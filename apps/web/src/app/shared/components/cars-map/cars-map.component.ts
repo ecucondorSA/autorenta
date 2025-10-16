@@ -45,11 +45,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
 
   private map: MapboxMap | null = null;
-  private markers: MapMarkerData[] = [];
+  private markers: MarkerData[] = [];
   private userMarker: Marker | null = null;
   private realtimeUnsubscribe: (() => void) | null = null;
   private refreshInterval: ReturnType<typeof setInterval> | null = null;
   private mapboxgl: any | null = null;
+  private geolocationWatchId: number | null = null;
 
   constructor() {
     // Efecto para limpiar recursos cuando el componente se destruye
@@ -571,21 +572,29 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    console.log('[CarsMapComponent] Requesting high-accuracy location...');
+    console.log('[CarsMapComponent] Starting continuous high-accuracy location tracking...');
 
-    navigator.geolocation.getCurrentPosition(
+    // Usar watchPosition para obtener actualizaciones continuas
+    this.geolocationWatchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude, accuracy } = position.coords;
-        console.log('[CarsMapComponent] User location obtained:', {
+        console.log('[CarsMapComponent] Location update:', {
           lat: latitude,
           lng: longitude,
-          accuracy: `${Math.round(accuracy)}m`
+          accuracy: `${Math.round(accuracy)}m`,
+          timestamp: new Date(position.timestamp).toLocaleTimeString()
         });
+
+        // Solo actualizar si la precisión es razonable (< 100m)
+        if (accuracy > 100) {
+          console.warn('[CarsMapComponent] Low accuracy, waiting for better signal...', accuracy);
+          return;
+        }
 
         // Validar que la ubicación esté dentro de Argentina
         const isInArgentina = this.isLocationInArgentina(latitude, longitude);
         if (!isInArgentina) {
-          console.warn('[CarsMapComponent] Location outside Argentina bounds, using fallback');
+          console.warn('[CarsMapComponent] Location outside Argentina bounds:', { latitude, longitude });
           // Usar Buenos Aires como fallback
           this.userLocation.set({ lat: -34.6037, lng: -58.3816 });
           this.addUserMarker(-34.6037, -58.3816);
@@ -593,7 +602,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           this.userLocation.set({ lat: latitude, lng: longitude });
           this.addUserMarker(latitude, longitude);
-          this.zoomToUserLocation(latitude, longitude);
+
+          // Solo hacer zoom la primera vez
+          const isFirstUpdate = this.markers.length === 0 || !this.userLocation();
+          if (isFirstUpdate) {
+            this.zoomToUserLocation(latitude, longitude);
+          }
         }
 
         // Recargar marcadores con distancias
@@ -602,7 +616,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       (error) => {
         console.error('[CarsMapComponent] Geolocation error:', {
           code: error.code,
-          message: error.message
+          message: error.message,
+          details: this.getGeolocationErrorMessage(error.code)
         });
 
         // Usar Buenos Aires como ubicación predeterminada
@@ -613,11 +628,24 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         void this.loadCarLocations(true);
       },
       {
-        enableHighAccuracy: true, // CRÍTICO: Alta precisión GPS
-        timeout: 10000, // 10 segundos para obtener ubicación precisa
-        maximumAge: 0, // No usar cache, siempre obtener ubicación fresca
+        enableHighAccuracy: true, // CRÍTICO: Máxima precisión GPS
+        timeout: 15000, // 15 segundos timeout
+        maximumAge: 0, // Sin cache, ubicación en tiempo real
       }
     );
+  }
+
+  private getGeolocationErrorMessage(code: number): string {
+    switch (code) {
+      case 1:
+        return 'Permiso denegado por el usuario';
+      case 2:
+        return 'Posición no disponible (sin señal GPS)';
+      case 3:
+        return 'Timeout - tardó demasiado';
+      default:
+        return 'Error desconocido';
+    }
   }
 
   private isLocationInArgentina(lat: number, lng: number): boolean {
@@ -701,6 +729,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.userMarker) {
       this.userMarker.remove();
       this.userMarker = null;
+    }
+
+    // Detener tracking de geolocalización
+    if (this.geolocationWatchId !== null) {
+      navigator.geolocation.clearWatch(this.geolocationWatchId);
+      this.geolocationWatchId = null;
+      console.log('[CarsMapComponent] Geolocation tracking stopped');
     }
 
     // Limpiar realtime
