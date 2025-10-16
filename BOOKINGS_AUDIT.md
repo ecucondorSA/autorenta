@@ -731,5 +731,81 @@ Necesito:
 
 ---
 
-**Status**: 🟢 Base de datos FUNCIONAL - Investigar por qué UI no funciona
-**Next Action**: Crear booking de prueba y verificar que aparece en UI
+---
+
+## 🎯 ROOT CAUSE ENCONTRADO (2025-10-16 - Test con Python)
+
+### ❌ Problema Real: Mismatch entre Código y Base de Datos
+
+**Error en la UI**: "No pudimos cargar tus reservas. Por favor intentá de nuevo más tarde."
+
+**Error técnico**:
+```
+APIError: Could not find a relationship between 'bookings' and 'payment_intents'
+Code: PGRST200
+Hint: Perhaps you meant 'payments' instead of 'payment_intents'.
+```
+
+### 🔍 Análisis del Problema
+
+1. **BookingsService.getMyBookings()** ejecuta:
+   ```typescript
+   .from('bookings')
+   .select('*, cars(*), payment_intents(*)')  // ❌ payment_intents no existe
+   ```
+
+2. **Base de datos real** tiene:
+   - ✅ Tabla `payments` con FK a `bookings`
+   - ❌ NO existe tabla `payment_intents`
+   - ❌ NO existe FK entre `bookings` y `payment_intents`
+
+3. **PostgreSQL/PostgREST** rechaza la query porque:
+   - No puede hacer JOIN implícito sin foreign key
+   - La tabla `payment_intents` no existe o no está relacionada
+
+### ✅ Solución Implementada
+
+**Archivo**: `apps/web/src/app/core/services/bookings.service.ts`
+
+**Cambio**:
+```typescript
+// ANTES (líneas 26 y 36):
+.select('*, cars(*), payment_intents(*)')  // ❌ Tabla inexistente
+
+// DESPUÉS:
+.select('*, cars(*), payments(*)')  // ✅ Tabla correcta con FK
+```
+
+**Funciones afectadas**:
+- `getMyBookings()` - línea 26
+- `getBookingById()` - línea 36
+
+### 🧪 Verificación
+
+**Test con Python + Supabase SDK**:
+
+```bash
+# Query INCORRECTA (la del código original):
+.select('*, cars(*), payment_intents(*)')
+❌ APIError: Could not find a relationship...
+
+# Query CORRECTA (fix aplicado):
+.select('*, cars(*), payments(*)')
+✅ Query successful! Found 0 bookings
+```
+
+### 📊 Estado Actual
+
+- ✅ Base de datos completamente funcional
+- ✅ RLS policies funcionando correctamente
+- ✅ Tablas con estructura avanzada (PostGIS, tstzrange, etc.)
+- ✅ Fix aplicado en el servicio
+- ⏳ Pendiente: Probar en la UI real
+
+---
+
+**Status**: 🟡 Root cause identificado y corregido - Requiere testing en UI
+**Next Action**:
+1. Compilar aplicación Angular
+2. Probar flujo completo en navegador
+3. Verificar que bookings aparecen correctamente
