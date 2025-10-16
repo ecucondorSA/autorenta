@@ -249,6 +249,120 @@
   left: 12px;
 }
 
+/* Cluster Markers */
+:host ::ng-deep .car-marker-cluster {
+  z-index: 20 !important;
+}
+
+:host ::ng-deep .marker-cluster-content {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  padding: 8px 14px;
+  min-width: 120px;
+}
+
+:host ::ng-deep .marker-cluster-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
+  background: white;
+  color: #dc2626;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Cluster Popup Styles */
+:host ::ng-deep .cluster-popup .popup-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+:host ::ng-deep .cluster-cars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+:host ::ng-deep .cluster-car-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+:host ::ng-deep .cluster-car-item:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  transform: translateX(2px);
+}
+
+:host ::ng-deep .cluster-car-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .cluster-car-price {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .cluster-car-distance {
+  font-size: 11px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .cluster-car-link {
+  grid-column: 3;
+  padding: 4px 10px;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+:host ::ng-deep .cluster-car-link:hover {
+  background: #1d4ed8;
+}
+
+:host ::ng-deep .cluster-more {
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+  margin: 12px 0 8px 0;
+  font-style: italic;
+}
+
+:host ::ng-deep .cluster-hint {
+  font-size: 12px;
+  color: #64748b;
+  text-align: center;
+  margin: 12px 0 0 0;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
 /* Popup Styles */
 :host ::ng-deep .mapboxgl-popup {
   z-index: 200 !important;

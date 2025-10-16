@@ -167,14 +167,22 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private async loadCarLocations(force = false): Promise<void> {
     try {
-      const locations = await this.carLocationsService.fetchActiveLocations(force);
+      let locations = await this.carLocationsService.fetchActiveLocations(force);
+
+      // Ordenar por distancia si tenemos ubicación del usuario
+      const userLoc = this.userLocation();
+      if (userLoc) {
+        locations = this.sortLocationsByDistance(locations, userLoc);
+        console.log('[CarsMapComponent] Sorted locations by distance:', locations.length);
+      }
+
       this.updateMarkers(locations);
       this.carCount.set(locations.length);
       this.loading.set(false);
       this.error.set(null);
 
-      // Ajustar vista del mapa a los marcadores
-      if (locations.length > 0 && this.map) {
+      // Ajustar vista del mapa a los marcadores (solo si no tenemos ubicación de usuario)
+      if (locations.length > 0 && this.map && !userLoc) {
         this.fitMapToBounds(locations);
       }
     } catch (err) {
@@ -182,6 +190,17 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.error.set('Error al cargar las ubicaciones de los autos');
       this.loading.set(false);
     }
+  }
+
+  private sortLocationsByDistance(
+    locations: CarMapLocation[],
+    userLoc: { lat: number; lng: number }
+  ): CarMapLocation[] {
+    return [...locations].sort((a, b) => {
+      const distA = this.calculateDistance(userLoc.lat, userLoc.lng, a.lat, a.lng);
+      const distB = this.calculateDistance(userLoc.lat, userLoc.lng, b.lat, b.lng);
+      return distA - distB;
+    });
   }
 
   private updateMarkers(locations: CarMapLocation[]): void {
@@ -192,23 +211,34 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
     // Eliminar marcadores existentes
     this.clearMarkers();
 
+    // Agrupar marcadores por ubicación cercana para clustering simple
+    const clustered = this.clusterNearbyLocations(locations);
+
     // Crear nuevos marcadores
-    locations.forEach((location) => {
+    clustered.forEach((item) => {
       if (!this.map || !this.mapboxgl) {
         return;
       }
 
+      const isCluster = item.count > 1;
+      const location = item.locations[0]; // Usar primera ubicación como referencia
+
       // Crear elemento HTML personalizado para el marcador
       const el = document.createElement('div');
-      el.className = 'car-marker';
-      el.innerHTML = this.createMarkerHTML(location);
+      el.className = isCluster ? 'car-marker car-marker-cluster' : 'car-marker';
+
+      if (isCluster) {
+        el.innerHTML = this.createClusterMarkerHTML(item.count, location);
+      } else {
+        el.innerHTML = this.createMarkerHTML(location);
+      }
 
       // Crear popup
       const popup = new this.mapboxgl.Popup({
         offset: 25,
         closeButton: true,
         closeOnClick: false,
-      }).setHTML(this.createPopupHTML(location));
+      }).setHTML(isCluster ? this.createClusterPopupHTML(item) : this.createPopupHTML(location));
 
       // Crear marcador
       const marker = new this.mapboxgl.Marker(el)
@@ -218,16 +248,25 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Agregar evento de click
       el.addEventListener('click', () => {
-        if (marker.getPopup().isOpen()) {
-          marker.togglePopup();
-        } else {
-          // Cerrar otros popups
-          this.markers.forEach((m) => {
-            if (m.marker.getPopup().isOpen()) {
-              m.marker.togglePopup();
-            }
+        if (isCluster) {
+          // Para clusters, hacer zoom a esa área
+          this.map?.flyTo({
+            center: [location.lng, location.lat],
+            zoom: (this.map?.getZoom() || 10) + 2,
+            duration: 1000
           });
-          marker.togglePopup();
+        } else {
+          if (marker.getPopup().isOpen()) {
+            marker.togglePopup();
+          } else {
+            // Cerrar otros popups
+            this.markers.forEach((m) => {
+              if (m.marker.getPopup().isOpen()) {
+                m.marker.togglePopup();
+              }
+            });
+            marker.togglePopup();
+          }
         }
       });
 
@@ -236,6 +275,151 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         carId: location.carId,
       });
     });
+  }
+
+  private clusterNearbyLocations(locations: CarMapLocation[]): Array<{
+    locations: CarMapLocation[];
+    count: number;
+    lat: number;
+    lng: number;
+  }> {
+    const clusters: Array<{
+      locations: CarMapLocation[];
+      count: number;
+      lat: number;
+      lng: number;
+    }> = [];
+    const processed = new Set<string>();
+    const clusterRadius = 0.05; // ~5.5 km aprox
+
+    locations.forEach((location) => {
+      if (processed.has(location.carId)) {
+        return;
+      }
+
+      // Encontrar todas las ubicaciones cercanas
+      const nearby = locations.filter((other) => {
+        if (processed.has(other.carId)) {
+          return false;
+        }
+
+        const distance = this.calculateDistance(
+          location.lat,
+          location.lng,
+          other.lat,
+          other.lng
+        );
+
+        return distance <= clusterRadius;
+      });
+
+      // Marcar como procesadas
+      nearby.forEach((l) => processed.add(l.carId));
+
+      // Calcular centro del cluster
+      const avgLat = nearby.reduce((sum, l) => sum + l.lat, 0) / nearby.length;
+      const avgLng = nearby.reduce((sum, l) => sum + l.lng, 0) / nearby.length;
+
+      clusters.push({
+        locations: nearby,
+        count: nearby.length,
+        lat: avgLat,
+        lng: avgLng,
+      });
+    });
+
+    console.log(`[CarsMapComponent] Created ${clusters.length} clusters from ${locations.length} locations`);
+    return clusters;
+  }
+
+  private createClusterMarkerHTML(count: number, location: CarMapLocation): string {
+    const userLoc = this.userLocation();
+    let distanceText = '';
+    if (userLoc) {
+      const distanceKm = this.calculateDistance(
+        userLoc.lat,
+        userLoc.lng,
+        location.lat,
+        location.lng
+      );
+      if (distanceKm < 1) {
+        distanceText = `${Math.round(distanceKm * 10) * 100}m`;
+      } else if (distanceKm < 10) {
+        distanceText = `${distanceKm.toFixed(1)}km`;
+      } else {
+        distanceText = `${Math.round(distanceKm)}km`;
+      }
+    }
+
+    return `
+      <div class="marker-content marker-cluster-content">
+        <div class="marker-cluster-badge">${count}</div>
+        <div class="marker-text">
+          <span class="marker-price">${count} autos</span>
+          ${distanceText ? `<span class="marker-distance">${distanceText}</span>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  private createClusterPopupHTML(cluster: {
+    locations: CarMapLocation[];
+    count: number;
+  }): string {
+    const userLoc = this.userLocation();
+
+    // Ordenar por distancia dentro del cluster
+    let sortedLocations = cluster.locations;
+    if (userLoc) {
+      sortedLocations = [...cluster.locations].sort((a, b) => {
+        const distA = this.calculateDistance(userLoc.lat, userLoc.lng, a.lat, a.lng);
+        const distB = this.calculateDistance(userLoc.lat, userLoc.lng, b.lat, b.lng);
+        return distA - distB;
+      });
+    }
+
+    const carsList = sortedLocations
+      .slice(0, 5) // Mostrar máximo 5
+      .map((loc) => {
+        const priceFormatted = new Intl.NumberFormat('es-AR', {
+          style: 'currency',
+          currency: loc.currency,
+          minimumFractionDigits: 0,
+        }).format(loc.pricePerDay);
+
+        let distText = '';
+        if (userLoc) {
+          const dist = this.calculateDistance(userLoc.lat, userLoc.lng, loc.lat, loc.lng);
+          distText = dist < 1
+            ? `${Math.round(dist * 10) * 100}m`
+            : `${Math.round(dist)}km`;
+        }
+
+        return `
+          <div class="cluster-car-item">
+            <span class="cluster-car-title">${this.escapeHtml(loc.title)}</span>
+            <span class="cluster-car-price">${priceFormatted}/día</span>
+            ${distText ? `<span class="cluster-car-distance">${distText}</span>` : ''}
+            <a href="/cars/${loc.carId}" class="cluster-car-link">Ver →</a>
+          </div>
+        `;
+      })
+      .join('');
+
+    const moreText = cluster.count > 5 ? `<p class="cluster-more">Y ${cluster.count - 5} más...</p>` : '';
+
+    return `
+      <div class="car-popup cluster-popup">
+        <div class="popup-content">
+          <h3 class="popup-title">${cluster.count} autos en esta área</h3>
+          <div class="cluster-cars-list">
+            ${carsList}
+          </div>
+          ${moreText}
+          <p class="cluster-hint">💡 Haz zoom para ver más detalles</p>
+        </div>
+      </div>
+    `;
   }
 
   private createMarkerHTML(location: CarMapLocation): string {
@@ -387,33 +571,79 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    console.log('[CarsMapComponent] Requesting high-accuracy location...');
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude, longitude } = position.coords;
-        console.log('[CarsMapComponent] User location:', latitude, longitude);
-
-        this.userLocation.set({ lat: latitude, lng: longitude });
-        this.addUserMarker(latitude, longitude);
-
-        // Actualizar marcadores con distancias
-        const locations = Array.from(this.markers).map(m => {
-          // Re-render markers with distance
-          return null;
+        const { latitude, longitude, accuracy } = position.coords;
+        console.log('[CarsMapComponent] User location obtained:', {
+          lat: latitude,
+          lng: longitude,
+          accuracy: `${Math.round(accuracy)}m`
         });
 
-        // Trigger marker update
+        // Validar que la ubicación esté dentro de Argentina
+        const isInArgentina = this.isLocationInArgentina(latitude, longitude);
+        if (!isInArgentina) {
+          console.warn('[CarsMapComponent] Location outside Argentina bounds, using fallback');
+          // Usar Buenos Aires como fallback
+          this.userLocation.set({ lat: -34.6037, lng: -58.3816 });
+          this.addUserMarker(-34.6037, -58.3816);
+          this.zoomToUserLocation(-34.6037, -58.3816);
+        } else {
+          this.userLocation.set({ lat: latitude, lng: longitude });
+          this.addUserMarker(latitude, longitude);
+          this.zoomToUserLocation(latitude, longitude);
+        }
+
+        // Recargar marcadores con distancias
         void this.loadCarLocations(true);
       },
       (error) => {
-        console.log('[CarsMapComponent] Geolocation error:', error.message);
-        // No mostrar error, solo continuar sin ubicación
+        console.error('[CarsMapComponent] Geolocation error:', {
+          code: error.code,
+          message: error.message
+        });
+
+        // Usar Buenos Aires como ubicación predeterminada
+        console.log('[CarsMapComponent] Using Buenos Aires as fallback location');
+        this.userLocation.set({ lat: -34.6037, lng: -58.3816 });
+        this.addUserMarker(-34.6037, -58.3816);
+        this.zoomToUserLocation(-34.6037, -58.3816);
+        void this.loadCarLocations(true);
       },
       {
-        enableHighAccuracy: false,
-        timeout: 5000,
-        maximumAge: 300000, // 5 minutos de cache
+        enableHighAccuracy: true, // CRÍTICO: Alta precisión GPS
+        timeout: 10000, // 10 segundos para obtener ubicación precisa
+        maximumAge: 0, // No usar cache, siempre obtener ubicación fresca
       }
     );
+  }
+
+  private isLocationInArgentina(lat: number, lng: number): boolean {
+    // Bounds de Argentina
+    const minLat = -55.2;
+    const maxLat = -21.8;
+    const minLng = -73.5;
+    const maxLng = -53.5;
+
+    return lat >= minLat && lat <= maxLat && lng >= minLng && lng <= maxLng;
+  }
+
+  private zoomToUserLocation(lat: number, lng: number): void {
+    if (!this.map) {
+      return;
+    }
+
+    console.log('[CarsMapComponent] Zooming to user location');
+
+    // Hacer zoom suave a la ubicación del usuario
+    this.map.flyTo({
+      center: [lng, lat],
+      zoom: 11, // Zoom nivel ciudad
+      duration: 2000, // 2 segundos de animación
+      essential: true
+    });
   }
 
   private addUserMarker(lat: number, lng: number): void {
