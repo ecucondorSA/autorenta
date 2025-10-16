@@ -4,6 +4,10 @@ interface EnvDefaults {
   supabaseAnonKey?: string;
   defaultCurrency?: string;
   paymentsWebhookUrl?: string;
+  mapboxAccessToken?: string;
+  carLocationsCacheTtlMs?: number;
+  carLocationsRefreshMs?: number;
+  carLocationsEdgeFunction?: string;
 }
 
 const readEnv = (key: string): string | undefined => {
@@ -40,6 +44,10 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   supabaseAnonKey: resolve('NG_APP_SUPABASE_ANON_KEY', defaults.supabaseAnonKey),
   defaultCurrency: resolve('NG_APP_DEFAULT_CURRENCY', defaults.defaultCurrency ?? 'ARS'),
   paymentsWebhookUrl: resolve('NG_APP_PAYMENTS_WEBHOOK_URL', defaults.paymentsWebhookUrl ?? ''),
+  mapboxAccessToken: resolve('NG_APP_MAPBOX_ACCESS_TOKEN', defaults.mapboxAccessToken),
+  carLocationsCacheTtlMs: defaults.carLocationsCacheTtlMs ?? 5 * 60 * 1000,
+  carLocationsRefreshMs: defaults.carLocationsRefreshMs ?? 60 * 1000,
+  carLocationsEdgeFunction: resolve('NG_APP_CAR_LOCATIONS_EDGE_FUNCTION', defaults.carLocationsEdgeFunction),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;
