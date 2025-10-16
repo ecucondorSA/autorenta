@@ -31,6 +31,13 @@ export interface Profile {
   phone: string | null;
   dni: string | null;
   country: string | null;
+  avatar_url: string | null;
+  email_verified: boolean | null;
+  phone_verified: boolean | null;
+  id_verified: boolean | null;
+  stripe_customer_id: string | null;
+  rating_avg: number | null;
+  rating_count: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -88,6 +95,12 @@ export interface Booking {
   status: BookingStatus;
   pickup_location: any | null;
   dropoff_location: any | null;
+  pickup_confirmed_at: string | null;
+  dropoff_confirmed_at: string | null;
+  pickup_confirmed_by: string | null;
+  dropoff_confirmed_by: string | null;
+  actual_start_at: string | null;
+  actual_end_at: string | null;
   total_amount: number;
   currency: string;
   notes: string | null;
@@ -108,6 +121,9 @@ export interface Payment {
   net_amount: number | null;
   currency: string;
   receipt_url: string | null;
+  refund_reason: string | null;
+  refunded_at: string | null;
+  refunded_by: string | null;
   raw: Record<string, any>;
   created_at: string;
 }
