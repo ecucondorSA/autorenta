@@ -1,0 +1,97 @@
+<section class="mx-auto max-w-3xl space-y-6">
+  <header class="space-y-2">
+    <h1 class="text-3xl font-semibold text-slate-900">Publicá tu auto</h1>
+    <p class="text-sm text-slate-500">
+      Completá la información esencial. El equipo de AutorentA revisará y aprobará tu publicación.
+    </p>
+  </header>
+
+  <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
+    <section class="grid gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm md:grid-cols-2">
+      <div class="space-y-3">
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Título
+          <input
+            class="rounded-lg border border-slate-200 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+            formControlName="title"
+            placeholder="Ford Fiesta ideal para ciudad"
+          />
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Descripción
+          <textarea
+            class="min-h-[120px] rounded-lg border border-slate-200 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+            formControlName="description"
+            placeholder="Contá los detalles del auto, mantenimiento, entrega, etc."
+          ></textarea>
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Marca
+          <input class="rounded-lg border border-slate-200 px-3 py-2" formControlName="brand" />
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Modelo
+          <input class="rounded-lg border border-slate-200 px-3 py-2" formControlName="model" />
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Año
+          <input class="rounded-lg border border-slate-200 px-3 py-2" type="number" formControlName="year" />
+        </label>
+      </div>
+
+      <div class="space-y-3">
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Precio por día (ARS)
+          <input class="rounded-lg border border-slate-200 px-3 py-2" type="number" formControlName="price_per_day" />
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Ciudad
+          <input class="rounded-lg border border-slate-200 px-3 py-2" formControlName="location_city" />
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Provincia
+          <input class="rounded-lg border border-slate-200 px-3 py-2" formControlName="location_province" />
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Asientos
+          <input class="rounded-lg border border-slate-200 px-3 py-2" type="number" formControlName="seats" />
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Transmisión
+          <select class="rounded-lg border border-slate-200 px-3 py-2" formControlName="transmission">
+            <option value="automatic">Automática</option>
+            <option value="manual">Manual</option>
+          </select>
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Combustible
+          <select class="rounded-lg border border-slate-200 px-3 py-2" formControlName="fuel_type">
+            <option value="nafta">Nafta</option>
+            <option value="gasoil">Diésel/Gasoil</option>
+            <option value="hibrido">Híbrido</option>
+            <option value="electrico">Eléctrico</option>
+          </select>
+        </label>
+        <label class="flex flex-col gap-1 text-sm text-slate-600">
+          Kilometraje
+          <input class="rounded-lg border border-slate-200 px-3 py-2" type="number" formControlName="mileage" />
+        </label>
+      </div>
+    </section>
+
+    <section class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <app-upload-image (filesSelected)="onFilesSelected($event)"></app-upload-image>
+      <p class="mt-2 text-xs text-slate-500">
+        Podés subir múltiples fotos. La primera será destacada. Luego podrás reordenarlas.
+      </p>
+    </section>
+
+    <button
+      class="flex w-full items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+      type="submit"
+      [disabled]="submitting()"
+    >
+      {{ submitting() ? 'Publicando…' : 'Enviar para revisión' }}
+    </button>
+  </form>
+</section>

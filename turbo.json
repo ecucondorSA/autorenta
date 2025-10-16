@@ -1,0 +1,11 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "apps/web/dist/**", "apps/workers/payment-webhook/dist/**"]
+    },
+    "lint": {},
+    "test": {}
+  }
+}

@@ -1,0 +1,14 @@
+<section class="space-y-6">
+  <header>
+    <h1 class="text-2xl font-semibold text-slate-900">Mis autos</h1>
+    <p class="text-sm text-slate-600">Gestioná las publicaciones que creaste.</p>
+  </header>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <app-car-card *ngFor="let car of cars()" [car]="car"></app-car-card>
+  </div>
+
+  <p *ngIf="!loading() && cars().length === 0" class="text-sm text-slate-500">
+    Todavía no publicaste autos. <a routerLink="/cars/publish" class="text-blue-600">Publicá el primero.</a>
+  </p>
+</section>

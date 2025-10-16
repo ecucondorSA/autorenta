@@ -1,0 +1,10 @@
+<label class="grid gap-2 text-sm font-medium text-slate-700">
+  {{ label }}
+  <input
+    type="file"
+    [attr.multiple]="multiple ? '' : null"
+    accept="image/*"
+    class="rounded border border-dashed border-slate-300 px-3 py-6 text-sm text-slate-500 hover:border-blue-400 focus:border-blue-500 focus:outline-none"
+    (change)="onFileChange($event)"
+  />
+</label>

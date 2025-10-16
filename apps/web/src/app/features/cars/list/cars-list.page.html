@@ -1,0 +1,27 @@
+<section class="space-y-6">
+  <header class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h1 class="text-2xl font-semibold text-slate-900">Encontrá tu próximo auto</h1>
+    <p class="mt-2 text-sm text-slate-600">
+      Buscá por ciudad y rango de fechas. Los precios están expresados en pesos argentinos.
+    </p>
+    <div class="mt-4 grid gap-4 md:grid-cols-[minmax(0,240px)_minmax(0,320px)_auto] md:items-end">
+      <app-city-select (valueChange)="onCityChange($event)"></app-city-select>
+      <app-date-range-picker (rangeChange)="onRangeChange($event)"></app-date-range-picker>
+      <button
+        class="h-11 rounded bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+        (click)="loadCars()"
+        [disabled]="loading()"
+      >
+        {{ loading() ? 'Buscando...' : 'Buscar autos' }}
+      </button>
+    </div>
+  </header>
+
+  <section class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <app-car-card *ngFor="let car of cars()" [car]="car"></app-car-card>
+  </section>
+
+  <p *ngIf="!loading() && cars().length === 0" class="text-center text-sm text-slate-500">
+    No encontramos autos para tu búsqueda.
+  </p>
+</section>

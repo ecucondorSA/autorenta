@@ -1,0 +1,28 @@
+<article class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+  <div class="relative h-48 w-full bg-slate-100">
+    <img
+      *ngIf="firstPhoto(); else placeholder"
+      [src]="firstPhoto()!.url"
+      [alt]="car.title"
+      class="h-full w-full object-cover"
+    />
+    <ng-template #placeholder>
+      <div class="flex h-full w-full items-center justify-center text-sm text-slate-400">
+        Sin imagen
+      </div>
+    </ng-template>
+  </div>
+  <div class="flex flex-1 flex-col gap-2 px-4 py-4">
+    <h3 class="text-lg font-semibold tracking-tight text-slate-900">{{ car.title }}</h3>
+    <p class="text-sm text-slate-600">
+      {{ car.location_city }}, {{ car.location_state }} · {{ car.transmission | titlecase }}
+    </p>
+    <p class="mt-auto text-base font-semibold text-blue-600">
+      {{ car.price_per_day | money }}
+      <span class="text-sm font-normal text-slate-500">/ día</span>
+    </p>
+    <a [routerLink]="['/cars', car.id]" class="rounded bg-blue-600 px-3 py-2 text-center text-white">
+      Ver detalle
+    </a>
+  </div>
+</article>

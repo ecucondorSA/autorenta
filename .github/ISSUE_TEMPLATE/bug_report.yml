@@ -1,0 +1,19 @@
+name: Bug report
+description: Reportar un error
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: ¿Qué pasa?
+      placeholder: Describí el problema
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+  - type: input
+    id: version
+    attributes:
+      label: Versión/commit

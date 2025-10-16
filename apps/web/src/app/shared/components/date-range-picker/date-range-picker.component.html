@@ -1,0 +1,17 @@
+<div class="grid gap-2">
+  <label class="text-sm font-medium text-slate-700">{{ label }}</label>
+  <div class="grid grid-cols-2 gap-2">
+    <input
+      type="date"
+      class="rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200"
+      [value]="from() ?? ''"
+      (change)="onFromChange($any($event.target).value)"
+    />
+    <input
+      type="date"
+      class="rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200"
+      [value]="to() ?? ''"
+      (change)="onToChange($any($event.target).value)"
+    />
+  </div>
+</div>

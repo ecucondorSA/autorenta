@@ -1,0 +1,30 @@
+<section class="space-y-6">
+  <header>
+    <h1 class="text-2xl font-semibold text-slate-900">Mis reservas</h1>
+    <p class="text-sm text-slate-600">Seguimiento de tus pedidos y su estado actual.</p>
+  </header>
+
+  <div class="space-y-3">
+    <article
+      *ngFor="let booking of bookings()"
+      class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+    >
+      <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p class="text-sm font-semibold text-slate-900">
+            Reserva #{{ booking.id }}
+          </p>
+          <p class="text-sm text-slate-600">{{ rangeLabel(booking) }}</p>
+        </div>
+        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-600">
+          {{ booking.status }}
+        </span>
+      </div>
+      <p class="mt-2 text-sm text-slate-600">Total: {{ booking.total_amount | money }}</p>
+    </article>
+  </div>
+
+  <p *ngIf="!loading() && bookings().length === 0" class="text-sm text-slate-500">
+    No tenés reservas todavía.
+  </p>
+</section>

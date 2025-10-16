@@ -1,0 +1,64 @@
+import { Injectable } from '@angular/core';
+import { injectSupabase } from './supabase-client.service';
+import { environment } from '../../../environments/environment';
+import { PaymentIntent } from '../models';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PaymentsService {
+  private readonly supabase = injectSupabase();
+
+  async createIntent(bookingId: string): Promise<PaymentIntent> {
+    const { data, error } = await this.supabase
+      .from('payment_intents')
+      .insert({ booking_id: bookingId, provider: 'mock', status: 'requires_payment' })
+      .select()
+      .single();
+    if (error) throw error;
+    return data as PaymentIntent;
+  }
+
+  async markAsPaid(intentId: string): Promise<void> {
+    const workerUrl = environment.paymentsWebhookUrl;
+    if (!workerUrl) {
+      throw new Error('paymentsWebhookUrl no configurado');
+    }
+    // workerUrl already includes /webhooks/payments path
+    const response = await fetch(workerUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'mock', intent_id: intentId, status: 'approved' }),
+    });
+    if (!response.ok) {
+      throw new Error(`Webhook respondió ${response.status}`);
+    }
+  }
+
+  async getStatus(intentId: string): Promise<PaymentIntent | null> {
+    const { data, error } = await this.supabase.from('payment_intents').select('*').eq('id', intentId).single();
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return null;
+      }
+      throw error;
+    }
+    return data as PaymentIntent;
+  }
+
+  async triggerMockPayment(bookingId: string, status: 'approved' | 'rejected'): Promise<void> {
+    const workerUrl = environment.paymentsWebhookUrl;
+    if (!workerUrl) {
+      throw new Error('paymentsWebhookUrl no configurado');
+    }
+    // workerUrl already includes /webhooks/payments path
+    const response = await fetch(workerUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'mock', booking_id: bookingId, status }),
+    });
+    if (!response.ok) {
+      throw new Error(`Webhook respondió ${response.status}`);
+    }
+  }
+}

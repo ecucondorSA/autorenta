@@ -1,0 +1,358 @@
+<div class="mx-auto max-w-4xl space-y-6">
+  <!-- Header -->
+  <header class="flex items-center justify-between">
+    <h1 class="text-3xl font-semibold text-slate-900">Mi Perfil</h1>
+    <button
+      (click)="signOut()"
+      class="rounded bg-slate-600 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+    >
+      Cerrar sesión
+    </button>
+  </header>
+
+  <!-- Messages -->
+  <div *ngIf="message()" class="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800">
+    {{ message() }}
+  </div>
+
+  <div *ngIf="error()" class="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
+    {{ error() }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+    <p class="text-slate-500">Cargando perfil...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <ng-container *ngIf="!loading() && profile()">
+    <div class="grid gap-6 lg:grid-cols-[300px_1fr]">
+      <!-- Avatar Section -->
+      <aside class="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-col items-center space-y-4">
+          <!-- Avatar Image -->
+          <div class="relative h-32 w-32">
+            <div
+              class="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-slate-100"
+            >
+              <img
+                *ngIf="avatarUrl(); else placeholderAvatar"
+                [src]="avatarUrl()"
+                alt="Avatar"
+                class="h-full w-full object-cover"
+              />
+              <ng-template #placeholderAvatar>
+                <svg
+                  class="h-16 w-16 text-slate-400"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              </ng-template>
+            </div>
+
+            <!-- Upload spinner overlay -->
+            <div
+              *ngIf="uploadingAvatar()"
+              class="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50"
+            >
+              <svg
+                class="h-8 w-8 animate-spin text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Avatar Actions -->
+          <div class="flex w-full flex-col gap-2">
+            <label
+              class="cursor-pointer rounded bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+              [class.pointer-events-none]="uploadingAvatar()"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                class="hidden"
+                (change)="onAvatarChange($event)"
+                [disabled]="uploadingAvatar()"
+              />
+              {{ uploadingAvatar() ? 'Subiendo...' : 'Cambiar foto' }}
+            </label>
+
+            <button
+              *ngIf="avatarUrl()"
+              (click)="deleteAvatar()"
+              [disabled]="uploadingAvatar()"
+              class="rounded border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Eliminar foto
+            </button>
+          </div>
+
+          <!-- User Info -->
+          <div class="w-full space-y-2 border-t border-slate-200 pt-4 text-sm">
+            <p class="text-slate-600">
+              <span class="font-semibold">Email:</span><br />
+              {{ userEmail() }}
+            </p>
+            <p class="text-slate-600">
+              <span class="font-semibold">Miembro desde:</span><br />
+              {{ profile()?.created_at | date: 'dd/MM/yyyy' }}
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Profile Form Section -->
+      <section class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <!-- View Mode -->
+        <div *ngIf="!editMode()" class="space-y-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold text-slate-900">Información Personal</h2>
+            <button
+              (click)="toggleEditMode()"
+              class="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+            >
+              Editar perfil
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <p class="text-sm font-medium text-slate-500">Nombre completo</p>
+              <p class="mt-1 text-base text-slate-900">{{ profile()?.full_name }}</p>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium text-slate-500">Rol</p>
+              <div class="mt-2">
+                <span
+                  class="inline-flex rounded-full px-3 py-1 text-sm font-semibold"
+                  [class]="
+                    profile()?.role === 'owner'
+                      ? 'bg-purple-100 text-purple-800'
+                      : profile()?.role === 'renter'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-green-100 text-green-800'
+                  "
+                >
+                  {{
+                    profile()?.role === 'owner'
+                      ? 'Locador'
+                      : profile()?.role === 'renter'
+                      ? 'Locatario'
+                      : profile()?.role === 'both'
+                      ? 'Ambos'
+                      : 'Administrador'
+                  }}
+                </span>
+              </div>
+              <p class="mt-2 text-sm text-slate-600">
+                <ng-container *ngIf="profile()?.role === 'owner'">
+                  Puedes publicar tus autos para alquilar
+                </ng-container>
+                <ng-container *ngIf="profile()?.role === 'renter'">
+                  Puedes reservar autos de otros usuarios
+                </ng-container>
+                <ng-container *ngIf="profile()?.role === 'both'">
+                  Puedes publicar y reservar autos
+                </ng-container>
+                <ng-container *ngIf="profile()?.role === 'admin'">
+                  Acceso completo al sistema
+                </ng-container>
+              </p>
+            </div>
+
+            <!-- Capabilities -->
+            <div class="rounded-lg bg-slate-50 p-4">
+              <p class="mb-2 text-sm font-semibold text-slate-700">Permisos:</p>
+              <ul class="space-y-1 text-sm text-slate-600">
+                <li class="flex items-center">
+                  <svg
+                    class="mr-2 h-5 w-5"
+                    [class.text-green-600]="canPublishCars()"
+                    [class.text-slate-400]="!canPublishCars()"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Publicar autos
+                </li>
+                <li class="flex items-center">
+                  <svg
+                    class="mr-2 h-5 w-5"
+                    [class.text-green-600]="canBookCars()"
+                    [class.text-slate-400]="!canBookCars()"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Reservar autos
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Mode -->
+        <form *ngIf="editMode()" [formGroup]="form" (ngSubmit)="saveProfile()" class="space-y-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold text-slate-900">Editar Información</h2>
+            <button
+              type="button"
+              (click)="toggleEditMode()"
+              class="text-sm text-slate-600 hover:text-slate-900"
+            >
+              Cancelar
+            </button>
+          </div>
+
+          <!-- Full Name -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700">
+              Nombre completo *
+              <input
+                type="text"
+                formControlName="full_name"
+                class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                [class.border-red-500]="
+                  form.controls.full_name.touched && form.controls.full_name.invalid
+                "
+              />
+            </label>
+            <p
+              *ngIf="
+                form.controls.full_name.touched && form.controls.full_name.errors?.['required']
+              "
+              class="mt-1 text-xs text-red-600"
+            >
+              El nombre es obligatorio.
+            </p>
+            <p
+              *ngIf="
+                form.controls.full_name.touched && form.controls.full_name.errors?.['minlength']
+              "
+              class="mt-1 text-xs text-red-600"
+            >
+              El nombre debe tener al menos 3 caracteres.
+            </p>
+          </div>
+
+          <!-- Role Selection -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2"> Rol * </label>
+            <div class="space-y-3">
+              <div
+                *ngFor="let roleOption of roles"
+                class="relative flex cursor-pointer rounded-lg border p-4 hover:bg-slate-50"
+                [class.border-blue-500]="form.value.role === roleOption.value"
+                [class.bg-blue-50]="form.value.role === roleOption.value"
+                [class.border-slate-200]="form.value.role !== roleOption.value"
+              >
+                <input
+                  type="radio"
+                  [value]="roleOption.value"
+                  formControlName="role"
+                  class="mt-1 h-4 w-4 border-slate-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label class="ml-3 flex flex-1 cursor-pointer flex-col">
+                  <span class="block text-sm font-medium text-slate-900">
+                    {{ roleOption.label }}
+                  </span>
+                  <span class="block text-xs text-slate-500">
+                    {{ roleOption.description }}
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3 pt-4">
+            <button
+              type="submit"
+              [disabled]="form.invalid || saving()"
+              class="flex-1 rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            >
+              {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+            </button>
+            <button
+              type="button"
+              (click)="toggleEditMode()"
+              [disabled]="saving()"
+              class="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+
+        <!-- Quick Links -->
+        <div
+          *ngIf="!editMode()"
+          class="border-t border-slate-200 pt-6"
+        >
+          <h3 class="mb-3 text-sm font-semibold text-slate-700">Accesos rápidos</h3>
+          <div class="grid gap-2 sm:grid-cols-2">
+            <a
+              *ngIf="canPublishCars()"
+              routerLink="/cars/publish"
+              class="rounded-lg border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              📝 Publicar auto
+            </a>
+            <a
+              *ngIf="canPublishCars()"
+              routerLink="/cars/mine"
+              class="rounded-lg border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              🚗 Mis autos
+            </a>
+            <a
+              *ngIf="canBookCars()"
+              routerLink="/bookings"
+              class="rounded-lg border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              📅 Mis reservas
+            </a>
+            <a
+              routerLink="/cars"
+              class="rounded-lg border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              🔍 Buscar autos
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+</div>

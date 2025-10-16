@@ -1,0 +1,52 @@
+<ng-container *ngIf="car(); else loadingOrError">
+  <section class="grid gap-8 lg:grid-cols-[2fr_1fr]">
+    <div class="space-y-6">
+      <div class="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <img
+          *ngIf="firstPhoto(); else placeholder"
+          [src]="firstPhoto()!.url"
+          [alt]="car()?.title ?? ''"
+          class="h-72 w-full rounded-lg object-cover"
+        />
+        <ng-template #placeholder>
+          <div class="flex h-72 items-center justify-center rounded-lg bg-slate-100 text-sm text-slate-500">
+            Sin fotos disponibles
+          </div>
+        </ng-template>
+        <h1 class="text-3xl font-semibold text-slate-900">{{ car()?.title }}</h1>
+        <p class="text-sm text-slate-600">
+          {{ car()?.location_city }}, {{ car()?.location_state }} · Transmisión {{ car()?.transmission }}
+        </p>
+        <p class="text-base text-slate-700">
+          {{ car()?.description }}
+        </p>
+      </div>
+      <a routerLink="/cars" class="text-sm text-blue-600 hover:underline">Volver a buscar</a>
+    </div>
+
+    <aside class="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <p class="text-xl font-semibold text-slate-900">
+        {{ car()?.price_per_day | money }}
+        <span class="text-sm font-normal text-slate-500">por día</span>
+      </p>
+
+      <app-date-range-picker label="Fechas de alquiler" (rangeChange)="onRangeChange($event)"></app-date-range-picker>
+
+      <div *ngIf="totalPrice() as total" class="rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-800">
+        Total estimado: <strong>{{ total | money }}</strong>
+      </div>
+
+      <button class="w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+        Reservar
+      </button>
+    </aside>
+  </section>
+</ng-container>
+
+<ng-template #loadingOrError>
+  <p *ngIf="loading(); else errorTpl" class="text-center text-sm text-slate-500">Cargando auto...</p>
+</ng-template>
+
+<ng-template #errorTpl>
+  <p class="text-center text-sm text-red-600">{{ error() ?? 'No pudimos cargar el auto.' }}</p>
+</ng-template>

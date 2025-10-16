@@ -1,0 +1,21 @@
+{
+  "name": "autorenta",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "postinstall": "cd apps/web && npm install",
+    "lint": "cd apps/web && npm run lint",
+    "test": "cd apps/web && npm run test",
+    "build:web": "cd apps/web && npm run build",
+    "build:worker": "cd functions/workers/payments_webhook && npm run build",
+    "build": "npm run build:web && npm run build:worker",
+    "dev:web": "cd apps/web && npm run start",
+    "dev:worker": "cd functions/workers/payments_webhook && npm run dev",
+    "deploy:web": "cd apps/web && npm run deploy:pages",
+    "deploy:worker": "cd functions/workers/payments_webhook && npm run deploy"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.4.0",
+    "@commitlint/config-conventional": "^19.4.0"
+  }
+}

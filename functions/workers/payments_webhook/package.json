@@ -1,0 +1,25 @@
+{
+  "name": "payments_webhook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "tsc --project tsconfig.json",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20251011.0",
+    "@supabase/supabase-js": "^2.75.0",
+    "undici": "^7.16.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.11",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.43.0"
+  }
+}
