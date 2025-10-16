@@ -130,7 +130,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v12',
+        style: 'mapbox://styles/mapbox/standard',
         center: defaultCenter,
         zoom: defaultZoom,
         attributionControl: true,
@@ -232,12 +232,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       style: 'currency',
       currency: location.currency,
       minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(location.pricePerDay);
 
     return `
       <div class="marker-content">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#2563eb"/>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
         </svg>
         <span class="marker-price">${priceFormatted}</span>
       </div>
