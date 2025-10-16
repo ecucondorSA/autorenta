@@ -1,3 +1,5 @@
+/* 🎨 Cars Map Component - Paleta Neutra Premium */
+
 .cars-map-container {
   position: relative;
   width: 100%;
@@ -10,7 +12,7 @@
   height: 100%;
 }
 
-/* Overlays */
+/* Overlays con paleta neutra */
 .map-overlay {
   position: absolute;
   top: 0;
@@ -24,13 +26,13 @@
 }
 
 .loading-overlay {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(248, 246, 243, 0.98);
   flex-direction: column;
   gap: 16px;
 }
 
 .loading-overlay p {
-  color: #64748b;
+  color: #4B4B4B;
   font-size: 14px;
   margin: 0;
 }
@@ -38,8 +40,8 @@
 .spinner {
   width: 48px;
   height: 48px;
-  border: 4px solid #e2e8f0;
-  border-top-color: #2563eb;
+  border: 4px solid #D9D6D0;
+  border-top-color: #2C4A52;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -51,7 +53,7 @@
 }
 
 .error-overlay {
-  background: rgba(254, 242, 242, 0.95);
+  background: rgba(248, 246, 243, 0.98);
 }
 
 .error-content {
@@ -67,11 +69,11 @@
 .error-icon {
   width: 48px;
   height: 48px;
-  color: #dc2626;
+  color: #8B7355;
 }
 
 .error-message {
-  color: #991b1b;
+  color: #4B4B4B;
   font-size: 14px;
   margin: 0;
   line-height: 1.5;
@@ -79,58 +81,61 @@
 
 .retry-button {
   padding: 10px 20px;
-  background: #dc2626;
-  color: white;
+  background: #1A1A1A;
+  color: #FAF9F6;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .retry-button:hover {
-  background: #b91c1c;
+  background: #4B4B4B;
+  transform: translateY(-1px);
 }
 
-/* Compact Info Badge */
+/* Compact Info Badge - Estilo premium */
 .map-info-badge {
   position: absolute;
   top: 16px;
   right: 16px;
-  background: white;
-  border-radius: 20px;
-  padding: 8px 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(217, 214, 208, 0.5);
   z-index: 80;
   transition: all 0.3s;
 }
 
 .map-info-badge:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .badge-content {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .badge-icon {
   width: 18px;
   height: 18px;
-  color: #2563eb;
+  color: #2C4A52;
   flex-shrink: 0;
 }
 
 .badge-text {
   font-size: 15px;
   font-weight: 700;
-  color: #0f172a;
+  color: #1A1A1A;
 }
 
-/* Mapbox Controls Positioning (moved down to avoid badge overlap) */
+/* Mapbox Controls Positioning */
 :host ::ng-deep .mapboxgl-ctrl-top-right {
   top: 60px;
 }
@@ -140,17 +145,17 @@
   right: 10px;
 }
 
-/* Custom Markers - Estilo Uber Compacto */
+/* Custom Markers - Estilo Neutro Premium */
 :host ::ng-deep .car-marker {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-block;
-  max-width: 110px;
+  max-width: 120px;
   z-index: 10;
 }
 
 :host ::ng-deep .car-marker:hover {
-  transform: translateY(-2px) scale(1.05);
+  transform: translateY(-3px) scale(1.05);
   z-index: 100 !important;
 }
 
@@ -158,22 +163,23 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-radius: 20px;
-  padding: 6px 12px;
+  gap: 8px;
+  background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+  border-radius: 24px;
+  padding: 8px 14px;
   width: fit-content;
   max-width: 100%;
   box-shadow:
-    0 2px 8px rgba(37, 99, 235, 0.25),
+    0 2px 8px rgba(26, 26, 26, 0.15),
     0 0 0 2px rgba(255, 255, 255, 0.95);
   position: relative;
 }
 
 :host ::ng-deep .car-marker:hover .marker-content {
   box-shadow:
-    0 4px 12px rgba(37, 99, 235, 0.35),
+    0 4px 16px rgba(26, 26, 26, 0.25),
     0 0 0 2px rgba(255, 255, 255, 1);
+  background: linear-gradient(135deg, #2C4A52 0%, #3A5F68 100%);
 }
 
 :host ::ng-deep .marker-content svg {
@@ -191,7 +197,7 @@
 :host ::ng-deep .marker-price {
   font-size: 12px;
   font-weight: 700;
-  color: white;
+  color: #FAF9F6;
   white-space: nowrap;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   letter-spacing: -0.01em;
@@ -201,13 +207,13 @@
 :host ::ng-deep .marker-distance {
   font-size: 10px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(250, 249, 246, 0.85);
   white-space: nowrap;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   line-height: 1;
 }
 
-/* User Location Marker */
+/* User Location Marker - Premium */
 :host ::ng-deep .user-location-marker {
   width: 40px;
   height: 40px;
@@ -219,7 +225,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(44, 74, 82, 0.25);
   position: absolute;
   top: 0;
   left: 0;
@@ -241,21 +247,21 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #3b82f6;
+  background: #2C4A52;
   border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   position: absolute;
   top: 12px;
   left: 12px;
 }
 
-/* Cluster Markers */
+/* Cluster Markers - Neutro */
 :host ::ng-deep .car-marker-cluster {
   z-index: 20 !important;
 }
 
 :host ::ng-deep .marker-cluster-content {
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  background: linear-gradient(135deg, #8B7355 0%, #7A6449 100%);
   padding: 8px 14px;
   min-width: 120px;
 }
@@ -267,14 +273,14 @@
   width: 28px;
   height: 28px;
   background: white;
-  color: #dc2626;
+  color: #8B7355;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 13px;
   font-weight: 800;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Cluster Popup Styles */
@@ -295,23 +301,24 @@
   grid-template-columns: 1fr auto auto;
   gap: 8px;
   align-items: center;
-  padding: 10px;
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  padding: 12px;
+  background: #F8F6F3;
+  border-radius: 10px;
+  border: 1px solid #EDEAE3;
   transition: all 0.2s;
 }
 
 :host ::ng-deep .cluster-car-item:hover {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  transform: translateX(2px);
+  background: #FFFFFF;
+  border-color: #D9D6D0;
+  transform: translateX(3px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 :host ::ng-deep .cluster-car-title {
   font-size: 13px;
   font-weight: 600;
-  color: #0f172a;
+  color: #1A1A1A;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -320,35 +327,36 @@
 :host ::ng-deep .cluster-car-price {
   font-size: 12px;
   font-weight: 700;
-  color: #2563eb;
+  color: #2C4A52;
   white-space: nowrap;
 }
 
 :host ::ng-deep .cluster-car-distance {
   font-size: 11px;
-  color: #64748b;
+  color: #8E8E8E;
   white-space: nowrap;
 }
 
 :host ::ng-deep .cluster-car-link {
   grid-column: 3;
-  padding: 4px 10px;
-  background: #2563eb;
-  color: white;
+  padding: 6px 12px;
+  background: #1A1A1A;
+  color: #FAF9F6;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 :host ::ng-deep .cluster-car-link:hover {
-  background: #1d4ed8;
+  background: #2C4A52;
+  transform: translateY(-1px);
 }
 
 :host ::ng-deep .cluster-more {
   font-size: 13px;
-  color: #64748b;
+  color: #8E8E8E;
   text-align: center;
   margin: 12px 0 8px 0;
   font-style: italic;
@@ -356,25 +364,26 @@
 
 :host ::ng-deep .cluster-hint {
   font-size: 12px;
-  color: #64748b;
+  color: #8E8E8E;
   text-align: center;
   margin: 12px 0 0 0;
   padding-top: 12px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #EDEAE3;
 }
 
-/* Popup Styles */
+/* Popup Styles - Premium Neutro */
 :host ::ng-deep .mapboxgl-popup {
   z-index: 200 !important;
 }
 
 :host ::ng-deep .mapboxgl-popup-content {
   padding: 0;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   min-width: 280px;
   max-width: 320px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(217, 214, 208, 0.5);
 }
 
 :host ::ng-deep .car-popup {
@@ -391,29 +400,29 @@
 :host ::ng-deep .popup-no-image {
   width: 100%;
   height: 160px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8B7355 0%, #7A6449 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #FAF9F6;
   font-weight: 600;
 }
 
 :host ::ng-deep .popup-content {
-  padding: 16px;
+  padding: 18px;
 }
 
 :host ::ng-deep .popup-title {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 8px 0;
+  color: #1A1A1A;
+  margin: 0 0 10px 0;
   line-height: 1.3;
 }
 
 :host ::ng-deep .popup-location {
   font-size: 13px;
-  color: #64748b;
+  color: #4B4B4B;
   margin: 0 0 8px 0;
   display: flex;
   align-items: center;
@@ -422,7 +431,7 @@
 
 :host ::ng-deep .popup-distance {
   font-size: 13px;
-  color: #2563eb;
+  color: #2C4A52;
   margin: 0 0 8px 0;
   font-weight: 600;
   display: flex;
@@ -432,8 +441,8 @@
 
 :host ::ng-deep .popup-description {
   font-size: 13px;
-  color: #475569;
-  margin: 0 0 12px 0;
+  color: #4B4B4B;
+  margin: 0 0 14px 0;
   line-height: 1.5;
 }
 
@@ -441,41 +450,43 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid #e2e8f0;
+  padding-top: 14px;
+  border-top: 1px solid #EDEAE3;
 }
 
 :host ::ng-deep .popup-price {
   font-size: 18px;
   font-weight: 700;
-  color: #2563eb;
+  color: #1A1A1A;
 }
 
 :host ::ng-deep .popup-link {
-  padding: 8px 16px;
-  background: #2563eb;
-  color: white;
+  padding: 10px 18px;
+  background: #1A1A1A;
+  color: #FAF9F6;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 :host ::ng-deep .popup-link:hover {
-  background: #1d4ed8;
+  background: #2C4A52;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* Mapbox overrides */
 :host ::ng-deep .mapboxgl-popup-close-button {
   font-size: 20px;
   padding: 8px;
-  color: #64748b;
+  color: #8E8E8E;
 }
 
 :host ::ng-deep .mapboxgl-popup-close-button:hover {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: #F8F6F3;
+  color: #1A1A1A;
 }
 
 /* Responsive */

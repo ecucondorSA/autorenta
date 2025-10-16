@@ -39,6 +39,7 @@ export class PublishCarPage implements OnInit {
   readonly models = signal<CarModel[]>([]);
   readonly loadingBrands = signal(true);
   readonly loadingModels = signal(false);
+  readonly maxYear = new Date().getFullYear() + 1;
 
   readonly form = this.fb.nonNullable.group({
     // Información básica

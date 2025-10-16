@@ -2,11 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 🎨 Variables CSS - Paleta Neutra Premium Autorent */
+:root {
+  /* Fondos Light Mode */
+  --bg-primary: #F8F6F3;
+  --bg-secondary: #EDEAE3;
+  --bg-elevated: #FFFFFF;
+
+  /* Textos Light Mode */
+  --text-primary: #1A1A1A;
+  --text-secondary: #4B4B4B;
+  --text-disabled: #8E8E8E;
+
+  /* Bordes */
+  --border-color: #D9D6D0;
+
+  /* Accents */
+  --accent-primary: #2C4A52;
+  --accent-warm: #8B7355;
+}
+
+/* Dark mode variables (opcional para futuro) */
+[data-theme='dark'] {
+  --bg-primary: #121212;
+  --bg-secondary: #1E1E1E;
+  --bg-elevated: #2A2A2A;
+
+  --text-primary: #FAF9F6;
+  --text-secondary: #E5E3DD;
+  --text-disabled: #78716C;
+
+  --border-color: #44403C;
+}
+
 html,
 body {
   height: 100%;
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-ivory-soft text-smoke-black antialiased;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 🎯 Utility Classes Personalizadas */
+@layer components {
+  /* Botones premium */
+  .btn-primary {
+    @apply bg-smoke-black text-ivory-soft px-6 py-3 rounded-lg font-medium;
+    @apply hover:bg-charcoal-medium transition-all duration-200;
+    @apply shadow-soft hover:shadow-medium;
+  }
+
+  .btn-secondary {
+    @apply bg-white-pure text-smoke-black px-6 py-3 rounded-lg font-medium;
+    @apply border border-pearl-gray hover:border-charcoal-medium;
+    @apply transition-all duration-200;
+  }
+
+  .btn-accent {
+    @apply bg-accent-petrol text-ivory-soft px-6 py-3 rounded-lg font-medium;
+    @apply hover:bg-opacity-90 transition-all duration-200;
+    @apply shadow-soft hover:shadow-medium;
+  }
+
+  /* Cards premium */
+  .card-premium {
+    @apply bg-white-pure rounded-xl shadow-card;
+    @apply border border-pearl-gray/50;
+    @apply transition-all duration-300;
+    @apply hover:shadow-elevated;
+  }
+
+  /* Inputs elegantes */
+  .input-premium {
+    @apply w-full px-4 py-3 rounded-lg;
+    @apply bg-white-pure border border-pearl-gray;
+    @apply text-smoke-black placeholder:text-ash-gray;
+    @apply focus:border-charcoal-medium focus:ring-2 focus:ring-charcoal-medium/20;
+    @apply transition-all duration-200;
+  }
+
+  /* Sección con fondo alternativo */
+  .section-alt {
+    @apply bg-sand-light;
+  }
 }
