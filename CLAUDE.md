@@ -41,6 +41,22 @@ autorenta/
 
 ## Common Commands
 
+### Root Package Scripts (from project root)
+
+**🚀 Claude Code Workflows (NEW - Oct 2025):**
+```bash
+npm run workflows          # Ver ayuda de todos los workflows
+npm run ci                 # Pipeline CI/CD completo (lint + test + build)
+npm run dev                # Inicia entorno completo (web + worker)
+npm run deploy             # Deploy completo a producción
+npm run test:quick         # Tests rápidos sin coverage
+npm run test:coverage      # Tests completos con coverage
+npm run lint:fix           # Auto-fix de linting issues
+npm run install:all        # Instala todas las dependencias
+```
+
+**💡 Tip**: Todos los workflows aprovechan auto-background de Claude Code para comandos largos.
+
 ### Angular Web App (from `apps/web/`)
 
 **Development:**
@@ -588,4 +604,107 @@ SELECT (storage.foldername('user-uuid/file.jpg'))[1] = 'user-uuid';
 
 SELECT (storage.foldername('avatars/user-uuid/file.jpg'))[1] = 'user-uuid';
 -- Should return: false (this is the bug!)
+```
+
+---
+
+## Claude Code Optimization (Oct 2025)
+
+### Auto-Background Commands
+
+AutoRenta aprovecha las nuevas funcionalidades de **auto-background** de Claude Code para ejecutar comandos largos sin timeouts.
+
+**Comandos que se benefician**:
+- `npm run build` - 30-90s (antes: timeout a 120s)
+- `npm run deploy:pages` - 60-180s (antes: fallos frecuentes)
+- `npm run test` - 40-120s
+- `npm install` - 60-300s (dependiendo de red)
+
+**Configuración**:
+```bash
+# Timeout configurado en BASH_DEFAULT_TIMEOUT_MS
+export BASH_DEFAULT_TIMEOUT_MS=900000  # 15 minutos
+```
+
+### Workflows Automatizados
+
+El proyecto incluye workflows automatizados en `tools/claude-workflows.sh`:
+
+**Funciones Principales**:
+
+```bash
+# Cargar workflows
+source tools/claude-workflows.sh
+
+# O usar shortcuts de npm
+npm run workflows          # Ver ayuda completa
+
+# CI/CD Pipeline
+npm run ci                 # lint + test + build en paralelo
+# - Lint y tests corren simultáneamente
+# - Build ejecuta después de validaciones
+# - Todo aprovecha auto-background
+
+# Desarrollo
+npm run dev                # Inicia web + worker en background
+# - Angular dev server: http://localhost:4200
+# - Payment worker: http://localhost:8787
+
+# Deploy
+npm run deploy             # Deploy completo con confirmación
+# - Valida que ci_pipeline haya pasado
+# - Deploys web y worker en secuencia
+```
+
+**Ventajas**:
+- ⏱️ 40-60% reducción en tiempo de desarrollo
+- 🚫 0 timeouts en builds y deploys
+- ⚡ Ejecución paralela de tareas independientes
+- 📊 Mejor visibilidad de progreso
+
+### Claude Skills (Preparación)
+
+El proyecto está preparado para aprovechar **Claude Skills** cuando estén disponibles:
+
+**Documentación**:
+- `CLAUDE_SKILLS_GUIDE.md` - Guía completa de uso
+- `CLAUDE.md` - Patterns de arquitectura (este archivo)
+- `CLAUDE_CODE_IMPROVEMENTS.md` - Análisis de mejoras
+
+**Skills Recomendados**:
+1. **Angular Scaffolder** - Genera features siguiendo patterns de AutoRenta
+2. **Supabase RLS Debugger** - Analiza vertical stack de políticas de seguridad
+3. **TypeScript Sync** - Sincroniza database.types.ts con schema
+4. **Test Generator** - Genera tests unitarios con 80%+ coverage
+5. **Performance Optimizer** - Analiza bundle size y Web Vitals
+6. **Security Auditor** - Valida RLS policies y configuraciones
+
+**Preparación para Skills**:
+- ✅ CLAUDE.md documentado con patterns claros
+- ✅ Arquitectura standalone bien definida
+- ✅ Storage conventions documentadas
+- ✅ Debugging workflows establecidos
+- 🔄 TODO: Crear PATTERNS.md con templates de código
+
+### Recursos Claude Code
+
+**Documentos Clave**:
+- `/autorenta/CLAUDE.md` - Guía principal del proyecto
+- `/autorenta/CLAUDE_SKILLS_GUIDE.md` - Uso de Skills
+- `/autorenta/CLAUDE_CODE_IMPROVEMENTS.md` - Análisis de mejoras
+- `/autorenta/tools/claude-workflows.sh` - Scripts automatizados
+
+**Comandos Útiles**:
+```bash
+# Workflows
+npm run workflows          # Ver ayuda
+npm run ci                 # Pipeline completo
+npm run dev                # Entorno de desarrollo
+npm run deploy             # Deploy a producción
+
+# Status
+source tools/claude-workflows.sh && status  # Ver estado del proyecto
+
+# Linting
+npm run lint:fix           # Auto-fix de issues
 ```

@@ -132,7 +132,7 @@ export class CarLocationsService {
     const { data: cars, error: carsError } = await this.supabase
       .from('v_cars_with_main_photo')
       .select(
-        'id, title, status, price_per_day, currency, location_city, location_state, location_country, location_formatted_address, location_lat, location_lng, main_photo_url, description, updated_at',
+        'id, title, status, price_per_day, currency, location_city, location_state, location_country, location_lat, location_lng, main_photo_url, description, updated_at',
       )
       .eq('status', 'active')
       .not('location_lat', 'is', null)
