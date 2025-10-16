@@ -15,7 +15,15 @@
   <div class="flex flex-1 flex-col gap-2 px-4 py-4">
     <h3 class="text-lg font-semibold tracking-tight text-slate-900">{{ car.title }}</h3>
     <p class="text-sm text-slate-600">
-      {{ car.location_city }}, {{ car.location_state }} · {{ car.transmission | titlecase }}
+      <ng-container *ngIf="car.location_formatted_address; else oldLocation">
+        📍 {{ car.location_formatted_address }}
+      </ng-container>
+      <ng-template #oldLocation>
+        📍 {{ car.location_city }}, {{ car.location_state }}
+      </ng-template>
+    </p>
+    <p class="text-xs text-slate-500">
+      {{ car.transmission | titlecase }} · {{ car.fuel_type | titlecase }}
     </p>
     <p class="mt-auto text-base font-semibold text-blue-600">
       {{ car.price_per_day | money }}

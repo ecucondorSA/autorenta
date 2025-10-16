@@ -18,6 +18,7 @@ export interface CarMapLocation {
   state?: string | null;
   country?: string | null;
   locationLabel: string;
+  formattedAddress?: string | null;
   photoUrl?: string | null;
   description?: string | null;
 }
@@ -131,7 +132,7 @@ export class CarLocationsService {
     const { data: cars, error: carsError } = await this.supabase
       .from('v_cars_with_main_photo')
       .select(
-        'id, title, status, price_per_day, currency, location_city, location_state, location_country, location_lat, location_lng, main_photo_url, description, updated_at',
+        'id, title, status, price_per_day, currency, location_city, location_state, location_country, location_formatted_address, location_lat, location_lng, main_photo_url, description, updated_at',
       )
       .eq('status', 'active')
       .not('location_lat', 'is', null)
@@ -192,6 +193,7 @@ export class CarLocationsService {
     const city = car.location_city ?? entry.city ?? entry.location_city ?? null;
     const state = car.location_state ?? entry.state ?? entry.location_state ?? null;
     const country = car.location_country ?? entry.country ?? entry.location_country ?? null;
+    const formattedAddress = car.location_formatted_address ?? entry.location_formatted_address ?? null;
     const updatedAt = String(entry.updated_at ?? car.updated_at ?? new Date().toISOString());
     const photoUrl = car.main_photo_url ?? entry.main_photo_url ?? entry.photo_url ?? null;
     const description = this.buildSummary(car.description ?? entry.description ?? meta.description ?? '');
@@ -208,6 +210,7 @@ export class CarLocationsService {
       state,
       country,
       locationLabel: this.buildLocationLabel(city, state, country),
+      formattedAddress,
       photoUrl,
       description,
     };

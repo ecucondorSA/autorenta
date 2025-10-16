@@ -105,4 +105,23 @@ export class CarsService {
     if (error) throw error;
     return (data ?? []) as Car[];
   }
+
+  async getCarBrands(): Promise<Array<{ id: string; name: string }>> {
+    const { data, error } = await this.supabase
+      .from('car_brands')
+      .select('id, name')
+      .order('name');
+    if (error) throw error;
+    return data ?? [];
+  }
+
+  async getCarModels(brandId: string): Promise<Array<{ id: string; name: string; category: string }>> {
+    const { data, error } = await this.supabase
+      .from('car_models')
+      .select('id, name, category')
+      .eq('brand_id', brandId)
+      .order('name');
+    if (error) throw error;
+    return data ?? [];
+  }
 }

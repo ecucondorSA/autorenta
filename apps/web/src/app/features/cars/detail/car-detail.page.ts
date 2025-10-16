@@ -104,16 +104,33 @@ export class CarDetailPage implements OnInit {
       await this.router.navigate(['/bookings']);
     } catch (err: any) {
       console.error('Error creating booking', err);
+      console.error('Error type:', typeof err);
+      console.error('Error keys:', Object.keys(err));
+      console.error('Error message:', err?.message);
+      console.error('Error code:', err?.code);
+      console.error('Error details:', err?.details);
+      console.error('Error hint:', err?.hint);
+
+      // Extraer mensaje de error de diferentes estructuras posibles
+      let errorMessage = err?.message || err?.error?.message || err?.error || '';
+
+      // Si es un objeto de Supabase, puede venir en err.message
+      if (typeof errorMessage === 'string') {
+        errorMessage = errorMessage.toLowerCase();
+      }
 
       // Manejar errores específicos
-      if (err.message?.includes('no autenticado')) {
+      if (errorMessage.includes('no autenticado') || errorMessage.includes('not authenticated')) {
         this.bookingError.set('Necesitás iniciar sesión para reservar');
-      } else if (err.message?.includes('no disponible')) {
+      } else if (errorMessage.includes('no disponible') || errorMessage.includes('not available')) {
         this.bookingError.set('Este auto no está disponible en las fechas seleccionadas');
-      } else if (err.message?.includes('propio auto')) {
+      } else if (errorMessage.includes('propio auto') || errorMessage.includes('own car')) {
         this.bookingError.set('No podés reservar tu propio auto');
       } else {
-        this.bookingError.set('No pudimos crear la reserva. Por favor intentá de nuevo.');
+        // Mostrar el error real para debugging
+        this.bookingError.set(
+          `Error: ${err?.message || JSON.stringify(err)}`
+        );
       }
     } finally {
       this.bookingInProgress.set(false);

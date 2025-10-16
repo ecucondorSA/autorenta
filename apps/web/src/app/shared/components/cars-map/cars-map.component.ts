@@ -45,7 +45,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
 
   private map: MapboxMap | null = null;
-  private markers: MarkerData[] = [];
+  private markers: MapMarkerData[] = [];
   private userMarker: Marker | null = null;
   private realtimeUnsubscribe: (() => void) | null = null;
   private refreshInterval: ReturnType<typeof setInterval> | null = null;
@@ -127,14 +127,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     try {
-      // Crear mapa centrado en Argentina por defecto
-      const defaultCenter: [number, number] = [-63.5, -38.0]; // Centro de Argentina
-      const defaultZoom = 4.5;
+      // Crear mapa centrado en Uruguay por defecto
+      const defaultCenter: [number, number] = [-56.0, -32.5]; // Centro de Uruguay
+      const defaultZoom = 6.5;
 
-      // Límites de Argentina para evitar mostrar océano innecesario
-      const argentinaBounds: [[number, number], [number, number]] = [
-        [-73.5, -55.2], // Southwest (Tierra del Fuego)
-        [-53.5, -21.8], // Northeast (Misiones)
+      // Límites de Uruguay para evitar mostrar océano innecesario
+      const uruguayBounds: [[number, number], [number, number]] = [
+        [-58.5, -35.0], // Southwest
+        [-53.0, -30.0], // Northeast
       ];
 
       this.map = new this.mapboxgl.Map({
@@ -142,7 +142,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         style: 'mapbox://styles/mapbox/standard',
         center: defaultCenter,
         zoom: defaultZoom,
-        maxBounds: argentinaBounds,
+        maxBounds: uruguayBounds,
         attributionControl: true,
         cooperativeGestures: false,
       });
@@ -169,12 +169,35 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   private async loadCarLocations(force = false): Promise<void> {
     try {
       let locations = await this.carLocationsService.fetchActiveLocations(force);
+      const originalCount = locations.length;
 
       // Ordenar por distancia si tenemos ubicación del usuario
       const userLoc = this.userLocation();
       if (userLoc) {
         locations = this.sortLocationsByDistance(locations, userLoc);
         console.log('[CarsMapComponent] Sorted locations by distance:', locations.length);
+
+        // FILTRO DE AUDITORÍA: Eliminar autos que están a más de 150km (Uruguay es pequeño pero largo)
+        const maxDistanceKm = 150;
+        const filteredLocations = locations.filter((loc) => {
+          const distance = this.calculateDistance(
+            userLoc.lat,
+            userLoc.lng,
+            loc.lat,
+            loc.lng
+          );
+          return distance <= maxDistanceKm;
+        });
+
+        const filteredCount = originalCount - filteredLocations.length;
+        if (filteredCount > 0) {
+          console.log(
+            `[CarsMapComponent] 🔍 AUDITORÍA: Filtrados ${filteredCount} autos que están a más de ${maxDistanceKm}km de distancia (Uruguay)`
+          );
+        }
+        console.log(`[CarsMapComponent] Mostrando ${filteredLocations.length} de ${originalCount} autos dentro de ${maxDistanceKm}km`);
+
+        locations = filteredLocations;
       }
 
       this.updateMarkers(locations);
@@ -495,12 +518,15 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       distanceHTML = `<p class="popup-distance">📍 ${distanceText}</p>`;
     }
 
+    // Usar dirección formateada si está disponible, sino usar locationLabel
+    const locationText = location.formattedAddress || location.locationLabel;
+
     return `
       <div class="car-popup">
         ${photoHTML}
         <div class="popup-content">
           <h3 class="popup-title">${this.escapeHtml(location.title)}</h3>
-          <p class="popup-location">${this.escapeHtml(location.locationLabel)}</p>
+          <p class="popup-location">📍 ${this.escapeHtml(locationText)}</p>
           ${distanceHTML}
           ${location.description ? `<p class="popup-description">${this.escapeHtml(location.description)}</p>` : ''}
           <div class="popup-footer">
@@ -591,14 +617,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
 
-        // Validar que la ubicación esté dentro de Argentina
-        const isInArgentina = this.isLocationInArgentina(latitude, longitude);
-        if (!isInArgentina) {
-          console.warn('[CarsMapComponent] Location outside Argentina bounds:', { latitude, longitude });
-          // Usar Buenos Aires como fallback
-          this.userLocation.set({ lat: -34.6037, lng: -58.3816 });
-          this.addUserMarker(-34.6037, -58.3816);
-          this.zoomToUserLocation(-34.6037, -58.3816);
+        // Validar que la ubicación esté dentro de Uruguay
+        const isInUruguay = this.isLocationInUruguay(latitude, longitude);
+        if (!isInUruguay) {
+          console.warn('[CarsMapComponent] Location outside Uruguay bounds:', { latitude, longitude });
+          // Usar Montevideo como fallback
+          this.userLocation.set({ lat: -34.9011, lng: -56.1645 });
+          this.addUserMarker(-34.9011, -56.1645);
+          this.zoomToUserLocation(-34.9011, -56.1645);
         } else {
           this.userLocation.set({ lat: latitude, lng: longitude });
           this.addUserMarker(latitude, longitude);
@@ -620,11 +646,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
           details: this.getGeolocationErrorMessage(error.code)
         });
 
-        // Usar Buenos Aires como ubicación predeterminada
-        console.log('[CarsMapComponent] Using Buenos Aires as fallback location');
-        this.userLocation.set({ lat: -34.6037, lng: -58.3816 });
-        this.addUserMarker(-34.6037, -58.3816);
-        this.zoomToUserLocation(-34.6037, -58.3816);
+        // Usar Montevideo como ubicación predeterminada
+        console.log('[CarsMapComponent] Using Montevideo as fallback location');
+        this.userLocation.set({ lat: -34.9011, lng: -56.1645 });
+        this.addUserMarker(-34.9011, -56.1645);
+        this.zoomToUserLocation(-34.9011, -56.1645);
         void this.loadCarLocations(true);
       },
       {
@@ -648,12 +674,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private isLocationInArgentina(lat: number, lng: number): boolean {
-    // Bounds de Argentina
-    const minLat = -55.2;
-    const maxLat = -21.8;
-    const minLng = -73.5;
-    const maxLng = -53.5;
+  private isLocationInUruguay(lat: number, lng: number): boolean {
+    // Bounds de Uruguay
+    const minLat = -35.0;
+    const maxLat = -30.0;
+    const minLng = -58.5;
+    const maxLng = -53.0;
 
     return lat >= minLat && lat <= maxLat && lng >= minLng && lng <= maxLng;
   }

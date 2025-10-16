@@ -14,9 +14,15 @@
           </div>
         </ng-template>
         <h1 class="text-3xl font-semibold text-slate-900">{{ car()?.title }}</h1>
-        <p class="text-sm text-slate-600">
-          {{ car()?.location_city }}, {{ car()?.location_state }} · Transmisión {{ car()?.transmission }}
-        </p>
+        <div class="space-y-1">
+          <p class="text-sm text-slate-600">
+            📍 <ng-container *ngIf="car()?.location_formatted_address; else oldLocation">{{ car()?.location_formatted_address }}</ng-container>
+            <ng-template #oldLocation>{{ car()?.location_city }}, {{ car()?.location_state }}</ng-template>
+          </p>
+          <p class="text-sm text-slate-600">
+            Transmisión {{ car()?.transmission }} · {{ car()?.fuel_type | titlecase }}
+          </p>
+        </div>
         <p class="text-base text-slate-700">
           {{ car()?.description }}
         </p>
