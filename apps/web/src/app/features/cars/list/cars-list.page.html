@@ -3,7 +3,17 @@
   @defer (on viewport) {
     <section class="map-full-section">
       <!-- Controles de búsqueda superpuestos -->
-      <div class="map-search-overlay">
+      <div class="map-search-overlay" [class.collapsed]="searchCollapsed()">
+        <!-- Toggle button -->
+        <button class="search-toggle-button" (click)="toggleSearchCollapsed()" title="Mostrar/Ocultar búsqueda">
+          <svg *ngIf="searchCollapsed()" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+          <svg *ngIf="!searchCollapsed()" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+          </svg>
+        </button>
+
         <div class="search-container">
           <div class="search-header">
             <h1 class="search-title">Encontrá tu próximo auto</h1>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, signal, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, computed, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarsService } from '../../../core/services/cars.service';
 import { Car } from '../../../core/models';
@@ -15,7 +15,7 @@ import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.c
   styleUrls: ['./cars-list.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarsListPage implements OnInit {
+export class CarsListPage implements OnInit, OnDestroy {
   @ViewChild('carsContainer') carsContainer?: ElementRef<HTMLDivElement>;
 
   readonly city = signal<string | null>(null);
@@ -23,14 +23,41 @@ export class CarsListPage implements OnInit {
   readonly loading = signal(false);
   readonly cars = signal<Car[]>([]);
   readonly hasFilters = computed(() => !!this.city() || !!this.dateRange().from);
+  readonly searchCollapsed = signal(false);
 
   canScrollLeft = false;
   canScrollRight = false;
+  private autoCollapseTimer?: ReturnType<typeof setTimeout>;
 
   constructor(private readonly carsService: CarsService) {}
 
   ngOnInit(): void {
     void this.loadCars();
+    this.startAutoCollapseTimer();
+  }
+
+  ngOnDestroy(): void {
+    if (this.autoCollapseTimer) {
+      clearTimeout(this.autoCollapseTimer);
+    }
+  }
+
+  private startAutoCollapseTimer(): void {
+    this.autoCollapseTimer = setTimeout(() => {
+      this.searchCollapsed.set(true);
+    }, 3000);
+  }
+
+  toggleSearchCollapsed(): void {
+    this.searchCollapsed.set(!this.searchCollapsed());
+
+    // Si se expande, reiniciar el timer
+    if (!this.searchCollapsed()) {
+      if (this.autoCollapseTimer) {
+        clearTimeout(this.autoCollapseTimer);
+      }
+      this.startAutoCollapseTimer();
+    }
   }
 
   async loadCars(): Promise<void> {

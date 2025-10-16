@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
+import { BookingsService } from '../../../core/services/bookings.service';
 import { Car } from '../../../core/models';
 import { DateRangePickerComponent, DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
@@ -18,6 +19,8 @@ export class CarDetailPage implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
+  readonly bookingInProgress = signal(false);
+  readonly bookingError = signal<string | null>(null);
 
   readonly firstPhoto = computed(() => {
     const car = this.car();
@@ -34,7 +37,18 @@ export class CarDetailPage implements OnInit {
     return diff > 0 ? diff * car.price_per_day : null;
   });
 
-  constructor(private readonly carsService: CarsService, private readonly route: ActivatedRoute) {}
+  readonly canBook = computed(() => {
+    const range = this.dateRange();
+    const car = this.car();
+    return !!(range.from && range.to && car && this.totalPrice());
+  });
+
+  constructor(
+    private readonly carsService: CarsService,
+    private readonly bookingsService: BookingsService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     void this.loadCar();
@@ -65,5 +79,44 @@ export class CarDetailPage implements OnInit {
 
   onRangeChange(range: DateRange): void {
     this.dateRange.set(range);
+  }
+
+  async onBookClick(): Promise<void> {
+    const car = this.car();
+    const range = this.dateRange();
+
+    if (!car || !range.from || !range.to) {
+      this.bookingError.set('Por favor seleccioná las fechas de alquiler');
+      return;
+    }
+
+    this.bookingInProgress.set(true);
+    this.bookingError.set(null);
+
+    try {
+      // Convertir fechas a ISO string para la RPC function
+      const startISO = new Date(range.from).toISOString();
+      const endISO = new Date(range.to).toISOString();
+
+      const booking = await this.bookingsService.requestBooking(car.id, startISO, endISO);
+
+      // Redirigir a la página de reservas
+      await this.router.navigate(['/bookings']);
+    } catch (err: any) {
+      console.error('Error creating booking', err);
+
+      // Manejar errores específicos
+      if (err.message?.includes('no autenticado')) {
+        this.bookingError.set('Necesitás iniciar sesión para reservar');
+      } else if (err.message?.includes('no disponible')) {
+        this.bookingError.set('Este auto no está disponible en las fechas seleccionadas');
+      } else if (err.message?.includes('propio auto')) {
+        this.bookingError.set('No podés reservar tu propio auto');
+      } else {
+        this.bookingError.set('No pudimos crear la reserva. Por favor intentá de nuevo.');
+      }
+    } finally {
+      this.bookingInProgress.set(false);
+    }
   }
 }

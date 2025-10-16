@@ -36,8 +36,23 @@
         Total estimado: <strong>{{ total | money }}</strong>
       </div>
 
-      <button class="w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
-        Reservar
+      <!-- Error message -->
+      <div
+        *ngIf="bookingError()"
+        class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+      >
+        {{ bookingError() }}
+      </div>
+
+      <button
+        (click)="onBookClick()"
+        [disabled]="!canBook() || bookingInProgress()"
+        [class.opacity-50]="!canBook() || bookingInProgress()"
+        [class.cursor-not-allowed]="!canBook() || bookingInProgress()"
+        class="w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:hover:bg-blue-600"
+      >
+        <span *ngIf="!bookingInProgress()">Reservar</span>
+        <span *ngIf="bookingInProgress()">Creando reserva...</span>
       </button>
     </aside>
   </section>
