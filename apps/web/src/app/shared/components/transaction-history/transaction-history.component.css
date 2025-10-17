@@ -1,0 +1,79 @@
+/* TransactionHistoryComponent Styles */
+
+.transaction-history {
+  /* El componente usa principalmente Tailwind CSS */
+}
+
+/* Animación para la rotación de la flecha */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* Transición suave para las flechas de expansión */
+svg {
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect para transaction items */
+.transaction-item:hover {
+  background-color: #f9fafb;
+}
+
+/* Animación para el panel de detalles expandibles */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* Badges con bordes más suaves */
+.badge {
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Scrollbar personalizada para metadata JSON */
+pre {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: #f7fafc;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Mejora para truncate en IDs largos */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Estilo para montos negativos y positivos */
+.amount-positive {
+  color: #10b981;
+}
+
+.amount-negative {
+  color: #ef4444;
+}
