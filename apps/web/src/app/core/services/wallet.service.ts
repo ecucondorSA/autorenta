@@ -132,7 +132,9 @@ export class WalletService {
 
   /**
    * Inicia un proceso de depósito
-   * Llama a la función RPC wallet_initiate_deposit()
+   * 1. Llama a wallet_initiate_deposit() para crear transacción pending en DB
+   * 2. Si provider es 'mercadopago', llama a Edge Function para crear preference
+   * 3. Retorna init_point (URL de checkout) para redirigir al usuario
    *
    * @returns URL de pago para redirigir al usuario
    */
@@ -157,6 +159,7 @@ export class WalletService {
         );
       }
 
+      // Paso 1: Crear transacción pending en la base de datos
       const { data, error } = await this.supabase.client.rpc('wallet_initiate_deposit', {
         p_amount: params.amount,
         p_provider: params.provider ?? 'mercadopago',
@@ -175,6 +178,53 @@ export class WalletService {
 
       if (!result.success) {
         throw this.createError('DEPOSIT_FAILED', result.message);
+      }
+
+      // Paso 2: Si es Mercado Pago, llamar a Edge Function para crear preference
+      if (params.provider === 'mercadopago' || !params.provider) {
+        try {
+          const session = await this.supabase.client.auth.getSession();
+          const accessToken = session.data.session?.access_token;
+
+          if (!accessToken) {
+            throw this.createError('NO_AUTH_TOKEN', 'Usuario no autenticado');
+          }
+
+          const mpResponse = await fetch(
+            `${this.supabase.client.supabaseUrl}/functions/v1/mercadopago-create-preference`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+              },
+              body: JSON.stringify({
+                transaction_id: result.transaction_id,
+                amount: params.amount,
+                description: params.description || 'Depósito a Wallet - AutoRenta',
+              }),
+            }
+          );
+
+          if (!mpResponse.ok) {
+            const errorData = await mpResponse.json().catch(() => ({}));
+            throw this.createError(
+              'MERCADOPAGO_ERROR',
+              `Error al crear preferencia de pago: ${errorData.error || mpResponse.statusText}`,
+              errorData
+            );
+          }
+
+          const mpData = await mpResponse.json();
+
+          // Actualizar result con el init_point real de Mercado Pago
+          result.payment_url = mpData.init_point || mpData.sandbox_init_point;
+        } catch (mpError) {
+          // Si falla la creación de preference, registrar error pero no fallar la transacción
+          console.error('Error creating MercadoPago preference:', mpError);
+          // La transacción ya fue creada en DB, el usuario puede reintentar
+          throw this.handleError(mpError, 'Error al procesar con Mercado Pago');
+        }
       }
 
       // Refrescar balance después de iniciar depósito (aunque estará pending)
