@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -40,6 +47,20 @@ export class ProfilePage implements OnInit {
   readonly form = this.fb.nonNullable.group({
     full_name: ['', [Validators.required, Validators.minLength(3)]],
     role: ['renter' as Role, Validators.required],
+    // Contact
+    phone: [''],
+    whatsapp: [''],
+    // Driver License
+    driver_license_number: [''],
+    driver_license_country: [''],
+    driver_license_expiry: [''],
+    // Address
+    address_line1: [''],
+    address_line2: [''],
+    city: [''],
+    state: [''],
+    postal_code: [''],
+    country: [''],
   });
 
   readonly roles: { value: Role; label: string; description: string }[] = [
@@ -76,6 +97,17 @@ export class ProfilePage implements OnInit {
         this.form.patchValue({
           full_name: profile.full_name,
           role: profile.role,
+          phone: profile.phone ?? '',
+          whatsapp: profile.whatsapp ?? '',
+          driver_license_number: profile.driver_license_number ?? '',
+          driver_license_country: profile.driver_license_country ?? '',
+          driver_license_expiry: profile.driver_license_expiry ?? '',
+          address_line1: profile.address_line1 ?? '',
+          address_line2: profile.address_line2 ?? '',
+          city: profile.city ?? '',
+          state: profile.state ?? '',
+          postal_code: profile.postal_code ?? '',
+          country: profile.country ?? '',
         });
       }
     } catch (err) {
@@ -95,6 +127,17 @@ export class ProfilePage implements OnInit {
         this.form.patchValue({
           full_name: profile.full_name,
           role: profile.role,
+          phone: profile.phone ?? '',
+          whatsapp: profile.whatsapp ?? '',
+          driver_license_number: profile.driver_license_number ?? '',
+          driver_license_country: profile.driver_license_country ?? '',
+          driver_license_expiry: profile.driver_license_expiry ?? '',
+          address_line1: profile.address_line1 ?? '',
+          address_line2: profile.address_line2 ?? '',
+          city: profile.city ?? '',
+          state: profile.state ?? '',
+          postal_code: profile.postal_code ?? '',
+          country: profile.country ?? '',
         });
       }
       this.editMode.set(false);
@@ -126,9 +169,7 @@ export class ProfilePage implements OnInit {
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
       console.error(err);
-      this.error.set(
-        err instanceof Error ? err.message : 'No pudimos actualizar tu perfil.'
-      );
+      this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu perfil.');
     } finally {
       this.saving.set(false);
     }
@@ -160,9 +201,7 @@ export class ProfilePage implements OnInit {
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
       console.error(err);
-      this.error.set(
-        err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.'
-      );
+      this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
     } finally {
       this.uploadingAvatar.set(false);
       // Reset input
