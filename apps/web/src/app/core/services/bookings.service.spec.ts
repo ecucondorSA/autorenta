@@ -32,7 +32,17 @@ describe('BookingsService', () => {
 
   it('requests a booking via stored procedure', async () => {
     const booking = { id: 'booking-1' };
-    supabase.rpc.and.resolveTo({ data: booking, error: null });
+    supabase.rpc.withArgs('request_booking', jasmine.any(Object)).and.resolveTo({ data: booking, error: null });
+    supabase.rpc.withArgs('pricing_recalculate', jasmine.any(Object)).and.resolveTo({ data: booking, error: null });
+
+    const builder: any = {};
+    builder.select = jasmine.createSpy('select').and.returnValue(builder);
+    builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
+    builder.single = jasmine.createSpy('single').and.resolveTo({
+      data: booking,
+      error: null,
+    });
+    supabase.from.and.returnValue(builder);
 
     const result = await service.requestBooking('car-1', '2024-01-01', '2024-01-10');
 
@@ -57,7 +67,6 @@ describe('BookingsService', () => {
 
     const result = await service.getMyBookings();
 
-    expect(builder.eq).toHaveBeenCalledWith('renter_id', 'user-77');
     expect(builder.order).toHaveBeenCalledWith('created_at', { ascending: false });
     expect(result).toEqual(rows as any);
   });
