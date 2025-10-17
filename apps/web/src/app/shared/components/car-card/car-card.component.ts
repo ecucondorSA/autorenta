@@ -15,6 +15,7 @@ import { getCarPlaceholderImage } from '../../utils/car-placeholder-images';
 export class CarCardComponent {
   private readonly _car = signal<Car | undefined>(undefined);
   private readonly _selected = signal<boolean>(false);
+  private readonly _distanceKm = signal<number | null>(null);
 
   @Input({ required: true })
   set car(value: Car) {
@@ -32,6 +33,15 @@ export class CarCardComponent {
 
   get selected(): boolean {
     return this._selected();
+  }
+
+  @Input()
+  set distanceKm(value: number | null) {
+    this._distanceKm.set(value);
+  }
+
+  get distanceKm(): number | null {
+    return this._distanceKm();
   }
 
   readonly firstPhoto = computed(() => this._car()?.photos?.[0] ?? null);
