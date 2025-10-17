@@ -469,6 +469,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       description: props.description,
       lat: coords[1],
       lng: coords[0],
+      updatedAt: new Date().toISOString(),
     };
 
     const popupHTML = this.createPopupHTML(location);
@@ -840,7 +841,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       });
 
       if (features.length > 0) {
-        const feature = features.find((f) => f.properties.carId === carId);
+        const feature = features.find((f: any) => f.properties.carId === carId);
         if (feature) {
           this.showCarPopup(feature);
         }
