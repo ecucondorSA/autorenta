@@ -1,0 +1,82 @@
+/* DepositModalComponent Styles */
+
+/* Modal aparecer con animación */
+:host {
+  display: block;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animación del contenido del modal */
+:host > div > div {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Estilos para inputs con error */
+input.error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+input.error:focus {
+  ring-color: #ef4444;
+}
+
+/* Mejora visual para radio buttons */
+input[type='radio']:checked {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Hover state para provider options */
+.provider-option:hover {
+  transform: translateX(2px);
+  transition: transform 0.2s ease;
+}
+
+/* Asegurar que el modal esté encima de todo */
+:host {
+  z-index: 9999;
+}
+
+/* Scrollbar personalizada para contenido largo */
+:host > div > div {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+:host > div > div::-webkit-scrollbar {
+  width: 6px;
+}
+
+:host > div > div::-webkit-scrollbar-track {
+  background: #f7fafc;
+}
+
+:host > div > div::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+:host > div > div::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
