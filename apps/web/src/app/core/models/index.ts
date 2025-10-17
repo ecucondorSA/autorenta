@@ -31,12 +31,15 @@ export interface Car {
   title: string;
   description: string;
   brand: string;
+  brand_id?: string;
   model: string;
+  model_id?: string;
   year: number;
   plate?: string | null;
   vin?: string | null;
   transmission: Transmission;
   fuel: FuelType;
+  fuel_type: FuelType; // Alias for fuel
   seats: number;
   doors: number;
   color: string;
@@ -46,12 +49,32 @@ export interface Car {
   currency: string;
   rating_avg: number;
   rating_count: number;
+
+  // Location fields
   location_city: string;
   location_state: string;
   location_province: string;
   location_country: string;
   location_lat?: number | null;
   location_lng?: number | null;
+
+  // Address fields (new)
+  location_street?: string | null;
+  location_street_number?: string | null;
+  location_neighborhood?: string | null;
+  location_postal_code?: string | null;
+  location_formatted_address?: string | null;
+
+  // Rental terms (new)
+  payment_methods?: string[];
+  deposit_required?: boolean;
+  deposit_amount?: number;
+  insurance_included?: boolean;
+  min_rental_days?: number;
+  max_rental_days?: number;
+  terms_and_conditions?: string;
+  delivery_options?: string[];
+
   mileage: number;
   cancel_policy: CancelPolicy;
   photos?: CarPhoto[];

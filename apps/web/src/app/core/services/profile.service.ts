@@ -114,7 +114,7 @@ export class ProfileService {
     }
 
     const extension = file.name.split('.').pop() ?? 'jpg';
-    const filePath = `avatars/${user.id}/${uuidv4()}.${extension}`;
+    const filePath = `${user.id}/${uuidv4()}.${extension}`;
 
     // Subir archivo
     const { error: uploadError } = await this.supabase.storage
@@ -153,7 +153,7 @@ export class ProfileService {
     const url = new URL(profile.avatar_url);
     const pathParts = url.pathname.split('/avatars/');
     if (pathParts.length > 1) {
-      const storagePath = `avatars/${pathParts[1]}`;
+      const storagePath = pathParts[1];
 
       // Eliminar del storage
       await this.supabase.storage.from('avatars').remove([storagePath]);

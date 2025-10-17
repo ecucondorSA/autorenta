@@ -20,7 +20,10 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading()" class="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+  <div
+    *ngIf="loading()"
+    class="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm"
+  >
     <p class="text-slate-500">Cargando perfil...</p>
   </div>
 
@@ -42,11 +45,7 @@
                 class="h-full w-full object-cover"
               />
               <ng-template #placeholderAvatar>
-                <svg
-                  class="h-16 w-16 text-slate-400"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg class="h-16 w-16 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
                   />
@@ -151,18 +150,18 @@
                     profile()?.role === 'owner'
                       ? 'bg-purple-100 text-purple-800'
                       : profile()?.role === 'renter'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-green-100 text-green-800'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-green-100 text-green-800'
                   "
                 >
                   {{
                     profile()?.role === 'owner'
                       ? 'Locador'
                       : profile()?.role === 'renter'
-                      ? 'Locatario'
-                      : profile()?.role === 'both'
-                      ? 'Ambos'
-                      : 'Administrador'
+                        ? 'Locatario'
+                        : profile()?.role === 'both'
+                          ? 'Ambos'
+                          : 'Administrador'
                   }}
                 </span>
               </div>
@@ -217,6 +216,115 @@
                     />
                   </svg>
                   Reservar autos
+                </li>
+              </ul>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="space-y-3 pt-4 border-t border-slate-200">
+              <h3 class="text-sm font-semibold text-slate-900">Contacto</h3>
+              <div *ngIf="profile()?.phone">
+                <p class="text-sm font-medium text-slate-500">Teléfono</p>
+                <p class="mt-1 text-base text-slate-900">{{ profile()?.phone }}</p>
+              </div>
+              <div *ngIf="profile()?.whatsapp">
+                <p class="text-sm font-medium text-slate-500">WhatsApp</p>
+                <p class="mt-1 text-base text-slate-900">{{ profile()?.whatsapp }}</p>
+              </div>
+              <div *ngIf="!profile()?.phone && !profile()?.whatsapp" class="text-sm text-slate-500 italic">
+                No has agregado información de contacto
+              </div>
+            </div>
+
+            <!-- Driver License -->
+            <div class="space-y-3 pt-4 border-t border-slate-200">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-slate-900">Licencia de Conducir</h3>
+                <span
+                  *ngIf="profile()?.is_driver_verified"
+                  class="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
+                >
+                  <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Verificada
+                </span>
+              </div>
+              <div *ngIf="profile()?.driver_license_number">
+                <p class="text-sm font-medium text-slate-500">Número</p>
+                <p class="mt-1 text-base text-slate-900">{{ profile()?.driver_license_number }}</p>
+              </div>
+              <div *ngIf="profile()?.driver_license_country" class="grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm font-medium text-slate-500">País</p>
+                  <p class="mt-1 text-base text-slate-900">{{ profile()?.driver_license_country }}</p>
+                </div>
+                <div *ngIf="profile()?.driver_license_expiry">
+                  <p class="text-sm font-medium text-slate-500">Vencimiento</p>
+                  <p class="mt-1 text-base text-slate-900">{{ profile()?.driver_license_expiry | date: 'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+              <div *ngIf="!profile()?.driver_license_number" class="text-sm text-slate-500 italic">
+                No has agregado tu licencia de conducir
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="space-y-3 pt-4 border-t border-slate-200">
+              <h3 class="text-sm font-semibold text-slate-900">Dirección</h3>
+              <div *ngIf="profile()?.address_line1">
+                <p class="text-base text-slate-900">{{ profile()?.address_line1 }}</p>
+                <p *ngIf="profile()?.address_line2" class="text-base text-slate-900">{{ profile()?.address_line2 }}</p>
+                <p class="text-sm text-slate-600 mt-1">
+                  {{ profile()?.city }}<span *ngIf="profile()?.state">, {{ profile()?.state }}</span>
+                  <span *ngIf="profile()?.postal_code"> - {{ profile()?.postal_code }}</span>
+                </p>
+                <p *ngIf="profile()?.country" class="text-sm text-slate-600">{{ profile()?.country }}</p>
+              </div>
+              <div *ngIf="!profile()?.address_line1" class="text-sm text-slate-500 italic">
+                No has agregado tu dirección
+              </div>
+            </div>
+
+            <!-- Verification Status -->
+            <div class="rounded-lg bg-blue-50 p-4 mt-4">
+              <p class="mb-2 text-sm font-semibold text-blue-900">Estado de Verificación</p>
+              <ul class="space-y-1 text-sm">
+                <li class="flex items-center text-blue-800">
+                  <svg
+                    class="mr-2 h-4 w-4"
+                    [class.text-green-600]="profile()?.is_email_verified"
+                    [class.text-blue-400]="!profile()?.is_email_verified"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Email {{ profile()?.is_email_verified ? 'verificado' : 'sin verificar' }}
+                </li>
+                <li class="flex items-center text-blue-800">
+                  <svg
+                    class="mr-2 h-4 w-4"
+                    [class.text-green-600]="profile()?.is_phone_verified"
+                    [class.text-blue-400]="!profile()?.is_phone_verified"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Teléfono {{ profile()?.is_phone_verified ? 'verificado' : 'sin verificar' }}
+                </li>
+                <li class="flex items-center text-blue-800">
+                  <svg
+                    class="mr-2 h-4 w-4"
+                    [class.text-green-600]="profile()?.is_driver_verified"
+                    [class.text-blue-400]="!profile()?.is_driver_verified"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Licencia {{ profile()?.is_driver_verified ? 'verificada' : 'sin verificar' }}
                 </li>
               </ul>
             </div>
@@ -296,6 +404,151 @@
             </div>
           </div>
 
+          <!-- Contact Information Section -->
+          <div class="border-t border-slate-200 pt-6">
+            <h3 class="text-lg font-semibold text-slate-900 mb-4">Información de Contacto</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700">
+                  Teléfono
+                  <input
+                    type="tel"
+                    formControlName="phone"
+                    placeholder="+598 99 123 456"
+                    class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  />
+                </label>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700">
+                  WhatsApp
+                  <input
+                    type="tel"
+                    formControlName="whatsapp"
+                    placeholder="+598 99 123 456"
+                    class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Driver License Section -->
+          <div class="border-t border-slate-200 pt-6">
+            <h3 class="text-lg font-semibold text-slate-900 mb-4">Licencia de Conducir</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700">
+                  Número de Licencia
+                  <input
+                    type="text"
+                    formControlName="driver_license_number"
+                    placeholder="ABC123456"
+                    class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  />
+                </label>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">
+                    País de Emisión
+                    <input
+                      type="text"
+                      formControlName="driver_license_country"
+                      placeholder="Uruguay"
+                      class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">
+                    Fecha de Vencimiento
+                    <input
+                      type="date"
+                      formControlName="driver_license_expiry"
+                      class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address Section -->
+          <div class="border-t border-slate-200 pt-6">
+            <h3 class="text-lg font-semibold text-slate-900 mb-4">Dirección</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700">
+                  Calle y Número
+                  <input
+                    type="text"
+                    formControlName="address_line1"
+                    placeholder="18 de Julio 1234"
+                    class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  />
+                </label>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700">
+                  Apartamento, Suite, etc. (opcional)
+                  <input
+                    type="text"
+                    formControlName="address_line2"
+                    placeholder="Apto 101"
+                    class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  />
+                </label>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">
+                    Ciudad
+                    <input
+                      type="text"
+                      formControlName="city"
+                      placeholder="Montevideo"
+                      class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">
+                    Departamento
+                    <input
+                      type="text"
+                      formControlName="state"
+                      placeholder="Montevideo"
+                      class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">
+                    Código Postal
+                    <input
+                      type="text"
+                      formControlName="postal_code"
+                      placeholder="11200"
+                      class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700">
+                  País
+                  <input
+                    type="text"
+                    formControlName="country"
+                    placeholder="Uruguay"
+                    class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
           <!-- Actions -->
           <div class="flex gap-3 pt-4">
             <button
@@ -317,10 +570,7 @@
         </form>
 
         <!-- Quick Links -->
-        <div
-          *ngIf="!editMode()"
-          class="border-t border-slate-200 pt-6"
-        >
+        <div *ngIf="!editMode()" class="border-t border-slate-200 pt-6">
           <h3 class="mb-3 text-sm font-semibold text-slate-700">Accesos rápidos</h3>
           <div class="grid gap-2 sm:grid-cols-2">
             <a

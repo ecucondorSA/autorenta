@@ -1,3 +1,514 @@
+/* 🎨 Cars List Page - Paleta Neutra Premium */
+
 :host {
   display: block;
+}
+
+.cars-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* =================================================================
+   MAPA FULL WIDTH CON FILTROS SUPERPUESTOS - PREMIUM
+   ================================================================= */
+
+.map-full-section {
+  position: relative;
+  width: 100%;
+  height: 72vh;
+  min-height: 520px;
+  max-height: 850px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(217, 214, 208, 0.5);
+}
+
+/* Overlay de búsqueda con degradado neutro elegante */
+.map-search-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 32px;
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 26, 26, 0.85) 0%,
+    rgba(26, 26, 26, 0.5) 60%,
+    rgba(26, 26, 26, 0.2) 85%,
+    transparent 100%
+  );
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 450px;
+  overflow: hidden;
+}
+
+/* Estado colapsado con diseño premium */
+.map-search-overlay.collapsed {
+  padding: 18px 32px;
+  max-height: 68px;
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 26, 26, 0.6) 0%,
+    rgba(26, 26, 26, 0.2) 70%,
+    transparent 100%
+  );
+}
+
+.map-search-overlay.collapsed .search-container {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-15px);
+}
+
+/* Botón de toggle premium */
+.search-toggle-button {
+  position: absolute;
+  top: 16px;
+  right: 32px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(217, 214, 208, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 15;
+}
+
+.search-toggle-button:hover {
+  background: white;
+  transform: scale(1.08) translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  border-color: rgba(44, 74, 82, 0.2);
+}
+
+.search-toggle-button svg {
+  width: 24px;
+  height: 24px;
+  color: #2c4a52;
+  transition: transform 0.3s;
+}
+
+.collapsed .search-toggle-button svg {
+  transform: rotate(0deg);
+}
+
+.search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  pointer-events: auto;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-header {
+  margin-bottom: 24px;
+}
+
+.search-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #faf9f6;
+  margin: 0 0 12px 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.02em;
+}
+
+.search-subtitle {
+  font-size: 15px;
+  color: rgba(250, 249, 246, 0.92);
+  margin: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  line-height: 1.5;
+}
+
+.search-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 250px) minmax(0, 400px) minmax(0, 170px);
+  gap: 14px;
+  align-items: end;
+}
+
+/* Botón de búsqueda premium neutro */
+.search-button {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: #faf9f6;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.3);
+}
+
+.search-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2c4a52 0%, #3a5f68 100%);
+  box-shadow: 0 6px 16px rgba(26, 26, 26, 0.4);
+  transform: translateY(-2px);
+}
+
+.search-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.search-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.search-spinner {
+  width: 19px;
+  height: 19px;
+  border: 2px solid rgba(250, 249, 246, 0.3);
+  border-top-color: #faf9f6;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Map Placeholder States - Neutros */
+.map-placeholder-full,
+.map-loading-full {
+  width: 100%;
+  height: 72vh;
+  min-height: 520px;
+  max-height: 850px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.map-placeholder-full {
+  border: 2px dashed #d9d6d0;
+  background: #f8f6f3;
+}
+
+.map-loading-full {
+  border: 1px solid #edeae3;
+  background: #ffffff;
+}
+
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.placeholder-icon {
+  width: 72px;
+  height: 72px;
+  color: #8e8e8e;
+}
+
+.placeholder-content p {
+  color: #4b4b4b;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.loading-spinner-large {
+  width: 52px;
+  height: 52px;
+  border: 4px solid #edeae3;
+  border-top-color: #2c4a52;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.map-loading-full p {
+  color: #4b4b4b;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* =================================================================
+   GRID HORIZONTAL DESPLAZABLE DE AUTOS - PREMIUM
+   ================================================================= */
+
+.cars-horizontal-section {
+  position: relative;
+  padding: 0 8px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.section-icon {
+  width: 32px;
+  height: 32px;
+  color: #2c4a52;
+}
+
+.cars-count {
+  font-size: 19px;
+  font-weight: 600;
+  color: #8e8e8e;
+}
+
+.scroll-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.scroll-button {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 2px solid #edeae3;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b4b4b;
+}
+
+.scroll-button:hover:not(:disabled) {
+  background: #f8f6f3;
+  border-color: #d9d6d0;
+  color: #1a1a1a;
+  transform: scale(1.05);
+}
+
+.scroll-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.scroll-button.scroll-auto.active {
+  background: #2c4a52;
+  border-color: #2c4a52;
+  color: #faf9f6;
+}
+
+.scroll-button.scroll-auto.active:hover {
+  background: #3a5f68;
+  border-color: #3a5f68;
+}
+
+.scroll-button svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cars-scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #d9d6d0 #f8f6f3;
+  scroll-behavior: smooth;
+}
+
+.cars-scroll-container::-webkit-scrollbar {
+  height: 10px;
+}
+
+.cars-scroll-container::-webkit-scrollbar-track {
+  background: #f8f6f3;
+  border-radius: 5px;
+}
+
+.cars-scroll-container::-webkit-scrollbar-thumb {
+  background: #d9d6d0;
+  border-radius: 5px;
+}
+
+.cars-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #8e8e8e;
+}
+
+.cars-grid-horizontal {
+  display: inline-flex;
+  gap: 24px;
+  padding: 12px;
+  min-width: 100%;
+}
+
+.cars-grid-horizontal > * {
+  flex: 0 0 auto;
+  width: 340px;
+  max-width: 340px;
+}
+
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 72px 32px;
+  text-align: center;
+  color: #4b4b4b;
+  font-size: 16px;
+  margin: 0;
+  background: #f8f6f3;
+  border-radius: 16px;
+  border: 2px dashed #d9d6d0;
+}
+
+.no-results-icon {
+  width: 52px;
+  height: 52px;
+  color: #8e8e8e;
+}
+
+/* =================================================================
+   RESPONSIVE
+   ================================================================= */
+
+@media (max-width: 1024px) {
+  .search-controls {
+    grid-template-columns: minmax(0, 210px) minmax(0, 320px) minmax(0, 150px);
+    gap: 12px;
+  }
+
+  .search-title {
+    font-size: 30px;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .cars-grid-horizontal > * {
+    width: 310px;
+    max-width: 310px;
+  }
+}
+
+@media (max-width: 768px) {
+  .map-full-section {
+    height: 65vh;
+    min-height: 450px;
+    border-radius: 16px;
+  }
+
+  .map-search-overlay {
+    padding: 20px;
+  }
+
+  .search-title {
+    font-size: 26px;
+  }
+
+  .search-subtitle {
+    font-size: 14px;
+  }
+
+  .search-controls {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .search-button {
+    height: 50px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .scroll-buttons {
+    align-self: flex-end;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+
+  .cars-grid-horizontal > * {
+    width: 290px;
+    max-width: 290px;
+  }
+
+  .map-placeholder-full,
+  .map-loading-full {
+    height: 65vh;
+    min-height: 450px;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-full-section {
+    border-radius: 14px;
+  }
+
+  .search-title {
+    font-size: 22px;
+  }
+
+  .search-toggle-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .section-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .cars-grid-horizontal > * {
+    width: 270px;
+    max-width: 270px;
+  }
+
+  .cars-grid-horizontal {
+    gap: 18px;
+  }
 }

@@ -21,9 +21,9 @@ export class BookingsService {
   async getMyBookings(): Promise<Booking[]> {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
     if (!userId) throw new Error('Usuario no autenticado');
-    const { data, error } = await this.supabase
+    const { data, error} = await this.supabase
       .from('bookings')
-      .select('*, cars(*), payment_intents(*)')
+      .select('*, cars(*), payments(*)')
       .eq('renter_id', userId)
       .order('created_at', { ascending: false });
     if (error) throw error;
@@ -33,7 +33,7 @@ export class BookingsService {
   async getBookingById(bookingId: string): Promise<Booking | null> {
     const { data, error } = await this.supabase
       .from('bookings')
-      .select('*, cars(*), payment_intents(*)')
+      .select('*, cars(*), payments(*)')
       .eq('id', bookingId)
       .single();
     if (error) {

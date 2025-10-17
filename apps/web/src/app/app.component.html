@@ -1,0 +1,209 @@
+<!-- App Shell - Layout Neutral Premium -->
+<div class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-soft dark:bg-graphite-dark">
+  <!-- Header Compacto -->
+  <header class="sticky top-0 z-50 border-b border-pearl-gray/30 backdrop-blur-sm bg-white-pure/95 dark:bg-anthracite/95">
+    <div class="mx-auto max-w-7xl px-4 py-3 flex items-center gap-3">
+      <!-- Menu Toggle (mobile) -->
+      <button
+        (click)="toggleSidebar()"
+        class="md:hidden p-2 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition"
+        aria-label="Alternar menú"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <!-- Logo -->
+      <a routerLink="/" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
+        <img
+          src="/assets/images/autorentar-logo.png"
+          alt="Autorentar"
+          class="h-8 w-auto"
+        />
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-4 ml-6 text-sm font-medium">
+        <a
+          routerLink="/cars"
+          routerLinkActive="text-accent-petrol"
+          [routerLinkActiveOptions]="{exact: false}"
+          class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+        >
+          Buscar
+        </a>
+        <a
+          *ngIf="isAuthenticated()"
+          routerLink="/cars/publish"
+          routerLinkActive="text-accent-petrol"
+          class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+        >
+          Publicar
+        </a>
+        <a
+          *ngIf="isAuthenticated()"
+          routerLink="/bookings"
+          routerLinkActive="text-accent-petrol"
+          class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+        >
+          Mis reservas
+        </a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="ml-auto flex items-center gap-2">
+        <!-- Theme Toggle -->
+        <button
+          (click)="toggleDarkMode()"
+          class="p-2 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          aria-label="Cambiar tema"
+        >
+          <svg *ngIf="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <svg *ngIf="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </button>
+
+        <!-- User Menu / Login -->
+        <a
+          *ngIf="!isAuthenticated()"
+          routerLink="/auth/login"
+          class="px-4 py-2 rounded-xl bg-accent-petrol text-white hover:opacity-90 transition text-sm font-semibold"
+        >
+          Ingresar
+        </a>
+
+        <a
+          *ngIf="isAuthenticated()"
+          routerLink="/profile"
+          routerLinkActive="ring-2 ring-accent-petrol"
+          class="p-2 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          aria-label="Perfil"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="mx-auto max-w-7xl w-full px-4 py-6">
+    <!-- Mobile Sidebar Overlay -->
+    <div
+      *ngIf="sidebarOpen"
+      class="fixed inset-0 bg-smoke-black/50 z-40 md:hidden"
+      (click)="toggleSidebar()"
+    ></div>
+
+    <!-- Mobile Sidebar -->
+    <aside
+      [class.translate-x-0]="sidebarOpen"
+      [class.-translate-x-full]="!sidebarOpen"
+      class="fixed left-0 top-0 h-full w-72 bg-white-pure dark:bg-anthracite z-50 transform transition-transform md:hidden overflow-auto"
+    >
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-6">
+          <span class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">Menú</span>
+          <button (click)="toggleSidebar()" class="p-2 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="space-y-1">
+          <a
+            routerLink="/cars"
+            (click)="toggleSidebar()"
+            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          >
+            🔍 Buscar autos
+          </a>
+          <a
+            *ngIf="isAuthenticated()"
+            routerLink="/cars/publish"
+            (click)="toggleSidebar()"
+            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          >
+            🚗 Publicar auto
+          </a>
+          <a
+            *ngIf="isAuthenticated()"
+            routerLink="/bookings"
+            (click)="toggleSidebar()"
+            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          >
+            📅 Mis reservas
+          </a>
+          <a
+            *ngIf="isAuthenticated()"
+            routerLink="/profile"
+            (click)="toggleSidebar()"
+            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          >
+            👤 Mi perfil
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Page Content -->
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer Compacto -->
+  <footer class="border-t border-pearl-gray/30 bg-white-pure dark:bg-anthracite">
+    <div class="mx-auto max-w-7xl px-4 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
+        <!-- Brand -->
+        <div>
+          <img
+            src="/assets/images/autorentar-logo.png"
+            alt="Autorentar"
+            class="h-8 w-auto mb-3"
+          />
+          <p class="text-sm text-charcoal-medium dark:text-pearl-light leading-relaxed">
+            Alquiler de autos premium. Confianza, calidad y servicio.
+          </p>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-3">Explorar</h4>
+          <ul class="space-y-2 text-sm text-charcoal-medium dark:text-pearl-light">
+            <li><a routerLink="/cars" class="hover:text-accent-petrol transition-colors">Buscar autos</a></li>
+            <li><a routerLink="/cars/publish" class="hover:text-accent-petrol transition-colors">Publicar auto</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-3">Legal</h4>
+          <ul class="space-y-2 text-sm text-charcoal-medium dark:text-pearl-light">
+            <li><a href="#" class="hover:text-accent-petrol transition-colors">Términos y condiciones</a></li>
+            <li><a href="#" class="hover:text-accent-petrol transition-colors">Política de privacidad</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-3">Contacto</h4>
+          <ul class="space-y-2 text-sm text-charcoal-medium dark:text-pearl-light">
+            <li>info@autorent.com</li>
+            <li>+598 99 123 456</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div class="pt-4 border-t border-pearl-gray/30">
+        <p class="text-xs text-ash-gray dark:text-charcoal-medium text-center">
+          © {{ year }} Autorentar. Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+</div>

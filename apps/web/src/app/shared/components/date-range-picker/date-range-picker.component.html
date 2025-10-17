@@ -1,17 +1,30 @@
-<div class="grid gap-2">
-  <label class="text-sm font-medium text-slate-700">{{ label }}</label>
-  <div class="grid grid-cols-2 gap-2">
-    <input
-      type="date"
-      class="rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200"
-      [value]="from() ?? ''"
-      (change)="onFromChange($any($event.target).value)"
-    />
-    <input
-      type="date"
-      class="rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200"
-      [value]="to() ?? ''"
-      (change)="onToChange($any($event.target).value)"
-    />
+<div class="grid gap-2.5">
+  <label class="text-sm font-semibold text-smoke-black">{{ label }}</label>
+  <div class="grid grid-cols-2 gap-3">
+    <!-- Fecha inicio -->
+    <div class="relative">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-medium pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <input
+        type="date"
+        class="input-premium pl-11 pr-4"
+        [value]="from() ?? ''"
+        (change)="onFromChange($any($event.target).value)"
+      />
+    </div>
+
+    <!-- Fecha fin -->
+    <div class="relative">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-medium pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <input
+        type="date"
+        class="input-premium pl-11 pr-4"
+        [value]="to() ?? ''"
+        (change)="onToChange($any($event.target).value)"
+      />
+    </div>
   </div>
 </div>

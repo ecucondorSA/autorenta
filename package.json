@@ -5,14 +5,22 @@
   "scripts": {
     "postinstall": "cd apps/web && npm install",
     "lint": "cd apps/web && npm run lint",
+    "lint:fix": "cd apps/web && npm run format && npm run lint -- --fix",
     "test": "cd apps/web && npm run test",
+    "test:quick": "cd apps/web && npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage=false",
+    "test:coverage": "cd apps/web && npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage=true",
     "build:web": "cd apps/web && npm run build",
     "build:worker": "cd functions/workers/payments_webhook && npm run build",
     "build": "npm run build:web && npm run build:worker",
     "dev:web": "cd apps/web && npm run start",
     "dev:worker": "cd functions/workers/payments_webhook && npm run dev",
+    "dev": "source tools/claude-workflows.sh && dev_setup",
     "deploy:web": "cd apps/web && npm run deploy:pages",
-    "deploy:worker": "cd functions/workers/payments_webhook && npm run deploy"
+    "deploy:worker": "cd functions/workers/payments_webhook && npm run deploy",
+    "deploy": "source tools/claude-workflows.sh && full_deploy",
+    "ci": "source tools/claude-workflows.sh && ci_pipeline",
+    "install:all": "cd apps/web && npm install && cd ../../functions/workers/payments_webhook && npm install",
+    "workflows": "source tools/claude-workflows.sh && workflows_help"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",

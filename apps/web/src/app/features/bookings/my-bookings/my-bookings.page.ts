@@ -15,6 +15,7 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 export class MyBookingsPage implements OnInit {
   readonly bookings = signal<Booking[]>([]);
   readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
 
   constructor(private readonly bookingsService: BookingsService) {}
 
@@ -24,11 +25,13 @@ export class MyBookingsPage implements OnInit {
 
   async loadBookings(): Promise<void> {
     this.loading.set(true);
+    this.error.set(null);
     try {
       const items = await this.bookingsService.getMyBookings();
       this.bookings.set(items);
     } catch (err) {
       console.error('getMyBookings error', err);
+      this.error.set('No pudimos cargar tus reservas. Por favor intentá de nuevo más tarde.');
     } finally {
       this.loading.set(false);
     }
