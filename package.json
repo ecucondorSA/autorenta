@@ -20,10 +20,64 @@
     "deploy": "source tools/claude-workflows.sh && full_deploy",
     "ci": "source tools/claude-workflows.sh && ci_pipeline",
     "install:all": "cd apps/web && npm install && cd ../../functions/workers/payments_webhook && npm install",
-    "workflows": "source tools/claude-workflows.sh && workflows_help"
+    "workflows": "source tools/claude-workflows.sh && workflows_help",
+    "sync:types": "tools/sync-types.sh",
+    "sync:types:remote": "tools/sync-types.sh --remote",
+    "check:skills": "tools/check-skills.sh"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.4.0"
+  },
+  "autorenta": {
+    "version": "0.1.0",
+    "architecture": "angular-standalone",
+    "backend": "supabase",
+    "deployment": "cloudflare-pages",
+    "patterns": {
+      "services": "inject-pattern",
+      "components": "standalone-lazy",
+      "testing": "jasmine-karma",
+      "routing": "lazy-loaded-routes",
+      "stateManagement": "signals",
+      "storage": "supabase-storage-rls"
+    },
+    "conventions": {
+      "fileNaming": "kebab-case",
+      "componentSuffix": ".component.ts",
+      "serviceSuffix": ".service.ts",
+      "pageSuffix": ".page.ts",
+      "modelSuffix": ".model.ts"
+    },
+    "features": [
+      "auth",
+      "cars",
+      "bookings",
+      "payments",
+      "admin"
+    ],
+    "documentation": {
+      "architecture": "CLAUDE.md",
+      "patterns": "PATTERNS.md",
+      "skills": "CLAUDE_SKILLS_GUIDE.md",
+      "workflows": "tools/claude-workflows.sh"
+    },
+    "claude": {
+      "skills": {
+        "enabled": true,
+        "recommended": [
+          "angular-scaffolder",
+          "supabase-rls-debugger",
+          "typescript-sync",
+          "test-generator",
+          "performance-optimizer",
+          "security-auditor"
+        ]
+      },
+      "autoBackground": {
+        "enabled": true,
+        "timeout": 900000
+      }
+    }
   }
 }
