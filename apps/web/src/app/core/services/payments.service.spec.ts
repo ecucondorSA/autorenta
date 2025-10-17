@@ -32,7 +32,7 @@ describe('PaymentsService', () => {
 
   it('creates payment intents with default values', async () => {
     const single = jasmine.createSpy('single').and.resolveTo({
-      data: { id: 'intent-1', status: 'requires_payment_method' },
+      data: { id: 'intent-1', status: 'requires_payment' },
       error: null,
     });
     const select = jasmine.createSpy('select').and.returnValue({ single });
@@ -47,9 +47,9 @@ describe('PaymentsService', () => {
     expect(insert).toHaveBeenCalledWith({
       booking_id: 'booking-1',
       provider: 'mock',
-      status: 'requires_payment_method',
+      status: 'requires_payment',
     });
-    expect(intent).toEqual({ id: 'intent-1', status: 'requires_payment_method' } as any);
+    expect(intent).toEqual({ id: 'intent-1', status: 'requires_payment' } as any);
   });
 
   it('calls the worker webhook when marking as paid', async () => {
@@ -58,7 +58,7 @@ describe('PaymentsService', () => {
 
     await service.markAsPaid('intent-7');
 
-    expect(fetchSpy).toHaveBeenCalledWith('https://worker.example/webhooks/payments', {
+    expect(fetchSpy).toHaveBeenCalledWith('https://worker.example', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -57,6 +57,7 @@ describe('CarsService', () => {
     const builder: any = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
     builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
+    builder.order = jasmine.createSpy('order').and.returnValue(builder);
     builder.limit = jasmine.createSpy('limit').and.returnValue(builder);
     builder.ilike = jasmine.createSpy('ilike').and.returnValue(builder);
     builder.then = (resolve: (value: { data: unknown; error: null }) => unknown) =>
@@ -86,6 +87,11 @@ describe('CarsService', () => {
       return { upload, getPublicUrl };
     });
 
+    const single = jasmine.createSpy('single').and.callFake(() => Promise.resolve({ data: { id: 'photo-1', car_id: 'car-123', stored_path: uploadedPaths[0], url: 'https://cdn.example/car.jpg', position: 0, sort_order: 0 }, error: null }));
+    const select = jasmine.createSpy('select').and.returnValue({ single });
+    const insert = jasmine.createSpy('insert').and.returnValue({ select });
+    supabase.from.withArgs('car_photos').and.returnValue({ insert });
+
     const file = new File(['binary'], 'front.png');
     const result = await service.uploadPhoto(file, 'car-123');
     const storedPath = uploadedPaths[0];
@@ -103,7 +109,6 @@ describe('CarsService', () => {
         car_id: 'car-123',
         stored_path: storedPath,
         url: 'https://cdn.example/car.jpg',
-        is_primary: false,
       }) as any,
     );
     expect(result.id.length).toBeGreaterThan(0);

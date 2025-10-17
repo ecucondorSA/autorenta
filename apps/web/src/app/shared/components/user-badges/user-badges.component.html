@@ -1,0 +1,24 @@
+<div class="user-badges flex flex-wrap gap-2">
+  <div
+    *ngFor="let badge of activeBadges"
+    class="badge-container"
+    [attr.data-tooltip]="badge.description"
+  >
+    <div
+      class="badge bg-gradient-to-r rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+      [ngClass]="[getBadgeSizeClass(), badge.color]"
+      [attr.aria-label]="badge.label"
+    >
+      <span class="badge-icon">{{ badge.icon }}</span>
+    </div>
+
+    <p *ngIf="showLabels" class="badge-label text-xs text-gray-600 mt-1 text-center font-medium">
+      {{ badge.label }}
+    </p>
+  </div>
+
+  <!-- No badges message -->
+  <div *ngIf="activeBadges.length === 0" class="text-gray-400 text-sm italic">
+    Sin insignias aún
+  </div>
+</div>
