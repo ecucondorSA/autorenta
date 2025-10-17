@@ -59,7 +59,7 @@ export class CarsService {
       .from('cars')
       .select('*, car_photos(*)')
       .eq('status', 'active')
-      .limit(20);
+      .order('created_at', { ascending: false });
     if (filters.city) {
       query = query.ilike('location_city', `%${filters.city}%`);
     }
