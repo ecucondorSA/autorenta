@@ -11,12 +11,17 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
-import { UserProfile, Role } from '../../core/models';
+import { WalletService } from '../../core/services/wallet.service';
+import { ReviewsService } from '../../core/services/reviews.service';
+import { UserProfile, Role, UserStats, Review } from '../../core/models';
+
+import { UserBadgesComponent } from '../../shared/components/user-badges/user-badges.component';
+import { ReviewCardComponent } from '../../shared/components/review-card/review-card.component';
 
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, UserBadgesComponent, ReviewCardComponent],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -24,6 +29,8 @@ export class ProfilePage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
+  private readonly walletService = inject(WalletService);
+  private readonly reviewsService = inject(ReviewsService);
 
   readonly profile = signal<UserProfile | null>(null);
   readonly loading = signal(false);
@@ -32,6 +39,14 @@ export class ProfilePage implements OnInit {
   readonly message = signal<string | null>(null);
   readonly error = signal<string | null>(null);
   readonly editMode = signal(false);
+
+  // Reviews and stats
+  readonly userStats = signal<UserStats | null>(null);
+  readonly reviewsAsOwner = signal<Review[]>([]);
+  readonly reviewsAsRenter = signal<Review[]>([]);
+  readonly reviewsLoading = signal(false);
+  readonly showAllReviewsOwner = signal(false);
+  readonly showAllReviewsRenter = signal(false);
 
   readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
   readonly avatarUrl = computed(() => this.profile()?.avatar_url ?? '');
@@ -43,6 +58,25 @@ export class ProfilePage implements OnInit {
     const role = this.profile()?.role;
     return role === 'renter' || role === 'both';
   });
+
+  // Wallet state
+  readonly availableBalance = this.walletService.availableBalance;
+  readonly lockedBalance = this.walletService.lockedBalance;
+  readonly totalBalance = this.walletService.totalBalance;
+
+  // Computed reviews for display
+  readonly displayedReviewsAsOwner = computed(() => {
+    const reviews = this.reviewsAsOwner();
+    return this.showAllReviewsOwner() ? reviews : reviews.slice(0, 3);
+  });
+
+  readonly displayedReviewsAsRenter = computed(() => {
+    const reviews = this.reviewsAsRenter();
+    return this.showAllReviewsRenter() ? reviews : reviews.slice(0, 3);
+  });
+
+  readonly hasMoreReviewsOwner = computed(() => this.reviewsAsOwner().length > 3);
+  readonly hasMoreReviewsRenter = computed(() => this.reviewsAsRenter().length > 3);
 
   readonly form = this.fb.nonNullable.group({
     full_name: ['', [Validators.required, Validators.minLength(3)]],
@@ -83,6 +117,10 @@ export class ProfilePage implements OnInit {
 
   ngOnInit(): void {
     void this.loadProfile();
+    void this.walletService.getBalance().catch(() => {
+      // Ignorar error si no se puede cargar el balance
+    });
+    void this.loadReviewsAndStats();
   }
 
   async loadProfile(): Promise<void> {
@@ -246,5 +284,38 @@ export class ProfilePage implements OnInit {
       console.error(err);
       this.error.set('Error al cerrar sesión');
     }
+  }
+
+  async loadReviewsAndStats(): Promise<void> {
+    this.reviewsLoading.set(true);
+
+    try {
+      const userId = this.authService.session$()?.user?.id;
+      if (!userId) {
+        return;
+      }
+
+      const [stats, reviewsAsOwner, reviewsAsRenter] = await Promise.all([
+        this.reviewsService.getUserStats(userId),
+        this.reviewsService.getReviewsForUser(userId, true), // as owner
+        this.reviewsService.getReviewsForUser(userId, false), // as renter
+      ]);
+
+      this.userStats.set(stats);
+      this.reviewsAsOwner.set(reviewsAsOwner);
+      this.reviewsAsRenter.set(reviewsAsRenter);
+    } catch (error) {
+      console.error('Error loading reviews and stats:', error);
+    } finally {
+      this.reviewsLoading.set(false);
+    }
+  }
+
+  toggleShowAllOwnerReviews(): void {
+    this.showAllReviewsOwner.set(!this.showAllReviewsOwner());
+  }
+
+  toggleShowAllRenterReviews(): void {
+    this.showAllReviewsRenter.set(!this.showAllReviewsRenter());
   }
 }

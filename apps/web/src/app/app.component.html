@@ -1,5 +1,13 @@
+<!-- Splash Loader -->
+@if (showSplash()) {
+  <app-splash-loader></app-splash-loader>
+}
+
 <!-- App Shell - Layout Neutral Premium -->
-<div class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-soft dark:bg-graphite-dark">
+<div
+  [class.opacity-0]="showSplash()"
+  [class.pointer-events-none]="showSplash()"
+  class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-soft dark:bg-graphite-dark transition-opacity duration-500">
   <!-- Header Compacto -->
   <header class="sticky top-0 z-50 border-b border-pearl-gray/30 backdrop-blur-sm bg-white-pure/95 dark:bg-anthracite/95">
     <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-2 sm:py-3 flex items-center gap-2 sm:gap-3">
@@ -17,7 +25,7 @@
       <!-- Logo -->
       <a routerLink="/" class="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity">
         <img
-          src="/assets/images/autorentar-logo.svg"
+          src="/assets/images/autorentar-logo.png"
           alt="Autorentar"
           class="h-6 sm:h-7 md:h-8 w-auto"
         />
@@ -91,6 +99,11 @@
     </div>
   </header>
 
+  <!-- Pending Reviews Banner -->
+  <div *ngIf="isAuthenticated()" class="mx-auto max-w-7xl w-full px-4 pt-4">
+    <app-pending-reviews-banner></app-pending-reviews-banner>
+  </div>
+
   <!-- Main Content Area -->
   <main class="mx-auto max-w-7xl w-full px-4 py-6">
     <!-- Mobile Sidebar Overlay -->
@@ -156,6 +169,18 @@
     <router-outlet></router-outlet>
   </main>
 
+  <!-- Floating Comparison Badge -->
+  <a
+    *ngIf="compareCount() > 0"
+    routerLink="/cars/compare"
+    class="fixed bottom-6 right-6 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-accent-petrol text-white shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 animate-fade-in"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+    </svg>
+    <span class="font-semibold text-sm">Comparando ({{ compareCount() }})</span>
+  </a>
+
   <!-- Footer Compacto -->
   <footer class="border-t border-pearl-gray/30 bg-white-pure dark:bg-anthracite">
     <div class="mx-auto max-w-7xl px-4 py-8">
@@ -163,7 +188,7 @@
         <!-- Brand -->
         <div>
           <img
-            src="/assets/images/autorentar-logo.svg"
+            src="/assets/images/autorentar-logo.png"
             alt="Autorentar"
             class="h-8 w-auto mb-3"
           />

@@ -74,7 +74,20 @@ export class CarsService {
   async getCarById(id: string): Promise<Car | null> {
     const { data, error } = await this.supabase
       .from('cars')
-      .select('*, car_photos(*)')
+      .select(`
+        *,
+        car_photos(*),
+        owner:profiles!owner_id(
+          id,
+          full_name,
+          avatar_url,
+          rating_avg,
+          rating_count,
+          created_at,
+          is_email_verified,
+          is_phone_verified
+        )
+      `)
       .eq('id', id)
       .single();
     if (error) {
@@ -126,11 +139,20 @@ export class CarsService {
 
   async getCarModels(
     brandId: string,
-  ): Promise<Array<{ id: string; name: string; category: string }>> {
+  ): Promise<Array<{ id: string; name: string; category: string; seats: number; doors: number }>> {
     const { data, error } = await this.supabase
       .from('car_models')
-      .select('id, name, category')
+      .select('id, name, category, seats, doors')
       .eq('brand_id', brandId)
+      .order('name');
+    if (error) throw error;
+    return data ?? [];
+  }
+
+  async getAllCarModels(): Promise<Array<{ id: string; brand_id: string; name: string; category: string; seats: number; doors: number }>> {
+    const { data, error } = await this.supabase
+      .from('car_models')
+      .select('id, brand_id, name, category, seats, doors')
       .order('name');
     if (error) throw error;
     return data ?? [];

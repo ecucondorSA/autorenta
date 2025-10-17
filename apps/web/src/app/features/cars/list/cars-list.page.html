@@ -172,7 +172,10 @@
           *ngFor="let car of cars()"
           [car]="car"
           [selected]="car.id === selectedCarId()"
+          [isComparing]="isCarComparing(car.id)"
+          [compareDisabled]="maxCompareReached()"
           (click)="onCarSelected(car.id)"
+          (compareToggle)="onCompareToggle($event)"
         ></app-car-card>
       </div>
     </div>

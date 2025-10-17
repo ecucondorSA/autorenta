@@ -7,9 +7,11 @@ import {
   signal,
   ViewChild,
   ElementRef,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarsService } from '../../../core/services/cars.service';
+import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { Car } from '../../../core/models';
 import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
 import {
@@ -36,6 +38,9 @@ import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.c
 export class CarsListPage implements OnInit, OnDestroy {
   @ViewChild('carsContainer') carsContainer?: ElementRef<HTMLDivElement>;
 
+  private readonly carsService = inject(CarsService);
+  private readonly compareService = inject(CarsCompareService);
+
   readonly city = signal<string | null>(null);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
   readonly loading = signal(false);
@@ -44,12 +49,14 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly searchCollapsed = signal(false);
   readonly selectedCarId = signal<string | null>(null);
 
+  // Comparación
+  readonly compareCount = this.compareService.count;
+  readonly maxCompareReached = computed(() => this.compareCount() >= 3);
+
   canScrollLeft = false;
   canScrollRight = false;
   private autoCollapseTimer?: ReturnType<typeof setTimeout>;
   autoScrollInterval?: ReturnType<typeof setInterval>;
-
-  constructor(private readonly carsService: CarsService) {}
 
   ngOnInit(): void {
     void this.loadCars();
@@ -193,6 +200,23 @@ export class CarsListPage implements OnInit, OnDestroy {
       this.stopAutoScroll();
     } else {
       this.startAutoScroll();
+    }
+  }
+
+  // Comparación
+  isCarComparing(carId: string): boolean {
+    return this.compareService.isComparing(carId);
+  }
+
+  onCompareToggle(carId: string): void {
+    if (this.compareService.isComparing(carId)) {
+      this.compareService.removeCar(carId);
+    } else {
+      const added = this.compareService.addCar(carId);
+      if (!added) {
+        // Máximo alcanzado, se podría mostrar un mensaje
+        console.log('Máximo de 3 autos alcanzado');
+      }
     }
   }
 }
