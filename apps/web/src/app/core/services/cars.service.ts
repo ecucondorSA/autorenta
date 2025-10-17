@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
-import { injectSupabase } from './supabase-client.service';
 import { Car, CarFilters, CarPhoto } from '../models';
+import { injectSupabase } from './supabase-client.service';
 
 @Injectable({
   providedIn: 'root',
@@ -55,7 +55,11 @@ export class CarsService {
   }
 
   async listActiveCars(filters: CarFilters): Promise<Car[]> {
-    let query = this.supabase.from('cars').select('*, car_photos(*)').eq('status', 'active').limit(20);
+    let query = this.supabase
+      .from('cars')
+      .select('*, car_photos(*)')
+      .eq('status', 'active')
+      .limit(20);
     if (filters.city) {
       query = query.ilike('location_city', `%${filters.city}%`);
     }
@@ -68,7 +72,11 @@ export class CarsService {
   }
 
   async getCarById(id: string): Promise<Car | null> {
-    const { data, error } = await this.supabase.from('cars').select('*, car_photos(*)').eq('id', id).single();
+    const { data, error } = await this.supabase
+      .from('cars')
+      .select('*, car_photos(*)')
+      .eq('id', id)
+      .single();
     if (error) {
       if (error.code === 'PGRST116') return null;
       throw error;
@@ -91,7 +99,11 @@ export class CarsService {
   async deleteCar(carId: string): Promise<void> {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
     if (!userId) throw new Error('Usuario no autenticado');
-    const { error } = await this.supabase.from('cars').delete().eq('id', carId).eq('owner_id', userId);
+    const { error } = await this.supabase
+      .from('cars')
+      .delete()
+      .eq('id', carId)
+      .eq('owner_id', userId);
     if (error) throw error;
   }
 
@@ -104,5 +116,23 @@ export class CarsService {
       .order('created_at', { ascending: false });
     if (error) throw error;
     return (data ?? []) as Car[];
+  }
+
+  async getCarBrands(): Promise<Array<{ id: string; name: string }>> {
+    const { data, error } = await this.supabase.from('car_brands').select('id, name').order('name');
+    if (error) throw error;
+    return data ?? [];
+  }
+
+  async getCarModels(
+    brandId: string,
+  ): Promise<Array<{ id: string; name: string; category: string }>> {
+    const { data, error } = await this.supabase
+      .from('car_models')
+      .select('id, name, category')
+      .eq('brand_id', brandId)
+      .order('name');
+    if (error) throw error;
+    return data ?? [];
   }
 }

@@ -47,7 +47,7 @@ export class AdminDashboardPage implements OnInit {
     private readonly adminService: AdminService,
     private readonly carsService: CarsService,
     private readonly profileService: ProfileService,
-    private readonly databaseExportService: DatabaseExportService
+    private readonly databaseExportService: DatabaseExportService,
   ) {}
 
   ngOnInit(): void {
@@ -88,7 +88,9 @@ export class AdminDashboardPage implements OnInit {
   }
 
   private async getAllProfiles(): Promise<number> {
-    const { count } = await this.supabase.from('profiles').select('*', { count: 'exact', head: true });
+    const { count } = await this.supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true });
     return count ?? 0;
   }
 
@@ -98,17 +100,23 @@ export class AdminDashboardPage implements OnInit {
   }
 
   private async getPhotoCount(): Promise<number> {
-    const { count } = await this.supabase.from('car_photos').select('*', { count: 'exact', head: true });
+    const { count } = await this.supabase
+      .from('car_photos')
+      .select('*', { count: 'exact', head: true });
     return count ?? 0;
   }
 
   private async getBookingCount(): Promise<number> {
-    const { count } = await this.supabase.from('bookings').select('*', { count: 'exact', head: true });
+    const { count } = await this.supabase
+      .from('bookings')
+      .select('*', { count: 'exact', head: true });
     return count ?? 0;
   }
 
   private async getPaymentCount(): Promise<number> {
-    const { count } = await this.supabase.from('payments').select('*', { count: 'exact', head: true });
+    const { count } = await this.supabase
+      .from('payments')
+      .select('*', { count: 'exact', head: true });
     return count ?? 0;
   }
 

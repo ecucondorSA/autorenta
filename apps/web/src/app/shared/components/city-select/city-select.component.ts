@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class CitySelectComponent {
   @Input() label = 'Ciudad';
-  @Input() placeholder = 'Buenos Aires';
+  @Input() placeholder = 'Montevideo';
   @Input() value: string | null = null;
   @Output() readonly valueChange = new EventEmitter<string>();
 

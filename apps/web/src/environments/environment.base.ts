@@ -4,6 +4,10 @@ interface EnvDefaults {
   supabaseAnonKey?: string;
   defaultCurrency?: string;
   paymentsWebhookUrl?: string;
+  mapboxAccessToken?: string;
+  carLocationsCacheTtlMs?: number;
+  carLocationsRefreshMs?: number;
+  carLocationsEdgeFunction?: string;
 }
 
 const readEnv = (key: string): string | undefined => {
@@ -14,9 +18,10 @@ const readEnv = (key: string): string | undefined => {
   }
 
   // import.meta.env (Angular 17+ builder exposes env vars at build time)
-  const metaEnv = (typeof import.meta !== 'undefined' && (import.meta as any).env)
-    ? (import.meta as any).env[key]
-    : undefined;
+  const metaEnv =
+    typeof import.meta !== 'undefined' && (import.meta as any).env
+      ? (import.meta as any).env[key]
+      : undefined;
   if (typeof metaEnv === 'string' && metaEnv.length > 0) {
     return metaEnv;
   }
@@ -38,8 +43,15 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   production: defaults.production ?? false,
   supabaseUrl: resolve('NG_APP_SUPABASE_URL', defaults.supabaseUrl),
   supabaseAnonKey: resolve('NG_APP_SUPABASE_ANON_KEY', defaults.supabaseAnonKey),
-  defaultCurrency: resolve('NG_APP_DEFAULT_CURRENCY', defaults.defaultCurrency ?? 'ARS'),
+  defaultCurrency: resolve('NG_APP_DEFAULT_CURRENCY', defaults.defaultCurrency ?? 'USD'),
   paymentsWebhookUrl: resolve('NG_APP_PAYMENTS_WEBHOOK_URL', defaults.paymentsWebhookUrl ?? ''),
+  mapboxAccessToken: resolve('NG_APP_MAPBOX_ACCESS_TOKEN', defaults.mapboxAccessToken),
+  carLocationsCacheTtlMs: defaults.carLocationsCacheTtlMs ?? 5 * 60 * 1000,
+  carLocationsRefreshMs: defaults.carLocationsRefreshMs ?? 60 * 1000,
+  carLocationsEdgeFunction: resolve(
+    'NG_APP_CAR_LOCATIONS_EDGE_FUNCTION',
+    defaults.carLocationsEdgeFunction,
+  ),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

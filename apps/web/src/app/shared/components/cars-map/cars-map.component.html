@@ -1,0 +1,41 @@
+<div class="cars-map-container">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="map-overlay loading-overlay">
+    <div class="spinner"></div>
+    <p>Cargando mapa de autos disponibles...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error() && !loading()" class="map-overlay error-overlay">
+    <div class="error-content">
+      <svg class="error-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <p class="error-message">{{ error() }}</p>
+      <button class="retry-button" (click)="refreshMap()">Reintentar</button>
+    </div>
+  </div>
+
+  <!-- Map Info Badge (Compact) -->
+  <div *ngIf="!loading() && !error()" class="map-info-badge">
+    <div class="badge-content">
+      <svg class="badge-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+        />
+      </svg>
+      <span class="badge-text">{{ carCount() }}</span>
+    </div>
+  </div>
+
+  <!-- Map Container -->
+  <div #mapContainer class="map-canvas"></div>
+</div>

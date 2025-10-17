@@ -9,14 +9,27 @@
           class="h-72 w-full rounded-lg object-cover"
         />
         <ng-template #placeholder>
-          <div class="flex h-72 items-center justify-center rounded-lg bg-slate-100 text-sm text-slate-500">
+          <div
+            class="flex h-72 items-center justify-center rounded-lg bg-slate-100 text-sm text-slate-500"
+          >
             Sin fotos disponibles
           </div>
         </ng-template>
         <h1 class="text-3xl font-semibold text-slate-900">{{ car()?.title }}</h1>
-        <p class="text-sm text-slate-600">
-          {{ car()?.location_city }}, {{ car()?.location_state }} · Transmisión {{ car()?.transmission }}
-        </p>
+        <div class="space-y-1">
+          <p class="text-sm text-slate-600">
+            📍
+            <ng-container *ngIf="car()?.location_formatted_address; else oldLocation">{{
+              car()?.location_formatted_address
+            }}</ng-container>
+            <ng-template #oldLocation
+              >{{ car()?.location_city }}, {{ car()?.location_state }}</ng-template
+            >
+          </p>
+          <p class="text-sm text-slate-600">
+            Transmisión {{ car()?.transmission }} · {{ car()?.fuel_type | titlecase }}
+          </p>
+        </div>
         <p class="text-base text-slate-700">
           {{ car()?.description }}
         </p>
@@ -30,21 +43,44 @@
         <span class="text-sm font-normal text-slate-500">por día</span>
       </p>
 
-      <app-date-range-picker label="Fechas de alquiler" (rangeChange)="onRangeChange($event)"></app-date-range-picker>
+      <app-date-range-picker
+        label="Fechas de alquiler"
+        (rangeChange)="onRangeChange($event)"
+      ></app-date-range-picker>
 
-      <div *ngIf="totalPrice() as total" class="rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-800">
+      <div
+        *ngIf="totalPrice() as total"
+        class="rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-800"
+      >
         Total estimado: <strong>{{ total | money }}</strong>
       </div>
 
-      <button class="w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
-        Reservar
+      <!-- Error message -->
+      <div
+        *ngIf="bookingError()"
+        class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+      >
+        {{ bookingError() }}
+      </div>
+
+      <button
+        (click)="onBookClick()"
+        [disabled]="!canBook() || bookingInProgress()"
+        [class.opacity-50]="!canBook() || bookingInProgress()"
+        [class.cursor-not-allowed]="!canBook() || bookingInProgress()"
+        class="w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:hover:bg-blue-600"
+      >
+        <span *ngIf="!bookingInProgress()">Reservar</span>
+        <span *ngIf="bookingInProgress()">Creando reserva...</span>
       </button>
     </aside>
   </section>
 </ng-container>
 
 <ng-template #loadingOrError>
-  <p *ngIf="loading(); else errorTpl" class="text-center text-sm text-slate-500">Cargando auto...</p>
+  <p *ngIf="loading(); else errorTpl" class="text-center text-sm text-slate-500">
+    Cargando auto...
+  </p>
 </ng-template>
 
 <ng-template #errorTpl>
