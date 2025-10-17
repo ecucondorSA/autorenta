@@ -22,7 +22,9 @@
   max-height: 850px;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(217, 214, 208, 0.5);
 }
 
@@ -34,11 +36,13 @@
   right: 0;
   z-index: 10;
   padding: 32px;
-  background: linear-gradient(to bottom,
-      rgba(26, 26, 26, 0.85) 0%,
-      rgba(26, 26, 26, 0.5) 60%,
-      rgba(26, 26, 26, 0.2) 85%,
-      transparent 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 26, 26, 0.85) 0%,
+    rgba(26, 26, 26, 0.5) 60%,
+    rgba(26, 26, 26, 0.2) 85%,
+    transparent 100%
+  );
   backdrop-filter: blur(2px);
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -50,10 +54,12 @@
 .map-search-overlay.collapsed {
   padding: 18px 32px;
   max-height: 68px;
-  background: linear-gradient(to bottom,
-      rgba(26, 26, 26, 0.6) 0%,
-      rgba(26, 26, 26, 0.2) 70%,
-      transparent 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 26, 26, 0.6) 0%,
+    rgba(26, 26, 26, 0.2) 70%,
+    transparent 100%
+  );
 }
 
 .map-search-overlay.collapsed .search-container {
@@ -93,7 +99,7 @@
 .search-toggle-button svg {
   width: 24px;
   height: 24px;
-  color: #2C4A52;
+  color: #2c4a52;
   transition: transform 0.3s;
 }
 
@@ -115,7 +121,7 @@
 .search-title {
   font-size: 36px;
   font-weight: 700;
-  color: #FAF9F6;
+  color: #faf9f6;
   margin: 0 0 12px 0;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   letter-spacing: -0.02em;
@@ -143,8 +149,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
-  color: #FAF9F6;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: #faf9f6;
   border: none;
   border-radius: 12px;
   font-weight: 600;
@@ -155,7 +161,7 @@
 }
 
 .search-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2C4A52 0%, #3A5F68 100%);
+  background: linear-gradient(135deg, #2c4a52 0%, #3a5f68 100%);
   box-shadow: 0 6px 16px rgba(26, 26, 26, 0.4);
   transform: translateY(-2px);
 }
@@ -175,7 +181,7 @@
   width: 19px;
   height: 19px;
   border: 2px solid rgba(250, 249, 246, 0.3);
-  border-top-color: #FAF9F6;
+  border-top-color: #faf9f6;
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
 }
@@ -202,13 +208,13 @@
 }
 
 .map-placeholder-full {
-  border: 2px dashed #D9D6D0;
-  background: #F8F6F3;
+  border: 2px dashed #d9d6d0;
+  background: #f8f6f3;
 }
 
 .map-loading-full {
-  border: 1px solid #EDEAE3;
-  background: #FFFFFF;
+  border: 1px solid #edeae3;
+  background: #ffffff;
 }
 
 .placeholder-content {
@@ -221,11 +227,11 @@
 .placeholder-icon {
   width: 72px;
   height: 72px;
-  color: #8E8E8E;
+  color: #8e8e8e;
 }
 
 .placeholder-content p {
-  color: #4B4B4B;
+  color: #4b4b4b;
   font-size: 16px;
   margin: 0;
   font-weight: 500;
@@ -234,14 +240,14 @@
 .loading-spinner-large {
   width: 52px;
   height: 52px;
-  border: 4px solid #EDEAE3;
-  border-top-color: #2C4A52;
+  border: 4px solid #edeae3;
+  border-top-color: #2c4a52;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 .map-loading-full p {
-  color: #4B4B4B;
+  color: #4b4b4b;
   font-size: 16px;
   margin: 0;
   font-weight: 500;
@@ -270,7 +276,7 @@
   gap: 14px;
   font-size: 28px;
   font-weight: 700;
-  color: #1A1A1A;
+  color: #1a1a1a;
   margin: 0;
   letter-spacing: -0.01em;
 }
@@ -278,13 +284,13 @@
 .section-icon {
   width: 32px;
   height: 32px;
-  color: #2C4A52;
+  color: #2c4a52;
 }
 
 .cars-count {
   font-size: 19px;
   font-weight: 600;
-  color: #8E8E8E;
+  color: #8e8e8e;
 }
 
 .scroll-buttons {
@@ -298,24 +304,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #FFFFFF;
-  border: 2px solid #EDEAE3;
+  background: #ffffff;
+  border: 2px solid #edeae3;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
-  color: #4B4B4B;
+  color: #4b4b4b;
 }
 
 .scroll-button:hover:not(:disabled) {
-  background: #F8F6F3;
-  border-color: #D9D6D0;
-  color: #1A1A1A;
+  background: #f8f6f3;
+  border-color: #d9d6d0;
+  color: #1a1a1a;
   transform: scale(1.05);
 }
 
 .scroll-button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
+}
+
+.scroll-button.scroll-auto.active {
+  background: #2c4a52;
+  border-color: #2c4a52;
+  color: #faf9f6;
+}
+
+.scroll-button.scroll-auto.active:hover {
+  background: #3a5f68;
+  border-color: #3a5f68;
 }
 
 .scroll-button svg {
@@ -328,7 +345,7 @@
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: #D9D6D0 #F8F6F3;
+  scrollbar-color: #d9d6d0 #f8f6f3;
   scroll-behavior: smooth;
 }
 
@@ -337,17 +354,17 @@
 }
 
 .cars-scroll-container::-webkit-scrollbar-track {
-  background: #F8F6F3;
+  background: #f8f6f3;
   border-radius: 5px;
 }
 
 .cars-scroll-container::-webkit-scrollbar-thumb {
-  background: #D9D6D0;
+  background: #d9d6d0;
   border-radius: 5px;
 }
 
 .cars-scroll-container::-webkit-scrollbar-thumb:hover {
-  background: #8E8E8E;
+  background: #8e8e8e;
 }
 
 .cars-grid-horizontal {
@@ -370,18 +387,18 @@
   gap: 18px;
   padding: 72px 32px;
   text-align: center;
-  color: #4B4B4B;
+  color: #4b4b4b;
   font-size: 16px;
   margin: 0;
-  background: #F8F6F3;
+  background: #f8f6f3;
   border-radius: 16px;
-  border: 2px dashed #D9D6D0;
+  border: 2px dashed #d9d6d0;
 }
 
 .no-results-icon {
   width: 52px;
   height: 52px;
-  color: #8E8E8E;
+  color: #8e8e8e;
 }
 
 /* =================================================================

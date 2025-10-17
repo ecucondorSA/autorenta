@@ -5,34 +5,34 @@
 /* 🎨 Variables CSS - Paleta Neutra Premium Autorent */
 :root {
   /* Fondos Light Mode */
-  --bg-primary: #F8F6F3;
-  --bg-secondary: #EDEAE3;
-  --bg-elevated: #FFFFFF;
+  --bg-primary: #f8f6f3;
+  --bg-secondary: #edeae3;
+  --bg-elevated: #ffffff;
 
   /* Textos Light Mode */
-  --text-primary: #1A1A1A;
-  --text-secondary: #4B4B4B;
-  --text-disabled: #8E8E8E;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4b4b4b;
+  --text-disabled: #8e8e8e;
 
   /* Bordes */
-  --border-color: #D9D6D0;
+  --border-color: #d9d6d0;
 
   /* Accents */
-  --accent-primary: #2C4A52;
-  --accent-warm: #8B7355;
+  --accent-primary: #2c4a52;
+  --accent-warm: #8b7355;
 }
 
 /* Dark mode variables (opcional para futuro) */
 [data-theme='dark'] {
   --bg-primary: #121212;
-  --bg-secondary: #1E1E1E;
-  --bg-elevated: #2A2A2A;
+  --bg-secondary: #1e1e1e;
+  --bg-elevated: #2a2a2a;
 
-  --text-primary: #FAF9F6;
-  --text-secondary: #E5E3DD;
-  --text-disabled: #78716C;
+  --text-primary: #faf9f6;
+  --text-secondary: #e5e3dd;
+  --text-disabled: #78716c;
 
-  --border-color: #44403C;
+  --border-color: #44403c;
 }
 
 html,
@@ -42,7 +42,9 @@ body {
 
 body {
   @apply bg-ivory-soft text-smoke-black antialiased;
-  font-feature-settings: 'liga' 1, 'kern' 1;
+  font-feature-settings:
+    'liga' 1,
+    'kern' 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -74,6 +76,11 @@ body {
     @apply border border-pearl-gray/50;
     @apply transition-all duration-300;
     @apply hover:shadow-elevated;
+  }
+
+  .card-premium.selected {
+    @apply border-accent-petrol border-2 shadow-elevated;
+    @apply ring-2 ring-accent-petrol/20;
   }
 
   /* Inputs elegantes */

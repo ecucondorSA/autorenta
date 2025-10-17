@@ -10,9 +10,15 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { CarLocationsService, type CarMapLocation } from '../../../core/services/car-locations.service';
+import {
+  CarLocationsService,
+  type CarMapLocation,
+} from '../../../core/services/car-locations.service';
 import { environment } from '../../../../environments/environment';
 
 // Dynamic import types
@@ -35,6 +41,10 @@ interface MapMarkerData {
 })
 export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
+
+  @Input() cars: any[] = [];
+  @Input() selectedCarId: string | null = null;
+  @Output() carSelected = new EventEmitter<string>();
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly carLocationsService = inject(CarLocationsService);
@@ -180,22 +190,19 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         // FILTRO DE AUDITORÍA: Eliminar autos que están a más de 150km (Uruguay es pequeño pero largo)
         const maxDistanceKm = 150;
         const filteredLocations = locations.filter((loc) => {
-          const distance = this.calculateDistance(
-            userLoc.lat,
-            userLoc.lng,
-            loc.lat,
-            loc.lng
-          );
+          const distance = this.calculateDistance(userLoc.lat, userLoc.lng, loc.lat, loc.lng);
           return distance <= maxDistanceKm;
         });
 
         const filteredCount = originalCount - filteredLocations.length;
         if (filteredCount > 0) {
           console.log(
-            `[CarsMapComponent] 🔍 AUDITORÍA: Filtrados ${filteredCount} autos que están a más de ${maxDistanceKm}km de distancia (Uruguay)`
+            `[CarsMapComponent] 🔍 AUDITORÍA: Filtrados ${filteredCount} autos que están a más de ${maxDistanceKm}km de distancia (Uruguay)`,
           );
         }
-        console.log(`[CarsMapComponent] Mostrando ${filteredLocations.length} de ${originalCount} autos dentro de ${maxDistanceKm}km`);
+        console.log(
+          `[CarsMapComponent] Mostrando ${filteredLocations.length} de ${originalCount} autos dentro de ${maxDistanceKm}km`,
+        );
 
         locations = filteredLocations;
       }
@@ -218,7 +225,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private sortLocationsByDistance(
     locations: CarMapLocation[],
-    userLoc: { lat: number; lng: number }
+    userLoc: { lat: number; lng: number },
   ): CarMapLocation[] {
     return [...locations].sort((a, b) => {
       const distA = this.calculateDistance(userLoc.lat, userLoc.lng, a.lat, a.lng);
@@ -277,9 +284,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
           this.map?.flyTo({
             center: [location.lng, location.lat],
             zoom: (this.map?.getZoom() || 10) + 2,
-            duration: 1000
+            duration: 1000,
           });
         } else {
+          // Emitir evento de selección de auto
+          this.carSelected.emit(location.carId);
+
           if (marker.getPopup().isOpen()) {
             marker.togglePopup();
           } else {
@@ -327,12 +337,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
           return false;
         }
 
-        const distance = this.calculateDistance(
-          location.lat,
-          location.lng,
-          other.lat,
-          other.lng
-        );
+        const distance = this.calculateDistance(location.lat, location.lng, other.lat, other.lng);
 
         return distance <= clusterRadius;
       });
@@ -352,7 +357,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
-    console.log(`[CarsMapComponent] Created ${clusters.length} clusters from ${locations.length} locations`);
+    console.log(
+      `[CarsMapComponent] Created ${clusters.length} clusters from ${locations.length} locations`,
+    );
     return clusters;
   }
 
@@ -364,7 +371,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         userLoc.lat,
         userLoc.lng,
         location.lat,
-        location.lng
+        location.lng,
       );
       if (distanceKm < 1) {
         distanceText = `${Math.round(distanceKm * 10) * 100}m`;
@@ -386,10 +393,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
     `;
   }
 
-  private createClusterPopupHTML(cluster: {
-    locations: CarMapLocation[];
-    count: number;
-  }): string {
+  private createClusterPopupHTML(cluster: { locations: CarMapLocation[]; count: number }): string {
     const userLoc = this.userLocation();
 
     // Ordenar por distancia dentro del cluster
@@ -414,9 +418,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         let distText = '';
         if (userLoc) {
           const dist = this.calculateDistance(userLoc.lat, userLoc.lng, loc.lat, loc.lng);
-          distText = dist < 1
-            ? `${Math.round(dist * 10) * 100}m`
-            : `${Math.round(dist)}km`;
+          distText = dist < 1 ? `${Math.round(dist * 10) * 100}m` : `${Math.round(dist)}km`;
         }
 
         return `
@@ -430,7 +432,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .join('');
 
-    const moreText = cluster.count > 5 ? `<p class="cluster-more">Y ${cluster.count - 5} más...</p>` : '';
+    const moreText =
+      cluster.count > 5 ? `<p class="cluster-more">Y ${cluster.count - 5} más...</p>` : '';
 
     return `
       <div class="car-popup cluster-popup">
@@ -462,7 +465,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         userLoc.lat,
         userLoc.lng,
         location.lat,
-        location.lng
+        location.lng,
       );
       if (distanceKm < 1) {
         distanceText = `<span class="marker-distance">${Math.round(distanceKm * 10) * 100}m</span>`;
@@ -505,7 +508,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         userLoc.lat,
         userLoc.lng,
         location.lat,
-        location.lng
+        location.lng,
       );
       let distanceText = '';
       if (distanceKm < 1) {
@@ -608,7 +611,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
           lat: latitude,
           lng: longitude,
           accuracy: `${Math.round(accuracy)}m`,
-          timestamp: new Date(position.timestamp).toLocaleTimeString()
+          timestamp: new Date(position.timestamp).toLocaleTimeString(),
         });
 
         // Solo actualizar si la precisión es razonable (< 100m)
@@ -620,7 +623,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         // Validar que la ubicación esté dentro de Uruguay
         const isInUruguay = this.isLocationInUruguay(latitude, longitude);
         if (!isInUruguay) {
-          console.warn('[CarsMapComponent] Location outside Uruguay bounds:', { latitude, longitude });
+          console.warn('[CarsMapComponent] Location outside Uruguay bounds:', {
+            latitude,
+            longitude,
+          });
           // Usar Montevideo como fallback
           this.userLocation.set({ lat: -34.9011, lng: -56.1645 });
           this.addUserMarker(-34.9011, -56.1645);
@@ -643,7 +649,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         console.error('[CarsMapComponent] Geolocation error:', {
           code: error.code,
           message: error.message,
-          details: this.getGeolocationErrorMessage(error.code)
+          details: this.getGeolocationErrorMessage(error.code),
         });
 
         // Usar Montevideo como ubicación predeterminada
@@ -657,7 +663,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         enableHighAccuracy: true, // CRÍTICO: Máxima precisión GPS
         timeout: 15000, // 15 segundos timeout
         maximumAge: 0, // Sin cache, ubicación en tiempo real
-      }
+      },
     );
   }
 
@@ -696,7 +702,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       center: [lng, lat],
       zoom: 11, // Zoom nivel ciudad
       duration: 2000, // 2 segundos de animación
-      essential: true
+      essential: true,
     });
   }
 
