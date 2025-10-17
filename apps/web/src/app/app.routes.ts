@@ -19,6 +19,11 @@ export const routes: Routes = [
           import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
       },
       {
+        path: 'compare',
+        loadComponent: () =>
+          import('./features/cars/compare/compare.page').then((m) => m.ComparePage),
+      },
+      {
         path: 'publish',
         canMatch: [AuthGuard],
         loadComponent: () =>
