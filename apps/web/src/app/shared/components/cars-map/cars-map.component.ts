@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  OnChanges,
   signal,
   effect,
   inject,
@@ -26,11 +27,6 @@ type MapboxMap = any;
 type Marker = any;
 type LngLatLike = [number, number];
 
-interface MapMarkerData {
-  marker: Marker;
-  carId: string;
-}
-
 @Component({
   standalone: true,
   selector: 'app-cars-map',
@@ -39,7 +35,7 @@ interface MapMarkerData {
   styleUrls: ['./cars-map.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
 
   @Input() cars: any[] = [];
@@ -55,12 +51,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
 
   private map: MapboxMap | null = null;
-  private markers: MapMarkerData[] = [];
   private userMarker: Marker | null = null;
   private realtimeUnsubscribe: (() => void) | null = null;
   private refreshInterval: ReturnType<typeof setInterval> | null = null;
   private mapboxgl: any | null = null;
   private geolocationWatchId: number | null = null;
+  private currentLocations: CarMapLocation[] = []; // Para tracking de locations
+  private selectedPopup: any | null = null; // Popup actual abierto
 
   constructor() {
     // Efecto para limpiar recursos cuando el componente se destruye
@@ -72,6 +69,23 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       { allowSignalWrites: false },
     );
+  }
+
+  ngOnChanges(changes: any): void {
+    // Detectar cambios en selectedCarId y mover el mapa
+    if (changes.selectedCarId && !changes.selectedCarId.firstChange) {
+      const carId = changes.selectedCarId.currentValue;
+      if (carId) {
+        this.flyToCarLocation(carId);
+      }
+    }
+
+    // Forzar resize del mapa si cambió el tamaño del contenedor
+    if (this.map) {
+      setTimeout(() => {
+        this.map?.resize();
+      }, 100);
+    }
   }
 
   ngOnInit(): void {
@@ -149,7 +163,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/standard',
+        style: 'mapbox://styles/mapbox/streets-v12', // Estilo con color (calles, parques, agua)
         center: defaultCenter,
         zoom: defaultZoom,
         maxBounds: uruguayBounds,
@@ -159,6 +173,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Esperar a que el mapa cargue
       this.map.on('load', () => {
+        // Forzar resize para asegurar que el mapa tome el tamaño correcto
+        setTimeout(() => {
+          this.map?.resize();
+        }, 300);
+
         void this.loadCarLocations();
         this.setupRealtimeUpdates();
         this.setupPeriodicRefresh();
@@ -239,255 +258,238 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    // Eliminar marcadores existentes
-    this.clearMarkers();
+    // Guardar locations para uso posterior
+    this.currentLocations = locations;
 
-    // Agrupar marcadores por ubicación cercana para clustering simple
-    const clustered = this.clusterNearbyLocations(locations);
+    // Remover layers y source existentes si existen
+    this.removeCarLayers();
 
-    // Crear nuevos marcadores
-    clustered.forEach((item) => {
-      if (!this.map || !this.mapboxgl) {
-        return;
-      }
-
-      const isCluster = item.count > 1;
-      const location = item.locations[0]; // Usar primera ubicación como referencia
-
-      // Crear elemento HTML personalizado para el marcador
-      const el = document.createElement('div');
-      el.className = isCluster ? 'car-marker car-marker-cluster' : 'car-marker';
-
-      if (isCluster) {
-        el.innerHTML = this.createClusterMarkerHTML(item.count, location);
-      } else {
-        el.innerHTML = this.createMarkerHTML(location);
-      }
-
-      // Crear popup
-      const popup = new this.mapboxgl.Popup({
-        offset: 25,
-        closeButton: true,
-        closeOnClick: false,
-      }).setHTML(isCluster ? this.createClusterPopupHTML(item) : this.createPopupHTML(location));
-
-      // Crear marcador
-      const marker = new this.mapboxgl.Marker(el)
-        .setLngLat([location.lng, location.lat] as LngLatLike)
-        .setPopup(popup)
-        .addTo(this.map);
-
-      // Agregar evento de click
-      el.addEventListener('click', () => {
-        if (isCluster) {
-          // Para clusters, hacer zoom a esa área
-          this.map?.flyTo({
-            center: [location.lng, location.lat],
-            zoom: (this.map?.getZoom() || 10) + 2,
-            duration: 1000,
-          });
-        } else {
-          // Emitir evento de selección de auto
-          this.carSelected.emit(location.carId);
-
-          if (marker.getPopup().isOpen()) {
-            marker.togglePopup();
-          } else {
-            // Cerrar otros popups
-            this.markers.forEach((m) => {
-              if (m.marker.getPopup().isOpen()) {
-                m.marker.togglePopup();
-              }
-            });
-            marker.togglePopup();
-          }
-        }
-      });
-
-      this.markers.push({
-        marker,
-        carId: location.carId,
-      });
-    });
-  }
-
-  private clusterNearbyLocations(locations: CarMapLocation[]): Array<{
-    locations: CarMapLocation[];
-    count: number;
-    lat: number;
-    lng: number;
-  }> {
-    const clusters: Array<{
-      locations: CarMapLocation[];
-      count: number;
-      lat: number;
-      lng: number;
-    }> = [];
-    const processed = new Set<string>();
-    const clusterRadius = 0.05; // ~5.5 km aprox
-
-    locations.forEach((location) => {
-      if (processed.has(location.carId)) {
-        return;
-      }
-
-      // Encontrar todas las ubicaciones cercanas
-      const nearby = locations.filter((other) => {
-        if (processed.has(other.carId)) {
-          return false;
-        }
-
-        const distance = this.calculateDistance(location.lat, location.lng, other.lat, other.lng);
-
-        return distance <= clusterRadius;
-      });
-
-      // Marcar como procesadas
-      nearby.forEach((l) => processed.add(l.carId));
-
-      // Calcular centro del cluster
-      const avgLat = nearby.reduce((sum, l) => sum + l.lat, 0) / nearby.length;
-      const avgLng = nearby.reduce((sum, l) => sum + l.lng, 0) / nearby.length;
-
-      clusters.push({
-        locations: nearby,
-        count: nearby.length,
-        lat: avgLat,
-        lng: avgLng,
-      });
-    });
-
-    console.log(
-      `[CarsMapComponent] Created ${clusters.length} clusters from ${locations.length} locations`,
-    );
-    return clusters;
-  }
-
-  private createClusterMarkerHTML(count: number, location: CarMapLocation): string {
-    const userLoc = this.userLocation();
-    let distanceText = '';
-    if (userLoc) {
-      const distanceKm = this.calculateDistance(
-        userLoc.lat,
-        userLoc.lng,
-        location.lat,
-        location.lng,
-      );
-      if (distanceKm < 1) {
-        distanceText = `${Math.round(distanceKm * 10) * 100}m`;
-      } else if (distanceKm < 10) {
-        distanceText = `${distanceKm.toFixed(1)}km`;
-      } else {
-        distanceText = `${Math.round(distanceKm)}km`;
-      }
-    }
-
-    return `
-      <div class="marker-content marker-cluster-content">
-        <div class="marker-cluster-badge">${count}</div>
-        <div class="marker-text">
-          <span class="marker-price">${count} autos</span>
-          ${distanceText ? `<span class="marker-distance">${distanceText}</span>` : ''}
-        </div>
-      </div>
-    `;
-  }
-
-  private createClusterPopupHTML(cluster: { locations: CarMapLocation[]; count: number }): string {
-    const userLoc = this.userLocation();
-
-    // Ordenar por distancia dentro del cluster
-    let sortedLocations = cluster.locations;
-    if (userLoc) {
-      sortedLocations = [...cluster.locations].sort((a, b) => {
-        const distA = this.calculateDistance(userLoc.lat, userLoc.lng, a.lat, a.lng);
-        const distB = this.calculateDistance(userLoc.lat, userLoc.lng, b.lat, b.lng);
-        return distA - distB;
-      });
-    }
-
-    const carsList = sortedLocations
-      .slice(0, 5) // Mostrar máximo 5
-      .map((loc) => {
-        const priceFormatted = new Intl.NumberFormat('es-AR', {
-          style: 'currency',
+    // Crear GeoJSON source con los datos de los autos
+    const geojsonData = {
+      type: 'FeatureCollection' as const,
+      features: locations.map((loc) => ({
+        type: 'Feature' as const,
+        geometry: {
+          type: 'Point' as const,
+          coordinates: [loc.lng, loc.lat],
+        },
+        properties: {
+          carId: loc.carId,
+          price: Math.round(loc.pricePerDay),
+          title: loc.title,
           currency: loc.currency,
-          minimumFractionDigits: 0,
-        }).format(loc.pricePerDay);
+          photoUrl: loc.photoUrl || '',
+          locationLabel: loc.locationLabel,
+          formattedAddress: loc.formattedAddress || '',
+          description: loc.description || '',
+        },
+      })),
+    };
 
-        let distText = '';
-        if (userLoc) {
-          const dist = this.calculateDistance(userLoc.lat, userLoc.lng, loc.lat, loc.lng);
-          distText = dist < 1 ? `${Math.round(dist * 10) * 100}m` : `${Math.round(dist)}km`;
-        }
-
-        return `
-          <div class="cluster-car-item">
-            <span class="cluster-car-title">${this.escapeHtml(loc.title)}</span>
-            <span class="cluster-car-price">${priceFormatted}/día</span>
-            ${distText ? `<span class="cluster-car-distance">${distText}</span>` : ''}
-            <a href="/cars/${loc.carId}" class="cluster-car-link">Ver →</a>
-          </div>
-        `;
-      })
-      .join('');
-
-    const moreText =
-      cluster.count > 5 ? `<p class="cluster-more">Y ${cluster.count - 5} más...</p>` : '';
-
-    return `
-      <div class="car-popup cluster-popup">
-        <div class="popup-content">
-          <h3 class="popup-title">${cluster.count} autos en esta área</h3>
-          <div class="cluster-cars-list">
-            ${carsList}
-          </div>
-          ${moreText}
-          <p class="cluster-hint">💡 Haz zoom para ver más detalles</p>
-        </div>
-      </div>
-    `;
-  }
-
-  private createMarkerHTML(location: CarMapLocation): string {
-    const priceFormatted = new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: location.currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(location.pricePerDay);
-
-    // Calcular distancia si tenemos ubicación del usuario
-    const userLoc = this.userLocation();
-    let distanceText = '';
-    if (userLoc) {
-      const distanceKm = this.calculateDistance(
-        userLoc.lat,
-        userLoc.lng,
-        location.lat,
-        location.lng,
-      );
-      if (distanceKm < 1) {
-        distanceText = `<span class="marker-distance">${Math.round(distanceKm * 10) * 100}m</span>`;
-      } else if (distanceKm < 10) {
-        distanceText = `<span class="marker-distance">${distanceKm.toFixed(1)}km</span>`;
-      } else {
-        distanceText = `<span class="marker-distance">${Math.round(distanceKm)}km</span>`;
-      }
+    // Agregar source
+    if (this.map.getSource('cars')) {
+      (this.map.getSource('cars') as any).setData(geojsonData);
+    } else {
+      this.map.addSource('cars', {
+        type: 'geojson',
+        data: geojsonData,
+        cluster: true, // Habilitar clustering nativo de Mapbox
+        clusterMaxZoom: 14, // Max zoom para clusters
+        clusterRadius: 50, // Radio del cluster en pixels
+      });
     }
 
-    return `
-      <div class="marker-content">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
-        </svg>
-        <div class="marker-text">
-          <span class="marker-price">${priceFormatted}</span>
-          ${distanceText}
-        </div>
-      </div>
-    `;
+    // Layer 1: Círculos para clusters
+    this.map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'cars',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': '#222222',
+        'circle-radius': ['step', ['get', 'point_count'], 20, 10, 25, 30, 30],
+        'circle-stroke-width': 1,
+        'circle-stroke-color': '#ffffff',
+      },
+    });
+
+    // Layer 2: Texto de conteo para clusters
+    this.map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'cars',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
+        'text-size': 14,
+      },
+      paint: {
+        'text-color': '#ffffff',
+      },
+    });
+
+    // Layer 3: Círculos de fondo para autos individuales (estilo Airbnb)
+    this.map.addLayer({
+      id: 'car-markers-bg',
+      type: 'circle',
+      source: 'cars',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': '#ffffff',
+        'circle-radius': 22,
+        'circle-stroke-width': 1.5,
+        'circle-stroke-color': 'rgba(0, 0, 0, 0.08)',
+        'circle-opacity': 1,
+      },
+    });
+
+    // Layer 4: Texto de precio para autos individuales
+    this.map.addLayer({
+      id: 'car-prices',
+      type: 'symbol',
+      source: 'cars',
+      filter: ['!', ['has', 'point_count']],
+      layout: {
+        'text-field': ['concat', '$', ['get', 'price']],
+        'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
+        'text-size': 13,
+        'text-allow-overlap': true,
+      },
+      paint: {
+        'text-color': '#222222',
+      },
+    });
+
+    // Agregar interactividad
+    this.setupLayerInteractions();
   }
+
+  /**
+   * Configura eventos de click y hover para los layers
+   */
+  private setupLayerInteractions(): void {
+    if (!this.map) return;
+
+    // Cambiar cursor al pasar sobre autos o clusters
+    this.map.on('mouseenter', 'car-markers-bg', () => {
+      if (this.map) this.map.getCanvas().style.cursor = 'pointer';
+    });
+
+    this.map.on('mouseleave', 'car-markers-bg', () => {
+      if (this.map) this.map.getCanvas().style.cursor = '';
+    });
+
+    this.map.on('mouseenter', 'clusters', () => {
+      if (this.map) this.map.getCanvas().style.cursor = 'pointer';
+    });
+
+    this.map.on('mouseleave', 'clusters', () => {
+      if (this.map) this.map.getCanvas().style.cursor = '';
+    });
+
+    // Click en auto individual
+    this.map.on('click', 'car-markers-bg', (e: any) => {
+      if (!e.features || e.features.length === 0) return;
+
+      const feature = e.features[0];
+      const carId = feature.properties.carId;
+
+      // Emitir evento de selección
+      this.carSelected.emit(carId);
+
+      // Mostrar popup
+      this.showCarPopup(feature);
+    });
+
+    // Click en cluster - hacer zoom
+    this.map.on('click', 'clusters', (e: any) => {
+      if (!this.map || !e.features || e.features.length === 0) return;
+
+      const features = this.map.queryRenderedFeatures(e.point, {
+        layers: ['clusters'],
+      });
+
+      if (features.length === 0) return;
+
+      const clusterId = features[0].properties.cluster_id;
+      const source = this.map.getSource('cars') as any;
+
+      source.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
+        if (err || !this.map) return;
+
+        this.map.easeTo({
+          center: (features[0].geometry as any).coordinates,
+          zoom: zoom,
+          duration: 500,
+        });
+      });
+    });
+  }
+
+  /**
+   * Remueve los layers de autos del mapa
+   */
+  private removeCarLayers(): void {
+    if (!this.map) return;
+
+    const layers = ['car-prices', 'car-markers-bg', 'cluster-count', 'clusters'];
+
+    layers.forEach((layerId) => {
+      if (this.map?.getLayer(layerId)) {
+        this.map.removeLayer(layerId);
+      }
+    });
+  }
+
+  /**
+   * Muestra un popup para un auto específico
+   */
+  private showCarPopup(feature: any): void {
+    if (!this.map || !this.mapboxgl) return;
+
+    // Cerrar popup anterior si existe
+    if (this.selectedPopup) {
+      this.selectedPopup.remove();
+      this.selectedPopup = null;
+    }
+
+    const props = feature.properties;
+    const coords = (feature.geometry as any).coordinates;
+
+    // Crear HTML del popup usando el mismo método existente
+    const location: CarMapLocation = {
+      carId: props.carId,
+      title: props.title,
+      pricePerDay: props.price,
+      currency: props.currency,
+      photoUrl: props.photoUrl,
+      locationLabel: props.locationLabel,
+      formattedAddress: props.formattedAddress,
+      description: props.description,
+      lat: coords[1],
+      lng: coords[0],
+    };
+
+    const popupHTML = this.createPopupHTML(location);
+
+    // Crear y mostrar popup
+    this.selectedPopup = new this.mapboxgl.Popup({
+      offset: 25,
+      closeButton: true,
+      closeOnClick: false,
+      maxWidth: '320px',
+    })
+      .setLngLat(coords)
+      .setHTML(popupHTML)
+      .addTo(this.map);
+
+    // Limpiar referencia cuando se cierra
+    this.selectedPopup.on('close', () => {
+      this.selectedPopup = null;
+    });
+  }
+
 
   private createPopupHTML(location: CarMapLocation): string {
     const priceFormatted = new Intl.NumberFormat('es-AR', {
@@ -574,10 +576,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private clearMarkers(): void {
-    this.markers.forEach(({ marker }) => {
-      marker.remove();
-    });
-    this.markers = [];
+    // Ya no usamos HTML markers, los layers se actualizan automáticamente
+    // Este método se mantiene para compatibilidad con el user marker
+    if (this.selectedPopup) {
+      this.selectedPopup.remove();
+      this.selectedPopup = null;
+    }
   }
 
   private setupRealtimeUpdates(): void {
@@ -636,7 +640,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addUserMarker(latitude, longitude);
 
           // Solo hacer zoom la primera vez
-          const isFirstUpdate = this.markers.length === 0 || !this.userLocation();
+          const isFirstUpdate = this.currentLocations.length === 0 || !this.userLocation();
           if (isFirstUpdate) {
             this.zoomToUserLocation(latitude, longitude);
           }
@@ -754,8 +758,16 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private cleanup(): void {
-    // Limpiar marcadores
+    // Limpiar popup seleccionado
     this.clearMarkers();
+
+    // Limpiar layers de autos
+    this.removeCarLayers();
+
+    // Limpiar source de autos
+    if (this.map && this.map.getSource('cars')) {
+      this.map.removeSource('cars');
+    }
 
     // Limpiar marcador de usuario
     if (this.userMarker) {
@@ -792,5 +804,49 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   async refreshMap(): Promise<void> {
     this.loading.set(true);
     await this.loadCarLocations(true);
+  }
+
+  /**
+   * Vuela a la ubicación de un auto específico (desplazamiento rápido)
+   */
+  flyToCarLocation(carId: string): void {
+    if (!this.map) {
+      return;
+    }
+
+    // Buscar el auto en currentLocations
+    const location = this.currentLocations.find((loc) => loc.carId === carId);
+    if (!location) {
+      console.warn(`[CarsMapComponent] No location found for car ID: ${carId}`);
+      return;
+    }
+
+    // Volar a la ubicación con animación rápida
+    this.map.flyTo({
+      center: [location.lng, location.lat],
+      zoom: 14, // Zoom cercano para ver el auto
+      duration: 400, // 400ms = animación rápida y suave
+      essential: true,
+    });
+
+    // Abrir popup del auto después de un delay
+    setTimeout(() => {
+      if (!this.map) return;
+
+      // Query features en esa ubicación
+      const point = this.map.project([location.lng, location.lat]);
+      const features = this.map.queryRenderedFeatures(point, {
+        layers: ['car-markers-bg'],
+      });
+
+      if (features.length > 0) {
+        const feature = features.find((f) => f.properties.carId === carId);
+        if (feature) {
+          this.showCarPopup(feature);
+        }
+      }
+    }, 500);
+
+    console.log(`[CarsMapComponent] Flying to car ${carId} at [${location.lng}, ${location.lat}]`);
   }
 }

@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -51,7 +58,10 @@ export class PublishCarPage implements OnInit {
     brand: ['', Validators.required],
     model_id: ['', Validators.required],
     model: ['', Validators.required],
-    year: [new Date().getFullYear(), [Validators.required, Validators.min(2000), Validators.max(new Date().getFullYear() + 1)]],
+    year: [
+      new Date().getFullYear(),
+      [Validators.required, Validators.min(2000), Validators.max(new Date().getFullYear() + 1)],
+    ],
 
     // Precio y condiciones
     price_per_day: [0, [Validators.required, Validators.min(10)]],
@@ -106,7 +116,7 @@ export class PublishCarPage implements OnInit {
     this.form.get('brand_id')?.valueChanges.subscribe(async (brandId) => {
       if (brandId) {
         await this.loadModels(brandId);
-        const brand = this.brands().find(b => b.id === brandId);
+        const brand = this.brands().find((b) => b.id === brandId);
         if (brand) {
           this.form.patchValue({ brand: brand.name });
         }
@@ -119,7 +129,7 @@ export class PublishCarPage implements OnInit {
     // Watch for model changes
     this.form.get('model_id')?.valueChanges.subscribe((modelId) => {
       if (modelId) {
-        const model = this.models().find(m => m.id === modelId);
+        const model = this.models().find((m) => m.id === modelId);
         if (model) {
           this.form.patchValue({ model: model.name });
         }
@@ -266,7 +276,7 @@ export class PublishCarPage implements OnInit {
 
   private getFormValidationErrors(): any {
     const errors: any = {};
-    Object.keys(this.form.controls).forEach(key => {
+    Object.keys(this.form.controls).forEach((key) => {
       const control = this.form.get(key);
       if (control?.errors) {
         errors[key] = control.errors;

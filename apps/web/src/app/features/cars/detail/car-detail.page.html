@@ -9,15 +9,22 @@
           class="h-72 w-full rounded-lg object-cover"
         />
         <ng-template #placeholder>
-          <div class="flex h-72 items-center justify-center rounded-lg bg-slate-100 text-sm text-slate-500">
+          <div
+            class="flex h-72 items-center justify-center rounded-lg bg-slate-100 text-sm text-slate-500"
+          >
             Sin fotos disponibles
           </div>
         </ng-template>
         <h1 class="text-3xl font-semibold text-slate-900">{{ car()?.title }}</h1>
         <div class="space-y-1">
           <p class="text-sm text-slate-600">
-            📍 <ng-container *ngIf="car()?.location_formatted_address; else oldLocation">{{ car()?.location_formatted_address }}</ng-container>
-            <ng-template #oldLocation>{{ car()?.location_city }}, {{ car()?.location_state }}</ng-template>
+            📍
+            <ng-container *ngIf="car()?.location_formatted_address; else oldLocation">{{
+              car()?.location_formatted_address
+            }}</ng-container>
+            <ng-template #oldLocation
+              >{{ car()?.location_city }}, {{ car()?.location_state }}</ng-template
+            >
           </p>
           <p class="text-sm text-slate-600">
             Transmisión {{ car()?.transmission }} · {{ car()?.fuel_type | titlecase }}
@@ -36,9 +43,15 @@
         <span class="text-sm font-normal text-slate-500">por día</span>
       </p>
 
-      <app-date-range-picker label="Fechas de alquiler" (rangeChange)="onRangeChange($event)"></app-date-range-picker>
+      <app-date-range-picker
+        label="Fechas de alquiler"
+        (rangeChange)="onRangeChange($event)"
+      ></app-date-range-picker>
 
-      <div *ngIf="totalPrice() as total" class="rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-800">
+      <div
+        *ngIf="totalPrice() as total"
+        class="rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-800"
+      >
         Total estimado: <strong>{{ total | money }}</strong>
       </div>
 
@@ -65,7 +78,9 @@
 </ng-container>
 
 <ng-template #loadingOrError>
-  <p *ngIf="loading(); else errorTpl" class="text-center text-sm text-slate-500">Cargando auto...</p>
+  <p *ngIf="loading(); else errorTpl" class="text-center text-sm text-slate-500">
+    Cargando auto...
+  </p>
 </ng-template>
 
 <ng-template #errorTpl>

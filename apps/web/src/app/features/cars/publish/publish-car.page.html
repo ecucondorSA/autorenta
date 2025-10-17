@@ -2,7 +2,8 @@
   <header class="space-y-2">
     <h1 class="text-3xl font-bold text-slate-900">Publicá tu auto</h1>
     <p class="text-sm text-slate-600">
-      Completá la información en secciones. El equipo de AutorentA revisará y aprobará tu publicación.
+      Completá la información en secciones. El equipo de AutorentA revisará y aprobará tu
+      publicación.
     </p>
   </header>
 
@@ -211,7 +212,9 @@
               formControlName="insurance_included"
               class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
             />
-            <span class="text-sm font-medium text-slate-700">El seguro está incluido en el precio</span>
+            <span class="text-sm font-medium text-slate-700"
+              >El seguro está incluido en el precio</span
+            >
           </label>
         </div>
       </div>
@@ -280,7 +283,8 @@
     <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <h2 class="mb-4 text-xl font-semibold text-slate-900">📍 Ubicación</h2>
       <p class="mb-4 text-sm text-slate-600">
-        Ingresá la dirección exacta donde se retirará el auto. Las coordenadas se calcularán automáticamente.
+        Ingresá la dirección exacta donde se retirará el auto. Las coordenadas se calcularán
+        automáticamente.
       </p>
 
       <div class="grid gap-4">
@@ -358,7 +362,8 @@
 
         <div class="rounded-lg bg-blue-50 border border-blue-200 p-3">
           <p class="text-xs text-blue-800">
-            💡 <strong>Nota:</strong> La dirección se geocodificará automáticamente al publicar el auto para mostrarlo en el mapa.
+            💡 <strong>Nota:</strong> La dirección se geocodificará automáticamente al publicar el
+            auto para mostrarlo en el mapa.
           </p>
         </div>
       </div>
@@ -369,7 +374,8 @@
       <h2 class="mb-4 text-xl font-semibold text-slate-900">📸 Fotos del Auto</h2>
       <app-upload-image (filesSelected)="onFilesSelected($event)"></app-upload-image>
       <p class="mt-3 text-xs text-slate-600">
-        Podés subir múltiples fotos. La primera será la foto principal. Se recomienda fotos de buena calidad desde diferentes ángulos.
+        Podés subir múltiples fotos. La primera será la foto principal. Se recomienda fotos de buena
+        calidad desde diferentes ángulos.
       </p>
     </section>
 
@@ -382,7 +388,9 @@
           formControlName="terms_and_conditions"
           placeholder="Ej: No se permite fumar, Se requiere licencia vigente con al menos 2 años de antigüedad, etc."
         ></textarea>
-        <span class="text-xs text-slate-500">Condiciones específicas o restricciones para el alquiler</span>
+        <span class="text-xs text-slate-500"
+          >Condiciones específicas o restricciones para el alquiler</span
+        >
       </label>
     </section>
 
@@ -390,7 +398,9 @@
     <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-6">
       <div class="flex-1">
         <p class="text-sm font-medium text-slate-900">¿Listo para publicar?</p>
-        <p class="text-xs text-slate-600">Tu anuncio será revisado por el equipo antes de publicarse.</p>
+        <p class="text-xs text-slate-600">
+          Tu anuncio será revisado por el equipo antes de publicarse.
+        </p>
       </div>
       <button
         class="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
@@ -399,7 +409,9 @@
       >
         <span *ngIf="!submitting()">📤 Enviar para revisión</span>
         <span *ngIf="submitting()" class="flex items-center gap-2">
-          <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+          <span
+            class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+          ></span>
           Publicando...
         </span>
       </button>

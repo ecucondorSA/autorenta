@@ -4,7 +4,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Car } from '../../../core/models';
-import { DateRangePickerComponent, DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
+import {
+  DateRangePickerComponent,
+  DateRange,
+} from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
 @Component({
@@ -47,7 +50,7 @@ export class CarDetailPage implements OnInit {
     private readonly carsService: CarsService,
     private readonly bookingsService: BookingsService,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -128,9 +131,7 @@ export class CarDetailPage implements OnInit {
         this.bookingError.set('No podés reservar tu propio auto');
       } else {
         // Mostrar el error real para debugging
-        this.bookingError.set(
-          `Error: ${err?.message || JSON.stringify(err)}`
-        );
+        this.bookingError.set(`Error: ${err?.message || JSON.stringify(err)}`);
       }
     } finally {
       this.bookingInProgress.set(false);
