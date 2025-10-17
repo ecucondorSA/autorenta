@@ -54,5 +54,10 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
     loadComponent: () => import('./features/profile/profile.page').then((m) => m.ProfilePage),
   },
+  {
+    path: 'wallet',
+    canMatch: [AuthGuard],
+    loadComponent: () => import('./features/wallet/wallet.page').then((m) => m.WalletPage),
+  },
   { path: '**', redirectTo: '' },
 ];
