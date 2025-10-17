@@ -4,13 +4,11 @@ import { AuthGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
+    loadComponent: () => import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
   },
   {
     path: 'auth',
-    loadChildren: () =>
-      import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
     path: 'cars',
@@ -54,8 +52,7 @@ export const routes: Routes = [
   {
     path: 'profile',
     canMatch: [AuthGuard],
-    loadComponent: () =>
-      import('./features/profile/profile.page').then((m) => m.ProfilePage),
+    loadComponent: () => import('./features/profile/profile.page').then((m) => m.ProfilePage),
   },
   { path: '**', redirectTo: '' },
 ];

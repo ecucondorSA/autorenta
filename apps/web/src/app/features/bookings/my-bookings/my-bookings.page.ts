@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
 import { formatDateRange } from '../../../shared/utils/date.utils';
@@ -8,7 +9,7 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
-  imports: [CommonModule, MoneyPipe],
+  imports: [CommonModule, MoneyPipe, RouterLink],
   templateUrl: './my-bookings.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

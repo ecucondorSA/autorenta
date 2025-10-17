@@ -42,7 +42,7 @@ export class LoginPage {
     } catch (err) {
       console.error(err);
       this.error.set(
-        err instanceof Error ? err.message : 'No pudimos iniciar sesión, revisá tus credenciales.'
+        err instanceof Error ? err.message : 'No pudimos iniciar sesión, revisá tus credenciales.',
       );
     } finally {
       this.loading.set(false);

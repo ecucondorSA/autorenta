@@ -12,8 +12,22 @@ export type CarStatus = 'draft' | 'active' | 'suspended' | 'maintenance';
 export type FuelType = 'nafta' | 'gasoil' | 'hibrido' | 'electrico';
 export type Transmission = 'manual' | 'automatic';
 export type CancelPolicy = 'flex' | 'moderate' | 'strict';
-export type BookingStatus = 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show';
-export type PaymentStatus = 'requires_payment' | 'processing' | 'succeeded' | 'failed' | 'refunded' | 'partial_refund' | 'chargeback';
+export type BookingStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
+  | 'no_show'
+  | 'expired';
+export type PaymentStatus =
+  | 'requires_payment'
+  | 'processing'
+  | 'succeeded'
+  | 'failed'
+  | 'refunded'
+  | 'partial_refund'
+  | 'chargeback';
 export type PaymentProvider = 'mercadopago' | 'stripe' | 'otro';
 export type DisputeKind = 'damage' | 'no_show' | 'late_return' | 'other';
 export type DisputeStatus = 'open' | 'in_review' | 'resolved' | 'rejected';
@@ -195,8 +209,24 @@ export const CAR_STATUSES: CarStatus[] = ['draft', 'active', 'suspended', 'maint
 export const FUEL_TYPES: FuelType[] = ['nafta', 'gasoil', 'hibrido', 'electrico'];
 export const TRANSMISSIONS: Transmission[] = ['manual', 'automatic'];
 export const CANCEL_POLICIES: CancelPolicy[] = ['flex', 'moderate', 'strict'];
-export const BOOKING_STATUSES: BookingStatus[] = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show'];
-export const PAYMENT_STATUSES: PaymentStatus[] = ['requires_payment', 'processing', 'succeeded', 'failed', 'refunded', 'partial_refund', 'chargeback'];
+export const BOOKING_STATUSES: BookingStatus[] = [
+  'pending',
+  'confirmed',
+  'in_progress',
+  'completed',
+  'cancelled',
+  'no_show',
+  'expired',
+];
+export const PAYMENT_STATUSES: PaymentStatus[] = [
+  'requires_payment',
+  'processing',
+  'succeeded',
+  'failed',
+  'refunded',
+  'partial_refund',
+  'chargeback',
+];
 
 export const STORAGE_BUCKETS = {
   AVATARS: 'avatars',

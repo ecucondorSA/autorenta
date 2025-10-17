@@ -18,9 +18,10 @@ const readEnv = (key: string): string | undefined => {
   }
 
   // import.meta.env (Angular 17+ builder exposes env vars at build time)
-  const metaEnv = (typeof import.meta !== 'undefined' && (import.meta as any).env)
-    ? (import.meta as any).env[key]
-    : undefined;
+  const metaEnv =
+    typeof import.meta !== 'undefined' && (import.meta as any).env
+      ? (import.meta as any).env[key]
+      : undefined;
   if (typeof metaEnv === 'string' && metaEnv.length > 0) {
     return metaEnv;
   }
@@ -47,7 +48,10 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   mapboxAccessToken: resolve('NG_APP_MAPBOX_ACCESS_TOKEN', defaults.mapboxAccessToken),
   carLocationsCacheTtlMs: defaults.carLocationsCacheTtlMs ?? 5 * 60 * 1000,
   carLocationsRefreshMs: defaults.carLocationsRefreshMs ?? 60 * 1000,
-  carLocationsEdgeFunction: resolve('NG_APP_CAR_LOCATIONS_EDGE_FUNCTION', defaults.carLocationsEdgeFunction),
+  carLocationsEdgeFunction: resolve(
+    'NG_APP_CAR_LOCATIONS_EDGE_FUNCTION',
+    defaults.carLocationsEdgeFunction,
+  ),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

@@ -1,7 +1,9 @@
 <section class="space-y-8">
   <header>
     <h1 class="text-3xl font-bold text-slate-900">Panel de Administración</h1>
-    <p class="text-sm text-slate-600">Estadísticas de la base de datos y gestión de publicaciones.</p>
+    <p class="text-sm text-slate-600">
+      Estadísticas de la base de datos y gestión de publicaciones.
+    </p>
     <div class="mt-4 flex flex-wrap items-center gap-3">
       <button
         type="button"
@@ -65,7 +67,10 @@
       </div>
     </div>
 
-    <p *ngIf="!loading() && pendingCars().length === 0" class="rounded-lg bg-slate-100 p-4 text-center text-sm text-slate-600">
+    <p
+      *ngIf="!loading() && pendingCars().length === 0"
+      class="rounded-lg bg-slate-100 p-4 text-center text-sm text-slate-600"
+    >
       ✓ No hay autos pendientes de aprobación.
     </p>
   </div>

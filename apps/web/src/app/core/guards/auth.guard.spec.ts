@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, UrlTree } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AuthGuard } from './auth.guard';
 import { AuthService } from '../services/auth.service';
+import { AuthGuard } from './auth.guard';
 
 class AuthServiceStub {
   private authenticated = false;
 
-  ensureSession = jasmine.createSpy('ensureSession').and.callFake(async () =>
-    this.authenticated ? ({ access_token: 'token' } as any) : null,
-  );
+  ensureSession = jasmine
+    .createSpy('ensureSession')
+    .and.callFake(async () => (this.authenticated ? ({ access_token: 'token' } as any) : null));
 
   isAuthenticated = () => this.authenticated;
 

@@ -22,8 +22,8 @@
   --accent-warm: #8b7355;
 }
 
-/* Dark mode variables (opcional para futuro) */
-[data-theme='dark'] {
+/* Dark mode variables */
+.dark {
   --bg-primary: #121212;
   --bg-secondary: #1e1e1e;
   --bg-elevated: #2a2a2a;

@@ -104,7 +104,10 @@ export class GeocodingService {
   /**
    * Reverse geocoding: convertir coordenadas a dirección
    */
-  async reverseGeocode(latitude: number, longitude: number): Promise<{
+  async reverseGeocode(
+    latitude: number,
+    longitude: number,
+  ): Promise<{
     formattedAddress: string;
     components: AddressComponents;
   } | null> {
@@ -172,11 +175,11 @@ export class GeocodingService {
 
   private getCountryCode(country: string): string {
     const countryMap: Record<string, string> = {
-      'Uruguay': 'UY',
-      'Argentina': 'AR',
-      'Brasil': 'BR',
-      'Chile': 'CL',
-      'Paraguay': 'PY',
+      Uruguay: 'UY',
+      Argentina: 'AR',
+      Brasil: 'BR',
+      Chile: 'CL',
+      Paraguay: 'PY',
     };
 
     return countryMap[country] || 'UY';

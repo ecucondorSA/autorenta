@@ -68,22 +68,16 @@ export class CarLocationsService {
     }
 
     const channel = this.supabase.channel('public:car_map_feed');
-    channel.on(
-      'postgres_changes',
-      { schema: 'public', table: 'car_locations', event: '*' },
-      () => onChange(),
+    channel.on('postgres_changes', { schema: 'public', table: 'car_locations', event: '*' }, () =>
+      onChange(),
     );
-    channel.on(
-      'postgres_changes',
-      { schema: 'public', table: 'cars', event: '*' },
-      (payload) => {
-        const newStatus = (payload.new as any)?.status;
-        const oldStatus = (payload.old as any)?.status;
-        if (newStatus === 'active' || oldStatus === 'active') {
-          onChange();
-        }
-      },
-    );
+    channel.on('postgres_changes', { schema: 'public', table: 'cars', event: '*' }, (payload) => {
+      const newStatus = (payload.new as any)?.status;
+      const oldStatus = (payload.old as any)?.status;
+      if (newStatus === 'active' || oldStatus === 'active') {
+        onChange();
+      }
+    });
 
     void channel.subscribe();
     this.realtimeChannel = channel;
@@ -174,7 +168,12 @@ export class CarLocationsService {
     const lngRaw = entry.lng ?? entry.location_lng ?? car.location_lng;
     const lat = typeof latRaw === 'string' ? Number.parseFloat(latRaw) : latRaw;
     const lng = typeof lngRaw === 'string' ? Number.parseFloat(lngRaw) : lngRaw;
-    if (typeof lat !== 'number' || Number.isNaN(lat) || typeof lng !== 'number' || Number.isNaN(lng)) {
+    if (
+      typeof lat !== 'number' ||
+      Number.isNaN(lat) ||
+      typeof lng !== 'number' ||
+      Number.isNaN(lng)
+    ) {
       return null;
     }
 
@@ -186,17 +185,22 @@ export class CarLocationsService {
     const title = String(car.title ?? entry.title ?? 'Auto disponible');
     const pricePerDayRaw = car.price_per_day ?? entry.price_per_day ?? 0;
     const pricePerDay =
-      typeof pricePerDayRaw === 'string' ? Number.parseFloat(pricePerDayRaw) : Number(pricePerDayRaw ?? 0);
+      typeof pricePerDayRaw === 'string'
+        ? Number.parseFloat(pricePerDayRaw)
+        : Number(pricePerDayRaw ?? 0);
     const currency = String(
       car.currency ?? entry.currency ?? environment.defaultCurrency ?? 'USD',
     ).toUpperCase();
     const city = car.location_city ?? entry.city ?? entry.location_city ?? null;
     const state = car.location_state ?? entry.state ?? entry.location_state ?? null;
     const country = car.location_country ?? entry.country ?? entry.location_country ?? null;
-    const formattedAddress = car.location_formatted_address ?? entry.location_formatted_address ?? null;
+    const formattedAddress =
+      car.location_formatted_address ?? entry.location_formatted_address ?? null;
     const updatedAt = String(entry.updated_at ?? car.updated_at ?? new Date().toISOString());
     const photoUrl = car.main_photo_url ?? entry.main_photo_url ?? entry.photo_url ?? null;
-    const description = this.buildSummary(car.description ?? entry.description ?? meta.description ?? '');
+    const description = this.buildSummary(
+      car.description ?? entry.description ?? meta.description ?? '',
+    );
 
     return {
       carId,

@@ -1,7 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
-import { injectSupabase } from './supabase-client.service';
 import { environment } from '../../../environments/environment';
+import { injectSupabase } from './supabase-client.service';
 
 interface AuthState {
   session: Session | null;
@@ -97,7 +97,9 @@ export class AuthService {
 
   private mapError(error: Error & { status?: number }): Error {
     if (error?.message?.toLowerCase().includes('failed to fetch')) {
-      return new Error('No se pudo contactar con Supabase. Verifica tu conexión y las variables NG_APP_SUPABASE_URL / NG_APP_SUPABASE_ANON_KEY.');
+      return new Error(
+        'No se pudo contactar con Supabase. Verifica tu conexión y las variables NG_APP_SUPABASE_URL / NG_APP_SUPABASE_ANON_KEY.',
+      );
     }
     return error;
   }

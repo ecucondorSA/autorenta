@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { injectSupabase } from './supabase-client.service';
 import { environment } from '../../../environments/environment';
 import { PaymentIntent } from '../models';
+import { injectSupabase } from './supabase-client.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +36,11 @@ export class PaymentsService {
   }
 
   async getStatus(intentId: string): Promise<PaymentIntent | null> {
-    const { data, error } = await this.supabase.from('payment_intents').select('*').eq('id', intentId).single();
+    const { data, error } = await this.supabase
+      .from('payment_intents')
+      .select('*')
+      .eq('id', intentId)
+      .single();
     if (error) {
       if (error.code === 'PGRST116') {
         return null;
@@ -60,5 +64,14 @@ export class PaymentsService {
     if (!response.ok) {
       throw new Error(`Webhook respondió ${response.status}`);
     }
+  }
+
+  // Alias methods for booking-detail page compatibility
+  async createPaymentIntent(bookingId: string, provider: string): Promise<PaymentIntent> {
+    return this.createIntent(bookingId);
+  }
+
+  async simulateWebhook(provider: string, intentId: string, status: 'approved' | 'rejected'): Promise<void> {
+    return this.markAsPaid(intentId);
   }
 }

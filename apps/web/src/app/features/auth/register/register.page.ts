@@ -43,9 +43,7 @@ export class RegisterPage {
       setTimeout(() => void this.router.navigate(['/auth/login']), 1500);
     } catch (err) {
       console.error(err);
-      this.error.set(
-        err instanceof Error ? err.message : 'No pudimos registrar el usuario.'
-      );
+      this.error.set(err instanceof Error ? err.message : 'No pudimos registrar el usuario.');
     } finally {
       this.loading.set(false);
     }

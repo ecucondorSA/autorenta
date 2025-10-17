@@ -36,7 +36,10 @@ export class ContractsService {
   }
 
   async acceptContract(contractId: string): Promise<void> {
-    const { data: { user }, error: authError } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await this.supabase.auth.getUser();
     if (authError) throw authError;
     if (!user?.id) throw new Error('Usuario no autenticado');
 

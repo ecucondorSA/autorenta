@@ -24,7 +24,7 @@ export class CheckoutPage implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly payments: PaymentsService,
-    private readonly bookings: BookingsService
+    private readonly bookings: BookingsService,
   ) {}
 
   ngOnInit(): void {

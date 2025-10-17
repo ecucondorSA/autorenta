@@ -5,10 +5,7 @@
   </header>
 
   <!-- Error message -->
-  <div
-    *ngIf="error()"
-    class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
-  >
+  <div *ngIf="error()" class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
     <p class="font-semibold">Error al cargar reservas</p>
     <p class="mt-1">{{ error() }}</p>
     <button
@@ -28,20 +25,52 @@
   <div class="space-y-3" *ngIf="!loading() && !error()">
     <article
       *ngFor="let booking of bookings()"
-      class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+      class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
     >
-      <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p class="text-sm font-semibold text-slate-900">
-            Reserva #{{ booking.id }}
-          </p>
-          <p class="text-sm text-slate-600">{{ rangeLabel(booking) }}</p>
+      <a [routerLink]="['/bookings', booking.id]" class="block">
+        <!-- Car Photo and Info -->
+        <div class="flex gap-4 mb-3">
+          <img
+            *ngIf="booking.main_photo_url"
+            [src]="booking.main_photo_url"
+            [alt]="booking.car_title"
+            class="w-24 h-24 object-cover rounded-lg"
+          />
+          <div class="flex-1">
+            <p class="text-lg font-semibold text-slate-900">{{ booking.car_title || 'Auto' }}</p>
+            <p class="text-sm text-slate-600" *ngIf="booking.car_brand || booking.car_model">
+              {{ booking.car_brand }} {{ booking.car_model }}
+            </p>
+            <p class="text-xs text-slate-500 mt-1">{{ rangeLabel(booking) }}</p>
+          </div>
         </div>
-        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-600">
-          {{ booking.status }}
-        </span>
-      </div>
-      <p class="mt-2 text-sm text-slate-600">Total: {{ booking.total_amount | money }}</p>
+
+        <!-- Status and Price -->
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div class="flex items-center gap-2">
+            <span
+              class="rounded-full px-3 py-1 text-xs font-semibold uppercase"
+              [ngClass]="{
+                'bg-yellow-100 text-yellow-800': booking.status === 'pending',
+                'bg-green-100 text-green-800': booking.status === 'confirmed',
+                'bg-blue-100 text-blue-800': booking.status === 'in_progress',
+                'bg-gray-100 text-gray-800': booking.status === 'completed',
+                'bg-red-100 text-red-800': booking.status === 'cancelled' || booking.status === 'expired'
+              }"
+            >
+              {{ booking.status }}
+            </span>
+          </div>
+          <p class="text-sm font-semibold text-slate-900">
+            Total: {{ booking.total_amount | money }}
+          </p>
+        </div>
+
+        <!-- View Details Link -->
+        <div class="mt-3 text-sm text-accent-petrol font-semibold flex items-center gap-1">
+          Ver detalle →
+        </div>
+      </a>
     </article>
   </div>
 
