@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Car } from '../../../core/models';
@@ -16,6 +16,10 @@ export class CarCardComponent {
   private readonly _car = signal<Car | undefined>(undefined);
   private readonly _selected = signal<boolean>(false);
   private readonly _distanceKm = signal<number | null>(null);
+  private readonly _isComparing = signal<boolean>(false);
+  private readonly _compareDisabled = signal<boolean>(false);
+
+  @Output() compareToggle = new EventEmitter<string>();
 
   @Input({ required: true })
   set car(value: Car) {
@@ -44,7 +48,33 @@ export class CarCardComponent {
     return this._distanceKm();
   }
 
+  @Input()
+  set isComparing(value: boolean) {
+    this._isComparing.set(value);
+  }
+
+  get isComparing(): boolean {
+    return this._isComparing();
+  }
+
+  @Input()
+  set compareDisabled(value: boolean) {
+    this._compareDisabled.set(value);
+  }
+
+  get compareDisabled(): boolean {
+    return this._compareDisabled();
+  }
+
   readonly firstPhoto = computed(() => this._car()?.photos?.[0] ?? null);
+
+  onCompareToggle(event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    if (!this.compareDisabled || this.isComparing) {
+      this.compareToggle.emit(this.car.id);
+    }
+  }
 
   readonly displayImage = computed(() => {
     const car = this._car();

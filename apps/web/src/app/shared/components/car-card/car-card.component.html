@@ -123,20 +123,43 @@
         <p class="text-sm text-charcoal-medium">por día</p>
       </div>
 
-      <a
-        [routerLink]="['/cars', car.id]"
-        class="btn-primary text-sm px-5 py-2.5 flex items-center gap-2 group/btn"
-      >
-        <span>Ver detalle</span>
-        <svg
-          class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      <div class="flex gap-2">
+        <!-- Botón de comparación -->
+        <button
+          (click)="onCompareToggle($event)"
+          [disabled]="compareDisabled && !isComparing"
+          [class.opacity-50]="compareDisabled && !isComparing"
+          [class.cursor-not-allowed]="compareDisabled && !isComparing"
+          class="text-sm px-3 py-2.5 rounded-lg border transition-all"
+          [class.border-accent-petrol]="!isComparing"
+          [class.text-accent-petrol]="!isComparing"
+          [class.hover:bg-accent-petrol/10]="!isComparing && !compareDisabled"
+          [class.bg-accent-petrol]="isComparing"
+          [class.text-white]="isComparing"
+          [class.border-accent-petrol]="isComparing"
+          [title]="isComparing ? 'Quitar de comparación' : (compareDisabled ? 'Máximo 3 autos' : 'Agregar a comparación')"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path *ngIf="!isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            <path *ngIf="isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </button>
+
+        <a
+          [routerLink]="['/cars', car.id]"
+          class="btn-primary text-sm px-5 py-2.5 flex items-center gap-2 group/btn"
+        >
+          <span>Ver detalle</span>
+          <svg
+            class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
     </div>
   </div>
 </article>
