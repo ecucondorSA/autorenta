@@ -47,7 +47,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   canScrollLeft = false;
   canScrollRight = false;
   private autoCollapseTimer?: ReturnType<typeof setTimeout>;
-  private autoScrollInterval?: ReturnType<typeof setInterval>;
+  autoScrollInterval?: ReturnType<typeof setInterval>;
 
   constructor(private readonly carsService: CarsService) {}
 
