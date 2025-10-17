@@ -1,0 +1,187 @@
+<div class="review-card bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
+  <!-- Header with user info and rating -->
+  <div class="flex items-start justify-between mb-4">
+    <div class="flex items-center space-x-3">
+      <!-- Avatar -->
+      <div class="flex-shrink-0">
+        <div
+          *ngIf="!review.reviewer_avatar"
+          class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg"
+        >
+          {{ getAvatarInitials(review.reviewer_name || 'Usuario') }}
+        </div>
+        <img
+          *ngIf="review.reviewer_avatar"
+          [src]="review.reviewer_avatar"
+          [alt]="review.reviewer_name || 'Usuario'"
+          class="w-12 h-12 rounded-full object-cover"
+        />
+      </div>
+
+      <!-- Name and date -->
+      <div>
+        <h3 class="font-semibold text-gray-900">{{ review.reviewer_name || 'Usuario' }}</h3>
+        <p class="text-sm text-gray-500">{{ getTimeSince(review.created_at) }}</p>
+        <p *ngIf="showCarTitle && review.car_title" class="text-xs text-gray-400">
+          {{ review.car_title }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Overall rating -->
+    <div class="flex items-center space-x-2">
+      <span class="text-2xl font-bold text-gray-900">{{ getOverallRating() }}</span>
+      <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+        <path
+          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Public comment -->
+  <div *ngIf="review.comment_public" class="mb-4">
+    <p class="text-gray-700 leading-relaxed">{{ review.comment_public }}</p>
+  </div>
+
+  <!-- Category ratings -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+    <div class="category-rating" *ngIf="review.rating_cleanliness">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-gray-600">Limpieza</span>
+        <div class="flex">
+          <svg
+            *ngFor="let star of getRatingStars(review.rating_cleanliness)"
+            class="w-4 h-4"
+            [class.text-yellow-400]="star === 'filled'"
+            [class.text-gray-300]="star === 'empty'"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-rating" *ngIf="review.rating_communication">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-gray-600">Comunicación</span>
+        <div class="flex">
+          <svg
+            *ngFor="let star of getRatingStars(review.rating_communication)"
+            class="w-4 h-4"
+            [class.text-yellow-400]="star === 'filled'"
+            [class.text-gray-300]="star === 'empty'"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-rating" *ngIf="review.rating_accuracy">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-gray-600">Precisión</span>
+        <div class="flex">
+          <svg
+            *ngFor="let star of getRatingStars(review.rating_accuracy)"
+            class="w-4 h-4"
+            [class.text-yellow-400]="star === 'filled'"
+            [class.text-gray-300]="star === 'empty'"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-rating" *ngIf="review.rating_location">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-gray-600">Ubicación</span>
+        <div class="flex">
+          <svg
+            *ngFor="let star of getRatingStars(review.rating_location)"
+            class="w-4 h-4"
+            [class.text-yellow-400]="star === 'filled'"
+            [class.text-gray-300]="star === 'empty'"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-rating" *ngIf="review.rating_checkin">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-gray-600">Check-in</span>
+        <div class="flex">
+          <svg
+            *ngFor="let star of getRatingStars(review.rating_checkin)"
+            class="w-4 h-4"
+            [class.text-yellow-400]="star === 'filled'"
+            [class.text-gray-300]="star === 'empty'"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-rating" *ngIf="review.rating_value">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-gray-600">Valor</span>
+        <div class="flex">
+          <svg
+            *ngFor="let star of getRatingStars(review.rating_value)"
+            class="w-4 h-4"
+            [class.text-yellow-400]="star === 'filled'"
+            [class.text-gray-300]="star === 'empty'"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flag button -->
+  <div *ngIf="canFlag" class="border-t border-gray-100 pt-3">
+    <button
+      (click)="onFlagReview()"
+      class="text-sm text-gray-500 hover:text-red-600 transition-colors flex items-center space-x-1"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
+        />
+      </svg>
+      <span>Reportar review</span>
+    </button>
+  </div>
+</div>

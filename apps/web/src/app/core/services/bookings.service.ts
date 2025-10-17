@@ -79,6 +79,22 @@ export class BookingsService {
   }
 
   /**
+   * Update booking fields
+   * NOTE: This method is used to update a booking with partial data.
+   */
+  async updateBooking(bookingId: string, updates: Partial<Booking>): Promise<Booking> {
+    const { data, error } = await this.supabase
+      .from('bookings')
+      .update(updates)
+      .eq('id', bookingId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Booking;
+  }
+
+  /**
    * Cancel a booking
    */
   async cancelBooking(bookingId: string, reason?: string): Promise<void> {

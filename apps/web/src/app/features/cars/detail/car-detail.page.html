@@ -271,6 +271,78 @@
         </p>
       </div>
 
+      <!-- Reviews Section -->
+      <div class="card-premium rounded-2xl border border-pearl-gray bg-white-pure p-6 shadow-soft">
+        <div class="mb-6">
+          <h2 class="text-2xl font-semibold text-smoke-black mb-2">⭐ Calificaciones y Reseñas</h2>
+
+          <!-- Stats Summary -->
+          <div *ngIf="carStats() as stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-sand-light rounded-xl">
+            <div class="text-center">
+              <div class="text-3xl font-bold text-accent-petrol">{{ stats.rating_avg | number:'1.1-1' }}</div>
+              <div class="text-xs text-ash-gray">Calificación</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-smoke-black">{{ stats.reviews_count }}</div>
+              <div class="text-xs text-ash-gray">Reseñas</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-smoke-black">{{ stats.completed_bookings }}</div>
+              <div class="text-xs text-ash-gray">Viajes</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-accent-petrol">{{ (1 - stats.cancellation_rate) * 100 | number:'1.0-0' }}%</div>
+              <div class="text-xs text-ash-gray">Éxito</div>
+            </div>
+          </div>
+
+          <!-- Category Ratings -->
+          <div *ngIf="carStats() && carStats()!.reviews_count > 0" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+            <div class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray">
+              <span class="text-sm text-charcoal-medium">🧼 Limpieza</span>
+              <span class="font-semibold text-smoke-black">{{ carStats()!.rating_cleanliness_avg | number:'1.1-1' }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray">
+              <span class="text-sm text-charcoal-medium">💬 Comunicación</span>
+              <span class="font-semibold text-smoke-black">{{ carStats()!.rating_communication_avg | number:'1.1-1' }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray">
+              <span class="text-sm text-charcoal-medium">✓ Precisión</span>
+              <span class="font-semibold text-smoke-black">{{ carStats()!.rating_accuracy_avg | number:'1.1-1' }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray">
+              <span class="text-sm text-charcoal-medium">📍 Ubicación</span>
+              <span class="font-semibold text-smoke-black">{{ carStats()!.rating_location_avg | number:'1.1-1' }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray">
+              <span class="text-sm text-charcoal-medium">🔑 Check-in</span>
+              <span class="font-semibold text-smoke-black">{{ carStats()!.rating_checkin_avg | number:'1.1-1' }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray">
+              <span class="text-sm text-charcoal-medium">💰 Valor</span>
+              <span class="font-semibold text-smoke-black">{{ carStats()!.rating_value_avg | number:'1.1-1' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div *ngIf="reviewsLoading()" class="text-center py-8">
+          <p class="text-ash-gray">Cargando reseñas...</p>
+        </div>
+
+        <div *ngIf="!reviewsLoading() && reviews().length === 0" class="text-center py-8">
+          <p class="text-ash-gray">Este auto aún no tiene reseñas. ¡Sé el primero en reservarlo!</p>
+        </div>
+
+        <div *ngIf="!reviewsLoading() && reviews().length > 0" class="space-y-4">
+          <app-review-card
+            *ngFor="let review of reviews()"
+            [review]="review"
+            [showCarTitle]="false"
+          ></app-review-card>
+        </div>
+      </div>
+
       <!-- Botón volver -->
       <a routerLink="/cars" class="inline-flex items-center gap-2 text-sm font-medium text-accent-petrol hover:text-accent-petrol/80">
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -291,6 +363,22 @@
           <p class="text-sm text-charcoal-medium">por día</p>
         </div>
 
+        <!-- Wallet Balance Display -->
+        <div *ngIf="availableBalance() > 0" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg class="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+              </svg>
+              <span class="text-sm font-medium text-emerald-900">Tu Wallet</span>
+            </div>
+            <span class="text-lg font-bold text-emerald-700">${{ availableBalance() | number:'1.2-2' }}</span>
+          </div>
+          <p class="mt-2 text-xs text-emerald-700">
+            Podés usar tu saldo para pagar esta reserva
+          </p>
+        </div>
+
         <!-- Selector de fechas -->
         <div class="mb-6">
           <app-date-range-picker
@@ -299,60 +387,12 @@
           ></app-date-range-picker>
         </div>
 
-        <!-- Métodos de pago -->
-        <div *ngIf="car()?.payment_methods && car()!.payment_methods!.length > 0" class="mb-6">
-          <h3 class="mb-3 text-sm font-semibold text-smoke-black">Método de Pago</h3>
-          <div class="space-y-2">
-            <button
-              *ngFor="let method of car()?.payment_methods"
-              type="button"
-              (click)="onPaymentMethodChange(method)"
-              [class.border-accent-petrol]="selectedPaymentMethod() === method"
-              [class.bg-accent-petrol/5]="selectedPaymentMethod() === method"
-              class="flex w-full items-center gap-3 rounded-lg border border-pearl-gray p-3 transition-all hover:border-accent-petrol hover:bg-accent-petrol/5"
-            >
-              <!-- Icono según el método de pago -->
-              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sand-light">
-                <svg *ngIf="method === 'mercadopago'" class="h-6 w-6 text-accent-petrol" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 9.75a6.314 6.314 0 01-6.187 5.062c-2.854 0-5.25-1.969-5.906-4.594h3.469c.468 1.031 1.5 1.75 2.687 1.75 1.656 0 3-1.344 3-3s-1.344-3-3-3c-1.188 0-2.219.719-2.687 1.75H6.469C7.124 5.094 9.52 3.125 12.375 3.125c3.469 0 6.281 2.813 6.281 6.281 0 .125-.031.25-.031.375-.031 0-.031 0-.063-.031z"/>
-                </svg>
-                <svg *ngIf="method === 'tarjeta_credito'" class="h-6 w-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                </svg>
-                <svg *ngIf="method === 'transferencia'" class="h-6 w-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                </svg>
-                <svg *ngIf="method === 'efectivo'" class="h-6 w-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-                <svg *ngIf="method !== 'mercadopago' && method !== 'tarjeta_credito' && method !== 'transferencia' && method !== 'efectivo'" class="h-6 w-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-              </div>
-
-              <!-- Texto del método -->
-              <div class="flex-1 text-left">
-                <p class="font-semibold text-smoke-black">
-                  <ng-container *ngIf="method === 'mercadopago'">Mercado Pago</ng-container>
-                  <ng-container *ngIf="method === 'tarjeta_credito'">Tarjeta de Crédito</ng-container>
-                  <ng-container *ngIf="method === 'transferencia'">Transferencia Bancaria</ng-container>
-                  <ng-container *ngIf="method === 'efectivo'">Efectivo</ng-container>
-                  <ng-container *ngIf="method !== 'mercadopago' && method !== 'tarjeta_credito' && method !== 'transferencia' && method !== 'efectivo'">{{ method | titlecase }}</ng-container>
-                </p>
-                <p class="text-xs text-ash-gray">
-                  <ng-container *ngIf="method === 'mercadopago'">Pago seguro en línea</ng-container>
-                  <ng-container *ngIf="method === 'tarjeta_credito'">Débito o crédito</ng-container>
-                  <ng-container *ngIf="method === 'transferencia'">CBU o Alias</ng-container>
-                  <ng-container *ngIf="method === 'efectivo'">Pago al retirar</ng-container>
-                </p>
-              </div>
-
-              <!-- Check mark si está seleccionado -->
-              <svg *ngIf="selectedPaymentMethod() === method" class="h-5 w-5 text-accent-petrol" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-              </svg>
-            </button>
-          </div>
+        <!-- Payment Method Selector con Wallet -->
+        <div *ngIf="totalPrice() as total" class="mb-6">
+          <app-payment-method-selector
+            [totalAmount]="total"
+            (paymentMethodChange)="onPaymentMethodChange($event)"
+          ></app-payment-method-selector>
         </div>
 
         <!-- Desglose de precios -->

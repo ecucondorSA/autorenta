@@ -1,14 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Booking } from '../../../core/models';
+import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
+import { ReviewsService } from '../../../core/services/reviews.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';
+import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 
 @Component({
   selector: 'app-booking-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ReviewFormComponent, ReviewCardComponent],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
 })
@@ -17,11 +21,26 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
   private readonly paymentsService = inject(PaymentsService);
+  private readonly reviewsService = inject(ReviewsService);
+  private readonly authService = inject(AuthService);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   timeRemaining = signal<string | null>(null);
+
+  // Review-related signals
+  showReviewForm = signal(false);
+  canReview = signal(false);
+  existingReview = signal<Review | null>(null);
+  isSubmittingReview = signal(false);
+  reviewData = signal<{
+    revieweeId: string;
+    revieweeName: string;
+    carId: string;
+    carTitle: string;
+    reviewType: 'renter_to_owner' | 'owner_to_renter';
+  } | null>(null);
 
   private countdownInterval: number | null = null;
 
@@ -93,11 +112,56 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       this.booking.set(booking);
       this.startCountdown();
+
+      // Check if user can review this booking
+      if (booking.status === 'completed') {
+        await this.checkReviewStatus();
+        await this.loadReviewData();
+      }
     } catch (err) {
       console.error('Error loading booking:', err);
       this.error.set('Error al cargar la reserva');
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  private async checkReviewStatus(): Promise<void> {
+    const booking = this.booking();
+    if (!booking) return;
+
+    try {
+      // Check if user can review
+      const canReview = await this.reviewsService.canReviewBooking(booking.id);
+      this.canReview.set(canReview);
+
+      // Check if review already exists
+      const currentUser = this.authService.session$()?.user;
+      if (!currentUser) return;
+
+      // Get car info from booking
+      const { data: car } = await this.bookingsService['supabase']
+        .from('cars')
+        .select('id, owner_id')
+        .eq('id', booking.car_id)
+        .single();
+
+      if (!car) return;
+
+      // Check if this user already reviewed
+      const { data: review } = await this.reviewsService['supabase']
+        .from('reviews')
+        .select('*')
+        .eq('booking_id', booking.id)
+        .eq('reviewer_id', currentUser.id)
+        .maybeSingle();
+
+      if (review) {
+        this.existingReview.set(review as Review);
+        this.canReview.set(false);
+      }
+    } catch (error) {
+      console.error('Error checking review status:', error);
     }
   }
 
@@ -208,5 +272,98 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       hour: '2-digit',
       minute: '2-digit',
     });
+  }
+
+  // Review methods
+  handleShowReviewForm(): void {
+    this.showReviewForm.set(true);
+  }
+
+  handleCancelReview(): void {
+    this.showReviewForm.set(false);
+  }
+
+  async handleSubmitReview(params: CreateReviewParams): Promise<void> {
+    this.isSubmittingReview.set(true);
+
+    try {
+      const result = await this.reviewsService.createReview(params);
+
+      if (result.success) {
+        alert(
+          '¡Review enviada exitosamente! Se publicará cuando ambas partes hayan calificado, o después de 14 días.'
+        );
+        this.showReviewForm.set(false);
+
+        // Reload to show the submitted review
+        await this.checkReviewStatus();
+      } else {
+        alert(`Error al enviar la review: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert('Error al enviar la review. Intentá nuevamente.');
+    } finally {
+      this.isSubmittingReview.set(false);
+    }
+  }
+
+  async loadReviewData(): Promise<void> {
+    const booking = this.booking();
+    if (!booking) return;
+
+    try {
+      const currentUser = this.authService.session$()?.user;
+      if (!currentUser) return;
+
+      // Get car and owner info
+      const { data: car } = await this.bookingsService['supabase']
+        .from('cars')
+        .select('id, title, owner_id, owner:profiles!cars_owner_id_fkey(id, full_name)')
+        .eq('id', booking.car_id)
+        .single();
+
+      if (!car) return;
+
+      // Determine if current user is renter or owner
+      const isRenter = booking.renter_id === currentUser.id;
+      const isOwner = car.owner_id === currentUser.id;
+
+      if (!isRenter && !isOwner) return;
+
+      let revieweeId: string;
+      let revieweeName: string;
+      let reviewType: 'renter_to_owner' | 'owner_to_renter';
+
+      if (isRenter) {
+        // Renter is reviewing the owner
+        revieweeId = car.owner_id;
+        revieweeName = (car as any).owner?.full_name || 'Propietario';
+        reviewType = 'renter_to_owner';
+      } else {
+        // Owner is reviewing the renter
+        const { data: renter } = await this.bookingsService['supabase']
+          .from('profiles')
+          .select('id, full_name')
+          .eq('id', booking.renter_id)
+          .single();
+
+        if (!renter) return;
+
+        revieweeId = renter.id;
+        revieweeName = renter.full_name || 'Arrendatario';
+        reviewType = 'owner_to_renter';
+      }
+
+      this.reviewData.set({
+        revieweeId,
+        revieweeName,
+        carId: car.id,
+        carTitle: car.title || 'Vehículo',
+        reviewType,
+      });
+    } catch (error) {
+      console.error('Error loading review data:', error);
+    }
   }
 }

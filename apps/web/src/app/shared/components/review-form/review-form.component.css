@@ -1,0 +1,32 @@
+.review-form-container {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.star-button {
+  cursor: pointer;
+}
+
+.star-button:hover svg {
+  transform: scale(1.1);
+}
+
+.rating-category {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1.5rem;
+}
+
+.rating-category:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}

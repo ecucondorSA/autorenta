@@ -108,7 +108,7 @@ export class WalletService {
     this.clearError();
 
     try {
-      const { data, error } = await this.supabase.client.rpc('wallet_get_balance');
+      const { data, error} = await this.supabase.getClient().rpc('wallet_get_balance');
 
       if (error) {
         throw this.createError('BALANCE_FETCH_ERROR', error.message, error);
@@ -160,7 +160,7 @@ export class WalletService {
       }
 
       // Paso 1: Crear transacción pending en la base de datos
-      const { data, error } = await this.supabase.client.rpc('wallet_initiate_deposit', {
+      const { data, error } = await this.supabase.getClient().rpc('wallet_initiate_deposit', {
         p_amount: params.amount,
         p_provider: params.provider ?? 'mercadopago',
         p_description: params.description ?? 'Depósito a wallet',
@@ -183,15 +183,16 @@ export class WalletService {
       // Paso 2: Si es Mercado Pago, llamar a Edge Function para crear preference
       if (params.provider === 'mercadopago' || !params.provider) {
         try {
-          const session = await this.supabase.client.auth.getSession();
+          const session = await this.supabase.getClient().auth.getSession();
           const accessToken = session.data.session?.access_token;
 
           if (!accessToken) {
             throw this.createError('NO_AUTH_TOKEN', 'Usuario no autenticado');
           }
 
+          const supabaseUrl = (this.supabase.getClient() as any).supabaseUrl;
           const mpResponse = await fetch(
-            `${this.supabase.client.supabaseUrl}/functions/v1/mercadopago-create-preference`,
+            `${supabaseUrl}/functions/v1/mercadopago-create-preference`,
             {
               method: 'POST',
               headers: {
@@ -267,7 +268,7 @@ export class WalletService {
         );
       }
 
-      const { data, error } = await this.supabase.client.rpc('wallet_lock_funds', {
+      const { data, error } = await this.supabase.getClient().rpc('wallet_lock_funds', {
         p_booking_id: params.booking_id,
         p_amount: params.amount,
         p_description: params.description ?? 'Garantía bloqueada para reserva',
@@ -317,7 +318,7 @@ export class WalletService {
         throw this.createError('MISSING_BOOKING_ID', 'El ID de la reserva es requerido');
       }
 
-      const { data, error } = await this.supabase.client.rpc('wallet_unlock_funds', {
+      const { data, error } = await this.supabase.getClient().rpc('wallet_unlock_funds', {
         p_booking_id: params.booking_id,
         p_description: params.description ?? 'Fondos desbloqueados',
       });
@@ -362,7 +363,7 @@ export class WalletService {
     this.clearError();
 
     try {
-      let query = this.supabase.client
+      let query = this.supabase.getClient()
         .from('wallet_transactions')
         .select('*')
         .order('created_at', { ascending: false });

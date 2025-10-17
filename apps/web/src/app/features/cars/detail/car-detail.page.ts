@@ -3,17 +3,22 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
-import { Car } from '../../../core/models';
+import { ReviewsService } from '../../../core/services/reviews.service';
+import { WalletService } from '../../../core/services/wallet.service';
+import { Car, Review, CarStats, ReviewSummary } from '../../../core/models';
 import {
   DateRangePickerComponent,
   DateRange,
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
+import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
+import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 
 @Component({
   standalone: true,
   selector: 'app-car-detail-page',
-  imports: [CommonModule, RouterLink, DateRangePickerComponent, MoneyPipe],
+  imports: [CommonModule, RouterLink, DateRangePickerComponent, MoneyPipe, ReviewCardComponent, PaymentMethodSelectorComponent],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -24,8 +29,15 @@ export class CarDetailPage implements OnInit {
   readonly dateRange = signal<DateRange>({ from: null, to: null });
   readonly bookingInProgress = signal(false);
   readonly bookingError = signal<string | null>(null);
-  readonly selectedPaymentMethod = signal<string | null>(null);
+  readonly selectedPaymentMethod = signal<BookingPaymentMethod>('credit_card');
+  readonly walletAmountToUse = signal<number>(0);
+  readonly cardAmountToUse = signal<number>(0);
   readonly currentPhotoIndex = signal(0);
+
+  // Reviews-related signals
+  readonly reviews = signal<Review[]>([]);
+  readonly carStats = signal<CarStats | null>(null);
+  readonly reviewsLoading = signal(false);
 
   readonly firstPhoto = computed(() => {
     const car = this.car();
@@ -60,8 +72,8 @@ export class CarDetailPage implements OnInit {
   readonly canBook = computed(() => {
     const range = this.dateRange();
     const car = this.car();
-    const paymentMethod = this.selectedPaymentMethod();
-    return !!(range.from && range.to && car && this.totalPrice() && paymentMethod);
+    const total = this.totalPrice();
+    return !!(range.from && range.to && car && total);
   });
 
   readonly daysCount = computed(() => {
@@ -81,15 +93,33 @@ export class CarDetailPage implements OnInit {
     return total + deposit;
   });
 
+  // Wallet state
+  readonly availableBalance = signal<number>(0);
+  readonly lockedBalance = signal<number>(0);
+
   constructor(
     private readonly carsService: CarsService,
     private readonly bookingsService: BookingsService,
+    private readonly reviewsService: ReviewsService,
+    private readonly walletService: WalletService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
     void this.loadCar();
+    void this.loadWalletBalance();
+  }
+
+  async loadWalletBalance(): Promise<void> {
+    try {
+      const balance = await this.walletService.getBalance();
+      this.availableBalance.set(balance.available_balance);
+      this.lockedBalance.set(balance.locked_balance);
+    } catch (error) {
+      // Ignorar error si el usuario no está autenticado o no tiene wallet
+      console.log('Could not load wallet balance:', error);
+    }
   }
 
   async loadCar(): Promise<void> {
@@ -106,6 +136,8 @@ export class CarDetailPage implements OnInit {
         this.error.set('Auto no disponible');
       } else {
         this.car.set(car);
+        // Load reviews for this car
+        await this.loadReviews(carId);
       }
     } catch (err) {
       console.error(err);
@@ -115,12 +147,37 @@ export class CarDetailPage implements OnInit {
     }
   }
 
+  async loadReviews(carId: string): Promise<void> {
+    this.reviewsLoading.set(true);
+    try {
+      const [reviews, stats] = await Promise.all([
+        this.reviewsService.getReviewsForCar(carId),
+        this.reviewsService.getCarStats(carId),
+      ]);
+
+      this.reviews.set(reviews);
+      this.carStats.set(stats);
+    } catch (error) {
+      console.error('Error loading reviews:', error);
+    } finally {
+      this.reviewsLoading.set(false);
+    }
+  }
+
   onRangeChange(range: DateRange): void {
     this.dateRange.set(range);
   }
 
-  onPaymentMethodChange(method: string): void {
-    this.selectedPaymentMethod.set(method);
+  onPaymentMethodChange(event: {
+    method: BookingPaymentMethod;
+    walletAmount: number;
+    cardAmount: number;
+  }): void {
+    this.selectedPaymentMethod.set(event.method);
+    this.walletAmountToUse.set(event.walletAmount);
+    this.cardAmountToUse.set(event.cardAmount);
+
+    console.log('Payment method changed in car detail:', event);
   }
 
   nextPhoto(): void {

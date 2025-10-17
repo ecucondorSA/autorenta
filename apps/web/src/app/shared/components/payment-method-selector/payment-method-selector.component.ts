@@ -76,6 +76,11 @@ export class PaymentMethodSelectorComponent implements OnInit {
    */
   readonly isLoadingBalance = signal(false);
 
+  /**
+   * Expose Math for template
+   */
+  readonly Math = Math;
+
   // ==================== COMPUTED SIGNALS ====================
 
   /**

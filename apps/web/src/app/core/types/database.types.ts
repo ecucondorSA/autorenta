@@ -121,6 +121,12 @@ export interface Booking {
   metadata: Record<string, any>;
   created_at: string;
   updated_at: string;
+  payment_method: 'credit_card' | 'wallet' | 'partial_wallet' | null;
+  wallet_amount_cents: number | null;
+  wallet_lock_transaction_id: string | null;
+  wallet_status: 'none' | 'locked' | 'charged' | 'refunded' | null;
+  wallet_charged_at: string | null;
+  wallet_refunded_at: string | null;
 }
 
 export interface Payment {
