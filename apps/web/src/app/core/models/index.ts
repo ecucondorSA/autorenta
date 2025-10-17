@@ -110,6 +110,17 @@ export interface ProfileAudit {
   created_at: string;
 }
 
+export interface CarOwner {
+  id: string;
+  full_name: string;
+  avatar_url?: string | null;
+  rating_avg: number;
+  rating_count: number;
+  created_at: string;
+  is_email_verified: boolean;
+  is_phone_verified: boolean;
+}
+
 export interface Car {
   id: string;
   owner_id: string;
@@ -164,6 +175,7 @@ export interface Car {
   cancel_policy: CancelPolicy;
   photos?: CarPhoto[];
   car_photos?: CarPhoto[];
+  owner?: CarOwner; // Owner profile information
   created_at: string;
   updated_at: string;
 }
