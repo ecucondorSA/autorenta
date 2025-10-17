@@ -40,9 +40,23 @@ export class WalletBalanceCardComponent implements OnInit {
   showDepositButton = signal(true);
 
   /**
-   * Evento emitido cuando el usuario hace click en "Depositar"
+   * Callback para cuando el usuario hace click en "Depositar"
    */
   depositClickHandler?: () => void;
+
+  /**
+   * Permite configurar si mostrar el botón de depósito desde el componente padre
+   */
+  setShowDepositButton(show: boolean): void {
+    this.showDepositButton.set(show);
+  }
+
+  /**
+   * Permite configurar el handler de depósito desde el componente padre
+   */
+  setDepositClickHandler(handler: () => void): void {
+    this.depositClickHandler = handler;
+  }
 
   // ==================== PUBLIC SIGNALS ====================
 
