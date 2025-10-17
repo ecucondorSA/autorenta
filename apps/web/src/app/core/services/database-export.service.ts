@@ -122,9 +122,7 @@ export class DatabaseExportService {
   }
 
   private buildTimestamp(): string {
-    return new Date()
-      .toISOString()
-      .replace(/[:.]/g, '-');
+    return new Date().toISOString().replace(/[:.]/g, '-');
   }
 
   private describeValue(value: unknown): string {

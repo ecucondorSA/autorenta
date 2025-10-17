@@ -1,28 +1,90 @@
-<article class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-  <div class="relative h-48 w-full bg-slate-100">
+<article class="card-premium flex flex-col overflow-hidden group cursor-pointer" [class.selected]="selected">
+  <!-- Imagen del auto con overlay sutil -->
+  <div class="relative h-56 w-full bg-sand-light overflow-hidden">
     <img
-      *ngIf="firstPhoto(); else placeholder"
-      [src]="firstPhoto()!.url"
-      [alt]="car.title"
-      class="h-full w-full object-cover"
+      *ngIf="displayImage()"
+      [src]="displayImage()!.url"
+      [alt]="displayImage()!.alt"
+      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
     />
-    <ng-template #placeholder>
-      <div class="flex h-full w-full items-center justify-center text-sm text-slate-400">
-        Sin imagen
-      </div>
-    </ng-template>
+
+    <!-- Badge de estado (opcional - si el auto tiene badge) -->
+    <div class="absolute top-3 right-3 bg-smoke-black/80 backdrop-blur-sm px-3 py-1 rounded-full">
+      <span class="text-xs font-medium text-ivory-soft">Disponible</span>
+    </div>
   </div>
-  <div class="flex flex-1 flex-col gap-2 px-4 py-4">
-    <h3 class="text-lg font-semibold tracking-tight text-slate-900">{{ car.title }}</h3>
-    <p class="text-sm text-slate-600">
-      {{ car.location_city }}, {{ car.location_state }} · {{ car.transmission | titlecase }}
-    </p>
-    <p class="mt-auto text-base font-semibold text-blue-600">
-      {{ car.price_per_day | money }}
-      <span class="text-sm font-normal text-slate-500">/ día</span>
-    </p>
-    <a [routerLink]="['/cars', car.id]" class="rounded bg-blue-600 px-3 py-2 text-center text-white">
-      Ver detalle
-    </a>
+
+  <!-- Contenido del card -->
+  <div class="flex flex-1 flex-col gap-3 p-5">
+    <!-- Título premium -->
+    <h3
+      class="text-xl font-semibold tracking-tight text-smoke-black leading-tight group-hover:text-charcoal-medium transition-colors"
+    >
+      {{ car.title }}
+    </h3>
+
+    <!-- Ubicación con icono minimalista -->
+    <div class="flex items-start gap-2 text-charcoal-medium">
+      <svg
+        class="w-4 h-4 mt-0.5 flex-shrink-0"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+        />
+      </svg>
+      <p class="text-sm leading-relaxed">
+        <ng-container *ngIf="car.location_formatted_address; else oldLocation">
+          {{ car.location_formatted_address }}
+        </ng-container>
+        <ng-template #oldLocation> {{ car.location_city }}, {{ car.location_state }} </ng-template>
+      </p>
+    </div>
+
+    <!-- Especificaciones con separador elegante -->
+    <div class="flex items-center gap-3 text-xs text-ash-gray font-medium">
+      <span>{{ car.transmission | titlecase }}</span>
+      <span class="w-1 h-1 rounded-full bg-pearl-gray"></span>
+      <span>{{ car.fuel_type | titlecase }}</span>
+    </div>
+
+    <!-- Divider sutil -->
+    <div class="h-px bg-pearl-gray my-1"></div>
+
+    <!-- Precio y CTA -->
+    <div class="flex items-end justify-between mt-auto pt-2">
+      <div>
+        <p class="text-2xl font-bold text-smoke-black tracking-tight">
+          {{ car.price_per_day | money }}
+        </p>
+        <p class="text-sm text-charcoal-medium">por día</p>
+      </div>
+
+      <a
+        [routerLink]="['/cars', car.id]"
+        class="btn-primary text-sm px-5 py-2.5 flex items-center gap-2 group/btn"
+      >
+        <span>Ver detalle</span>
+        <svg
+          class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
   </div>
 </article>

@@ -1,0 +1,115 @@
+/* Profile Expanded Page - Estilos Premium Neutros */
+
+/* Scroll suave para tabs */
+nav[aria-label="Tabs"] {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+nav[aria-label="Tabs"]::-webkit-scrollbar {
+  height: 4px;
+}
+
+nav[aria-label="Tabs"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+nav[aria-label="Tabs"]::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 2px;
+}
+
+/* Avatar hover effect */
+.relative img {
+  transition: transform 0.3s ease;
+}
+
+.relative:hover img {
+  transform: scale(1.05);
+}
+
+/* Radio button cards */
+label:has(input[type="radio"]) {
+  cursor: pointer;
+}
+
+label:has(input[type="radio"]:checked) {
+  box-shadow: 0 0 0 2px var(--accent-primary);
+}
+
+/* Document upload cards */
+label:has(input[type="file"]) .flex {
+  transition: all 0.2s ease;
+}
+
+label:has(input[type="file"]):hover .flex {
+  transform: translateY(-2px);
+}
+
+/* Checkbox custom styles */
+input[type="checkbox"]:checked {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+/* Badge animations */
+.inline-flex {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Tabs transition */
+nav button {
+  position: relative;
+  overflow: hidden;
+}
+
+nav button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-primary);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+nav button:hover::after {
+  width: 100%;
+}
+
+/* Form focus states */
+.input-premium:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(44, 74, 82, 0.1);
+}
+
+select.input-premium:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(44, 74, 82, 0.1);
+}

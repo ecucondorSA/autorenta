@@ -34,7 +34,9 @@ describe('AuthService', () => {
   let authCallbacks: AuthCallback | undefined;
   let supabaseAuthMock: {
     getSession: jasmine.Spy<() => Promise<{ data: { session: Session | null }; error: null }>>;
-    onAuthStateChange: jasmine.Spy<(callback: AuthCallback) => { data: { subscription: { unsubscribe: () => void } } }>;
+    onAuthStateChange: jasmine.Spy<
+      (callback: AuthCallback) => { data: { subscription: { unsubscribe: () => void } } }
+    >;
     signUp: jasmine.Spy;
     signInWithPassword: jasmine.Spy;
     signOut: jasmine.Spy;
@@ -53,13 +55,19 @@ describe('AuthService', () => {
     const unsubscribe = () => undefined;
 
     supabaseAuthMock = {
-      getSession: jasmine.createSpy('getSession').and.resolveTo({ data: { session: null }, error: null }),
-      onAuthStateChange: jasmine.createSpy('onAuthStateChange').and.callFake((callback: AuthCallback) => {
-        authCallbacks = callback;
-        return { data: { subscription: { unsubscribe } } };
-      }),
+      getSession: jasmine
+        .createSpy('getSession')
+        .and.resolveTo({ data: { session: null }, error: null }),
+      onAuthStateChange: jasmine
+        .createSpy('onAuthStateChange')
+        .and.callFake((callback: AuthCallback) => {
+          authCallbacks = callback;
+          return { data: { subscription: { unsubscribe } } };
+        }),
       signUp: jasmine.createSpy('signUp').and.resolveTo({ data: {}, error: null }),
-      signInWithPassword: jasmine.createSpy('signInWithPassword').and.resolveTo({ data: {}, error: null }),
+      signInWithPassword: jasmine
+        .createSpy('signInWithPassword')
+        .and.resolveTo({ data: {}, error: null }),
       signOut: jasmine.createSpy('signOut').and.resolveTo({ error: null }),
       resetPasswordForEmail: jasmine
         .createSpy('resetPasswordForEmail')
