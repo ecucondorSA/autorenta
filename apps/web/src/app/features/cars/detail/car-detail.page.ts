@@ -24,10 +24,27 @@ export class CarDetailPage implements OnInit {
   readonly dateRange = signal<DateRange>({ from: null, to: null });
   readonly bookingInProgress = signal(false);
   readonly bookingError = signal<string | null>(null);
+  readonly selectedPaymentMethod = signal<string | null>(null);
+  readonly currentPhotoIndex = signal(0);
 
   readonly firstPhoto = computed(() => {
     const car = this.car();
     return car?.photos?.[0] ?? null;
+  });
+
+  readonly allPhotos = computed(() => {
+    const car = this.car();
+    return car?.photos ?? car?.car_photos ?? [];
+  });
+
+  readonly currentPhoto = computed(() => {
+    const photos = this.allPhotos();
+    const index = this.currentPhotoIndex();
+    return photos[index] ?? null;
+  });
+
+  readonly hasMultiplePhotos = computed(() => {
+    return this.allPhotos().length > 1;
   });
 
   readonly totalPrice = computed(() => {
@@ -43,7 +60,25 @@ export class CarDetailPage implements OnInit {
   readonly canBook = computed(() => {
     const range = this.dateRange();
     const car = this.car();
-    return !!(range.from && range.to && car && this.totalPrice());
+    const paymentMethod = this.selectedPaymentMethod();
+    return !!(range.from && range.to && car && this.totalPrice() && paymentMethod);
+  });
+
+  readonly daysCount = computed(() => {
+    const range = this.dateRange();
+    if (!range.from || !range.to) return 0;
+    const start = new Date(range.from);
+    const end = new Date(range.to);
+    const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    return diff > 0 ? diff : 0;
+  });
+
+  readonly totalWithDeposit = computed(() => {
+    const total = this.totalPrice();
+    const car = this.car();
+    if (!total) return null;
+    const deposit = car?.deposit_required && car?.deposit_amount ? car.deposit_amount : 0;
+    return total + deposit;
   });
 
   constructor(
@@ -82,6 +117,32 @@ export class CarDetailPage implements OnInit {
 
   onRangeChange(range: DateRange): void {
     this.dateRange.set(range);
+  }
+
+  onPaymentMethodChange(method: string): void {
+    this.selectedPaymentMethod.set(method);
+  }
+
+  nextPhoto(): void {
+    const photos = this.allPhotos();
+    if (photos.length > 1) {
+      const currentIndex = this.currentPhotoIndex();
+      const nextIndex = (currentIndex + 1) % photos.length;
+      this.currentPhotoIndex.set(nextIndex);
+    }
+  }
+
+  previousPhoto(): void {
+    const photos = this.allPhotos();
+    if (photos.length > 1) {
+      const currentIndex = this.currentPhotoIndex();
+      const previousIndex = currentIndex === 0 ? photos.length - 1 : currentIndex - 1;
+      this.currentPhotoIndex.set(previousIndex);
+    }
+  }
+
+  goToPhoto(index: number): void {
+    this.currentPhotoIndex.set(index);
   }
 
   async onBookClick(): Promise<void> {

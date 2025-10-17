@@ -201,29 +201,12 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       const originalCount = locations.length;
 
       // Ordenar por distancia si tenemos ubicación del usuario
+      // NO filtramos por distancia para mostrar TODOS los autos disponibles en Uruguay
       const userLoc = this.userLocation();
       if (userLoc) {
         locations = this.sortLocationsByDistance(locations, userLoc);
-        console.log('[CarsMapComponent] Sorted locations by distance:', locations.length);
-
-        // FILTRO DE AUDITORÍA: Eliminar autos que están a más de 150km (Uruguay es pequeño pero largo)
-        const maxDistanceKm = 150;
-        const filteredLocations = locations.filter((loc) => {
-          const distance = this.calculateDistance(userLoc.lat, userLoc.lng, loc.lat, loc.lng);
-          return distance <= maxDistanceKm;
-        });
-
-        const filteredCount = originalCount - filteredLocations.length;
-        if (filteredCount > 0) {
-          console.log(
-            `[CarsMapComponent] 🔍 AUDITORÍA: Filtrados ${filteredCount} autos que están a más de ${maxDistanceKm}km de distancia (Uruguay)`,
-          );
-        }
-        console.log(
-          `[CarsMapComponent] Mostrando ${filteredLocations.length} de ${originalCount} autos dentro de ${maxDistanceKm}km`,
-        );
-
-        locations = filteredLocations;
+        console.log('[CarsMapComponent] Locations sorted by distance from user');
+        console.log(`[CarsMapComponent] Showing all ${locations.length} active cars on map`);
       }
 
       this.updateMarkers(locations);

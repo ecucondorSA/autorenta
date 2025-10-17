@@ -74,7 +74,20 @@ export class CarsService {
   async getCarById(id: string): Promise<Car | null> {
     const { data, error } = await this.supabase
       .from('cars')
-      .select('*, car_photos(*)')
+      .select(`
+        *,
+        car_photos(*),
+        owner:profiles!owner_id(
+          id,
+          full_name,
+          avatar_url,
+          rating_avg,
+          rating_count,
+          created_at,
+          is_email_verified,
+          is_phone_verified
+        )
+      `)
       .eq('id', id)
       .single();
     if (error) {
