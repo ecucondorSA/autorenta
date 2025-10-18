@@ -51,8 +51,22 @@ export const routes: Routes = [
   {
     path: 'admin',
     canMatch: [AuthGuard],
-    loadComponent: () =>
-      import('./features/admin/admin-dashboard.page').then((m) => m.AdminDashboardPage),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/admin/dashboard/admin-dashboard.page').then(
+            (m) => m.AdminDashboardPage
+          ),
+      },
+      {
+        path: 'withdrawals',
+        loadComponent: () =>
+          import('./features/admin/withdrawals/admin-withdrawals.page').then(
+            (m) => m.AdminWithdrawalsPage
+          ),
+      },
+    ],
   },
   {
     path: 'profile',

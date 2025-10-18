@@ -541,3 +541,91 @@ export interface ComparisonRow {
   values: (string | number | boolean | null)[];
   highlightBest?: boolean; // Para resaltar el mejor valor en la comparación
 }
+
+// ============================================
+// WALLET & WITHDRAWALS SYSTEM
+// ============================================
+
+export type AccountType = 'cbu' | 'cvu' | 'alias';
+
+export interface BankAccount {
+  id: string;
+  user_id: string;
+  account_type: AccountType;
+  account_number: string;
+  account_holder_name: string;
+  account_holder_document: string;
+  bank_name?: string | null;
+  is_verified: boolean;
+  verified_at?: string | null;
+  verification_method?: string | null;
+  is_active: boolean;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export type WithdrawalStatus =
+  | 'pending'
+  | 'approved'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'rejected'
+  | 'cancelled';
+
+export interface WithdrawalRequest {
+  id: string;
+  user_id: string;
+  bank_account_id: string;
+  amount: number;
+  currency: string;
+  fee_amount: number;
+  net_amount: number;
+  status: WithdrawalStatus;
+  provider: string;
+  provider_transaction_id?: string | null;
+  provider_metadata?: Record<string, unknown> | null;
+  approved_by?: string | null;
+  approved_at?: string | null;
+  rejection_reason?: string | null;
+  processed_at?: string | null;
+  completed_at?: string | null;
+  failed_at?: string | null;
+  failure_reason?: string | null;
+  wallet_transaction_id?: string | null;
+  user_notes?: string | null;
+  admin_notes?: string | null;
+  created_at: string;
+  updated_at: string;
+
+  // Extended fields from views/joins
+  user_name?: string;
+  user_email?: string;
+  bank_account?: BankAccount;
+}
+
+export interface WalletTransaction {
+  id: string;
+  user_id: string;
+  type: 'deposit' | 'withdrawal' | 'payment' | 'refund' | 'lock' | 'unlock';
+  amount: number;
+  currency: string;
+  status: 'pending' | 'completed' | 'failed' | 'cancelled';
+  description?: string | null;
+  reference_type?: string | null;
+  reference_id?: string | null;
+  provider?: string | null;
+  provider_transaction_id?: string | null;
+  provider_metadata?: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export interface UserWallet {
+  user_id: string;
+  available_balance: number;
+  locked_balance: number;
+  currency: string;
+  created_at: string;
+  updated_at: string;
+}
