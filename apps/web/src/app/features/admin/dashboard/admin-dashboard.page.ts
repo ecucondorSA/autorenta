@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,7 +16,7 @@ import { MoneyPipe } from '@shared/pipes/money.pipe';
 @Component({
   selector: 'autorenta-admin-dashboard-page',
   standalone: true,
-  imports: [CommonModule, MoneyPipe],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MoneyPipe],
   templateUrl: './admin-dashboard.page.html',
   styleUrl: './admin-dashboard.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
