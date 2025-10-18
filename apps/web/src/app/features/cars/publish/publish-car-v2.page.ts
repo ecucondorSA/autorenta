@@ -1,9 +1,9 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
-import { GeocodingService, ReverseGeocodingResult } from '../../../core/services/geocoding.service';
+import { GeocodingService } from '../../../core/services/geocoding.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
 
 @Component({
@@ -15,11 +15,22 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
       <div class="max-w-3xl mx-auto">
         <!-- Header -->
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Publicar Auto</h1>
-          <p class="text-gray-600">Completa la información de tu vehículo</p>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ editMode() ? 'Editar Auto' : 'Publicar Auto' }}</h1>
+          <p class="text-gray-600">{{ editMode() ? 'Modifica la información de tu vehículo' : 'Completa la información de tu vehículo' }}</p>
+
+          <!-- Edit mode indicator -->
+          <div *ngIf="editMode()" class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
+            <span class="text-amber-600 text-lg">✏️</span>
+            <div class="flex-1">
+              <p class="text-sm text-amber-800 font-medium">Modo edición</p>
+              <p class="text-xs text-amber-600 mt-1">
+                Estás editando un auto existente. Los cambios se guardarán al enviar el formulario.
+              </p>
+            </div>
+          </div>
 
           <!-- Autofill indicator -->
-          <div *ngIf="autofilledFromLast()" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
+          <div *ngIf="autofilledFromLast() && !editMode()" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
             <span class="text-blue-600 text-lg">ℹ️</span>
             <div class="flex-1">
               <p class="text-sm text-blue-800 font-medium">Datos autocompletados</p>
@@ -233,27 +244,17 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
               </div>
             </div>
 
-            <!-- Geocode button - Simple approach with reverse geocoding -->
-            <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div class="flex items-start gap-3">
-                <span class="text-blue-600 text-xl">ℹ️</span>
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-blue-900 mb-2">
-                    Ubicación Precisa
-                  </p>
-                  <p class="text-xs text-blue-700 mb-3">
-                    Usa tu GPS para capturar tu ubicación exacta y autocompletar la dirección, o las coordenadas se calcularán al publicar.
-                  </p>
-                  <button type="button" (click)="useCurrentLocation()"
-                          class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition font-medium">
-                    📍 Usar Mi Ubicación Actual
-                  </button>
-                  <div *ngIf="manualCoordinates()" class="mt-3 text-xs text-green-700 bg-green-50 p-2 rounded">
-                    ✅ GPS capturado: {{ manualCoordinates()!.latitude.toFixed(6) }}, {{ manualCoordinates()!.longitude.toFixed(6) }}
-                    <br>
-                    <span class="text-green-600">Dirección autocompletada desde GPS</span>
-                  </div>
-                </div>
+            <!-- GPS Location Button - Minimalist -->
+            <div class="mt-4 flex items-center justify-between">
+              <button type="button" (click)="useCurrentLocation()"
+                      class="btn-secondary flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                </svg>
+                📍 Usar Mi Ubicación
+              </button>
+              <div *ngIf="manualCoordinates()" class="text-xs text-smoke-black">
+                ✓ GPS activo
               </div>
             </div>
           </div>
@@ -302,8 +303,8 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
               </button>
               <button type="submit" [disabled]="!canSubmit() || isSubmitting()"
                       class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition font-semibold">
-                <span *ngIf="!isSubmitting()">Publicar Auto</span>
-                <span *ngIf="isSubmitting()">Publicando...</span>
+                <span *ngIf="!isSubmitting()">{{ editMode() ? 'Guardar cambios' : 'Publicar Auto' }}</span>
+                <span *ngIf="isSubmitting()">{{ editMode() ? 'Guardando...' : 'Publicando...' }}</span>
               </button>
             </div>
           </div>
@@ -322,6 +323,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly carsService: CarsService;
   private readonly geocodingService: GeocodingService;
   private readonly router: Router;
+  private readonly route: ActivatedRoute;
 
   readonly minYear = 1980;
   readonly maxYear = new Date().getFullYear() + 1;
@@ -332,6 +334,8 @@ export class PublishCarV2Page implements OnInit {
   uploadedPhotos = signal<Array<{ file: File; preview: string }>>([]);
   isSubmitting = signal(false);
   autofilledFromLast = signal(false);
+  editMode = signal(false);
+  editingCarId = signal<string | null>(null);
 
   // Manual coordinates (simple approach)
   manualCoordinates = signal<{ latitude: number; longitude: number } | null>(null);
@@ -363,18 +367,29 @@ export class PublishCarV2Page implements OnInit {
     fb: FormBuilder,
     carsService: CarsService,
     geocodingService: GeocodingService,
-    router: Router
+    router: Router,
+    route: ActivatedRoute
   ) {
     this.fb = fb;
     this.carsService = carsService;
     this.geocodingService = geocodingService;
     this.router = router;
+    this.route = route;
   }
 
   ngOnInit(): void {
     this.initForm();
     void this.loadData();
-    void this.loadLastPublicationData();
+
+    // Check if we're in edit mode
+    const editCarId = this.route.snapshot.queryParamMap.get('edit');
+    if (editCarId) {
+      this.editMode.set(true);
+      this.editingCarId.set(editCarId);
+      void this.loadCarForEditing(editCarId);
+    } else {
+      void this.loadLastPublicationData();
+    }
   }
 
   private initForm(): void {
@@ -447,9 +462,60 @@ export class PublishCarV2Page implements OnInit {
         this.autofilledFromLast.set(true);
         console.log('✅ Formulario autocompletado desde última publicación');
       }
-    } catch (error) {
+    } catch {
       // Silently fail - not critical
       console.log('No previous car found for autofill');
+    }
+  }
+
+  private async loadCarForEditing(carId: string): Promise<void> {
+    try {
+      const car = await this.carsService.getCarById(carId);
+      if (!car) {
+        alert('Auto no encontrado');
+        await this.router.navigate(['/cars/my']);
+        return;
+      }
+
+      // Pre-fill form with car data
+      this.publishForm.patchValue({
+        brand_id: car.brand_id,
+        model_id: car.model_id,
+        year: car.year,
+        color: car.color,
+        mileage: car.mileage,
+        transmission: car.transmission,
+        fuel: car.fuel,
+        price_per_day: car.price_per_day,
+        currency: car.currency,
+        min_rental_days: car.min_rental_days,
+        max_rental_days: car.max_rental_days,
+        deposit_required: car.deposit_required,
+        deposit_amount: car.deposit_amount,
+        insurance_included: car.insurance_included,
+        location_street: car.location_street,
+        location_street_number: car.location_street_number,
+        location_city: car.location_city,
+        location_state: car.location_state,
+        location_country: car.location_country,
+      });
+
+      // Set coordinates if available
+      if (car.location_lat && car.location_lng) {
+        this.manualCoordinates.set({
+          latitude: car.location_lat,
+          longitude: car.location_lng
+        });
+      }
+
+      // Trigger brand change to load models for the selected brand
+      this.onBrandChange();
+
+      console.log('✅ Formulario cargado con datos del auto para edición');
+    } catch (error) {
+      console.error('Error loading car for editing:', error);
+      alert('Error al cargar el auto. Por favor intenta nuevamente.');
+      await this.router.navigate(['/cars/my']);
     }
   }
 
@@ -561,7 +627,13 @@ export class PublishCarV2Page implements OnInit {
   }
 
   canSubmit(): boolean {
-    return this.publishForm.valid && this.uploadedPhotos().length >= 3;
+    // In edit mode, allow submission without photos (car already has photos)
+    // In create mode, require at least 3 photos
+    if (this.editMode()) {
+      return this.publishForm.valid;
+    } else {
+      return this.publishForm.valid && this.uploadedPhotos().length >= 3;
+    }
   }
 
   async onSubmit(): Promise<void> {
@@ -663,15 +735,33 @@ export class PublishCarV2Page implements OnInit {
         features: {},
       };
 
-      const createdCar = await this.carsService.createCar(carData);
+      let resultCar: Car;
 
-      // Upload photos
-      for (let i = 0; i < this.uploadedPhotos().length; i++) {
-        const photo = this.uploadedPhotos()[i];
-        await this.carsService.uploadPhoto(photo.file, createdCar.id, i);
+      // Check if we're editing or creating
+      if (this.editMode() && this.editingCarId()) {
+        // Update existing car
+        resultCar = await this.carsService.updateCar(this.editingCarId()!, carData);
+        console.log('✅ Auto actualizado exitosamente');
+      } else {
+        // Create new car
+        resultCar = await this.carsService.createCar(carData);
+        console.log('✅ Auto creado exitosamente');
       }
 
-      alert('¡Auto publicado exitosamente! Será revisado por nuestro equipo.');
+      // Upload new photos (only if there are any)
+      if (this.uploadedPhotos().length > 0) {
+        for (let i = 0; i < this.uploadedPhotos().length; i++) {
+          const photo = this.uploadedPhotos()[i];
+          await this.carsService.uploadPhoto(photo.file, resultCar.id, i);
+        }
+        console.log(`✅ ${this.uploadedPhotos().length} fotos subidas`);
+      }
+
+      const message = this.editMode()
+        ? '¡Auto actualizado exitosamente!'
+        : '¡Auto publicado exitosamente! Será revisado por nuestro equipo.';
+
+      alert(message);
       await this.router.navigate(['/cars/my']);
     } catch (error) {
       console.error('Error publishing car:', error);

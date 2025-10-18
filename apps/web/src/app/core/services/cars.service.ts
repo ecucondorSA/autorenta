@@ -138,6 +138,27 @@ export class CarsService {
     if (error) throw error;
   }
 
+  async updateCar(carId: string, input: Partial<Car>): Promise<Car> {
+    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    if (!userId) throw new Error('Usuario no autenticado');
+
+    const { data, error } = await this.supabase
+      .from('cars')
+      .update(input)
+      .eq('id', carId)
+      .eq('owner_id', userId)
+      .select('*, car_photos(*)')
+      .single();
+
+    if (error) throw error;
+
+    // Map car_photos to photos for backward compatibility
+    return {
+      ...data,
+      photos: data.car_photos || []
+    } as Car;
+  }
+
   async listPendingCars(): Promise<Car[]> {
     // Note: 'pending' status doesn't exist in DB. Using 'draft' for pending approval.
     const { data, error } = await this.supabase

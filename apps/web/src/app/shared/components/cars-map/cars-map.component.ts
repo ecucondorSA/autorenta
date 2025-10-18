@@ -41,6 +41,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   @Input() cars: any[] = [];
   @Input() selectedCarId: string | null = null;
   @Output() carSelected = new EventEmitter<string>();
+  @Output() userLocationChange = new EventEmitter<{ lat: number; lng: number }>();
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly carLocationsService = inject(CarLocationsService);
@@ -629,8 +630,13 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
           this.addUserMarker(-34.9011, -56.1645);
           this.zoomToUserLocation(-34.9011, -56.1645);
         } else {
-          this.userLocation.set({ lat: latitude, lng: longitude });
+          const newLocation = { lat: latitude, lng: longitude };
+          this.userLocation.set(newLocation);
           this.addUserMarker(latitude, longitude);
+
+          // Emitir cambio de ubicación al componente padre
+          console.log('[CarsMapComponent] Emitting userLocationChange:', newLocation);
+          this.userLocationChange.emit(newLocation);
 
           // Solo hacer zoom la primera vez
           const isFirstUpdate = this.currentLocations.length === 0 || !this.userLocation();
@@ -827,5 +833,19 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Esto evita duplicación de información y mantiene la UX limpia
 
     console.log(`[CarsMapComponent] Flying to car ${carId} at [${location.lng}, ${location.lat}]`);
+  }
+
+  /**
+   * Centra el mapa en la ubicación del usuario
+   */
+  centerOnUserLocation(): void {
+    const userLoc = this.userLocation();
+
+    if (userLoc && this.map) {
+      this.zoomToUserLocation(userLoc.lat, userLoc.lng);
+    } else if (!userLoc) {
+      // Si no hay ubicación guardada, solicitar una nueva
+      this.requestUserLocation();
+    }
   }
 }

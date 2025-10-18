@@ -260,7 +260,7 @@ export class ProfileExpandedPage implements OnInit {
           payload = this.preferencesForm.getRawValue();
           break;
 
-        case 'notifications':
+        case 'notifications': {
           const notifValues = this.notificationsForm.getRawValue();
           payload = {
             notif_prefs: {
@@ -279,13 +279,15 @@ export class ProfileExpandedPage implements OnInit {
             } as NotificationPrefs,
           };
           break;
+        }
 
-        case 'security':
+        case 'security': {
           const tosValue = this.securityForm.value.tos_accepted;
           if (tosValue && !this.tosAccepted()) {
             payload = { tos_accepted_at: true };
           }
           break;
+        }
       }
 
       const updatedProfile = await this.profileService.updateProfileSafe(payload);

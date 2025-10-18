@@ -15,11 +15,24 @@ import { getCarPlaceholderImage } from '../../utils/car-placeholder-images';
 export class CarCardComponent {
   private readonly _car = signal<Car | undefined>(undefined);
   private readonly _selected = signal<boolean>(false);
-  private readonly _distanceKm = signal<number | null>(null);
+  private readonly _distance = signal<string | undefined>(undefined);
   private readonly _isComparing = signal<boolean>(false);
   private readonly _compareDisabled = signal<boolean>(false);
 
   @Output() compareToggle = new EventEmitter<string>();
+  @Output() edit = new EventEmitter<string>();
+  @Output() delete = new EventEmitter<string>();
+
+  private readonly _showOwnerActions = signal<boolean>(false);
+
+  @Input()
+  set showOwnerActions(value: boolean) {
+    this._showOwnerActions.set(value);
+  }
+
+  get showOwnerActions(): boolean {
+    return this._showOwnerActions();
+  }
 
   @Input({ required: true })
   set car(value: Car) {
@@ -40,12 +53,12 @@ export class CarCardComponent {
   }
 
   @Input()
-  set distanceKm(value: number | null) {
-    this._distanceKm.set(value);
+  set distance(value: string | undefined) {
+    this._distance.set(value);
   }
 
-  get distanceKm(): number | null {
-    return this._distanceKm();
+  get distance(): string | undefined {
+    return this._distance();
   }
 
   @Input()
@@ -74,6 +87,18 @@ export class CarCardComponent {
     if (!this.compareDisabled || this.isComparing) {
       this.compareToggle.emit(this.car.id);
     }
+  }
+
+  onEdit(event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.edit.emit(this.car.id);
+  }
+
+  onDelete(event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.delete.emit(this.car.id);
   }
 
   readonly displayImage = computed(() => {

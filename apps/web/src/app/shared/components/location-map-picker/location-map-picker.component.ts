@@ -57,8 +57,6 @@ export interface LocationCoordinates {
   `,
   styles: [
     `
-      @import 'mapbox-gl/dist/mapbox-gl.css';
-
       .location-map-picker {
         position: relative;
         width: 100%;

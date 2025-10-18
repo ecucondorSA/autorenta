@@ -47,17 +47,18 @@
               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
             />
           </svg>
-          <span *ngIf="cars().length > 0">{{ cars().length }} autos disponibles</span>
-          <span *ngIf="cars().length === 0">No hay autos disponibles</span>
+          <span *ngIf="carsWithDistance().length > 0">{{ carsWithDistance().length }} autos disponibles</span>
+          <span *ngIf="carsWithDistance().length === 0">No hay autos disponibles</span>
         </h2>
       </div>
 
       <!-- Grid vertical de cards -->
       <div class="cars-grid-vertical" #carsContainer>
         <app-car-card
-          *ngFor="let car of cars()"
+          *ngFor="let car of carsWithDistance()"
           [id]="'car-card-' + car.id"
           [car]="car"
+          [distance]="car.distanceText"
           [selected]="car.id === selectedCarId()"
           [isComparing]="isCarComparing(car.id)"
           [compareDisabled]="maxCompareReached()"
@@ -66,7 +67,7 @@
         ></app-car-card>
 
         <!-- Empty state -->
-        <div *ngIf="!loading() && cars().length === 0" class="no-results-vertical">
+        <div *ngIf="!loading() && carsWithDistance().length === 0" class="no-results-vertical">
           <svg class="no-results-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
@@ -89,6 +90,7 @@
             [cars]="cars()"
             [selectedCarId]="selectedCarId()"
             (carSelected)="onMapCarSelected($event)"
+            (userLocationChange)="onUserLocationChange($event)"
           ></app-cars-map>
         </div>
       } @placeholder {

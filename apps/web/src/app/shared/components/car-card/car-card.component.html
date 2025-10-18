@@ -132,7 +132,7 @@
     </div>
 
     <!-- Badge de distancia (cuando está disponible) -->
-    <div *ngIf="distanceKm !== null" class="flex items-center gap-1.5 text-accent-petrol mt-1">
+    <div *ngIf="distance" class="flex items-center gap-1.5 text-accent-petrol mt-1">
       <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
@@ -141,7 +141,7 @@
           d="M13 10V3L4 14h7v7l9-11h-7z"
         />
       </svg>
-      <span class="text-sm font-semibold">{{ distanceKm }}km de tu ubicación</span>
+      <span class="text-sm font-semibold">{{ distance }} de tu ubicación</span>
     </div>
 
     <!-- Especificaciones con separador elegante -->
@@ -183,41 +183,85 @@
       </div>
 
       <div class="flex gap-2">
-        <!-- Botón de comparación -->
-        <button
-          (click)="onCompareToggle($event)"
-          [disabled]="compareDisabled && !isComparing"
-          [class.opacity-50]="compareDisabled && !isComparing"
-          [class.cursor-not-allowed]="compareDisabled && !isComparing"
-          class="text-sm px-3 py-2.5 rounded-lg border transition-all"
-          [class.border-accent-petrol]="!isComparing"
-          [class.text-accent-petrol]="!isComparing"
-          [class.hover:bg-accent-petrol/10]="!isComparing && !compareDisabled"
-          [class.bg-accent-petrol]="isComparing"
-          [class.text-white]="isComparing"
-          [class.border-accent-petrol]="isComparing"
-          [title]="isComparing ? 'Quitar de comparación' : (compareDisabled ? 'Máximo 3 autos' : 'Agregar a comparación')"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path *ngIf="!isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            <path *ngIf="isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-        </button>
-
-        <a
-          [routerLink]="['/cars', car.id]"
-          class="btn-primary text-sm px-5 py-2.5 flex items-center gap-2 group/btn"
-        >
-          <span>Ver detalle</span>
-          <svg
-            class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <!-- Botones para el dueño del auto -->
+        <ng-container *ngIf="showOwnerActions; else normalActions">
+          <!-- Botón Editar -->
+          <button
+            (click)="onEdit($event)"
+            class="text-sm px-3 py-2.5 rounded-lg border border-accent-warm text-accent-warm hover:bg-accent-warm/10 transition-all flex items-center gap-2"
+            title="Editar auto"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </button>
+
+          <!-- Botón Eliminar -->
+          <button
+            (click)="onDelete($event)"
+            class="text-sm px-3 py-2.5 rounded-lg border border-red-500 text-red-600 hover:bg-red-50 transition-all flex items-center gap-2"
+            title="Eliminar auto"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+
+          <!-- Ver detalle -->
+          <a
+            [routerLink]="['/cars', car.id]"
+            class="btn-primary text-sm px-5 py-2.5 flex items-center gap-2 group/btn"
+          >
+            <span>Ver</span>
+            <svg
+              class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </ng-container>
+
+        <!-- Botones normales (comparar + ver detalle) -->
+        <ng-template #normalActions>
+          <!-- Botón de comparación -->
+          <button
+            (click)="onCompareToggle($event)"
+            [disabled]="compareDisabled && !isComparing"
+            [class.opacity-50]="compareDisabled && !isComparing"
+            [class.cursor-not-allowed]="compareDisabled && !isComparing"
+            class="text-sm px-3 py-2.5 rounded-lg border transition-all"
+            [class.border-accent-petrol]="!isComparing"
+            [class.text-accent-petrol]="!isComparing"
+            [class.hover:bg-accent-petrol/10]="!isComparing && !compareDisabled"
+            [class.bg-accent-petrol]="isComparing"
+            [class.text-white]="isComparing"
+            [class.border-accent-petrol]="isComparing"
+            [title]="isComparing ? 'Quitar de comparación' : (compareDisabled ? 'Máximo 3 autos' : 'Agregar a comparación')"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path *ngIf="!isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              <path *ngIf="isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+
+          <a
+            [routerLink]="['/cars', car.id]"
+            class="btn-primary text-sm px-5 py-2.5 flex items-center gap-2 group/btn"
+          >
+            <span>Ver detalle</span>
+            <svg
+              class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </ng-template>
       </div>
     </div>
   </div>
