@@ -62,17 +62,20 @@ serve(async (req) => {
 
   try {
     // Verificar variables de entorno
-    let MP_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN') || 'APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571';
-    MP_ACCESS_TOKEN = MP_ACCESS_TOKEN.trim().replace(/[\r\n\t\s]/g, '');
+    const MP_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
+    if (!MP_ACCESS_TOKEN) {
+      throw new Error('MERCADOPAGO_ACCESS_TOKEN environment variable not configured');
+    }
+    const cleanToken = MP_ACCESS_TOKEN.trim().replace(/[\r\n\t\s]/g, '');
 
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    console.log('MP_ACCESS_TOKEN configured:', !!MP_ACCESS_TOKEN);
+    console.log('MP_ACCESS_TOKEN configured:', !!cleanToken);
     console.log('SUPABASE_URL configured:', !!SUPABASE_URL);
 
-    if (!MP_ACCESS_TOKEN || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-      throw new Error('Missing required environment variables');
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+      throw new Error('Missing required environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
     }
 
     // Validar método HTTP
@@ -221,7 +224,7 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+        'Authorization': `Bearer ${cleanToken}`,
       },
       body: JSON.stringify(moneyOutPayload),
     });
@@ -229,6 +232,30 @@ serve(async (req) => {
     const mpData = await mpResponse.json();
 
     console.log('MercadoPago Money Out response:', JSON.stringify(mpData, null, 2));
+
+    // VALIDACIÓN CRÍTICA: Rechazar transacciones simuladas/test
+    if (mpData.test === true || mpData.simulated === true) {
+      const errorMessage = 'Transfer rejected: This is a simulated/test transaction, not a real transfer';
+      console.error('CRITICAL: Test transaction detected:', errorMessage);
+
+      // Marcar retiro como fallido
+      await supabase.rpc('wallet_fail_withdrawal', {
+        p_request_id: withdrawal_request_id,
+        p_failure_reason: errorMessage,
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: errorMessage,
+          details: 'MercadoPago returned a test/simulated transaction. This should not happen in production.',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     if (!mpResponse.ok) {
       // Error en la transferencia
