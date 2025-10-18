@@ -40,7 +40,7 @@ export class DepositModalComponent {
   /**
    * Evento emitido cuando el modal se cierra
    */
-  @Output() close = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>();
 
   /**
    * Evento emitido cuando el depósito se inicia exitosamente
@@ -117,7 +117,7 @@ export class DepositModalComponent {
    * Cierra el modal
    */
   onClose(): void {
-    this.close.emit();
+    this.closeModal.emit();
   }
 
   /**

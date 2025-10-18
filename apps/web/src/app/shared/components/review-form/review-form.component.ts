@@ -26,7 +26,7 @@ export class ReviewFormComponent implements OnInit {
   @Input() carTitle: string = 'Vehículo';
 
   @Output() submitReview = new EventEmitter<CreateReviewParams>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelReview = new EventEmitter<void>();
 
   reviewForm!: FormGroup;
   isSubmitting = false;
@@ -143,7 +143,7 @@ export class ReviewFormComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelReview.emit();
   }
 
   get isRenterToOwner(): boolean {

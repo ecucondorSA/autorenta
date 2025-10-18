@@ -106,7 +106,7 @@
   <!-- Deposit Modal (Conditional) -->
   <app-deposit-modal
     *ngIf="showDepositModal()"
-    (close)="closeDepositModal()"
+    (closeModal)="closeDepositModal()"
     (depositSuccess)="handleDepositSuccess($event)">
   </app-deposit-modal>
 </div>

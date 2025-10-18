@@ -462,6 +462,49 @@
   color: #1a1a1a;
 }
 
+/* GPS Location Button - Minimalist AutoRentA Style */
+.gps-button {
+  position: absolute;
+  top: 70px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(217, 214, 208, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+  z-index: 80;
+}
+
+.gps-button:hover {
+  background: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.gps-icon {
+  width: 20px;
+  height: 20px;
+  color: #2c4a52;
+  transition: color 0.2s ease;
+}
+
+.gps-button:hover .gps-icon {
+  color: #faf9f6;
+}
+
+.gps-button:active {
+  transform: translateY(0);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .cars-map-container {
@@ -489,5 +532,15 @@
   :host ::ng-deep .popup-image,
   :host ::ng-deep .popup-no-image {
     height: 120px;
+  }
+
+  .gps-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .gps-icon {
+    width: 18px;
+    height: 18px;
   }
 }
