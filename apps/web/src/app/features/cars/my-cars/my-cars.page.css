@@ -1,3 +1,130 @@
+/* 🎨 My Cars Page - Premium Design Autorentar */
+
 :host {
   display: block;
+}
+
+/* Autorentar Color Palette */
+/* --accent-petrol: #2c4a52 */
+/* --accent-warm: #8B7355 */
+/* --ivory-soft: #FAF9F6 */
+/* --smoke-black: #1A1A1A */
+/* --charcoal-medium: #4B4B4B */
+/* --pearl-gray: #D9D6D0 */
+/* --ash-gray: #8E8E8E */
+/* --white-pure: #FFFFFF */
+/* --sand-light: #F5F3EF */
+
+/* =================================================================
+   ANIMATION UTILITIES
+   ================================================================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* =================================================================
+   LOADING STATES
+   ================================================================= */
+
+.loading-spinner-large {
+  border-width: 4px;
+  border-color: #edeae3;
+  border-top-color: #2c4a52; /* accent-petrol */
+  border-right-color: #8B7355; /* accent-warm */
+}
+
+/* =================================================================
+   CARDS AND CONTAINERS
+   ================================================================= */
+
+.card-premium {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-premium:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* =================================================================
+   RESPONSIVE
+   ================================================================= */
+
+@media (max-width: 768px) {
+  .grid {
+    gap: 1rem;
+  }
+
+  .card-premium {
+    padding: 1rem !important;
+  }
+}
+
+/* =================================================================
+   STAT CARDS
+   ================================================================= */
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(44, 74, 82, 0.03) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+/* =================================================================
+   EMPTY STATE
+   ================================================================= */
+
+.empty-state-card {
+  background: linear-gradient(135deg, #FAF9F6 0%, #F5F3EF 100%);
+  border: 2px dashed #D9D6D0;
+}
+
+/* =================================================================
+   RESPONSIVE GRID
+   ================================================================= */
+
+@media (max-width: 1024px) {
+  .grid.lg\\:grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid.md\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .grid.md\\:grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
 }

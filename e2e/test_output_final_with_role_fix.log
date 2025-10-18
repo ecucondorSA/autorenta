@@ -1,0 +1,148 @@
+[18:10:41] [INFO] ================================================================================
+[18:10:41] [INFO] AUTORENTAR E2E TESTS - PRE-PRODUCTION BUG HUNT
+[18:10:41] [INFO] ================================================================================
+[18:10:41] [INFO] Base URL: http://localhost:4200
+[18:10:41] [INFO] Headless: False
+[18:10:41] [INFO] Slow Motion: 1000ms
+[18:10:41] [INFO] 
+[18:10:42] [INFO] Launching browser...
+[18:10:43] [INFO] 
+📋 SCENARIO 1: OWNER PUBLISHING CAR
+[18:10:43] [INFO] --------------------------------------------------------------------------------
+[18:10:43] [TEST] 🧪 TEST START: Owner Registration
+[18:10:43] [INFO] Navigating to http://localhost:4200/auth/register
+[18:10:44] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_01_register_page.png
+[18:10:44] [INFO] Filling registration form...
+[18:10:51] [WARNING] Role selection not found or not required
+[18:10:52] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_02_register_form_filled.png
+[18:10:52] [INFO] Submitting registration form...
+[18:10:55] [INFO] After registration, URL: http://localhost:4200/auth/login
+[18:10:55] [INFO] Registration successful - redirected away from register page
+[18:10:55] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_03_after_registration.png
+[18:10:55] [PASS] ✅ TEST PASS: Owner Registration
+[18:10:55] [TEST] 🧪 TEST START: Owner Login
+[18:10:55] [INFO] Navigating to http://localhost:4200/auth/login
+[18:10:57] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_04_login_page.png
+[18:10:57] [INFO] Filling login form...
+[18:10:59] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_05_login_form_filled.png
+[18:10:59] [INFO] Submitting login form...
+[18:11:03] [INFO] After login, URL: http://localhost:4200/
+[18:11:03] [INFO] Login successful
+[18:11:04] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_06_after_login.png
+[18:11:04] [PASS] ✅ TEST PASS: Owner Login
+[18:11:04] [TEST] 🧪 TEST START: Car Publication
+[18:11:04] [INFO] Navigating to http://localhost:4200/cars/publish
+[18:11:06] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_07_publish_page.png
+[18:11:06] [INFO] ✅ Publish form loaded (V2 single-page form)
+[18:11:06] [INFO] 📝 Section 1: Vehicle Information
+[18:11:08] [INFO] ✅ Selected brand
+[18:11:10] [INFO] ✅ Selected model
+[18:11:11] [INFO] ✅ Set year: 2020
+[18:11:13] [INFO] ✅ Set mileage: 50000
+[18:11:14] [INFO] ✅ Set color: Blanco
+[18:11:15] [INFO] ✅ Set transmission: Manual
+[18:11:16] [INFO] ✅ Set fuel: Nafta
+[18:11:16] [INFO] NOTE: Title is auto-generated from brand + model + year (no title field)
+[18:11:16] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_08_vehicle_info_filled.png
+[18:11:16] [INFO] 💰 Section 2: Pricing and Conditions
+[18:11:17] [INFO] ✅ Set price: 2500 USD/day
+[18:11:18] [INFO] ✅ Set currency: USD
+[18:11:19] [INFO] ✅ Set min rental days: 1
+[18:11:20] [INFO] ✅ Set max rental days: 30
+[18:11:21] [INFO] ✅ Set deposit: 200 USD
+[18:11:22] [INFO] ✅ Insurance included: Yes
+[18:11:22] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_09_pricing_filled.png
+[18:11:22] [INFO] 📍 Section 3: Location (CRITICAL FOR MAP)
+[18:11:23] [INFO] ✅ Set street: Av. 18 de Julio
+[18:11:24] [INFO] ✅ Set street number: 1234
+[18:11:25] [INFO] ✅ Set city: Montevideo
+[18:11:26] [INFO] ✅ Set state: Montevideo
+[18:11:27] [INFO] ✅ Set country: Uruguay
+[18:11:27] [INFO] ⚠️  NOTE: Location will be geocoded on backend - coordinates not set manually
+[18:11:28] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_10_location_filled.png
+[18:11:28] [INFO] 📸 Section 4: Photos (minimum 3 required)
+[18:11:28] [INFO] Creating test images...
+[18:11:28] [INFO] ✅ Created 3 test images
+[18:11:29] [INFO] ✅ Uploaded 3 photos
+[18:11:31] [INFO] ✅ Verified 3 photos in preview
+[18:11:31] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_11_photos_uploaded.png
+[18:11:31] [INFO] 🚀 Submitting car publication...
+[18:11:32] [INFO] ✅ Clicked submit button
+[18:11:37] [INFO] After submit, URL: http://localhost:4200/cars/publish
+[18:11:37] [WARNING] Still on publish page, checking for success message...
+[18:11:37] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_13_still_on_page.png
+[18:11:37] [WARNING] No errors visible - likely succeeded
+[18:11:37] [PASS] ✅ TEST PASS: Car Publication
+[18:11:37] [TEST] 🧪 TEST START: Car Appears on Map
+[18:11:37] [INFO] Navigating to http://localhost:4200/cars to verify map marker
+[18:11:43] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_14_cars_page_with_map.png
+[18:11:43] [INFO] ✅ Map container found
+[18:11:45] [INFO] Found 0 map markers
+[18:11:45] [WARNING] No HTML markers found, checking for canvas markers (GeoJSON)...
+[18:11:45] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_15_map_markers_check.png
+[18:11:45] [WARNING] Map canvas found - markers might be rendered as GeoJSON
+[18:11:45] [PASS] ✅ TEST PASS: Car Appears on Map
+[18:11:45] [INFO] 
+📋 SCENARIO 2: RENTER BOOKING CAR
+[18:11:45] [INFO] --------------------------------------------------------------------------------
+[18:11:45] [TEST] 🧪 TEST START: Renter Registration
+[18:11:51] [INFO] No logout needed or button not found
+[18:11:52] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_16_renter_register_page.png
+[18:11:52] [INFO] Registering renter user...
+[18:11:59] [INFO] Renter role selection not found
+[18:12:00] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_17_renter_form_filled.png
+[18:12:03] [INFO] Renter registration successful
+[18:12:03] [PASS] ✅ TEST PASS: Renter Registration
+[18:12:03] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_18_after_renter_register.png
+[18:12:03] [TEST] 🧪 TEST START: Renter Login
+[18:12:10] [INFO] Renter login successful
+[18:12:10] [PASS] ✅ TEST PASS: Renter Login
+[18:12:10] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_19_renter_logged_in.png
+[18:12:10] [TEST] 🧪 TEST START: Browse and Book Car
+[18:12:16] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_20_browse_cars.png
+[18:12:16] [INFO] Found 11 car cards
+[18:12:16] [INFO] Clicking on first car...
+[18:12:19] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_181041_21_car_detail_page.png
+[18:12:19] [INFO] ✅ Navigated to car detail page
+[18:12:19] [WARNING] No booking button found on car detail page
+[18:12:19] [PASS] ✅ TEST PASS: Browse and Book Car
+
+================================================================================
+E2E TEST SUMMARY
+================================================================================
+
+📊 Total Tests: 7
+✅ Passed: 7
+❌ Failed: 0
+⚠️  Warnings: 6
+🐛 Errors: 0
+
+⚠️  WARNINGS:
+  1. Role selection not found or not required
+  2. Still on publish page, checking for success message...
+  3. No errors visible - likely succeeded
+  4. No HTML markers found, checking for canvas markers (GeoJSON)...
+  5. Map canvas found - markers might be rendered as GeoJSON
+  6. No booking button found on car detail page
+
+================================================================================
+
+================================================================================
+E2E TEST SUMMARY
+================================================================================
+
+📊 Total Tests: 7
+✅ Passed: 7
+❌ Failed: 0
+⚠️  Warnings: 6
+🐛 Errors: 0
+
+⚠️  WARNINGS:
+  1. Role selection not found or not required
+  2. Still on publish page, checking for success message...
+  3. No errors visible - likely succeeded
+  4. No HTML markers found, checking for canvas markers (GeoJSON)...
+  5. Map canvas found - markers might be rendered as GeoJSON
+  6. No booking button found on car detail page
+
+================================================================================

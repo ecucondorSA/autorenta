@@ -247,6 +247,8 @@ export class CarDetailPage implements OnInit {
         this.bookingError.set('Este auto no está disponible en las fechas seleccionadas');
       } else if (errorMessage.includes('propio auto') || errorMessage.includes('own car')) {
         this.bookingError.set('No podés reservar tu propio auto');
+      } else if (errorMessage.includes('bookings_no_overlap') || errorMessage.includes('exclusion constraint')) {
+        this.bookingError.set('Este auto ya tiene una reserva confirmada para las fechas seleccionadas. Por favor elegí otras fechas.');
       } else {
         // Mostrar el error real para debugging
         this.bookingError.set(`Error: ${err?.message || JSON.stringify(err)}`);

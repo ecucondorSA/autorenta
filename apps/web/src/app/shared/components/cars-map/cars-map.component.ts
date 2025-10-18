@@ -282,17 +282,17 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       });
     }
 
-    // Layer 1: Círculos para clusters
+    // Layer 1: Círculos para clusters - Autorentar theme
     this.map.addLayer({
       id: 'clusters',
       type: 'circle',
       source: 'cars',
       filter: ['has', 'point_count'],
       paint: {
-        'circle-color': '#222222',
+        'circle-color': '#2c4a52', // accent-petrol
         'circle-radius': ['step', ['get', 'point_count'], 20, 10, 25, 30, 30],
-        'circle-stroke-width': 1,
-        'circle-stroke-color': '#ffffff',
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#8B7355', // accent-warm
       },
     });
 
@@ -312,7 +312,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       },
     });
 
-    // Layer 3: Círculos de fondo para autos individuales (estilo Airbnb)
+    // Layer 3: Círculos de fondo para autos individuales (Autorentar style)
     this.map.addLayer({
       id: 'car-markers-bg',
       type: 'circle',
@@ -321,8 +321,8 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       paint: {
         'circle-color': '#ffffff',
         'circle-radius': 22,
-        'circle-stroke-width': 1.5,
-        'circle-stroke-color': 'rgba(0, 0, 0, 0.08)',
+        'circle-stroke-width': 2,
+        'circle-stroke-color': 'rgba(44, 74, 82, 0.25)', // accent-petrol sutil
         'circle-opacity': 1,
       },
     });
@@ -377,12 +377,21 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
       const feature = e.features[0];
       const carId = feature.properties.carId;
+      const coords = (feature.geometry as any).coordinates;
 
-      // Emitir evento de selección
+      // Emitir evento de selección para que el componente padre maneje la interacción
       this.carSelected.emit(carId);
 
-      // Mostrar popup
-      this.showCarPopup(feature);
+      // Hacer zoom suave al auto (opcional pero mejora la UX)
+      this.map?.flyTo({
+        center: coords,
+        zoom: Math.max(this.map.getZoom(), 13), // Zoom al menos 13
+        duration: 400,
+        essential: true,
+      });
+
+      // NO mostrar popup aquí - el popup solo aparece cuando se selecciona desde el card
+      // El comportamiento de selección + scroll al card se maneja en cars-list.page.ts
     });
 
     // Click en cluster - hacer zoom
@@ -792,6 +801,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   /**
    * Vuela a la ubicación de un auto específico (desplazamiento rápido)
+   * Ya NO muestra popup - la información se ve en el card seleccionado del sidebar
    */
   flyToCarLocation(carId: string): void {
     if (!this.map) {
@@ -813,23 +823,8 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       essential: true,
     });
 
-    // Abrir popup del auto después de un delay
-    setTimeout(() => {
-      if (!this.map) return;
-
-      // Query features en esa ubicación
-      const point = this.map.project([location.lng, location.lat]);
-      const features = this.map.queryRenderedFeatures(point, {
-        layers: ['car-markers-bg'],
-      });
-
-      if (features.length > 0) {
-        const feature = features.find((f: any) => f.properties.carId === carId);
-        if (feature) {
-          this.showCarPopup(feature);
-        }
-      }
-    }, 500);
+    // Ya NO mostramos popup aquí - la información del auto se muestra en el card seleccionado del sidebar
+    // Esto evita duplicación de información y mantiene la UX limpia
 
     console.log(`[CarsMapComponent] Flying to car ${carId} at [${location.lng}, ${location.lat}]`);
   }

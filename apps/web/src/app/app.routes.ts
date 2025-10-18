@@ -27,7 +27,7 @@ export const routes: Routes = [
         path: 'publish',
         canMatch: [AuthGuard],
         loadComponent: () =>
-          import('./features/cars/publish/publish-car.page').then((m) => m.PublishCarPage),
+          import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },
       {
         path: 'my',
@@ -57,7 +57,7 @@ export const routes: Routes = [
   {
     path: 'profile',
     canMatch: [AuthGuard],
-    loadComponent: () => import('./features/profile/profile.page').then((m) => m.ProfilePage),
+    loadComponent: () => import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
   },
   {
     path: 'wallet',

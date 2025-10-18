@@ -170,7 +170,11 @@ export interface Car {
   brand_id: string;
   model_id: string;
 
-  // Backward compatibility (populated via JOIN in views)
+  // Backward compatibility fields (required in database)
+  brand_text_backup: string;
+  model_text_backup: string;
+
+  // Additional backward compatibility (populated via JOIN in views)
   brand?: string;
   model?: string;
   brand_name?: string; // From JOIN
