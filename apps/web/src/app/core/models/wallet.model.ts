@@ -22,7 +22,15 @@ export type WalletTransactionType =
   | 'unlock' // Desbloqueo de fondos
   | 'charge' // Cargo efectivo de fondos
   | 'refund' // Devolución de fondos
-  | 'bonus'; // Bonificación/regalo
+  | 'bonus' // Bonificación/regalo
+  // Nuevos tipos para sistema dual rental + deposit
+  | 'rental_payment_lock' // Bloqueo del pago del alquiler
+  | 'rental_payment_transfer' // Transferencia del pago al propietario
+  | 'security_deposit_lock' // Bloqueo de la garantía
+  | 'security_deposit_release' // Liberación de la garantía al usuario
+  | 'security_deposit_charge' // Cargo por daños de la garantía
+  // Tipos para sistema de retiros
+  | 'withdrawal'; // Retiro de fondos a cuenta bancaria
 
 /**
  * Estados de transacciones de wallet
@@ -202,4 +210,234 @@ export interface WalletError {
   code: string;
   message: string;
   details?: unknown;
+}
+
+/**
+ * Respuesta de wallet_lock_rental_and_deposit
+ */
+export interface WalletLockRentalAndDepositResponse {
+  success: boolean;
+  message: string;
+  rental_lock_transaction_id: string | null;
+  deposit_lock_transaction_id: string | null;
+  total_locked: number;
+  new_available_balance: number;
+  new_locked_balance: number;
+}
+
+/**
+ * Respuesta de wallet_complete_booking (sin daños)
+ */
+export interface WalletCompleteBookingResponse {
+  success: boolean;
+  message: string;
+  rental_payment_transaction_id: string | null;
+  deposit_release_transaction_id: string | null;
+  platform_fee_transaction_id: string | null;
+  amount_to_owner: number;
+  amount_to_renter: number;
+  platform_fee: number;
+}
+
+/**
+ * Respuesta de wallet_complete_booking_with_damages
+ */
+export interface WalletCompleteBookingWithDamagesResponse {
+  success: boolean;
+  message: string;
+  rental_payment_transaction_id: string | null;
+  damage_charge_transaction_id: string | null;
+  deposit_release_transaction_id: string | null;
+  platform_fee_transaction_id: string | null;
+  amount_to_owner: number;
+  damage_charged: number;
+  amount_returned_to_renter: number;
+  platform_fee: number;
+}
+
+/**
+ * Parámetros para bloquear rental + deposit
+ */
+export interface LockRentalAndDepositParams {
+  booking_id: string;
+  rental_amount: number;
+  deposit_amount?: number; // Default $250
+}
+
+/**
+ * Parámetros para completar booking con daños
+ */
+export interface CompleteBookingWithDamagesParams {
+  booking_id: string;
+  damage_amount: number;
+  damage_description: string;
+}
+
+/**
+ * Estados de depósito en bookings
+ */
+export type BookingDepositStatus =
+  | 'none' // Sin garantía
+  | 'locked' // Garantía bloqueada
+  | 'released' // Garantía liberada al usuario
+  | 'partially_charged' // Garantía parcialmente cobrada por daños
+  | 'fully_charged'; // Garantía completamente cobrada por daños
+
+// ============================================================================
+// WITHDRAWAL SYSTEM - Sistema de Retiros
+// ============================================================================
+
+/**
+ * Tipos de cuenta bancaria soportados
+ */
+export type BankAccountType = 'cbu' | 'cvu' | 'alias';
+
+/**
+ * Cuenta bancaria del usuario para retiros
+ */
+export interface BankAccount {
+  id: string;
+  user_id: string;
+  account_type: BankAccountType;
+  account_number: string; // CBU/CVU o Alias
+  account_holder_name: string;
+  account_holder_document: string; // DNI/CUIT
+  bank_name?: string;
+  is_verified: boolean;
+  verified_at?: string;
+  verification_method?: string;
+  is_active: boolean;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Estados de solicitudes de retiro
+ */
+export type WithdrawalStatus =
+  | 'pending' // Esperando aprobación
+  | 'approved' // Aprobada, lista para procesar
+  | 'processing' // En proceso de transferencia
+  | 'completed' // Transferencia exitosa
+  | 'failed' // Transferencia falló
+  | 'rejected' // Rechazada por admin
+  | 'cancelled'; // Cancelada por usuario
+
+/**
+ * Solicitud de retiro
+ */
+export interface WithdrawalRequest {
+  id: string;
+  user_id: string;
+  bank_account_id: string;
+  amount: number;
+  currency: string;
+  fee_amount: number;
+  net_amount: number;
+  status: WithdrawalStatus;
+  provider?: string;
+  provider_transaction_id?: string;
+  provider_metadata?: Record<string, unknown>;
+  approved_by?: string;
+  approved_at?: string;
+  rejection_reason?: string;
+  processed_at?: string;
+  completed_at?: string;
+  failed_at?: string;
+  failure_reason?: string;
+  wallet_transaction_id?: string;
+  user_notes?: string;
+  admin_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Parámetros para solicitar retiro
+ */
+export interface RequestWithdrawalParams {
+  bank_account_id: string;
+  amount: number;
+  user_notes?: string;
+}
+
+/**
+ * Respuesta de wallet_request_withdrawal
+ */
+export interface WalletRequestWithdrawalResponse {
+  success: boolean;
+  message: string;
+  request_id: string | null;
+  fee_amount: number;
+  net_amount: number;
+  new_available_balance: number;
+}
+
+/**
+ * Respuesta de wallet_approve_withdrawal
+ */
+export interface WalletApproveWithdrawalResponse {
+  success: boolean;
+  message: string;
+  provider: string;
+  amount: number;
+  recipient: string;
+}
+
+/**
+ * Respuesta de wallet_complete_withdrawal
+ */
+export interface WalletCompleteWithdrawalResponse {
+  success: boolean;
+  message: string;
+  wallet_transaction_id: string | null;
+}
+
+/**
+ * Parámetros para aprobar retiro
+ */
+export interface ApproveWithdrawalParams {
+  request_id: string;
+  admin_notes?: string;
+}
+
+/**
+ * Parámetros para rechazar retiro
+ */
+export interface RejectWithdrawalParams {
+  request_id: string;
+  rejection_reason: string;
+}
+
+/**
+ * Parámetros para agregar cuenta bancaria
+ */
+export interface AddBankAccountParams {
+  account_type: BankAccountType;
+  account_number: string;
+  account_holder_name: string;
+  account_holder_document: string;
+  bank_name?: string;
+}
+
+/**
+ * Filtros para historial de retiros
+ */
+export interface WithdrawalFilters {
+  status?: WithdrawalStatus | WithdrawalStatus[];
+  from_date?: Date;
+  to_date?: Date;
+}
+
+/**
+ * Estado de carga para withdrawal operations
+ */
+export interface WithdrawalLoadingState {
+  requesting: boolean;
+  approving: boolean;
+  rejecting: boolean;
+  fetchingRequests: boolean;
+  addingBankAccount: boolean;
+  fetchingBankAccounts: boolean;
 }

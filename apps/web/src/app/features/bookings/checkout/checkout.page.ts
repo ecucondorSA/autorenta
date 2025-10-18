@@ -101,46 +101,62 @@ export class CheckoutPage implements OnInit {
   }
 
   /**
-   * Procesa pago 100% con wallet
+   * Procesa pago 100% con wallet (rental + deposit)
+   * Sistema dual: rental payment + security deposit
    */
-  private async processWalletPayment(bookingId: string, amount: number): Promise<void> {
-    // Paso 1: Bloquear fondos del wallet
-    const lockResult = await this.wallet.lockFunds({
+  private async processWalletPayment(bookingId: string, rentalAmount: number): Promise<void> {
+    const DEPOSIT_AMOUNT = 250; // USD - Garantía no reembolsable en cash
+
+    // Paso 1: Bloquear rental + deposit (sistema dual)
+    const lockResult = await this.wallet.lockRentalAndDeposit({
       booking_id: bookingId,
-      amount,
-      description: 'Pago de reserva con wallet',
+      rental_amount: rentalAmount,
+      deposit_amount: DEPOSIT_AMOUNT,
     });
 
     if (!lockResult.success) {
       throw new Error(lockResult.message);
     }
 
-    // Paso 2: Actualizar booking con wallet payment info
-    // TODO: Implementar updateBooking en BookingsService si es necesario
-    // await this.bookings.updateBooking(bookingId, {
-    //   payment_method: 'wallet',
-    //   wallet_amount_used: amount,
-    //   card_amount_used: 0,
-    // });
+    // Paso 2: Actualizar booking con payment info
+    await this.bookings.updateBooking(bookingId, {
+      payment_method: 'wallet',
+      rental_amount_cents: Math.round(rentalAmount * 100),
+      deposit_amount_cents: Math.round(DEPOSIT_AMOUNT * 100),
+      rental_lock_transaction_id: lockResult.rental_lock_transaction_id,
+      deposit_lock_transaction_id: lockResult.deposit_lock_transaction_id,
+      deposit_status: 'locked',
+      status: 'confirmed',
+    });
 
     this.status.set('paid_with_wallet');
-    this.message.set(`Pago exitoso con wallet. $${amount} bloqueados hasta finalizar la reserva.`);
+    this.message.set(
+      `✅ Pago exitoso con wallet!\n\n` +
+      `💰 Alquiler: $${rentalAmount} bloqueado (se paga al propietario)\n` +
+      `🔒 Garantía: $${DEPOSIT_AMOUNT} bloqueada (se devuelve a tu wallet)\n` +
+      `📊 Total bloqueado: $${lockResult.total_locked}\n\n` +
+      `La garantía se devolverá a tu wallet al finalizar el alquiler.`
+    );
 
-    // Redirigir a confirmación después de 2 segundos
+    // Redirigir a confirmación después de 3 segundos
     setTimeout(() => {
       void this.router.navigate(['/bookings', bookingId]);
-    }, 2000);
+    }, 3000);
   }
 
   /**
    * Procesa pago mixto (wallet + tarjeta)
+   * NOTA: Esta opción NO usa el sistema dual de rental+deposit
+   * Solo bloquea el monto de wallet tradicional
    */
   private async processPartialWalletPayment(
     bookingId: string,
     walletAmount: number,
     cardAmount: number
   ): Promise<void> {
-    // Paso 1: Bloquear fondos del wallet
+    // Paso 1: Bloquear fondos del wallet (sin deposit, solo el monto parcial)
+    let lockTransactionId: string | null | undefined;
+
     if (walletAmount > 0) {
       const lockResult = await this.wallet.lockFunds({
         booking_id: bookingId,
@@ -151,6 +167,8 @@ export class CheckoutPage implements OnInit {
       if (!lockResult.success) {
         throw new Error(lockResult.message);
       }
+
+      lockTransactionId = lockResult.transaction_id;
     }
 
     // Paso 2: Crear payment intent para el resto con Mercado Pago
@@ -158,12 +176,13 @@ export class CheckoutPage implements OnInit {
     this.intentId.set(intent.id);
 
     // Paso 3: Actualizar booking con payment info
-    // TODO: Implementar updateBooking en BookingsService si es necesario
-    // await this.bookings.updateBooking(bookingId, {
-    //   payment_method: 'partial_wallet',
-    //   wallet_amount_used: walletAmount,
-    //   card_amount_used: cardAmount,
-    // });
+    await this.bookings.updateBooking(bookingId, {
+      payment_method: 'partial_wallet',
+      wallet_amount_cents: Math.round(walletAmount * 100),
+      wallet_status: walletAmount > 0 ? 'locked' : undefined,
+      wallet_lock_transaction_id: lockTransactionId,
+      payment_intent_id: intent.id,
+    });
 
     // Paso 4: Redirigir a Mercado Pago para pagar el resto
     this.status.set('redirecting_to_mercadopago');
@@ -171,8 +190,15 @@ export class CheckoutPage implements OnInit {
       `$${walletAmount} bloqueados de tu wallet. Redirigiendo a Mercado Pago para pagar $${cardAmount}...`
     );
 
-    // TODO: Obtener init_point de Mercado Pago y redirigir
-    // Por ahora, simular el pago
+    // TODO: Implementar integración con MercadoPago para pagos de bookings
+    // Actualmente, la Edge Function mercadopago-create-preference está diseñada
+    // para depósitos de wallet. Para pagos de bookings necesitaremos:
+    // 1. Crear nueva Edge Function o extender la existente
+    // 2. Obtener el init_point de MercadoPago con el monto del cardAmount
+    // 3. Redirigir al usuario: window.location.href = init_point
+    // 4. Configurar webhook para procesar el pago del booking
+    //
+    // Por ahora, simular el pago para testing
     setTimeout(() => {
       this.status.set('paid_partial');
       this.message.set('Pago mixto completado exitosamente');
@@ -196,8 +222,15 @@ export class CheckoutPage implements OnInit {
 
     this.message.set('Redirigiendo a Mercado Pago...');
 
-    // TODO: Obtener init_point de Mercado Pago y redirigir
-    // Por ahora, mostrar mensaje
+    // TODO: Implementar integración con MercadoPago para pagos de bookings
+    // Similar al flujo de pago parcial, necesitamos:
+    // 1. Llamar a Edge Function para crear preferencia de pago
+    // 2. Obtener init_point de MercadoPago
+    // 3. Redirigir: window.location.href = init_point
+    // 4. Usuario completa pago en MercadoPago
+    // 5. Webhook procesa la confirmación
+    //
+    // Por ahora, mostrar mensaje de simulación
     setTimeout(() => {
       this.status.set('awaiting_payment');
       this.message.set('Esperando confirmación de pago de Mercado Pago');

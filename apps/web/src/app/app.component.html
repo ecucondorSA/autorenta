@@ -57,6 +57,14 @@
         >
           Mis reservas
         </a>
+        <a
+          *ngIf="isAuthenticated()"
+          routerLink="/wallet"
+          routerLinkActive="text-accent-petrol"
+          class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+        >
+          Wallet
+        </a>
       </nav>
 
       <!-- Actions -->
@@ -152,6 +160,14 @@
             class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
           >
             📅 Mis reservas
+          </a>
+          <a
+            *ngIf="isAuthenticated()"
+            routerLink="/wallet"
+            (click)="toggleSidebar()"
+            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          >
+            💰 Wallet
           </a>
           <a
             *ngIf="isAuthenticated()"

@@ -68,9 +68,138 @@
         </div>
       </div>
 
-      <!-- Right Column: Transaction History -->
+      <!-- Right Column: Tabs (Transactions / Withdrawals) -->
       <div class="lg:col-span-2">
-        <app-transaction-history></app-transaction-history>
+        <!-- Tabs Navigation -->
+        <div class="bg-white rounded-t-lg shadow-sm border-b border-gray-200">
+          <div class="flex">
+            <button
+              type="button"
+              (click)="setActiveTab('transactions')"
+              [class.border-b-2]="activeTab() === 'transactions'"
+              [class.border-blue-600]="activeTab() === 'transactions'"
+              [class.text-blue-600]="activeTab() === 'transactions'"
+              [class.text-gray-600]="activeTab() !== 'transactions'"
+              class="flex-1 px-6 py-4 text-sm font-semibold hover:text-blue-600 transition-colors">
+              Transacciones
+            </button>
+            <button
+              type="button"
+              (click)="setActiveTab('withdrawals')"
+              [class.border-b-2]="activeTab() === 'withdrawals'"
+              [class.border-blue-600]="activeTab() === 'withdrawals'"
+              [class.text-blue-600]="activeTab() === 'withdrawals'"
+              [class.text-gray-600]="activeTab() !== 'withdrawals'"
+              class="flex-1 px-6 py-4 text-sm font-semibold hover:text-blue-600 transition-colors">
+              Retiros
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="bg-white rounded-b-lg shadow-sm">
+          <!-- Transactions Tab -->
+          @if (activeTab() === 'transactions') {
+            <app-transaction-history></app-transaction-history>
+          }
+
+          <!-- Withdrawals Tab -->
+          @if (activeTab() === 'withdrawals') {
+            <div class="p-6 space-y-6">
+              <!-- Withdrawal Mode Toggle -->
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">Gestión de Retiros</h2>
+                <div class="flex gap-2">
+                  <button
+                    type="button"
+                    (click)="setWithdrawalMode('form')"
+                    [class.bg-blue-600]="withdrawalMode() === 'form'"
+                    [class.text-white]="withdrawalMode() === 'form'"
+                    [class.bg-gray-100]="withdrawalMode() !== 'form'"
+                    [class.text-gray-700]="withdrawalMode() !== 'form'"
+                    class="px-4 py-2 text-sm font-medium rounded-lg transition-colors">
+                    Solicitar Retiro
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setWithdrawalMode('accounts')"
+                    [class.bg-blue-600]="withdrawalMode() === 'accounts'"
+                    [class.text-white]="withdrawalMode() === 'accounts'"
+                    [class.bg-gray-100]="withdrawalMode() !== 'accounts'"
+                    [class.text-gray-700]="withdrawalMode() !== 'accounts'"
+                    class="px-4 py-2 text-sm font-medium rounded-lg transition-colors">
+                    Mis Cuentas
+                  </button>
+                </div>
+              </div>
+
+              <!-- Form Mode: Withdrawal Request -->
+              @if (withdrawalMode() === 'form') {
+                <div class="space-y-6">
+                  <!-- Withdrawal Request Form -->
+                  <app-withdrawal-request-form
+                    [availableBalance]="availableBalance"
+                    [accounts]="activeBankAccounts()"
+                    (submitWithdrawal)="handleWithdrawalRequest($event)">
+                  </app-withdrawal-request-form>
+
+                  <!-- Quick Link to Add Account -->
+                  @if (activeBankAccounts().length === 0) {
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <div class="flex items-start">
+                        <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <div class="ml-3 flex-1">
+                          <p class="text-sm text-yellow-800">
+                            No tienes cuentas bancarias registradas.
+                          </p>
+                          <button
+                            type="button"
+                            (click)="setWithdrawalMode('accounts')"
+                            class="mt-2 text-sm font-medium text-yellow-900 hover:text-yellow-700 underline">
+                            Agregar cuenta bancaria
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  }
+
+                  <!-- Withdrawal History -->
+                  <div class="border-t border-gray-200 pt-6">
+                    <app-withdrawal-history
+                      [requests]="withdrawalRequests()"
+                      [loading]="loading().fetchingRequests"
+                      (cancelRequest)="handleCancelWithdrawal($event)"
+                      (refresh)="handleRefreshWithdrawals()">
+                    </app-withdrawal-history>
+                  </div>
+                </div>
+              }
+
+              <!-- Accounts Mode: Bank Accounts Management -->
+              @if (withdrawalMode() === 'accounts') {
+                <div class="space-y-6">
+                  <!-- Bank Accounts List -->
+                  <app-bank-accounts-list
+                    [accounts]="bankAccounts()"
+                    [loading]="loading().fetchingBankAccounts"
+                    (setDefault)="handleSetDefaultAccount($event)"
+                    (deleteAccount)="handleDeleteAccount($event)">
+                  </app-bank-accounts-list>
+
+                  <!-- Add New Bank Account Form -->
+                  <div class="border-t border-gray-200 pt-6">
+                    <h3 class="text-md font-semibold text-gray-900 mb-4">Agregar Nueva Cuenta</h3>
+                    <app-bank-account-form
+                      (submitAccount)="handleAddBankAccount($event)">
+                    </app-bank-account-form>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
       </div>
     </div>
 
@@ -78,17 +207,25 @@
     <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-lg p-6 text-white">
       <div class="flex flex-col md:flex-row items-center justify-between">
         <div class="mb-4 md:mb-0">
-          <h2 class="text-xl font-bold mb-2">¿Listo para tu próxima aventura?</h2>
+          <h2 class="text-xl font-bold mb-2">Gestiona tu dinero fácilmente</h2>
           <p class="text-blue-100 text-sm">
-            Deposita fondos ahora y aprovecha las mejores ofertas en alquiler de autos
+            Deposita fondos para tus reservas o retira tus ganancias a tu cuenta bancaria
           </p>
         </div>
-        <button
-          type="button"
-          (click)="openDepositModal()"
-          class="px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition-colors shadow-sm">
-          Depositar Fondos
-        </button>
+        <div class="flex gap-3">
+          <button
+            type="button"
+            (click)="openDepositModal()"
+            class="px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition-colors shadow-sm">
+            Depositar
+          </button>
+          <button
+            type="button"
+            (click)="setActiveTab('withdrawals')"
+            class="px-6 py-3 bg-blue-800 text-white font-semibold rounded-lg hover:bg-blue-900 transition-colors shadow-sm border-2 border-white">
+            Retirar
+          </button>
+        </div>
       </div>
     </div>
 

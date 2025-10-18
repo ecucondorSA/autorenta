@@ -2,12 +2,13 @@
  * Supabase Edge Function: mercadopago-create-preference
  *
  * Crea una preferencia de pago en Mercado Pago para depósitos al wallet.
+ * MIGRADO A SDK OFICIAL DE MERCADOPAGO
  *
  * Flujo:
  * 1. Frontend inicia depósito → llama a wallet_initiate_deposit() en Supabase
  * 2. wallet_initiate_deposit() crea transaction en DB con status 'pending'
  * 3. Frontend llama a esta Edge Function con transaction_id
- * 4. Edge Function crea preference en Mercado Pago
+ * 4. Edge Function crea preference en Mercado Pago usando SDK oficial
  * 5. Retorna init_point (URL de checkout) al frontend
  * 6. Usuario completa pago en Mercado Pago
  * 7. Webhook de MP confirma pago → llama a wallet_confirm_deposit()
@@ -21,39 +22,15 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// Importar SDK de MercadoPago desde npm vía esm.sh
+import MercadoPagoConfig from 'https://esm.sh/mercadopago@2';
+import { Preference } from 'https://esm.sh/mercadopago@2';
 
 // Tipos
 interface CreatePreferenceRequest {
   transaction_id: string;
   amount: number;
   description?: string;
-}
-
-interface MercadoPagoPreference {
-  items: Array<{
-    title: string;
-    quantity: number;
-    unit_price: number;
-    currency_id: string;
-  }>;
-  back_urls: {
-    success: string;
-    failure: string;
-    pending: string;
-  };
-  auto_return: string;
-  external_reference: string;
-  notification_url?: string;
-  payer?: {
-    email?: string;
-    name?: string;
-  };
-}
-
-interface MercadoPagoResponse {
-  id: string;
-  init_point: string;
-  sandbox_init_point: string;
 }
 
 const corsHeaders = {
@@ -69,10 +46,21 @@ serve(async (req) => {
 
   try {
     // Verificar variables de entorno
-    const MP_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
+    let MP_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN') || 'APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571';
+
+    // Limpiar token: remover espacios, saltos de línea, tabs
+    MP_ACCESS_TOKEN = MP_ACCESS_TOKEN.trim().replace(/[\r\n\t\s]/g, '');
+
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     const APP_BASE_URL = Deno.env.get('APP_BASE_URL') || 'http://localhost:4200';
+
+    // Debug: Log token info
+    console.log('MP_ACCESS_TOKEN from env:', !!Deno.env.get('MERCADOPAGO_ACCESS_TOKEN'));
+    console.log('MP_ACCESS_TOKEN after cleaning:', !!MP_ACCESS_TOKEN);
+    console.log('MP_ACCESS_TOKEN length:', MP_ACCESS_TOKEN?.length);
+    console.log('MP_ACCESS_TOKEN prefix:', MP_ACCESS_TOKEN?.substring(0, 15) + '...');
+    console.log('MP_ACCESS_TOKEN suffix:', '...' + MP_ACCESS_TOKEN?.substring(MP_ACCESS_TOKEN.length - 10));
 
     if (!MP_ACCESS_TOKEN || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       throw new Error('Missing required environment variables');
@@ -144,14 +132,31 @@ serve(async (req) => {
       .eq('id', transaction.user_id)
       .single();
 
-    // Crear preferencia en Mercado Pago
-    const preference: MercadoPagoPreference = {
+    // ========================================
+    // MIGRACIÓN AL SDK OFICIAL DE MERCADOPAGO
+    // ========================================
+
+    // Inicializar cliente de MercadoPago con el SDK oficial
+    const client = new MercadoPagoConfig({
+      accessToken: MP_ACCESS_TOKEN,
+      options: {
+        timeout: 5000,
+      },
+    });
+
+    // Crear instancia de Preference
+    const preferenceClient = new Preference(client);
+
+    // Crear preferencia usando el SDK
+    console.log('Creating preference with MercadoPago SDK...');
+
+    const preferenceData = {
       items: [
         {
           title: description || 'Depósito a Wallet - AutoRenta',
           quantity: 1,
           unit_price: amount,
-          currency_id: 'USD',
+          currency_id: 'ARS', // MercadoPago Argentina requiere ARS
         },
       ],
       back_urls: {
@@ -159,36 +164,25 @@ serve(async (req) => {
         failure: `${APP_BASE_URL}/wallet?payment=failure&transaction_id=${transaction_id}`,
         pending: `${APP_BASE_URL}/wallet?payment=pending&transaction_id=${transaction_id}`,
       },
-      auto_return: 'approved',
+      // auto_return removido: solo funciona con HTTPS, no con localhost HTTP
       external_reference: transaction_id,
       notification_url: `${SUPABASE_URL}/functions/v1/mercadopago-webhook`,
     };
 
     // Agregar info del pagador si está disponible
     if (profile) {
-      preference.payer = {
+      preferenceData.payer = {
         email: profile.email,
         name: profile.full_name || undefined,
       };
     }
 
-    // Llamar a API de Mercado Pago
-    const mpResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
-      },
-      body: JSON.stringify(preference),
-    });
+    console.log('Preference data:', JSON.stringify(preferenceData, null, 2));
 
-    if (!mpResponse.ok) {
-      const errorData = await mpResponse.json();
-      console.error('MercadoPago API Error:', errorData);
-      throw new Error(`MercadoPago API error: ${mpResponse.status}`);
-    }
+    // Llamar al SDK para crear la preferencia
+    const mpData = await preferenceClient.create({ body: preferenceData });
 
-    const mpData: MercadoPagoResponse = await mpResponse.json();
+    console.log('MercadoPago SDK Response:', JSON.stringify(mpData, null, 2));
 
     // Actualizar transacción con preference_id
     await supabase
@@ -223,6 +217,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         error: error instanceof Error ? error.message : 'Internal server error',
+        details: error instanceof Error ? error.stack : undefined,
       }),
       {
         status: 500,

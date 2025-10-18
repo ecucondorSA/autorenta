@@ -1,0 +1,208 @@
+<div class="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
+  <!-- Header -->
+  <div class="mb-6">
+    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+      Confirmación del Locatario
+    </h3>
+    <p class="text-sm text-slate-600 dark:text-slate-400">
+      Confirma liberar el pago al propietario y recibir tu garantía de vuelta en tu wallet.
+    </p>
+  </div>
+
+  <!-- Estado de confirmaciones -->
+  <div class="mb-6 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex items-center gap-2">
+        <div
+          class="w-3 h-3 rounded-full"
+          [class.bg-green-500]="ownerConfirmed"
+          [class.bg-slate-300]="!ownerConfirmed"
+        ></div>
+        <span class="text-sm" [class.text-green-600]="ownerConfirmed" [class.text-slate-500]="!ownerConfirmed">
+          Propietario
+          <span class="font-medium">{{ ownerConfirmed ? 'confirmó' : 'pendiente' }}</span>
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div
+          class="w-3 h-3 rounded-full"
+          [class.bg-green-500]="renterConfirmed"
+          [class.bg-slate-300]="!renterConfirmed"
+        ></div>
+        <span class="text-sm" [class.text-green-600]="renterConfirmed" [class.text-slate-500]="!renterConfirmed">
+          Locatario
+          <span class="font-medium">{{ renterConfirmed ? 'confirmó' : 'pendiente' }}</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Mensaje explicativo -->
+    <p class="mt-3 text-xs text-slate-600 dark:text-slate-400">
+      Cuando AMBOS confirmen, los fondos se liberarán automáticamente. El pago irá al propietario,
+      y tu garantía{{ damageAmount ? ' (menos daños)' : '' }} volverá a tu wallet.
+    </p>
+  </div>
+
+  <!-- Información de daños (si aplica) -->
+  <div *ngIf="ownerConfirmed && damageAmount && damageAmount > 0" class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+    <div class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+      </svg>
+      <div class="flex-1">
+        <h4 class="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-2">
+          El propietario reportó daños al vehículo
+        </h4>
+        <div class="space-y-2 text-sm text-amber-800 dark:text-amber-300">
+          <div class="flex justify-between items-center">
+            <span>Monto de daños:</span>
+            <span class="font-semibold">${{ damageAmount }} USD</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span>Depósito original:</span>
+            <span>${{ depositAmount }} USD</span>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-amber-200 dark:border-amber-800">
+            <span class="font-semibold">Devolveremos a tu wallet:</span>
+            <span class="font-bold text-lg text-amber-900 dark:text-amber-100">
+              ${{ amountToReturn }} USD
+            </span>
+          </div>
+        </div>
+
+        <!-- Descripción de daños -->
+        <div *ngIf="damageDescription" class="mt-3 pt-3 border-t border-amber-200 dark:border-amber-800">
+          <p class="text-xs font-semibold text-amber-900 dark:text-amber-200 mb-1">
+            Descripción de daños:
+          </p>
+          <p class="text-xs text-amber-800 dark:text-amber-300 whitespace-pre-wrap">
+            {{ damageDescription }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen de devolución (sin daños) -->
+  <div *ngIf="!renterConfirmed && (!damageAmount || damageAmount === 0)" class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+    <div class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+      </svg>
+      <div class="flex-1">
+        <h4 class="text-sm font-semibold text-green-900 dark:text-green-200 mb-2">
+          Sin daños reportados
+        </h4>
+        <p class="text-sm text-green-800 dark:text-green-300">
+          Recibirás el depósito completo de vuelta: <span class="font-bold">${{ depositAmount }} USD</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Información importante -->
+  <div *ngIf="!renterConfirmed" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+    <h4 class="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-2">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+      </svg>
+      Importante
+    </h4>
+    <ul class="text-xs text-blue-800 dark:text-blue-300 space-y-2">
+      <li class="flex items-start gap-2">
+        <span class="text-blue-600 dark:text-blue-400">•</span>
+        <span>Al confirmar, autorizas la transferencia del pago del alquiler al propietario</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-blue-600 dark:text-blue-400">•</span>
+        <span>Tu garantía{{ damageAmount ? ' (menos daños)' : '' }} se devolverá a tu <strong>wallet</strong>, no a tu cuenta bancaria</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-blue-600 dark:text-blue-400">•</span>
+        <span>Podrás usar los fondos del wallet para futuros alquileres</span>
+      </li>
+      <li *ngIf="ownerConfirmed" class="flex items-start gap-2">
+        <span class="text-green-600 dark:text-green-400">✓</span>
+        <span>El propietario ya confirmó. Al confirmar tú, los fondos se liberarán <strong>inmediatamente</strong></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Botón de confirmación -->
+  <div *ngIf="!renterConfirmed" class="flex justify-end">
+    <button
+      type="button"
+      (click)="confirm()"
+      class="px-6 py-3 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
+      [disabled]="loading().confirmingRenter"
+    >
+      <svg
+        *ngIf="loading().confirmingRenter"
+        class="animate-spin h-4 w-4 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <svg *ngIf="!loading().confirmingRenter" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <span>{{ loading().confirmingRenter ? 'Confirmando...' : 'Confirmar y liberar pago' }}</span>
+    </button>
+  </div>
+
+  <!-- Estado ya confirmado -->
+  <div *ngIf="renterConfirmed" class="text-center py-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full mb-4">
+      <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+      Ya confirmaste liberar el pago
+    </h4>
+    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+      <span *ngIf="!ownerConfirmed">
+        Esperando confirmación del propietario para liberar fondos.
+      </span>
+      <span *ngIf="ownerConfirmed">
+        El propietario también confirmó. Los fondos se liberaron automáticamente.
+      </span>
+    </p>
+
+    <!-- Resumen de fondos devueltos -->
+    <div *ngIf="ownerConfirmed" class="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg inline-block">
+      <p class="text-xs text-green-800 dark:text-green-300 mb-2">
+        Fondos devueltos a tu wallet:
+      </p>
+      <p class="text-2xl font-bold text-green-600 dark:text-green-400">
+        ${{ amountToReturn }} USD
+      </p>
+    </div>
+  </div>
+
+  <!-- Mensaje de resultado -->
+  <div *ngIf="message()" class="mt-4 p-4 rounded-lg" [class.bg-green-50]="confirmationResult()?.success" [class.dark:bg-green-900/20]="confirmationResult()?.success" [class.bg-red-50]="!confirmationResult()?.success" [class.dark:bg-red-900/20]="!confirmationResult()?.success">
+    <p class="text-sm" [class.text-green-800]="confirmationResult()?.success" [class.dark:text-green-300]="confirmationResult()?.success" [class.text-red-800]="!confirmationResult()?.success" [class.dark:text-red-300]="!confirmationResult()?.success">
+      {{ message() }}
+    </p>
+
+    <!-- Detalles de liberación de fondos -->
+    <div *ngIf="confirmationResult()?.funds_released" class="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
+      <p class="text-xs font-semibold text-green-900 dark:text-green-200 mb-2">
+        Fondos liberados automáticamente:
+      </p>
+      <ul class="text-xs text-green-800 dark:text-green-300 space-y-1">
+        <li>✓ Pago del alquiler transferido al propietario</li>
+        <li>✓ Garantía de ${{ amountToReturn }} USD devuelta a tu wallet</li>
+        <li *ngIf="damageAmount && damageAmount > 0">ℹ Cargo por daños: ${{ damageAmount }} USD</li>
+      </ul>
+    </div>
+  </div>
+</div>

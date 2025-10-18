@@ -1,0 +1,205 @@
+<div class="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
+  <!-- Header -->
+  <div class="mb-6">
+    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+      Confirmación del Propietario
+    </h3>
+    <p class="text-sm text-slate-600 dark:text-slate-400">
+      Confirma que recibiste el vehículo de vuelta. Opcionalmente puedes reportar daños.
+    </p>
+  </div>
+
+  <!-- Estado de confirmaciones -->
+  <div class="mb-6 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex items-center gap-2">
+        <div
+          class="w-3 h-3 rounded-full"
+          [class.bg-green-500]="ownerConfirmed"
+          [class.bg-slate-300]="!ownerConfirmed"
+        ></div>
+        <span class="text-sm" [class.text-green-600]="ownerConfirmed" [class.text-slate-500]="!ownerConfirmed">
+          Propietario
+          <span class="font-medium">{{ ownerConfirmed ? 'confirmó' : 'pendiente' }}</span>
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div
+          class="w-3 h-3 rounded-full"
+          [class.bg-green-500]="renterConfirmed"
+          [class.bg-slate-300]="!renterConfirmed"
+        ></div>
+        <span class="text-sm" [class.text-green-600]="renterConfirmed" [class.text-slate-500]="!renterConfirmed">
+          Locatario
+          <span class="font-medium">{{ renterConfirmed ? 'confirmó' : 'pendiente' }}</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Mensaje explicativo -->
+    <p class="mt-3 text-xs text-slate-600 dark:text-slate-400">
+      Cuando AMBOS confirmen, los fondos se liberarán automáticamente. El pago del alquiler irá a tu cuenta,
+      y la garantía (menos daños si aplica) volverá al wallet del locatario.
+    </p>
+  </div>
+
+  <!-- Formulario de confirmación -->
+  <form [formGroup]="form" (ngSubmit)="confirm()" *ngIf="!ownerConfirmed">
+    <!-- Checkbox: ¿Hay daños? -->
+    <div class="mb-4">
+      <label class="flex items-start gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          formControlName="has_damages"
+          class="mt-1 w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600"
+        />
+        <div>
+          <span class="text-sm font-medium text-slate-900 dark:text-white">
+            El vehículo tiene daños
+          </span>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Marca esta opción si encontraste daños al recibir el vehículo. Puedes cobrar hasta $250 USD de la garantía.
+          </p>
+        </div>
+      </label>
+    </div>
+
+    <!-- Campos de daños (si has_damages = true) -->
+    <div *ngIf="form.controls.has_damages.value" class="ml-7 mb-4 space-y-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+      <!-- Monto de daños -->
+      <div>
+        <label for="damage_amount" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+          Monto de daños (USD) <span class="text-red-500">*</span>
+        </label>
+        <input
+          id="damage_amount"
+          type="number"
+          formControlName="damage_amount"
+          min="1"
+          max="250"
+          step="0.01"
+          placeholder="Ej: 100"
+          class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-white"
+          [class.border-red-500]="form.controls.damage_amount.touched && form.controls.damage_amount.invalid"
+        />
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          Máximo: $250 USD (monto de la garantía)
+        </p>
+        <p
+          *ngIf="form.controls.damage_amount?.touched && form.controls.damage_amount?.hasError('required')"
+          class="mt-1 text-xs text-red-600 dark:text-red-400"
+        >
+          El monto de daños es requerido
+        </p>
+        <p
+          *ngIf="form.controls.damage_amount?.touched && form.controls.damage_amount?.hasError('max')"
+          class="mt-1 text-xs text-red-600 dark:text-red-400"
+        >
+          El monto no puede exceder $250 USD
+        </p>
+      </div>
+
+      <!-- Descripción de daños -->
+      <div>
+        <label for="damage_description" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+          Descripción de daños <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          id="damage_description"
+          formControlName="damage_description"
+          rows="4"
+          placeholder="Describe los daños encontrados (rayones, abolladuras, faltantes, etc.)"
+          class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-white resize-none"
+          [class.border-red-500]="form.controls.damage_description.touched && form.controls.damage_description.invalid"
+        ></textarea>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          Mínimo 10 caracteres. Sé específico con los daños encontrados.
+        </p>
+        <p
+          *ngIf="form.controls.damage_description?.touched && form.controls.damage_description?.hasError('required')"
+          class="mt-1 text-xs text-red-600 dark:text-red-400"
+        >
+          La descripción es requerida cuando hay daños
+        </p>
+        <p
+          *ngIf="form.controls.damage_description?.touched && form.controls.damage_description?.hasError('minlength')"
+          class="mt-1 text-xs text-red-600 dark:text-red-400"
+        >
+          La descripción debe tener al menos 10 caracteres
+        </p>
+      </div>
+    </div>
+
+    <!-- Botón de confirmación -->
+    <div class="flex items-center justify-between mt-6">
+      <button
+        type="button"
+        (click)="reset()"
+        class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+        [disabled]="loading().confirmingOwner"
+      >
+        Limpiar
+      </button>
+
+      <button
+        type="submit"
+        class="px-6 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        [disabled]="form.invalid || loading().confirmingOwner"
+      >
+        <svg
+          *ngIf="loading().confirmingOwner"
+          class="animate-spin h-4 w-4 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span>{{ loading().confirmingOwner ? 'Confirmando...' : 'Confirmar recepción' }}</span>
+      </button>
+    </div>
+  </form>
+
+  <!-- Estado ya confirmado -->
+  <div *ngIf="ownerConfirmed" class="text-center py-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full mb-4">
+      <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+      Ya confirmaste la recepción del vehículo
+    </h4>
+    <p class="text-sm text-slate-600 dark:text-slate-400">
+      <span *ngIf="!renterConfirmed">
+        Esperando confirmación del locatario para liberar fondos.
+      </span>
+      <span *ngIf="renterConfirmed">
+        El locatario también confirmó. Los fondos se liberaron automáticamente.
+      </span>
+    </p>
+  </div>
+
+  <!-- Mensaje de resultado -->
+  <div *ngIf="message()" class="mt-4 p-4 rounded-lg" [class.bg-green-50]="confirmationResult()?.success" [class.dark:bg-green-900/20]="confirmationResult()?.success" [class.bg-red-50]="!confirmationResult()?.success" [class.dark:bg-red-900/20]="!confirmationResult()?.success">
+    <p class="text-sm" [class.text-green-800]="confirmationResult()?.success" [class.dark:text-green-300]="confirmationResult()?.success" [class.text-red-800]="!confirmationResult()?.success" [class.dark:text-red-300]="!confirmationResult()?.success">
+      {{ message() }}
+    </p>
+
+    <!-- Detalles de liberación de fondos -->
+    <div *ngIf="confirmationResult()?.funds_released" class="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
+      <p class="text-xs font-semibold text-green-900 dark:text-green-200 mb-2">
+        Fondos liberados automáticamente:
+      </p>
+      <ul class="text-xs text-green-800 dark:text-green-300 space-y-1">
+        <li>✓ Pago del alquiler transferido a tu cuenta</li>
+        <li>✓ Garantía devuelta al wallet del locatario{{ form.controls.has_damages.value ? ' (menos daños reportados)' : '' }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
