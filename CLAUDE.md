@@ -136,6 +136,43 @@ wrangler secret put SUPABASE_SERVICE_ROLE_KEY
 
 **RPC Functions:**
 - `request_booking`: Creates booking with validation
+- `wallet_initiate_deposit`: Creates pending deposit transaction
+- `wallet_confirm_deposit`: Confirms deposit and credits funds (called by webhook)
+- `wallet_get_balance`: Returns user's wallet balance
+- `wallet_lock_funds`: Locks funds for booking
+- `wallet_unlock_funds`: Unlocks funds after booking
+
+### Wallet System
+
+**Tables:**
+- `user_wallets`: User balance and locked funds (one row per user)
+- `wallet_transactions`: All wallet operations (deposits, withdrawals, payments, locks, unlocks)
+
+**Edge Functions:**
+- `mercadopago-create-preference`: Creates MercadoPago payment preference for deposits
+- `mercadopago-webhook`: Processes IPN notifications from MercadoPago
+
+**Flow**:
+1. User clicks "Depositar" → Frontend calls `wallet_initiate_deposit()`
+2. RPC creates pending transaction → Returns transaction_id
+3. Frontend calls Edge Function `mercadopago-create-preference` with transaction_id
+4. Edge Function creates preference → Returns init_point (checkout URL)
+5. User redirected to MercadoPago → Completes payment
+6. MercadoPago sends IPN → Calls Edge Function `mercadopago-webhook`
+7. Webhook verifies payment → Calls `wallet_confirm_deposit()`
+8. RPC updates transaction status → Credits funds to user wallet
+9. User redirected back → Balance updated
+
+**Key Implementation Details:**
+- ✅ Currency: Always ARS (required by MercadoPago Argentina)
+- ✅ Idempotency: Webhook handles duplicate notifications safely
+- ✅ Token cleaning: Access token is trimmed and sanitized
+- ✅ No auto_return: Doesn't work with localhost HTTP
+- ✅ Logging: Extensive debug logs for troubleshooting
+- ✅ Hardcoded fallback: Token has fallback for local development
+- ✅ RLS: All operations protected by Row Level Security
+
+**Documentation**: See `WALLET_SYSTEM_DOCUMENTATION.md` for complete guide.
 
 ### Payment Webhook Worker
 
