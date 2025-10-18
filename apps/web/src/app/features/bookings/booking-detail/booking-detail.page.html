@@ -310,5 +310,33 @@
         [showCarTitle]="false"
       ></app-review-card>
     </div>
+
+    <!-- Bilateral Confirmation Section -->
+    <div *ngIf="showConfirmationSection()" class="space-y-4">
+      <!-- Owner Confirmation Component -->
+      <div *ngIf="isOwner()">
+        <app-owner-confirmation
+          [bookingId]="booking()!.id"
+          [ownerConfirmed]="booking()?.owner_confirmed_delivery ?? false"
+          [renterConfirmed]="booking()?.renter_confirmed_payment ?? false"
+          (confirmed)="handleConfirmationSuccess($event)"
+          (error)="handleConfirmationError($event)"
+        ></app-owner-confirmation>
+      </div>
+
+      <!-- Renter Confirmation Component -->
+      <div *ngIf="isRenter()">
+        <app-renter-confirmation
+          [bookingId]="booking()!.id"
+          [ownerConfirmed]="booking()?.owner_confirmed_delivery ?? false"
+          [renterConfirmed]="booking()?.renter_confirmed_payment ?? false"
+          [damageAmount]="booking()?.owner_damage_amount ?? null"
+          [damageDescription]="booking()?.owner_damage_description ?? null"
+          [depositAmount]="(booking()?.deposit_amount_cents ?? 25000) / 100"
+          (confirmed)="handleConfirmationSuccess($event)"
+          (error)="handleConfirmationError($event)"
+        ></app-renter-confirmation>
+      </div>
+    </div>
   </div>
 </div>

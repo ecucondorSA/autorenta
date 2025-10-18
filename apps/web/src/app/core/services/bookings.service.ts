@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Booking } from '../models';
 import { injectSupabase } from './supabase-client.service';
+import { WalletService } from './wallet.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookingsService {
   private readonly supabase = injectSupabase();
+  private readonly walletService = inject(WalletService);
 
   async requestBooking(carId: string, start: string, end: string): Promise<Booking> {
     const { data, error } = await this.supabase.rpc('request_booking', {
@@ -96,14 +98,38 @@ export class BookingsService {
 
   /**
    * Cancel a booking
+   * If the booking has locked wallet funds, they will be unlocked automatically
    */
   async cancelBooking(bookingId: string, reason?: string): Promise<void> {
+    // 1. Get booking to check wallet status
+    const booking = await this.getBookingById(bookingId);
+
+    if (!booking) {
+      throw new Error('Booking not found');
+    }
+
+    // 2. If wallet funds are locked, unlock them before cancelling
+    if (booking.wallet_status === 'locked' && booking.wallet_lock_transaction_id) {
+      try {
+        await this.walletService.unlockFunds({
+          booking_id: bookingId,
+          description: `Fondos desbloqueados por cancelación: ${reason ?? 'Cancelled by user'}`,
+        });
+      } catch (unlockError) {
+        console.error('Error unlocking wallet funds during cancellation:', unlockError);
+        // Continue with cancellation even if unlock fails
+        // The unlock can be retried manually later
+      }
+    }
+
+    // 3. Cancel the booking
     const { error } = await this.supabase
       .from('bookings')
       .update({
         status: 'cancelled',
         cancelled_at: new Date().toISOString(),
         cancellation_reason: reason ?? 'Cancelled by user',
+        wallet_status: booking.wallet_status === 'locked' ? 'refunded' : booking.wallet_status,
       })
       .eq('id', bookingId);
 

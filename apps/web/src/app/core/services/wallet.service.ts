@@ -12,6 +12,11 @@ import type {
   WalletTransactionFilters,
   WalletLoadingState,
   WalletError,
+  WalletLockRentalAndDepositResponse,
+  WalletCompleteBookingResponse,
+  WalletCompleteBookingWithDamagesResponse,
+  LockRentalAndDepositParams,
+  CompleteBookingWithDamagesParams,
 } from '../models/wallet.model';
 
 /**
@@ -431,6 +436,123 @@ export class WalletService {
         /* Ignorar errores de refresh */
       }),
     ]);
+  }
+
+  // ==================== MÉTODOS DE SISTEMA DUAL (RENTAL + DEPOSIT) ====================
+
+  /**
+   * Bloquea tanto el pago del alquiler como la garantía
+   * El pago se transfiere al propietario, la garantía se devuelve al usuario
+   *
+   * @example
+   * // Alquiler de $300 + Garantía de $250 = $550 total bloqueado
+   * await walletService.lockRentalAndDeposit({
+   *   booking_id: 'booking-uuid',
+   *   rental_amount: 300,
+   *   deposit_amount: 250 // Opcional, default $250
+   * });
+   */
+  async lockRentalAndDeposit(params: LockRentalAndDepositParams): Promise<WalletLockRentalAndDepositResponse> {
+    this.setLoadingState('lockingFunds', true);
+    this.clearError();
+
+    try {
+      const { data, error } = await this.supabase.getClient().rpc('wallet_lock_rental_and_deposit', {
+        p_booking_id: params.booking_id,
+        p_rental_amount: params.rental_amount,
+        p_deposit_amount: params.deposit_amount ?? 250,
+      });
+
+      if (error) throw this.createError('LOCK_RENTAL_DEPOSIT_ERROR', error.message, error);
+      if (!data || data.length === 0) throw this.createError('LOCK_EMPTY', 'No se pudo bloquear fondos');
+
+      const result = data[0] as WalletLockRentalAndDepositResponse;
+      if (!result.success) throw this.createError('LOCK_FAILED', result.message);
+
+      // Actualizar balance local
+      this.balance.set({
+        available_balance: result.new_available_balance,
+        locked_balance: result.new_locked_balance,
+        total_balance: result.new_available_balance + result.new_locked_balance,
+        currency: this.balance()?.currency ?? 'USD',
+      });
+
+      return result;
+    } catch (err) {
+      throw this.handleError(err, 'Error al bloquear rental + deposit');
+    } finally {
+      this.setLoadingState('lockingFunds', false);
+    }
+  }
+
+  /**
+   * Completa un booking sin daños
+   * - Transfiere el pago del alquiler al propietario
+   * - Devuelve la garantía completa al usuario (a su wallet)
+   */
+  async completeBooking(bookingId: string, completionNotes?: string): Promise<WalletCompleteBookingResponse> {
+    this.setLoadingState('unlockingFunds', true);
+    this.clearError();
+
+    try {
+      const { data, error } = await this.supabase.getClient().rpc('wallet_complete_booking', {
+        p_booking_id: bookingId,
+        p_completion_notes: completionNotes ?? 'Auto entregado en buenas condiciones',
+      });
+
+      if (error) throw this.createError('COMPLETE_BOOKING_ERROR', error.message, error);
+      if (!data || data.length === 0) throw this.createError('COMPLETE_EMPTY', 'No se pudo completar booking');
+
+      const result = data[0] as WalletCompleteBookingResponse;
+      if (!result.success) throw this.createError('COMPLETE_FAILED', result.message);
+
+      // Refrescar balance después de completar
+      await this.getBalance().catch(() => {
+        /* Ignorar errores de refresh */
+      });
+
+      return result;
+    } catch (err) {
+      throw this.handleError(err, 'Error al completar booking');
+    } finally {
+      this.setLoadingState('unlockingFunds', false);
+    }
+  }
+
+  /**
+   * Completa un booking con daños
+   * - Transfiere el pago del alquiler al propietario
+   * - Cobra daños de la garantía (parcial o total)
+   * - Devuelve el resto de la garantía al usuario (si aplica)
+   */
+  async completeBookingWithDamages(params: CompleteBookingWithDamagesParams): Promise<WalletCompleteBookingWithDamagesResponse> {
+    this.setLoadingState('unlockingFunds', true);
+    this.clearError();
+
+    try {
+      const { data, error } = await this.supabase.getClient().rpc('wallet_complete_booking_with_damages', {
+        p_booking_id: params.booking_id,
+        p_damage_amount: params.damage_amount,
+        p_damage_description: params.damage_description,
+      });
+
+      if (error) throw this.createError('COMPLETE_WITH_DAMAGES_ERROR', error.message, error);
+      if (!data || data.length === 0) throw this.createError('COMPLETE_EMPTY', 'No se pudo completar booking');
+
+      const result = data[0] as WalletCompleteBookingWithDamagesResponse;
+      if (!result.success) throw this.createError('COMPLETE_FAILED', result.message);
+
+      // Refrescar balance después de completar
+      await this.getBalance().catch(() => {
+        /* Ignorar errores de refresh */
+      });
+
+      return result;
+    } catch (err) {
+      throw this.handleError(err, 'Error al completar booking con daños');
+    } finally {
+      this.setLoadingState('unlockingFunds', false);
+    }
   }
 
   /**

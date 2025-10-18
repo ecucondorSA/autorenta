@@ -1,4 +1,46 @@
-# Web
+# AutoRenta - Car Rental Marketplace
+
+AutoRenta es una plataforma de alquiler de autos para Argentina construida con Angular 17, Supabase y MercadoPago.
+
+## 🚀 Características Principales
+
+- **Sistema de Wallet** con depósitos y retiros via MercadoPago
+- **Gestión de Reservas** con garantías bilaterales
+- **Autenticación** con Supabase Auth
+- **Pagos** integrados con MercadoPago (Argentina)
+- **Panel de Administración** para gestión de usuarios y transacciones
+
+## 💳 Integración con MercadoPago
+
+### Configuración Actual
+- **País:** Argentina
+- **Moneda:** ARS (Pesos Argentinos)
+- **Public Key:** `APP_USR-a89f4240-f154-43dc-9535-4cde45b1d8cd`
+- **Access Token:** Configurado en Supabase
+
+### Edge Functions Desplegadas
+- `mercadopago-create-preference` - Crea preferencias de pago para depósitos
+- `mercadopago-webhook` - Procesa notificaciones IPN de MercadoPago
+
+Para más detalles, ver [MERCADOPAGO_SETUP.md](./MERCADOPAGO_SETUP.md)
+
+## 🛠️ Tecnologías
+
+- **Frontend:** Angular 17 (Standalone Components)
+- **Backend:** Supabase (PostgreSQL + Edge Functions)
+- **Pagos:** MercadoPago (Argentina)
+- **Styling:** Tailwind CSS
+- **Deployment:** Cloudflare Pages
+
+## 📚 Documentación
+
+- [MERCADOPAGO_SETUP.md](./MERCADOPAGO_SETUP.md) - Configuración de pagos
+- [WALLET_BILATERAL_RELEASE_SYSTEM.md](./WALLET_BILATERAL_RELEASE_SYSTEM.md) - Sistema de wallet
+- [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) - Guía de despliegue
+
+---
+
+## Development
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
 

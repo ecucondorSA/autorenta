@@ -1,4 +1,5 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { injectSupabase } from './supabase-client.service';
@@ -13,6 +14,7 @@ interface AuthState {
 })
 export class AuthService {
   private readonly supabase = injectSupabase();
+  private readonly router = inject(Router);
   private readonly state = signal<AuthState>({ session: null, loading: true });
   private restoreSessionPromise: Promise<void> | null = null;
 
@@ -84,6 +86,8 @@ export class AuthService {
     if (error) {
       throw this.mapError(error);
     }
+    // Redirect to home page after successful logout
+    await this.router.navigate(['/']);
   }
 
   async resetPassword(email: string, redirectTo?: string): Promise<void> {

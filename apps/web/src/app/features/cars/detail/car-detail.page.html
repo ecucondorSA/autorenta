@@ -195,7 +195,7 @@
       </div>
 
       <!-- Información del dueño/anfitrión -->
-      <div *ngIf="car()?.owner" class="card-premium rounded-2xl border border-pearl-gray bg-white-pure p-6 shadow-soft">
+      <div *ngIf="car()?.owner && authService.isAuthenticated()" class="card-premium rounded-2xl border border-pearl-gray bg-white-pure p-6 shadow-soft">
         <h2 class="mb-4 text-xl font-semibold text-smoke-black">Anfitrión</h2>
 
         <div class="flex items-start gap-4">
@@ -260,6 +260,21 @@
               Miembro desde {{ car()?.owner?.created_at | date:'MMM yyyy' }}
             </p>
           </div>
+        </div>
+      </div>
+
+      <!-- Mensaje para usuarios no autenticados -->
+      <div *ngIf="car()?.owner && !authService.isAuthenticated()" class="card-premium rounded-2xl border border-pearl-gray bg-white-pure p-6 shadow-soft">
+        <h2 class="mb-4 text-xl font-semibold text-smoke-black">Anfitrión</h2>
+        <div class="flex flex-col items-center justify-center py-8 text-center">
+          <svg class="mb-4 h-16 w-16 text-accent-petrol/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          <p class="mb-2 text-lg font-semibold text-smoke-black">Iniciá sesión para ver los datos del anfitrión</p>
+          <p class="mb-4 text-sm text-charcoal-medium">Necesitás estar registrado para acceder a la información de contacto</p>
+          <a routerLink="/auth/login" class="btn-primary px-6 py-2 text-sm font-semibold">
+            Iniciar sesión
+          </a>
         </div>
       </div>
 
@@ -438,6 +453,7 @@
 
         <!-- Botón de reserva -->
         <button
+          *ngIf="authService.isAuthenticated()"
           (click)="onBookClick()"
           [disabled]="!canBook() || bookingInProgress()"
           [class.opacity-50]="!canBook() || bookingInProgress()"
@@ -446,6 +462,15 @@
         >
           <span *ngIf="!bookingInProgress()">Solicitar reserva</span>
           <span *ngIf="bookingInProgress()">Procesando...</span>
+        </button>
+
+        <!-- Botón para usuarios no autenticados -->
+        <button
+          *ngIf="!authService.isAuthenticated()"
+          (click)="navigateToLogin()"
+          class="btn-primary w-full py-3 text-base font-semibold"
+        >
+          Inicia sesión para reservar
         </button>
 
         <!-- Información adicional -->

@@ -260,6 +260,22 @@ export interface BookingBreakdown {
   lines?: Array<{ label: string; amount_cents: number }>;
 }
 
+/**
+ * Estado del depósito de garantía en el sistema dual
+ */
+export type BookingDepositStatus = 'none' | 'locked' | 'released' | 'charged';
+
+/**
+ * Estado del proceso de confirmación bilateral
+ */
+export type BookingCompletionStatus =
+  | 'active' // Booking activo, alquiler en progreso
+  | 'returned' // Auto devuelto, esperando confirmaciones
+  | 'pending_owner' // Esperando confirmación del propietario
+  | 'pending_renter' // Esperando confirmación del locatario
+  | 'pending_both' // Esperando confirmación de ambas partes
+  | 'funds_released'; // Fondos liberados exitosamente
+
 export interface Booking {
   id: string;
   car_id: string;
@@ -292,6 +308,27 @@ export interface Booking {
   wallet_status?: 'none' | 'locked' | 'charged' | 'refunded' | null;
   wallet_charged_at?: string | null;
   wallet_refunded_at?: string | null;
+
+  // Dual payment system (rental + deposit)
+  rental_amount_cents?: number | null;
+  deposit_amount_cents?: number | null;
+  rental_lock_transaction_id?: string | null;
+  deposit_lock_transaction_id?: string | null;
+  rental_payment_transaction_id?: string | null;
+  deposit_release_transaction_id?: string | null;
+  deposit_status?: BookingDepositStatus | null;
+
+  // Bilateral confirmation system
+  returned_at?: string | null;
+  owner_confirmed_delivery?: boolean | null;
+  owner_confirmation_at?: string | null;
+  owner_reported_damages?: boolean | null;
+  owner_damage_amount?: number | null;
+  owner_damage_description?: string | null;
+  renter_confirmed_payment?: boolean | null;
+  renter_confirmation_at?: string | null;
+  funds_released_at?: string | null;
+  completion_status?: BookingCompletionStatus | null;
 
   // Cancellation management
   cancellation_policy_id?: number;

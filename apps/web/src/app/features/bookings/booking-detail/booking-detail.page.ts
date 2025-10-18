@@ -8,11 +8,21 @@ import { ReviewsService } from '../../../core/services/reviews.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
+import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
+import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
+import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
 
 @Component({
   selector: 'app-booking-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReviewFormComponent, ReviewCardComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReviewFormComponent,
+    ReviewCardComponent,
+    OwnerConfirmationComponent,
+    RenterConfirmationComponent,
+  ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
 })
@@ -94,6 +104,34 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return booking ? this.bookingsService.isExpired(booking) : false;
   });
 
+  // Confirmations - show if booking is in "returned" status
+  showConfirmationSection = computed(() => {
+    const booking = this.booking();
+    return booking?.completion_status === 'returned' ||
+           booking?.completion_status === 'pending_owner' ||
+           booking?.completion_status === 'pending_renter' ||
+           booking?.completion_status === 'pending_both' ||
+           booking?.completion_status === 'funds_released';
+  });
+
+  isOwner = computed(() => {
+    const booking = this.booking();
+    const currentUser = this.authService.session$()?.user;
+    if (!booking || !currentUser) return false;
+
+    // Need to check car owner_id - will load from car data
+    return this.carOwnerId() === currentUser.id;
+  });
+
+  isRenter = computed(() => {
+    const booking = this.booking();
+    const currentUser = this.authService.session$()?.user;
+    return booking?.renter_id === currentUser?.id;
+  });
+
+  // Car owner ID (loaded separately)
+  carOwnerId = signal<string | null>(null);
+
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
     if (!bookingId) {
@@ -113,6 +151,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       this.booking.set(booking);
       this.startCountdown();
 
+      // Load car owner ID for confirmation logic
+      await this.loadCarOwner();
+
       // Check if user can review this booking
       if (booking.status === 'completed') {
         await this.checkReviewStatus();
@@ -123,6 +164,25 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       this.error.set('Error al cargar la reserva');
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  private async loadCarOwner(): Promise<void> {
+    const booking = this.booking();
+    if (!booking) return;
+
+    try {
+      const { data: car } = await this.bookingsService['supabase']
+        .from('cars')
+        .select('owner_id')
+        .eq('id', booking.car_id)
+        .single();
+
+      if (car) {
+        this.carOwnerId.set(car.owner_id);
+      }
+    } catch (error) {
+      console.error('Error loading car owner:', error);
     }
   }
 
@@ -365,5 +425,29 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error loading review data:', error);
     }
+  }
+
+  // Confirmation handlers
+  async handleConfirmationSuccess(result: ConfirmAndReleaseResponse): Promise<void> {
+    console.log('Confirmation result:', result);
+
+    // Reload booking to get updated status
+    const bookingId = this.booking()?.id;
+    if (bookingId) {
+      const updated = await this.bookingsService.getBookingById(bookingId);
+      this.booking.set(updated);
+    }
+
+    // Show success message
+    if (result.funds_released) {
+      alert(`✅ ${result.message}\n\n¡Los fondos fueron liberados automáticamente!`);
+    } else {
+      alert(`✅ ${result.message}`);
+    }
+  }
+
+  handleConfirmationError(errorMessage: string): void {
+    console.error('Confirmation error:', errorMessage);
+    alert(`❌ Error: ${errorMessage}`);
   }
 }

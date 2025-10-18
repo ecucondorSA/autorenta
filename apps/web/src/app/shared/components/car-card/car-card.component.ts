@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output, EventEmitter, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Car } from '../../../core/models';
@@ -13,6 +13,8 @@ import { getCarPlaceholderImage } from '../../utils/car-placeholder-images';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarCardComponent {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   private readonly _car = signal<Car | undefined>(undefined);
   private readonly _selected = signal<boolean>(false);
   private readonly _distance = signal<string | undefined>(undefined);
@@ -55,6 +57,8 @@ export class CarCardComponent {
   @Input()
   set distance(value: string | undefined) {
     this._distance.set(value);
+    // Trigger change detection when distance updates (important for OnPush strategy)
+    this.cdr.markForCheck();
   }
 
   get distance(): string | undefined {

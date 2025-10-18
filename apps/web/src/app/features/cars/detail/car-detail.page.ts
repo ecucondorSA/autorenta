@@ -5,6 +5,7 @@ import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { WalletService } from '../../../core/services/wallet.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Car, Review, CarStats, ReviewSummary } from '../../../core/models';
 import {
   DateRangePickerComponent,
@@ -102,6 +103,7 @@ export class CarDetailPage implements OnInit {
     private readonly bookingsService: BookingsService,
     private readonly reviewsService: ReviewsService,
     private readonly walletService: WalletService,
+    readonly authService: AuthService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
   ) {}
@@ -200,6 +202,10 @@ export class CarDetailPage implements OnInit {
 
   goToPhoto(index: number): void {
     this.currentPhotoIndex.set(index);
+  }
+
+  navigateToLogin(): void {
+    void this.router.navigate(['/auth/login']);
   }
 
   async onBookClick(): Promise<void> {
