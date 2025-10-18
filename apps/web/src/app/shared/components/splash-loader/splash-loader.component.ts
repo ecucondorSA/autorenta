@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,81 +13,109 @@ import { CommonModule } from '@angular/common';
       .motion-ok { animation: none !important; }
     }
 
-    /* Custom keyframes for subtle bobbing of the wheel */
+    /* Custom keyframes for subtle bobbing of the logo */
     @keyframes bob {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
+      50% { transform: translateY(-8px); }
     }
 
-    /* Speedometer needle sweep */
-    @keyframes sweep {
-      0% { transform: rotate(-60deg); }
-      50% { transform: rotate(40deg); }
-      100% { transform: rotate(-60deg); }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    @keyframes roadmove {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Video background styling */
+    .video-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      animation: fadeIn 0.8s ease-in;
+    }
+
+    .overlay {
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+      );
     }
   `],
   template: `
-    <div class="fixed inset-0 z-[9999] bg-neutral-950 text-neutral-100 flex flex-col items-center justify-center gap-8">
-      <!-- Logo/Wordmark -->
-      <div class="flex items-center gap-3">
-        <div class="h-9 w-9 rounded-2xl bg-white/10 backdrop-blur-sm grid place-items-center shadow-inner">
-          <!-- Minimal wheel glyph -->
-          <svg viewBox="0 0 100 100" class="h-6 w-6" aria-hidden="true">
-            <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="8" opacity="0.7"/>
-            <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" stroke-width="6"/>
-            <circle cx="50" cy="50" r="4" fill="currentColor"/>
-          </svg>
-        </div>
-        <span class="text-2xl tracking-tight font-semibold">AutorentA</span>
-      </div>
+    <div class="fixed inset-0 z-[9999] overflow-hidden">
+      <!-- Video Background -->
+      <video
+        #videoElement
+        class="video-bg"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+        [defaultMuted]="true"
+      >
+        <source src="/assets/videos/splash-background.mp4" type="video/mp4">
+      </video>
 
-      <!-- Wheel spinner + road strip -->
-      <div class="relative">
-        <!-- Rotating tire -->
-        <div class="motion-ok animate-spin h-28 w-28 rounded-full grid place-items-center shadow-2xl shadow-black/50 bg-neutral-900 border border-white/10" style="animation-duration: 800ms;">
-          <svg viewBox="0 0 100 100" class="h-24 w-24 motion-ok" style="animation: bob 1.8s ease-in-out infinite;">
-            <!-- Tire -->
-            <circle cx="50" cy="50" r="46" fill="none" stroke="white" stroke-opacity="0.12" stroke-width="8"/>
-            <!-- Rim -->
-            <circle cx="50" cy="50" r="28" fill="none" stroke="white" stroke-opacity="0.25" stroke-width="6"/>
-            <!-- 5 spokes -->
-            <g stroke="white" stroke-width="5" stroke-linecap="round" stroke-opacity="0.9">
-              <line x1="50" y1="50" x2="50" y2="18" />
-              <line x1="50" y1="50" x2="77" y2="36" />
-              <line x1="50" y1="50" x2="77" y2="64" />
-              <line x1="50" y1="50" x2="50" y2="82" />
-              <line x1="50" y1="50" x2="23" y2="64" />
-            </g>
-            <circle cx="50" cy="50" r="6" fill="white"/>
-          </svg>
-        </div>
-        <!-- Road center lines animation -->
-        <div class="absolute left-1/2 -translate-x-1/2 top-full mt-6 h-1 w-64 overflow-hidden rounded-full bg-white/10">
-          <div class="h-full w-[200%] bg-[repeating-linear-gradient(to_right,theme(colors.white)_0_16px,transparent_16px_28px)] motion-ok" style="animation: roadmove 1s linear infinite;"></div>
-        </div>
-      </div>
+      <!-- Dark Overlay -->
+      <div class="overlay absolute inset-0"></div>
 
-      <!-- Tagline / helpful text -->
-      <div class="text-center text-sm text-neutral-300 px-6">
-        Preparando tu experiencia de alquiler…
-      </div>
+      <!-- Content Over Video -->
+      <div class="relative z-10 h-full flex flex-col items-center justify-center gap-8 text-white">
+        <!-- Logo/Wordmark -->
+        <div class="flex items-center justify-center h-32 motion-ok" style="animation: bob 2s ease-in-out infinite;">
+          <img
+            src="/assets/images/autorentar-logo.png"
+            alt="Autorentar"
+            class="h-full w-auto object-contain scale-[5] drop-shadow-2xl"
+          />
+        </div>
 
-      <!-- Speedometer -->
-      <div class="relative w-40 h-20">
-        <svg viewBox="0 0 200 100" class="absolute inset-0 w-full h-full">
-          <path d="M20 90 A80 80 0 0 1 180 90" fill="none" stroke="white" stroke-opacity="0.2" stroke-width="10"/>
-          <circle cx="100" cy="90" r="4" fill="white"/>
-        </svg>
-        <div class="absolute left-1/2 top-[68%] origin-[50%_100%] motion-ok" style="transform: translateX(-50%) rotate(-60deg); animation: sweep 1.8s ease-in-out infinite;">
-          <div class="w-0.5 h-16 bg-white rounded-full shadow" aria-hidden="true"></div>
+        <!-- Tagline / helpful text -->
+        <div class="text-center px-6 motion-ok" style="animation: pulse 2s ease-in-out infinite;">
+          <p class="text-xl md:text-2xl font-light tracking-wide drop-shadow-lg">
+            Prendiendo los motores...
+          </p>
+        </div>
+
+        <!-- Loading bar -->
+        <div class="w-64 h-1 bg-white/20 rounded-full overflow-hidden mt-4">
+          <div class="h-full bg-white/90 rounded-full motion-ok" style="animation: loadingBar 4s ease-in-out infinite;"></div>
         </div>
       </div>
     </div>
+
+    <style>
+      @keyframes loadingBar {
+        0% { width: 0%; }
+        100% { width: 100%; }
+      }
+    </style>
   `
 })
-export class SplashLoaderComponent {}
+export class SplashLoaderComponent implements AfterViewInit {
+  @ViewChild('videoElement') videoElement?: ElementRef<HTMLVideoElement>;
+
+  ngAfterViewInit(): void {
+    // Force video play on load
+    if (this.videoElement?.nativeElement) {
+      const video = this.videoElement.nativeElement;
+      video.muted = true; // Ensure muted for autoplay
+      video.playbackRate = 1.3; // Play at 1.3x speed
+      video.play().catch(err => {
+        console.warn('Video autoplay failed:', err);
+        // Fallback: try playing on user interaction
+        document.addEventListener('click', () => {
+          video.play().catch(() => {});
+        }, { once: true });
+      });
+    }
+  }
+}

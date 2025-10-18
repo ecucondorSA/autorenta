@@ -9,7 +9,8 @@
     // See also https://aka.ms/tsconfig/module
     "module": "es2022",
     "target": "es2022",
-    "types": [],
+    "moduleResolution": "bundler",
+    "types": ["@cloudflare/workers-types"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],

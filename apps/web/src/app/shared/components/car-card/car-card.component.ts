@@ -88,4 +88,33 @@ export class CarCardComponent {
     // Use placeholder image based on car ID
     return getCarPlaceholderImage(car.id);
   });
+
+  readonly topFeatures = computed(() => {
+    const car = this._car();
+    if (!car?.features) return [];
+
+    // Mapeo de features a labels en español
+    const featureLabels: Record<string, string> = {
+      ac: 'Aire acondicionado',
+      bluetooth: 'Bluetooth',
+      gps: 'GPS',
+      usb: 'USB',
+      abs: 'ABS',
+      airbag: 'Airbag',
+      backup_camera: 'Cámara trasera',
+      parking_sensors: 'Sensores de estacionamiento',
+      cruise_control: 'Control crucero',
+      leather_seats: 'Asientos de cuero',
+      sunroof: 'Techo solar',
+      aux_input: 'Entrada auxiliar',
+    };
+
+    // Filtrar features activas y obtener top 3
+    const activeFeatures = Object.entries(car.features)
+      .filter(([_, value]) => value === true)
+      .map(([key]) => featureLabels[key] || key)
+      .slice(0, 3);
+
+    return activeFeatures;
+  });
 }

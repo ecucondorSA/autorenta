@@ -1,175 +1,62 @@
 <section class="cars-page">
-  <!-- Mapa con filtros integrados (lazy loaded on viewport) -->
-  @defer (on viewport) {
-    <section class="map-full-section">
-      <!-- Controles de búsqueda superpuestos -->
-      <div class="map-search-overlay" [class.collapsed]="searchCollapsed()">
-        <!-- Toggle button -->
-        <button
-          class="search-toggle-button"
-          (click)="toggleSearchCollapsed()"
-          title="Mostrar/Ocultar búsqueda"
-        >
-          <svg *ngIf="searchCollapsed()" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-          <svg *ngIf="!searchCollapsed()" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 15l7-7 7 7"
-            />
-          </svg>
-        </button>
-
-        <div class="search-container">
-          <div class="search-header">
-            <h1 class="search-title">Encontrá tu próximo auto</h1>
-            <p class="search-subtitle">
-              Buscá por ciudad y rango de fechas. Los precios están expresados en pesos argentinos.
-            </p>
-          </div>
-          <div class="search-controls">
-            <app-city-select (valueChange)="onCityChange($event)"></app-city-select>
-            <app-date-range-picker (rangeChange)="onRangeChange($event)"></app-date-range-picker>
-            <button class="search-button" (click)="loadCars()" [disabled]="loading()">
-              <svg
-                *ngIf="!loading()"
-                class="search-icon"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <span class="search-spinner" *ngIf="loading()"></span>
-              {{ loading() ? 'Buscando...' : 'Buscar autos' }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mapa -->
-      <app-cars-map
-        [cars]="cars()"
-        [selectedCarId]="selectedCarId()"
-        (carSelected)="onMapCarSelected($event)"
-      ></app-cars-map>
-    </section>
-  } @placeholder {
-    <section class="map-placeholder-full">
-      <div class="placeholder-content">
-        <svg class="placeholder-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-          />
-        </svg>
-        <p>Desplázate para ver el mapa de ubicaciones</p>
-      </div>
-    </section>
-  } @loading {
-    <section class="map-loading-full">
-      <div class="loading-spinner-large"></div>
-      <p>Cargando mapa...</p>
-    </section>
-  }
-
-  <!-- Grid horizontal desplazable de autos -->
-  <section class="cars-horizontal-section">
-    <div class="section-header">
-      <h2 class="section-title">
-        <svg class="section-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-          />
-        </svg>
-        Autos disponibles
-        <span class="cars-count" *ngIf="cars().length > 0">({{ cars().length }})</span>
-      </h2>
-
-      <!-- Scroll buttons -->
-      <div class="scroll-buttons" *ngIf="cars().length > 3">
-        <button
-          class="scroll-button scroll-auto"
-          (click)="toggleAutoScroll()"
-          [class.active]="autoScrollInterval"
-          title="Auto-desplazamiento"
-        >
-          <svg *ngIf="!autoScrollInterval" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <svg *ngIf="autoScrollInterval" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </button>
-        <button
-          class="scroll-button scroll-left"
-          (click)="scrollCars('left')"
-          [disabled]="!canScrollLeft"
-        >
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-        <button
-          class="scroll-button scroll-right"
-          (click)="scrollCars('right')"
-          [disabled]="!canScrollRight"
-        >
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-      </div>
+  <!-- Filtros de búsqueda superiores -->
+  <section class="search-bar-top">
+    <div class="search-header-compact">
+      <h1 class="page-title">Encontrá tu próximo auto</h1>
+      <p class="page-subtitle">
+        Buscá por ciudad y rango de fechas. Los precios están expresados en pesos argentinos.
+      </p>
     </div>
 
-    <div class="cars-scroll-container" #carsContainer (scroll)="onCarsScroll()">
-      <div class="cars-grid-horizontal">
+    <div class="search-controls-top">
+      <app-city-select (valueChange)="onCityChange($event)"></app-city-select>
+      <app-date-range-picker (rangeChange)="onRangeChange($event)"></app-date-range-picker>
+      <button class="search-button-top" (click)="loadCars()" [disabled]="loading()">
+        <svg
+          *ngIf="!loading()"
+          class="search-icon"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <span class="search-spinner" *ngIf="loading()"></span>
+        {{ loading() ? 'Buscando...' : 'Buscar' }}
+      </button>
+    </div>
+  </section>
+
+  <!-- Layout Airbnb-style: Cards izquierda, Mapa derecha -->
+  <div class="split-layout">
+    <!-- Panel izquierdo: Lista de autos -->
+    <section class="cars-panel">
+      <!-- Header con count -->
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <svg class="title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            />
+          </svg>
+          <span *ngIf="cars().length > 0">{{ cars().length }} autos disponibles</span>
+          <span *ngIf="cars().length === 0">No hay autos disponibles</span>
+        </h2>
+      </div>
+
+      <!-- Grid vertical de cards -->
+      <div class="cars-grid-vertical" #carsContainer>
         <app-car-card
           *ngFor="let car of cars()"
+          [id]="'car-card-' + car.id"
           [car]="car"
           [selected]="car.id === selectedCarId()"
           [isComparing]="isCarComparing(car.id)"
@@ -177,19 +64,53 @@
           (click)="onCarSelected(car.id)"
           (compareToggle)="onCompareToggle($event)"
         ></app-car-card>
-      </div>
-    </div>
 
-    <p *ngIf="!loading() && cars().length === 0" class="no-results">
-      <svg class="no-results-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      No encontramos autos para tu búsqueda.
-    </p>
-  </section>
+        <!-- Empty state -->
+        <div *ngIf="!loading() && cars().length === 0" class="no-results-vertical">
+          <svg class="no-results-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <p>No encontramos autos para tu búsqueda.</p>
+          <p class="hint">Intentá cambiar los filtros o la ubicación</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel derecho: Mapa sticky -->
+    <section class="map-panel">
+      @defer (on viewport) {
+        <div class="map-sticky-container">
+          <app-cars-map
+            [cars]="cars()"
+            [selectedCarId]="selectedCarId()"
+            (carSelected)="onMapCarSelected($event)"
+          ></app-cars-map>
+        </div>
+      } @placeholder {
+        <div class="map-placeholder">
+          <div class="placeholder-content">
+            <svg class="placeholder-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+              />
+            </svg>
+            <p>Desplázate para ver el mapa</p>
+          </div>
+        </div>
+      } @loading {
+        <div class="map-loading">
+          <div class="loading-spinner-large"></div>
+          <p>Cargando mapa...</p>
+        </div>
+      }
+    </section>
+  </div>
 </section>

@@ -36,19 +36,20 @@
       <p class="text-sm font-medium text-red-800">{{ error() }}</p>
     </div>
 
-    <!-- Profile Header Card -->
-    <div class="card-premium mb-6 p-6">
-      <div class="flex items-start gap-6">
-        <!-- Avatar -->
-        <div class="flex-shrink-0">
-          <div class="relative h-24 w-24">
+    <!-- Hero Section -->
+    <div class="card-premium mb-6 p-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left: Avatar + Basic Info -->
+        <div class="flex flex-col items-center text-center">
+          <div class="relative group mb-4">
             <img
               [src]="avatarUrl() || '/assets/avatar-placeholder.png'"
               alt="Avatar"
-              class="h-24 w-24 rounded-full object-cover bg-sand-light"
+              class="h-32 w-32 rounded-full object-cover bg-sand-light ring-4 ring-pearl-gray/30"
             />
+            <!-- Hover Overlay -->
             <label
-              class="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-smoke-black hover:bg-charcoal-medium cursor-pointer flex items-center justify-center transition-colors"
+              class="absolute inset-0 rounded-full bg-smoke-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex flex-col items-center justify-center"
               [class.opacity-50]="uploadingAvatar()"
             >
               <input
@@ -58,54 +59,177 @@
                 (change)="onAvatarChange($event)"
                 [disabled]="uploadingAvatar()"
               />
-              <svg class="h-4 w-4 text-ivory-soft" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-8 w-8 text-white-pure mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
+              <span class="text-xs font-medium text-white-pure">Cambiar foto</span>
             </label>
+          </div>
+
+          <h2 class="text-2xl font-bold text-smoke-black mb-1">{{ profile()?.full_name }}</h2>
+          <p class="text-sm text-charcoal-medium mb-3">{{ userEmail() }}</p>
+
+          <!-- Role Badge -->
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-sand-light px-4 py-1.5 text-sm font-semibold text-smoke-black">
+            {{ profile()?.role === 'renter' ? 'Locatario' : profile()?.role === 'owner' ? 'Locador' : 'Ambos' }}
+          </span>
+
+          <!-- Permissions -->
+          <div class="mt-3 flex flex-col gap-1.5 text-xs text-charcoal-medium">
+            <span *ngIf="canPublishCars()" class="flex items-center gap-1">
+              <svg class="h-3 w-3 text-accent-petrol" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              Puedes publicar autos
+            </span>
+            <span *ngIf="canBookCars()" class="flex items-center gap-1">
+              <svg class="h-3 w-3 text-accent-warm" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              Puedes reservar autos
+            </span>
           </div>
         </div>
 
-        <!-- Profile Info -->
-        <div class="flex-1 min-w-0">
-          <h2 class="text-2xl font-semibold text-smoke-black">{{ profile()?.full_name }}</h2>
-          <p class="mt-1 text-sm text-charcoal-medium">{{ userEmail() }}</p>
+        <!-- Center: Ratings & Stats -->
+        <div class="flex flex-col justify-center gap-6">
+          <!-- Ratings -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-petrol/10 to-accent-petrol/5 border border-accent-petrol/20">
+              <div>
+                <p class="text-xs font-medium text-charcoal-medium mb-1">Como Locador</p>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-3xl font-bold text-smoke-black">0.0</span>
+                  <span class="text-accent-petrol">★</span>
+                </div>
+                <p class="text-xs text-charcoal-medium mt-1">0 reviews</p>
+              </div>
+              <svg class="h-12 w-12 text-accent-petrol/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </div>
 
-          <!-- Badges -->
-          <div class="mt-4 flex flex-wrap gap-2">
-            <!-- Rol -->
-            <span class="inline-flex items-center gap-1.5 rounded-full bg-sand-light px-3 py-1 text-sm font-medium text-smoke-black">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-warm/10 to-accent-warm/5 border border-accent-warm/20">
+              <div>
+                <p class="text-xs font-medium text-charcoal-medium mb-1">Como Locatario</p>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-3xl font-bold text-smoke-black">0.0</span>
+                  <span class="text-accent-warm">★</span>
+                </div>
+                <p class="text-xs text-charcoal-medium mt-1">0 reviews</p>
+              </div>
+              <svg class="h-12 w-12 text-accent-warm/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              {{ profile()?.role }}
-            </span>
+            </div>
+          </div>
+        </div>
 
-            <!-- Permisos -->
-            <span *ngIf="canPublishCars()" class="inline-flex items-center gap-1.5 rounded-full bg-accent-petrol/10 px-3 py-1 text-sm font-medium text-accent-petrol">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        <!-- Right: Wallet & Verification -->
+        <div class="flex flex-col justify-center gap-4">
+          <!-- Wallet -->
+          <a routerLink="/wallet" class="block p-6 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 transition-all hover:shadow-lg group">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-green-700 uppercase tracking-wide">Mi Wallet</span>
+              <svg class="h-5 w-5 text-green-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>
-              Puede publicar autos
-            </span>
+            </div>
+            <p class="text-3xl font-bold text-green-900">$0.00</p>
+            <p class="text-xs text-green-600 mt-1">ARS</p>
+          </a>
 
-            <span *ngIf="canBookCars()" class="inline-flex items-center gap-1.5 rounded-full bg-accent-warm/10 px-3 py-1 text-sm font-medium text-accent-warm">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              Puede reservar autos
-            </span>
+          <!-- Verification Status -->
+          <div class="p-4 rounded-xl bg-sand-light border border-pearl-gray">
+            <h4 class="text-xs font-semibold text-smoke-black mb-3 uppercase tracking-wide">Estado de Verificación</h4>
+            <div class="space-y-2 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-charcoal-medium">Email</span>
+                <span [class]="profile()?.is_email_verified ? 'text-green-600 font-semibold' : 'text-ash-gray'">
+                  {{ profile()?.is_email_verified ? '✓ Verificado' : '✗ Sin verificar' }}
+                </span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-charcoal-medium">Teléfono</span>
+                <span [class]="profile()?.is_phone_verified ? 'text-green-600 font-semibold' : 'text-ash-gray'">
+                  {{ profile()?.is_phone_verified ? '✓ Verificado' : '✗ Sin verificar' }}
+                </span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-charcoal-medium">Licencia</span>
+                <span [class]="profile()?.is_driver_verified ? 'text-green-600 font-semibold' : 'text-ash-gray'">
+                  {{ profile()?.is_driver_verified ? '✓ Verificado' : '✗ Sin verificar' }}
+                </span>
+              </div>
+            </div>
 
-            <!-- KYC Status -->
-            <span [class]="'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ' + getKycStatusClass(kycStatus())">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              {{ getKycStatusLabel(kycStatus()) }}
-            </span>
+            <!-- KYC Badge -->
+            <div class="mt-3 pt-3 border-t border-pearl-gray">
+              <span [class]="'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ' + getKycStatusClass(kycStatus())">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                {{ getKycStatusLabel(kycStatus()) }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <a routerLink="/cars/publish" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
+        <div class="flex items-center gap-4">
+          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-accent-petrol/10 flex items-center justify-center group-hover:bg-accent-petrol group-hover:scale-110 transition-all">
+            <svg class="h-7 w-7 text-accent-petrol group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-bold text-smoke-black group-hover:text-accent-petrol transition-colors">Publicar Auto</h3>
+            <p class="text-xs text-charcoal-medium mt-0.5">Añade un nuevo vehículo</p>
+          </div>
+          <svg class="h-5 w-5 text-charcoal-medium group-hover:text-accent-petrol group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
+
+      <a routerLink="/cars/my" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
+        <div class="flex items-center gap-4">
+          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-accent-warm/10 flex items-center justify-center group-hover:bg-accent-warm group-hover:scale-110 transition-all">
+            <svg class="h-7 w-7 text-accent-warm group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-bold text-smoke-black group-hover:text-accent-warm transition-colors">Mis Autos</h3>
+            <p class="text-xs text-charcoal-medium mt-0.5">Gestiona tus publicaciones</p>
+          </div>
+          <svg class="h-5 w-5 text-charcoal-medium group-hover:text-accent-warm group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
+
+      <a routerLink="/bookings" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
+        <div class="flex items-center gap-4">
+          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-purple-100 flex items-center justify-center group-hover:bg-purple-500 group-hover:scale-110 transition-all">
+            <svg class="h-7 w-7 text-purple-600 group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-bold text-smoke-black group-hover:text-purple-600 transition-colors">Mis Reservas</h3>
+            <p class="text-xs text-charcoal-medium mt-0.5">Ve tus alquileres</p>
+          </div>
+          <svg class="h-5 w-5 text-charcoal-medium group-hover:text-purple-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
     </div>
 
     <!-- Tabs Navigation -->

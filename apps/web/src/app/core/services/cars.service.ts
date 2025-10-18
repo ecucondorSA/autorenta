@@ -20,7 +20,12 @@ export class CarsService {
       .select('*, car_photos(*)')
       .single();
     if (error) throw error;
-    return data as Car;
+
+    // Map car_photos to photos for backward compatibility
+    return {
+      ...data,
+      photos: data.car_photos || []
+    } as Car;
   }
 
   async uploadPhoto(file: File, carId: string, position = 0): Promise<CarPhoto> {
@@ -68,7 +73,12 @@ export class CarsService {
     }
     const { data, error } = await query;
     if (error) throw error;
-    return (data ?? []) as Car[];
+
+    // Map car_photos to photos for backward compatibility
+    return (data ?? []).map(car => ({
+      ...car,
+      photos: car.car_photos || []
+    })) as Car[];
   }
 
   async getCarById(id: string): Promise<Car | null> {
@@ -77,15 +87,13 @@ export class CarsService {
       .select(`
         *,
         car_photos(*),
-        owner:profiles!owner_id(
+        owner:v_car_owner_info!owner_id(
           id,
           full_name,
           avatar_url,
           rating_avg,
           rating_count,
-          created_at,
-          is_email_verified,
-          is_phone_verified
+          created_at
         )
       `)
       .eq('id', id)
@@ -94,7 +102,12 @@ export class CarsService {
       if (error.code === 'PGRST116') return null;
       throw error;
     }
-    return data as Car;
+
+    // Map car_photos to photos for backward compatibility
+    return {
+      ...data,
+      photos: data.car_photos || []
+    } as Car;
   }
 
   async listMyCars(): Promise<Car[]> {
@@ -106,7 +119,12 @@ export class CarsService {
       .eq('owner_id', userId)
       .order('created_at', { ascending: false });
     if (error) throw error;
-    return (data ?? []) as Car[];
+
+    // Map car_photos to photos for backward compatibility
+    return (data ?? []).map(car => ({
+      ...car,
+      photos: car.car_photos || []
+    })) as Car[];
   }
 
   async deleteCar(carId: string): Promise<void> {
@@ -128,7 +146,12 @@ export class CarsService {
       .eq('status', 'draft')
       .order('created_at', { ascending: false });
     if (error) throw error;
-    return (data ?? []) as Car[];
+
+    // Map car_photos to photos for backward compatibility
+    return (data ?? []).map(car => ({
+      ...car,
+      photos: car.car_photos || []
+    })) as Car[];
   }
 
   async getCarBrands(): Promise<Array<{ id: string; name: string }>> {
@@ -156,5 +179,25 @@ export class CarsService {
       .order('name');
     if (error) throw error;
     return data ?? [];
+  }
+
+  async getUserLastCar(): Promise<Car | null> {
+    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    if (!userId) return null;
+
+    const { data, error } = await this.supabase
+      .from('cars')
+      .select('*')
+      .eq('owner_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') return null; // No rows found
+      throw error;
+    }
+
+    return data as Car;
   }
 }

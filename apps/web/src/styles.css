@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mapbox GL JS CSS - Required for markers and controls */
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
 /* 🎨 Variables CSS - Paleta Neutra Premium Autorent */
 :root {
   /* Fondos Light Mode */

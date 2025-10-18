@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
@@ -32,5 +32,13 @@ export class MyCarsPage implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  countActive(): number {
+    return this.cars().filter(car => car.status === 'active').length;
+  }
+
+  countDraft(): number {
+    return this.cars().filter(car => car.status === 'draft').length;
   }
 }

@@ -10,7 +10,7 @@
   class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-soft dark:bg-graphite-dark transition-opacity duration-500">
   <!-- Header Compacto -->
   <header class="sticky top-0 z-50 border-b border-pearl-gray/30 backdrop-blur-sm bg-white-pure/95 dark:bg-anthracite/95">
-    <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-2 sm:py-3 flex items-center gap-2 sm:gap-3">
+    <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 h-16 sm:h-20 md:h-24">
       <!-- Menu Toggle (mobile) -->
       <button
         (click)="toggleSidebar()"
@@ -23,11 +23,11 @@
       </button>
 
       <!-- Logo -->
-      <a routerLink="/" class="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity">
+      <a routerLink="/" class="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity h-full">
         <img
           src="/assets/images/autorentar-logo.png"
           alt="Autorentar"
-          class="h-6 sm:h-7 md:h-8 w-auto"
+          class="h-full w-auto object-contain scale-[2]"
         />
       </a>
 
@@ -187,11 +187,13 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
         <!-- Brand -->
         <div>
-          <img
-            src="/assets/images/autorentar-logo.png"
-            alt="Autorentar"
-            class="h-8 w-auto mb-3"
-          />
+          <div class="h-16 mb-3 flex items-center">
+            <img
+              src="/assets/images/autorentar-logo.png"
+              alt="Autorentar"
+              class="h-full w-auto object-contain scale-[2]"
+            />
+          </div>
           <p class="text-sm text-charcoal-medium dark:text-pearl-light leading-relaxed">
             Alquiler de autos premium. Confianza, calidad y servicio.
           </p>

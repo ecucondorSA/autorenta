@@ -1,0 +1,92 @@
+[15:51:00] [INFO] ================================================================================
+[15:51:00] [INFO] AUTORENTAR E2E TESTS - PRE-PRODUCTION BUG HUNT
+[15:51:00] [INFO] ================================================================================
+[15:51:00] [INFO] Base URL: http://localhost:4200
+[15:51:00] [INFO] Headless: False
+[15:51:00] [INFO] Slow Motion: 1000ms
+[15:51:00] [INFO] 
+[15:51:00] [INFO] Launching browser...
+[15:51:01] [INFO] 
+📋 SCENARIO 1: OWNER PUBLISHING CAR
+[15:51:01] [INFO] --------------------------------------------------------------------------------
+[15:51:01] [TEST] 🧪 TEST START: Owner Registration
+[15:51:01] [INFO] Navigating to http://localhost:4200/auth/register
+[15:51:03] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_155100_01_register_page.png
+[15:51:03] [INFO] Filling registration form...
+[15:51:10] [WARNING] Role selection not found or not required
+[15:51:10] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_155100_02_register_form_filled.png
+[15:51:10] [INFO] Submitting registration form...
+[15:51:13] [INFO] After registration, URL: http://localhost:4200/auth/login
+[15:51:13] [INFO] Registration successful - redirected away from register page
+[15:51:14] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_155100_03_after_registration.png
+[15:51:14] [PASS] ✅ TEST PASS: Owner Registration
+[15:51:14] [TEST] 🧪 TEST START: Owner Login
+[15:51:14] [INFO] Navigating to http://localhost:4200/auth/login
+[15:51:16] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_155100_04_login_page.png
+[15:51:16] [INFO] Filling login form...
+[15:51:18] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_155100_05_login_form_filled.png
+[15:51:18] [INFO] Submitting login form...
+[15:51:22] [INFO] After login, URL: http://localhost:4200/
+[15:51:22] [INFO] Login successful
+[15:51:23] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_155100_06_after_login.png
+[15:51:23] [PASS] ✅ TEST PASS: Owner Login
+[15:51:23] [TEST] 🧪 TEST START: Car Publication
+[15:51:23] [INFO] Navigating to http://localhost:4200/cars/publish
+[15:51:25] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_155100_07_publish_page.png
+[15:51:26] [INFO] Publish form loaded
+[15:51:26] [INFO] Filling car publication form...
+[15:51:28] [INFO] Selected brand
+[15:52:01] [WARNING] Model selection not found
+[15:52:33] [FAIL] ❌ TEST FAIL: Car Publication - Page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("input[formcontrolname=\"title\"], input[name=\"title\"]")
+
+[15:52:33] [DEBUG] Screenshot saved: /home/edu/autorenta/e2e/screenshots/20251017_155100_13_publish_error.png
+[15:52:33] [ERROR] Critical error during tests: Page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("input[formcontrolname=\"title\"], input[name=\"title\"]")
+
+
+================================================================================
+E2E TEST SUMMARY
+================================================================================
+
+📊 Total Tests: 3
+✅ Passed: 2
+❌ Failed: 1
+⚠️  Warnings: 2
+🐛 Errors: 1
+
+🐛 ERRORS FOUND (Victory! Found bugs before production):
+  1. Critical error during tests: Page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("input[formcontrolname=\"title\"], input[name=\"title\"]")
+
+
+⚠️  WARNINGS:
+  1. Role selection not found or not required
+  2. Model selection not found
+
+================================================================================
+
+================================================================================
+E2E TEST SUMMARY
+================================================================================
+
+📊 Total Tests: 3
+✅ Passed: 2
+❌ Failed: 1
+⚠️  Warnings: 2
+🐛 Errors: 1
+
+🐛 ERRORS FOUND (Victory! Found bugs before production):
+  1. Critical error during tests: Page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("input[formcontrolname=\"title\"], input[name=\"title\"]")
+
+
+⚠️  WARNINGS:
+  1. Role selection not found or not required
+  2. Model selection not found
+
+================================================================================

@@ -247,30 +247,41 @@ export class PublishCarPage implements OnInit {
     }
 
     console.log('[PublishCarPage] Geocoding address...');
-    const result = await this.geocodingService.geocodeFromComponents({
-      street,
-      streetNumber,
-      neighborhood,
-      city,
-      state,
-      country,
-    });
+    try {
+      const result = await this.geocodingService.geocodeStructuredAddress(
+        street,
+        streetNumber || '',
+        city,
+        state || '',
+        country || 'Uruguay'
+      );
 
-    if (result) {
       console.log('[PublishCarPage] Geocoding successful:', result);
       this.form.patchValue({
         location_lat: result.latitude,
         location_lng: result.longitude,
-        location_formatted_address: result.formattedAddress,
+        location_formatted_address: result.fullAddress,
       });
-    } else {
-      console.warn('[PublishCarPage] Geocoding failed, using default coordinates for', city);
-      // Si falla el geocoding, usar coordenadas aproximadas de Montevideo por defecto
-      this.form.patchValue({
-        location_lat: -34.9011,
-        location_lng: -56.1645,
-        location_formatted_address: `${street} ${streetNumber}, ${city}, ${country}`,
-      });
+    } catch (error) {
+      console.warn('[PublishCarPage] Geocoding failed, trying city fallback...', error);
+      try {
+        // Fallback: Try geocoding just the city
+        const cityResult = await this.geocodingService.getCityCoordinates(city, country || 'Uruguay');
+        console.log('[PublishCarPage] City fallback successful:', cityResult);
+        this.form.patchValue({
+          location_lat: cityResult.latitude,
+          location_lng: cityResult.longitude,
+          location_formatted_address: cityResult.fullAddress,
+        });
+      } catch (cityError) {
+        console.error('[PublishCarPage] City geocoding also failed:', cityError);
+        // Si falla todo, usar coordenadas aproximadas de Montevideo por defecto
+        this.form.patchValue({
+          location_lat: -34.9011,
+          location_lng: -56.1645,
+          location_formatted_address: `${street} ${streetNumber}, ${city}, ${country || 'Uruguay'}`,
+        });
+      }
     }
   }
 
