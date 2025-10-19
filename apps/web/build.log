@@ -1,0 +1,88 @@
+
+> autorenta-web@0.1.0 prebuild
+> node scripts/generate-env.js
+
+✅ Generated public/env.js with environment configuration
+Environment variables:
+  - NG_APP_SUPABASE_URL: (empty)
+  - NG_APP_SUPABASE_ANON_KEY: (empty)
+  - NG_APP_DEFAULT_CURRENCY: ARS
+  - NG_APP_PAYMENTS_WEBHOOK_URL: (empty)
+  - NG_APP_MAPBOX_ACCESS_TOKEN: (empty)
+  - NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: (empty)
+
+> autorenta-web@0.1.0 build
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files   | Names                  |  Raw size | Estimated transfer size
+chunk-TAIHQZD6.js     | -                      | 340.59 kB |                88.53 kB
+styles-KWFZQAEV.css   | styles                 | 123.61 kB |                13.96 kB
+chunk-CYVXC2GN.js     | -                      | 101.86 kB |                26.02 kB
+main-G2QYE4CL.js      | main                   |  93.36 kB |                25.24 kB
+polyfills-5CFQRCPP.js | polyfills              |  34.59 kB |                11.33 kB
+chunk-5RXZUVKE.js     | -                      |   5.85 kB |                 1.53 kB
+chunk-SVOUQ3KS.js     | -                      |   4.33 kB |                 1.07 kB
+chunk-NF7NHDPQ.js     | -                      |   3.45 kB |                 1.13 kB
+chunk-F4WKHHFY.js     | -                      |   2.08 kB |               743 bytes
+chunk-ODN5LVDJ.js     | -                      |   1.43 kB |               619 bytes
+chunk-FM6WEN77.js     | -                      | 862 bytes |               862 bytes
+chunk-X5YLR3NI.js     | -                      | 455 bytes |               455 bytes
+
+                      | Initial total          | 712.46 kB |               171.49 kB
+
+Lazy chunk files      | Names                  |  Raw size | Estimated transfer size
+chunk-2XZSXTBR.js     | mapbox-gl              |   1.61 MB |               362.68 kB
+chunk-VMHPH24H.js     | wallet-page            |  91.14 kB |                18.81 kB
+chunk-MHD5OXAL.js     | booking-detail-page    |  75.00 kB |                15.91 kB
+chunk-3ZQ5RT35.js     | cars-list-page         |  53.33 kB |                12.52 kB
+chunk-AJPAJCDF.js     | -                      |  49.49 kB |                 9.90 kB
+chunk-EXYI3ZLO.js     | profile-expanded-page  |  43.36 kB |                 9.95 kB
+chunk-OAWZMAXN.js     | car-detail-page        |  32.37 kB |                 8.48 kB
+chunk-BL2P44QF.js     | my-cars-page           |  29.50 kB |                 7.59 kB
+chunk-2X5ZB2IK.js     | publish-car-v2-page    |  26.23 kB |                 7.03 kB
+chunk-PGY3HORB.js     | admin-withdrawals-page |  18.67 kB |                 4.82 kB
+chunk-LPKXQRAX.js     | -                      |  13.24 kB |                 3.52 kB
+chunk-3SGN7EI4.js     | checkout-page          |  11.33 kB |                 3.56 kB
+chunk-EMQUBUHA.js     | register-page          |  10.23 kB |                 2.73 kB
+chunk-DVXJWE62.js     | compare-page           |  10.19 kB |                 2.62 kB
+chunk-RXAD6M7O.js     | -                      |   9.15 kB |                 2.19 kB
+...and 12 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [21.280 seconds] - 2025-10-19T07:19:26.007Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/list/cars-list.page.html:86:57:
+[37m      86 │ ...pan class="owner-name">{{ car.owner?.[32mfull_name[37m || 'Host' }}</span>
+         ╵                                         [32m~~~~~~~~~[0m
+
+  Warning occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:37:15:
+[37m      37 │   templateUrl: [32m'./cars-list.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mbundle initial exceeded maximum budget. Budget 500.00 kB was not met by 212.46 kB with a total of 712.46 kB.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1msrc/app/shared/components/cars-map/cars-map.component.css exceeded maximum budget. Budget 8.00 kB was not met by 624 bytes with a total of 8.62 kB.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1msrc/app/features/cars/list/cars-list.page.css exceeded maximum budget. Budget 8.00 kB was not met by 2.01 kB with a total of 10.01 kB.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mModule 'mapbox-gl' used by 'src/app/shared/components/cars-map/cars-map.component.ts' is not ESM[0m
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: [4mhttps://angular.dev/tools/cli/build#configuring-commonjs-dependencies[0m
+
+
+Output location: /home/edu/autorenta/apps/web/dist/web
+
+
+> autorenta-web@0.1.0 postbuild
+> echo '/* /index.html 200' > dist/web/browser/_redirects
+

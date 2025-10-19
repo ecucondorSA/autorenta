@@ -62,7 +62,18 @@ export class CarsService {
   async listActiveCars(filters: CarFilters): Promise<Car[]> {
     let query = this.supabase
       .from('cars')
-      .select('*, car_photos(*)')
+      .select(`
+        *,
+        car_photos(*),
+        owner:v_car_owner_info!owner_id(
+          id,
+          full_name,
+          avatar_url,
+          rating_avg,
+          rating_count,
+          created_at
+        )
+      `)
       .eq('status', 'active')
       .order('created_at', { ascending: false });
     if (filters.city) {
@@ -74,10 +85,11 @@ export class CarsService {
     const { data, error } = await query;
     if (error) throw error;
 
-    // Map car_photos to photos for backward compatibility
+    // Map car_photos to photos and owner for backward compatibility
     return (data ?? []).map(car => ({
       ...car,
-      photos: car.car_photos || []
+      photos: car.car_photos || [],
+      owner: Array.isArray(car.owner) ? car.owner[0] : car.owner
     })) as Car[];
   }
 

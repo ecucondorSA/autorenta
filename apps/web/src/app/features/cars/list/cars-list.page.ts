@@ -8,16 +8,17 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { Car } from '../../../core/models';
-import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
 import {
-  DateRangePickerComponent,
   DateRange,
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
+import { MapFiltersComponent, MapFilters } from '../../../shared/components/map-filters/map-filters.component';
+import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
 // Interface para auto con distancia
 export interface CarWithDistance extends Car {
@@ -30,10 +31,10 @@ export interface CarWithDistance extends Car {
   selector: 'app-cars-list-page',
   imports: [
     CommonModule,
-    CitySelectComponent,
-    DateRangePickerComponent,
-    CarCardComponent,
+    RouterLink,
     CarsMapComponent,
+    MapFiltersComponent,
+    MoneyPipe,
   ],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],
@@ -52,22 +53,63 @@ export class CarsListPage implements OnInit {
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
   readonly hasFilters = computed(() => !!this.city() || !!this.dateRange().from);
   readonly selectedCarId = signal<string | null>(null);
+  readonly searchExpanded = signal(false);
+  readonly activeCarouselIndex = signal(0);
+
+  // Filtros y ordenamiento
+  readonly mapFilters = signal<MapFilters | null>(null);
+  readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('distance');
 
   // Autos ordenados por distancia con información de distancia
   readonly carsWithDistance = computed(() => {
-    const carsList = this.cars();
+    let carsList = this.cars();
     const userLoc = this.userLocation();
+    const filters = this.mapFilters();
+    const sort = this.sortBy();
 
     console.log('[CarsListPage] carsWithDistance computed - userLoc:', userLoc, 'cars count:', carsList.length);
 
-    if (!userLoc || !carsList.length) {
-      console.log('[CarsListPage] No userLoc or no cars - returning original list');
-      return carsList as CarWithDistance[];
+    // Aplicar filtros
+    if (filters) {
+      carsList = carsList.filter(car => {
+        // Filtro de precio
+        if (car.price_per_day < filters.minPrice || car.price_per_day > filters.maxPrice) {
+          return false;
+        }
+
+        // Filtro de transmisión
+        if (filters.transmission !== 'all' && car.transmission !== filters.transmission) {
+          return false;
+        }
+
+        // Filtro de combustible
+        if (filters.fuelType !== 'all' && car.fuel_type !== filters.fuelType) {
+          return false;
+        }
+
+        // Filtro de asientos
+        if (car.seats < filters.minSeats) {
+          return false;
+        }
+
+        // Filtro de características
+        if (filters.features.ac && !car.features?.['ac']) return false;
+        if (filters.features.gps && !car.features?.['gps']) return false;
+        if (filters.features.bluetooth && !car.features?.['bluetooth']) return false;
+        if (filters.features.backup_camera && !car.features?.['backup_camera']) return false;
+
+        return true;
+      });
     }
 
-    // Calcular distancias y ordenar
+    if (!carsList.length) {
+      console.log('[CarsListPage] No cars after filtering');
+      return [] as CarWithDistance[];
+    }
+
+    // Calcular distancias
     const carsWithDist: CarWithDistance[] = carsList.map((car) => {
-      if (!car.location_lat || !car.location_lng) {
+      if (!userLoc || !car.location_lat || !car.location_lng) {
         return { ...car, distance: undefined, distanceText: undefined };
       }
 
@@ -95,17 +137,44 @@ export class CarsListPage implements OnInit {
       };
     });
 
-    console.log('[CarsListPage] Calculated distances for', carsWithDist.length, 'cars');
-    console.log('[CarsListPage] Sample car with distance:', carsWithDist[0]?.title, carsWithDist[0]?.distanceText);
+    // Aplicar ordenamiento
+    let sorted = [...carsWithDist];
 
-    // Ordenar por distancia (más cercano primero)
-    const sorted = carsWithDist.sort((a, b) => {
-      if (a.distance === undefined) return 1;
-      if (b.distance === undefined) return -1;
-      return a.distance - b.distance;
-    });
+    switch (sort) {
+      case 'distance':
+        sorted.sort((a, b) => {
+          if (a.distance === undefined) return 1;
+          if (b.distance === undefined) return -1;
+          return a.distance - b.distance;
+        });
+        break;
 
-    console.log('[CarsListPage] Sorted cars - first:', sorted[0]?.title, sorted[0]?.distanceText);
+      case 'price_asc':
+        sorted.sort((a, b) => a.price_per_day - b.price_per_day);
+        break;
+
+      case 'price_desc':
+        sorted.sort((a, b) => b.price_per_day - a.price_per_day);
+        break;
+
+      case 'rating':
+        sorted.sort((a, b) => {
+          const ratingA = a.owner?.rating_avg || 0;
+          const ratingB = b.owner?.rating_avg || 0;
+          return ratingB - ratingA;
+        });
+        break;
+
+      case 'newest':
+        sorted.sort((a, b) => {
+          const dateA = new Date(a.created_at || 0).getTime();
+          const dateB = new Date(b.created_at || 0).getTime();
+          return dateB - dateA;
+        });
+        break;
+    }
+
+    console.log('[CarsListPage] Final sorted cars:', sorted.length, 'sort:', sort);
     return sorted;
   });
 
@@ -131,11 +200,17 @@ export class CarsListPage implements OnInit {
         to: this.dateRange().to ?? undefined,
       });
       this.cars.set(items);
+      // Collapse search form on mobile after search
+      this.searchExpanded.set(false);
     } catch (err) {
       console.error('listActiveCars error', err);
     } finally {
       this.loading.set(false);
     }
+  }
+
+  toggleSearch(): void {
+    this.searchExpanded.update((expanded) => !expanded);
   }
 
   onCityChange(value: string): void {
@@ -155,19 +230,57 @@ export class CarsListPage implements OnInit {
   onMapCarSelected(carId: string): void {
     this.selectedCarId.set(carId);
 
-    // Hacer scroll automático al card seleccionado
-    // Usar setTimeout para asegurar que Angular haya actualizado el DOM
+    // Buscar el índice del card en el carousel
+    const carIndex = this.carsWithDistance().findIndex(car => car.id === carId);
+    if (carIndex !== -1) {
+      this.activeCarouselIndex.set(carIndex);
+      this.scrollToCarouselCard(carIndex);
+    }
+  }
+
+  /**
+   * Detecta cuando el usuario desliza el carousel y sincroniza con el mapa
+   */
+  onCarouselScroll(event: Event): void {
+    const container = event.target as HTMLElement;
+    const cardWidth = container.querySelector('.carousel-card')?.clientWidth || 0;
+
+    if (cardWidth === 0) return;
+
+    // Calcular índice del card visible basado en la posición del scroll
+    const scrollLeft = container.scrollLeft;
+    const newIndex = Math.round(scrollLeft / cardWidth);
+
+    // Solo actualizar si cambió el índice
+    if (newIndex !== this.activeCarouselIndex()) {
+      this.activeCarouselIndex.set(newIndex);
+
+      // Obtener el auto correspondiente
+      const cars = this.carsWithDistance();
+      if (cars[newIndex]) {
+        const carId = cars[newIndex].id;
+        this.selectedCarId.set(carId);
+
+        // Centrar el mapa en el auto
+        if (this.carsMapComponent) {
+          this.carsMapComponent.flyToCarLocation(carId);
+        }
+      }
+    }
+  }
+
+  /**
+   * Hace scroll del carousel a un card específico
+   */
+  private scrollToCarouselCard(index: number): void {
     setTimeout(() => {
-      const cardElement = document.getElementById(`car-card-${carId}`);
-      if (cardElement) {
-        cardElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest', // 'nearest' evita scroll innecesario si ya está visible
-          inline: 'nearest',
+      const carousel = document.querySelector('.carousel-container') as HTMLElement;
+      if (carousel) {
+        const cardWidth = carousel.querySelector('.carousel-card')?.clientWidth || 0;
+        carousel.scrollTo({
+          left: index * cardWidth,
+          behavior: 'smooth'
         });
-        console.log(`[CarsListPage] Scrolled to card ${carId}`);
-      } else {
-        console.warn(`[CarsListPage] Card element not found for ID: car-card-${carId}`);
       }
     }, 100);
   }
@@ -211,5 +324,18 @@ export class CarsListPage implements OnInit {
 
   private deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
+  }
+
+  // Filtros y ordenamiento
+  onFiltersChange(filters: MapFilters): void {
+    this.mapFilters.set(filters);
+  }
+
+  onFiltersReset(): void {
+    this.mapFilters.set(null);
+  }
+
+  onSortChange(sortBy: 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'): void {
+    this.sortBy.set(sortBy);
   }
 }

@@ -59,6 +59,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private geolocationWatchId: number | null = null;
   private currentLocations: CarMapLocation[] = []; // Para tracking de locations
   private selectedPopup: any | null = null; // Popup actual abierto
+  private resizeObserver: ResizeObserver | null = null; // Observer para cambios de tamaño
 
   constructor() {
     // Efecto para limpiar recursos cuando el componente se destruye
@@ -81,11 +82,16 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       }
     }
 
-    // Forzar resize del mapa si cambió el tamaño del contenedor
+    // CRITICAL: Forzar resize del mapa con múltiples delays
     if (this.map) {
-      setTimeout(() => {
-        this.map?.resize();
-      }, 100);
+      [100, 300, 600].forEach((delay) => {
+        setTimeout(() => {
+          if (this.map) {
+            this.map.resize();
+            console.log(`[CarsMapComponent] Map resized on change at ${delay}ms`);
+          }
+        }, delay);
+      });
     }
   }
 
@@ -108,6 +114,16 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       if (this.mapboxgl) {
         clearInterval(checkInterval);
         void this.initializeMap();
+
+        // CRITICAL: Múltiples resize con delays más largos para asegurar que el contenedor tenga tamaño
+        [100, 300, 600, 1000, 1500, 2000, 3000].forEach((delay) => {
+          setTimeout(() => {
+            if (this.map) {
+              this.map.resize();
+              console.log(`[CarsMapComponent] AfterViewInit resize at ${delay}ms`);
+            }
+          }, delay);
+        });
       }
     }, 100);
 
@@ -152,9 +168,43 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
     try {
+      // CRITICAL: Esperar a que el contenedor tenga dimensiones reales
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Verificar que el contenedor tenga altura
+      const containerEl = this.mapContainer.nativeElement;
+      const containerHeight = containerEl.offsetHeight;
+      const containerWidth = containerEl.offsetWidth;
+      const parentEl = containerEl.parentElement;
+
+      console.log('=== MAPBOX INIT DEBUG ===');
+      console.log('Container dimensions:', { width: containerWidth, height: containerHeight });
+      console.log('Container computed style:', {
+        width: getComputedStyle(containerEl).width,
+        height: getComputedStyle(containerEl).height,
+        position: getComputedStyle(containerEl).position,
+        display: getComputedStyle(containerEl).display
+      });
+      console.log('Parent dimensions:', {
+        width: parentEl?.offsetWidth,
+        height: parentEl?.offsetHeight
+      });
+      console.log('Parent computed style:', {
+        width: getComputedStyle(parentEl).width,
+        height: getComputedStyle(parentEl).height,
+        flex: getComputedStyle(parentEl).flex,
+        display: getComputedStyle(parentEl).display
+      });
+
+      if (containerHeight === 0) {
+        console.warn('[CarsMapComponent] ⚠️ Container height is 0, forcing height...');
+        containerEl.style.height = '100%';
+        containerEl.style.minHeight = '500px';
+      }
+
       // Crear mapa centrado en Uruguay por defecto
       const defaultCenter: [number, number] = [-56.0, -32.5]; // Centro de Uruguay
-      const defaultZoom = 6.5;
+      const defaultZoom = 11; // Aumentado de 6.5 a 11 - sensación de proximidad
 
       // Límites de Uruguay para evitar mostrar océano innecesario
       const uruguayBounds: [[number, number], [number, number]] = [
@@ -164,20 +214,44 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v12', // Estilo con color (calles, parques, agua)
+        style: 'mapbox://styles/mapbox/streets-v12', // Streets - Azul celeste limpio
         center: defaultCenter,
         zoom: defaultZoom,
         maxBounds: uruguayBounds,
         attributionControl: true,
         cooperativeGestures: false,
+        minZoom: 10, // Aumentado de 8 a 10 - siempre cerca
+        maxZoom: 17, // Aumentado de 16 a 17 - permite más acercamiento
       });
+
+      // CRITICAL: Forzar resize inmediatamente después de crear el mapa
+      setTimeout(() => {
+        if (this.map) {
+          this.map.resize();
+          console.log('[CarsMapComponent] Initial map resize');
+        }
+      }, 0);
 
       // Esperar a que el mapa cargue
       this.map.on('load', () => {
-        // Forzar resize para asegurar que el mapa tome el tamaño correcto
-        setTimeout(() => {
-          this.map?.resize();
-        }, 300);
+        // CLEANUP: Ocultar capas innecesarias para un mapa más limpio
+        this.cleanupMapLayers();
+
+        // CRITICAL: Múltiples llamadas a resize con delays progresivos
+        // Esto asegura que el mapa se ajuste correctamente independientemente
+        // de cuándo el contenedor obtenga su altura final
+        const resizeDelays = [100, 300, 600, 1000, 1500, 2000];
+        resizeDelays.forEach((delay) => {
+          setTimeout(() => {
+            if (this.map) {
+              this.map.resize();
+              console.log(`[CarsMapComponent] Map resized at ${delay}ms`);
+            }
+          }, delay);
+        });
+
+        // Setup ResizeObserver para detectar cambios de tamaño del contenedor
+        this.setupResizeObserver();
 
         void this.loadCarLocations();
         this.setupRealtimeUpdates();
@@ -194,6 +268,72 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       this.error.set('Error al inicializar el mapa');
       this.loading.set(false);
     }
+  }
+
+  private cleanupMapLayers(): void {
+    if (!this.map) return;
+
+    // Lista de capas a ocultar para un mapa más limpio
+    const layersToHide = [
+      // POI (puntos de interés) - restaurantes, tiendas, etc.
+      'poi-label',
+
+      // Labels de lugares innecesarios
+      'settlement-subdivision-label',
+      'airport-label',
+      'transit-label',
+
+      // Símbolos de tránsito
+      'ferry-aerialway-label',
+      'waterway-label',
+
+      // Edificios 3D y detalles
+      'building',
+      'building-outline',
+
+      // Labels de carreteras menores
+      'road-label-simple',
+
+      // Natural labels (montañas, parques pequeños, etc.)
+      'natural-point-label',
+      'natural-line-label',
+
+      // Símbolos de estado
+      'state-label',
+    ];
+
+    layersToHide.forEach((layerId) => {
+      if (this.map?.getLayer(layerId)) {
+        this.map.setLayoutProperty(layerId, 'visibility', 'none');
+      }
+    });
+
+    console.log('[CarsMapComponent] Map layers cleaned up - minimalist mode enabled');
+  }
+
+  private setupResizeObserver(): void {
+    if (!this.mapContainer || !isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    // Crear ResizeObserver para detectar cambios de tamaño del contenedor
+    this.resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === this.mapContainer.nativeElement && this.map) {
+          console.log('[CarsMapComponent] Container resized, updating map...');
+          // Usar requestAnimationFrame para asegurar que el resize se ejecute después del repaint
+          requestAnimationFrame(() => {
+            if (this.map) {
+              this.map.resize();
+            }
+          });
+        }
+      }
+    });
+
+    // Observar el contenedor del mapa
+    this.resizeObserver.observe(this.mapContainer.nativeElement);
+    console.log('[CarsMapComponent] ResizeObserver setup complete');
   }
 
   private async loadCarLocations(force = false): Promise<void> {
@@ -386,7 +526,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       // Hacer zoom suave al auto (opcional pero mejora la UX)
       this.map?.flyTo({
         center: coords,
-        zoom: Math.max(this.map.getZoom(), 13), // Zoom al menos 13
+        zoom: Math.max(this.map.getZoom(), 14), // Aumentado de 13 a 14 - muy cerca del marcador
         duration: 400,
         essential: true,
       });
@@ -549,10 +689,10 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
     if (locations.length === 1) {
-      // Si solo hay un auto, centrar en él
+      // Si solo hay un auto, centrar en él con zoom cercano
       this.map.flyTo({
         center: [locations[0].lng, locations[0].lat],
-        zoom: 12,
+        zoom: 14, // Aumentado de 12 a 14 - muy cerca
       });
       return;
     }
@@ -564,8 +704,9 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
 
     this.map.fitBounds(bounds, {
-      padding: { top: 50, bottom: 50, left: 50, right: 50 },
-      maxZoom: 12,
+      padding: { top: 80, bottom: 80, left: 80, right: 80 }, // Más padding para zoom más cercano
+      maxZoom: 14, // Aumentado de 12 a 14 - sensación de proximidad
+      minZoom: 12, // Mínimo zoom 12 para mantener cercanía
     });
   }
 
@@ -703,7 +844,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Hacer zoom suave a la ubicación del usuario
     this.map.flyTo({
       center: [lng, lat],
-      zoom: 11, // Zoom nivel ciudad
+      zoom: 13, // Aumentado de 11 a 13 - marcadores se ven muy cerca
       duration: 2000, // 2 segundos de animación
       essential: true,
     });
@@ -781,6 +922,13 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       console.log('[CarsMapComponent] Geolocation tracking stopped');
     }
 
+    // Limpiar ResizeObserver
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+      console.log('[CarsMapComponent] ResizeObserver disconnected');
+    }
+
     // Limpiar realtime
     if (this.realtimeUnsubscribe) {
       this.realtimeUnsubscribe();
@@ -824,7 +972,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Volar a la ubicación con animación rápida
     this.map.flyTo({
       center: [location.lng, location.lat],
-      zoom: 14, // Zoom cercano para ver el auto
+      zoom: 15, // Aumentado de 14 a 15 - súper cerca del auto
       duration: 400, // 400ms = animación rápida y suave
       essential: true,
     });

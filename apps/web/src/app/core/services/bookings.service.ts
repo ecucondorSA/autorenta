@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Booking } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { WalletService } from './wallet.service';
+import { PwaService } from './pwa.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import { WalletService } from './wallet.service';
 export class BookingsService {
   private readonly supabase = injectSupabase();
   private readonly walletService = inject(WalletService);
+  private readonly pwaService = inject(PwaService);
 
   async requestBooking(carId: string, start: string, end: string): Promise<Booking> {
     const { data, error } = await this.supabase.rpc('request_booking', {
@@ -38,7 +40,28 @@ export class BookingsService {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return (data ?? []) as Booking[];
+
+    const bookings = (data ?? []) as Booking[];
+
+    // Update app badge with pending bookings count
+    await this.updateAppBadge(bookings);
+
+    return bookings;
+  }
+
+  /**
+   * Update app badge with pending bookings count
+   */
+  private async updateAppBadge(bookings: Booking[]): Promise<void> {
+    const pendingCount = bookings.filter(
+      b => b.status === 'pending' || b.status === 'confirmed'
+    ).length;
+
+    if (pendingCount > 0) {
+      await this.pwaService.setAppBadge(pendingCount);
+    } else {
+      await this.pwaService.clearAppBadge();
+    }
   }
 
   /**

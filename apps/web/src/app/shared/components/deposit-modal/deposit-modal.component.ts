@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WalletService } from '../../../core/services/wallet.service';
 import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
+import { FocusTrapDirective } from '../../directives/focus-trap.directive';
+import { EscapeKeyDirective } from '../../directives/escape-key.directive';
 
 /**
  * DepositModalComponent
@@ -28,7 +30,7 @@ import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
 @Component({
   selector: 'app-deposit-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FocusTrapDirective, EscapeKeyDirective],
   templateUrl: './deposit-modal.component.html',
   styleUrls: ['./deposit-modal.component.css'],
 })

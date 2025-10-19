@@ -1,118 +1,147 @@
-<section class="cars-page">
-  <!-- Filtros de búsqueda superiores -->
-  <section class="search-bar-top">
-    <div class="search-header-compact">
-      <h1 class="page-title">Encontrá tu próximo auto</h1>
-      <p class="page-subtitle">
-        Buscá por ciudad y rango de fechas. Los precios están expresados en pesos argentinos.
-      </p>
-    </div>
+<section class="cars-page-keko">
+  <!-- Layout Keko-style: Mapa full-screen con carousel inferior -->
+  <div class="keko-layout">
+    <!-- Mapa full-screen -->
+    <section class="map-fullscreen">
+      <app-cars-map
+        [cars]="cars()"
+        [selectedCarId]="selectedCarId()"
+        (carSelected)="onMapCarSelected($event)"
+        (userLocationChange)="onUserLocationChange($event)"
+      ></app-cars-map>
 
-    <div class="search-controls-top">
-      <app-city-select (valueChange)="onCityChange($event)"></app-city-select>
-      <app-date-range-picker (rangeChange)="onRangeChange($event)"></app-date-range-picker>
-      <button class="search-button-top" (click)="loadCars()" [disabled]="loading()">
-        <svg
-          *ngIf="!loading()"
-          class="search-icon"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-        <span class="search-spinner" *ngIf="loading()"></span>
-        {{ loading() ? 'Buscando...' : 'Buscar' }}
-      </button>
-    </div>
-  </section>
+      <!-- Filtros flotantes (fuera del @defer para posicionamiento correcto) -->
+      <app-map-filters
+        (filtersChange)="onFiltersChange($event)"
+        (filtersReset)="onFiltersReset()"
+      ></app-map-filters>
 
-  <!-- Layout Airbnb-style: Cards izquierda, Mapa derecha -->
-  <div class="split-layout">
-    <!-- Panel izquierdo: Lista de autos -->
-    <section class="cars-panel">
-      <!-- Header con count -->
-      <div class="panel-header">
-        <h2 class="panel-title">
-          <svg class="title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-            />
-          </svg>
-          <span *ngIf="carsWithDistance().length > 0">{{ carsWithDistance().length }} autos disponibles</span>
-          <span *ngIf="carsWithDistance().length === 0">No hay autos disponibles</span>
-        </h2>
-      </div>
-
-      <!-- Grid vertical de cards -->
-      <div class="cars-grid-vertical" #carsContainer>
-        <app-car-card
-          *ngFor="let car of carsWithDistance()"
-          [id]="'car-card-' + car.id"
-          [car]="car"
-          [distance]="car.distanceText"
-          [selected]="car.id === selectedCarId()"
-          [isComparing]="isCarComparing(car.id)"
-          [compareDisabled]="maxCompareReached()"
-          (click)="onCarSelected(car.id)"
-          (compareToggle)="onCompareToggle($event)"
-        ></app-car-card>
-
-        <!-- Empty state -->
-        <div *ngIf="!loading() && carsWithDistance().length === 0" class="no-results-vertical">
-          <svg class="no-results-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <p>No encontramos autos para tu búsqueda.</p>
-          <p class="hint">Intentá cambiar los filtros o la ubicación</p>
-        </div>
+      <!-- Selector de ordenamiento (fuera del @defer para posicionamiento correcto) -->
+      <div class="sort-selector">
+        <select
+          [value]="sortBy()"
+          (change)="onSortChange($any($event.target).value)"
+          class="sort-dropdown">
+          <option value="distance">Más cercanos</option>
+          <option value="price_asc">Precio: menor a mayor</option>
+          <option value="price_desc">Precio: mayor a menor</option>
+          <option value="rating">Mejor valorados</option>
+          <option value="newest">Más nuevos</option>
+        </select>
       </div>
     </section>
 
-    <!-- Panel derecho: Mapa sticky -->
-    <section class="map-panel">
-      @defer (on viewport) {
-        <div class="map-sticky-container">
-          <app-cars-map
-            [cars]="cars()"
-            [selectedCarId]="selectedCarId()"
-            (carSelected)="onMapCarSelected($event)"
-            (userLocationChange)="onUserLocationChange($event)"
-          ></app-cars-map>
-        </div>
-      } @placeholder {
-        <div class="map-placeholder">
-          <div class="placeholder-content">
-            <svg class="placeholder-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+    <!-- Carousel horizontal de cards (parte inferior) -->
+    <section class="carousel-bottom" *ngIf="!loading() && carsWithDistance().length > 0">
+      <div
+        class="carousel-container"
+        (scroll)="onCarouselScroll($event)"
+      >
+        <div
+          *ngFor="let car of carsWithDistance(); let i = index"
+          class="carousel-card"
+          [class.carousel-card-active]="i === activeCarouselIndex()"
+        >
+          <!-- Card compacto del auto -->
+          <div class="card-inner">
+            <!-- Imagen con badge de marca -->
+            <div class="card-image">
+              <img
+                *ngIf="car.photos && car.photos.length > 0"
+                [src]="car.photos[0].url"
+                [alt]="car.title"
+                loading="lazy"
+                class="object-cover w-full h-full"
               />
-            </svg>
-            <p>Desplázate para ver el mapa</p>
+              <div *ngIf="!car.photos || car.photos.length === 0" class="no-image">
+                <svg class="w-8 h-8 text-charcoal-medium" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="7" cy="17" r="2" stroke-width="1.5"/>
+                  <circle cx="17" cy="17" r="2" stroke-width="1.5"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 15h14M8 12l1-4h6l1 4"/>
+                </svg>
+              </div>
+              <!-- Badge de marca del auto -->
+              <div class="brand-badge">
+                <span class="brand-name">{{ car.brand || car.brand_text_backup }}</span>
+              </div>
+            </div>
+
+            <!-- Info -->
+            <div class="card-content">
+              <!-- Header con avatar y rating del dueño -->
+              <div class="card-owner" *ngIf="car.owner">
+                <img
+                  *ngIf="car.owner?.avatar_url"
+                  [src]="car.owner.avatar_url"
+                  [alt]="car.owner?.full_name || 'Owner'"
+                  class="owner-avatar"
+                />
+                <div *ngIf="!car.owner?.avatar_url" class="owner-avatar-placeholder">
+                  <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <div class="owner-info">
+                  <span class="owner-name">{{ car.owner?.full_name || 'Host' }}</span>
+                  <div class="owner-rating" *ngIf="car.owner && car.owner.rating_count > 0">
+                    <svg class="rating-star" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <span class="rating-value">{{ car.owner.rating_avg.toFixed(1) }}</span>
+                    <span class="rating-count">({{ car.owner.rating_count }})</span>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="card-title">{{ car.title }}</h3>
+              <p class="card-location" *ngIf="car.distanceText">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span>{{ car.distanceText }}</span>
+              </p>
+              <div class="card-footer">
+                <div class="card-price">
+                  <span class="price-amount">{{ car.price_per_day | money }}</span>
+                  <span class="price-label">/ día</span>
+                </div>
+                <a [routerLink]="['/cars', car.id]" class="card-button">
+                  Ver
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
-      } @loading {
-        <div class="map-loading">
-          <div class="loading-spinner-large"></div>
-          <p>Cargando mapa...</p>
-        </div>
-      }
+      </div>
+
+      <!-- Indicadores de scroll (dots) -->
+      <div class="carousel-indicators" *ngIf="carsWithDistance().length > 1">
+        <button
+          *ngFor="let car of carsWithDistance(); let i = index"
+          class="carousel-dot"
+          [class.carousel-dot-active]="i === activeCarouselIndex()"
+          (click)="onCarSelected(car.id)"
+          [attr.aria-label]="'Ver auto ' + (i + 1)"
+        ></button>
+      </div>
     </section>
+
+    <!-- Empty state (sin cards) -->
+    <div *ngIf="!loading() && carsWithDistance().length === 0" class="empty-state">
+      <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <p>No encontramos autos para tu búsqueda.</p>
+      <p class="hint">Intentá cambiar los filtros o la ubicación</p>
+    </div>
   </div>
 </section>

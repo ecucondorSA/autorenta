@@ -17,11 +17,12 @@ import { UserProfile, Role, UserStats, Review } from '../../core/models';
 
 import { UserBadgesComponent } from '../../shared/components/user-badges/user-badges.component';
 import { ReviewCardComponent } from '../../shared/components/review-card/review-card.component';
+import { PwaCapabilitiesComponent } from '../../shared/components/pwa-capabilities/pwa-capabilities.component';
 
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, UserBadgesComponent, ReviewCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, UserBadgesComponent, ReviewCardComponent, PwaCapabilitiesComponent],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

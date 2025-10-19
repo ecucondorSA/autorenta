@@ -745,3 +745,139 @@ source tools/claude-workflows.sh && status  # Ver estado del proyecto
 # Linting
 npm run lint:fix           # Auto-fix de issues
 ```
+
+---
+
+## Model Context Protocol (MCP) Integration
+
+### Configured MCP Servers
+
+AutoRenta uses Cloudflare's official MCP servers for enhanced development and deployment workflows. Configuration is located in `.claude/config.json`.
+
+**Active Servers (Free Tier)**:
+
+| Server | URL | Purpose | Use Cases |
+|--------|-----|---------|-----------|
+| **cloudflare-builds** | `https://builds.mcp.cloudflare.com/mcp` | Deploy and manage Pages/Workers builds | Deploy automation, build status, rollbacks |
+| **cloudflare-docs** | `https://docs.mcp.cloudflare.com/mcp` | Quick Cloudflare documentation reference | API lookups, configuration help |
+| **cloudflare-bindings** | `https://bindings.mcp.cloudflare.com/mcp` | Manage Workers bindings (R2, KV, D1, AI) | Future: KV for webhook idempotency |
+
+**Recommended (Paid Plan)**:
+
+| Server | URL | Purpose | Value for AutoRenta |
+|--------|-----|---------|---------------------|
+| **cloudflare-observability** | `https://observability.mcp.cloudflare.com/mcp` | Logs and analytics debugging | **CRITICAL**: Payment webhook debugging |
+| **cloudflare-audit-logs** | `https://auditlogs.mcp.cloudflare.com/mcp` | Security and compliance auditing | Track deployments, API changes |
+| **cloudflare-graphql** | `https://graphql.mcp.cloudflare.com/mcp` | Analytics data access | Performance metrics, Web Vitals |
+
+### Authentication
+
+MCP servers use OAuth authentication with your Cloudflare account:
+
+1. Claude Code will prompt for authentication when accessing MCP servers
+2. Use the same Cloudflare account that hosts AutoRenta Pages and Workers
+3. Grant requested permissions (read-only for free tier servers)
+
+### Common MCP Workflows
+
+**Deployment Management** (cloudflare-builds):
+```
+"Show me the latest deployment of autorenta-web on Pages"
+"Deploy my web app to Cloudflare Pages"
+"What's the status of my last 5 deployments?"
+"Rollback Pages deployment to the previous version"
+```
+
+**Documentation Lookup** (cloudflare-docs):
+```
+"How do I configure custom domains in Cloudflare Pages?"
+"What are the limits for Cloudflare Workers free tier?"
+"Show me examples of KV namespace usage for idempotency"
+"How do I set up environment variables in Workers?"
+```
+
+**Bindings Management** (cloudflare-bindings):
+```
+"List all KV namespaces in my account"
+"Create a new KV namespace for webhook idempotency"
+"Show me the bindings configured for my payment webhook worker"
+```
+
+**Debugging Payment Webhook** (cloudflare-observability - Paid):
+```
+"Show me the last 10 invocations of payments_webhook with errors"
+"What's the average execution time of my payment webhook today?"
+"Find all webhook calls that resulted in 500 errors in the last hour"
+"Get logs for invocation with error at 2025-10-18 15:30 UTC"
+```
+
+**Security Auditing** (cloudflare-audit-logs - Paid):
+```
+"Show me all API key creations in the last 7 days"
+"List all configuration changes to my Workers this week"
+"Who deployed to production yesterday?"
+"Audit trail for payment webhook configuration changes"
+```
+
+### MCP Server Configuration
+
+The MCP configuration file is located at `.claude/config.json`:
+
+```json
+{
+  "mcpServers": {
+    "cloudflare-builds": {
+      "url": "https://builds.mcp.cloudflare.com/mcp",
+      "transport": "streamble-http",
+      "description": "Deploy and manage Cloudflare Pages and Workers builds"
+    },
+    "cloudflare-docs": {
+      "url": "https://docs.mcp.cloudflare.com/mcp",
+      "transport": "streamble-http",
+      "description": "Quick reference for Cloudflare documentation"
+    },
+    "cloudflare-bindings": {
+      "url": "https://bindings.mcp.cloudflare.com/mcp",
+      "transport": "streamble-http",
+      "description": "Manage Workers bindings (R2, KV, D1, AI, etc.)"
+    }
+  }
+}
+```
+
+To add paid servers when available:
+
+```bash
+# Edit .claude/config.json and add:
+"cloudflare-observability": {
+  "url": "https://observability.mcp.cloudflare.com/mcp",
+  "transport": "streamble-http",
+  "description": "Logs and analytics debugging for Workers"
+}
+```
+
+### Why Cloudflare MCP vs Others
+
+AutoRenta chose Cloudflare MCP servers over alternatives (e.g., Vercel) because:
+
+- ✅ **100% Infrastructure Alignment**: Already using Cloudflare Pages + Workers
+- ✅ **15 Official Servers**: vs 0 official Vercel servers
+- ✅ **Observability**: Critical for payment webhook debugging
+- ✅ **Maturity**: 3k+ stars, 311 commits, actively maintained
+- ✅ **Native Integration**: Built for Cloudflare services used by AutoRenta
+
+### Future MCP Usage
+
+When upgrading to a paid Cloudflare Workers plan:
+
+1. **Enable Observability Server** - Essential for production webhook debugging
+2. **Setup Audit Logs** - Compliance and security tracking
+3. **Configure GraphQL Analytics** - Performance monitoring and Web Vitals
+4. **Add Browser Rendering** - E2E testing and screenshot generation
+
+### Resources
+
+- **GitHub**: [cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare)
+- **Documentation**: [Cloudflare MCP Docs](https://developers.cloudflare.com/agents/model-context-protocol/)
+- **All Servers**: 15 servers available, 3 configured for free tier
+- **Last Updated**: October 2025

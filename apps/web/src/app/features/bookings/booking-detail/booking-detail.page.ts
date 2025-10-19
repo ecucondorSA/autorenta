@@ -10,6 +10,7 @@ import { ReviewFormComponent } from '../../../shared/components/review-form/revi
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
+import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
 
 @Component({
@@ -22,6 +23,7 @@ import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confir
     ReviewCardComponent,
     OwnerConfirmationComponent,
     RenterConfirmationComponent,
+    BookingChatComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -129,8 +131,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return booking?.renter_id === currentUser?.id;
   });
 
-  // Car owner ID (loaded separately)
+  // Car owner ID and name (loaded separately)
   carOwnerId = signal<string | null>(null);
+  carOwnerName = signal<string>('el anfitrión');
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
@@ -174,12 +177,14 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const { data: car } = await this.bookingsService['supabase']
         .from('cars')
-        .select('owner_id')
+        .select('owner_id, owner:profiles!cars_owner_id_fkey(id, full_name)')
         .eq('id', booking.car_id)
         .single();
 
       if (car) {
         this.carOwnerId.set(car.owner_id);
+        const ownerFullName = (car as any).owner?.full_name || 'el anfitrión';
+        this.carOwnerName.set(ownerFullName);
       }
     } catch (error) {
       console.error('Error loading car owner:', error);

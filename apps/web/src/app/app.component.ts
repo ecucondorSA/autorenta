@@ -3,8 +3,11 @@ import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/auth.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
+import { PwaService } from './core/services/pwa.service';
 import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
 import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
+import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
+import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +19,8 @@ import { SplashLoaderComponent } from './shared/components/splash-loader/splash-
     RouterLinkActive,
     PendingReviewsBannerComponent,
     SplashLoaderComponent,
+    PwaInstallPromptComponent,
+    PwaUpdatePromptComponent,
   ],
   templateUrl: './app.component.html',
   styles: [
@@ -30,6 +35,7 @@ import { SplashLoaderComponent } from './shared/components/splash-loader/splash-
 export class AppComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly compareService = inject(CarsCompareService);
+  private readonly pwaService = inject(PwaService);
   readonly isAuthenticated = computed(() => this.authService.isAuthenticated());
   readonly compareCount = this.compareService.count;
 

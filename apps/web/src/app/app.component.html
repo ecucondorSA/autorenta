@@ -3,82 +3,86 @@
   <app-splash-loader></app-splash-loader>
 }
 
+<!-- PWA Components -->
+<app-pwa-install-prompt></app-pwa-install-prompt>
+<app-pwa-update-prompt></app-pwa-update-prompt>
+
 <!-- App Shell - Layout Neutral Premium -->
 <div
   [class.opacity-0]="showSplash()"
   [class.pointer-events-none]="showSplash()"
   class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-soft dark:bg-graphite-dark transition-opacity duration-500">
-  <!-- Header Compacto -->
-  <header class="sticky top-0 z-50 border-b border-pearl-gray/30 backdrop-blur-sm bg-white-pure/95 dark:bg-anthracite/95">
-    <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 h-16 sm:h-20 md:h-24">
-      <!-- Menu Toggle (mobile) -->
+  <!-- Header - Sistema de Diseño Optimizado -->
+  <header class="sticky top-0 z-sticky border-b border-pearl-gray/30 backdrop-blur-md bg-white-pure/95 dark:bg-anthracite/95">
+    <div class="container-page px-container py-4 flex items-center gap-4 h-20">
+      <!-- Menu Toggle (mobile) - Aparece hasta lg (1024px) -->
       <button
         (click)="toggleSidebar()"
-        class="md:hidden p-1.5 sm:p-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep transition touch-manipulation"
+        class="lg:hidden icon-button"
         aria-label="Alternar menú"
       >
-        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
 
-      <!-- Logo -->
-      <a routerLink="/" class="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity h-full">
+      <!-- Logo (aumentado de tamaño para mayor visibilidad) -->
+      <a routerLink="/" class="flex items-center hover:opacity-90 transition-base max-w-[90%] sm:max-w-none">
         <img
           src="/assets/images/autorentar-logo.png"
           alt="Autorentar"
-          class="h-full w-auto object-contain scale-[2]"
+          class="h-12 sm:h-48 md:h-60 lg:h-80 w-auto object-contain"
         />
       </a>
 
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center gap-4 ml-6 text-sm font-medium">
+      <!-- Desktop Navigation - Aparece desde lg -->
+      <nav class="hidden lg:flex items-center gap-6 ml-8">
         <a
           routerLink="/cars"
-          routerLinkActive="text-accent-petrol"
+          routerLinkActive="nav-link-active"
           [routerLinkActiveOptions]="{exact: false}"
-          class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+          class="nav-link"
         >
           Buscar
         </a>
         <a
           *ngIf="isAuthenticated()"
           routerLink="/cars/publish"
-          routerLinkActive="text-accent-petrol"
-          class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+          routerLinkActive="nav-link-active"
+          class="nav-link"
         >
           Publicar
         </a>
         <a
           *ngIf="isAuthenticated()"
           routerLink="/bookings"
-          routerLinkActive="text-accent-petrol"
-          class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+          routerLinkActive="nav-link-active"
+          class="nav-link"
         >
           Mis reservas
         </a>
         <a
           *ngIf="isAuthenticated()"
           routerLink="/wallet"
-          routerLinkActive="text-accent-petrol"
-          class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+          routerLinkActive="nav-link-active"
+          class="nav-link"
         >
           Wallet
         </a>
       </nav>
 
       <!-- Actions -->
-      <div class="ml-auto flex items-center gap-2">
+      <div class="ml-auto flex items-center gap-3">
         <!-- Theme Toggle -->
         <button
           (click)="toggleDarkMode()"
-          class="p-2 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          class="icon-button"
           aria-label="Cambiar tema"
         >
-          <svg *ngIf="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg *ngIf="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
           </svg>
-          <svg *ngIf="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg *ngIf="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
         </button>
@@ -87,7 +91,7 @@
         <a
           *ngIf="!isAuthenticated()"
           routerLink="/auth/login"
-          class="px-4 py-2 rounded-xl bg-accent-petrol text-white hover:opacity-90 transition text-sm font-semibold"
+          class="btn-accent"
         >
           Ingresar
         </a>
@@ -96,10 +100,10 @@
           *ngIf="isAuthenticated()"
           routerLink="/profile"
           routerLinkActive="ring-2 ring-accent-petrol"
-          class="p-2 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition"
+          class="icon-button"
           aria-label="Perfil"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
         </a>
@@ -113,11 +117,11 @@
   </div>
 
   <!-- Main Content Area -->
-  <main class="mx-auto max-w-7xl w-full px-4 py-6">
+  <main class="container-page px-container py-section-sm">
     <!-- Mobile Sidebar Overlay -->
     <div
       *ngIf="sidebarOpen"
-      class="fixed inset-0 bg-smoke-black/50 z-40 md:hidden"
+      class="fixed inset-0 bg-smoke-black/50 z-modal-backdrop lg:hidden"
       (click)="toggleSidebar()"
     ></div>
 
@@ -125,57 +129,57 @@
     <aside
       [class.translate-x-0]="sidebarOpen"
       [class.-translate-x-full]="!sidebarOpen"
-      class="fixed left-0 top-0 h-full w-72 bg-white-pure dark:bg-anthracite z-50 transform transition-transform md:hidden overflow-auto"
+      class="fixed left-0 top-0 h-full w-72 bg-white-pure dark:bg-anthracite z-modal transform transition-smooth lg:hidden overflow-auto animate-slide-in-left"
     >
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-6">
-          <span class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">Menú</span>
-          <button (click)="toggleSidebar()" class="p-2 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-8">
+          <span class="h5">Menú</span>
+          <button (click)="toggleSidebar()" class="icon-button" aria-label="Cerrar menú">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <nav class="space-y-1">
+        <nav class="space-y-2">
           <a
             routerLink="/cars"
             (click)="toggleSidebar()"
-            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+            class="block px-4 py-3 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
           >
-            🔍 Buscar autos
+            Buscar autos
           </a>
           <a
             *ngIf="isAuthenticated()"
             routerLink="/cars/publish"
             (click)="toggleSidebar()"
-            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+            class="block px-4 py-3 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
           >
-            🚗 Publicar auto
+            Publicar auto
           </a>
           <a
             *ngIf="isAuthenticated()"
             routerLink="/bookings"
             (click)="toggleSidebar()"
-            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+            class="block px-4 py-3 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
           >
-            📅 Mis reservas
+            Mis reservas
           </a>
           <a
             *ngIf="isAuthenticated()"
             routerLink="/wallet"
             (click)="toggleSidebar()"
-            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+            class="block px-4 py-3 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
           >
-            💰 Wallet
+            Wallet
           </a>
           <a
             *ngIf="isAuthenticated()"
             routerLink="/profile"
             (click)="toggleSidebar()"
-            class="block px-3 py-2 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition"
+            class="block px-4 py-3 rounded-xl text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
           >
-            👤 Mi perfil
+            Mi perfil
           </a>
         </nav>
       </div>
@@ -190,8 +194,9 @@
     *ngIf="compareCount() > 0"
     routerLink="/cars/compare"
     class="fixed bottom-6 right-6 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-accent-petrol text-white shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 animate-fade-in"
+    aria-label="Ver comparación de autos"
   >
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
     </svg>
     <span class="font-semibold text-sm">Comparando ({{ compareCount() }})</span>
@@ -199,15 +204,15 @@
 
   <!-- Footer Compacto -->
   <footer class="border-t border-pearl-gray/30 bg-white-pure dark:bg-anthracite">
-    <div class="mx-auto max-w-7xl px-4 py-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
+    <div class="mx-auto max-w-7xl px-container py-section-sm">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
         <!-- Brand -->
         <div>
-          <div class="h-16 mb-3 flex items-center">
+          <div class="h-12 mb-4 flex items-center">
             <img
               src="/assets/images/autorentar-logo.png"
               alt="Autorentar"
-              class="h-full w-auto object-contain scale-[2]"
+              class="h-full w-auto object-contain"
             />
           </div>
           <p class="text-sm text-charcoal-medium dark:text-pearl-light leading-relaxed">
@@ -217,24 +222,24 @@
 
         <!-- Links -->
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-3">Explorar</h4>
-          <ul class="space-y-2 text-sm text-charcoal-medium dark:text-pearl-light">
-            <li><a routerLink="/cars" class="hover:text-accent-petrol transition-colors">Buscar autos</a></li>
-            <li><a routerLink="/cars/publish" class="hover:text-accent-petrol transition-colors">Publicar auto</a></li>
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Explorar</h4>
+          <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light">
+            <li><a routerLink="/cars" class="hover:text-accent-petrol transition-base">Buscar autos</a></li>
+            <li><a routerLink="/cars/publish" class="hover:text-accent-petrol transition-base">Publicar auto</a></li>
           </ul>
         </div>
 
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-3">Legal</h4>
-          <ul class="space-y-2 text-sm text-charcoal-medium dark:text-pearl-light">
-            <li><a href="#" class="hover:text-accent-petrol transition-colors">Términos y condiciones</a></li>
-            <li><a href="#" class="hover:text-accent-petrol transition-colors">Política de privacidad</a></li>
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Legal</h4>
+          <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light">
+            <li><a href="#" class="hover:text-accent-petrol transition-base">Términos y condiciones</a></li>
+            <li><a href="#" class="hover:text-accent-petrol transition-base">Política de privacidad</a></li>
           </ul>
         </div>
 
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-3">Contacto</h4>
-          <ul class="space-y-2 text-sm text-charcoal-medium dark:text-pearl-light">
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Contacto</h4>
+          <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light">
             <li>info@autorent.com</li>
             <li>+598 99 123 456</li>
           </ul>
@@ -242,7 +247,7 @@
       </div>
 
       <!-- Copyright -->
-      <div class="pt-4 border-t border-pearl-gray/30">
+      <div class="pt-6 border-t border-pearl-gray/30">
         <p class="text-xs text-ash-gray dark:text-charcoal-medium text-center">
           © {{ year }} Autorentar. Todos los derechos reservados.
         </p>

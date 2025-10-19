@@ -1,16 +1,16 @@
 name = "autorenta-payments-webhook"
 main = "dist/index.js"
 compatibility_date = "2024-09-10"
+account_id = "5b448192fe4b369642b68ad8f53a7603"
 
 env = { }
 
 [vars]
-SUPABASE_URL = ""
-SUPABASE_SERVICE_ROLE_KEY = ""
+SUPABASE_URL = "https://obxvffplochgeiclibng.supabase.co"
 
 [build]
 command = "npm run build"
 
 [[kv_namespaces]]
 binding = "AUTORENT_WEBHOOK_KV"
-id = "b213d1185bf446b58e9c9216933ca7af"
+id = "a2a12698413f4f288023a9c595e19ae6"

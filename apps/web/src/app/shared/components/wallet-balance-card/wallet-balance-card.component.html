@@ -26,6 +26,29 @@
     </button>
   </div>
 
+  <!-- Pending Deposits Alert -->
+  <div *ngIf="hasPendingDeposits()" class="mb-4 bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+    <div class="flex items-start">
+      <svg class="w-6 h-6 text-amber-600 mt-0.5 flex-shrink-0 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <div class="ml-3 flex-1">
+        <h3 class="text-sm font-medium text-amber-800">
+          {{ pendingDeposits() === 1 ? 'Tienes 1 depósito pendiente' : 'Tienes ' + pendingDeposits() + ' depósitos pendientes' }}
+        </h3>
+        <p class="text-sm text-amber-700 mt-1">
+          Tu depósito está siendo procesado y se reflejará en tu balance en unos minutos. El balance se actualiza automáticamente cada 30 segundos.
+        </p>
+        <button
+          type="button"
+          (click)="retry()"
+          class="mt-2 text-xs font-medium text-amber-800 hover:text-amber-900 underline">
+          Actualizar ahora
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Loading State -->
   <div *ngIf="isLoadingBalance()" class="text-center py-8">
     <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>

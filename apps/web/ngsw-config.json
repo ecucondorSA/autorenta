@@ -1,0 +1,130 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "appData": {
+    "version": "2.0.0",
+    "name": "Autorentar PWA",
+    "description": "Progressive Web App with advanced caching strategies"
+  },
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/favicon.png",
+          "/index.csr.html",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/env.js",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "name": "media",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
+          "/assets/**/*.(mp4|webm)"
+        ]
+      }
+    },
+    {
+      "name": "icons",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/icons/**/*.png"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-supabase-fresh",
+      "urls": [
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/bookings*",
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/payments*",
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/wallet_transactions*"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 50,
+        "maxAge": "5m",
+        "timeout": "5s"
+      }
+    },
+    {
+      "name": "api-supabase-performance",
+      "urls": [
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/cars*",
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/car_photos*",
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/profiles*"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "30m",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "api-mapbox-tiles",
+      "urls": [
+        "https://api.mapbox.com/styles/**",
+        "https://api.mapbox.com/v4/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "30d"
+      }
+    },
+    {
+      "name": "api-mapbox-geocoding",
+      "urls": [
+        "https://api.mapbox.com/geocoding/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 50,
+        "maxAge": "7d",
+        "timeout": "8s"
+      }
+    },
+    {
+      "name": "cdn-images",
+      "urls": [
+        "https://*.supabase.co/storage/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 200,
+        "maxAge": "7d"
+      }
+    }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**"
+  ]
+}

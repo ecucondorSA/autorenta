@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WalletService } from '../../../core/services/wallet.service';
 
@@ -12,7 +12,8 @@ import { WalletService } from '../../../core/services/wallet.service';
  * - Indicador de carga mientras se obtiene el balance
  * - Manejo de errores con mensajes amigables
  * - Botón para iniciar depósito
- * - Auto-refresh al inicializar
+ * - Auto-refresh cada 30 segundos
+ * - Alerta visual para depósitos pendientes
  *
  * Uso:
  * ```html
@@ -29,8 +30,9 @@ import { WalletService } from '../../../core/services/wallet.service';
   templateUrl: './wallet-balance-card.component.html',
   styleUrls: ['./wallet-balance-card.component.css'],
 })
-export class WalletBalanceCardComponent implements OnInit {
+export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   private readonly walletService = inject(WalletService);
+  private refreshInterval?: number;
 
   // ==================== INPUTS & OUTPUTS ====================
 
@@ -90,11 +92,46 @@ export class WalletBalanceCardComponent implements OnInit {
    */
   readonly error = this.walletService.error;
 
+  /**
+   * Depósitos pendientes
+   */
+  readonly pendingDeposits = signal<number>(0);
+
+  /**
+   * Indica si hay depósitos pendientes
+   */
+  readonly hasPendingDeposits = computed(() => this.pendingDeposits() > 0);
+
+  /**
+   * Auto-refresh habilitado (puede deshabilitarse en production si se desea)
+   */
+  readonly autoRefreshEnabled = signal(true);
+
+  /**
+   * Intervalo de refresh en milisegundos (30 segundos)
+   */
+  readonly refreshIntervalMs = 30000;
+
   // ==================== LIFECYCLE ====================
 
   async ngOnInit(): Promise<void> {
     // Auto-cargar balance al inicializar
     await this.loadBalance();
+
+    // Cargar pending deposits
+    await this.loadPendingDeposits();
+
+    // Iniciar auto-refresh si está habilitado
+    if (this.autoRefreshEnabled()) {
+      this.startAutoRefresh();
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar interval al destruir componente
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   }
 
   // ==================== PUBLIC METHODS ====================
@@ -128,6 +165,53 @@ export class WalletBalanceCardComponent implements OnInit {
    */
   async retry(): Promise<void> {
     await this.loadBalance();
+    await this.loadPendingDeposits();
+  }
+
+  /**
+   * Carga el número de depósitos pendientes
+   */
+  async loadPendingDeposits(): Promise<void> {
+    try {
+      // Obtener transacciones pendientes de tipo deposit
+      const transactions = await this.walletService.getTransactions({
+        type: 'deposit',
+        status: 'pending',
+      });
+
+      this.pendingDeposits.set(transactions.length);
+
+      // Log para debugging
+      if (transactions.length > 0) {
+        console.log(`⚠️  Tienes ${transactions.length} depósito(s) pendiente(s):`, transactions);
+      }
+    } catch (err) {
+      console.error('Error loading pending deposits:', err);
+    }
+  }
+
+  /**
+   * Inicia el auto-refresh del balance
+   */
+  private startAutoRefresh(): void {
+    this.refreshInterval = setInterval(async () => {
+      console.log('🔄 Auto-refreshing wallet balance...');
+      await this.loadBalance();
+      await this.loadPendingDeposits();
+    }, this.refreshIntervalMs) as unknown as number;
+
+    console.log(`✅ Auto-refresh habilitado cada ${this.refreshIntervalMs / 1000}s`);
+  }
+
+  /**
+   * Detiene el auto-refresh
+   */
+  stopAutoRefresh(): void {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = undefined;
+      console.log('⏸️  Auto-refresh deshabilitado');
+    }
   }
 
   /**

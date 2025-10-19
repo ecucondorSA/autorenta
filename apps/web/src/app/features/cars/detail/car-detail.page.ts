@@ -14,12 +14,13 @@ import {
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
+import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
 import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 
 @Component({
   standalone: true,
   selector: 'app-car-detail-page',
-  imports: [CommonModule, RouterLink, DateRangePickerComponent, MoneyPipe, ReviewCardComponent, PaymentMethodSelectorComponent],
+  imports: [CommonModule, RouterLink, DateRangePickerComponent, MoneyPipe, ReviewCardComponent, PaymentMethodSelectorComponent, ShareMenuComponent],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -227,8 +228,8 @@ export class CarDetailPage implements OnInit {
 
       const booking = await this.bookingsService.requestBooking(car.id, startISO, endISO);
 
-      // Redirigir a la página de reservas
-      await this.router.navigate(['/bookings']);
+      // Redirigir a la página de detalles de la reserva recién creada
+      await this.router.navigate(['/bookings', booking.id]);
     } catch (err: any) {
       console.error('Error creating booking', err);
       console.error('Error type:', typeof err);

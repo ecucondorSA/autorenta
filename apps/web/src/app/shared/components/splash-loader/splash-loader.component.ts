@@ -57,9 +57,14 @@ import { CommonModule } from '@angular/common';
         class="video-bg"
         autoplay
         muted
+        loop
         playsinline
+        webkit-playsinline
         preload="auto"
         [defaultMuted]="true"
+        [muted]="true"
+        disablePictureInPicture
+        controlsList="nodownload nofullscreen noremoteplayback"
       >
         <source src="/assets/videos/splash-background.mp4" type="video/mp4">
       </video>
@@ -104,18 +109,54 @@ export class SplashLoaderComponent implements AfterViewInit {
   @ViewChild('videoElement') videoElement?: ElementRef<HTMLVideoElement>;
 
   ngAfterViewInit(): void {
-    // Force video play on load
+    // Aggressive autoplay for iOS Safari
     if (this.videoElement?.nativeElement) {
       const video = this.videoElement.nativeElement;
-      video.muted = true; // Ensure muted for autoplay
-      video.playbackRate = 1.3; // Play at 1.3x speed
-      video.play().catch(err => {
-        console.warn('Video autoplay failed:', err);
-        // Fallback: try playing on user interaction
-        document.addEventListener('click', () => {
-          video.play().catch(() => {});
-        }, { once: true });
-      });
+
+      // Critical: Ensure muted for autoplay (iOS requirement)
+      video.muted = true;
+      video.playsInline = true;
+      video.playbackRate = 1.3;
+
+      // Attempt 1: Play immediately (video should be preloaded from index.html)
+      this.attemptPlay(video, 1);
+    }
+  }
+
+  private attemptPlay(video: HTMLVideoElement, attempt: number): void {
+    const playPromise = video.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          console.log(`🎬 Splash video autoplay SUCCESS (attempt ${attempt})`);
+        })
+        .catch(err => {
+          console.warn(`⚠️ Autoplay attempt ${attempt} failed:`, err.name);
+
+          // Attempt 2: Retry after 100ms (video might still be loading)
+          if (attempt === 1) {
+            setTimeout(() => this.attemptPlay(video, 2), 100);
+            return;
+          }
+
+          // Attempt 3: Retry after 500ms
+          if (attempt === 2) {
+            setTimeout(() => this.attemptPlay(video, 3), 500);
+            return;
+          }
+
+          // Final fallback: Play on first user interaction
+          console.warn('🚫 All autoplay attempts failed. Waiting for user interaction...');
+          const playOnInteraction = () => {
+            video.play()
+              .then(() => console.log('🎬 Video played after user interaction'))
+              .catch(() => console.error('❌ Video play failed even after interaction'));
+          };
+
+          document.addEventListener('touchstart', playOnInteraction, { once: true, passive: true });
+          document.addEventListener('click', playOnInteraction, { once: true });
+        });
     }
   }
 }
