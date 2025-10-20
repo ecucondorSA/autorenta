@@ -1,8 +1,9 @@
 /* Mapbox GL JS CSS - Required for markers and controls */
 @import 'mapbox-gl/dist/mapbox-gl.css';
 
-/* 🎨 Fuente Inter - Premium UI Typography */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* 🎨 Fuente Inter - Premium UI Typography
+   Nota: durante builds offline omitimos la importación remota de Google Fonts.
+   Si se requiere nuevamente, restaura la línea con la URL oficial. */
 
 @tailwind base;
 @tailwind components;
@@ -94,6 +95,12 @@
     }
   }
 
+  @media (max-width: 375px) {
+    :root {
+      --header-height: 72px;
+    }
+  }
+
   /* ─────────────────────────────────────────────────────────────
      Preferencias de Accesibilidad
      ───────────────────────────────────────────────────────────── */
@@ -127,6 +134,8 @@
     @apply bg-ivory-soft text-smoke-black antialiased;
     font-size: 16px;
     line-height: 1.6;
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -227,6 +236,18 @@
     @apply text-ivory-luminous;
   }
 
+  .dark .text-body {
+    @apply text-pearl-light/80;
+  }
+
+  .dark .text-caption {
+    @apply text-pearl-light/70;
+  }
+
+  .dark .text-overline {
+    @apply text-pearl-light/60;
+  }
+
   /* ─────────────────────────────────────────────────────────────
      Sistema de Contenedores
      ───────────────────────────────────────────────────────────── */
@@ -301,6 +322,7 @@
   /* Icon buttons - WCAG 2.5.5 compliant (44x44px minimum) */
   .icon-button {
     @apply p-3 rounded-xl;
+    @apply text-charcoal-medium dark:text-pearl-light;
     @apply hover:bg-sand-light dark:hover:bg-slate-deep;
     @apply transition-all active:scale-95;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol;
@@ -420,6 +442,14 @@
     transform: translateY(-2px);
   }
 
+  .dark .info-card {
+    @apply bg-anthracite border-slate-deep text-pearl-light shadow-card;
+  }
+
+  .dark .info-card:hover {
+    @apply shadow-elevated border-accent-petrol/40;
+  }
+
   /* Info card petrol variant */
   .info-card-petrol {
     @apply info-card;
@@ -432,13 +462,48 @@
     @apply bg-accent-warm/5 border-accent-warm/20;
   }
 
+  .dark .info-card-petrol {
+    @apply bg-accent-petrol/15 border-accent-petrol/30;
+  }
+
+  .dark .info-card-warm {
+    @apply bg-accent-warm/15 border-accent-warm/30;
+  }
+
   /* ─────────────────────────────────────────────────────────────
      Transiciones y Animaciones
      ───────────────────────────────────────────────────────────── */
 
-  .transition-base {
-    transition: all var(--duration-fast) var(--easing-standard);
+.transition-base {
+  transition: all var(--duration-fast) var(--easing-standard);
+}
+
+.app-main {
+  padding-bottom: calc(var(--spacing-section) + env(safe-area-inset-bottom, 0));
+}
+
+.app-main.full-bleed-safe {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+@media (max-width: 375px) {
+  header.sticky .container-page {
+    padding-left: calc(var(--spacing-container) + env(safe-area-inset-left, 0));
+    padding-right: calc(var(--spacing-container) + env(safe-area-inset-right, 0));
+    gap: 0.75rem;
   }
+
+  header.sticky .icon-button,
+  header.sticky .btn-accent {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  header.sticky .group img {
+    height: 2.5rem;
+  }
+}
 
   .transition-smooth {
     transition: all var(--duration-normal) var(--easing-standard);
@@ -539,14 +604,22 @@
      ───────────────────────────────────────────────────────────── */
 
   .nav-link {
+    @apply inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-base;
     @apply text-charcoal-medium dark:text-pearl-light;
-    @apply hover:text-smoke-black dark:hover:text-ivory-luminous;
-    @apply transition-colors py-2 font-medium text-sm;
-    transition-duration: var(--duration-fast);
+    @apply hover:bg-sand-light/70 hover:text-accent-petrol dark:hover:bg-slate-deep/70;
+  }
+
+  .nav-link svg {
+    @apply w-4 h-4;
+  }
+
+  .nav-link-primary {
+    @apply bg-accent-petrol/10 text-accent-petrol shadow-[0_4px_14px_rgba(0,71,79,0.12)];
+    @apply hover:bg-accent-petrol/15 hover:text-accent-petrol;
   }
 
   .nav-link-active {
-    @apply text-accent-petrol font-semibold;
+    @apply bg-accent-petrol/15 text-accent-petrol font-semibold;
   }
 
   /* ─────────────────────────────────────────────────────────────

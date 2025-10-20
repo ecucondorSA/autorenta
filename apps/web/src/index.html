@@ -32,8 +32,18 @@
     <!-- Theme Color -->
     <meta name="theme-color" content="#2c4a52"/>
 
+    <!-- Apple PWA Configuration -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png"/>
+    <link rel="apple-touch-startup-image" href="/icons/apple-splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"/>
+    <link rel="apple-touch-startup-image" href="/icons/apple-splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"/>
+
     <!-- Preload critical resources for instant splash video (iOS Safari autoplay) -->
     <link rel="preload" href="/assets/videos/splash-background.mp4" as="video" type="video/mp4"/>
+    <link rel="preload" href="/assets/videos/splash-background-mobile.mp4" as="video" type="video/mp4" media="(max-aspect-ratio: 3/4)"/>
+    <link rel="preload" href="/assets/videos/splash-background.webm" as="video" type="video/webm"/>
+    <link rel="preload" href="/assets/images/splash-background-poster.jpg" as="image"/>
     <link rel="manifest" href="manifest.webmanifest">
 </head>
   <body>

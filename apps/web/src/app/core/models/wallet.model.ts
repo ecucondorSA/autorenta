@@ -8,6 +8,8 @@
  */
 export interface WalletBalance {
   available_balance: number; // Fondos disponibles para usar
+  withdrawable_balance: number; // Fondos que pueden retirarse
+  non_withdrawable_balance: number; // Crédito exclusivo para Autorentar
   locked_balance: number; // Fondos bloqueados en reservas activas
   total_balance: number; // Total (available + locked)
   currency: string; // 'USD' o 'UYU'
@@ -61,6 +63,7 @@ export interface WalletTransaction {
   status: WalletTransactionStatus;
   amount: number;
   currency: string;
+  is_withdrawable?: boolean;
   reference_type?: WalletReferenceType;
   reference_id?: string;
   provider?: WalletPaymentProvider;
@@ -105,7 +108,9 @@ export interface WalletInitiateDepositResponse {
   message: string;
   payment_provider: WalletPaymentProvider;
   payment_url: string;
+  payment_mobile_deep_link?: string | null;
   status: WalletTransactionStatus;
+  is_withdrawable?: boolean;
 }
 
 /**
@@ -132,6 +137,7 @@ export interface InitiateDepositParams {
   amount: number;
   provider?: WalletPaymentProvider;
   description?: string;
+  allowWithdrawal?: boolean;
 }
 
 /**

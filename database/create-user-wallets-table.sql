@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS user_wallets (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   available_balance NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (available_balance >= 0),
   locked_balance NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (locked_balance >= 0),
+  non_withdrawable_floor NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (non_withdrawable_floor >= 0),
   currency TEXT NOT NULL DEFAULT 'ARS',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

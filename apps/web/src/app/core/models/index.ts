@@ -16,7 +16,14 @@ export type Role = UserRole;
 // Nuevos tipos para perfil expandido
 export type KycStatus = 'not_started' | 'pending' | 'verified' | 'rejected';
 export type OnboardingStatus = 'incomplete' | 'complete';
-export type DocumentKind = 'gov_id_front' | 'gov_id_back' | 'driver_license' | 'utility_bill' | 'selfie';
+export type DocumentKind =
+  | 'gov_id_front'
+  | 'gov_id_back'
+  | 'driver_license'
+  | 'vehicle_registration'
+  | 'vehicle_insurance'
+  | 'utility_bill'
+  | 'selfie';
 
 export interface NotificationChannelPrefs {
   bookings: boolean;
@@ -100,6 +107,21 @@ export interface UserDocument {
   created_at: string;
   reviewed_by?: string | null;
   reviewed_at?: string | null;
+  analyzed_at?: string | null;
+}
+
+export type VerificationRole = 'driver' | 'owner';
+export type VerificationStatus = 'VERIFICADO' | 'PENDIENTE' | 'RECHAZADO';
+
+export interface UserVerificationStatus {
+  user_id: string;
+  role: VerificationRole;
+  status: VerificationStatus;
+  missing_docs: string[];
+  notes?: string | null;
+  metadata?: Record<string, unknown> | null;
+  created_at?: string;
+  updated_at: string;
 }
 
 export interface ProfileAudit {

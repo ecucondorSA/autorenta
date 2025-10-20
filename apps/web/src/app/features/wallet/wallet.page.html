@@ -1,4 +1,4 @@
-<div class="wallet-page min-h-screen bg-ivory-soft py-section-sm">
+<div class="wallet-page min-h-screen bg-ivory-soft dark:bg-graphite-dark dark:text-pearl-light py-section-sm">
   <div class="container-page px-container">
     <!-- Page Header -->
     <div class="mb-8">
@@ -13,65 +13,164 @@
       <!-- Left Column: Balance Card -->
       <div class="lg:col-span-1">
         <app-wallet-balance-card #balanceCard></app-wallet-balance-card>
+      </div>
 
-        <!-- Info Cards -->
-        <div class="mt-6 space-y-4">
-          <!-- How it Works Card -->
-          <div class="info-card">
-            <div class="flex items-start">
-              <svg class="w-5 h-5 text-accent-petrol mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <div class="ml-3">
-                <h3 class="h6 mb-1">¿Cómo funciona?</h3>
-                <p class="text-caption leading-relaxed">
-                  Deposita fondos en tu wallet y úsalos como garantía o pago para tus reservas.
-                  No necesitas tarjeta de crédito si tienes saldo suficiente.
-                </p>
+      <!-- Right Column: Tabs (Transactions / Withdrawals) -->
+      <div class="lg:col-span-2">
+        <!-- Guarantee Options Info -->
+        <div class="mb-6 space-y-4">
+          <div class="rounded-2xl border border-accent-petrol/30 dark:border-accent-petrol/40 bg-gradient-to-br from-accent-petrol/15 via-white-pure to-white-pure dark:from-accent-petrol/20 dark:via-anthracite dark:to-anthracite shadow-soft p-6 space-y-4">
+            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div class="flex items-start gap-3 md:max-w-xl">
+                <svg class="w-6 h-6 text-accent-petrol dark:text-ivory-luminous mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="flex-1 space-y-2">
+                  <p class="text-xs uppercase tracking-wide text-accent-petrol font-semibold dark:text-pearl-light/70">Opciones para garantizar tu reserva</p>
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                    <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">Elegí cómo activar tu protección</h3>
+                    <span
+                      class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full"
+                      [ngClass]="{
+                        'bg-emerald-100 text-emerald-700': protectedCreditStatus() === 'active',
+                        'bg-amber-100 text-amber-800': protectedCreditStatus() === 'partial',
+                        'bg-sand-light text-charcoal-medium': protectedCreditStatus() === 'pending'
+                      }"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11V7m0 8h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      @switch (protectedCreditStatus()) {
+                        @case ('active') { Activo }
+                        @case ('partial') { En progreso }
+                        @default { Pendiente }
+                      }
+                    </span>
+                  </div>
+                  <div class="grid gap-3 sm:grid-cols-2">
+                    <div class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-slate-deep p-4 space-y-2">
+                      <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">1. Tarjeta de crédito</p>
+                      <p class="text-sm text-charcoal-medium dark:text-pearl-light/80 leading-relaxed">
+                        Autorentar bloquea el monto de la garantía (USD 500-1000 según el vehículo) y se libera automáticamente al finalizar el viaje.
+                      </p>
+                      <p class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60">Requiere tarjeta internacional habilitada para compras online.</p>
+                    </div>
+                    <div class="rounded-xl border border-accent-warm/30 bg-amber-50 dark:bg-amber-500/15 p-4 space-y-2">
+                      <p class="text-sm font-semibold text-accent-warm dark:text-amber-100">2. Crédito Autorentar (USD 250)</p>
+                      <p class="text-sm text-amber-800 dark:text-amber-100 leading-relaxed">
+                        Deposita USD 250 una sola vez, úsalo como crédito protegido dentro de la plataforma y reserva sin tarjeta de crédito.
+                      </p>
+                      <p class="text-xs text-amber-700 dark:text-amber-100/80">
+                        El crédito es no reembolsable en efectivo, pero se libera después de cada viaje para futuras reservas.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col items-stretch gap-3">
+                <button
+                  type="button"
+                  (click)="openDepositModal()"
+                  class="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-petrol px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-accent-petrol/90 transition-base"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                  </svg>
+                  Configurar Crédito Autorentar
+                </button>
+                <div class="rounded-xl bg-white/70 dark:bg-slate-deep/70 border border-pearl-gray/60 dark:border-slate-deep px-3 py-2 text-xs text-charcoal-medium/80 dark:text-pearl-light/80">
+                  <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Progreso crédito protegido</p>
+                  <p class="mt-1 flex items-baseline gap-2 text-sm font-medium">
+                    <span>USD {{ protectedCreditBalance() | number:'1.2-2' }}</span>
+                    <span class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60">meta USD {{ protectedCreditTarget | number:'1.0-0' }}</span>
+                  </p>
+                  <div class="mt-2 h-2 rounded-full bg-sand-light dark:bg-slate-deep/60 overflow-hidden">
+                    <div
+                      class="h-full rounded-full bg-accent-petrol transition-[width] duration-500"
+                      [style.width.%]="protectedCreditProgress()"
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Benefits Card -->
+          <div class="info-card-warm">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-accent-warm mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div class="space-y-2">
+                <h3 class="h6 mb-1">Crédito Autorentar (USD 250)</h3>
+                <p class="text-caption leading-relaxed text-smoke-black dark:text-pearl-light/80">
+                  Depósitalo una vez, úsalo para cubrir garantías y cargos dentro de la plataforma y mantenelo activo para reservar sin tarjeta.
+                  Siempre lo verás como <strong>crédito protegido</strong>. No se devuelve en efectivo pero se libera para tu próximo viaje.
+                </p>
+                <p class="text-caption text-charcoal-medium dark:text-pearl-light/60">
+                  Podés sumar fondos extra (retirables) para completar pagos o solicitar retiros cuando lo necesites.
+                </p>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <div class="rounded-lg border border-accent-warm/30 bg-amber-50/60 dark:bg-amber-500/10 px-3 py-2">
+                    <p class="text-xs uppercase tracking-wide text-accent-warm/90">Crédito protegido</p>
+                    <p class="text-sm font-semibold text-smoke-black dark:text-amber-100">
+                      USD {{ protectedCreditBalance() | number:'1.2-2' }}
+                    </p>
+                  </div>
+                  <div class="rounded-lg border border-pearl-gray/50 bg-white/70 dark:bg-slate-deep/70 px-3 py-2">
+                    <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/70">Fondos retirables</p>
+                    <p class="text-sm font-semibold text-smoke-black dark:text-pearl-light">
+                      USD {{ withdrawableBalance() | number:'1.2-2' }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="info-card-petrol">
-            <div class="flex items-start">
+            <div class="flex items-start gap-3">
               <svg class="w-5 h-5 text-accent-petrol mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              <div class="ml-3">
+              <div>
                 <h3 class="h6 mb-1">Beneficios</h3>
                 <ul class="text-caption space-y-1">
-                  <li>✓ Reservas sin tarjeta de crédito</li>
-                  <li>✓ Procesos de pago más rápidos</li>
-                  <li>✓ Control total de tus fondos</li>
-                  <li>✓ Reembolsos automáticos</li>
+                  <li>✓ Reservas sin necesidad de tarjeta corporativa o internacional.</li>
+                  <li>✓ Procesos más rápidos en cada alquiler.</li>
+                  <li>✓ Control claro de crédito protegido y fondos retirables.</li>
+                  <li>✓ Protección inmediata en caso de daños o cancelaciones.</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <!-- Security Card -->
-          <div class="info-card-warm">
-            <div class="flex items-start">
-              <svg class="w-5 h-5 text-accent-warm mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="info-card">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-accent-petrol mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
               </svg>
-              <div class="ml-3">
+              <div class="space-y-2">
                 <h3 class="h6 mb-1">Seguridad</h3>
                 <p class="text-caption leading-relaxed">
-                  Tus fondos están protegidos con encriptación de nivel bancario.
-                  Los fondos bloqueados se liberan automáticamente al finalizar cada reserva.
+                  Tus fondos se administran con estándares bancarios, monitoreo en tiempo real y auditoría contable. Los saldos protegidos y retirables
+                  se muestran en tu wallet para que sepas exactamente qué podés retirar y qué necesitas mantener para tus próximas reservas.
                 </p>
+                <a
+                  href="/terminos/credito-autorentar"
+                  class="inline-flex items-center gap-2 text-xs font-semibold text-accent-petrol hover:text-accent-warm transition-base"
+                >
+                  Consultar política del Crédito Autorentar
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Right Column: Tabs (Transactions / Withdrawals) -->
-      <div class="lg:col-span-2">
         <!-- Tabs Navigation -->
-        <div class="bg-white-pure rounded-t-xl shadow-soft border-b border-pearl-gray">
+        <div class="bg-white-pure dark:bg-anthracite rounded-t-xl shadow-soft dark:shadow-card border-b border-pearl-gray dark:border-slate-deep">
           <div class="flex">
             <button
               type="button"
@@ -80,7 +179,8 @@
               [class.border-accent-petrol]="activeTab() === 'transactions'"
               [class.text-accent-petrol]="activeTab() === 'transactions'"
               [class.text-charcoal-medium]="activeTab() !== 'transactions'"
-              class="flex-1 px-6 py-4 text-sm font-semibold hover:text-accent-petrol transition-base">
+              [class.dark\\:text-pearl-light]="activeTab() !== 'transactions'"
+              class="flex-1 px-6 py-4 text-sm font-semibold hover:text-accent-petrol dark:hover:text-ivory-luminous transition-base">
               Transacciones
             </button>
             <button
@@ -90,14 +190,15 @@
               [class.border-accent-petrol]="activeTab() === 'withdrawals'"
               [class.text-accent-petrol]="activeTab() === 'withdrawals'"
               [class.text-charcoal-medium]="activeTab() !== 'withdrawals'"
-              class="flex-1 px-6 py-4 text-sm font-semibold hover:text-accent-petrol transition-base">
+              [class.dark\\:text-pearl-light]="activeTab() !== 'withdrawals'"
+              class="flex-1 px-6 py-4 text-sm font-semibold hover:text-accent-petrol dark:hover:text-ivory-luminous transition-base">
               Retiros
             </button>
           </div>
         </div>
 
         <!-- Tab Content -->
-        <div class="bg-white-pure rounded-b-xl shadow-soft">
+        <div class="bg-white-pure dark:bg-anthracite rounded-b-xl shadow-soft dark:shadow-card border border-pearl-gray/70 dark:border-slate-deep">
           <!-- Transactions Tab -->
           @if (activeTab() === 'transactions') {
             <app-transaction-history></app-transaction-history>
@@ -117,7 +218,9 @@
                     [class.text-white]="withdrawalMode() === 'form'"
                     [class.bg-sand-light]="withdrawalMode() !== 'form'"
                     [class.text-charcoal-medium]="withdrawalMode() !== 'form'"
-                    class="px-4 py-2 text-sm font-medium rounded-xl transition-base">
+                    [class.dark\\:bg-slate-deep]="withdrawalMode() !== 'form'"
+                    [class.dark\\:text-pearl-light]="withdrawalMode() !== 'form'"
+                    class="px-4 py-2 text-sm font-medium rounded-xl transition-base border border-transparent dark:border-slate-deep/60 hover:border-accent-petrol/40 dark:hover:border-accent-petrol/40 hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80">
                     Solicitar Retiro
                   </button>
                   <button
@@ -127,7 +230,9 @@
                     [class.text-white]="withdrawalMode() === 'accounts'"
                     [class.bg-sand-light]="withdrawalMode() !== 'accounts'"
                     [class.text-charcoal-medium]="withdrawalMode() !== 'accounts'"
-                    class="px-4 py-2 text-sm font-medium rounded-xl transition-base">
+                    [class.dark\\:bg-slate-deep]="withdrawalMode() !== 'accounts'"
+                    [class.dark\\:text-pearl-light]="withdrawalMode() !== 'accounts'"
+                    class="px-4 py-2 text-sm font-medium rounded-xl transition-base border border-transparent dark:border-slate-deep/60 hover:border-accent-petrol/40 dark:hover:border-accent-petrol/40 hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80">
                     Mis Cuentas
                   </button>
                 </div>
@@ -138,7 +243,9 @@
                 <div class="space-y-6">
                   <!-- Withdrawal Request Form -->
                   <app-withdrawal-request-form
-                    [availableBalance]="availableBalance"
+                    [availableBalance]="availableBalanceSummary()"
+                    [withdrawableBalance]="withdrawableBalance()"
+                    [nonWithdrawableBalance]="protectedCreditBalance()"
                     [accounts]="activeBankAccounts()"
                     (submitWithdrawal)="handleWithdrawalRequest($event)">
                   </app-withdrawal-request-form>
@@ -151,13 +258,13 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                         </svg>
                         <div class="ml-3 flex-1">
-                          <p class="text-sm text-smoke-black">
+                          <p class="text-sm text-smoke-black dark:text-pearl-light">
                             No tienes cuentas bancarias registradas.
                           </p>
                           <button
                             type="button"
                             (click)="setWithdrawalMode('accounts')"
-                            class="mt-2 text-sm font-medium text-accent-warm hover:text-accent-petrol underline transition-base">
+                            class="mt-2 text-sm font-medium text-accent-warm dark:text-pearl-light hover:text-accent-petrol dark:hover:text-ivory-luminous underline transition-base">
                             Agregar cuenta bancaria
                           </button>
                         </div>
@@ -166,7 +273,7 @@
                   }
 
                   <!-- Withdrawal History -->
-                  <div class="border-t border-pearl-gray pt-6">
+                  <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
                     <app-withdrawal-history
                       [requests]="withdrawalRequests()"
                       [loading]="loading().fetchingRequests"
@@ -189,7 +296,7 @@
                   </app-bank-accounts-list>
 
                   <!-- Add New Bank Account Form -->
-                  <div class="border-t border-pearl-gray pt-6">
+                  <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
                     <h3 class="h5 mb-4">Agregar Nueva Cuenta</h3>
                     <app-bank-account-form
                       (submitAccount)="handleAddBankAccount($event)">

@@ -43,9 +43,11 @@ import { CommonModule } from '@angular/common';
               <ul class="space-y-2 ml-4">
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
-                  <span
-                    >Debes depositar el <strong>monto del alquiler + $250 USD de garantía</strong></span
-                  >
+                  <span>
+                    Debes garantizar el <strong>monto del alquiler + depósito</strong>:
+                    $500 USD si pagás con tarjeta de crédito o $250 USD si usás la wallet de AutoRenta
+                    (Mercado Pago)
+                  </span>
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
@@ -56,10 +58,10 @@ import { CommonModule } from '@angular/common';
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
-                  <span
-                    >La <strong>garantía de $250 USD se devuelve a tu wallet</strong> (no a tu cuenta
-                    bancaria)</span
-                  >
+                  <span>
+                    La garantía se libera según el método elegido: se desbloquean $500 USD en tu tarjeta
+                    o vuelven $250 USD como saldo en tu wallet (no se deposita en tu cuenta bancaria)
+                  </span>
                 </li>
               </ul>
             </div>
@@ -70,7 +72,10 @@ import { CommonModule } from '@angular/common';
               <ul class="space-y-2 ml-4">
                 <li class="flex items-start">
                   <span class="mr-2">✔</span>
-                  <span>Alquilar otro auto (solo necesitas agregar el monto del alquiler + $250 más)</span>
+                  <span>
+                    Alquilar otro auto (solo necesitás agregar el monto del alquiler + el depósito que
+                    corresponda a tu método de pago)
+                  </span>
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">✔</span>
@@ -110,18 +115,22 @@ import { CommonModule } from '@angular/common';
               <ul class="space-y-2 ml-4">
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
-                  <span
-                    >El propietario puede cobrar los daños <strong>de tu garantía</strong> (hasta $250
-                    USD)</span
-                  >
+                  <span>
+                    El propietario puede cobrar los daños <strong>de tu garantía</strong> (hasta el monto
+                    retenido: $500 USD con tarjeta o $250 USD con wallet)
+                  </span>
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
-                  <span>Si los daños son menores, recibes el <strong>resto en tu wallet</strong></span>
+                  <span>
+                    Si los daños son menores, recibes el <strong>resto en tu wallet o tu tarjeta</strong>
+                  </span>
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
-                  <span>Ejemplo: Daño de $100 → Recibes $150 de vuelta en tu wallet</span>
+                  <span>
+                    Ejemplo: Daño de $100 → Se liberan $400 si usaste tarjeta o $150 si usaste la wallet
+                  </span>
                 </li>
               </ul>
             </div>

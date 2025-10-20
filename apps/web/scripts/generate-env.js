@@ -13,8 +13,13 @@ const envVars = {
   NG_APP_SUPABASE_ANON_KEY: process.env.NG_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU',
   NG_APP_DEFAULT_CURRENCY: process.env.NG_APP_DEFAULT_CURRENCY || 'ARS',
   NG_APP_PAYMENTS_WEBHOOK_URL: process.env.NG_APP_PAYMENTS_WEBHOOK_URL || '',
-  NG_APP_MAPBOX_ACCESS_TOKEN: process.env.NG_APP_MAPBOX_ACCESS_TOKEN || '',
-  NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: process.env.NG_APP_CAR_LOCATIONS_EDGE_FUNCTION || ''
+  NG_APP_MAPBOX_ACCESS_TOKEN:
+    process.env.NG_APP_MAPBOX_ACCESS_TOKEN ||
+    'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg',
+  NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: process.env.NG_APP_CAR_LOCATIONS_EDGE_FUNCTION || '',
+  NG_APP_BACKGROUND_MODEL_URL:
+    process.env.NG_APP_BACKGROUND_MODEL_URL ||
+    'https://huggingface.co/briaai/RMBG-1.4/resolve/main/rmbg-1.4.onnx?download=1'
 };
 
 const envJsContent = `// Auto-generated environment configuration

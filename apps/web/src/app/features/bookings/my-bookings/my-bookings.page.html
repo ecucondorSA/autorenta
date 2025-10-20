@@ -1,13 +1,13 @@
 <section class="space-y-6">
   <header>
     <h1 class="h2">Mis reservas</h1>
-    <p class="text-body">Seguimiento de tus pedidos y su estado actual.</p>
+    <p class="text-body text-charcoal-medium dark:text-pearl-light/80">Seguimiento de tus pedidos y su estado actual.</p>
   </header>
 
   <!-- Error message -->
   <div *ngIf="error()" class="info-card-warm">
-    <p class="font-semibold text-smoke-black">Error al cargar reservas</p>
-    <p class="mt-1 text-charcoal-medium">{{ error() }}</p>
+    <p class="font-semibold text-smoke-black dark:text-pearl-light">Error al cargar reservas</p>
+    <p class="mt-1 text-charcoal-medium dark:text-pearl-light/80">{{ error() }}</p>
     <button
       (click)="loadBookings()"
       class="mt-3 px-3 py-2 bg-accent-warm text-white rounded-xl text-xs font-semibold hover:bg-accent-petrol transition-base"
@@ -17,7 +17,7 @@
   </div>
 
   <!-- Loading state -->
-  <div *ngIf="loading() && !error()" class="text-center text-sm text-charcoal-medium">
+  <div *ngIf="loading() && !error()" class="text-center text-sm text-charcoal-medium dark:text-pearl-light/70">
     Cargando reservas...
   </div>
 
@@ -87,15 +87,15 @@
         </div>
 
         <!-- Card Footer with Price and Action -->
-        <div class="p-4 sm:p-5 bg-white-pure">
+        <div class="p-4 sm:p-5 bg-white-pure dark:bg-slate-deep/90 border-t border-pearl-gray/40 dark:border-slate-deep/60 transition-base">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs text-ash-gray mb-1">Total</p>
-              <p class="text-lg sm:text-xl font-bold text-smoke-black">
+              <p class="text-xs text-ash-gray dark:text-pearl-light/70 mb-1">Total</p>
+              <p class="text-lg sm:text-xl font-bold text-smoke-black dark:text-ivory-luminous">
                 {{ booking.total_amount | money }}
               </p>
             </div>
-            <div class="flex items-center gap-2 text-accent-petrol font-semibold text-sm hover:text-accent-warm transition-base">
+            <div class="flex items-center gap-2 text-accent-petrol dark:text-ivory-luminous font-semibold text-sm hover:text-accent-warm dark:hover:text-amber-200 transition-base">
               Ver detalle
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -108,7 +108,7 @@
   </div>
 
   <!-- Empty state -->
-  <p *ngIf="!loading() && !error() && bookings().length === 0" class="text-caption text-center py-8">
+  <p *ngIf="!loading() && !error() && bookings().length === 0" class="text-caption text-center py-8 text-charcoal-medium dark:text-pearl-light/70">
     No tenés reservas todavía.
   </p>
 </section>

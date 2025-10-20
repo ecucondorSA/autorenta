@@ -6,8 +6,10 @@ import {
   computed,
   signal,
   inject,
+  effect,
+  PLATFORM_ID,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
@@ -15,7 +17,6 @@ import { Car } from '../../../core/models';
 import {
   DateRange,
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
-import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { MapFiltersComponent, MapFilters } from '../../../shared/components/map-filters/map-filters.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
@@ -24,7 +25,19 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 export interface CarWithDistance extends Car {
   distance?: number;
   distanceText?: string;
+  body_type?: string | null;
 }
+
+interface PremiumSegmentation {
+  threshold: number;
+  scores: Map<string, number>;
+}
+
+const SORT_STORAGE_KEY = 'autorenta:list-sort';
+const ANALYTICS_EVENT = 'autorenta:analytics';
+const ECONOMY_RADIUS_KM = 50;
+const PREMIUM_SCORE_PRICE_WEIGHT = 0.7;
+const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
 
 @Component({
   standalone: true,
@@ -45,6 +58,11 @@ export class CarsListPage implements OnInit {
 
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
+  private sortInitialized = false;
+  private analyticsLastKey: string | null = null;
 
   readonly city = signal<string | null>(null);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -54,20 +72,44 @@ export class CarsListPage implements OnInit {
   readonly hasFilters = computed(() => !!this.city() || !!this.dateRange().from);
   readonly selectedCarId = signal<string | null>(null);
   readonly searchExpanded = signal(false);
-  readonly activeCarouselIndex = signal(0);
 
   // Filtros y ordenamiento
   readonly mapFilters = signal<MapFilters | null>(null);
-  readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('distance');
+  readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('price_desc');
+  readonly sortLabel = computed(() => this.getSortLabel(this.sortBy()));
+
+  private readonly persistSortEffect = effect(() => {
+    if (!this.isBrowser || !this.sortInitialized) {
+      return;
+    }
+    const sort = this.sortBy();
+    localStorage.setItem(SORT_STORAGE_KEY, sort);
+  });
+
+  private readonly analyticsEffect = effect(() => {
+    if (!this.isBrowser) {
+      return;
+    }
+    const premiumCount = this.premiumCars().length;
+    const economyCount = this.economyCars().length;
+    const sort = this.sortBy();
+    const key = `${premiumCount}:${economyCount}:${sort}`;
+    if (key === this.analyticsLastKey) {
+      return;
+    }
+    this.analyticsLastKey = key;
+    this.trackAnalytics('inventory_segments_updated', {
+      premiumCount,
+      economyCount,
+      sort,
+    });
+  });
 
   // Autos ordenados por distancia con información de distancia
-  readonly carsWithDistance = computed(() => {
+  private readonly filteredCarsWithDistance = computed<CarWithDistance[]>(() => {
     let carsList = this.cars();
     const userLoc = this.userLocation();
     const filters = this.mapFilters();
-    const sort = this.sortBy();
-
-    console.log('[CarsListPage] carsWithDistance computed - userLoc:', userLoc, 'cars count:', carsList.length);
 
     // Aplicar filtros
     if (filters) {
@@ -103,12 +145,10 @@ export class CarsListPage implements OnInit {
     }
 
     if (!carsList.length) {
-      console.log('[CarsListPage] No cars after filtering');
       return [] as CarWithDistance[];
     }
 
-    // Calcular distancias
-    const carsWithDist: CarWithDistance[] = carsList.map((car) => {
+    return carsList.map((car) => {
       if (!userLoc || !car.location_lat || !car.location_lng) {
         return { ...car, distance: undefined, distanceText: undefined };
       }
@@ -136,46 +176,184 @@ export class CarsListPage implements OnInit {
         distanceText,
       };
     });
+  });
 
-    // Aplicar ordenamiento
-    let sorted = [...carsWithDist];
+  private readonly premiumSegmentation = computed<PremiumSegmentation | null>(() => {
+    const cars = this.filteredCarsWithDistance();
+    if (!cars.length) {
+      return null;
+    }
 
-    switch (sort) {
-      case 'distance':
-        sorted.sort((a, b) => {
-          if (a.distance === undefined) return 1;
-          if (b.distance === undefined) return -1;
-          return a.distance - b.distance;
+    const prices = cars
+      .map(car => car.price_per_day)
+      .filter(price => typeof price === 'number' && !Number.isNaN(price));
+
+    if (!prices.length) {
+      return null;
+    }
+
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    const priceRange = Math.max(maxPrice - minPrice, 1);
+
+    const entries = cars.map(car => {
+      const priceNormalized = (car.price_per_day - minPrice) / priceRange;
+      const ratingNormalized = Math.min((car.owner?.rating_avg ?? 0) / 5, 1);
+      const score = priceNormalized * PREMIUM_SCORE_PRICE_WEIGHT + ratingNormalized * PREMIUM_SCORE_RATING_WEIGHT;
+      return { id: car.id, score };
+    });
+
+    const sortedScores = entries
+      .map(entry => entry.score)
+      .sort((a, b) => a - b);
+
+    const thresholdIndex = Math.max(0, Math.floor(sortedScores.length * 0.6));
+    const threshold = sortedScores[Math.min(thresholdIndex, sortedScores.length - 1)];
+
+    return {
+      threshold,
+      scores: new Map(entries.map(entry => [entry.id, entry.score])),
+    };
+  });
+
+  readonly premiumCars = computed<CarWithDistance[]>(() => {
+    const segmentation = this.premiumSegmentation();
+    const cars = this.filteredCarsWithDistance();
+
+    if (!cars.length) {
+      return [];
+    }
+
+    const list = !segmentation
+      ? cars
+      : cars.filter(car => {
+          const score = segmentation.scores.get(car.id) ?? 0;
+          return score >= segmentation.threshold;
         });
-        break;
 
+    const sorted = list.slice();
+
+    switch (this.sortBy()) {
       case 'price_asc':
         sorted.sort((a, b) => a.price_per_day - b.price_per_day);
         break;
-
       case 'price_desc':
         sorted.sort((a, b) => b.price_per_day - a.price_per_day);
         break;
-
       case 'rating':
         sorted.sort((a, b) => {
-          const ratingA = a.owner?.rating_avg || 0;
-          const ratingB = b.owner?.rating_avg || 0;
-          return ratingB - ratingA;
+          const ratingA = a.owner?.rating_avg ?? 0;
+          const ratingB = b.owner?.rating_avg ?? 0;
+          if (ratingB !== ratingA) {
+            return ratingB - ratingA;
+          }
+          return b.price_per_day - a.price_per_day;
         });
         break;
-
       case 'newest':
         sorted.sort((a, b) => {
           const dateA = new Date(a.created_at || 0).getTime();
           const dateB = new Date(b.created_at || 0).getTime();
-          return dateB - dateA;
+          if (dateB !== dateA) {
+            return dateB - dateA;
+          }
+          return b.price_per_day - a.price_per_day;
+        });
+        break;
+      case 'distance':
+      default:
+        sorted.sort((a, b) => {
+          const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
+          const distanceB = b.distance ?? Number.POSITIVE_INFINITY;
+          if (distanceA !== distanceB) {
+            return distanceA - distanceB;
+          }
+          return b.price_per_day - a.price_per_day;
         });
         break;
     }
 
-    console.log('[CarsListPage] Final sorted cars:', sorted.length, 'sort:', sort);
     return sorted;
+  });
+
+  readonly economyCars = computed<CarWithDistance[]>(() => {
+    const segmentation = this.premiumSegmentation();
+    const cars = this.filteredCarsWithDistance();
+
+    if (!cars.length) {
+      return [];
+    }
+
+    const premiumSet = segmentation
+      ? new Set(
+          cars
+            .filter(car => (segmentation.scores.get(car.id) ?? 0) >= segmentation.threshold)
+            .map(car => car.id)
+        )
+      : new Set<string>();
+
+    let list = cars.filter(car => {
+      const withinRadius = car.distance === undefined || car.distance <= this.economyRadiusKm;
+      if (!withinRadius) {
+        return false;
+      }
+
+      if (!segmentation) {
+        return true;
+      }
+
+      const score = segmentation.scores.get(car.id) ?? 0;
+      return score < segmentation.threshold;
+    });
+
+    if (!list.length) {
+      const nonPremium = cars.filter(car => !premiumSet.has(car.id));
+      const source = nonPremium.length ? nonPremium : cars;
+
+      list = source
+        .slice()
+        .sort((a, b) => {
+          const priceDiff = a.price_per_day - b.price_per_day;
+          if (priceDiff !== 0) {
+            return priceDiff;
+          }
+          const distA = a.distance ?? Number.POSITIVE_INFINITY;
+          const distB = b.distance ?? Number.POSITIVE_INFINITY;
+          return distA - distB;
+        })
+        .slice(0, 12);
+    }
+
+    return list
+      .sort((a, b) => {
+        const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
+        const distanceB = b.distance ?? Number.POSITIVE_INFINITY;
+
+        if (distanceA !== distanceB) {
+          return distanceA - distanceB;
+        }
+        if (a.price_per_day !== b.price_per_day) {
+          return a.price_per_day - b.price_per_day;
+        }
+        return (a.title || '').localeCompare(b.title || '');
+      })
+      .slice(0, 12);
+  });
+
+  readonly showEconomyCarousel = computed(() => {
+    const economy = this.economyCars();
+    if (!economy.length) {
+      return false;
+    }
+
+    const premiumSet = new Set(this.premiumCars().map(car => car.id));
+
+    if (premiumSet.size === 0) {
+      const allCount = this.filteredCarsWithDistance().length;
+      return economy.length < allCount;
+    }
+
+    return economy.some(car => !premiumSet.has(car.id));
   });
 
   // Comparación
@@ -183,11 +361,22 @@ export class CarsListPage implements OnInit {
   readonly maxCompareReached = computed(() => this.compareCount() >= 3);
 
   ngOnInit(): void {
+    if (this.isBrowser) {
+      const storedSort = localStorage.getItem(SORT_STORAGE_KEY);
+      if (storedSort && this.isValidSort(storedSort)) {
+        this.sortBy.set(storedSort);
+      }
+    }
+
+    this.sortInitialized = true;
+    if (this.isBrowser) {
+      localStorage.setItem(SORT_STORAGE_KEY, this.sortBy());
+    }
+
     void this.loadCars();
   }
 
   onUserLocationChange(location: { lat: number; lng: number }): void {
-    console.log('[CarsListPage] Received userLocation from map:', location);
     this.userLocation.set(location);
   }
 
@@ -225,64 +414,21 @@ export class CarsListPage implements OnInit {
 
   onCarSelected(carId: string): void {
     this.selectedCarId.set(carId);
+    if (this.carsMapComponent) {
+      this.carsMapComponent.flyToCarLocation(carId);
+    }
   }
 
   onMapCarSelected(carId: string): void {
     this.selectedCarId.set(carId);
-
-    // Buscar el índice del card en el carousel
-    const carIndex = this.carsWithDistance().findIndex(car => car.id === carId);
-    if (carIndex !== -1) {
-      this.activeCarouselIndex.set(carIndex);
-      this.scrollToCarouselCard(carIndex);
+    if (this.carsMapComponent) {
+      this.carsMapComponent.flyToCarLocation(carId);
     }
+    this.scrollToCarCard(carId);
   }
 
-  /**
-   * Detecta cuando el usuario desliza el carousel y sincroniza con el mapa
-   */
-  onCarouselScroll(event: Event): void {
-    const container = event.target as HTMLElement;
-    const cardWidth = container.querySelector('.carousel-card')?.clientWidth || 0;
-
-    if (cardWidth === 0) return;
-
-    // Calcular índice del card visible basado en la posición del scroll
-    const scrollLeft = container.scrollLeft;
-    const newIndex = Math.round(scrollLeft / cardWidth);
-
-    // Solo actualizar si cambió el índice
-    if (newIndex !== this.activeCarouselIndex()) {
-      this.activeCarouselIndex.set(newIndex);
-
-      // Obtener el auto correspondiente
-      const cars = this.carsWithDistance();
-      if (cars[newIndex]) {
-        const carId = cars[newIndex].id;
-        this.selectedCarId.set(carId);
-
-        // Centrar el mapa en el auto
-        if (this.carsMapComponent) {
-          this.carsMapComponent.flyToCarLocation(carId);
-        }
-      }
-    }
-  }
-
-  /**
-   * Hace scroll del carousel a un card específico
-   */
-  private scrollToCarouselCard(index: number): void {
-    setTimeout(() => {
-      const carousel = document.querySelector('.carousel-container') as HTMLElement;
-      if (carousel) {
-        const cardWidth = carousel.querySelector('.carousel-card')?.clientWidth || 0;
-        carousel.scrollTo({
-          left: index * cardWidth,
-          behavior: 'smooth'
-        });
-      }
-    }, 100);
+  isCarSelected(carId: string): boolean {
+    return this.selectedCarId() === carId;
   }
 
   // Comparación
@@ -297,7 +443,7 @@ export class CarsListPage implements OnInit {
       const added = this.compareService.addCar(carId);
       if (!added) {
         // Máximo alcanzado, se podría mostrar un mensaje
-        console.log('Máximo de 3 autos alcanzado');
+        // TODO: surface feedback to user (toast/snackbar)
       }
     }
   }
@@ -338,4 +484,58 @@ export class CarsListPage implements OnInit {
   onSortChange(sortBy: 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'): void {
     this.sortBy.set(sortBy);
   }
+
+  trackByCarId(_index: number, car: CarWithDistance): string {
+    return car.id;
+  }
+
+  private getSortLabel(sort: 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'): string {
+    switch (sort) {
+      case 'distance':
+        return 'distancia';
+      case 'price_asc':
+        return 'precio ascendente';
+      case 'price_desc':
+        return 'precio descendente';
+      case 'rating':
+        return 'mejor valoración';
+      case 'newest':
+        return 'más nuevos';
+      default:
+        return 'distancia';
+    }
+  }
+
+  private scrollToCarCard(carId: string): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const card = document.getElementById(`car-card-${carId}`);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  private isValidSort(value: string): value is 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest' {
+    return ['distance', 'price_asc', 'price_desc', 'rating', 'newest'].includes(value);
+  }
+
+  private trackAnalytics(event: string, payload: Record<string, unknown>): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent(ANALYTICS_EVENT, {
+        detail: {
+          event,
+          timestamp: Date.now(),
+          source: 'cars-list-page',
+          ...payload,
+        },
+      })
+    );
+  }
+
 }

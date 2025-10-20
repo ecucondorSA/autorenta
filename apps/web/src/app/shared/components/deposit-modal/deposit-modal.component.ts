@@ -55,7 +55,7 @@ export class DepositModalComponent {
   /**
    * Monto a depositar
    */
-  amount = signal<number>(100);
+  amount = signal<number>(250);
 
   /**
    * Proveedor de pago seleccionado
@@ -83,6 +83,7 @@ export class DepositModalComponent {
    * URL de pago generada
    */
   paymentUrl = signal<string | null>(null);
+  paymentMobileDeepLink = signal<string | null>(null);
 
   // ==================== VALIDATION ====================
 
@@ -180,14 +181,18 @@ export class DepositModalComponent {
 
       if (result.success && result.payment_url) {
         this.paymentUrl.set(result.payment_url);
+        this.paymentMobileDeepLink.set(result.payment_mobile_deep_link ?? null);
 
         // Emitir evento de éxito
         this.depositSuccess.emit(result.payment_url);
 
-        // Esperar 1 segundo para mostrar mensaje de éxito y luego redirigir
+        // Intentar abrir Mercado Pago inmediatamente
+        this.openMercadoPago(result.payment_url, result.payment_mobile_deep_link ?? null);
+
+        // Como fallback, mantener la redirección automática en la misma pestaña
         setTimeout(() => {
-          window.location.href = result.payment_url;
-        }, 1500);
+          this.openMercadoPago(result.payment_url, result.payment_mobile_deep_link ?? null, true);
+        }, 2000);
       } else {
         this.formError.set(result.message || 'Error al iniciar el depósito');
       }
@@ -222,6 +227,30 @@ export class DepositModalComponent {
    */
   updateDescription(value: string): void {
     this.description.set(value);
+  }
+
+  openMercadoPago(paymentUrl: string, mobileDeepLink: string | null, forceSameTab = false): void {
+    if (!paymentUrl) {
+      return;
+    }
+
+    const isMobile =
+      typeof navigator !== 'undefined' &&
+      /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+
+    const targetUrl = isMobile && mobileDeepLink ? mobileDeepLink : paymentUrl;
+
+    if (forceSameTab) {
+      window.location.assign(targetUrl);
+      return;
+    }
+
+    const opened = window.open(targetUrl, '_blank', 'noopener,noreferrer');
+
+    if (!opened) {
+      // Si el navegador bloquea la ventana emergente, redirigir en la misma pestaña
+      window.location.assign(targetUrl);
+    }
   }
 
   /**

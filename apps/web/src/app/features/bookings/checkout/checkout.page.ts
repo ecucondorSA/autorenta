@@ -129,6 +129,8 @@ export class CheckoutPage implements OnInit {
       status: 'confirmed',
     });
 
+    await this.bookings.recalculatePricing(bookingId);
+
     this.status.set('paid_with_wallet');
     this.message.set(
       `✅ Pago exitoso con wallet!\n\n` +
@@ -182,7 +184,10 @@ export class CheckoutPage implements OnInit {
       wallet_status: walletAmount > 0 ? 'locked' : undefined,
       wallet_lock_transaction_id: lockTransactionId,
       payment_intent_id: intent.id,
+      deposit_amount_cents: 50000,
     });
+
+    await this.bookings.recalculatePricing(bookingId);
 
     // Paso 4: Redirigir a Mercado Pago para pagar el resto
     this.status.set('redirecting_to_mercadopago');
@@ -218,7 +223,10 @@ export class CheckoutPage implements OnInit {
     await this.bookings.updateBooking(bookingId, {
       payment_method: 'credit_card',
       wallet_amount_cents: 0,
+      deposit_amount_cents: 50000,
     });
+
+    await this.bookings.recalculatePricing(bookingId);
 
     this.message.set('Redirigiendo a Mercado Pago...');
 

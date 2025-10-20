@@ -17,10 +17,18 @@
           "/favicon.png",
           "/index.csr.html",
           "/index.html",
+          "/offline.html",
           "/manifest.webmanifest",
           "/env.js",
           "/*.css",
           "/*.js"
+        ],
+        "urls": [
+          "/cars",
+          "/cars/compare",
+          "/wallet",
+          "/bookings",
+          "/profile"
         ]
       }
     },

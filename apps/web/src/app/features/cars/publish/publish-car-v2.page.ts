@@ -1,9 +1,10 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
+import { BackgroundRemovalService } from '../../../core/services/background-removal.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
 
 @Component({
@@ -267,11 +268,24 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
             </h2>
 
             <div class="mb-4">
-              <label class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2">
-                <span>➕ Agregar Fotos</span>
-                <input type="file" accept="image/*" multiple (change)="onPhotoSelected($event)" class="hidden" />
+              <label class="cursor-pointer bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
+                     [class.opacity-50]="isProcessingPhotos()"
+                     [class.cursor-not-allowed]="isProcessingPhotos()">
+                <span *ngIf="!isProcessingPhotos()">➕ Agregar Fotos</span>
+                <span *ngIf="isProcessingPhotos()" class="flex items-center gap-2">
+                  <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Procesando...
+                </span>
+                <input type="file" accept="image/*" multiple (change)="onPhotoSelected($event)" class="hidden" [disabled]="isProcessingPhotos()" />
               </label>
-              <p class="mt-2 text-xs text-gray-500">Mínimo 3 fotos, máximo 10. Primera foto será la portada.</p>
+              <p class="mt-2 text-xs text-gray-500">
+                Mínimo 3 fotos, máximo 10. Primera foto será la portada.
+                <br>
+                <span class="text-blue-600 font-medium">✨ Las fotos se procesarán automáticamente para remover el fondo</span>
+              </p>
             </div>
 
             <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -322,6 +336,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly fb: FormBuilder;
   private readonly carsService: CarsService;
   private readonly geocodingService: GeocodingService;
+  private readonly bgRemovalService = inject(BackgroundRemovalService);
   private readonly router: Router;
   private readonly route: ActivatedRoute;
 
@@ -333,6 +348,7 @@ export class PublishCarV2Page implements OnInit {
   filteredModels = signal<CarModel[]>([]);
   uploadedPhotos = signal<Array<{ file: File; preview: string }>>([]);
   isSubmitting = signal(false);
+  isProcessingPhotos = signal(false);
   autofilledFromLast = signal(false);
   editMode = signal(false);
   editingCarId = signal<string | null>(null);
@@ -537,7 +553,7 @@ export class PublishCarV2Page implements OnInit {
     // Model info is displayed automatically via computed signal
   }
 
-  onPhotoSelected(event: Event): void {
+  async onPhotoSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     const files = input.files;
     if (!files || files.length === 0) return;
@@ -547,26 +563,48 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
-    Array.from(files).forEach((file) => {
-      if (!file.type.startsWith('image/')) {
-        alert(`${file.name} no es una imagen válida`);
-        return;
+    this.isProcessingPhotos.set(true);
+
+    try {
+      for (const file of Array.from(files)) {
+        if (!file.type.startsWith('image/')) {
+          alert(`${file.name} no es una imagen válida`);
+          continue;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`${file.name} supera el tamaño máximo de 5MB`);
+          continue;
+        }
+
+        console.log(`[Upload] Processing ${file.name}...`);
+
+        // 1. Remover fondo con ONNX
+        let processedFile: File;
+        try {
+          console.log(`[Upload] Removing background from ${file.name}...`);
+          const processedBlob = await this.bgRemovalService.removeBackground(file);
+          processedFile = new File([processedBlob], file.name.replace(/\.[^.]+$/, '.png'), {
+            type: 'image/png',
+          });
+          console.log(`✅ [Upload] Background removed from ${file.name}`);
+        } catch (error) {
+          console.warn(`⚠️ Background removal failed for ${file.name}, using original:`, error);
+          processedFile = file; // Fallback: usar imagen original
+        }
+
+        // 2. Crear preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const preview = e.target?.result as string;
+          this.uploadedPhotos.update((photos) => [...photos, { file: processedFile, preview }]);
+        };
+        reader.readAsDataURL(processedFile);
       }
-
-      if (file.size > 5 * 1024 * 1024) {
-        alert(`${file.name} supera el tamaño máximo de 5MB`);
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const preview = e.target?.result as string;
-        this.uploadedPhotos.update((photos) => [...photos, { file, preview }]);
-      };
-      reader.readAsDataURL(file);
-    });
-
-    input.value = '';
+    } finally {
+      this.isProcessingPhotos.set(false);
+      input.value = '';
+    }
   }
 
   removePhoto(index: number): void {

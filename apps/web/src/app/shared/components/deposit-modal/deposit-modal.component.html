@@ -1,11 +1,11 @@
 <!-- Modal Overlay -->
 <div
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  class="fixed inset-0 bg-black/60 dark:bg-black/70 flex items-center justify-center z-50 p-4"
   (click)="onOverlayClick($event)"
   role="presentation">
   <!-- Modal Content -->
   <div
-    class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+    class="bg-white-pure dark:bg-anthracite border border-pearl-gray/70 dark:border-slate-deep rounded-2xl shadow-elevated dark:shadow-card max-w-md w-full max-h-[90vh] overflow-y-auto transition-colors duration-300"
     role="dialog"
     aria-modal="true"
     aria-labelledby="deposit-modal-title"
@@ -14,12 +14,12 @@
     appEscapeKey
     (escapePressed)="onClose()">
     <!-- Modal Header -->
-    <div class="flex items-center justify-between p-6 border-b border-gray-200">
-      <h2 id="deposit-modal-title" class="text-2xl font-bold text-gray-900">Depositar Fondos</h2>
+    <div class="flex items-center justify-between p-6 border-b border-pearl-gray dark:border-slate-deep">
+      <h2 id="deposit-modal-title" class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">Depositar Fondos</h2>
       <button
         type="button"
         (click)="onClose()"
-        class="text-gray-400 hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+        class="icon-button transition-base"
         aria-label="Cerrar modal">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -28,38 +28,52 @@
     </div>
 
     <!-- Modal Body -->
-    <div class="p-6">
+    <div class="p-6 space-y-6">
       <!-- Success State (Payment URL Generated) -->
       <div *ngIf="paymentUrl()" class="text-center py-8" role="status" aria-live="polite">
         <div class="mb-4">
-          <svg class="w-16 h-16 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="w-16 h-16 text-emerald-500 dark:text-emerald-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Depósito Iniciado</h3>
-        <p class="text-gray-600 mb-4">Serás redirigido al sitio de pago en un momento...</p>
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600" aria-label="Cargando" role="status"></div>
+        <h3 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-2">Depósito Iniciado</h3>
+        <p class="text-charcoal-medium dark:text-pearl-light/80 mb-4">Serás redirigido al sitio de pago en un momento...</p>
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-petrol dark:border-pearl-light" aria-label="Cargando" role="status"></div>
+        <div class="mt-6 space-y-3">
+          <button
+            type="button"
+            class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent-petrol text-ivory-soft font-semibold rounded-full shadow-soft hover:bg-accent-petrol/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 transition-base"
+            (click)="openMercadoPago(paymentUrl()!, paymentMobileDeepLink())">
+            Ir a Mercado Pago
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+          <p class="text-xs text-ash-gray dark:text-pearl-light/60">
+            Si la redirección automática es bloqueada por el navegador, presiona el botón para continuar con el pago.
+          </p>
+        </div>
       </div>
 
       <!-- Form (Not Success) -->
       <form *ngIf="!paymentUrl()" (ngSubmit)="onSubmit()" class="space-y-6">
         <!-- Error Message -->
-        <div *ngIf="formError()" class="bg-red-50 border border-red-200 rounded-lg p-4" role="alert" aria-live="assertive">
+        <div *ngIf="formError()" class="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/40 rounded-lg p-4" role="alert" aria-live="assertive">
           <div class="flex items-start">
-            <svg class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="w-5 h-5 text-red-600 dark:text-red-300 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <p class="text-sm text-red-700 ml-2">{{ formError() }}</p>
+            <p class="text-sm text-red-700 dark:text-red-200 ml-2">{{ formError() }}</p>
           </div>
         </div>
 
         <!-- Amount Input -->
         <div>
-          <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="amount" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
             Monto a Depositar
           </label>
           <div class="relative">
-            <span class="absolute left-3 top-3 text-gray-500 font-medium">$</span>
+            <span class="absolute left-3 top-3 text-ash-gray dark:text-pearl-light/60 font-medium">$</span>
             <input
               type="number"
               id="amount"
@@ -70,27 +84,27 @@
               [max]="MAX_DEPOSIT"
               step="10"
               required
-              class="pl-8 pr-16 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="pl-8 pr-16 py-3 w-full border border-pearl-gray/70 dark:border-slate-deep rounded-xl bg-white-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
               placeholder="100.00"
               [disabled]="isProcessing()" />
-            <span class="absolute right-3 top-3 text-gray-500 font-medium">USD</span>
+            <span class="absolute right-3 top-3 text-ash-gray dark:text-pearl-light/60 font-medium">USD</span>
           </div>
-          <p class="text-xs text-gray-500 mt-1">
+          <p class="text-xs text-ash-gray dark:text-pearl-light/70 mt-1">
             Mínimo: {{ formatCurrency(MIN_DEPOSIT) }} | Máximo: {{ formatCurrency(MAX_DEPOSIT) }}
           </p>
         </div>
 
         <!-- Payment Provider Selection -->
         <div>
-          <label id="payment-method-label" class="block text-sm font-medium text-gray-700 mb-3">
+          <label id="payment-method-label" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-3">
             Método de Pago
           </label>
           <div class="space-y-3" role="radiogroup" aria-labelledby="payment-method-label">
             <div
               *ngFor="let providerOption of availableProviders"
-              class="relative border rounded-lg p-4 cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-50"
-              [class.border-blue-600]="provider() === providerOption.value"
-              [class.bg-blue-50]="provider() === providerOption.value"
+              class="provider-option relative border border-pearl-gray/70 dark:border-slate-deep rounded-xl p-4 cursor-pointer transition-all hover:border-accent-petrol/40 hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80"
+              [class.border-accent-petrol]="provider() === providerOption.value"
+              [ngClass]="provider() === providerOption.value ? ['bg-accent-petrol/10', 'dark:bg-accent-petrol/20'] : []"
               (click)="updateProvider(providerOption.value)">
               <div class="flex items-start">
                 <input
@@ -100,13 +114,13 @@
                   [value]="providerOption.value"
                   [checked]="provider() === providerOption.value"
                   (change)="updateProvider(providerOption.value)"
-                  class="mt-1 mr-3 text-blue-600 focus:ring-blue-500"
+                  class="mt-1 mr-3 text-accent-petrol focus:ring-accent-petrol dark:bg-slate-deep dark:border-slate-deep"
                   [disabled]="isProcessing()" />
                 <div class="flex-1">
-                  <label [for]="'provider-' + providerOption.value" class="block font-medium text-gray-900 cursor-pointer">
+                  <label [for]="'provider-' + providerOption.value" class="block font-medium text-smoke-black dark:text-ivory-luminous cursor-pointer">
                     {{ providerOption.label }}
                   </label>
-                  <p class="text-sm text-gray-600 mt-1">{{ providerOption.description }}</p>
+                  <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mt-1">{{ providerOption.description }}</p>
                 </div>
               </div>
             </div>
@@ -115,7 +129,7 @@
 
         <!-- Description (Optional) -->
         <div>
-          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="description" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
             Descripción (Opcional)
           </label>
           <input
@@ -125,16 +139,16 @@
             [value]="description()"
             (input)="updateDescription($any($event.target).value)"
             maxlength="200"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-3 py-2 border border-pearl-gray/70 dark:border-slate-deep rounded-xl bg-white-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
             placeholder="Ej: Recarga para alquiler de auto"
             [disabled]="isProcessing()" />
         </div>
 
         <!-- Summary -->
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <div class="bg-sand-light/70 dark:bg-slate-deep/60 rounded-xl p-4 border border-pearl-gray/70 dark:border-slate-deep">
           <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-600">Recibirás en tu wallet:</span>
-            <span class="text-xl font-bold text-gray-900">{{ formatCurrency(amount()) }}</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light/70">Recibirás en tu wallet:</span>
+            <span class="text-xl font-bold text-smoke-black dark:text-ivory-luminous">{{ formatCurrency(amount()) }}</span>
           </div>
         </div>
 
@@ -144,13 +158,13 @@
             type="button"
             (click)="onClose()"
             [disabled]="isProcessing()"
-            class="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            class="flex-1 py-3 px-4 border border-pearl-gray/70 dark:border-slate-deep rounded-xl text-charcoal-medium dark:text-pearl-light font-semibold bg-sand-light/60 hover:bg-sand-light dark:bg-slate-deep/70 dark:hover:bg-slate-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/50 disabled:opacity-60 disabled:cursor-not-allowed transition-base">
             Cancelar
           </button>
           <button
             type="submit"
             [disabled]="isProcessing()"
-            class="flex-1 py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            class="flex-1 py-3 px-4 bg-accent-petrol text-ivory-soft font-semibold rounded-xl hover:bg-accent-petrol/90 transition-base disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60">
             <svg
               *ngIf="isProcessing()"
               class="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
@@ -165,12 +179,12 @@
         </div>
 
         <!-- Info Message -->
-        <div class="bg-blue-50 border border-blue-100 rounded-lg p-3" role="note">
+        <div class="bg-accent-petrol/5 dark:bg-accent-petrol/15 border border-accent-petrol/20 dark:border-accent-petrol/30 rounded-xl p-3" role="note">
           <div class="flex items-start">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="w-5 h-5 text-accent-petrol dark:text-ivory-luminous mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <p class="text-xs text-blue-700 ml-2">
+            <p class="text-xs text-accent-petrol dark:text-pearl-light/80 ml-2">
               Serás redirigido al sitio seguro de pago. Los fondos se acreditarán automáticamente una vez confirmado el pago.
             </p>
           </div>

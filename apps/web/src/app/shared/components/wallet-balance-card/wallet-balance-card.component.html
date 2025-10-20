@@ -1,14 +1,14 @@
-<div class="wallet-balance-card bg-white rounded-lg shadow-md p-6">
+<div class="wallet-balance-card bg-white-pure dark:bg-anthracite border border-pearl-gray/70 dark:border-slate-deep rounded-xl shadow-soft dark:shadow-card p-6 transition-colors duration-300">
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
-    <h2 class="text-xl font-semibold text-gray-800">Mi Wallet</h2>
+    <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous">Mi Wallet</h2>
 
     <!-- Refresh Button -->
     <button
       type="button"
       (click)="loadBalance()"
       [disabled]="isLoadingBalance()"
-      class="text-blue-600 hover:text-blue-700 disabled:text-gray-400 transition-colors"
+      class="text-accent-petrol hover:text-accent-petrol/80 disabled:text-ash-gray dark:text-pearl-light dark:hover:text-ivory-luminous dark:disabled:text-neutral-500 transition-colors"
       aria-label="Refrescar balance">
       <svg
         class="w-5 h-5"
@@ -27,22 +27,22 @@
   </div>
 
   <!-- Pending Deposits Alert -->
-  <div *ngIf="hasPendingDeposits()" class="mb-4 bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+  <div *ngIf="hasPendingDeposits()" class="mb-4 bg-amber-50 dark:bg-amber-500/15 border-l-4 border-amber-400 dark:border-amber-400/60 p-4 rounded-r-lg">
     <div class="flex items-start">
-      <svg class="w-6 h-6 text-amber-600 mt-0.5 flex-shrink-0 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-6 h-6 text-amber-600 dark:text-amber-200 mt-0.5 flex-shrink-0 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>
       <div class="ml-3 flex-1">
-        <h3 class="text-sm font-medium text-amber-800">
+        <h3 class="text-sm font-medium text-amber-800 dark:text-amber-100">
           {{ pendingDeposits() === 1 ? 'Tienes 1 depósito pendiente' : 'Tienes ' + pendingDeposits() + ' depósitos pendientes' }}
         </h3>
-        <p class="text-sm text-amber-700 mt-1">
+        <p class="text-sm text-amber-700 dark:text-amber-200 mt-1">
           Tu depósito está siendo procesado y se reflejará en tu balance en unos minutos. El balance se actualiza automáticamente cada 30 segundos.
         </p>
         <button
           type="button"
           (click)="retry()"
-          class="mt-2 text-xs font-medium text-amber-800 hover:text-amber-900 underline">
+          class="mt-2 text-xs font-medium text-amber-800 dark:text-amber-200 hover:text-amber-900 dark:hover:text-amber-100 underline">
           Actualizar ahora
         </button>
       </div>
@@ -51,20 +51,20 @@
 
   <!-- Loading State -->
   <div *ngIf="isLoadingBalance()" class="text-center py-8">
-    <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-    <p class="text-gray-600 mt-4">Cargando balance...</p>
+    <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-petrol dark:border-pearl-light"></div>
+    <p class="text-charcoal-medium dark:text-pearl-light/80 mt-4">Cargando balance...</p>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error() && !isLoadingBalance()" class="text-center py-8">
-    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+    <div class="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/40 rounded-lg p-4 mb-4">
       <div class="flex items-start">
-        <svg class="w-6 h-6 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6 text-red-600 dark:text-red-300 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <div class="ml-3 flex-1">
-          <h3 class="text-sm font-medium text-red-800">Error al cargar el balance</h3>
-          <p class="text-sm text-red-700 mt-1">{{ error()?.message }}</p>
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-200">Error al cargar el balance</h3>
+          <p class="text-sm text-red-700 dark:text-red-300 mt-1">{{ error()?.message }}</p>
         </div>
       </div>
     </div>
@@ -72,7 +72,7 @@
     <button
       type="button"
       (click)="retry()"
-      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      class="px-4 py-2 bg-accent-petrol text-ivory-soft rounded-lg hover:bg-accent-petrol/90 dark:hover:bg-accent-petrol/80 transition-colors">
       Reintentar
     </button>
   </div>
@@ -80,42 +80,61 @@
   <!-- Balance Display -->
   <div *ngIf="balance() && !isLoadingBalance()" class="space-y-4">
     <!-- Total Balance -->
-    <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6">
-      <p class="text-sm text-blue-700 font-medium mb-1">Balance Total</p>
-      <p class="text-4xl font-bold text-blue-900">
+    <div class="bg-gradient-to-br from-accent-petrol/10 via-accent-petrol/5 to-white-pure dark:from-accent-petrol/30 dark:via-accent-petrol/10 dark:to-transparent rounded-xl p-6 border border-accent-petrol/20 dark:border-accent-petrol/30">
+      <p class="text-sm text-accent-petrol font-medium dark:text-pearl-light/90 mb-1">Balance Total</p>
+      <p class="text-4xl font-bold text-accent-petrol dark:text-ivory-luminous">
         {{ formatCurrency(totalBalance()) }}
       </p>
-      <p class="text-xs text-blue-600 mt-1">{{ balance()?.currency || 'USD' }}</p>
+      <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/70 mt-1">{{ balance()?.currency || 'USD' }}</p>
     </div>
 
     <!-- Available & Locked Balance -->
     <div class="grid grid-cols-2 gap-4">
       <!-- Available Balance -->
-      <div class="bg-green-50 rounded-lg p-4 border border-green-100">
+      <div class="bg-emerald-50 dark:bg-emerald-500/15 rounded-xl p-4 border border-emerald-100 dark:border-emerald-400/40">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-xs text-green-700 font-medium">Disponible</p>
-          <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <p class="text-xs text-emerald-700 dark:text-emerald-200 font-medium">Disponible</p>
+          <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
-        <p class="text-2xl font-bold text-green-900">
+        <p class="text-2xl font-bold text-emerald-900 dark:text-emerald-100">
           {{ formatCurrency(availableBalance()) }}
         </p>
-        <p class="text-xs text-green-600 mt-1">Para usar ahora</p>
+        <p class="text-xs text-emerald-600 dark:text-emerald-200/80 mt-1">Fondos totales listos para usar</p>
+
+        <div class="mt-3 space-y-2">
+          <div class="flex items-center justify-between text-xs text-emerald-700 dark:text-emerald-200">
+            <span>Retirable</span>
+            <span class="font-semibold text-emerald-900 dark:text-emerald-100">{{ formatCurrency(withdrawableBalance()) }}</span>
+          </div>
+
+          @if (nonWithdrawableBalance() > 0) {
+            <div class="flex items-start justify-between text-xs text-amber-700 dark:text-amber-200">
+              <span class="flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 18.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z"></path>
+                </svg>
+                Crédito Autorentar
+              </span>
+              <span class="font-semibold">{{ formatCurrency(nonWithdrawableBalance()) }}</span>
+            </div>
+          }
+        </div>
       </div>
 
       <!-- Locked Balance -->
-      <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-100">
+      <div class="bg-amber-50 dark:bg-amber-500/15 rounded-xl p-4 border border-amber-100 dark:border-amber-400/40">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-xs text-yellow-700 font-medium">Bloqueado</p>
-          <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <p class="text-xs text-amber-700 dark:text-amber-200 font-medium">Bloqueado</p>
+          <svg class="w-5 h-5 text-amber-600 dark:text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
           </svg>
         </div>
-        <p class="text-2xl font-bold text-yellow-900">
+        <p class="text-2xl font-bold text-amber-900 dark:text-amber-100">
           {{ formatCurrency(lockedBalance()) }}
         </p>
-        <p class="text-xs text-yellow-600 mt-1">En reservas</p>
+        <p class="text-xs text-amber-600 dark:text-amber-200/80 mt-1">En reservas</p>
       </div>
     </div>
 
@@ -124,7 +143,7 @@
       *ngIf="showDepositButton()"
       type="button"
       (click)="onDepositClick()"
-      class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md">
+      class="w-full py-3 bg-accent-petrol text-ivory-soft font-semibold rounded-xl hover:bg-accent-petrol/90 dark:hover:bg-accent-petrol/80 transition-colors shadow-soft hover:shadow-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60">
       <div class="flex items-center justify-center">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -134,14 +153,21 @@
     </button>
 
     <!-- Info Message -->
-    <div class="bg-blue-50 border border-blue-100 rounded-lg p-3">
+    <div class="bg-accent-petrol/5 dark:bg-accent-petrol/15 border border-accent-petrol/20 dark:border-accent-petrol/30 rounded-xl p-3">
       <div class="flex items-start">
-        <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 text-accent-petrol dark:text-pearl-light mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <p class="text-xs text-blue-700 ml-2">
-          Los fondos bloqueados se liberan automáticamente al finalizar tus reservas.
-        </p>
+        <div class="ml-2 space-y-1">
+          <p class="text-xs text-accent-petrol dark:text-pearl-light/80">
+            Los fondos bloqueados se liberan automáticamente al finalizar tus reservas.
+          </p>
+          @if (nonWithdrawableBalance() > 0) {
+            <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/70">
+              Tu crédito Autorentar se mantiene disponible para nuevas reservas y no puede retirarse como efectivo.
+            </p>
+          }
+        </div>
       </div>
     </div>
   </div>

@@ -60,17 +60,15 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private currentLocations: CarMapLocation[] = []; // Para tracking de locations
   private selectedPopup: any | null = null; // Popup actual abierto
   private resizeObserver: ResizeObserver | null = null; // Observer para cambios de tamaño
+  private themeChangeListener: ((event: CustomEvent<{ dark: boolean }>) => void) | null = null;
 
   constructor() {
     // Efecto para limpiar recursos cuando el componente se destruye
-    effect(
-      () => {
-        return () => {
-          this.cleanup();
-        };
-      },
-      { allowSignalWrites: false },
-    );
+    effect(() => {
+      return () => {
+        this.cleanup();
+      };
+    });
   }
 
   ngOnChanges(changes: any): void {
@@ -179,22 +177,27 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
       console.log('=== MAPBOX INIT DEBUG ===');
       console.log('Container dimensions:', { width: containerWidth, height: containerHeight });
+      const containerStyle = getComputedStyle(containerEl);
+      const parentStyle = parentEl ? getComputedStyle(parentEl) : null;
+
       console.log('Container computed style:', {
-        width: getComputedStyle(containerEl).width,
-        height: getComputedStyle(containerEl).height,
-        position: getComputedStyle(containerEl).position,
-        display: getComputedStyle(containerEl).display
+        width: containerStyle.width,
+        height: containerStyle.height,
+        position: containerStyle.position,
+        display: containerStyle.display,
       });
       console.log('Parent dimensions:', {
         width: parentEl?.offsetWidth,
-        height: parentEl?.offsetHeight
+        height: parentEl?.offsetHeight,
       });
-      console.log('Parent computed style:', {
-        width: getComputedStyle(parentEl).width,
-        height: getComputedStyle(parentEl).height,
-        flex: getComputedStyle(parentEl).flex,
-        display: getComputedStyle(parentEl).display
-      });
+      console.log('Parent computed style:', parentStyle
+        ? {
+            width: parentStyle.width,
+            height: parentStyle.height,
+            flex: parentStyle.flex,
+            display: parentStyle.display,
+          }
+        : 'N/A');
 
       if (containerHeight === 0) {
         console.warn('[CarsMapComponent] ⚠️ Container height is 0, forcing height...');
@@ -463,8 +466,9 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         'circle-color': '#ffffff',
         'circle-radius': 22,
         'circle-stroke-width': 2,
-        'circle-stroke-color': 'rgba(44, 74, 82, 0.25)', // accent-petrol sutil
-        'circle-opacity': 1,
+        'circle-stroke-color': 'rgba(44, 74, 82, 0.3)',
+        'circle-opacity': 0.96,
+        'circle-blur': 0.15,
       },
     });
 
@@ -481,12 +485,20 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         'text-allow-overlap': true,
       },
       paint: {
-        'text-color': '#222222',
+        'text-color': '#1f2d35',
+        'text-halo-color': 'rgba(255, 255, 255, 0.92)',
+        'text-halo-width': 1.2,
+        'text-halo-blur': 0.6,
       },
     });
 
     // Agregar interactividad
     this.setupLayerInteractions();
+
+    if (isPlatformBrowser(this.platformId)) {
+      const isDark = document.documentElement.classList.contains('dark');
+      this.applyThemeToMap(isDark);
+    }
   }
 
   /**
@@ -878,6 +890,50 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
    * Calcula la distancia entre dos puntos usando la fórmula de Haversine
    * @returns Distancia en kilómetros
    */
+  private setupThemeListener(): void {
+    if (!isPlatformBrowser(this.platformId) || this.themeChangeListener) {
+      return;
+    }
+
+    this.themeChangeListener = (event: CustomEvent<{ dark: boolean }>) => {
+      this.applyThemeToMap(event.detail?.dark ?? document.documentElement.classList.contains('dark'));
+    };
+
+    window.addEventListener('autorenta:theme-change', this.themeChangeListener as EventListener);
+  }
+
+  private applyThemeToMap(isDark: boolean): void {
+    if (!this.map) {
+      return;
+    }
+
+    const markerBgColor = isDark ? '#1c2427' : '#ffffff';
+    const markerStroke = isDark ? 'rgba(134, 186, 196, 0.35)' : 'rgba(44, 74, 82, 0.3)';
+    const markerText = isDark ? '#f5f0e3' : '#1f2d35';
+    const markerHalo = isDark ? 'rgba(12, 19, 23, 0.92)' : 'rgba(255, 255, 255, 0.92)';
+
+    if (this.map.getLayer('car-markers-bg')) {
+      this.map.setPaintProperty('car-markers-bg', 'circle-color', markerBgColor);
+      this.map.setPaintProperty('car-markers-bg', 'circle-stroke-color', markerStroke);
+    }
+
+    if (this.map.getLayer('car-prices')) {
+      this.map.setPaintProperty('car-prices', 'text-color', markerText);
+      this.map.setPaintProperty('car-prices', 'text-halo-color', markerHalo);
+      this.map.setPaintProperty('car-prices', 'text-halo-width', 1.2);
+      this.map.setPaintProperty('car-prices', 'text-halo-blur', 0.6);
+    }
+
+    if (this.map.getLayer('clusters')) {
+      this.map.setPaintProperty('clusters', 'circle-color', isDark ? '#20353b' : '#2c4a52');
+      this.map.setPaintProperty('clusters', 'circle-stroke-color', isDark ? 'rgba(139, 115, 85, 0.55)' : '#8B7355');
+    }
+
+    if (this.map.getLayer('cluster-count')) {
+      this.map.setPaintProperty('cluster-count', 'text-color', isDark ? '#f6f0e6' : '#ffffff');
+    }
+  }
+
   private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Radio de la Tierra en km
     const dLat = this.deg2rad(lat2 - lat1);
@@ -939,6 +995,11 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
       this.refreshInterval = null;
+    }
+
+    if (this.themeChangeListener) {
+      window.removeEventListener('autorenta:theme-change', this.themeChangeListener as EventListener);
+      this.themeChangeListener = null;
     }
 
     // Limpiar mapa

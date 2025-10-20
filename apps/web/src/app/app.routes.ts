@@ -4,6 +4,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
+    data: { layout: 'full-bleed' },
     loadComponent: () => import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
   },
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        data: { layout: 'full-bleed' },
         loadComponent: () =>
           import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
       },
@@ -77,6 +79,10 @@ export const routes: Routes = [
     path: 'wallet',
     canMatch: [AuthGuard],
     loadComponent: () => import('./features/wallet/wallet.page').then((m) => m.WalletPage),
+  },
+  {
+    path: 'terminos',
+    loadComponent: () => import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
   },
   { path: '**', redirectTo: '' },
 ];

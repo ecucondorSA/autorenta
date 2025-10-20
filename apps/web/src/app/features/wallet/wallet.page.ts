@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild, AfterViewInit, computed } from '@angular/core';
+import { Component, signal, ViewChild, AfterViewInit, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WalletBalanceCardComponent } from '../../shared/components/wallet-balance-card/wallet-balance-card.component';
 import { DepositModalComponent } from '../../shared/components/deposit-modal/deposit-modal.component';
@@ -9,6 +9,7 @@ import { WithdrawalRequestFormComponent } from '../../shared/components/withdraw
 import { WithdrawalHistoryComponent } from '../../shared/components/withdrawal-history/withdrawal-history.component';
 import { WithdrawalService } from '../../core/services/withdrawal.service';
 import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/models/wallet.model';
+import { WalletService } from '../../core/services/wallet.service';
 
 /**
  * WalletPage
@@ -70,6 +71,50 @@ export class WalletPage implements AfterViewInit {
    * Estado de carga
    */
   loading = computed(() => this.withdrawalService.loading());
+
+  private readonly walletService = inject(WalletService);
+
+  /**
+   * Target de crédito protegido (USD 250)
+   */
+  readonly protectedCreditTarget = 250;
+
+  /**
+   * Balance disponible en el wallet
+   */
+  readonly availableBalanceSummary = this.walletService.availableBalance;
+
+  /**
+   * Fondos retirables (excluye crédito protegido)
+   */
+  readonly withdrawableBalance = this.walletService.withdrawableBalance;
+
+  /**
+   * Crédito protegido que permanece bloqueado
+   */
+  readonly protectedCreditBalance = this.walletService.nonWithdrawableBalance;
+
+  /**
+   * Estado del crédito protegido (pending | partial | active)
+   */
+  readonly protectedCreditStatus = computed<'pending' | 'partial' | 'active'>(() => {
+    const protectedAmount = this.protectedCreditBalance();
+    if (protectedAmount >= this.protectedCreditTarget) {
+      return 'active';
+    }
+    if (protectedAmount > 0) {
+      return 'partial';
+    }
+    return 'pending';
+  });
+
+  /**
+   * Porcentaje de progreso hacia el crédito objetivo
+   */
+  readonly protectedCreditProgress = computed(() => {
+    const progress = (this.protectedCreditBalance() / this.protectedCreditTarget) * 100;
+    return Math.min(progress, 100);
+  });
 
   constructor(private withdrawalService: WithdrawalService) {
     // Cargar cuentas bancarias y retiros al iniciar
@@ -212,13 +257,6 @@ export class WalletPage implements AfterViewInit {
     } catch (error) {
       console.error('Error refreshing withdrawals:', error);
     }
-  }
-
-  /**
-   * Obtiene el balance disponible para retiros
-   */
-  get availableBalance(): number {
-    return this.balanceCard?.availableBalance() || 0;
   }
 
   /**

@@ -324,6 +324,19 @@ export class ProfileService {
       throw insertError;
     }
 
+    // Disparar verificación automatizada (no bloquear si falla)
+    try {
+      await this.supabase.functions.invoke('verify-user-docs', {
+        body: {
+          document_id: data.id,
+          kind,
+          trigger: 'document-upload',
+        },
+      });
+    } catch (verificationError) {
+      console.warn('[ProfileService] No se pudo iniciar la verificación automática:', verificationError);
+    }
+
     return data as UserDocument;
   }
 

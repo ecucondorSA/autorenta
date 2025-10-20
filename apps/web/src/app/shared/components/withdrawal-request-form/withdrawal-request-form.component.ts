@@ -15,6 +15,8 @@ import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/
 })
 export class WithdrawalRequestFormComponent {
   @Input({ required: true }) availableBalance = 0;
+  @Input() withdrawableBalance = 0;
+  @Input() nonWithdrawableBalance = 0;
   @Input({ required: true }) accounts: BankAccount[] = [];
 
   @Output() submitWithdrawal = new EventEmitter<RequestWithdrawalParams>();
@@ -47,7 +49,7 @@ export class WithdrawalRequestFormComponent {
   });
 
   readonly hasEnoughBalance = computed(() => {
-    return this.totalDebit() <= this.availableBalance;
+    return this.totalDebit() <= this.withdrawableBalance;
   });
 
   readonly selectedAccount = computed(() => {
@@ -112,7 +114,7 @@ export class WithdrawalRequestFormComponent {
   setMaxAmount(): void {
     // Calcular el monto máximo que se puede retirar
     // max_amount = (available_balance / (1 + fee_percentage))
-    const maxWithdrawal = Math.floor(this.availableBalance / (1 + this.FEE_PERCENTAGE));
+    const maxWithdrawal = Math.floor(this.withdrawableBalance / (1 + this.FEE_PERCENTAGE));
     this.form.patchValue({ amount: maxWithdrawal });
   }
 

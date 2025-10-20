@@ -72,6 +72,16 @@ export class WalletService {
   readonly availableBalance = computed(() => this.balance()?.available_balance ?? 0);
 
   /**
+   * Balance que puede retirarse a cuenta bancaria
+   */
+  readonly withdrawableBalance = computed(() => this.balance()?.withdrawable_balance ?? this.availableBalance());
+
+  /**
+   * Crédito interno (no reembolsable) que debe permanecer en Autorentar
+   */
+  readonly nonWithdrawableBalance = computed(() => this.balance()?.non_withdrawable_balance ?? 0);
+
+  /**
    * Balance bloqueado (computed para fácil acceso)
    */
   readonly lockedBalance = computed(() => this.balance()?.locked_balance ?? 0);
@@ -102,6 +112,13 @@ export class WalletService {
     return this.availableBalance() >= amount;
   }
 
+  /**
+   * Indica si el usuario puede retirar un monto específico (considerando el piso no reembolsable)
+   */
+  hasSufficientWithdrawableFunds(amount: number): boolean {
+    return this.withdrawableBalance() >= amount;
+  }
+
   // ==================== PUBLIC METHODS ====================
 
   /**
@@ -124,9 +141,21 @@ export class WalletService {
       }
 
       const balance = data[0] as WalletBalance;
-      this.balance.set(balance);
+      const normalizedBalance: WalletBalance = {
+        ...balance,
+        available_balance: balance.available_balance ?? 0,
+        withdrawable_balance: balance.withdrawable_balance ?? balance.available_balance ?? 0,
+        non_withdrawable_balance:
+          balance.non_withdrawable_balance ??
+          Math.max((balance.available_balance ?? 0) - (balance.withdrawable_balance ?? balance.available_balance ?? 0), 0),
+        locked_balance: balance.locked_balance ?? 0,
+        total_balance: balance.total_balance ?? ((balance.available_balance ?? 0) + (balance.locked_balance ?? 0)),
+        currency: balance.currency ?? 'USD',
+      };
 
-      return balance;
+      this.balance.set(normalizedBalance);
+
+      return normalizedBalance;
     } catch (err) {
       const walletError = this.handleError(err, 'Error al obtener balance');
       throw walletError;
@@ -169,6 +198,7 @@ export class WalletService {
         p_amount: params.amount,
         p_provider: params.provider ?? 'mercadopago',
         p_description: params.description ?? 'Depósito a wallet',
+        p_allow_withdrawal: params.allowWithdrawal ?? false,
       });
 
       if (error) {
@@ -223,8 +253,22 @@ export class WalletService {
 
           const mpData = await mpResponse.json();
 
-          // Actualizar result con el init_point real de Mercado Pago
-          result.payment_url = mpData.init_point || mpData.sandbox_init_point;
+          const initPoint: string | undefined = mpData.init_point || mpData.sandbox_init_point;
+          const mobileDeepLink: string | undefined =
+            mpData.mobile_deep_link ||
+            mpData.point_of_interaction?.transaction_data?.ticket_url ||
+            (typeof initPoint === 'string'
+              ? initPoint.replace('https://www.mercadopago.com', 'mercadopago://')
+              : undefined);
+
+          // Actualizar result con la URL real de Mercado Pago
+          if (initPoint) {
+            result.payment_url = initPoint;
+          }
+
+          if (mobileDeepLink) {
+            result.payment_mobile_deep_link = mobileDeepLink;
+          }
         } catch (mpError) {
           // Si falla la creación de preference, registrar error pero no fallar la transacción
           console.error('Error creating MercadoPago preference:', mpError);
@@ -294,11 +338,18 @@ export class WalletService {
       }
 
       // Actualizar balance local con el nuevo balance
+      const previous = this.balance();
+      const previousNonWithdrawable = previous?.non_withdrawable_balance ?? 0;
+      const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
+      const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
+
       this.balance.set({
         available_balance: result.new_available_balance,
+        withdrawable_balance: withdrawable,
+        non_withdrawable_balance: nonWithdrawable,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
-        currency: this.balance()?.currency ?? 'USD',
+        currency: previous?.currency ?? 'USD',
       });
 
       return result;
@@ -343,11 +394,18 @@ export class WalletService {
       }
 
       // Actualizar balance local con el nuevo balance
+      const previous = this.balance();
+      const previousNonWithdrawable = previous?.non_withdrawable_balance ?? 0;
+      const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
+      const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
+
       this.balance.set({
         available_balance: result.new_available_balance,
+        withdrawable_balance: withdrawable,
+        non_withdrawable_balance: nonWithdrawable,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
-        currency: this.balance()?.currency ?? 'USD',
+        currency: previous?.currency ?? 'USD',
       });
 
       return result;
@@ -470,11 +528,18 @@ export class WalletService {
       if (!result.success) throw this.createError('LOCK_FAILED', result.message);
 
       // Actualizar balance local
+      const previous = this.balance();
+      const previousNonWithdrawable = previous?.non_withdrawable_balance ?? 0;
+      const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
+      const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
+
       this.balance.set({
         available_balance: result.new_available_balance,
+        withdrawable_balance: withdrawable,
+        non_withdrawable_balance: nonWithdrawable,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
-        currency: this.balance()?.currency ?? 'USD',
+        currency: previous?.currency ?? 'USD',
       });
 
       return result;
@@ -591,7 +656,17 @@ export class WalletService {
     }
 
     if (err instanceof Error) {
-      return this.createError('UNKNOWN_ERROR', err.message || defaultMessage, err);
+      const message = err.message || defaultMessage;
+
+      if (err instanceof TypeError && message.toLowerCase().includes('fetch')) {
+        return this.createError(
+          'NETWORK_ERROR',
+          'No pudimos conectar con el servicio de wallet. Verifica tu conexión a internet e inténtalo nuevamente.',
+          err,
+        );
+      }
+
+      return this.createError('UNKNOWN_ERROR', message, err);
     }
 
     return this.createError('UNKNOWN_ERROR', defaultMessage, err);

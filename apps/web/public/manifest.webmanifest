@@ -4,8 +4,8 @@
   "description": "Alquiler de autos premium en Uruguay. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura.",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
-  "scope": "./",
-  "start_url": "./?source=pwa",
+  "scope": "/",
+  "start_url": "/",
   "theme_color": "#2c4a52",
   "background_color": "#FAF9F6",
   "orientation": "portrait-primary",
@@ -31,7 +31,7 @@
       "url": "/cars?source=shortcut",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -44,7 +44,7 @@
       "url": "/cars/publish?source=shortcut",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -57,7 +57,7 @@
       "url": "/bookings?source=shortcut",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -70,7 +70,7 @@
       "url": "/profile?source=shortcut",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -79,52 +79,26 @@
   ],
   "icons": [
     {
-      "src": "icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icons/icon-192x192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable any"
+      "type": "image/png"
     },
     {
-      "src": "icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "icons/maskable-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/monochrome-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "monochrome"
     }
   ],
   "screenshots": [

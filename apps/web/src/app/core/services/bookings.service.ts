@@ -20,13 +20,21 @@ export class BookingsService {
     });
     if (error) throw error;
 
+    const bookingId = this.extractBookingId(data);
+    if (!bookingId) {
+      throw new Error('request_booking did not return a booking id');
+    }
+
     // Recalculate pricing breakdown after creating booking
-    const booking = data as Booking;
-    await this.recalculatePricing(booking.id);
+    await this.recalculatePricing(bookingId);
 
     // Fetch the updated booking with breakdown
-    const updated = await this.getBookingById(booking.id);
-    return updated ?? booking;
+    const updated = await this.getBookingById(bookingId);
+    if (updated) {
+      return updated;
+    }
+
+    return { ...(data as Booking), id: bookingId };
   }
 
   /**
@@ -94,13 +102,12 @@ export class BookingsService {
   /**
    * Recalculate pricing breakdown for a booking
    */
-  async recalculatePricing(bookingId: string): Promise<Booking> {
-    const { data, error } = await this.supabase.rpc('pricing_recalculate', {
+  async recalculatePricing(bookingId: string): Promise<void> {
+    const { error } = await this.supabase.rpc('pricing_recalculate', {
       p_booking_id: bookingId,
     });
 
     if (error) throw error;
-    return data as Booking;
   }
 
   /**
@@ -211,5 +218,27 @@ export class BookingsService {
   isExpired(booking: Booking): boolean {
     if (!booking.expires_at) return false;
     return new Date(booking.expires_at).getTime() < Date.now();
+  }
+
+  private extractBookingId(response: unknown): string | null {
+    if (!response || typeof response !== 'object') {
+      return null;
+    }
+
+    const maybeBooking = response as Partial<Booking>;
+    if (typeof maybeBooking.id === 'string' && maybeBooking.id.length > 0) {
+      return maybeBooking.id;
+    }
+
+    const withBookingId = response as { booking_id?: unknown; bookingId?: unknown };
+    if (typeof withBookingId.booking_id === 'string' && withBookingId.booking_id.length > 0) {
+      return withBookingId.booking_id;
+    }
+
+    if (typeof withBookingId.bookingId === 'string' && withBookingId.bookingId.length > 0) {
+      return withBookingId.bookingId;
+    }
+
+    return null;
   }
 }

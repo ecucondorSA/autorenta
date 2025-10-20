@@ -237,6 +237,8 @@ DECLARE
   v_fee NUMERIC;
   v_request_id UUID;
   v_bank_account RECORD;
+  v_non_withdrawable_floor NUMERIC := 0;
+  v_withdrawable_balance NUMERIC := 0;
 BEGIN
   -- Obtener user_id del usuario autenticado
   v_user_id := auth.uid();
@@ -265,7 +267,8 @@ BEGIN
   END IF;
 
   -- Obtener balance actual
-  SELECT available_balance INTO v_current_balance
+  SELECT available_balance, non_withdrawable_floor
+  INTO v_current_balance, v_non_withdrawable_floor
   FROM user_wallets
   WHERE user_id = v_user_id;
 
@@ -273,14 +276,20 @@ BEGIN
     v_current_balance := 0;
   END IF;
 
+  IF v_non_withdrawable_floor IS NULL THEN
+    v_non_withdrawable_floor := 0;
+  END IF;
+
+  v_withdrawable_balance := GREATEST(v_current_balance - v_non_withdrawable_floor, 0);
+
   -- Calcular comisión
   v_fee := calculate_withdrawal_fee(p_amount);
 
   -- Validar saldo suficiente (monto + comisión)
-  IF v_current_balance < (p_amount + v_fee) THEN
+  IF v_withdrawable_balance < (p_amount + v_fee) THEN
     RETURN QUERY SELECT
       FALSE,
-      'Saldo insuficiente. Disponible: $' || v_current_balance || ', Necesario: $' || (p_amount + v_fee) || ' (incluye comisión de $' || v_fee || ')',
+      'Saldo retirabile insuficiente. Disponible para retiro: $' || v_withdrawable_balance || ', Necesario: $' || (p_amount + v_fee) || ' (incluye comisión de $' || v_fee || ')',
       NULL::UUID,
       v_fee,
       (p_amount - v_fee),

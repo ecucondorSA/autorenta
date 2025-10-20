@@ -1,17 +1,17 @@
 /**
- * Actualización: Sistema de comisión del 15% para AutoRenta
+ * Actualización: Sistema de comisión del 23% para AutoRenta
  *
  * Modelo de negocio:
- * - El precio publicado por el locador YA incluye la comisión del 15%
- * - Ejemplo: Auto vale $85, locador publica a $100 ($85 + 15% = $100)
+ * - El precio publicado por el locador YA incluye la comisión del 23%
+ * - Ejemplo: Auto vale $77, locador publica a $100 ($77 + 23% = $100)
  * - Al completar el booking:
- *   - Locador recibe: $85 (85% del rental_amount)
- *   - AutoRenta recibe: $15 (15% del rental_amount)
+ *   - Locador recibe: $77 (77% del rental_amount)
+ *   - AutoRenta recibe: $23 (23% del rental_amount)
  *   - Usuario recupera: $250 de garantía (si no hay daños)
  */
 
 -- ============================================================================
--- FUNCIÓN AUXILIAR: Calcular comisión de AutoRenta (15%)
+-- FUNCIÓN AUXILIAR: Calcular comisión de AutoRenta (23%)
 -- ============================================================================
 
 CREATE OR REPLACE FUNCTION calculate_platform_fee(
@@ -19,16 +19,16 @@ CREATE OR REPLACE FUNCTION calculate_platform_fee(
 )
 RETURNS NUMERIC LANGUAGE plpgsql IMMUTABLE AS $$
 BEGIN
-  -- 15% del monto
-  RETURN ROUND(p_amount * 0.15, 2);
+  -- 23% del monto
+  RETURN ROUND(p_amount * 0.23, 2);
 END;
 $$;
 
 COMMENT ON FUNCTION calculate_platform_fee IS
-'Calcula la comisión del 15% de AutoRenta sobre un monto dado.';
+'Calcula la comisión del 23% de AutoRenta sobre un monto dado.';
 
 -- ============================================================================
--- 2. COMPLETAR BOOKING SIN DAÑOS (CON COMISIÓN DEL 15%)
+-- 2. COMPLETAR BOOKING SIN DAÑOS (CON COMISIÓN DEL 23%)
 -- ============================================================================
 
 -- Eliminar función existente primero (cambio de firma)
@@ -87,11 +87,11 @@ BEGIN
   -- CALCULAR COMISIÓN Y MONTO AL PROPIETARIO
   -- ========================================
 
-  v_platform_fee := calculate_platform_fee(v_rental_amount); -- 15%
-  v_amount_to_owner := v_rental_amount - v_platform_fee;       -- 85%
+  v_platform_fee := calculate_platform_fee(v_rental_amount); -- 23%
+  v_amount_to_owner := v_rental_amount - v_platform_fee;       -- 77%
 
   -- ========================================
-  -- PASO 1: TRANSFERIR RENTAL PAYMENT AL PROPIETARIO (85%)
+  -- PASO 1: TRANSFERIR RENTAL PAYMENT AL PROPIETARIO (77%)
   -- ========================================
 
   INSERT INTO wallet_transactions (
@@ -99,7 +99,7 @@ BEGIN
     reference_type, reference_id
   ) VALUES (
     v_owner_id, 'rental_payment_transfer', v_amount_to_owner, 'completed',
-    'Pago de alquiler recibido: $' || v_amount_to_owner || ' (85% del total) - ' || p_completion_notes,
+    'Pago de alquiler recibido: $' || v_amount_to_owner || ' (77% del total) - ' || p_completion_notes,
     'booking', p_booking_id
   ) RETURNING id INTO v_rental_payment_tx_id;
 
@@ -110,7 +110,7 @@ BEGIN
     updated_at = NOW()
   WHERE user_id = v_renter_id;
 
-  -- Acreditar al owner (agregar solo 85% a available)
+  -- Acreditar al owner (agregar solo 77% a available)
   INSERT INTO user_wallets (user_id, available_balance, locked_balance, currency)
   VALUES (v_owner_id, v_amount_to_owner, 0, 'USD')
   ON CONFLICT (user_id)
@@ -119,7 +119,7 @@ BEGIN
     updated_at = NOW();
 
   -- ========================================
-  -- PASO 1.5: TRANSFERIR COMISIÓN A AUTORENT A (15%)
+  -- PASO 1.5: TRANSFERIR COMISIÓN A AUTORENT A (23%)
   -- ========================================
 
   -- Crear wallet de la plataforma si no existe
@@ -133,7 +133,7 @@ BEGIN
     reference_type, reference_id
   ) VALUES (
     v_platform_wallet_id, 'deposit', v_platform_fee, 'completed',
-    'Comisión AutoRenta (15%): $' || v_platform_fee || ' del booking ' || p_booking_id,
+    'Comisión AutoRenta (23%): $' || v_platform_fee || ' del booking ' || p_booking_id,
     'booking', p_booking_id
   ) RETURNING id INTO v_platform_fee_tx_id;
 
@@ -180,7 +180,7 @@ BEGIN
 
   RETURN QUERY SELECT
     TRUE,
-    'Booking completado. $' || v_amount_to_owner || ' pagado al propietario (85%). $' || v_platform_fee || ' comisión AutoRenta (15%). $' || v_deposit_amount || ' devuelto al usuario.',
+    'Booking completado. $' || v_amount_to_owner || ' pagado al propietario (77%). $' || v_platform_fee || ' comisión AutoRenta (23%). $' || v_deposit_amount || ' devuelto al usuario.',
     v_rental_payment_tx_id,
     v_deposit_release_tx_id,
     v_platform_fee_tx_id,
@@ -191,10 +191,10 @@ END;
 $$;
 
 COMMENT ON FUNCTION wallet_complete_booking IS
-'Completa un booking sin daños: paga al propietario (85%), cobra comisión AutoRenta (15%) y devuelve la garantía completa al usuario.';
+'Completa un booking sin daños: paga al propietario (77%), cobra comisión AutoRenta (23%) y devuelve la garantía completa al usuario.';
 
 -- ============================================================================
--- 3. COMPLETAR BOOKING CON DAÑOS (CON COMISIÓN DEL 15%)
+-- 3. COMPLETAR BOOKING CON DAÑOS (CON COMISIÓN DEL 23%)
 -- ============================================================================
 
 -- Eliminar función existente primero (cambio de firma)
@@ -265,14 +265,14 @@ BEGIN
   END IF;
 
   -- Calcular comisión y monto al propietario
-  v_platform_fee := calculate_platform_fee(v_rental_amount); -- 15%
-  v_amount_to_owner := v_rental_amount - v_platform_fee;      -- 85%
+  v_platform_fee := calculate_platform_fee(v_rental_amount); -- 23%
+  v_amount_to_owner := v_rental_amount - v_platform_fee;      -- 77%
 
   -- Calcular depósito restante
   v_remaining_deposit := v_deposit_amount - p_damage_amount;
 
   -- ========================================
-  -- PASO 1: TRANSFERIR RENTAL PAYMENT AL PROPIETARIO (85%)
+  -- PASO 1: TRANSFERIR RENTAL PAYMENT AL PROPIETARIO (77%)
   -- ========================================
 
   INSERT INTO wallet_transactions (
@@ -280,7 +280,7 @@ BEGIN
     reference_type, reference_id
   ) VALUES (
     v_owner_id, 'rental_payment_transfer', v_amount_to_owner, 'completed',
-    'Pago de alquiler recibido: $' || v_amount_to_owner || ' (85% del total)',
+    'Pago de alquiler recibido: $' || v_amount_to_owner || ' (77% del total)',
     'booking', p_booking_id
   ) RETURNING id INTO v_rental_payment_tx_id;
 
@@ -298,7 +298,7 @@ BEGIN
     updated_at = NOW();
 
   -- ========================================
-  -- PASO 1.5: TRANSFERIR COMISIÓN A AUTORENTA (15%)
+  -- PASO 1.5: TRANSFERIR COMISIÓN A AUTORENTA (23%)
   -- ========================================
 
   INSERT INTO user_wallets (user_id, available_balance, locked_balance, currency)
@@ -310,7 +310,7 @@ BEGIN
     reference_type, reference_id
   ) VALUES (
     v_platform_wallet_id, 'deposit', v_platform_fee, 'completed',
-    'Comisión AutoRenta (15%): $' || v_platform_fee || ' del booking ' || p_booking_id,
+    'Comisión AutoRenta (23%): $' || v_platform_fee || ' del booking ' || p_booking_id,
     'booking', p_booking_id
   ) RETURNING id INTO v_platform_fee_tx_id;
 
@@ -386,7 +386,7 @@ BEGIN
 
   RETURN QUERY SELECT
     TRUE,
-    'Booking completado con daños. $' || v_amount_to_owner || ' + $' || p_damage_amount || ' pagado al propietario. $' || v_platform_fee || ' comisión AutoRenta (15%). $' || v_remaining_deposit || ' devuelto al usuario.',
+    'Booking completado con daños. $' || v_amount_to_owner || ' + $' || p_damage_amount || ' pagado al propietario. $' || v_platform_fee || ' comisión AutoRenta (23%). $' || v_remaining_deposit || ' devuelto al usuario.',
     v_rental_payment_tx_id,
     v_damage_charge_tx_id,
     v_deposit_release_tx_id,
@@ -399,4 +399,4 @@ END;
 $$;
 
 COMMENT ON FUNCTION wallet_complete_booking_with_damages IS
-'Completa un booking con daños: paga al propietario (85%), cobra comisión AutoRenta (15%), cobra daños de la garantía y devuelve el resto al usuario.';
+'Completa un booking con daños: paga al propietario (77%), cobra comisión AutoRenta (23%), cobra daños de la garantía y devuelve el resto al usuario.';

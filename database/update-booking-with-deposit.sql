@@ -168,41 +168,54 @@ BEGIN
   END IF;
 
   -- Calculate days
-  v_days := (v_booking.end_at::DATE - v_booking.start_at::DATE);
+  v_days := GREATEST(1, (v_booking.end_at::DATE - v_booking.start_at::DATE));
 
   -- Convert price to cents
-  v_nightly_rate_cents := (v_car.price_per_day * 100)::INTEGER;
+  v_nightly_rate_cents := ROUND(v_car.price_per_day * 100)::INTEGER;
 
   -- Calculate subtotal (rental only, without deposit)
   v_subtotal_cents := v_nightly_rate_cents * v_days;
 
+  v_lines := jsonb_build_array(
+    jsonb_build_object(
+      'label', 'Tarifa base',
+      'amount_cents', v_subtotal_cents
+    )
+  );
+
   -- Add insurance if NOT included in price
   IF v_car.insurance_included IS FALSE THEN
-    v_insurance_cents := (v_subtotal_cents * 0.10)::INTEGER; -- 10% insurance fee
+    v_insurance_cents := ROUND(v_subtotal_cents * 0.10)::INTEGER; -- 10% insurance fee
     v_lines := v_lines || jsonb_build_object(
       'label', 'Seguro adicional',
       'amount_cents', v_insurance_cents
     );
   END IF;
 
-  -- Add service fee (5% of subtotal)
-  v_fees_cents := (v_subtotal_cents * 0.05)::INTEGER;
+  -- Add service fee (23% of subtotal)
+  v_fees_cents := ROUND(v_subtotal_cents * 0.23)::INTEGER;
   v_lines := v_lines || jsonb_build_object(
-    'label', 'Cargo por servicio',
+    'label', 'Comisión de servicio (23%)',
     'amount_cents', v_fees_cents
   );
 
-  -- Add deposit if required (IMPORTANT: deposit is separate from rental total)
-  IF v_car.deposit_required AND v_car.deposit_amount IS NOT NULL THEN
-    v_deposit_cents := (v_car.deposit_amount * 100)::INTEGER;
+  -- Determine deposit according to payment method (credit card hold vs wallet)
+  v_deposit_cents := CASE
+    WHEN v_booking.payment_method = 'wallet' THEN 25000
+    WHEN v_booking.payment_method = 'partial_wallet' THEN 50000
+    WHEN v_booking.payment_method = 'credit_card' THEN 50000
+    ELSE COALESCE(NULLIF(v_booking.deposit_amount_cents, 0), 50000)
+  END;
+
+  IF v_deposit_cents > 0 THEN
     v_lines := v_lines || jsonb_build_object(
       'label', 'Depósito de garantía (se devuelve)',
       'amount_cents', v_deposit_cents
     );
   END IF;
 
-  -- Calculate final total
-  v_total_cents := v_subtotal_cents + v_insurance_cents + v_fees_cents + v_deposit_cents - v_discounts_cents;
+  -- Calculate final total (deposit shown separately)
+  v_total_cents := v_subtotal_cents + v_insurance_cents + v_fees_cents - v_discounts_cents;
 
   -- Build breakdown JSON
   v_breakdown := jsonb_build_object(
@@ -228,6 +241,8 @@ BEGIN
     fees_cents = v_fees_cents,
     discounts_cents = v_discounts_cents,
     total_cents = v_total_cents,
+    rental_amount_cents = v_total_cents,
+    deposit_amount_cents = v_deposit_cents,
     total_amount = (v_total_cents::NUMERIC / 100),
     breakdown = v_breakdown
   WHERE id = p_booking_id;

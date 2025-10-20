@@ -11,7 +11,7 @@ registerLocaleData(localeEsAr);
 
 bootstrapApplication(AppComponent, {
   ...appConfig,
-  providers: [...(appConfig.providers ?? []), provideAnimations(), provideServiceWorker('ngsw-worker.js', {
+  providers: [...(appConfig.providers ?? []), provideAnimations(), provideServiceWorker('service-worker.js', {
             enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000'
           })],

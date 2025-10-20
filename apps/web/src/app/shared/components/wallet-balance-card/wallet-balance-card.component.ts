@@ -73,6 +73,16 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   readonly availableBalance = this.walletService.availableBalance;
 
   /**
+   * Fondos retirables (después de aplicar el piso no reembolsable)
+   */
+  readonly withdrawableBalance = this.walletService.withdrawableBalance;
+
+  /**
+   * Crédito interno no reembolsable
+   */
+  readonly nonWithdrawableBalance = this.walletService.nonWithdrawableBalance;
+
+  /**
    * Balance bloqueado (computed del servicio)
    */
   readonly lockedBalance = this.walletService.lockedBalance;

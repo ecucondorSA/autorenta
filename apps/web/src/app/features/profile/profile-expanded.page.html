@@ -393,6 +393,136 @@
       <div *ngIf="activeTab() === 'verification'">
         <h3 class="text-lg font-semibold text-smoke-black mb-4">Verificación de Identidad</h3>
 
+        <!-- Overall verification badge -->
+        <div class="mb-6 flex flex-col gap-4">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-smoke-black">Estado general</p>
+              <p class="text-xs text-charcoal-medium">
+                {{ overallVerificationStatus() === 'VERIFICADO'
+                  ? 'Listo para alquilar y publicar en la plataforma.'
+                  : 'Completá los pasos sugeridos para habilitar tu cuenta.' }}
+              </p>
+            </div>
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold"
+              [class]="getVerificationStatusClass(overallVerificationStatus())"
+            >
+              <span>{{ getVerificationStatusIcon(overallVerificationStatus()) }}</span>
+              <span>{{ getVerificationStatusLabel(overallVerificationStatus()) }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="verificationError()" class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
+            {{ verificationError() }}
+          </div>
+
+          <div *ngIf="verificationLoading()" class="flex items-center gap-2 text-xs text-ash-gray">
+            <span class="inline-flex h-3 w-3 animate-spin rounded-full border-2 border-accent-petrol border-t-transparent"></span>
+            Evaluando documentación...
+          </div>
+        </div>
+
+        <!-- Driver workflow -->
+        <div *ngIf="showDriverFlow()" class="mb-6 rounded-lg border border-pearl-gray bg-white-pure p-4 shadow-sm">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+            <div class="flex items-center gap-2">
+              <h4 class="text-sm font-semibold text-smoke-black flex items-center gap-2">
+                <span>🚗 Conductor</span>
+                <span
+                  class="px-2 py-1 rounded-full text-xs font-semibold"
+                  [class]="getVerificationStatusClass(driverVerification()?.status ?? 'PENDIENTE')"
+                >
+                  {{ getVerificationStatusIcon(driverVerification()?.status ?? 'PENDIENTE') }}
+                  {{ getVerificationStatusLabel(driverVerification()?.status ?? 'PENDIENTE') }}
+                </span>
+              </h4>
+            </div>
+            <button
+              type="button"
+              class="text-xs font-semibold text-accent-petrol hover:underline disabled:opacity-50"
+              (click)="refreshVerificationStatuses('driver')"
+              [disabled]="verificationLoading()"
+            >
+              Re-evaluar ahora
+            </button>
+          </div>
+
+          <ul class="space-y-4">
+            <li *ngFor="let step of driverChecklist()" class="flex items-start gap-3 rounded-lg border border-pearl-gray/60 bg-sand-light/30 p-3">
+              <div class="mt-0.5 text-lg">
+                {{ getStepIcon(step) }}
+              </div>
+              <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <p class="text-sm font-semibold text-smoke-black">{{ step.label }}</p>
+                  <span
+                    class="px-2 py-1 rounded-full text-xs font-semibold"
+                    [class]="getStepStatusClass(step)"
+                  >
+                    {{ getStepStatusLabel(step) }}
+                  </span>
+                </div>
+                <p class="text-xs text-charcoal-medium mt-1" *ngIf="step.description">{{ step.description }}</p>
+                <p class="text-xs text-red-600 mt-1" *ngIf="step.missingKey">
+                  Falta: {{ getMissingDocumentLabel(step.missingKey) }}
+                </p>
+                <p class="text-xs text-charcoal-medium mt-1" *ngIf="step.notes">{{ step.notes }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Owner workflow -->
+        <div *ngIf="showOwnerFlow()" class="mb-6 rounded-lg border border-pearl-gray bg-white-pure p-4 shadow-sm">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+            <div class="flex items-center gap-2">
+              <h4 class="text-sm font-semibold text-smoke-black flex items-center gap-2">
+                <span>🚘 Locador / Dueño</span>
+                <span
+                  class="px-2 py-1 rounded-full text-xs font-semibold"
+                  [class]="getVerificationStatusClass(ownerVerification()?.status ?? 'PENDIENTE')"
+                >
+                  {{ getVerificationStatusIcon(ownerVerification()?.status ?? 'PENDIENTE') }}
+                  {{ getVerificationStatusLabel(ownerVerification()?.status ?? 'PENDIENTE') }}
+                </span>
+              </h4>
+            </div>
+            <button
+              type="button"
+              class="text-xs font-semibold text-accent-petrol hover:underline disabled:opacity-50"
+              (click)="refreshVerificationStatuses('owner')"
+              [disabled]="verificationLoading()"
+            >
+              Re-evaluar ahora
+            </button>
+          </div>
+
+          <ul class="space-y-4">
+            <li *ngFor="let step of ownerChecklist()" class="flex items-start gap-3 rounded-lg border border-pearl-gray/60 bg-sand-light/30 p-3">
+              <div class="mt-0.5 text-lg">
+                {{ getStepIcon(step) }}
+              </div>
+              <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <p class="text-sm font-semibold text-smoke-black">{{ step.label }}</p>
+                  <span
+                    class="px-2 py-1 rounded-full text-xs font-semibold"
+                    [class]="getStepStatusClass(step)"
+                  >
+                    {{ getStepStatusLabel(step) }}
+                  </span>
+                </div>
+                <p class="text-xs text-charcoal-medium mt-1" *ngIf="step.description">{{ step.description }}</p>
+                <p class="text-xs text-red-600 mt-1" *ngIf="step.missingKey">
+                  Falta: {{ getMissingDocumentLabel(step.missingKey) }}
+                </p>
+                <p class="text-xs text-charcoal-medium mt-1" *ngIf="step.notes">{{ step.notes }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
         <!-- Document Upload Section -->
         <div class="mb-6 p-4 rounded-lg bg-sand-light border border-pearl-gray">
           <h4 class="text-sm font-semibold text-smoke-black mb-3">Documentos Subidos</h4>

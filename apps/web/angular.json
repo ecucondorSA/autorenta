@@ -26,6 +26,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*.wasm",
+                "input": "node_modules/onnxruntime-web/dist",
+                "output": "/assets/onnxruntime"
               }
             ],
             "styles": [
@@ -56,6 +61,7 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ],
+              "aot": true,
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
