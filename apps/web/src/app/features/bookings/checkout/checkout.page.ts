@@ -8,11 +8,12 @@ import { Booking } from '../../../core/models';
 import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-checkout-page',
-  imports: [CommonModule, MoneyPipe, PaymentMethodSelectorComponent],
+  imports: [CommonModule, MoneyPipe, PaymentMethodSelectorComponent, TranslateModule],
   templateUrl: './checkout.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

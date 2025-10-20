@@ -35,6 +35,12 @@ import type {
 })
 export class WalletService {
   private readonly supabase = inject(SupabaseClientService);
+  private readonly storage =
+    typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+      ? window.localStorage
+      : null;
+  private readonly BALANCE_CACHE_KEY = 'autorentar:wallet:last-balance';
+  private readonly BALANCE_CACHE_META_KEY = 'autorentar:wallet:last-balance-meta';
 
   // ==================== SIGNALS ====================
 
@@ -63,6 +69,11 @@ export class WalletService {
    * Error actual (si existe)
    */
   readonly error = signal<WalletError | null>(null);
+
+  /**
+   * Indica si el balance mostrado proviene del caché local (offline)
+   */
+  readonly balanceStale = signal(false);
 
   // ==================== COMPUTED SIGNALS ====================
 
@@ -154,10 +165,19 @@ export class WalletService {
       };
 
       this.balance.set(normalizedBalance);
+      this.balanceStale.set(false);
+      this.saveBalanceToCache(normalizedBalance);
 
       return normalizedBalance;
     } catch (err) {
       const walletError = this.handleError(err, 'Error al obtener balance');
+      if (walletError.code === 'NETWORK_ERROR') {
+        const cached = this.loadBalanceFromCache();
+        if (cached) {
+          this.balance.set(cached);
+          this.balanceStale.set(true);
+        }
+      }
       throw walletError;
     } finally {
       this.setLoadingState('balance', false);
@@ -254,20 +274,11 @@ export class WalletService {
           const mpData = await mpResponse.json();
 
           const initPoint: string | undefined = mpData.init_point || mpData.sandbox_init_point;
-          const mobileDeepLink: string | undefined =
-            mpData.mobile_deep_link ||
-            mpData.point_of_interaction?.transaction_data?.ticket_url ||
-            (typeof initPoint === 'string'
-              ? initPoint.replace('https://www.mercadopago.com', 'mercadopago://')
-              : undefined);
 
           // Actualizar result con la URL real de Mercado Pago
+          // init_point funciona tanto en web como en móvil (MP redirige automáticamente a la app si está instalada)
           if (initPoint) {
             result.payment_url = initPoint;
-          }
-
-          if (mobileDeepLink) {
-            result.payment_mobile_deep_link = mobileDeepLink;
           }
         } catch (mpError) {
           // Si falla la creación de preference, registrar error pero no fallar la transacción
@@ -343,14 +354,17 @@ export class WalletService {
       const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
       const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
 
-      this.balance.set({
+      const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
         withdrawable_balance: withdrawable,
         non_withdrawable_balance: nonWithdrawable,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
         currency: previous?.currency ?? 'USD',
-      });
+      };
+      this.balance.set(updatedBalance);
+      this.balanceStale.set(false);
+      this.saveBalanceToCache(updatedBalance);
 
       return result;
     } catch (err) {
@@ -399,14 +413,17 @@ export class WalletService {
       const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
       const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
 
-      this.balance.set({
+      const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
         withdrawable_balance: withdrawable,
         non_withdrawable_balance: nonWithdrawable,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
         currency: previous?.currency ?? 'USD',
-      });
+      };
+      this.balance.set(updatedBalance);
+      this.balanceStale.set(false);
+      this.saveBalanceToCache(updatedBalance);
 
       return result;
     } catch (err) {
@@ -533,14 +550,17 @@ export class WalletService {
       const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
       const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
 
-      this.balance.set({
+      const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
         withdrawable_balance: withdrawable,
         non_withdrawable_balance: nonWithdrawable,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
         currency: previous?.currency ?? 'USD',
-      });
+      };
+      this.balance.set(updatedBalance);
+      this.balanceStale.set(false);
+      this.saveBalanceToCache(updatedBalance);
 
       return result;
     } catch (err) {
@@ -627,6 +647,22 @@ export class WalletService {
     this.balance.set(null);
     this.transactions.set([]);
     this.clearError();
+    this.balanceStale.set(false);
+    if (this.storage) {
+      try {
+        this.storage.removeItem(this.BALANCE_CACHE_KEY);
+        this.storage.removeItem(this.BALANCE_CACHE_META_KEY);
+      } catch (error) {
+        console.warn('No se pudo limpiar el caché local del wallet', error);
+      }
+    }
+  }
+
+  /**
+   * Resetea manualmente el error expuesto (p. ej. después de manejar un fallo de Mercado Pago)
+   */
+  resetError(): void {
+    this.clearError();
   }
 
   // ==================== PRIVATE METHODS ====================
@@ -691,5 +727,44 @@ export class WalletService {
    */
   private clearError(): void {
     this.error.set(null);
+  }
+
+  /**
+   * Guarda el balance en caché local para escenarios offline
+   */
+  private saveBalanceToCache(balance: WalletBalance | null): void {
+    if (!this.storage || !balance) {
+      return;
+    }
+
+    try {
+      this.storage.setItem(this.BALANCE_CACHE_KEY, JSON.stringify(balance));
+      this.storage.setItem(
+        this.BALANCE_CACHE_META_KEY,
+        JSON.stringify({ savedAt: Date.now() }),
+      );
+    } catch (error) {
+      console.warn('No se pudo guardar el balance en caché local', error);
+    }
+  }
+
+  /**
+   * Recupera el balance desde el caché local si está disponible
+   */
+  private loadBalanceFromCache(): WalletBalance | null {
+    if (!this.storage) {
+      return null;
+    }
+
+    try {
+      const raw = this.storage.getItem(this.BALANCE_CACHE_KEY);
+      if (!raw) {
+        return null;
+      }
+      return JSON.parse(raw) as WalletBalance;
+    } catch (error) {
+      console.warn('No se pudo leer el balance en caché local', error);
+      return null;
+    }
   }
 }

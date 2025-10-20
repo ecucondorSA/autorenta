@@ -20,6 +20,7 @@ import {
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { MapFiltersComponent, MapFilters } from '../../../shared/components/map-filters/map-filters.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 // Interface para auto con distancia
 export interface CarWithDistance extends Car {
@@ -47,8 +48,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     RouterLink,
     CarsMapComponent,
     MapFiltersComponent,
-    MoneyPipe,
-  ],
+    MoneyPipe, TranslateModule],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

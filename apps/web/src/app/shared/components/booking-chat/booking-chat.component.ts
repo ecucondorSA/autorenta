@@ -1,16 +1,17 @@
-import { Component, OnInit, input, signal, inject, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, input, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-booking-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './booking-chat.component.html',
 })
-export class BookingChatComponent implements OnInit {
+export class BookingChatComponent implements OnInit, OnDestroy {
   // Inputs
   readonly bookingId = input.required<string>();
   readonly recipientId = input.required<string>();
@@ -26,9 +27,12 @@ export class BookingChatComponent implements OnInit {
   readonly sending = signal(false);
   readonly error = signal<string | null>(null);
   readonly newMessage = signal('');
+  readonly notification = signal<string | null>(null);
 
   // Computed
   readonly currentUserId = signal<string | null>(null);
+
+  private notificationTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     // Update current user ID when session changes
@@ -40,6 +44,26 @@ export class BookingChatComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.loadMessages();
+
+    this.messagesService.subscribeToBooking(this.bookingId(), message => {
+      this.messages.update(prev => {
+        if (prev.some(existing => existing.id === message.id)) {
+          return prev;
+        }
+        return [...prev, message];
+      });
+
+      if (message.sender_id !== this.currentUserId()) {
+        this.showNotification(`Nuevo mensaje de ${this.recipientName()}`);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.messagesService.unsubscribe();
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
+    }
   }
 
   async loadMessages(): Promise<void> {
@@ -95,5 +119,15 @@ export class BookingChatComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
     });
+  }
+
+  private showNotification(message: string): void {
+    this.notification.set(message);
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
+    }
+    this.notificationTimeout = setTimeout(() => {
+      this.notification.set(null);
+    }, 4000);
   }
 }

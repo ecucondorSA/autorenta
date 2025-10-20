@@ -6,36 +6,37 @@ import { CarsService } from '../../../core/services/cars.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 import { BackgroundRemovalService } from '../../../core/services/background-removal.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-publish-car-v2',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   template: `
-    <div class="min-h-screen bg-gray-50 py-8 px-4">
+    <div class="min-h-screen bg-gray-50 dark:bg-graphite-dark py-8 px-4 transition-colors duration-300 text-gray-900 dark:text-pearl-light">
       <div class="max-w-3xl mx-auto">
         <!-- Header -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ editMode() ? 'Editar Auto' : 'Publicar Auto' }}</h1>
-          <p class="text-gray-600">{{ editMode() ? 'Modifica la información de tu vehículo' : 'Completa la información de tu vehículo' }}</p>
+        <div class="bg-white dark:bg-anthracite rounded-lg shadow-sm dark:shadow-card p-6 mb-6 transition-colors">
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-luminous mb-2">{{ editMode() ? 'Editar Auto' : 'Publicar Auto' }}</h1>
+          <p class="text-gray-600 dark:text-pearl-light/75">{{ editMode() ? 'Modifica la información de tu vehículo' : 'Completa la información de tu vehículo' }}</p>
 
           <!-- Edit mode indicator -->
-          <div *ngIf="editMode()" class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
-            <span class="text-amber-600 text-lg">✏️</span>
+          <div *ngIf="editMode()" class="mt-4 bg-amber-50/90 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/50 rounded-lg p-3 flex items-start gap-2">
+            <span class="text-amber-600 dark:text-amber-200 text-lg">✏️</span>
             <div class="flex-1">
-              <p class="text-sm text-amber-800 font-medium">Modo edición</p>
-              <p class="text-xs text-amber-600 mt-1">
+              <p class="text-sm text-amber-800 dark:text-amber-100 font-medium">Modo edición</p>
+              <p class="text-xs text-amber-600 dark:text-amber-100/80 mt-1">
                 Estás editando un auto existente. Los cambios se guardarán al enviar el formulario.
               </p>
             </div>
           </div>
 
           <!-- Autofill indicator -->
-          <div *ngIf="autofilledFromLast() && !editMode()" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
-            <span class="text-blue-600 text-lg">ℹ️</span>
+          <div *ngIf="autofilledFromLast() && !editMode()" class="mt-4 bg-blue-50/90 dark:bg-blue-500/15 border border-blue-200 dark:border-blue-400/40 rounded-lg p-3 flex items-start gap-2">
+            <span class="text-blue-600 dark:text-blue-200 text-lg">ℹ️</span>
             <div class="flex-1">
-              <p class="text-sm text-blue-800 font-medium">Datos autocompletados</p>
-              <p class="text-xs text-blue-600 mt-1">
+              <p class="text-sm text-blue-800 dark:text-blue-100 font-medium">Datos autocompletados</p>
+              <p class="text-xs text-blue-600 dark:text-blue-200/80 mt-1">
                 Hemos rellenado algunos campos con los datos de tu última publicación para ahorrar tiempo.
                 Solo modifica marca, modelo, año y fotos para el nuevo auto.
               </p>
@@ -47,7 +48,7 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
         <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-6">
 
           <!-- 1. Vehículo -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
+          <div class="publish-card bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <span class="text-2xl">🚗</span>
               Información del Vehículo
@@ -126,7 +127,7 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
           </div>
 
           <!-- 2. Precio -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
+          <div class="publish-card bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <span class="text-2xl">💰</span>
               Precio y Condiciones
@@ -196,7 +197,7 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
           </div>
 
           <!-- 3. Ubicación -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
+          <div class="publish-card bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <span class="text-2xl">📍</span>
               Ubicación
@@ -261,7 +262,7 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
           </div>
 
           <!-- 4. Fotos -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
+          <div class="publish-card bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <span class="text-2xl">📸</span>
               Fotos ({{ uploadedPhotos().length }}/10)
@@ -310,7 +311,7 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
           </div>
 
           <!-- Submit -->
-          <div class="bg-white rounded-lg shadow-sm p-6 sticky bottom-0">
+          <div class="publish-card bg-white rounded-lg shadow-sm p-6 sticky bottom-0">
             <div class="flex justify-between items-center">
               <button type="button" (click)="goBack()" class="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
                 Cancelar
@@ -326,11 +327,55 @@ import { Car, CarBrand, CarModel } from '../../../core/models';
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+
+      :host-context(.dark) .publish-card {
+        background-color: #1f2426;
+        border-color: rgba(255, 255, 255, 0.08);
+        color: #f7f5ee;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+      }
+
+      :host-context(.dark) label,
+      :host-context(.dark) .text-gray-600,
+      :host-context(.dark) .text-gray-700,
+      :host-context(.dark) .text-gray-900 {
+        color: #f7f5ee;
+      }
+
+      :host-context(.dark) .text-gray-500 {
+        color: rgba(247, 245, 238, 0.7);
+      }
+
+      :host-context(.dark) input,
+      :host-context(.dark) select,
+      :host-context(.dark) textarea {
+        background-color: #1a1f21;
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #f7f5ee;
+      }
+
+      :host-context(.dark) input:focus,
+      :host-context(.dark) select:focus,
+      :host-context(.dark) textarea:focus {
+        border-color: rgba(122, 162, 170, 0.65);
+        box-shadow: 0 0 0 2px rgba(44, 74, 82, 0.35);
+      }
+
+      :host-context(.dark) input::placeholder,
+      :host-context(.dark) textarea::placeholder {
+        color: rgba(247, 245, 238, 0.4);
+      }
+
+      :host-context(.dark) .bg-gray-100 {
+        background-color: rgba(36, 42, 46, 0.9);
+      }
+    `,
+  ],
 })
 export class PublishCarV2Page implements OnInit {
   private readonly fb: FormBuilder;

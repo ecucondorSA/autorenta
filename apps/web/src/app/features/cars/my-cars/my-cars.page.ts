@@ -4,11 +4,12 @@ import { RouterLink, Router } from '@angular/router';
 import { CarsService } from '../../../core/services/cars.service';
 import { Car } from '../../../core/models';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-my-cars-page',
-  imports: [CommonModule, RouterLink, CarCardComponent],
+  imports: [CommonModule, RouterLink, CarCardComponent, TranslateModule],
   templateUrl: './my-cars.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

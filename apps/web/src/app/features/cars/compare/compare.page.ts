@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { ComparisonRow } from '../../../core/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-compare-page',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './compare.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

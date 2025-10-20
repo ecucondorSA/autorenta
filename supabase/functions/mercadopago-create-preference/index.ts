@@ -186,13 +186,6 @@ serve(async (req) => {
 
     const mpData = await mpResponse.json();
 
-    const mobileDeepLink =
-      mpData.mobile_deep_link ||
-      mpData.point_of_interaction?.transaction_data?.ticket_url ||
-      (typeof mpData.init_point === 'string'
-        ? mpData.init_point.replace('https://www.mercadopago.com', 'mercadopago://')
-        : undefined);
-
     console.log('MercadoPago API Response:', JSON.stringify(mpData, null, 2));
 
     // Actualizar transacción con preference_id
@@ -204,20 +197,18 @@ serve(async (req) => {
           preference_id: mpData.id,
           init_point: mpData.init_point,
           sandbox_init_point: mpData.sandbox_init_point,
-          mobile_deep_link: mobileDeepLink,
           created_at: new Date().toISOString(),
         },
       })
       .eq('id', transaction_id);
 
-    // Retornar URL de checkout
+    // Retornar URL de checkout (init_point funciona en web y móvil)
     return new Response(
       JSON.stringify({
         success: true,
         preference_id: mpData.id,
         init_point: mpData.init_point,
         sandbox_init_point: mpData.sandbox_init_point,
-        mobile_deep_link: mobileDeepLink,
       }),
       {
         status: 200,

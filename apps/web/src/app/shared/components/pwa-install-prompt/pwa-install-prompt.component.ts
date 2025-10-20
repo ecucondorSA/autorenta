@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PwaService } from '../../../core/services/pwa.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-pwa-install-prompt',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './pwa-install-prompt.component.html',
   styleUrl: './pwa-install-prompt.component.css',
 })

@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarsService } from '../../../core/services/cars.service';
 import { UploadImageComponent } from '../../../shared/components/upload-image/upload-image.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-car-publish-page',
-  imports: [CommonModule, UploadImageComponent],
+  imports: [CommonModule, UploadImageComponent, TranslateModule],
   templateUrl: './car-publish.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

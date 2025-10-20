@@ -5,11 +5,12 @@ import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
 import { formatDateRange } from '../../../shared/utils/date.utils';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
-  imports: [CommonModule, MoneyPipe, RouterLink],
+  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule],
   templateUrl: './my-bookings.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

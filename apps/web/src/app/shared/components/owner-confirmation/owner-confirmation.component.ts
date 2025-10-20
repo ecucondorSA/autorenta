@@ -6,6 +6,7 @@ import {
   ConfirmAndReleaseResponse,
 } from '../../../core/services/booking-confirmation.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Componente de confirmación del propietario (locador)
@@ -22,7 +23,7 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-owner-confirmation',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './owner-confirmation.component.html',
   styles: [
     `

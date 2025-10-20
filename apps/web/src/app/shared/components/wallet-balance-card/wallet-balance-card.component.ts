@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WalletService } from '../../../core/services/wallet.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * WalletBalanceCardComponent
@@ -26,7 +27,7 @@ import { WalletService } from '../../../core/services/wallet.service';
 @Component({
   selector: 'app-wallet-balance-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './wallet-balance-card.component.html',
   styleUrls: ['./wallet-balance-card.component.css'],
 })
@@ -101,6 +102,11 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    * Error actual si existe
    */
   readonly error = this.walletService.error;
+
+  /**
+   * Indica si el balance mostrado proviene del caché offline
+   */
+  readonly balanceStale = this.walletService.balanceStale;
 
   /**
    * Depósitos pendientes

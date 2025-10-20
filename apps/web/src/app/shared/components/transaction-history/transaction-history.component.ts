@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WalletService } from '../../../core/services/wallet.service';
+import { TranslateModule } from '@ngx-translate/core';
 import type {
   WalletTransaction,
   WalletTransactionFilters,
@@ -29,7 +30,7 @@ import type {
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './transaction-history.component.html',
   styleUrls: ['./transaction-history.component.css'],
 })

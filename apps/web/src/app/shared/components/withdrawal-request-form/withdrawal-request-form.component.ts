@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, signal, computed, effect } from
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/wallet.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Componente para solicitar retiros
@@ -9,7 +10,7 @@ import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/
 @Component({
   selector: 'app-withdrawal-request-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './withdrawal-request-form.component.html',
   styleUrl: './withdrawal-request-form.component.css',
 })

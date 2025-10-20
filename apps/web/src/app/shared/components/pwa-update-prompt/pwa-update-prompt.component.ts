@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PwaService } from '../../../core/services/pwa.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-pwa-update-prompt',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './pwa-update-prompt.component.html',
   styleUrl: './pwa-update-prompt.component.css',
 })

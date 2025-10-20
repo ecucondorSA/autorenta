@@ -21,6 +21,7 @@ import {
   type CarMapLocation,
 } from '../../../core/services/car-locations.service';
 import { environment } from '../../../../environments/environment';
+import { TranslateModule } from '@ngx-translate/core';
 
 // Dynamic import types
 type MapboxMap = any;
@@ -30,7 +31,7 @@ type LngLatLike = [number, number];
 @Component({
   standalone: true,
   selector: 'app-cars-map',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

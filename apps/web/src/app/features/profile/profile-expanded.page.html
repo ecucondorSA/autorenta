@@ -1,17 +1,17 @@
-<div class="min-h-screen bg-ivory-soft pb-20">
+<div class="min-h-screen bg-ivory-soft dark:bg-graphite-dark pb-20 transition-colors duration-300 text-smoke-black dark:text-pearl-light">
   <!-- Header -->
-  <div class="bg-white-pure border-b border-pearl-gray/30">
+  <div class="bg-white-pure dark:bg-anthracite border-b border-pearl-gray/30 dark:border-slate-deep/50 transition-colors">
     <div class="mx-auto max-w-5xl px-6 py-8">
       <div class="flex items-start justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-smoke-black tracking-tight">Mi Perfil</h1>
-          <p class="mt-2 text-sm text-charcoal-medium">
+          <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous tracking-tight">Mi Perfil</h1>
+          <p class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light/70">
             Gestiona tu información personal y preferencias
           </p>
         </div>
         <button
           (click)="signOut()"
-          class="px-4 py-2 text-sm font-medium text-charcoal-medium hover:text-smoke-black transition-colors rounded-lg hover:bg-sand-light"
+          class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep/70"
         >
           Cerrar sesión
         </button>
@@ -22,18 +22,18 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="mx-auto max-w-5xl px-6 py-12 text-center">
     <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-accent-petrol border-r-transparent"></div>
-    <p class="mt-4 text-charcoal-medium">Cargando perfil...</p>
+    <p class="mt-4 text-charcoal-medium dark:text-pearl-light/70">Cargando perfil...</p>
   </div>
 
   <!-- Content -->
   <div *ngIf="!loading()" class="mx-auto max-w-5xl px-6 py-8">
     <!-- Messages -->
-    <div *ngIf="message()" class="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
-      <p class="text-sm font-medium text-green-800">{{ message() }}</p>
+    <div *ngIf="message()" class="mb-6 rounded-xl bg-green-50 border border-green-200 dark:bg-emerald-500/15 dark:border-emerald-400/40 p-4 transition-colors">
+      <p class="text-sm font-medium text-green-800 dark:text-emerald-100">{{ message() }}</p>
     </div>
 
-    <div *ngIf="error()" class="mb-6 rounded-xl bg-red-50 border border-red-200 p-4">
-      <p class="text-sm font-medium text-red-800">{{ error() }}</p>
+    <div *ngIf="error()" class="mb-6 rounded-xl bg-red-50 border border-red-200 dark:bg-red-500/15 dark:border-red-400/40 p-4 transition-colors">
+      <p class="text-sm font-medium text-red-800 dark:text-red-100">{{ error() }}</p>
     </div>
 
     <!-- Hero Section -->
@@ -45,7 +45,7 @@
             <img
               [src]="avatarUrl() || '/assets/avatar-placeholder.png'"
               alt="Avatar"
-              class="h-32 w-32 rounded-full object-cover bg-sand-light ring-4 ring-pearl-gray/30"
+              class="h-32 w-32 rounded-full object-cover bg-sand-light dark:bg-slate-deep/70 ring-4 ring-pearl-gray/30 dark:ring-slate-deep/60 transition-colors"
             />
             <!-- Hover Overlay -->
             <label
@@ -96,30 +96,30 @@
         <div class="flex flex-col justify-center gap-6">
           <!-- Ratings -->
           <div class="space-y-3">
-            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-petrol/10 to-accent-petrol/5 border border-accent-petrol/20">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-petrol/10 to-accent-petrol/5 dark:from-accent-petrol/12 dark:to-transparent border border-accent-petrol/20 dark:border-accent-petrol/35 transition-colors">
               <div>
-                <p class="text-xs font-medium text-charcoal-medium mb-1">Como Locador</p>
+                <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">Como Locador</p>
                 <div class="flex items-baseline gap-2">
-                  <span class="text-3xl font-bold text-smoke-black">0.0</span>
-                  <span class="text-accent-petrol">★</span>
+                  <span class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">0.0</span>
+                  <span class="text-accent-petrol dark:text-accent-petrol/80">★</span>
                 </div>
-                <p class="text-xs text-charcoal-medium mt-1">0 reviews</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mt-1">0 reviews</p>
               </div>
-              <svg class="h-12 w-12 text-accent-petrol/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-12 w-12 text-accent-petrol/20 dark:text-accent-petrol/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
             </div>
 
-            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-warm/10 to-accent-warm/5 border border-accent-warm/20">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-warm/10 to-accent-warm/5 dark:from-accent-warm/12 dark:to-transparent border border-accent-warm/20 dark:border-accent-warm/35 transition-colors">
               <div>
-                <p class="text-xs font-medium text-charcoal-medium mb-1">Como Locatario</p>
+                <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">Como Locatario</p>
                 <div class="flex items-baseline gap-2">
-                  <span class="text-3xl font-bold text-smoke-black">0.0</span>
-                  <span class="text-accent-warm">★</span>
+                  <span class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">0.0</span>
+                  <span class="text-accent-warm dark:text-accent-warm/80">★</span>
                 </div>
-                <p class="text-xs text-charcoal-medium mt-1">0 reviews</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mt-1">0 reviews</p>
               </div>
-              <svg class="h-12 w-12 text-accent-warm/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-12 w-12 text-accent-warm/20 dark:text-accent-warm/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
@@ -129,43 +129,43 @@
         <!-- Right: Wallet & Verification -->
         <div class="flex flex-col justify-center gap-4">
           <!-- Wallet -->
-          <a routerLink="/wallet" class="block p-6 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 transition-all hover:shadow-lg group">
+          <a routerLink="/wallet" class="block p-6 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-500/12 dark:to-transparent border-2 border-green-200 dark:border-emerald-400/50 hover:border-green-400 dark:hover:border-emerald-300 transition-all hover:shadow-lg group">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-semibold text-green-700 uppercase tracking-wide">Mi Wallet</span>
+              <span class="text-xs font-semibold text-green-700 dark:text-emerald-100 uppercase tracking-wide">Mi Wallet</span>
               <svg class="h-5 w-5 text-green-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            <p class="text-3xl font-bold text-green-900">$0.00</p>
-            <p class="text-xs text-green-600 mt-1">ARS</p>
+            <p class="text-3xl font-bold text-green-900 dark:text-emerald-100">$0.00</p>
+            <p class="text-xs text-green-600 dark:text-emerald-200 mt-1">ARS</p>
           </a>
 
           <!-- Verification Status -->
-          <div class="p-4 rounded-xl bg-sand-light border border-pearl-gray">
-            <h4 class="text-xs font-semibold text-smoke-black mb-3 uppercase tracking-wide">Estado de Verificación</h4>
-            <div class="space-y-2 text-xs">
+          <div class="p-4 rounded-xl bg-sand-light dark:bg-slate-deep/70 border border-pearl-gray dark:border-slate-deep transition-colors">
+            <h4 class="text-xs font-semibold text-smoke-black dark:text-ivory-luminous mb-3 uppercase tracking-wide">Estado de Verificación</h4>
+            <div class="space-y-2 text-xs text-charcoal-medium dark:text-pearl-light/70">
               <div class="flex items-center justify-between">
-                <span class="text-charcoal-medium">Email</span>
-                <span [class]="profile()?.is_email_verified ? 'text-green-600 font-semibold' : 'text-ash-gray'">
+                <span>Email</span>
+                <span [class]="profile()?.is_email_verified ? 'text-green-600 dark:text-emerald-200 font-semibold' : 'text-ash-gray dark:text-pearl-light/50'">
                   {{ profile()?.is_email_verified ? '✓ Verificado' : '✗ Sin verificar' }}
                 </span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-charcoal-medium">Teléfono</span>
-                <span [class]="profile()?.is_phone_verified ? 'text-green-600 font-semibold' : 'text-ash-gray'">
+                <span>Teléfono</span>
+                <span [class]="profile()?.is_phone_verified ? 'text-green-600 dark:text-emerald-200 font-semibold' : 'text-ash-gray dark:text-pearl-light/50'">
                   {{ profile()?.is_phone_verified ? '✓ Verificado' : '✗ Sin verificar' }}
                 </span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-charcoal-medium">Licencia</span>
-                <span [class]="profile()?.is_driver_verified ? 'text-green-600 font-semibold' : 'text-ash-gray'">
+                <span>Licencia</span>
+                <span [class]="profile()?.is_driver_verified ? 'text-green-600 dark:text-emerald-200 font-semibold' : 'text-ash-gray dark:text-pearl-light/50'">
                   {{ profile()?.is_driver_verified ? '✓ Verificado' : '✗ Sin verificar' }}
                 </span>
               </div>
             </div>
 
             <!-- KYC Badge -->
-            <div class="mt-3 pt-3 border-t border-pearl-gray">
+            <div class="mt-3 pt-3 border-t border-pearl-gray dark:border-slate-deep/70">
               <span [class]="'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ' + getKycStatusClass(kycStatus())">
                 <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -188,10 +188,10 @@
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-smoke-black group-hover:text-accent-petrol transition-colors">Publicar Auto</h3>
-            <p class="text-xs text-charcoal-medium mt-0.5">Añade un nuevo vehículo</p>
+            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-accent-petrol transition-colors">Publicar Auto</h3>
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Añade un nuevo vehículo</p>
           </div>
-          <svg class="h-5 w-5 text-charcoal-medium group-hover:text-accent-petrol group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-accent-petrol group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -205,10 +205,10 @@
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-smoke-black group-hover:text-accent-warm transition-colors">Mis Autos</h3>
-            <p class="text-xs text-charcoal-medium mt-0.5">Gestiona tus publicaciones</p>
+            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-accent-warm transition-colors">Mis Autos</h3>
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Gestiona tus publicaciones</p>
           </div>
-          <svg class="h-5 w-5 text-charcoal-medium group-hover:text-accent-warm group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-accent-warm group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -222,10 +222,10 @@
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-smoke-black group-hover:text-purple-600 transition-colors">Mis Reservas</h3>
-            <p class="text-xs text-charcoal-medium mt-0.5">Ve tus alquileres</p>
+            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-purple-600 transition-colors">Mis Reservas</h3>
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Ve tus alquileres</p>
           </div>
-          <svg class="h-5 w-5 text-charcoal-medium group-hover:text-purple-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -233,7 +233,7 @@
     </div>
 
     <!-- Tabs Navigation -->
-    <div class="mb-6 border-b border-pearl-gray">
+    <div class="mb-6 border-b border-pearl-gray dark:border-slate-deep/70 transition-colors">
       <nav class="-mb-px flex gap-6 overflow-x-auto" aria-label="Tabs">
         <button
           *ngFor="let tab of tabs"
@@ -242,7 +242,7 @@
           [class.border-accent-petrol]="activeTab() === tab.id"
           [class.text-charcoal-medium]="activeTab() !== tab.id"
           [class.border-transparent]="activeTab() !== tab.id"
-          class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black"
+          class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"
         >
           {{ tab.label }}
         </button>
@@ -253,10 +253,10 @@
     <div class="card-premium p-6">
       <!-- General Tab -->
       <div *ngIf="activeTab() === 'general'">
-        <h3 class="text-lg font-semibold text-smoke-black mb-4">Información General</h3>
+        <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Información General</h3>
         <form [formGroup]="generalForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">Nombre completo</label>
+            <label class="block text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-2">Nombre completo</label>
             <input
               type="text"
               formControlName="full_name"

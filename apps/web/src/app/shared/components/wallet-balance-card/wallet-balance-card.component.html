@@ -65,6 +65,9 @@
         <div class="ml-3 flex-1">
           <h3 class="text-sm font-medium text-red-800 dark:text-red-200">Error al cargar el balance</h3>
           <p class="text-sm text-red-700 dark:text-red-300 mt-1">{{ error()?.message }}</p>
+          <p *ngIf="balance() && balanceStale()" class="text-xs text-red-700/80 dark:text-red-200/80 mt-2">
+            Mostramos tu último balance guardado mientras vuelves a tener conexión.
+          </p>
         </div>
       </div>
     </div>
@@ -165,6 +168,11 @@
           @if (nonWithdrawableBalance() > 0) {
             <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/70">
               Tu crédito Autorentar se mantiene disponible para nuevas reservas y no puede retirarse como efectivo.
+            </p>
+          }
+          @if (balanceStale()) {
+            <p class="text-xs text-accent-petrol/70 dark:text-pearl-light/60">
+              Estás viendo datos guardados offline. Reintenta cuando tengas conexión para obtener el balance actualizado.
             </p>
           }
         </div>

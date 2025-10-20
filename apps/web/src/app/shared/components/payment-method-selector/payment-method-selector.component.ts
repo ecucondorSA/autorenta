@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WalletService } from '../../../core/services/wallet.service';
 import type { BookingPaymentMethod } from '../../../core/models/wallet.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * PaymentMethodSelectorComponent
@@ -31,7 +32,7 @@ import type { BookingPaymentMethod } from '../../../core/models/wallet.model';
 @Component({
   selector: 'app-payment-method-selector',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './payment-method-selector.component.html',
   styleUrls: ['./payment-method-selector.component.css'],
 })

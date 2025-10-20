@@ -15,6 +15,7 @@ import { AuthService } from '@core/services/auth.service';
 import { GeocodingService } from '@core/services/geocoding.service';
 import { UploadImageComponent } from '@shared/components/upload-image/upload-image.component';
 import type { FuelType, Transmission, CarStatus } from '@core/types/database.types';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface CarBrand {
   id: string;
@@ -30,7 +31,7 @@ interface CarModel {
 @Component({
   selector: 'autorenta-publish-car-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UploadImageComponent],
+  imports: [CommonModule, ReactiveFormsModule, UploadImageComponent, TranslateModule],
   templateUrl: './publish-car.page.html',
   styleUrl: './publish-car.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

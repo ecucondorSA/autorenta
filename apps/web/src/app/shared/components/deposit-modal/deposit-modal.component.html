@@ -43,7 +43,7 @@
           <button
             type="button"
             class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent-petrol text-ivory-soft font-semibold rounded-full shadow-soft hover:bg-accent-petrol/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 transition-base"
-            (click)="openMercadoPago(paymentUrl()!, paymentMobileDeepLink())">
+            (click)="openMercadoPago(paymentUrl()!)">
             Ir a Mercado Pago
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -124,11 +124,46 @@
                 </div>
               </div>
             </div>
+        </div>
+      </div>
+      @if (fallbackSuggestion() === 'bank_transfer') {
+        <div class="rounded-xl border border-amber-300 dark:border-amber-400 bg-amber-50/80 dark:bg-amber-500/15 p-4 space-y-2">
+          <div class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-amber-600 dark:text-amber-200 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div class="space-y-1 text-sm text-amber-900 dark:text-amber-100/90">
+              <p><strong>Seleccionamos Transferencia Bancaria</strong> porque Mercado Pago devolvió un error de configuración.</p>
+              <p>Seguí los pasos que figuran abajo y envíanos el comprobante; acreditamos los fondos manualmente en minutos hábiles.</p>
+            </div>
           </div>
         </div>
+      }
+      @if (provider() === 'bank_transfer') {
+        <div class="rounded-xl border border-accent-petrol/40 dark:border-accent-petrol/50 bg-accent-petrol/5 dark:bg-accent-petrol/15 p-4 space-y-3">
+          <h3 class="text-sm font-semibold text-accent-petrol dark:text-ivory-luminous flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Instrucciones para transferir
+          </h3>
+          <div class="grid gap-2 text-xs text-charcoal-medium dark:text-pearl-light/80">
+            <p>1. Transferí el monto exacto a:</p>
+            <ul class="ml-4 list-disc space-y-1">
+              <li>Titular: {{ bankTransferDetails.accountName }}</li>
+              <li>Banco: {{ bankTransferDetails.bank }}</li>
+              <li>Alias: {{ bankTransferDetails.alias }}</li>
+              <li>CBU: {{ bankTransferDetails.cbu }}</li>
+              <li>Concepto: {{ bankTransferDetails.concept }}</li>
+            </ul>
+            <p>2. Enviá el comprobante a <a class="text-accent-petrol dark:text-ivory-luminous font-semibold" href="mailto:{{ bankTransferDetails.email }}">{{ bankTransferDetails.email }}</a> indicando el correo de tu cuenta.</p>
+            <p>3. Acreditamos el crédito protegido en tu wallet apenas validemos el comprobante (horario hábil: Lun-Vie 9 a 18 hs).</p>
+          </div>
+        </div>
+      }
 
-        <!-- Description (Optional) -->
-        <div>
+      <!-- Description (Optional) -->
+      <div>
           <label for="description" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
             Descripción (Opcional)
           </label>

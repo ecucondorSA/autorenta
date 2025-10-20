@@ -5,6 +5,7 @@ import { WalletService } from '../../../core/services/wallet.service';
 import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
 import { FocusTrapDirective } from '../../directives/focus-trap.directive';
 import { EscapeKeyDirective } from '../../directives/escape-key.directive';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * DepositModalComponent
@@ -30,12 +31,24 @@ import { EscapeKeyDirective } from '../../directives/escape-key.directive';
 @Component({
   selector: 'app-deposit-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, FocusTrapDirective, EscapeKeyDirective],
+  imports: [CommonModule, FormsModule, FocusTrapDirective, EscapeKeyDirective, TranslateModule],
   templateUrl: './deposit-modal.component.html',
   styleUrls: ['./deposit-modal.component.css'],
 })
 export class DepositModalComponent {
   private readonly walletService = inject(WalletService);
+
+  /**
+   * Datos para transferencia bancaria manual
+   */
+  readonly bankTransferDetails = {
+    accountName: 'Autorentar Operaciones SRL',
+    bank: 'Banco Galicia',
+    alias: 'AUTORENTAR.PAGOS',
+    cbu: '0170018740000000123456',
+    concept: 'Crédito Autorentar',
+    email: 'pagos@autorentar.com',
+  };
 
   // ==================== OUTPUTS ====================
 
@@ -83,7 +96,11 @@ export class DepositModalComponent {
    * URL de pago generada
    */
   paymentUrl = signal<string | null>(null);
-  paymentMobileDeepLink = signal<string | null>(null);
+
+  /**
+   * Sugiere un cambio de método luego de un error
+   */
+  readonly fallbackSuggestion = signal<'none' | 'bank_transfer'>('none');
 
   // ==================== VALIDATION ====================
 
@@ -171,6 +188,8 @@ export class DepositModalComponent {
 
     this.isProcessing.set(true);
     this.formError.set(null);
+    this.walletService.resetError();
+    this.fallbackSuggestion.set('none');
 
     try {
       const result = await this.walletService.initiateDeposit({
@@ -180,27 +199,34 @@ export class DepositModalComponent {
       });
 
       if (result.success && result.payment_url) {
+        this.walletService.resetError();
         this.paymentUrl.set(result.payment_url);
-        this.paymentMobileDeepLink.set(result.payment_mobile_deep_link ?? null);
+        this.fallbackSuggestion.set('none');
 
         // Emitir evento de éxito
         this.depositSuccess.emit(result.payment_url);
 
         // Intentar abrir Mercado Pago inmediatamente
-        this.openMercadoPago(result.payment_url, result.payment_mobile_deep_link ?? null);
+        this.openMercadoPago(result.payment_url);
 
         // Como fallback, mantener la redirección automática en la misma pestaña
         setTimeout(() => {
-          this.openMercadoPago(result.payment_url, result.payment_mobile_deep_link ?? null, true);
+          this.openMercadoPago(result.payment_url, true);
         }, 2000);
       } else {
         this.formError.set(result.message || 'Error al iniciar el depósito');
       }
     } catch (error) {
       console.error('Error initiating deposit:', error);
-      this.formError.set(
-        error instanceof Error ? error.message : 'Error inesperado al iniciar el depósito',
-      );
+      const walletError = this.extractWalletError(error);
+      this.formError.set(this.getFriendlyErrorMessage(walletError, error));
+
+      if (walletError?.code === 'MERCADOPAGO_ERROR') {
+        this.provider.set('bank_transfer');
+        this.fallbackSuggestion.set('bank_transfer');
+      }
+
+      this.walletService.resetError();
     } finally {
       this.isProcessing.set(false);
     }
@@ -220,6 +246,9 @@ export class DepositModalComponent {
    */
   updateProvider(value: string): void {
     this.provider.set(value as WalletPaymentProvider);
+    if (value !== 'bank_transfer') {
+      this.fallbackSuggestion.set('none');
+    }
   }
 
   /**
@@ -229,27 +258,23 @@ export class DepositModalComponent {
     this.description.set(value);
   }
 
-  openMercadoPago(paymentUrl: string, mobileDeepLink: string | null, forceSameTab = false): void {
+  openMercadoPago(paymentUrl: string, forceSameTab = false): void {
     if (!paymentUrl) {
       return;
     }
 
-    const isMobile =
-      typeof navigator !== 'undefined' &&
-      /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
-
-    const targetUrl = isMobile && mobileDeepLink ? mobileDeepLink : paymentUrl;
-
+    // MercadoPago redirige automáticamente a la app móvil si está instalada
+    // No necesitamos lógica especial para móviles
     if (forceSameTab) {
-      window.location.assign(targetUrl);
+      window.location.assign(paymentUrl);
       return;
     }
 
-    const opened = window.open(targetUrl, '_blank', 'noopener,noreferrer');
+    const opened = window.open(paymentUrl, '_blank', 'noopener,noreferrer');
 
     if (!opened) {
       // Si el navegador bloquea la ventana emergente, redirigir en la misma pestaña
-      window.location.assign(targetUrl);
+      window.location.assign(paymentUrl);
     }
   }
 
@@ -263,5 +288,51 @@ export class DepositModalComponent {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  }
+
+  private getFriendlyErrorMessage(
+    walletError: { code: string; message: string; details?: unknown } | null,
+    rawError: unknown,
+  ): string {
+    if (walletError?.code === 'MERCADOPAGO_ERROR') {
+      if (typeof walletError.details === 'object' && walletError.details) {
+        const status = (walletError.details as any).status;
+        if (status === 503) {
+          return 'Mercado Pago está experimentando una interrupción momentánea (503). Reintentá en unos minutos o elegí otro método de pago, como transferencia bancaria.';
+        }
+      }
+      if (walletError?.message?.toLowerCase().includes('collector configuration')) {
+        return 'Mercado Pago no pudo iniciar el cobro por una configuración del cobrador. Probá nuevamente más tarde o seleccioná transferencia bancaria como alternativa.';
+      }
+      return 'No pudimos iniciar el pago con Mercado Pago. Reintentá en unos minutos o elegí otro método.';
+    }
+
+    if (walletError?.code === 'NETWORK_ERROR') {
+      return 'No pudimos conectarnos al servicio de pagos. Verificá tu conexión y probá otra vez.';
+    }
+
+    if (walletError?.message) {
+      return walletError.message;
+    }
+
+    if (rawError instanceof Error && rawError.message) {
+      return rawError.message;
+    }
+
+    return 'Ocurrió un error inesperado al iniciar el depósito. Intenta nuevamente.';
+  }
+
+  private extractWalletError(error: unknown): { code: string; message: string; details?: unknown } | null {
+    if (typeof error === 'object' && error !== null) {
+      const maybeWalletError = error as { code?: unknown; message?: unknown; details?: unknown };
+      if (typeof maybeWalletError.code === 'string' && typeof maybeWalletError.message === 'string') {
+        return {
+          code: maybeWalletError.code,
+          message: maybeWalletError.message,
+          details: maybeWalletError.details,
+        };
+      }
+    }
+    return null;
   }
 }

@@ -41,10 +41,19 @@
   touch-action: pan-x pan-y;
 }
 
+:host-context(.dark) .map-wrapper {
+  background: #1f2426;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 @media (min-width: 1024px) {
   .map-wrapper {
     border-bottom: none;
     border-right: 1px solid rgba(217, 214, 208, 0.6);
+  }
+
+  :host-context(.dark) .map-wrapper {
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
 

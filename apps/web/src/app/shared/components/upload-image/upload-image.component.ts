@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface UploadFilePreview {
   name: string;
@@ -10,7 +11,7 @@ export interface UploadFilePreview {
 @Component({
   selector: 'app-upload-image',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './upload-image.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

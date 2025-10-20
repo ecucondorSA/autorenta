@@ -5,6 +5,7 @@ import {
   ConfirmAndReleaseResponse,
 } from '../../../core/services/booking-confirmation.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Componente de confirmación del locatario (renter)
@@ -21,7 +22,7 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-renter-confirmation',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './renter-confirmation.component.html',
   styles: [
     `

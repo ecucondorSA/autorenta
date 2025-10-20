@@ -1,4 +1,9 @@
 <div class="card-premium rounded-2xl border border-pearl-gray bg-white-pure shadow-soft">
+  <!-- Notification toast -->
+  <div *ngIf="notification()" class="m-4 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-400/50 p-3 text-sm text-emerald-800 dark:text-emerald-100 shadow-sm">
+    {{ notification() }}
+  </div>
+
   <!-- Header del chat -->
   <div class="border-b border-pearl-gray p-4 sm:p-6">
     <div class="flex items-center gap-3">
@@ -28,7 +33,7 @@
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <p class="text-sm text-ash-gray">Cargando mensajes...</p>
+        <p class="text-sm text-ash-gray dark:text-pearl-light/60">Cargando mensajes...</p>
       </div>
     </div>
 
@@ -37,8 +42,8 @@
       <svg class="mb-4 h-16 w-16 text-accent-petrol/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
       </svg>
-      <p class="text-sm font-medium text-charcoal-medium">No hay mensajes aún</p>
-      <p class="mt-1 text-xs text-ash-gray">Enviá el primer mensaje para comenzar la conversación</p>
+      <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">No hay mensajes aún</p>
+      <p class="mt-1 text-xs text-ash-gray dark:text-pearl-light/60">Enviá el primer mensaje para comenzar la conversación</p>
     </div>
 
     <!-- Messages list -->
@@ -53,13 +58,16 @@
           [class.bg-accent-petrol]="isOwnMessage(message)"
           [class.text-white-pure]="isOwnMessage(message)"
           [class.bg-sand-light]="!isOwnMessage(message)"
+          [class.dark:bg-slate-deep/70]="!isOwnMessage(message)"
           [class.text-smoke-black]="!isOwnMessage(message)"
+          [class.dark:text-pearl-light]="!isOwnMessage(message)"
           class="max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 shadow-sm"
         >
           <p class="whitespace-pre-line break-words text-sm leading-relaxed">{{ message.body }}</p>
           <p
             [class.text-white-pure/70]="isOwnMessage(message)"
             [class.text-ash-gray]="!isOwnMessage(message)"
+            [class.dark:text-pearl-light/60]="!isOwnMessage(message)"
             class="mt-2 text-xs"
           >
             {{ formatTime(message.created_at) }}

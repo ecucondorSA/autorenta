@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { VerificationService } from '../../../core/services/verification.service';
 import type { VerificationStatus } from '../../../core/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-verification-badge',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
     <ng-container *ngIf="hasData()">
       <div

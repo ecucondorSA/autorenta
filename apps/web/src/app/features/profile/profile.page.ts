@@ -18,11 +18,12 @@ import { UserProfile, Role, UserStats, Review } from '../../core/models';
 import { UserBadgesComponent } from '../../shared/components/user-badges/user-badges.component';
 import { ReviewCardComponent } from '../../shared/components/review-card/review-card.component';
 import { PwaCapabilitiesComponent } from '../../shared/components/pwa-capabilities/pwa-capabilities.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, UserBadgesComponent, ReviewCardComponent, PwaCapabilitiesComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, UserBadgesComponent, ReviewCardComponent, PwaCapabilitiesComponent, TranslateModule],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

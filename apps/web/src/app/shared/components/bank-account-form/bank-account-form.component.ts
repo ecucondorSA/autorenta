@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, signal, computed } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import type { BankAccountType, AddBankAccountParams } from '../../../core/models/wallet.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Componente para agregar cuentas bancarias
@@ -10,7 +11,7 @@ import type { BankAccountType, AddBankAccountParams } from '../../../core/models
 @Component({
   selector: 'app-bank-account-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './bank-account-form.component.html',
   styleUrl: './bank-account-form.component.css',
 })

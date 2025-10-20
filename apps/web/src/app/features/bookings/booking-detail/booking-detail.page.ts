@@ -12,6 +12,7 @@ import { OwnerConfirmationComponent } from '../../../shared/components/owner-con
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-booking-detail',
@@ -23,8 +24,7 @@ import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confir
     ReviewCardComponent,
     OwnerConfirmationComponent,
     RenterConfirmationComponent,
-    BookingChatComponent,
-  ],
+    BookingChatComponent, TranslateModule],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
 })

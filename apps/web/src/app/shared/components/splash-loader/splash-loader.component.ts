@@ -1,10 +1,11 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-splash-loader',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   styles: [`
     :host { display: contents; }
 

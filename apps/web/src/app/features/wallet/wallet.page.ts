@@ -10,6 +10,7 @@ import { WithdrawalHistoryComponent } from '../../shared/components/withdrawal-h
 import { WithdrawalService } from '../../core/services/withdrawal.service';
 import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/models/wallet.model';
 import { WalletService } from '../../core/services/wallet.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * WalletPage
@@ -41,8 +42,7 @@ import { WalletService } from '../../core/services/wallet.service';
     BankAccountFormComponent,
     BankAccountsListComponent,
     WithdrawalRequestFormComponent,
-    WithdrawalHistoryComponent,
-  ],
+    WithdrawalHistoryComponent, TranslateModule],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
 })

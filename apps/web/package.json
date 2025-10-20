@@ -47,6 +47,8 @@
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
     "@angular/service-worker": "^20.3.5",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
     "@supabase/supabase-js": "^2.75.0",
     "@types/mapbox-gl": "^3.4.1",
     "@types/mercadopago": "^1.5.11",

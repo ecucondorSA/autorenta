@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet, Router
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from './core/services/auth.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { PwaService } from './core/services/pwa.service';
@@ -11,6 +12,7 @@ import { SplashLoaderComponent } from './shared/components/splash-loader/splash-
 import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
+import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-root',
@@ -21,11 +23,13 @@ import { VerificationBadgeComponent } from './shared/components/verification-bad
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
+    TranslateModule,
     PendingReviewsBannerComponent,
     SplashLoaderComponent,
     PwaInstallPromptComponent,
     PwaUpdatePromptComponent,
     VerificationBadgeComponent,
+    LanguageSelectorComponent,
   ],
   templateUrl: './app.component.html',
   styles: [

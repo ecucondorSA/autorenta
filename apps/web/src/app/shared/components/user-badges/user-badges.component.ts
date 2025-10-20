@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import type { UserStats } from '../../../core/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface BadgeDisplay {
   type: string;
@@ -13,7 +14,7 @@ interface BadgeDisplay {
 @Component({
   selector: 'app-user-badges',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './user-badges.component.html',
   styleUrls: ['./user-badges.component.css'],
 })

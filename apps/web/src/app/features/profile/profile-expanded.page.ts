@@ -22,6 +22,7 @@ import {
   VerificationStatus,
 } from '../../core/models';
 import { VerificationService } from '../../core/services/verification.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 type TabId =
   | 'general'
@@ -52,7 +53,7 @@ interface VerificationChecklistItem {
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

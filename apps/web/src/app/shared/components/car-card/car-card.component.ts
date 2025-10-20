@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { Car } from '../../../core/models';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { getCarPlaceholderImage } from '../../utils/car-placeholder-images';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-car-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, MoneyPipe],
+  imports: [CommonModule, RouterLink, MoneyPipe, TranslateModule],
   templateUrl: './car-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

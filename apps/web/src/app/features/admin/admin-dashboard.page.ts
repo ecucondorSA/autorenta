@@ -7,6 +7,7 @@ import { Car } from '../../core/models';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { DatabaseExportService } from '../../core/services/database-export.service';
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface DatabaseStats {
   totalProfiles: number;
@@ -21,7 +22,7 @@ interface DatabaseStats {
 @Component({
   standalone: true,
   selector: 'app-admin-dashboard-page',
-  imports: [CommonModule, CarCardComponent],
+  imports: [CommonModule, CarCardComponent, TranslateModule],
   templateUrl: './admin-dashboard.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

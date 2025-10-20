@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import type { BankAccount } from '../../../core/models/wallet.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Componente para mostrar lista de cuentas bancarias
@@ -8,7 +9,7 @@ import type { BankAccount } from '../../../core/models/wallet.model';
 @Component({
   selector: 'app-bank-accounts-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './bank-accounts-list.component.html',
   styleUrl: './bank-accounts-list.component.css',
 })

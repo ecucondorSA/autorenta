@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Componente de advertencia sobre la garantía no reembolsable
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-deposit-warning',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
     <div class="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-6 mb-6 rounded-r-lg">
       <div class="flex items-start">

@@ -1,11 +1,12 @@
 import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PwaService } from '../../../core/services/pwa.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-share-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './share-menu.component.html',
   styleUrl: './share-menu.component.css',
 })

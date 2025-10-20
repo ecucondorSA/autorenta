@@ -138,6 +138,22 @@
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
+  .dark .text-charcoal-medium {
+    color: rgba(247, 245, 238, 0.72) !important;
+  }
+
+  .dark .text-ash-gray {
+    color: rgba(247, 245, 238, 0.58) !important;
+  }
+
+  .dark .text-smoke-black {
+    color: #f7f5ee !important;
+  }
+
+  .dark .bg-sand-light {
+    background-color: rgba(48, 55, 59, 0.65) !important;
+  }
+
   /* ─────────────────────────────────────────────────────────────
      Sistema Tipográfico - Escala Modular 1.250 (Major Third)
      Base: 16px
@@ -353,8 +369,18 @@
     transition-timing-function: var(--easing-standard);
   }
 
+  .dark .card-premium {
+    @apply bg-anthracite border-slate-deep shadow-card;
+    color: #f7f5ee;
+  }
+
   .card-premium:hover {
     @apply shadow-elevated border-accent-warm/50;
+    transform: translateY(-4px);
+  }
+
+  .dark .card-premium:hover {
+    @apply shadow-elevated border-accent-petrol/40;
     transform: translateY(-4px);
   }
 
@@ -379,8 +405,17 @@
     transition-duration: var(--duration-fast);
   }
 
+  .dark .input-premium {
+    @apply bg-slate-deep border-slate-deep/80 text-pearl-light placeholder:text-pearl-light/40;
+    @apply focus:border-accent-petrol/70 focus:ring-accent-petrol/20;
+  }
+
   .input-premium:hover {
     @apply border-charcoal-medium/30;
+  }
+
+  .dark .input-premium:hover {
+    @apply border-accent-petrol/60;
   }
 
   /* ─────────────────────────────────────────────────────────────
