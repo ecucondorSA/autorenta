@@ -44,8 +44,12 @@ export class ProfileService {
     } = await this.supabase.auth.getUser();
 
     if (!user) {
-      throw new Error('Usuario no autenticado');
+      const errMsg = 'Usuario no autenticado - getUser() retornó null';
+      console.error('[ProfileService] Error:', errMsg);
+      throw new Error(errMsg);
     }
+
+    console.log('[ProfileService] Fetching profile for user:', user.id);
 
     const { data, error } = await this.supabase
       .from('profiles')
@@ -54,13 +58,34 @@ export class ProfileService {
       .single();
 
     if (error) {
+      console.error('[ProfileService] Query error:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
+
       if (error.code === 'PGRST116') {
         // Profile doesn't exist yet, create one
+        console.log('[ProfileService] Profile not found (PGRST116), creating new profile...');
         return this.createProfile(user.id, user.email ?? '');
       }
-      throw error;
+
+      // Check if it's a RLS policy violation (code 42501)
+      if (error.code === '42501') {
+        const rrlsError = `RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. ` +
+          `Error: ${error.message}`;
+        console.error('[ProfileService]', rrlsError);
+        throw new Error(rrlsError);
+      }
+
+      // Re-throw with more context
+      const detailedError = `Error cargando perfil (${error.code}): ${error.message}`;
+      console.error('[ProfileService]', detailedError);
+      throw new Error(detailedError);
     }
 
+    console.log('[ProfileService] Profile loaded successfully:', { id: data?.id, full_name: data?.full_name });
     return data as UserProfile;
   }
 
@@ -191,6 +216,8 @@ export class ProfileService {
       country: 'AR', // País por defecto Argentina
     };
 
+    console.log('[ProfileService] Creating new profile:', { userId, email, profile: newProfile });
+
     const { data, error } = await this.supabase
       .from('profiles')
       .insert(newProfile)
@@ -198,9 +225,13 @@ export class ProfileService {
       .single();
 
     if (error) {
-      throw error;
+      const detailedError = `Error creando perfil (${error.code}): ${error.message}. ` +
+        `Details: ${error.details}. Hint: ${error.hint}`;
+      console.error('[ProfileService]', detailedError);
+      throw new Error(detailedError);
     }
 
+    console.log('[ProfileService] Profile created successfully:', { id: data?.id, full_name: data?.full_name });
     return data as UserProfile;
   }
 

@@ -130,10 +130,12 @@ export class ProfilePage implements OnInit {
     this.error.set(null);
 
     try {
+      console.log('[ProfilePage] Loading profile...');
       const profile = await this.profileService.getCurrentProfile();
       this.profile.set(profile);
 
       if (profile) {
+        console.log('[ProfilePage] Profile loaded, patching form values...');
         this.form.patchValue({
           full_name: profile.full_name,
           role: profile.role,
@@ -151,8 +153,24 @@ export class ProfilePage implements OnInit {
         });
       }
     } catch (err) {
-      console.error('Error loading profile:', err);
-      const errorMessage = err instanceof Error ? err.message : 'No pudimos cargar tu perfil.';
+      console.error('[ProfilePage] Error loading profile:', err);
+
+      // Get detailed error message
+      let errorMessage = 'No pudimos cargar tu perfil.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'object' && err !== null) {
+        errorMessage = JSON.stringify(err);
+      }
+
+      // Provide more context based on error type
+      if (errorMessage.includes('Usuario no autenticado')) {
+        errorMessage = 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.';
+      } else if (errorMessage.includes('RLS Policy')) {
+        errorMessage = 'Error de permisos: ' + errorMessage;
+      }
+
+      console.error('[ProfilePage] Final error message:', errorMessage);
       this.error.set(errorMessage);
     } finally {
       this.loading.set(false);

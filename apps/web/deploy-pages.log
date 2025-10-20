@@ -1,4 +1,8 @@
 
+> autorenta-web@0.1.0 deploy:pages
+> npm run build && CLOUDFLARE_ACCOUNT_ID=5b448192fe4b369642b68ad8f53a7603 npx wrangler pages deploy dist/web/browser --project-name=autorenta-web
+
+
 > autorenta-web@0.1.0 prebuild
 > node scripts/generate-env.js
 
@@ -55,7 +59,7 @@ chunk-CVQDPJAE.js     | register-page          |  10.29 kB |                 2.7
 chunk-L4T3VIHL.js     | compare-page           |  10.26 kB |                 2.62 kB
 ...and 13 more lazy chunks files. Use "--verbose" to show all the files.
 
-Application bundle generation complete. [41.097 seconds] - 2025-10-20T11:57:13.383Z
+Application bundle generation complete. [41.753 seconds] - 2025-10-20T11:58:10.745Z
 
 [33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mbundle initial exceeded maximum budget. Budget 500.00 kB was not met by 273.72 kB with a total of 773.72 kB.[0m
 
@@ -72,3 +76,22 @@ Output location: /home/edu/autorenta/apps/web/dist/web
 > autorenta-web@0.1.0 postbuild
 > echo '/* /index.html 200' > dist/web/browser/_redirects
 
+
+ ⛅️ wrangler 4.43.0
+───────────────────
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mWarning: Your working directory is a git repo and has uncommitted changes[0m
+
+  To silence this warning, pass in --commit-dirty=true
+
+
+Uploading... (41/83)
+Uploading... (55/83)
+Uploading... (69/83)
+Uploading... (83/83)
+✨ Success! Uploaded 42 files (41 already uploaded) (3.58 sec)
+
+✨ Uploading _headers
+✨ Uploading _redirects
+🌎 Deploying...
+✨ Deployment complete! Take a peek over at https://90c5e601.autorenta-web.pages.dev
+✨ Deployment alias URL: https://lab-wallet-debug-aggressive.autorenta-web.pages.dev
