@@ -245,33 +245,58 @@ export class WalletService {
             throw this.createError('NO_AUTH_TOKEN', 'Usuario no autenticado');
           }
 
-          const supabaseUrl = (this.supabase.getClient() as any).supabaseUrl;
-          const mpResponse = await fetch(
-            `${supabaseUrl}/functions/v1/mercadopago-create-preference`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-              },
-              body: JSON.stringify({
-                transaction_id: result.transaction_id,
-                amount: params.amount,
-                description: params.description || 'Depósito a Wallet - AutoRenta',
-              }),
-            }
-          );
+          // 🔍 DEBUG: Logging agresivo
+          console.log('🔍 [WALLET DEBUG] Iniciando creación de preferencia MercadoPago');
+          console.log('🔍 [WALLET DEBUG] Transaction ID:', result.transaction_id);
+          console.log('🔍 [WALLET DEBUG] Amount:', params.amount);
+          console.log('🔍 [WALLET DEBUG] Has accessToken:', !!accessToken);
+
+          // HARDCODED URL - FIX para "Failed to fetch"
+          const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+          console.log('🔍 [WALLET DEBUG] Supabase URL:', supabaseUrl);
+
+          const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-create-preference`;
+          console.log('🔍 [WALLET DEBUG] Edge Function URL:', edgeFunctionUrl);
+
+          const requestBody = {
+            transaction_id: result.transaction_id,
+            amount: params.amount,
+            description: params.description || 'Depósito a Wallet - AutoRenta',
+          };
+          console.log('🔍 [WALLET DEBUG] Request body:', requestBody);
+
+          const mpResponse = await fetch(edgeFunctionUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(requestBody),
+          });
+
+          console.log('🔍 [WALLET DEBUG] Response status:', mpResponse.status);
+          console.log('🔍 [WALLET DEBUG] Response ok:', mpResponse.ok);
 
           if (!mpResponse.ok) {
-            const errorData = await mpResponse.json().catch(() => ({}));
+            const errorText = await mpResponse.text();
+            console.error('🔍 [WALLET DEBUG] Error response:', errorText);
+
+            let errorData: any = {};
+            try {
+              errorData = JSON.parse(errorText);
+            } catch {
+              errorData = { rawError: errorText };
+            }
+
             throw this.createError(
               'MERCADOPAGO_ERROR',
-              `Error al crear preferencia de pago: ${errorData.error || mpResponse.statusText}`,
+              `Error al crear preferencia de pago (${mpResponse.status}): ${errorData.error || errorText}`,
               errorData
             );
           }
 
           const mpData = await mpResponse.json();
+          console.log('🔍 [WALLET DEBUG] MercadoPago response:', mpData);
 
           const initPoint: string | undefined = mpData.init_point || mpData.sandbox_init_point;
 
