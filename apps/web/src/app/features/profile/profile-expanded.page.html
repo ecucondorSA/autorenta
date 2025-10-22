@@ -583,39 +583,24 @@
               </div>
             </div>
 
-            <!-- Camera Capture Button (Mobile-first) -->
-            <label class="block mb-2 cursor-pointer">
+            <!-- Unified Upload Button - Works on mobile and desktop -->
+            <label class="block cursor-pointer">
               <input
+                #fileInput
                 type="file"
-                accept="image/*"
-                capture="environment"
+                [accept]="kind.value === 'vehicle_registration' ? 'image/*,application/pdf' : 'image/*'"
+                [attr.capture]="isMobileDevice() ? 'environment' : null"
                 class="hidden"
                 (change)="onDocumentUpload($event, kind.value)"
                 [disabled]="uploadingDocument()"
               />
-              <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-accent-petrol hover:bg-accent-petrol/90 text-white-pure font-semibold text-sm transition-colors">
+              <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-accent-petrol hover:bg-accent-petrol/90 text-white-pure font-semibold text-sm transition-colors shadow-md hover:shadow-lg">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>Tomar foto con cámara</span>
-              </div>
-            </label>
-
-            <!-- File Upload Button (Desktop fallback) -->
-            <label class="block cursor-pointer">
-              <input
-                type="file"
-                accept="image/*,application/pdf"
-                class="hidden"
-                (change)="onDocumentUpload($event, kind.value)"
-                [disabled]="uploadingDocument()"
-              />
-              <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-dashed border-pearl-gray dark:border-slate-deep hover:border-accent-petrol dark:hover:border-accent-petrol hover:bg-accent-petrol/5 dark:hover:bg-accent-petrol/10 text-charcoal-medium dark:text-pearl-light/70 font-medium text-sm transition-all">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
-                <span>Subir desde galería/archivos</span>
+                <span class="hidden sm:inline">{{ isMobileDevice() ? 'Tomar foto o seleccionar archivo' : 'Seleccionar archivo o tomar foto' }}</span>
+                <span class="sm:hidden">Tomar foto</span>
               </div>
             </label>
 
