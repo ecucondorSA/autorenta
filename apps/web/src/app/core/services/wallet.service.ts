@@ -1,5 +1,4 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { SupabaseClientService } from './supabase-client.service';
 import type {
   WalletBalance,
   WalletTransaction,
@@ -18,6 +17,7 @@ import type {
   LockRentalAndDepositParams,
   CompleteBookingWithDamagesParams,
 } from '../models/wallet.model';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * WalletService
@@ -35,6 +35,9 @@ import type {
 })
 export class WalletService {
   private readonly supabase = inject(SupabaseClientService);
+  // IMPORTANTE: NO cachear balance en localStorage
+  // El balance debe SIEMPRE obtenerse fresco de la base de datos
+  // para evitar mostrar datos obsoletos que causen errores de "saldo insuficiente"
 
   // ==================== SIGNALS ====================
 
@@ -67,17 +70,39 @@ export class WalletService {
   // ==================== COMPUTED SIGNALS ====================
 
   /**
-   * Balance disponible (computed para fácil acceso)
+   * Balance disponible (Total - Locked)
    */
   readonly availableBalance = computed(() => this.balance()?.available_balance ?? 0);
 
   /**
-   * Balance bloqueado (computed para fácil acceso)
+   * Fondos transferibles dentro de la app o a otros usuarios (Available - Protected)
+   */
+  readonly transferableBalance = computed(() => this.balance()?.transferable_balance ?? 0);
+
+  /**
+   * Fondos retirables a cuenta bancaria externa (Transferable - Hold)
+   */
+  readonly withdrawableBalance = computed(() => this.balance()?.withdrawable_balance ?? 0);
+
+  /**
+   * Crédito Autorentar (meta USD 250, no retirable, no transferible)
+   * Solo para cubrir garantías de reservas
+   */
+  readonly protectedCreditBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
+
+  /**
+   * @deprecated Use protectedCreditBalance instead
+   * Backward compatibility
+   */
+  readonly nonWithdrawableBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
+
+  /**
+   * Balance bloqueado en reservas activas
    */
   readonly lockedBalance = computed(() => this.balance()?.locked_balance ?? 0);
 
   /**
-   * Balance total (computed para fácil acceso)
+   * Balance total (Available + Locked)
    */
   readonly totalBalance = computed(() => this.balance()?.total_balance ?? 0);
 
@@ -102,6 +127,13 @@ export class WalletService {
     return this.availableBalance() >= amount;
   }
 
+  /**
+   * Indica si el usuario puede retirar un monto específico (considerando el piso no reembolsable)
+   */
+  hasSufficientWithdrawableFunds(amount: number): boolean {
+    return this.withdrawableBalance() >= amount;
+  }
+
   // ==================== PUBLIC METHODS ====================
 
   /**
@@ -124,9 +156,22 @@ export class WalletService {
       }
 
       const balance = data[0] as WalletBalance;
-      this.balance.set(balance);
+      const normalizedBalance: WalletBalance = {
+        ...balance,
+        available_balance: balance.available_balance ?? 0,
+        transferable_balance: balance.transferable_balance ?? 0,
+        withdrawable_balance: balance.withdrawable_balance ?? 0,
+        protected_credit_balance: balance.protected_credit_balance ?? 0,
+        locked_balance: balance.locked_balance ?? 0,
+        total_balance: balance.total_balance ?? 0,
+        currency: balance.currency ?? 'USD',
+        // Backward compatibility
+        non_withdrawable_balance: balance.protected_credit_balance ?? 0,
+      };
 
-      return balance;
+      this.balance.set(normalizedBalance);
+
+      return normalizedBalance;
     } catch (err) {
       const walletError = this.handleError(err, 'Error al obtener balance');
       throw walletError;
@@ -169,6 +214,7 @@ export class WalletService {
         p_amount: params.amount,
         p_provider: params.provider ?? 'mercadopago',
         p_description: params.description ?? 'Depósito a wallet',
+        p_allow_withdrawal: params.allowWithdrawal ?? false,
       });
 
       if (error) {
@@ -195,36 +241,66 @@ export class WalletService {
             throw this.createError('NO_AUTH_TOKEN', 'Usuario no autenticado');
           }
 
-          const supabaseUrl = (this.supabase.getClient() as any).supabaseUrl;
-          const mpResponse = await fetch(
-            `${supabaseUrl}/functions/v1/mercadopago-create-preference`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-              },
-              body: JSON.stringify({
-                transaction_id: result.transaction_id,
-                amount: params.amount,
-                description: params.description || 'Depósito a Wallet - AutoRenta',
-              }),
-            }
-          );
+          // 🔍 DEBUG: Logging agresivo
+          console.log('🔍 [WALLET DEBUG] Iniciando creación de preferencia MercadoPago');
+          console.log('🔍 [WALLET DEBUG] Transaction ID:', result.transaction_id);
+          console.log('🔍 [WALLET DEBUG] Amount:', params.amount);
+          console.log('🔍 [WALLET DEBUG] Has accessToken:', !!accessToken);
+
+          // HARDCODED URL - FIX para "Failed to fetch"
+          const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+          console.log('🔍 [WALLET DEBUG] Supabase URL:', supabaseUrl);
+
+          const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-create-preference`;
+          console.log('🔍 [WALLET DEBUG] Edge Function URL:', edgeFunctionUrl);
+
+          const requestBody = {
+            transaction_id: result.transaction_id,
+            amount: params.amount,
+            description: params.description || 'Depósito a Wallet - AutoRenta',
+          };
+          console.log('🔍 [WALLET DEBUG] Request body:', requestBody);
+
+          const mpResponse = await fetch(edgeFunctionUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(requestBody),
+          });
+
+          console.log('🔍 [WALLET DEBUG] Response status:', mpResponse.status);
+          console.log('🔍 [WALLET DEBUG] Response ok:', mpResponse.ok);
 
           if (!mpResponse.ok) {
-            const errorData = await mpResponse.json().catch(() => ({}));
+            const errorText = await mpResponse.text();
+            console.error('🔍 [WALLET DEBUG] Error response:', errorText);
+
+            let errorData: any = {};
+            try {
+              errorData = JSON.parse(errorText);
+            } catch {
+              errorData = { rawError: errorText };
+            }
+
             throw this.createError(
               'MERCADOPAGO_ERROR',
-              `Error al crear preferencia de pago: ${errorData.error || mpResponse.statusText}`,
+              `Error al crear preferencia de pago (${mpResponse.status}): ${errorData.error || errorText}`,
               errorData
             );
           }
 
           const mpData = await mpResponse.json();
+          console.log('🔍 [WALLET DEBUG] MercadoPago response:', mpData);
 
-          // Actualizar result con el init_point real de Mercado Pago
-          result.payment_url = mpData.init_point || mpData.sandbox_init_point;
+          const initPoint: string | undefined = mpData.init_point || mpData.sandbox_init_point;
+
+          // Actualizar result con la URL real de Mercado Pago
+          // init_point funciona tanto en web como en móvil (MP redirige automáticamente a la app si está instalada)
+          if (initPoint) {
+            result.payment_url = initPoint;
+          }
         } catch (mpError) {
           // Si falla la creación de preference, registrar error pero no fallar la transacción
           console.error('Error creating MercadoPago preference:', mpError);
@@ -244,6 +320,77 @@ export class WalletService {
       throw walletError;
     } finally {
       this.setLoadingState('initiatingDeposit', false);
+    }
+  }
+
+  /**
+   * Fuerza el polling de pagos pendientes de MercadoPago
+   * Llama a la Edge Function mercadopago-poll-pending-payments
+   *
+   * Esta función permite al usuario forzar manualmente la verificación
+   * de pagos pendientes en MercadoPago, útil cuando:
+   * - El usuario acaba de completar un pago
+   * - El webhook falló
+   * - El auto-polling no ha ejecutado aún
+   *
+   * @returns Promise con resultado del polling
+   */
+  async forcePollPendingPayments(): Promise<{ success: boolean; confirmed: number; message: string }> {
+    try {
+      console.log('🔄 Forzando polling de pagos pendientes...');
+
+      // Obtener access token
+      const { data: { session } } = await this.supabase.getClient().auth.getSession();
+      const accessToken = session?.access_token;
+
+      if (!accessToken) {
+        throw this.createError('AUTH_ERROR', 'No hay sesión activa');
+      }
+
+      // HARDCODED URL - Misma lógica que initiateDeposit
+      const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-poll-pending-payments`;
+
+      console.log('📡 Llamando polling function:', edgeFunctionUrl);
+
+      const response = await fetch(edgeFunctionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Error en polling:', errorText);
+        throw this.createError(
+          'POLLING_ERROR',
+          `Error al ejecutar polling (${response.status})`,
+          { rawError: errorText }
+        );
+      }
+
+      const result = await response.json();
+      console.log('✅ Resultado del polling:', result);
+
+      // Refrescar balance después del polling
+      await this.getBalance().catch(() => {
+        console.warn('⚠️ No se pudo refrescar balance después del polling');
+      });
+
+      return {
+        success: result.success || false,
+        confirmed: result.summary?.confirmed || 0,
+        message: result.summary?.confirmed > 0
+          ? `Se confirmaron ${result.summary.confirmed} depósito(s)`
+          : 'No se encontraron pagos aprobados para confirmar',
+      };
+    } catch (err) {
+      console.error('❌ Error al forzar polling:', err);
+      const walletError = this.handleError(err, 'Error al verificar pagos pendientes');
+      throw walletError;
     }
   }
 
@@ -294,12 +441,23 @@ export class WalletService {
       }
 
       // Actualizar balance local con el nuevo balance
-      this.balance.set({
+      const previous = this.balance();
+      const protectedCredit = previous?.protected_credit_balance ?? 0;
+      const transferable = Math.max(result.new_available_balance - protectedCredit, 0);
+      const withdrawable = transferable; // Por ahora, sin hold adicional
+
+      const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
+        transferable_balance: transferable,
+        withdrawable_balance: withdrawable,
+        protected_credit_balance: protectedCredit,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
-        currency: this.balance()?.currency ?? 'USD',
-      });
+        currency: previous?.currency ?? 'USD',
+        // Backward compatibility
+        non_withdrawable_balance: protectedCredit,
+      };
+      this.balance.set(updatedBalance);
 
       return result;
     } catch (err) {
@@ -343,12 +501,23 @@ export class WalletService {
       }
 
       // Actualizar balance local con el nuevo balance
-      this.balance.set({
+      const previous = this.balance();
+      const protectedCredit = previous?.protected_credit_balance ?? 0;
+      const transferable = Math.max(result.new_available_balance - protectedCredit, 0);
+      const withdrawable = transferable; // Por ahora, sin hold adicional
+
+      const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
+        transferable_balance: transferable,
+        withdrawable_balance: withdrawable,
+        protected_credit_balance: protectedCredit,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
-        currency: this.balance()?.currency ?? 'USD',
-      });
+        currency: previous?.currency ?? 'USD',
+        // Backward compatibility
+        non_withdrawable_balance: protectedCredit,
+      };
+      this.balance.set(updatedBalance);
 
       return result;
     } catch (err) {
@@ -362,23 +531,27 @@ export class WalletService {
   /**
    * Obtiene el historial de transacciones del usuario
    * Con filtros opcionales
+   *
+   * ACTUALIZADO (2025-10-22): Usa vista consolidada v_wallet_history que combina
+   * wallet_transactions (legacy) y wallet_ledger (nuevo sistema de doble partida)
    */
   async getTransactions(filters?: WalletTransactionFilters): Promise<WalletTransaction[]> {
     this.setLoadingState('transactions', true);
     this.clearError();
 
     try {
+      // Usar vista consolidada en vez de wallet_transactions directamente
       let query = this.supabase.getClient()
-        .from('wallet_transactions')
+        .from('v_wallet_history')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('transaction_date', { ascending: false });
 
-      // Aplicar filtros
+      // Aplicar filtros (adaptados a columnas de vista consolidada)
       if (filters?.type) {
         if (Array.isArray(filters.type)) {
-          query = query.in('type', filters.type);
+          query = query.in('transaction_type', filters.type);
         } else {
-          query = query.eq('type', filters.type);
+          query = query.eq('transaction_type', filters.type);
         }
       }
 
@@ -391,19 +564,21 @@ export class WalletService {
       }
 
       if (filters?.reference_type) {
-        query = query.eq('reference_type', filters.reference_type);
+        // reference_type está en metadata, filtrar con JSONB operator
+        query = query.contains('metadata', { reference_type: filters.reference_type });
       }
 
       if (filters?.reference_id) {
-        query = query.eq('reference_id', filters.reference_id);
+        // Filtrar por booking_id (más común) o por metadata.reference_id
+        query = query.or(`booking_id.eq.${filters.reference_id},metadata.cs.{"reference_id":"${filters.reference_id}"}`);
       }
 
       if (filters?.from_date) {
-        query = query.gte('created_at', filters.from_date.toISOString());
+        query = query.gte('transaction_date', filters.from_date.toISOString());
       }
 
       if (filters?.to_date) {
-        query = query.lte('created_at', filters.to_date.toISOString());
+        query = query.lte('transaction_date', filters.to_date.toISOString());
       }
 
       const { data, error } = await query;
@@ -412,7 +587,27 @@ export class WalletService {
         throw this.createError('TRANSACTIONS_FETCH_ERROR', error.message, error);
       }
 
-      const transactions = (data ?? []) as WalletTransaction[];
+      // Transformar datos de vista consolidada a formato WalletTransaction
+      const transactions = (data ?? []).map((row: any) => ({
+        id: row.id,
+        user_id: row.user_id,
+        type: row.transaction_type,
+        status: row.status,
+        amount: row.amount_cents / 100, // Convertir centavos a decimales
+        currency: row.currency,
+        is_withdrawable: row.metadata?.is_withdrawable ?? false,
+        reference_type: row.metadata?.reference_type,
+        reference_id: row.metadata?.reference_id || row.booking_id,
+        provider: row.metadata?.provider,
+        provider_transaction_id: row.metadata?.provider_transaction_id,
+        provider_metadata: row.metadata?.provider_metadata,
+        description: row.metadata?.description,
+        admin_notes: row.metadata?.admin_notes,
+        created_at: row.transaction_date,
+        updated_at: row.transaction_date,
+        completed_at: row.legacy_completed_at || (row.status === 'completed' ? row.transaction_date : undefined),
+      })) as WalletTransaction[];
+
       this.transactions.set(transactions);
 
       return transactions;
@@ -470,12 +665,23 @@ export class WalletService {
       if (!result.success) throw this.createError('LOCK_FAILED', result.message);
 
       // Actualizar balance local
-      this.balance.set({
+      const previous = this.balance();
+      const protectedCredit = previous?.protected_credit_balance ?? 0;
+      const transferable = Math.max(result.new_available_balance - protectedCredit, 0);
+      const withdrawable = transferable; // Por ahora, sin hold adicional
+
+      const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
+        transferable_balance: transferable,
+        withdrawable_balance: withdrawable,
+        protected_credit_balance: protectedCredit,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
-        currency: this.balance()?.currency ?? 'USD',
-      });
+        currency: previous?.currency ?? 'USD',
+        // Backward compatibility
+        non_withdrawable_balance: protectedCredit,
+      };
+      this.balance.set(updatedBalance);
 
       return result;
     } catch (err) {
@@ -564,6 +770,13 @@ export class WalletService {
     this.clearError();
   }
 
+  /**
+   * Resetea manualmente el error expuesto (p. ej. después de manejar un fallo de Mercado Pago)
+   */
+  resetError(): void {
+    this.clearError();
+  }
+
   // ==================== PRIVATE METHODS ====================
 
   /**
@@ -591,7 +804,17 @@ export class WalletService {
     }
 
     if (err instanceof Error) {
-      return this.createError('UNKNOWN_ERROR', err.message || defaultMessage, err);
+      const message = err.message || defaultMessage;
+
+      if (err instanceof TypeError && message.toLowerCase().includes('fetch')) {
+        return this.createError(
+          'NETWORK_ERROR',
+          'No pudimos conectar con el servicio de wallet. Verifica tu conexión a internet e inténtalo nuevamente.',
+          err,
+        );
+      }
+
+      return this.createError('UNKNOWN_ERROR', message, err);
     }
 
     return this.createError('UNKNOWN_ERROR', defaultMessage, err);
@@ -617,4 +840,5 @@ export class WalletService {
   private clearError(): void {
     this.error.set(null);
   }
+
 }

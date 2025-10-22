@@ -1,0 +1,47 @@
+# Security Headers para AutoRenta (Cloudflare Pages)
+# Generado: 2025-10-18
+
+# Headers globales para todas las rutas
+/*
+  # Prevenir clickjacking
+  X-Frame-Options: DENY
+
+  # Prevenir MIME-type sniffing
+  X-Content-Type-Options: nosniff
+
+  # Habilitar XSS protection en navegadores antiguos
+  X-XSS-Protection: 1; mode=block
+
+  # Política de referrer
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Permissions Policy (reemplaza Feature-Policy)
+  Permissions-Policy: geolocation=(self), microphone=(), camera=(), payment=(self), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
+
+  # Content Security Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://obxvffplochgeiclibng.supabase.co https://api.mapbox.com https://events.mapbox.com wss://*.supabase.co; frame-src 'self' https://www.mercadopago.com https://www.mercadopago.com.ar; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://www.mercadopago.com;
+
+# Cache headers para assets estáticos
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache para imágenes
+/assets/images/*
+  Cache-Control: public, max-age=604800
+
+# No cache para HTML
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Cache para JavaScript y CSS con hash en nombre
+/main-*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/styles-*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/chunk-*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/polyfills-*.js
+  Cache-Control: public, max-age=31536000, immutable

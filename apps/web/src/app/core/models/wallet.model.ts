@@ -7,10 +7,17 @@
  * Balance de wallet del usuario
  */
 export interface WalletBalance {
-  available_balance: number; // Fondos disponibles para usar
+  available_balance: number; // Fondos disponibles (Total - Locked)
+  transferable_balance: number; // Fondos transferibles in-app (Available - Protected)
+  withdrawable_balance: number; // Fondos retirables a banco (Transferable - Hold)
+  protected_credit_balance: number; // Crédito Autorentar (meta USD 250, no retirable)
   locked_balance: number; // Fondos bloqueados en reservas activas
   total_balance: number; // Total (available + locked)
   currency: string; // 'USD' o 'UYU'
+
+  // DEPRECATED: Backward compatibility - será removido
+  /** @deprecated Use protected_credit_balance instead */
+  non_withdrawable_balance?: number;
 }
 
 /**
@@ -44,7 +51,13 @@ export type WalletTransactionStatus =
 /**
  * Tipos de referencia de transacciones
  */
-export type WalletReferenceType = 'booking' | 'deposit' | 'reward';
+export type WalletReferenceType =
+  | 'booking' // Reserva/booking
+  | 'deposit' // Depósito normal
+  | 'reward' // Bonificación/recompensa
+  | 'credit_protected' // Crédito Autorentar (no retirable, meta USD 250)
+  | 'transfer' // Transferencia entre usuarios
+  | 'withdrawal'; // Retiro a cuenta bancaria
 
 /**
  * Proveedores de pago soportados
@@ -61,6 +74,7 @@ export interface WalletTransaction {
   status: WalletTransactionStatus;
   amount: number;
   currency: string;
+  is_withdrawable?: boolean;
   reference_type?: WalletReferenceType;
   reference_id?: string;
   provider?: WalletPaymentProvider;
@@ -105,7 +119,9 @@ export interface WalletInitiateDepositResponse {
   message: string;
   payment_provider: WalletPaymentProvider;
   payment_url: string;
+  payment_mobile_deep_link?: string | null;
   status: WalletTransactionStatus;
+  is_withdrawable?: boolean;
 }
 
 /**
@@ -132,6 +148,8 @@ export interface InitiateDepositParams {
   amount: number;
   provider?: WalletPaymentProvider;
   description?: string;
+  /** Si true, los fondos serán retirables. Si false, será Crédito Autorentar (no retirable) */
+  allowWithdrawal?: boolean;
 }
 
 /**
@@ -440,4 +458,82 @@ export interface WithdrawalLoadingState {
   fetchingRequests: boolean;
   addingBankAccount: boolean;
   fetchingBankAccounts: boolean;
+}
+
+// ============================================================================
+// CONSOLIDATED WALLET HISTORY - Vista Unificada (Migration 009)
+// ============================================================================
+
+/**
+ * Sistema de origen de la transacción
+ * Indica de dónde proviene el dato en la vista consolidada
+ */
+export type WalletHistorySourceSystem =
+  | 'legacy'  // Solo en wallet_transactions (sistema anterior)
+  | 'ledger'  // Solo en wallet_ledger (sistema nuevo de doble partida)
+  | 'both';   // Migrada: existe en ambos sistemas
+
+/**
+ * Entry de la vista consolidada v_wallet_history
+ *
+ * Esta interfaz representa una transacción de wallet que puede provenir de:
+ * - wallet_transactions (sistema legacy, deprecated)
+ * - wallet_ledger (sistema nuevo de doble partida)
+ * - Ambos (transacción migrada)
+ *
+ * Creada en: Migration 009 (2025-10-22)
+ * Vista SQL: v_wallet_history
+ * Uso: WalletService.getTransactions() usa esta vista internamente
+ */
+export interface WalletHistoryEntry {
+  // Campos principales normalizados
+  id: string;
+  user_id: string;
+  transaction_date: string;  // TIMESTAMPTZ
+  transaction_type: string;  // Normalizado de type (legacy) o kind (ledger)
+  status: string;  // 'pending' | 'completed' | 'failed' | 'refunded'
+
+  // Monto (siempre en centavos para consistencia)
+  amount_cents: number;  // BIGINT
+  currency: string;  // 'USD' | 'UYU' | 'ARS'
+
+  // Metadata unificada (JSONB)
+  metadata: {
+    description?: string;
+    reference_type?: WalletReferenceType;
+    reference_id?: string;
+    provider?: WalletPaymentProvider;
+    provider_transaction_id?: string;
+    provider_metadata?: Record<string, unknown>;
+    admin_notes?: string;
+    is_withdrawable?: boolean;
+    [key: string]: unknown;  // Campos adicionales específicos de ledger/legacy
+  };
+
+  // Referencias
+  booking_id?: string;  // UUID
+
+  // Sistema de origen (para debugging y migración)
+  source_system: WalletHistorySourceSystem;
+
+  // IDs originales (para traceability)
+  legacy_transaction_id?: string;  // UUID si proviene de wallet_transactions
+  ledger_entry_id?: string;        // UUID si proviene de wallet_ledger
+  ledger_ref?: string;             // Ref de idempotencia (solo ledger)
+
+  // Timestamps
+  legacy_completed_at?: string;  // completed_at de wallet_transactions
+  ledger_created_at?: string;    // created_at de wallet_ledger
+}
+
+/**
+ * Estadísticas de migración legacy → ledger
+ * Retornada por: get_wallet_migration_stats() RPC function
+ */
+export interface WalletMigrationStats {
+  total_legacy_transactions: number;  // Total en wallet_transactions
+  migrated_to_ledger: number;         // Ya migradas (source_system = 'both')
+  pending_migration: number;          // Pendientes (source_system = 'legacy')
+  ledger_only_entries: number;        // Solo en ledger (source_system = 'ledger')
+  migration_percentage: number;       // % de progreso (0-100)
 }

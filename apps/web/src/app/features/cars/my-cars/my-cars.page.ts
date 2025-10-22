@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { Car } from '../../../core/models';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
@@ -8,7 +9,7 @@ import { CarCardComponent } from '../../../shared/components/car-card/car-card.c
 @Component({
   standalone: true,
   selector: 'app-my-cars-page',
-  imports: [CommonModule, RouterLink, CarCardComponent],
+  imports: [CommonModule, RouterLink, CarCardComponent, TranslateModule],
   templateUrl: './my-cars.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

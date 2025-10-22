@@ -1,0 +1,26 @@
+
+> payments_webhook@1.0.0 deploy
+> wrangler deploy
+
+
+Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md
+
+ ⛅️ wrangler 4.43.0
+───────────────────
+[custom build] Running: npm run build
+[custom build] 
+[custom build] > payments_webhook@1.0.0 build
+[custom build] > tsc --project tsconfig.json
+[custom build] 
+[custom build] 
+Total Upload: 346.65 KiB / gzip: 68.19 KiB
+Worker Startup Time: 1 ms
+Your Worker has access to the following bindings:
+Binding                                                                   Resource                  
+env.AUTORENT_WEBHOOK_KV (a2a12698413f4f288023a9c595e19ae6)                KV Namespace              
+env.SUPABASE_URL ("https://obxvffplochgeiclibng.supabase...")             Environment Variable      
+
+Uploaded autorenta-payments-webhook (5.21 sec)
+Deployed autorenta-payments-webhook triggers (0.84 sec)
+  https://autorenta-payments-webhook.marques-eduardo95466020.workers.dev
+Current Version ID: 065ede87-9421-4931-958f-654647d7104d

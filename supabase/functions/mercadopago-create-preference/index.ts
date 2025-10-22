@@ -92,6 +92,10 @@ serve(async (req) => {
       );
     }
 
+    // ========================================
+    // VALIDACIÓN DE AUTORIZACIÓN Y OWNERSHIP (CRÍTICA)
+    // ========================================
+
     // Verificar autorización del usuario
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
@@ -107,7 +111,22 @@ serve(async (req) => {
     // Crear cliente de Supabase
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // Verificar que la transacción existe y pertenece al usuario
+    // Obtener usuario autenticado desde Supabase
+    const { data: { user }, error: authError } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid or expired token' }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const authenticated_user_id = user.id;
+
+    // Verificar que la transacción existe, está pending, y PERTENECE al usuario autenticado
     const { data: transaction, error: txError } = await supabase
       .from('wallet_transactions')
       .select('*')
@@ -126,13 +145,85 @@ serve(async (req) => {
       );
     }
 
+    // ========================================
+    // VALIDACIÓN CRÍTICA: Ownership
+    // ========================================
+    if (transaction.user_id !== authenticated_user_id) {
+      console.error('SECURITY: User attempting to use transaction from another user', {
+        authenticated_user: authenticated_user_id,
+        transaction_owner: transaction.user_id,
+        transaction_id,
+      });
+
+      return new Response(
+        JSON.stringify({
+          error: 'Unauthorized: This transaction does not belong to you',
+          code: 'OWNERSHIP_VIOLATION',
+        }),
+        {
+          status: 403, // Forbidden
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // ========================================
+    // VALIDACIÓN: Montos dentro de límites
+    // ========================================
+    if (amount < 10 || amount > 5000) {
+      return new Response(
+        JSON.stringify({
+          error: `Amount must be between $10 and $5,000 (received: $${amount})`,
+          code: 'INVALID_AMOUNT',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // ========================================
+    // VALIDACIÓN: Idempotencia (evitar doble-creación de preference)
+    // ========================================
+    if (transaction.provider_metadata?.preference_id) {
+      // Ya existe una preference para esta transacción
+      const existingInitPoint = transaction.provider_metadata.init_point ||
+                                 transaction.provider_metadata.sandbox_init_point;
+
+      if (existingInitPoint) {
+        console.log('Preference already exists for transaction, returning existing init_point');
+        return new Response(
+          JSON.stringify({
+            success: true,
+            preference_id: transaction.provider_metadata.preference_id,
+            init_point: existingInitPoint,
+            message: 'Using existing preference (idempotent)',
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+    }
+
     // Obtener información del usuario (email desde auth.users, nombre desde profiles)
     const { data: authUser } = await supabase.auth.admin.getUserById(transaction.user_id);
     const { data: profile } = await supabase
       .from('profiles')
-      .select('full_name')
+      .select('full_name, email, phone')
       .eq('id', transaction.user_id)
       .single();
+
+    // ========================================
+    // DIVIDIR NOMBRE EN FIRST_NAME Y LAST_NAME
+    // Mejora de calidad de integración MercadoPago
+    // ========================================
+    const fullName = profile?.full_name || authUser?.user?.user_metadata?.full_name || 'Usuario AutoRenta';
+    const nameParts = fullName.trim().split(' ');
+    const firstName = nameParts[0] || 'Usuario';
+    const lastName = nameParts.slice(1).join(' ') || 'AutoRenta';
 
     // ========================================
     // LLAMADA DIRECTA A MERCADOPAGO REST API
@@ -143,7 +234,14 @@ serve(async (req) => {
     const preferenceData = {
       items: [
         {
+          // ========================================
+          // MEJORAS DE CALIDAD DE INTEGRACIÓN
+          // +11 puntos: id, description, category_id
+          // ========================================
+          id: transaction_id,  // +4 puntos
           title: description || 'Depósito a Wallet - AutoRenta',
+          description: `Depósito de ARS ${amount} a tu wallet de AutoRenta para alquileres de vehículos`,  // +3 puntos
+          category_id: 'services',  // +4 puntos (servicios financieros)
           quantity: 1,
           unit_price: amount,
           currency_id: 'ARS', // MercadoPago Argentina requiere ARS
@@ -154,17 +252,44 @@ serve(async (req) => {
         failure: `${APP_BASE_URL}/wallet?payment=failure&transaction_id=${transaction_id}`,
         pending: `${APP_BASE_URL}/wallet?payment=pending&transaction_id=${transaction_id}`,
       },
+      auto_return: 'approved', // Redirección automática solo cuando el pago es aprobado
       external_reference: transaction_id,
       notification_url: `${SUPABASE_URL}/functions/v1/mercadopago-webhook`,
+
+      // ========================================
+      // MÉTODOS DE PAGO - Configuración Completa
+      // ========================================
+      payment_methods: {
+        // Habilitar todos los métodos de pago disponibles
+        excluded_payment_methods: [], // No excluir ningún método
+        excluded_payment_types: [],   // No excluir ningún tipo
+
+        // Configurar cuotas
+        installments: 12,              // Permitir hasta 12 cuotas
+        default_installments: 1,       // Por defecto sin cuotas
+      },
+
+      // ========================================
+      // OPCIONES DE EXPERIENCIA DE USUARIO
+      // ========================================
+      statement_descriptor: 'AUTORENTAR',  // Aparece en el resumen de tarjeta
+
+      // Configuración adicional
+      binary_mode: false,  // Permitir pagos pendientes (efectivo, transferencia)
+      expires: true,       // La preference expira después de 30 días
+      expiration_date_from: new Date().toISOString(),
+      expiration_date_to: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 días
     };
 
-    // Agregar info del pagador si está disponible
-    if (authUser?.user?.email || profile?.full_name) {
-      preferenceData.payer = {
-        email: authUser?.user?.email,
-        name: profile?.full_name || undefined,
-      };
-    }
+    // ========================================
+    // PAYER INFO MEJORADO
+    // +10 puntos: first_name, last_name
+    // ========================================
+    preferenceData.payer = {
+      email: authUser?.user?.email || profile?.email || `${transaction.user_id}@autorenta.com`,
+      first_name: firstName,  // +5 puntos
+      last_name: lastName,    // +5 puntos
+    };
 
     console.log('Preference data:', JSON.stringify(preferenceData, null, 2));
 
@@ -202,7 +327,7 @@ serve(async (req) => {
       })
       .eq('id', transaction_id);
 
-    // Retornar URL de checkout
+    // Retornar URL de checkout (init_point funciona en web y móvil)
     return new Response(
       JSON.stringify({
         success: true,

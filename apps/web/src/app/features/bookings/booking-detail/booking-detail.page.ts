@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
@@ -10,7 +11,9 @@ import { ReviewFormComponent } from '../../../shared/components/review-form/revi
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
+import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
+import { MetaService } from '../../../core/services/meta.service';
 
 @Component({
   selector: 'app-booking-detail',
@@ -22,7 +25,7 @@ import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confir
     ReviewCardComponent,
     OwnerConfirmationComponent,
     RenterConfirmationComponent,
-  ],
+    BookingChatComponent, TranslateModule],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
 })
@@ -33,6 +36,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly paymentsService = inject(PaymentsService);
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
+  private readonly metaService = inject(MetaService);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
@@ -129,8 +133,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return booking?.renter_id === currentUser?.id;
   });
 
-  // Car owner ID (loaded separately)
+  // Car owner ID and name (loaded separately)
   carOwnerId = signal<string | null>(null);
+  carOwnerName = signal<string>('el anfitrión');
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
@@ -150,6 +155,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       this.booking.set(booking);
       this.startCountdown();
+
+      // Update SEO meta tags (private page - noindex)
+      this.metaService.updateBookingDetailMeta(booking.id);
 
       // Load car owner ID for confirmation logic
       await this.loadCarOwner();
@@ -174,12 +182,14 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const { data: car } = await this.bookingsService['supabase']
         .from('cars')
-        .select('owner_id')
+        .select('owner_id, owner:profiles!cars_owner_id_fkey(id, full_name)')
         .eq('id', booking.car_id)
         .single();
 
       if (car) {
         this.carOwnerId.set(car.owner_id);
+        const ownerFullName = (car as any).owner?.full_name || 'el anfitrión';
+        this.carOwnerName.set(ownerFullName);
       }
     } catch (error) {
       console.error('Error loading car owner:', error);

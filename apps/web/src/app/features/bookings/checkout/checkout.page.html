@@ -1,96 +1,139 @@
-<section
-  class="mx-auto max-w-4xl space-y-6 py-8 px-4"
->
-  <!-- Header -->
-  <header class="mb-6">
-    <h1 class="text-3xl font-bold text-slate-900 mb-2">Checkout</h1>
-    <p class="text-slate-600">Completa el pago de tu reserva</p>
-  </header>
+<section class="min-h-screen bg-ivory-soft">
+  <!-- Hero Section with Car Image Background -->
+  <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0">
+      <!-- Car Image (if available) -->
+      <div *ngIf="booking()?.main_photo_url; else defaultHero" class="absolute inset-0">
+        <img
+          [src]="booking()!.main_photo_url"
+          [alt]="booking()!.car_title || 'Auto'"
+          class="w-full h-full object-cover"
+        />
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-smoke-black/70 via-smoke-black/50 to-smoke-black/80"></div>
+      </div>
 
-  <!-- Booking Summary Card -->
-  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-    <h2 class="text-lg font-semibold text-slate-900 mb-4">Resumen de la Reserva</h2>
-    <div class="space-y-2 text-sm text-slate-600">
-      <div class="flex justify-between">
-        <span>Reserva ID:</span>
-        <span class="font-medium text-slate-900">{{ bookingId() }}</span>
-      </div>
-      <div class="flex justify-between">
-        <span>Estado:</span>
-        <span class="font-medium text-slate-900">{{ status() }}</span>
-      </div>
-      <div *ngIf="booking() as current" class="flex justify-between pt-2 border-t border-slate-200">
-        <span class="font-semibold text-slate-900">Total a Pagar:</span>
-        <span class="text-xl font-bold text-slate-900">{{ current.total_amount | money: current.currency }}</span>
+      <!-- Default Hero (no image) -->
+      <ng-template #defaultHero>
+        <div class="absolute inset-0 bg-gradient-to-br from-accent-petrol via-accent-petrol/90 to-accent-warm">
+          <!-- Decorative Pattern -->
+          <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 40px 40px;"></div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative h-full container-page px-container flex flex-col justify-center">
+      <div class="max-w-4xl mx-auto w-full">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">
+          Checkout
+        </h1>
+        <p class="text-xl md:text-2xl text-white/90 font-medium">
+          Completa el pago de tu reserva
+        </p>
+        <div *ngIf="booking() as current" class="mt-4 flex items-center gap-3">
+          <span class="badge-status badge-info text-white border-white/30">
+            {{ current.car_title || 'Auto' }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Payment Method Selector -->
-  <div *ngIf="booking() as current" class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-    <app-payment-method-selector
-      [totalAmount]="current.total_amount"
-      (paymentMethodChange)="onPaymentMethodChange($event)"
-    ></app-payment-method-selector>
-  </div>
+  <!-- Main Content -->
+  <div class="mx-auto max-w-4xl px-container py-8 -mt-16 relative z-10">
+    <div class="space-y-6">
 
-  <!-- Action Button -->
-  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-    <button
-      type="button"
-      class="w-full rounded-lg bg-blue-600 px-6 py-4 text-lg font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 transition-colors"
-      (click)="processPayment()"
-      [disabled]="loading() || !bookingId() || !booking()"
-    >
-      <span *ngIf="!loading()">
-        <span *ngIf="selectedPaymentMethod() === 'wallet'">Pagar con Wallet</span>
-        <span *ngIf="selectedPaymentMethod() === 'credit_card'">Pagar con Tarjeta</span>
-        <span *ngIf="selectedPaymentMethod() === 'partial_wallet'">Procesar Pago Mixto</span>
-      </span>
-      <span *ngIf="loading()" class="flex items-center justify-center">
-        <svg class="animate-spin h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Procesando...
-      </span>
-    </button>
-  </div>
-
-  <!-- Status Message -->
-  <div *ngIf="message()" class="rounded-lg p-4" [class.bg-green-50]="status() === 'paid_with_wallet' || status() === 'paid_partial'" [class.bg-blue-50]="status() !== 'paid_with_wallet' && status() !== 'paid_partial'">
-    <p class="text-sm font-medium" [class.text-green-800]="status() === 'paid_with_wallet' || status() === 'paid_partial'" [class.text-blue-800]="status() !== 'paid_with_wallet' && status() !== 'paid_partial'">
-      {{ message() }}
-    </p>
-  </div>
-
-  <!-- Debug Section (Development Only) -->
-  <details class="bg-slate-50 rounded-lg border border-slate-200 p-4">
-    <summary class="cursor-pointer text-sm font-medium text-slate-700 hover:text-slate-900">
-      Opciones de Desarrollo (Click para expandir)
-    </summary>
-    <div class="mt-4 space-y-3">
-      <button
-        type="button"
-        class="w-full rounded bg-slate-600 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-        (click)="createIntent()"
-        [disabled]="loading() || !bookingId()"
-      >
-        {{ loading() ? 'Procesando...' : 'Generar intento de pago (Mock)' }}
-      </button>
-
-      <button
-        type="button"
-        class="w-full rounded border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400"
-        (click)="simulatePayment()"
-        [disabled]="loading() || !intentId()"
-      >
-        Simular pago aprobado (Mock)
-      </button>
-
-      <div *ngIf="intentId()" class="text-xs text-slate-600 p-2 bg-white rounded">
-        <p><strong>Intent ID:</strong> {{ intentId() }}</p>
+      <!-- Booking Summary Card -->
+      <div class="card-premium p-6 shadow-elevated">
+        <h2 class="h4 mb-4">Resumen de la Reserva</h2>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between items-center">
+            <span class="text-charcoal-medium">Reserva ID:</span>
+            <span class="font-medium text-smoke-black font-mono text-xs">{{ bookingId() }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-charcoal-medium">Estado:</span>
+            <span class="badge-status badge-info">{{ status() }}</span>
+          </div>
+          <div class="divider-horizontal my-3"></div>
+          <div *ngIf="booking() as current" class="flex justify-between items-center pt-2">
+            <span class="h5">Total a Pagar:</span>
+            <span class="text-3xl font-bold text-accent-petrol">{{ current.total_amount | money: current.currency }}</span>
+          </div>
+        </div>
       </div>
+
+      <!-- Payment Method Selector -->
+      <div *ngIf="booking() as current" class="card-premium p-6 shadow-elevated">
+        <app-payment-method-selector
+          [totalAmount]="current.total_amount"
+          (paymentMethodChange)="onPaymentMethodChange($event)"
+        ></app-payment-method-selector>
+      </div>
+
+      <!-- Action Button -->
+      <div class="card-premium p-6 shadow-elevated">
+        <button
+          type="button"
+          class="btn-primary w-full py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="processPayment()"
+          [disabled]="loading() || !bookingId() || !booking()"
+        >
+          <span *ngIf="!loading()">
+            <span *ngIf="selectedPaymentMethod() === 'wallet'">💰 Pagar con Wallet</span>
+            <span *ngIf="selectedPaymentMethod() === 'credit_card'">💳 Pagar con Tarjeta</span>
+            <span *ngIf="selectedPaymentMethod() === 'partial_wallet'">🔄 Procesar Pago Mixto</span>
+          </span>
+          <span *ngIf="loading()" class="flex items-center justify-center gap-3">
+            <span class="spinner-sm"></span>
+            Procesando...
+          </span>
+        </button>
+      </div>
+
+      <!-- Status Message -->
+      <div *ngIf="message()" class="info-card-petrol" [class.info-card-warm]="status() === 'paid_with_wallet' || status() === 'paid_partial'">
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" [class.text-accent-petrol]="status() === 'paid_with_wallet' || status() === 'paid_partial'" [class.text-accent-warm]="status() !== 'paid_with_wallet' && status() !== 'paid_partial'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-sm font-medium text-smoke-black whitespace-pre-line">
+            {{ message() }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Debug Section (Development Only) -->
+      <details class="card-premium p-4 shadow-soft">
+        <summary class="cursor-pointer text-sm font-medium text-charcoal-medium hover:text-smoke-black transition-base">
+          🔧 Opciones de Desarrollo (Click para expandir)
+        </summary>
+        <div class="mt-4 space-y-3">
+          <button
+            type="button"
+            class="btn-accent w-full text-sm disabled:opacity-50"
+            (click)="createIntent()"
+            [disabled]="loading() || !bookingId()"
+          >
+            {{ loading() ? 'Procesando...' : 'Generar intento de pago (Mock)' }}
+          </button>
+
+          <button
+            type="button"
+            class="btn-secondary w-full text-sm disabled:opacity-50"
+            (click)="simulatePayment()"
+            [disabled]="loading() || !intentId()"
+          >
+            Simular pago aprobado (Mock)
+          </button>
+
+          <div *ngIf="intentId()" class="info-card text-xs">
+            <p class="text-charcoal-medium"><strong class="text-smoke-black">Intent ID:</strong> {{ intentId() }}</p>
+          </div>
+        </div>
+      </details>
     </div>
-  </details>
+  </div>
 </section>

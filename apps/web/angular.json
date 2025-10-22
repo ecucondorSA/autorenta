@@ -22,10 +22,21 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "serviceWorker": false,
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*.wasm",
+                "input": "node_modules/onnxruntime-web/dist",
+                "output": "/assets/onnxruntime"
+              },
+              {
+                "glob": "**/*.json",
+                "input": "src/assets/i18n",
+                "output": "/assets/i18n"
               }
             ],
             "styles": [
@@ -42,11 +53,12 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "16kB",
+                  "maximumError": "20kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "serviceWorker": false
             },
             "development": {
               "fileReplacements": [
@@ -55,6 +67,7 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ],
+              "aot": true,
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true

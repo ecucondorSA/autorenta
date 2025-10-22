@@ -12,11 +12,12 @@ import {
 import { AdminService } from '@core/services/admin.service';
 import { Car, Booking } from '@core/models';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'autorenta-admin-dashboard-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, MoneyPipe],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MoneyPipe, TranslateModule],
   templateUrl: './admin-dashboard.page.html',
   styleUrl: './admin-dashboard.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

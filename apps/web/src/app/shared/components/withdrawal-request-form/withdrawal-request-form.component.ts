@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/wallet.model';
 
 /**
@@ -9,16 +10,18 @@ import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/
 @Component({
   selector: 'app-withdrawal-request-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './withdrawal-request-form.component.html',
   styleUrl: './withdrawal-request-form.component.css',
 })
 export class WithdrawalRequestFormComponent {
   @Input({ required: true }) availableBalance = 0;
+  @Input() withdrawableBalance = 0;
+  @Input() nonWithdrawableBalance = 0;
   @Input({ required: true }) accounts: BankAccount[] = [];
 
   @Output() submitWithdrawal = new EventEmitter<RequestWithdrawalParams>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelled = new EventEmitter<void>();
 
   readonly form: FormGroup;
   readonly submitting = signal(false);
@@ -47,7 +50,7 @@ export class WithdrawalRequestFormComponent {
   });
 
   readonly hasEnoughBalance = computed(() => {
-    return this.totalDebit() <= this.availableBalance;
+    return this.totalDebit() <= this.withdrawableBalance;
   });
 
   readonly selectedAccount = computed(() => {
@@ -106,13 +109,13 @@ export class WithdrawalRequestFormComponent {
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelled.emit();
   }
 
   setMaxAmount(): void {
     // Calcular el monto máximo que se puede retirar
     // max_amount = (available_balance / (1 + fee_percentage))
-    const maxWithdrawal = Math.floor(this.availableBalance / (1 + this.FEE_PERCENTAGE));
+    const maxWithdrawal = Math.floor(this.withdrawableBalance / (1 + this.FEE_PERCENTAGE));
     this.form.patchValue({ amount: maxWithdrawal });
   }
 

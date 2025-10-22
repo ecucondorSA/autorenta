@@ -9,6 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import {
@@ -17,7 +18,12 @@ import {
   UserDocument,
   DocumentKind,
   NotificationPrefs,
+  KycStatus,
+  UserVerificationStatus,
+  VerificationStatus,
 } from '../../core/models';
+import { VerificationService } from '../../core/services/verification.service';
+import { MetaService } from '../../core/services/meta.service';
 
 type TabId =
   | 'general'
@@ -34,10 +40,21 @@ interface Tab {
   icon: string;
 }
 
+interface VerificationChecklistItem {
+  id: string;
+  label: string;
+  description?: string;
+  statusType: 'document' | 'verification';
+  status: KycStatus | VerificationStatus;
+  completed: boolean;
+  missingKey?: string;
+  notes?: string | null;
+}
+
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +63,8 @@ export class ProfileExpandedPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
+  private readonly verificationService = inject(VerificationService);
+  private readonly metaService = inject(MetaService);
 
   // State signals
   readonly profile = signal<UserProfile | null>(null);
@@ -57,6 +76,39 @@ export class ProfileExpandedPage implements OnInit {
   readonly message = signal<string | null>(null);
   readonly error = signal<string | null>(null);
   readonly activeTab = signal<TabId>('general');
+
+  readonly verificationStatuses = this.verificationService.statuses;
+  readonly verificationLoading = this.verificationService.loading;
+  readonly verificationError = this.verificationService.error;
+
+  readonly driverVerification = computed(() =>
+    this.verificationStatuses().find((status) => status.role === 'driver') ?? null,
+  );
+
+  readonly ownerVerification = computed(() =>
+    this.verificationStatuses().find((status) => status.role === 'owner') ?? null,
+  );
+
+  readonly overallVerificationStatus = computed<VerificationStatus>(() => {
+    const statuses = this.verificationStatuses();
+    if (!statuses.length) {
+      return 'PENDIENTE';
+    }
+    if (statuses.some((status) => status.status === 'RECHAZADO')) {
+      return 'RECHAZADO';
+    }
+    if (statuses.every((status) => status.status === 'VERIFICADO')) {
+      return 'VERIFICADO';
+    }
+    return 'PENDIENTE';
+  });
+
+  readonly driverChecklist = computed(() => this.createDriverChecklist());
+  readonly ownerChecklist = computed(() => this.createOwnerChecklist());
+
+  readonly profileRole = computed(() => this.profile()?.role ?? 'renter');
+  readonly showDriverFlow = computed(() => ['renter', 'both'].includes(this.profileRole()));
+  readonly showOwnerFlow = computed(() => ['owner', 'both'].includes(this.profileRole()));
 
   // Computed
   readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
@@ -133,16 +185,29 @@ export class ProfileExpandedPage implements OnInit {
   ];
 
   readonly documentKinds: { value: DocumentKind; label: string }[] = [
-    { value: 'gov_id_front', label: 'DNI/CI - Frente' },
-    { value: 'gov_id_back', label: 'DNI/CI - Dorso' },
-    { value: 'driver_license', label: 'Licencia de conducir' },
+    // CONDUCTOR (Locatario)
+    { value: 'driver_license', label: 'Licencia de conducir (OBLIGATORIO)' },
+    { value: 'selfie', label: 'Selfie con licencia (recomendado)' },
+
+    // LOCADOR: Documento personal
+    { value: 'gov_id_front', label: 'DNI/Pasaporte - Frente' },
+    { value: 'gov_id_back', label: 'DNI/Pasaporte - Dorso' },
+
+    // LOCADOR: Vehículo
+    { value: 'vehicle_registration', label: 'Cédula del vehículo (digital PDF O foto física)' },
+    { value: 'vehicle_insurance', label: 'Seguro del vehículo / Carta Verde (Mercosur)' },
+
+    // OTROS
     { value: 'utility_bill', label: 'Factura de servicios' },
-    { value: 'selfie', label: 'Selfie de verificación' },
   ];
 
   ngOnInit(): void {
+    // Update SEO meta tags (private page - noindex)
+    this.metaService.updateProfileMeta();
+
     void this.loadProfile();
     void this.loadDocuments();
+    void this.refreshVerificationStatuses();
   }
 
   async loadProfile(): Promise<void> {
@@ -168,6 +233,132 @@ export class ProfileExpandedPage implements OnInit {
     } catch (err) {
       console.error('Error loading documents:', err);
     }
+  }
+
+  async refreshVerificationStatuses(role?: 'driver' | 'owner'): Promise<void> {
+    try {
+      await this.verificationService.triggerVerification(role);
+    } catch (err) {
+      console.warn('No pudimos actualizar el estado de verificación automáticamente:', err);
+    }
+  }
+
+  private getDocumentStatusForKinds(kinds: DocumentKind | DocumentKind[]): {
+    status: KycStatus;
+    completed: boolean;
+    notes?: string | null;
+  } {
+    const docKinds = Array.isArray(kinds) ? kinds : [kinds];
+    const docs = this.documents().filter((doc) => docKinds.includes(doc.kind));
+
+    if (docs.length === 0) {
+      return { status: 'not_started', completed: false };
+    }
+
+    if (docs.some((doc) => doc.status === 'rejected')) {
+      const rejectedDoc = docs.find((doc) => doc.status === 'rejected');
+      return {
+        status: 'rejected',
+        completed: false,
+        notes: rejectedDoc?.notes ?? null,
+      };
+    }
+
+    if (docs.some((doc) => doc.status === 'pending')) {
+      const pendingDoc = docs.find((doc) => doc.status === 'pending');
+      return {
+        status: 'pending',
+        completed: false,
+        notes: pendingDoc?.notes ?? null,
+      };
+    }
+
+    if (docs.every((doc) => doc.status === 'verified')) {
+      return {
+        status: 'verified',
+        completed: true,
+        notes: docs[0]?.notes ?? null,
+      };
+    }
+
+    // Fallback: return first doc status
+    const doc = docs[0]!;
+    return {
+      status: doc.status,
+      completed: doc.status === 'verified',
+      notes: doc.notes ?? null,
+    };
+  }
+
+  private createDriverChecklist(): VerificationChecklistItem[] {
+    const verification = this.driverVerification();
+    const missingDocs = verification?.missing_docs ?? [];
+
+    const licenseStatus = this.getDocumentStatusForKinds('driver_license');
+    const selfieStatus = this.getDocumentStatusForKinds('selfie');
+
+    return [
+      {
+        id: 'driver_license_upload',
+        label: 'Licencia de conducir (OBLIGATORIO)',
+        description: 'Foto clara del frente. IA extrae automáticamente: nombre, vencimiento, categoría.',
+        statusType: 'document',
+        status: licenseStatus.status,
+        completed: licenseStatus.completed,
+        missingKey: 'licencia',
+        notes: licenseStatus.notes ?? null,
+      },
+      {
+        id: 'driver_selfie',
+        label: 'Selfie con licencia (recomendado)',
+        description: 'Acelera la verificación.',
+        statusType: 'document',
+        status: selfieStatus.status,
+        completed: selfieStatus.completed,
+        notes: selfieStatus.notes ?? null,
+      },
+    ];
+  }
+
+  private createOwnerChecklist(): VerificationChecklistItem[] {
+    const verification = this.ownerVerification();
+    const missingDocs = verification?.missing_docs ?? [];
+
+    const vehicleStatus = this.getDocumentStatusForKinds('vehicle_registration');
+    const insuranceStatus = this.getDocumentStatusForKinds('vehicle_insurance');
+    const govIdStatus = this.getDocumentStatusForKinds(['gov_id_front', 'gov_id_back']);
+
+    return [
+      {
+        id: 'owner_vehicle_doc',
+        label: 'Cédula del vehículo (digital O física)',
+        description: 'PDF digital desde Mi Argentina O foto de cédula verde/azul. IA extrae: patente, titular, vigencia.',
+        statusType: 'document',
+        status: vehicleStatus.status,
+        completed: vehicleStatus.completed,
+        missingKey: 'cedula_auto',
+        notes: vehicleStatus.notes ?? null,
+      },
+      {
+        id: 'owner_gov_id',
+        label: 'DNI / Pasaporte',
+        description: 'Frente y dorso. IA verifica coincidencia con titular de la cédula.',
+        statusType: 'document',
+        status: govIdStatus.status,
+        completed: govIdStatus.completed,
+        missingKey: 'dni',
+        notes: govIdStatus.notes ?? null,
+      },
+      {
+        id: 'owner_insurance',
+        label: 'Seguro / Carta Verde (opcional)',
+        description: 'Recomendado. Si permitís viajes al exterior, Carta Verde es obligatoria.',
+        statusType: 'document',
+        status: insuranceStatus.status,
+        completed: insuranceStatus.completed,
+        notes: insuranceStatus.notes ?? null,
+      },
+    ];
   }
 
   populateForms(profile: UserProfile): void {
@@ -347,6 +538,7 @@ export class ProfileExpandedPage implements OnInit {
     try {
       await this.profileService.uploadDocument(file, kind);
       await this.loadDocuments();
+      await this.refreshVerificationStatuses();
 
       this.message.set('Documento subido exitosamente');
       setTimeout(() => this.message.set(null), 3000);
@@ -367,6 +559,7 @@ export class ProfileExpandedPage implements OnInit {
     try {
       await this.profileService.deleteDocument(documentId);
       await this.loadDocuments();
+      await this.refreshVerificationStatuses();
 
       this.message.set('Documento eliminado');
       setTimeout(() => this.message.set(null), 3000);
@@ -398,6 +591,70 @@ export class ProfileExpandedPage implements OnInit {
       rejected: 'bg-red-600 text-white-pure',
     };
     return classes[status] ?? 'bg-pearl-gray text-smoke-black';
+  }
+
+  getVerificationStatusLabel(status: VerificationStatus | string): string {
+    const normalized = (status as VerificationStatus) ?? 'PENDIENTE';
+    const labels: Record<VerificationStatus, string> = {
+      VERIFICADO: 'Verificado',
+      PENDIENTE: 'Pendiente',
+      RECHAZADO: 'Rechazado',
+    };
+    return labels[normalized] ?? labels.PENDIENTE;
+  }
+
+  getVerificationStatusClass(status: VerificationStatus | string): string {
+    const normalized = (status as VerificationStatus) ?? 'PENDIENTE';
+    const classes: Record<VerificationStatus, string> = {
+      VERIFICADO: 'bg-green-100 text-green-800 border border-green-200',
+      PENDIENTE: 'bg-yellow-100 text-yellow-800 border border-yellow-200',
+      RECHAZADO: 'bg-red-100 text-red-800 border border-red-200',
+    };
+    return classes[normalized] ?? classes.PENDIENTE;
+  }
+
+  getVerificationStatusIcon(status: VerificationStatus | string): string {
+    const normalized = (status as VerificationStatus) ?? 'PENDIENTE';
+    const icons: Record<VerificationStatus, string> = {
+      VERIFICADO: '🟢',
+      PENDIENTE: '🔶',
+      RECHAZADO: '🔴',
+    };
+    return icons[normalized] ?? icons.PENDIENTE;
+  }
+
+  getMissingDocumentLabel(code: string): string {
+    const labels: Record<string, string> = {
+      licencia: 'Licencia de conducir',
+      cedula_auto: 'Documento del vehículo',
+      dni: 'Documento personal',
+    };
+    return labels[code] ?? code;
+  }
+
+  isVerificationStep(step: VerificationChecklistItem): boolean {
+    return step.statusType === 'verification';
+  }
+
+  getStepStatusLabel(step: VerificationChecklistItem): string {
+    if (step.statusType === 'verification') {
+      return this.getVerificationStatusLabel(step.status as VerificationStatus);
+    }
+    return this.getKycStatusLabel(step.status as string);
+  }
+
+  getStepStatusClass(step: VerificationChecklistItem): string {
+    if (step.statusType === 'verification') {
+      return this.getVerificationStatusClass(step.status as VerificationStatus);
+    }
+    return this.getKycStatusClass(step.status as string);
+  }
+
+  getStepIcon(step: VerificationChecklistItem): string {
+    if (step.statusType === 'verification') {
+      return this.getVerificationStatusIcon(step.status as VerificationStatus);
+    }
+    return step.completed ? '✅' : '📄';
   }
 
   async signOut(): Promise<void> {

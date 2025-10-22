@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
 import type {
   WalletTransaction,
@@ -29,7 +30,7 @@ import type {
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './transaction-history.component.html',
   styleUrls: ['./transaction-history.component.css'],
 })
@@ -98,6 +99,13 @@ export class TransactionHistoryComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.loadTransactions();
+  }
+
+  /**
+   * Determina si el depósito es crédito exclusivo (no retirable)
+   */
+  isNonWithdrawableDeposit(transaction: WalletTransaction): boolean {
+    return transaction.type === 'deposit' && transaction.is_withdrawable === false;
   }
 
   // ==================== PUBLIC METHODS ====================
@@ -195,20 +203,20 @@ export class TransactionHistoryComponent implements OnInit {
    */
   getTypeColor(type: WalletTransactionType): string {
     const colors: Record<WalletTransactionType, string> = {
-      deposit: 'bg-green-100 text-green-800',
-      withdrawal: 'bg-purple-100 text-purple-800',
-      lock: 'bg-yellow-100 text-yellow-800',
-      unlock: 'bg-blue-100 text-blue-800',
-      charge: 'bg-purple-100 text-purple-800',
-      refund: 'bg-indigo-100 text-indigo-800',
-      bonus: 'bg-pink-100 text-pink-800',
-      rental_payment_lock: 'bg-orange-100 text-orange-800',
-      rental_payment_transfer: 'bg-teal-100 text-teal-800',
-      security_deposit_lock: 'bg-amber-100 text-amber-800',
-      security_deposit_release: 'bg-cyan-100 text-cyan-800',
-      security_deposit_charge: 'bg-red-100 text-red-800',
+      deposit: 'bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200',
+      withdrawal: 'bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-200',
+      lock: 'bg-yellow-100 text-yellow-800 dark:bg-amber-500/25 dark:text-amber-200',
+      unlock: 'bg-blue-100 text-blue-800 dark:bg-sky-500/20 dark:text-sky-200',
+      charge: 'bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-200',
+      refund: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-500/20 dark:text-indigo-200',
+      bonus: 'bg-pink-100 text-pink-800 dark:bg-pink-500/20 dark:text-pink-200',
+      rental_payment_lock: 'bg-orange-100 text-orange-800 dark:bg-orange-500/25 dark:text-orange-200',
+      rental_payment_transfer: 'bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-200',
+      security_deposit_lock: 'bg-amber-100 text-amber-800 dark:bg-amber-500/25 dark:text-amber-200',
+      security_deposit_release: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-200',
+      security_deposit_charge: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-200',
     };
-    return colors[type] || 'bg-gray-100 text-gray-800';
+    return colors[type] || 'bg-gray-100 text-gray-800 dark:bg-neutral-700/40 dark:text-neutral-200';
   }
 
   /**
@@ -216,12 +224,12 @@ export class TransactionHistoryComponent implements OnInit {
    */
   getStatusColor(status: WalletTransactionStatus): string {
     const colors: Record<WalletTransactionStatus, string> = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      completed: 'bg-green-100 text-green-800',
-      failed: 'bg-red-100 text-red-800',
-      refunded: 'bg-gray-100 text-gray-800',
+      pending: 'bg-yellow-100 text-yellow-800 dark:bg-amber-500/25 dark:text-amber-200',
+      completed: 'bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200',
+      failed: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-200',
+      refunded: 'bg-gray-100 text-gray-800 dark:bg-neutral-700/40 dark:text-neutral-200',
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-gray-100 text-gray-800 dark:bg-neutral-700/40 dark:text-neutral-200';
   }
 
   /**

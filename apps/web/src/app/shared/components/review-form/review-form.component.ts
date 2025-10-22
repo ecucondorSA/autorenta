@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import type { CreateReviewParams, ReviewType } from '../../../core/models';
 
 interface RatingCategory {
@@ -13,7 +14,7 @@ interface RatingCategory {
 @Component({
   selector: 'app-review-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './review-form.component.html',
   styleUrls: ['./review-form.component.css'],
 })

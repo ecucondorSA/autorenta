@@ -1,0 +1,271 @@
+<div class="min-h-screen bg-ivory-soft dark:bg-graphite-dark pb-20 transition-colors duration-300">
+  <!-- Header with back button -->
+  <div class="bg-white-pure dark:bg-anthracite border-b border-pearl-gray/30 dark:border-slate-deep/50 transition-colors">
+    <div class="mx-auto max-w-5xl px-6 py-6">
+      <button
+        (click)="goBack()"
+        class="flex items-center gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        {{ 'common.back' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="mx-auto max-w-5xl px-6 py-12 text-center">
+    <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-accent-petrol border-r-transparent"></div>
+    <p class="mt-4 text-charcoal-medium dark:text-pearl-light/70">{{ 'publicProfile.loadingProfile' | translate }}</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error() && !loading()" class="mx-auto max-w-5xl px-6 py-12">
+    <div class="rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-400/40 p-6 text-center">
+      <p class="text-red-800 dark:text-red-200 font-medium">{{ error() }}</p>
+      <button
+        (click)="goBack()"
+        class="mt-4 btn-secondary px-6 py-2"
+      >
+        {{ 'common.back' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!loading() && profile()" class="mx-auto max-w-5xl px-6 py-8">
+    <!-- Hero Section -->
+    <div class="card-premium mb-8 overflow-hidden">
+      <!-- Cover/Background -->
+      <div class="h-32 bg-gradient-to-br from-accent-petrol via-accent-petrol/90 to-accent-warm dark:from-slate-deep dark:via-accent-petrol/60 dark:to-charcoal-medium"></div>
+
+      <!-- Profile Info -->
+      <div class="px-6 sm:px-8 pb-6">
+        <div class="relative -mt-16 flex flex-col sm:flex-row items-start sm:items-end gap-6">
+          <!-- Avatar -->
+          <div class="flex-shrink-0">
+            <img
+              [src]="profile()?.avatar_url || '/assets/avatar-placeholder.png'"
+              [alt]="profile()?.full_name"
+              class="h-32 w-32 rounded-full object-cover bg-sand-light dark:bg-slate-deep/70 ring-4 ring-white-pure dark:ring-anthracite transition-colors shadow-lg"
+            />
+          </div>
+
+          <!-- Name and Stats -->
+          <div class="flex-1 pt-16 sm:pt-0">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div>
+                <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous tracking-tight">
+                  {{ profile()?.full_name }}
+                </h1>
+                <div class="mt-2 flex flex-wrap items-center gap-2">
+                  <!-- Role Badge -->
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-sand-light dark:bg-slate-deep/70 px-3 py-1 text-sm font-semibold text-smoke-black dark:text-ivory-luminous border border-pearl-gray/30 dark:border-slate-deep/50">
+                    {{ profile()?.role === 'renter' ? '🚗 Locatario' : profile()?.role === 'owner' ? '🏠 Locador' : '🔄 Ambos' }}
+                  </span>
+
+                  <!-- Verification Badge -->
+                  <span [class]="'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold border ' + getVerificationBadgeClass()">
+                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    {{ profile()?.is_email_verified && profile()?.is_phone_verified ? 'Verificado' : 'Sin verificar' }}
+                  </span>
+                </div>
+                <p class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light/70">
+                  {{ 'publicProfile.memberSince' | translate }} {{ formatMemberSince(profile()?.created_at || '') }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <!-- Owner Rating -->
+          <div class="rounded-xl bg-gradient-to-br from-accent-petrol/10 to-accent-petrol/5 dark:from-accent-petrol/15 dark:to-transparent border border-accent-petrol/20 dark:border-accent-petrol/30 p-4 transition-colors">
+            <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">{{ 'publicProfile.asOwner' | translate }}</p>
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+                {{ (userStats()?.owner_rating_avg || 0) | number:'1.1-1' }}
+              </span>
+              <span class="text-accent-petrol dark:text-accent-petrol/80">★</span>
+            </div>
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mt-1">
+              {{ userStats()?.owner_reviews_count || 0 }} reviews
+            </p>
+          </div>
+
+          <!-- Renter Rating -->
+          <div class="rounded-xl bg-gradient-to-br from-accent-warm/10 to-accent-warm/5 dark:from-accent-warm/15 dark:to-transparent border border-accent-warm/20 dark:border-accent-warm/30 p-4 transition-colors">
+            <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">{{ 'publicProfile.asRenter' | translate }}</p>
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+                {{ (userStats()?.renter_rating_avg || 0) | number:'1.1-1' }}
+              </span>
+              <span class="text-accent-warm dark:text-accent-warm/80">★</span>
+            </div>
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mt-1">
+              {{ userStats()?.renter_reviews_count || 0 }} reviews
+            </p>
+          </div>
+
+          <!-- Total Cars -->
+          <div class="rounded-xl bg-sand-light dark:bg-slate-deep/50 border border-pearl-gray/30 dark:border-slate-deep/50 p-4 transition-colors">
+            <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">{{ 'publicProfile.activeCars' | translate }}</p>
+            <p class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+              {{ userCars().length }}
+            </p>
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mt-1">{{ 'publicProfile.published' | translate }}</p>
+          </div>
+
+          <!-- Average Price -->
+          <div class="rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-500/15 dark:to-transparent border border-emerald-200 dark:border-emerald-400/30 p-4 transition-colors">
+            <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">{{ 'publicProfile.avgPrice' | translate }}</p>
+            <p class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+              ${{ averageCarPrice() | number:'1.0-0' }}
+            </p>
+            <p class="text-xs text-emerald-700 dark:text-emerald-300/80 mt-1">{{ 'publicProfile.perDay' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="mb-6 border-b border-pearl-gray dark:border-slate-deep/70 transition-colors">
+      <nav class="-mb-px flex gap-6 overflow-x-auto" aria-label="Tabs">
+        <button
+          (click)="setActiveTab('cars')"
+          [class.text-accent-petrol]="activeTab() === 'cars'"
+          [class.border-accent-petrol]="activeTab() === 'cars'"
+          [class.text-charcoal-medium]="activeTab() !== 'cars'"
+          [class.dark:text-pearl-light/70]="activeTab() !== 'cars'"
+          [class.border-transparent]="activeTab() !== 'cars'"
+          class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"
+        >
+          {{ 'publicProfile.tabs.cars' | translate }} ({{ userCars().length }})
+        </button>
+        <button
+          *ngIf="hasOwnerReviews()"
+          (click)="setActiveTab('reviews-owner')"
+          [class.text-accent-petrol]="activeTab() === 'reviews-owner'"
+          [class.border-accent-petrol]="activeTab() === 'reviews-owner'"
+          [class.text-charcoal-medium]="activeTab() !== 'reviews-owner'"
+          [class.dark:text-pearl-light/70]="activeTab() !== 'reviews-owner'"
+          [class.border-transparent]="activeTab() !== 'reviews-owner'"
+          class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"
+        >
+          {{ 'publicProfile.tabs.reviewsAsOwner' | translate }} ({{ reviewsAsOwner().length }})
+        </button>
+        <button
+          *ngIf="hasRenterReviews()"
+          (click)="setActiveTab('reviews-renter')"
+          [class.text-accent-petrol]="activeTab() === 'reviews-renter'"
+          [class.border-accent-petrol]="activeTab() === 'reviews-renter'"
+          [class.text-charcoal-medium]="activeTab() !== 'reviews-renter'"
+          [class.dark:text-pearl-light/70]="activeTab() !== 'reviews-renter'"
+          [class.border-transparent]="activeTab() !== 'reviews-renter'"
+          class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"
+        >
+          {{ 'publicProfile.tabs.reviewsAsRenter' | translate }} ({{ reviewsAsRenter().length }})
+        </button>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+    <!-- Cars Tab -->
+    <div *ngIf="activeTab() === 'cars'" class="space-y-6">
+      <div *ngIf="!hasCars()" class="card-premium p-12 text-center">
+        <p class="text-charcoal-medium dark:text-pearl-light/70">{{ 'publicProfile.noCars' | translate }}</p>
+      </div>
+
+      <div *ngIf="hasCars()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a
+          *ngFor="let car of displayedCars()"
+          [routerLink]="['/cars', car.id]"
+          class="card-premium overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 group"
+        >
+          <div class="aspect-[4/3] overflow-hidden bg-sand-light dark:bg-slate-deep/70">
+            <img
+              [src]="getCarPhotoUrl(car)"
+              [alt]="car.title"
+              class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-accent-petrol transition-colors">
+              {{ car.brand }} {{ car.model }}
+            </h3>
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mt-1">{{ car.year }}</p>
+            <div class="mt-3 flex items-center justify-between">
+              <p class="text-lg font-bold text-accent-petrol dark:text-accent-petrol/90">
+                ${{ car.price_per_day | number:'1.0-0' }}/día
+              </p>
+              <span class="text-xs text-charcoal-medium dark:text-pearl-light/60">{{ car.location_city }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div *ngIf="userCars().length > 6" class="text-center">
+        <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+          {{ 'publicProfile.showing' | translate }} 6 {{ 'publicProfile.of' | translate }} {{ userCars().length }} {{ 'publicProfile.cars' | translate }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Reviews as Owner Tab -->
+    <div *ngIf="activeTab() === 'reviews-owner'" class="space-y-4">
+      <div *ngFor="let review of displayedReviewsOwner()" class="card-premium p-6">
+        <div class="flex items-start gap-4">
+          <img
+            [src]="review.reviewer_avatar || '/assets/avatar-placeholder.png'"
+            [alt]="review.reviewer_name"
+            class="h-12 w-12 rounded-full object-cover"
+          />
+          <div class="flex-1">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="font-semibold text-smoke-black dark:text-ivory-luminous">{{ review.reviewer_name }}</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60">{{ review.created_at | date:'medium' }}</p>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">{{ getOverallRating(review) }}</span>
+                <span class="text-accent-warm">★</span>
+              </div>
+            </div>
+            <p *ngIf="review.comment_public" class="mt-2 text-sm text-smoke-black dark:text-pearl-light/80">{{ review.comment_public }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews as Renter Tab -->
+    <div *ngIf="activeTab() === 'reviews-renter'" class="space-y-4">
+      <div *ngFor="let review of displayedReviewsRenter()" class="card-premium p-6">
+        <div class="flex items-start gap-4">
+          <img
+            [src]="review.reviewer_avatar || '/assets/avatar-placeholder.png'"
+            [alt]="review.reviewer_name"
+            class="h-12 w-12 rounded-full object-cover"
+          />
+          <div class="flex-1">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="font-semibold text-smoke-black dark:text-ivory-luminous">{{ review.reviewer_name }}</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60">{{ review.created_at | date:'medium' }}</p>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">{{ getOverallRating(review) }}</span>
+                <span class="text-accent-petrol">★</span>
+              </div>
+            </div>
+            <p *ngIf="review.comment_public" class="mt-2 text-sm text-smoke-black dark:text-pearl-light/80">{{ review.comment_public }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

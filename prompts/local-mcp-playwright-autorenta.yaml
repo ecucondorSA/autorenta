@@ -1,0 +1,76 @@
+meta:
+  name: "Local – MCP + Playwright (AutoRenta)"
+  version: "2025-10-20"
+  mode: "interactive"
+  mutation: "enabled"
+  outputs_dir: "generated-docs"
+
+targets:
+  web:
+    app: "http://localhost:3000"
+  db:
+    mcp_endpoint: "${SUPABASE_MCP_ENDPOINT:-}"
+    mcp_token: "${SUPABASE_MCP_TOKEN:-}"
+    url: "${SUPABASE_URL:-}"
+
+env:
+  required:
+    - SUPABASE_URL
+    - SUPABASE_ANON_KEY
+    - SUPABASE_SERVICE_ROLE_KEY
+    - NEXT_PUBLIC_SUPABASE_URL
+    - NEXT_PUBLIC_SUPABASE_ANON_KEY
+    - MERCADOPAGO_ACCESS_TOKEN
+    - MERCADOPAGO_PUBLIC_KEY
+
+steps:
+  - id: env_check
+    note: "Validar variables requeridas para auth, DB y MercadoPago"
+    run:
+      - "node -v"
+      - "pnpm -v"
+      - "test -n \"$SUPABASE_URL\" && echo SUPABASE_URL=OK || (echo 'Falta SUPABASE_URL' && exit 1)"
+      - "test -n \"$MERCADOPAGO_ACCESS_TOKEN\" && echo MERCADOPAGO_ACCESS_TOKEN=OK || (echo 'Falta MERCADOPAGO_ACCESS_TOKEN' && exit 1)"
+
+  - id: dev_server
+    note: "Levantar app en :3000 (Next dev)"
+    run:
+      - "pnpm dev"
+
+  - id: e2e_wallet
+    note: "Ejecutar tests E2E de wallet y depósitos"
+    run:
+      - "pnpm test:e2e:wallet"
+
+  - id: e2e_bookings
+    note: "Ejecutar tests E2E de reservas y pagos"
+    run:
+      - "pnpm test:e2e:bookings"
+
+  - id: api_smoke
+    note: "Verificar APIs protegidas responden correctamente"
+    http:
+      - url: "${targets.web.app}/api/health"
+        expect_status: 200
+      - url: "${targets.web.app}/api/wallet/balance"
+        expect_any_status: [200, 401]
+      - url: "${targets.web.app}/api/bookings"
+        expect_any_status: [200, 401]
+
+  - id: wallet_balance_check
+    note: "Verificar integridad de balances de wallets"
+    run:
+      - "psql $DATABASE_URL -c \"SELECT id, balance FROM user_wallets WHERE balance < 0;\" | tee ${outputs_dir}/negative-balances.txt"
+
+report:
+  main: "LOCAL_E2E_REPORT.md"
+  include:
+    - "${outputs_dir}/playwright-report.txt"
+    - "${outputs_dir}/negative-balances.txt"
+
+exit_policy:
+  success_if:
+    - "all_steps_passed"
+  fail_if:
+    - "any_gate_failed"
+    - "negative_balances_found"

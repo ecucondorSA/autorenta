@@ -1,0 +1,6 @@
+# robots.txt para AutoRenta
+User-agent: *
+Disallow: /admin/
+Disallow: /wallet/
+Disallow: /bookings/
+Disallow: /profile/

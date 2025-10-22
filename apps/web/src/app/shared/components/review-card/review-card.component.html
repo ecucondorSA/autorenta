@@ -2,8 +2,11 @@
   <!-- Header with user info and rating -->
   <div class="flex items-start justify-between mb-4">
     <div class="flex items-center space-x-3">
-      <!-- Avatar -->
-      <div class="flex-shrink-0">
+      <!-- Avatar (clickable) -->
+      <a
+        [routerLink]="['/users', review.reviewer_id]"
+        class="flex-shrink-0 transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full"
+      >
         <div
           *ngIf="!review.reviewer_avatar"
           class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg"
@@ -14,13 +17,22 @@
           *ngIf="review.reviewer_avatar"
           [src]="review.reviewer_avatar"
           [alt]="review.reviewer_name || 'Usuario'"
+          loading="lazy"
+          decoding="async"
+          width="48"
+          height="48"
           class="w-12 h-12 rounded-full object-cover"
         />
-      </div>
+      </a>
 
       <!-- Name and date -->
       <div>
-        <h3 class="font-semibold text-gray-900">{{ review.reviewer_name || 'Usuario' }}</h3>
+        <a
+          [routerLink]="['/users', review.reviewer_id]"
+          class="font-semibold text-gray-900 hover:text-blue-600 transition-colors focus:outline-none focus:underline"
+        >
+          {{ review.reviewer_name || 'Usuario' }}
+        </a>
         <p class="text-sm text-gray-500">{{ getTimeSince(review.created_at) }}</p>
         <p *ngIf="showCarTitle && review.car_title" class="text-xs text-gray-400">
           {{ review.car_title }}

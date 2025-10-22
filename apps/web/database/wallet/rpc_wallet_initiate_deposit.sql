@@ -7,12 +7,14 @@
 
 -- Drop function if exists
 DROP FUNCTION IF EXISTS wallet_initiate_deposit(NUMERIC, TEXT, TEXT);
+DROP FUNCTION IF EXISTS wallet_initiate_deposit(NUMERIC, TEXT, TEXT, BOOLEAN);
 
 -- Crear función para iniciar depósito
 CREATE OR REPLACE FUNCTION wallet_initiate_deposit(
   p_amount NUMERIC(10, 2),
   p_provider TEXT DEFAULT 'mercadopago',
-  p_description TEXT DEFAULT 'Depósito a wallet'
+  p_description TEXT DEFAULT 'Depósito a wallet',
+  p_allow_withdrawal BOOLEAN DEFAULT FALSE
 )
 RETURNS TABLE (
   transaction_id UUID,
@@ -20,12 +22,17 @@ RETURNS TABLE (
   message TEXT,
   payment_provider TEXT,
   payment_url TEXT,
-  status TEXT
+  payment_mobile_deep_link TEXT,
+  status TEXT,
+  is_withdrawable BOOLEAN
 ) AS $$
 DECLARE
   v_user_id UUID;
   v_transaction_id UUID;
   v_payment_url TEXT;
+  v_payment_mobile_link TEXT;
+  v_user_email TEXT;
+  v_jwt_claims JSON;
 BEGIN
   -- Obtener el user_id del usuario autenticado
   v_user_id := auth.uid();
@@ -51,10 +58,34 @@ BEGIN
     RAISE EXCEPTION 'Proveedor de pago no soportado: %. Opciones válidas: mercadopago, stripe, bank_transfer', p_provider;
   END IF;
 
+  -- Asegurar que el perfil del usuario exista para satisfacer FK de wallet_transactions
+  BEGIN
+    v_jwt_claims := NULLIF(current_setting('request.jwt.claims', true), '')::json;
+    v_user_email := COALESCE(v_jwt_claims->>'email', NULL);
+  EXCEPTION
+    WHEN OTHERS THEN
+      v_jwt_claims := NULL;
+      v_user_email := NULL;
+  END;
+
+  INSERT INTO public.profiles (id, full_name)
+  VALUES (
+    v_user_id,
+    COALESCE(
+      v_jwt_claims->>'full_name',
+      v_user_email,
+      'Usuario Autorenta'
+    )
+  )
+  ON CONFLICT (id) DO NOTHING;
+
   -- Generar nuevo transaction_id
   v_transaction_id := gen_random_uuid();
 
   -- Crear transacción de depósito en estado 'pending'
+  -- reference_type:
+  --   - 'deposit': Depósitos retirables normales
+  --   - 'credit_protected': Crédito Autorentar (no retirable, meta USD 250)
   INSERT INTO wallet_transactions (
     id,
     user_id,
@@ -66,7 +97,8 @@ BEGIN
     reference_id,
     provider,
     description,
-    provider_metadata
+    provider_metadata,
+    is_withdrawable
   ) VALUES (
     v_transaction_id,
     v_user_id,
@@ -74,7 +106,10 @@ BEGIN
     'pending',  -- Inicia como pending hasta que se confirme el pago
     p_amount,
     'USD',
-    'deposit',
+    CASE
+      WHEN p_allow_withdrawal THEN 'deposit'
+      ELSE 'credit_protected'  -- Crédito Autorentar (no retirable)
+    END,
     v_transaction_id,  -- La referencia es a sí misma
     p_provider,
     p_description,
@@ -82,8 +117,14 @@ BEGIN
       'initiated_at', NOW(),
       'user_id', v_user_id,
       'amount', p_amount,
-      'provider', p_provider
-    )
+      'provider', p_provider,
+      'allow_withdrawal', p_allow_withdrawal,
+      'deposit_type', CASE
+        WHEN p_allow_withdrawal THEN 'withdrawable'
+        ELSE 'protected_credit'
+      END
+    ),
+    p_allow_withdrawal
   );
 
   -- Generar URL de pago simulada (en producción, llamar a API del proveedor)
@@ -98,20 +139,33 @@ BEGIN
     v_transaction_id,
     p_amount
   );
+  v_payment_mobile_link := v_payment_url;
 
   -- Actualizar metadata con payment URL
   UPDATE wallet_transactions
-  SET provider_metadata = provider_metadata || jsonb_build_object('payment_url', v_payment_url)
+  SET provider_metadata = provider_metadata || jsonb_build_object(
+    'payment_url', v_payment_url,
+    'payment_mobile_deep_link', v_payment_mobile_link
+  )
   WHERE id = v_transaction_id;
 
   -- Retornar resultado exitoso con información para el frontend
   RETURN QUERY SELECT
     v_transaction_id AS transaction_id,
     TRUE AS success,
-    FORMAT('Depósito iniciado. Completa el pago para acreditar $%s a tu wallet', p_amount) AS message,
+    FORMAT(
+      'Depósito iniciado. Completa el pago para acreditar $%s a tu wallet %s',
+      p_amount,
+      CASE
+        WHEN p_allow_withdrawal THEN '(retirable)'
+        ELSE '(crédito exclusivo para Autorentar)'
+      END
+    ) AS message,
     p_provider AS payment_provider,
     v_payment_url AS payment_url,
-    'pending'::TEXT AS status;
+    v_payment_mobile_link AS payment_mobile_deep_link,
+    'pending'::TEXT AS status,
+    p_allow_withdrawal AS is_withdrawable;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -120,13 +174,13 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- =====================================================
 
 -- Cualquier usuario autenticado puede iniciar depósitos
-GRANT EXECUTE ON FUNCTION wallet_initiate_deposit(NUMERIC, TEXT, TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION wallet_initiate_deposit(NUMERIC, TEXT, TEXT, BOOLEAN) TO authenticated;
 
 -- =====================================================
 -- COMENTARIOS
 -- =====================================================
 
-COMMENT ON FUNCTION wallet_initiate_deposit(NUMERIC, TEXT, TEXT) IS 'Inicia un proceso de depósito en el wallet del usuario (crea transacción pending y genera payment URL)';
+COMMENT ON FUNCTION wallet_initiate_deposit(NUMERIC, TEXT, TEXT, BOOLEAN) IS 'Inicia un depósito y permite marcarlo como retirabile o crédito interno';
 
 -- =====================================================
 -- FUNCIÓN AUXILIAR: Confirmar depósito (webhook)
@@ -172,6 +226,19 @@ BEGIN
     provider_metadata = provider_metadata || p_provider_metadata || jsonb_build_object('confirmed_at', NOW()),
     completed_at = NOW()
   WHERE id = p_transaction_id;
+
+  -- Asegurar existencia del wallet y actualizar piso no reembolsable
+  INSERT INTO user_wallets (user_id, currency)
+  VALUES (v_transaction.user_id, v_transaction.currency)
+  ON CONFLICT (user_id) DO NOTHING;
+
+  IF NOT v_transaction.is_withdrawable THEN
+    UPDATE user_wallets
+    SET
+      non_withdrawable_floor = GREATEST(non_withdrawable_floor, 250),
+      updated_at = NOW()
+    WHERE user_id = v_transaction.user_id;
+  END IF;
 
   -- Obtener nuevo balance
   SELECT available_balance INTO v_new_balance

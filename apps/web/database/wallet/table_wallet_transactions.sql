@@ -47,6 +47,7 @@ CREATE TABLE wallet_transactions (
   )),
   provider_transaction_id TEXT,  -- ID de transacción en el proveedor externo
   provider_metadata JSONB,       -- Metadata del proveedor (webhooks, etc.)
+  is_withdrawable BOOLEAN NOT NULL DEFAULT TRUE, -- Indica si los fondos pueden retirarse
 
   -- Descripción y notas
   description TEXT,
@@ -160,6 +161,7 @@ COMMENT ON COLUMN wallet_transactions.reference_id IS 'ID de la entidad referenc
 COMMENT ON COLUMN wallet_transactions.provider IS 'Proveedor de pago: mercadopago, stripe, bank_transfer, internal';
 COMMENT ON COLUMN wallet_transactions.provider_transaction_id IS 'ID de transacción en el sistema externo del proveedor';
 COMMENT ON COLUMN wallet_transactions.provider_metadata IS 'Metadata JSON del proveedor (webhooks, responses, etc)';
+COMMENT ON COLUMN wallet_transactions.is_withdrawable IS 'TRUE si los fondos pueden retirarse a cuentas externas';
 
 -- =====================================================
 -- GRANTS (permisos)

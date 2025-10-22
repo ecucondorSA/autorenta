@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { ComparisonRow } from '../../../core/models';
 
 @Component({
   standalone: true,
   selector: 'app-compare-page',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './compare.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

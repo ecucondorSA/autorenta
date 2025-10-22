@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
 export interface Message {
@@ -16,6 +17,7 @@ export interface Message {
 })
 export class MessagesService {
   private readonly supabase = injectSupabase();
+  private realtimeChannel?: RealtimeChannel;
 
   async listByBooking(bookingId: string): Promise<Message[]> {
     const { data, error } = await this.supabase
@@ -62,5 +64,32 @@ export class MessagesService {
       body: params.body,
     });
     if (error) throw error;
+  }
+
+  subscribeToBooking(bookingId: string, handler: (message: Message) => void): void {
+    this.unsubscribe();
+
+    this.realtimeChannel = this.supabase
+      .channel(`booking-messages-${bookingId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `booking_id=eq.${bookingId}`,
+        },
+        payload => {
+          handler(payload.new as Message);
+        },
+      )
+      .subscribe();
+  }
+
+  unsubscribe(): void {
+    if (this.realtimeChannel) {
+      this.supabase.removeChannel(this.realtimeChannel);
+      this.realtimeChannel = undefined;
+    }
   }
 }

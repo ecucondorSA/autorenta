@@ -10,7 +10,10 @@ export interface CarMapLocation {
   carId: string;
   title: string;
   pricePerDay: number;
+  pricePerHour?: number; // Dynamic pricing
   currency: string;
+  regionId?: string | null; // For dynamic pricing calculation
+  surgeActive?: boolean; // Surge pricing indicator
   lat: number;
   lng: number;
   updatedAt: string;
@@ -126,7 +129,7 @@ export class CarLocationsService {
     const { data: cars, error: carsError } = await this.supabase
       .from('v_cars_with_main_photo')
       .select(
-        'id, title, status, price_per_day, currency, location_city, location_state, location_country, location_lat, location_lng, main_photo_url, description, updated_at',
+        'id, title, status, price_per_day, currency, region_id, location_city, location_state, location_country, location_lat, location_lng, main_photo_url, description, updated_at',
       )
       .eq('status', 'active')
       .not('location_lat', 'is', null)
@@ -191,6 +194,7 @@ export class CarLocationsService {
     const currency = String(
       car.currency ?? entry.currency ?? environment.defaultCurrency ?? 'USD',
     ).toUpperCase();
+    const regionId = car.region_id ?? entry.region_id ?? null;
     const city = car.location_city ?? entry.city ?? entry.location_city ?? null;
     const state = car.location_state ?? entry.state ?? entry.location_state ?? null;
     const country = car.location_country ?? entry.country ?? entry.location_country ?? null;
@@ -207,6 +211,7 @@ export class CarLocationsService {
       title,
       pricePerDay: Number.isFinite(pricePerDay) ? pricePerDay : 0,
       currency,
+      regionId,
       lat,
       lng,
       updatedAt,

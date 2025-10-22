@@ -4,6 +4,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
+    data: { layout: 'full-bleed' },
     loadComponent: () => import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
   },
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        data: { layout: 'full-bleed' },
         loadComponent: () =>
           import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
       },
@@ -66,6 +68,13 @@ export const routes: Routes = [
             (m) => m.AdminWithdrawalsPage
           ),
       },
+      {
+        path: 'coverage-fund',
+        loadComponent: () =>
+          import('./features/admin/components/coverage-fund-dashboard.component').then(
+            (m) => m.CoverageFundDashboardComponent
+          ),
+      },
     ],
   },
   {
@@ -74,9 +83,36 @@ export const routes: Routes = [
     loadComponent: () => import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
   },
   {
+    path: 'users/:id',
+    loadComponent: () => import('./features/users/public-profile.page').then((m) => m.PublicProfilePage),
+  },
+  {
     path: 'wallet',
     canMatch: [AuthGuard],
-    loadComponent: () => import('./features/wallet/wallet.page').then((m) => m.WalletPage),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/wallet/wallet.page').then((m) => m.WalletPage),
+      },
+      {
+        path: 'history',
+        loadComponent: () =>
+          import('./features/wallet/components/ledger-history.component').then(
+            (m) => m.LedgerHistoryComponent
+          ),
+      },
+      {
+        path: 'transfer',
+        loadComponent: () =>
+          import('./features/wallet/components/transfer-funds.component').then(
+            (m) => m.TransferFundsComponent
+          ),
+      },
+    ],
+  },
+  {
+    path: 'terminos',
+    loadComponent: () => import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
   },
   { path: '**', redirectTo: '' },
 ];

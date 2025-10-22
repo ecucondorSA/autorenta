@@ -1,5 +1,4 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { SupabaseClientService } from './supabase-client.service';
 import type {
   BankAccount,
   WithdrawalRequest,
@@ -15,6 +14,7 @@ import type {
   WalletError,
   BankAccountType,
 } from '../models/wallet.model';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * WithdrawalService

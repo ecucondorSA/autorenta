@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "cloudflare-builds": {
+      "url": "https://builds.mcp.cloudflare.com/mcp",
+      "transport": "streamble-http",
+      "description": "Deploy and manage Cloudflare Pages and Workers builds"
+    },
+    "cloudflare-docs": {
+      "url": "https://docs.mcp.cloudflare.com/mcp",
+      "transport": "streamble-http",
+      "description": "Quick reference for Cloudflare documentation"
+    },
+    "cloudflare-bindings": {
+      "url": "https://bindings.mcp.cloudflare.com/mcp",
+      "transport": "streamble-http",
+      "description": "Manage Workers bindings (R2, KV, D1, AI, etc.)"
+    }
+  }
+}
