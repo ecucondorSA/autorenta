@@ -699,4 +699,15 @@ export class ProfileExpandedPage implements OnInit {
       this.error.set('Error al cerrar sesión');
     }
   }
+
+  /**
+   * Detecta si el usuario está en un dispositivo móvil
+   * Se usa para determinar si mostrar el atributo capture="environment"
+   */
+  isMobileDevice(): boolean {
+    if (typeof navigator === 'undefined') {
+      return false;
+    }
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
 }
