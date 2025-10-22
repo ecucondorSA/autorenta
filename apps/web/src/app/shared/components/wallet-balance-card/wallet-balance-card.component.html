@@ -84,7 +84,7 @@
     <button
       type="button"
       (click)="retry()"
-      class="px-4 py-2 bg-accent-petrol text-ivory-soft rounded-lg hover:bg-accent-petrol/90 dark:hover:bg-accent-petrol/80 transition-colors">
+      class="btn-primary">
       Reintentar
     </button>
   </div>
@@ -92,9 +92,9 @@
   <!-- Balance Display -->
   <div *ngIf="balance() && !isLoadingBalance()" class="space-y-4">
     <!-- Total Balance -->
-    <div class="bg-gradient-to-br from-accent-petrol/10 via-accent-petrol/5 to-white-pure dark:from-accent-petrol/30 dark:via-accent-petrol/10 dark:to-transparent rounded-xl p-6 border border-accent-petrol/20 dark:border-accent-petrol/30">
-      <p class="text-sm text-accent-petrol font-medium dark:text-pearl-light/90 mb-1">Balance Total</p>
-      <p class="text-4xl font-bold text-accent-petrol dark:text-ivory-luminous">
+    <div class="bg-white-pure dark:bg-slate-deep rounded-xl p-6 border-2 border-accent-petrol/30 dark:border-accent-petrol/40 shadow-soft hover:border-accent-petrol/50 dark:hover:border-accent-petrol/60 transition-all">
+      <p class="text-sm text-charcoal-medium dark:text-pearl-light/90 font-medium mb-1">Balance Total</p>
+      <p class="text-4xl font-bold text-smoke-black dark:text-ivory-luminous">
         {{ formatCurrency(totalBalance()) }}
       </p>
     </div>
@@ -154,7 +154,7 @@
       *ngIf="showDepositButton()"
       type="button"
       (click)="onDepositClick()"
-      class="w-full py-3 bg-accent-petrol text-ivory-soft font-semibold rounded-xl hover:bg-accent-petrol/90 dark:hover:bg-accent-petrol/80 transition-colors shadow-soft hover:shadow-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60">
+      class="btn-primary w-full">
       <div class="flex items-center justify-center">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -164,11 +164,11 @@
     </button>
 
     <!-- Bank Transfer Information -->
-    <div class="border border-accent-petrol/20 dark:border-accent-petrol/30 rounded-xl overflow-hidden">
+    <div class="border border-pearl-gray dark:border-slate-deep rounded-xl overflow-hidden">
       <button
         type="button"
         (click)="showBankInfo.set(!showBankInfo())"
-        class="w-full px-4 py-3 bg-accent-petrol/5 dark:bg-accent-petrol/15 text-accent-petrol dark:text-pearl-light font-medium flex items-center justify-between hover:bg-accent-petrol/10 transition-colors">
+        class="w-full px-4 py-3 bg-sand-light dark:bg-anthracite text-smoke-black dark:text-pearl-light font-medium flex items-center justify-between hover:bg-pearl-gray dark:hover:bg-slate-deep transition-colors rounded-t-xl">
         <span class="text-sm">Ver datos para transferencia bancaria</span>
         <svg
           class="w-5 h-5 transition-transform"
@@ -178,7 +178,7 @@
         </svg>
       </button>
 
-      <div *ngIf="showBankInfo()" class="p-4 bg-white-pure dark:bg-slate-deep space-y-3 text-sm border-t border-accent-petrol/20 dark:border-accent-petrol/30">
+      <div *ngIf="showBankInfo()" class="p-4 bg-white-pure dark:bg-slate-deep space-y-3 text-sm border-t border-pearl-gray dark:border-slate-deep">
         <div class="flex items-center justify-between">
           <span class="text-charcoal-medium dark:text-pearl-light/70">Titular:</span>
           <span class="font-semibold text-smoke-black dark:text-ivory-luminous">{{ bankDetails.accountName }}</span>
@@ -229,19 +229,19 @@
     </div>
 
     <!-- Info Message -->
-    <div class="bg-accent-petrol/5 dark:bg-accent-petrol/15 border border-accent-petrol/20 dark:border-accent-petrol/30 rounded-xl p-3">
+    <div class="info-card">
       <div class="flex items-start">
-        <svg class="w-5 h-5 text-accent-petrol dark:text-pearl-light mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 text-charcoal-medium dark:text-pearl-light mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <div class="ml-2 space-y-1">
-          <p class="text-xs text-accent-petrol dark:text-pearl-light/80">
+          <p class="text-xs text-charcoal-medium dark:text-pearl-light/80">
             Los fondos bloqueados se liberan automáticamente al finalizar tus reservas.
           </p>
           @if (nonWithdrawableBalance() > 0) {
-            <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/70">
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
               Tu crédito Autorentar se mantiene disponible para nuevas reservas y no puede retirarse como efectivo.
-              <a href="/politica-credito-autorentar" class="underline font-semibold hover:text-accent-petrol dark:hover:text-ivory-luminous" target="_blank">
+              <a href="/politica-credito-autorentar" class="underline font-semibold hover:text-smoke-black dark:hover:text-ivory-luminous" target="_blank">
                 Consultar política
               </a>
             </p>

@@ -163,6 +163,26 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     // Cargar pending deposits
     await this.loadPendingDeposits();
 
+    // Subscribirse a cambios realtime en wallet
+    await this.walletService.subscribeToWalletChanges(
+      // Callback cuando un depósito se confirma
+      (transaction) => {
+        console.log('✅ Depósito confirmado en realtime:', transaction);
+
+        // Mostrar notificación toast
+        this.showDepositConfirmedToast(transaction);
+
+        // Recargar pending deposits
+        this.loadPendingDeposits().catch((err) => {
+          console.error('Error al recargar pending deposits:', err);
+        });
+      },
+      // Callback para cualquier cambio en transacciones
+      (transaction) => {
+        console.log('🔔 Transacción actualizada en realtime:', transaction);
+      }
+    );
+
     // Iniciar auto-refresh si está habilitado
     if (this.autoRefreshEnabled()) {
       this.startAutoRefresh();
@@ -170,6 +190,11 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Desuscribirse de cambios realtime
+    this.walletService.unsubscribeFromWalletChanges().catch((err) => {
+      console.error('Error al desuscribirse de cambios realtime:', err);
+    });
+
     // Limpiar interval al destruir componente
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
@@ -362,6 +387,29 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     if (seconds < 3600) return `hace ${Math.floor(seconds / 60)}m`;
 
     return last.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  /**
+   * Muestra un toast de confirmación cuando un depósito es confirmado vía realtime
+   */
+  private showDepositConfirmedToast(transaction: any): void {
+    const amount = typeof transaction.amount === 'number' ? transaction.amount : 0;
+    const currency = transaction.currency || 'USD';
+
+    // Format amount
+    const formattedAmount = new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: currency,
+      currencyDisplay: 'symbol',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+
+    // Mostrar notificación con alert (temporal hasta implementar un sistema de toasts)
+    alert(`✅ Depósito Confirmado!\n\n${formattedAmount} se acreditaron a tu wallet.\n\nTu balance ha sido actualizado.`);
+
+    // TODO: Reemplazar con un toast notification component más elegante
+    console.log('✅ Toast mostrado para depósito confirmado:', transaction);
   }
 
   /**
