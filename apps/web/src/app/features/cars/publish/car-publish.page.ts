@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { UploadImageComponent } from '../../../shared/components/upload-image/upload-image.component';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,

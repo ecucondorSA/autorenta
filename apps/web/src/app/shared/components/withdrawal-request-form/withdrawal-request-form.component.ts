@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/wallet.model';
 import { TranslateModule } from '@ngx-translate/core';
+import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/wallet.model';
 
 /**
  * Componente para solicitar retiros
@@ -21,7 +21,7 @@ export class WithdrawalRequestFormComponent {
   @Input({ required: true }) accounts: BankAccount[] = [];
 
   @Output() submitWithdrawal = new EventEmitter<RequestWithdrawalParams>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelled = new EventEmitter<void>();
 
   readonly form: FormGroup;
   readonly submitting = signal(false);
@@ -109,7 +109,7 @@ export class WithdrawalRequestFormComponent {
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelled.emit();
   }
 
   setMaxAmount(): void {

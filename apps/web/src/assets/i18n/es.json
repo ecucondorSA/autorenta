@@ -15,6 +15,7 @@
     "currency": "ARS",
     "skipToContent": "Saltar al contenido",
     "changeTheme": "Cambiar tema",
+    "help": "Ayuda",
     "centro_pocitos_etc": "Centro, Pocitos, etc.",
     "error_al_cargar_reservas": "Error al cargar reservas",
     "cargando_reviews": "Cargando reviews...",
@@ -610,5 +611,49 @@
     "writeMessage": "Escribí tu mensaje...",
     "send": "Enviar",
     "sending": "Enviando..."
+  },
+  "publicProfile": {
+    "title": "Perfil Público",
+    "memberSince": "Miembro desde",
+    "asOwner": "Como Locador",
+    "asRenter": "Como Locatario",
+    "activeCars": "Autos Activos",
+    "rating": "Calificación",
+    "reviews": "reseñas",
+    "trips": "Viajes",
+    "tabs": {
+      "cars": "Autos",
+      "reviewsAsOwner": "Reviews como Locador",
+      "reviewsAsRenter": "Reviews como Locatario"
+    },
+    "badges": {
+      "emailVerified": "Email verificado",
+      "phoneVerified": "Teléfono verificado",
+      "driverVerified": "Conductor verificado"
+    },
+    "noCars": "Este usuario no tiene autos publicados actualmente",
+    "noReviews": "No tiene reviews aún",
+    "showing": "Mostrando",
+    "of": "de",
+    "loadingProfile": "Cargando perfil...",
+    "published": "publicados",
+    "completed": "completados",
+    "cars": "autos",
+    "avgPrice": "Precio Promedio",
+    "perDay": "por día"
+  },
+  "navigation": {
+    "getDirections": "Cómo llegar",
+    "openMap": "Abrir mapa",
+    "locationNotAvailable": "Ubicación del auto no disponible",
+    "deviceNotSupported": "Tu dispositivo no soporta geolocalización"
+  },
+  "carDetail": {
+    "viewFullProfile": "Ver perfil completo",
+    "host": "Anfitrión",
+    "newHost": "Nuevo anfitrión",
+    "reviews": "reseñas",
+    "loginToViewProfile": "Iniciá sesión para ver el perfil completo",
+    "loginDescription": "Accedé a verificaciones, información de contacto y más detalles del anfitrión"
   }
 }

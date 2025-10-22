@@ -35,9 +35,6 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-// Importar SDK de MercadoPago desde npm vía esm.sh
-import MercadoPagoConfig from 'https://esm.sh/mercadopago@2';
-import { Payment } from 'https://esm.sh/mercadopago@2';
 
 // Tipos de Mercado Pago
 interface MPWebhookPayload {
@@ -89,10 +86,125 @@ serve(async (req) => {
       );
     }
 
-    // Obtener payload del webhook
-    const webhookPayload: MPWebhookPayload = await req.json();
+    // ========================================
+    // VALIDACIÓN DE FIRMA HMAC (CRÍTICA)
+    // Verificar que el webhook proviene realmente de MercadoPago
+    // ========================================
+
+    const xSignature = req.headers.get('x-signature');
+    const xRequestId = req.headers.get('x-request-id');
+
+    // Obtener query params para validación
+    const url = new URL(req.url);
+    const dataId = url.searchParams.get('data.id');
+    const webhookType = url.searchParams.get('type');
+
+    // Leer body raw (necesario para HMAC)
+    const rawBody = await req.text();
+    let webhookPayload: MPWebhookPayload;
+
+    try {
+      webhookPayload = JSON.parse(rawBody);
+    } catch (e) {
+      console.error('Invalid JSON in webhook payload:', e);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON payload' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     console.log('MercadoPago Webhook received:', JSON.stringify(webhookPayload, null, 2));
+
+    // ========================================
+    // VALIDAR FIRMA HMAC (si está presente)
+    // ========================================
+    if (xSignature && xRequestId) {
+      // Extraer ts y v1 de x-signature
+      // Formato: "ts=1704900000,v1=abc123def456..."
+      const signatureParts: Record<string, string> = {};
+
+      xSignature.split(',').forEach(part => {
+        const [key, value] = part.split('=');
+        if (key && value) {
+          signatureParts[key.trim()] = value.trim();
+        }
+      });
+
+      const ts = signatureParts['ts'];
+      const hash = signatureParts['v1'];
+
+      if (ts && hash) {
+        // Construir mensaje para HMAC
+        // Formato: data.id + x-request-id + ts
+        const paymentId = webhookPayload.data?.id || dataId || '';
+        const manifest = `id:${paymentId};request-id:${xRequestId};ts:${ts};`;
+
+        console.log('HMAC validation:', {
+          manifest,
+          ts,
+          hash_received: hash.substring(0, 20) + '...',
+        });
+
+        // Calcular HMAC-SHA256
+        const encoder = new TextEncoder();
+        const keyData = encoder.encode(MP_ACCESS_TOKEN);
+
+        try {
+          const cryptoKey = await crypto.subtle.importKey(
+            'raw',
+            keyData,
+            { name: 'HMAC', hash: 'SHA-256' },
+            false,
+            ['sign']
+          );
+
+          const signature = await crypto.subtle.sign(
+            'HMAC',
+            cryptoKey,
+            encoder.encode(manifest)
+          );
+
+          // Convertir a hex
+          const hashArray = Array.from(new Uint8Array(signature));
+          const calculatedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+          console.log('HMAC calculated:', calculatedHash.substring(0, 20) + '...');
+
+          // Comparar hashes
+          if (calculatedHash !== hash) {
+            console.error('HMAC validation FAILED', {
+              expected: hash.substring(0, 20) + '...',
+              calculated: calculatedHash.substring(0, 20) + '...',
+            });
+
+            // ✅ ACTIVADO EN PRODUCCIÓN - Rechazar webhook con firma inválida
+            return new Response(
+              JSON.stringify({
+                error: 'Invalid webhook signature',
+                code: 'INVALID_HMAC',
+              }),
+              {
+                status: 403,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              }
+            );
+          } else {
+            console.log('✅ HMAC validation passed');
+          }
+        } catch (cryptoError) {
+          console.error('Error calculating HMAC:', cryptoError);
+          // No fallar por errores de crypto, solo loggear
+        }
+      } else {
+        console.warn('x-signature present but missing ts or v1 parts');
+      }
+    } else {
+      console.warn('⚠️ No x-signature header - webhook signature not validated');
+      // En producción deberíamos rechazar, por ahora solo loggeamos
+    }
 
     // Solo procesar notificaciones de tipo 'payment'
     if (webhookPayload.type !== 'payment') {
@@ -107,27 +219,94 @@ serve(async (req) => {
     }
 
     // ========================================
-    // MIGRACIÓN AL SDK OFICIAL DE MERCADOPAGO
+    // LLAMADA DIRECTA A MERCADOPAGO REST API
+    // FIX: SDK tiene bug con Deno (f.headers.raw is not a function)
     // ========================================
 
-    // Inicializar cliente de MercadoPago con el SDK oficial
-    const client = new MercadoPagoConfig({
-      accessToken: MP_ACCESS_TOKEN,
-      options: {
-        timeout: 5000,
-      },
-    });
-
-    // Crear instancia de Payment
-    const paymentClient = new Payment(client);
-
-    // Obtener detalles del pago usando el SDK
     const paymentId = webhookPayload.data.id;
-    console.log(`Fetching payment ${paymentId} using MercadoPago SDK...`);
+    console.log(`Fetching payment ${paymentId} using MercadoPago REST API...`);
 
-    const paymentData = await paymentClient.get({ id: paymentId });
+    // Llamar directamente a la REST API (sin SDK)
+    let paymentData;
+    try {
+      const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
-    console.log('Payment Data from SDK:', JSON.stringify(paymentData, null, 2));
+      if (!mpResponse.ok) {
+        const errorText = await mpResponse.text();
+        console.error('MercadoPago API Error:', {
+          status: mpResponse.status,
+          statusText: mpResponse.statusText,
+          body: errorText,
+        });
+
+        // Si MP API está caída (500, 502, 503)
+        if (mpResponse.status >= 500) {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: 'MercadoPago API temporarily unavailable',
+              retry_after: 300,
+              payment_id: paymentId,
+            }),
+            {
+              status: 503,
+              headers: {
+                ...corsHeaders,
+                'Content-Type': 'application/json',
+                'Retry-After': '300',
+              },
+            }
+          );
+        }
+
+        // Payment not found o unauthorized
+        throw new Error(`MercadoPago API error: ${mpResponse.status} ${errorText}`);
+      }
+
+      paymentData = await mpResponse.json();
+
+      // Validar que la respuesta contiene datos válidos
+      if (!paymentData || !paymentData.id) {
+        console.error('Invalid payment data received from MercadoPago API:', paymentData);
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Invalid payment data from MercadoPago API',
+            payment_id: paymentId,
+          }),
+          {
+            status: 502,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      console.log('Payment Data from REST API:', JSON.stringify(paymentData, null, 2));
+
+    } catch (apiError) {
+      console.error('MercadoPago API error:', apiError);
+
+      // Retornar 200 OK para evitar reintentos infinitos
+      // El polling backup confirmará el pago de todas formas
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Error fetching payment, will be processed by polling',
+          payment_id: paymentId,
+          error_details: apiError instanceof Error ? apiError.message : 'Unknown error',
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Verificar que el pago esté aprobado
     if (paymentData.status !== 'approved') {
@@ -181,21 +360,31 @@ serve(async (req) => {
       );
     }
 
-    // Confirmar depósito llamando a la función de base de datos
+    // ========================================
+    // MEJORA: Usar función admin que no requiere auth
+    // ========================================
+    // Confirmar depósito llamando a la función de base de datos (versión admin)
     const { data: confirmResult, error: confirmError } = await supabase.rpc(
-      'wallet_confirm_deposit',
+      'wallet_confirm_deposit_admin',
       {
+        p_user_id: transaction.user_id,
         p_transaction_id: transaction_id,
         p_provider_transaction_id: paymentData.id?.toString() || '',
         p_provider_metadata: {
+          id: paymentData.id,
           status: paymentData.status,
           status_detail: paymentData.status_detail,
           payment_method_id: paymentData.payment_method_id,
           payment_type_id: paymentData.payment_type_id,
           transaction_amount: paymentData.transaction_amount,
+          net_amount: paymentData.transaction_details?.net_received_amount,
           currency_id: paymentData.currency_id,
           date_approved: paymentData.date_approved,
+          date_created: paymentData.date_created,
+          external_reference: paymentData.external_reference,
           payer_email: paymentData.payer?.email,
+          payer_first_name: paymentData.payer?.first_name,
+          payer_last_name: paymentData.payer?.last_name,
         },
       }
     );
@@ -206,6 +395,45 @@ serve(async (req) => {
     }
 
     console.log('Deposit confirmed successfully:', confirmResult);
+
+    // ========================================
+    // REGISTRAR EN WALLET LEDGER (NUEVO SISTEMA)
+    // ========================================
+    // Convertir a centavos (MercadoPago usa decimales, ledger usa centavos)
+    const amountCents = Math.round(paymentData.transaction_amount * 100);
+    const refKey = `mp-${paymentData.id}`;
+
+    console.log(`Registering deposit in ledger: ${amountCents} cents for user ${transaction.user_id}`);
+
+    const { data: ledgerResult, error: ledgerError } = await supabase.rpc(
+      'wallet_deposit_ledger',
+      {
+        p_user_id: transaction.user_id,
+        p_amount_cents: amountCents,
+        p_ref: refKey,
+        p_provider: 'mercadopago',
+        p_meta: {
+          transaction_id: transaction_id,
+          payment_id: paymentData.id,
+          payment_method: paymentData.payment_method_id,
+          payment_type: paymentData.payment_type_id,
+          status: paymentData.status,
+          status_detail: paymentData.status_detail,
+          currency: paymentData.currency_id,
+          net_amount: paymentData.transaction_details?.net_received_amount,
+          date_approved: paymentData.date_approved,
+          payer_email: paymentData.payer?.email,
+        },
+      }
+    );
+
+    if (ledgerError) {
+      // No fallar el webhook si el ledger falla, solo loggear
+      // El sistema viejo (wallet_transactions) ya funcionó
+      console.error('Warning: Error registering in ledger (old system still worked):', ledgerError);
+    } else {
+      console.log('✅ Deposit registered in ledger successfully:', ledgerResult);
+    }
 
     // Retornar éxito
     return new Response(

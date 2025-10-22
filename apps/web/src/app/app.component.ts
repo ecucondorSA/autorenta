@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, ViewChild, computed, inject, signal, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,12 +7,16 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from './core/services/auth.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { PwaService } from './core/services/pwa.service';
+import { TourService } from './core/services/tour.service';
+import { LocaleManagerService } from './core/services/locale-manager.service';
 import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
 import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
 import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
+import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
+import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
 
 @Component({
   selector: 'app-root',
@@ -25,11 +29,13 @@ import { LanguageSelectorComponent } from './shared/components/language-selector
     RouterLinkActive,
     TranslateModule,
     PendingReviewsBannerComponent,
+    VerificationPromptBannerComponent,
     SplashLoaderComponent,
     PwaInstallPromptComponent,
     PwaUpdatePromptComponent,
     VerificationBadgeComponent,
     LanguageSelectorComponent,
+    HelpButtonComponent,
   ],
   templateUrl: './app.component.html',
   styles: [
@@ -41,10 +47,12 @@ import { LanguageSelectorComponent } from './shared/components/language-selector
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   private readonly authService = inject(AuthService);
   private readonly compareService = inject(CarsCompareService);
   private readonly pwaService = inject(PwaService);
+  private readonly tourService = inject(TourService);
+  private readonly localeManager = inject(LocaleManagerService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
@@ -68,6 +76,17 @@ export class AppComponent implements OnInit {
     this.initializeSplash();
     this.initializeTheme();
     this.initializeLayoutWatcher();
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    // Wait for splash screen (4s) + initial render (1s) + buffer (1s)
+    setTimeout(() => {
+      this.initializeWelcomeTour();
+    }, 6000);
   }
 
   toggleSidebar(): void {
@@ -220,5 +239,14 @@ export class AppComponent implements OnInit {
     return Array.from(
       this.sidebarPanel.nativeElement.querySelectorAll<HTMLElement>(focusableSelectors),
     ).filter(element => !element.hasAttribute('disabled') && element.tabIndex !== -1);
+  }
+
+  private initializeWelcomeTour(): void {
+    const hasSeenTour = localStorage.getItem('autorenta:tour:welcome');
+    const isHomePage = this.router.url === '/' || this.router.url === '/cars';
+
+    if (!hasSeenTour && isHomePage) {
+      this.tourService.startWelcomeTour();
+    }
   }
 }

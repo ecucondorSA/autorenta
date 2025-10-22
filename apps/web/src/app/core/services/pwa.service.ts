@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Optional, signal } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
 
@@ -11,7 +11,7 @@ export class PwaService {
   readonly updateAvailable = signal(false);
   readonly isStandalone = signal(false);
 
-  constructor(private swUpdate: SwUpdate) {
+  constructor(@Optional() private swUpdate: SwUpdate | null) {
     this.initPwa();
     this.checkStandaloneMode();
     this.listenForUpdates();
@@ -53,7 +53,7 @@ export class PwaService {
   }
 
   private listenForUpdates(): void {
-    if (!this.swUpdate.isEnabled) {
+    if (!this.swUpdate?.isEnabled) {
       return;
     }
 
@@ -71,7 +71,7 @@ export class PwaService {
 
     // Check for updates every 30 minutes
     setInterval(() => {
-      this.swUpdate.checkForUpdate();
+      this.swUpdate?.checkForUpdate();
     }, 30 * 60 * 1000);
   }
 
@@ -103,7 +103,7 @@ export class PwaService {
    * Activate the latest version of the service worker
    */
   async activateUpdate(): Promise<void> {
-    if (!this.swUpdate.isEnabled) {
+    if (!this.swUpdate?.isEnabled) {
       return;
     }
 

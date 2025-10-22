@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PwaService } from '../../../core/services/pwa.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { PwaService } from '../../../core/services/pwa.service';
 
 @Component({
   selector: 'app-pwa-update-prompt',

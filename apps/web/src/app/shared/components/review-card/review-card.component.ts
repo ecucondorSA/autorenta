@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { Review } from '../../../core/models';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import type { Review } from '../../../core/models';
 
 @Component({
   selector: 'app-review-card',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './review-card.component.html',
   styleUrls: ['./review-card.component.css'],
 })

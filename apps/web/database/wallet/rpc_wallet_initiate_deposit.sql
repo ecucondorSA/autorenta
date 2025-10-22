@@ -83,6 +83,9 @@ BEGIN
   v_transaction_id := gen_random_uuid();
 
   -- Crear transacción de depósito en estado 'pending'
+  -- reference_type:
+  --   - 'deposit': Depósitos retirables normales
+  --   - 'credit_protected': Crédito Autorentar (no retirable, meta USD 250)
   INSERT INTO wallet_transactions (
     id,
     user_id,
@@ -103,7 +106,10 @@ BEGIN
     'pending',  -- Inicia como pending hasta que se confirme el pago
     p_amount,
     'USD',
-    'deposit',
+    CASE
+      WHEN p_allow_withdrawal THEN 'deposit'
+      ELSE 'credit_protected'  -- Crédito Autorentar (no retirable)
+    END,
     v_transaction_id,  -- La referencia es a sí misma
     p_provider,
     p_description,
@@ -112,7 +118,11 @@ BEGIN
       'user_id', v_user_id,
       'amount', p_amount,
       'provider', p_provider,
-      'allow_withdrawal', p_allow_withdrawal
+      'allow_withdrawal', p_allow_withdrawal,
+      'deposit_type', CASE
+        WHEN p_allow_withdrawal THEN 'withdrawable'
+        ELSE 'protected_credit'
+      END
     ),
     p_allow_withdrawal
   );

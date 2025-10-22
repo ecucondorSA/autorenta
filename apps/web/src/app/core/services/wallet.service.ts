@@ -1,5 +1,4 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { SupabaseClientService } from './supabase-client.service';
 import type {
   WalletBalance,
   WalletTransaction,
@@ -18,6 +17,7 @@ import type {
   LockRentalAndDepositParams,
   CompleteBookingWithDamagesParams,
 } from '../models/wallet.model';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * WalletService
@@ -35,12 +35,9 @@ import type {
 })
 export class WalletService {
   private readonly supabase = inject(SupabaseClientService);
-  private readonly storage =
-    typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
-      ? window.localStorage
-      : null;
-  private readonly BALANCE_CACHE_KEY = 'autorentar:wallet:last-balance';
-  private readonly BALANCE_CACHE_META_KEY = 'autorentar:wallet:last-balance-meta';
+  // IMPORTANTE: NO cachear balance en localStorage
+  // El balance debe SIEMPRE obtenerse fresco de la base de datos
+  // para evitar mostrar datos obsoletos que causen errores de "saldo insuficiente"
 
   // ==================== SIGNALS ====================
 
@@ -70,35 +67,42 @@ export class WalletService {
    */
   readonly error = signal<WalletError | null>(null);
 
-  /**
-   * Indica si el balance mostrado proviene del caché local (offline)
-   */
-  readonly balanceStale = signal(false);
-
   // ==================== COMPUTED SIGNALS ====================
 
   /**
-   * Balance disponible (computed para fácil acceso)
+   * Balance disponible (Total - Locked)
    */
   readonly availableBalance = computed(() => this.balance()?.available_balance ?? 0);
 
   /**
-   * Balance que puede retirarse a cuenta bancaria
+   * Fondos transferibles dentro de la app o a otros usuarios (Available - Protected)
    */
-  readonly withdrawableBalance = computed(() => this.balance()?.withdrawable_balance ?? this.availableBalance());
+  readonly transferableBalance = computed(() => this.balance()?.transferable_balance ?? 0);
 
   /**
-   * Crédito interno (no reembolsable) que debe permanecer en Autorentar
+   * Fondos retirables a cuenta bancaria externa (Transferable - Hold)
    */
-  readonly nonWithdrawableBalance = computed(() => this.balance()?.non_withdrawable_balance ?? 0);
+  readonly withdrawableBalance = computed(() => this.balance()?.withdrawable_balance ?? 0);
 
   /**
-   * Balance bloqueado (computed para fácil acceso)
+   * Crédito Autorentar (meta USD 250, no retirable, no transferible)
+   * Solo para cubrir garantías de reservas
+   */
+  readonly protectedCreditBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
+
+  /**
+   * @deprecated Use protectedCreditBalance instead
+   * Backward compatibility
+   */
+  readonly nonWithdrawableBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
+
+  /**
+   * Balance bloqueado en reservas activas
    */
   readonly lockedBalance = computed(() => this.balance()?.locked_balance ?? 0);
 
   /**
-   * Balance total (computed para fácil acceso)
+   * Balance total (Available + Locked)
    */
   readonly totalBalance = computed(() => this.balance()?.total_balance ?? 0);
 
@@ -155,29 +159,21 @@ export class WalletService {
       const normalizedBalance: WalletBalance = {
         ...balance,
         available_balance: balance.available_balance ?? 0,
-        withdrawable_balance: balance.withdrawable_balance ?? balance.available_balance ?? 0,
-        non_withdrawable_balance:
-          balance.non_withdrawable_balance ??
-          Math.max((balance.available_balance ?? 0) - (balance.withdrawable_balance ?? balance.available_balance ?? 0), 0),
+        transferable_balance: balance.transferable_balance ?? 0,
+        withdrawable_balance: balance.withdrawable_balance ?? 0,
+        protected_credit_balance: balance.protected_credit_balance ?? 0,
         locked_balance: balance.locked_balance ?? 0,
-        total_balance: balance.total_balance ?? ((balance.available_balance ?? 0) + (balance.locked_balance ?? 0)),
+        total_balance: balance.total_balance ?? 0,
         currency: balance.currency ?? 'USD',
+        // Backward compatibility
+        non_withdrawable_balance: balance.protected_credit_balance ?? 0,
       };
 
       this.balance.set(normalizedBalance);
-      this.balanceStale.set(false);
-      this.saveBalanceToCache(normalizedBalance);
 
       return normalizedBalance;
     } catch (err) {
       const walletError = this.handleError(err, 'Error al obtener balance');
-      if (walletError.code === 'NETWORK_ERROR') {
-        const cached = this.loadBalanceFromCache();
-        if (cached) {
-          this.balance.set(cached);
-          this.balanceStale.set(true);
-        }
-      }
       throw walletError;
     } finally {
       this.setLoadingState('balance', false);
@@ -328,6 +324,77 @@ export class WalletService {
   }
 
   /**
+   * Fuerza el polling de pagos pendientes de MercadoPago
+   * Llama a la Edge Function mercadopago-poll-pending-payments
+   *
+   * Esta función permite al usuario forzar manualmente la verificación
+   * de pagos pendientes en MercadoPago, útil cuando:
+   * - El usuario acaba de completar un pago
+   * - El webhook falló
+   * - El auto-polling no ha ejecutado aún
+   *
+   * @returns Promise con resultado del polling
+   */
+  async forcePollPendingPayments(): Promise<{ success: boolean; confirmed: number; message: string }> {
+    try {
+      console.log('🔄 Forzando polling de pagos pendientes...');
+
+      // Obtener access token
+      const { data: { session } } = await this.supabase.getClient().auth.getSession();
+      const accessToken = session?.access_token;
+
+      if (!accessToken) {
+        throw this.createError('AUTH_ERROR', 'No hay sesión activa');
+      }
+
+      // HARDCODED URL - Misma lógica que initiateDeposit
+      const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-poll-pending-payments`;
+
+      console.log('📡 Llamando polling function:', edgeFunctionUrl);
+
+      const response = await fetch(edgeFunctionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Error en polling:', errorText);
+        throw this.createError(
+          'POLLING_ERROR',
+          `Error al ejecutar polling (${response.status})`,
+          { rawError: errorText }
+        );
+      }
+
+      const result = await response.json();
+      console.log('✅ Resultado del polling:', result);
+
+      // Refrescar balance después del polling
+      await this.getBalance().catch(() => {
+        console.warn('⚠️ No se pudo refrescar balance después del polling');
+      });
+
+      return {
+        success: result.success || false,
+        confirmed: result.summary?.confirmed || 0,
+        message: result.summary?.confirmed > 0
+          ? `Se confirmaron ${result.summary.confirmed} depósito(s)`
+          : 'No se encontraron pagos aprobados para confirmar',
+      };
+    } catch (err) {
+      console.error('❌ Error al forzar polling:', err);
+      const walletError = this.handleError(err, 'Error al verificar pagos pendientes');
+      throw walletError;
+    }
+  }
+
+  /**
    * Bloquea fondos para una reserva
    * Llama a la función RPC wallet_lock_funds()
    */
@@ -375,21 +442,22 @@ export class WalletService {
 
       // Actualizar balance local con el nuevo balance
       const previous = this.balance();
-      const previousNonWithdrawable = previous?.non_withdrawable_balance ?? 0;
-      const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
-      const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
+      const protectedCredit = previous?.protected_credit_balance ?? 0;
+      const transferable = Math.max(result.new_available_balance - protectedCredit, 0);
+      const withdrawable = transferable; // Por ahora, sin hold adicional
 
       const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
+        transferable_balance: transferable,
         withdrawable_balance: withdrawable,
-        non_withdrawable_balance: nonWithdrawable,
+        protected_credit_balance: protectedCredit,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
         currency: previous?.currency ?? 'USD',
+        // Backward compatibility
+        non_withdrawable_balance: protectedCredit,
       };
       this.balance.set(updatedBalance);
-      this.balanceStale.set(false);
-      this.saveBalanceToCache(updatedBalance);
 
       return result;
     } catch (err) {
@@ -434,21 +502,22 @@ export class WalletService {
 
       // Actualizar balance local con el nuevo balance
       const previous = this.balance();
-      const previousNonWithdrawable = previous?.non_withdrawable_balance ?? 0;
-      const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
-      const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
+      const protectedCredit = previous?.protected_credit_balance ?? 0;
+      const transferable = Math.max(result.new_available_balance - protectedCredit, 0);
+      const withdrawable = transferable; // Por ahora, sin hold adicional
 
       const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
+        transferable_balance: transferable,
         withdrawable_balance: withdrawable,
-        non_withdrawable_balance: nonWithdrawable,
+        protected_credit_balance: protectedCredit,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
         currency: previous?.currency ?? 'USD',
+        // Backward compatibility
+        non_withdrawable_balance: protectedCredit,
       };
       this.balance.set(updatedBalance);
-      this.balanceStale.set(false);
-      this.saveBalanceToCache(updatedBalance);
 
       return result;
     } catch (err) {
@@ -462,23 +531,27 @@ export class WalletService {
   /**
    * Obtiene el historial de transacciones del usuario
    * Con filtros opcionales
+   *
+   * ACTUALIZADO (2025-10-22): Usa vista consolidada v_wallet_history que combina
+   * wallet_transactions (legacy) y wallet_ledger (nuevo sistema de doble partida)
    */
   async getTransactions(filters?: WalletTransactionFilters): Promise<WalletTransaction[]> {
     this.setLoadingState('transactions', true);
     this.clearError();
 
     try {
+      // Usar vista consolidada en vez de wallet_transactions directamente
       let query = this.supabase.getClient()
-        .from('wallet_transactions')
+        .from('v_wallet_history')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('transaction_date', { ascending: false });
 
-      // Aplicar filtros
+      // Aplicar filtros (adaptados a columnas de vista consolidada)
       if (filters?.type) {
         if (Array.isArray(filters.type)) {
-          query = query.in('type', filters.type);
+          query = query.in('transaction_type', filters.type);
         } else {
-          query = query.eq('type', filters.type);
+          query = query.eq('transaction_type', filters.type);
         }
       }
 
@@ -491,19 +564,21 @@ export class WalletService {
       }
 
       if (filters?.reference_type) {
-        query = query.eq('reference_type', filters.reference_type);
+        // reference_type está en metadata, filtrar con JSONB operator
+        query = query.contains('metadata', { reference_type: filters.reference_type });
       }
 
       if (filters?.reference_id) {
-        query = query.eq('reference_id', filters.reference_id);
+        // Filtrar por booking_id (más común) o por metadata.reference_id
+        query = query.or(`booking_id.eq.${filters.reference_id},metadata.cs.{"reference_id":"${filters.reference_id}"}`);
       }
 
       if (filters?.from_date) {
-        query = query.gte('created_at', filters.from_date.toISOString());
+        query = query.gte('transaction_date', filters.from_date.toISOString());
       }
 
       if (filters?.to_date) {
-        query = query.lte('created_at', filters.to_date.toISOString());
+        query = query.lte('transaction_date', filters.to_date.toISOString());
       }
 
       const { data, error } = await query;
@@ -512,7 +587,27 @@ export class WalletService {
         throw this.createError('TRANSACTIONS_FETCH_ERROR', error.message, error);
       }
 
-      const transactions = (data ?? []) as WalletTransaction[];
+      // Transformar datos de vista consolidada a formato WalletTransaction
+      const transactions = (data ?? []).map((row: any) => ({
+        id: row.id,
+        user_id: row.user_id,
+        type: row.transaction_type,
+        status: row.status,
+        amount: row.amount_cents / 100, // Convertir centavos a decimales
+        currency: row.currency,
+        is_withdrawable: row.metadata?.is_withdrawable ?? false,
+        reference_type: row.metadata?.reference_type,
+        reference_id: row.metadata?.reference_id || row.booking_id,
+        provider: row.metadata?.provider,
+        provider_transaction_id: row.metadata?.provider_transaction_id,
+        provider_metadata: row.metadata?.provider_metadata,
+        description: row.metadata?.description,
+        admin_notes: row.metadata?.admin_notes,
+        created_at: row.transaction_date,
+        updated_at: row.transaction_date,
+        completed_at: row.legacy_completed_at || (row.status === 'completed' ? row.transaction_date : undefined),
+      })) as WalletTransaction[];
+
       this.transactions.set(transactions);
 
       return transactions;
@@ -571,21 +666,22 @@ export class WalletService {
 
       // Actualizar balance local
       const previous = this.balance();
-      const previousNonWithdrawable = previous?.non_withdrawable_balance ?? 0;
-      const nonWithdrawable = Math.min(previousNonWithdrawable, result.new_available_balance);
-      const withdrawable = Math.max(result.new_available_balance - nonWithdrawable, 0);
+      const protectedCredit = previous?.protected_credit_balance ?? 0;
+      const transferable = Math.max(result.new_available_balance - protectedCredit, 0);
+      const withdrawable = transferable; // Por ahora, sin hold adicional
 
       const updatedBalance: WalletBalance = {
         available_balance: result.new_available_balance,
+        transferable_balance: transferable,
         withdrawable_balance: withdrawable,
-        non_withdrawable_balance: nonWithdrawable,
+        protected_credit_balance: protectedCredit,
         locked_balance: result.new_locked_balance,
         total_balance: result.new_available_balance + result.new_locked_balance,
         currency: previous?.currency ?? 'USD',
+        // Backward compatibility
+        non_withdrawable_balance: protectedCredit,
       };
       this.balance.set(updatedBalance);
-      this.balanceStale.set(false);
-      this.saveBalanceToCache(updatedBalance);
 
       return result;
     } catch (err) {
@@ -672,15 +768,6 @@ export class WalletService {
     this.balance.set(null);
     this.transactions.set([]);
     this.clearError();
-    this.balanceStale.set(false);
-    if (this.storage) {
-      try {
-        this.storage.removeItem(this.BALANCE_CACHE_KEY);
-        this.storage.removeItem(this.BALANCE_CACHE_META_KEY);
-      } catch (error) {
-        console.warn('No se pudo limpiar el caché local del wallet', error);
-      }
-    }
   }
 
   /**
@@ -754,42 +841,4 @@ export class WalletService {
     this.error.set(null);
   }
 
-  /**
-   * Guarda el balance en caché local para escenarios offline
-   */
-  private saveBalanceToCache(balance: WalletBalance | null): void {
-    if (!this.storage || !balance) {
-      return;
-    }
-
-    try {
-      this.storage.setItem(this.BALANCE_CACHE_KEY, JSON.stringify(balance));
-      this.storage.setItem(
-        this.BALANCE_CACHE_META_KEY,
-        JSON.stringify({ savedAt: Date.now() }),
-      );
-    } catch (error) {
-      console.warn('No se pudo guardar el balance en caché local', error);
-    }
-  }
-
-  /**
-   * Recupera el balance desde el caché local si está disponible
-   */
-  private loadBalanceFromCache(): WalletBalance | null {
-    if (!this.storage) {
-      return null;
-    }
-
-    try {
-      const raw = this.storage.getItem(this.BALANCE_CACHE_KEY);
-      if (!raw) {
-        return null;
-      }
-      return JSON.parse(raw) as WalletBalance;
-    } catch (error) {
-      console.warn('No se pudo leer el balance en caché local', error);
-      return null;
-    }
-  }
 }

@@ -18,4 +18,9 @@ export const AUTH_ROUTES: Routes = [
     loadComponent: () =>
       import('./reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
   },
+  {
+    path: 'callback',
+    // No GuestGuard - permite acceso durante el proceso OAuth
+    loadComponent: () => import('./callback/auth-callback.page').then((m) => m.AuthCallbackPage),
+  },
 ];

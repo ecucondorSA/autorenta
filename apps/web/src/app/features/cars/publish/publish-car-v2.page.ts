@@ -2,16 +2,17 @@ import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 import { BackgroundRemovalService } from '../../../core/services/background-removal.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
-import { TranslateModule } from '@ngx-translate/core';
+import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 
 @Component({
   selector: 'app-publish-car-v2',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, HostSupportInfoPanelComponent],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-graphite-dark py-8 px-4 transition-colors duration-300 text-gray-900 dark:text-pearl-light">
       <div class="max-w-3xl mx-auto">
@@ -32,17 +33,20 @@ import { TranslateModule } from '@ngx-translate/core';
           </div>
 
           <!-- Autofill indicator -->
-          <div *ngIf="autofilledFromLast() && !editMode()" class="mt-4 bg-blue-50/90 dark:bg-blue-500/15 border border-blue-200 dark:border-blue-400/40 rounded-lg p-3 flex items-start gap-2">
-            <span class="text-blue-600 dark:text-blue-200 text-lg">ℹ️</span>
+          <div *ngIf="autofilledFromLast() && !editMode()" class="mt-4 bg-accent-petrol/10 dark:bg-accent-petrol/15 border border-accent-petrol/30 dark:border-accent-petrol/40 rounded-lg p-3 flex items-start gap-2">
+            <span class="text-accent-petrol dark:text-ivory-luminous text-lg">ℹ️</span>
             <div class="flex-1">
-              <p class="text-sm text-blue-800 dark:text-blue-100 font-medium">Datos autocompletados</p>
-              <p class="text-xs text-blue-600 dark:text-blue-200/80 mt-1">
+              <p class="text-sm text-accent-petrol dark:text-ivory-luminous font-medium">Datos autocompletados</p>
+              <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/80 mt-1">
                 Hemos rellenado algunos campos con los datos de tu última publicación para ahorrar tiempo.
                 Solo modifica marca, modelo, año y fotos para el nuevo auto.
               </p>
             </div>
           </div>
         </div>
+
+        <!-- Host Support Info Panel -->
+        <app-host-support-info-panel></app-host-support-info-panel>
 
         <!-- Main Form -->
         <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-6">
@@ -59,7 +63,7 @@ import { TranslateModule } from '@ngx-translate/core';
               <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Marca *</label>
                 <select formControlName="brand_id" (change)="onBrandChange()"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
                   <option value="">Selecciona una marca</option>
                   <option *ngFor="let brand of brands()" [value]="brand.id">{{ brand.name }}</option>
                 </select>
@@ -70,7 +74,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 <label class="block text-sm font-medium text-gray-700 mb-2">Modelo *</label>
                 <select formControlName="model_id" (change)="onModelChange()"
                         [disabled]="!publishForm.get('brand_id')?.value"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100">
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent disabled:bg-gray-100">
                   <option value="">Selecciona un modelo</option>
                   <option *ngFor="let model of filteredModels()" [value]="model.id">{{ model.name }}</option>
                 </select>
@@ -83,28 +87,28 @@ import { TranslateModule } from '@ngx-translate/core';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Año *</label>
                 <input type="number" formControlName="year" [min]="minYear" [max]="maxYear" placeholder="2024"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- Mileage -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Kilometraje *</label>
                 <input type="number" formControlName="mileage" min="0" placeholder="50000"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- Color -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Color *</label>
                 <input type="text" formControlName="color" placeholder="Ej: Blanco, Negro"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- Transmission -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Transmisión *</label>
                 <select formControlName="transmission"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500">
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol">
                   <option value="">Selecciona</option>
                   <option value="manual">Manual</option>
                   <option value="automatic">Automática</option>
@@ -115,7 +119,7 @@ import { TranslateModule } from '@ngx-translate/core';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Combustible *</label>
                 <select formControlName="fuel"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500">
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol">
                   <option value="">Selecciona</option>
                   <option value="nafta">Nafta</option>
                   <option value="gasoil">Diesel</option>
@@ -138,14 +142,14 @@ import { TranslateModule } from '@ngx-translate/core';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Precio por día *</label>
                 <input type="number" formControlName="price_per_day" min="1" placeholder="50"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- Currency -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Moneda *</label>
                 <select formControlName="currency"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500">
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol">
                   <option value="USD">USD - Dólar</option>
                   <option value="ARS">ARS - Peso Argentino</option>
                   <option value="UYU">UYU - Peso Uruguayo</option>
@@ -156,14 +160,14 @@ import { TranslateModule } from '@ngx-translate/core';
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Días mínimos *</label>
                 <input type="number" formControlName="min_rental_days" min="1" placeholder="1"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- Max rental days -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Días máximos</label>
                 <input type="number" formControlName="max_rental_days" min="1" placeholder="30"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
                 <p class="mt-1 text-xs text-gray-500">Dejar vacío = sin límite</p>
               </div>
 
@@ -171,14 +175,14 @@ import { TranslateModule } from '@ngx-translate/core';
               <div class="md:col-span-2 border-t border-gray-200 pt-4">
                 <div class="flex items-center gap-3 mb-3">
                   <input type="checkbox" formControlName="deposit_required" id="deposit_required"
-                         class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500">
+                         class="w-5 h-5 text-accent-petrol rounded focus:ring-2 focus:ring-accent-petrol">
                   <label for="deposit_required" class="text-sm font-medium text-gray-700 cursor-pointer">
                     Requiere depósito de garantía
                   </label>
                 </div>
                 <div *ngIf="publishForm.get('deposit_required')?.value">
                   <input type="number" formControlName="deposit_amount" min="0" placeholder="200"
-                         class="w-full md:w-1/2 rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                         class="w-full md:w-1/2 rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
                   <p class="mt-1 text-xs text-gray-500">Monto del depósito</p>
                 </div>
               </div>
@@ -187,7 +191,7 @@ import { TranslateModule } from '@ngx-translate/core';
               <div class="md:col-span-2">
                 <div class="flex items-center gap-3">
                   <input type="checkbox" formControlName="insurance_included" id="insurance_included"
-                         class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500">
+                         class="w-5 h-5 text-accent-petrol rounded focus:ring-2 focus:ring-accent-petrol">
                   <label for="insurance_included" class="text-sm font-medium text-gray-700 cursor-pointer">
                     El seguro está incluido en el precio
                   </label>
@@ -208,35 +212,35 @@ import { TranslateModule } from '@ngx-translate/core';
               <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Calle *</label>
                 <input type="text" formControlName="location_street" placeholder="Ej: Av. Corrientes"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- Street number -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Número *</label>
                 <input type="text" formControlName="location_street_number" placeholder="1234"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- City -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Ciudad *</label>
                 <input type="text" formControlName="location_city" placeholder="Ej: Buenos Aires"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- State -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Provincia *</label>
                 <input type="text" formControlName="location_state" placeholder="Ej: Buenos Aires"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
               </div>
 
               <!-- Country -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">País *</label>
                 <select formControlName="location_country"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500">
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol">
                   <option value="AR">Argentina</option>
                   <option value="UY">Uruguay</option>
                   <option value="BR">Brasil</option>
@@ -269,7 +273,7 @@ import { TranslateModule } from '@ngx-translate/core';
             </h2>
 
             <div class="mb-4">
-              <label class="cursor-pointer bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
+              <label class="cursor-pointer bg-accent-petrol hover:bg-accent-petrol/90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
                      [class.opacity-50]="isProcessingPhotos()"
                      [class.cursor-not-allowed]="isProcessingPhotos()">
                 <span *ngIf="!isProcessingPhotos()">➕ Agregar Fotos</span>
@@ -285,15 +289,15 @@ import { TranslateModule } from '@ngx-translate/core';
               <p class="mt-2 text-xs text-gray-500">
                 Mínimo 3 fotos, máximo 10. Primera foto será la portada.
                 <br>
-                <span class="text-blue-600 font-medium">✨ Las fotos se procesarán automáticamente para remover el fondo</span>
+                <span class="text-accent-petrol dark:text-accent-warm font-medium">✨ Las fotos se procesarán automáticamente para remover el fondo</span>
               </p>
             </div>
 
             <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative group">
                 <img [src]="photo.preview" [alt]="'Foto ' + (i + 1)" class="w-full h-32 object-cover rounded-lg border-2"
-                     [class.border-blue-500]="i === 0" [class.border-gray-300]="i !== 0">
-                <div *ngIf="i === 0" class="absolute top-2 left-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                     [class.border-accent-petrol]="i === 0" [class.border-gray-300]="i !== 0">
+                <div *ngIf="i === 0" class="absolute top-2 left-2 bg-accent-petrol text-white text-xs font-semibold px-2 py-1 rounded">
                   PORTADA
                 </div>
                 <button type="button" (click)="removePhoto(i)"
@@ -317,7 +321,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 Cancelar
               </button>
               <button type="submit" [disabled]="!canSubmit() || isSubmitting()"
-                      class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition font-semibold">
+                      class="px-8 py-3 bg-accent-petrol text-white rounded-lg hover:bg-accent-petrol/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition font-semibold">
                 <span *ngIf="!isSubmitting()">{{ editMode() ? 'Guardar cambios' : 'Publicar Auto' }}</span>
                 <span *ngIf="isSubmitting()">{{ editMode() ? 'Guardando...' : 'Publicando...' }}</span>
               </button>

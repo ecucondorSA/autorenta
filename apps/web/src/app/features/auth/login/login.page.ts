@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   standalone: true,
   selector: 'app-login-page',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, NgOptimizedImage, RouterLink, ReactiveFormsModule, TranslateModule],
   templateUrl: './login.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -46,6 +46,25 @@ export class LoginPage {
         err instanceof Error ? err.message : 'No pudimos iniciar sesión, revisá tus credenciales.',
       );
     } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    if (this.loading()) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      await this.auth.signInWithGoogle();
+      // La redirección a Google ocurre automáticamente
+      // El callback manejará el retorno
+    } catch (err) {
+      console.error(err);
+      this.error.set(
+        err instanceof Error ? err.message : 'No pudimos conectar con Google. Intentá nuevamente.',
+      );
       this.loading.set(false);
     }
   }

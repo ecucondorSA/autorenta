@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WalletService } from '../../../core/services/wallet.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { WalletService } from '../../../core/services/wallet.service';
 
 /**
  * WalletBalanceCardComponent
@@ -104,11 +104,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   readonly error = this.walletService.error;
 
   /**
-   * Indica si el balance mostrado proviene del caché offline
-   */
-  readonly balanceStale = this.walletService.balanceStale;
-
-  /**
    * Depósitos pendientes
    */
   readonly pendingDeposits = signal<number>(0);
@@ -127,6 +122,27 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    * Intervalo de refresh en milisegundos (30 segundos)
    */
   readonly refreshIntervalMs = 30000;
+
+  /**
+   * Timestamp de última actualización del balance
+   */
+  readonly lastUpdate = signal<Date | null>(null);
+
+  /**
+   * Mostrar información bancaria
+   */
+  readonly showBankInfo = signal(false);
+
+  /**
+   * Datos bancarios para transferencias manuales
+   */
+  readonly bankDetails = {
+    accountName: 'AutoRentA SRL',
+    bank: 'Banco Galicia',
+    alias: 'AUTORENTAR.PAGOS',
+    cbu: '0170018740000000123456',
+    email: 'pagos@autorentar.com',
+  };
 
   // ==================== LIFECYCLE ====================
 
@@ -159,6 +175,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     this.isLoadingBalance.set(true);
     try {
       await this.walletService.getBalance();
+      this.lastUpdate.set(new Date()); // Guardar timestamp de actualización
     } catch (err) {
       // El error ya está en walletService.error()
       console.error('Error loading wallet balance:', err);
@@ -178,10 +195,38 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
   /**
    * Reintenta cargar el balance después de un error
+   * También fuerza el polling de pagos pendientes en MercadoPago
    */
   async retry(): Promise<void> {
-    await this.loadBalance();
-    await this.loadPendingDeposits();
+    this.isLoadingBalance.set(true);
+
+    try {
+      console.log('🔄 Usuario solicitó actualización manual...');
+
+      // 1. Forzar polling de MercadoPago (esto también refresca el balance internamente)
+      const pollResult = await this.walletService.forcePollPendingPayments();
+      console.log('✅ Resultado del polling:', pollResult);
+
+      // 2. Refrescar balance (por si el polling confirmó algún depósito)
+      await this.loadBalance();
+
+      // 3. Refrescar pending deposits
+      await this.loadPendingDeposits();
+
+      // 4. Mostrar mensaje al usuario si se confirmó algún depósito
+      if (pollResult.confirmed > 0) {
+        alert(`✅ ${pollResult.message}\n\nTu balance se ha actualizado.`);
+      } else if (this.pendingDeposits() > 0) {
+        alert('⏳ Tus depósitos aún están pendientes de aprobación en MercadoPago.\n\nPueden tardar algunos minutos. Te notificaremos cuando se acrediten.');
+      }
+    } catch (err) {
+      console.error('Error al actualizar:', err);
+      // El error ya está en walletService.error(), solo recargamos el balance local
+      await this.loadBalance();
+      await this.loadPendingDeposits();
+    } finally {
+      this.isLoadingBalance.set(false);
+    }
   }
 
   /**
@@ -231,14 +276,51 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Formatea un número como moneda USD
+   * Formatea un número (en centavos) como moneda
+   * Usa la moneda del balance actual o USD por defecto
    */
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('en-US', {
+  formatCurrency(amountCents: number): string {
+    const currency = this.balance()?.currency || 'USD';
+    const amount = amountCents / 100; // Convertir centavos a unidades
+
+    return new Intl.NumberFormat('es-AR', {
       style: 'currency',
-      currency: 'USD',
+      currency: currency,
+      currencyDisplay: 'symbol', // Usa solo el símbolo (US$) sin label adicional
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  }
+
+  /**
+   * Obtiene texto de última actualización en formato relativo
+   */
+  getLastUpdateText(): string {
+    const last = this.lastUpdate();
+    if (!last) return 'Nunca';
+
+    const diff = Date.now() - last.getTime();
+    const seconds = Math.floor(diff / 1000);
+
+    if (seconds < 10) return 'Ahora mismo';
+    if (seconds < 60) return `hace ${seconds}s`;
+    if (seconds < 3600) return `hace ${Math.floor(seconds / 60)}m`;
+
+    return last.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  /**
+   * Copia texto al portapapeles
+   */
+  async copyToClipboard(text: string): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(text);
+      console.log(`✅ Copiado: ${text}`);
+      // TODO: Agregar toast notification en vez de alert
+      alert(`✅ Copiado al portapapeles: ${text}`);
+    } catch (err) {
+      console.error('Error al copiar al portapapeles:', err);
+      alert('❌ Error al copiar. Por favor, copia manualmente.');
+    }
   }
 }

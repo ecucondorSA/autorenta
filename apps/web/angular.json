@@ -22,6 +22,7 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "serviceWorker": false,
             "assets": [
               {
                 "glob": "**/*",
@@ -57,7 +58,7 @@
                 }
               ],
               "outputHashing": "all",
-              "serviceWorker": "ngsw-config.json"
+              "serviceWorker": false
             },
             "development": {
               "fileReplacements": [

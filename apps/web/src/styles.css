@@ -1,6 +1,9 @@
 /* Mapbox GL JS CSS - Required for markers and controls */
 @import 'mapbox-gl/dist/mapbox-gl.css';
 
+/* Shepherd.js Tours CSS */
+@import './styles/shepherd-custom.scss';
+
 /* 🎨 Fuente Inter - Premium UI Typography
    Nota: durante builds offline omitimos la importación remota de Google Fonts.
    Si se requiere nuevamente, restaura la línea con la URL oficial. */
@@ -681,3 +684,8 @@
     @apply w-px bg-pearl-gray dark:bg-slate-deep;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   🎯 SHEPHERD.JS TOURS - PRODUCT TOURS
+   ═══════════════════════════════════════════════════════════════ */
+/* Shepherd.js styles imported at top of file */

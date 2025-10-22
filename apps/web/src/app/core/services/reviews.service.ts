@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { injectSupabase } from './supabase-client.service';
 import type {
   Review,
   CreateReviewParams,
@@ -8,6 +7,7 @@ import type {
   ReviewSummary,
   ReviewType,
 } from '../models';
+import { injectSupabase } from './supabase-client.service';
 
 export interface CreateReviewResult {
   success: boolean;
@@ -406,5 +406,57 @@ export class ReviewsService {
       console.error('Error fetching pending reviews:', error);
       return [];
     }
+  }
+
+  /**
+   * Obtiene las reviews recibidas por un usuario como owner (para perfil público)
+   */
+  async getReviewsForOwner(ownerId: string): Promise<Review[]> {
+    const { data, error } = await this.supabase
+      .from('reviews')
+      .select(`
+        *,
+        reviewer:profiles!reviews_reviewer_id_fkey(full_name, avatar_url)
+      `)
+      .eq('reviewee_id', ownerId)
+      .eq('reviewee_role', 'owner')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('[ReviewsService] Error fetching owner reviews:', error);
+      return [];
+    }
+
+    return ((data || []) as any[]).map((review) => ({
+      ...review,
+      reviewer_name: review.reviewer?.full_name || 'Usuario',
+      reviewer_avatar: review.reviewer?.avatar_url || null,
+    })) as Review[];
+  }
+
+  /**
+   * Obtiene las reviews recibidas por un usuario como renter (para perfil público)
+   */
+  async getReviewsForRenter(renterId: string): Promise<Review[]> {
+    const { data, error } = await this.supabase
+      .from('reviews')
+      .select(`
+        *,
+        reviewer:profiles!reviews_reviewer_id_fkey(full_name, avatar_url)
+      `)
+      .eq('reviewee_id', renterId)
+      .eq('reviewee_role', 'renter')
+      .order('created_at', { ascending: false});
+
+    if (error) {
+      console.error('[ReviewsService] Error fetching renter reviews:', error);
+      return [];
+    }
+
+    return ((data || []) as any[]).map((review) => ({
+      ...review,
+      reviewer_name: review.reviewer?.full_name || 'Usuario',
+      reviewer_avatar: review.reviewer?.avatar_url || null,
+    })) as Review[];
   }
 }

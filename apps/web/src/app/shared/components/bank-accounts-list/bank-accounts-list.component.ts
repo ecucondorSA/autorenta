@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { BankAccount } from '../../../core/models/wallet.model';
 import { TranslateModule } from '@ngx-translate/core';
+import type { BankAccount } from '../../../core/models/wallet.model';
 
 /**
  * Componente para mostrar lista de cuentas bancarias

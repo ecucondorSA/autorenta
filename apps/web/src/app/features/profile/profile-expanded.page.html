@@ -424,10 +424,10 @@
         </div>
 
         <!-- Driver workflow -->
-        <div *ngIf="showDriverFlow()" class="mb-6 rounded-lg border border-pearl-gray bg-white-pure p-4 shadow-sm">
+        <div *ngIf="showDriverFlow()" class="mb-6 rounded-lg border border-pearl-gray dark:border-slate-deep/70 bg-white-pure dark:bg-anthracite p-4 shadow-sm transition-colors">
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
             <div class="flex items-center gap-2">
-              <h4 class="text-sm font-semibold text-smoke-black flex items-center gap-2">
+              <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous flex items-center gap-2">
                 <span>🚗 Conductor</span>
                 <span
                   class="px-2 py-1 rounded-full text-xs font-semibold"
@@ -440,7 +440,7 @@
             </div>
             <button
               type="button"
-              class="text-xs font-semibold text-accent-petrol hover:underline disabled:opacity-50"
+              class="text-xs font-semibold text-accent-petrol dark:text-accent-petrol/90 hover:underline disabled:opacity-50"
               (click)="refreshVerificationStatuses('driver')"
               [disabled]="verificationLoading()"
             >
@@ -449,13 +449,13 @@
           </div>
 
           <ul class="space-y-4">
-            <li *ngFor="let step of driverChecklist()" class="flex items-start gap-3 rounded-lg border border-pearl-gray/60 bg-sand-light/30 p-3">
+            <li *ngFor="let step of driverChecklist()" class="flex items-start gap-3 rounded-lg border border-pearl-gray/60 dark:border-slate-deep/70 bg-sand-light/30 dark:bg-slate-deep/40 p-3 transition-colors">
               <div class="mt-0.5 text-lg">
                 {{ getStepIcon(step) }}
               </div>
               <div class="flex-1">
                 <div class="flex flex-wrap items-center gap-2">
-                  <p class="text-sm font-semibold text-smoke-black">{{ step.label }}</p>
+                  <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">{{ step.label }}</p>
                   <span
                     class="px-2 py-1 rounded-full text-xs font-semibold"
                     [class]="getStepStatusClass(step)"
@@ -463,21 +463,21 @@
                     {{ getStepStatusLabel(step) }}
                   </span>
                 </div>
-                <p class="text-xs text-charcoal-medium mt-1" *ngIf="step.description">{{ step.description }}</p>
-                <p class="text-xs text-red-600 mt-1" *ngIf="step.missingKey">
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1" *ngIf="step.description">{{ step.description }}</p>
+                <p class="text-xs text-red-600 dark:text-red-400 font-semibold mt-1" *ngIf="step.missingKey">
                   Falta: {{ getMissingDocumentLabel(step.missingKey) }}
                 </p>
-                <p class="text-xs text-charcoal-medium mt-1" *ngIf="step.notes">{{ step.notes }}</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1" *ngIf="step.notes">{{ step.notes }}</p>
               </div>
             </li>
           </ul>
         </div>
 
         <!-- Owner workflow -->
-        <div *ngIf="showOwnerFlow()" class="mb-6 rounded-lg border border-pearl-gray bg-white-pure p-4 shadow-sm">
+        <div *ngIf="showOwnerFlow()" class="mb-6 rounded-lg border border-pearl-gray dark:border-slate-deep/70 bg-white-pure dark:bg-anthracite p-4 shadow-sm transition-colors">
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
             <div class="flex items-center gap-2">
-              <h4 class="text-sm font-semibold text-smoke-black flex items-center gap-2">
+              <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous flex items-center gap-2">
                 <span>🚘 Locador / Dueño</span>
                 <span
                   class="px-2 py-1 rounded-full text-xs font-semibold"
@@ -490,7 +490,7 @@
             </div>
             <button
               type="button"
-              class="text-xs font-semibold text-accent-petrol hover:underline disabled:opacity-50"
+              class="text-xs font-semibold text-accent-petrol dark:text-accent-petrol/90 hover:underline disabled:opacity-50"
               (click)="refreshVerificationStatuses('owner')"
               [disabled]="verificationLoading()"
             >
@@ -499,13 +499,13 @@
           </div>
 
           <ul class="space-y-4">
-            <li *ngFor="let step of ownerChecklist()" class="flex items-start gap-3 rounded-lg border border-pearl-gray/60 bg-sand-light/30 p-3">
+            <li *ngFor="let step of ownerChecklist()" class="flex items-start gap-3 rounded-lg border border-pearl-gray/60 dark:border-slate-deep/70 bg-sand-light/30 dark:bg-slate-deep/40 p-3 transition-colors">
               <div class="mt-0.5 text-lg">
                 {{ getStepIcon(step) }}
               </div>
               <div class="flex-1">
                 <div class="flex flex-wrap items-center gap-2">
-                  <p class="text-sm font-semibold text-smoke-black">{{ step.label }}</p>
+                  <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">{{ step.label }}</p>
                   <span
                     class="px-2 py-1 rounded-full text-xs font-semibold"
                     [class]="getStepStatusClass(step)"
@@ -513,39 +513,63 @@
                     {{ getStepStatusLabel(step) }}
                   </span>
                 </div>
-                <p class="text-xs text-charcoal-medium mt-1" *ngIf="step.description">{{ step.description }}</p>
-                <p class="text-xs text-red-600 mt-1" *ngIf="step.missingKey">
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1" *ngIf="step.description">{{ step.description }}</p>
+                <p class="text-xs text-red-600 dark:text-red-400 font-semibold mt-1" *ngIf="step.missingKey">
                   Falta: {{ getMissingDocumentLabel(step.missingKey) }}
                 </p>
-                <p class="text-xs text-charcoal-medium mt-1" *ngIf="step.notes">{{ step.notes }}</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1" *ngIf="step.notes">{{ step.notes }}</p>
               </div>
             </li>
           </ul>
         </div>
 
         <!-- Document Upload Section -->
-        <div class="mb-6 p-4 rounded-lg bg-sand-light border border-pearl-gray">
-          <h4 class="text-sm font-semibold text-smoke-black mb-3">Documentos Subidos</h4>
+        <div class="mb-6 p-4 rounded-lg bg-sand-light dark:bg-slate-deep/50 border border-pearl-gray dark:border-slate-deep/70 transition-colors">
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-3">Documentos Subidos</h4>
 
           <div *ngIf="documents().length === 0" class="text-center py-6">
-            <p class="text-sm text-charcoal-medium">No has subido documentos aún</p>
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">No has subido documentos aún</p>
           </div>
 
           <div *ngIf="documents().length > 0" class="space-y-2">
-            <div *ngFor="let doc of documents()" class="flex items-center justify-between p-3 rounded-lg bg-white-pure">
+            <div *ngFor="let doc of documents()" class="flex items-center justify-between p-3 rounded-lg bg-white-pure dark:bg-anthracite border border-pearl-gray/30 dark:border-slate-deep/50 transition-colors">
               <div class="flex items-center gap-3">
                 <div [class]="'flex-shrink-0 w-2 h-2 rounded-full ' + getKycStatusClass(doc.status)"></div>
                 <div>
-                  <p class="text-sm font-medium text-smoke-black">{{ getDocumentLabel(doc.kind) }}</p>
-                  <p class="text-xs text-charcoal-medium">{{ doc.created_at | date:'short' }}</p>
+                  <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous">{{ getDocumentLabel(doc.kind) }}</p>
+                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/60">{{ doc.created_at | date:'short' }}</p>
                 </div>
               </div>
               <button
                 (click)="deleteDocument(doc.id)"
-                class="text-sm text-red-600 hover:text-red-800 transition-colors"
+                class="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-semibold transition-colors"
               >
                 Eliminar
               </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informational Banner: Cédula Digital + Viajes Exterior -->
+        <div *ngIf="showOwnerFlow()" class="mb-6 p-4 rounded-xl bg-gradient-to-br from-accent-petrol/10 to-accent-petrol/5 dark:from-accent-petrol/12 dark:to-transparent border border-accent-petrol/20 dark:border-accent-petrol/35 transition-colors">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0">
+              <svg class="h-6 w-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h5 class="text-sm font-bold text-smoke-black dark:text-ivory-luminous mb-2">💡 Cédula Digital + Viajes al Exterior</h5>
+              <p class="text-xs text-charcoal-medium dark:text-pearl-light/80 mb-3">
+                <strong>Tip:</strong> Descargá el PDF con firma DNRPA desde <strong>Mi Argentina</strong> y subilo acá.
+                Aceptamos ambos formatos: digital o física.
+              </p>
+              <div class="p-3 rounded-lg bg-green-50 dark:bg-emerald-500/10 border border-green-200 dark:border-emerald-400/30">
+                <p class="text-xs font-semibold text-green-800 dark:text-emerald-100 mb-1">🌎 ¿Permitís viajes al exterior?</p>
+                <p class="text-xs text-green-700 dark:text-emerald-200">
+                  Locadores con esta opción obtienen <strong>+30% de retorno</strong> porque Autorentar cobra precios más altos por asumir mayores riesgos.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -560,69 +584,30 @@
               (change)="onDocumentUpload($event, kind.value)"
               [disabled]="uploadingDocument()"
             />
-            <div class="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed border-pearl-gray hover:border-accent-petrol hover:bg-accent-petrol/5 transition-all">
-              <svg class="h-6 w-6 text-charcoal-medium" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed border-pearl-gray dark:border-slate-deep hover:border-accent-petrol dark:hover:border-accent-petrol hover:bg-accent-petrol/5 dark:hover:bg-accent-petrol/10 transition-all">
+              <svg class="h-6 w-6 text-charcoal-medium dark:text-pearl-light/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              <span class="text-xs font-medium text-smoke-black text-center">{{ kind.label }}</span>
+              <span class="text-xs font-medium text-smoke-black dark:text-ivory-luminous text-center">{{ kind.label }}</span>
             </div>
           </label>
         </div>
 
-        <!-- ID Fields -->
-        <form [formGroup]="verificationForm" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Note: Extraction Automática -->
+        <div class="p-4 rounded-lg bg-accent-petrol/5 dark:bg-accent-petrol/10 border border-accent-petrol/20 dark:border-accent-petrol/30">
+          <div class="flex items-start gap-3">
+            <svg class="h-5 w-5 text-accent-petrol mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">Tipo de Documento</label>
-              <select formControlName="gov_id_type" class="input-premium">
-                <option value="DNI">DNI</option>
-                <option value="CI">Cédula de Identidad</option>
-                <option value="Pasaporte">Pasaporte</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">Número de Documento</label>
-              <input
-                type="text"
-                formControlName="gov_id_number"
-                class="input-premium"
-                placeholder="Ej: 12345678"
-              />
+              <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-1">🤖 Extracción Automática con IA</p>
+              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                Nuestra IA extrae automáticamente todos los datos de tus documentos: nombre, DNI, número de licencia, vencimiento, categoría, patente, etc.
+                <strong>No necesitás completar campos manualmente.</strong>
+              </p>
             </div>
           </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">Nº Licencia de Conducir</label>
-              <input
-                type="text"
-                formControlName="driver_license_number"
-                class="input-premium"
-                placeholder="Ej: ABC123456"
-              />
-            </div>
-
-            <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">País Emisor</label>
-              <input
-                type="text"
-                formControlName="driver_license_country"
-                class="input-premium"
-                placeholder="AR"
-              />
-            </div>
-
-            <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">Fecha de Vencimiento</label>
-              <input
-                type="date"
-                formControlName="driver_license_expiry"
-                class="input-premium"
-              />
-            </div>
-          </div>
-        </form>
+        </div>
       </div>
 
       <!-- Notifications Tab -->

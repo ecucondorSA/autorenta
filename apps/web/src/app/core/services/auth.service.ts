@@ -81,6 +81,55 @@ export class AuthService {
     }
   }
 
+  /**
+   * Inicia sesión con Google usando Supabase OAuth
+   * Redirige al usuario a la página de autenticación de Google
+   */
+  async signInWithGoogle(): Promise<void> {
+    const { error } = await this.supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    });
+
+    if (error) {
+      throw this.mapError(error);
+    }
+  }
+
+  /**
+   * Maneja el callback de OAuth procesando los tokens del hash
+   * Supabase detecta automáticamente tokens en URL fragments (#access_token=...)
+   */
+  async handleOAuthCallback(): Promise<{ data: Session | null; error: Error | null }> {
+    try {
+      // getSession() automáticamente detecta y procesa tokens en el hash de la URL
+      const { data, error } = await this.supabase.auth.getSession();
+
+      if (error) {
+        console.error('handleOAuthCallback error:', error);
+        return { data: null, error };
+      }
+
+      if (data.session) {
+        // Actualizar el state con la nueva sesión
+        this.state.set({ session: data.session, loading: false });
+        console.log('✅ OAuth session established:', data.session.user.email);
+      }
+
+      return { data: data.session, error: null };
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Unknown OAuth callback error');
+      console.error('handleOAuthCallback exception:', error);
+      return { data: null, error };
+    }
+  }
+
   async signOut(): Promise<void> {
     const { error } = await this.supabase.auth.signOut();
     if (error) {

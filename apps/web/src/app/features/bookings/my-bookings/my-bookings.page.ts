@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
 import { formatDateRange } from '../../../shared/utils/date.utils';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,

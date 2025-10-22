@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { PaymentsService } from '../../../core/services/payments.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { WalletService } from '../../../core/services/wallet.service';
@@ -8,7 +9,6 @@ import { Booking } from '../../../core/models';
 import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
@@ -12,7 +13,7 @@ import { OwnerConfirmationComponent } from '../../../shared/components/owner-con
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { MetaService } from '../../../core/services/meta.service';
 
 @Component({
   selector: 'app-booking-detail',
@@ -35,6 +36,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly paymentsService = inject(PaymentsService);
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
+  private readonly metaService = inject(MetaService);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
@@ -153,6 +155,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       this.booking.set(booking);
       this.startCountdown();
+
+      // Update SEO meta tags (private page - noindex)
+      this.metaService.updateBookingDetailMeta(booking.id);
 
       // Load car owner ID for confirmation logic
       await this.loadCarOwner();

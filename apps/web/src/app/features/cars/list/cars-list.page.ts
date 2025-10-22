@@ -11,8 +11,10 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
+import { MetaService } from '../../../core/services/meta.service';
 import { Car } from '../../../core/models';
 import {
   DateRange,
@@ -20,7 +22,6 @@ import {
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { MapFiltersComponent, MapFilters } from '../../../shared/components/map-filters/map-filters.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
-import { TranslateModule } from '@ngx-translate/core';
 
 // Interface para auto con distancia
 export interface CarWithDistance extends Car {
@@ -58,6 +59,7 @@ export class CarsListPage implements OnInit {
 
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
+  private readonly metaService = inject(MetaService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
@@ -372,6 +374,11 @@ export class CarsListPage implements OnInit {
     if (this.isBrowser) {
       localStorage.setItem(SORT_STORAGE_KEY, this.sortBy());
     }
+
+    // Update SEO meta tags
+    this.metaService.updateCarsListMeta({
+      city: this.city() || undefined,
+    });
 
     void this.loadCars();
   }

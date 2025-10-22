@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output, EventEmitter, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { Car } from '../../../core/models';
 import { MoneyPipe } from '../../pipes/money.pipe';
-import { getCarPlaceholderImage } from '../../utils/car-placeholder-images';
-import { TranslateModule } from '@ngx-translate/core';
+import { getCarImageUrl } from '../../utils/car-placeholder.util';
 
 @Component({
   selector: 'app-car-card',
@@ -110,13 +110,15 @@ export class CarCardComponent {
     const car = this._car();
     if (!car) return null;
 
-    const photo = car.photos?.[0];
-    if (photo) {
-      return { url: photo.url, alt: car.title };
-    }
+    const photos = car.photos || car.car_photos;
+    const url = getCarImageUrl(photos, {
+      brand: car.brand || car.brand_name,
+      model: car.model || car.model_name,
+      year: car.year,
+      id: car.id,
+    });
 
-    // Use placeholder image based on car ID
-    return getCarPlaceholderImage(car.id);
+    return { url, alt: car.title };
   });
 
   readonly topFeatures = computed(() => {

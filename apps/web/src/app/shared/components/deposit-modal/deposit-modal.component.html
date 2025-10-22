@@ -67,10 +67,10 @@
           </div>
         </div>
 
-        <!-- Amount Input -->
+        <!-- Amount Input (ARS) -->
         <div>
           <label for="amount" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
-            Monto a Depositar
+            Monto a Depositar (en Pesos Argentinos)
           </label>
           <div class="relative">
             <span class="absolute left-3 top-3 text-ash-gray dark:text-pearl-light/60 font-medium">$</span>
@@ -78,20 +78,133 @@
               type="number"
               id="amount"
               name="amount"
-              [value]="amount()"
-              (input)="updateAmount($any($event.target).value)"
-              [min]="MIN_DEPOSIT"
-              [max]="MAX_DEPOSIT"
-              step="10"
+              [value]="arsAmount()"
+              (input)="updateArsAmount($any($event.target).value)"
+              min="100"
+              max="1000000"
+              step="100"
               required
               class="pl-8 pr-16 py-3 w-full border border-pearl-gray/70 dark:border-slate-deep rounded-xl bg-white-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
-              placeholder="100.00"
+              placeholder="1000.00"
               [disabled]="isProcessing()" />
-            <span class="absolute right-3 top-3 text-ash-gray dark:text-pearl-light/60 font-medium">USD</span>
+            <span class="absolute right-3 top-3 text-ash-gray dark:text-pearl-light/60 font-medium">ARS</span>
           </div>
           <p class="text-xs text-ash-gray dark:text-pearl-light/70 mt-1">
-            Mínimo: {{ formatCurrency(MIN_DEPOSIT) }} | Máximo: {{ formatCurrency(MAX_DEPOSIT) }}
+            Mínimo: $100 ARS | Máximo: $1,000,000 ARS
           </p>
+        </div>
+
+        <!-- Conversion Preview -->
+        <div *ngIf="arsAmount() > 0" class="bg-gradient-to-br from-accent-petrol/5 to-accent-petrol/10 dark:from-accent-petrol/15 dark:to-accent-petrol/20 rounded-xl p-5 border border-accent-petrol/30 dark:border-accent-petrol/40 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-accent-petrol dark:text-ivory-luminous" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+              </svg>
+              <span class="text-sm font-medium text-accent-petrol dark:text-ivory-luminous">Conversión en Tiempo Real</span>
+            </div>
+            <div *ngIf="loadingRate()" class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-accent-petrol dark:border-pearl-light"></div>
+          </div>
+
+          <!-- USD Preview (Large) -->
+          <div class="text-center py-3 bg-white/50 dark:bg-slate-deep/30 rounded-lg">
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mb-1">Recibirás en tu wallet:</p>
+            <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+              {{ formatCurrency(usdAmount()) }}
+            </p>
+          </div>
+
+          <!-- Exchange Rate Info -->
+          <div class="bg-white/40 dark:bg-slate-deep/40 rounded-lg p-4 text-center">
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mb-2">Tipo de cambio actual</p>
+            <p class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">
+              1 USD = {{ platformRate() | number:'1.2-2' }} ARS
+            </p>
+          </div>
+
+          <!-- Calculation Breakdown -->
+          <div class="text-xs text-charcoal-medium dark:text-pearl-light/70 pt-2 border-t border-accent-petrol/20 dark:border-accent-petrol/30">
+            <p class="flex items-center justify-between">
+              <span>Monto en ARS:</span>
+              <span class="font-medium">${{ arsAmount() | number:'1.2-2' }} ARS</span>
+            </p>
+            <p class="flex items-center justify-between mt-1">
+              <span>÷ Tasa de conversión:</span>
+              <span class="font-medium">{{ platformRate() | number:'1.2-2' }}</span>
+            </p>
+            <p class="flex items-center justify-between mt-1 text-accent-petrol dark:text-ivory-luminous font-semibold">
+              <span>= Crédito en USD:</span>
+              <span>${{ usdAmount() | number:'1.2-2' }} USD</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Deposit Type Selection -->
+        <div>
+          <label id="deposit-type-label" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-3">
+            Tipo de Depósito
+          </label>
+          <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-labelledby="deposit-type-label">
+            <!-- Withdrawable Option -->
+            <div
+              class="deposit-type-option relative border rounded-xl p-4 cursor-pointer transition-all hover:border-emerald-500/40 hover:bg-emerald-50/50 dark:hover:bg-emerald-500/10"
+              [class.border-emerald-500]="depositType() === 'withdrawable'"
+              [class.bg-emerald-50]="depositType() === 'withdrawable'"
+              [class.dark:bg-emerald-500/15]="depositType() === 'withdrawable'"
+              [class.border-pearl-gray/70]="depositType() !== 'withdrawable'"
+              [class.dark:border-slate-deep]="depositType() !== 'withdrawable'"
+              (click)="depositType.set('withdrawable')">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="type-withdrawable"
+                    name="depositType"
+                    value="withdrawable"
+                    [checked]="depositType() === 'withdrawable'"
+                    (change)="depositType.set('withdrawable')"
+                    class="text-emerald-600 focus:ring-emerald-500 dark:bg-slate-deep dark:border-slate-deep"
+                    [disabled]="isProcessing()" />
+                  <label for="type-withdrawable" class="flex-1 font-semibold text-smoke-black dark:text-ivory-luminous cursor-pointer text-sm">
+                    Retirable
+                  </label>
+                </div>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 ml-6">
+                  Podés retirarlo a tu cuenta bancaria cuando quieras
+                </p>
+              </div>
+            </div>
+
+            <!-- Protected Credit Option -->
+            <div
+              class="deposit-type-option relative border rounded-xl p-4 cursor-pointer transition-all hover:border-amber-500/40 hover:bg-amber-50/50 dark:hover:bg-amber-500/10"
+              [class.border-amber-500]="depositType() === 'protected'"
+              [class.bg-amber-50]="depositType() === 'protected'"
+              [class.dark:bg-amber-500/15]="depositType() === 'protected'"
+              [class.border-pearl-gray/70]="depositType() !== 'protected'"
+              [class.dark:border-slate-deep]="depositType() !== 'protected'"
+              (click)="depositType.set('protected')">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="type-protected"
+                    name="depositType"
+                    value="protected"
+                    [checked]="depositType() === 'protected'"
+                    (change)="depositType.set('protected')"
+                    class="text-amber-600 focus:ring-amber-500 dark:bg-slate-deep dark:border-slate-deep"
+                    [disabled]="isProcessing()" />
+                  <label for="type-protected" class="flex-1 font-semibold text-smoke-black dark:text-ivory-luminous cursor-pointer text-sm">
+                    Crédito Autorentar
+                  </label>
+                </div>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 ml-6">
+                  No retirable, para garantías (meta: USD 250)
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Payment Provider Selection -->
@@ -180,10 +293,14 @@
         </div>
 
         <!-- Summary -->
-        <div class="bg-sand-light/70 dark:bg-slate-deep/60 rounded-xl p-4 border border-pearl-gray/70 dark:border-slate-deep">
+        <div class="bg-sand-light/70 dark:bg-slate-deep/60 rounded-xl p-4 border border-pearl-gray/70 dark:border-slate-deep space-y-2">
           <div class="flex items-center justify-between">
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light/70">Depositarás (ARS):</span>
+            <span class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">${{ arsAmount() | number:'1.2-2' }} ARS</span>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-pearl-gray/50 dark:border-slate-deep">
             <span class="text-sm text-charcoal-medium dark:text-pearl-light/70">Recibirás en tu wallet:</span>
-            <span class="text-xl font-bold text-smoke-black dark:text-ivory-luminous">{{ formatCurrency(amount()) }}</span>
+            <span class="text-xl font-bold text-accent-petrol dark:text-ivory-luminous">{{ formatCurrency(usdAmount()) }}</span>
           </div>
         </div>
 

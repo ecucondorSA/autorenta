@@ -43,14 +43,30 @@ const mapStatusToKyc = (status: VerificationResult['status']): string => {
   }
 };
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 serve(async (req) => {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   if (req.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return new Response('Method Not Allowed', {
+      status: 405,
+      headers: corsHeaders
+    });
   }
 
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
-    return new Response('Unauthorized', { status: 401 });
+    return new Response('Unauthorized', {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
   }
 
   const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -63,7 +79,10 @@ serve(async (req) => {
   const { data: authData, error: userError } = await userClient.auth.getUser();
   if (userError || !authData?.user) {
     console.error('[verify-user-docs] auth error:', userError);
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
   }
 
   const userId = authData.user.id;
@@ -79,7 +98,10 @@ serve(async (req) => {
 
   if (profileError || !profile) {
     console.error('[verify-user-docs] profile not found', profileError);
-    return new Response(JSON.stringify({ error: 'Perfil no encontrado' }), { status: 404 });
+    return new Response(JSON.stringify({ error: 'Perfil no encontrado' }), {
+      status: 404,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
   }
 
   const { data: documents, error: documentsError } = await adminClient
@@ -91,6 +113,7 @@ serve(async (req) => {
     console.error('[verify-user-docs] error fetching documents', documentsError);
     return new Response(JSON.stringify({ error: 'No pudimos obtener los documentos' }), {
       status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
 
@@ -208,7 +231,7 @@ serve(async (req) => {
   });
 
   return new Response(JSON.stringify(results, null, 2), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 });
 

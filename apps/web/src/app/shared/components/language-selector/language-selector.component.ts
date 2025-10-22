@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LanguageService, SupportedLanguage } from '../../../core/services/language.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { LanguageService, SupportedLanguage } from '../../../core/services/language.service';
 
 /**
  * LanguageSelectorComponent

@@ -66,11 +66,48 @@
   ],
   "dataGroups": [
     {
+      "name": "api-supabase-rpc",
+      "urls": [
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/rpc/*"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 0,
+        "maxAge": "0s",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "api-supabase-auth",
+      "urls": [
+        "https://obxvffplochgeiclibng.supabase.co/auth/*"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 0,
+        "maxAge": "0s",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "api-supabase-functions",
+      "urls": [
+        "https://obxvffplochgeiclibng.supabase.co/functions/*"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 0,
+        "maxAge": "0s",
+        "timeout": "30s"
+      }
+    },
+    {
       "name": "api-supabase-fresh",
       "urls": [
         "https://obxvffplochgeiclibng.supabase.co/rest/v1/bookings*",
         "https://obxvffplochgeiclibng.supabase.co/rest/v1/payments*",
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/wallet_transactions*"
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/wallet_transactions*",
+        "https://obxvffplochgeiclibng.supabase.co/rest/v1/user_wallets*"
       ],
       "cacheConfig": {
         "strategy": "freshness",
@@ -133,6 +170,10 @@
     "/**",
     "!/**/*.*",
     "!/**/*__*",
-    "!/**/*__*/**"
-  ]
+    "!/**/*__*/**",
+    "!https://obxvffplochgeiclibng.supabase.co/**",
+    "!https://api.mapbox.com/**",
+    "!https://events.mapbox.com/**"
+  ],
+  "navigationRequestStrategy": "freshness"
 }

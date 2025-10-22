@@ -9,6 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import {
@@ -22,7 +23,7 @@ import {
   VerificationStatus,
 } from '../../core/models';
 import { VerificationService } from '../../core/services/verification.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { MetaService } from '../../core/services/meta.service';
 
 type TabId =
   | 'general'
@@ -63,6 +64,7 @@ export class ProfileExpandedPage implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
   private readonly verificationService = inject(VerificationService);
+  private readonly metaService = inject(MetaService);
 
   // State signals
   readonly profile = signal<UserProfile | null>(null);
@@ -183,16 +185,26 @@ export class ProfileExpandedPage implements OnInit {
   ];
 
   readonly documentKinds: { value: DocumentKind; label: string }[] = [
-    { value: 'gov_id_front', label: 'DNI/CI - Frente' },
-    { value: 'gov_id_back', label: 'DNI/CI - Dorso' },
-    { value: 'driver_license', label: 'Licencia de conducir' },
-    { value: 'vehicle_registration', label: 'Cédula verde / Documento del vehículo' },
-    { value: 'vehicle_insurance', label: 'Seguro del vehículo (opcional)' },
+    // CONDUCTOR (Locatario)
+    { value: 'driver_license', label: 'Licencia de conducir (OBLIGATORIO)' },
+    { value: 'selfie', label: 'Selfie con licencia (recomendado)' },
+
+    // LOCADOR: Documento personal
+    { value: 'gov_id_front', label: 'DNI/Pasaporte - Frente' },
+    { value: 'gov_id_back', label: 'DNI/Pasaporte - Dorso' },
+
+    // LOCADOR: Vehículo
+    { value: 'vehicle_registration', label: 'Cédula del vehículo (digital PDF O foto física)' },
+    { value: 'vehicle_insurance', label: 'Seguro del vehículo / Carta Verde (Mercosur)' },
+
+    // OTROS
     { value: 'utility_bill', label: 'Factura de servicios' },
-    { value: 'selfie', label: 'Selfie de verificación' },
   ];
 
   ngOnInit(): void {
+    // Update SEO meta tags (private page - noindex)
+    this.metaService.updateProfileMeta();
+
     void this.loadProfile();
     void this.loadDocuments();
     void this.refreshVerificationStatuses();
@@ -288,8 +300,8 @@ export class ProfileExpandedPage implements OnInit {
     return [
       {
         id: 'driver_license_upload',
-        label: 'Subí tu licencia de conducir',
-        description: 'Foto clara donde se lean tu nombre y la fecha de vencimiento.',
+        label: 'Licencia de conducir (OBLIGATORIO)',
+        description: 'Foto clara del frente. IA extrae automáticamente: nombre, vencimiento, categoría.',
         statusType: 'document',
         status: licenseStatus.status,
         completed: licenseStatus.completed,
@@ -298,22 +310,12 @@ export class ProfileExpandedPage implements OnInit {
       },
       {
         id: 'driver_selfie',
-        label: 'Agregá una selfie sosteniendo tu licencia (recomendado)',
-        description: 'Ayuda a acelerar la verificación automática.',
+        label: 'Selfie con licencia (recomendado)',
+        description: 'Acelera la verificación.',
         statusType: 'document',
         status: selfieStatus.status,
         completed: selfieStatus.completed,
         notes: selfieStatus.notes ?? null,
-      },
-      {
-        id: 'driver_ai_review',
-        label: 'Validación automática de la licencia',
-        description: 'La IA comprueba autenticidad, vigencia y coincidencia con tu perfil.',
-        statusType: 'verification',
-        status: verification?.status ?? 'PENDIENTE',
-        completed: verification?.status === 'VERIFICADO',
-        missingKey: missingDocs.includes('licencia') ? 'licencia' : undefined,
-        notes: verification?.notes ?? null,
       },
     ];
   }
@@ -328,19 +330,9 @@ export class ProfileExpandedPage implements OnInit {
 
     return [
       {
-        id: 'owner_gov_id',
-        label: 'Subí tu documento personal (DNI / Pasaporte)',
-        description: 'Frente y dorso legibles, sin reflejos ni recortes.',
-        statusType: 'document',
-        status: govIdStatus.status,
-        completed: govIdStatus.completed,
-        missingKey: 'dni',
-        notes: govIdStatus.notes ?? null,
-      },
-      {
         id: 'owner_vehicle_doc',
-        label: 'Subí la documentación del vehículo (cédula verde)',
-        description: 'Debe coincidir con la patente y datos que vas a publicar.',
+        label: 'Cédula del vehículo (digital O física)',
+        description: 'PDF digital desde Mi Argentina O foto de cédula verde/azul. IA extrae: patente, titular, vigencia.',
         statusType: 'document',
         status: vehicleStatus.status,
         completed: vehicleStatus.completed,
@@ -348,25 +340,23 @@ export class ProfileExpandedPage implements OnInit {
         notes: vehicleStatus.notes ?? null,
       },
       {
+        id: 'owner_gov_id',
+        label: 'DNI / Pasaporte',
+        description: 'Frente y dorso. IA verifica coincidencia con titular de la cédula.',
+        statusType: 'document',
+        status: govIdStatus.status,
+        completed: govIdStatus.completed,
+        missingKey: 'dni',
+        notes: govIdStatus.notes ?? null,
+      },
+      {
         id: 'owner_insurance',
-        label: 'Seguro del vehículo (opcional pero recomendado)',
-        description: 'Adjuntalo para generar más confianza en los conductores.',
+        label: 'Seguro / Carta Verde (opcional)',
+        description: 'Recomendado. Si permitís viajes al exterior, Carta Verde es obligatoria.',
         statusType: 'document',
         status: insuranceStatus.status,
         completed: insuranceStatus.completed,
         notes: insuranceStatus.notes ?? null,
-      },
-      {
-        id: 'owner_ai_review',
-        label: 'Validación automática de la documentación',
-        description: 'La IA verifica que seas el titular y que los datos del auto sean coherentes.',
-        statusType: 'verification',
-        status: verification?.status ?? 'PENDIENTE',
-        completed: verification?.status === 'VERIFICADO',
-        missingKey: missingDocs.find((doc) =>
-          ['dni', 'cedula_auto'].includes(doc),
-        ),
-        notes: verification?.notes ?? null,
       },
     ];
   }

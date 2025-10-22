@@ -1,11 +1,12 @@
-import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
+import { Component, EventEmitter, Output, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
+import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
 import { FocusTrapDirective } from '../../directives/focus-trap.directive';
 import { EscapeKeyDirective } from '../../directives/escape-key.directive';
-import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * DepositModalComponent
@@ -37,6 +38,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class DepositModalComponent {
   private readonly walletService = inject(WalletService);
+  private readonly exchangeRateService = inject(ExchangeRateService);
 
   /**
    * Datos para transferencia bancaria manual
@@ -49,6 +51,45 @@ export class DepositModalComponent {
     concept: 'Crédito Autorentar',
     email: 'pagos@autorentar.com',
   };
+
+  // ==================== CONVERSION PREVIEW ====================
+
+  /**
+   * Monto que el usuario depositará en ARS
+   */
+  arsAmount = signal<number>(1000);
+
+  /**
+   * Monto equivalente en USD que recibirá
+   */
+  usdAmount = signal<number>(0);
+
+  /**
+   * Cotización actual de la plataforma (ARS por USD)
+   */
+  platformRate = signal<number>(0);
+
+
+  /**
+   * Indica si está cargando la cotización
+   */
+  loadingRate = signal(false);
+
+  /**
+   * Constructor con effect para actualizar conversión en tiempo real
+   */
+  constructor() {
+    // Effect para actualizar USD cuando cambia el monto en ARS
+    effect(() => {
+      const ars = this.arsAmount();
+      if (ars > 0) {
+        this.updateConversionPreview(ars);
+      }
+    });
+
+    // Cargar cotización inicial
+    this.loadExchangeRate();
+  }
 
   // ==================== OUTPUTS ====================
 
@@ -66,11 +107,6 @@ export class DepositModalComponent {
   // ==================== FORM STATE ====================
 
   /**
-   * Monto a depositar
-   */
-  amount = signal<number>(250);
-
-  /**
    * Proveedor de pago seleccionado
    */
   provider = signal<WalletPaymentProvider>('mercadopago');
@@ -79,6 +115,11 @@ export class DepositModalComponent {
    * Descripción opcional del depósito
    */
   description = signal<string>('');
+
+  /**
+   * Tipo de depósito: 'protected' (Crédito Autorentar) o 'withdrawable' (Fondos retirables)
+   */
+  depositType = signal<'protected' | 'withdrawable'>('withdrawable');
 
   // ==================== UI STATE ====================
 
@@ -105,10 +146,10 @@ export class DepositModalComponent {
   // ==================== VALIDATION ====================
 
   /**
-   * Límites de depósito
+   * Límites de depósito (en ARS)
    */
-  readonly MIN_DEPOSIT = 10;
-  readonly MAX_DEPOSIT = 5000;
+  readonly MIN_DEPOSIT_ARS = 100;
+  readonly MAX_DEPOSIT_ARS = 1000000;
 
   /**
    * Proveedores disponibles
@@ -134,6 +175,45 @@ export class DepositModalComponent {
   // ==================== PUBLIC METHODS ====================
 
   /**
+   * Carga la cotización actual desde el servicio
+   */
+  async loadExchangeRate(): Promise<void> {
+    this.loadingRate.set(true);
+    try {
+      const rate = await this.exchangeRateService.getPlatformRate();
+      this.platformRate.set(rate);
+
+      console.log(`💱 Cotización cargada: 1 USD = ${rate} ARS`);
+    } catch (error) {
+      console.error('Error loading exchange rate:', error);
+      // Usar fallback si falla (tasa aproximada)
+      this.platformRate.set(1748.01);
+    } finally {
+      this.loadingRate.set(false);
+    }
+  }
+
+  /**
+   * Actualiza el preview de conversión en tiempo real
+   */
+  async updateConversionPreview(ars: number): Promise<void> {
+    if (!this.platformRate()) {
+      await this.loadExchangeRate();
+    }
+
+    const usd = Math.round((ars / this.platformRate()) * 100) / 100;
+    this.usdAmount.set(usd);
+  }
+
+  /**
+   * Actualiza el monto en ARS cuando el usuario cambia el input
+   */
+  updateArsAmount(value: string): void {
+    const numValue = parseFloat(value);
+    this.arsAmount.set(isNaN(numValue) ? 0 : numValue);
+  }
+
+  /**
    * Cierra el modal
    */
   onClose(): void {
@@ -155,23 +235,30 @@ export class DepositModalComponent {
   validateForm(): boolean {
     this.formError.set(null);
 
-    const currentAmount = this.amount();
+    const currentArsAmount = this.arsAmount();
+    const currentUsdAmount = this.usdAmount();
 
-    // Validar que el monto sea un número
-    if (isNaN(currentAmount) || currentAmount === null) {
-      this.formError.set('Por favor ingresa un monto válido');
+    // Validar que el monto en ARS sea un número válido
+    if (isNaN(currentArsAmount) || currentArsAmount === null || currentArsAmount <= 0) {
+      this.formError.set('Por favor ingresa un monto válido en pesos argentinos');
       return false;
     }
 
-    // Validar monto mínimo
-    if (currentAmount < this.MIN_DEPOSIT) {
-      this.formError.set(`El depósito mínimo es $${this.MIN_DEPOSIT} USD`);
+    // Validar monto mínimo en ARS
+    if (currentArsAmount < this.MIN_DEPOSIT_ARS) {
+      this.formError.set(`El depósito mínimo es $${this.MIN_DEPOSIT_ARS} ARS`);
       return false;
     }
 
-    // Validar monto máximo
-    if (currentAmount > this.MAX_DEPOSIT) {
-      this.formError.set(`El depósito máximo es $${this.MAX_DEPOSIT} USD`);
+    // Validar monto máximo en ARS
+    if (currentArsAmount > this.MAX_DEPOSIT_ARS) {
+      this.formError.set(`El depósito máximo es $${this.MAX_DEPOSIT_ARS.toLocaleString('es-AR')} ARS`);
+      return false;
+    }
+
+    // Validar que la conversión a USD sea válida
+    if (isNaN(currentUsdAmount) || currentUsdAmount <= 0) {
+      this.formError.set('Error al calcular la conversión a USD. Reintenta en unos segundos.');
       return false;
     }
 
@@ -192,10 +279,18 @@ export class DepositModalComponent {
     this.fallbackSuggestion.set('none');
 
     try {
+      // Pasar el monto en USD (convertido desde ARS) al servicio de wallet
+      const usdAmount = this.usdAmount();
+
+      console.log(`💰 Iniciando depósito: ${this.arsAmount()} ARS → ${usdAmount} USD (tasa: ${this.platformRate()})`);
+
+      const isProtectedCredit = this.depositType() === 'protected';
+
       const result = await this.walletService.initiateDeposit({
-        amount: this.amount(),
+        amount: usdAmount, // USD amount (converted from ARS)
         provider: this.provider(),
-        description: this.description() || 'Depósito a wallet',
+        description: this.description() || `Depósito de ${this.arsAmount()} ARS ${isProtectedCredit ? '(Crédito Autorentar)' : '(Retirable)'}`,
+        allowWithdrawal: !isProtectedCredit, // Invertir: protected=false, withdrawable=true
       });
 
       if (result.success && result.payment_url) {
@@ -230,15 +325,6 @@ export class DepositModalComponent {
     } finally {
       this.isProcessing.set(false);
     }
-  }
-
-  /**
-   * Actualiza el monto
-   */
-  updateAmount(value: string): void {
-    const numValue = parseFloat(value);
-    this.amount.set(isNaN(numValue) ? 0 : numValue);
-    this.formError.set(null);
   }
 
   /**

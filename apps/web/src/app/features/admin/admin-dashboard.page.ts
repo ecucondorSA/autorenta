@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../core/services/admin.service';
 import { CarsService } from '../../core/services/cars.service';
 import { ProfileService } from '../../core/services/profile.service';
@@ -7,7 +8,6 @@ import { Car } from '../../core/models';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { DatabaseExportService } from '../../core/services/database-export.service';
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
-import { TranslateModule } from '@ngx-translate/core';
 
 interface DatabaseStats {
   totalProfiles: number;

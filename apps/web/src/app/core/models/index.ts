@@ -42,6 +42,9 @@ export interface UserProfile {
   avatar_url?: string | null;
   role: Role;
 
+  // Wallet
+  wallet_account_number?: string | null;
+
   // Información de contacto
   phone?: string | null;
   whatsapp?: string | null;
@@ -191,6 +194,7 @@ export interface Car {
   // Foreign Keys to normalized tables
   brand_id: string;
   model_id: string;
+  region_id?: string | null; // For dynamic pricing
 
   // Backward compatibility fields (required in database)
   brand_text_backup: string;
@@ -301,7 +305,9 @@ export type BookingCompletionStatus =
 export interface Booking {
   id: string;
   car_id: string;
+  user_id: string; // Alias for renter_id (backward compatibility)
   renter_id: string;
+  owner_id?: string; // Car owner ID
   start_at: string;
   end_at: string;
   status: BookingStatus;
@@ -327,7 +333,7 @@ export interface Booking {
   payment_method?: 'credit_card' | 'wallet' | 'partial_wallet' | null;
   wallet_amount_cents?: number | null;
   wallet_lock_transaction_id?: string | null;
-  wallet_status?: 'none' | 'locked' | 'charged' | 'refunded' | null;
+  wallet_status?: 'none' | 'locked' | 'charged' | 'refunded' | 'partially_charged' | null;
   wallet_charged_at?: string | null;
   wallet_refunded_at?: string | null;
 

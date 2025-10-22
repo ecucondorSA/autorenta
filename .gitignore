@@ -18,3 +18,5 @@ node_modules
 .idea
 .vscode/*
 !.vscode/extensions.json
+# ONNX models (too large for GitHub)
+apps/web/src/assets/models/*.onnx

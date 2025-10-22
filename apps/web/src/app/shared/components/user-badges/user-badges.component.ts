@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { UserStats } from '../../../core/models';
 import { TranslateModule } from '@ngx-translate/core';
+import type { UserStats } from '../../../core/models';
 
 interface BadgeDisplay {
   type: string;

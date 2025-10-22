@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ReviewsService } from '../../../core/services/reviews.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { ReviewsService } from '../../../core/services/reviews.service';
 
 interface PendingReview {
   booking_id: string;

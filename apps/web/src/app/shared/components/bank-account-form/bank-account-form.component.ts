@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import type { BankAccountType, AddBankAccountParams } from '../../../core/models/wallet.model';
 import { TranslateModule } from '@ngx-translate/core';
+import type { BankAccountType, AddBankAccountParams } from '../../../core/models/wallet.model';
 
 /**
  * Componente para agregar cuentas bancarias
@@ -17,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class BankAccountFormComponent {
   @Output() submitAccount = new EventEmitter<AddBankAccountParams>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelled = new EventEmitter<void>();
 
   readonly form: FormGroup;
   readonly submitting = signal(false);
@@ -107,7 +107,7 @@ export class BankAccountFormComponent {
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelled.emit();
   }
 
   getErrorMessage(fieldName: string): string {

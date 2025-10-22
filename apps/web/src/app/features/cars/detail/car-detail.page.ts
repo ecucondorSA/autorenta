@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { WalletService } from '../../../core/services/wallet.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { MetaService } from '../../../core/services/meta.service';
+import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { Car, Review, CarStats, ReviewSummary } from '../../../core/models';
 import {
   DateRangePickerComponent,
@@ -15,13 +18,13 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
 import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
+import { DynamicPriceDisplayComponent } from '../../../shared/components/dynamic-price-display/dynamic-price-display.component';
 import { BookingPaymentMethod } from '../../../core/models/wallet.model';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'app-car-detail-page',
-  imports: [CommonModule, RouterLink, DateRangePickerComponent, MoneyPipe, ReviewCardComponent, PaymentMethodSelectorComponent, ShareMenuComponent, TranslateModule],
+  imports: [CommonModule, RouterLink, DateRangePickerComponent, MoneyPipe, ReviewCardComponent, PaymentMethodSelectorComponent, ShareMenuComponent, DynamicPriceDisplayComponent, TranslateModule],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -100,14 +103,32 @@ export class CarDetailPage implements OnInit {
   readonly availableBalance = signal<number>(0);
   readonly lockedBalance = signal<number>(0);
 
+  // Dynamic pricing computed values
+  readonly useDynamicPricing = computed(() => {
+    const car = this.car();
+    return car?.region_id != null;
+  });
+
+  readonly rentalStartDate = computed(() => {
+    const range = this.dateRange();
+    return range.from ? new Date(range.from) : new Date();
+  });
+
+  readonly rentalHours = computed(() => {
+    const days = this.daysCount();
+    return days > 0 ? days * 24 : 24; // Default 24 hours if no dates selected
+  });
+
   constructor(
     private readonly carsService: CarsService,
     private readonly bookingsService: BookingsService,
     private readonly reviewsService: ReviewsService,
     private readonly walletService: WalletService,
+    private readonly metaService: MetaService,
     readonly authService: AuthService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
+    readonly pricingService: DynamicPricingService,
   ) {}
 
   ngOnInit(): void {
@@ -140,6 +161,31 @@ export class CarDetailPage implements OnInit {
         this.error.set('Auto no disponible');
       } else {
         this.car.set(car);
+
+        // Update SEO meta tags
+        const mainPhoto = (car.photos?.[0] ?? car.car_photos?.[0])?.url;
+        this.metaService.updateCarDetailMeta({
+          title: car.title,
+          description: car.description || `${car.brand} ${car.model} ${car.year} - Alquiler de auto en ${car.location_city}`,
+          main_photo_url: mainPhoto,
+          price_per_day: car.price_per_day,
+          currency: car.currency || 'ARS',
+          id: car.id,
+        });
+
+        // Add structured data for search engines
+        const stats = await this.reviewsService.getCarStats(carId);
+        this.metaService.addCarProductData({
+          title: car.title,
+          description: car.description || `${car.brand} ${car.model} ${car.year}`,
+          main_photo_url: mainPhoto,
+          price_per_day: car.price_per_day,
+          currency: car.currency || 'ARS',
+          id: car.id,
+          rating_avg: stats?.rating_avg || undefined,
+          rating_count: stats?.reviews_count || 0,
+        });
+
         // Load reviews for this car
         await this.loadReviews(carId);
       }
@@ -264,5 +310,122 @@ export class CarDetailPage implements OnInit {
     } finally {
       this.bookingInProgress.set(false);
     }
+  }
+
+  /**
+   * Abre la navegación al auto en Google Maps/Waze/Apple Maps
+   */
+  openNavigation(): void {
+    const car = this.car();
+    if (!car?.location_lat || !car?.location_lng) {
+      alert('Ubicación del auto no disponible');
+      return;
+    }
+
+    const lat = car.location_lat;
+    const lng = car.location_lng;
+    const carName = `${car.brand} ${car.model}`;
+    const address = car.location_formatted_address || car.location_city || 'Auto para alquilar';
+
+    // Detectar sistema operativo y app de mapas preferida
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroid = /android/.test(userAgent);
+
+    // Construcción de URLs para diferentes apps de navegación
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=&travelmode=driving`;
+    const appleMapsUrl = `http://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`;
+    const wazeUrl = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes&z=15`;
+
+    // Mostrar opciones de navegación
+    if (isIOS) {
+      // iOS: Preferir Apple Maps pero dar opciones
+      this.showNavigationOptions(appleMapsUrl, googleMapsUrl, wazeUrl, carName);
+    } else if (isAndroid) {
+      // Android: Preferir Google Maps pero dar opciones
+      this.showNavigationOptions(googleMapsUrl, wazeUrl, appleMapsUrl, carName);
+    } else {
+      // Desktop: Abrir Google Maps en nueva pestaña
+      window.open(googleMapsUrl, '_blank');
+    }
+  }
+
+  /**
+   * Muestra opciones de navegación para el usuario
+   */
+  private showNavigationOptions(primary: string, secondary: string, tertiary: string, carName: string): void {
+    // En móvil, intentar abrir directamente la app de mapas nativa
+    if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
+      window.location.href = primary;
+    } else {
+      window.open(primary, '_blank');
+    }
+  }
+
+  /**
+   * Obtiene la ubicación actual del usuario y calcula la ruta
+   */
+  async getDirectionsFromCurrentLocation(): Promise<void> {
+    const car = this.car();
+    if (!car?.location_lat || !car?.location_lng) {
+      alert('Ubicación del auto no disponible');
+      return;
+    }
+
+    if ('geolocation' in navigator) {
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          });
+        });
+
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        const carLat = car.location_lat;
+        const carLng = car.location_lng;
+
+        // Abrir Google Maps con la ruta desde ubicación actual
+        const url = `https://www.google.com/maps/dir/${userLat},${userLng}/${carLat},${carLng}/@${(userLat + carLat) / 2},${(userLng + carLng) / 2},13z/data=!3m1!4b1!4m2!4m1!3e0`;
+
+        if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
+          window.location.href = url;
+        } else {
+          window.open(url, '_blank');
+        }
+      } catch (error) {
+        console.error('Error getting user location:', error);
+        // Si falla la geolocalización, usar navegación sin origen
+        this.openNavigation();
+      }
+    } else {
+      alert('Tu dispositivo no soporta geolocalización');
+      this.openNavigation();
+    }
+  }
+
+  /**
+   * Calcula la distancia aproximada entre el usuario y el auto
+   */
+  calculateDistance(userLat: number, userLng: number, carLat: number, carLng: number): number {
+    // Fórmula de Haversine para calcular distancia entre dos puntos
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = this.deg2rad(carLat - userLat);
+    const dLng = this.deg2rad(carLng - userLng);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(userLat)) *
+      Math.cos(this.deg2rad(carLat)) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distancia en km
+    return Math.round(distance * 10) / 10; // Redondear a 1 decimal
+  }
+
+  private deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
   }
 }

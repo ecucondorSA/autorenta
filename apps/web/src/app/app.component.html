@@ -14,7 +14,7 @@
   class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-soft dark:bg-graphite-dark transition-opacity duration-500"
 >
   <!-- Header -->
-  <header class="sticky top-0 z-sticky border-b border-pearl-gray/30 backdrop-blur-md bg-white-pure/95 dark:bg-anthracite/95">
+  <header id="main-header" class="sticky top-0 z-sticky border-b border-pearl-gray/30 backdrop-blur-md bg-white-pure/95 dark:bg-anthracite/95">
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-sand-light dark:bg-slate-deep"
       href="#main-content"
@@ -47,18 +47,18 @@
           class="h-12 md:h-14 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-[1.04]"
           priority
         />
-        <span class="hidden xl:flex flex-col leading-tight">
+        <span class="flex flex-col leading-tight">
           <span class="text-[1.05rem] font-semibold text-smoke-black dark:text-pearl-light group-hover:text-accent-petrol">
             AutoRentar
           </span>
           <span class="text-[0.68rem] uppercase tracking-[0.22em] text-ash-gray dark:text-pearl-light/65">
-            Premium Car Sharing
+            Car Sharing
           </span>
         </span>
       </a>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden lg:flex items-center gap-3 xl:gap-4 ml-8" role="navigation" aria-label="Principal">
+      <nav id="main-nav" class="hidden lg:flex items-center gap-3 xl:gap-4 ml-8" role="navigation" aria-label="Principal">
         <a
           routerLink="/cars"
           routerLinkActive="nav-link-active"
@@ -86,6 +86,8 @@
         <app-verification-badge *ngIf="isAuthenticatedSig()" class="hidden lg:inline-flex"></app-verification-badge>
         <!-- Language Selector -->
         <app-language-selector></app-language-selector>
+        <!-- Help Button -->
+        <app-help-button></app-help-button>
         <!-- Theme Toggle -->
         <button (click)="toggleDarkMode()" class="icon-button h-10 w-10 lg:h-11 lg:w-11" [attr.aria-label]="'common.changeTheme' | translate">
           <svg *ngIf="!darkMode()" class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -118,6 +120,9 @@
       </div>
     </div>
   </header>
+
+  <!-- Verification Prompt Banner -->
+  <app-verification-prompt-banner *ngIf="isAuthenticatedSig()"></app-verification-prompt-banner>
 
   <!-- Pending Reviews Banner -->
   <div *ngIf="isAuthenticatedSig()" class="mx-auto max-w-7xl w-full px-4 pt-4">
@@ -283,12 +288,12 @@
           <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Contacto</h4>
           <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
             <li>
-              <a href="mailto:info@autorent.com" class="inline-flex items-center gap-2 hover:text-accent-petrol transition-base">
+              <a href="mailto:autorentardev@gmail.com" class="inline-flex items-center gap-2 hover:text-accent-petrol transition-base">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 5h18M5 7h14v12H5z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 9l7 5 7-5" />
                 </svg>
-                info@autorent.com
+                autorentardev@gmail.com
               </a>
             </li>
             <li>

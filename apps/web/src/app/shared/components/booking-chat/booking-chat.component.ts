@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, input, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-booking-chat',

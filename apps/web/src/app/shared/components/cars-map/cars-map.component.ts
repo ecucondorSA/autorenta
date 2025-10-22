@@ -16,12 +16,13 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   CarLocationsService,
   type CarMapLocation,
 } from '../../../core/services/car-locations.service';
+import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { environment } from '../../../../environments/environment';
-import { TranslateModule } from '@ngx-translate/core';
 
 // Dynamic import types
 type MapboxMap = any;
@@ -46,6 +47,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly carLocationsService = inject(CarLocationsService);
+  private readonly pricingService = inject(DynamicPricingService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -81,16 +83,14 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       }
     }
 
-    // CRITICAL: Forzar resize del mapa con múltiples delays
+    // Optimized: Single resize call - trackResize: true and ResizeObserver handle most cases
     if (this.map) {
-      [100, 300, 600].forEach((delay) => {
-        setTimeout(() => {
-          if (this.map) {
-            this.map.resize();
-            console.log(`[CarsMapComponent] Map resized on change at ${delay}ms`);
-          }
-        }, delay);
-      });
+      setTimeout(() => {
+        if (this.map) {
+          this.map.resize();
+          console.log('[CarsMapComponent] Map resized on change');
+        }
+      }, 200);
     }
   }
 
@@ -113,16 +113,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       if (this.mapboxgl) {
         clearInterval(checkInterval);
         void this.initializeMap();
-
-        // CRITICAL: Múltiples resize con delays más largos para asegurar que el contenedor tenga tamaño
-        [100, 300, 600, 1000, 1500, 2000, 3000].forEach((delay) => {
-          setTimeout(() => {
-            if (this.map) {
-              this.map.resize();
-              console.log(`[CarsMapComponent] AfterViewInit resize at ${delay}ms`);
-            }
-          }, delay);
-        });
+        // Resize is now handled by trackResize: true and ResizeObserver
       }
     }, 100);
 
@@ -226,6 +217,12 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         cooperativeGestures: false,
         minZoom: 10, // Aumentado de 8 a 10 - siempre cerca
         maxZoom: 17, // Aumentado de 16 a 17 - permite más acercamiento
+        // Performance optimizations for faster tile loading
+        renderWorldCopies: false, // Don't render multiple world copies (improves performance)
+        trackResize: true, // Automatically resize when container changes
+        preserveDrawingBuffer: false, // Better performance, disable if screenshots needed
+        refreshExpiredTiles: false, // Don't auto-refresh expired tiles (reduces network)
+        fadeDuration: 150, // Faster tile fade-in (default: 300ms)
       });
 
       // CRITICAL: Forzar resize inmediatamente después de crear el mapa
@@ -241,18 +238,14 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         // CLEANUP: Ocultar capas innecesarias para un mapa más limpio
         this.cleanupMapLayers();
 
-        // CRITICAL: Múltiples llamadas a resize con delays progresivos
-        // Esto asegura que el mapa se ajuste correctamente independientemente
-        // de cuándo el contenedor obtenga su altura final
-        const resizeDelays = [100, 300, 600, 1000, 1500, 2000];
-        resizeDelays.forEach((delay) => {
-          setTimeout(() => {
-            if (this.map) {
-              this.map.resize();
-              console.log(`[CarsMapComponent] Map resized at ${delay}ms`);
-            }
-          }, delay);
-        });
+        // Optimized: Reduced resize calls - trackResize: true handles most cases
+        // Only resize once after a short delay to ensure container has final dimensions
+        setTimeout(() => {
+          if (this.map) {
+            this.map.resize();
+            console.log('[CarsMapComponent] Initial map resize complete');
+          }
+        }, 300);
 
         // Setup ResizeObserver para detectar cambios de tamaño del contenedor
         this.setupResizeObserver();
@@ -261,6 +254,12 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         this.setupRealtimeUpdates();
         this.setupPeriodicRefresh();
         this.requestUserLocation();
+      });
+
+      // Actualizar precios cuando el usuario mueve el mapa
+      this.map.on('moveend', () => {
+        console.log('[CarsMapComponent] Map moved, refreshing prices...');
+        void this.loadCarLocations(true);
       });
 
       // Manejo de errores
@@ -354,7 +353,9 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         console.log(`[CarsMapComponent] Showing all ${locations.length} active cars on map`);
       }
 
-      this.updateMarkers(locations);
+      // Update markers with dynamic pricing
+      await this.updateMarkersWithDynamicPricing(locations);
+
       this.carCount.set(locations.length);
       this.loading.set(false);
       this.error.set(null);
@@ -381,6 +382,51 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
   }
 
+  /**
+   * Update markers with dynamic pricing from pricing service
+   * Fetches batch prices and updates location data before rendering
+   */
+  private async updateMarkersWithDynamicPricing(locations: CarMapLocation[]): Promise<void> {
+    // Filter locations that have regionId
+    const carsWithRegion = locations
+      .filter((loc) => loc.regionId)
+      .map((loc) => ({ id: loc.carId, region_id: loc.regionId! }));
+
+    // If no cars have regionId, use static pricing
+    if (carsWithRegion.length === 0) {
+      console.log('[CarsMapComponent] No cars with region_id, using static pricing');
+      this.updateMarkers(locations);
+      return;
+    }
+
+    try {
+      // Fetch dynamic prices in batch
+      const prices = await this.pricingService.getBatchPrices(carsWithRegion);
+      console.log(`[CarsMapComponent] Fetched dynamic prices for ${prices.size} cars`);
+
+      // Update locations with dynamic pricing data
+      const updatedLocations = locations.map((loc) => {
+        const dynamicPrice = prices.get(loc.carId);
+        if (dynamicPrice) {
+          return {
+            ...loc,
+            pricePerDay: dynamicPrice.price_per_day,
+            pricePerHour: dynamicPrice.price_per_hour,
+            surgeActive: dynamicPrice.surge_active,
+          };
+        }
+        return loc;
+      });
+
+      // Render markers with updated pricing
+      this.updateMarkers(updatedLocations);
+    } catch (error) {
+      console.error('[CarsMapComponent] Error fetching dynamic prices:', error);
+      // Fallback to static pricing on error
+      this.updateMarkers(locations);
+    }
+  }
+
   private updateMarkers(locations: CarMapLocation[]): void {
     if (!this.map || !this.mapboxgl) {
       return;
@@ -404,6 +450,8 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         properties: {
           carId: loc.carId,
           price: Math.round(loc.pricePerDay),
+          pricePerHour: loc.pricePerHour ? Math.round(loc.pricePerHour) : null,
+          surgeActive: loc.surgeActive || false,
           title: loc.title,
           currency: loc.currency,
           photoUrl: loc.photoUrl || '',
@@ -422,8 +470,12 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         type: 'geojson',
         data: geojsonData,
         cluster: true, // Habilitar clustering nativo de Mapbox
-        clusterMaxZoom: 14, // Max zoom para clusters
-        clusterRadius: 50, // Radio del cluster en pixels
+        clusterMaxZoom: 13, // Optimized: Cluster until zoom 13 (was 14) - reduces marker count
+        clusterRadius: 60, // Optimized: Larger radius (was 50) - fewer clusters, better mobile performance
+        clusterProperties: {
+          // Optional: Pre-calculate cluster properties for faster rendering
+          minPrice: ['min', ['get', 'price']],
+        },
       });
     }
 
@@ -473,14 +525,19 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       },
     });
 
-    // Layer 4: Texto de precio para autos individuales
+    // Layer 4: Texto de precio para autos individuales (muestra precio por hora si está disponible)
     this.map.addLayer({
       id: 'car-prices',
       type: 'symbol',
       source: 'cars',
       filter: ['!', ['has', 'point_count']],
       layout: {
-        'text-field': ['concat', '$', ['get', 'price']],
+        'text-field': [
+          'case',
+          ['!=', ['get', 'pricePerHour'], null],
+          ['concat', '$', ['get', 'pricePerHour'], '/h'],
+          ['concat', '$', ['get', 'price']],
+        ],
         'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
         'text-size': 13,
         'text-allow-overlap': true,

@@ -60,7 +60,7 @@
 
   <div class="layout-grid">
     <div class="map-panel">
-      <div class="map-wrapper">
+      <div id="map-container" class="map-wrapper">
         <app-cars-map
           [cars]="cars()"
           [selectedCarId]="selectedCarId()"
@@ -70,7 +70,7 @@
 
         <div class="pointer-events-none absolute inset-0">
           <div class="map-controls pointer-events-auto">
-            <div class="map-controls__filters">
+            <div id="filters" class="map-controls__filters filter-section">
               <app-map-filters
                 (filtersChange)="onFiltersChange($event)"
                 (filtersReset)="onFiltersReset()"

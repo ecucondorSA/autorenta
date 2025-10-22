@@ -1,0 +1,60 @@
+╔════════════════════════════════════════════════════════════╗
+║     INVESTIGATING MERCADOPAGO DEPOSIT ISSUE               ║
+╚════════════════════════════════════════════════════════════╝
+
+Payment ID: 130624829514
+Transaction ID: NOT PROVIDED
+Timestamp: 2025-10-20 14:33 UTC
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1️⃣  SEARCHING FOR TRANSACTION BY PAYMENT ID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ id | user_id | type | amount | status | is_withdrawable | provider_transaction_id | created_at | completed_at | mp_status | mp_status_detail 
+----+---------+------+--------+--------+-----------------+-------------------------+------------+--------------+-----------+------------------
+(0 rows)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2️⃣  RECENT PENDING DEPOSITS (Last 24 hours)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                  id                  |               user_id                |  type   | amount | status  | is_withdrawable | provider_transaction_id |          created_at           | mp_status 
+--------------------------------------+--------------------------------------+---------+--------+---------+-----------------+-------------------------+-------------------------------+-----------
+ 1ef67259-3544-446a-bfdb-b7a8217ea994 | acc5fb2d-5ba5-492c-9abd-711a13a3b4ff | deposit | 250.00 | pending | f               |                         | 2025-10-20 15:08:41.846336+00 | 
+ de0d1150-f237-4f42-95ef-1333cd9db21f | acc5fb2d-5ba5-492c-9abd-711a13a3b4ff | deposit | 250.00 | pending | f               |                         | 2025-10-20 14:32:35.541833+00 | 
+ fe154559-bf87-4b6b-af52-8b81962537be | acc5fb2d-5ba5-492c-9abd-711a13a3b4ff | deposit | 250.00 | pending | f               |                         | 2025-10-20 14:31:34.699993+00 | 
+ 00f2316a-fc90-40c6-b774-dcc662a61164 | acc5fb2d-5ba5-492c-9abd-711a13a3b4ff | deposit | 250.00 | pending | f               |                         | 2025-10-20 14:28:46.985916+00 | 
+ 3226d57d-ee67-4332-9aba-d84ec6ead870 | acc5fb2d-5ba5-492c-9abd-711a13a3b4ff | deposit | 250.00 | pending | f               |                         | 2025-10-20 14:04:57.332694+00 | 
+ 43e5082c-74da-40b4-bc93-0fa6b070a0f8 | 1ed1dcf4-7a41-4213-8369-b2a86ca534ba | deposit | 250.00 | pending | f               |                         | 2025-10-20 12:53:24.464417+00 | 
+ 4f85528b-65a9-4f77-914c-d27e84cfc4a5 | 1ed1dcf4-7a41-4213-8369-b2a86ca534ba | deposit | 250.00 | pending | f               |                         | 2025-10-20 12:51:45.354254+00 | 
+ efe70c6b-eaf1-4521-8e32-a054bbe96e19 | 1ed1dcf4-7a41-4213-8369-b2a86ca534ba | deposit | 250.00 | pending | f               |                         | 2025-10-20 12:45:27.613899+00 | 
+ 9e5ff9bb-45a3-40b1-a973-9594e09fea53 | 1ed1dcf4-7a41-4213-8369-b2a86ca534ba | deposit | 250.00 | pending | f               |                         | 2025-10-20 12:17:20.632723+00 | 
+ 6ff08ad7-a774-4a40-8c22-0f5d8abd0eb0 | 1ed1dcf4-7a41-4213-8369-b2a86ca534ba | deposit | 250.00 | pending | f               |                         | 2025-10-20 12:00:07.689456+00 | 
+(10 rows)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5️⃣  MERCADOPAGO API CHECK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Fetching payment 130624829514 from MercadoPago API...
+{
+    "message": "Payment not found",
+    "error": "not_found",
+    "status": 404,
+    "cause": [
+        {
+            "code": 2000,
+            "description": "Payment not found",
+            "data": "20-10-2025T15:16:04UTC;cf5bc341-2817-4ae1-961f-4d164bdac0b3"
+        }
+    ]
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ INVESTIGATION COMPLETE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Next steps:
+1. Check if payment status is 'approved' in MercadoPago
+2. If approved and transaction is pending, reinject webhook manually
+3. If transaction needs to be withdrawable, run convert function
+

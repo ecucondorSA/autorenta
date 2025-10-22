@@ -1,0 +1,566 @@
+/**
+ * Shepherd.js Custom Styles para AutoRenta
+ *
+ * ✅ 100% Alineado con Design System AutoRenta
+ * - Accent petrol (#2C4A52) como color primario
+ * - Tipografía Inter con escala modular
+ * - Variables de dark mode del sistema
+ * - Sombras premium sutiles
+ * - Mobile-responsive
+ */
+
+@import 'shepherd.js/dist/css/shepherd.css';
+
+// ══════════════════════════════════════════════════════════════════════
+// 🎨 VARIABLES - AutoRenta Design System
+// ══════════════════════════════════════════════════════════════════════
+
+// Colores Primarios
+$shepherd-primary: #2C4A52; // accent-petrol
+$shepherd-primary-hover: #234047; // Más oscuro para hover
+$shepherd-accent-warm: #8B7355; // accent-warm para highlights
+
+// Fondos Light Mode
+$shepherd-bg-light: #FFFFFF; // white-pure
+$shepherd-bg-secondary-light: #F8F6F3; // ivory-soft
+
+// Textos Light Mode
+$shepherd-text-dark: #1A1A1A; // smoke-black
+$shepherd-text-medium: #4B4B4B; // charcoal-medium
+$shepherd-text-light: #8E8E8E; // ash-gray
+
+// Bordes
+$shepherd-border-light: #D9D6D0; // pearl-gray
+
+// Fondos Dark Mode
+$shepherd-bg-dark: #1E1E1E; // anthracite
+$shepherd-bg-secondary-dark: #2A2A2A; // slate-deep
+
+// Textos Dark Mode
+$shepherd-text-dark-mode: #FAF9F6; // ivory-luminous
+$shepherd-text-secondary-dark: #E5E3DD; // pearl-light
+
+// Sombras Premium
+$shepherd-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+$shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
+
+// ══════════════════════════════════════════════════════════════════════
+// 📦 OVERLAY Y BACKDROP
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-modal-overlay-container {
+  background-color: rgba(26, 26, 26, 0.6); // Usa smoke-black con transparencia
+  backdrop-filter: blur(3px);
+  transition: opacity 0.3s ease;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🎁 TOOLTIP PRINCIPAL
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-element {
+  background: $shepherd-bg-light;
+  border-radius: 12px;
+  box-shadow: $shepherd-shadow-elevated;
+  max-width: 400px;
+  z-index: 10000;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  @media (max-width: 768px) {
+    max-width: 92vw;
+    margin: 1rem;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 📝 CONTENIDO DEL PASO
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-text {
+  padding: 1.5rem;
+  color: $shepherd-text-medium;
+  font-size: 0.938rem; // ~15px
+  line-height: 1.6;
+}
+
+.tour-content {
+  h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.125rem; // lg en el design system
+    font-weight: 600; // semibold
+    color: $shepherd-text-dark;
+    line-height: 1.5;
+  }
+
+  p {
+    margin: 0.5rem 0;
+    color: $shepherd-text-medium;
+    line-height: 1.6;
+
+    strong {
+      color: $shepherd-primary;
+      font-weight: 600;
+    }
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  // Hints o tips secundarios
+  .tour-tip {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: $shepherd-bg-secondary-light;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: $shepherd-text-light;
+    border-left: 3px solid $shepherd-accent-warm;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🔘 BOTONES
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-footer {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  border-top: 1px solid $shepherd-border-light;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.shepherd-button {
+  background: $shepherd-primary;
+  color: white;
+  border: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500; // medium
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &:hover {
+    background: $shepherd-primary-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(44, 74, 82, 0.25); // accent-petrol shadow
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus {
+    outline: 2px solid $shepherd-primary;
+    outline-offset: 2px;
+  }
+
+  // Botón secundario (Ver después, Atrás)
+  &.shepherd-button-secondary {
+    background: transparent;
+    color: $shepherd-text-dark;
+    border: 1px solid $shepherd-border-light;
+
+    &:hover {
+      background: $shepherd-bg-secondary-light;
+      border-color: $shepherd-primary;
+      color: $shepherd-primary;
+      box-shadow: none;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// ✖️ BOTÓN DE CERRAR
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-cancel-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: $shepherd-bg-secondary-light;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: $shepherd-text-medium;
+
+  &:hover {
+    background: $shepherd-border-light;
+    transform: rotate(90deg);
+    color: $shepherd-text-dark;
+  }
+
+  &:focus {
+    outline: 2px solid $shepherd-primary;
+    outline-offset: 2px;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// ➤ FLECHA DEL TOOLTIP
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-arrow {
+  &::before {
+    background: $shepherd-bg-light;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 📍 HEADER DEL TOOLTIP
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-header {
+  padding: 1.5rem 1.5rem 0 1.5rem;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// ⚫ PROGRESS INDICATOR (DOTS)
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-progress {
+  display: flex;
+  gap: 0.375rem;
+  padding: 0 1.5rem 1rem 1.5rem;
+  justify-content: center;
+}
+
+.shepherd-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $shepherd-border-light;
+  transition: all 0.3s ease;
+
+  &.active {
+    background: $shepherd-primary;
+    width: 28px;
+    border-radius: 4px;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🎬 ANIMACIONES
+// ══════════════════════════════════════════════════════════════════════
+
+@keyframes shepherd-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes shepherd-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+}
+
+.shepherd-element.shepherd-enabled {
+  animation: shepherd-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 💡 QUICK TIP VARIANT (sin overlay, más pequeño)
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-quick-tip {
+  .shepherd-element {
+    max-width: 300px;
+    box-shadow: $shepherd-shadow-soft;
+  }
+
+  .shepherd-text {
+    padding: 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .shepherd-footer {
+    padding: 0 1.25rem 1.25rem 1.25rem;
+    margin-top: 0.75rem;
+  }
+
+  .shepherd-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.813rem;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🎯 HIGHLIGHT DEL ELEMENTO TARGET
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-target {
+  box-shadow: 0 0 0 4px rgba(44, 74, 82, 0.25) !important; // accent-petrol glow
+  transition: box-shadow 0.3s ease;
+  border-radius: 8px;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🌙 DARK MODE
+// ══════════════════════════════════════════════════════════════════════
+
+// Dark mode via class
+.dark {
+  .shepherd-element {
+    background: $shepherd-bg-dark;
+    color: $shepherd-text-dark-mode;
+    border: 1px solid $shepherd-bg-secondary-dark;
+  }
+
+  .tour-content {
+    h3 {
+      color: $shepherd-text-dark-mode;
+    }
+
+    p {
+      color: $shepherd-text-secondary-dark;
+
+      strong {
+        color: #4A6C76; // Lighter petrol for dark mode
+      }
+    }
+
+    .tour-tip {
+      background: $shepherd-bg-secondary-dark;
+      color: $shepherd-text-secondary-dark;
+      border-left-color: #A89782; // Lighter warm accent
+    }
+  }
+
+  .shepherd-button-secondary {
+    background: transparent;
+    color: $shepherd-text-dark-mode;
+    border-color: $shepherd-bg-secondary-dark;
+
+    &:hover {
+      background: $shepherd-bg-secondary-dark;
+      border-color: #4A6C76; // Lighter petrol
+      color: #4A6C76;
+    }
+  }
+
+  .shepherd-cancel-icon {
+    background: $shepherd-bg-secondary-dark;
+    color: $shepherd-text-secondary-dark;
+
+    &:hover {
+      background: #3A3A3A;
+      color: $shepherd-text-dark-mode;
+    }
+  }
+
+  .shepherd-footer {
+    border-top-color: $shepherd-bg-secondary-dark;
+  }
+
+  .shepherd-arrow::before {
+    background: $shepherd-bg-dark;
+  }
+
+  .shepherd-progress-dot {
+    background: $shepherd-bg-secondary-dark;
+
+    &.active {
+      background: #4A6C76; // Lighter petrol
+    }
+  }
+}
+
+// Dark mode via system preference
+@media (prefers-color-scheme: dark) {
+  .shepherd-element {
+    background: $shepherd-bg-dark;
+    color: $shepherd-text-dark-mode;
+    border: 1px solid $shepherd-bg-secondary-dark;
+  }
+
+  .tour-content {
+    h3 {
+      color: $shepherd-text-dark-mode;
+    }
+
+    p {
+      color: $shepherd-text-secondary-dark;
+
+      strong {
+        color: #4A6C76; // Lighter petrol for dark mode
+      }
+    }
+
+    .tour-tip {
+      background: $shepherd-bg-secondary-dark;
+      color: $shepherd-text-secondary-dark;
+      border-left-color: #A89782; // Lighter warm accent
+    }
+  }
+
+  .shepherd-button-secondary {
+    background: transparent;
+    color: $shepherd-text-dark-mode;
+    border-color: $shepherd-bg-secondary-dark;
+
+    &:hover {
+      background: $shepherd-bg-secondary-dark;
+      border-color: #4A6C76; // Lighter petrol
+      color: #4A6C76;
+    }
+  }
+
+  .shepherd-cancel-icon {
+    background: $shepherd-bg-secondary-dark;
+    color: $shepherd-text-secondary-dark;
+
+    &:hover {
+      background: #3A3A3A;
+      color: $shepherd-text-dark-mode;
+    }
+  }
+
+  .shepherd-footer {
+    border-top-color: $shepherd-bg-secondary-dark;
+  }
+
+  .shepherd-arrow::before {
+    background: $shepherd-bg-dark;
+  }
+
+  .shepherd-progress-dot {
+    background: $shepherd-bg-secondary-dark;
+
+    &.active {
+      background: #4A6C76; // Lighter petrol
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 📱 MOBILE OPTIMIZATIONS
+// ══════════════════════════════════════════════════════════════════════
+
+@media (max-width: 640px) {
+  .shepherd-element {
+    border-radius: 16px; // Más redondeado en móvil
+  }
+
+  .tour-content {
+    h3 {
+      font-size: 1rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+    }
+  }
+
+  .shepherd-button {
+    padding: 0.625rem 1rem;
+    font-size: 0.813rem;
+    border-radius: 10px;
+  }
+
+  .shepherd-footer {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+
+    .shepherd-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .shepherd-cancel-icon {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// ♿ ACCESSIBILITY
+// ══════════════════════════════════════════════════════════════════════
+
+.shepherd-element:focus-within {
+  outline: 3px solid $shepherd-primary;
+  outline-offset: 2px;
+}
+
+// Reduced motion para usuarios con preferencias de accesibilidad
+@media (prefers-reduced-motion: reduce) {
+  .shepherd-element {
+    animation: none !important;
+  }
+
+  .shepherd-button,
+  .shepherd-cancel-icon,
+  .shepherd-target {
+    transition: none !important;
+  }
+
+  .shepherd-modal-overlay-container {
+    transition: none !important;
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .shepherd-element {
+    border: 2px solid $shepherd-primary;
+  }
+
+  .shepherd-button {
+    border: 2px solid currentColor;
+  }
+
+  .shepherd-button-secondary {
+    border-width: 2px;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🎨 VARIANTES ESPECIALES
+// ══════════════════════════════════════════════════════════════════════
+
+// Welcome tour con estilo premium
+.shepherd-welcome-tour {
+  .tour-content h3 {
+    font-size: 1.5rem; // 2xl
+    background: linear-gradient(135deg, $shepherd-primary 0%, $shepherd-accent-warm 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+// Success variant (para completar tour)
+.shepherd-success {
+  .shepherd-element {
+    border-left: 4px solid #10b981; // emerald-500
+  }
+}
+
+// Warning variant (para puntos importantes)
+.shepherd-warning {
+  .shepherd-element {
+    border-left: 4px solid $shepherd-accent-warm;
+  }
+}

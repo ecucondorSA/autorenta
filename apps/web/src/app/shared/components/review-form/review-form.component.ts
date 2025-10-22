@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import type { CreateReviewParams, ReviewType } from '../../../core/models';
 import { TranslateModule } from '@ngx-translate/core';
+import type { CreateReviewParams, ReviewType } from '../../../core/models';
 
 interface RatingCategory {
   key: keyof Omit<CreateReviewParams, 'booking_id' | 'reviewee_id' | 'car_id' | 'review_type' | 'comment_public' | 'comment_private'>;

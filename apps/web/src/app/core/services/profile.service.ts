@@ -513,4 +513,64 @@ export class ProfileService {
 
     return data ?? [];
   }
+
+  /**
+   * Obtiene el perfil público de un usuario (solo datos visibles públicamente)
+   */
+  async getPublicProfile(userId: string): Promise<Partial<UserProfile> | null> {
+    const { data, error} = await this.supabase
+      .from('profiles')
+      .select(`
+        id,
+        full_name,
+        avatar_url,
+        role,
+        is_email_verified,
+        is_phone_verified,
+        is_driver_verified,
+        kyc,
+        created_at
+      `)
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      throw error;
+    }
+
+    return data as Partial<UserProfile>;
+  }
+
+  /**
+   * Obtiene las estadísticas públicas de un usuario
+   */
+  async getUserStats(userId: string): Promise<any> {
+    const { data, error } = await this.supabase
+      .rpc('get_user_public_stats', { target_user_id: userId });
+
+    if (error) {
+      console.error('[ProfileService] Error obteniendo stats:', error);
+      // Retornar stats vacías si falla
+      return {
+        owner_rating_avg: null,
+        owner_reviews_count: 0,
+        owner_trips_count: 0,
+        renter_rating_avg: null,
+        renter_reviews_count: 0,
+        renter_trips_count: 0,
+        total_cars: 0,
+      };
+    }
+
+    return data || {
+      owner_rating_avg: null,
+      owner_reviews_count: 0,
+      owner_trips_count: 0,
+      renter_rating_avg: null,
+      renter_reviews_count: 0,
+      renter_trips_count: 0,
+      total_cars: 0,
+    };
+  }
 }

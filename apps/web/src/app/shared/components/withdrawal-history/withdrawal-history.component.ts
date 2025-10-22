@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { WithdrawalRequest, WithdrawalStatus } from '../../../core/models/wallet.model';
 import { TranslateModule } from '@ngx-translate/core';
+import type { WithdrawalRequest, WithdrawalStatus } from '../../../core/models/wallet.model';
 
 /**
  * Componente para mostrar historial de retiros

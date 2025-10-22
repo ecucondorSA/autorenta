@@ -233,4 +233,21 @@ export class CarsService {
 
     return data as Car;
   }
+
+  /**
+   * Obtiene todos los autos de un usuario específico (para perfiles públicos)
+   */
+  async getCarsByOwner(ownerId: string): Promise<Car[]> {
+    const { data, error } = await this.supabase
+      .from('cars')
+      .select('*')
+      .eq('owner_id', ownerId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return (data as Car[]) ?? [];
+  }
 }

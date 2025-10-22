@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 import { SupabaseClientService } from './supabase-client.service';
-import { environment } from '../../../environments/environment';
 
 type AuthCallback = (event: AuthChangeEvent, session: Session | null) => void;
 

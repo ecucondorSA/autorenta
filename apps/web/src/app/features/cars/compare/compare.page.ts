@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { ComparisonRow } from '../../../core/models';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,

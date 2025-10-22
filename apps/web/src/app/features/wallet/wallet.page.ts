@@ -1,5 +1,7 @@
 import { Component, signal, ViewChild, AfterViewInit, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { WalletBalanceCardComponent } from '../../shared/components/wallet-balance-card/wallet-balance-card.component';
 import { DepositModalComponent } from '../../shared/components/deposit-modal/deposit-modal.component';
 import { TransactionHistoryComponent } from '../../shared/components/transaction-history/transaction-history.component';
@@ -10,7 +12,8 @@ import { WithdrawalHistoryComponent } from '../../shared/components/withdrawal-h
 import { WithdrawalService } from '../../core/services/withdrawal.service';
 import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/models/wallet.model';
 import { WalletService } from '../../core/services/wallet.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { MetaService } from '../../core/services/meta.service';
+import { ProfileService } from '../../core/services/profile.service';
 
 /**
  * WalletPage
@@ -73,11 +76,23 @@ export class WalletPage implements AfterViewInit {
   loading = computed(() => this.withdrawalService.loading());
 
   private readonly walletService = inject(WalletService);
+  private readonly router = inject(Router);
+  private readonly profileService = inject(ProfileService);
 
   /**
-   * Target de crédito protegido (USD 250)
+   * Wallet Account Number del usuario actual
    */
-  readonly protectedCreditTarget = 250;
+  readonly walletAccountNumber = signal<string | null>(null);
+
+  /**
+   * Estado de copiado del WAN
+   */
+  readonly copied = signal(false);
+
+  /**
+   * Target de crédito protegido (USD 250 = 25000 centavos)
+   */
+  readonly protectedCreditTarget = 25000;
 
   /**
    * Balance disponible en el wallet
@@ -85,14 +100,19 @@ export class WalletPage implements AfterViewInit {
   readonly availableBalanceSummary = this.walletService.availableBalance;
 
   /**
-   * Fondos retirables (excluye crédito protegido)
+   * Fondos transferibles dentro de la app o a otros usuarios
+   */
+  readonly transferableBalance = this.walletService.transferableBalance;
+
+  /**
+   * Fondos retirables a cuenta bancaria externa (off-ramp)
    */
   readonly withdrawableBalance = this.walletService.withdrawableBalance;
 
   /**
-   * Crédito protegido que permanece bloqueado
+   * Crédito Autorentar (meta USD 250, no retirable)
    */
-  readonly protectedCreditBalance = this.walletService.nonWithdrawableBalance;
+  readonly protectedCreditBalance = this.walletService.protectedCreditBalance;
 
   /**
    * Estado del crédito protegido (pending | partial | active)
@@ -116,9 +136,16 @@ export class WalletPage implements AfterViewInit {
     return Math.min(progress, 100);
   });
 
-  constructor(private withdrawalService: WithdrawalService) {
-    // Cargar cuentas bancarias y retiros al iniciar
+  constructor(
+    private withdrawalService: WithdrawalService,
+    private metaService: MetaService
+  ) {
+    // Update SEO meta tags (private page)
+    this.metaService.updateWalletMeta();
+
+    // Cargar datos al iniciar
     this.loadWithdrawalData();
+    this.loadWalletAccountNumber();
   }
 
   /**
@@ -285,5 +312,47 @@ export class WalletPage implements AfterViewInit {
    */
   get withdrawalRequests() {
     return this.withdrawalService.withdrawalRequests;
+  }
+
+  /**
+   * Carga el Wallet Account Number del usuario actual
+   */
+  private async loadWalletAccountNumber(): Promise<void> {
+    try {
+      const profile = await this.profileService.getCurrentProfile();
+      if (profile?.wallet_account_number) {
+        this.walletAccountNumber.set(profile.wallet_account_number);
+      }
+    } catch (error) {
+      console.error('Error loading wallet account number:', error);
+    }
+  }
+
+  /**
+   * Navega a la página de transferencias
+   */
+  goToTransfer(): void {
+    void this.router.navigate(['/wallet/transfer']);
+  }
+
+  /**
+   * Copia el Wallet Account Number al portapapeles
+   */
+  async copyWalletAccountNumber(): Promise<void> {
+    const wan = this.walletAccountNumber();
+    if (!wan) return;
+
+    try {
+      await navigator.clipboard.writeText(wan);
+      this.copied.set(true);
+
+      // Reset copied state after 2 seconds
+      setTimeout(() => {
+        this.copied.set(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      alert('Error al copiar el número de cuenta');
+    }
   }
 }

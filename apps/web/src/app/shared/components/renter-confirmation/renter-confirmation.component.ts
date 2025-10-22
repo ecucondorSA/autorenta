@@ -1,11 +1,11 @@
 import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   BookingConfirmationService,
   ConfirmAndReleaseResponse,
 } from '../../../core/services/booking-confirmation.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Componente de confirmación del locatario (renter)
@@ -74,7 +74,7 @@ export class RenterConfirmationComponent {
   /**
    * Emite cuando ocurre un error
    */
-  @Output() error = new EventEmitter<string>();
+  @Output() errorOccurred = new EventEmitter<string>();
 
   /**
    * Estado de la confirmación
@@ -108,7 +108,7 @@ export class RenterConfirmationComponent {
     const userId = this.auth.sessionSignal()?.user?.id;
     if (!userId) {
       this.message.set('Error: Usuario no autenticado');
-      this.error.emit('Usuario no autenticado');
+      this.errorOccurred.emit('Usuario no autenticado');
       return;
     }
 
@@ -124,7 +124,7 @@ export class RenterConfirmationComponent {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al confirmar';
       this.message.set(`Error: ${errorMessage}`);
-      this.error.emit(errorMessage);
+      this.errorOccurred.emit(errorMessage);
     }
   }
 }
