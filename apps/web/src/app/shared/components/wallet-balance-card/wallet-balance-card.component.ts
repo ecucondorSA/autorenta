@@ -114,6 +114,16 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   readonly hasPendingDeposits = computed(() => this.pendingDeposits() > 0);
 
   /**
+   * Controla si la notificación de depósitos pendientes está visible
+   */
+  readonly showPendingDepositsNotification = signal(false);
+
+  /**
+   * Timer para auto-ocultar la notificación
+   */
+  private notificationTimer?: number;
+
+  /**
    * Auto-refresh habilitado (puede deshabilitarse en production si se desea)
    */
   readonly autoRefreshEnabled = signal(true);
@@ -163,6 +173,11 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     // Limpiar interval al destruir componente
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
+    }
+
+    // Limpiar timer de notificación
+    if (this.notificationTimer) {
+      clearTimeout(this.notificationTimer);
     }
   }
 
@@ -240,7 +255,17 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
         status: 'pending',
       });
 
-      this.pendingDeposits.set(transactions.length);
+      const previousCount = this.pendingDeposits();
+      const newCount = transactions.length;
+
+      this.pendingDeposits.set(newCount);
+
+      // Mostrar notificación solo si:
+      // 1. Hay depósitos pendientes
+      // 2. Es la primera vez (previousCount === 0) O hay nuevos depósitos
+      if (newCount > 0 && (previousCount === 0 || newCount > previousCount)) {
+        this.showPendingNotification();
+      }
 
       // Log para debugging
       if (transactions.length > 0) {
@@ -248,6 +273,36 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       }
     } catch (err) {
       console.error('Error loading pending deposits:', err);
+    }
+  }
+
+  /**
+   * Muestra la notificación de depósitos pendientes y programa su cierre automático
+   */
+  private showPendingNotification(): void {
+    // Limpiar timer anterior si existe
+    if (this.notificationTimer) {
+      clearTimeout(this.notificationTimer);
+    }
+
+    // Mostrar notificación
+    this.showPendingDepositsNotification.set(true);
+
+    // Auto-ocultar después de 10 segundos
+    this.notificationTimer = setTimeout(() => {
+      this.dismissPendingNotification();
+    }, 10000) as unknown as number;
+  }
+
+  /**
+   * Cierra la notificación de depósitos pendientes
+   */
+  dismissPendingNotification(): void {
+    this.showPendingDepositsNotification.set(false);
+
+    if (this.notificationTimer) {
+      clearTimeout(this.notificationTimer);
+      this.notificationTimer = undefined;
     }
   }
 
