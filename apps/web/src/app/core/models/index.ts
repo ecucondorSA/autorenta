@@ -582,7 +582,8 @@ export interface BankAccount {
   account_type: AccountType;
   account_number: string;
   account_holder_name: string;
-  account_holder_document: string;
+  // DEPRECATED: Use gov_id_number from UserProfile instead
+  account_holder_document?: string;
   bank_name?: string | null;
   is_verified: boolean;
   verified_at?: string | null;
