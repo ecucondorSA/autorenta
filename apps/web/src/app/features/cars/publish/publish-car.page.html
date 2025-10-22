@@ -1,7 +1,7 @@
 <section class="mx-auto max-w-4xl space-y-6 pb-12">
   <header class="space-y-2">
-    <h1 class="text-3xl font-bold text-slate-900">Publicá tu auto</h1>
-    <p class="text-sm text-slate-600">
+    <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">Publicá tu auto</h1>
+    <p class="text-sm text-charcoal-medium dark:text-pearl-light/80">
       Completá la información en secciones. El equipo de AutorentA revisará y aprobará tu
       publicación.
     </p>
@@ -9,39 +9,39 @@
 
   <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
     <!-- Sección 1: Información Básica -->
-    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="mb-4 text-xl font-semibold text-slate-900">📝 Información Básica</h2>
+    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">📝 Información Básica</h2>
       <div class="grid gap-4 md:grid-cols-2">
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Título del anuncio
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             formControlName="title"
             placeholder="Ej: Toyota Corolla 2023 - Impecable, bajo kilometraje"
           />
-          <span class="text-xs text-slate-500">Mínimo 10 caracteres, describe tu auto</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400">Mínimo 10 caracteres, describe tu auto</span>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700 md:col-span-2">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2">
           Descripción
           <textarea
-            class="min-h-[100px] rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="min-h-[100px] rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             formControlName="description"
             placeholder="Describe el estado del auto, mantenimiento, accesorios incluidos, condiciones de entrega, etc."
           ></textarea>
-          <span class="text-xs text-slate-500">Mínimo 30 caracteres</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400">Mínimo 30 caracteres</span>
         </label>
       </div>
     </section>
 
     <!-- Sección 2: Marca y Modelo -->
-    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="mb-4 text-xl font-semibold text-slate-900">🚗 Marca y Modelo</h2>
+    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">🚗 Marca y Modelo</h2>
       <div class="grid gap-4 md:grid-cols-3">
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Marca
           <select
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             formControlName="brand_id"
             [disabled]="loadingBrands()"
           >
@@ -50,24 +50,24 @@
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Modelo
           <select
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             formControlName="model_id"
             [disabled]="!form.get('brand_id')?.value || loadingModels()"
           >
             <option value="">Selecciona un modelo</option>
             <option *ngFor="let model of models()" [value]="model.id">
-              {{ model.name }} <span class="text-xs text-slate-500">({{ model.category }})</span>
+              {{ model.name }} <span class="text-xs text-ash-gray dark:text-neutral-400">({{ model.category }})</span>
             </option>
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Año
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             type="number"
             formControlName="year"
             min="2000"
@@ -78,13 +78,13 @@
     </section>
 
     <!-- Sección 3: Especificaciones Técnicas -->
-    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="mb-4 text-xl font-semibold text-slate-900">⚙️ Especificaciones</h2>
+    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">⚙️ Especificaciones</h2>
       <div class="grid gap-4 md:grid-cols-4">
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Asientos
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             type="number"
             formControlName="seats"
             min="2"
@@ -92,10 +92,10 @@
           />
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Puertas
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             type="number"
             formControlName="doors"
             min="2"
@@ -103,10 +103,10 @@
           />
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Transmisión
           <select
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             formControlName="transmission"
           >
             <option value="automatic">Automática</option>
@@ -114,10 +114,10 @@
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Combustible
           <select
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             formControlName="fuel_type"
           >
             <option value="nafta">Nafta</option>
@@ -127,56 +127,56 @@
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700 md:col-span-2">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2">
           Kilometraje
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             type="number"
             formControlName="mileage"
             placeholder="0"
           />
-          <span class="text-xs text-slate-500">Kilometraje actual del vehículo</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400">Kilometraje actual del vehículo</span>
         </label>
       </div>
     </section>
 
     <!-- Sección 4: Precio y Condiciones -->
-    <section id="pricing-section" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="mb-4 text-xl font-semibold text-slate-900">💵 Precio y Condiciones</h2>
+    <section id="pricing-section" class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">💵 Precio y Condiciones</h2>
       <div class="grid gap-4 md:grid-cols-3">
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Precio por día (USD)
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             type="number"
             formControlName="price_per_day"
             min="10"
             placeholder="50"
           />
-          <span class="text-xs text-slate-500">Precio diario en dólares</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400">Precio diario en dólares</span>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Mínimo de días
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             type="number"
             formControlName="min_rental_days"
             min="1"
           />
-          <span class="text-xs text-slate-500">Mínimo días de alquiler</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400">Mínimo días de alquiler</span>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Máximo de días
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             type="number"
             formControlName="max_rental_days"
             min="1"
             placeholder="30"
           />
-          <span class="text-xs text-slate-500">Máximo días de alquiler</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400">Máximo días de alquiler</span>
         </label>
 
         <div class="md:col-span-3">
@@ -184,25 +184,25 @@
             <input
               type="checkbox"
               formControlName="deposit_required"
-              class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm font-medium text-slate-700">¿Requiere depósito de garantía?</span>
+            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">¿Requiere depósito de garantía?</span>
           </label>
         </div>
 
         <label
           *ngIf="form.get('deposit_required')?.value"
-          class="flex flex-col gap-2 text-sm font-medium text-slate-700 md:col-span-2"
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2"
         >
           Monto del depósito (USD)
           <input
-            class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             type="number"
             formControlName="deposit_amount"
             min="50"
             placeholder="200"
           />
-          <span class="text-xs text-slate-500">Monto mínimo recomendado: $200 USD</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400">Monto mínimo recomendado: $200 USD</span>
         </label>
 
         <div id="insurance-selector" class="md:col-span-3">
@@ -210,9 +210,9 @@
             <input
               type="checkbox"
               formControlName="insurance_included"
-              class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm font-medium text-slate-700"
+            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light"
               >El seguro está incluido en el precio</span
             >
           </label>
@@ -220,69 +220,69 @@
       </div>
 
       <!-- Formas de pago -->
-      <div class="mt-6 border-t border-slate-200 pt-6">
-        <h3 class="mb-3 text-sm font-semibold text-slate-900">Formas de pago aceptadas</h3>
+      <div class="mt-6 border-t border-pearl-gray/70 dark:border-slate-deep pt-6">
+        <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Formas de pago aceptadas</h3>
         <div class="grid gap-3 md:grid-cols-3">
           <label class="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
               [checked]="form.get('payment_methods')?.value?.includes('cash')"
               (change)="togglePaymentMethod('cash')"
-              class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm text-slate-700">Efectivo</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light">Efectivo</span>
           </label>
           <label class="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
               [checked]="form.get('payment_methods')?.value?.includes('transfer')"
               (change)="togglePaymentMethod('transfer')"
-              class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm text-slate-700">Transferencia</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light">Transferencia</span>
           </label>
           <label class="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
               [checked]="form.get('payment_methods')?.value?.includes('card')"
               (change)="togglePaymentMethod('card')"
-              class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm text-slate-700">Tarjeta</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light">Tarjeta</span>
           </label>
         </div>
       </div>
 
       <!-- Opciones de entrega -->
-      <div class="mt-6 border-t border-slate-200 pt-6">
-        <h3 class="mb-3 text-sm font-semibold text-slate-900">Opciones de entrega</h3>
+      <div class="mt-6 border-t border-pearl-gray/70 dark:border-slate-deep pt-6">
+        <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Opciones de entrega</h3>
         <div class="grid gap-3 md:grid-cols-2">
           <label class="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
               [checked]="form.get('delivery_options')?.value?.includes('pickup')"
               (change)="toggleDeliveryOption('pickup')"
-              class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm text-slate-700">Retiro en ubicación</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light">Retiro en ubicación</span>
           </label>
           <label class="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
               [checked]="form.get('delivery_options')?.value?.includes('delivery')"
               (change)="toggleDeliveryOption('delivery')"
-              class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm text-slate-700">Entrega a domicilio (costo adicional)</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light">Entrega a domicilio (costo adicional)</span>
           </label>
         </div>
       </div>
     </section>
 
     <!-- Sección 5: Ubicación -->
-    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="mb-4 text-xl font-semibold text-slate-900">📍 Ubicación</h2>
-      <p class="mb-4 text-sm text-slate-600">
+    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">📍 Ubicación</h2>
+      <p class="mb-4 text-sm text-charcoal-medium dark:text-pearl-light/80">
         Ingresá la dirección exacta donde se retirará el auto. Las coordenadas se calcularán
         automáticamente.
       </p>
@@ -290,19 +290,19 @@
       <div class="grid gap-4">
         <!-- Dirección -->
         <div class="grid gap-4 md:grid-cols-3">
-          <label class="flex flex-col gap-2 text-sm font-medium text-slate-700 md:col-span-2">
+          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2">
             Calle
             <input
-              class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
               formControlName="location_street"
               placeholder="Av. 18 de Julio"
             />
           </label>
 
-          <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
             Número
             <input
-              class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
               formControlName="location_street_number"
               placeholder="1234"
             />
@@ -311,28 +311,28 @@
 
         <!-- Ciudad y barrio -->
         <div class="grid gap-4 md:grid-cols-3">
-          <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
             Ciudad
             <input
-              class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
               formControlName="location_city"
               placeholder="Montevideo"
             />
           </label>
 
-          <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
             Barrio (opcional)
             <input
-              class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
               formControlName="location_neighborhood"
               placeholder="Centro, Pocitos, etc."
             />
           </label>
 
-          <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
             Código Postal (opcional)
             <input
-              class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
               formControlName="location_postal_code"
               placeholder="11100"
             />
@@ -341,27 +341,27 @@
 
         <!-- Departamento y país -->
         <div class="grid gap-4 md:grid-cols-2">
-          <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
             Departamento
             <input
-              class="rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
               formControlName="location_state"
               placeholder="Montevideo"
             />
           </label>
 
-          <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
             País
             <input
-              class="rounded-lg border border-slate-300 px-3 py-2 bg-slate-50"
+              class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-sand-light dark:bg-graphite-dark/50 px-3 py-2 text-smoke-black dark:text-ivory-luminous"
               formControlName="location_country"
               readonly
             />
           </label>
         </div>
 
-        <div class="rounded-lg bg-blue-50 border border-blue-200 p-3">
-          <p class="text-xs text-blue-800">
+        <div class="rounded-lg bg-accent-petrol/10 dark:bg-accent-petrol/20 border border-accent-petrol/30 dark:border-accent-petrol/40 p-3">
+          <p class="text-xs text-accent-petrol dark:text-accent-petrol/90">
             💡 <strong>Nota:</strong> La dirección se geocodificará automáticamente al publicar el
             auto para mostrarlo en el mapa.
           </p>
@@ -370,41 +370,41 @@
     </section>
 
     <!-- Sección 6: Fotos -->
-    <section id="photo-uploader" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="mb-4 text-xl font-semibold text-slate-900">📸 Fotos del Auto</h2>
+    <section id="photo-uploader" class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">📸 Fotos del Auto</h2>
       <app-upload-image (filesSelected)="onFilesSelected($event)"></app-upload-image>
-      <p class="mt-3 text-xs text-slate-600">
+      <p class="mt-3 text-xs text-charcoal-medium dark:text-pearl-light/80">
         Podés subir múltiples fotos. La primera será la foto principal. Se recomienda fotos de buena
         calidad desde diferentes ángulos.
       </p>
     </section>
 
     <!-- Sección 7: Términos (Opcional) -->
-    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="mb-4 text-xl font-semibold text-slate-900">📄 Términos Adicionales (Opcional)</h2>
-      <label class="flex flex-col gap-2 text-sm font-medium text-slate-700">
+    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">📄 Términos Adicionales (Opcional)</h2>
+      <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
         <textarea
-          class="min-h-[100px] rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          class="min-h-[100px] rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
           formControlName="terms_and_conditions"
           placeholder="Ej: No se permite fumar, Se requiere licencia vigente con al menos 2 años de antigüedad, etc."
         ></textarea>
-        <span class="text-xs text-slate-500"
+        <span class="text-xs text-ash-gray dark:text-neutral-400"
           >Condiciones específicas o restricciones para el alquiler</span
         >
       </label>
     </section>
 
     <!-- Botón de envío -->
-    <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-6">
+    <div class="flex items-center gap-4 rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-sand-light dark:bg-graphite-dark p-6 transition-colors duration-300">
       <div class="flex-1">
-        <p class="text-sm font-medium text-slate-900">¿Listo para publicar?</p>
-        <p class="text-xs text-slate-600">
+        <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous">¿Listo para publicar?</p>
+        <p class="text-xs text-charcoal-medium dark:text-pearl-light/80">
           Tu anuncio será revisado por el equipo antes de publicarse.
         </p>
       </div>
       <button
         id="publish-button"
-        class="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+        class="flex items-center justify-center gap-2 rounded-lg bg-accent-petrol dark:bg-accent-petrol/90 px-6 py-3 text-sm font-semibold text-white transition hover:bg-accent-petrol/90 dark:hover:bg-accent-petrol hover:shadow-medium dark:hover:shadow-card-hover disabled:cursor-not-allowed disabled:bg-ash-gray dark:disabled:bg-neutral-600 disabled:opacity-50"
         type="submit"
         [disabled]="submitting() || form.invalid"
       >
