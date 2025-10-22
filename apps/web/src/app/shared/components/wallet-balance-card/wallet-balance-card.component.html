@@ -26,8 +26,10 @@
     </button>
   </div>
 
-  <!-- Pending Deposits Alert -->
-  <div *ngIf="hasPendingDeposits()" class="mb-4 bg-amber-50 dark:bg-amber-500/15 border-l-4 border-amber-400 dark:border-amber-400/60 p-4 rounded-r-lg">
+  <!-- Pending Deposits Toast Notification -->
+  <div
+    *ngIf="showPendingDepositsNotification() && hasPendingDeposits()"
+    class="mb-4 bg-amber-50 dark:bg-amber-500/15 border-l-4 border-amber-400 dark:border-amber-400/60 p-4 rounded-r-lg shadow-lg animate-slide-in-right">
     <div class="flex items-start">
       <svg class="w-6 h-6 text-amber-600 dark:text-amber-200 mt-0.5 flex-shrink-0 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -37,10 +39,7 @@
           {{ pendingDeposits() === 1 ? 'Tienes 1 depósito pendiente' : 'Tienes ' + pendingDeposits() + ' depósitos pendientes' }}
         </h3>
         <p class="text-sm text-amber-700 dark:text-amber-200 mt-1">
-          Tu depósito está siendo procesado y se reflejará en tu balance en unos minutos.
-        </p>
-        <p class="text-xs text-amber-600 dark:text-amber-300 mt-1">
-          Última actualización: {{ getLastUpdateText() }}. Se refresca automáticamente cada 30s.
+          {{ pendingDeposits() === 1 ? 'Tu depósito está siendo procesado' : 'Tus depósitos están siendo procesados' }} y se reflejarán en tu balance en unos minutos.
         </p>
         <button
           type="button"
@@ -49,6 +48,16 @@
           Actualizar ahora
         </button>
       </div>
+      <!-- Close Button -->
+      <button
+        type="button"
+        (click)="dismissPendingNotification()"
+        class="ml-2 text-amber-600 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-100 transition-colors"
+        aria-label="Cerrar notificación">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
   </div>
 
