@@ -120,6 +120,19 @@ export class ProfileExpandedPage implements OnInit {
   readonly onboardingComplete = computed(() => this.profile()?.onboarding === 'complete');
   readonly tosAccepted = computed(() => !!this.profile()?.tos_accepted_at);
 
+  // Document verification status
+  readonly driverLicenseStatus = computed(() => {
+    const docs = this.documents();
+    const license = docs.find(d => d.kind === 'driver_license');
+    return license?.status ?? 'not_started';
+  });
+
+  readonly vehicleRegistrationStatus = computed(() => {
+    const docs = this.documents();
+    const registration = docs.find(d => d.kind === 'vehicle_registration');
+    return registration?.status ?? 'not_started';
+  });
+
   // Tabs
   readonly tabs: Tab[] = [
     { id: 'general', label: 'General', icon: 'user' },
