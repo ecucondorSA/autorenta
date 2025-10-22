@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -61,6 +61,7 @@ interface VerificationChecklistItem {
 })
 export class ProfileExpandedPage implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
   private readonly verificationService = inject(VerificationService);
@@ -214,9 +215,20 @@ export class ProfileExpandedPage implements OnInit {
     // Update SEO meta tags (private page - noindex)
     this.metaService.updateProfileMeta();
 
+    // Handle query param ?tab=verification
+    const tabParam = this.route.snapshot.queryParamMap.get('tab');
+    if (tabParam && this.isValidTab(tabParam)) {
+      this.activeTab.set(tabParam as TabId);
+    }
+
     void this.loadProfile();
     void this.loadDocuments();
     void this.refreshVerificationStatuses();
+  }
+
+  private isValidTab(tab: string): boolean {
+    const validTabs: TabId[] = ['general', 'contact', 'address', 'verification', 'notifications', 'preferences', 'security'];
+    return validTabs.includes(tab as TabId);
   }
 
   async loadProfile(): Promise<void> {
