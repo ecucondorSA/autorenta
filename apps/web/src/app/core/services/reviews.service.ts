@@ -8,14 +8,6 @@ import type {
   ReviewType,
 } from '../models';
 import { injectSupabase } from './supabase-client.service';
-import type {
-  Review,
-  CreateReviewParams,
-  UserStats,
-  CarStats,
-  ReviewSummary,
-  ReviewType,
-} from '../models';
 
 export interface CreateReviewResult {
   success: boolean;

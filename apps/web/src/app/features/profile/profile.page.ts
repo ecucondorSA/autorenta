@@ -51,14 +51,6 @@ export class ProfilePage implements OnInit {
   readonly showAllReviewsOwner = signal(false);
   readonly showAllReviewsRenter = signal(false);
 
-  // Reviews and stats
-  readonly userStats = signal<UserStats | null>(null);
-  readonly reviewsAsOwner = signal<Review[]>([]);
-  readonly reviewsAsRenter = signal<Review[]>([]);
-  readonly reviewsLoading = signal(false);
-  readonly showAllReviewsOwner = signal(false);
-  readonly showAllReviewsRenter = signal(false);
-
   readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
   readonly avatarUrl = computed(() => this.profile()?.avatar_url ?? '');
   readonly canPublishCars = computed(() => {
