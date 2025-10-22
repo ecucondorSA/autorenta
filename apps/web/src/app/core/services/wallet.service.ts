@@ -1,4 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import type {
   WalletBalance,
   WalletTransaction,
@@ -38,6 +39,11 @@ export class WalletService {
   // IMPORTANTE: NO cachear balance en localStorage
   // El balance debe SIEMPRE obtenerse fresco de la base de datos
   // para evitar mostrar datos obsoletos que causen errores de "saldo insuficiente"
+
+  /**
+   * Canal de subscripción a cambios realtime en wallet_transactions
+   */
+  private realtimeChannel: RealtimeChannel | null = null;
 
   // ==================== SIGNALS ====================
 
@@ -761,6 +767,189 @@ export class WalletService {
     }
   }
 
+  // ==================== REALTIME SUBSCRIPTIONS ====================
+
+  /**
+   * Subscribirse a cambios en wallet_transactions en tiempo real
+   * Útil para mostrar notificaciones cuando se confirman depósitos
+   *
+   * @param onDepositConfirmed - Callback cuando un depósito pasa de pending a completed
+   * @param onTransactionUpdate - Callback para cualquier cambio en transacciones
+   */
+  async subscribeToWalletChanges(
+    onDepositConfirmed?: (transaction: WalletTransaction) => void,
+    onTransactionUpdate?: (transaction: WalletTransaction) => void
+  ): Promise<void> {
+    try {
+      // Obtener user_id actual
+      const { data: { user } } = await this.supabase.getClient().auth.getUser();
+      if (!user) {
+        console.warn('⚠️ No hay usuario autenticado para subscribirse a cambios');
+        return;
+      }
+
+      // Desuscribirse del canal anterior si existe
+      if (this.realtimeChannel) {
+        await this.unsubscribeFromWalletChanges();
+      }
+
+      console.log('🔔 Iniciando subscripción realtime para wallet...');
+
+      // Crear canal de subscripción
+      this.realtimeChannel = this.supabase.getClient()
+        .channel(`wallet_updates_${user.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'wallet_transactions',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            console.log('🔔 Cambio detectado en wallet_transactions:', payload);
+
+            const oldRecord = payload.old as any;
+            const newRecord = payload.new as any;
+
+            // Convertir a WalletTransaction
+            const transaction: WalletTransaction = {
+              id: newRecord.id,
+              user_id: newRecord.user_id,
+              type: newRecord.type,
+              status: newRecord.status,
+              amount: newRecord.amount,
+              currency: newRecord.currency,
+              is_withdrawable: newRecord.is_withdrawable,
+              reference_type: newRecord.reference_type,
+              reference_id: newRecord.reference_id,
+              provider: newRecord.provider,
+              provider_transaction_id: newRecord.provider_transaction_id,
+              provider_metadata: newRecord.provider_metadata,
+              description: newRecord.description,
+              admin_notes: newRecord.admin_notes,
+              created_at: newRecord.created_at,
+              updated_at: newRecord.updated_at,
+              completed_at: newRecord.completed_at,
+            };
+
+            // Detectar si es un depósito que pasó de pending a completed
+            if (
+              transaction.type === 'deposit' &&
+              oldRecord.status === 'pending' &&
+              newRecord.status === 'completed'
+            ) {
+              console.log('✅ Depósito confirmado:', transaction);
+
+              // Refrescar balance automáticamente
+              this.getBalance().catch((err) => {
+                console.error('Error al refrescar balance después de confirmación:', err);
+              });
+
+              // Enviar email de confirmación
+              this.sendDepositConfirmationEmail(transaction).catch((err) => {
+                console.error('Error al enviar email de confirmación:', err);
+                // No fallar si el email falla, es opcional
+              });
+
+              // Llamar callback si existe
+              if (onDepositConfirmed) {
+                onDepositConfirmed(transaction);
+              }
+            }
+
+            // Callback genérico para cualquier update
+            if (onTransactionUpdate) {
+              onTransactionUpdate(transaction);
+            }
+
+            // Actualizar lista de transacciones en memoria
+            this.transactions.update((current) => {
+              const index = current.findIndex((t) => t.id === transaction.id);
+              if (index >= 0) {
+                // Actualizar transacción existente
+                const updated = [...current];
+                updated[index] = transaction;
+                return updated;
+              }
+              // Agregar nueva transacción al inicio
+              return [transaction, ...current];
+            });
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'wallet_transactions',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            console.log('🔔 Nueva transacción detectada:', payload);
+
+            const newRecord = payload.new as any;
+            const transaction: WalletTransaction = {
+              id: newRecord.id,
+              user_id: newRecord.user_id,
+              type: newRecord.type,
+              status: newRecord.status,
+              amount: newRecord.amount,
+              currency: newRecord.currency,
+              is_withdrawable: newRecord.is_withdrawable,
+              reference_type: newRecord.reference_type,
+              reference_id: newRecord.reference_id,
+              provider: newRecord.provider,
+              provider_transaction_id: newRecord.provider_transaction_id,
+              provider_metadata: newRecord.provider_metadata,
+              description: newRecord.description,
+              admin_notes: newRecord.admin_notes,
+              created_at: newRecord.created_at,
+              updated_at: newRecord.updated_at,
+              completed_at: newRecord.completed_at,
+            };
+
+            // Callback para nueva transacción
+            if (onTransactionUpdate) {
+              onTransactionUpdate(transaction);
+            }
+
+            // Agregar a lista de transacciones
+            this.transactions.update((current) => [transaction, ...current]);
+          }
+        )
+        .subscribe((status) => {
+          console.log('🔔 Estado de subscripción realtime:', status);
+
+          if (status === 'SUBSCRIBED') {
+            console.log('✅ Subscripción realtime activa para wallet');
+          } else if (status === 'CHANNEL_ERROR') {
+            console.error('❌ Error en canal de subscripción realtime');
+          } else if (status === 'TIMED_OUT') {
+            console.warn('⏱️ Timeout en subscripción realtime');
+          } else if (status === 'CLOSED') {
+            console.log('🔒 Canal de subscripción cerrado');
+          }
+        });
+
+    } catch (err) {
+      console.error('❌ Error al subscribirse a cambios en wallet:', err);
+      throw this.handleError(err, 'Error al iniciar subscripción realtime');
+    }
+  }
+
+  /**
+   * Desuscribirse de cambios en wallet_transactions
+   */
+  async unsubscribeFromWalletChanges(): Promise<void> {
+    if (this.realtimeChannel) {
+      console.log('🔕 Cerrando subscripción realtime de wallet...');
+      await this.supabase.getClient().removeChannel(this.realtimeChannel);
+      this.realtimeChannel = null;
+      console.log('✅ Subscripción realtime cerrada');
+    }
+  }
+
   /**
    * Limpia el estado del servicio
    */
@@ -768,6 +957,10 @@ export class WalletService {
     this.balance.set(null);
     this.transactions.set([]);
     this.clearError();
+    // Cerrar subscripción realtime
+    this.unsubscribeFromWalletChanges().catch((err) => {
+      console.error('Error al cerrar subscripción realtime:', err);
+    });
   }
 
   /**
@@ -839,6 +1032,52 @@ export class WalletService {
    */
   private clearError(): void {
     this.error.set(null);
+  }
+
+  /**
+   * Envía email de confirmación de depósito
+   */
+  private async sendDepositConfirmationEmail(transaction: WalletTransaction): Promise<void> {
+    try {
+      const session = await this.supabase.getClient().auth.getSession();
+      const accessToken = session.data.session?.access_token;
+
+      if (!accessToken) {
+        console.warn('⚠️  No access token, skipping email');
+        return;
+      }
+
+      const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/send-deposit-confirmation-email`;
+
+      console.log('📧 Enviando email de confirmación...');
+
+      const response = await fetch(edgeFunctionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          transaction_id: transaction.id,
+          user_id: transaction.user_id,
+          amount: transaction.amount,
+          currency: transaction.currency,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Error enviando email:', errorText);
+        return;
+      }
+
+      const result = await response.json();
+      console.log('✅ Email enviado:', result);
+    } catch (err) {
+      console.error('❌ Error al enviar email de confirmación:', err);
+      // No propagar el error, el email es opcional
+    }
   }
 
 }
