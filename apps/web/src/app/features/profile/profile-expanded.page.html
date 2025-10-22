@@ -552,7 +552,7 @@
 
         <!-- Upload Buttons -->
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-          <label *ngFor="let kind of documentKinds" class="relative cursor-pointer">
+          <label *ngFor="let kind of documentKinds()" class="relative cursor-pointer">
             <input
               type="file"
               accept="image/*,application/pdf"

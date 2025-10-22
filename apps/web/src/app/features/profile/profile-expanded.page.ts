@@ -579,7 +579,7 @@ export class ProfileExpandedPage implements OnInit {
   }
 
   getDocumentLabel(kind: DocumentKind): string {
-    return this.documentKinds.find((dk) => dk.value === kind)?.label ?? kind;
+    return this.documentKinds().find((dk) => dk.value === kind)?.label ?? kind;
   }
 
   getKycStatusLabel(status: string): string {
