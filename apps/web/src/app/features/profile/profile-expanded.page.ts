@@ -184,22 +184,31 @@ export class ProfileExpandedPage implements OnInit {
     { value: 'both', label: 'Ambos', description: 'Quiero reservar y publicar autos' },
   ];
 
-  readonly documentKinds: { value: DocumentKind; label: string }[] = [
-    // CONDUCTOR (Locatario)
-    { value: 'driver_license', label: 'Licencia de conducir (OBLIGATORIO)' },
-    { value: 'selfie', label: 'Selfie con licencia (recomendado)' },
+  // NOTA: Ahora la IA extrae automáticamente todos los datos necesarios
+  // de un solo documento por rol, simplificando drásticamente el proceso.
+  readonly documentKinds = computed<{ value: DocumentKind; label: string }[]>(() => {
+    const role = this.profileRole();
 
-    // LOCADOR: Documento personal
-    { value: 'gov_id_front', label: 'DNI/Pasaporte - Frente' },
-    { value: 'gov_id_back', label: 'DNI/Pasaporte - Dorso' },
+    const kinds: { value: DocumentKind; label: string }[] = [];
 
-    // LOCADOR: Vehículo
-    { value: 'vehicle_registration', label: 'Cédula del vehículo (digital PDF O foto física)' },
-    { value: 'vehicle_insurance', label: 'Seguro del vehículo / Carta Verde (Mercosur)' },
+    // CONDUCTOR/LOCATARIO: Solo licencia
+    if (role === 'renter' || role === 'both') {
+      kinds.push({
+        value: 'driver_license',
+        label: 'Licencia de conducir (frente y dorso en una sola foto)'
+      });
+    }
 
-    // OTROS
-    { value: 'utility_bill', label: 'Factura de servicios' },
-  ];
+    // PROPIETARIO: Solo cédula del vehículo
+    if (role === 'owner' || role === 'both') {
+      kinds.push({
+        value: 'vehicle_registration',
+        label: 'Cédula del vehículo (digital PDF o foto)'
+      });
+    }
+
+    return kinds;
+  });
 
   ngOnInit(): void {
     // Update SEO meta tags (private page - noindex)
