@@ -17,6 +17,16 @@ ALTER TYPE booking_status ADD VALUE IF NOT EXISTS 'expired';
 -- SECTION 2: Add pricing breakdown fields to bookings table
 -- ============================================================================
 
+ALTER TABLE public.cars
+  ADD COLUMN IF NOT EXISTS brand TEXT,
+  ADD COLUMN IF NOT EXISTS model TEXT;
+
+UPDATE public.cars
+SET
+  brand = COALESCE(brand, brand_text_backup),
+  model = COALESCE(model, model_text_backup)
+WHERE brand IS NULL OR model IS NULL;
+
 ALTER TABLE public.bookings
   -- Pricing breakdown fields (all amounts in cents to avoid floating point issues)
   ADD COLUMN IF NOT EXISTS days_count INTEGER,
@@ -31,7 +41,7 @@ ALTER TABLE public.bookings
   ADD COLUMN IF NOT EXISTS breakdown JSONB,
 
   -- Payment management
-  ADD COLUMN IF NOT EXISTS payment_intent_id UUID REFERENCES public.payment_intents(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS payment_intent_id UUID,
   ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ,
   ADD COLUMN IF NOT EXISTS paid_at TIMESTAMPTZ,
 
@@ -52,6 +62,9 @@ CREATE INDEX IF NOT EXISTS idx_bookings_payment_intent_id ON public.bookings(pay
 -- SECTION 3: RPC Function - pricing_recalculate
 -- ============================================================================
 
+-- Ensure the previous version is removed so we can change return type safely
+DROP FUNCTION IF EXISTS public.pricing_recalculate(UUID);
+
 CREATE OR REPLACE FUNCTION public.pricing_recalculate(p_booking_id UUID)
 RETURNS public.bookings
 LANGUAGE plpgsql
@@ -67,8 +80,10 @@ DECLARE
   v_insurance_cents BIGINT := 0;
   v_fees_cents BIGINT := 0;
   v_discounts_cents BIGINT := 0;
+  v_deposit_cents BIGINT := 0;
   v_total_cents BIGINT;
   v_breakdown JSONB;
+  v_lines JSONB := '[]'::JSONB;
 BEGIN
   -- Get booking
   SELECT * INTO v_booking
@@ -89,35 +104,42 @@ BEGIN
   END IF;
 
   -- Calculate days (minimum 1)
-  v_days := EXTRACT(DAY FROM (v_booking.end_at - v_booking.start_at))::INTEGER;
-  IF v_days < 1 THEN
-    v_days := 1;
-  END IF;
+  v_days := GREATEST(
+    1,
+    EXTRACT(DAY FROM (v_booking.end_at - v_booking.start_at))::INTEGER
+  );
 
-  -- Convert price_per_day to cents (multiply by 100)
   v_nightly_rate_cents := ROUND(v_car.price_per_day * 100)::BIGINT;
-
-  -- Calculate subtotal
   v_subtotal_cents := v_nightly_rate_cents * v_days;
 
-  -- TODO: Add insurance calculation based on car value or fixed percentage
-  -- For now, insurance is optional and defaults to 0
+  v_lines := jsonb_build_array(
+    jsonb_build_object('label', 'Tarifa base', 'amount_cents', v_subtotal_cents)
+  );
 
-  -- TODO: Add platform fees (e.g., 10% of subtotal)
-  -- v_fees_cents := ROUND(v_subtotal_cents * 0.10)::BIGINT;
+  -- Platform service fee: 23% of rental subtotal
+  v_fees_cents := ROUND(v_subtotal_cents * 0.23)::BIGINT;
+  v_lines := v_lines || jsonb_build_object(
+    'label', 'Comisión de servicio (23%)',
+    'amount_cents', v_fees_cents
+  );
 
-  -- TODO: Add discounts based on rental duration
-  -- e.g., 5% off for 7+ days, 10% off for 30+ days
-  -- IF v_days >= 30 THEN
-  --   v_discounts_cents := ROUND(v_subtotal_cents * 0.10)::BIGINT;
-  -- ELSIF v_days >= 7 THEN
-  --   v_discounts_cents := ROUND(v_subtotal_cents * 0.05)::BIGINT;
-  -- END IF;
+  -- Determine security deposit based on payment method
+  v_deposit_cents := CASE
+    WHEN v_booking.payment_method = 'wallet' THEN 25000
+    WHEN v_booking.payment_method = 'partial_wallet' THEN 50000
+    WHEN v_booking.payment_method = 'credit_card' THEN 50000
+    ELSE COALESCE(NULLIF(v_booking.deposit_amount_cents, 0), 50000)
+  END;
 
-  -- Calculate total
+  IF v_deposit_cents > 0 THEN
+    v_lines := v_lines || jsonb_build_object(
+      'label', 'Depósito de garantía (se devuelve)',
+      'amount_cents', v_deposit_cents
+    );
+  END IF;
+
   v_total_cents := v_subtotal_cents + v_insurance_cents + v_fees_cents - v_discounts_cents;
 
-  -- Build breakdown JSON
   v_breakdown := jsonb_build_object(
     'days', v_days,
     'nightly_rate_cents', v_nightly_rate_cents,
@@ -125,17 +147,12 @@ BEGIN
     'insurance_cents', v_insurance_cents,
     'fees_cents', v_fees_cents,
     'discounts_cents', v_discounts_cents,
+    'deposit_cents', v_deposit_cents,
     'total_cents', v_total_cents,
     'currency', v_car.currency,
-    'lines', jsonb_build_array(
-      jsonb_build_object('label', 'Base rate', 'amount_cents', v_subtotal_cents),
-      jsonb_build_object('label', 'Insurance', 'amount_cents', v_insurance_cents),
-      jsonb_build_object('label', 'Service fee', 'amount_cents', v_fees_cents),
-      jsonb_build_object('label', 'Discount', 'amount_cents', -v_discounts_cents)
-    )
+    'lines', v_lines
   );
 
-  -- Update booking with calculated values
   UPDATE public.bookings
   SET
     days_count = v_days,
@@ -145,8 +162,9 @@ BEGIN
     fees_cents = v_fees_cents,
     discounts_cents = v_discounts_cents,
     total_cents = v_total_cents,
+    rental_amount_cents = v_total_cents,
+    deposit_amount_cents = v_deposit_cents,
     breakdown = v_breakdown,
-    -- Keep existing total_amount in sync (for backward compatibility)
     total_amount = v_total_cents / 100.0,
     currency = v_car.currency
   WHERE id = p_booking_id
@@ -166,6 +184,7 @@ COMMENT ON FUNCTION public.pricing_recalculate IS 'Recalculates and updates book
 -- SECTION 4: View - my_bookings
 -- ============================================================================
 
+DROP VIEW IF EXISTS public.my_bookings;
 CREATE OR REPLACE VIEW public.my_bookings AS
 SELECT
   b.*,
@@ -180,12 +199,12 @@ SELECT
     (SELECT url FROM public.car_photos WHERE car_id = c.id AND is_cover = true LIMIT 1),
     (SELECT url FROM public.car_photos WHERE car_id = c.id ORDER BY sort_order LIMIT 1)
   ) AS main_photo_url,
-  -- Payment intent info
-  pi.status AS payment_status,
-  pi.provider AS payment_provider
+  -- Payment info
+  pay.status AS payment_status,
+  pay.provider AS payment_provider
 FROM public.bookings b
 JOIN public.cars c ON c.id = b.car_id
-LEFT JOIN public.payment_intents pi ON pi.id = b.payment_intent_id
+LEFT JOIN public.payments pay ON pay.id = b.payment_id
 WHERE b.renter_id = auth.uid();
 
 -- Grant select permission
@@ -197,6 +216,7 @@ COMMENT ON VIEW public.my_bookings IS 'Bookings for the current authenticated us
 -- SECTION 5: View - owner_bookings
 -- ============================================================================
 
+DROP VIEW IF EXISTS public.owner_bookings;
 CREATE OR REPLACE VIEW public.owner_bookings AS
 SELECT
   b.*,
@@ -206,13 +226,13 @@ SELECT
   -- Renter info (public fields only)
   p.full_name AS renter_name,
   p.avatar_url AS renter_avatar,
-  -- Payment intent info
-  pi.status AS payment_status,
-  pi.provider AS payment_provider
+  -- Payment info
+  pay.status AS payment_status,
+  pay.provider AS payment_provider
 FROM public.bookings b
 JOIN public.cars c ON c.id = b.car_id
 LEFT JOIN public.profiles p ON p.id = b.renter_id
-LEFT JOIN public.payment_intents pi ON pi.id = b.payment_intent_id
+LEFT JOIN public.payments pay ON pay.id = b.payment_id
 WHERE c.owner_id = auth.uid();
 
 -- Grant select permission

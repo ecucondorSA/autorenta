@@ -1,87 +1,223 @@
 <!-- Modal Overlay -->
 <div
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-  (click)="onOverlayClick($event)">
+  class="fixed inset-0 bg-black/60 dark:bg-black/70 flex items-center justify-center z-50 p-4"
+  (click)="onOverlayClick($event)"
+  role="presentation">
   <!-- Modal Content -->
-  <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+  <div
+    class="bg-white-pure dark:bg-anthracite border border-pearl-gray/70 dark:border-slate-deep rounded-2xl shadow-elevated dark:shadow-card max-w-md w-full max-h-[90vh] overflow-y-auto transition-colors duration-300"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="deposit-modal-title"
+    appFocusTrap
+    [isActive]="true"
+    appEscapeKey
+    (escapePressed)="onClose()">
     <!-- Modal Header -->
-    <div class="flex items-center justify-between p-6 border-b border-gray-200">
-      <h2 class="text-2xl font-bold text-gray-900">Depositar Fondos</h2>
+    <div class="flex items-center justify-between p-6 border-b border-pearl-gray dark:border-slate-deep">
+      <h2 id="deposit-modal-title" class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">Depositar Fondos</h2>
       <button
         type="button"
         (click)="onClose()"
-        class="text-gray-400 hover:text-gray-600 transition-colors"
+        class="icon-button transition-base"
         aria-label="Cerrar modal">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
     </div>
 
     <!-- Modal Body -->
-    <div class="p-6">
+    <div class="p-6 space-y-6">
       <!-- Success State (Payment URL Generated) -->
-      <div *ngIf="paymentUrl()" class="text-center py-8">
+      <div *ngIf="paymentUrl()" class="text-center py-8" role="status" aria-live="polite">
         <div class="mb-4">
-          <svg class="w-16 h-16 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-16 h-16 text-emerald-500 dark:text-emerald-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Depósito Iniciado</h3>
-        <p class="text-gray-600 mb-4">Serás redirigido al sitio de pago en un momento...</p>
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+        <h3 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-2">Depósito Iniciado</h3>
+        <p class="text-charcoal-medium dark:text-pearl-light/80 mb-4">Serás redirigido al sitio de pago en un momento...</p>
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-petrol dark:border-pearl-light" aria-label="Cargando" role="status"></div>
+        <div class="mt-6 space-y-3">
+          <button
+            type="button"
+            class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent-petrol text-ivory-soft font-semibold rounded-full shadow-soft hover:bg-accent-petrol/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 transition-base"
+            (click)="openMercadoPago(paymentUrl()!)">
+            Ir a Mercado Pago
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+          <p class="text-xs text-ash-gray dark:text-pearl-light/60">
+            Si la redirección automática es bloqueada por el navegador, presiona el botón para continuar con el pago.
+          </p>
+        </div>
       </div>
 
       <!-- Form (Not Success) -->
       <form *ngIf="!paymentUrl()" (ngSubmit)="onSubmit()" class="space-y-6">
         <!-- Error Message -->
-        <div *ngIf="formError()" class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div *ngIf="formError()" class="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/40 rounded-lg p-4" role="alert" aria-live="assertive">
           <div class="flex items-start">
-            <svg class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-red-600 dark:text-red-300 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <p class="text-sm text-red-700 ml-2">{{ formError() }}</p>
+            <p class="text-sm text-red-700 dark:text-red-200 ml-2">{{ formError() }}</p>
           </div>
         </div>
 
-        <!-- Amount Input -->
+        <!-- Amount Input (ARS) -->
         <div>
-          <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">
-            Monto a Depositar
+          <label for="amount" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
+            Monto a Depositar (en Pesos Argentinos)
           </label>
           <div class="relative">
-            <span class="absolute left-3 top-3 text-gray-500 font-medium">$</span>
+            <span class="absolute left-3 top-3 text-ash-gray dark:text-pearl-light/60 font-medium">$</span>
             <input
               type="number"
               id="amount"
               name="amount"
-              [value]="amount()"
-              (input)="updateAmount($any($event.target).value)"
-              [min]="MIN_DEPOSIT"
-              [max]="MAX_DEPOSIT"
-              step="10"
+              [value]="arsAmount()"
+              (input)="updateArsAmount($any($event.target).value)"
+              min="100"
+              max="1000000"
+              step="100"
               required
-              class="pl-8 pr-16 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="100.00"
+              class="pl-8 pr-16 py-3 w-full border border-pearl-gray/70 dark:border-slate-deep rounded-xl bg-white-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
+              placeholder="1000.00"
               [disabled]="isProcessing()" />
-            <span class="absolute right-3 top-3 text-gray-500 font-medium">USD</span>
+            <span class="absolute right-3 top-3 text-ash-gray dark:text-pearl-light/60 font-medium">ARS</span>
           </div>
-          <p class="text-xs text-gray-500 mt-1">
-            Mínimo: {{ formatCurrency(MIN_DEPOSIT) }} | Máximo: {{ formatCurrency(MAX_DEPOSIT) }}
+          <p class="text-xs text-ash-gray dark:text-pearl-light/70 mt-1">
+            Mínimo: $100 ARS | Máximo: $1,000,000 ARS
           </p>
+        </div>
+
+        <!-- Conversion Preview -->
+        <div *ngIf="arsAmount() > 0" class="bg-gradient-to-br from-accent-petrol/5 to-accent-petrol/10 dark:from-accent-petrol/15 dark:to-accent-petrol/20 rounded-xl p-5 border border-accent-petrol/30 dark:border-accent-petrol/40 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-accent-petrol dark:text-ivory-luminous" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+              </svg>
+              <span class="text-sm font-medium text-accent-petrol dark:text-ivory-luminous">Conversión en Tiempo Real</span>
+            </div>
+            <div *ngIf="loadingRate()" class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-accent-petrol dark:border-pearl-light"></div>
+          </div>
+
+          <!-- USD Preview (Large) -->
+          <div class="text-center py-3 bg-white/50 dark:bg-slate-deep/30 rounded-lg">
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mb-1">Recibirás en tu wallet:</p>
+            <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+              {{ formatCurrency(usdAmount()) }}
+            </p>
+          </div>
+
+          <!-- Exchange Rate Info -->
+          <div class="bg-white/40 dark:bg-slate-deep/40 rounded-lg p-4 text-center">
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mb-2">Tipo de cambio actual</p>
+            <p class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">
+              1 USD = {{ platformRate() | number:'1.2-2' }} ARS
+            </p>
+          </div>
+
+          <!-- Calculation Breakdown -->
+          <div class="text-xs text-charcoal-medium dark:text-pearl-light/70 pt-2 border-t border-accent-petrol/20 dark:border-accent-petrol/30">
+            <p class="flex items-center justify-between">
+              <span>Monto en ARS:</span>
+              <span class="font-medium">${{ arsAmount() | number:'1.2-2' }} ARS</span>
+            </p>
+            <p class="flex items-center justify-between mt-1">
+              <span>÷ Tasa de conversión:</span>
+              <span class="font-medium">{{ platformRate() | number:'1.2-2' }}</span>
+            </p>
+            <p class="flex items-center justify-between mt-1 text-accent-petrol dark:text-ivory-luminous font-semibold">
+              <span>= Crédito en USD:</span>
+              <span>${{ usdAmount() | number:'1.2-2' }} USD</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Deposit Type Selection -->
+        <div>
+          <label id="deposit-type-label" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-3">
+            Tipo de Depósito
+          </label>
+          <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-labelledby="deposit-type-label">
+            <!-- Withdrawable Option -->
+            <div
+              class="deposit-type-option relative border rounded-xl p-4 cursor-pointer transition-all hover:border-emerald-500/40 hover:bg-emerald-50/50 dark:hover:bg-emerald-500/10"
+              [class.border-emerald-500]="depositType() === 'withdrawable'"
+              [class.bg-emerald-50]="depositType() === 'withdrawable'"
+              [class.dark:bg-emerald-500/15]="depositType() === 'withdrawable'"
+              [class.border-pearl-gray/70]="depositType() !== 'withdrawable'"
+              [class.dark:border-slate-deep]="depositType() !== 'withdrawable'"
+              (click)="depositType.set('withdrawable')">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="type-withdrawable"
+                    name="depositType"
+                    value="withdrawable"
+                    [checked]="depositType() === 'withdrawable'"
+                    (change)="depositType.set('withdrawable')"
+                    class="text-emerald-600 focus:ring-emerald-500 dark:bg-slate-deep dark:border-slate-deep"
+                    [disabled]="isProcessing()" />
+                  <label for="type-withdrawable" class="flex-1 font-semibold text-smoke-black dark:text-ivory-luminous cursor-pointer text-sm">
+                    Retirable
+                  </label>
+                </div>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 ml-6">
+                  Podés retirarlo a tu cuenta bancaria cuando quieras
+                </p>
+              </div>
+            </div>
+
+            <!-- Protected Credit Option -->
+            <div
+              class="deposit-type-option relative border rounded-xl p-4 cursor-pointer transition-all hover:border-amber-500/40 hover:bg-amber-50/50 dark:hover:bg-amber-500/10"
+              [class.border-amber-500]="depositType() === 'protected'"
+              [class.bg-amber-50]="depositType() === 'protected'"
+              [class.dark:bg-amber-500/15]="depositType() === 'protected'"
+              [class.border-pearl-gray/70]="depositType() !== 'protected'"
+              [class.dark:border-slate-deep]="depositType() !== 'protected'"
+              (click)="depositType.set('protected')">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="type-protected"
+                    name="depositType"
+                    value="protected"
+                    [checked]="depositType() === 'protected'"
+                    (change)="depositType.set('protected')"
+                    class="text-amber-600 focus:ring-amber-500 dark:bg-slate-deep dark:border-slate-deep"
+                    [disabled]="isProcessing()" />
+                  <label for="type-protected" class="flex-1 font-semibold text-smoke-black dark:text-ivory-luminous cursor-pointer text-sm">
+                    Crédito Autorentar
+                  </label>
+                </div>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 ml-6">
+                  No retirable, para garantías (meta: USD 250)
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Payment Provider Selection -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-3">
+          <label id="payment-method-label" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-3">
             Método de Pago
           </label>
-          <div class="space-y-3">
+          <div class="space-y-3" role="radiogroup" aria-labelledby="payment-method-label">
             <div
               *ngFor="let providerOption of availableProviders"
-              class="relative border rounded-lg p-4 cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-50"
-              [class.border-blue-600]="provider() === providerOption.value"
-              [class.bg-blue-50]="provider() === providerOption.value"
+              class="provider-option relative border border-pearl-gray/70 dark:border-slate-deep rounded-xl p-4 cursor-pointer transition-all hover:border-accent-petrol/40 hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80"
+              [class.border-accent-petrol]="provider() === providerOption.value"
+              [ngClass]="provider() === providerOption.value ? ['bg-accent-petrol/10', 'dark:bg-accent-petrol/20'] : []"
               (click)="updateProvider(providerOption.value)">
               <div class="flex items-start">
                 <input
@@ -91,22 +227,57 @@
                   [value]="providerOption.value"
                   [checked]="provider() === providerOption.value"
                   (change)="updateProvider(providerOption.value)"
-                  class="mt-1 mr-3 text-blue-600 focus:ring-blue-500"
+                  class="mt-1 mr-3 text-accent-petrol focus:ring-accent-petrol dark:bg-slate-deep dark:border-slate-deep"
                   [disabled]="isProcessing()" />
                 <div class="flex-1">
-                  <label [for]="'provider-' + providerOption.value" class="block font-medium text-gray-900 cursor-pointer">
+                  <label [for]="'provider-' + providerOption.value" class="block font-medium text-smoke-black dark:text-ivory-luminous cursor-pointer">
                     {{ providerOption.label }}
                   </label>
-                  <p class="text-sm text-gray-600 mt-1">{{ providerOption.description }}</p>
+                  <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mt-1">{{ providerOption.description }}</p>
                 </div>
               </div>
             </div>
+        </div>
+      </div>
+      @if (fallbackSuggestion() === 'bank_transfer') {
+        <div class="rounded-xl border border-amber-300 dark:border-amber-400 bg-amber-50/80 dark:bg-amber-500/15 p-4 space-y-2">
+          <div class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-amber-600 dark:text-amber-200 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div class="space-y-1 text-sm text-amber-900 dark:text-amber-100/90">
+              <p><strong>Seleccionamos Transferencia Bancaria</strong> porque Mercado Pago devolvió un error de configuración.</p>
+              <p>Seguí los pasos que figuran abajo y envíanos el comprobante; acreditamos los fondos manualmente en minutos hábiles.</p>
+            </div>
           </div>
         </div>
+      }
+      @if (provider() === 'bank_transfer') {
+        <div class="rounded-xl border border-accent-petrol/40 dark:border-accent-petrol/50 bg-accent-petrol/5 dark:bg-accent-petrol/15 p-4 space-y-3">
+          <h3 class="text-sm font-semibold text-accent-petrol dark:text-ivory-luminous flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Instrucciones para transferir
+          </h3>
+          <div class="grid gap-2 text-xs text-charcoal-medium dark:text-pearl-light/80">
+            <p>1. Transferí el monto exacto a:</p>
+            <ul class="ml-4 list-disc space-y-1">
+              <li>Titular: {{ bankTransferDetails.accountName }}</li>
+              <li>Banco: {{ bankTransferDetails.bank }}</li>
+              <li>Alias: {{ bankTransferDetails.alias }}</li>
+              <li>CBU: {{ bankTransferDetails.cbu }}</li>
+              <li>Concepto: {{ bankTransferDetails.concept }}</li>
+            </ul>
+            <p>2. Enviá el comprobante a <a class="text-accent-petrol dark:text-ivory-luminous font-semibold" href="mailto:{{ bankTransferDetails.email }}">{{ bankTransferDetails.email }}</a> indicando el correo de tu cuenta.</p>
+            <p>3. Acreditamos el crédito protegido en tu wallet apenas validemos el comprobante (horario hábil: Lun-Vie 9 a 18 hs).</p>
+          </div>
+        </div>
+      }
 
-        <!-- Description (Optional) -->
-        <div>
-          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+      <!-- Description (Optional) -->
+      <div>
+          <label for="description" class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
             Descripción (Opcional)
           </label>
           <input
@@ -116,16 +287,20 @@
             [value]="description()"
             (input)="updateDescription($any($event.target).value)"
             maxlength="200"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-3 py-2 border border-pearl-gray/70 dark:border-slate-deep rounded-xl bg-white-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
             placeholder="Ej: Recarga para alquiler de auto"
             [disabled]="isProcessing()" />
         </div>
 
         <!-- Summary -->
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <div class="bg-sand-light/70 dark:bg-slate-deep/60 rounded-xl p-4 border border-pearl-gray/70 dark:border-slate-deep space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-600">Recibirás en tu wallet:</span>
-            <span class="text-xl font-bold text-gray-900">{{ formatCurrency(amount()) }}</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light/70">Depositarás (ARS):</span>
+            <span class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">${{ arsAmount() | number:'1.2-2' }} ARS</span>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-pearl-gray/50 dark:border-slate-deep">
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light/70">Recibirás en tu wallet:</span>
+            <span class="text-xl font-bold text-accent-petrol dark:text-ivory-luminous">{{ formatCurrency(usdAmount()) }}</span>
           </div>
         </div>
 
@@ -135,18 +310,19 @@
             type="button"
             (click)="onClose()"
             [disabled]="isProcessing()"
-            class="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            class="flex-1 py-3 px-4 border border-pearl-gray/70 dark:border-slate-deep rounded-xl text-charcoal-medium dark:text-pearl-light font-semibold bg-sand-light/60 hover:bg-sand-light dark:bg-slate-deep/70 dark:hover:bg-slate-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/50 disabled:opacity-60 disabled:cursor-not-allowed transition-base">
             Cancelar
           </button>
           <button
             type="submit"
             [disabled]="isProcessing()"
-            class="flex-1 py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+            class="flex-1 py-3 px-4 bg-accent-petrol text-ivory-soft font-semibold rounded-xl hover:bg-accent-petrol/90 transition-base disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60">
             <svg
               *ngIf="isProcessing()"
               class="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
               fill="none"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+              aria-hidden="true">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -155,12 +331,12 @@
         </div>
 
         <!-- Info Message -->
-        <div class="bg-blue-50 border border-blue-100 rounded-lg p-3">
+        <div class="bg-accent-petrol/5 dark:bg-accent-petrol/15 border border-accent-petrol/20 dark:border-accent-petrol/30 rounded-xl p-3" role="note">
           <div class="flex items-start">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-accent-petrol dark:text-ivory-luminous mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <p class="text-xs text-blue-700 ml-2">
+            <p class="text-xs text-accent-petrol dark:text-pearl-light/80 ml-2">
               Serás redirigido al sitio seguro de pago. Los fondos se acreditarán automáticamente una vez confirmado el pago.
             </p>
           </div>

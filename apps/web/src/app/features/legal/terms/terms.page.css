@@ -1,0 +1,54 @@
+.terms-page {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card {
+  background: var(--bg-card, #ffffff);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(44, 74, 82, 0.08);
+  box-shadow: 0 12px 40px rgba(20, 32, 44, 0.08);
+  display: grid;
+  gap: 1rem;
+}
+
+.warning {
+  border-color: rgba(234, 179, 8, 0.4);
+  background: rgba(253, 230, 138, 0.25);
+}
+
+.dark .terms-page .card {
+  background: rgba(18, 18, 18, 0.6);
+  border-color: rgba(148, 163, 184, 0.2);
+  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.08);
+}
+
+.dark .terms-page .warning {
+  background: rgba(234, 179, 8, 0.08);
+  border-color: rgba(234, 179, 8, 0.25);
+}
+
+.faq-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.faq-grid h3 {
+  font-weight: 600;
+  color: #2c4a52;
+}
+
+.dark .terms-page .faq-grid h3 {
+  color: #facc15;
+}
+
+.link {
+  color: #2c4a52;
+  font-weight: 600;
+}
+
+.dark .terms-page .link {
+  color: #e2e8f0;
+  text-decoration: underline;
+}

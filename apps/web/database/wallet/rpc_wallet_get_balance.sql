@@ -13,6 +13,8 @@ DROP FUNCTION IF EXISTS wallet_get_balance(UUID);
 CREATE OR REPLACE FUNCTION wallet_get_balance()
 RETURNS TABLE (
   available_balance NUMERIC(10, 2),
+  withdrawable_balance NUMERIC(10, 2),
+  non_withdrawable_balance NUMERIC(10, 2),
   locked_balance NUMERIC(10, 2),
   total_balance NUMERIC(10, 2),
   currency TEXT
@@ -21,6 +23,9 @@ DECLARE
   v_user_id UUID;
   v_available NUMERIC(10, 2) := 0;
   v_locked NUMERIC(10, 2) := 0;
+  v_floor NUMERIC(10, 2) := 0;
+  v_non_withdrawable NUMERIC(10, 2) := 0;
+  v_withdrawable NUMERIC(10, 2) := 0;
 BEGIN
   -- Obtener el user_id del usuario autenticado
   v_user_id := auth.uid();
@@ -61,9 +66,24 @@ BEGIN
     AND status = 'completed'
     AND type IN ('lock', 'unlock');
 
+  -- Obtener piso de fondos no reembolsables
+  SELECT non_withdrawable_floor INTO v_floor
+  FROM user_wallets
+  WHERE user_id = v_user_id;
+
+  IF v_floor IS NULL THEN
+    v_floor := 0;
+  END IF;
+
+  -- Calcular balances retirables vs crédito de plataforma
+  v_non_withdrawable := LEAST(v_available, v_floor);
+  v_withdrawable := GREATEST(v_available - v_non_withdrawable, 0);
+
   -- Retornar el balance
   RETURN QUERY SELECT
     v_available AS available_balance,
+    v_withdrawable AS withdrawable_balance,
+    v_non_withdrawable AS non_withdrawable_balance,
     v_locked AS locked_balance,
     (v_available + v_locked) AS total_balance,
     'USD'::TEXT AS currency;
@@ -92,6 +112,6 @@ COMMENT ON FUNCTION wallet_get_balance() IS 'Obtiene el balance de wallet del us
 SELECT * FROM wallet_get_balance();
 
 -- Resultado esperado:
--- available_balance | locked_balance | total_balance | currency
--- 150.00            | 50.00          | 200.00        | USD
+-- available_balance | withdrawable_balance | non_withdrawable_balance | locked_balance | total_balance | currency
+-- 150.00            | 50.00                 | 100.00                    | 50.00          | 200.00        | USD
 */

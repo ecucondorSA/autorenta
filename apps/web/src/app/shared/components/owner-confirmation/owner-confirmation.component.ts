@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   BookingConfirmationService,
   ConfirmAndReleaseResponse,
@@ -22,7 +23,7 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-owner-confirmation',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './owner-confirmation.component.html',
   styles: [
     `
@@ -59,7 +60,7 @@ export class OwnerConfirmationComponent {
   /**
    * Emite cuando ocurre un error
    */
-  @Output() error = new EventEmitter<string>();
+  @Output() errorOccurred = new EventEmitter<string>();
 
   /**
    * Estado de la confirmación
@@ -112,7 +113,7 @@ export class OwnerConfirmationComponent {
     const userId = this.auth.sessionSignal()?.user?.id;
     if (!userId) {
       this.message.set('Error: Usuario no autenticado');
-      this.error.emit('Usuario no autenticado');
+      this.errorOccurred.emit('Usuario no autenticado');
       return;
     }
 
@@ -136,7 +137,7 @@ export class OwnerConfirmationComponent {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al confirmar';
       this.message.set(`Error: ${errorMessage}`);
-      this.error.emit(errorMessage);
+      this.errorOccurred.emit(errorMessage);
     }
   }
 

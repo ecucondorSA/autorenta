@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { BookingsService } from './bookings.service';
 import { SupabaseClientService } from './supabase-client.service';
+import { PwaService } from './pwa.service';
+import { WalletService } from './wallet.service';
 
 describe('BookingsService', () => {
   let service: BookingsService;
@@ -9,6 +11,8 @@ describe('BookingsService', () => {
     auth: jasmine.SpyObj<any>;
     from: jasmine.Spy<any>;
   };
+  let pwaService: jasmine.SpyObj<PwaService>;
+  let walletService: jasmine.SpyObj<WalletService>;
 
   beforeEach(() => {
     supabase = {
@@ -16,6 +20,8 @@ describe('BookingsService', () => {
       auth: jasmine.createSpyObj('auth', ['getUser']),
       from: jasmine.createSpy('from'),
     };
+    pwaService = jasmine.createSpyObj<PwaService>('PwaService', ['setAppBadge', 'clearAppBadge']);
+    walletService = jasmine.createSpyObj<WalletService>('WalletService', ['unlockFunds']);
 
     TestBed.configureTestingModule({
       providers: [
@@ -24,6 +30,8 @@ describe('BookingsService', () => {
           provide: SupabaseClientService,
           useValue: { getClient: () => supabase },
         },
+        { provide: PwaService, useValue: pwaService },
+        { provide: WalletService, useValue: walletService },
       ],
     });
 
@@ -52,6 +60,29 @@ describe('BookingsService', () => {
       p_end: '2024-01-10',
     });
     expect(result).toBe(booking as any);
+  });
+
+  it('extracts booking id from legacy response shape', async () => {
+    const response = { booking_id: 'booking-2', total_amount: 1200 };
+    const booking = { id: 'booking-2', total_amount: 1200 };
+    supabase.rpc.withArgs('request_booking', jasmine.any(Object)).and.resolveTo({ data: response, error: null });
+    supabase.rpc.withArgs('pricing_recalculate', jasmine.any(Object)).and.resolveTo({ data: null, error: null });
+
+    const builder: any = {};
+    builder.select = jasmine.createSpy('select').and.returnValue(builder);
+    builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
+    builder.single = jasmine.createSpy('single').and.resolveTo({
+      data: booking,
+      error: null,
+    });
+    supabase.from.and.returnValue(builder);
+
+    const result = await service.requestBooking('car-1', '2024-02-01', '2024-02-10');
+
+    expect(supabase.rpc).toHaveBeenCalledWith('pricing_recalculate', {
+      p_booking_id: 'booking-2',
+    });
+    expect(result).toEqual(booking as any);
   });
 
   it('returns the authenticated renter bookings ordered by creation', async () => {

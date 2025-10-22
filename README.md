@@ -1,128 +1,183 @@
-# AutorentA
+# Supabase CLI
 
-Marketplace MVP para alquiler de autos en Argentina desarrollado con Angular 17, Supabase y Cloudflare Workers/Pages. Este repositorio incluye la aplicación web, el worker para webhooks de pagos simulados y la estructura base para integraciones futuras.
+[![Coverage Status](https://coveralls.io/repos/github/supabase/cli/badge.svg?branch=main)](https://coveralls.io/github/supabase/cli?branch=main) [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/supabase-cli/setup-cli/master?style=flat-square&label=Bitbucket%20Canary)](https://bitbucket.org/supabase-cli/setup-cli/pipelines) [![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/sweatybridge%2Fsetup-cli?label=Gitlab%20Canary)
+](https://gitlab.com/sweatybridge/setup-cli/-/pipelines)
 
-## Estructura principal
+[Supabase](https://supabase.io) is an open source Firebase alternative. We're building the features of Firebase using enterprise-grade open source tools.
+
+This repository contains all the functionality for Supabase CLI.
+
+- [x] Running Supabase locally
+- [x] Managing database migrations
+- [x] Creating and deploying Supabase Functions
+- [x] Generating types directly from your database schema
+- [x] Making authenticated HTTP requests to [Management API](https://supabase.com/docs/reference/api/introduction)
+
+## Getting started
+
+### Install the CLI
+
+Available via [NPM](https://www.npmjs.com) as dev dependency. To install:
+
+```bash
+npm i supabase --save-dev
+```
+
+To install the beta release channel:
+
+```bash
+npm i supabase@beta --save-dev
+```
+
+When installing with yarn 4, you need to disable experimental fetch with the following nodejs config.
 
 ```
-autorenta/
-  apps/
-    web/                # Aplicación Angular standalone + Tailwind
-  functions/
-    workers/
-      payments_webhook/ # Worker de Cloudflare para webhooks de pago
-  supabase/
-    README.md           # Documentación de esquemas/migraciones aplicadas
-  .env.example
+NODE_OPTIONS=--no-experimental-fetch yarn add supabase
 ```
 
-## Requisitos previos
+> **Note**
+For Bun versions below v1.0.17, you must add `supabase` as a [trusted dependency](https://bun.sh/guides/install/trusted) before running `bun add -D supabase`.
 
-- Node.js 20+
-- npm 10+
-- Cuenta Supabase con las tablas `profiles`, `cars`, `car_photos`, `bookings`, `payments`, `payment_intents`
-- Cuenta Cloudflare con Pages y Workers habilitados
+<details>
+  <summary><b>macOS</b></summary>
 
-## Configuración inicial
+  Available via [Homebrew](https://brew.sh). To install:
 
-1. Copiá las variables de entorno y completalas con tus credenciales:
-
-   ```bash
-   cp .env.example .env
-   cp apps/web/.env.development.local.example apps/web/.env.development.local
-   ```
-
-   > Para la aplicación Angular usá las variables prefijadas con `NG_APP_`. El Worker debe recibir sus secretos con `wrangler secret put` (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`).
-
-2. Instalá las dependencias:
-
-   ```bash
-   cd apps/web
-   npm install
-   ```
-
-3. Verificá que Husky esté instalado (se ejecuta automáticamente vía `npm run prepare`).
-
-## Desarrollo local
-
-- **Aplicación Angular**
-
-  ```bash
-  cd apps/web
-  npm run start
+  ```sh
+  brew install supabase/tap/supabase
   ```
 
-  La app queda disponible en `http://localhost:4200`.
+  To install the beta release channel:
+  
+  ```sh
+  brew install supabase/tap/supabase-beta
+  brew link --overwrite supabase-beta
+  ```
+  
+  To upgrade:
 
-- **Worker de pagos (mock)**
+  ```sh
+  brew upgrade supabase
+  ```
+</details>
 
-  ```bash
-  cd functions/workers/payments_webhook
-  npm install
-  npm run dev
+<details>
+  <summary><b>Windows</b></summary>
+
+  Available via [Scoop](https://scoop.sh). To install:
+
+  ```powershell
+  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+  scoop install supabase
   ```
 
-  Wrangler expone el endpoint en `http://localhost:8787/webhooks/payments` (puenteado en la app vía `NG_APP_PAYMENTS_WEBHOOK_URL`).
+  To upgrade:
 
-## Scripts útiles (Angular)
+  ```powershell
+  scoop update supabase
+  ```
+</details>
 
-- `npm run start` – servidor de desarrollo
-- `npm run build` – build optimizada (dist/autorenta-web)
-- `npm run lint` – ESLint + Angular ESLint con flat config
-- `npm run format` – Prettier con cache
-- `npm run test` – Karma/Jasmine en modo CLI
-- `npm run deploy:pages` – build + despliegue a Cloudflare Pages (requiere autenticación de Wrangler)
-- `npm run worker:dev` – atajo para levantar el worker desde la raíz del repo
-- `npm run worker:deploy` – atajo para desplegar el worker
+<details>
+  <summary><b>Linux</b></summary>
 
-## Integración con Supabase
+  Available via [Homebrew](https://brew.sh) and Linux packages.
 
-- `SupabaseClientService` centraliza la inicialización del SDK con Signals.
-- `AuthService`, `CarsService`, `BookingsService`, `PaymentsService` y `AdminService` encapsulan las operaciones frecuentes (ver `apps/web/src/app/core/services`).
-- El guard `AuthGuard` protege rutas de locadores/locatarios/admin.
-- El interceptor `supabaseAuthInterceptor` adjunta el JWT en peticiones HTTP salientes.
+  #### via Homebrew
 
-Consulta `supabase/README.md` para detalles del esquema y funciones RPC (`request_booking`, etc.).
+  To install:
 
-## Despliegue en Cloudflare Pages
+  ```sh
+  brew install supabase/tap/supabase
+  ```
 
-1. Autenticá Wrangler:
+  To upgrade:
 
-   ```bash
-   npm create cloudflare@latest
-   wrangler login
-   ```
+  ```sh
+  brew upgrade supabase
+  ```
 
-2. Desde `apps/web` ejecutá:
+  #### via Linux packages
 
-   ```bash
-   npm run build
-   wrangler pages deploy dist/autorenta-web --project-name=autorenta
-   ```
+  Linux packages are provided in [Releases](https://github.com/supabase/cli/releases). To install, download the `.apk`/`.deb`/`.rpm`/`.pkg.tar.zst` file depending on your package manager and run the respective commands.
 
-3. Configurá las variables de entorno en el proyecto Pages (`NG_APP_*`).
+  ```sh
+  sudo apk add --allow-untrusted <...>.apk
+  ```
 
-## Despliegue del Worker
+  ```sh
+  sudo dpkg -i <...>.deb
+  ```
 
-1. En `functions/workers/payments_webhook` seteá los secretos:
+  ```sh
+  sudo rpm -i <...>.rpm
+  ```
 
-   ```bash
-   wrangler secret put SUPABASE_URL
-   wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-   ```
+  ```sh
+  sudo pacman -U <...>.pkg.tar.zst
+  ```
+</details>
 
-2. Ejecutá el despliegue:
+<details>
+  <summary><b>Other Platforms</b></summary>
 
-   ```bash
-   npm run deploy
-   ```
+  You can also install the CLI via [go modules](https://go.dev/ref/mod#go-install) without the help of package managers.
 
-3. Asigná la URL del worker a `NG_APP_PAYMENTS_WEBHOOK_URL` en Pages.
+  ```sh
+  go install github.com/supabase/cli@latest
+  ```
 
-## Próximos pasos sugeridos
+  Add a symlink to the binary in `$PATH` for easier access:
 
-1. Agregar KV Namespace al Worker para idempotencia real.
-2. Integrar proveedor de pagos (ej. Mercado Pago) reemplazando el flujo mock.
-3. Añadir tests unitarios/E2E por módulo (Auth, Cars, Bookings).
-4. Implementar notificaciones en tiempo real (Supabase Realtime) para reservas.
-5. Añadir una sección de perfil con verificación de identidad de locadores.
+  ```sh
+  ln -s "$(go env GOPATH)/bin/cli" /usr/bin/supabase
+  ```
+
+  This works on other non-standard Linux distros.
+</details>
+
+<details>
+  <summary><b>Community Maintained Packages</b></summary>
+
+  Available via [pkgx](https://pkgx.sh/). Package script [here](https://github.com/pkgxdev/pantry/blob/main/projects/supabase.com/cli/package.yml).
+  To install in your working directory:
+
+  ```bash
+  pkgx install supabase
+  ```
+
+  Available via [Nixpkgs](https://nixos.org/). Package script [here](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/supabase-cli/default.nix).
+</details>
+
+### Run the CLI
+
+```bash
+supabase bootstrap
+```
+
+Or using npx:
+
+```bash
+npx supabase bootstrap
+```
+
+The bootstrap command will guide you through the process of setting up a Supabase project using one of the [starter](https://github.com/supabase-community/supabase-samples/blob/main/samples.json) templates.
+
+## Docs
+
+Command & config reference can be found [here](https://supabase.com/docs/reference/cli/about).
+
+## Breaking changes
+
+We follow semantic versioning for changes that directly impact CLI commands, flags, and configurations.
+
+However, due to dependencies on other service images, we cannot guarantee that schema migrations, seed.sql, and generated types will always work for the same CLI major version. If you need such guarantees, we encourage you to pin a specific version of CLI in package.json.
+
+## Developing
+
+To run from source:
+
+```sh
+# Go >= 1.22
+go run . help
+```

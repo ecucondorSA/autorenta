@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { PaymentsService } from '../../../core/services/payments.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { WalletService } from '../../../core/services/wallet.service';
@@ -12,7 +13,7 @@ import { PaymentMethodSelectorComponent } from '../../../shared/components/payme
 @Component({
   standalone: true,
   selector: 'app-checkout-page',
-  imports: [CommonModule, MoneyPipe, PaymentMethodSelectorComponent],
+  imports: [CommonModule, MoneyPipe, PaymentMethodSelectorComponent, TranslateModule],
   templateUrl: './checkout.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -129,6 +130,8 @@ export class CheckoutPage implements OnInit {
       status: 'confirmed',
     });
 
+    await this.bookings.recalculatePricing(bookingId);
+
     this.status.set('paid_with_wallet');
     this.message.set(
       `✅ Pago exitoso con wallet!\n\n` +
@@ -182,7 +185,10 @@ export class CheckoutPage implements OnInit {
       wallet_status: walletAmount > 0 ? 'locked' : undefined,
       wallet_lock_transaction_id: lockTransactionId,
       payment_intent_id: intent.id,
+      deposit_amount_cents: 50000,
     });
+
+    await this.bookings.recalculatePricing(bookingId);
 
     // Paso 4: Redirigir a Mercado Pago para pagar el resto
     this.status.set('redirecting_to_mercadopago');
@@ -218,7 +224,10 @@ export class CheckoutPage implements OnInit {
     await this.bookings.updateBooking(bookingId, {
       payment_method: 'credit_card',
       wallet_amount_cents: 0,
+      deposit_amount_cents: 50000,
     });
+
+    await this.bookings.recalculatePricing(bookingId);
 
     this.message.set('Redirigiendo a Mercado Pago...');
 

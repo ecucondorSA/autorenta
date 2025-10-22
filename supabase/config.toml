@@ -1,0 +1,7 @@
+[functions.mercadopago-webhook]
+# Disable JWT verification for webhook (needs to be public for MercadoPago)
+verify_jwt = false
+
+[functions.mercadopago-create-preference]
+# This one needs JWT verification (user must be authenticated)
+verify_jwt = true

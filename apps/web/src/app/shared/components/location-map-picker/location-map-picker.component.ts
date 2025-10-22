@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as mapboxgl from 'mapbox-gl';
+import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '../../../../environments/environment';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 
@@ -24,7 +25,7 @@ export interface LocationCoordinates {
 @Component({
   selector: 'app-location-map-picker',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
     <div class="location-map-picker">
       <!-- Map container -->

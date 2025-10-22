@@ -1,38 +1,55 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>Autorentar - Alquiler de Autos Premium en Uruguay</title>
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="/"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Alquiler de autos premium en Uruguay. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura." />
-    <meta name="keywords" content="alquiler autos, rent a car, uruguay, autorentar, alquiler vehiculos" />
-    <meta name="author" content="Autorentar" />
+    <meta name="description" content="Alquiler de autos premium en Uruguay. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura."/>
+    <meta name="keywords" content="alquiler autos, rent a car, uruguay, autorentar, alquiler vehiculos"/>
+    <meta name="author" content="Autorentar"/>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="apple-touch-icon" href="/assets/images/autorentar-logo.png" />
+    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="apple-touch-icon" href="/assets/images/autorentar-logo.png"/>
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://autorentar.com/" />
-    <meta property="og:title" content="Autorentar - Alquiler de Autos Premium" />
-    <meta property="og:description" content="Alquiler de autos premium en Uruguay. Encuentra el auto perfecto para tu viaje." />
-    <meta property="og:image" content="/assets/images/autorentar-logo.png" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://autorentar.com/"/>
+    <meta property="og:title" content="Autorentar - Alquiler de Autos Premium"/>
+    <meta property="og:description" content="Alquiler de autos premium en Uruguay. Encuentra el auto perfecto para tu viaje."/>
+    <meta property="og:image" content="/assets/images/autorentar-logo.png"/>
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://autorentar.com/" />
-    <meta property="twitter:title" content="Autorentar - Alquiler de Autos Premium" />
-    <meta property="twitter:description" content="Alquiler de autos premium en Uruguay. Encuentra el auto perfecto para tu viaje." />
-    <meta property="twitter:image" content="/assets/images/autorentar-logo.png" />
+    <meta property="twitter:card" content="summary_large_image"/>
+    <meta property="twitter:url" content="https://autorentar.com/"/>
+    <meta property="twitter:title" content="Autorentar - Alquiler de Autos Premium"/>
+    <meta property="twitter:description" content="Alquiler de autos premium en Uruguay. Encuentra el auto perfecto para tu viaje."/>
+    <meta property="twitter:image" content="/assets/images/autorentar-logo.png"/>
 
     <!-- Theme Color -->
-    <meta name="theme-color" content="#2c4a52" />
-  </head>
+    <meta name="theme-color" content="#805ad5"/>
+
+    <!-- Apple PWA Configuration -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png"/>
+    <link rel="apple-touch-startup-image" href="/icons/apple-splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"/>
+    <link rel="apple-touch-startup-image" href="/icons/apple-splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"/>
+
+    <!-- Preload critical resources for instant splash video (iOS Safari autoplay) -->
+    <link rel="preload" href="/assets/videos/splash-background.mp4" as="video" type="video/mp4"/>
+    <link rel="preload" href="/assets/videos/splash-background-mobile.mp4" as="video" type="video/mp4" media="(max-aspect-ratio: 3/4)"/>
+    <link rel="preload" href="/assets/videos/splash-background.webm" as="video" type="video/webm"/>
+    <link rel="preload" href="/assets/images/splash-background-poster.jpg" as="image"/>
+    <link rel="manifest" href="manifest.webmanifest">
+</head>
   <body>
+    <!-- Runtime environment configuration (loaded before Angular) -->
+    <script src="env.js"></script>
     <app-root></app-root>
-  </body>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
+</body>
 </html>

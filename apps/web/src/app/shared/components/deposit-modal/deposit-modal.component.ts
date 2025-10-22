@@ -1,8 +1,12 @@
-import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
+import { Component, EventEmitter, Output, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
+import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
+import { FocusTrapDirective } from '../../directives/focus-trap.directive';
+import { EscapeKeyDirective } from '../../directives/escape-key.directive';
 
 /**
  * DepositModalComponent
@@ -28,12 +32,64 @@ import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
 @Component({
   selector: 'app-deposit-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FocusTrapDirective, EscapeKeyDirective, TranslateModule],
   templateUrl: './deposit-modal.component.html',
   styleUrls: ['./deposit-modal.component.css'],
 })
 export class DepositModalComponent {
   private readonly walletService = inject(WalletService);
+  private readonly exchangeRateService = inject(ExchangeRateService);
+
+  /**
+   * Datos para transferencia bancaria manual
+   */
+  readonly bankTransferDetails = {
+    accountName: 'Autorentar Operaciones SRL',
+    bank: 'Banco Galicia',
+    alias: 'AUTORENTAR.PAGOS',
+    cbu: '0170018740000000123456',
+    concept: 'Crédito Autorentar',
+    email: 'pagos@autorentar.com',
+  };
+
+  // ==================== CONVERSION PREVIEW ====================
+
+  /**
+   * Monto que el usuario depositará en ARS
+   */
+  arsAmount = signal<number>(1000);
+
+  /**
+   * Monto equivalente en USD que recibirá
+   */
+  usdAmount = signal<number>(0);
+
+  /**
+   * Cotización actual de la plataforma (ARS por USD)
+   */
+  platformRate = signal<number>(0);
+
+
+  /**
+   * Indica si está cargando la cotización
+   */
+  loadingRate = signal(false);
+
+  /**
+   * Constructor con effect para actualizar conversión en tiempo real
+   */
+  constructor() {
+    // Effect para actualizar USD cuando cambia el monto en ARS
+    effect(() => {
+      const ars = this.arsAmount();
+      if (ars > 0) {
+        this.updateConversionPreview(ars);
+      }
+    });
+
+    // Cargar cotización inicial
+    this.loadExchangeRate();
+  }
 
   // ==================== OUTPUTS ====================
 
@@ -51,11 +107,6 @@ export class DepositModalComponent {
   // ==================== FORM STATE ====================
 
   /**
-   * Monto a depositar
-   */
-  amount = signal<number>(100);
-
-  /**
    * Proveedor de pago seleccionado
    */
   provider = signal<WalletPaymentProvider>('mercadopago');
@@ -64,6 +115,11 @@ export class DepositModalComponent {
    * Descripción opcional del depósito
    */
   description = signal<string>('');
+
+  /**
+   * Tipo de depósito: 'protected' (Crédito Autorentar) o 'withdrawable' (Fondos retirables)
+   */
+  depositType = signal<'protected' | 'withdrawable'>('withdrawable');
 
   // ==================== UI STATE ====================
 
@@ -82,13 +138,18 @@ export class DepositModalComponent {
    */
   paymentUrl = signal<string | null>(null);
 
+  /**
+   * Sugiere un cambio de método luego de un error
+   */
+  readonly fallbackSuggestion = signal<'none' | 'bank_transfer'>('none');
+
   // ==================== VALIDATION ====================
 
   /**
-   * Límites de depósito
+   * Límites de depósito (en ARS)
    */
-  readonly MIN_DEPOSIT = 10;
-  readonly MAX_DEPOSIT = 5000;
+  readonly MIN_DEPOSIT_ARS = 100;
+  readonly MAX_DEPOSIT_ARS = 1000000;
 
   /**
    * Proveedores disponibles
@@ -114,6 +175,45 @@ export class DepositModalComponent {
   // ==================== PUBLIC METHODS ====================
 
   /**
+   * Carga la cotización actual desde el servicio
+   */
+  async loadExchangeRate(): Promise<void> {
+    this.loadingRate.set(true);
+    try {
+      const rate = await this.exchangeRateService.getPlatformRate();
+      this.platformRate.set(rate);
+
+      console.log(`💱 Cotización cargada: 1 USD = ${rate} ARS`);
+    } catch (error) {
+      console.error('Error loading exchange rate:', error);
+      // Usar fallback si falla (tasa aproximada)
+      this.platformRate.set(1748.01);
+    } finally {
+      this.loadingRate.set(false);
+    }
+  }
+
+  /**
+   * Actualiza el preview de conversión en tiempo real
+   */
+  async updateConversionPreview(ars: number): Promise<void> {
+    if (!this.platformRate()) {
+      await this.loadExchangeRate();
+    }
+
+    const usd = Math.round((ars / this.platformRate()) * 100) / 100;
+    this.usdAmount.set(usd);
+  }
+
+  /**
+   * Actualiza el monto en ARS cuando el usuario cambia el input
+   */
+  updateArsAmount(value: string): void {
+    const numValue = parseFloat(value);
+    this.arsAmount.set(isNaN(numValue) ? 0 : numValue);
+  }
+
+  /**
    * Cierra el modal
    */
   onClose(): void {
@@ -135,23 +235,30 @@ export class DepositModalComponent {
   validateForm(): boolean {
     this.formError.set(null);
 
-    const currentAmount = this.amount();
+    const currentArsAmount = this.arsAmount();
+    const currentUsdAmount = this.usdAmount();
 
-    // Validar que el monto sea un número
-    if (isNaN(currentAmount) || currentAmount === null) {
-      this.formError.set('Por favor ingresa un monto válido');
+    // Validar que el monto en ARS sea un número válido
+    if (isNaN(currentArsAmount) || currentArsAmount === null || currentArsAmount <= 0) {
+      this.formError.set('Por favor ingresa un monto válido en pesos argentinos');
       return false;
     }
 
-    // Validar monto mínimo
-    if (currentAmount < this.MIN_DEPOSIT) {
-      this.formError.set(`El depósito mínimo es $${this.MIN_DEPOSIT} USD`);
+    // Validar monto mínimo en ARS
+    if (currentArsAmount < this.MIN_DEPOSIT_ARS) {
+      this.formError.set(`El depósito mínimo es $${this.MIN_DEPOSIT_ARS} ARS`);
       return false;
     }
 
-    // Validar monto máximo
-    if (currentAmount > this.MAX_DEPOSIT) {
-      this.formError.set(`El depósito máximo es $${this.MAX_DEPOSIT} USD`);
+    // Validar monto máximo en ARS
+    if (currentArsAmount > this.MAX_DEPOSIT_ARS) {
+      this.formError.set(`El depósito máximo es $${this.MAX_DEPOSIT_ARS.toLocaleString('es-AR')} ARS`);
+      return false;
+    }
+
+    // Validar que la conversión a USD sea válida
+    if (isNaN(currentUsdAmount) || currentUsdAmount <= 0) {
+      this.formError.set('Error al calcular la conversión a USD. Reintenta en unos segundos.');
       return false;
     }
 
@@ -168,44 +275,56 @@ export class DepositModalComponent {
 
     this.isProcessing.set(true);
     this.formError.set(null);
+    this.walletService.resetError();
+    this.fallbackSuggestion.set('none');
 
     try {
+      // Pasar el monto en USD (convertido desde ARS) al servicio de wallet
+      const usdAmount = this.usdAmount();
+
+      console.log(`💰 Iniciando depósito: ${this.arsAmount()} ARS → ${usdAmount} USD (tasa: ${this.platformRate()})`);
+
+      const isProtectedCredit = this.depositType() === 'protected';
+
       const result = await this.walletService.initiateDeposit({
-        amount: this.amount(),
+        amount: usdAmount, // USD amount (converted from ARS)
         provider: this.provider(),
-        description: this.description() || 'Depósito a wallet',
+        description: this.description() || `Depósito de ${this.arsAmount()} ARS ${isProtectedCredit ? '(Crédito Autorentar)' : '(Retirable)'}`,
+        allowWithdrawal: !isProtectedCredit, // Invertir: protected=false, withdrawable=true
       });
 
       if (result.success && result.payment_url) {
+        this.walletService.resetError();
         this.paymentUrl.set(result.payment_url);
+        this.fallbackSuggestion.set('none');
 
         // Emitir evento de éxito
         this.depositSuccess.emit(result.payment_url);
 
-        // Esperar 1 segundo para mostrar mensaje de éxito y luego redirigir
+        // Intentar abrir Mercado Pago inmediatamente
+        this.openMercadoPago(result.payment_url);
+
+        // Como fallback, mantener la redirección automática en la misma pestaña
         setTimeout(() => {
-          window.location.href = result.payment_url;
-        }, 1500);
+          this.openMercadoPago(result.payment_url, true);
+        }, 2000);
       } else {
         this.formError.set(result.message || 'Error al iniciar el depósito');
       }
     } catch (error) {
       console.error('Error initiating deposit:', error);
-      this.formError.set(
-        error instanceof Error ? error.message : 'Error inesperado al iniciar el depósito',
-      );
+      const walletError = this.extractWalletError(error);
+      this.formError.set(this.getFriendlyErrorMessage(walletError, error));
+
+      if (walletError?.code === 'MERCADOPAGO_ERROR') {
+        this.provider.set('bank_transfer');
+        this.fallbackSuggestion.set('bank_transfer');
+      }
+
+      this.walletService.resetError();
     } finally {
       this.isProcessing.set(false);
     }
-  }
-
-  /**
-   * Actualiza el monto
-   */
-  updateAmount(value: string): void {
-    const numValue = parseFloat(value);
-    this.amount.set(isNaN(numValue) ? 0 : numValue);
-    this.formError.set(null);
   }
 
   /**
@@ -213,6 +332,9 @@ export class DepositModalComponent {
    */
   updateProvider(value: string): void {
     this.provider.set(value as WalletPaymentProvider);
+    if (value !== 'bank_transfer') {
+      this.fallbackSuggestion.set('none');
+    }
   }
 
   /**
@@ -220,6 +342,26 @@ export class DepositModalComponent {
    */
   updateDescription(value: string): void {
     this.description.set(value);
+  }
+
+  openMercadoPago(paymentUrl: string, forceSameTab = false): void {
+    if (!paymentUrl) {
+      return;
+    }
+
+    // MercadoPago redirige automáticamente a la app móvil si está instalada
+    // No necesitamos lógica especial para móviles
+    if (forceSameTab) {
+      window.location.assign(paymentUrl);
+      return;
+    }
+
+    const opened = window.open(paymentUrl, '_blank', 'noopener,noreferrer');
+
+    if (!opened) {
+      // Si el navegador bloquea la ventana emergente, redirigir en la misma pestaña
+      window.location.assign(paymentUrl);
+    }
   }
 
   /**
@@ -232,5 +374,51 @@ export class DepositModalComponent {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  }
+
+  private getFriendlyErrorMessage(
+    walletError: { code: string; message: string; details?: unknown } | null,
+    rawError: unknown,
+  ): string {
+    if (walletError?.code === 'MERCADOPAGO_ERROR') {
+      if (typeof walletError.details === 'object' && walletError.details) {
+        const status = (walletError.details as any).status;
+        if (status === 503) {
+          return 'Mercado Pago está experimentando una interrupción momentánea (503). Reintentá en unos minutos o elegí otro método de pago, como transferencia bancaria.';
+        }
+      }
+      if (walletError?.message?.toLowerCase().includes('collector configuration')) {
+        return 'Mercado Pago no pudo iniciar el cobro por una configuración del cobrador. Probá nuevamente más tarde o seleccioná transferencia bancaria como alternativa.';
+      }
+      return 'No pudimos iniciar el pago con Mercado Pago. Reintentá en unos minutos o elegí otro método.';
+    }
+
+    if (walletError?.code === 'NETWORK_ERROR') {
+      return 'No pudimos conectarnos al servicio de pagos. Verificá tu conexión y probá otra vez.';
+    }
+
+    if (walletError?.message) {
+      return walletError.message;
+    }
+
+    if (rawError instanceof Error && rawError.message) {
+      return rawError.message;
+    }
+
+    return 'Ocurrió un error inesperado al iniciar el depósito. Intenta nuevamente.';
+  }
+
+  private extractWalletError(error: unknown): { code: string; message: string; details?: unknown } | null {
+    if (typeof error === 'object' && error !== null) {
+      const maybeWalletError = error as { code?: unknown; message?: unknown; details?: unknown };
+      if (typeof maybeWalletError.code === 'string' && typeof maybeWalletError.message === 'string') {
+        return {
+          code: maybeWalletError.code,
+          message: maybeWalletError.message,
+          details: maybeWalletError.details,
+        };
+      }
+    }
+    return null;
   }
 }

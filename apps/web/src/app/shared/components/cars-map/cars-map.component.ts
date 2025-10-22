@@ -16,10 +16,12 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   CarLocationsService,
   type CarMapLocation,
 } from '../../../core/services/car-locations.service';
+import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { environment } from '../../../../environments/environment';
 
 // Dynamic import types
@@ -30,7 +32,7 @@ type LngLatLike = [number, number];
 @Component({
   standalone: true,
   selector: 'app-cars-map',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +47,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly carLocationsService = inject(CarLocationsService);
+  private readonly pricingService = inject(DynamicPricingService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -59,17 +62,16 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private geolocationWatchId: number | null = null;
   private currentLocations: CarMapLocation[] = []; // Para tracking de locations
   private selectedPopup: any | null = null; // Popup actual abierto
+  private resizeObserver: ResizeObserver | null = null; // Observer para cambios de tamaño
+  private themeChangeListener: ((event: CustomEvent<{ dark: boolean }>) => void) | null = null;
 
   constructor() {
     // Efecto para limpiar recursos cuando el componente se destruye
-    effect(
-      () => {
-        return () => {
-          this.cleanup();
-        };
-      },
-      { allowSignalWrites: false },
-    );
+    effect(() => {
+      return () => {
+        this.cleanup();
+      };
+    });
   }
 
   ngOnChanges(changes: any): void {
@@ -81,11 +83,14 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       }
     }
 
-    // Forzar resize del mapa si cambió el tamaño del contenedor
+    // Optimized: Single resize call - trackResize: true and ResizeObserver handle most cases
     if (this.map) {
       setTimeout(() => {
-        this.map?.resize();
-      }, 100);
+        if (this.map) {
+          this.map.resize();
+          console.log('[CarsMapComponent] Map resized on change');
+        }
+      }, 200);
     }
   }
 
@@ -108,6 +113,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       if (this.mapboxgl) {
         clearInterval(checkInterval);
         void this.initializeMap();
+        // Resize is now handled by trackResize: true and ResizeObserver
       }
     }, 100);
 
@@ -152,9 +158,48 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
     try {
+      // CRITICAL: Esperar a que el contenedor tenga dimensiones reales
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Verificar que el contenedor tenga altura
+      const containerEl = this.mapContainer.nativeElement;
+      const containerHeight = containerEl.offsetHeight;
+      const containerWidth = containerEl.offsetWidth;
+      const parentEl = containerEl.parentElement;
+
+      console.log('=== MAPBOX INIT DEBUG ===');
+      console.log('Container dimensions:', { width: containerWidth, height: containerHeight });
+      const containerStyle = getComputedStyle(containerEl);
+      const parentStyle = parentEl ? getComputedStyle(parentEl) : null;
+
+      console.log('Container computed style:', {
+        width: containerStyle.width,
+        height: containerStyle.height,
+        position: containerStyle.position,
+        display: containerStyle.display,
+      });
+      console.log('Parent dimensions:', {
+        width: parentEl?.offsetWidth,
+        height: parentEl?.offsetHeight,
+      });
+      console.log('Parent computed style:', parentStyle
+        ? {
+            width: parentStyle.width,
+            height: parentStyle.height,
+            flex: parentStyle.flex,
+            display: parentStyle.display,
+          }
+        : 'N/A');
+
+      if (containerHeight === 0) {
+        console.warn('[CarsMapComponent] ⚠️ Container height is 0, forcing height...');
+        containerEl.style.height = '100%';
+        containerEl.style.minHeight = '500px';
+      }
+
       // Crear mapa centrado en Uruguay por defecto
       const defaultCenter: [number, number] = [-56.0, -32.5]; // Centro de Uruguay
-      const defaultZoom = 6.5;
+      const defaultZoom = 11; // Aumentado de 6.5 a 11 - sensación de proximidad
 
       // Límites de Uruguay para evitar mostrar océano innecesario
       const uruguayBounds: [[number, number], [number, number]] = [
@@ -164,25 +209,57 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v12', // Estilo con color (calles, parques, agua)
+        style: 'mapbox://styles/mapbox/streets-v12', // Streets - Azul celeste limpio
         center: defaultCenter,
         zoom: defaultZoom,
         maxBounds: uruguayBounds,
         attributionControl: true,
         cooperativeGestures: false,
+        minZoom: 10, // Aumentado de 8 a 10 - siempre cerca
+        maxZoom: 17, // Aumentado de 16 a 17 - permite más acercamiento
+        // Performance optimizations for faster tile loading
+        renderWorldCopies: false, // Don't render multiple world copies (improves performance)
+        trackResize: true, // Automatically resize when container changes
+        preserveDrawingBuffer: false, // Better performance, disable if screenshots needed
+        refreshExpiredTiles: false, // Don't auto-refresh expired tiles (reduces network)
+        fadeDuration: 150, // Faster tile fade-in (default: 300ms)
       });
+
+      // CRITICAL: Forzar resize inmediatamente después de crear el mapa
+      setTimeout(() => {
+        if (this.map) {
+          this.map.resize();
+          console.log('[CarsMapComponent] Initial map resize');
+        }
+      }, 0);
 
       // Esperar a que el mapa cargue
       this.map.on('load', () => {
-        // Forzar resize para asegurar que el mapa tome el tamaño correcto
+        // CLEANUP: Ocultar capas innecesarias para un mapa más limpio
+        this.cleanupMapLayers();
+
+        // Optimized: Reduced resize calls - trackResize: true handles most cases
+        // Only resize once after a short delay to ensure container has final dimensions
         setTimeout(() => {
-          this.map?.resize();
+          if (this.map) {
+            this.map.resize();
+            console.log('[CarsMapComponent] Initial map resize complete');
+          }
         }, 300);
+
+        // Setup ResizeObserver para detectar cambios de tamaño del contenedor
+        this.setupResizeObserver();
 
         void this.loadCarLocations();
         this.setupRealtimeUpdates();
         this.setupPeriodicRefresh();
         this.requestUserLocation();
+      });
+
+      // Actualizar precios cuando el usuario mueve el mapa
+      this.map.on('moveend', () => {
+        console.log('[CarsMapComponent] Map moved, refreshing prices...');
+        void this.loadCarLocations(true);
       });
 
       // Manejo de errores
@@ -194,6 +271,72 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       this.error.set('Error al inicializar el mapa');
       this.loading.set(false);
     }
+  }
+
+  private cleanupMapLayers(): void {
+    if (!this.map) return;
+
+    // Lista de capas a ocultar para un mapa más limpio
+    const layersToHide = [
+      // POI (puntos de interés) - restaurantes, tiendas, etc.
+      'poi-label',
+
+      // Labels de lugares innecesarios
+      'settlement-subdivision-label',
+      'airport-label',
+      'transit-label',
+
+      // Símbolos de tránsito
+      'ferry-aerialway-label',
+      'waterway-label',
+
+      // Edificios 3D y detalles
+      'building',
+      'building-outline',
+
+      // Labels de carreteras menores
+      'road-label-simple',
+
+      // Natural labels (montañas, parques pequeños, etc.)
+      'natural-point-label',
+      'natural-line-label',
+
+      // Símbolos de estado
+      'state-label',
+    ];
+
+    layersToHide.forEach((layerId) => {
+      if (this.map?.getLayer(layerId)) {
+        this.map.setLayoutProperty(layerId, 'visibility', 'none');
+      }
+    });
+
+    console.log('[CarsMapComponent] Map layers cleaned up - minimalist mode enabled');
+  }
+
+  private setupResizeObserver(): void {
+    if (!this.mapContainer || !isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    // Crear ResizeObserver para detectar cambios de tamaño del contenedor
+    this.resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === this.mapContainer.nativeElement && this.map) {
+          console.log('[CarsMapComponent] Container resized, updating map...');
+          // Usar requestAnimationFrame para asegurar que el resize se ejecute después del repaint
+          requestAnimationFrame(() => {
+            if (this.map) {
+              this.map.resize();
+            }
+          });
+        }
+      }
+    });
+
+    // Observar el contenedor del mapa
+    this.resizeObserver.observe(this.mapContainer.nativeElement);
+    console.log('[CarsMapComponent] ResizeObserver setup complete');
   }
 
   private async loadCarLocations(force = false): Promise<void> {
@@ -210,7 +353,9 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         console.log(`[CarsMapComponent] Showing all ${locations.length} active cars on map`);
       }
 
-      this.updateMarkers(locations);
+      // Update markers with dynamic pricing
+      await this.updateMarkersWithDynamicPricing(locations);
+
       this.carCount.set(locations.length);
       this.loading.set(false);
       this.error.set(null);
@@ -237,6 +382,51 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
   }
 
+  /**
+   * Update markers with dynamic pricing from pricing service
+   * Fetches batch prices and updates location data before rendering
+   */
+  private async updateMarkersWithDynamicPricing(locations: CarMapLocation[]): Promise<void> {
+    // Filter locations that have regionId
+    const carsWithRegion = locations
+      .filter((loc) => loc.regionId)
+      .map((loc) => ({ id: loc.carId, region_id: loc.regionId! }));
+
+    // If no cars have regionId, use static pricing
+    if (carsWithRegion.length === 0) {
+      console.log('[CarsMapComponent] No cars with region_id, using static pricing');
+      this.updateMarkers(locations);
+      return;
+    }
+
+    try {
+      // Fetch dynamic prices in batch
+      const prices = await this.pricingService.getBatchPrices(carsWithRegion);
+      console.log(`[CarsMapComponent] Fetched dynamic prices for ${prices.size} cars`);
+
+      // Update locations with dynamic pricing data
+      const updatedLocations = locations.map((loc) => {
+        const dynamicPrice = prices.get(loc.carId);
+        if (dynamicPrice) {
+          return {
+            ...loc,
+            pricePerDay: dynamicPrice.price_per_day,
+            pricePerHour: dynamicPrice.price_per_hour,
+            surgeActive: dynamicPrice.surge_active,
+          };
+        }
+        return loc;
+      });
+
+      // Render markers with updated pricing
+      this.updateMarkers(updatedLocations);
+    } catch (error) {
+      console.error('[CarsMapComponent] Error fetching dynamic prices:', error);
+      // Fallback to static pricing on error
+      this.updateMarkers(locations);
+    }
+  }
+
   private updateMarkers(locations: CarMapLocation[]): void {
     if (!this.map || !this.mapboxgl) {
       return;
@@ -260,6 +450,8 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         properties: {
           carId: loc.carId,
           price: Math.round(loc.pricePerDay),
+          pricePerHour: loc.pricePerHour ? Math.round(loc.pricePerHour) : null,
+          surgeActive: loc.surgeActive || false,
           title: loc.title,
           currency: loc.currency,
           photoUrl: loc.photoUrl || '',
@@ -278,8 +470,12 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         type: 'geojson',
         data: geojsonData,
         cluster: true, // Habilitar clustering nativo de Mapbox
-        clusterMaxZoom: 14, // Max zoom para clusters
-        clusterRadius: 50, // Radio del cluster en pixels
+        clusterMaxZoom: 13, // Optimized: Cluster until zoom 13 (was 14) - reduces marker count
+        clusterRadius: 60, // Optimized: Larger radius (was 50) - fewer clusters, better mobile performance
+        clusterProperties: {
+          // Optional: Pre-calculate cluster properties for faster rendering
+          minPrice: ['min', ['get', 'price']],
+        },
       });
     }
 
@@ -323,30 +519,44 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         'circle-color': '#ffffff',
         'circle-radius': 22,
         'circle-stroke-width': 2,
-        'circle-stroke-color': 'rgba(44, 74, 82, 0.25)', // accent-petrol sutil
-        'circle-opacity': 1,
+        'circle-stroke-color': 'rgba(44, 74, 82, 0.3)',
+        'circle-opacity': 0.96,
+        'circle-blur': 0.15,
       },
     });
 
-    // Layer 4: Texto de precio para autos individuales
+    // Layer 4: Texto de precio para autos individuales (muestra precio por hora si está disponible)
     this.map.addLayer({
       id: 'car-prices',
       type: 'symbol',
       source: 'cars',
       filter: ['!', ['has', 'point_count']],
       layout: {
-        'text-field': ['concat', '$', ['get', 'price']],
+        'text-field': [
+          'case',
+          ['!=', ['get', 'pricePerHour'], null],
+          ['concat', '$', ['get', 'pricePerHour'], '/h'],
+          ['concat', '$', ['get', 'price']],
+        ],
         'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
         'text-size': 13,
         'text-allow-overlap': true,
       },
       paint: {
-        'text-color': '#222222',
+        'text-color': '#1f2d35',
+        'text-halo-color': 'rgba(255, 255, 255, 0.92)',
+        'text-halo-width': 1.2,
+        'text-halo-blur': 0.6,
       },
     });
 
     // Agregar interactividad
     this.setupLayerInteractions();
+
+    if (isPlatformBrowser(this.platformId)) {
+      const isDark = document.documentElement.classList.contains('dark');
+      this.applyThemeToMap(isDark);
+    }
   }
 
   /**
@@ -386,7 +596,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       // Hacer zoom suave al auto (opcional pero mejora la UX)
       this.map?.flyTo({
         center: coords,
-        zoom: Math.max(this.map.getZoom(), 13), // Zoom al menos 13
+        zoom: Math.max(this.map.getZoom(), 14), // Aumentado de 13 a 14 - muy cerca del marcador
         duration: 400,
         essential: true,
       });
@@ -549,10 +759,10 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
     if (locations.length === 1) {
-      // Si solo hay un auto, centrar en él
+      // Si solo hay un auto, centrar en él con zoom cercano
       this.map.flyTo({
         center: [locations[0].lng, locations[0].lat],
-        zoom: 12,
+        zoom: 14, // Aumentado de 12 a 14 - muy cerca
       });
       return;
     }
@@ -564,8 +774,9 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
 
     this.map.fitBounds(bounds, {
-      padding: { top: 50, bottom: 50, left: 50, right: 50 },
-      maxZoom: 12,
+      padding: { top: 80, bottom: 80, left: 80, right: 80 }, // Más padding para zoom más cercano
+      maxZoom: 14, // Aumentado de 12 a 14 - sensación de proximidad
+      minZoom: 12, // Mínimo zoom 12 para mantener cercanía
     });
   }
 
@@ -703,7 +914,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Hacer zoom suave a la ubicación del usuario
     this.map.flyTo({
       center: [lng, lat],
-      zoom: 11, // Zoom nivel ciudad
+      zoom: 13, // Aumentado de 11 a 13 - marcadores se ven muy cerca
       duration: 2000, // 2 segundos de animación
       essential: true,
     });
@@ -737,6 +948,50 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
    * Calcula la distancia entre dos puntos usando la fórmula de Haversine
    * @returns Distancia en kilómetros
    */
+  private setupThemeListener(): void {
+    if (!isPlatformBrowser(this.platformId) || this.themeChangeListener) {
+      return;
+    }
+
+    this.themeChangeListener = (event: CustomEvent<{ dark: boolean }>) => {
+      this.applyThemeToMap(event.detail?.dark ?? document.documentElement.classList.contains('dark'));
+    };
+
+    window.addEventListener('autorenta:theme-change', this.themeChangeListener as EventListener);
+  }
+
+  private applyThemeToMap(isDark: boolean): void {
+    if (!this.map) {
+      return;
+    }
+
+    const markerBgColor = isDark ? '#1c2427' : '#ffffff';
+    const markerStroke = isDark ? 'rgba(134, 186, 196, 0.35)' : 'rgba(44, 74, 82, 0.3)';
+    const markerText = isDark ? '#f5f0e3' : '#1f2d35';
+    const markerHalo = isDark ? 'rgba(12, 19, 23, 0.92)' : 'rgba(255, 255, 255, 0.92)';
+
+    if (this.map.getLayer('car-markers-bg')) {
+      this.map.setPaintProperty('car-markers-bg', 'circle-color', markerBgColor);
+      this.map.setPaintProperty('car-markers-bg', 'circle-stroke-color', markerStroke);
+    }
+
+    if (this.map.getLayer('car-prices')) {
+      this.map.setPaintProperty('car-prices', 'text-color', markerText);
+      this.map.setPaintProperty('car-prices', 'text-halo-color', markerHalo);
+      this.map.setPaintProperty('car-prices', 'text-halo-width', 1.2);
+      this.map.setPaintProperty('car-prices', 'text-halo-blur', 0.6);
+    }
+
+    if (this.map.getLayer('clusters')) {
+      this.map.setPaintProperty('clusters', 'circle-color', isDark ? '#20353b' : '#2c4a52');
+      this.map.setPaintProperty('clusters', 'circle-stroke-color', isDark ? 'rgba(139, 115, 85, 0.55)' : '#8B7355');
+    }
+
+    if (this.map.getLayer('cluster-count')) {
+      this.map.setPaintProperty('cluster-count', 'text-color', isDark ? '#f6f0e6' : '#ffffff');
+    }
+  }
+
   private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Radio de la Tierra en km
     const dLat = this.deg2rad(lat2 - lat1);
@@ -781,6 +1036,13 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       console.log('[CarsMapComponent] Geolocation tracking stopped');
     }
 
+    // Limpiar ResizeObserver
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+      console.log('[CarsMapComponent] ResizeObserver disconnected');
+    }
+
     // Limpiar realtime
     if (this.realtimeUnsubscribe) {
       this.realtimeUnsubscribe();
@@ -791,6 +1053,11 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
       this.refreshInterval = null;
+    }
+
+    if (this.themeChangeListener) {
+      window.removeEventListener('autorenta:theme-change', this.themeChangeListener as EventListener);
+      this.themeChangeListener = null;
     }
 
     // Limpiar mapa
@@ -824,7 +1091,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Volar a la ubicación con animación rápida
     this.map.flyTo({
       center: [location.lng, location.lat],
-      zoom: 14, // Zoom cercano para ver el auto
+      zoom: 15, // Aumentado de 14 a 15 - súper cerca del auto
       duration: 400, // 400ms = animación rápida y suave
       essential: true,
     });

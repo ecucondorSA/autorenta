@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface DateRange {
   from: string | null;
@@ -16,7 +17,7 @@ export interface DateRange {
 @Component({
   selector: 'app-date-range-picker',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './date-range-picker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

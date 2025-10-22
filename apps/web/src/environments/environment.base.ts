@@ -8,6 +8,7 @@ interface EnvDefaults {
   carLocationsCacheTtlMs?: number;
   carLocationsRefreshMs?: number;
   carLocationsEdgeFunction?: string;
+  backgroundRemovalModelUrl?: string;
 }
 
 const readEnv = (key: string): string | undefined => {
@@ -51,6 +52,11 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   carLocationsEdgeFunction: resolve(
     'NG_APP_CAR_LOCATIONS_EDGE_FUNCTION',
     defaults.carLocationsEdgeFunction,
+  ),
+  backgroundRemovalModelUrl: resolve(
+    'NG_APP_BACKGROUND_MODEL_URL',
+    defaults.backgroundRemovalModelUrl ??
+      'https://huggingface.co/briaai/RMBG-1.4/resolve/main/rmbg-1.4.onnx?download=1',
   ),
 });
 

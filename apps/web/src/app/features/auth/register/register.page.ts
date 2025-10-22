@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   standalone: true,
   selector: 'app-register-page',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, TranslateModule],
   templateUrl: './register.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -45,6 +46,26 @@ export class RegisterPage {
       console.error(err);
       this.error.set(err instanceof Error ? err.message : 'No pudimos registrar el usuario.');
     } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async signUpWithGoogle(): Promise<void> {
+    if (this.loading()) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+    this.message.set(null);
+
+    try {
+      await this.auth.signInWithGoogle();
+      // La redirección a Google ocurre automáticamente
+      // El callback manejará el retorno y creará el perfil si es necesario
+    } catch (err) {
+      console.error(err);
+      this.error.set(
+        err instanceof Error ? err.message : 'No pudimos conectar con Google. Intentá nuevamente.',
+      );
       this.loading.set(false);
     }
   }

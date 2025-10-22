@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { ReviewsService } from '../../../core/services/reviews.service';
 
 interface PendingReview {
@@ -14,7 +15,7 @@ interface PendingReview {
 @Component({
   selector: 'app-pending-reviews-banner',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './pending-reviews-banner.component.html',
   styleUrls: ['./pending-reviews-banner.component.css'],
 })

@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminService } from '@core/services/admin.service';
 import { WithdrawalRequest, WithdrawalStatus } from '@core/models';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface WithdrawalExportRow {
   fecha: string;
@@ -29,7 +30,7 @@ interface WithdrawalExportRow {
 @Component({
   selector: 'autorenta-admin-withdrawals-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, MoneyPipe],
+  imports: [CommonModule, FormsModule, MoneyPipe, TranslateModule],
   templateUrl: './admin-withdrawals.page.html',
   styleUrl: './admin-withdrawals.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

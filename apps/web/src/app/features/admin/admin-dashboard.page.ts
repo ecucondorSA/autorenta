@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../core/services/admin.service';
 import { CarsService } from '../../core/services/cars.service';
 import { ProfileService } from '../../core/services/profile.service';
@@ -21,7 +22,7 @@ interface DatabaseStats {
 @Component({
   standalone: true,
   selector: 'app-admin-dashboard-page',
-  imports: [CommonModule, CarCardComponent],
+  imports: [CommonModule, CarCardComponent, TranslateModule],
   templateUrl: './admin-dashboard.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

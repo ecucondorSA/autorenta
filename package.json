@@ -28,7 +28,12 @@
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.4.0",
-    "puppeteer": "^24.25.0"
+    "@playwright/test": "^1.56.1",
+    "@supabase/supabase-js": "^2.76.0",
+    "@types/uuid": "^10.0.0",
+    "playwright": "^1.56.1",
+    "puppeteer": "^24.25.0",
+    "uuid": "^13.0.0"
   },
   "autorenta": {
     "version": "0.1.0",

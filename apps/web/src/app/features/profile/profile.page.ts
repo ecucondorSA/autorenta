@@ -9,6 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import { WalletService } from '../../core/services/wallet.service';
@@ -17,11 +18,12 @@ import { UserProfile, Role, UserStats, Review } from '../../core/models';
 
 import { UserBadgesComponent } from '../../shared/components/user-badges/user-badges.component';
 import { ReviewCardComponent } from '../../shared/components/review-card/review-card.component';
+import { PwaCapabilitiesComponent } from '../../shared/components/pwa-capabilities/pwa-capabilities.component';
 
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, UserBadgesComponent, ReviewCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, UserBadgesComponent, ReviewCardComponent, PwaCapabilitiesComponent, TranslateModule],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -39,6 +41,15 @@ export class ProfilePage implements OnInit {
   readonly message = signal<string | null>(null);
   readonly error = signal<string | null>(null);
   readonly editMode = signal(false);
+  readonly copiedWAN = signal(false);
+
+  // Reviews and stats
+  readonly userStats = signal<UserStats | null>(null);
+  readonly reviewsAsOwner = signal<Review[]>([]);
+  readonly reviewsAsRenter = signal<Review[]>([]);
+  readonly reviewsLoading = signal(false);
+  readonly showAllReviewsOwner = signal(false);
+  readonly showAllReviewsRenter = signal(false);
 
   // Reviews and stats
   readonly userStats = signal<UserStats | null>(null);
@@ -61,6 +72,8 @@ export class ProfilePage implements OnInit {
 
   // Wallet state
   readonly availableBalance = this.walletService.availableBalance;
+  readonly withdrawableBalance = this.walletService.withdrawableBalance;
+  readonly protectedCreditBalance = this.walletService.nonWithdrawableBalance;
   readonly lockedBalance = this.walletService.lockedBalance;
   readonly totalBalance = this.walletService.totalBalance;
 
@@ -128,10 +141,12 @@ export class ProfilePage implements OnInit {
     this.error.set(null);
 
     try {
+      console.log('[ProfilePage] Loading profile...');
       const profile = await this.profileService.getCurrentProfile();
       this.profile.set(profile);
 
       if (profile) {
+        console.log('[ProfilePage] Profile loaded, patching form values...');
         this.form.patchValue({
           full_name: profile.full_name,
           role: profile.role,
@@ -149,8 +164,24 @@ export class ProfilePage implements OnInit {
         });
       }
     } catch (err) {
-      console.error('Error loading profile:', err);
-      const errorMessage = err instanceof Error ? err.message : 'No pudimos cargar tu perfil.';
+      console.error('[ProfilePage] Error loading profile:', err);
+
+      // Get detailed error message
+      let errorMessage = 'No pudimos cargar tu perfil.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'object' && err !== null) {
+        errorMessage = JSON.stringify(err);
+      }
+
+      // Provide more context based on error type
+      if (errorMessage.includes('Usuario no autenticado')) {
+        errorMessage = 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.';
+      } else if (errorMessage.includes('RLS Policy')) {
+        errorMessage = 'Error de permisos: ' + errorMessage;
+      }
+
+      console.error('[ProfilePage] Final error message:', errorMessage);
       this.error.set(errorMessage);
     } finally {
       this.loading.set(false);
@@ -317,5 +348,26 @@ export class ProfilePage implements OnInit {
 
   toggleShowAllRenterReviews(): void {
     this.showAllReviewsRenter.set(!this.showAllReviewsRenter());
+  }
+
+  /**
+   * Copia el Wallet Account Number al portapapeles
+   */
+  async copyWalletAccountNumber(): Promise<void> {
+    const wan = this.profile()?.wallet_account_number;
+    if (!wan) return;
+
+    try {
+      await navigator.clipboard.writeText(wan);
+      this.copiedWAN.set(true);
+
+      // Reset copied state after 2 seconds
+      setTimeout(() => {
+        this.copiedWAN.set(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      this.error.set('Error al copiar el número de cuenta');
+    }
   }
 }
