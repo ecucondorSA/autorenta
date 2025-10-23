@@ -73,7 +73,7 @@ WHERE status = 'active';
 -- Index for verification queries (using actual columns: kyc status and driver verification)
 CREATE INDEX IF NOT EXISTS idx_profiles_verification
 ON profiles(kyc, is_driver_verified, is_email_verified, updated_at DESC)
-WHERE kyc IN ('pending', 'in_review') OR is_driver_verified = false;
+WHERE kyc = 'pending' OR is_driver_verified = false;
 
 -- Index for admin queries (find users by role)
 CREATE INDEX IF NOT EXISTS idx_profiles_role_created
