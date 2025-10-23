@@ -32,7 +32,7 @@
       <!-- Success State (Payment URL Generated) -->
       <div *ngIf="paymentUrl()" class="text-center py-8" role="status" aria-live="polite">
         <div class="mb-4">
-          <svg class="w-16 h-16 text-emerald-500 dark:text-emerald-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="w-16 h-16 text-success-500 dark:text-success-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
@@ -147,10 +147,10 @@
           <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-labelledby="deposit-type-label">
             <!-- Withdrawable Option -->
             <div
-              class="deposit-type-option relative border rounded-xl p-4 cursor-pointer transition-all hover:border-emerald-500/40 hover:bg-emerald-50/50 dark:hover:bg-emerald-500/10"
-              [class.border-emerald-500]="depositType() === 'withdrawable'"
-              [class.bg-emerald-50]="depositType() === 'withdrawable'"
-              [class.dark:bg-emerald-500/15]="depositType() === 'withdrawable'"
+              class="deposit-type-option relative border rounded-xl p-4 cursor-pointer transition-all hover:border-success-500/40 hover:bg-success-50/50 dark:hover:bg-success-500/10"
+              [class.border-success-500]="depositType() === 'withdrawable'"
+              [class.bg-success-50]="depositType() === 'withdrawable'"
+              [class.dark:bg-success-500/15]="depositType() === 'withdrawable'"
               [class.border-pearl-gray/70]="depositType() !== 'withdrawable'"
               [class.dark:border-slate-deep]="depositType() !== 'withdrawable'"
               (click)="depositType.set('withdrawable')">
@@ -163,7 +163,7 @@
                     value="withdrawable"
                     [checked]="depositType() === 'withdrawable'"
                     (change)="depositType.set('withdrawable')"
-                    class="text-emerald-600 focus:ring-emerald-500 dark:bg-slate-deep dark:border-slate-deep"
+                    class="text-success-600 focus:ring-success-500 dark:bg-slate-deep dark:border-slate-deep"
                     [disabled]="isProcessing()" />
                   <label for="type-withdrawable" class="flex-1 font-semibold text-smoke-black dark:text-ivory-luminous cursor-pointer text-sm">
                     Retirable

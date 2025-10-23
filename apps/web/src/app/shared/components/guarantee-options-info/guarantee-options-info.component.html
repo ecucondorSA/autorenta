@@ -1,0 +1,75 @@
+<div class="rounded-2xl border border-accent-petrol/30 dark:border-accent-petrol/40 bg-gradient-to-br from-accent-petrol/15 via-white-pure to-white-pure dark:from-accent-petrol/20 dark:via-anthracite dark:to-anthracite shadow-soft p-6 space-y-4">
+  <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+    <div class="flex items-start gap-3 md:max-w-xl">
+      <svg class="w-6 h-6 text-accent-petrol dark:text-ivory-luminous mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <div class="flex-1 space-y-2">
+        <p class="text-xs uppercase tracking-wide text-accent-petrol font-semibold dark:text-pearl-light/70">Opciones para garantizar tu reserva</p>
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">Elegí cómo activar tu protección</h3>
+          <span
+            class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full"
+            [ngClass]="{
+              'bg-success-100 text-success-700': protectedCreditStatus === 'active',
+              'bg-warning-100 text-warning-800': protectedCreditStatus === 'partial',
+              'bg-sand-light text-charcoal-medium': protectedCreditStatus === 'pending'
+            }"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11V7m0 8h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <ng-container [ngSwitch]="protectedCreditStatus">
+              <ng-container *ngSwitchCase="'active'">Activo</ng-container>
+              <ng-container *ngSwitchCase="'partial'">En progreso</ng-container>
+              <ng-container *ngSwitchDefault>Pendiente</ng-container>
+            </ng-container>
+          </span>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-slate-deep p-4 space-y-2">
+            <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">1. Tarjeta de crédito</p>
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light/80 leading-relaxed">
+              Autorentar bloquea el monto de la garantía (USD 500-1000 según el vehículo) y se libera automáticamente al finalizar el viaje.
+            </p>
+            <p class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60">Requiere tarjeta internacional habilitada para compras online.</p>
+          </div>
+          <div class="rounded-xl border border-warning-300 bg-warning-50 dark:bg-warning-500/15 p-4 space-y-2">
+            <p class="text-sm font-semibold text-warning-800 dark:text-warning-100">2. Crédito Autorentar (USD 250)</p>
+            <p class="text-sm text-warning-800 dark:text-warning-100 leading-relaxed">
+              Deposita USD 250 una sola vez, úsalo como crédito protegido dentro de la plataforma y reserva sin tarjeta de crédito.
+            </p>
+            <p class="text-xs text-warning-700 dark:text-warning-100/80">
+              El crédito es no reembolsable en efectivo, pero se libera después de cada viaje para futuras reservas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col items-stretch gap-3">
+      <button
+        type="button"
+        (click)="openDepositModal.emit()"
+        class="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-petrol px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-accent-petrol/90 transition-base"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Configurar Crédito Autorentar
+      </button>
+      <div class="rounded-xl bg-white/70 dark:bg-slate-deep/70 border border-pearl-gray/60 dark:border-slate-deep px-3 py-2 text-xs text-charcoal-medium/80 dark:text-pearl-light/80">
+        <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Progreso crédito protegido</p>
+        <p class="mt-1 flex items-baseline gap-2 text-sm font-medium">
+          <span>USD {{ protectedCreditBalance / 100 | number:'1.2-2' }}</span>
+          <span class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60">meta USD {{ protectedCreditTarget / 100 | number:'1.0-0' }}</span>
+        </p>
+        <div class="mt-2 h-2 rounded-full bg-sand-light dark:bg-slate-deep/60 overflow-hidden">
+          <div
+            class="h-full rounded-full bg-accent-petrol transition-[width] duration-500"
+            [style.width.%]="protectedCreditProgress"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

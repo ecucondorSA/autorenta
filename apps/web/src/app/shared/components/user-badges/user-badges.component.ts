@@ -67,7 +67,7 @@ export class UserBadgesComponent {
         type: 'trusted_driver',
         label: 'Trusted Driver',
         icon: '🚗',
-        color: 'from-green-500 to-emerald-600',
+        color: 'from-green-500 to-success-600',
         description: '≥10 reservas, promedio ≥4.8⭐',
       });
     }

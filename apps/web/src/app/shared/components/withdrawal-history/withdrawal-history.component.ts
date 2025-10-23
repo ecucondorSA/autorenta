@@ -35,15 +35,15 @@ export class WithdrawalHistoryComponent {
 
   getStatusClass(status: WithdrawalStatus): string {
     const classes: Record<WithdrawalStatus, string> = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      approved: 'bg-blue-100 text-blue-800',
-      processing: 'bg-indigo-100 text-indigo-800',
-      completed: 'bg-green-100 text-green-800',
-      failed: 'bg-red-100 text-red-800',
-      rejected: 'bg-red-100 text-red-800',
-      cancelled: 'bg-gray-100 text-gray-800',
+      pending: 'bg-warning-100 text-warning-900',
+      approved: 'bg-info-100 text-info-900',
+      processing: 'bg-info-100 text-info-900',
+      completed: 'bg-success-100 text-success-900',
+      failed: 'bg-error-100 text-error-900',
+      rejected: 'bg-error-100 text-error-900',
+      cancelled: 'bg-neutral-100 text-neutral-900',
     };
-    return classes[status] || 'bg-gray-100 text-gray-800';
+    return classes[status] || 'bg-neutral-100 text-neutral-900';
   }
 
   getStatusIcon(status: WithdrawalStatus): string {

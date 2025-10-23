@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 import { BackgroundRemovalService } from '../../../core/services/background-removal.service';
+import { AiPhotoEnhancerService, EnhancedPhoto } from '../../../core/services/ai-photo-enhancer.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 
@@ -272,24 +273,46 @@ import { HostSupportInfoPanelComponent } from '../../../shared/components/host-s
               Fotos ({{ uploadedPhotos().length }}/10)
             </h2>
 
-            <div class="mb-4">
-              <label class="cursor-pointer bg-accent-petrol hover:bg-accent-petrol/90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
-                     [class.opacity-50]="isProcessingPhotos()"
-                     [class.cursor-not-allowed]="isProcessingPhotos()">
-                <span *ngIf="!isProcessingPhotos()">➕ Agregar Fotos</span>
-                <span *ngIf="isProcessingPhotos()" class="flex items-center gap-2">
-                  <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Procesando...
-                </span>
-                <input type="file" accept="image/*" multiple (change)="onPhotoSelected($event)" class="hidden" [disabled]="isProcessingPhotos()" />
-              </label>
-              <p class="mt-2 text-xs text-gray-500">
+            <div class="mb-4 space-y-3">
+              <!-- Botón principal: Agregar fotos manuales -->
+              <div class="flex flex-wrap gap-3">
+                <label class="cursor-pointer bg-accent-petrol hover:bg-accent-petrol/90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
+                       [class.opacity-50]="isProcessingPhotos()"
+                       [class.cursor-not-allowed]="isProcessingPhotos()">
+                  <span *ngIf="!isProcessingPhotos()">➕ Agregar Fotos</span>
+                  <span *ngIf="isProcessingPhotos()" class="flex items-center gap-2">
+                    <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Procesando...
+                  </span>
+                  <input type="file" accept="image/*" multiple (change)="onPhotoSelected($event)" class="hidden" [disabled]="isProcessingPhotos()" />
+                </label>
+
+                <!-- Botón secundario: Generar con IA -->
+                <button type="button" (click)="generateAIPhotos()"
+                        [disabled]="isGeneratingAIPhotos() || uploadedPhotos().length >= 10"
+                        class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
+                        [class.opacity-50]="isGeneratingAIPhotos()">
+                  <span *ngIf="!isGeneratingAIPhotos()">Generar fotos AutorentA</span>
+                  <span *ngIf="isGeneratingAIPhotos()" class="flex items-center gap-2">
+                    <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Generando con IA...
+                  </span>
+                </button>
+              </div>
+
+              <!-- Ayuda y tips -->
+              <p class="text-xs text-gray-500">
                 Mínimo 3 fotos, máximo 10. Primera foto será la portada.
                 <br>
                 <span class="text-accent-petrol dark:text-accent-warm font-medium">✨ Las fotos se procesarán automáticamente para remover el fondo</span>
+                <br>
+                <span class="text-purple-600 dark:text-pink-400 font-medium">🤖 O genera fotos profesionales con IA seleccionando primero marca y modelo</span>
               </p>
             </div>
 
@@ -386,6 +409,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly carsService: CarsService;
   private readonly geocodingService: GeocodingService;
   private readonly bgRemovalService = inject(BackgroundRemovalService);
+  private readonly aiPhotoEnhancer = inject(AiPhotoEnhancerService);
   private readonly router: Router;
   private readonly route: ActivatedRoute;
 
@@ -398,6 +422,7 @@ export class PublishCarV2Page implements OnInit {
   uploadedPhotos = signal<Array<{ file: File; preview: string }>>([]);
   isSubmitting = signal(false);
   isProcessingPhotos = signal(false);
+  isGeneratingAIPhotos = signal(false);
   autofilledFromLast = signal(false);
   editMode = signal(false);
   editingCarId = signal<string | null>(null);
@@ -660,6 +685,67 @@ export class PublishCarV2Page implements OnInit {
     this.uploadedPhotos.update((photos) => photos.filter((_, i) => i !== index));
   }
 
+  /**
+   * Genera fotos con IA usando stock photos + background removal
+   */
+  async generateAIPhotos(): Promise<void> {
+    // Validar que hay marca y modelo seleccionados
+    const brandId = this.publishForm.get('brand_id')?.value;
+    const modelId = this.publishForm.get('model_id')?.value;
+
+    if (!brandId || !modelId) {
+      alert('Por favor selecciona primero la marca y modelo del auto');
+      return;
+    }
+
+    // Obtener nombres de marca y modelo
+    const brand = this.brands().find(b => b.id === brandId);
+    const model = this.models().find(m => m.id === modelId);
+
+    if (!brand || !model) {
+      alert('Error al obtener la información del auto');
+      return;
+    }
+
+    this.isGeneratingAIPhotos.set(true);
+
+    try {
+      console.log('[AI Photos] Generating photos for:', brand.name, model.name);
+
+      const enhancedPhotos = await this.aiPhotoEnhancer.generateCarPhotos({
+        brand: brand.name,
+        model: model.name,
+        year: this.publishForm.get('year')?.value,
+        color: this.publishForm.get('color')?.value,
+        count: 3, // Generar 3 fotos
+        method: 'cloudflare-ai', // Usar Cloudflare AI en lugar de stock photos
+      });
+
+      console.log(`[AI Photos] ✅ Generated ${enhancedPhotos.length} photos`);
+
+      // Agregar las fotos generadas a la lista
+      for (const enhancedPhoto of enhancedPhotos) {
+        const file = new File([enhancedPhoto.enhanced], `ai-${brand.name}-${model.name}-${Date.now()}.png`, {
+          type: 'image/png',
+        });
+
+        this.uploadedPhotos.update((photos) => [
+          ...photos,
+          { file, preview: enhancedPhoto.preview },
+        ]);
+      }
+
+      alert(`✅ Se generaron ${enhancedPhotos.length} fotos con IA. Puedes agregar más o reemplazarlas.`);
+    } catch (error) {
+      console.error('[AI Photos] Error:', error);
+      alert(
+        'No pudimos generar las fotos con IA. Por favor, sube tus propias fotos o intenta de nuevo.'
+      );
+    } finally {
+      this.isGeneratingAIPhotos.set(false);
+    }
+  }
+
   useCurrentLocation(): void {
     if (!navigator.geolocation) {
       alert('Tu navegador no soporta geolocalización');
@@ -694,6 +780,7 @@ export class PublishCarV2Page implements OnInit {
             location_country: addressResult.countryCode || 'AR',
           });
 
+          alert('✅ Ubicación capturada y dirección autocompletada correctamente.');
           console.log('✅ Formulario autocompletado con dirección desde GPS');
         } catch (reverseGeoError) {
           console.warn('⚠️ Reverse geocoding failed:', reverseGeoError);
@@ -703,7 +790,24 @@ export class PublishCarV2Page implements OnInit {
       },
       (error) => {
         console.error('Error obteniendo ubicación:', error);
-        alert('No se pudo obtener tu ubicación. Asegúrate de dar permiso al navegador.');
+
+        let errorMessage = 'No se pudo obtener tu ubicación. ';
+
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage += 'Por favor permite el acceso a tu ubicación en la configuración del navegador.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage += 'La información de ubicación no está disponible en este momento.';
+            break;
+          case error.TIMEOUT:
+            errorMessage += 'La solicitud de ubicación tardó demasiado. Intenta nuevamente.';
+            break;
+          default:
+            errorMessage += 'Error desconocido. Por favor ingresa la dirección manualmente.';
+        }
+
+        alert(errorMessage);
       },
       {
         enableHighAccuracy: true,

@@ -14,6 +14,7 @@ import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/m
 import { WalletService } from '../../core/services/wallet.service';
 import { MetaService } from '../../core/services/meta.service';
 import { ProfileService } from '../../core/services/profile.service';
+import { ToastService } from '../../core/services/toast.service';
 
 /**
  * WalletPage
@@ -34,6 +35,9 @@ import { ProfileService } from '../../core/services/profile.service';
  *
  * Ruta: /wallet
  */
+import { GuaranteeOptionsInfoComponent } from '../../shared/components/guarantee-options-info/guarantee-options-info.component';
+import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
+
 @Component({
   selector: 'app-wallet',
   standalone: true,
@@ -45,7 +49,11 @@ import { ProfileService } from '../../core/services/profile.service';
     BankAccountFormComponent,
     BankAccountsListComponent,
     WithdrawalRequestFormComponent,
-    WithdrawalHistoryComponent, TranslateModule],
+    WithdrawalHistoryComponent, 
+    TranslateModule,
+    WalletAccountNumberCardComponent,
+    GuaranteeOptionsInfoComponent
+  ],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
 })
@@ -78,6 +86,7 @@ export class WalletPage implements AfterViewInit {
   private readonly walletService = inject(WalletService);
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
+  private readonly toastService = inject(ToastService);
 
   /**
    * Wallet Account Number del usuario actual
@@ -214,10 +223,10 @@ export class WalletPage implements AfterViewInit {
   async handleAddBankAccount(params: AddBankAccountParams): Promise<void> {
     try {
       await this.withdrawalService.addBankAccount(params);
-      alert('Cuenta bancaria agregada exitosamente');
+      this.toastService.success('Cuenta bancaria agregada exitosamente');
       this.setWithdrawalMode('form');
     } catch (error: any) {
-      alert('Error al agregar cuenta bancaria: ' + (error.message || 'Error desconocido'));
+      this.toastService.error('Error al agregar cuenta bancaria: ' + (error.message || 'Error desconocido'));
     }
   }
 
@@ -228,14 +237,14 @@ export class WalletPage implements AfterViewInit {
     try {
       const result = await this.withdrawalService.requestWithdrawal(params);
       if (result.success) {
-        alert(`Retiro solicitado exitosamente!\n\nMonto: $${params.amount}\nComisión: $${result.fee_amount}\nNeto: $${result.net_amount}`);
+        this.toastService.success(`Retiro solicitado exitosamente! Monto: $${params.amount}, Comisión: $${result.fee_amount}, Neto: $${result.net_amount}`);
         // Recargar historial
         await this.withdrawalService.getWithdrawalRequests();
       } else {
-        alert('Error: ' + result.message);
+        this.toastService.error('Error: ' + result.message);
       }
     } catch (error: any) {
-      alert('Error al solicitar retiro: ' + (error.message || 'Error desconocido'));
+      this.toastService.error('Error al solicitar retiro: ' + (error.message || 'Error desconocido'));
     }
   }
 
@@ -245,9 +254,9 @@ export class WalletPage implements AfterViewInit {
   async handleSetDefaultAccount(accountId: string): Promise<void> {
     try {
       await this.withdrawalService.setDefaultBankAccount(accountId);
-      alert('Cuenta establecida como predeterminada');
+      this.toastService.success('Cuenta establecida como predeterminada');
     } catch (error: any) {
-      alert('Error: ' + (error.message || 'Error desconocido'));
+      this.toastService.error('Error: ' + (error.message || 'Error desconocido'));
     }
   }
 
@@ -257,9 +266,9 @@ export class WalletPage implements AfterViewInit {
   async handleDeleteAccount(accountId: string): Promise<void> {
     try {
       await this.withdrawalService.deleteBankAccount(accountId);
-      alert('Cuenta eliminada exitosamente');
+      this.toastService.success('Cuenta eliminada exitosamente');
     } catch (error: any) {
-      alert('Error al eliminar cuenta: ' + (error.message || 'Error desconocido'));
+      this.toastService.error('Error al eliminar cuenta: ' + (error.message || 'Error desconocido'));
     }
   }
 
@@ -269,9 +278,9 @@ export class WalletPage implements AfterViewInit {
   async handleCancelWithdrawal(requestId: string): Promise<void> {
     try {
       await this.withdrawalService.cancelWithdrawalRequest(requestId);
-      alert('Solicitud de retiro cancelada');
+      this.toastService.success('Solicitud de retiro cancelada');
     } catch (error: any) {
-      alert('Error al cancelar: ' + (error.message || 'Error desconocido'));
+      this.toastService.error('Error al cancelar: ' + (error.message || 'Error desconocido'));
     }
   }
 
@@ -352,7 +361,7 @@ export class WalletPage implements AfterViewInit {
       }, 2000);
     } catch (error) {
       console.error('Error copying to clipboard:', error);
-      alert('Error al copiar el número de cuenta');
+      this.toastService.error('Error al copiar el número de cuenta');
     }
   }
 }

@@ -512,17 +512,17 @@
         </div>
 
         <!-- Wallet Balance Display -->
-        <div *ngIf="availableBalance() > 0" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+        <div *ngIf="availableBalance() > 0" class="mb-6 rounded-xl border border-success-200 bg-success-50 p-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <svg class="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-5 w-5 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
               </svg>
-              <span class="text-sm font-medium text-emerald-900">Tu Wallet</span>
+              <span class="text-sm font-medium text-success-900">Tu Wallet</span>
             </div>
-            <span class="text-lg font-bold text-emerald-700">${{ availableBalance() | number:'1.2-2' }}</span>
+            <span class="text-lg font-bold text-success-700">${{ availableBalance() | number:'1.2-2' }}</span>
           </div>
-          <p class="mt-2 text-xs text-emerald-700">
+          <p class="mt-2 text-xs text-success-700">
             Podés usar tu saldo para pagar esta reserva
           </p>
         </div>

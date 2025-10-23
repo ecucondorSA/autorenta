@@ -28,17 +28,6 @@ interface CarModel {
   category: string;
 }
 
-interface CarBrand {
-  id: string;
-  name: string;
-}
-
-interface CarModel {
-  id: string;
-  name: string;
-  category: string;
-}
-
 @Component({
   selector: 'autorenta-publish-car-page',
   standalone: true,
