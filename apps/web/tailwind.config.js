@@ -92,6 +92,47 @@ module.exports = {
         // Accents
         'accent-petrol': '#2C4A52',
         'accent-warm': '#8B7355',
+
+        // Semantic Colors (Success, Warning, Error, Info)
+        // Estos colores se usan para estados del sistema
+        success: {
+          50: '#d1fae5',
+          100: '#a7f3d0',
+          200: '#6ee7b7',
+          300: '#34d399',
+          400: '#10b981',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#065f46',
+          950: '#022c22',
+        },
+        warning: {
+          50: '#fef3c7',
+          100: '#fde68a',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#78350f',
+          900: '#92400e',
+        },
+        error: {
+          50: '#fee2e2',
+          100: '#fecaca',
+          500: '#ef4444',
+          600: '#dc2626',
+          700: '#b91c1c',
+          900: '#991b1b',
+        },
+        info: {
+          50: '#dbeafe',
+          100: '#bfdbfe',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          900: '#1e3a8a',
+        },
       },
 
       /* ─────────────────────────────────────────────────────────────
@@ -243,9 +284,7 @@ module.exports = {
         },
       },
 
-      /* ─────────────────────────────────────────────────────────────
-         Z-Index Scale
-         ───────────────────────────────────────────────────────────── */
+        'pattern': 'radial-gradient(circle, #8B7355 1px, transparent 1px)',
       zIndex: {
         dropdown: '1000',
         sticky: '1020',
@@ -253,7 +292,9 @@ module.exports = {
         'modal-backdrop': '1040',
         modal: '1050',
         popover: '1060',
-        tooltip: '1070',
+      },
+      backgroundImage: {
+        'pattern': 'radial-gradient(circle, #8B7355 1px, transparent 1px)',
       },
     },
   },

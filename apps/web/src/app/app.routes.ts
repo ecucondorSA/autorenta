@@ -75,6 +75,13 @@ export const routes: Routes = [
             (m) => m.CoverageFundDashboardComponent
           ),
       },
+      {
+        path: 'fgo',
+        loadComponent: () =>
+          import('./features/admin/fgo/fgo-overview.page').then(
+            (m) => m.FgoOverviewPage
+          ),
+      },
     ],
   },
   {

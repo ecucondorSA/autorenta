@@ -115,21 +115,5 @@
       ]
     }
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/home-desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Pantalla principal de búsqueda"
-    },
-    {
-      "src": "/screenshots/home-mobile.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Búsqueda móvil"
-    }
-  ],
   "prefer_related_applications": false
 }

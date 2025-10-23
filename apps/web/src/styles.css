@@ -323,6 +323,9 @@
     @apply border-2 border-pearl-gray hover:border-charcoal-medium;
     @apply hover:bg-sand-light active:scale-95;
     @apply focus-visible:ring-charcoal-medium;
+    @apply dark:bg-slate-deep dark:text-ivory-luminous;
+    @apply dark:border-charcoal-medium dark:hover:border-pearl-light;
+    @apply dark:hover:bg-anthracite;
   }
 
   .btn-accent {

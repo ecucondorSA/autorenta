@@ -100,19 +100,5 @@
       "type": "image/png",
       "purpose": "monochrome"
     }
-  ],
-  "screenshots": [
-    {
-      "src": "/assets/images/screenshot-mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/assets/images/screenshot-desktop.png",
-      "sizes": "1920x1080",
-      "type": "image/png",
-      "form_factor": "wide"
-    }
   ]
 }

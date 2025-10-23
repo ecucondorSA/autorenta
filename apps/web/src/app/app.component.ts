@@ -17,6 +17,7 @@ import { VerificationBadgeComponent } from './shared/components/verification-bad
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ import { HelpButtonComponent } from './shared/components/help-button/help-button
     VerificationBadgeComponent,
     LanguageSelectorComponent,
     HelpButtonComponent,
+    ToastComponent,
   ],
   templateUrl: './app.component.html',
   styles: [

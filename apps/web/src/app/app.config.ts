@@ -2,6 +2,7 @@ import { ApplicationConfig, LOCALE_ID, importProvidersFrom, isDevMode, provideZo
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withEnabledBlockingInitialNavigation()),
     provideHttpClient(withInterceptors([SupabaseAuthInterceptor])),
+    provideAnimationsAsync(),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
@@ -20,9 +22,7 @@ export const appConfig: ApplicationConfig = {
     SupabaseClientService.forRoot(),
     { provide: LOCALE_ID, useValue: 'es-AR' },
     importProvidersFrom(
-      TranslateModule.forRoot({
-        defaultLanguage: 'es',
-      })
+      TranslateModule.forRoot()
     ),
     provideTranslateHttpLoader({
       prefix: '/assets/i18n/',

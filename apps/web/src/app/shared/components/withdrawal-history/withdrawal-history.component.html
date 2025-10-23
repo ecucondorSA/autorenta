@@ -82,24 +82,24 @@
               }
 
               @if (request.rejection_reason) {
-                <div class="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                  <p class="text-xs text-red-800">
+                <div class="mt-2 p-2 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg">
+                  <p class="text-xs text-error-900 dark:text-error-100">
                     <strong>Motivo de rechazo:</strong> {{ request.rejection_reason }}
                   </p>
                 </div>
               }
 
               @if (request.failure_reason) {
-                <div class="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                  <p class="text-xs text-red-800">
+                <div class="mt-2 p-2 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg">
+                  <p class="text-xs text-error-900 dark:text-error-100">
                     <strong>Error:</strong> {{ request.failure_reason }}
                   </p>
                 </div>
               }
 
               @if (request.admin_notes) {
-                <div class="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p class="text-xs text-blue-800">
+                <div class="mt-2 p-2 bg-info-50 dark:bg-info-500/15 border border-info-500 dark:border-info-500/40 rounded-lg">
+                  <p class="text-xs text-info-900 dark:text-info-100">
                     <strong>Nota del admin:</strong> {{ request.admin_notes }}
                   </p>
                 </div>
@@ -123,7 +123,7 @@
             @if (canCancel(request)) {
               <button
                 (click)="onCancel(request.id)"
-                class="ml-4 px-3 py-1 text-sm border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition"
+                class="ml-4 px-3 py-1 text-sm border border-error-500 text-error-700 dark:text-error-100 rounded-lg hover:bg-error-50 dark:hover:bg-error-500/15 transition"
               >
                 Cancelar
               </button>

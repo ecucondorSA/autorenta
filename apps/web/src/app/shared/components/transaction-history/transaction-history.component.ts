@@ -200,36 +200,38 @@ export class TransactionHistoryComponent implements OnInit {
 
   /**
    * Obtiene el color del badge según el tipo de transacción
+   * Usa el sistema de colores semánticos de AutoRenta
    */
   getTypeColor(type: WalletTransactionType): string {
     const colors: Record<WalletTransactionType, string> = {
-      deposit: 'bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200',
-      withdrawal: 'bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-200',
-      lock: 'bg-yellow-100 text-yellow-800 dark:bg-amber-500/25 dark:text-amber-200',
-      unlock: 'bg-blue-100 text-blue-800 dark:bg-sky-500/20 dark:text-sky-200',
-      charge: 'bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-200',
-      refund: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-500/20 dark:text-indigo-200',
-      bonus: 'bg-pink-100 text-pink-800 dark:bg-pink-500/20 dark:text-pink-200',
-      rental_payment_lock: 'bg-orange-100 text-orange-800 dark:bg-orange-500/25 dark:text-orange-200',
-      rental_payment_transfer: 'bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-200',
-      security_deposit_lock: 'bg-amber-100 text-amber-800 dark:bg-amber-500/25 dark:text-amber-200',
-      security_deposit_release: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-200',
-      security_deposit_charge: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-200',
+      deposit: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      withdrawal: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      lock: 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
+      unlock: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      charge: 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
+      refund: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      bonus: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      rental_payment_lock: 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
+      rental_payment_transfer: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      security_deposit_lock: 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
+      security_deposit_release: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      security_deposit_charge: 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
     };
-    return colors[type] || 'bg-gray-100 text-gray-800 dark:bg-neutral-700/40 dark:text-neutral-200';
+    return colors[type] || 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700/40 dark:text-neutral-200';
   }
 
   /**
    * Obtiene el color del badge según el estado de la transacción
+   * Usa el sistema de colores semánticos de AutoRenta
    */
   getStatusColor(status: WalletTransactionStatus): string {
     const colors: Record<WalletTransactionStatus, string> = {
-      pending: 'bg-yellow-100 text-yellow-800 dark:bg-amber-500/25 dark:text-amber-200',
-      completed: 'bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200',
-      failed: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-200',
-      refunded: 'bg-gray-100 text-gray-800 dark:bg-neutral-700/40 dark:text-neutral-200',
+      pending: 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
+      completed: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      failed: 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
+      refunded: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700/40 dark:text-neutral-200',
     };
-    return colors[status] || 'bg-gray-100 text-gray-800 dark:bg-neutral-700/40 dark:text-neutral-200';
+    return colors[status] || 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700/40 dark:text-neutral-200';
   }
 
   /**

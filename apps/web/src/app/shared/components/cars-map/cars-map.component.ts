@@ -65,6 +65,17 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private resizeObserver: ResizeObserver | null = null; // Observer para cambios de tamaño
   private themeChangeListener: ((event: CustomEvent<{ dark: boolean }>) => void) | null = null;
 
+  // Performance optimizations
+  private moveEndDebounceTimeout: ReturnType<typeof setTimeout> | null = null;
+  private lastLocationUpdate: { lat: number; lng: number; timestamp: number } | null = null;
+  private readonly MIN_LOCATION_CHANGE_THRESHOLD = 0.0001; // ~10 metros
+  private readonly MIN_LOCATION_TIME_THRESHOLD = 5000; // 5 segundos
+  private pricingCache: Map<string, { price: number; pricePerHour: number | null; timestamp: number; surgeActive: boolean }> = new Map();
+  private readonly PRICING_CACHE_TTL = 30000; // 30 segundos
+  private cachedSortedLocations: CarMapLocation[] | null = null;
+  private lastSortLocation: { lat: number; lng: number } | null = null;
+  private layersCreated = false; // Track if layers have been created
+
   constructor() {
     // Efecto para limpiar recursos cuando el componente se destruye
     effect(() => {
@@ -256,10 +267,18 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         this.requestUserLocation();
       });
 
-      // Actualizar precios cuando el usuario mueve el mapa
+      // Actualizar precios cuando el usuario mueve el mapa (con debounce)
       this.map.on('moveend', () => {
-        console.log('[CarsMapComponent] Map moved, refreshing prices...');
-        void this.loadCarLocations(true);
+        // Cancelar timeout anterior
+        if (this.moveEndDebounceTimeout) {
+          clearTimeout(this.moveEndDebounceTimeout);
+        }
+
+        // Ejecutar solo después de 500ms de inactividad
+        this.moveEndDebounceTimeout = setTimeout(() => {
+          console.log('[CarsMapComponent] Map stable, refreshing prices...');
+          void this.loadCarLocations(true);
+        }, 500);
       });
 
       // Manejo de errores
@@ -385,6 +404,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   /**
    * Update markers with dynamic pricing from pricing service
    * Fetches batch prices and updates location data before rendering
+   * OPTIMIZED: Uses cache to reduce API calls
    */
   private async updateMarkersWithDynamicPricing(locations: CarMapLocation[]): Promise<void> {
     // Filter locations that have regionId
@@ -400,11 +420,53 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
     try {
-      // Fetch dynamic prices in batch
-      const prices = await this.pricingService.getBatchPrices(carsWithRegion);
-      console.log(`[CarsMapComponent] Fetched dynamic prices for ${prices.size} cars`);
+      const now = Date.now();
+      const prices = new Map<string, any>();
+      const carsNeedingFetch: Array<{ id: string; region_id: string }> = [];
 
-      // Update locations with dynamic pricing data
+      // OPTIMIZACIÓN: Verificar caché primero
+      for (const car of carsWithRegion) {
+        const cached = this.pricingCache.get(car.id);
+
+        // Si hay caché válido (no expirado), usarlo
+        if (cached && now - cached.timestamp < this.PRICING_CACHE_TTL) {
+          prices.set(car.id, {
+            price_per_day: cached.price,
+            price_per_hour: cached.pricePerHour,
+            surge_active: cached.surgeActive,
+          });
+        } else {
+          // Necesita fetch
+          carsNeedingFetch.push(car);
+        }
+      }
+
+      // Si hay autos que necesitan fetch, hacerlo
+      if (carsNeedingFetch.length > 0) {
+        console.log(
+          `[CarsMapComponent] Fetching prices for ${carsNeedingFetch.length} cars (${prices.size} from cache)`
+        );
+
+        const fetchedPrices = await this.pricingService.getBatchPrices(carsNeedingFetch);
+
+        // Actualizar caché y agregar a prices map
+        fetchedPrices.forEach((price, carId) => {
+          // Guardar en caché
+          this.pricingCache.set(carId, {
+            price: price.price_per_day,
+            pricePerHour: price.price_per_hour,
+            timestamp: now,
+            surgeActive: price.surge_active,
+          });
+
+          // Agregar a prices para uso inmediato
+          prices.set(carId, price);
+        });
+      } else {
+        console.log(`[CarsMapComponent] Using cached prices for all ${prices.size} cars`);
+      }
+
+      // Update locations with dynamic pricing data (cached + fetched)
       const updatedLocations = locations.map((loc) => {
         const dynamicPrice = prices.get(loc.carId);
         if (dynamicPrice) {
@@ -435,9 +497,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Guardar locations para uso posterior
     this.currentLocations = locations;
 
-    // Remover layers y source existentes si existen
-    this.removeCarLayers();
-
     // Crear GeoJSON source con los datos de los autos
     const geojsonData = {
       type: 'FeatureCollection' as const,
@@ -461,6 +520,19 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         },
       })),
     };
+
+    // OPTIMIZACIÓN: Si layers ya están creados, solo actualizar data
+    if (this.layersCreated && this.map.getSource('cars')) {
+      console.log('[CarsMapComponent] Updating existing source data (no layer recreation)');
+      (this.map.getSource('cars') as any).setData(geojsonData);
+      return; // No recrear layers
+    }
+
+    // Primera vez: Crear source y layers
+    console.log('[CarsMapComponent] Creating source and layers for first time');
+
+    // Remover layers existentes si existen (solo en caso de reinicialización)
+    this.removeCarLayers();
 
     // Agregar source
     if (this.map.getSource('cars')) {
@@ -552,6 +624,10 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     // Agregar interactividad
     this.setupLayerInteractions();
+
+    // Marcar layers como creados (optimization flag)
+    this.layersCreated = true;
+    console.log('[CarsMapComponent] Layers created and marked as initialized');
 
     if (isPlatformBrowser(this.platformId)) {
       const isDark = document.documentElement.classList.contains('dark');
@@ -828,6 +904,32 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
           console.warn('[CarsMapComponent] Low accuracy, waiting for better signal...', accuracy);
           return;
         }
+
+        // OPTIMIZACIÓN: Rate limiting de GPS updates
+        // Solo actualizar si el cambio es significativo o ha pasado suficiente tiempo
+        if (this.lastLocationUpdate) {
+          const latDiff = Math.abs(latitude - this.lastLocationUpdate.lat);
+          const lngDiff = Math.abs(longitude - this.lastLocationUpdate.lng);
+          const timeDiff = Date.now() - this.lastLocationUpdate.timestamp;
+
+          // Ignorar updates menores a ~10 metros o dentro de 5 segundos
+          if (
+            latDiff < this.MIN_LOCATION_CHANGE_THRESHOLD &&
+            lngDiff < this.MIN_LOCATION_CHANGE_THRESHOLD &&
+            timeDiff < this.MIN_LOCATION_TIME_THRESHOLD
+          ) {
+            console.log('[CarsMapComponent] GPS update ignored (too small or too soon):', {
+              latDiff,
+              lngDiff,
+              timeDiff: `${timeDiff}ms`,
+            });
+            return;
+          }
+        }
+
+        // Actualizar timestamp de última ubicación
+        this.lastLocationUpdate = { lat: latitude, lng: longitude, timestamp: Date.now() };
+        console.log('[CarsMapComponent] GPS update accepted, reloading locations...');
 
         // Validar que la ubicación esté dentro de Uruguay
         const isInUruguay = this.isLocationInUruguay(latitude, longitude);

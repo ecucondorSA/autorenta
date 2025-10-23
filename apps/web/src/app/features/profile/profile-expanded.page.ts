@@ -566,6 +566,31 @@ export class ProfileExpandedPage implements OnInit {
 
     if (!file) return;
 
+    // Client-side validation BEFORE upload
+    const allowedTypes = kind === 'vehicle_registration'
+      ? ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
+      : ['image/jpeg', 'image/jpg', 'image/png'];
+
+    const maxSizeMB = 5;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+    // Validate file type
+    if (!allowedTypes.includes(file.type)) {
+      const allowedFormats = allowedTypes
+        .map(type => type.split('/')[1].toUpperCase())
+        .join(', ');
+      this.error.set(`Formato no permitido. Solo se aceptan: ${allowedFormats}`);
+      input.value = '';
+      return;
+    }
+
+    // Validate file size
+    if (file.size > maxSizeBytes) {
+      this.error.set(`El archivo supera el tamaño máximo de ${maxSizeMB}MB`);
+      input.value = '';
+      return;
+    }
+
     this.uploadingDocument.set(true);
     this.error.set(null);
 
@@ -703,11 +728,25 @@ export class ProfileExpandedPage implements OnInit {
   /**
    * Detecta si el usuario está en un dispositivo móvil
    * Se usa para determinar si mostrar el atributo capture="environment"
+   * Usa detección más confiable basada en touch events
    */
   isMobileDevice(): boolean {
-    if (typeof navigator === 'undefined') {
+    if (typeof window === 'undefined') {
       return false;
     }
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // Detección más confiable: verificar soporte táctil
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
+  /**
+   * Determina si se debe usar el atributo capture para abrir la cámara
+   * Solo si estamos en móvil Y en HTTPS (requerido por navegadores)
+   */
+  shouldUseCapture(): boolean {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+    return this.isMobileDevice() &&
+           (window.location.protocol === 'https:' || window.location.hostname === 'localhost');
   }
 }

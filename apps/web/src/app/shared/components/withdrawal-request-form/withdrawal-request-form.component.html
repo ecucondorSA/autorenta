@@ -10,17 +10,17 @@
       </p>
     </div>
 
-    <div class="p-4 bg-emerald-50 dark:bg-emerald-500/15 rounded-xl border border-emerald-200 dark:border-emerald-400/40 transition-colors">
-      <p class="text-sm text-emerald-800 dark:text-emerald-200 mb-1">Disponible para retirar</p>
-      <p class="text-2xl font-bold text-emerald-700 dark:text-emerald-100">
+    <div class="p-4 bg-success-50 dark:bg-success-500/15 rounded-xl border border-success-500 dark:border-success-500/40 transition-colors">
+      <p class="text-sm text-success-900 dark:text-success-100 mb-1">Disponible para retirar</p>
+      <p class="text-2xl font-bold text-success-900 dark:text-success-100">
         ${{ withdrawableBalance | number:'1.2-2' }}
       </p>
     </div>
 
     @if (nonWithdrawableBalance > 0) {
-      <div class="md:col-span-2 p-4 bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/40 rounded-xl transition-colors">
-        <p class="text-sm font-semibold text-amber-800 dark:text-amber-200">Crédito Autorentar protegido</p>
-        <p class="text-xs text-amber-700 dark:text-amber-100/80 mt-1 leading-relaxed">
+      <div class="md:col-span-2 p-4 bg-warning-50 dark:bg-warning-500/15 border border-warning-500 dark:border-warning-500/40 rounded-xl transition-colors">
+        <p class="text-sm font-semibold text-warning-900 dark:text-warning-100">Crédito Autorentar protegido</p>
+        <p class="text-xs text-warning-900 dark:text-warning-100/80 mt-1 leading-relaxed">
           ${{ nonWithdrawableBalance | number:'1.2-2' }} deben permanecer en tu wallet para garantizar reservas y futuras locaciones. Este saldo no es reembolsable, pero puedes usarlo para alquilar vehículos o cubrir garantías.
         </p>
       </div>
@@ -28,9 +28,9 @@
   </div>
 
   @if (accounts.length === 0) {
-    <div class="text-center py-8 bg-yellow-50 rounded-xl border border-yellow-200">
-      <p class="text-yellow-800 font-semibold">⚠️ No tienes cuentas bancarias agregadas</p>
-      <p class="text-sm text-yellow-700 mt-1">Primero debes agregar una cuenta bancaria</p>
+    <div class="text-center py-8 bg-warning-50 dark:bg-warning-500/15 rounded-xl border border-warning-500 dark:border-warning-500/40">
+      <p class="text-warning-900 dark:text-warning-100 font-semibold">⚠️ No tienes cuentas bancarias agregadas</p>
+      <p class="text-sm text-warning-900 dark:text-warning-100 mt-1">Primero debes agregar una cuenta bancaria</p>
       <button
         (click)="onCancel()"
         class="mt-4 px-4 py-2 bg-accent-petrol text-white font-semibold rounded-xl hover:bg-accent-petrol/90 transition"
@@ -120,7 +120,7 @@
 
           <div class="border-t border-gray-300 pt-2 flex items-center justify-between">
             <span class="text-sm font-bold text-smoke-black dark:text-ivory-luminous">Recibirás en tu cuenta</span>
-            <span class="text-lg font-bold text-emerald-700 dark:text-emerald-200">
+            <span class="text-lg font-bold text-success-700 dark:text-success-200">
               ${{ netAmount() | number:'1.2-2' }}
             </span>
           </div>
@@ -134,11 +134,11 @@
 
           <!-- Advertencia de saldo insuficiente -->
           @if (!hasEnoughBalance()) {
-            <div class="mt-3 p-3 bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/40 rounded-lg transition-colors">
-              <p class="text-sm text-red-800 dark:text-red-200">
+            <div class="mt-3 p-3 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg transition-colors">
+              <p class="text-sm text-error-900 dark:text-error-100">
                 ⚠️ <strong>Saldo insuficiente</strong>
               </p>
-              <p class="text-xs text-red-700 dark:text-red-300 mt-1">
+              <p class="text-xs text-error-900 dark:text-error-100 mt-1">
                 Necesitas ${{ totalDebit() | number:'1.2-2' }} pero solo tienes ${{ withdrawableBalance | number:'1.2-2' }} disponibles para retiro
               </p>
             </div>

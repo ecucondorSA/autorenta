@@ -2,7 +2,7 @@
   <div class="container-page px-container">
     <!-- Page Header -->
     <div class="mb-8">
-      <h1 class="h1 mb-2">Mi Wallet</h1>
+      <h1 class="text-3xl font-bold mb-2">Mi Wallet</h1>
       <p class="text-body">
         Administra tus fondos, realiza depósitos y consulta tu historial de transacciones
       </p>
@@ -16,52 +16,11 @@
 
         <!-- Wallet Account Number Card -->
         @if (walletAccountNumber()) {
-          <div class="bg-gradient-to-br from-accent-petrol/10 to-white-pure dark:from-accent-petrol/20 dark:to-anthracite rounded-2xl shadow-soft dark:shadow-card border border-accent-petrol/20 dark:border-accent-petrol/30 p-6">
-            <div class="flex items-center gap-2 mb-3">
-              <svg class="w-5 h-5 text-accent-petrol dark:text-ivory-luminous" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-              </svg>
-              <h3 class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">Tu Número de Cuenta Wallet</h3>
-            </div>
-
-            <div class="bg-white-pure dark:bg-slate-deep rounded-xl p-4 mb-3 border border-pearl-gray/50 dark:border-slate-deep">
-              <p class="text-2xl font-mono font-bold text-accent-petrol dark:text-ivory-luminous tracking-wider text-center">
-                {{ walletAccountNumber() }}
-              </p>
-            </div>
-
-            <div class="flex gap-2">
-              <button
-                type="button"
-                (click)="copyWalletAccountNumber()"
-                [disabled]="copied()"
-                class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-base border-2"
-                [class.bg-emerald-50]="copied()"
-                [class.border-emerald-500]="copied()"
-                [class.text-emerald-700]="copied()"
-                [class.bg-accent-petrol]="!copied()"
-                [class.border-accent-petrol]="!copied()"
-                [class.text-white]="!copied()"
-                [class.hover\\:bg-accent-petrol\\/90]="!copied()"
-              >
-                @if (copied()) {
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>Copiado!</span>
-                } @else {
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                  </svg>
-                  <span>Copiar</span>
-                }
-              </button>
-            </div>
-
-            <p class="mt-3 text-xs text-charcoal-medium/70 dark:text-pearl-light/60 text-center">
-              Comparte este número para recibir transferencias de otros usuarios
-            </p>
-          </div>
+          <app-wallet-account-number-card
+          [walletAccountNumber]="walletAccountNumber()"
+          [copied]="copied()"
+          (copyWAN)="copyWalletAccountNumber()"
+        ></app-wallet-account-number-card>
         }
       </div>
 
@@ -69,81 +28,13 @@
       <div class="lg:col-span-2">
         <!-- Guarantee Options Info -->
         <div class="mb-6 space-y-4">
-          <div class="rounded-2xl border border-accent-petrol/30 dark:border-accent-petrol/40 bg-gradient-to-br from-accent-petrol/15 via-white-pure to-white-pure dark:from-accent-petrol/20 dark:via-anthracite dark:to-anthracite shadow-soft p-6 space-y-4">
-            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div class="flex items-start gap-3 md:max-w-xl">
-                <svg class="w-6 h-6 text-accent-petrol dark:text-ivory-luminous mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div class="flex-1 space-y-2">
-                  <p class="text-xs uppercase tracking-wide text-accent-petrol font-semibold dark:text-pearl-light/70">Opciones para garantizar tu reserva</p>
-                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-                    <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">Elegí cómo activar tu protección</h3>
-                    <span
-                      class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full"
-                      [ngClass]="{
-                        'bg-emerald-100 text-emerald-700': protectedCreditStatus() === 'active',
-                        'bg-amber-100 text-amber-800': protectedCreditStatus() === 'partial',
-                        'bg-sand-light text-charcoal-medium': protectedCreditStatus() === 'pending'
-                      }"
-                    >
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11V7m0 8h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                      @switch (protectedCreditStatus()) {
-                        @case ('active') { Activo }
-                        @case ('partial') { En progreso }
-                        @default { Pendiente }
-                      }
-                    </span>
-                  </div>
-                  <div class="grid gap-3 sm:grid-cols-2">
-                    <div class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-slate-deep p-4 space-y-2">
-                      <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">1. Tarjeta de crédito</p>
-                      <p class="text-sm text-charcoal-medium dark:text-pearl-light/80 leading-relaxed">
-                        Autorentar bloquea el monto de la garantía (USD 500-1000 según el vehículo) y se libera automáticamente al finalizar el viaje.
-                      </p>
-                      <p class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60">Requiere tarjeta internacional habilitada para compras online.</p>
-                    </div>
-                    <div class="rounded-xl border border-accent-warm/30 bg-amber-50 dark:bg-amber-500/15 p-4 space-y-2">
-                      <p class="text-sm font-semibold text-accent-warm dark:text-amber-100">2. Crédito Autorentar (USD 250)</p>
-                      <p class="text-sm text-amber-800 dark:text-amber-100 leading-relaxed">
-                        Deposita USD 250 una sola vez, úsalo como crédito protegido dentro de la plataforma y reserva sin tarjeta de crédito.
-                      </p>
-                      <p class="text-xs text-amber-700 dark:text-amber-100/80">
-                        El crédito es no reembolsable en efectivo, pero se libera después de cada viaje para futuras reservas.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="flex flex-col items-stretch gap-3">
-                <button
-                  type="button"
-                  (click)="openDepositModal()"
-                  class="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-petrol px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-accent-petrol/90 transition-base"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                  </svg>
-                  Configurar Crédito Autorentar
-                </button>
-                <div class="rounded-xl bg-white/70 dark:bg-slate-deep/70 border border-pearl-gray/60 dark:border-slate-deep px-3 py-2 text-xs text-charcoal-medium/80 dark:text-pearl-light/80">
-                  <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Progreso crédito protegido</p>
-                  <p class="mt-1 flex items-baseline gap-2 text-sm font-medium">
-                    <span>USD {{ protectedCreditBalance() / 100 | number:'1.2-2' }}</span>
-                    <span class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60">meta USD {{ protectedCreditTarget / 100 | number:'1.0-0' }}</span>
-                  </p>
-                  <div class="mt-2 h-2 rounded-full bg-sand-light dark:bg-slate-deep/60 overflow-hidden">
-                    <div
-                      class="h-full rounded-full bg-accent-petrol transition-[width] duration-500"
-                      [style.width.%]="protectedCreditProgress()"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <app-guarantee-options-info
+            [protectedCreditStatus]="protectedCreditStatus()"
+            [protectedCreditBalance]="protectedCreditBalance()"
+            [protectedCreditTarget]="protectedCreditTarget"
+            [protectedCreditProgress]="protectedCreditProgress()"
+            (openDepositModal)="openDepositModal()"
+          ></app-guarantee-options-info>
 
           <div class="info-card-warm">
             <div class="flex items-start gap-3">
@@ -151,7 +42,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <div class="space-y-2">
-                <h3 class="h6 mb-1">Crédito Autorentar (USD 250)</h3>
+                <h3 class="text-base font-semibold mb-1">Crédito Autorentar (USD 250)</h3>
                 <p class="text-caption leading-relaxed text-smoke-black dark:text-pearl-light/80">
                   Depósitalo una vez, úsalo para cubrir garantías y cargos dentro de la plataforma y mantenelo activo para reservar sin tarjeta.
                   Siempre lo verás como <strong>crédito protegido</strong>. No se devuelve en efectivo pero se libera para tu próximo viaje.
@@ -160,29 +51,29 @@
                   Podés sumar fondos extra (retirables) para completar pagos o solicitar retiros cuando lo necesites.
                 </p>
                 <div class="grid gap-3 sm:grid-cols-3">
-                  <div class="rounded-lg border border-accent-warm/30 bg-amber-50/60 dark:bg-amber-500/10 px-3 py-2">
+                  <div class="rounded-lg border border-warning-300 bg-warning-50/60 dark:bg-warning-500/10 px-3 py-2">
                     <div class="flex items-center gap-1.5 mb-1">
-                      <p class="text-xs uppercase tracking-wide text-accent-warm/90">Crédito protegido</p>
-                      <svg class="w-3.5 h-3.5 text-accent-warm/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="No retirable, no transferible. Solo para garantías.">
+<p class="text-xs uppercase tracking-wide text-warning-800/90">Crédito protegido</p>
+                      <svg class="w-3.5 h-3.5 text-warning-700/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="No retirable, no transferible. Solo para garantías.">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
                     </div>
-                    <p class="text-sm font-semibold text-smoke-black dark:text-amber-100">
+                    <p class="text-sm font-semibold text-smoke-black dark:text-warning-100">
                       USD {{ protectedCreditBalance() / 100 | number:'1.2-2' }}
                     </p>
-                    <p class="text-xs text-accent-warm/70 dark:text-amber-100/70 mt-1">Meta: USD 250</p>
+                    <p class="text-xs text-warning-700/70 dark:text-warning-100/70 mt-1">Meta: USD 250</p>
                   </div>
-                  <div class="rounded-lg border border-emerald-500/30 bg-emerald-50/60 dark:bg-emerald-500/10 px-3 py-2">
+                  <div class="rounded-lg border border-success-500/30 bg-success-50/60 dark:bg-success-500/10 px-3 py-2">
                     <div class="flex items-center gap-1.5 mb-1">
-                      <p class="text-xs uppercase tracking-wide text-emerald-700/90 dark:text-emerald-300/90">Transferible</p>
-                      <svg class="w-3.5 h-3.5 text-emerald-600/70 dark:text-emerald-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Usar en Autorentar o transferir a otros usuarios">
+                      <p class="text-xs uppercase tracking-wide text-success-700/90 dark:text-success-300/90">Transferible</p>
+                      <svg class="w-3.5 h-3.5 text-success-600/70 dark:text-success-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Usar en Autorentar o transferir a otros usuarios">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                       </svg>
                     </div>
-                    <p class="text-sm font-semibold text-smoke-black dark:text-emerald-100">
+                    <p class="text-sm font-semibold text-smoke-black dark:text-success-100">
                       USD {{ transferableBalance() / 100 | number:'1.2-2' }}
                     </p>
-                    <p class="text-xs text-emerald-700/70 dark:text-emerald-100/70 mt-1">In-app</p>
+                    <p class="text-xs text-success-700/70 dark:text-success-100/70 mt-1">In-app</p>
                   </div>
                   <div class="rounded-lg border border-pearl-gray/50 bg-white/70 dark:bg-slate-deep/70 px-3 py-2">
                     <div class="flex items-center gap-1.5 mb-1">
@@ -207,7 +98,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <div>
-                <h3 class="h6 mb-1">Beneficios</h3>
+                <h3 class="text-base font-semibold mb-1">Beneficios</h3>
                 <ul class="text-caption space-y-1">
                   <li>✓ Reservas sin necesidad de tarjeta corporativa o internacional.</li>
                   <li>✓ Procesos más rápidos en cada alquiler.</li>
@@ -224,7 +115,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
               </svg>
               <div class="space-y-2">
-                <h3 class="h6 mb-1">Seguridad</h3>
+                <h3 class="text-base font-semibold mb-1">Seguridad</h3>
                 <p class="text-caption leading-relaxed">
                   Tus fondos se administran con estándares bancarios, monitoreo en tiempo real y auditoría contable. Los saldos protegidos y retirables
                   se muestran en tu wallet para que sepas exactamente qué podés retirar y qué necesitas mantener para tus próximas reservas.
@@ -283,7 +174,7 @@
             <div class="p-6 space-y-6">
               <!-- Withdrawal Mode Toggle -->
               <div class="flex items-center justify-between mb-4">
-                <h2 class="h4">Gestión de Retiros</h2>
+                <h2 class="text-2xl font-bold">Gestión de Retiros</h2>
                 <div class="flex gap-2">
                   <button
                     type="button"
@@ -371,7 +262,7 @@
 
                   <!-- Add New Bank Account Form -->
                   <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
-                    <h3 class="h5 mb-4">Agregar Nueva Cuenta</h3>
+                    <h3 class="text-lg font-semibold mb-4">Agregar Nueva Cuenta</h3>
                     <app-bank-account-form
                       (submitAccount)="handleAddBankAccount($event)">
                     </app-bank-account-form>

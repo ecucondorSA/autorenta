@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { PwaService } from '../../../core/services/pwa.service';
 
 @Component({
@@ -9,6 +10,17 @@ import { PwaService } from '../../../core/services/pwa.service';
   imports: [CommonModule, TranslateModule],
   templateUrl: './pwa-install-prompt.component.html',
   styleUrl: './pwa-install-prompt.component.css',
+  animations: [
+    trigger('slideUp', [
+      transition(':enter', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class PwaInstallPromptComponent {
   readonly visible = signal(false);

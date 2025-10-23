@@ -29,6 +29,9 @@ export class LocaleManagerService {
     registerLocaleData(localePtBr, 'pt-BR');
     registerLocaleData(localeEn, 'en-US');
 
+    // Configurar idioma por defecto (fallback)
+    this.translateService.setDefaultLang('es');
+
     // Cargar idioma guardado o usar default
     const savedLang = this.getSavedLanguage();
     this.setLanguage(savedLang);

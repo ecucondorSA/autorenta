@@ -92,11 +92,11 @@ interface UserSearchResult {
 
             <!-- Selected Recipient -->
             @if (selectedRecipient()) {
-              <div class="mt-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-500 dark:border-emerald-700 rounded-xl">
+              <div class="mt-3 p-4 bg-success-50 dark:bg-success-900/20 border-2 border-success-500 dark:border-success-700 rounded-xl">
                 <div class="flex items-center justify-between">
                   <div class="flex-1">
                     <div class="flex items-center space-x-2 mb-2">
-                      <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                      <svg class="w-6 h-6 text-success-600 dark:text-success-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                       </svg>
                       <p class="font-bold text-smoke-black dark:text-ivory-luminous">
@@ -186,12 +186,12 @@ interface UserSearchResult {
 
           <!-- Success Message -->
           @if (success()) {
-            <div class="mb-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-500 dark:border-emerald-700 rounded-xl">
+            <div class="mb-4 p-4 bg-success-50 dark:bg-success-900/20 border-2 border-success-500 dark:border-success-700 rounded-xl">
               <div class="flex items-start gap-2">
-                <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5 text-success-600 dark:text-success-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
-                <p class="text-sm text-emerald-700 dark:text-emerald-200 font-semibold">
+                <p class="text-sm text-success-700 dark:text-success-200 font-semibold">
                   Transferencia exitosa: {{ formatAmount(lastTransferAmount()) }}
                 </p>
               </div>

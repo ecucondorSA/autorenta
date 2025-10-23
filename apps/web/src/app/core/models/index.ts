@@ -13,6 +13,9 @@ import type {
 // Re-export for backward compatibility
 export type Role = UserRole;
 
+// Export FGO models
+export * from './fgo.model';
+
 // Nuevos tipos para perfil expandido
 export type KycStatus = 'not_started' | 'pending' | 'verified' | 'rejected';
 export type OnboardingStatus = 'incomplete' | 'complete';
