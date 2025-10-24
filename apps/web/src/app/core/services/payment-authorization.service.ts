@@ -177,30 +177,119 @@ export class PaymentAuthorizationService {
   }
 
   /**
+   * Captura una preautorización (cobra los fondos retenidos)
+   * Llama al Edge Function mp-capture-preauth
+   */
+  captureAuthorization(
+    authorizedPaymentId: string,
+    amountArs?: number
+  ): Observable<{ ok: boolean; error?: string }> {
+    console.log('💰 Capturing preauthorization:', authorizedPaymentId);
+
+    return from(
+      (async () => {
+        // Obtener session token
+        const session = await this.authService.ensureSession();
+        if (!session?.access_token) {
+          throw new Error('No session token');
+        }
+
+        // Llamar Edge Function para capturar preauth
+        const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+        const response = await fetch(
+          `${supabaseUrl}/functions/v1/mp-capture-preauth`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              intent_id: authorizedPaymentId,
+              ...(amountArs ? { amount_ars: amountArs } : {}),
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Capture API error:', errorData);
+          throw new Error(errorData.error || 'Error al capturar preautorización');
+        }
+
+        const data = await response.json();
+        console.log('✅ Preauthorization captured:', data);
+
+        if (!data.success) {
+          throw new Error(data.error || 'Capture failed');
+        }
+
+        return { ok: true };
+      })()
+    ).pipe(
+      catchError((error) => {
+        console.error('❌ Error in captureAuthorization:', error);
+        return of({
+          ok: false,
+          error: error.message || 'Error desconocido al capturar',
+        });
+      })
+    );
+  }
+
+  /**
    * Cancela una preautorización (libera los fondos)
+   * Llama al Edge Function mp-cancel-preauth
    */
   cancelAuthorization(authorizedPaymentId: string): Observable<{ ok: boolean; error?: string }> {
-    // TODO: Implementar cancelación vía MP API
-    // Por ahora solo actualiza estado en DB
+    console.log('❌ Cancelling preauthorization:', authorizedPaymentId);
+
     return from(
-      this.supabaseClient
-        .from('payment_intents')
-        .update({
-          status: 'cancelled',
-          cancelled_at: new Date().toISOString(),
-        })
-        .eq('id', authorizedPaymentId)
-    ).pipe(
-      map((response) => {
-        if (response.error) {
-          console.error('Error cancelling authorization:', response.error);
-          return { ok: false, error: response.error.message };
+      (async () => {
+        // Obtener session token
+        const session = await this.authService.ensureSession();
+        if (!session?.access_token) {
+          throw new Error('No session token');
         }
+
+        // Llamar Edge Function para cancelar preauth
+        const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+        const response = await fetch(
+          `${supabaseUrl}/functions/v1/mp-cancel-preauth`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              intent_id: authorizedPaymentId,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Cancel API error:', errorData);
+          throw new Error(errorData.error || 'Error al cancelar preautorización');
+        }
+
+        const data = await response.json();
+        console.log('✅ Preauthorization cancelled:', data);
+
+        if (!data.success) {
+          throw new Error(data.error || 'Cancellation failed');
+        }
+
         return { ok: true };
-      }),
+      })()
+    ).pipe(
       catchError((error) => {
-        console.error('Error in cancelAuthorization:', error);
-        return of({ ok: false, error: error.message });
+        console.error('❌ Error in cancelAuthorization:', error);
+        return of({
+          ok: false,
+          error: error.message || 'Error desconocido al cancelar',
+        });
       })
     );
   }

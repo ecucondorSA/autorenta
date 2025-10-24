@@ -308,6 +308,190 @@ serve(async (req) => {
       );
     }
 
+    // ========================================
+    // MANEJAR PREAUTORIZACIONES (AUTHORIZED STATUS)
+    // ========================================
+
+    // Check if this is a preauthorization (status: authorized)
+    if (paymentData.status === 'authorized') {
+      console.log('Processing preauthorization (hold) webhook...');
+
+      // Find payment intent by mp_payment_id
+      const { data: intent, error: intentError } = await supabase
+        .from('payment_intents')
+        .select('*')
+        .eq('mp_payment_id', paymentId)
+        .single();
+
+      if (intentError || !intent) {
+        console.log('No payment intent found for authorized payment:', paymentId);
+        // This might be a regular authorized payment, not a preauth
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'Preauth webhook received but no intent found',
+            status: paymentData.status,
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      // Update payment intent with authorized status
+      const { error: updateError } = await supabase.rpc('update_payment_intent_status', {
+        p_mp_payment_id: paymentId,
+        p_mp_status: paymentData.status,
+        p_mp_status_detail: paymentData.status_detail,
+        p_payment_method_id: paymentData.payment_method_id,
+        p_card_last4: paymentData.card?.last_four_digits,
+        p_metadata: {
+          webhook_received_at: new Date().toISOString(),
+          mp_payment_data: paymentData,
+        },
+      });
+
+      if (updateError) {
+        console.error('Error updating preauth intent:', updateError);
+      } else {
+        console.log('✅ Preauthorization updated successfully');
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Preauthorization webhook processed',
+          intent_id: intent.id,
+          status: 'authorized',
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // ========================================
+    // MANEJAR CAPTURAS DE PREAUTH (APPROVED AFTER AUTHORIZED)
+    // ========================================
+
+    // Check if this is a captured preauth (status changed from authorized to approved)
+    const { data: capturedIntent, error: capturedIntentError } = await supabase
+      .from('payment_intents')
+      .select('*')
+      .eq('mp_payment_id', paymentId)
+      .eq('status', 'authorized')
+      .single();
+
+    if (!capturedIntentError && capturedIntent && paymentData.status === 'approved') {
+      console.log('Processing preauth capture webhook...');
+
+      // Update payment intent to captured
+      const { error: updateError } = await supabase.rpc('update_payment_intent_status', {
+        p_mp_payment_id: paymentId,
+        p_mp_status: 'approved',
+        p_mp_status_detail: paymentData.status_detail,
+        p_metadata: {
+          captured_via_webhook: true,
+          webhook_received_at: new Date().toISOString(),
+          mp_payment_data: paymentData,
+        },
+      });
+
+      if (updateError) {
+        console.error('Error updating captured preauth:', updateError);
+      }
+
+      // Call capture_preauth RPC to handle ledger entries
+      if (capturedIntent.booking_id) {
+        const { error: captureError } = await supabase.rpc('capture_preauth', {
+          p_intent_id: capturedIntent.id,
+          p_booking_id: capturedIntent.booking_id,
+        });
+
+        if (captureError) {
+          console.error('Error processing capture ledger:', captureError);
+        } else {
+          console.log('✅ Preauth captured and ledger updated');
+        }
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Preauth capture webhook processed',
+          intent_id: capturedIntent.id,
+          status: 'captured',
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // ========================================
+    // MANEJAR CANCELACIONES DE PREAUTH
+    // ========================================
+
+    if (paymentData.status === 'cancelled') {
+      console.log('Processing preauth cancellation webhook...');
+
+      // Find payment intent by mp_payment_id
+      const { data: cancelledIntent, error: cancelledIntentError } = await supabase
+        .from('payment_intents')
+        .select('*')
+        .eq('mp_payment_id', paymentId)
+        .single();
+
+      if (!cancelledIntentError && cancelledIntent) {
+        // Update payment intent to cancelled
+        const { error: updateError } = await supabase.rpc('update_payment_intent_status', {
+          p_mp_payment_id: paymentId,
+          p_mp_status: 'cancelled',
+          p_mp_status_detail: paymentData.status_detail,
+          p_metadata: {
+            cancelled_via_webhook: true,
+            webhook_received_at: new Date().toISOString(),
+            mp_payment_data: paymentData,
+          },
+        });
+
+        if (updateError) {
+          console.error('Error updating cancelled preauth:', updateError);
+        }
+
+        // Call cancel_preauth RPC to release any locked funds
+        const { error: cancelError } = await supabase.rpc('cancel_preauth', {
+          p_intent_id: cancelledIntent.id,
+        });
+
+        if (cancelError) {
+          console.error('Error processing cancellation:', cancelError);
+        } else {
+          console.log('✅ Preauth cancelled successfully');
+        }
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'Preauth cancellation webhook processed',
+            intent_id: cancelledIntent.id,
+            status: 'cancelled',
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+    }
+
+    // ========================================
+    // MANEJAR PAGOS REGULARES (NO PREAUTH)
+    // ========================================
+
     // Verificar que el pago esté aprobado
     if (paymentData.status !== 'approved') {
       console.log(`Payment not approved. Status: ${paymentData.status}`);
