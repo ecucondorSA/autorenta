@@ -146,4 +146,42 @@ export class MyBookingsPage implements OnInit {
         return 'ℹ️';
     }
   }
+
+  // Actions
+  completePay(bookingId: string): void {
+    console.log('Navigating to payment for booking:', bookingId);
+    // RouterLink handles navigation
+  }
+
+  cancelBooking(bookingId: string): void {
+    if (confirm('¿Estás seguro de cancelar esta reserva?')) {
+      console.log('Cancelling booking:', bookingId);
+      // TODO: Call booking service to cancel
+      // this.bookingsService.cancelBooking(bookingId).then(() => this.loadBookings());
+    }
+  }
+
+  showInstructions(booking: Booking): void {
+    console.log('Show instructions for:', booking.id);
+    const location = booking.car_city && booking.car_province 
+      ? `${booking.car_city}, ${booking.car_province}` 
+      : 'Ver en detalle';
+    // TODO: Open modal with instructions
+    alert(`📋 Instrucciones para ${booking.car_title}\n\n1. Documentos: DNI y Licencia\n2. Ubicación: ${location}\n3. Hora: ${booking.start_at}\n\n[En próxima actualización: Modal completo con checklist]`);
+  }
+
+  openChat(booking: Booking): void {
+    console.log('Open chat for:', booking.id);
+    // TODO: Open chat component
+    alert(`💬 Chat con anfitrión\n\n[En próxima actualización: Chat integrado]\n\nPor ahora, contacta al anfitrión desde el detalle de la reserva.`);
+  }
+
+  showMap(booking: Booking): void {
+    console.log('Show map for:', booking.id);
+    const location = booking.car_city && booking.car_province 
+      ? `${booking.car_city}, ${booking.car_province}` 
+      : 'No especificada';
+    // TODO: Open map modal
+    alert(`🗺️ Ubicación: ${location}\n\n[En próxima actualización: Mapa interactivo con navegación]`);
+  }
 }
