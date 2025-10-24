@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output, EventEmitter, computed, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Car } from '../../../core/models';
@@ -9,7 +9,7 @@ import { getCarImageUrl } from '../../utils/car-placeholder.util';
 @Component({
   selector: 'app-car-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, MoneyPipe, TranslateModule],
+  imports: [CommonModule, RouterLink, MoneyPipe, TranslateModule, NgOptimizedImage],
   templateUrl: './car-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

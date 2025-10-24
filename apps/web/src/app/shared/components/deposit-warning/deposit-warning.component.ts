@@ -45,9 +45,10 @@ import { TranslateModule } from '@ngx-translate/core';
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    Debes garantizar el <strong>monto del alquiler + depósito</strong>:
-                    $500 USD si pagás con tarjeta de crédito o $250 USD si usás la wallet de AutoRenta
-                    (Mercado Pago)
+                    Debes garantizar el <strong>monto del alquiler + depósito</strong> correspondiente al
+                    vehículo:
+                    <strong>entre USD 300 y USD 900</strong> si usás la wallet de AutoRenta (Mercado Pago) y
+                    <strong>entre USD 500 y USD 1.200</strong> si preferís tarjeta de crédito.
                   </span>
                 </li>
                 <li class="flex items-start">
@@ -60,8 +61,8 @@ import { TranslateModule } from '@ngx-translate/core';
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    La garantía se libera según el método elegido: se desbloquean $500 USD en tu tarjeta
-                    o vuelven $250 USD como saldo en tu wallet (no se deposita en tu cuenta bancaria)
+                    La garantía se libera según el método elegido: se desbloquea el hold de tu tarjeta o
+                    vuelve el saldo bloqueado a tu wallet (no se deposita en tu cuenta bancaria)
                   </span>
                 </li>
               </ul>
@@ -117,20 +118,21 @@ import { TranslateModule } from '@ngx-translate/core';
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    El propietario puede cobrar los daños <strong>de tu garantía</strong> (hasta el monto
-                    retenido: $500 USD con tarjeta o $250 USD con wallet)
+                    El propietario puede cobrar los daños <strong>del monto garantizado</strong> (hasta el
+                    depósito retenido según el vehículo y método de pago)
                   </span>
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    Si los daños son menores, recibes el <strong>resto en tu wallet o tu tarjeta</strong>
+                    Si los daños son menores, recibís el <strong>resto en tu wallet o en tu tarjeta</strong>
                   </span>
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    Ejemplo: Daño de $100 → Se liberan $400 si usaste tarjeta o $150 si usaste la wallet
+                    Ejemplo: si te cobran USD 100 por un daño menor, se libera el resto del depósito
+                    retenido cuando finaliza la reserva
                   </span>
                 </li>
               </ul>

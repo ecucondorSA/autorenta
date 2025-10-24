@@ -22,14 +22,15 @@
   </div>
 
   <!-- Bookings list -->
-  <div class="space-y-4 sm:space-y-6" *ngIf="!loading() && !error()">
+  <div class="bookings-grid" *ngIf="!loading() && !error()">
     <article
       *ngFor="let booking of bookings()"
-      class="card-premium overflow-hidden hover-lift shadow-soft"
+      class="card-premium overflow-hidden hover-lift shadow-soft booking-card"
+      [ngClass]="statusCardClass(booking)"
     >
       <a [routerLink]="['/bookings', booking.id]" class="block">
         <!-- Hero Section with Car Photo Background -->
-        <div class="relative h-48 sm:h-56 md:h-64 overflow-hidden">
+        <div class="relative h-32 sm:h-40 md:h-48 overflow-hidden">
           <!-- Car Image Background -->
           <div *ngIf="booking.main_photo_url; else defaultBookingHero" class="absolute inset-0">
             <img
@@ -59,15 +60,9 @@
             <div class="flex justify-between items-start">
               <span
                 class="badge-status text-white border-white/30 backdrop-blur-sm"
-                [ngClass]="{
-                  'badge-warning': booking.status === 'pending',
-                  'badge-success': booking.status === 'confirmed',
-                  'badge-info': booking.status === 'in_progress',
-                  'badge-neutral': booking.status === 'completed',
-                  'badge-danger': booking.status === 'cancelled' || booking.status === 'expired'
-                }"
+                [ngClass]="statusBadgeClass(booking)"
               >
-                {{ booking.status }}
+                {{ statusLabel(booking) }}
               </span>
             </div>
 
@@ -83,6 +78,14 @@
                 {{ rangeLabel(booking) }}
               </p>
             </div>
+          </div>
+        </div>
+
+        <div class="status-banner" [ngClass]="statusBannerClass(booking)">
+          <div class="status-banner__icon" aria-hidden="true">{{ statusIcon(booking) }}</div>
+          <div>
+            <p class="status-banner__title">{{ statusLabel(booking) }}</p>
+            <p *ngIf="statusHint(booking)" class="status-banner__hint">{{ statusHint(booking) }}</p>
           </div>
         </div>
 

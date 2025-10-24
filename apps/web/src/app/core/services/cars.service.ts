@@ -3,6 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { Car, CarFilters, CarPhoto } from '../models';
 import { injectSupabase } from './supabase-client.service';
 
+interface ImageOptimizeOptions {
+  maxWidth: number;
+  maxHeight: number;
+  quality: number;
+  format: 'webp' | 'jpeg';
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -21,7 +28,6 @@ export class CarsService {
       .single();
     if (error) throw error;
 
-    // Map car_photos to photos for backward compatibility
     return {
       ...data,
       photos: data.car_photos || []
@@ -31,16 +37,23 @@ export class CarsService {
   async uploadPhoto(file: File, carId: string, position = 0): Promise<CarPhoto> {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
     if (!userId) throw new Error('Usuario no autenticado');
-    const extension = file.name.split('.').pop() ?? 'jpg';
+
+    const optimizedFile = await this.optimizeImage(file, {
+      maxWidth: 1200,
+      maxHeight: 900,
+      quality: 0.85,
+      format: 'webp'
+    });
+
+    const extension = 'webp';
     const filePath = `${userId}/${carId}/${uuidv4()}.${extension}`;
-    const { error } = await this.supabase.storage.from('car-images').upload(filePath, file, {
+    const { error } = await this.supabase.storage.from('car-images').upload(filePath, optimizedFile, {
       cacheControl: '3600',
       upsert: false,
     });
     if (error) throw error;
     const { data } = this.supabase.storage.from('car-images').getPublicUrl(filePath);
 
-    // Crear registro en car_photos
     const photoId = uuidv4();
     const { data: photoData, error: photoError } = await this.supabase
       .from('car_photos')
@@ -57,6 +70,48 @@ export class CarsService {
 
     if (photoError) throw photoError;
     return photoData as CarPhoto;
+  }
+
+  private async optimizeImage(file: File, options: ImageOptimizeOptions): Promise<File> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
+
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > options.maxWidth) {
+          height = (height * options.maxWidth) / width;
+          width = options.maxWidth;
+        }
+
+        if (height > options.maxHeight) {
+          width = (width * options.maxHeight) / height;
+          height = options.maxHeight;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(new File([blob], file.name.replace(/\.[^/.]+$/, ".webp"), { type: 'image/webp' }));
+            } else {
+              reject(new Error('Failed to optimize image'));
+            }
+          },
+          'image/webp',
+          options.quality
+        );
+      };
+
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
   }
 
   async listActiveCars(filters: CarFilters): Promise<Car[]> {
@@ -85,8 +140,7 @@ export class CarsService {
     const { data, error } = await query;
     if (error) throw error;
 
-    // Map car_photos to photos and owner for backward compatibility
-    return (data ?? []).map(car => ({
+    return (data ?? []).map((car: any) => ({
       ...car,
       photos: car.car_photos || [],
       owner: Array.isArray(car.owner) ? car.owner[0] : car.owner
@@ -115,7 +169,6 @@ export class CarsService {
       throw error;
     }
 
-    // Map car_photos to photos for backward compatibility
     return {
       ...data,
       photos: data.car_photos || []
@@ -132,8 +185,7 @@ export class CarsService {
       .order('created_at', { ascending: false });
     if (error) throw error;
 
-    // Map car_photos to photos for backward compatibility
-    return (data ?? []).map(car => ({
+    return (data ?? []).map((car: any) => ({
       ...car,
       photos: car.car_photos || []
     })) as Car[];
@@ -164,7 +216,6 @@ export class CarsService {
 
     if (error) throw error;
 
-    // Map car_photos to photos for backward compatibility
     return {
       ...data,
       photos: data.car_photos || []
@@ -172,7 +223,6 @@ export class CarsService {
   }
 
   async listPendingCars(): Promise<Car[]> {
-    // Note: 'pending' status doesn't exist in DB. Using 'draft' for pending approval.
     const { data, error } = await this.supabase
       .from('cars')
       .select('*, car_photos(*)')
@@ -180,8 +230,7 @@ export class CarsService {
       .order('created_at', { ascending: false });
     if (error) throw error;
 
-    // Map car_photos to photos for backward compatibility
-    return (data ?? []).map(car => ({
+    return (data ?? []).map((car: any) => ({
       ...car,
       photos: car.car_photos || []
     })) as Car[];
@@ -234,9 +283,6 @@ export class CarsService {
     return data as Car;
   }
 
-  /**
-   * Obtiene todos los autos de un usuario específico (para perfiles públicos)
-   */
   async getCarsByOwner(ownerId: string): Promise<Car[]> {
     const { data, error } = await this.supabase
       .from('cars')

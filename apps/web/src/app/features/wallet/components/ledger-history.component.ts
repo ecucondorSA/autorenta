@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WalletLedgerService, LedgerEntry, LedgerKind } from '@app/core/services/wallet-ledger.service';
 import { injectSupabase } from '@app/core/services/supabase-client.service';
+import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
 
 @Component({
   selector: 'app-ledger-history',
@@ -139,6 +140,17 @@ import { injectSupabase } from '@app/core/services/supabase-client.service';
                       <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
                         {{ formatDate(entry.ts) }}
                       </p>
+
+                      <!-- 🆕 FGO v1.1: Aporte FGO (solo para depósitos) -->
+                      @if (entry.kind === 'deposit') {
+                        <div class="mt-2 inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20
+                                    border border-green-200 dark:border-green-800 rounded text-xs">
+                          <span class="mr-1">🛡️</span>
+                          <span class="text-green-800 dark:text-green-200 font-medium">
+                            Aporte FGO: {{ formatFgoContribution(entry) }}
+                          </span>
+                        </div>
+                      }
                     </div>
                   </div>
 
@@ -182,6 +194,7 @@ import { injectSupabase } from '@app/core/services/supabase-client.service';
 export class LedgerHistoryComponent implements OnInit, OnDestroy {
   readonly ledgerService = inject(WalletLedgerService);
   private readonly supabase = injectSupabase();
+  private readonly fgoService = inject(FgoV1_1Service); // 🆕 FGO v1.1
 
   // State
   readonly loading = this.ledgerService.loading;
@@ -282,5 +295,32 @@ export class LedgerHistoryComponent implements OnInit, OnDestroy {
   formatBalanceChange(cents: number): string {
     const sign = cents >= 0 ? '+' : '';
     return `${sign}${this.ledgerService.formatAmount(cents)}`;
+  }
+
+  /**
+   * 🆕 FGO v1.1: Formatea el aporte FGO de un depósito
+   *
+   * Calcula el aporte al FGO basado en el alpha actual.
+   * Por ahora usa alpha hardcoded (15%), pero en futuras versiones
+   * se puede obtener dinámicamente del FgoV1_1Service.
+   *
+   * @param entry - Entrada del ledger (debe ser un depósito)
+   * @returns String formateado con el aporte FGO
+   */
+  formatFgoContribution(entry: LedgerEntry): string {
+    if (entry.kind !== 'deposit') return '-';
+
+    // TODO: Obtener alpha dinámicamente desde FgoService
+    // const params = await this.fgoService.getParameters('AR', 'default');
+    // const alpha = params.alpha;
+
+    // Por ahora, usar alpha hardcoded (15%)
+    const alpha = 0.15;
+
+    // Calcular aporte al FGO (alpha% del depósito)
+    const contributionCents = Math.round(entry.amount_cents * alpha);
+    const contributionUsd = contributionCents / 100;
+
+    return `USD $${contributionUsd.toFixed(2)} (${(alpha * 100)}%)`;
   }
 }

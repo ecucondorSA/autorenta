@@ -14,6 +14,7 @@ export type Transmission = 'manual' | 'automatic';
 export type CancelPolicy = 'flex' | 'moderate' | 'strict';
 export type BookingStatus =
   | 'pending'
+  | 'pending_payment'
   | 'confirmed'
   | 'in_progress'
   | 'completed'

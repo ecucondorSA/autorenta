@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TourService } from '../../../core/services/tour.service';
+import { TourService, TourId } from '../../../core/services/tour.service';
 
 @Component({
   selector: 'app-help-button',
@@ -116,17 +116,25 @@ export class HelpButtonComponent {
   showTour(tourType: 'welcome' | 'renter' | 'owner'): void {
     this.closeMenu();
 
+    // Map string to TourId enum
+    const tourIdMap: Record<'welcome' | 'renter' | 'owner', TourId> = {
+      'welcome': TourId.Welcome,
+      'renter': TourId.Renter,
+      'owner': TourId.Owner,
+    };
+    const tourId = tourIdMap[tourType];
+
     // Navegar a la ruta correcta si es necesario
     if (tourType === 'renter' && !this.router.url.includes('/cars')) {
       this.router.navigate(['/cars']).then(() => {
-        setTimeout(() => this.tourService.restartTour('renter'), 500);
+        setTimeout(() => this.tourService.restartTour(tourId), 500);
       });
     } else if (tourType === 'owner' && !this.router.url.includes('/publish')) {
       this.router.navigate(['/cars/publish']).then(() => {
-        setTimeout(() => this.tourService.restartTour('owner'), 500);
+        setTimeout(() => this.tourService.restartTour(tourId), 500);
       });
     } else {
-      this.tourService.restartTour(tourType);
+      this.tourService.restartTour(tourId);
     }
   }
 }

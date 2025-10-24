@@ -65,8 +65,64 @@
         </div>
       </div>
 
+      <!-- Guarantees & FGO Summary -->
+      <section *ngIf="booking()" class="card-premium p-6 shadow-elevated fgo-card">
+        <div class="fgo-card__header">
+          <h3 class="h5">🛡️ Garantía y cobertura</h3>
+          <span class="fgo-card__badge">{{ fgoEventCapUsdDisplay() }}</span>
+        </div>
+
+        <div class="fgo-card__stat-grid">
+          <div class="fgo-card__stat">
+            <p class="fgo-card__stat-label">{{ securitySourceLabel() }}</p>
+            <p class="fgo-card__stat-value">{{ depositAmountUsdDisplay() }}</p>
+            <p class="fgo-card__stat-hint" *ngIf="depositAmountLocalDisplay()">
+              Equivalente: {{ depositAmountLocalDisplay() }}
+            </p>
+            <p class="fgo-card__stat-hint">{{ securitySourceDescription() }}</p>
+          </div>
+          <div class="fgo-card__stat">
+            <p class="fgo-card__stat-label">Franquicia estándar</p>
+            <p class="fgo-card__stat-value">{{ fgoEventCapUsdDisplay() }}</p>
+            <p class="fgo-card__stat-hint" *ngIf="fgoEventCapLocalDisplay()">
+              Equivalente: {{ fgoEventCapLocalDisplay() }}
+            </p>
+            <p class="fgo-card__stat-hint">
+              El FGO cubre el remanente hasta ese tope por evento si la documentación está completa.
+            </p>
+          </div>
+        </div>
+
+        <div class="fgo-waterfall">
+          <div class="fgo-step" *ngFor="let step of guaranteeWaterfallSteps(); let idx = index">
+            <span class="fgo-step__marker">{{ idx + 1 }}</span>
+            <div>
+              <p class="fgo-step__title">{{ step.label }}</p>
+              <p class="fgo-step__description">{{ step.description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="guaranteeCopy() as copy" class="fgo-copy mt-4 space-y-2">
+          <p class="font-semibold text-smoke-black">{{ copy.headline }}</p>
+          <ul class="list-disc list-inside text-sm text-charcoal-medium space-y-1">
+            <li *ngFor="let detail of copy.details">{{ detail }}</li>
+          </ul>
+          <div class="grid md:grid-cols-3 gap-3 mt-3">
+            <div *ngFor="let item of copy.summary" class="info-card text-xs">
+              <p class="font-semibold text-smoke-black">{{ item.label }}</p>
+              <p>{{ item.value }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fgo-card__hint">
+          El FGO se activa sólo si la reserva está verificada, se intenta el recupero y el fondo mantiene RC ≥ 1.0.
+        </div>
+      </section>
+
       <!-- Payment Method Selector -->
-      <div *ngIf="booking() as current" class="card-premium p-6 shadow-elevated">
+      <div *ngIf="booking() as current" class="card-premium p-6 shadow-elevated" id="tour-payment-section">
         <app-payment-method-selector
           [totalAmount]="current.total_amount"
           (paymentMethodChange)="onPaymentMethodChange($event)"
@@ -104,36 +160,6 @@
           </p>
         </div>
       </div>
-
-      <!-- Debug Section (Development Only) -->
-      <details class="card-premium p-4 shadow-soft">
-        <summary class="cursor-pointer text-sm font-medium text-charcoal-medium hover:text-smoke-black transition-base">
-          🔧 Opciones de Desarrollo (Click para expandir)
-        </summary>
-        <div class="mt-4 space-y-3">
-          <button
-            type="button"
-            class="btn-accent w-full text-sm disabled:opacity-50"
-            (click)="createIntent()"
-            [disabled]="loading() || !bookingId()"
-          >
-            {{ loading() ? 'Procesando...' : 'Generar intento de pago (Mock)' }}
-          </button>
-
-          <button
-            type="button"
-            class="btn-secondary w-full text-sm disabled:opacity-50"
-            (click)="simulatePayment()"
-            [disabled]="loading() || !intentId()"
-          >
-            Simular pago aprobado (Mock)
-          </button>
-
-          <div *ngIf="intentId()" class="info-card text-xs">
-            <p class="text-charcoal-medium"><strong class="text-smoke-black">Intent ID:</strong> {{ intentId() }}</p>
-          </div>
-        </div>
-      </details>
     </div>
   </div>
 </section>

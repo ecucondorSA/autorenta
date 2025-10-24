@@ -28,43 +28,6 @@
       Volver a mis reservas
     </button>
 
-    <!-- Mensaje de confirmación de reserva exitosa -->
-    <div *ngIf="booking()?.status === 'pending'" class="card-premium rounded-2xl border-2 border-accent-petrol/20 bg-gradient-to-r from-accent-petrol/5 to-accent-warm/5 dark:from-accent-petrol/10 dark:to-accent-warm/10 p-4 sm:p-6 shadow-soft mb-4">
-      <div class="flex items-start gap-4">
-        <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-accent-petrol">
-          <svg class="h-6 w-6 text-white-pure" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-          </svg>
-        </div>
-        <div class="flex-1">
-          <h3 class="text-xl font-bold text-smoke-black dark:text-white-pure mb-2">¡Reserva realizada exitosamente!</h3>
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-3">
-            Tu reserva ha sido creada y está pendiente de pago. Completá el pago para confirmarla.
-          </p>
-          <div class="rounded-lg bg-white-pure/80 dark:bg-charcoal-medium/40 border border-pearl-gray dark:border-white/20 p-3 space-y-2 text-sm">
-            <p class="flex items-center gap-2 text-charcoal-medium dark:text-pearl-light">
-              <svg class="h-5 w-5 text-accent-petrol dark:text-accent-warm flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-              </svg>
-              <span><strong class="text-smoke-black dark:text-white-pure">Métodos de pago:</strong> Mercado Pago, Tarjeta de crédito/débito</span>
-            </p>
-            <p class="flex items-center gap-2 text-charcoal-medium dark:text-pearl-light">
-              <svg class="h-5 w-5 text-accent-petrol dark:text-accent-warm flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-              </svg>
-              <span><strong class="text-smoke-black dark:text-white-pure">Pago seguro:</strong> Tus datos están protegidos</span>
-            </p>
-            <p class="flex items-start gap-2 text-charcoal-medium dark:text-pearl-light">
-              <svg class="h-5 w-5 text-accent-petrol dark:text-accent-warm flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <span><strong class="text-smoke-black dark:text-white-pure">Comisión del anfitrión:</strong> El 23% del monto total va destinado a la plataforma por cada reserva confirmada.</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Hero Section with Car Photo Background -->
     <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-2xl">
       <!-- Car Image Background -->
@@ -90,12 +53,7 @@
       <div class="relative h-full container-page px-4 sm:px-6 flex flex-col justify-between py-6 sm:py-8">
         <!-- Top: Status Badge -->
         <div class="flex justify-between items-start">
-          <span
-            class="badge-status text-white border-white/30 backdrop-blur-sm"
-            [ngClass]="statusClass()"
-          >
-            {{ statusLabel() }}
-          </span>
+          <app-booking-status [booking]="booking()!"></app-booking-status>
           <p class="text-xs sm:text-sm text-white/70 font-mono backdrop-blur-sm bg-smoke-black/30 px-3 py-1 rounded-lg">
             ID: {{ booking()?.id }}
           </p>
@@ -121,326 +79,123 @@
       </div>
     </div>
 
-    <!-- Dates Card -->
-    <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
-      <h3 class="h5 mb-4">📅 Fechas de la Reserva</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <p class="text-sm text-ash-gray">Inicio</p>
-          <p class="text-lg font-semibold text-smoke-black">{{ formatDateTime(booking()!.start_at) }}</p>
+    <div class="booking-detail-layout">
+      <section class="booking-detail-main">
+        <!-- Dates Card -->
+        <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft" id="tour-booking-dates">
+          <h3 class="h5 mb-4">📅 Fechas de la Reserva</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm text-ash-gray">Inicio</p>
+              <p class="text-lg font-semibold text-smoke-black">{{ formatDateTime(booking()!.start_at) }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-ash-gray">Fin</p>
+              <p class="text-lg font-semibold text-smoke-black">{{ formatDateTime(booking()!.end_at) }}</p>
+            </div>
+          </div>
+          <p class="mt-4 text-sm text-charcoal-medium" *ngIf="booking()?.days_count">
+            Duración: <strong class="text-smoke-black">{{ booking()?.days_count }} día<span *ngIf="booking()!.days_count! > 1">s</span></strong>
+          </p>
         </div>
-        <div>
-          <p class="text-sm text-ash-gray">Fin</p>
-          <p class="text-lg font-semibold text-smoke-black">{{ formatDateTime(booking()!.end_at) }}</p>
-        </div>
-      </div>
-      <p class="mt-4 text-sm text-charcoal-medium" *ngIf="booking()?.days_count">
-        Duración: <strong class="text-smoke-black">{{ booking()?.days_count }} día<span *ngIf="booking()!.days_count! > 1">s</span></strong>
-      </p>
-    </div>
 
-    <!-- Requirements Card - Solo para reservas confirmadas o en progreso -->
-    <div *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress'" class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-accent-petrol/20">
-      <div class="flex items-center gap-2 mb-4">
-        <svg class="w-6 h-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <h3 class="h5">Requisitos para el Retiro</h3>
-      </div>
+        <!-- Requirements Card - Solo para reservas confirmadas o en progreso -->
+        <div *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress'" class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-accent-petrol/20">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-6 h-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <h3 class="h5">Requisitos para el Retiro</h3>
+          </div>
 
-      <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
-        Asegurate de cumplir con estos requisitos el día del retiro del vehículo:
-      </p>
+          <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
+            Asegurate de cumplir con estos requisitos el día del retiro del vehículo:
+          </p>
 
-      <div class="space-y-3">
-        <!-- Edad mínima -->
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-          <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-          </svg>
-          <div class="flex-1">
-            <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Edad mínima: 21 años</p>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Deberás presentar tu DNI o pasaporte para verificar tu edad.</p>
+          <div class="space-y-3">
+            <!-- Edad mínima -->
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
+              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Edad mínima: 21 años</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Deberás presentar tu DNI o pasaporte para verificar tu edad.</p>
+              </div>
+            </div>
+
+            <!-- Licencia de conducir -->
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
+              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+              </svg>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Licencia de conducir válida</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Con antigüedad mínima de 1 año y vigente durante toda la reserva.</p>
+              </div>
+            </div>
+
+            <!-- Documento de identidad -->
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
+              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/>
+              </svg>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">DNI o Pasaporte</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Original y en vigencia. No se aceptan copias.</p>
+              </div>
+            </div>
+
+            <!-- Método de pago / Wallet -->
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
+              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Depósito de garantía pagado</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                  <span *ngIf="booking()?.payment_method === 'wallet'">✅ Pagado con Wallet ($250 USD bloqueados)</span>
+                  <span *ngIf="booking()?.payment_method !== 'wallet'">Tarjeta de crédito o efectivo en el momento del retiro.</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Verificación de identidad -->
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
+              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Perfil verificado</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Verificá tu identidad en tu perfil antes del retiro para agilizar el proceso.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nota importante -->
+          <div class="info-card-petrol p-4 mt-4">
+            <div class="flex items-start gap-2">
+              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <div class="text-sm text-charcoal-medium dark:text-pearl-light">
+                <p class="font-semibold text-smoke-black dark:text-white-pure mb-1">Importante</p>
+                <p>El anfitrión puede rechazar la entrega si no cumplís con todos los requisitos. Asegurate de tener todo listo antes de coordinar el retiro.</p>
+              </div>
+            </div>
           </div>
         </div>
+        <app-fgo-management [booking]="booking()!" [exchangeRate]="exchangeRate()"></app-fgo-management>
 
-        <!-- Licencia de conducir -->
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-          <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-          </svg>
-          <div class="flex-1">
-            <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Licencia de conducir válida</p>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Con antigüedad mínima de 1 año y vigente durante toda la reserva.</p>
-          </div>
-        </div>
+        <!-- Pricing Breakdown Card -->
+      </section>
 
-        <!-- Documento de identidad -->
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-          <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/>
-          </svg>
-          <div class="flex-1">
-            <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">DNI o Pasaporte</p>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Original y en vigencia. No se aceptan copias.</p>
-          </div>
-        </div>
-
-        <!-- Método de pago / Wallet -->
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-          <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-          </svg>
-          <div class="flex-1">
-            <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Depósito de garantía pagado</p>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
-              <span *ngIf="booking()?.payment_method === 'wallet'">✅ Pagado con Wallet ($250 USD bloqueados)</span>
-              <span *ngIf="booking()?.payment_method !== 'wallet'">Tarjeta de crédito o efectivo en el momento del retiro.</span>
-            </p>
-          </div>
-        </div>
-
-        <!-- Verificación de identidad -->
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-          <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-          </svg>
-          <div class="flex-1">
-            <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Perfil verificado</p>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Verificá tu identidad en tu perfil antes del retiro para agilizar el proceso.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Nota importante -->
-      <div class="info-card-petrol p-4 mt-4">
-        <div class="flex items-start gap-2">
-          <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <div class="text-sm text-charcoal-medium dark:text-pearl-light">
-            <p class="font-semibold text-smoke-black dark:text-white-pure mb-1">Importante</p>
-            <p>El anfitrión puede rechazar la entrega si no cumplís con todos los requisitos. Asegurate de tener todo listo antes de coordinar el retiro.</p>
-          </div>
-        </div>
-      </div>
+      <aside class="booking-detail-side">
+        <app-payment-actions [booking]="booking()!" [timeRemaining]="timeRemaining()"></app-payment-actions>
+      </aside>
     </div>
 
-    <!-- Pricing Breakdown Card -->
-    <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="h5">💰 Desglose del Precio</h3>
-      </div>
-
-      <!-- Breakdown -->
-      <div class="space-y-3 mb-4" *ngIf="booking()?.breakdown">
-        <!-- Base Rate -->
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-charcoal-medium">
-            Tarifa base
-            <span *ngIf="booking()?.breakdown?.days && booking()?.breakdown?.nightly_rate_cents">
-              ({{ formatCurrency(booking()!.breakdown!.nightly_rate_cents, booking()!.currency) }} × {{ booking()?.breakdown?.days }} días)
-            </span>
-          </span>
-          <span class="font-semibold" *ngIf="booking()?.breakdown?.subtotal_cents">
-            {{ formatCurrency(booking()!.breakdown!.subtotal_cents, booking()!.currency) }}
-          </span>
-        </div>
-
-        <!-- Insurance -->
-        <div
-          class="flex items-center justify-between text-sm"
-          *ngIf="booking()?.breakdown?.insurance_cents && (booking()?.breakdown?.insurance_cents ?? 0) > 0"
-        >
-          <span class="text-charcoal-medium">Seguro</span>
-          <span class="font-semibold text-smoke-black">
-            {{ formatCurrency(booking()?.breakdown?.insurance_cents ?? 0, booking()!.currency) }}
-          </span>
-        </div>
-
-        <!-- Fees -->
-        <div
-          class="flex items-center justify-between text-sm"
-          *ngIf="booking()?.breakdown?.fees_cents && (booking()?.breakdown?.fees_cents ?? 0) > 0"
-        >
-          <span class="text-charcoal-medium">Comisión de servicio</span>
-          <span class="font-semibold">
-            {{ formatCurrency(booking()?.breakdown?.fees_cents ?? 0, booking()!.currency) }}
-          </span>
-        </div>
-
-        <!-- Discounts -->
-        <div
-          class="flex items-center justify-between text-sm"
-          *ngIf="booking()?.breakdown?.discounts_cents && (booking()?.breakdown?.discounts_cents ?? 0) > 0"
-        >
-          <span class="text-green-600">Descuento</span>
-          <span class="font-semibold text-green-600">
-            -{{ formatCurrency(booking()?.breakdown?.discounts_cents ?? 0, booking()!.currency) }}
-          </span>
-        </div>
-
-        <!-- Deposit -->
-        <div
-          class="flex items-center justify-between text-sm border-t border-pearl-gray pt-3"
-          *ngIf="booking()?.breakdown?.deposit_cents && (booking()?.breakdown?.deposit_cents ?? 0) > 0"
-        >
-          <div>
-            <span class="text-smoke-black font-semibold">Depósito de garantía</span>
-            <p class="text-xs text-ash-gray mt-1">Se devolverá al finalizar el alquiler</p>
-          </div>
-          <span class="font-semibold text-smoke-black">
-            {{ formatCurrency(booking()?.breakdown?.deposit_cents ?? 0, booking()!.currency) }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Total -->
-      <div class="border-t border-pearl-gray pt-4 flex items-center justify-between">
-        <span class="text-lg font-bold text-smoke-black">Total</span>
-        <span class="text-2xl font-bold text-accent-petrol" *ngIf="booking()?.breakdown?.total_cents">
-          {{ formatCurrency(booking()!.breakdown!.total_cents, booking()!.currency) }}
-        </span>
-      </div>
-
-      <!-- Expiration Warning (pending bookings only) -->
-      <div
-        *ngIf="booking()?.status === 'pending' && timeRemaining()"
-        class="info-card-warm mt-4 p-4"
-      >
-        <p class="text-sm font-semibold text-accent-warm">
-          ⏱️ Vence en: {{ timeRemaining() }}
-        </p>
-        <p class="text-xs text-charcoal-medium mt-1">
-          Completá el pago antes de que expire la reserva.
-        </p>
-      </div>
-
-      <!-- Expired Warning -->
-      <div
-        *ngIf="isExpired()"
-        class="info-card-warm mt-4 p-4"
-      >
-        <p class="text-sm font-semibold text-accent-warm">
-          ❌ Esta reserva ha expirado. El pago no fue completado a tiempo.
-        </p>
-      </div>
-
-      <!-- Payment Status (confirmed bookings) -->
-      <div
-        *ngIf="booking()?.status === 'confirmed' && booking()?.paid_at"
-        class="info-card-petrol mt-4 p-4"
-      >
-        <p class="text-sm font-semibold text-accent-petrol">
-          ✅ Pago confirmado el {{ formatDateTime(booking()!.paid_at!) }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
-      <h3 class="h5 mb-4">Acciones</h3>
-
-      <!-- Pending Actions -->
-      <div *ngIf="showPaymentActions()" class="flex flex-col sm:flex-row gap-3">
-        <button
-          (click)="handlePayNow()"
-          class="btn-primary flex-1 px-6 py-3 font-semibold shadow-soft"
-        >
-          💳 Pagar ahora
-        </button>
-        <button
-          (click)="handleCancel()"
-          class="btn-secondary flex-1 px-6 py-3 font-semibold"
-        >
-          ❌ Cancelar reserva
-        </button>
-      </div>
-
-      <!-- Confirmed Actions -->
-      <div *ngIf="showConfirmedActions()" class="flex flex-col sm:flex-row gap-3">
-        <button
-          class="btn-primary flex-1 px-6 py-3 font-semibold shadow-soft"
-        >
-          📄 Ver comprobante
-        </button>
-      </div>
-
-      <!-- Completed Actions -->
-      <div *ngIf="showCompletedActions()" class="flex flex-col sm:flex-row gap-3">
-        <button
-          *ngIf="canReview() && !existingReview()"
-          (click)="handleShowReviewForm()"
-          class="btn-primary flex-1 px-6 py-3 font-semibold shadow-soft"
-        >
-          ⭐ Dejar reseña
-        </button>
-        <button
-          *ngIf="existingReview()"
-          class="info-card-petrol flex-1 px-6 py-3 font-semibold cursor-default text-center"
-          disabled
-        >
-          ✅ Ya calificaste esta reserva
-        </button>
-        <button
-          class="btn-secondary flex-1 px-6 py-3 font-semibold"
-        >
-          📄 Ver factura
-        </button>
-      </div>
-
-      <!-- No Actions Available -->
-      <p
-        *ngIf="!showPaymentActions() && !showConfirmedActions() && !showCompletedActions()"
-        class="text-charcoal-medium text-sm"
-      >
-        No hay acciones disponibles para esta reserva.
-      </p>
-    </div>
-
-    <!-- Cancellation Info (if cancelled) -->
-    <div *ngIf="booking()?.status === 'cancelled' && booking()?.cancellation_reason" class="info-card-warm p-4 sm:p-6 rounded-xl">
-      <h3 class="h5 text-accent-warm mb-2">❌ Reserva Cancelada</h3>
-      <p class="text-sm text-charcoal-medium">
-        <strong class="text-smoke-black">Motivo:</strong> {{ booking()?.cancellation_reason }}
-      </p>
-      <p class="text-xs text-ash-gray mt-2" *ngIf="booking()?.cancelled_at">
-        Cancelada el {{ formatDateTime(booking()!.cancelled_at!) }}
-      </p>
-    </div>
-
-    <!-- Review Form Modal -->
-    <div *ngIf="showReviewForm() && reviewData()" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div class="my-8">
-        <app-review-form
-          [bookingId]="booking()!.id"
-          [revieweeId]="reviewData()!.revieweeId"
-          [carId]="reviewData()!.carId"
-          [reviewType]="reviewData()!.reviewType"
-          [revieweeName]="reviewData()!.revieweeName"
-          [carTitle]="reviewData()!.carTitle"
-          (submitReview)="handleSubmitReview($event)"
-          (cancelReview)="handleCancelReview()"
-        ></app-review-form>
-      </div>
-    </div>
-
-    <!-- Existing Review Display -->
-    <div *ngIf="existingReview() && !showReviewForm()" class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
-      <h3 class="h5 mb-4">📝 Tu Calificación</h3>
-      <div class="info-card-warm p-4 mb-4">
-        <p class="text-sm font-semibold text-accent-warm">
-          ⏳ Review pendiente de publicación
-        </p>
-        <p class="text-xs text-charcoal-medium mt-1">
-          Se publicará cuando ambas partes hayan calificado, o después de 14 días.
-        </p>
-      </div>
-      <app-review-card
-        [review]="existingReview()!"
-        [showCarTitle]="false"
-      ></app-review-card>
-    </div>
+    <app-review-management [booking]="booking()!"></app-review-management>
 
     <!-- Bilateral Confirmation Section -->
     <div *ngIf="showConfirmationSection()" class="space-y-4">
@@ -471,7 +226,7 @@
     </div>
 
     <!-- Chat Section - Visible for confirmed, in_progress bookings -->
-    <div *ngIf="(booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'pending' || showConfirmationSection()) && carOwnerId()">
+    <div *ngIf="(booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'pending' || showConfirmationSection()) && carOwnerId()" id="tour-booking-chat">
       <app-booking-chat
         [bookingId]="booking()!.id"
         [recipientId]="carOwnerId()!"

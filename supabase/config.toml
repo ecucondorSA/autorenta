@@ -5,3 +5,11 @@ verify_jwt = false
 [functions.mercadopago-create-preference]
 # This one needs JWT verification (user must be authenticated)
 verify_jwt = true
+
+[functions.sync-binance-rates]
+# Disable JWT verification (called by pg_cron internally)
+verify_jwt = false
+
+[functions.mp-create-preauth]
+# Requires JWT verification (user must be authenticated)
+verify_jwt = true

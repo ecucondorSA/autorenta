@@ -1,0 +1,250 @@
+<div class="claim-form">
+  <!-- Header -->
+  <div class="header">
+    <h2>Reportar Daños</h2>
+    <button class="close-btn" (click)="cancel()" [disabled]="creating()">
+      ✕
+    </button>
+  </div>
+
+  <!-- Error message -->
+  @if (error()) {
+    <div class="error-message">
+      ⚠️ {{ error() }}
+    </div>
+  }
+
+  <!-- Intro message -->
+  <div class="intro">
+    <p>
+      Reportá los daños encontrados después del check-out. Incluí fotos claras y una descripción detallada de cada daño para agilizar el procesamiento.
+    </p>
+  </div>
+
+  <!-- Damages list -->
+  <div class="damages-section">
+    <h3>Daños Reportados ({{ damageCount() }})</h3>
+
+    @for (damage of damages(); track $index; let i = $index) {
+      <div class="damage-card">
+        <!-- Card header -->
+        <div class="damage-header">
+          <span class="damage-number">Daño #{{ i + 1 }}</span>
+          @if (damages().length > 1) {
+            <button
+              class="remove-damage-btn"
+              (click)="removeDamage(i)"
+              [disabled]="creating()"
+              title="Eliminar daño"
+            >
+              🗑️ Eliminar
+            </button>
+          }
+        </div>
+
+        <!-- Type selection -->
+        <div class="form-group">
+          <label [for]="'type-' + i">Tipo de Daño</label>
+          <select
+            [id]="'type-' + i"
+            [(ngModel)]="damage.type"
+            (change)="autoEstimateCost(i)"
+            [disabled]="creating()"
+          >
+            @for (type of damageTypes; track type.value) {
+              <option [value]="type.value">{{ type.label }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label [for]="'description-' + i">Descripción</label>
+          <textarea
+            [id]="'description-' + i"
+            [(ngModel)]="damage.description"
+            rows="2"
+            placeholder="Ej: Rayón de 10cm en puerta trasera derecha, color plateado visible..."
+            [disabled]="creating()"
+          ></textarea>
+          @if (!damage.description.trim()) {
+            <span class="field-hint error">⚠️ La descripción es requerida</span>
+          }
+        </div>
+
+        <!-- Severity -->
+        <div class="form-group">
+          <label [for]="'severity-' + i">Severidad</label>
+          <div class="severity-options">
+            @for (option of severityOptions; track option.value) {
+              <label class="radio-option" [class.selected]="damage.severity === option.value">
+                <input
+                  type="radio"
+                  [name]="'severity-' + i"
+                  [value]="option.value"
+                  [(ngModel)]="damage.severity"
+                  (change)="autoEstimateCost(i)"
+                  [disabled]="creating()"
+                />
+                <div class="radio-label">
+                  <strong>{{ option.label }}</strong>
+                  <small>{{ option.hint }}</small>
+                </div>
+              </label>
+            }
+          </div>
+        </div>
+
+        <!-- Estimated cost -->
+        <div class="form-group">
+          <label [for]="'cost-' + i">Costo Estimado (USD)</label>
+          <div class="cost-input-wrapper">
+            <span class="currency-symbol">$</span>
+            <input
+              [id]="'cost-' + i"
+              type="number"
+              [(ngModel)]="damage.estimatedCostUsd"
+              min="0"
+              step="10"
+              placeholder="0"
+              [disabled]="creating()"
+            />
+            <button
+              class="auto-estimate-btn"
+              (click)="autoEstimateCost(i)"
+              [disabled]="creating()"
+              title="Calcular estimación automática"
+            >
+              🔄 Auto
+            </button>
+          </div>
+          @if (damage.estimatedCostUsd <= 0) {
+            <span class="field-hint error">⚠️ Ingrese el costo estimado</span>
+          } @else {
+            <span class="field-hint">
+              Costo sugerido: ${{ estimateCost(damage.type, damage.severity) }}
+            </span>
+          }
+        </div>
+
+        <!-- Photos (optional) -->
+        <div class="form-group">
+          <label [for]="'photos-' + i">Fotos de Evidencia (opcional)</label>
+          <div class="photo-upload-wrapper">
+            <label [for]="'photos-' + i" class="upload-photo-btn">
+              📷 Subir Fotos
+            </label>
+            <input
+              [id]="'photos-' + i"
+              type="file"
+              multiple
+              accept="image/*"
+              (change)="onPhotosSelected($event, i)"
+              [disabled]="creating()"
+            />
+          </div>
+
+          @if (damage.photos.length > 0) {
+            <div class="photo-preview">
+              @for (photo of damage.photos; track photo; let photoIdx = $index) {
+                <div class="photo-thumb">
+                  <img [src]="photo" alt="Evidencia" />
+                  <button
+                    class="remove-photo"
+                    (click)="removePhoto(i, photoIdx)"
+                    [disabled]="creating()"
+                  >
+                    ✕
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Add damage button -->
+    <button
+      class="add-damage-btn"
+      (click)="addDamage()"
+      [disabled]="creating()"
+    >
+      ➕ Agregar Otro Daño
+    </button>
+  </div>
+
+  <!-- Notes section -->
+  <div class="notes-section">
+    <h3>Observaciones Generales (opcional)</h3>
+    <textarea
+      [(ngModel)]="notes"
+      rows="3"
+      placeholder="Ej: El locatario mencionó que el rayón ocurrió en un estacionamiento. Se adjuntan fotos del vehículo completo..."
+      [disabled]="creating()"
+    ></textarea>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-section">
+    <h3>Resumen del Claim</h3>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <span class="label">Total de daños:</span>
+        <span class="value">{{ damageCount() }}</span>
+      </div>
+      <div class="summary-item highlight">
+        <span class="label">Costo total estimado:</span>
+        <span class="value total">USD ${{ totalCost().toFixed(2) }}</span>
+      </div>
+    </div>
+
+    @if (!isValid()) {
+      <div class="validation-warning">
+        <strong>⚠️ Completá todos los campos requeridos:</strong>
+        <ul>
+          @for (damage of damages(); track $index; let i = $index) {
+            @if (!damage.description.trim() || damage.estimatedCostUsd <= 0) {
+              <li>
+                Daño #{{ i + 1 }}:
+                @if (!damage.description.trim()) {
+                  <span>falta descripción</span>
+                }
+                @if (!damage.description.trim() && damage.estimatedCostUsd <= 0) {
+                  <span>, </span>
+                }
+                @if (damage.estimatedCostUsd <= 0) {
+                  <span>falta costo estimado</span>
+                }
+              </li>
+            }
+          }
+        </ul>
+      </div>
+    }
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button
+      class="btn btn-secondary"
+      (click)="cancel()"
+      [disabled]="creating()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      class="btn btn-primary"
+      (click)="submit()"
+      [disabled]="!isValid() || creating()"
+    >
+      @if (creating()) {
+        <span class="spinner"></span>
+        Creando Claim...
+      } @else {
+        📋 Crear Claim
+      }
+    </button>
+  </div>
+</div>

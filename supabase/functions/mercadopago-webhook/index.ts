@@ -324,10 +324,10 @@ serve(async (req) => {
       );
     }
 
-    // Obtener transaction_id del external_reference
-    const transaction_id = paymentData.external_reference;
+    // Obtener reference del external_reference (puede ser booking_id o transaction_id)
+    const reference_id = paymentData.external_reference;
 
-    if (!transaction_id) {
+    if (!reference_id) {
       console.error('Missing external_reference in payment data');
       throw new Error('Missing external_reference');
     }
@@ -335,18 +335,87 @@ serve(async (req) => {
     // Crear cliente de Supabase
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // Verificar que la transacción existe y está pendiente
+    // ========================================
+    // DETERMINAR TIPO DE PAGO: BOOKING O WALLET DEPOSIT
+    // ========================================
+
+    // Primero verificar si es un booking
+    const { data: booking, error: bookingError } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('id', reference_id)
+      .single();
+
+    // Si es un booking, procesar pago de booking
+    if (booking && !bookingError) {
+      console.log('Processing booking payment:', reference_id);
+
+      // Verificar que el booking esté pendiente de pago
+      if (booking.status !== 'pending') {
+        console.log(`Booking is not pending (status: ${booking.status}), ignoring webhook`);
+        return new Response(
+          JSON.stringify({ success: true, message: 'Booking already processed' }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      // Actualizar booking a confirmado
+      const { error: updateError } = await supabase
+        .from('bookings')
+        .update({
+          status: 'confirmed',
+          paid_at: new Date().toISOString(),
+          payment_method: 'credit_card',
+          metadata: {
+            ...(booking.metadata || {}),
+            mercadopago_payment_id: paymentData.id,
+            mercadopago_status: paymentData.status,
+            mercadopago_payment_method: paymentData.payment_method_id,
+            mercadopago_amount: paymentData.transaction_amount,
+            mercadopago_currency: paymentData.currency_id,
+            mercadopago_approved_at: paymentData.date_approved,
+          },
+        })
+        .eq('id', reference_id);
+
+      if (updateError) {
+        console.error('Error updating booking:', updateError);
+        throw updateError;
+      }
+
+      console.log('✅ Booking payment confirmed successfully:', reference_id);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Booking payment processed successfully',
+          booking_id: reference_id,
+          payment_id: paymentData.id,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Si no es un booking, verificar si es un wallet deposit
     const { data: transaction, error: txError } = await supabase
       .from('wallet_transactions')
       .select('*')
-      .eq('id', transaction_id)
+      .eq('id', reference_id)
       .eq('type', 'deposit')
       .single();
 
     if (txError || !transaction) {
-      console.error('Transaction not found:', transaction_id);
-      throw new Error('Transaction not found');
+      console.error('Neither booking nor wallet transaction found:', reference_id);
+      throw new Error('Reference not found - not a booking or wallet deposit');
     }
+
+    console.log('Processing wallet deposit:', reference_id);
 
     // Si la transacción ya fue completada, ignorar (idempotencia)
     if (transaction.status === 'completed') {

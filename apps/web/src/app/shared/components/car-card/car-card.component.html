@@ -7,12 +7,11 @@
     <!-- Imagen real del auto -->
     <img
       *ngIf="displayImage()"
-      [src]="displayImage()!.url"
+      [ngSrc]="displayImage()!.url"
       [alt]="displayImage()!.alt"
-      loading="lazy"
-      decoding="async"
       width="400"
       height="300"
+      priority="false"
       class="absolute inset-0 w-full h-full object-cover transition-slow group-hover:scale-105"
     />
 
