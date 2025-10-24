@@ -66,8 +66,18 @@ serve(async (req) => {
 
     console.log('Creating preauth for intent:', intent_id);
 
+    // TEST MODE: Reducir monto si es muy alto para evitar rechazos
+    const isTestMode = MERCADOPAGO_ACCESS_TOKEN.startsWith('TEST-');
+    const MAX_SAFE_TEST_AMOUNT = 10000; // $10,000 ARS máximo en TEST
+
+    let finalAmountArs = amount_ars;
+    if (isTestMode && amount_ars > MAX_SAFE_TEST_AMOUNT) {
+      console.warn(`⚠️ TEST MODE: Reducing amount from ${amount_ars} to ${MAX_SAFE_TEST_AMOUNT} ARS to avoid high_risk rejection`);
+      finalAmountArs = MAX_SAFE_TEST_AMOUNT;
+    }
+
     // Validate required fields
-    if (!intent_id || !user_id || !amount_ars || !card_token || !payer_email) {
+    if (!intent_id || !user_id || !finalAmountArs || !card_token || !payer_email) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -111,7 +121,7 @@ serve(async (req) => {
 
     // Crear preautorización en Mercado Pago con capture=false
     const mpPayload = {
-      transaction_amount: Number(amount_ars.toFixed(2)),
+      transaction_amount: Number(finalAmountArs.toFixed(2)),
       token: card_token,
       description: description,
       installments: 1,
