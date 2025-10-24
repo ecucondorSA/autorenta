@@ -6,6 +6,7 @@ import {
   PaymentAuthorization,
   AuthorizePaymentResult,
 } from '../models/booking-detail-payment.model';
+import { environment } from '@environment';
 
 /**
  * Servicio para gestionar preautorizaciones de pago con Mercado Pago
@@ -17,6 +18,67 @@ import {
 export class PaymentAuthorizationService {
   private supabaseClient = inject(SupabaseClientService).getClient();
   private authService = inject(AuthService);
+
+  /**
+   * MercadoPago TEST sandbox limita montos a ~$100,000 ARS
+   * Rechaza montos mayores con cc_rejected_high_risk
+   */
+  private readonly MP_TEST_MAX_AMOUNT_ARS = 10000;
+
+  /**
+   * Mensajes de error en español para códigos de rechazo de MercadoPago
+   * @see https://www.mercadopago.com.ar/developers/es/docs/checkout-api/response-handling/collection-results
+   */
+  private readonly MP_ERROR_MESSAGES: Record<string, string> = {
+    // Rechazos por la tarjeta
+    'cc_rejected_high_risk': 'Tu pago fue rechazado por políticas de seguridad. Intenta con otra tarjeta o contacta a tu banco.',
+    'cc_rejected_insufficient_amount': 'Tu tarjeta no tiene fondos suficientes. Intenta con otra tarjeta.',
+    'cc_rejected_bad_filled_card_number': 'Revisa el número de tu tarjeta e intenta nuevamente.',
+    'cc_rejected_bad_filled_security_code': 'El código de seguridad (CVV) es incorrecto. Verifica e intenta nuevamente.',
+    'cc_rejected_bad_filled_date': 'La fecha de vencimiento es incorrecta. Verifica e intenta nuevamente.',
+    'cc_rejected_bad_filled_other': 'Revisa los datos de tu tarjeta e intenta nuevamente.',
+    'cc_rejected_call_for_authorize': 'Debes autorizar este pago con tu banco. Contacta a tu entidad bancaria.',
+    'cc_rejected_card_disabled': 'Tu tarjeta está deshabilitada. Contacta a tu banco o intenta con otra tarjeta.',
+    'cc_rejected_duplicated_payment': 'Ya realizaste un pago similar recientemente.',
+    'cc_rejected_invalid_installments': 'El plan de cuotas seleccionado no está disponible para esta tarjeta.',
+    'cc_rejected_max_attempts': 'Alcanzaste el límite de intentos. Intenta con otra tarjeta.',
+    'cc_rejected_blacklist': 'No pudimos procesar tu pago. Intenta con otra tarjeta.',
+    'cc_rejected_card_error': 'No pudimos procesar tu tarjeta. Intenta nuevamente o usa otra tarjeta.',
+    
+    // Errores del comercio
+    'cc_amount_rate_limit_exceeded': 'Excediste el límite de monto. Intenta con un monto menor.',
+    
+    // Errores de fraude
+    'cc_rejected_fraud': 'Tu pago fue rechazado por razones de seguridad.',
+    
+    // Otros
+    'rejected_other_reason': 'Tu pago fue rechazado. Intenta nuevamente o contacta a tu banco.',
+  };
+
+  /**
+   * Obtiene un mensaje de error amigable para el usuario
+   */
+  private getErrorMessage(statusDetail?: string): string {
+    if (!statusDetail) {
+      return 'No pudimos procesar tu pago. Por favor, intenta nuevamente.';
+    }
+    
+    return this.MP_ERROR_MESSAGES[statusDetail] 
+      || `Tu pago fue rechazado (${statusDetail}). Intenta con otra tarjeta o contacta a tu banco.`;
+  }
+
+  /**
+   * Ajusta el monto para testing si excede el límite del sandbox
+   */
+  private getTestSafeAmount(amountArs: number): number {
+    if (!environment.production && amountArs > this.MP_TEST_MAX_AMOUNT_ARS) {
+      console.warn(
+        `💡 [TEST MODE] Monto reducido de $${amountArs} ARS a $${this.MP_TEST_MAX_AMOUNT_ARS} ARS para evitar rechazo por alto riesgo en sandbox`
+      );
+      return this.MP_TEST_MAX_AMOUNT_ARS;
+    }
+    return amountArs;
+  }
 
   /**
    * Crea una preautorización (hold) con Mercado Pago
@@ -43,10 +105,20 @@ export class PaymentAuthorizationService {
       bookingId,
     } = params;
 
+    // Ajustar monto para TEST mode si es necesario
+    const safeAmountArs = this.getTestSafeAmount(amountArs);
+    const safeAmountUsd = safeAmountArs !== amountArs 
+      ? safeAmountArs / fxRate 
+      : amountUsd;
+
     console.log('💳 Creating payment authorization...', {
-      amountUsd,
-      amountArs,
+      amountUsd: safeAmountUsd,
+      amountArs: safeAmountArs,
       bookingId,
+      ...(safeAmountArs !== amountArs && { 
+        originalAmountArs: amountArs,
+        testMode: true 
+      })
     });
 
     return from(
@@ -56,8 +128,8 @@ export class PaymentAuthorizationService {
           .rpc('create_payment_authorization', {
             p_user_id: userId,
             p_booking_id: bookingId || null,
-            p_amount_usd: amountUsd,
-            p_amount_ars: amountArs,
+            p_amount_usd: safeAmountUsd,
+            p_amount_ars: safeAmountArs,
             p_fx_rate: fxRate,
             p_description: description,
             p_external_reference: `preauth_${bookingId || Date.now()}`,
@@ -91,8 +163,8 @@ export class PaymentAuthorizationService {
               intent_id: intentId,
               user_id: userId,
               booking_id: bookingId,
-              amount_ars: amountArs,
-              amount_usd: amountUsd,
+              amount_ars: safeAmountArs,
+              amount_usd: safeAmountUsd,
               card_token: cardToken,
               payer_email: payerEmail,
               description: description,
@@ -110,6 +182,16 @@ export class PaymentAuthorizationService {
 
         const mpData = await mpResponse.json();
         console.log('✅ Mercado Pago authorization:', mpData);
+
+        // Verificar si fue rechazado
+        if (mpData.status === 'rejected') {
+          const errorMsg = this.getErrorMessage(mpData.status_detail);
+          console.error('❌ Payment rejected:', {
+            status_detail: mpData.status_detail,
+            mp_payment_id: mpData.mp_payment_id
+          });
+          throw new Error(errorMsg);
+        }
 
         if (!mpData.success) {
           throw new Error(mpData.error || 'Authorization failed');

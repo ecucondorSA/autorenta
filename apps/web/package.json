@@ -7,7 +7,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "node tools/start-with-env.mjs",
+    "start": "node tools/start-with-env.mjs > app_start.log 2>&1",
     "prebuild": "node scripts/generate-env.js",
     "build": "ng build",
     "postbuild": "node scripts/create-cloudflare-config.js",
@@ -75,6 +75,7 @@
     "@angular/compiler-cli": "~20.3.7",
     "@playwright/test": "^1.56.1",
     "@types/jasmine": "~5.1.0",
+    "@types/mercadopago-sdk-js": "^2.0.17",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",
     "autoprefixer": "^10.4.21",

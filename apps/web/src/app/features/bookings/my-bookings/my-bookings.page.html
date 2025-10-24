@@ -89,6 +89,64 @@
           </div>
         </div>
 
+        <!-- Action Buttons by Status -->
+        <div class="p-4 sm:p-5 bg-white-pure dark:bg-slate-deep/90 transition-base" 
+             *ngIf="booking.status === 'pending' || booking.status === 'confirmed'"
+             [attr.data-tour-step]="'booking-actions-' + booking.status">
+          
+          <!-- Pending: Needs Payment -->
+          <div *ngIf="booking.status === 'pending'" class="space-y-3">
+            <div class="flex items-center gap-2 text-amber-600 dark:text-amber-400 text-sm font-medium">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              <span>Acción requerida: Falta completar el pago</span>
+            </div>
+            <div class="flex gap-2">
+              <button 
+                (click)="$event.preventDefault(); completePay(booking.id)"
+                [routerLink]="['/booking-detail-payment', booking.id]"
+                data-tour-step="complete-payment-btn"
+                class="flex-1 px-4 py-3 bg-gradient-to-r from-accent-petrol to-accent-warm text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+                💳 Completar Pago
+              </button>
+              <button 
+                (click)="$event.preventDefault(); cancelBooking(booking.id)"
+                class="px-4 py-3 border-2 border-pearl-gray/60 dark:border-neutral-700 text-charcoal-medium dark:text-pearl-light rounded-xl font-semibold hover:bg-pearl-gray/20 dark:hover:bg-neutral-800 transition-base">
+                Cancelar
+              </button>
+            </div>
+          </div>
+
+          <!-- Confirmed: Show Next Steps -->
+          <div *ngIf="booking.status === 'confirmed'" class="space-y-3">
+            <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2">📋 Próximos pasos:</p>
+            <div class="grid grid-cols-3 gap-2">
+              <button 
+                (click)="$event.preventDefault(); showInstructions(booking)"
+                data-tour-step="view-instructions-btn"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-pearl-gray/40 dark:border-neutral-700 hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base">
+                <span class="text-2xl">📋</span>
+                <span class="text-xs font-medium text-charcoal-medium dark:text-pearl-light">Instrucciones</span>
+              </button>
+              <button 
+                (click)="$event.preventDefault(); openChat(booking)"
+                data-tour-step="chat-btn"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-pearl-gray/40 dark:border-neutral-700 hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base">
+                <span class="text-2xl">💬</span>
+                <span class="text-xs font-medium text-charcoal-medium dark:text-pearl-light">Chat</span>
+              </button>
+              <button 
+                (click)="$event.preventDefault(); showMap(booking)"
+                data-tour-step="map-btn"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-pearl-gray/40 dark:border-neutral-700 hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base">
+                <span class="text-2xl">🗺️</span>
+                <span class="text-xs font-medium text-charcoal-medium dark:text-pearl-light">Mapa</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Card Footer with Price and Action -->
         <div class="p-4 sm:p-5 bg-white-pure dark:bg-slate-deep/90 border-t border-pearl-gray/40 dark:border-slate-deep/60 transition-base">
           <div class="flex items-center justify-between">

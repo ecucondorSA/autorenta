@@ -9,4 +9,5 @@ export const environment = buildEnvironment({
   paymentsWebhookUrl: 'http://localhost:8787/webhooks/payments',
   mapboxAccessToken:
     'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg',
+  mercadopagoPublicKey: 'APP_USR-a89f4240-f154-43dc-9535-4cde45b1d8cd',
 });
