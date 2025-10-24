@@ -270,7 +270,7 @@ export class CardHoldPanelComponent implements OnInit {
   /**
    * Handler: Autorizar tarjeta
    */
-  protected onAuthorize(): void {
+  protected async onAuthorize(): Promise<void> {
     if (!this.userId) {
       this.errorMessage.set('Error: Usuario no identificado');
       this.authorizationStatus.set('failed');
@@ -280,12 +280,37 @@ export class CardHoldPanelComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    // TODO: Obtener cardToken de Mercado Pago SDK
-    // TODO: Obtener payer email del usuario
-    const cardToken = 'DUMMY_TOKEN'; // Reemplazar con token real
-    const payerEmail = 'user@example.com'; // Reemplazar con email real
+    try {
+      // WORKAROUND TEMPORAL: Usar Edge Function para generar token de prueba
+      // TODO: Reemplazar con SDK de Mercado Pago en frontend
+      console.log('🔑 Generando token de prueba...');
 
-    this.authService
+      const tokenResponse = await fetch(
+        'https://obxvffplochgeiclibng.supabase.co/functions/v1/mp-create-test-token',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cardType: 'approved', // approved, rejected, insufficient_funds
+          }),
+        }
+      );
+
+      if (!tokenResponse.ok) {
+        throw new Error('Failed to generate test token');
+      }
+
+      const tokenData = await tokenResponse.json();
+      const cardToken = tokenData.cardToken;
+
+      console.log('✅ Token de prueba generado:', cardToken);
+
+      // Obtener email del usuario (TODO: desde AuthService)
+      const payerEmail = 'test@autorenta.com';
+
+      this.authService
       .authorizePayment({
         userId: this.userId,
         amountUsd: this.riskSnapshot.holdEstimatedUsd,
@@ -328,6 +353,12 @@ export class CardHoldPanelComponent implements OnInit {
           this.authorizationChange.emit(null);
         },
       });
+    } catch (error) {
+      this.isLoading.set(false);
+      const message = error instanceof Error ? error.message : 'Error generando token';
+      this.errorMessage.set(message);
+      this.authorizationStatus.set('failed');
+    }
   }
 
   /**
