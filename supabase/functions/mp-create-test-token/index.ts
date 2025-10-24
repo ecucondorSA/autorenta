@@ -161,18 +161,21 @@ async function createCardTokenWithAccessToken(cardData: any): Promise<any> {
 }
 
 serve(async (req) => {
-  // CORS
+  // CORS - Permitir llamadas desde cualquier origen (testing)
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  };
+
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      },
-    });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // NOTA: Esta función es pública para facilitar testing
+    // NO requiere autenticación porque solo genera tokens de prueba
+    // En producción, usar SDK de Mercado Pago en el frontend
     const body: CreateTokenRequest = await req.json().catch(() => ({}));
     const cardType = body.cardType || 'approved';
 
@@ -198,7 +201,7 @@ serve(async (req) => {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          ...corsHeaders,
         },
       }
     );
@@ -213,7 +216,7 @@ serve(async (req) => {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          ...corsHeaders,
         },
       }
     );
