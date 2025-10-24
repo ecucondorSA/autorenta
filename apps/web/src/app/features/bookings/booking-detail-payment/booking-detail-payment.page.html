@@ -74,7 +74,6 @@
               [riskSnapshot]="riskSnapshot()!"
               [fxSnapshot]="fxSnapshot()!"
               [userId]="userId() || ''"
-              [bookingId]="bookingInput()?.carId"
               [currentAuthorization]="paymentAuthorization()"
               (authorizationChange)="onAuthorizationChange($event)"
               (fallbackToWallet)="onFallbackToWallet()"
