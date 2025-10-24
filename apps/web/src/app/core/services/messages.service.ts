@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
 export interface Message {
@@ -79,7 +79,7 @@ export class MessagesService {
           table: 'messages',
           filter: `booking_id=eq.${bookingId}`,
         },
-        payload => {
+        (payload: RealtimePostgresChangesPayload<Message>) => {
           handler(payload.new as Message);
         },
       )

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { injectSupabase } from './supabase-client.service';
 
@@ -57,9 +57,6 @@ export class CarLocationsService {
     return data;
   }
 
-  /**
-   * Subscribe to realtime updates for car location changes. Returns an unsubscribe function.
-   */
   subscribeToRealtime(onChange: () => void): () => void {
     if (this.realtimeChannel) {
       return () => {
@@ -71,10 +68,10 @@ export class CarLocationsService {
     }
 
     const channel = this.supabase.channel('public:car_map_feed');
-    channel.on('postgres_changes', { schema: 'public', table: 'car_locations', event: '*' }, () =>
+    channel.on('postgres_changes', { schema: 'public', table: 'car_locations', event: '*' }, (_payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) =>
       onChange(),
     );
-    channel.on('postgres_changes', { schema: 'public', table: 'cars', event: '*' }, (payload) => {
+    channel.on('postgres_changes', { schema: 'public', table: 'cars', event: '*' }, (payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => {
       const newStatus = (payload.new as any)?.status;
       const oldStatus = (payload.old as any)?.status;
       if (newStatus === 'active' || oldStatus === 'active') {

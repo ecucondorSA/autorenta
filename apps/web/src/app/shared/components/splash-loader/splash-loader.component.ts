@@ -48,30 +48,27 @@ import { TranslateModule } from '@ngx-translate/core';
     }
 
     .overlay {
-      background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.28) 0%,
-        rgba(0, 0, 0, 0.48) 45%,
-        rgba(0, 0, 0, 0.68) 100%
-      );
-      backdrop-filter: blur(3px);
+      /* Overlay removido para mostrar video limpio */
+      display: none;
     }
 
     .logo-image {
-      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.55));
+      filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.85)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
     }
 
     .tagline {
-      text-shadow: 0 6px 22px rgba(0, 0, 0, 0.65);
-      color: #f5efe6;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.9), 0 8px 24px rgba(0, 0, 0, 0.7);
+      color: #ffffff;
     }
 
     .progress-track {
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(0, 0, 0, 0.45);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
     .progress-fill {
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 216, 145, 0.95) 100%);
+      background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 216, 145, 1) 100%);
+      box-shadow: 0 2px 12px rgba(255, 255, 255, 0.6);
     }
   `],
   template: `

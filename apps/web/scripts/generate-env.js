@@ -8,6 +8,10 @@
 const fs = require('fs');
 const path = require('path');
 
+// Load environment variables from .env files
+require('dotenv').config({ path: path.join(__dirname, '../.env.development.local') });
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
 const envVars = {
   NG_APP_SUPABASE_URL: process.env.NG_APP_SUPABASE_URL || 'https://obxvffplochgeiclibng.supabase.co',
   NG_APP_SUPABASE_ANON_KEY: process.env.NG_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU',

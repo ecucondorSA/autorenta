@@ -1,0 +1,162 @@
+<div class="inspection-uploader">
+  <!-- Header -->
+  <div class="header">
+    <h2>{{ stageLabel() }} del Vehículo</h2>
+    <button class="close-btn" (click)="cancel()" [disabled]="saving()">
+      ✕
+    </button>
+  </div>
+
+  <!-- Error message -->
+  @if (error()) {
+    <div class="error-message">
+      ⚠️ {{ error() }}
+    </div>
+  }
+
+  <!-- Photo upload section -->
+  <div class="photo-section">
+    <h3>Fotos del Vehículo</h3>
+    <p class="hint">
+      Subí al menos 8 fotos claras del vehículo: exterior (4 ángulos), interior, odómetro, nivel de combustible, y cualquier daño existente.
+    </p>
+
+    <!-- Upload button -->
+    <div class="upload-btn-wrapper">
+      <label for="photo-input" class="upload-btn" [class.disabled]="uploading()">
+        @if (uploading()) {
+          <span class="spinner"></span>
+          Subiendo...
+        } @else {
+          📸 Subir Fotos
+        }
+      </label>
+      <input
+        id="photo-input"
+        type="file"
+        multiple
+        accept="image/*"
+        (change)="onPhotosSelected($event)"
+        [disabled]="uploading() || saving()"
+      />
+    </div>
+
+    <!-- Photo count indicator -->
+    <div class="photo-count">
+      @if (photoCount() >= 8) {
+        <span class="success">✅ {{ photoCount() }} fotos subidas</span>
+      } @else {
+        <span class="warning">
+          ⚠️ {{ photoCount() }} / 8 fotos (faltan {{ missingPhotos() }})
+        </span>
+      }
+    </div>
+
+    <!-- Photo grid -->
+    @if (photos().length > 0) {
+      <div class="photo-grid">
+        @for (photo of photos(); track photo.url; let i = $index) {
+          <div class="photo-item">
+            <img [src]="photo.url" [alt]="'Foto ' + (i + 1)" />
+            <button
+              class="remove-photo"
+              (click)="removePhoto(i)"
+              [disabled]="saving()"
+            >
+              🗑️
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Vehicle data section -->
+  <div class="data-section">
+    <h3>Datos del Vehículo</h3>
+
+    <!-- Odometer -->
+    <div class="form-group">
+      <label for="odometer">Kilometraje</label>
+      <input
+        id="odometer"
+        type="number"
+        [(ngModel)]="odometer"
+        min="0"
+        step="1"
+        placeholder="Ej: 45000"
+        [disabled]="saving()"
+      />
+      @if (odometer <= 0) {
+        <span class="field-hint error">⚠️ Ingrese el kilometraje</span>
+      }
+    </div>
+
+    <!-- Fuel level -->
+    <div class="form-group">
+      <label for="fuel-level">Nivel de Combustible (%)</label>
+      <div class="fuel-input-wrapper">
+        <input
+          id="fuel-level"
+          type="range"
+          [(ngModel)]="fuelLevel"
+          min="0"
+          max="100"
+          step="5"
+          [disabled]="saving()"
+        />
+        <span class="fuel-value">{{ fuelLevel }}%</span>
+      </div>
+      <div class="fuel-indicator">
+        <div class="fuel-bar" [style.width.%]="fuelLevel"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button
+      class="btn btn-secondary"
+      (click)="cancel()"
+      [disabled]="saving()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="!isValid() || saving()"
+    >
+      @if (saving()) {
+        <span class="spinner"></span>
+        Guardando...
+      } @else {
+        ✅ Guardar y Firmar
+      }
+    </button>
+  </div>
+
+  <!-- Validation hints -->
+  @if (!isValid()) {
+    <div class="validation-hints">
+      <h4>Para continuar necesitás:</h4>
+      <ul>
+        @if (photoCount() < 8) {
+          <li>❌ Subir al menos 8 fotos (tenés {{ photoCount() }})</li>
+        } @else {
+          <li>✅ Fotos completas</li>
+        }
+
+        @if (odometer <= 0) {
+          <li>❌ Ingresar el kilometraje</li>
+        } @else {
+          <li>✅ Kilometraje registrado</li>
+        }
+
+        <li>✅ Nivel de combustible: {{ fuelLevel }}%</li>
+      </ul>
+    </div>
+  }
+</div>

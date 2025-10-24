@@ -15,6 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { MetaService } from '../../../core/services/meta.service';
+import { TourService } from '../../../core/services/tour.service';
 import { Car } from '../../../core/models';
 import {
   DateRange,
@@ -60,6 +61,7 @@ export class CarsListPage implements OnInit {
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
   private readonly metaService = inject(MetaService);
+  private readonly tourService = inject(TourService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
@@ -368,6 +370,11 @@ export class CarsListPage implements OnInit {
       if (storedSort && this.isValidSort(storedSort)) {
         this.sortBy.set(storedSort);
       }
+
+      // Iniciar tour guiado para nuevos usuarios (navegación libre)
+      setTimeout(() => {
+        this.tourService.startGuidedBookingTour();
+      }, 2000); // Esperar a que el mapa y autos se carguen
     }
 
     this.sortInitialized = true;

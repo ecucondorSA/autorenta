@@ -1,6 +1,10 @@
 # robots.txt para AutoRenta
 User-agent: *
+Allow: /
 Disallow: /admin/
 Disallow: /wallet/
 Disallow: /bookings/
 Disallow: /profile/
+
+# Sitemap
+Sitemap: https://autorenta-web.pages.dev/sitemap.xml

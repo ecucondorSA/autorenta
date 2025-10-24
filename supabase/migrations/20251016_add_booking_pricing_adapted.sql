@@ -131,7 +131,7 @@ BEGIN
   );
 
   v_deposit_cents := CASE
-    WHEN v_booking.payment_method = 'wallet' THEN 25000
+    WHEN v_booking.payment_method = 'wallet' THEN 30000  -- USD 300 (aligned with frontend)
     WHEN v_booking.payment_method = 'partial_wallet' THEN 50000
     WHEN v_booking.payment_method = 'credit_card' THEN 50000
     ELSE COALESCE(NULLIF(v_booking.deposit_amount_cents, 0), 50000)

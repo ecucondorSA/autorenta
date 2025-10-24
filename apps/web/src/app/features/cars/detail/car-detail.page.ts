@@ -265,51 +265,64 @@ export class CarDetailPage implements OnInit {
       return;
     }
 
-    this.bookingInProgress.set(true);
-    this.bookingError.set(null);
-
-    try {
-      // Convertir fechas a ISO string para la RPC function
-      const startISO = new Date(range.from).toISOString();
-      const endISO = new Date(range.to).toISOString();
-
-      const booking = await this.bookingsService.requestBooking(car.id, startISO, endISO);
-
-      // Redirigir a la página de detalles de la reserva recién creada
-      await this.router.navigate(['/bookings', booking.id]);
-    } catch (err: any) {
-      console.error('Error creating booking', err);
-      console.error('Error type:', typeof err);
-      console.error('Error keys:', Object.keys(err));
-      console.error('Error message:', err?.message);
-      console.error('Error code:', err?.code);
-      console.error('Error details:', err?.details);
-      console.error('Error hint:', err?.hint);
-
-      // Extraer mensaje de error de diferentes estructuras posibles
-      let errorMessage = err?.message || err?.error?.message || err?.error || '';
-
-      // Si es un objeto de Supabase, puede venir en err.message
-      if (typeof errorMessage === 'string') {
-        errorMessage = errorMessage.toLowerCase();
-      }
-
-      // Manejar errores específicos
-      if (errorMessage.includes('no autenticado') || errorMessage.includes('not authenticated')) {
-        this.bookingError.set('Necesitás iniciar sesión para reservar');
-      } else if (errorMessage.includes('no disponible') || errorMessage.includes('not available')) {
-        this.bookingError.set('Este auto no está disponible en las fechas seleccionadas');
-      } else if (errorMessage.includes('propio auto') || errorMessage.includes('own car')) {
-        this.bookingError.set('No podés reservar tu propio auto');
-      } else if (errorMessage.includes('bookings_no_overlap') || errorMessage.includes('exclusion constraint')) {
-        this.bookingError.set('Este auto ya tiene una reserva confirmada para las fechas seleccionadas. Por favor elegí otras fechas.');
-      } else {
-        // Mostrar el error real para debugging
-        this.bookingError.set(`Error: ${err?.message || JSON.stringify(err)}`);
-      }
-    } finally {
-      this.bookingInProgress.set(false);
+    // Check if user is authenticated
+    const isAuth = await this.authService.isAuthenticated();
+    if (!isAuth) {
+      this.bookingError.set('Necesitás iniciar sesión para reservar');
+      return;
     }
+
+    // Navigate to detail-payment page with booking parameters
+    try {
+      await this.router.navigate(['/bookings/detail-payment'], {
+        queryParams: {
+          carId: car.id,
+          startDate: new Date(range.from).toISOString(),
+          endDate: new Date(range.to).toISOString(),
+          // Vehicle details for risk calculation
+          vehicleValueUsd: this.estimateVehicleValue(car),
+          bucket: this.determineVehicleBucket(car),
+          country: 'AR', // Argentina
+        },
+      });
+    } catch (err: any) {
+      console.error('Error navigating to detail-payment', err);
+      this.bookingError.set('Error al proceder con la reserva');
+    }
+  }
+
+  /**
+   * Estimate vehicle value in USD based on price per day
+   * This is a rough estimation - ideally should come from car metadata
+   */
+  private estimateVehicleValue(car: Car): number {
+    let pricePerDayUsd = car.price_per_day;
+
+    // If price is in ARS, convert to USD (rough estimate: 1 USD = 1000 ARS)
+    if (car.currency === 'ARS') {
+      pricePerDayUsd = car.price_per_day / 1000;
+    }
+
+    // Rough estimation: daily rate * 300 gives approximate value
+    // $50/day -> $15k, $100/day -> $30k, etc.
+    return Math.round(pricePerDayUsd * 300);
+  }
+
+  /**
+   * Determine vehicle bucket based on price per day (in USD)
+   */
+  private determineVehicleBucket(car: Car): 'economy' | 'standard' | 'premium' | 'luxury' {
+    let pricePerDayUsd = car.price_per_day;
+
+    // If price is in ARS, convert to USD
+    if (car.currency === 'ARS') {
+      pricePerDayUsd = car.price_per_day / 1000;
+    }
+
+    if (pricePerDayUsd <= 30) return 'economy';
+    if (pricePerDayUsd <= 60) return 'standard';
+    if (pricePerDayUsd <= 100) return 'premium';
+    return 'luxury';
   }
 
   /**

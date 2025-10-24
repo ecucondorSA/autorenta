@@ -66,6 +66,26 @@ export class PaymentsService {
     }
   }
 
+  // Create payment intent with full details
+  async createPaymentIntentWithDetails(details: {
+    booking_id: string;
+    payment_method: string;
+    amount_cents: number;
+    status: string;
+  }): Promise<PaymentIntent> {
+    const { data, error } = await this.supabase
+      .from('payment_intents')
+      .insert({
+        booking_id: details.booking_id,
+        provider: details.payment_method === 'wallet' ? 'wallet' : 'mercadopago',
+        status: details.status,
+      })
+      .select()
+      .single();
+    if (error) throw error;
+    return data as PaymentIntent;
+  }
+
   // Alias methods for booking-detail page compatibility
   async createPaymentIntent(bookingId: string, provider: string): Promise<PaymentIntent> {
     return this.createIntent(bookingId);

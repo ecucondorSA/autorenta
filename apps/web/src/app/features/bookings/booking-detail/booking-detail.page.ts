@@ -2,34 +2,62 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';
-import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
+import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
+import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
+import { SettlementService, Claim, ClaimProcessingResult } from '../../../core/services/settlement.service';
+import { BookingInspection, BookingRiskSnapshot, EligibilityResult, WaterfallResult, FgoParameters, BucketType, InspectionStage } from '../../../core/models/fgo-v1-1.model';
 import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
+import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
+import { ClaimFormComponent } from '../../../shared/components/claim-form/claim-form.component';
 import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
 import { MetaService } from '../../../core/services/meta.service';
+import { BookingStatusComponent } from './booking-status.component';
+import { PaymentActionsComponent } from './payment-actions.component';
+import { ReviewManagementComponent } from './review-management.component';
+import { FgoManagementComponent } from './fgo-management.component';
 
+/**
+ * BookingDetailPage
+ *
+ * This component acts as a container for the booking detail view. It is responsible for:
+ * - Fetching the booking data from the server.
+ * - Passing the booking data to child components that handle specific aspects of the view.
+ * - Handling general page-level concerns like loading and error states.
+ *
+ * The component has been refactored to delegate responsibilities to smaller, more focused child components:
+ * - app-booking-status: Displays the current status of the booking.
+ * - app-payment-actions: Handles all payment-related logic and UI.
+ * - app-review-management: Manages the creation and display of reviews.
+ * - app-fgo-management: Encapsulates all logic related to the FGO (Fondo de Garantía Operativa).
+ */
 @Component({
   selector: 'app-booking-detail',
   standalone: true,
   imports: [
     CommonModule,
     RouterLink,
-    ReviewFormComponent,
-    ReviewCardComponent,
     OwnerConfirmationComponent,
     RenterConfirmationComponent,
-    BookingChatComponent, TranslateModule],
+    BookingChatComponent,
+    TranslateModule,
+    BookingStatusComponent,
+    PaymentActionsComponent,
+    ReviewManagementComponent,
+    FgoManagementComponent,
+  ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
 })
 export class BookingDetailPage implements OnInit, OnDestroy {
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
@@ -37,76 +65,31 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
   private readonly metaService = inject(MetaService);
+  private readonly exchangeRateService = inject(ExchangeRateService);
+  private readonly fgoService = inject(FgoV1_1Service);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   timeRemaining = signal<string | null>(null);
 
-  // Review-related signals
-  showReviewForm = signal(false);
-  canReview = signal(false);
-  existingReview = signal<Review | null>(null);
-  isSubmittingReview = signal(false);
-  reviewData = signal<{
-    revieweeId: string;
-    revieweeName: string;
-    carId: string;
-    carTitle: string;
-    reviewType: 'renter_to_owner' | 'owner_to_renter';
-  } | null>(null);
+  // Exchange rate signals
+  exchangeRate = signal<number | null>(null);
+  totalInARS = signal<number | null>(null);
+  loadingRate = signal(false);
+
+  // FGO signals
+  inspections = signal<BookingInspection[]>([]);
 
   private countdownInterval: number | null = null;
 
   // Computed properties
-  statusClass = computed(() => {
-    const status = this.booking()?.status;
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'confirmed':
-        return 'bg-green-100 text-green-800';
-      case 'in_progress':
-        return 'bg-blue-100 text-blue-800';
-      case 'completed':
-        return 'bg-gray-100 text-gray-800';
-      case 'cancelled':
-      case 'expired':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  });
-
-  statusLabel = computed(() => {
-    const status = this.booking()?.status;
-    switch (status) {
-      case 'pending':
-        return 'Pendiente de pago';
-      case 'confirmed':
-        return 'Confirmada';
-      case 'in_progress':
-        return 'En curso';
-      case 'completed':
-        return 'Completada';
-      case 'cancelled':
-        return 'Cancelada';
-      case 'expired':
-        return 'Expirada';
-      case 'no_show':
-        return 'No show';
-      default:
-        return status ?? 'Desconocido';
-    }
-  });
-
-  showPaymentActions = computed(() => this.booking()?.status === 'pending');
-  showConfirmedActions = computed(() => this.booking()?.status === 'confirmed');
-  showCompletedActions = computed(() => this.booking()?.status === 'completed');
   isExpired = computed(() => {
     const booking = this.booking();
     return booking ? this.bookingsService.isExpired(booking) : false;
   });
+
+  showConfirmedActions = computed(() => this.booking()?.status === 'confirmed');
 
   // Confirmations - show if booking is in "returned" status
   showConfirmationSection = computed(() => {
@@ -137,6 +120,25 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   carOwnerId = signal<string | null>(null);
   carOwnerName = signal<string>('el anfitrión');
 
+  // 🆕 FGO v1.1: Computed properties para inspecciones
+  readonly canUploadInspection = computed(() => {
+    const booking = this.booking();
+    return booking?.status === 'in_progress' || booking?.status === 'completed';
+  });
+
+  readonly hasCheckIn = computed(() => {
+    return this.inspections().some((i: BookingInspection) => i.stage === 'check_in' && i.signedAt);
+  });
+
+  readonly hasCheckOut = computed(() => {
+    return this.inspections().some((i: BookingInspection) => i.stage === 'check_out' && i.signedAt);
+  });
+
+  readonly hasClaim = computed(() => {
+    // TODO: Implementar cuando se agregue tabla de claims en DB
+    return false;
+  });
+
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
     if (!bookingId) {
@@ -159,19 +161,42 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       // Update SEO meta tags (private page - noindex)
       this.metaService.updateBookingDetailMeta(booking.id);
 
+      // Load exchange rate for ARS conversion
+      await this.loadExchangeRate();
+
       // Load car owner ID for confirmation logic
       await this.loadCarOwner();
 
-      // Check if user can review this booking
-      if (booking.status === 'completed') {
-        await this.checkReviewStatus();
-        await this.loadReviewData();
-      }
+      // Load FGO inspections
+      await this.loadInspections();
     } catch (err) {
       console.error('Error loading booking:', err);
       this.error.set('Error al cargar la reserva');
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  private async loadExchangeRate(): Promise<void> {
+    const booking = this.booking();
+    if (!booking || !booking.breakdown?.total_cents) return;
+
+    try {
+      this.loadingRate.set(true);
+      const rate = await this.exchangeRateService.getPlatformRate();
+      this.exchangeRate.set(rate);
+
+      // Convert total USD to ARS
+      const totalUSD = booking.breakdown.total_cents / 100; // Convertir centavos a dólares
+      const totalARS = await this.exchangeRateService.convertUsdToArs(totalUSD);
+      this.totalInARS.set(totalARS);
+
+      console.log(`💱 Conversión cargada: ${totalUSD} USD = ${totalARS} ARS (rate: ${rate})`);
+    } catch (error) {
+      console.error('Error loading exchange rate:', error);
+      // No fallar si no se puede obtener la tasa, solo no mostrar conversión
+    } finally {
+      this.loadingRate.set(false);
     }
   }
 
@@ -196,42 +221,18 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  private async checkReviewStatus(): Promise<void> {
+  private async loadInspections(): Promise<void> {
     const booking = this.booking();
     if (!booking) return;
 
     try {
-      // Check if user can review
-      const canReview = await this.reviewsService.canReviewBooking(booking.id);
-      this.canReview.set(canReview);
-
-      // Check if review already exists
-      const currentUser = this.authService.session$()?.user;
-      if (!currentUser) return;
-
-      // Get car info from booking
-      const { data: car } = await this.bookingsService['supabase']
-        .from('cars')
-        .select('id, owner_id')
-        .eq('id', booking.car_id)
-        .single();
-
-      if (!car) return;
-
-      // Check if this user already reviewed
-      const { data: review } = await this.reviewsService['supabase']
-        .from('reviews')
-        .select('*')
-        .eq('booking_id', booking.id)
-        .eq('reviewer_id', currentUser.id)
-        .maybeSingle();
-
-      if (review) {
-        this.existingReview.set(review as Review);
-        this.canReview.set(false);
-      }
+      const inspections = await firstValueFrom(
+        this.fgoService.getInspections(booking.id)
+      );
+      this.inspections.set(inspections);
     } catch (error) {
-      console.error('Error checking review status:', error);
+      console.error('Error loading inspections:', error);
+      // Non-blocking error, inspections are optional
     }
   }
 
@@ -274,48 +275,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     this.timeRemaining.set(this.bookingsService.formatTimeRemaining(remaining));
   }
 
-  async handlePayNow() {
-    const booking = this.booking();
-    if (!booking) return;
-
-    try {
-      // Create payment intent
-      const intent = await this.paymentsService.createPaymentIntent(booking.id, 'mock');
-
-      // Simulate payment (in production, redirect to payment provider)
-      await this.paymentsService.simulateWebhook('mock', intent.id, 'approved');
-
-      // Reload booking
-      const updated = await this.bookingsService.getBookingById(booking.id);
-      this.booking.set(updated);
-
-      alert('¡Pago realizado exitosamente!');
-    } catch (err) {
-      console.error('Payment error:', err);
-      alert('Error al procesar el pago');
-    }
-  }
-
-  async handleCancel() {
-    const booking = this.booking();
-    if (!booking) return;
-
-    if (!confirm('¿Estás seguro de que querés cancelar esta reserva?')) {
-      return;
-    }
-
-    try {
-      await this.bookingsService.cancelBooking(booking.id, 'Cancelled by user');
-
-      // Reload booking
-      const updated = await this.bookingsService.getBookingById(booking.id);
-      this.booking.set(updated);
-    } catch (err) {
-      console.error('Cancel error:', err);
-      alert('Error al cancelar la reserva');
-    }
-  }
-
   formatCurrency(cents: number, currency: string): string {
     const amount = cents / 100;
     return new Intl.NumberFormat('es-AR', {
@@ -323,6 +282,23 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
+    }).format(amount);
+  }
+
+  private getTotalCents(booking: Booking): number {
+    if (booking.breakdown?.total_cents) {
+      return booking.breakdown.total_cents;
+    }
+    return Math.round((booking.total_amount ?? 0) * 100);
+  }
+
+  private formatUsd(amount: number): string {
+    const fractionDigits = Number.isInteger(amount) ? 0 : 2;
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
     }).format(amount);
   }
 
@@ -342,99 +318,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       hour: '2-digit',
       minute: '2-digit',
     });
-  }
-
-  // Review methods
-  handleShowReviewForm(): void {
-    this.showReviewForm.set(true);
-  }
-
-  handleCancelReview(): void {
-    this.showReviewForm.set(false);
-  }
-
-  async handleSubmitReview(params: CreateReviewParams): Promise<void> {
-    this.isSubmittingReview.set(true);
-
-    try {
-      const result = await this.reviewsService.createReview(params);
-
-      if (result.success) {
-        alert(
-          '¡Review enviada exitosamente! Se publicará cuando ambas partes hayan calificado, o después de 14 días.'
-        );
-        this.showReviewForm.set(false);
-
-        // Reload to show the submitted review
-        await this.checkReviewStatus();
-      } else {
-        alert(`Error al enviar la review: ${result.error}`);
-      }
-    } catch (error) {
-      console.error('Error submitting review:', error);
-      alert('Error al enviar la review. Intentá nuevamente.');
-    } finally {
-      this.isSubmittingReview.set(false);
-    }
-  }
-
-  async loadReviewData(): Promise<void> {
-    const booking = this.booking();
-    if (!booking) return;
-
-    try {
-      const currentUser = this.authService.session$()?.user;
-      if (!currentUser) return;
-
-      // Get car and owner info
-      const { data: car } = await this.bookingsService['supabase']
-        .from('cars')
-        .select('id, title, owner_id, owner:profiles!cars_owner_id_fkey(id, full_name)')
-        .eq('id', booking.car_id)
-        .single();
-
-      if (!car) return;
-
-      // Determine if current user is renter or owner
-      const isRenter = booking.renter_id === currentUser.id;
-      const isOwner = car.owner_id === currentUser.id;
-
-      if (!isRenter && !isOwner) return;
-
-      let revieweeId: string;
-      let revieweeName: string;
-      let reviewType: 'renter_to_owner' | 'owner_to_renter';
-
-      if (isRenter) {
-        // Renter is reviewing the owner
-        revieweeId = car.owner_id;
-        revieweeName = (car as any).owner?.full_name || 'Propietario';
-        reviewType = 'renter_to_owner';
-      } else {
-        // Owner is reviewing the renter
-        const { data: renter } = await this.bookingsService['supabase']
-          .from('profiles')
-          .select('id, full_name')
-          .eq('id', booking.renter_id)
-          .single();
-
-        if (!renter) return;
-
-        revieweeId = renter.id;
-        revieweeName = renter.full_name || 'Arrendatario';
-        reviewType = 'owner_to_renter';
-      }
-
-      this.reviewData.set({
-        revieweeId,
-        revieweeName,
-        carId: car.id,
-        carTitle: car.title || 'Vehículo',
-        reviewType,
-      });
-    } catch (error) {
-      console.error('Error loading review data:', error);
-    }
   }
 
   // Confirmation handlers

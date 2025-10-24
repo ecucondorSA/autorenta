@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil, interval } from 'rxjs';
-import { FgoService } from '../../../core/services/fgo.service';
+import { Subject, takeUntil, interval, firstValueFrom } from 'rxjs';
+import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import {
@@ -16,6 +16,7 @@ import {
   getMovementTypeName,
   formatRatio,
 } from '../../../core/models/fgo.model';
+import { FgoStatusV1_1 } from '../../../core/models/fgo-v1-1.model';
 
 /**
  * Componente de vista general del FGO
@@ -51,7 +52,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
   formatRatio = formatRatio;
 
   constructor(
-    private readonly fgoService: FgoService,
+    private readonly fgoService: FgoV1_1Service,
     private readonly supabaseService: SupabaseClientService
   ) {}
 
@@ -129,10 +130,10 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
   private loadFgoStatus(): void {
     this.loadingStatus = true;
     this.fgoService
-      .getStatus()
+      .getStatusV1_1()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (status) => {
+        next: (status: FgoStatusV1_1 | null) => {
           this.fgoStatus = status;
           this.loadingStatus = false;
         },
@@ -148,19 +149,37 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
    */
   private loadSubfunds(): void {
     this.loadingSubfunds = true;
-    this.fgoService
-      .getSubfundsBalance()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (subfunds) => {
-          this.subfunds = subfunds;
-          this.loadingSubfunds = false;
+    if (this.fgoStatus) {
+      this.subfunds = [
+        {
+          type: 'liquidity',
+          balanceCents: this.fgoStatus.liquidityBalance * 100,
+          balanceUsd: this.fgoStatus.liquidityBalance,
+          percentage: (this.fgoStatus.liquidityBalance / this.fgoStatus.totalBalance) * 100,
+          description: 'Liquidez',
+          purpose: 'Fondos disponibles para pagos inmediatos'
         },
-        error: (error) => {
-          console.error('Error loading subfunds:', error);
-          this.loadingSubfunds = false;
+        {
+          type: 'capitalization',
+          balanceCents: this.fgoStatus.capitalizationBalance * 100,
+          balanceUsd: this.fgoStatus.capitalizationBalance,
+          percentage: (this.fgoStatus.capitalizationBalance / this.fgoStatus.totalBalance) * 100,
+          description: 'Capitalización',
+          purpose: 'Fondos acumulados para crecimiento'
         },
-      });
+        {
+          type: 'profitability',
+          balanceCents: this.fgoStatus.profitabilityBalance * 100,
+          balanceUsd: this.fgoStatus.profitabilityBalance,
+          percentage: (this.fgoStatus.profitabilityBalance / this.fgoStatus.totalBalance) * 100,
+          description: 'Rentabilidad',
+          purpose: 'Fondos para generar intereses'
+        },
+      ];
+      this.loadingSubfunds = false;
+    } else {
+      this.loadingSubfunds = false;
+    }
   }
 
   /**
@@ -172,11 +191,11 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       .getMovements(10, 0)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (movements) => {
+        next: (movements: FgoMovementView[]) => {
           this.recentMovements = movements;
           this.loadingMovements = false;
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error loading movements:', error);
           this.loadingMovements = false;
         },
@@ -200,13 +219,13 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       .recalculateMetrics()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (result) => {
+        next: (result: { ok: boolean; error?: string } | null) => {
           if (result?.ok) {
             console.log('Metrics recalculated successfully');
             this.refreshData();
           }
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error recalculating metrics:', error);
         },
       });
@@ -331,15 +350,14 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
         return;
       }
 
-      const result = await this.fgoService
+      const result = await firstValueFrom(this.fgoService
         .transferBetweenSubfunds({
           fromSubfund: this.transferForm.fromSubfund as any,
           toSubfund: this.transferForm.toSubfund as any,
           amountCents: Math.round(this.transferForm.amount * 100),
           reason: this.transferForm.reason,
           adminId,
-        })
-        .toPromise();
+        }));
 
       if (result?.ok) {
         alert(`✅ Transferencia exitosa!\nReferencia: ${result.ref || 'N/A'}`);
@@ -402,13 +420,12 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     this.processingSiniestro = true;
 
     try {
-      const result = await this.fgoService
+      const result = await firstValueFrom(this.fgoService
         .paySiniestro({
           bookingId: this.siniestroForm.bookingId,
           amountCents: Math.round(this.siniestroForm.amount * 100),
           description: this.siniestroForm.description,
-        })
-        .toPromise();
+        }));
 
       if (result?.ok) {
         alert(`✅ Siniestro pagado exitosamente!\nReferencia: ${result.ref || 'N/A'}`);

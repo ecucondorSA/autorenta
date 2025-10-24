@@ -1,3 +1,148 @@
 :host {
   display: block;
 }
+
+.fgo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.fgo-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.fgo-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(33, 150, 83, 0.12);
+  color: #155e34;
+}
+
+.fgo-card__stat-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .fgo-card__stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.fgo-card__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.fgo-card__stat-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.fgo-card__stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fgo-card__stat-hint {
+  font-size: 0.8rem;
+  color: rgba(15, 23, 42, 0.65);
+  line-height: 1.4;
+}
+
+.fgo-waterfall {
+  display: grid;
+  gap: 1rem;
+}
+
+.fgo-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.fgo-step__marker {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.fgo-step__title {
+  font-weight: 600;
+  margin: 0 0 0.2rem;
+  color: #0f172a;
+}
+
+.fgo-step__description {
+  font-size: 0.85rem;
+  margin: 0;
+  color: rgba(15, 23, 42, 0.7);
+  line-height: 1.45;
+}
+
+.fgo-card__hint {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.05);
+  color: rgba(15, 23, 42, 0.75);
+}
+
+:host-context(.dark) .fgo-card__badge {
+  background: rgba(33, 150, 83, 0.25);
+  color: #c4f9d5;
+}
+
+:host-context(.dark) .fgo-card__stat-label {
+  color: rgba(226, 232, 240, 0.7);
+}
+
+:host-context(.dark) .fgo-card__stat-value {
+  color: #f8fafc;
+}
+
+:host-context(.dark) .fgo-card__stat-hint {
+  color: rgba(226, 232, 240, 0.75);
+}
+
+:host-context(.dark) .fgo-step__marker {
+  background: rgba(226, 232, 240, 0.2);
+  color: #f8fafc;
+}
+
+:host-context(.dark) .fgo-step__title {
+  color: #f8fafc;
+}
+
+:host-context(.dark) .fgo-step__description {
+  color: rgba(226, 232, 240, 0.82);
+}
+
+:host-context(.dark) .fgo-card__hint {
+  background: rgba(148, 163, 184, 0.18);
+  color: rgba(226, 232, 240, 0.85);
+}

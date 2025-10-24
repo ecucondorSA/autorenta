@@ -528,7 +528,7 @@
         </div>
 
         <!-- Selector de fechas -->
-        <div class="mb-6">
+        <div class="mb-6" id="tour-date-picker">
           <app-date-range-picker
             label="Fechas de alquiler"
             (rangeChange)="onRangeChange($event)"
@@ -545,7 +545,7 @@
 
         <!-- Desglose de precios -->
         <div *ngIf="totalPrice() as total" class="mb-6 space-y-3">
-          <div class="rounded-xl bg-sand-light p-4">
+          <div class="rounded-xl bg-sand-light p-4" id="tour-price-summary">
             <h3 class="mb-3 text-sm font-semibold text-smoke-black">Resumen de Precios</h3>
             <div class="space-y-2 text-sm">
               <div class="flex justify-between">

@@ -99,9 +99,9 @@ export class WalletPage implements AfterViewInit {
   readonly copied = signal(false);
 
   /**
-   * Target de crédito protegido (USD 250 = 25000 centavos)
+   * Target de crédito protegido (USD 300 = 30000 centavos)
    */
-  readonly protectedCreditTarget = 25000;
+  readonly protectedCreditTarget = 30000;
 
   /**
    * Balance disponible en el wallet
@@ -119,7 +119,7 @@ export class WalletPage implements AfterViewInit {
   readonly withdrawableBalance = this.walletService.withdrawableBalance;
 
   /**
-   * Crédito Autorentar (meta USD 250, no retirable)
+   * Crédito Autorentar (meta inicial USD 300, no retirable)
    */
   readonly protectedCreditBalance = this.walletService.protectedCreditBalance;
 

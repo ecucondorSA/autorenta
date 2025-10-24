@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const BINANCE_API_BASE = 'https://api.binance.com/api/v3';
-const PLATFORM_MARGIN_PERCENT = 20.0; // 20% margin as requested
+const PLATFORM_MARGIN_PERCENT = 10.0; // 10% margin
 
 interface BinanceTickerResponse {
   symbol: string;

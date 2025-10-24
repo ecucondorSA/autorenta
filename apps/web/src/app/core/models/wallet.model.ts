@@ -10,7 +10,7 @@ export interface WalletBalance {
   available_balance: number; // Fondos disponibles (Total - Locked)
   transferable_balance: number; // Fondos transferibles in-app (Available - Protected)
   withdrawable_balance: number; // Fondos retirables a banco (Transferable - Hold)
-  protected_credit_balance: number; // Crédito Autorentar (meta USD 250, no retirable)
+  protected_credit_balance: number; // Crédito Autorentar (meta inicial USD 300, no retirable)
   locked_balance: number; // Fondos bloqueados en reservas activas
   total_balance: number; // Total (available + locked)
   currency: string; // 'USD' o 'UYU'
@@ -55,7 +55,7 @@ export type WalletReferenceType =
   | 'booking' // Reserva/booking
   | 'deposit' // Depósito normal
   | 'reward' // Bonificación/recompensa
-  | 'credit_protected' // Crédito Autorentar (no retirable, meta USD 250)
+  | 'credit_protected' // Crédito Autorentar (no retirable, meta inicial USD 300)
   | 'transfer' // Transferencia entre usuarios
   | 'withdrawal'; // Retiro a cuenta bancaria
 

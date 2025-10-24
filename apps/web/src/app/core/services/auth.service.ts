@@ -53,7 +53,7 @@ export class AuthService {
   }
 
   private listenToAuthChanges(): void {
-    this.supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session) => {
+    this.supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       this.state.set({ session: session ?? null, loading: false });
     });
   }

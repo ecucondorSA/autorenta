@@ -91,7 +91,7 @@ export class WalletService {
   readonly withdrawableBalance = computed(() => this.balance()?.withdrawable_balance ?? 0);
 
   /**
-   * Crédito Autorentar (meta USD 250, no retirable, no transferible)
+   * Crédito Autorentar (meta inicial USD 300, no retirable, no transferible)
    * Solo para cubrir garantías de reservas
    */
   readonly protectedCreditBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);

@@ -12,6 +12,7 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
   selector: 'app-my-bookings-page',
   imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule],
   templateUrl: './my-bookings.page.html',
+  styleUrl: './my-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyBookingsPage implements OnInit {
@@ -41,5 +42,108 @@ export class MyBookingsPage implements OnInit {
 
   rangeLabel(booking: Booking): string {
     return formatDateRange(booking.start_at, booking.end_at);
+  }
+
+  statusLabel(booking: Booking): string {
+    switch (booking.status) {
+      case 'pending':
+        return 'Pendiente de pago';
+      case 'confirmed':
+        return 'Pagada';
+      case 'in_progress':
+        return 'En uso';
+      case 'completed':
+        return 'Finalizada';
+      case 'cancelled':
+        return 'Cancelada';
+      case 'expired':
+        return 'Vencida';
+      default:
+        return booking.status;
+    }
+  }
+
+  statusHint(booking: Booking): string | null {
+    switch (booking.status) {
+      case 'pending':
+        return 'Completá el checkout para confirmar tu reserva.';
+      case 'confirmed':
+        return 'Todo listo. Coordiná el retiro con el anfitrión.';
+      case 'completed':
+        return 'Gracias por viajar con nosotros.';
+      case 'cancelled':
+        return 'Se canceló esta reserva. Podés generar una nueva cuando quieras.';
+      default:
+        return null;
+    }
+  }
+
+  statusBannerClass(booking: Booking): string {
+    switch (booking.status) {
+      case 'pending':
+        return 'status-banner--pending';
+      case 'confirmed':
+      case 'in_progress':
+        return 'status-banner--success';
+      case 'completed':
+        return 'status-banner--neutral';
+      case 'cancelled':
+      case 'expired':
+        return 'status-banner--danger';
+      default:
+        return '';
+    }
+  }
+
+  statusBadgeClass(booking: Booking): string {
+    switch (booking.status) {
+      case 'pending':
+        return 'badge-warning';
+      case 'confirmed':
+        return 'badge-success';
+      case 'in_progress':
+        return 'badge-info';
+      case 'completed':
+        return 'badge-neutral';
+      case 'cancelled':
+      case 'expired':
+        return 'badge-danger';
+      default:
+        return 'badge-neutral';
+    }
+  }
+
+  statusCardClass(booking: Booking): string {
+    switch (booking.status) {
+      case 'pending':
+        return 'booking-card--pending';
+      case 'confirmed':
+      case 'in_progress':
+        return 'booking-card--success';
+      case 'completed':
+        return 'booking-card--neutral';
+      case 'cancelled':
+      case 'expired':
+        return 'booking-card--danger';
+      default:
+        return 'booking-card--neutral';
+    }
+  }
+
+  statusIcon(booking: Booking): string {
+    switch (booking.status) {
+      case 'pending':
+        return '⏳';
+      case 'confirmed':
+      case 'in_progress':
+        return '✅';
+      case 'completed':
+        return '🚗';
+      case 'cancelled':
+      case 'expired':
+        return '⚠️';
+      default:
+        return 'ℹ️';
+    }
   }
 }
