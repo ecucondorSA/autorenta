@@ -381,7 +381,8 @@ export class TourService {
         if (element) return resolve();
         if (Date.now() - startedAt >= this.WAIT_TIMEOUT_MS) {
           this.trackEvent('tour_element_timeout', { selector });
-          return reject(new Error(`Timeout waiting for selector: ${selector}`));
+          console.warn(`Tour: Timeout waiting for selector: ${selector}. Continuing anyway...`);
+          return resolve(); // Changed from reject to resolve to continue tour
         }
         setTimeout(tryFind, this.WAIT_INTERVAL_MS);
       };

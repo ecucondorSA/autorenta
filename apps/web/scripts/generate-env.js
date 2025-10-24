@@ -23,7 +23,11 @@ const envVars = {
   NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: process.env.NG_APP_CAR_LOCATIONS_EDGE_FUNCTION || '',
   NG_APP_BACKGROUND_MODEL_URL:
     process.env.NG_APP_BACKGROUND_MODEL_URL ||
-    'https://huggingface.co/briaai/RMBG-1.4/resolve/main/rmbg-1.4.onnx?download=1'
+    'https://huggingface.co/briaai/RMBG-1.4/resolve/main/rmbg-1.4.onnx?download=1',
+  NG_APP_MERCADOPAGO_PUBLIC_KEY:
+    process.env.NG_APP_MERCADOPAGO_PUBLIC_KEY ||
+    process.env.MERCADOPAGO_PUBLIC_KEY ||
+    ''
 };
 
 const envJsContent = `// Auto-generated environment configuration

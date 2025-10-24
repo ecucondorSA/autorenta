@@ -24,6 +24,8 @@ export class RiskMatrixService {
 
     if (error) {
       console.error('Error fetching risk policy:', error);
+      console.error('Table: risk_policy_AR, carValue:', carValue);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       throw error;
     }
 

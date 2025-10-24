@@ -1,0 +1,15 @@
+name = "autorent-ai-car-generator"
+main = "src/index.ts"
+compatibility_date = "2024-10-23"
+
+# AI binding para Cloudflare Workers AI
+[ai]
+binding = "AI"
+
+# Variables de entorno (opcional)
+[vars]
+ENVIRONMENT = "production"
+
+# Límites y configuración
+# [limits] CPU limits no soportados en plan Free
+# cpu_ms = 30000  # Solo disponible en plan Paid

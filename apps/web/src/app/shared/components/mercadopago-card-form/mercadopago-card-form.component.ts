@@ -86,6 +86,12 @@ type MercadoPagoCardFormData = {
           </div>
         </div>
 
+        <!-- Hidden fields required by MercadoPago SDK -->
+        <div class="hidden">
+          <select id="form-checkout__installments" name="installments"></select>
+          <select id="form-checkout__issuer" name="issuer"></select>
+        </div>
+
         <!-- Botón de Submit -->
         <button
           type="submit"
@@ -231,6 +237,14 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
             id: 'form-checkout__identificationNumber',
             placeholder: 'Número de documento',
           },
+          installments: {
+            id: 'form-checkout__installments',
+            placeholder: 'Cuotas',
+          },
+          issuer: {
+            id: 'form-checkout__issuer',
+            placeholder: 'Banco emisor',
+          },
         },
         callbacks: {
           onFormMounted: (error: any) => {
@@ -313,8 +327,24 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       });
 
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Error al inicializar Mercado Pago';
       console.error('MP initialization error:', err);
+      console.error('MP error type:', typeof err);
+      console.error('MP error stringified:', JSON.stringify(err, null, 2));
+      
+      let message = 'Error al inicializar Mercado Pago';
+      
+      if (Array.isArray(err)) {
+        console.error('MP Error is an array with', err.length, 'items:');
+        err.forEach((e, i) => {
+          console.error(`Error ${i}:`, e);
+        });
+        message = err.map((e: any) => e?.message || e?.description || JSON.stringify(e)).join('; ');
+      } else if (err instanceof Error) {
+        message = err.message;
+      } else if (typeof err === 'string') {
+        message = err;
+      }
+      
       this.errorMessage.set(message);
       this.error.emit(message);
     }
