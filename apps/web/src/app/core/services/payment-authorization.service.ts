@@ -104,6 +104,7 @@ export class PaymentAuthorizationService {
         if (!mpResponse.ok) {
           const errorData = await mpResponse.json();
           console.error('MP API error:', errorData);
+          console.error('MP API details:', JSON.stringify(errorData.details, null, 2));
           throw new Error(errorData.error || 'Error al autorizar el pago');
         }
 
