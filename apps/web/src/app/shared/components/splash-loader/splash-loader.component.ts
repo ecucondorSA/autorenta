@@ -1,11 +1,11 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-splash-loader',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, NgOptimizedImage],
   styles: [`
     :host { display: contents; }
 
@@ -102,8 +102,11 @@ import { TranslateModule } from '@ngx-translate/core';
         <!-- Logo/Wordmark -->
         <div class="flex items-center justify-center h-28 motion-ok" style="animation: bob 2s ease-in-out infinite;">
           <img
-            src="/assets/images/autorentar-logo.png"
+            ngSrc="/assets/images/autorentar-logo.png"
             alt="Autorentar"
+            width="500"
+            height="500"
+            priority
             class="logo-image h-full w-auto object-contain scale-[4.2]"
           />
         </div>

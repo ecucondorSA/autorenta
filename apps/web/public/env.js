@@ -8,5 +8,6 @@ window.__env = {
   "NG_APP_PAYMENTS_WEBHOOK_URL": "http://localhost:8787/webhooks/payments",
   "NG_APP_MAPBOX_ACCESS_TOKEN": "pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg",
   "NG_APP_CAR_LOCATIONS_EDGE_FUNCTION": "",
-  "NG_APP_BACKGROUND_MODEL_URL": "https://huggingface.co/briaai/RMBG-1.4/resolve/main/rmbg-1.4.onnx?download=1"
+  "NG_APP_BACKGROUND_MODEL_URL": "https://huggingface.co/briaai/RMBG-1.4/resolve/main/rmbg-1.4.onnx?download=1",
+  "NG_APP_MERCADOPAGO_PUBLIC_KEY": "APP_USR-a89f4240-f154-43dc-9535-4cde45b1d8cd"
 };

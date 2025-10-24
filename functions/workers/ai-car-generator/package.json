@@ -1,0 +1,25 @@
+{
+  "name": "autorent-ai-car-generator",
+  "version": "1.0.0",
+  "description": "Cloudflare AI Worker for generating car images using FLUX.1-schnell",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "test": "wrangler dev --test-scheduled"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "ai",
+    "flux",
+    "image-generation"
+  ],
+  "author": "AutoRent",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241022.0",
+    "wrangler": "^4.44.0"
+  }
+}
