@@ -115,7 +115,7 @@ serve(async (req) => {
       token: card_token,
       description: description,
       installments: 1,
-      payment_method_id: 'visa', // Will be determined by MP from token
+      // NO especificar payment_method_id, dejar que MP lo detecte del token
       payer: {
         email: payer_email,
       },
