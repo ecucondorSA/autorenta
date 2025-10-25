@@ -41,7 +41,7 @@
       </button>
 
       <!-- Logo -->
-      <a routerLink="/" class="group flex items-center gap-3 hover:opacity-100 transition-base">
+      <a routerLink="/" data-tour-step="welcome-hero" class="group flex items-center gap-3 hover:opacity-100 transition-base">
         <img
           ngSrc="/assets/images/autorentar-logo.png"
           alt="Autorentar"
@@ -61,7 +61,7 @@
       </a>
 
       <!-- Desktop Navigation -->
-      <nav id="main-nav" class="hidden lg:flex items-center gap-3 xl:gap-4 ml-8" role="navigation" aria-label="Principal">
+      <nav id="main-nav" data-tour-step="welcome-nav" class="hidden lg:flex items-center gap-3 xl:gap-4 ml-8" role="navigation" aria-label="Principal">
         <a
           routerLink="/cars"
           routerLinkActive="nav-link-active"
@@ -101,7 +101,7 @@
           </svg>
         </button>
 
-        <!-- User -->
+        <!-- User Profile Button -->
         <a
           *ngIf="!isAuthenticatedSig()"
           routerLink="/auth/login"
@@ -113,12 +113,21 @@
           *ngIf="isAuthenticatedSig()"
           routerLink="/profile"
           routerLinkActive="ring-2 ring-accent-petrol"
-          class="icon-button"
+          class="relative flex items-center justify-center h-10 w-10 rounded-full overflow-hidden bg-sand-light dark:bg-slate-deep hover:ring-2 hover:ring-accent-petrol/50 transition-all duration-200"
           [attr.aria-label]="'nav.profile' | translate"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
+          <img
+            *ngIf="userProfile()?.avatar_url; else profilePlaceholder"
+            [src]="userProfile()!.avatar_url"
+            [alt]="userProfile()?.full_name || 'Profile'"
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
+          <ng-template #profilePlaceholder>
+            <svg class="w-5 h-5 text-charcoal-medium dark:text-pearl-light" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </ng-template>
         </a>
       </div>
     </div>
@@ -202,8 +211,22 @@
           *ngIf="isAuthenticatedSig()"
           routerLink="/profile"
           (click)="closeSidebar()"
-          class="block px-4 py-3 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
         >
+          <div class="relative h-8 w-8 flex-shrink-0 rounded-full overflow-hidden bg-sand-light dark:bg-slate-deep/70">
+            <img
+              *ngIf="userProfile()?.avatar_url; else sidebarPlaceholder"
+              [src]="userProfile()!.avatar_url"
+              [alt]="userProfile()?.full_name || 'Profile'"
+              class="h-full w-full object-cover"
+              loading="lazy"
+            />
+            <ng-template #sidebarPlaceholder>
+              <svg class="h-full w-full p-1.5 text-charcoal-medium dark:text-pearl-light" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </ng-template>
+          </div>
           {{ 'nav.profile' | translate }}
         </a>
       </nav>

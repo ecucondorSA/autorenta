@@ -6,6 +6,7 @@ import { Car } from '../../../core/models';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
+import { RealtimePricingService } from '../../../core/services/realtime-pricing.service';
 
 @Component({
   selector: 'app-car-card',
@@ -17,6 +18,9 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
 export class CarCardComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly pricingService = inject(DynamicPricingService);
+  private readonly realtimePricing = inject(RealtimePricingService);
+  
+  private unsubscribeRealtime?: () => void;
 
   private readonly _car = signal<Car | undefined>(undefined);
   private readonly _selected = signal<boolean>(false);
@@ -72,11 +76,46 @@ export class CarCardComponent implements OnInit, OnDestroy {
     // Load dynamic price on init if car already set
     if (this.car?.region_id) {
       void this.loadDynamicPrice();
+      
+      // 🔴 REALTIME POOLING: Suscribirse a updates de pricing
+      this.subscribeToRealtimePricing();
     }
   }
 
   ngOnDestroy(): void {
-    // Cleanup if needed
+    // 🧹 Cleanup: desuscribirse de realtime
+    this.unsubscribeRealtime?.();
+  }
+  
+  /**
+   * 🔴 ECUCONDOR08122023 PATTERN: WebSocket Pooling
+   * Suscribirse a cambios en tiempo real de:
+   * - Exchange rates (Binance)
+   * - Demand snapshots (surge pricing)
+   * - Special events
+   */
+  private subscribeToRealtimePricing(): void {
+    const car = this._car();
+    if (!car || !car.region_id) return;
+    
+    // Suscribirse a TODO (exchange rates + demand + events)
+    this.unsubscribeRealtime = this.realtimePricing.subscribeToAllPricingUpdates({
+      onExchangeRateUpdate: () => {
+        console.log('💱 Exchange rate updated, recalculating price for car:', car.id);
+        void this.loadDynamicPrice();
+      },
+      onDemandUpdate: (regionId) => {
+        // Solo recalcular si es nuestra región
+        if (regionId === car.region_id) {
+          console.log('📈 Demand updated for region:', regionId);
+          void this.loadDynamicPrice();
+        }
+      },
+      onEventUpdate: () => {
+        console.log('🎉 Special event updated, recalculating price');
+        void this.loadDynamicPrice();
+      },
+    });
   }
 
   private async loadDynamicPrice(): Promise<void> {

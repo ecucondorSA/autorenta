@@ -74,28 +74,28 @@ export class RiskService {
       bucket: riskSnapshot.bucket,
       fx_snapshot: riskSnapshot.fxRate,
       currency: 'ARS',
-      estimated_hold_amount_ars: paymentMode === 'card' ? riskSnapshot.holdEstimatedArs : null,
-      estimated_credit_security_usd:
-        paymentMode === 'wallet' ? riskSnapshot.creditSecurityUsd : null,
-      deductible_usd: riskSnapshot.deductibleUsd,
-      rollover_deductible_usd: riskSnapshot.rolloverDeductibleUsd,
-      payment_mode: paymentMode,
-      coverage_upgrade: riskSnapshot.coverageUpgrade,
+      estimated_hold_amount: paymentMode === 'card' ? riskSnapshot.holdEstimatedArs : null,
+      estimated_deposit: paymentMode === 'wallet' ? riskSnapshot.creditSecurityUsd : null,
+      franchise_usd: riskSnapshot.deductibleUsd,
+      has_card: paymentMode === 'card',
+      has_wallet_security: paymentMode === 'wallet',
       meta: {
         vehicle_value_usd: riskSnapshot.vehicleValueUsd,
         calculated_at: riskSnapshot.calculatedAt.toISOString(),
+        coverage_upgrade: riskSnapshot.coverageUpgrade,
+        rollover_deductible_usd: riskSnapshot.rolloverDeductibleUsd,
       },
     };
 
     return from(
-      this.supabaseClient.from('booking_risk_snapshots').insert(snapshotData).select('id').single()
+      this.supabaseClient.from('booking_risk_snapshot').insert(snapshotData).select('booking_id').single()
     ).pipe(
       map((response) => {
         if (response.error) {
           console.error('Error persisting risk snapshot:', response.error);
           return { ok: false, error: response.error.message };
         }
-        return { ok: true, snapshotId: response.data.id };
+        return { ok: true, snapshotId: response.data.booking_id };
       }),
       catchError((error) => {
         console.error('Error in persistRiskSnapshot:', error);

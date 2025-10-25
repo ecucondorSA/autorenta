@@ -2,7 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TourService, TourId } from '../../../core/services/tour.service';
+import { TourService, TourId } from '../../../core/services/tour.service'; // OLD
+import { GuidedTourService, TourId as NewTourId } from '../../../core/guided-tour'; // NEW
 
 @Component({
   selector: 'app-help-button',
@@ -12,6 +13,7 @@ import { TourService, TourId } from '../../../core/services/tour.service';
     <div class="relative">
       <button
         id="help-center"
+        data-tour-step="welcome-help"
         class="icon-button h-10 w-10 lg:h-11 lg:w-11"
         (click)="toggleMenu()"
         [attr.aria-label]="'common.help' | translate"
@@ -100,7 +102,8 @@ import { TourService, TourId } from '../../../core/services/tour.service';
   ],
 })
 export class HelpButtonComponent {
-  private readonly tourService = inject(TourService);
+  private readonly tourService = inject(TourService); // OLD - Keeping for compatibility
+  private readonly guidedTour = inject(GuidedTourService); // NEW
   private readonly router = inject(Router);
 
   readonly showMenu = signal(false);
@@ -116,25 +119,45 @@ export class HelpButtonComponent {
   showTour(tourType: 'welcome' | 'renter' | 'owner'): void {
     this.closeMenu();
 
-    // Map string to TourId enum
-    const tourIdMap: Record<'welcome' | 'renter' | 'owner', TourId> = {
-      'welcome': TourId.Welcome,
-      'renter': TourId.Renter,
-      'owner': TourId.Owner,
+    // NEW TOUR SYSTEM: Use GuidedTourService
+    const tourIdMap: Record<'welcome' | 'renter' | 'owner', NewTourId> = {
+      'welcome': NewTourId.Welcome,
+      'renter': NewTourId.Renter,
+      'owner': NewTourId.Owner,
     };
     const tourId = tourIdMap[tourType];
 
     // Navegar a la ruta correcta si es necesario
     if (tourType === 'renter' && !this.router.url.includes('/cars')) {
       this.router.navigate(['/cars']).then(() => {
-        setTimeout(() => this.tourService.restartTour(tourId), 500);
+        setTimeout(() => {
+          this.guidedTour.reset(tourId);
+          this.guidedTour.request({ 
+            id: tourId, 
+            mode: 'user-triggered',
+            force: true 
+          });
+        }, 500);
       });
     } else if (tourType === 'owner' && !this.router.url.includes('/publish')) {
       this.router.navigate(['/cars/publish']).then(() => {
-        setTimeout(() => this.tourService.restartTour(tourId), 500);
+        setTimeout(() => {
+          this.guidedTour.reset(tourId);
+          this.guidedTour.request({ 
+            id: tourId, 
+            mode: 'user-triggered',
+            force: true 
+          });
+        }, 500);
       });
     } else {
-      this.tourService.restartTour(tourId);
+      // Reset and start tour (user-triggered = bypass throttling)
+      this.guidedTour.reset(tourId);
+      this.guidedTour.request({ 
+        id: tourId, 
+        mode: 'user-triggered',
+        force: true 
+      });
     }
   }
 }

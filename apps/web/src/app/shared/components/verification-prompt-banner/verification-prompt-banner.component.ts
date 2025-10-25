@@ -34,40 +34,63 @@ import { UserProfile } from '../../../core/models';
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-start justify-between gap-4">
-          <!-- Icon + Content -->
+          <!-- Avatar + Icon + Content -->
           <div class="flex items-start gap-4 flex-1">
-            <!-- Icon -->
-            <div class="flex-shrink-0 mt-0.5">
-              <svg
-                *ngIf="verificationProgress() < 100"
-                class="h-6 w-6 text-yellow-300 animate-pulse"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-              <svg
-                *ngIf="verificationProgress() === 100"
-                class="h-6 w-6 text-green-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+            <!-- Avatar -->
+            <div class="flex-shrink-0">
+              <div class="relative h-12 w-12">
+                <!-- Avatar Image or Placeholder -->
+                <div class="h-full w-full rounded-full overflow-hidden bg-white/20 border-2 border-white/40">
+                  <img
+                    *ngIf="profile()?.avatar_url; else avatarPlaceholder"
+                    [src]="profile()!.avatar_url"
+                    [alt]="profile()?.full_name || 'Usuario'"
+                    class="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                  <ng-template #avatarPlaceholder>
+                    <div class="h-full w-full flex items-center justify-center bg-white/30">
+                      <svg class="h-7 w-7 text-white/80" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                    </div>
+                  </ng-template>
+                </div>
+                
+                <!-- Status Icon Badge -->
+                <div class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-accent-warm to-accent-petrol border-2 border-white flex items-center justify-center">
+                  <svg
+                    *ngIf="verificationProgress() < 100"
+                    class="h-3 w-3 text-yellow-300 animate-pulse"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                  <svg
+                    *ngIf="verificationProgress() === 100"
+                    class="h-3 w-3 text-green-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             <!-- Text Content -->

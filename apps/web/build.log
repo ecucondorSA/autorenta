@@ -2,62 +2,71 @@
 > autorenta-web@0.1.0 prebuild
 > node scripts/generate-env.js
 
+[dotenv@17.2.3] injecting env (7) from .env.development.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
 ✅ Generated public/env.js with environment configuration
 Environment variables:
   - NG_APP_SUPABASE_URL: https://obxvffplochgeiclibng.supabase.co
   - NG_APP_SUPABASE_ANON_KEY: eyJhbGciOi...
   - NG_APP_DEFAULT_CURRENCY: ARS
-  - NG_APP_PAYMENTS_WEBHOOK_URL: (empty)
+  - NG_APP_PAYMENTS_WEBHOOK_URL: http://localhost:8787/webhooks/payments
   - NG_APP_MAPBOX_ACCESS_TOKEN: pk.eyJ1Ijo...
   - NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: (empty)
   - NG_APP_BACKGROUND_MODEL_URL: https://huggingface.co/briaai/RMBG-1.4/resolve/main/rmbg-1.4.onnx?download=1
+  - NG_APP_MERCADOPAGO_PUBLIC_KEY: APP_USR-a8...
 
 > autorenta-web@0.1.0 build
 > ng build
 
 ❯ Building...
 ✔ Building...
-Initial chunk files   | Names                  |  Raw size | Estimated transfer size
-chunk-LMSNBJQA.js     | -                      | 191.04 kB |                55.28 kB
-chunk-NCKNJM3X.js     | -                      | 150.64 kB |                34.06 kB
-styles-KX7E3Z6B.css   | styles                 | 135.78 kB |                15.56 kB
-main-7DGQZ6PS.js      | main                   | 114.55 kB |                29.71 kB
-chunk-M7PKGGFN.js     | -                      | 101.88 kB |                26.03 kB
-polyfills-5CFQRCPP.js | polyfills              |  34.59 kB |                11.33 kB
-chunk-XYYE76LG.js     | -                      |  12.78 kB |                 3.38 kB
-chunk-4WCGA4LI.js     | -                      |  12.30 kB |                 3.49 kB
-chunk-TI3KNSIX.js     | -                      |   5.88 kB |                 1.54 kB
-chunk-6ANQGZMH.js     | -                      |   4.36 kB |                 1.07 kB
-chunk-HX4VHGX4.js     | -                      |   3.45 kB |                 1.13 kB
-chunk-DM2HNFZT.js     | -                      |   2.12 kB |               752 bytes
-chunk-TWZW5B45.js     | -                      |   1.69 kB |               717 bytes
-chunk-ZAUOX5FS.js     | -                      |   1.35 kB |               556 bytes
-chunk-FM6WEN77.js     | -                      | 862 bytes |               862 bytes
-chunk-AQT7K737.js     | -                      | 455 bytes |               455 bytes
+Initial chunk files   | Names                       |  Raw size | Estimated transfer size
+styles-XV3U53XA.css   | styles                      | 169.12 kB |                18.98 kB
+chunk-BVXO34D2.js     | -                           | 158.42 kB |                46.53 kB
+chunk-6FJSZDNV.js     | -                           | 151.35 kB |                34.38 kB
+chunk-IK3W3JYS.js     | -                           | 110.31 kB |                28.02 kB
+main-BHUVVG2T.js      | main                        |  77.76 kB |                18.63 kB
+chunk-I2HLNBVO.js     | -                           |  67.48 kB |                17.73 kB
+chunk-BRCBJSWF.js     | -                           |  64.08 kB |                18.92 kB
+chunk-XWXF6PAO.js     | -                           |  41.96 kB |                11.80 kB
+polyfills-5CFQRCPP.js | polyfills                   |  34.59 kB |                11.33 kB
+chunk-ORWJLCZJ.js     | -                           |  12.78 kB |                 3.39 kB
+chunk-VY6MMUZ4.js     | -                           |  12.30 kB |                 3.49 kB
+chunk-DJNOJQPZ.js     | -                           |   7.64 kB |                 1.89 kB
+chunk-OKJPER5H.js     | -                           |   6.88 kB |                 1.63 kB
+chunk-ZSSKLR6M.js     | -                           |   5.13 kB |                 1.35 kB
+chunk-SSXDANRS.js     | -                           |   3.45 kB |                 1.13 kB
+chunk-UFAZBTMA.js     | -                           |   2.89 kB |               961 bytes
+chunk-TWZW5B45.js     | -                           |   1.69 kB |               717 bytes
+chunk-ILO6GU5L.js     | -                           |   1.35 kB |               555 bytes
+chunk-FM6WEN77.js     | -                           | 862 bytes |               862 bytes
+chunk-OEE4OONP.js     | -                           | 721 bytes |               721 bytes
+chunk-AQT7K737.js     | -                           | 455 bytes |               455 bytes
+chunk-N4H7QRWX.js     | -                           | 317 bytes |               317 bytes
 
-                      | Initial total          | 773.72 kB |               185.94 kB
+                      | Initial total               | 931.53 kB |               223.78 kB
 
-Lazy chunk files      | Names                  |  Raw size | Estimated transfer size
-chunk-S3WMSYRK.js     | mapbox-gl              |   1.61 MB |               362.63 kB
-chunk-7I3TTTMW.js     | publish-car-v2-page    | 438.24 kB |               100.41 kB
-chunk-BYQAMUXP.js     | wallet-page            | 117.51 kB |                23.24 kB
-chunk-SU6MNP5W.js     | cars-list-page         |  82.74 kB |                18.58 kB
-chunk-NRD3KKQB.js     | booking-detail-page    |  76.81 kB |                16.34 kB
-chunk-XBNQ7L25.js     | profile-expanded-page  |  56.96 kB |                12.54 kB
-chunk-YVSVPCFF.js     | -                      |  49.50 kB |                 9.89 kB
-chunk-D6JR2QTZ.js     | car-detail-page        |  39.84 kB |                10.28 kB
-chunk-M73DFHGD.js     | my-cars-page           |  29.58 kB |                 7.61 kB
-chunk-WJK7YBIO.js     | admin-withdrawals-page |  18.74 kB |                 4.83 kB
-chunk-UYQ6D3I5.js     | -                      |  13.28 kB |                 3.53 kB
-chunk-T7DSQMY3.js     | -                      |  12.69 kB |                 3.01 kB
-chunk-C4FHUMNM.js     | checkout-page          |  11.60 kB |                 3.59 kB
-chunk-CVQDPJAE.js     | register-page          |  10.29 kB |                 2.76 kB
-chunk-L4T3VIHL.js     | compare-page           |  10.26 kB |                 2.62 kB
-...and 13 more lazy chunks files. Use "--verbose" to show all the files.
+Lazy chunk files      | Names                       |  Raw size | Estimated transfer size
+chunk-S3WMSYRK.js     | mapbox-gl                   |   1.61 MB |               362.63 kB
+chunk-HYP3L6Y3.js     | publish-car-v2-page         | 463.83 kB |               106.08 kB
+chunk-2BIFK2HK.js     | wallet-page                 | 140.40 kB |                27.05 kB
+chunk-7Q26LM3C.js     | booking-detail-page         | 113.61 kB |                23.62 kB
+chunk-6IY4KOQF.js     | booking-detail-payment-page |  97.75 kB |                20.27 kB
+chunk-SEUXG7DS.js     | cars-list-page              |  91.56 kB |                20.20 kB
+chunk-I4JBQOZR.js     | car-detail-page             |  56.92 kB |                13.89 kB
+chunk-XB27XHAY.js     | profile-expanded-page       |  55.85 kB |                12.31 kB
+chunk-PWUBPVP4.js     | -                           |  49.53 kB |                 9.90 kB
+chunk-EKDTPT4E.js     | fgo-overview-page           |  32.20 kB |                 7.20 kB
+chunk-VDN3TXYT.js     | my-cars-page                |  28.67 kB |                 7.32 kB
+chunk-I3G3DRRF.js     | checkout-page               |  27.85 kB |                 7.87 kB
+chunk-KDRKTWGA.js     | admin-withdrawals-page      |  18.78 kB |                 4.84 kB
+chunk-GOR76H2W.js     | public-profile-page         |  18.53 kB |                 4.82 kB
+chunk-L7KQOBQF.js     | -                           |  17.54 kB |                 4.03 kB
+...and 27 more lazy chunks files. Use "--verbose" to show all the files.
 
-Application bundle generation complete. [41.097 seconds] - 2025-10-20T11:57:13.383Z
+Application bundle generation complete. [23.016 seconds] - 2025-10-24T20:15:50.844Z
 
-[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mbundle initial exceeded maximum budget. Budget 500.00 kB was not met by 273.72 kB with a total of 773.72 kB.[0m
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mbundle initial exceeded maximum budget. Budget 500.00 kB was not met by 431.53 kB with a total of 931.53 kB.[0m
 
 
 [33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mModule 'mapbox-gl' used by 'src/app/shared/components/cars-map/cars-map.component.ts' is not ESM[0m
@@ -70,5 +79,8 @@ Output location: /home/edu/autorenta/apps/web/dist/web
 
 
 > autorenta-web@0.1.0 postbuild
-> echo '/* /index.html 200' > dist/web/browser/_redirects
+> node scripts/create-cloudflare-config.js
 
+✅ Archivos de configuración de Cloudflare Pages creados:
+   - _redirects (SPA routing)
+   - _headers (Security & Cache)

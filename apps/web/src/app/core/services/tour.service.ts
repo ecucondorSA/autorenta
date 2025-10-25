@@ -100,28 +100,37 @@ export class TourService {
   }
 
   startWelcomeTour(): void {
-    if (this.shouldSkipTour(TourId.Welcome)) return;
-    const steps = this.getWelcomeTourSteps();
-    this.buildTour(TourId.Welcome, steps);
+    // DEPRECATED: This service is being replaced by GuidedTourService
+    // Uncomment the line below to temporarily disable old system
+    console.warn('[OLD TourService] startWelcomeTour() called - This will be removed soon. Use GuidedTourService instead.');
+    return; // Disabled - use new GuidedTourService
+    
+    // if (this.shouldSkipTour(TourId.Welcome)) return;
+    // const steps = this.getWelcomeTourSteps();
+    // this.buildTour(TourId.Welcome, steps);
   }
 
   startGuidedBookingTour(): void {
-    if (this.shouldSkipTour(TourId.GuidedBooking)) return;
-    if (this.activeTourId && this.activeTourId !== TourId.GuidedBooking) {
-      this.tour?.cancel();
-    }
+    // DEPRECATED: This service is being replaced by GuidedTourService
+    console.warn('[OLD TourService] startGuidedBookingTour() called - This will be removed soon. Use GuidedTourService instead.');
+    return; // Disabled - use new GuidedTourService
+    
+    // if (this.shouldSkipTour(TourId.GuidedBooking)) return;
+    // if (this.activeTourId && this.activeTourId !== TourId.GuidedBooking) {
+    //   this.tour?.cancel();
+    // }
 
-    this.tour = this.createTour(TourId.GuidedBooking, !this.isMobile());
-    this.guidedRouteStepsShown.clear();
-    this.ensureRouterListener();
+    // this.tour = this.createTour(TourId.GuidedBooking, !this.isMobile());
+    // this.guidedRouteStepsShown.clear();
+    // this.ensureRouterListener();
 
-    this._addGuidedBookingSearchSteps();
-    this._addGuidedBookingDetailSteps();
-    this._addGuidedBookingBookingSteps();
-    this._addGuidedBookingCompletionStep();
+    // this._addGuidedBookingSearchSteps();
+    // this._addGuidedBookingDetailSteps();
+    // this._addGuidedBookingBookingSteps();
+    // this._addGuidedBookingCompletionStep();
 
-    this.tour.start();
-    this.showGuidedBookingStepForUrl(this.router.url);
+    // this.tour?.start();
+    // this.showGuidedBookingStepForUrl(this.router.url);
   }
 
   startRenterTour(): void {

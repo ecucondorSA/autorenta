@@ -334,6 +334,12 @@ export interface Booking {
   expires_at?: string;
   paid_at?: string;
   payment_method?: 'credit_card' | 'wallet' | 'partial_wallet' | null;
+  payment_mode?: 'card' | 'wallet' | null; // NEW: Payment mode for detail-payment flow
+  authorized_payment_id?: string | null; // NEW: For card hold authorization
+  wallet_lock_id?: string | null; // NEW: For wallet lock ID
+  coverage_upgrade?: 'standard' | 'premium' | 'zero_franchise' | null; // NEW: Coverage upgrade
+  risk_snapshot_booking_id?: string | null; // NEW: FK to booking_risk_snapshot
+  risk_snapshot_date?: string | null; // NEW: When risk snapshot was created
   wallet_amount_cents?: number | null;
   wallet_lock_transaction_id?: string | null;
   wallet_status?: 'none' | 'locked' | 'charged' | 'refunded' | 'partially_charged' | null;
