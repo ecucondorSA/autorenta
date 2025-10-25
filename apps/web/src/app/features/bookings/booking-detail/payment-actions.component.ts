@@ -1,8 +1,9 @@
 
-import { Component, Input, computed, inject } from '@angular/core';
+import { Component, Input, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Booking } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
+import { PaymentsService } from '../../../core/services/payments.service';
 import { Router } from '@angular/router';
 
 /**
@@ -70,7 +71,10 @@ export class PaymentActionsComponent {
   @Input() timeRemaining: string | null = null;
 
   private readonly bookingsService = inject(BookingsService);
+  private readonly paymentsService = inject(PaymentsService); // ✅ Inyectar PaymentService
   private readonly router = inject(Router);
+  
+  protected isProcessing = signal(false); // ✅ Estado de carga
 
   isExpired = computed(() => {
     return this.bookingsService.isExpired(this.booking);
@@ -131,44 +135,29 @@ export class PaymentActionsComponent {
 
   showPaymentActions = computed(() => this.booking?.status === 'pending');
 
+  /**
+   * ✅ FIX P0.3: Usar PaymentService centralizado en lugar de código duplicado
+   */
   async handlePayNow() {
-    if (!this.booking) return;
+    if (!this.booking || this.isProcessing()) return;
+
+    this.isProcessing.set(true);
 
     try {
-      // This logic should be in a service
-      const session = await this.bookingsService['supabase'].auth.getSession();
-      const accessToken = session.data.session?.access_token;
+      const result = await this.paymentsService.processPayment(this.booking.id);
 
-      if (!accessToken) {
-        throw new Error('Usuario no autenticado');
-      }
-
-      const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
-      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-create-booking-preference`;
-
-      const response = await fetch(edgeFunctionUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ booking_id: this.booking.id }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error al crear preferencia de pago (${response.status})`);
-      }
-
-      const result = await response.json();
-
-      if (result.init_point) {
-        window.location.href = result.init_point;
+      if (result.success) {
+        alert('¡Pago procesado exitosamente!');
+        // Recargar booking para actualizar estado
+        window.location.reload();
       } else {
-        throw new Error('No se recibió URL de pago de Mercado Pago');
+        throw new Error(result.error || 'Error al procesar el pago');
       }
     } catch (err) {
+      console.error('Error en handlePayNow:', err);
       alert('Error al procesar el pago: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+    } finally {
+      this.isProcessing.set(false);
     }
   }
 

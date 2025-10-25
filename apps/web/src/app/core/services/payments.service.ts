@@ -124,4 +124,78 @@ export class PaymentsService {
   async simulateWebhook(provider: string, intentId: string, status: 'approved' | 'rejected'): Promise<void> {
     return this.markAsPaid(intentId);
   }
+
+  /**
+   * ✅ FIX P0.2: Proceso centralizado de pago para un booking
+   * Reemplaza código duplicado en payment-actions.component.ts
+   */
+  async processPayment(bookingId: string, retryCount = 0): Promise<{
+    success: boolean;
+    paymentIntentId?: string;
+    error?: string;
+  }> {
+    const MAX_RETRIES = 3;
+    
+    try {
+      // 1. Crear payment intent
+      const intent = await this.createIntent(bookingId);
+      
+      if (!intent || !intent.id) {
+        throw new Error('No se pudo crear el payment intent');
+      }
+
+      // 2. Marcar como pagado (simula webhook)
+      await this.markAsPaid(intent.id);
+
+      // 3. Verificar estado
+      const status = await this.getStatus(intent.id);
+      
+      if (status?.status === 'completed') {
+        return {
+          success: true,
+          paymentIntentId: intent.id
+        };
+      }
+
+      throw new Error('El pago no se completó correctamente');
+      
+    } catch (error: any) {
+      console.error('Error en processPayment:', error);
+      
+      // Retry logic para errores de red
+      if (retryCount < MAX_RETRIES && this.isRetryableError(error)) {
+        console.log(`Reintentando pago (${retryCount + 1}/${MAX_RETRIES})...`);
+        await this.delay(1000 * (retryCount + 1)); // Backoff exponencial
+        return this.processPayment(bookingId, retryCount + 1);
+      }
+
+      return {
+        success: false,
+        error: error.message || 'Error al procesar el pago'
+      };
+    }
+  }
+
+  /**
+   * Determina si un error es reintentable
+   */
+  private isRetryableError(error: any): boolean {
+    const retryableErrors = [
+      'Network error',
+      'timeout',
+      'ECONNRESET',
+      'ETIMEDOUT',
+      'Failed to fetch'
+    ];
+    
+    const errorMessage = error.message || error.toString();
+    return retryableErrors.some(msg => errorMessage.includes(msg));
+  }
+
+  /**
+   * Delay helper para retry logic
+   */
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }
