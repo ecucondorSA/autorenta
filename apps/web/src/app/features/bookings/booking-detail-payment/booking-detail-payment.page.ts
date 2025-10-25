@@ -18,6 +18,7 @@ import { PaymentAuthorizationService } from '../../../core/services/payment-auth
 import { WalletService } from '../../../core/services/wallet.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { BookingsService } from '../../../core/services/bookings.service';
 
 // Models
 import {
@@ -88,6 +89,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private paymentAuthService = inject(PaymentAuthorizationService);
   private walletService = inject(WalletService);
+  private bookingsService = inject(BookingsService);
   private supabaseClient = inject(SupabaseClientService).getClient();
 
   // ==================== SIGNALS (Estado Global) ====================
@@ -688,7 +690,8 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Crea el booking en DB
+   * Crea el booking en DB con validación de disponibilidad
+   * ✅ SPRINT 2 INTEGRATION: Usa BookingsService.createBookingWithValidation()
    */
   private async createBooking(): Promise<CreateBookingResult> {
     const input = this.bookingInput();
@@ -700,33 +703,40 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     }
 
     try {
-      const { data, error } = await this.supabaseClient
-        .from('bookings')
-        .insert({
-          car_id: input.carId,
-          renter_id: userId,
-          start_at: input.startDate.toISOString(),
-          end_at: input.endDate.toISOString(),
-          total_amount: pricing.totalArs,
+      // ✅ Usar método con validación de disponibilidad
+      const result = await this.bookingsService.createBookingWithValidation(
+        input.carId,
+        input.startDate.toISOString(),
+        input.endDate.toISOString(),
+        {
+          renterId: userId,
+          totalAmount: pricing.totalArs,
           currency: 'ARS',
-          total_price_ars: pricing.totalArs,
-          payment_mode: this.paymentMode(),
-          coverage_upgrade: this.coverageUpgrade(),
-          authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId,
-          wallet_lock_id: this.walletLock()?.lockId,
+          totalPriceArs: pricing.totalArs,
+          paymentMode: this.paymentMode(),
+          coverageUpgrade: this.coverageUpgrade(),
+          authorizedPaymentId: this.paymentAuthorization()?.authorizedPaymentId,
+          walletLockId: this.walletLock()?.lockId,
           status: 'pending',
-          idempotency_key: generateIdempotencyKey(),
-        })
-        .select('id')
-        .single();
+          idempotencyKey: generateIdempotencyKey(),
+        }
+      );
 
-      if (error) throw error;
+      if (!result.success) {
+        console.error('❌ Error creando reserva:', result.error);
+        return {
+          ok: false,
+          error: result.error || 'Error desconocido al crear reserva'
+        };
+      }
 
+      console.log('✅ Reserva creada con validación:', result.booking?.id);
       return {
         ok: true,
-        bookingId: data.id,
+        bookingId: result.booking!.id,
       };
     } catch (err: any) {
+      console.error('❌ Excepción en createBooking:', err);
       return {
         ok: false,
         error: err.message || 'Error desconocido',
