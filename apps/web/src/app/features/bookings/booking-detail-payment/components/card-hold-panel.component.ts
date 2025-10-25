@@ -313,10 +313,13 @@ export class CardHoldPanelComponent implements OnInit {
 
     try {
       // ✅ FIX P0.1: Usar email del usuario autenticado (no hardcoded)
-      const payerEmail = this.userEmail() || 'fallback@autorenta.com';
+      const payerEmail = this.userEmail();
       
-      if (!this.userEmail()) {
-        console.warn('Using fallback email - user email not loaded');
+      if (!payerEmail) {
+        this.errorMessage.set('Error: No se pudo obtener el email del usuario. Por favor, recarga la página.');
+        this.authorizationStatus.set('failed');
+        this.isLoading.set(false);
+        return;
       }
 
       this.authService
