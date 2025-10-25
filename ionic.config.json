@@ -1,0 +1,8 @@
+{
+  "name": "Autorenta",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "autorenta-mobile"
+}

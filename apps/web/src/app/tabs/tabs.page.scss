@@ -1,0 +1,77 @@
+// Tab Bar Custom Styles
+.tab-bar-custom {
+  --background: #ffffff;
+  --border: 1px solid #e5e7eb;
+  height: 65px;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tab-button-custom {
+  --color: #6b7280;
+  --color-selected: #4f46e5;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+
+  ion-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  ion-label {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+}
+
+// Center button (Publish) - larger and elevated
+.tab-button-center {
+  position: relative;
+  
+  ion-icon {
+    font-size: 32px;
+    color: #4f46e5;
+    filter: drop-shadow(0 2px 4px rgba(79, 70, 229, 0.3));
+  }
+
+  ion-label {
+    color: #4f46e5;
+    font-weight: 600;
+  }
+}
+
+// Active state animation
+.tab-button-custom.tab-selected {
+  ion-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+
+  ion-label {
+    font-weight: 600;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .tab-bar-custom {
+    --background: #1f2937;
+    --border: 1px solid #374151;
+  }
+
+  .tab-button-custom {
+    --color: #9ca3af;
+    --color-selected: #818cf8;
+  }
+
+  .tab-button-center {
+    ion-icon {
+      color: #818cf8;
+    }
+
+    ion-label {
+      color: #818cf8;
+    }
+  }
+}

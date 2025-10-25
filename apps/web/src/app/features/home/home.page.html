@@ -1,0 +1,101 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title class="title-custom">
+      <strong>Autorenta</strong>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-content">
+  
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-overlay">
+      <h1 class="hero-title">Encuentra tu auto ideal</h1>
+      <p class="hero-subtitle">Miles de opciones cerca de ti</p>
+      
+      <!-- Quick Search -->
+      <div class="search-container">
+        <ion-searchbar
+          [(ngModel)]="searchQuery"
+          (ionChange)="onSearch()"
+          placeholder="Buscar por ciudad o ubicación"
+          [animated]="true"
+          class="search-bar-custom"
+        ></ion-searchbar>
+        
+        <!-- Quick Filters -->
+        <div class="quick-filters">
+          <ion-chip [routerLink]="['/tabs/explore']">
+            <ion-icon name="location-outline"></ion-icon>
+            <ion-label>Cerca de mí</ion-label>
+          </ion-chip>
+          <ion-chip [routerLink]="['/tabs/explore']">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <ion-label>Hoy</ion-label>
+          </ion-chip>
+          <ion-chip [routerLink]="['/tabs/explore']">
+            <ion-icon name="trending-up"></ion-icon>
+            <ion-label>Popular</ion-label>
+          </ion-chip>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Cars Section -->
+  <div class="featured-section">
+    <div class="section-header">
+      <h2>Autos destacados</h2>
+      <ion-button fill="clear" [routerLink]="['/tabs/explore']">
+        Ver todos
+      </ion-button>
+    </div>
+
+    <!-- Loading Skeletons -->
+    <div class="cars-grid" *ngIf="loading">
+      <ion-card *ngFor="let i of [1,2,3,4,5,6]">
+        <ion-skeleton-text [animated]="true" style="height: 200px;"></ion-skeleton-text>
+        <ion-card-header>
+          <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+        </ion-card-header>
+      </ion-card>
+    </div>
+
+    <!-- Featured Cars Grid -->
+    <div class="cars-grid" *ngIf="!loading && featuredCars.length > 0">
+      <app-car-card
+        *ngFor="let car of featuredCars"
+        [car]="car"
+        [routerLink]="['/cars', car.id]"
+      ></app-car-card>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!loading && featuredCars.length === 0">
+      <ion-icon name="car-outline" size="large"></ion-icon>
+      <p>No hay autos disponibles en este momento</p>
+      <ion-button [routerLink]="['/tabs/explore']">Explorar</ion-button>
+    </div>
+  </div>
+
+  <!-- Promotional Banner -->
+  <div class="promo-section">
+    <ion-card class="promo-card">
+      <ion-card-content>
+        <h3>¿Tienes un auto?</h3>
+        <p>Publícalo y genera ingresos extra</p>
+        <ion-button expand="block" [routerLink]="['/tabs/publish']">
+          Publicar ahora
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>
