@@ -400,12 +400,30 @@ export class CarsListPage implements OnInit, OnDestroy {
   async loadCars(): Promise<void> {
     this.loading.set(true);
     try {
-      const items = await this.carsService.listActiveCars({
-        city: this.city() ?? undefined,
-        from: this.dateRange().from ?? undefined,
-        to: this.dateRange().to ?? undefined,
-      });
-      this.cars.set(items);
+      const dateRange = this.dateRange();
+      
+      // ✅ SPRINT 2 INTEGRATION: Usar getAvailableCars si hay fechas seleccionadas
+      if (dateRange.from && dateRange.to) {
+        const items = await this.carsService.getAvailableCars(
+          dateRange.from,
+          dateRange.to,
+          {
+            city: this.city() ?? undefined,
+            limit: 100
+          }
+        );
+        this.cars.set(items);
+        console.log(`✅ Cargados ${items.length} autos disponibles para ${dateRange.from} - ${dateRange.to}`);
+      } else {
+        // Si no hay fechas, usar método tradicional
+        const items = await this.carsService.listActiveCars({
+          city: this.city() ?? undefined,
+          from: dateRange.from ?? undefined,
+          to: dateRange.to ?? undefined,
+        });
+        this.cars.set(items);
+      }
+      
       // Collapse search form on mobile after search
       this.searchExpanded.set(false);
       
@@ -422,7 +440,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.setupRealtimeSubscription();
       }
     } catch (err) {
-      console.error('listActiveCars error', err);
+      console.error('loadCars error', err);
     } finally {
       this.loading.set(false);
     }
