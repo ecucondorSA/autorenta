@@ -153,11 +153,34 @@ export class MyBookingsPage implements OnInit {
     // RouterLink handles navigation
   }
 
-  cancelBooking(bookingId: string): void {
-    if (confirm('¿Estás seguro de cancelar esta reserva?')) {
-      console.log('Cancelling booking:', bookingId);
-      // TODO: Call booking service to cancel
-      // this.bookingsService.cancelBooking(bookingId).then(() => this.loadBookings());
+  /**
+   * ✅ SPRINT 3: Cancelar reserva con validación
+   */
+  async cancelBooking(bookingId: string): Promise<void> {
+    const confirmed = confirm(
+      '¿Estás seguro de cancelar esta reserva?\n\n' +
+      'Esta acción no se puede deshacer.'
+    );
+    
+    if (!confirmed) return;
+
+    this.loading.set(true);
+    try {
+      const result = await this.bookingsService.cancelBooking(bookingId);
+      
+      if (!result.success) {
+        alert(`❌ Error: ${result.error}`);
+        return;
+      }
+
+      alert('✅ Reserva cancelada exitosamente');
+      await this.loadBookings(); // Recargar lista
+      
+    } catch (error) {
+      console.error('Error cancelando reserva:', error);
+      alert('❌ Error inesperado al cancelar la reserva');
+    } finally {
+      this.loading.set(false);
     }
   }
 
@@ -170,18 +193,68 @@ export class MyBookingsPage implements OnInit {
     alert(`📋 Instrucciones para ${booking.car_title}\n\n1. Documentos: DNI y Licencia\n2. Ubicación: ${location}\n3. Hora: ${booking.start_at}\n\n[En próxima actualización: Modal completo con checklist]`);
   }
 
-  openChat(booking: Booking): void {
-    console.log('Open chat for:', booking.id);
-    // TODO: Open chat component
-    alert(`💬 Chat con anfitrión\n\n[En próxima actualización: Chat integrado]\n\nPor ahora, contacta al anfitrión desde el detalle de la reserva.`);
+  /**
+   * ✅ SPRINT 3: Abrir chat/contacto con propietario
+   * Opción A: WhatsApp redirect (implementado)
+   * Opción B: Chat in-app (TODO futuro)
+   */
+  async openChat(booking: Booking): Promise<void> {
+    if (!booking.car_owner_id) {
+      alert('❌ No se pudo obtener información del propietario');
+      return;
+    }
+
+    this.loading.set(true);
+    try {
+      const contact = await this.bookingsService.getOwnerContact(booking.car_owner_id);
+      
+      if (!contact.success || !contact.phone) {
+        // Fallback: mostrar email
+        alert(
+          `📧 Contacto del propietario:\n\n` +
+          `${contact.name || 'Propietario'}\n` +
+          `Email: ${contact.email || 'No disponible'}\n\n` +
+          `Puedes contactarlo por email para coordinar el retiro.`
+        );
+        return;
+      }
+
+      // Si tiene teléfono, abrir WhatsApp
+      const carInfo = `${booking.car_title || 'auto'}`;
+      const dates = this.rangeLabel(booking);
+      const message = encodeURIComponent(
+        `Hola! Te contacto por la reserva del ${carInfo} para ${dates}.`
+      );
+      
+      const whatsappUrl = `https://wa.me/${contact.phone}?text=${message}`;
+      window.open(whatsappUrl, '_blank');
+      
+    } catch (error) {
+      console.error('Error obteniendo contacto:', error);
+      alert('❌ Error al obtener información de contacto');
+    } finally {
+      this.loading.set(false);
+    }
   }
 
+  /**
+   * ✅ SPRINT 3: Mostrar mapa de ubicación
+   * Usa Google Maps con la ubicación del auto
+   */
   showMap(booking: Booking): void {
-    console.log('Show map for:', booking.id);
-    const location = booking.car_city && booking.car_province 
-      ? `${booking.car_city}, ${booking.car_province}` 
-      : 'No especificada';
-    // TODO: Open map modal
-    alert(`🗺️ Ubicación: ${location}\n\n[En próxima actualización: Mapa interactivo con navegación]`);
+    const { car_location_lat, car_location_lng, car_city, car_province } = booking;
+    
+    // Si no hay coordenadas, mostrar mensaje
+    if (!car_location_lat || !car_location_lng) {
+      const location = car_city && car_province 
+        ? `${car_city}, ${car_province}` 
+        : 'No especificada';
+      alert(`🗺️ Ubicación: ${location}\n\nCoordenadas no disponibles.`);
+      return;
+    }
+
+    // Abrir Google Maps con las coordenadas
+    const mapsUrl = `https://www.google.com/maps?q=${car_location_lat},${car_location_lng}`;
+    window.open(mapsUrl, '_blank');
   }
 }
