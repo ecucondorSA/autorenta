@@ -41,6 +41,19 @@ export class AuthService {
     return this.state().session;
   }
 
+  /**
+   * ✅ FIX P0.1: Obtener usuario autenticado con email
+   */
+  async getCurrentUser(): Promise<{ id: string; email: string } | null> {
+    const session = await this.ensureSession();
+    if (!session?.user) return null;
+    
+    return {
+      id: session.user.id,
+      email: session.user.email || ''
+    };
+  }
+
   private async loadSession(): Promise<void> {
     const {
       data: { session },

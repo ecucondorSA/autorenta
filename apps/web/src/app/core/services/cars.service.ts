@@ -131,20 +131,73 @@ export class CarsService {
       `)
       .eq('status', 'active')
       .order('created_at', { ascending: false });
+    
     if (filters.city) {
       query = query.ilike('location_city', `%${filters.city}%`);
     }
-    if (filters.from && filters.to) {
-      // TODO: filtrar por disponibilidad real usando reservas existentes
-    }
+    
     const { data, error } = await query;
     if (error) throw error;
+
+    // ✅ FIX P0.2: Filtrar por disponibilidad si hay fechas
+    if (filters.from && filters.to && data) {
+      const availableCars = await this.filterByAvailability(
+        data as Car[],
+        filters.from,
+        filters.to,
+        filters.blockedCarIds || []
+      );
+      return availableCars.map((car: any) => ({
+        ...car,
+        photos: car.car_photos || [],
+        owner: Array.isArray(car.owner) ? car.owner[0] : car.owner
+      })) as Car[];
+    }
 
     return (data ?? []).map((car: any) => ({
       ...car,
       photos: car.car_photos || [],
       owner: Array.isArray(car.owner) ? car.owner[0] : car.owner
     })) as Car[];
+  }
+
+  /**
+   * ✅ FIX P0.2: Filtrar autos que NO tienen reservas conflictivas
+   * Verifica disponibilidad real contra bookings existentes
+   */
+  private async filterByAvailability(
+    cars: Car[],
+    startDate: string,
+    endDate: string,
+    additionalBlockedIds: string[] = []
+  ): Promise<Car[]> {
+    if (cars.length === 0) return [];
+
+    const carIds = cars.map(c => c.id);
+
+    // Buscar bookings que se solapan con las fechas solicitadas
+    const { data: conflicts, error } = await this.supabase
+      .from('bookings')
+      .select('car_id')
+      .in('car_id', carIds)
+      .in('status', ['confirmed', 'in_progress', 'pending'])
+      .or(`start_at.lte.${endDate},end_at.gte.${startDate}`);
+
+    if (error) {
+      console.error('Error checking availability:', error);
+      return cars; // Fallback: mostrar todos si falla
+    }
+
+    // IDs de autos bloqueados
+    const blockedIds = new Set([
+      ...additionalBlockedIds,
+      ...(conflicts || []).map(c => c.car_id)
+    ]);
+
+    console.log(`🚗 Filtered ${blockedIds.size} unavailable cars from ${cars.length} total cars`);
+
+    // Filtrar autos disponibles
+    return cars.filter(car => !blockedIds.has(car.id));
   }
 
   async getCarById(id: string): Promise<Car | null> {

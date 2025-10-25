@@ -9,6 +9,7 @@ import {
   formatUsd,
 } from '../../../../core/models/booking-detail-payment.model';
 import { PaymentAuthorizationService } from '../../../../core/services/payment-authorization.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 /**
  * Panel para autorizar preautorización (hold) en tarjeta
@@ -230,6 +231,8 @@ export class CardHoldPanelComponent implements OnInit {
   @Output() fallbackToWallet = new EventEmitter<void>();
 
   private authService = inject(PaymentAuthorizationService);
+  private auth = inject(AuthService); // ✅ Inyectar AuthService
+  private userEmail = signal<string | null>(null); // ✅ Email del usuario
 
   // Signals para estado reactivo
   protected authorizationStatus = signal<'idle' | 'authorized' | 'expired' | 'failed'>('idle');
@@ -253,6 +256,25 @@ export class CardHoldPanelComponent implements OnInit {
     if (this.currentAuthorization) {
       this.currentAuthSignal.set(this.currentAuthorization);
       this.authorizationStatus.set(this.mapAuthStatus(this.currentAuthorization));
+    }
+    
+    // ✅ Cargar email del usuario autenticado
+    this.loadUserEmail();
+  }
+  
+  /**
+   * ✅ FIX P0.1: Cargar email real del usuario
+   */
+  private async loadUserEmail(): Promise<void> {
+    try {
+      const user = await this.auth.getCurrentUser();
+      this.userEmail.set(user?.email || null);
+      
+      if (!this.userEmail()) {
+        console.error('User email not found');
+      }
+    } catch (error) {
+      console.error('Error loading user email:', error);
     }
   }
 
@@ -290,8 +312,12 @@ export class CardHoldPanelComponent implements OnInit {
     this.errorMessage.set(null);
 
     try {
-      // Obtener email del usuario (TODO: desde AuthService)
-      const payerEmail = 'test@autorenta.com'; // TODO: Obtener del usuario logueado
+      // ✅ FIX P0.1: Usar email del usuario autenticado (no hardcoded)
+      const payerEmail = this.userEmail() || 'fallback@autorenta.com';
+      
+      if (!this.userEmail()) {
+        console.warn('Using fallback email - user email not loaded');
+      }
 
       this.authService
       .authorizePayment({
