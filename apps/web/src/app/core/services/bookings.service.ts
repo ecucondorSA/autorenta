@@ -584,4 +584,94 @@ export class BookingsService {
 
     return null;
   }
+
+  /**
+   * ✅ SPRINT 2 FIX: Crear reserva con validación de disponibilidad
+   * Este método valida ANTES de crear la reserva
+   * 
+   * @param carId - ID del auto a reservar
+   * @param startDate - Fecha inicio (ISO string)
+   * @param endDate - Fecha fin (ISO string)
+   * @returns Promise con resultado de la operación
+   * 
+   * @example
+   * const result = await bookingService.createBookingWithValidation(
+   *   'uuid-del-auto',
+   *   '2025-11-01T00:00:00Z',
+   *   '2025-11-05T00:00:00Z'
+   * );
+   * 
+   * if (!result.success) {
+   *   alert(result.error); // "Auto no disponible para esas fechas"
+   * }
+   */
+  async createBookingWithValidation(
+    carId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<{
+    success: boolean;
+    booking?: Booking;
+    error?: string;
+  }> {
+    try {
+      // 1. Validar que las fechas sean correctas
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      
+      if (start >= end) {
+        return {
+          success: false,
+          error: 'La fecha de inicio debe ser anterior a la fecha de fin'
+        };
+      }
+
+      if (start < new Date()) {
+        return {
+          success: false,
+          error: 'La fecha de inicio no puede ser en el pasado'
+        };
+      }
+
+      // 2. Verificar disponibilidad usando la RPC function
+      const { data: isAvailable, error: checkError } = await this.supabase.rpc(
+        'is_car_available',
+        {
+          p_car_id: carId,
+          p_start_date: startDate,
+          p_end_date: endDate
+        }
+      );
+
+      if (checkError) {
+        console.error('Error verificando disponibilidad:', checkError);
+        return {
+          success: false,
+          error: 'Error al verificar disponibilidad del auto'
+        };
+      }
+
+      if (!isAvailable) {
+        return {
+          success: false,
+          error: 'El auto no está disponible para esas fechas. Por favor elige otras fechas.'
+        };
+      }
+
+      // 3. Auto disponible, crear la reserva
+      const booking = await this.requestBooking(carId, startDate, endDate);
+
+      return {
+        success: true,
+        booking: booking
+      };
+
+    } catch (error: any) {
+      console.error('Error en createBookingWithValidation:', error);
+      return {
+        success: false,
+        error: error.message || 'Error al crear la reserva'
+      };
+    }
+  }
 }

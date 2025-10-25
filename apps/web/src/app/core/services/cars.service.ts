@@ -349,4 +349,122 @@ export class CarsService {
 
     return (data as Car[]) ?? [];
   }
+
+  /**
+   * ✅ SPRINT 2 FIX: Obtener autos disponibles usando RPC function
+   * Previene doble reserva validando en base de datos
+   * 
+   * @param startDate - Fecha inicio (ISO string)
+   * @param endDate - Fecha fin (ISO string)
+   * @param options - Opciones adicionales (limit, offset, city)
+   * @returns Promise<Car[]> - Solo autos SIN conflictos de fechas
+   * 
+   * @example
+   * const cars = await carsService.getAvailableCars(
+   *   '2025-11-01T00:00:00Z',
+   *   '2025-11-05T00:00:00Z',
+   *   { city: 'Montevideo', limit: 20 }
+   * );
+   */
+  async getAvailableCars(
+    startDate: string,
+    endDate: string,
+    options: {
+      limit?: number;
+      offset?: number;
+      city?: string;
+    } = {}
+  ): Promise<Car[]> {
+    try {
+      // Llamar a la función RPC que creamos en Sprint 2
+      const { data, error } = await this.supabase.rpc('get_available_cars', {
+        p_start_date: startDate,
+        p_end_date: endDate,
+        p_limit: options.limit || 100,
+        p_offset: options.offset || 0
+      });
+
+      if (error) {
+        console.error('Error calling get_available_cars RPC:', error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        return [];
+      }
+
+      // Filtrar por ciudad si se especificó
+      let filteredCars = data;
+      if (options.city) {
+        filteredCars = data.filter((car: any) => {
+          const cityInLocation = car.location?.city?.toLowerCase();
+          return cityInLocation?.includes(options.city!.toLowerCase());
+        });
+      }
+
+      // Cargar fotos para cada auto (la RPC no las incluye por performance)
+      const carsWithPhotos = await Promise.all(
+        filteredCars.map(async (car: any) => {
+          const { data: photos } = await this.supabase
+            .from('car_photos')
+            .select('*')
+            .eq('car_id', car.id)
+            .order('position');
+
+          return {
+            ...car,
+            photos: photos || []
+          } as Car;
+        })
+      );
+
+      return carsWithPhotos;
+    } catch (error) {
+      console.error('Error en getAvailableCars:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * ✅ SPRINT 2 FIX: Verificar si un auto específico está disponible
+   * Útil antes de crear una reserva
+   * 
+   * @param carId - ID del auto
+   * @param startDate - Fecha inicio (ISO string)
+   * @param endDate - Fecha fin (ISO string)
+   * @returns Promise<boolean> - true si está disponible, false si no
+   * 
+   * @example
+   * const available = await carsService.isCarAvailable(
+   *   'uuid-del-auto',
+   *   '2025-11-01T00:00:00Z',
+   *   '2025-11-05T00:00:00Z'
+   * );
+   * if (!available) {
+   *   alert('Auto no disponible para esas fechas');
+   * }
+   */
+  async isCarAvailable(
+    carId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<boolean> {
+    try {
+      const { data, error } = await this.supabase.rpc('is_car_available', {
+        p_car_id: carId,
+        p_start_date: startDate,
+        p_end_date: endDate
+      });
+
+      if (error) {
+        console.error('Error calling is_car_available RPC:', error);
+        return false; // En caso de error, asumir no disponible por seguridad
+      }
+
+      return data === true;
+    } catch (error) {
+      console.error('Error en isCarAvailable:', error);
+      return false;
+    }
+  }
 }
