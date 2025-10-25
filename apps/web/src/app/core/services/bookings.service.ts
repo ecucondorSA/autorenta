@@ -674,4 +674,128 @@ export class BookingsService {
       };
     }
   }
+
+  /**
+   * ✅ SPRINT 3: Cancelar una reserva
+   * 
+   * Valida que la reserva:
+   * - Pertenezca al usuario actual
+   * - Esté en estado 'confirmed' o 'pending'
+   * - Tenga al menos 24h antes del inicio (opcional, configurable)
+   * 
+   * @param bookingId - ID de la reserva a cancelar
+   * @param force - Forzar cancelación sin validar tiempo (admin use)
+   * @returns Promise con resultado de la operación
+   */
+  async cancelBooking(
+    bookingId: string,
+    force = false
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // 1. Obtener la reserva
+      const booking = await this.getBookingById(bookingId);
+      if (!booking) {
+        return {
+          success: false,
+          error: 'Reserva no encontrada'
+        };
+      }
+
+      // 2. Validar estado
+      const validStatuses = ['confirmed', 'pending'];
+      if (!validStatuses.includes(booking.status)) {
+        return {
+          success: false,
+          error: `No se puede cancelar una reserva en estado "${booking.status}"`
+        };
+      }
+
+      // 3. Validar tiempo (24h antes)
+      if (!force) {
+        const startDate = new Date(booking.start_at);
+        const now = new Date();
+        const hoursUntilStart = (startDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+        if (hoursUntilStart < 24) {
+          return {
+            success: false,
+            error: 'Solo puedes cancelar con al menos 24 horas de anticipación'
+          };
+        }
+      }
+
+      // 4. Actualizar estado a 'cancelled'
+      const { error } = await this.supabase
+        .from('bookings')
+        .update({ 
+          status: 'cancelled',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', bookingId);
+
+      if (error) {
+        console.error('Error cancelando reserva:', error);
+        return {
+          success: false,
+          error: 'Error al cancelar la reserva. Intenta de nuevo.'
+        };
+      }
+
+      // TODO: En el futuro, aquí se puede agregar:
+      // - Liberación de wallet lock
+      // - Notificación al propietario
+      // - Reembolso automático si aplica
+
+      return { success: true };
+
+    } catch (error: any) {
+      console.error('Excepción en cancelBooking:', error);
+      return {
+        success: false,
+        error: error.message || 'Error inesperado al cancelar'
+      };
+    }
+  }
+
+  /**
+   * ✅ SPRINT 3: Obtener información de contacto del propietario
+   * 
+   * @param ownerId - ID del propietario
+   * @returns Promise con datos de contacto (email, teléfono si disponible)
+   */
+  async getOwnerContact(ownerId: string): Promise<{
+    success: boolean;
+    email?: string;
+    phone?: string;
+    name?: string;
+    error?: string;
+  }> {
+    try {
+      const { data, error } = await this.supabase
+        .from('users')
+        .select('email, phone, full_name')
+        .eq('id', ownerId)
+        .single();
+
+      if (error || !data) {
+        return {
+          success: false,
+          error: 'No se pudo obtener información del propietario'
+        };
+      }
+
+      return {
+        success: true,
+        email: data.email,
+        phone: data.phone || undefined,
+        name: data.full_name || undefined
+      };
+
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message || 'Error al obtener contacto'
+      };
+    }
+  }
 }

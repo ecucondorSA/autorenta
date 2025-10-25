@@ -707,22 +707,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       const result = await this.bookingsService.createBookingWithValidation(
         input.carId,
         input.startDate.toISOString(),
-        input.endDate.toISOString(),
-        {
-          renterId: userId,
-          totalAmount: pricing.totalArs,
-          currency: 'ARS',
-          totalPriceArs: pricing.totalArs,
-          paymentMode: this.paymentMode(),
-          coverageUpgrade: this.coverageUpgrade(),
-          authorizedPaymentId: this.paymentAuthorization()?.authorizedPaymentId,
-          walletLockId: this.walletLock()?.lockId,
-          status: 'pending',
-          idempotencyKey: generateIdempotencyKey(),
-        }
+        input.endDate.toISOString()
       );
 
-      if (!result.success) {
+      if (!result.success || !result.booking?.id) {
         console.error('❌ Error creando reserva:', result.error);
         return {
           ok: false,
@@ -730,7 +718,28 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         };
       }
 
-      console.log('✅ Reserva creada con validación:', result.booking?.id);
+      // ✅ Paso 2: Actualizar la reserva con los detalles del pago
+      try {
+        await this.bookingsService.updateBooking(result.booking.id, {
+          total_amount: pricing.totalArs, // Corregido a snake_case
+          currency: 'ARS',
+          total_price_ars: pricing.totalArs, // Corregido a snake_case
+          payment_mode: this.paymentMode(), // Corregido a snake_case
+          coverage_upgrade: this.coverageUpgrade(), // Corregido a snake_case
+          authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId, // Corregido a snake_case
+          wallet_lock_id: this.walletLock()?.lockId, // Corregido a snake_case
+          status: 'pending',
+        });
+      } catch (updateError: any) {
+        console.error('❌ Error actualizando la reserva con detalles de pago:', updateError);
+        // Opcional: Considerar cancelar la reserva si la actualización falla
+        return {
+          ok: false,
+          error: `La reserva se creó pero no se pudo actualizar: ${updateError.message}`
+        };
+      }
+
+      console.log('✅ Reserva creada y actualizada con éxito:', result.booking.id);
       return {
         ok: true,
         bookingId: result.booking!.id,
