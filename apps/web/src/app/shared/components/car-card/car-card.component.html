@@ -180,9 +180,24 @@
     <!-- Precio y CTA con espaciado mejorado -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-4 mt-auto pt-3">
       <div class="flex-shrink-0">
-        <p class="text-2xl sm:text-3xl font-bold text-smoke-black tracking-tight leading-none">
-          {{ car.price_per_day | money }}
-        </p>
+        <!-- Skeleton loader mientras carga precio dinámico -->
+        <div *ngIf="showPriceLoader()" class="animate-pulse">
+          <div class="h-8 sm:h-10 bg-pearl-gray dark:bg-slate-deep rounded w-28 mb-1"></div>
+          <div class="h-4 bg-pearl-gray dark:bg-slate-deep rounded w-16"></div>
+        </div>
+        
+        <!-- Precio (dinámico o estático) -->
+        <div *ngIf="!showPriceLoader()" class="flex items-baseline gap-2">
+          <p class="text-2xl sm:text-3xl font-bold text-smoke-black tracking-tight leading-none">
+            {{ displayPrice() | money }}
+          </p>
+          <!-- Icono de surge pricing -->
+          <span *ngIf="priceSurgeIcon()" 
+                class="text-lg" 
+                [title]="priceSurgeIcon() === '⚡' ? 'Precio ajustado por demanda' : 'Descuento disponible'">
+            {{ priceSurgeIcon() }}
+          </span>
+        </div>
         <p class="text-sm font-medium text-charcoal-medium mt-1">por día</p>
       </div>
 

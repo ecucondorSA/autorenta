@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output, EventEmitter, computed, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output, EventEmitter, computed, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Car } from '../../../core/models';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
+import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 
 @Component({
   selector: 'app-car-card',
@@ -13,8 +14,9 @@ import { getCarImageUrl } from '../../utils/car-placeholder.util';
   templateUrl: './car-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarCardComponent {
+export class CarCardComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly pricingService = inject(DynamicPricingService);
 
   private readonly _car = signal<Car | undefined>(undefined);
   private readonly _selected = signal<boolean>(false);
@@ -28,6 +30,22 @@ export class CarCardComponent {
 
   private readonly _showOwnerActions = signal<boolean>(false);
 
+  // Dynamic pricing signals
+  readonly dynamicPrice = signal<number | null>(null);
+  readonly priceLoading = signal<boolean>(false);
+  readonly priceSurgeIcon = signal<string>('');
+
+  // Computed display price: use dynamic if available, fallback to static
+  readonly displayPrice = computed(() => {
+    const dynamic = this.dynamicPrice();
+    const car = this._car();
+    return dynamic !== null ? dynamic : (car?.price_per_day ?? 0);
+  });
+
+  readonly showPriceLoader = computed(() => {
+    return this.priceLoading() && this.dynamicPrice() === null;
+  });
+
   @Input()
   set showOwnerActions(value: boolean) {
     this._showOwnerActions.set(value);
@@ -40,10 +58,56 @@ export class CarCardComponent {
   @Input({ required: true })
   set car(value: Car) {
     this._car.set(value);
+    // Load dynamic price when car changes
+    if (value?.region_id) {
+      void this.loadDynamicPrice();
+    }
   }
 
   get car(): Car {
     return this._car()!;
+  }
+
+  ngOnInit(): void {
+    // Load dynamic price on init if car already set
+    if (this.car?.region_id) {
+      void this.loadDynamicPrice();
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup if needed
+  }
+
+  private async loadDynamicPrice(): Promise<void> {
+    const car = this._car();
+    if (!car || !car.region_id) {
+      return;
+    }
+
+    this.priceLoading.set(true);
+    this.cdr.markForCheck();
+
+    try {
+      const priceData = await this.pricingService.getQuickPrice(car.id, car.region_id);
+      
+      if (priceData) {
+        this.dynamicPrice.set(priceData.price_per_day);
+        
+        // Set surge icon if applicable
+        if (priceData.surge_active && priceData.surge_icon) {
+          this.priceSurgeIcon.set(priceData.surge_icon);
+        }
+        
+        this.cdr.markForCheck();
+      }
+    } catch (error) {
+      console.error('Failed to load dynamic price for car:', car.id, error);
+      // Fallback: dynamicPrice stays null, displayPrice uses car.price_per_day
+    } finally {
+      this.priceLoading.set(false);
+      this.cdr.markForCheck();
+    }
   }
 
   @Input()
