@@ -5,9 +5,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from './core/services/auth.service';
+import { ProfileService } from './core/services/profile.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { PwaService } from './core/services/pwa.service';
 import { TourService } from './core/services/tour.service';
+import { GuidedTourService } from './core/guided-tour';
 import { LocaleManagerService } from './core/services/locale-manager.service';
 import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
 import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
@@ -51,9 +53,11 @@ import { ToastComponent } from './shared/components/toast/toast.component';
 })
 export class AppComponent implements OnInit, AfterViewInit {
   private readonly authService = inject(AuthService);
+  private readonly profileService = inject(ProfileService);
   private readonly compareService = inject(CarsCompareService);
   private readonly pwaService = inject(PwaService);
-  private readonly tourService = inject(TourService);
+  private readonly tourService = inject(TourService); // OLD - Keeping for compatibility
+  private readonly guidedTour = inject(GuidedTourService); // NEW
   private readonly localeManager = inject(LocaleManagerService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -65,6 +69,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   readonly sidebarOpen = signal(false);
   readonly darkMode = signal(false);
   readonly fullBleedLayout = signal(false);
+  readonly userProfile = signal<any>(null);
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
@@ -78,6 +83,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initializeSplash();
     this.initializeTheme();
     this.initializeLayoutWatcher();
+    this.loadUserProfile();
   }
 
   ngAfterViewInit(): void {
@@ -244,11 +250,38 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private initializeWelcomeTour(): void {
-    const hasSeenTour = localStorage.getItem('autorenta:tour:welcome');
-    const isHomePage = this.router.url === '/' || this.router.url === '/cars';
+    // NEW TOUR SYSTEM: Tours with autoStart: true will start automatically
+    // No manual initialization needed! TourOrchestrator handles it.
+    
+    // Enable debug mode in development
+    if (!this.isBrowser) {
+      return;
+    }
+    
+    const isDev = !window.location.hostname.includes('autorentar.com');
+    if (isDev) {
+      this.guidedTour.enableDebug();
+      console.log('🧭 Guided Tour System: Debug mode enabled');
+    }
+    
+    // Tours are now managed by TourOrchestrator based on:
+    // - autoStart flag in TourDefinition
+    // - Guards (isHomePage, hasInventory, etc.)
+    // - Triggers (route patterns, custom events)
+    // - Throttle periods (won't show if already completed recently)
+  }
 
-    if (!hasSeenTour && isHomePage) {
-      this.tourService.startWelcomeTour();
+  private async loadUserProfile(): Promise<void> {
+    if (!this.isAuthenticatedSig()) {
+      return;
+    }
+
+    try {
+      const profile = await this.profileService.getCurrentProfile();
+      this.userProfile.set(profile);
+    } catch (error) {
+      // Silently fail - avatar will show placeholder
+      console.debug('Could not load user profile for avatar:', error);
     }
   }
 }

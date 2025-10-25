@@ -2,10 +2,12 @@
   <ng-template #carouselCard let-car>
     <button
       type="button"
+      role="listitem"
       class="map-carousel-card"
       [class.map-carousel-card--active]="isCarSelected(car.id)"
       (click)="onCarSelected(car.id)"
       [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto económico')"
+      tabindex="0"
     >
       <div class="map-carousel-card__media">
         <img
@@ -70,7 +72,7 @@
 
         <div class="pointer-events-none absolute inset-0">
           <div class="map-controls pointer-events-auto">
-            <div id="filters" class="map-controls__filters filter-section">
+            <div id="filters" data-tour-step="guided-search" class="map-controls__filters filter-section">
               <app-map-filters
                 (filtersChange)="onFiltersChange($event)"
                 (filtersReset)="onFiltersReset()"
@@ -96,11 +98,13 @@
           <div
             *ngIf="showEconomyCarousel()"
             class="map-carousel-container pointer-events-none hidden lg:block"
+            role="region"
+            aria-label="Autos cercanos y económicos"
           >
-            <div class="map-carousel-heading pointer-events-auto" aria-hidden="true">
+            <div class="map-carousel-heading pointer-events-auto">
               <span class="map-carousel-heading__pill">Cercanos y económicos</span>
             </div>
-            <div class="map-carousel pointer-events-auto">
+            <div class="map-carousel pointer-events-auto" data-tour-step="guided-select-car" role="list">
               <ng-container *ngFor="let car of economyCars(); trackBy: trackByCarId">
                 <ng-container
                   [ngTemplateOutlet]="carouselCard"
@@ -113,9 +117,9 @@
       </div>
     </div>
 
-    <div *ngIf="showEconomyCarousel()" class="map-carousel-mobile lg:hidden">
+    <div *ngIf="showEconomyCarousel()" class="map-carousel-mobile lg:hidden" role="region" aria-label="Autos sugeridos cerca tuyo">
       <p class="map-carousel-mobile__heading">Sugeridos cerca tuyo</p>
-      <div class="map-carousel map-carousel--mobile">
+      <div class="map-carousel map-carousel--mobile" role="list">
         <ng-container *ngFor="let car of economyCars(); trackBy: trackByCarId">
           <ng-container
             [ngTemplateOutlet]="carouselCard"

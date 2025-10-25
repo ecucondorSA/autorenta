@@ -248,6 +248,16 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * Carga el booking input desde route params o sessionStorage
    */
   private async loadBookingInput(): Promise<void> {
+    // NUEVO: Intentar cargar desde bookingId existente
+    const bookingId = this.route.snapshot.queryParamMap.get('bookingId');
+    
+    if (bookingId) {
+      // Flujo: booking existente desde /bookings
+      await this.loadExistingBooking(bookingId);
+      return;
+    }
+
+    // Flujo original: nueva reserva desde car-detail
     // Intentar desde sessionStorage primero
     const stored = sessionStorage.getItem('booking_detail_input');
     if (stored) {
@@ -297,6 +307,61 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       vehicleValueUsd: vehicleValueUsd ? parseInt(vehicleValueUsd, 10) : 15000,
       country: country || 'AR',
     }));
+  }
+
+  /**
+   * NUEVO: Carga un booking existente desde la DB
+   */
+  private async loadExistingBooking(bookingId: string): Promise<void> {
+    try {
+      const { data, error } = await this.supabaseClient
+        .from('bookings')
+        .select(`
+          *,
+          car:cars(*)
+        `)
+        .eq('id', bookingId)
+        .single();
+
+      if (error) throw error;
+      if (!data) {
+        this.error.set('Booking no encontrado');
+        return;
+      }
+
+      // Reconstruir bookingInput desde el booking
+      this.bookingInput.set({
+        carId: data.car_id,
+        startDate: new Date(data.start_at),
+        endDate: new Date(data.end_at),
+        bucket: data.car?.bucket || 'standard',
+        vehicleValueUsd: data.car?.value_usd || 15000,
+        country: 'AR',
+      });
+
+      // Pre-cargar info del auto
+      if (data.car) {
+        this.car.set(data.car);
+      }
+
+      // Pre-seleccionar payment_mode si ya existe
+      if (data.payment_mode) {
+        this.paymentMode.set(data.payment_mode as PaymentMode);
+      }
+
+      // Pre-seleccionar coverage_upgrade si ya existe
+      if (data.coverage_upgrade) {
+        this.coverageUpgrade.set(data.coverage_upgrade as CoverageUpgrade);
+      }
+
+      // Guardar bookingId para UPDATE posterior
+      (this as any).existingBookingId = bookingId;
+
+      console.log('[Detalle & Pago] Booking existente cargado:', bookingId);
+    } catch (err: any) {
+      console.error('Error loading existing booking:', err);
+      this.error.set('Error al cargar el booking: ' + err.message);
+    }
   }
 
   /**
@@ -522,23 +587,15 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     this.validationErrors.set([]);
 
     try {
-      // 1. Persistir risk snapshot
-      const riskSnapshotResult = await this.persistRiskSnapshot();
-      if (!riskSnapshotResult.ok || !riskSnapshotResult.snapshotId) {
-        throw new Error(riskSnapshotResult.error || 'Error al guardar risk snapshot');
+      const existingBookingId = (this as any).existingBookingId;
+
+      if (existingBookingId) {
+        // FLUJO UPDATE: Booking existente desde /bookings
+        await this.updateExistingBooking(existingBookingId);
+      } else {
+        // FLUJO CREATE: Nueva reserva desde car-detail
+        await this.createNewBooking();
       }
-
-      // 2. Crear booking
-      const bookingResult = await this.createBooking(riskSnapshotResult.snapshotId);
-      if (!bookingResult.ok || !bookingResult.bookingId) {
-        throw new Error(bookingResult.error || 'Error al crear reserva');
-      }
-
-      // 3. Limpiar sessionStorage
-      sessionStorage.removeItem('booking_detail_input');
-
-      // 4. Navegar a voucher
-      this.router.navigate(['/bookings', bookingResult.bookingId, 'voucher']);
     } catch (err: any) {
       console.error('Error confirming booking:', err);
       this.error.set(err.message || 'Error al confirmar reserva');
@@ -547,12 +604,77 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * NUEVO: Actualiza un booking existente con payment_mode y autorizaciones
+   */
+  private async updateExistingBooking(bookingId: string): Promise<void> {
+    console.log('[Detalle & Pago] Actualizando booking existente:', bookingId);
+
+    // 1. Persistir risk snapshot con booking_id real
+    const riskSnapshotResult = await this.persistRiskSnapshot(bookingId);
+    if (!riskSnapshotResult.ok || !riskSnapshotResult.snapshotId) {
+      throw new Error(riskSnapshotResult.error || 'Error al guardar risk snapshot');
+    }
+
+    // 2. Actualizar booking con payment_mode y autorizaciones
+    const { error } = await this.supabaseClient
+      .from('bookings')
+      .update({
+        payment_mode: this.paymentMode(),
+        coverage_upgrade: this.coverageUpgrade(),
+        authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId,
+        wallet_lock_id: this.walletLock()?.lockId,
+        risk_snapshot_booking_id: bookingId, // FIXED: Column is risk_snapshot_booking_id, not risk_snapshot_id
+        risk_snapshot_date: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', bookingId);
+
+    if (error) throw error;
+
+    console.log('[Detalle & Pago] Booking actualizado, redirigiendo a checkout');
+
+    // 3. Limpiar sessionStorage si existe
+    sessionStorage.removeItem('booking_detail_input');
+
+    // 4. Redirigir a checkout
+    this.router.navigate(['/bookings/checkout', bookingId]);
+  }
+
+  /**
+   * NUEVO: Crea un nuevo booking (flujo original)
+   */
+  private async createNewBooking(): Promise<void> {
+    console.log('[Detalle & Pago] Creando nuevo booking');
+
+    // 1. Crear booking primero (sin risk_snapshot_id)
+    const bookingResult = await this.createBooking();
+    if (!bookingResult.ok || !bookingResult.bookingId) {
+      throw new Error(bookingResult.error || 'Error al crear reserva');
+    }
+
+    // 2. Persistir risk snapshot con booking_id real
+    const riskSnapshotResult = await this.persistRiskSnapshot(bookingResult.bookingId);
+    if (!riskSnapshotResult.ok || !riskSnapshotResult.snapshotId) {
+      throw new Error(riskSnapshotResult.error || 'Error al guardar risk snapshot');
+    }
+
+    // 3. Actualizar booking con risk_snapshot_id
+    await this.updateBookingRiskSnapshot(bookingResult.bookingId, riskSnapshotResult.snapshotId);
+
+    // 4. Limpiar sessionStorage
+    sessionStorage.removeItem('booking_detail_input');
+
+    // 5. Navegar a checkout
+    this.router.navigate(['/bookings/checkout', bookingResult.bookingId]);
+  }
+
   // ==================== HELPERS ====================
 
   /**
    * Persiste el risk snapshot en DB
    */
-  private async persistRiskSnapshot(): Promise<{ ok: boolean; snapshotId?: string; error?: string }> {
+  private async persistRiskSnapshot(bookingId: string): Promise<{ ok: boolean; snapshotId?: string; error?: string }> {
     const risk = this.riskSnapshot();
     const input = this.bookingInput();
 
@@ -560,18 +682,15 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       return { ok: false, error: 'Faltan datos de riesgo o booking' };
     }
 
-    // Crear booking temporal para obtener ID
-    const tempBookingId = generateIdempotencyKey();
-
     return firstValueFrom(
-      this.riskService.persistRiskSnapshot(tempBookingId, risk, this.paymentMode())
+      this.riskService.persistRiskSnapshot(bookingId, risk, this.paymentMode())
     );
   }
 
   /**
    * Crea el booking en DB
    */
-  private async createBooking(riskSnapshotId: string): Promise<CreateBookingResult> {
+  private async createBooking(): Promise<CreateBookingResult> {
     const input = this.bookingInput();
     const pricing = this.priceBreakdown();
     const userId = this.userId();
@@ -585,17 +704,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         .from('bookings')
         .insert({
           car_id: input.carId,
-          user_id: userId,
-          start_date: input.startDate.toISOString(),
-          end_date: input.endDate.toISOString(),
-          total_price_usd: pricing.totalUsd,
+          renter_id: userId,
+          start_at: input.startDate.toISOString(),
+          end_at: input.endDate.toISOString(),
+          total_amount: pricing.totalArs,
+          currency: 'ARS',
           total_price_ars: pricing.totalArs,
-          risk_snapshot_id: riskSnapshotId,
           payment_mode: this.paymentMode(),
           coverage_upgrade: this.coverageUpgrade(),
           authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId,
           wallet_lock_id: this.walletLock()?.lockId,
-          status: 'pending_confirmation',
+          status: 'pending',
           idempotency_key: generateIdempotencyKey(),
         })
         .select('id')
@@ -606,13 +725,30 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       return {
         ok: true,
         bookingId: data.id,
-        riskSnapshotId,
       };
     } catch (err: any) {
       return {
         ok: false,
         error: err.message || 'Error desconocido',
       };
+    }
+  }
+
+  /**
+   * Actualiza el booking con el risk_snapshot_booking_id
+   */
+  private async updateBookingRiskSnapshot(bookingId: string, riskSnapshotId: string): Promise<void> {
+    const { error } = await this.supabaseClient
+      .from('bookings')
+      .update({ 
+        risk_snapshot_booking_id: bookingId, // FIXED: Column is risk_snapshot_booking_id
+        risk_snapshot_date: new Date().toISOString()
+      })
+      .eq('id', bookingId);
+
+    if (error) {
+      console.error('Error updating booking risk snapshot:', error);
+      throw new Error('Error al actualizar risk snapshot');
     }
   }
 

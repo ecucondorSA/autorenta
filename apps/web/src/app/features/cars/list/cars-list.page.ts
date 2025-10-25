@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
+  OnDestroy,
   ViewChild,
   computed,
   signal,
@@ -12,10 +13,12 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { TourService } from '../../../core/services/tour.service';
+import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { Car } from '../../../core/models';
 import {
   DateRange,
@@ -50,23 +53,27 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     RouterLink,
     CarsMapComponent,
     MapFiltersComponent,
-    MoneyPipe, TranslateModule],
+    MoneyPipe,
+    TranslateModule,
+  ],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarsListPage implements OnInit {
+export class CarsListPage implements OnInit, OnDestroy {
   @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
 
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
   private readonly metaService = inject(MetaService);
   private readonly tourService = inject(TourService);
+  private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
   private sortInitialized = false;
   private analyticsLastKey: string | null = null;
+  private realtimeChannel?: RealtimeChannel;
 
   readonly city = signal<string | null>(null);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -76,6 +83,7 @@ export class CarsListPage implements OnInit {
   readonly hasFilters = computed(() => !!this.city() || !!this.dateRange().from);
   readonly selectedCarId = signal<string | null>(null);
   readonly searchExpanded = signal(false);
+  readonly inventoryReady = signal(false);
 
   // Filtros y ordenamiento
   readonly mapFilters = signal<MapFilters | null>(null);
@@ -370,11 +378,6 @@ export class CarsListPage implements OnInit {
       if (storedSort && this.isValidSort(storedSort)) {
         this.sortBy.set(storedSort);
       }
-
-      // Iniciar tour guiado para nuevos usuarios (navegación libre)
-      setTimeout(() => {
-        this.tourService.startGuidedBookingTour();
-      }, 2000); // Esperar a que el mapa y autos se carguen
     }
 
     this.sortInitialized = true;
@@ -405,10 +408,76 @@ export class CarsListPage implements OnInit {
       this.cars.set(items);
       // Collapse search form on mobile after search
       this.searchExpanded.set(false);
+      
+      // Notificar que el inventario está listo y esperar a que el DOM se actualice
+      if (this.isBrowser && !this.inventoryReady()) {
+        this.inventoryReady.set(true);
+        setTimeout(() => {
+          this.tourService.startGuidedBookingTour();
+        }, 500);
+      }
+
+      // Setup real-time subscription on first load
+      if (this.isBrowser && !this.realtimeChannel) {
+        this.setupRealtimeSubscription();
+      }
     } catch (err) {
       console.error('listActiveCars error', err);
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  private setupRealtimeSubscription(): void {
+    this.realtimeChannel = this.supabase
+      .channel('cars-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'cars' },
+        (payload) => {
+          this.handleRealtimeUpdate(payload);
+        }
+      )
+      .subscribe();
+  }
+
+  private async handleRealtimeUpdate(payload: { eventType: string; [key: string]: unknown }): Promise<void> {
+    const eventType = payload.eventType;
+    
+    if (eventType === 'INSERT') {
+      await this.showNewCarToast();
+    } else if (eventType === 'UPDATE' || eventType === 'DELETE') {
+      // Silent refresh for updates/deletions
+      await this.loadCars();
+    }
+  }
+
+  private async showNewCarToast(): Promise<void> {
+    if (typeof window === 'undefined') return;
+    
+    // Show simple notification banner
+    const banner = document.createElement('div');
+    banner.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
+    banner.innerHTML = `
+      <span>¡Nuevos vehículos disponibles!</span>
+      <button class="underline font-medium" onclick="this.parentElement.dispatchEvent(new CustomEvent('refresh'))">Ver ahora</button>
+      <button class="ml-2" onclick="this.parentElement.remove()">✕</button>
+    `;
+    
+    banner.addEventListener('refresh', () => {
+      void this.loadCars();
+      banner.remove();
+    });
+    
+    document.body.appendChild(banner);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => banner.remove(), 5000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.realtimeChannel) {
+      this.supabase.removeChannel(this.realtimeChannel);
     }
   }
 
