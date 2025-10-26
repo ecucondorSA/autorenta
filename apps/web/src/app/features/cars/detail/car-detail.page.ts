@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,6 +9,7 @@ import { WalletService } from '../../../core/services/wallet.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
+import { FxService } from '../../../core/services/fx.service'; // ✅ NUEVO: Para tasas de cambio actuales
 import { Car, Review, CarStats, ReviewSummary } from '../../../core/models';
 import {
   DateRangePickerComponent,
@@ -39,6 +40,7 @@ export class CarDetailPage implements OnInit {
   readonly walletAmountToUse = signal<number>(0);
   readonly cardAmountToUse = signal<number>(0);
   readonly currentPhotoIndex = signal(0);
+  readonly currentFxRate = signal<number>(1000); // ✅ NUEVO: Tasa de cambio USD/ARS actual (default: 1000)
 
   // Reviews-related signals
   readonly reviews = signal<Review[]>([]);
@@ -129,11 +131,32 @@ export class CarDetailPage implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     readonly pricingService: DynamicPricingService,
+    private readonly fxService: FxService, // ✅ NUEVO: Para tasas de cambio actuales
   ) {}
 
   ngOnInit(): void {
     void this.loadCar();
     void this.loadWalletBalance();
+    void this.loadCurrentFxRate(); // ✅ NUEVO: Cargar tasa de cambio actual
+  }
+
+  /**
+   * ✅ NUEVO: Carga la tasa de cambio actual desde Binance
+   */
+  async loadCurrentFxRate(): Promise<void> {
+    this.fxService.getFxSnapshot('USD', 'ARS').subscribe({
+      next: (snapshot) => {
+        if (snapshot && !snapshot.isExpired) {
+          this.currentFxRate.set(snapshot.rate);
+          console.log(`💱 Tasa USD/ARS actualizada: ${snapshot.rate}`);
+        } else {
+          console.warn('⚠️ No se pudo obtener tasa de cambio, usando default 1000');
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar tasa de cambio:', err);
+      }
+    });
   }
 
   async loadWalletBalance(): Promise<void> {
@@ -307,9 +330,10 @@ export class CarDetailPage implements OnInit {
     
     let pricePerDayUsd = car.price_per_day;
 
-    // If price is in ARS, convert to USD (rough estimate: 1 USD = 1000 ARS)
+    // If price is in ARS, convert to USD using CURRENT rate
     if (car.currency === 'ARS') {
-      pricePerDayUsd = car.price_per_day / 1000;
+      const fxRate = this.currentFxRate(); // ✅ USA TASA ACTUAL en lugar de 1000 hardcodeado
+      pricePerDayUsd = car.price_per_day / fxRate;
     }
 
     // Rough estimation: daily rate * 300 gives approximate value
@@ -322,9 +346,10 @@ export class CarDetailPage implements OnInit {
   private determineVehicleBucket(car: Car): 'economy' | 'standard' | 'premium' | 'luxury' {
     let pricePerDayUsd = car.price_per_day;
 
-    // If price is in ARS, convert to USD
+    // If price is in ARS, convert to USD using CURRENT rate
     if (car.currency === 'ARS') {
-      pricePerDayUsd = car.price_per_day / 1000;
+      const fxRate = this.currentFxRate(); // ✅ USA TASA ACTUAL
+      pricePerDayUsd = car.price_per_day / fxRate;
     }
 
     if (pricePerDayUsd <= 30) return 'economy';

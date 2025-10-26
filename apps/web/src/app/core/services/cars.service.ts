@@ -268,6 +268,22 @@ export class CarsService {
     if (error) throw error;
   }
 
+  /**
+   * ✅ NUEVO: Actualizar solo el status del auto
+   */
+  async updateCarStatus(carId: string, status: string): Promise<void> {
+    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    if (!userId) throw new Error('Usuario no autenticado');
+    
+    const { error } = await this.supabase
+      .from('cars')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', carId)
+      .eq('owner_id', userId);
+    
+    if (error) throw error;
+  }
+
   async updateCar(carId: string, input: Partial<Car>): Promise<Car> {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
     if (!userId) throw new Error('Usuario no autenticado');

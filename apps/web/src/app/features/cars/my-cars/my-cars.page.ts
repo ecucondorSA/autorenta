@@ -90,4 +90,55 @@ export class MyCarsPage implements OnInit {
       alert('❌ Error al eliminar el auto. Por favor intenta nuevamente.');
     }
   }
+
+  /**
+   * ✅ NUEVO: Toggle de disponibilidad del auto
+   */
+  async onToggleAvailability(carId: string, currentStatus: string): Promise<void> {
+    try {
+      const car = this.cars().find(c => c.id === carId);
+      const carName = car ? `${car.brand} ${car.model}` : 'este auto';
+      
+      // Si está activo, verificar que no tenga reservas pendientes antes de desactivar
+      if (currentStatus === 'active') {
+        const { hasActive, count } = await this.carsService.hasActiveBookings(carId);
+        
+        if (hasActive) {
+          alert(
+            `⚠️ No puedes desactivar ${carName}\n\n` +
+            `Tiene ${count} reserva${count > 1 ? 's' : ''} activa${count > 1 ? 's' : ''}.\n` +
+            `Esperá a que finalicen o cancelalas primero.`
+          );
+          return;
+        }
+        
+        const confirmed = confirm(
+          `¿Desactivar ${carName}?\n\n` +
+          `El auto dejará de aparecer en las búsquedas.\n` +
+          `Podés reactivarlo cuando quieras.`
+        );
+        
+        if (!confirmed) return;
+      } else {
+        const confirmed = confirm(
+          `¿Activar ${carName}?\n\n` +
+          `El auto volverá a aparecer en las búsquedas.`
+        );
+        
+        if (!confirmed) return;
+      }
+
+      // Toggle: active <-> inactive
+      const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+      
+      await this.carsService.updateCarStatus(carId, newStatus);
+      await this.loadCars();
+      
+      const statusText = newStatus === 'active' ? 'activado' : 'desactivado';
+      alert(`✅ Auto ${statusText} exitosamente`);
+    } catch (error) {
+      console.error('Error toggling availability:', error);
+      alert('❌ Error al cambiar disponibilidad. Por favor intenta nuevamente.');
+    }
+  }
 }
