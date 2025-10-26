@@ -278,7 +278,8 @@
           [car]="car"
           [showOwnerActions]="true"
           (edit)="onEditCar($event)"
-          (delete)="onDeleteCar($event)">
+          (delete)="onDeleteCar($event)"
+          (toggleAvailability)="onToggleAvailability($event.id, $event.status)">
         </app-car-card>
       </div>
 

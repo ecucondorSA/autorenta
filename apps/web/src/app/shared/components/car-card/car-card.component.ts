@@ -33,6 +33,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   @Output() compareToggle = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
+  @Output() toggleAvailability = new EventEmitter<{ id: string; status: string }>(); // ✅ NUEVO
 
   private readonly _showOwnerActions = signal<boolean>(false);
 
@@ -253,6 +254,16 @@ export class CarCardComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     event.preventDefault();
     this.delete.emit(this.car.id);
+  }
+
+  /** ✅ NUEVO: Toggle disponibilidad */
+  onToggleAvailability(event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.toggleAvailability.emit({ 
+      id: this.car.id, 
+      status: this.car.status 
+    });
   }
 
   readonly displayImage = computed(() => {

@@ -204,6 +204,24 @@
       <div class="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3">
         <!-- Botones para el dueño del auto -->
         <ng-container *ngIf="showOwnerActions; else normalActions">
+          <!-- ✅ NUEVO: Botón Toggle Disponibilidad -->
+          <button
+            (click)="onToggleAvailability($event)"
+            [attr.aria-label]="car.status === 'active' ? 'Desactivar auto' : 'Activar auto'"
+            [class]="car.status === 'active' 
+              ? 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-amber-500 text-amber-600 hover:bg-amber-50 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'
+              : 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-green-500 text-green-600 hover:bg-green-50 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'"
+            [title]="car.status === 'active' ? 'Desactivar auto' : 'Activar auto'"
+          >
+            <svg *ngIf="car.status === 'active'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+            </svg>
+            <svg *ngIf="car.status !== 'active'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="sm:hidden font-semibold">{{ car.status === 'active' ? 'Desactivar' : 'Activar' }}</span>
+          </button>
+
           <!-- Botón Editar -->
           <button
             (click)="onEdit($event)"
