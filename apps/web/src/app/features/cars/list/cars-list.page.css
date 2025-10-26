@@ -1211,3 +1211,59 @@
     min-height: 350px;
   }
 }
+
+/* ✅ FIX: Estilos para app-car-card en carrusel */
+.map-carousel-card-wrapper {
+  scroll-snap-align: start;
+  min-width: 340px;
+  max-width: 340px;
+}
+
+/* Adaptar car-card para el carrusel */
+.map-carousel .map-carousel-card--dynamic {
+  display: block;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(26, 26, 26, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+:host-context(.dark) .map-carousel .map-carousel-card--dynamic {
+  background: rgba(33, 38, 40, 0.92);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+
+.map-carousel .map-carousel-card--dynamic:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 40px rgba(26, 26, 26, 0.22);
+}
+
+/* Ajustar layout interno del car-card para carrusel */
+.map-carousel .map-carousel-card--dynamic ::ng-deep .car-card {
+  min-height: auto;
+  height: auto;
+}
+
+.map-carousel .map-carousel-card--dynamic ::ng-deep .car-card__image-container {
+  height: 160px;
+}
+
+.map-carousel .map-carousel-card--dynamic ::ng-deep .car-card__content {
+  padding: 12px 14px;
+}
+
+.map-carousel .map-carousel-card--dynamic ::ng-deep .car-card__title {
+  font-size: 0.9rem;
+  line-height: 1.3;
+  max-height: 2.6rem;
+  overflow: hidden;
+}
+
+.map-carousel .map-carousel-card--dynamic ::ng-deep .car-card__price {
+  font-size: 1rem;
+  font-weight: 700;
+}

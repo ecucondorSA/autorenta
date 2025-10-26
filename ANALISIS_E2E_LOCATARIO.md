@@ -23,13 +23,23 @@ La primera impresión de la plataforma es moderna y funcional, pero presenta una
 
 ### Fallas Críticas y Puntos a Mejorar
 
-*   **FALLA/BUG: Inconsistencia de Precios entre Vistas.**
-    *   **Problema:** La página utiliza dos métodos distintos para mostrar los autos. La lista principal de "premium cars" usa el componente correcto `<app-car-card>`, pero el carrusel de "autos económicos" (que aparece sobre el mapa) usa una plantilla personalizada (`<ng-template #carouselCard>`).
-    *   **Impacto:** Esta plantilla **no tiene la lógica de precios dinámicos**. Como resultado, los autos en el carrusel mostrarán un precio estático, mientras que los mismos autos en la lista principal mostrarán un precio dinámico. **Un usuario podría ver dos precios diferentes para el mismo vehículo**, causando confusión y desconfianza.
+*   **~~FALLA/BUG: Inconsistencia de Precios entre Vistas.~~** ✅ **CORREGIDO**
+    *   **Problema Original:** La página utilizaba dos métodos distintos para mostrar los autos. La lista principal de "premium cars" usaba el componente correcto `<app-car-card>`, pero el carrusel de "autos económicos" (que aparece sobre el mapa) usaba una plantilla personalizada (`<ng-template #carouselCard>`).
+    *   **Impacto:** Esta plantilla **no tenía la lógica de precios dinámicos**. Como resultado, los autos en el carrusel mostraban un precio estático, mientras que los mismos autos en la lista principal mostraban un precio dinámico. **Un usuario podía ver dos precios diferentes para el mismo vehículo**, causando confusión y desconfianza.
+    *   **✅ Solución Implementada:**
+        1. Se reemplazó el template personalizado `<ng-template #carouselCard>` por el componente `<app-car-card>`
+        2. Se añadieron estilos CSS específicos para adaptar el componente al diseño del carrusel (`.map-carousel-card-wrapper`, `.map-carousel-card--dynamic`)
+        3. Se unificó toda la lógica de presentación de tarjetas de autos
+        4. Ahora todos los precios (carrusel y lista) usan el mismo sistema de precios dinámicos
+    *   **Archivos Modificados:**
+        - `apps/web/src/app/features/cars/list/cars-list.page.html` (líneas 2-61)
+        - `apps/web/src/app/features/cars/list/cars-list.page.css` (nuevos estilos al final)
+    *   **Estado Actual:** ✅ **Implementado** - Fecha: 26 Octubre 2025
 
-*   **MEJORA (Deuda Técnica): Código Duplicado.**
-    *   **Problema:** Mantener dos implementaciones diferentes para mostrar una tarjeta de auto incrementa la complejidad y el costo de mantenimiento. Cualquier cambio futuro en el diseño de la tarjeta deberá hacerse en dos lugares.
-    *   **Solución Sugerida:** Refactorizar el carrusel de "autos económicos" para que también utilice el componente `<app-car-card>`, unificando así el código y asegurando que todos los precios mostrados sean dinámicos.
+*   **~~MEJORA (Deuda Técnica): Código Duplicado.~~** ✅ **RESUELTO**
+    *   **Problema Original:** Mantener dos implementaciones diferentes para mostrar una tarjeta de auto incrementaba la complejidad y el costo de mantenimiento. Cualquier cambio futuro en el diseño de la tarjeta debía hacerse en dos lugares.
+    *   **✅ Solución:** Al unificar el carrusel con `<app-car-card>`, se eliminó completamente la duplicación de código. Ahora existe una única implementación de tarjeta de auto que se reutiliza en múltiples contextos (lista, carrusel, búsqueda, etc.).
+    *   **Estado Actual:** ✅ **Resuelto** - El código está unificado y es más mantenible.
 
 ---
 
@@ -78,19 +88,33 @@ Esta página es el corazón de la conversión. El análisis del código (`bookin
 
 ### Fallas Críticas y Puntos a Mejorar
 
-*   **FALLA CRÍTICA (Alto Riesgo): Falta de Atomicidad en la Creación de la Reserva.**
-    *   **Problema:** El método `createNewBooking` realiza el proceso en múltiples pasos no transaccionales: 1) Crea la reserva en la base de datos. 2) Persiste el `riskSnapshot`. 3) Actualiza la reserva con los detalles del pago. El propio código fuente contiene un comentario que advierte del riesgo: `// Opcional: Considerar cancelar la reserva si la actualización falla`.
-    *   **Impacto:** Si el paso 1 tiene éxito pero uno de los pasos posteriores falla (por un error de red, un bug, etc.), el sistema quedará en un **estado inconsistente**: una reserva existirá en la base de datos bloqueando la disponibilidad del auto, pero sin tener información de pago o riesgo asociada. Esto puede llevar a "reservas fantasma" y pérdidas económicas.
-    *   **Solución Sugerida:** Refactorizar este flujo para que se ejecute como una **única transacción atómica**. La mejor práctica es crear una sola función RPC en Supabase (ej. `create_booking_with_details`) que reciba toda la información y realice todas las operaciones (`INSERT` y `UPDATE`) en una única transacción de base de datos. Si algo falla, toda la operación se revierte (rollback), garantizando la consistencia de los datos.
+*   **~~FALLA CRÍTICA (Alto Riesgo): Falta de Atomicidad en la Creación de la Reserva.~~** ✅ **RESUELTO**
+    *   **Problema Original:** El método `createNewBooking` realizaba el proceso en múltiples pasos no transaccionales: 1) Crea la reserva en la base de datos. 2) Persiste el `riskSnapshot`. 3) Actualiza la reserva con los detalles del pago. El propio código fuente contenía un comentario que advertía del riesgo: `// Opcional: Considerar cancelar la reserva si la actualización falla`.
+    *   **Impacto:** Si el paso 1 tenía éxito pero uno de los pasos posteriores fallaba (por un error de red, un bug, etc.), el sistema quedaba en un **estado inconsistente**: una reserva existía en la base de datos bloqueando la disponibilidad del auto, pero sin tener información de pago o riesgo asociada. Esto podía llevar a "reservas fantasma" y pérdidas económicas.
+    *   **✅ Solución Implementada:** Se creó la función RPC `create_booking_atomic` en PostgreSQL (`/database/fix-atomic-booking.sql`) que ejecuta todas las operaciones en una **única transacción atómica**. La función:
+        1. Valida disponibilidad del vehículo
+        2. Crea el booking
+        3. Crea el risk_snapshot
+        4. Actualiza el booking con el risk_snapshot_id
+        5. Si cualquier paso falla, hace rollback automático de toda la operación
+    *   **Estado Actual:** ✅ **Producción** - La página de pago usa `createBookingAtomic` desde Octubre 2025.
 
-*   **MEJORA (UX): Flujo de "Fallback a Wallet".**
-    *   **Problema:** El panel de pago con tarjeta puede emitir un evento `fallbackToWallet` si la pre-autorización falla. La página principal simplemente cambia el modo de pago a `wallet`.
-    *   **Impacto:** El cambio puede ser abrupto y confuso para el usuario. No se le explica por qué falló su tarjeta.
-    *   **Solución Sugerida:** Al activarse el fallback, se debería mostrar un mensaje claro o un modal explicativo. Por ejemplo: "La pre-autorización con tu tarjeta fue rechazada. Puedes intentar con otra tarjeta o usar tu Wallet de AutoRenta para completar la reserva."
+*   **~~MEJORA (UX): Flujo de "Fallback a Wallet".~~** ✅ **IMPLEMENTADO**
+    *   **Problema Original:** El panel de pago con tarjeta podía emitir un evento `fallbackToWallet` si la pre-autorización fallaba. La página principal simplemente cambiaba el modo de pago a `wallet` sin explicación.
+    *   **Impacto:** El cambio era abrupto y confuso para el usuario. No se le explicaba por qué falló su tarjeta.
+    *   **✅ Solución Implementada:** 
+        1. Se añadieron signals `showFallbackMessage` y `fallbackReason` para gestionar el estado
+        2. Se creó un componente de mensaje explicativo con animación slide-down
+        3. El mensaje se muestra durante 8 segundos con las siguientes opciones:
+           - "Intentar con otra tarjeta" (vuelve al modo tarjeta)
+           - "Continuar con Wallet ✓" (acepta el cambio)
+        4. El usuario puede cerrar el mensaje manualmente
+    *   **Estado Actual:** ✅ **Implementado** - Fecha: 26 Octubre 2025
 
 *   **MEJORA (Técnica): Complejidad del Componente.**
     *   **Problema:** El componente `BookingDetailPaymentPage` es muy grande y maneja estado de múltiples dominios (precios, riesgo, pagos, wallet, etc.).
     *   **Solución Sugerida:** Aplicar un patrón de `Facade` o crear un servicio orquestador (ej. `BookingOrchestratorService`) que encapsule la lógica compleja. El componente solo se comunicaría con este servicio, simplificando enormemente su código y haciéndolo más fácil de mantener.
+    *   **Estado:** 📋 **Pendiente** - Deuda técnica para próximo sprint.
 
 ---
 

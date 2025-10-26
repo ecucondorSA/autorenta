@@ -1,63 +1,16 @@
 <section class="cars-map-page bg-ivory-soft dark:bg-graphite-dark transition-colors duration-300">
+  <!-- ✅ FIXED: Uso de app-car-card para precios dinámicos consistentes -->
   <ng-template #carouselCard let-car>
-    <button
-      type="button"
-      role="listitem"
-      class="map-carousel-card"
-      [class.map-carousel-card--active]="isCarSelected(car.id)"
-      (click)="onCarSelected(car.id)"
-      [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto económico')"
-      tabindex="0"
-    >
-      <div class="map-carousel-card__media">
-        <img
-          *ngIf="car.photos?.length"
-          [src]="car.photos[0].url"
-          [alt]="car.title"
-          class="map-carousel-card__image"
-          loading="lazy"
-        />
-        <div *ngIf="!car.photos?.length" class="map-carousel-card__placeholder">
-          <svg class="w-6 h-6 text-charcoal-medium" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="7" cy="17" r="2" stroke-width="1.5"></circle>
-            <circle cx="17" cy="17" r="2" stroke-width="1.5"></circle>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 15h14M8 12l1-4h6l1 4"></path>
-          </svg>
-        </div>
-      </div>
-      <div class="map-carousel-card__body">
-        <p class="map-carousel-card__title">{{ car.title }}</p>
-        <div class="map-carousel-card__meta">
-          <span class="map-carousel-card__price">{{ car.price_per_day | money }}</span>
-          <span class="map-carousel-card__price-suffix">/ día</span>
-        </div>
-        <div class="map-carousel-card__foot">
-          <span *ngIf="car.distanceText" class="map-carousel-card__distance">
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            {{ car.distanceText }}
-          </span>
-          <span *ngIf="car.owner?.rating_avg" class="map-carousel-card__rating">
-            ⭐ {{ car.owner.rating_avg | number:'1.1-1' }}
-          </span>
-        </div>
-        <div class="map-carousel-card__actions">
-          <a
-            [routerLink]="['/cars', car.id]"
-            class="map-carousel-card__cta"
-            (click)="$event.stopPropagation()"
-            [attr.aria-label]="'Alquilar ' + (car.title || '')"
-          >
-            Alquilar
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </button>
+    <div class="map-carousel-card-wrapper" role="listitem">
+      <app-car-card
+        [car]="car"
+        [selected]="isCarSelected(car.id)"
+        [distance]="car.distanceText"
+        (click)="onCarSelected(car.id)"
+        class="map-carousel-card--dynamic"
+        [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto económico')"
+      ></app-car-card>
+    </div>
   </ng-template>
 
   <div class="layout-grid">

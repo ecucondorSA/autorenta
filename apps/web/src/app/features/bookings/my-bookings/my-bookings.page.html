@@ -110,7 +110,8 @@
               
               <!-- Completar Pago -->
               <button 
-                [routerLink]="['/bookings/checkout', booking.id]"
+                [routerLink]="['/bookings/detail-payment']"
+                [queryParams]="{bookingId: booking.id}"
                 data-tour-step="complete-payment-btn"
                 class="flex-1 px-4 py-3 bg-gradient-to-r from-accent-petrol to-accent-warm text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 order-1">
                 💳 Completar Pago
