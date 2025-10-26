@@ -3,6 +3,7 @@ import { Booking } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { WalletService } from './wallet.service';
 import { PwaService } from './pwa.service';
+import { InsuranceService } from './insurance.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class BookingsService {
   private readonly supabase = injectSupabase();
   private readonly walletService = inject(WalletService);
   private readonly pwaService = inject(PwaService);
+  private readonly insuranceService = inject(InsuranceService);
 
   async requestBooking(carId: string, start: string, end: string): Promise<Booking> {
     const { data, error } = await this.supabase.rpc('request_booking', {
@@ -23,6 +25,19 @@ export class BookingsService {
     const bookingId = this.extractBookingId(data);
     if (!bookingId) {
       throw new Error('request_booking did not return a booking id');
+    }
+
+    // Activar cobertura de seguro automáticamente
+    try {
+      await this.insuranceService.activateCoverage({
+        booking_id: bookingId,
+        addon_ids: [] // Sin add-ons por defecto, se agregan en checkout
+      });
+      console.log('✅ Insurance coverage activated for booking:', bookingId);
+    } catch (insuranceError) {
+      console.error('⚠️ Error activating insurance (non-blocking):', insuranceError);
+      // No bloqueamos la reserva si falla el seguro
+      // El trigger de BD también lo activará al confirmar
     }
 
     // Recalculate pricing breakdown after creating booking
@@ -88,7 +103,13 @@ export class BookingsService {
   async getBookingById(bookingId: string): Promise<Booking | null> {
     const { data, error } = await this.supabase
       .from('my_bookings')
-      .select('*')
+      .select(`
+        *,
+        insurance_coverage:insurance_coverage_id (
+          *,
+          policy:policy_id (*)
+        )
+      `)
       .eq('id', bookingId)
       .single();
 
@@ -127,10 +148,10 @@ export class BookingsService {
   }
 
   /**
-   * Cancel a booking
+   * Cancel a booking (legacy method - use cancelBooking for new code)
    * If the booking has locked wallet funds, they will be unlocked automatically
    */
-  async cancelBooking(bookingId: string, reason?: string): Promise<void> {
+  async cancelBookingLegacy(bookingId: string, reason?: string): Promise<void> {
     // 1. Get booking to check wallet status
     const booking = await this.getBookingById(bookingId);
 
@@ -795,6 +816,174 @@ export class BookingsService {
       return {
         success: false,
         error: error.message || 'Error al obtener contacto'
+      };
+    }
+  }
+
+  /**
+   * ✅ INSURANCE: Activar cobertura con add-ons específicos
+   * Wrapper para activar seguro con add-ons desde checkout
+   */
+  async activateInsuranceCoverage(
+    bookingId: string,
+    addonIds: string[] = []
+  ): Promise<{ success: boolean; coverage_id?: string; error?: string }> {
+    try {
+      const coverageId = await this.insuranceService.activateCoverage({
+        booking_id: bookingId,
+        addon_ids: addonIds
+      });
+
+      return {
+        success: true,
+        coverage_id: coverageId
+      };
+    } catch (error: any) {
+      console.error('Error activating insurance coverage:', error);
+      return {
+        success: false,
+        error: error.message || 'Error al activar cobertura de seguro'
+      };
+    }
+  }
+
+  /**
+   * ✅ INSURANCE: Obtener resumen de seguro de una reserva
+   */
+  async getBookingInsuranceSummary(bookingId: string) {
+    return this.insuranceService.getInsuranceSummary(bookingId);
+  }
+
+  /**
+   * ✅ INSURANCE: Calcular depósito de seguridad para un auto
+   */
+  async calculateInsuranceDeposit(carId: string): Promise<number> {
+    return this.insuranceService.calculateSecurityDeposit(carId);
+  }
+
+  /**
+   * ✅ INSURANCE: Verificar si el auto tiene seguro propio (BYOI)
+   */
+  async hasOwnerInsurance(carId: string): Promise<boolean> {
+    return this.insuranceService.hasOwnerInsurance(carId);
+  }
+
+  /**
+   * ✅ INSURANCE: Obtener comisión aplicable según tipo de seguro
+   * 25% para seguro flotante, 15% para seguro propio
+   */
+  async getInsuranceCommissionRate(carId: string): Promise<number> {
+    return this.insuranceService.getCommissionRate(carId);
+  }
+
+  /**
+   * ✅ FIX CRÍTICO: Crear booking de forma atómica
+   * Soluciona el problema de "reservas fantasma" usando una transacción única
+   * 
+   * @param params - Parámetros completos del booking
+   * @returns Promise con resultado de la operación atómica
+   */
+  async createBookingAtomic(params: {
+    carId: string;
+    startDate: string;
+    endDate: string;
+    totalAmount: number;
+    currency: string;
+    paymentMode: string;
+    coverageUpgrade?: string;
+    authorizedPaymentId?: string;
+    walletLockId?: string;
+    riskSnapshot: {
+      dailyPriceUsd: number;
+      securityDepositUsd: number;
+      vehicleValueUsd: number;
+      driverAge: number;
+      coverageType: string;
+      paymentMode: string;
+      totalUsd: number;
+      totalArs: number;
+      exchangeRate: number;
+    };
+  }): Promise<{
+    success: boolean;
+    bookingId?: string;
+    riskSnapshotId?: string;
+    error?: string;
+  }> {
+    try {
+      const user = await this.supabase.auth.getUser();
+      if (!user.data.user?.id) {
+        return {
+          success: false,
+          error: 'Usuario no autenticado'
+        };
+      }
+
+      // Llamar a la función RPC atómica
+      const { data, error } = await this.supabase.rpc('create_booking_atomic', {
+        p_car_id: params.carId,
+        p_renter_id: user.data.user.id,
+        p_start_date: params.startDate,
+        p_end_date: params.endDate,
+        p_total_amount: params.totalAmount,
+        p_currency: params.currency,
+        p_payment_mode: params.paymentMode,
+        p_coverage_upgrade: params.coverageUpgrade || null,
+        p_authorized_payment_id: params.authorizedPaymentId || null,
+        p_wallet_lock_id: params.walletLockId || null,
+        // Risk snapshot
+        p_risk_daily_price_usd: params.riskSnapshot.dailyPriceUsd,
+        p_risk_security_deposit_usd: params.riskSnapshot.securityDepositUsd,
+        p_risk_vehicle_value_usd: params.riskSnapshot.vehicleValueUsd,
+        p_risk_driver_age: params.riskSnapshot.driverAge,
+        p_risk_coverage_type: params.riskSnapshot.coverageType,
+        p_risk_payment_mode: params.riskSnapshot.paymentMode,
+        p_risk_total_usd: params.riskSnapshot.totalUsd,
+        p_risk_total_ars: params.riskSnapshot.totalArs,
+        p_risk_exchange_rate: params.riskSnapshot.exchangeRate
+      });
+
+      if (error) {
+        console.error('❌ Error en create_booking_atomic:', error);
+        return {
+          success: false,
+          error: error.message || 'Error al crear la reserva'
+        };
+      }
+
+      // La función RPC retorna un array con un objeto
+      const result = Array.isArray(data) ? data[0] : data;
+
+      if (!result || !result.success) {
+        return {
+          success: false,
+          error: result?.error_message || 'Error desconocido al crear la reserva'
+        };
+      }
+
+      // Activar cobertura de seguro automáticamente
+      try {
+        await this.insuranceService.activateCoverage({
+          booking_id: result.booking_id,
+          addon_ids: [] // Los add-ons se agregan en checkout si es necesario
+        });
+        console.log('✅ Cobertura de seguro activada para booking:', result.booking_id);
+      } catch (insuranceError) {
+        console.error('⚠️ Error activando seguro (no bloqueante):', insuranceError);
+        // No bloqueamos la reserva si falla el seguro
+      }
+
+      return {
+        success: true,
+        bookingId: result.booking_id,
+        riskSnapshotId: result.risk_snapshot_id
+      };
+
+    } catch (error: any) {
+      console.error('❌ Error en createBookingAtomic:', error);
+      return {
+        success: false,
+        error: error.message || 'Error inesperado al crear la reserva'
       };
     }
   }

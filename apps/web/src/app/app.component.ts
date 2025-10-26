@@ -15,6 +15,7 @@ import { PendingReviewsBannerComponent } from './shared/components/pending-revie
 import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
 import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
+import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
@@ -36,6 +37,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     SplashLoaderComponent,
     PwaInstallPromptComponent,
     PwaUpdatePromptComponent,
+    PwaTitlebarComponent,
     VerificationBadgeComponent,
     LanguageSelectorComponent,
     HelpButtonComponent,

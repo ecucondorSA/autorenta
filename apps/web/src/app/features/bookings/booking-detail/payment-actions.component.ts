@@ -169,7 +169,11 @@ export class PaymentActionsComponent {
     }
 
     try {
-      await this.bookingsService.cancelBooking(this.booking.id, 'Cancelled by user');
+      const result = await this.bookingsService.cancelBooking(this.booking.id);
+      if (!result.success) {
+        alert(`Error al cancelar la reserva: ${result.error}`);
+        return;
+      }
       // Reloading should be handled by the parent component
       window.location.reload();
     } catch (err) {

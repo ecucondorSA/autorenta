@@ -143,6 +143,16 @@
   z-index: 30;
 }
 
+/* Mobile: Posición relativa, no flotante */
+@media (max-width: 1023px) {
+  .map-carousel-container {
+    position: relative;
+    bottom: 0;
+    padding: 16px;
+    background: transparent;
+  }
+}
+
 .map-carousel {
   display: flex;
   align-items: stretch;
@@ -159,8 +169,44 @@
   backdrop-filter: blur(18px);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scrollbar-width: none;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(44, 74, 82, 0.3) transparent;
   animation: fadeInUp 0.45s ease both;
+  cursor: grab;
+}
+
+/* Mobile: Diseño más compacto */
+@media (max-width: 1023px) {
+  .map-carousel {
+    max-width: 100%;
+    padding: 12px;
+    gap: 10px;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(26, 26, 26, 0.08);
+  }
+}
+
+.map-carousel:active {
+  cursor: grabbing;
+}
+
+/* Custom scrollbar para webkit */
+.map-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.map-carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.map-carousel::-webkit-scrollbar-thumb {
+  background-color: rgba(44, 74, 82, 0.3);
+  border-radius: 3px;
+}
+
+.map-carousel::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(44, 74, 82, 0.5);
 }
 
 :host-context(.dark) .map-carousel {
@@ -203,10 +249,17 @@
   display: none;
 }
 
+/* OBSOLETO - Carousel mobile eliminado (ahora usa carousel unificado)
 .map-carousel--mobile {
   background: transparent;
   box-shadow: none;
   padding: 0;
+  scroll-behavior: smooth;
+  cursor: grab;
+}
+
+.map-carousel--mobile:active {
+  cursor: grabbing;
 }
 
 .map-carousel-mobile {
@@ -231,6 +284,7 @@
     padding-right: 24px;
   }
 }
+*/
 
 .map-carousel-card {
   display: flex;

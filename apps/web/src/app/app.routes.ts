@@ -85,6 +85,10 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'mp-callback',
+    loadComponent: () => import('./features/mp-callback/mp-callback.page').then((m) => m.MpCallbackPage),
+  },
+  {
     path: 'profile',
     canMatch: [AuthGuard],
     loadComponent: () => import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),

@@ -117,10 +117,22 @@ serve(async (req) => {
 
     const authenticated_user_id = user.id;
 
-    // Obtener el booking
+    // Obtener el booking con información del propietario
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
-      .select('*, car:cars(id, title, owner_id)')
+      .select(`
+        *, 
+        car:cars(
+          id, 
+          title, 
+          owner_id,
+          owner:users!cars_owner_id_fkey(
+            id,
+            mercadopago_collector_id,
+            marketplace_approved
+          )
+        )
+      `)
       .eq('id', booking_id)
       .single();
 
@@ -294,6 +306,37 @@ serve(async (req) => {
     const lastName = nameParts.slice(1).join(' ') || 'AutoRenta';
 
     // ========================================
+    // VERIFICAR MARKETPLACE SPLIT
+    // ========================================
+    
+    const owner = booking.car?.owner;
+    const shouldSplit = owner?.marketplace_approved && owner?.mercadopago_collector_id;
+    
+    let platformFee = 0;
+    let ownerAmount = 0;
+    
+    if (shouldSplit) {
+      // Calcular split 85/15
+      const { data: splitData } = await supabase.rpc('calculate_payment_split', {
+        p_total_amount_cents: Math.round(amountARS * 100)
+      });
+      
+      if (splitData) {
+        ownerAmount = splitData.owner_amount_cents / 100;
+        platformFee = splitData.platform_fee_cents / 100;
+        
+        console.log(`💰 Split Payment:
+          Total: ${amountARS} ARS
+          Owner (85%): ${ownerAmount} ARS
+          Platform (15%): ${platformFee} ARS
+          Collector ID: ${owner.mercadopago_collector_id}
+        `);
+      }
+    } else {
+      console.log('⚠️ No split payment - Owner not marketplace approved or missing collector_id');
+    }
+
+    // ========================================
     // CREAR PREFERENCE EN MERCADOPAGO
     // ========================================
 
@@ -344,14 +387,25 @@ serve(async (req) => {
         last_name: lastName,
       },
 
+      // MARKETPLACE SPLIT (si aplica)
+      ...(shouldSplit && {
+        marketplace_fee: platformFee,
+        collector_id: owner.mercadopago_collector_id,
+      }),
+
       // Metadata adicional
       metadata: {
         booking_id: booking_id,
         renter_id: booking.renter_id,
         car_id: booking.car_id,
+        owner_id: booking.car?.owner_id,
         amount_usd: amountUSD,
         exchange_rate: platformRate,
         payment_type: 'booking',
+        is_marketplace_split: shouldSplit,
+        platform_fee_ars: platformFee,
+        owner_amount_ars: ownerAmount,
+        collector_id: owner?.mercadopago_collector_id || null,
       },
     };
 

@@ -4,6 +4,7 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
+  ElementRef,
   computed,
   signal,
   inject,
@@ -25,6 +26,7 @@ import {
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { MapFiltersComponent, MapFilters } from '../../../shared/components/map-filters/map-filters.component';
+import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
 // Interface para auto con distancia
@@ -53,6 +55,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     RouterLink,
     CarsMapComponent,
     MapFiltersComponent,
+    CarCardComponent,
     MoneyPipe,
     TranslateModule,
   ],
@@ -62,6 +65,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
 })
 export class CarsListPage implements OnInit, OnDestroy {
   @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
+  @ViewChild('unifiedCarousel', { read: ElementRef }) unifiedCarousel?: ElementRef<HTMLDivElement>;
 
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
@@ -74,6 +78,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   private sortInitialized = false;
   private analyticsLastKey: string | null = null;
   private realtimeChannel?: RealtimeChannel;
+  private carouselAutoScrollInterval?: ReturnType<typeof setInterval>;
 
   readonly city = signal<string | null>(null);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -84,10 +89,14 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly selectedCarId = signal<string | null>(null);
   readonly searchExpanded = signal(false);
   readonly inventoryReady = signal(false);
+  readonly isMobile = computed(() => {
+    if (!this.isBrowser) return false;
+    return window.innerWidth < 1024;
+  });
 
   // Filtros y ordenamiento
   readonly mapFilters = signal<MapFilters | null>(null);
-  readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('price_desc');
+  readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('rating');
   readonly sortLabel = computed(() => this.getSortLabel(this.sortBy()));
 
   private readonly persistSortEffect = effect(() => {
@@ -247,40 +256,94 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     switch (this.sortBy()) {
       case 'price_asc':
-        sorted.sort((a, b) => a.price_per_day - b.price_per_day);
-        break;
-      case 'price_desc':
-        sorted.sort((a, b) => b.price_per_day - a.price_per_day);
-        break;
-      case 'rating':
         sorted.sort((a, b) => {
+          // 1. Por precio bajo → alto
+          if (a.price_per_day !== b.price_per_day) {
+            return a.price_per_day - b.price_per_day;
+          }
+          // 2. Desempate por rating
           const ratingA = a.owner?.rating_avg ?? 0;
           const ratingB = b.owner?.rating_avg ?? 0;
           if (ratingB !== ratingA) {
             return ratingB - ratingA;
           }
-          return b.price_per_day - a.price_per_day;
+          // 3. Desempate por distancia
+          const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
+          const distanceB = b.distance ?? Number.POSITIVE_INFINITY;
+          return distanceA - distanceB;
         });
         break;
-      case 'newest':
+      case 'price_desc':
         sorted.sort((a, b) => {
-          const dateA = new Date(a.created_at || 0).getTime();
-          const dateB = new Date(b.created_at || 0).getTime();
-          if (dateB !== dateA) {
-            return dateB - dateA;
+          // 1. Por precio alto → bajo
+          if (b.price_per_day !== a.price_per_day) {
+            return b.price_per_day - a.price_per_day;
           }
-          return b.price_per_day - a.price_per_day;
+          // 2. Desempate por rating
+          const ratingA = a.owner?.rating_avg ?? 0;
+          const ratingB = b.owner?.rating_avg ?? 0;
+          return ratingB - ratingA;
         });
         break;
-      case 'distance':
-      default:
+      case 'rating':
         sorted.sort((a, b) => {
+          // 1. Por rating (mejor → peor)
+          const ratingA = a.owner?.rating_avg ?? 0;
+          const ratingB = b.owner?.rating_avg ?? 0;
+          if (ratingB !== ratingA) {
+            return ratingB - ratingA;
+          }
+          // 2. Desempate por distancia
           const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
           const distanceB = b.distance ?? Number.POSITIVE_INFINITY;
           if (distanceA !== distanceB) {
             return distanceA - distanceB;
           }
-          return b.price_per_day - a.price_per_day;
+          // 3. Desempate por precio (más barato primero)
+          if (a.price_per_day !== b.price_per_day) {
+            return a.price_per_day - b.price_per_day;
+          }
+          // 4. Desempate por más nuevo
+          const dateA = new Date(a.created_at || 0).getTime();
+          const dateB = new Date(b.created_at || 0).getTime();
+          return dateB - dateA;
+        });
+        break;
+      case 'newest':
+        sorted.sort((a, b) => {
+          // 1. Por fecha (más nuevo → antiguo)
+          const dateA = new Date(a.created_at || 0).getTime();
+          const dateB = new Date(b.created_at || 0).getTime();
+          if (dateB !== dateA) {
+            return dateB - dateA;
+          }
+          // 2. Desempate por rating
+          const ratingA = a.owner?.rating_avg ?? 0;
+          const ratingB = b.owner?.rating_avg ?? 0;
+          if (ratingB !== ratingA) {
+            return ratingB - ratingA;
+          }
+          // 3. Desempate por precio
+          return a.price_per_day - b.price_per_day;
+        });
+        break;
+      case 'distance':
+      default:
+        sorted.sort((a, b) => {
+          // 1. Por distancia (cerca → lejos)
+          const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
+          const distanceB = b.distance ?? Number.POSITIVE_INFINITY;
+          if (distanceA !== distanceB) {
+            return distanceA - distanceB;
+          }
+          // 2. Desempate por rating
+          const ratingA = a.owner?.rating_avg ?? 0;
+          const ratingB = b.owner?.rating_avg ?? 0;
+          if (ratingB !== ratingA) {
+            return ratingB - ratingA;
+          }
+          // 3. Desempate por precio
+          return a.price_per_day - b.price_per_day;
         });
         break;
     }
@@ -443,6 +506,11 @@ export class CarsListPage implements OnInit, OnDestroy {
       console.error('loadCars error', err);
     } finally {
       this.loading.set(false);
+      
+      // Iniciar auto-scroll del carousel después de cargar los autos
+      if (this.economyCars().length >= 3) {
+        setTimeout(() => this.startCarouselAutoScroll(), 1000);
+      }
     }
   }
 
@@ -497,6 +565,69 @@ export class CarsListPage implements OnInit, OnDestroy {
     if (this.realtimeChannel) {
       this.supabase.removeChannel(this.realtimeChannel);
     }
+    this.stopCarouselAutoScroll();
+  }
+
+  /**
+   * Inicia el auto-scroll del carousel
+   * Se mueve automáticamente cada 3 segundos
+   */
+  startCarouselAutoScroll(): void {
+    if (!this.isBrowser) return;
+
+    // Limpiar interval existente
+    this.stopCarouselAutoScroll();
+
+    // Iniciar auto-scroll después de 2 segundos (dar tiempo a que cargue)
+    setTimeout(() => {
+      this.carouselAutoScrollInterval = setInterval(() => {
+        this.scrollCarouselNext();
+      }, 3000); // Cada 3 segundos
+    }, 2000);
+  }
+
+  /**
+   * Detiene el auto-scroll del carousel
+   */
+  stopCarouselAutoScroll(): void {
+    if (this.carouselAutoScrollInterval) {
+      clearInterval(this.carouselAutoScrollInterval);
+      this.carouselAutoScrollInterval = undefined;
+    }
+  }
+
+  /**
+   * Scroll al siguiente item del carousel
+   */
+  private scrollCarouselNext(): void {
+    const carousel = this.unifiedCarousel?.nativeElement;
+    if (!carousel) return;
+
+    const cardWidth = 340 + 12; // min-width + gap
+    const currentScroll = carousel.scrollLeft;
+    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+
+    // Si llegó al final, volver al inicio
+    if (currentScroll >= maxScroll - 10) {
+      carousel.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      // Scroll al siguiente item
+      carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
+    }
+  }
+
+  /**
+   * Pausar auto-scroll cuando el usuario interactúa
+   */
+  onCarouselMouseEnter(): void {
+    this.stopCarouselAutoScroll();
+  }
+
+  /**
+   * Reanudar auto-scroll cuando el usuario deja de interactuar
+   */
+  onCarouselMouseLeave(): void {
+    this.startCarouselAutoScroll();
   }
 
   toggleSearch(): void {

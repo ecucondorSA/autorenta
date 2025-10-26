@@ -16,6 +16,9 @@ export type Role = UserRole;
 // Export FGO models
 export * from './fgo.model';
 
+// Export Insurance models
+export * from './insurance.model';
+
 // Nuevos tipos para perfil expandido
 export type KycStatus = 'not_started' | 'pending' | 'verified' | 'rejected';
 export type OnboardingStatus = 'incomplete' | 'complete';
@@ -387,6 +390,17 @@ export interface Booking {
   // Owner bookings view fields
   renter_name?: string;
   renter_avatar?: string;
+
+  // ✅ INSURANCE SYSTEM: Campos de seguro P2P
+  insurance_coverage_id?: string | null;
+  insurance_premium_total?: number | null; // Total prima de seguro en centavos
+  security_deposit_amount?: number | null; // Monto de depósito/franquicia en centavos
+  deposit_held?: boolean | null; // Si el depósito está retenido
+  deposit_released_at?: string | null; // Cuándo se liberó el depósito
+  has_active_claim?: boolean | null; // Si tiene un siniestro activo
+
+  // Relación con cobertura (populated via JOIN)
+  insurance_coverage?: any; // BookingInsuranceCoverage
 }
 
 export interface PaymentIntent {

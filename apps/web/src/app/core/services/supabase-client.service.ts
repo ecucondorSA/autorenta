@@ -115,6 +115,23 @@ export class SupabaseClientService {
   getClient(): SupabaseClient {
     return this.client;
   }
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      const { error } = await this.client.from('profiles').select('id').limit(1);
+      return !error;
+    } catch (error) {
+      console.error('❌ [SUPABASE CLIENT] Health check failed:', error);
+      return false;
+    }
+  }
+
+  getConnectionInfo(): { url: string; pooling: string } {
+    return {
+      url: environment.supabaseUrl || 'hardcoded',
+      pooling: 'transaction',
+    };
+  }
 }
 
 export const injectSupabase = (): SupabaseClient => inject(SupabaseClientService).getClient();

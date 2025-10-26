@@ -121,6 +121,17 @@
         </div>
       </section>
 
+      <!-- ✅ INSURANCE SELECTOR -->
+      <div *ngIf="booking() && getCarId()" class="insurance-section">
+        <app-insurance-selector
+          [carId]="getCarId()!"
+          [rentalDays]="getRentalDays()"
+          (addonsSelected)="onAddonsSelected($event)"
+          (totalCostChange)="onInsuranceCostChange($event)"
+          (depositCalculated)="onDepositCalculated($event)">
+        </app-insurance-selector>
+      </div>
+
       <!-- Payment Method Selector -->
       <div *ngIf="booking() as current" class="card-premium p-6 shadow-elevated" id="tour-payment-section">
         <app-payment-method-selector

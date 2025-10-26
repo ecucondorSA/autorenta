@@ -15,8 +15,19 @@ export const BOOKINGS_ROUTES: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'success/:id',
+    loadComponent: () => 
+      import('./booking-success/booking-success.page').then((m) => m.BookingSuccessPage),
+    canActivate: [AuthGuard],
+  },
+  {
     path: ':id',
     loadComponent: () => import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),
+  },
+  {
+    path: ':bookingId/report-claim',
+    loadComponent: () => import('./report-claim/report-claim.page').then((m) => m.ReportClaimPage),
+    canActivate: [AuthGuard],
   },
   {
     path: 'checkout/:bookingId',

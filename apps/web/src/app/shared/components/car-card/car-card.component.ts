@@ -7,6 +7,7 @@ import { MoneyPipe } from '../../pipes/money.pipe';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { RealtimePricingService } from '../../../core/services/realtime-pricing.service';
+import { injectSupabase } from '../../../core/services/supabase-client.service';
 
 @Component({
   selector: 'app-car-card',
@@ -19,6 +20,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly pricingService = inject(DynamicPricingService);
   private readonly realtimePricing = inject(RealtimePricingService);
+  private readonly supabase = injectSupabase();
   
   private unsubscribeRealtime?: () => void;
 
@@ -61,10 +63,21 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
   @Input({ required: true })
   set car(value: Car) {
+    console.log('🚗 [CarCard] Setter called:', {
+      id: value?.id,
+      title: value?.title,
+      region_id: value?.region_id,
+      price: value?.price_per_day,
+      hasRegionId: !!value?.region_id
+    });
+    
     this._car.set(value);
     // Load dynamic price when car changes
     if (value?.region_id) {
+      console.log('✅ [CarCard] Has region_id, loading dynamic price...');
       void this.loadDynamicPrice();
+    } else {
+      console.warn('❌ [CarCard] NO region_id - using static price for:', value?.title);
     }
   }
 
@@ -120,7 +133,16 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
   private async loadDynamicPrice(): Promise<void> {
     const car = this._car();
+    
+    console.log('🔍 [CarCard] Loading dynamic price for:', {
+      carId: car?.id,
+      carTitle: car?.title,
+      regionId: car?.region_id,
+      staticPrice: car?.price_per_day
+    });
+    
     if (!car || !car.region_id) {
+      console.warn('⚠️  [CarCard] Skipping - no car or region_id');
       return;
     }
 
@@ -128,21 +150,45 @@ export class CarCardComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
 
     try {
-      const priceData = await this.pricingService.getQuickPrice(car.id, car.region_id);
+      // Get current user
+      const { data: { user } } = await this.supabase.auth.getUser();
+      const userId = user?.id || '00000000-0000-0000-0000-000000000000';
       
-      if (priceData) {
-        this.dynamicPrice.set(priceData.price_per_day);
+      console.log('📞 [CarCard] Calling RPC directly...', {
+        regionId: car.region_id,
+        userId
+      });
+      
+      // Call RPC directly bypassing the problematic service
+      const { data, error } = await this.supabase.rpc('calculate_dynamic_price', {
+        p_region_id: car.region_id,
+        p_user_id: userId,
+        p_rental_start: new Date().toISOString(),
+        p_rental_hours: 24
+      });
+
+      if (error) {
+        console.error('❌ [CarCard] RPC Error:', error);
+        throw error;
+      }
+
+      console.log('✅ [CarCard] RPC Response:', data);
+
+      if (data && data.total_price) {
+        const dynamicPricePerDay = data.total_price;
+        this.dynamicPrice.set(dynamicPricePerDay);
+        console.log(`💰 [CarCard] Dynamic price set: $${dynamicPricePerDay} (was $${car.price_per_day})`);
         
-        // Set surge icon if applicable
-        if (priceData.surge_active && priceData.surge_icon) {
-          this.priceSurgeIcon.set(priceData.surge_icon);
+        // Set surge indicator if there's significant price change
+        if (data.surge_active || dynamicPricePerDay > car.price_per_day * 1.2) {
+          this.priceSurgeIcon.set('🔥');
         }
         
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       }
     } catch (error) {
-      console.error('Failed to load dynamic price for car:', car.id, error);
-      // Fallback: dynamicPrice stays null, displayPrice uses car.price_per_day
+      console.error('❌ [CarCard] Failed to load dynamic price:', error);
+      // Fallback: keep using static price
     } finally {
       this.priceLoading.set(false);
       this.cdr.markForCheck();

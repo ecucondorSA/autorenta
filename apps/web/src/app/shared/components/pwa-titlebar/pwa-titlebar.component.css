@@ -1,0 +1,189 @@
+/* PWA Titlebar - Window Controls Overlay */
+
+.pwa-titlebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #2c4a52 0%, #3a5d66 100%);
+  color: white;
+  z-index: 10000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Región draggable - izquierda */
+.titlebar-drag-region {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 16px;
+  flex: 0 0 auto;
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.titlebar-logo-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.titlebar-logo-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.titlebar-logo {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.titlebar-brand {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Acciones centrales - no draggable */
+.titlebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  flex: 1 1 auto;
+  max-width: 600px;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.titlebar-search {
+  position: relative;
+  flex: 1 1 auto;
+  max-width: 400px;
+}
+
+.titlebar-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+.titlebar-search-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 12px 0 40px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  color: white;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.titlebar-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.titlebar-search-input:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.titlebar-search-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.titlebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.titlebar-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.titlebar-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.titlebar-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Espaciador derecho para controles de Windows */
+.titlebar-spacer {
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+/* Dark mode support */
+:host-context(.dark) .pwa-titlebar {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+/* Ajustar body cuando WCO está activo */
+body.wco-active {
+  padding-top: env(titlebar-area-height, 40px);
+}
+
+/* Media query para esconder en móvil */
+@media (max-width: 768px) {
+  .pwa-titlebar {
+    display: none;
+  }
+}
+
+/* Animación de entrada */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pwa-titlebar {
+  animation: slideDown 0.3s ease-out;
+}

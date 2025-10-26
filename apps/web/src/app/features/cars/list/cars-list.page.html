@@ -95,16 +95,29 @@
             </div>
           </div>
 
+          <!-- Carousel Unificado Responsive -->
           <div
             *ngIf="showEconomyCarousel()"
-            class="map-carousel-container pointer-events-none hidden lg:block"
+            class="map-carousel-container pointer-events-none"
             role="region"
-            aria-label="Autos cercanos y económicos"
+            [attr.aria-label]="isMobile() ? 'Autos sugeridos cerca tuyo' : 'Autos cercanos y económicos'"
           >
             <div class="map-carousel-heading pointer-events-auto">
-              <span class="map-carousel-heading__pill">Cercanos y económicos</span>
+              <span class="map-carousel-heading__pill">
+                <span class="hidden lg:inline">Cercanos y económicos</span>
+                <span class="lg:hidden">Sugeridos cerca tuyo</span>
+              </span>
             </div>
-            <div class="map-carousel pointer-events-auto" data-tour-step="guided-select-car" role="list">
+            <div 
+              #unifiedCarousel
+              class="map-carousel pointer-events-auto" 
+              data-tour-step="guided-select-car" 
+              role="list"
+              (mouseenter)="onCarouselMouseEnter()"
+              (mouseleave)="onCarouselMouseLeave()"
+              (touchstart)="onCarouselMouseEnter()"
+              (touchend)="onCarouselMouseLeave()"
+            >
               <ng-container *ngFor="let car of economyCars(); trackBy: trackByCarId">
                 <ng-container
                   [ngTemplateOutlet]="carouselCard"
@@ -114,18 +127,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div *ngIf="showEconomyCarousel()" class="map-carousel-mobile lg:hidden" role="region" aria-label="Autos sugeridos cerca tuyo">
-      <p class="map-carousel-mobile__heading">Sugeridos cerca tuyo</p>
-      <div class="map-carousel map-carousel--mobile" role="list">
-        <ng-container *ngFor="let car of economyCars(); trackBy: trackByCarId">
-          <ng-container
-            [ngTemplateOutlet]="carouselCard"
-            [ngTemplateOutletContext]="{ $implicit: car }"
-          ></ng-container>
-        </ng-container>
       </div>
     </div>
 
@@ -176,130 +177,14 @@
           </div>
 
           <div *ngIf="premiumCars().length > 0" class="list-panel-cards">
-            <article
+            <app-car-card
               *ngFor="let car of premiumCars(); trackBy: trackByCarId"
               [id]="'car-card-' + car.id"
-              class="group rounded-2xl bg-white dark:bg-anthracite shadow-lg dark:shadow-[0_14px_32px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              [ngClass]="{ 'ring-2 ring-accent-petrol shadow-2xl dark:ring-accent-petrol/70': isCarSelected(car.id) }"
-            >
-              <button
-                type="button"
-                class="flex w-full flex-col text-left focus:outline-none"
-                (click)="onCarSelected(car.id)"
-                [attr.aria-label]="'Abrir resumen premium de ' + (car.title || 'este auto')"
-              >
-                <div class="relative h-48 w-full overflow-hidden rounded-t-2xl bg-sand-light">
-                  <img
-                    *ngIf="car.photos?.length"
-                    [src]="car.photos?.[0]?.url"
-                    [alt]="car.title"
-                    loading="lazy"
-                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div
-                    *ngIf="!car.photos?.length"
-                    class="flex h-full w-full items-center justify-center bg-gradient-to-br from-sand-light to-pearl-gray/60"
-                  >
-                    <svg class="h-12 w-12 text-ash-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <circle cx="7" cy="17" r="2" stroke-width="1.5"></circle>
-                      <circle cx="17" cy="17" r="2" stroke-width="1.5"></circle>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 15h14M8 12l1-4h6l1 4"></path>
-                    </svg>
-                  </div>
-
-                  <span
-                    class="absolute bottom-3 left-3 inline-flex items-center gap-2 rounded-lg bg-white/92 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-smoke-black dark:bg-anthracite/90 dark:text-pearl-light shadow-lg"
-                  >
-                    <svg class="h-3.5 w-3.5 text-accent-petrol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path d="M3 13h18l-1.8-4.5A3 3 0 0016.4 6H7.6a3 3 0 00-2.8 2.5L3 13z" stroke-linecap="round" stroke-linejoin="round" />
-                      <circle cx="7" cy="17" r="2" />
-                      <circle cx="17" cy="17" r="2" />
-                    </svg>
-                    {{ car.brand || car.brand_text_backup }}
-                  </span>
-                </div>
-
-                <div class="flex flex-col gap-4 p-5">
-                  <div class="card-badges" aria-hidden="true">
-                    <span class="badge badge--premium">Premium</span>
-                    <span class="badge" *ngIf="car.owner?.rating_avg">⭐ {{ car.owner?.rating_avg | number:'1.1-1' }}</span>
-                    <span class="badge" *ngIf="car.transmission === 'automatic'">Automático</span>
-                    <span class="badge" *ngIf="car.body_type">{{ (car.body_type || '').replace('_', ' ') | titlecase }}</span>
-                  </div>
-                  <div class="flex items-center gap-3" *ngIf="car.owner">
-                    <ng-container *ngIf="car.owner.avatar_url; else ownerPlaceholder">
-                      <img
-                        [src]="car.owner.avatar_url"
-                        [alt]="car.owner.full_name || 'Host'"
-                        class="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow"
-                      />
-                    </ng-container>
-                    <ng-template #ownerPlaceholder>
-                      <div class="flex h-10 w-10 items-center justify-center rounded-full bg-sand-light text-smoke-black shadow">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                        </svg>
-                      </div>
-                    </ng-template>
-                    <div class="flex flex-col">
-                      <span class="text-sm font-semibold text-smoke-black dark:text-pearl-light">
-                        {{ car.owner.full_name || 'Host' }}
-                      </span>
-                      <span class="text-xs text-ash-gray dark:text-pearl-light/70" *ngIf="car.owner?.rating_count">
-                        ⭐ {{ car.owner.rating_avg | number:'1.1-1' }} ({{ car.owner.rating_count }})
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="flex flex-col gap-1">
-                    <h3 class="text-base font-semibold text-smoke-black dark:text-pearl-light line-clamp-2">
-                      {{ car.title }}
-                    </h3>
-                    <p class="flex items-center gap-1 text-sm text-charcoal-medium dark:text-pearl-light/70" *ngIf="car.distanceText">
-                      <svg class="h-4 w-4 text-accent-petrol dark:text-accent-petrol/80" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      </svg>
-                      {{ car.distanceText }}
-                    </p>
-                  </div>
-
-                  <div class="flex items-center justify-between border-t border-pearl-gray/35 pt-4">
-                    <div class="flex flex-col leading-tight">
-                      <span class="car-price">{{ car.price_per_day | money }}</span>
-                      <span class="text-xs text-ash-gray">por día</span>
-                    </div>
-
-                    <div class="flex items-center gap-2 sm:gap-3">
-                      <button
-                        type="button"
-                        class="car-action-secondary"
-                        (click)="onCompareToggle(car.id); $event.stopPropagation()"
-                        [attr.aria-pressed]="isCarComparing(car.id)"
-                        [attr.aria-label]="(isCarComparing(car.id) ? 'Quitar de comparación' : 'Agregar a comparación') + ' ' + (car.title || '')"
-                      >
-                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4M12 2v4m5 14H7a2 2 0 01-2-2V9a2 2 0 012-2h10a2 2 0 012 2v9a2 2 0 01-2 2z" />
-                        </svg>
-                        <span>{{ isCarComparing(car.id) ? 'Quitar' : 'Comparar' }}</span>
-                      </button>
-
-                      <a
-                        [routerLink]="['/cars', car.id]"
-                        class="car-action-primary"
-                        (click)="$event.stopPropagation()"
-                        [attr.aria-label]="'Ver ficha completa de ' + (car.title || '')"
-                      >
-                        Ver ficha
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </button>
-            </article>
+              [car]="car"
+              [selected]="isCarSelected(car.id)"
+              (click)="onCarSelected(car.id)"
+              class="w-full cursor-pointer"
+            ></app-car-card>
           </div>
         </ng-container>
       </div>

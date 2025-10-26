@@ -87,7 +87,7 @@ describe('GuidedTourService', () => {
   it('should get current state', () => {
     const state = service.getState();
     expect(state).toBeDefined();
-    expect(state).toHaveProperty('isRunning');
-    expect(state).toHaveProperty('activeTourId');
+    expect(state.isRunning).toBeDefined();
+    expect(state.activeTourId).toBeDefined();
   });
 });
