@@ -54,17 +54,40 @@ export class MyCarsPage implements OnInit {
   }
 
   async onDeleteCar(carId: string): Promise<void> {
-    const confirmed = confirm('¿Estás seguro de que querés eliminar este auto? Esta acción no se puede deshacer.');
-    if (!confirmed) return;
-
     try {
+      // ✅ NUEVO: Verificar reservas activas
+      const { hasActive, count, bookings } = await this.carsService.hasActiveBookings(carId);
+      
+      if (hasActive) {
+        const nextBooking = bookings?.[0];
+        const startDate = nextBooking ? new Date(nextBooking.start_date).toLocaleDateString() : '';
+        
+        alert(
+          `❌ No puedes eliminar este auto\n\n` +
+          `Tiene ${count} reserva${count > 1 ? 's' : ''} activa${count > 1 ? 's' : ''}.\n` +
+          `Próxima reserva: ${startDate}\n\n` +
+          `Esperá a que finalicen las reservas o contactá a los locatarios para cancelarlas.`
+        );
+        return;
+      }
+
+      // ✅ MEJORADO: Confirmación más clara
+      const car = this.cars().find(c => c.id === carId);
+      const carName = car ? `${car.brand} ${car.model} ${car.year}` : 'este auto';
+      
+      const confirmed = confirm(
+        `¿Estás seguro de que querés eliminar ${carName}?\n\n` +
+        `Esta acción no se puede deshacer.`
+      );
+      
+      if (!confirmed) return;
+
       await this.carsService.deleteCar(carId);
-      // Reload cars list after successful deletion
       await this.loadCars();
-      alert('Auto eliminado exitosamente');
+      alert('✅ Auto eliminado exitosamente');
     } catch (error) {
       console.error('Error deleting car:', error);
-      alert('Error al eliminar el auto. Por favor intenta nuevamente.');
+      alert('❌ Error al eliminar el auto. Por favor intenta nuevamente.');
     }
   }
 }

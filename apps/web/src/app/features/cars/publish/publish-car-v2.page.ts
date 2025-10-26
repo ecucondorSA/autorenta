@@ -161,6 +161,19 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
                 </select>
               </div>
 
+              <!-- ✅ NUEVO: Valor del Vehículo (USD) -->
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  Valor Estimado del Vehículo (USD) *
+                  <span class="text-xs text-gray-500 font-normal" title="Este valor se usa para calcular seguros y garantías">ℹ️</span>
+                </label>
+                <input type="number" formControlName="value_usd" min="5000" max="500000" placeholder="15000"
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
+                <p class="mt-1 text-xs text-gray-500">
+                  Ingresa el valor aproximado de mercado de tu vehículo. Este valor se usa para calcular coberturas de seguro y depósitos de garantía.
+                </p>
+              </div>
+
               <!-- Min rental days -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Días mínimos *</label>
@@ -548,6 +561,7 @@ export class PublishCarV2Page implements OnInit {
       // Pricing
       price_per_day: [null, [Validators.required, Validators.min(1)]],
       currency: ['USD', Validators.required],
+      value_usd: [null, [Validators.required, Validators.min(5000), Validators.max(500000)]], // ✅ NUEVO: Valor del vehículo
       min_rental_days: [1, [Validators.required, Validators.min(1)]],
       max_rental_days: [30],
       deposit_required: [true],
@@ -630,6 +644,7 @@ export class PublishCarV2Page implements OnInit {
         fuel: car.fuel,
         price_per_day: car.price_per_day,
         currency: car.currency,
+        value_usd: car.value_usd || null, // ✅ NUEVO: Cargar value_usd si existe
         min_rental_days: car.min_rental_days,
         max_rental_days: car.max_rental_days,
         deposit_required: car.deposit_required,
@@ -958,6 +973,7 @@ export class PublishCarV2Page implements OnInit {
         doors: selectedModel?.doors,  // Desde car_models
         price_per_day: formValue.price_per_day,
         currency: formValue.currency,
+        value_usd: formValue.value_usd, // ✅ NUEVO: Valor del vehículo para cálculos de riesgo
         min_rental_days: formValue.min_rental_days,
         max_rental_days: formValue.max_rental_days,
         deposit_required: formValue.deposit_required,

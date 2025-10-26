@@ -225,6 +225,7 @@ export interface Car {
   status: CarStatus;
   price_per_day: number;
   currency: string;
+  value_usd?: number; // ✅ NUEVO: Valor real del vehículo en USD (para cálculos de riesgo/seguro)
   rating_avg: number;
   rating_count: number;
 

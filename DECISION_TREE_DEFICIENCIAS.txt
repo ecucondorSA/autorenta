@@ -1,0 +1,173 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                    ÁRBOL DE DECISIÓN: DEFICIENCIAS                   ║
+║                    Flujo Locatario - AutoRenta                       ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+📍 PUNTO DE ENTRADA
+│
+├─❓ ¿Necesitas información general?
+│  │
+│  ├─ SÍ → Consulta: RESUMEN_FINAL_DEFICIENCIAS_CRITICAS.md
+│  │       (10 min de lectura, overview completo)
+│  │
+│  └─ NO → Continúa abajo ↓
+│
+├─❓ ¿Vas a hacer DEPLOY hoy/mañana?
+│  │
+│  ├─ SÍ → ⚠️  LECTURA OBLIGATORIA:
+│  │       1. PRIORIDAD_CRITICA_2_COMPLETADA.md (15 min)
+│  │       2. QUICK_REFERENCE_DEFICIENCIAS.md (5 min)
+│  │       3. Ejecutar tests del checklist ✅
+│  │
+│  └─ NO → Continúa abajo ↓
+│
+├─❓ ¿Tienes un BUG en producción?
+│  │
+│  ├─ Relacionado con PAGOS/CHECKOUT
+│  │  │
+│  │  ├─ Síntoma: "El pago no se completa"
+│  │  │  └─→ Consulta: PRIORIDAD_CRITICA_2_COMPLETADA.md
+│  │  │      Sección: "Riesgos y Mitigación"
+│  │  │
+│  │  ├─ Síntoma: "Usuario redirigido a página equivocada"
+│  │  │  └─→ Verificar navegación a /bookings/checkout
+│  │  │      (debe ser 0, página deprecada)
+│  │  │
+│  │  └─ Síntoma: "Pago procesado pero booking no confirmado"
+│  │     └─→ Consulta: ESTADO_IMPLEMENTACION_ATOMICIDAD.md
+│  │         Ejecutar: ./test-atomicity.sh
+│  │
+│  ├─ Relacionado con RESERVAS
+│  │  │
+│  │  ├─ Síntoma: "Reserva sin risk_snapshot_id"
+│  │  │  └─→ ⚠️  CRÍTICO: Posible reserva fantasma
+│  │  │      1. Ejecutar: ./test-atomicity.sh
+│  │  │      2. Consulta: ESTADO_IMPLEMENTACION_ATOMICIDAD.md
+│  │  │      3. Revisar: database/fix-atomic-booking.sql
+│  │  │
+│  │  ├─ Síntoma: "Disponibilidad incorrecta"
+│  │  │  └─→ Verificar: create_booking_atomic en Supabase
+│  │  │      Función valida overlaps correctamente
+│  │  │
+│  │  └─ Síntoma: "Cálculo de seguro/garantía incorrecto"
+│  │     └─→ ⚠️  PENDIENTE: Implementar campo value_usd
+│  │         Consulta: PLAN_ACCION_DEFICIENCIAS_LOCATARIO.md
+│  │         Sección: "Prioridad Media"
+│  │
+│  └─ Otro tipo de bug
+│     └─→ Consulta índice: INDICE_DOCUMENTACION_DEFICIENCIAS.md
+│
+├─❓ ¿Eres NUEVO en el proyecto?
+│  │
+│  ├─ SÍ → 🎓 ONBOARDING EXPRESS (35 minutos):
+│  │       1. RESUMEN_FINAL_DEFICIENCIAS_CRITICAS.md (10 min)
+│  │       2. PRIORIDAD_CRITICA_2_COMPLETADA.md (15 min)
+│  │          - Enfócate en: "Flujos Implementados Completos"
+│  │       3. Ejecutar: ./test-atomicity.sh (5 min)
+│  │       4. Ejecutar tests manuales (5 min)
+│  │       ✅ Listo para trabajar!
+│  │
+│  └─ NO → Continúa abajo ↓
+│
+├─❓ ¿Necesitas IMPLEMENTAR algo?
+│  │
+│  ├─ Tarea: "Campo value_usd en cars"
+│  │  └─→ Consulta: PLAN_ACCION_DEFICIENCIAS_LOCATARIO.md
+│  │      Sección: "Prioridad Media: Campo value_usd"
+│  │      Tiempo: 1-2 horas
+│  │
+│  ├─ Tarea: "Modificar flujo de pago"
+│  │  └─→ ⚠️  YA ESTÁ IMPLEMENTADO
+│  │      Lee: PRIORIDAD_CRITICA_2_COMPLETADA.md
+│  │      Archivos modificados: 3
+│  │
+│  ├─ Tarea: "Atomicidad en reservas"
+│  │  └─→ ✅ YA ESTÁ IMPLEMENTADO
+│  │      Lee: ESTADO_IMPLEMENTACION_ATOMICIDAD.md
+│  │      Nada que hacer, solo validar con tests
+│  │
+│  └─ Otra tarea
+│     └─→ Consulta: INDICE_DOCUMENTACION_DEFICIENCIAS.md
+│
+├─❓ ¿Necesitas hacer TESTING?
+│  │
+│  ├─ Tests MANUALES
+│  │  └─→ Checklist completo en:
+│  │      - QUICK_REFERENCE_DEFICIENCIAS.md (sección Testing)
+│  │      - PRIORIDAD_CRITICA_2_COMPLETADA.md (4 casos de prueba)
+│  │
+│  ├─ Tests AUTOMATIZADOS
+│  │  └─→ Ejecutar: ./test-atomicity.sh
+│  │      Valida: Atomicidad + integridad referencial
+│  │
+│  └─ Tests E2E (Playwright)
+│     └─→ Pendiente de implementar
+│         Ver: PRIORIDAD_CRITICA_2_COMPLETADA.md
+│         Sección: "Testing Recomendado"
+│
+├─❓ ¿Necesitas MÉTRICAS/DATOS?
+│  │
+│  ├─ Objetivo: Validar mejoras
+│  │  └─→ Consulta: RESUMEN_FINAL_DEFICIENCIAS_CRITICAS.md
+│  │      Sección: "Métricas de Éxito Esperadas"
+│  │      Tabla con baseline vs. targets
+│  │
+│  ├─ Objetivo: Verificar atomicidad
+│  │  └─→ Ejecutar: ./test-atomicity.sh
+│  │      Output: Estadísticas de bookings + risk_snapshots
+│  │
+│  └─ Objetivo: Trackear conversión
+│     └─→ Monitorear:
+│         - Tasa de abandono en checkout
+│         - Tiempo promedio de checkout
+│         - Navegaciones a /bookings/checkout (debe ser ~0)
+│
+├─❓ ¿Necesitas VER EL CÓDIGO?
+│  │
+│  ├─ Backend/DB
+│  │  ├─→ database/fix-atomic-booking.sql
+│  │  │   (Función RPC: create_booking_atomic)
+│  │  │
+│  │  └─→ apps/web/src/app/core/services/bookings.service.ts
+│  │      (Método: createBookingAtomic())
+│  │
+│  ├─ Frontend
+│  │  ├─→ apps/web/src/app/features/bookings/booking-detail-payment/
+│  │  │   (Página consolidada de pago)
+│  │  │   - booking-detail-payment.page.ts (línea 885: processFinalPayment)
+│  │  │
+│  │  ├─→ apps/web/src/app/features/bookings/booking-success/
+│  │  │   (Página de éxito)
+│  │  │
+│  │  └─→ apps/web/src/app/features/bookings/checkout/
+│  │      (⚠️ DEPRECADA - No usar para nuevos features)
+│  │
+│  └─ Configuración
+│     └─→ apps/web/.env.development.local
+│         (Credenciales de Supabase)
+│
+└─❓ ¿No encuentras lo que buscas?
+   │
+   └─→ Consulta el ÍNDICE COMPLETO:
+       INDICE_DOCUMENTACION_DEFICIENCIAS.md
+       
+       O revisa la lista de documentos:
+       - RESUMEN_FINAL_DEFICIENCIAS_CRITICAS.md (overview)
+       - QUICK_REFERENCE_DEFICIENCIAS.md (referencia rápida)
+       - PLAN_ACCION_DEFICIENCIAS_LOCATARIO.md (plan completo)
+       - ESTADO_IMPLEMENTACION_ATOMICIDAD.md (atomicidad)
+       - PRIORIDAD_CRITICA_2_COMPLETADA.md (flujo de pago)
+       - ANALISIS_E2E_LOCATARIO.md (análisis original)
+
+╔══════════════════════════════════════════════════════════════════════╗
+║                         ATAJOS RÁPIDOS                                ║
+╠══════════════════════════════════════════════════════════════════════╣
+║ 🚀 Nuevo en el proyecto?    → Onboarding: paso 6                     ║
+║ 🔥 Deploy urgente?           → Paso 2 (LECTURA OBLIGATORIA)          ║
+║ 🐛 Bug en producción?        → Paso 4 (árbol de síntomas)            ║
+║ 🧪 Testing?                  → Paso 8 (checklist + script)           ║
+║ 📊 Métricas?                 → Paso 9 (tabla de KPIs)                ║
+║ 💻 Ver código?               → Paso 10 (rutas de archivos)           ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+Última actualización: 26 de Octubre, 2025

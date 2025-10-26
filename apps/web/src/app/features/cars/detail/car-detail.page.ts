@@ -292,10 +292,19 @@ export class CarDetailPage implements OnInit {
   }
 
   /**
-   * Estimate vehicle value in USD based on price per day
-   * This is a rough estimation - ideally should come from car metadata
+   * Get vehicle value in USD
+   * ✅ FIXED: Usa value_usd de la DB en lugar de estimación hardcodeada
+   * Fallback a estimación solo si value_usd no está disponible (autos antiguos)
    */
-  private estimateVehicleValue(car: Car): number {
+  private estimateVehicleValue(car: any): number {
+    // ✅ PRIORIDAD: Usar valor real de la DB si existe
+    if (car.value_usd && car.value_usd > 0) {
+      return Math.round(car.value_usd);
+    }
+
+    // ⚠️  FALLBACK: Solo para autos sin value_usd (legacy)
+    console.warn(`Auto ${car.id} sin value_usd, usando estimación`);
+    
     let pricePerDayUsd = car.price_per_day;
 
     // If price is in ARS, convert to USD (rough estimate: 1 USD = 1000 ARS)
@@ -304,7 +313,6 @@ export class CarDetailPage implements OnInit {
     }
 
     // Rough estimation: daily rate * 300 gives approximate value
-    // $50/day -> $15k, $100/day -> $30k, etc.
     return Math.round(pricePerDayUsd * 300);
   }
 

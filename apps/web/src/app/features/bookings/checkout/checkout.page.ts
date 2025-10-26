@@ -1,3 +1,18 @@
+/**
+ * @deprecated Esta página está DEPRECADA desde el 26 de Octubre, 2025.
+ * 
+ * MOTIVO: El flujo de pago en dos pasos (detail-payment → checkout) causaba 
+ * confusión y abandono de usuarios. Se consolidó todo en una sola página.
+ * 
+ * NUEVO FLUJO: booking-detail-payment.page.ts ahora procesa el pago completo
+ * en una sola página y redirige directamente a booking-success.page.ts.
+ * 
+ * ACCIÓN RECOMENDADA: Considerar eliminar este archivo y sus dependencias
+ * después de confirmar que el nuevo flujo funciona correctamente en producción.
+ * 
+ * Ver: PLAN_ACCION_DEFICIENCIAS_LOCATARIO.md - Prioridad Crítica 2
+ */
+
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
