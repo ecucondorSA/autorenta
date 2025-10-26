@@ -987,4 +987,139 @@ export class BookingsService {
       };
     }
   }
+
+  // ============================================================================
+  // SISTEMA DE APROBACIÓN MANUAL DE RESERVAS
+  // ============================================================================
+
+  /**
+   * Obtiene las reservas pendientes de aprobación del locador
+   */
+  async getPendingApprovals(): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('owner_pending_approvals')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching pending approvals:', error);
+      throw error;
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Aprueba una reserva pendiente
+   */
+  async approveBooking(bookingId: string): Promise<{ success: boolean; error?: string; message?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('approve_booking', {
+        p_booking_id: bookingId
+      });
+
+      if (error) {
+        console.error('Error approving booking:', error);
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+
+      // data es JSON con {success, message, booking_id, etc}
+      if (data && typeof data === 'object') {
+        if (data.success === false) {
+          return {
+            success: false,
+            error: data.error || data.message
+          };
+        }
+        
+        return {
+          success: true,
+          message: data.message || 'Reserva aprobada exitosamente'
+        };
+      }
+
+      return {
+        success: true,
+        message: 'Reserva aprobada exitosamente'
+      };
+
+    } catch (error: any) {
+      console.error('Exception approving booking:', error);
+      return {
+        success: false,
+        error: error.message || 'Error inesperado al aprobar reserva'
+      };
+    }
+  }
+
+  /**
+   * Rechaza una reserva pendiente
+   */
+  async rejectBooking(
+    bookingId: string, 
+    reason: string = 'No especificado'
+  ): Promise<{ success: boolean; error?: string; message?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('reject_booking', {
+        p_booking_id: bookingId,
+        p_rejection_reason: reason
+      });
+
+      if (error) {
+        console.error('Error rejecting booking:', error);
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+
+      // data es JSON con {success, message, booking_id, etc}
+      if (data && typeof data === 'object') {
+        if (data.success === false) {
+          return {
+            success: false,
+            error: data.error || data.message
+          };
+        }
+        
+        return {
+          success: true,
+          message: data.message || 'Reserva rechazada exitosamente'
+        };
+      }
+
+      return {
+        success: true,
+        message: 'Reserva rechazada exitosamente'
+      };
+
+    } catch (error: any) {
+      console.error('Exception rejecting booking:', error);
+      return {
+        success: false,
+        error: error.message || 'Error inesperado al rechazar reserva'
+      };
+    }
+  }
+
+  /**
+   * Verifica si un auto requiere aprobación manual
+   */
+  async carRequiresApproval(carId: string): Promise<boolean> {
+    const { data, error } = await this.supabase
+      .from('cars')
+      .select('instant_booking, require_approval')
+      .eq('id', carId)
+      .single();
+
+    if (error || !data) {
+      console.warn('Could not check car approval settings, assuming instant booking');
+      return false;
+    }
+
+    // Si require_approval es true O instant_booking es false, requiere aprobación
+    return data.require_approval === true || data.instant_booking === false;
+  }
 }
