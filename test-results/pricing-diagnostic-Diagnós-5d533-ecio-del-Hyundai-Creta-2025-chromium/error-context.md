@@ -1,0 +1,447 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - link "Saltar al contenido" [ref=e5] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=e6]:
+      - link "Autorentar AutoRentar Car Sharing" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img "Autorentar" [ref=e8]
+        - generic [ref=e9]:
+          - generic [ref=e10]: AutoRentar
+          - generic [ref=e11]: Car Sharing
+      - navigation "Principal" [ref=e12]:
+        - link "Buscar autos" [ref=e13] [cursor=pointer]:
+          - /url: /cars
+          - img [ref=e14]
+          - generic [ref=e16]: Buscar autos
+      - generic [ref=e17]:
+        - button "Seleccionar idioma" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: 🇦🇷
+          - generic [ref=e22]: Español
+          - img [ref=e23]
+        - button "Ayuda" [ref=e27] [cursor=pointer]:
+          - img [ref=e28]
+        - button "Cambiar tema" [ref=e30] [cursor=pointer]:
+          - img [ref=e31]
+        - link "Ingresar" [ref=e33] [cursor=pointer]:
+          - /url: /auth/login
+  - main [ref=e34]:
+    - generic [ref=e37]:
+      - generic [ref=e39]:
+        - generic [ref=e41]:
+          - generic [ref=e43]:
+            - img [ref=e44]
+            - generic [ref=e46]: "15"
+          - button "Centrar en mi ubicación" [ref=e47] [cursor=pointer]:
+            - img [ref=e48]
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - region "Map" [ref=e52]
+              - img "Map marker" [ref=e53]
+            - generic:
+              - generic [ref=e57]:
+                - link "Mapbox" [ref=e58] [cursor=pointer]:
+                  - /url: https://www.mapbox.com/about/maps
+                  - text: © Mapbox
+                - link "OpenStreetMap" [ref=e59] [cursor=pointer]:
+                  - /url: https://www.openstreetmap.org/copyright/
+                  - text: © OpenStreetMap
+                - link "Improve this map" [ref=e60] [cursor=pointer]:
+                  - /url: https://apps.mapbox.com/feedback/?owner=mapbox&id=streets-v12&access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg#/-56.1645/-34.9011/13
+              - link "Mapbox homepage" [ref=e62] [cursor=pointer]:
+                - /url: https://www.mapbox.com/
+        - generic:
+          - generic [ref=e63]:
+            - generic:
+              - generic:
+                - generic:
+                  - button "Filtros" [ref=e64] [cursor=pointer]:
+                    - img [ref=e65]
+                    - generic [ref=e67]: Filtros
+                  - generic:
+                    - generic:
+                      - heading "Filtrar autos" [level=3]
+                      - button:
+                        - img
+                    - generic:
+                      - generic:
+                        - generic: Precio por día
+                        - generic:
+                          - generic:
+                            - generic: $
+                            - spinbutton: "10"
+                          - generic: "-"
+                          - generic:
+                            - generic: $
+                            - spinbutton: "200"
+                        - generic:
+                          - slider [ref=e68]: "10"
+                          - slider [ref=e69]: "200"
+                      - generic:
+                        - generic: Transmisión
+                        - generic:
+                          - button "Todas"
+                          - button "Manual"
+                          - button "Automática"
+                      - generic:
+                        - generic: Combustible
+                        - generic:
+                          - button "Todos"
+                          - button "Nafta"
+                          - button "Gasoil"
+                          - button "Eléctrico"
+                      - generic:
+                        - generic: "Asientos mínimos: 2"
+                        - slider: "2"
+                      - generic:
+                        - generic: Características
+                        - generic:
+                          - generic:
+                            - checkbox "Aire acondicionado"
+                            - generic: Aire acondicionado
+                          - generic:
+                            - checkbox "GPS"
+                            - generic: GPS
+                          - generic:
+                            - checkbox "Bluetooth"
+                            - generic: Bluetooth
+                          - generic:
+                            - checkbox "Cámara trasera"
+                            - generic: Cámara trasera
+                    - generic:
+                      - button "Limpiar filtros"
+            - generic [ref=e70]:
+              - generic [ref=e71]: Ordenar resultados
+              - combobox "Ordenar resultados" [ref=e72]:
+                - option "Más cercanos"
+                - 'option "Precio: menor a mayor"'
+                - 'option "Precio: mayor a menor" [selected]'
+                - option "Mejor valorados"
+                - option "Más nuevos"
+          - region "Autos cercanos y económicos":
+            - generic [ref=e74]: Cercanos y económicos
+            - list [ref=e75]:
+              - listitem "Ver más sobre Volkswagen Gol Trend 2021" [ref=e76] [cursor=pointer]:
+                - img [ref=e79]
+                - generic [ref=e83]:
+                  - paragraph [ref=e84]: Volkswagen Gol Trend 2021
+                  - generic [ref=e85]:
+                    - generic [ref=e86]: $ 12
+                    - generic [ref=e87]: / día
+                  - link "Alquilar Volkswagen Gol Trend 2021" [ref=e89]:
+                    - /url: /cars/d10aad20-280a-4819-ac79-ff22b79449e6
+                    - text: Alquilar
+                    - img [ref=e90]
+              - listitem "Ver más sobre Fiat Cronos 2022 - Familiar" [ref=e92] [cursor=pointer]:
+                - img "Fiat Cronos 2022 - Familiar" [ref=e94]
+                - generic [ref=e95]:
+                  - paragraph [ref=e96]: Fiat Cronos 2022 - Familiar
+                  - generic [ref=e97]:
+                    - generic [ref=e98]: $ 14
+                    - generic [ref=e99]: / día
+                  - link "Alquilar Fiat Cronos 2022 - Familiar" [ref=e101]:
+                    - /url: /cars/8447c379-6b51-4b5e-8647-0f5de243f729
+                    - text: Alquilar
+                    - img [ref=e102]
+              - listitem "Ver más sobre Toyota Corolla 2022 - Económico y confiable" [ref=e104] [cursor=pointer]:
+                - img [ref=e107]
+                - generic [ref=e111]:
+                  - paragraph [ref=e112]: Toyota Corolla 2022 - Económico y confiable
+                  - generic [ref=e113]:
+                    - generic [ref=e114]: $ 15
+                    - generic [ref=e115]: / día
+                  - link "Alquilar Toyota Corolla 2022 - Económico y confiable" [ref=e117]:
+                    - /url: /cars/59011ffc-b8e1-432a-b4f6-4fd5bdc4e3ee
+                    - text: Alquilar
+                    - img [ref=e118]
+              - listitem "Ver más sobre Peugeot 208 2023 - Urbano" [ref=e120] [cursor=pointer]:
+                - img [ref=e123]
+                - generic [ref=e127]:
+                  - paragraph [ref=e128]: Peugeot 208 2023 - Urbano
+                  - generic [ref=e129]:
+                    - generic [ref=e130]: $ 17
+                    - generic [ref=e131]: / día
+                  - link "Alquilar Peugeot 208 2023 - Urbano" [ref=e133]:
+                    - /url: /cars/95dadd02-5b5e-4cd0-89aa-0adad31c78a7
+                    - text: Alquilar
+                    - img [ref=e134]
+              - listitem "Ver más sobre Ford Focus 2020 - Deportivo" [ref=e136] [cursor=pointer]:
+                - img [ref=e139]
+                - generic [ref=e143]:
+                  - paragraph [ref=e144]: Ford Focus 2020 - Deportivo
+                  - generic [ref=e145]:
+                    - generic [ref=e146]: $ 17
+                    - generic [ref=e147]: / día
+                  - link "Alquilar Ford Focus 2020 - Deportivo" [ref=e149]:
+                    - /url: /cars/caa404cc-6423-4f5e-b5df-f0d02f7d1aff
+                    - text: Alquilar
+                    - img [ref=e150]
+              - listitem "Ver más sobre Volkswagen Polo 2023 - Compacto moderno" [ref=e152] [cursor=pointer]:
+                - img [ref=e155]
+                - generic [ref=e159]:
+                  - paragraph [ref=e160]: Volkswagen Polo 2023 - Compacto moderno
+                  - generic [ref=e161]:
+                    - generic [ref=e162]: $ 18
+                    - generic [ref=e163]: / día
+                  - link "Alquilar Volkswagen Polo 2023 - Compacto moderno" [ref=e165]:
+                    - /url: /cars/82c3ecf6-1d8c-46fc-9fad-6dd63c3aeac7
+                    - text: Alquilar
+                    - img [ref=e166]
+              - listitem "Ver más sobre Chevrolet Onix 2025" [ref=e168] [cursor=pointer]:
+                - img "Chevrolet Onix 2025" [ref=e170]
+                - generic [ref=e171]:
+                  - paragraph [ref=e172]: Chevrolet Onix 2025
+                  - generic [ref=e173]:
+                    - generic [ref=e174]: $ 23
+                    - generic [ref=e175]: / día
+                  - link "Alquilar Chevrolet Onix 2025" [ref=e177]:
+                    - /url: /cars/8a854591-3fec-4425-946e-c7bb764a7333
+                    - text: Alquilar
+                    - img [ref=e178]
+              - listitem "Ver más sobre Chevrolet Cruze 2025" [ref=e180] [cursor=pointer]:
+                - img "Chevrolet Cruze 2025" [ref=e182]
+                - generic [ref=e183]:
+                  - paragraph [ref=e184]: Chevrolet Cruze 2025
+                  - generic [ref=e185]:
+                    - generic [ref=e186]: $ 34
+                    - generic [ref=e187]: / día
+                  - link "Alquilar Chevrolet Cruze 2025" [ref=e189]:
+                    - /url: /cars/4b3c5aed-8e3b-463e-8f3a-909a92e072e0
+                    - text: Alquilar
+                    - img [ref=e190]
+              - listitem "Ver más sobre Toyota Corolla XEi" [ref=e192] [cursor=pointer]:
+                - img "Toyota Corolla XEi" [ref=e194]
+                - generic [ref=e195]:
+                  - paragraph [ref=e196]: Toyota Corolla XEi
+                  - generic [ref=e197]:
+                    - generic [ref=e198]: $ 35
+                    - generic [ref=e199]: / día
+                  - link "Alquilar Toyota Corolla XEi" [ref=e201]:
+                    - /url: /cars/33333333-3333-3333-3333-333333333333
+                    - text: Alquilar
+                    - img [ref=e202]
+      - complementary [ref=e204]:
+        - generic [ref=e205]:
+          - generic [ref=e206]:
+            - generic [ref=e207]:
+              - heading "Autos disponibles" [level=2] [ref=e208]
+              - status [ref=e209]: 6 modelos media/alta gama · Ordenados por precio descendente
+            - generic [ref=e210]:
+              - generic [ref=e211]: Ordenar resultados
+              - combobox "Ordenar resultados" [ref=e212]:
+                - option "Más cercanos"
+                - 'option "Precio: menor a mayor"'
+                - 'option "Precio: mayor a menor" [selected]'
+                - option "Mejor valorados"
+                - option "Más nuevos"
+          - generic [ref=e213]:
+            - article [ref=e214]:
+              - button "Abrir resumen premium de Hyundai Creta 2025" [ref=e215] [cursor=pointer]:
+                - generic [ref=e216]:
+                  - img "Hyundai Creta 2025" [ref=e217]
+                  - generic [ref=e218]:
+                    - img [ref=e219]
+                    - text: Hyundai
+                - generic [ref=e223]:
+                  - generic [ref=e225]: Premium
+                  - generic [ref=e226]:
+                    - img "EDUARDO MARQUES DA ROSA" [ref=e227]
+                    - generic [ref=e229]: EDUARDO MARQUES DA ROSA
+                  - heading "Hyundai Creta 2025" [level=3] [ref=e231]
+                  - generic [ref=e232]:
+                    - generic [ref=e233]:
+                      - generic [ref=e234]: $ 75.000
+                      - generic [ref=e235]: por día
+                    - generic [ref=e236]:
+                      - button "Agregar a comparación Hyundai Creta 2025" [ref=e237]:
+                        - img [ref=e238]
+                        - generic [ref=e240]: Comparar
+                      - link "Ver ficha completa de Hyundai Creta 2025" [ref=e241]:
+                        - /url: /cars/e8644fdd-e8a3-4565-8c50-ebb779cf6ba3
+                        - text: Ver ficha
+                        - img [ref=e242]
+            - article [ref=e244]:
+              - button "Abrir resumen premium de Hyundai Creta 2022 - SUV Premium" [ref=e245] [cursor=pointer]:
+                - generic [ref=e246]:
+                  - img [ref=e248]
+                  - generic [ref=e252]:
+                    - img [ref=e253]
+                    - text: Hyundai
+                - generic [ref=e257]:
+                  - generic [ref=e258]:
+                    - generic [ref=e259]: Premium
+                    - generic [ref=e260]: Automático
+                  - generic [ref=e261]:
+                    - img [ref=e263]
+                    - generic [ref=e266]: Charles
+                  - heading "Hyundai Creta 2022 - SUV Premium" [level=3] [ref=e268]
+                  - generic [ref=e269]:
+                    - generic [ref=e270]:
+                      - generic [ref=e271]: $ 65.000
+                      - generic [ref=e272]: por día
+                    - generic [ref=e273]:
+                      - button "Agregar a comparación Hyundai Creta 2022 - SUV Premium" [ref=e274]:
+                        - img [ref=e275]
+                        - generic [ref=e277]: Comparar
+                      - link "Ver ficha completa de Hyundai Creta 2022 - SUV Premium" [ref=e278]:
+                        - /url: /cars/087227cd-24f6-49ed-901d-4c337abe4533
+                        - text: Ver ficha
+                        - img [ref=e279]
+            - article [ref=e281]:
+              - button "Abrir resumen premium de Renault Sandero Stepway 4x4" [ref=e282] [cursor=pointer]:
+                - generic [ref=e283]:
+                  - img [ref=e285]
+                  - generic [ref=e289]:
+                    - img [ref=e290]
+                    - text: Renault
+                - generic [ref=e294]:
+                  - generic [ref=e296]: Premium
+                  - generic [ref=e297]:
+                    - img [ref=e299]
+                    - generic [ref=e302]: Charles
+                  - heading "Renault Sandero Stepway 4x4" [level=3] [ref=e304]
+                  - generic [ref=e305]:
+                    - generic [ref=e306]:
+                      - generic [ref=e307]: $ 58.000
+                      - generic [ref=e308]: por día
+                    - generic [ref=e309]:
+                      - button "Agregar a comparación Renault Sandero Stepway 4x4" [ref=e310]:
+                        - img [ref=e311]
+                        - generic [ref=e313]: Comparar
+                      - link "Ver ficha completa de Renault Sandero Stepway 4x4" [ref=e314]:
+                        - /url: /cars/99d5af74-a2c7-43d5-9c02-93d7446000a2
+                        - text: Ver ficha
+                        - img [ref=e315]
+            - article [ref=e317]:
+              - button "Abrir resumen premium de Nissan Versa 2021 - Confort" [ref=e318] [cursor=pointer]:
+                - generic [ref=e319]:
+                  - img [ref=e321]
+                  - generic [ref=e325]:
+                    - img [ref=e326]
+                    - text: Nissan
+                - generic [ref=e330]:
+                  - generic [ref=e331]:
+                    - generic [ref=e332]: Premium
+                    - generic [ref=e333]: Automático
+                  - generic [ref=e334]:
+                    - img [ref=e336]
+                    - generic [ref=e339]: Charles
+                  - heading "Nissan Versa 2021 - Confort" [level=3] [ref=e341]
+                  - generic [ref=e342]:
+                    - generic [ref=e343]:
+                      - generic [ref=e344]: $ 42.000
+                      - generic [ref=e345]: por día
+                    - generic [ref=e346]:
+                      - button "Agregar a comparación Nissan Versa 2021 - Confort" [ref=e347]:
+                        - img [ref=e348]
+                        - generic [ref=e350]: Comparar
+                      - link "Ver ficha completa de Nissan Versa 2021 - Confort" [ref=e351]:
+                        - /url: /cars/47738b52-5173-4079-a236-996bc57940f9
+                        - text: Ver ficha
+                        - img [ref=e352]
+            - article [ref=e354]:
+              - button "Abrir resumen premium de Chevrolet Onix 2023 - Nuevo" [ref=e355] [cursor=pointer]:
+                - generic [ref=e356]:
+                  - img [ref=e358]
+                  - generic [ref=e362]:
+                    - img [ref=e363]
+                    - text: Chevrolet
+                - generic [ref=e367]:
+                  - generic [ref=e368]:
+                    - generic [ref=e369]: Premium
+                    - generic [ref=e370]: Automático
+                  - generic [ref=e371]:
+                    - img [ref=e373]
+                    - generic [ref=e376]: Charles
+                  - heading "Chevrolet Onix 2023 - Nuevo" [level=3] [ref=e378]
+                  - generic [ref=e379]:
+                    - generic [ref=e380]:
+                      - generic [ref=e381]: $ 38.000
+                      - generic [ref=e382]: por día
+                    - generic [ref=e383]:
+                      - button "Agregar a comparación Chevrolet Onix 2023 - Nuevo" [ref=e384]:
+                        - img [ref=e385]
+                        - generic [ref=e387]: Comparar
+                      - link "Ver ficha completa de Chevrolet Onix 2023 - Nuevo" [ref=e388]:
+                        - /url: /cars/22be81b9-2067-444a-a35d-ccf3997f2c4b
+                        - text: Ver ficha
+                        - img [ref=e389]
+            - article [ref=e391]:
+              - button "Abrir resumen premium de Toyota Hilux 2025" [ref=e392] [cursor=pointer]:
+                - generic [ref=e393]:
+                  - img "Toyota Hilux 2025" [ref=e394]
+                  - generic [ref=e395]:
+                    - img [ref=e396]
+                    - text: Toyota
+                - generic [ref=e400]:
+                  - generic [ref=e402]: Premium
+                  - generic [ref=e403]:
+                    - img "EDUARDO MARQUES DA ROSA" [ref=e404]
+                    - generic [ref=e406]: EDUARDO MARQUES DA ROSA
+                  - heading "Toyota Hilux 2025" [level=3] [ref=e408]
+                  - generic [ref=e409]:
+                    - generic [ref=e410]:
+                      - generic [ref=e411]: $ 90
+                      - generic [ref=e412]: por día
+                    - generic [ref=e413]:
+                      - button "Agregar a comparación Toyota Hilux 2025" [ref=e414]:
+                        - img [ref=e415]
+                        - generic [ref=e417]: Comparar
+                      - link "Ver ficha completa de Toyota Hilux 2025" [ref=e418]:
+                        - /url: /cars/dee81561-7f02-4da8-add9-2a07a1e4484a
+                        - text: Ver ficha
+                        - img [ref=e419]
+  - contentinfo [ref=e421]:
+    - generic [ref=e422]:
+      - generic [ref=e423]:
+        - generic [ref=e424]:
+          - img "Autorentar" [ref=e426]
+          - paragraph [ref=e427]: Alquiler de autos premium en Uruguay. Conectamos personas y experiencias con vehículos de anfitriones verificados.
+        - generic [ref=e428]:
+          - heading "Explorar" [level=4] [ref=e429]
+          - list [ref=e430]:
+            - listitem [ref=e431]:
+              - link "Buscar autos" [ref=e432] [cursor=pointer]:
+                - /url: /cars
+            - listitem [ref=e433]:
+              - link "Publicar auto" [ref=e434] [cursor=pointer]:
+                - /url: /cars/publish
+            - listitem [ref=e435]:
+              - link "Wallet" [ref=e436] [cursor=pointer]:
+                - /url: /wallet
+        - generic [ref=e437]:
+          - heading "Legal" [level=4] [ref=e438]
+          - list [ref=e439]:
+            - listitem [ref=e440]:
+              - link "Términos y condiciones" [ref=e441] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e442]:
+              - link "Política de privacidad" [ref=e443] [cursor=pointer]:
+                - /url: "#"
+        - generic [ref=e444]:
+          - heading "Contacto" [level=4] [ref=e445]
+          - list [ref=e446]:
+            - listitem [ref=e447]:
+              - link "autorentardev@gmail.com" [ref=e448] [cursor=pointer]:
+                - /url: mailto:autorentardev@gmail.com
+                - img [ref=e449]
+                - text: autorentardev@gmail.com
+            - listitem [ref=e452]:
+              - link "+598 99 123 456" [ref=e453] [cursor=pointer]:
+                - /url: tel:+59899123456
+                - img [ref=e454]
+                - text: +598 99 123 456
+          - generic [ref=e456]:
+            - heading "Síguenos" [level=5] [ref=e457]
+            - generic [ref=e458]:
+              - link "Instagram" [ref=e459] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e460]
+              - link "WhatsApp" [ref=e464] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e465]
+      - paragraph [ref=e468]: © 2025 Autorentar. Todos los derechos reservados.
+```

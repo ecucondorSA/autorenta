@@ -187,6 +187,13 @@
         </div>
         <app-fgo-management [booking]="booking()!" [exchangeRate]="exchangeRate()"></app-fgo-management>
 
+        <!-- ✅ INSURANCE SUMMARY CARD -->
+        <div class="insurance-card-container">
+          <app-insurance-summary-card 
+            [bookingId]="booking()!.id">
+          </app-insurance-summary-card>
+        </div>
+
         <!-- Pricing Breakdown Card -->
       </section>
 
@@ -222,6 +229,35 @@
           (confirmed)="handleConfirmationSuccess($event)"
           (errorOccurred)="handleConfirmationError($event)"
         ></app-renter-confirmation>
+      </div>
+    </div>
+
+    <!-- ✅ REPORT CLAIM BUTTON -->
+    <div 
+      *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress'"
+      class="card-premium p-4 rounded-2xl shadow-soft bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-l-4 border-red-500">
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0">
+          <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-smoke-black dark:text-white-pure mb-2">
+            ¿Tuviste un accidente o daño?
+          </h3>
+          <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
+            Reporta cualquier incidente inmediatamente para activar tu cobertura de seguro.
+          </p>
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'report-claim']"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-base shadow-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            Reportar Siniestro/Daño
+          </a>
+        </div>
       </div>
     </div>
 

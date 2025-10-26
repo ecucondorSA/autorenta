@@ -546,6 +546,32 @@ serve(async (req) => {
         );
       }
 
+      // ========================================
+      // MANEJAR MARKETPLACE SPLIT SI APLICA
+      // ========================================
+      
+      const metadata = paymentData.metadata || {};
+      const isMarketplaceSplit = metadata.is_marketplace_split === 'true' || metadata.is_marketplace_split === true;
+      
+      if (isMarketplaceSplit) {
+        console.log('💰 Processing marketplace split payment...');
+        
+        // Registrar split en BD
+        const { error: splitError } = await supabase.rpc('register_payment_split', {
+          p_booking_id: reference_id,
+          p_mp_payment_id: paymentData.id.toString(),
+          p_total_amount_cents: Math.round(paymentData.transaction_amount * 100),
+          p_currency: paymentData.currency_id
+        });
+        
+        if (splitError) {
+          console.error('Error registering payment split:', splitError);
+          // No fallar el webhook, solo logear
+        } else {
+          console.log('✅ Payment split registered successfully');
+        }
+      }
+
       // Actualizar booking a confirmado
       const { error: updateError } = await supabase
         .from('bookings')
@@ -553,6 +579,13 @@ serve(async (req) => {
           status: 'confirmed',
           paid_at: new Date().toISOString(),
           payment_method: 'credit_card',
+          payment_split_completed: isMarketplaceSplit,
+          owner_payment_amount: isMarketplaceSplit 
+            ? parseFloat(metadata.owner_amount_ars || '0') 
+            : null,
+          platform_fee: isMarketplaceSplit 
+            ? parseFloat(metadata.platform_fee_ars || '0') 
+            : null,
           metadata: {
             ...(booking.metadata || {}),
             mercadopago_payment_id: paymentData.id,
@@ -561,6 +594,8 @@ serve(async (req) => {
             mercadopago_amount: paymentData.transaction_amount,
             mercadopago_currency: paymentData.currency_id,
             mercadopago_approved_at: paymentData.date_approved,
+            is_marketplace_split: isMarketplaceSplit,
+            collector_id: metadata.collector_id || null,
           },
         })
         .eq('id', reference_id);
@@ -578,6 +613,7 @@ serve(async (req) => {
           message: 'Booking payment processed successfully',
           booking_id: reference_id,
           payment_id: paymentData.id,
+          marketplace_split: isMarketplaceSplit,
         }),
         {
           status: 200,

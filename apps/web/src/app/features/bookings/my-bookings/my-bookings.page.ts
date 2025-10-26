@@ -199,14 +199,14 @@ export class MyBookingsPage implements OnInit {
    * Opción B: Chat in-app (TODO futuro)
    */
   async openChat(booking: Booking): Promise<void> {
-    if (!booking.car_owner_id) {
+    if (!booking.owner_id) {
       alert('❌ No se pudo obtener información del propietario');
       return;
     }
 
     this.loading.set(true);
     try {
-      const contact = await this.bookingsService.getOwnerContact(booking.car_owner_id);
+      const contact = await this.bookingsService.getOwnerContact(booking.owner_id);
       
       if (!contact.success || !contact.phone) {
         // Fallback: mostrar email
@@ -242,19 +242,16 @@ export class MyBookingsPage implements OnInit {
    * Usa Google Maps con la ubicación del auto
    */
   showMap(booking: Booking): void {
-    const { car_location_lat, car_location_lng, car_city, car_province } = booking;
+    const { car_city, car_province } = booking;
     
-    // Si no hay coordenadas, mostrar mensaje
-    if (!car_location_lat || !car_location_lng) {
-      const location = car_city && car_province 
-        ? `${car_city}, ${car_province}` 
-        : 'No especificada';
-      alert(`🗺️ Ubicación: ${location}\n\nCoordenadas no disponibles.`);
-      return;
+    // Show location based on available data
+    if (car_city && car_province) {
+      // Open Google Maps search with city/province
+      const location = `${car_city}, ${car_province}`;
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+      window.open(mapsUrl, '_blank');
+    } else {
+      alert('🗺️ Ubicación no disponible para esta reserva.');
     }
-
-    // Abrir Google Maps con las coordenadas
-    const mapsUrl = `https://www.google.com/maps?q=${car_location_lat},${car_location_lng}`;
-    window.open(mapsUrl, '_blank');
   }
 }

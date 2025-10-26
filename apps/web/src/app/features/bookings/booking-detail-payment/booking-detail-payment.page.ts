@@ -19,6 +19,9 @@ import { WalletService } from '../../../core/services/wallet.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
+import { PaymentsService } from '../../../core/services/payments.service';
+import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
+import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 
 // Models
 import {
@@ -91,6 +94,25 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private walletService = inject(WalletService);
   private bookingsService = inject(BookingsService);
   private supabaseClient = inject(SupabaseClientService).getClient();
+  
+  // ✅ NUEVO: Servicios para procesamiento de pago final
+  private paymentsService = inject(PaymentsService);
+  private mpGateway = inject(MercadoPagoBookingGateway);
+  private fgoService = inject(FgoV1_1Service);
+
+  // Helper to convert CoverageUpgrade to Booking type
+  private mapCoverageUpgrade(upgrade: CoverageUpgrade): 'standard' | 'premium' | 'zero_franchise' {
+    switch (upgrade) {
+      case 'standard':
+        return 'standard';
+      case 'premium50':
+        return 'premium';
+      case 'zero':
+        return 'zero_franchise';
+      default:
+        return 'standard';
+    }
+  }
 
   // ==================== SIGNALS (Estado Global) ====================
 
@@ -137,6 +159,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly loadingPricing = signal(false);
   readonly error = signal<string | null>(null);
   readonly validationErrors = signal<ValidationError[]>([]);
+
+  // ✅ NUEVO: Signals para procesamiento de pago final
+  readonly processingFinalPayment = signal(false);
+  readonly lastCreatedBookingId = signal<string | null>(null);
 
   // User
   readonly userId = signal<string | null>(null);
@@ -646,29 +672,61 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   /**
    * NUEVO: Crea un nuevo booking (flujo original)
    */
+  /**
+   * ✅ FIX CRÍTICO: Crear booking usando función atómica
+   * ANTES: Múltiples pasos no transaccionales → riesgo de reservas fantasma
+   * AHORA: Una sola transacción atómica en la base de datos
+   */
   private async createNewBooking(): Promise<void> {
-    console.log('[Detalle & Pago] Creando nuevo booking');
+    console.log('[Detalle & Pago] Creando nuevo booking (ATÓMICO)');
 
-    // 1. Crear booking primero (sin risk_snapshot_id)
-    const bookingResult = await this.createBooking();
-    if (!bookingResult.ok || !bookingResult.bookingId) {
-      throw new Error(bookingResult.error || 'Error al crear reserva');
+    const input = this.bookingInput();
+    const pricing = this.priceBreakdown();
+    const risk = this.riskSnapshot();
+    const userId = this.userId();
+
+    if (!input || !pricing || !risk || !userId) {
+      throw new Error('Faltan datos para crear reserva');
     }
 
-    // 2. Persistir risk snapshot con booking_id real
-    const riskSnapshotResult = await this.persistRiskSnapshot(bookingResult.bookingId);
-    if (!riskSnapshotResult.ok || !riskSnapshotResult.snapshotId) {
-      throw new Error(riskSnapshotResult.error || 'Error al guardar risk snapshot');
+    // Llamar a la función RPC atómica que hace todo en una transacción
+    const result = await this.bookingsService.createBookingAtomic({
+      carId: input.carId,
+      startDate: input.startDate.toISOString(),
+      endDate: input.endDate.toISOString(),
+      totalAmount: pricing.totalArs,
+      currency: 'ARS',
+      paymentMode: this.paymentMode(),
+      coverageUpgrade: this.mapCoverageUpgrade(this.coverageUpgrade()),
+      authorizedPaymentId: this.paymentAuthorization()?.authorizedPaymentId,
+      walletLockId: this.walletLock()?.lockId,
+      riskSnapshot: {
+        dailyPriceUsd: pricing.totalUsd / (calculateTotalDays(input.startDate, input.endDate) || 1),
+        securityDepositUsd: risk.creditSecurityUsd,
+        vehicleValueUsd: risk.vehicleValueUsd,
+        driverAge: 30, // TODO: Obtener edad real del usuario
+        coverageType: risk.coverageUpgrade || 'standard',
+        paymentMode: this.paymentMode(),
+        totalUsd: pricing.totalUsd,
+        totalArs: pricing.totalArs,
+        exchangeRate: risk.fxRate
+      }
+    });
+
+    if (!result.success || !result.bookingId) {
+      throw new Error(result.error || 'Error al crear reserva');
     }
 
-    // 3. Actualizar booking con risk_snapshot_id
-    await this.updateBookingRiskSnapshot(bookingResult.bookingId, riskSnapshotResult.snapshotId);
+    console.log('✅ Booking creado exitosamente (atómico):', result.bookingId);
+    
+    // ✅ NUEVO: Guardar booking ID para procesamiento de pago
+    this.lastCreatedBookingId.set(result.bookingId);
 
-    // 4. Limpiar sessionStorage
+    // Limpiar sessionStorage
     sessionStorage.removeItem('booking_detail_input');
 
-    // 5. Navegar a checkout
-    this.router.navigate(['/bookings/checkout', bookingResult.bookingId]);
+    // ✅ NUEVO: Procesar pago inmediatamente en lugar de navegar
+    await this.processFinalPayment(result.bookingId);
   }
 
   // ==================== HELPERS ====================
@@ -723,9 +781,8 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         await this.bookingsService.updateBooking(result.booking.id, {
           total_amount: pricing.totalArs, // Corregido a snake_case
           currency: 'ARS',
-          total_price_ars: pricing.totalArs, // Corregido a snake_case
           payment_mode: this.paymentMode(), // Corregido a snake_case
-          coverage_upgrade: this.coverageUpgrade(), // Corregido a snake_case
+          coverage_upgrade: this.mapCoverageUpgrade(this.coverageUpgrade()), // Corregido a snake_case y tipo
           authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId, // Corregido a snake_case
           wallet_lock_id: this.walletLock()?.lockId, // Corregido a snake_case
           status: 'pending',
@@ -818,4 +875,138 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   // Expose formatters to template
   formatUsd = formatUsd;
   formatArs = formatArs;
+
+  // ==================== PROCESAMIENTO DE PAGO FINAL ====================
+
+  /**
+   * ✅ NUEVO: Procesa el pago final inmediatamente después de crear el booking
+   * Consolida la lógica que estaba en checkout.page.ts
+   */
+  private async processFinalPayment(bookingId: string): Promise<void> {
+    console.log('[Pago Final] Iniciando procesamiento para booking:', bookingId);
+    this.processingFinalPayment.set(true);
+
+    try {
+      // Obtener el booking recién creado
+      const booking = await this.bookingsService.getBookingById(bookingId);
+      if (!booking) {
+        throw new Error('Booking no encontrado');
+      }
+
+      const method = this.paymentMode();
+      console.log('[Pago Final] Método de pago:', method);
+
+      // Procesar según el método
+      if (method === 'wallet') {
+        await this.processWalletPayment(booking);
+      } else {
+        await this.processCreditCardPayment(booking);
+      }
+
+    } catch (error: any) {
+      console.error('[Pago Final] Error:', error);
+      this.error.set(error.message || 'Error al procesar el pago');
+      this.processingFinalPayment.set(false);
+      // No redirigir, dejar al usuario en la página para reintentar
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Procesa pago con wallet
+   * Lógica consolidada de checkout-payment.service.ts -> payWithWallet()
+   */
+  private async processWalletPayment(booking: any): Promise<void> {
+    const bookingId = booking.id;
+    const rentalAmount = booking.total_amount || 0;
+    const riskSnap = this.riskSnapshot();
+    const depositUsd = riskSnap?.creditSecurityUsd || 0;
+
+    console.log('[Wallet] Procesando pago:', { bookingId, rentalAmount, depositUsd });
+
+    try {
+      // Bloquear fondos en wallet
+      const lock = await this.walletService.lockRentalAndDeposit({
+        booking_id: bookingId,
+        rental_amount: rentalAmount,
+        deposit_amount: depositUsd,
+      });
+
+      if (!lock.success) {
+        throw new Error(lock.message ?? 'No se pudo bloquear fondos en wallet');
+      }
+
+      // Actualizar booking a confirmado
+      await this.bookingsService.updateBooking(bookingId, {
+        payment_method: 'wallet',
+        rental_amount_cents: Math.round(rentalAmount * 100),
+        deposit_amount_cents: Math.round(depositUsd * 100),
+        rental_lock_transaction_id: lock.rental_lock_transaction_id,
+        deposit_lock_transaction_id: lock.deposit_lock_transaction_id,
+        deposit_status: 'locked',
+        status: 'confirmed',
+      });
+
+      // Recalcular pricing
+      await this.bookingsService.recalculatePricing(bookingId);
+
+      console.log('✅ Pago con wallet exitoso');
+
+      // Redirigir a página de éxito
+      this.router.navigate(['/bookings/success', bookingId]);
+
+    } catch (error: any) {
+      console.error('[Wallet] Error en pago:', error);
+      // Intentar desbloquear wallet si hubo error
+      try {
+        await this.walletService.unlockFunds(bookingId);
+      } catch (unlockError) {
+        console.error('[Wallet] Error desbloqueando fondos:', unlockError);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Procesa pago con tarjeta (MercadoPago)
+   * Lógica consolidada de checkout-payment.service.ts -> payWithCreditCard()
+   */
+  private async processCreditCardPayment(booking: any): Promise<void> {
+    const bookingId = booking.id;
+    const riskSnap = this.riskSnapshot();
+    const depositUsd = riskSnap?.creditSecurityUsd || 0;
+
+    console.log('[Tarjeta] Procesando pago MercadoPago:', bookingId);
+
+    try {
+      // Crear intención de pago
+      const intent = await this.paymentsService.createIntent(bookingId);
+      console.log('[Tarjeta] Intención creada:', intent.status);
+
+      // Actualizar booking con método de pago
+      await this.bookingsService.updateBooking(bookingId, {
+        payment_method: 'credit_card',
+        wallet_amount_cents: 0,
+        deposit_amount_cents: Math.round(depositUsd * 100),
+      });
+
+      // Recalcular pricing
+      await this.bookingsService.recalculatePricing(bookingId);
+
+      // Crear preferencia de MercadoPago
+      const preference = await this.mpGateway.createPreference(bookingId);
+
+      console.log('✅ Redirigiendo a MercadoPago...');
+
+      // Redirigir a MercadoPago
+      if (preference.initPoint) {
+        window.location.href = preference.initPoint;
+      } else {
+        throw new Error('No se pudo crear preferencia de pago');
+      }
+
+    } catch (error: any) {
+      console.error('[Tarjeta] Error en pago:', error);
+      throw error;
+    }
+  }
 }

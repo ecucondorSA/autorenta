@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
+import { InsuranceSelectorComponent } from '../insurance-selector/insurance-selector.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 import { CheckoutStateService } from './state/checkout-state.service';
@@ -9,6 +10,7 @@ import { CheckoutPaymentService } from './services/checkout-payment.service';
 import { FranchiseInfo } from './support/franchise-table.service';
 import { GuaranteeCopy } from './support/guarantee-copy.builder';
 import { GuaranteeBreakdown } from './support/risk-calculator';
+import { BookingsService } from '../../../core/services/bookings.service';
 
 interface PaymentMethodChangeEvent {
   method: BookingPaymentMethod;
@@ -24,7 +26,7 @@ interface WaterfallStep {
 @Component({
   standalone: true,
   selector: 'app-checkout-page',
-  imports: [CommonModule, MoneyPipe, PaymentMethodSelectorComponent, TranslateModule],
+  imports: [CommonModule, MoneyPipe, PaymentMethodSelectorComponent, InsuranceSelectorComponent, TranslateModule],
   templateUrl: './checkout.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CheckoutStateService, CheckoutPaymentService],
@@ -32,9 +34,15 @@ interface WaterfallStep {
 export class CheckoutPage implements OnInit {
   private readonly state = inject(CheckoutStateService);
   private readonly payments = inject(CheckoutPaymentService);
+  private readonly bookingsService = inject(BookingsService);
 
   private readonly processing = signal(false);
   private readonly formatCache = new Map<string, Intl.NumberFormat>();
+
+  // ✅ INSURANCE: Signals para gestionar seguros
+  readonly selectedInsuranceAddons = signal<string[]>([]);
+  readonly insuranceTotalCost = signal<number>(0);
+  readonly securityDeposit = signal<number>(0);
 
   readonly booking = () => this.state.bookingSignal();
   readonly bookingId = () => this.state.getBookingId();
@@ -59,6 +67,16 @@ export class CheckoutPage implements OnInit {
     this.state.setMessage(null);
 
     try {
+      // ✅ INSURANCE: Activar add-ons seleccionados antes de procesar pago
+      const addonIds = this.selectedInsuranceAddons();
+      if (addonIds.length > 0 && this.bookingId()) {
+        console.log('Activando add-ons de seguro:', addonIds);
+        await this.bookingsService.activateInsuranceCoverage(
+          this.bookingId()!,
+          addonIds
+        );
+      }
+
       const outcome = await this.payments.processPayment();
       if (outcome.kind === 'redirect_to_mercadopago') {
         window.location.href = outcome.initPoint;
@@ -71,6 +89,35 @@ export class CheckoutPage implements OnInit {
     } finally {
       this.processing.set(false);
     }
+  }
+
+  // ✅ INSURANCE: Event handlers
+  onAddonsSelected(addonIds: string[]): void {
+    this.selectedInsuranceAddons.set(addonIds);
+    console.log('Add-ons seleccionados:', addonIds);
+  }
+
+  onInsuranceCostChange(totalCost: number): void {
+    this.insuranceTotalCost.set(totalCost);
+    console.log('Costo total seguro:', totalCost);
+    // Aquí podrías actualizar el total general si es necesario
+  }
+
+  onDepositCalculated(deposit: number): void {
+    this.securityDeposit.set(deposit);
+    console.log('Depósito de seguridad:', deposit);
+  }
+
+  // Getter para el car_id del booking
+  getCarId(): string | undefined {
+    return this.booking()?.car_id;
+  }
+
+  // Getter para los días de alquiler
+  getRentalDays(): number {
+    const booking = this.booking();
+    if (!booking) return 1;
+    return booking.days_count || 1;
   }
 
   // ---------------------------------------------------------------------------

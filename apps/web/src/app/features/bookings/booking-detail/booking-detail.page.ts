@@ -23,6 +23,7 @@ import { BookingStatusComponent } from './booking-status.component';
 import { PaymentActionsComponent } from './payment-actions.component';
 import { ReviewManagementComponent } from './review-management.component';
 import { FgoManagementComponent } from './fgo-management.component';
+import { InsuranceSummaryCardComponent } from '../../../shared/components/insurance-summary-card/insurance-summary-card.component';
 
 /**
  * BookingDetailPage
@@ -52,6 +53,7 @@ import { FgoManagementComponent } from './fgo-management.component';
     PaymentActionsComponent,
     ReviewManagementComponent,
     FgoManagementComponent,
+    InsuranceSummaryCardComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',

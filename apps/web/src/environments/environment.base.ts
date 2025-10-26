@@ -10,6 +10,9 @@ interface EnvDefaults {
   carLocationsEdgeFunction?: string;
   backgroundRemovalModelUrl?: string;
   mercadopagoPublicKey?: string;
+  mercadopagoClientId?: string;
+  mercadopagoClientSecret?: string;
+  appUrl?: string;
 }
 
 const readEnv = (key: string): string | undefined => {
@@ -60,6 +63,9 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
       'https://huggingface.co/briaai/RMBG-1.4/resolve/main/rmbg-1.4.onnx?download=1',
   ),
   mercadopagoPublicKey: resolve('NG_APP_MERCADOPAGO_PUBLIC_KEY', defaults.mercadopagoPublicKey),
+  mercadopagoClientId: resolve('NG_APP_MERCADOPAGO_CLIENT_ID', defaults.mercadopagoClientId),
+  mercadopagoClientSecret: resolve('NG_APP_MERCADOPAGO_CLIENT_SECRET', defaults.mercadopagoClientSecret),
+  appUrl: resolve('NG_APP_URL', defaults.appUrl ?? 'http://localhost:4200'),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

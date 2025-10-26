@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { ModalController } from '@ionic/angular/standalone';
 import { CarsService } from '../../../core/services/cars.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 import { BackgroundRemovalService } from '../../../core/services/background-removal.service';
 import { AiPhotoEnhancerService, EnhancedPhoto } from '../../../core/services/ai-photo-enhancer.service';
+import { MarketplaceOnboardingService } from '../../../core/services/marketplace-onboarding.service';
+import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
+import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 
 @Component({
   selector: 'app-publish-car-v2',
@@ -410,6 +414,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly geocodingService: GeocodingService;
   private readonly bgRemovalService = inject(BackgroundRemovalService);
   private readonly aiPhotoEnhancer = inject(AiPhotoEnhancerService);
+  private readonly supabaseClient = inject(SupabaseClientService);
   private readonly router: Router;
   private readonly route: ActivatedRoute;
 
@@ -465,9 +470,14 @@ export class PublishCarV2Page implements OnInit {
     this.geocodingService = geocodingService;
     this.router = router;
     this.route = route;
+    this.modalCtrl = inject(ModalController);
+    this.marketplaceService = inject(MarketplaceOnboardingService);
   }
 
-  ngOnInit(): void {
+  private readonly modalCtrl: ModalController;
+  private readonly marketplaceService: MarketplaceOnboardingService;
+
+  async ngOnInit(): Promise<void> {
     this.initForm();
     void this.loadData();
 
@@ -479,6 +489,48 @@ export class PublishCarV2Page implements OnInit {
       void this.loadCarForEditing(editCarId);
     } else {
       void this.loadLastPublicationData();
+    }
+
+    // ⚠️ VERIFICAR VINCULACIÓN DE MERCADO PAGO
+    await this.checkMarketplaceOnboarding();
+  }
+
+  /**
+   * Verifica si el usuario tiene Mercado Pago vinculado.
+   * Si no, muestra el modal de onboarding.
+   */
+  private async checkMarketplaceOnboarding(): Promise<void> {
+    try {
+      const { data: { user } } = await this.supabaseClient.getClient().auth.getUser();
+      if (!user) {
+        console.error('No user found');
+        return;
+      }
+
+      const canList = await this.marketplaceService.canListCars(user.id);
+      
+      if (!canList) {
+        console.log('⚠️ User needs to onboard to Mercado Pago');
+        
+        // Mostrar modal de onboarding
+        const modal = await this.modalCtrl.create({
+          component: MpOnboardingModalComponent,
+          backdropDismiss: false,
+        });
+        
+        await modal.present();
+        
+        const { data } = await modal.onWillDismiss();
+        
+        // Si el usuario no completa el onboarding, redirigir al listado
+        if (!data?.completed) {
+          console.log('User cancelled MP onboarding, redirecting to cars list');
+          await this.router.navigate(['/cars']);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking marketplace onboarding:', error);
+      // No bloquear la publicación si hay error
     }
   }
 
