@@ -480,4 +480,38 @@ export class CarsService {
       return false;
     }
   }
+
+  /**
+   * ✅ NUEVO: Verifica si un auto tiene reservas activas
+   * Usado antes de permitir eliminación del vehículo
+   */
+  async hasActiveBookings(carId: string): Promise<{
+    hasActive: boolean;
+    count: number;
+    bookings?: Array<{ id: string; status: string; start_date: string; end_date: string }>;
+  }> {
+    try {
+      const { data, error } = await this.supabase
+        .from('bookings')
+        .select('id, status, start_date, end_date')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'confirmed', 'in_progress'])
+        .order('start_date', { ascending: true });
+
+      if (error) {
+        console.error('Error checking active bookings:', error);
+        throw error;
+      }
+
+      const activeBookings = data || [];
+      return {
+        hasActive: activeBookings.length > 0,
+        count: activeBookings.length,
+        bookings: activeBookings
+      };
+    } catch (error) {
+      console.error('Error en hasActiveBookings:', error);
+      throw error;
+    }
+  }
 }
