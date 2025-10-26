@@ -159,6 +159,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly loadingPricing = signal(false);
   readonly error = signal<string | null>(null);
   readonly validationErrors = signal<ValidationError[]>([]);
+  
+  // ✅ NUEVO: Estado de fallback a wallet
+  readonly showFallbackMessage = signal(false);
+  readonly fallbackReason = signal<string>('');
 
   // ✅ NUEVO: Signals para procesamiento de pago final
   readonly processingFinalPayment = signal(false);
@@ -594,9 +598,26 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   /**
    * Handler: Fallback a wallet desde card
+   * ✅ MEJORA: Ahora muestra mensaje explicativo al usuario
    */
-  protected onFallbackToWallet(): void {
+  protected onFallbackToWallet(reason?: string): void {
+    console.log('[Detalle & Pago] Fallback a Wallet activado:', reason);
+    
+    // Establecer razón del fallback
+    this.fallbackReason.set(
+      reason || 'La pre-autorización con tu tarjeta fue rechazada'
+    );
+    
+    // Mostrar mensaje explicativo
+    this.showFallbackMessage.set(true);
+    
+    // Cambiar modo de pago a wallet
     this.paymentMode.set('wallet');
+    
+    // Ocultar mensaje después de 8 segundos
+    setTimeout(() => {
+      this.showFallbackMessage.set(false);
+    }, 8000);
   }
 
   /**
@@ -633,7 +654,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   }
 
   /**
-   * NUEVO: Actualiza un booking existente con payment_mode y autorizaciones
+   * ✅ FIX CRÍTICO: Actualiza un booking existente y procesa pago inmediatamente
+   * ANTES: Redirigía a /bookings/checkout (flujo de dos pasos)
+   * AHORA: Procesa el pago final en la misma página (flujo consolidado)
    */
   private async updateExistingBooking(bookingId: string): Promise<void> {
     console.log('[Detalle & Pago] Actualizando booking existente:', bookingId);
@@ -660,13 +683,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     if (error) throw error;
 
-    console.log('[Detalle & Pago] Booking actualizado, redirigiendo a checkout');
+    console.log('[Detalle & Pago] Booking actualizado, procesando pago final');
 
     // 3. Limpiar sessionStorage si existe
     sessionStorage.removeItem('booking_detail_input');
 
-    // 4. Redirigir a checkout
-    this.router.navigate(['/bookings/checkout', bookingId]);
+    // ✅ NUEVO: Procesar pago inmediatamente en lugar de redirigir a checkout
+    await this.processFinalPayment(bookingId);
   }
 
   /**
