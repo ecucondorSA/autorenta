@@ -12,7 +12,6 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { CarsService } from '../../../core/services/cars.service';
@@ -27,7 +26,6 @@ import {
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { MapFiltersComponent, MapFilters } from '../../../shared/components/map-filters/map-filters.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
-import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
 // Interface para auto con distancia
 export interface CarWithDistance extends Car {
@@ -52,11 +50,9 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
   selector: 'app-cars-list-page',
   imports: [
     CommonModule,
-    RouterLink,
     CarsMapComponent,
     MapFiltersComponent,
     CarCardComponent,
-    MoneyPipe,
     TranslateModule,
   ],
   templateUrl: './cars-list.page.html',

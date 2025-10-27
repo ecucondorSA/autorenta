@@ -1,0 +1,21 @@
+name: Update Exchange Rates
+
+on:
+  schedule:
+    # Ejecutar cada 15 minutos
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Permitir ejecución manual
+
+jobs:
+  update-rates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Exchange Rates
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            https://obxvffplochgeiclibng.supabase.co/functions/v1/sync-binance-rates
+
+      - name: Log completion
+        run: echo "Exchange rates updated at $(date)"
