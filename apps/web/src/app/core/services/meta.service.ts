@@ -31,7 +31,8 @@ export class MetaService {
 
   private readonly defaultConfig: MetaConfig = {
     title: 'AutoRenta - Alquiler de Autos Premium',
-    description: 'Alquiler de autos premium en Argentina y Uruguay. Plataforma peer-to-peer segura con wallet integrada.',
+    description:
+      'Alquiler de autos premium en Argentina y Uruguay. Plataforma peer-to-peer segura con wallet integrada.',
     keywords: 'alquiler autos, rent a car, argentina, uruguay, autorentar',
     author: 'AutoRenta',
     ogType: 'website',
@@ -80,11 +81,17 @@ export class MetaService {
     }
 
     if (fullConfig.ogTitle || fullConfig.title) {
-      this.meta.updateTag({ property: 'og:title', content: fullConfig.ogTitle || fullConfig.title! });
+      this.meta.updateTag({
+        property: 'og:title',
+        content: fullConfig.ogTitle || fullConfig.title!,
+      });
     }
 
     if (fullConfig.ogDescription || fullConfig.description) {
-      this.meta.updateTag({ property: 'og:description', content: fullConfig.ogDescription || fullConfig.description! });
+      this.meta.updateTag({
+        property: 'og:description',
+        content: fullConfig.ogDescription || fullConfig.description!,
+      });
     }
 
     if (fullConfig.ogImage) {
@@ -101,15 +108,24 @@ export class MetaService {
     }
 
     if (fullConfig.twitterTitle || fullConfig.title) {
-      this.meta.updateTag({ property: 'twitter:title', content: fullConfig.twitterTitle || fullConfig.title! });
+      this.meta.updateTag({
+        property: 'twitter:title',
+        content: fullConfig.twitterTitle || fullConfig.title!,
+      });
     }
 
     if (fullConfig.twitterDescription || fullConfig.description) {
-      this.meta.updateTag({ property: 'twitter:description', content: fullConfig.twitterDescription || fullConfig.description! });
+      this.meta.updateTag({
+        property: 'twitter:description',
+        content: fullConfig.twitterDescription || fullConfig.description!,
+      });
     }
 
     if (fullConfig.twitterImage || fullConfig.ogImage) {
-      this.meta.updateTag({ property: 'twitter:image', content: fullConfig.twitterImage || fullConfig.ogImage! });
+      this.meta.updateTag({
+        property: 'twitter:image',
+        content: fullConfig.twitterImage || fullConfig.ogImage!,
+      });
     }
 
     // Noindex robots meta
@@ -157,7 +173,8 @@ export class MetaService {
    */
   updateCarsListMeta(filters?: { city?: string; minPrice?: number; maxPrice?: number }): void {
     let title = 'Buscar Autos para Alquilar | AutoRenta';
-    let description = 'Encuentra el auto perfecto para tu viaje. Más de 100 autos disponibles para alquilar en Argentina y Uruguay.';
+    let description =
+      'Encuentra el auto perfecto para tu viaje. Más de 100 autos disponibles para alquilar en Argentina y Uruguay.';
 
     if (filters?.city) {
       title = `Alquiler de Autos en ${filters.city} | AutoRenta`;
@@ -180,7 +197,8 @@ export class MetaService {
   updateWalletMeta(): void {
     this.updateMeta({
       title: 'Mi Wallet - Gestiona tu Saldo | AutoRenta',
-      description: 'Gestiona tu saldo, deposita fondos y retira ganancias de forma segura con AutoRenta Wallet.',
+      description:
+        'Gestiona tu saldo, deposita fondos y retira ganancias de forma segura con AutoRenta Wallet.',
       keywords: 'wallet, saldo, depositar, retirar, mercado pago',
       noindex: true, // Private page
     });
@@ -192,7 +210,8 @@ export class MetaService {
   updateBookingDetailMeta(bookingId: string): void {
     this.updateMeta({
       title: `Reserva #${bookingId.substring(0, 8)} - Detalles | AutoRenta`,
-      description: 'Detalles de tu reserva de auto. Información de pago, fechas y datos del vehículo.',
+      description:
+        'Detalles de tu reserva de auto. Información de pago, fechas y datos del vehículo.',
       keywords: 'reserva, booking, alquiler confirmado',
       noindex: true, // Private page
     });
@@ -204,7 +223,8 @@ export class MetaService {
   updateProfileMeta(): void {
     this.updateMeta({
       title: 'Mi Perfil - Configuración de Cuenta | AutoRenta',
-      description: 'Gestiona tu perfil, verifica tu identidad y configura tus preferencias en AutoRenta.',
+      description:
+        'Gestiona tu perfil, verifica tu identidad y configura tus preferencias en AutoRenta.',
       keywords: 'perfil, cuenta, configuración, verificación',
       noindex: true, // Private page
     });
@@ -229,8 +249,13 @@ export class MetaService {
   /**
    * Add JSON-LD structured data to page
    */
-  addStructuredData(type: 'Product' | 'Organization' | 'WebSite', data: Record<string, unknown>): void {
-    let script: HTMLScriptElement | null = document.querySelector(`script[type='application/ld+json'][data-type='${type}']`);
+  addStructuredData(
+    type: 'Product' | 'Organization' | 'WebSite',
+    data: Record<string, unknown>,
+  ): void {
+    let script: HTMLScriptElement | null = document.querySelector(
+      `script[type='application/ld+json'][data-type='${type}']`,
+    );
 
     if (!script) {
       script = document.createElement('script');
@@ -264,7 +289,8 @@ export class MetaService {
     this.addStructuredData('Product', {
       name: car.title,
       description: car.description,
-      image: car.main_photo_url || 'https://autorenta-web.pages.dev/assets/images/autorentar-logo.png',
+      image:
+        car.main_photo_url || 'https://autorenta-web.pages.dev/assets/images/autorentar-logo.png',
       offers: {
         '@type': 'Offer',
         price: (car.price_per_day / 100).toFixed(2),
@@ -272,13 +298,14 @@ export class MetaService {
         availability: 'https://schema.org/InStock',
         url: `https://autorenta-web.pages.dev/cars/${car.id}`,
       },
-      aggregateRating: car.rating_count && car.rating_count > 0
-        ? {
-            '@type': 'AggregateRating',
-            ratingValue: car.rating_avg?.toFixed(1) || '0',
-            reviewCount: car.rating_count.toString(),
-          }
-        : undefined,
+      aggregateRating:
+        car.rating_count && car.rating_count > 0
+          ? {
+              '@type': 'AggregateRating',
+              ratingValue: car.rating_avg?.toFixed(1) || '0',
+              reviewCount: car.rating_count.toString(),
+            }
+          : undefined,
     });
   }
 

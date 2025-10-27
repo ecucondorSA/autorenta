@@ -8,13 +8,13 @@
 // ============================================================================
 
 export type FgoMovementType =
-  | 'user_contribution'    // Aporte de usuario (α%)
-  | 'siniestro_payment'    // Pago de siniestro
-  | 'franchise_payment'    // Pago de franquicia
-  | 'capitalization'       // Transferencia a capitalización
-  | 'return_to_user'       // Devolución a usuario
-  | 'interest_earned'      // Intereses ganados
-  | 'adjustment';          // Ajuste manual (admin)
+  | 'user_contribution' // Aporte de usuario (α%)
+  | 'siniestro_payment' // Pago de siniestro
+  | 'franchise_payment' // Pago de franquicia
+  | 'capitalization' // Transferencia a capitalización
+  | 'return_to_user' // Devolución a usuario
+  | 'interest_earned' // Intereses ganados
+  | 'adjustment'; // Ajuste manual (admin)
 
 export type SubfundType = 'liquidity' | 'capitalization' | 'profitability';
 
@@ -38,18 +38,18 @@ export interface FgoStatusView {
   total_fgo_balance_cents: number;
 
   // Parámetros configurables
-  alpha_percentage: number;              // α% actual (default: 15%)
-  target_months_coverage: number;        // Meses de cobertura objetivo (default: 12)
+  alpha_percentage: number; // α% actual (default: 15%)
+  target_months_coverage: number; // Meses de cobertura objetivo (default: 12)
 
   // Métricas calculadas
-  total_contributions_cents: number;     // Total de aportes recibidos
-  total_siniestros_paid_cents: number;   // Total de siniestros pagados
-  total_siniestros_count: number;        // Cantidad de siniestros
+  total_contributions_cents: number; // Total de aportes recibidos
+  total_siniestros_paid_cents: number; // Total de siniestros pagados
+  total_siniestros_count: number; // Cantidad de siniestros
 
   // Ratios (pueden ser null si no hay suficiente historial)
-  coverage_ratio: number | null;         // RC = Saldo / Meta
-  loss_ratio: number | null;             // LR = Siniestros / Aportes
-  target_balance_cents: number | null;   // Meta de saldo
+  coverage_ratio: number | null; // RC = Saldo / Meta
+  loss_ratio: number | null; // LR = Siniestros / Aportes
+  target_balance_cents: number | null; // Meta de saldo
 
   // Estado del fondo
   status: FgoHealthStatus;
@@ -101,7 +101,7 @@ export interface FgoMovement {
   subfund_type: SubfundType;
   amount_cents: number;
   operation: FgoOperation;
-  balance_change_cents: number;  // + para credit, - para debit
+  balance_change_cents: number; // + para credit, - para debit
   ref: string;
 
   // Relaciones (pueden ser null)
@@ -126,9 +126,9 @@ export interface FgoMovementView {
   timestamp: Date;
   movementType: FgoMovementType;
   subfundType: SubfundType;
-  amount: number;  // USD
+  amount: number; // USD
   operation: FgoOperation;
-  balanceChange: number;  // USD
+  balanceChange: number; // USD
   reference: string;
 
   // Relaciones
@@ -150,7 +150,7 @@ export interface SubfundBalance {
   type: SubfundType;
   balanceCents: number;
   balanceUsd: number;
-  percentage: number;  // % del total
+  percentage: number; // % del total
   description: string;
   purpose: string;
 }
@@ -160,7 +160,7 @@ export interface SubfundBalance {
  * Corresponde a la vista v_fgo_monthly_summary
  */
 export interface MonthlyFgoSummary {
-  month: string;                    // YYYY-MM
+  month: string; // YYYY-MM
   movement_type: FgoMovementType;
   subfund_type: SubfundType;
   movement_count: number;
@@ -177,9 +177,9 @@ export interface MonthlyFgoSummaryView {
   movementType: FgoMovementType;
   subfundType: SubfundType;
   movementCount: number;
-  totalCredits: number;  // USD
-  totalDebits: number;   // USD
-  netChange: number;     // USD
+  totalCredits: number; // USD
+  totalDebits: number; // USD
+  netChange: number; // USD
 }
 
 /**
@@ -212,8 +212,8 @@ export interface DepositWithFgoView {
   timestamp: Date;
   userId: string;
   userName?: string;
-  depositAmount: number;  // USD
-  fgoContribution: number;  // USD
+  depositAmount: number; // USD
+  fgoContribution: number; // USD
   alphaPercentage: number;
   hasContribution: boolean;
 }

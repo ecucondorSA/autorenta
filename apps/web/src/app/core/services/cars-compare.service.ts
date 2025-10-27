@@ -47,7 +47,7 @@ export class CarsCompareService {
    * Remover auto de la comparación
    */
   removeCar(carId: string): void {
-    const updated = this.comparedCarIds().filter(id => id !== carId);
+    const updated = this.comparedCarIds().filter((id) => id !== carId);
     this.comparedCarIds.set(updated);
     this.count.set(updated.length);
     this.saveToStorage(updated);
@@ -83,12 +83,10 @@ export class CarsCompareService {
 
     try {
       // Cargar todos los autos en paralelo
-      const cars = await Promise.all(
-        ids.map(id => this.carsService.getCarById(id))
-      );
+      const cars = await Promise.all(ids.map((id) => this.carsService.getCarById(id)));
 
       // Filtrar nulls por si algún auto no existe
-      const validCars = cars.filter(car => car !== null) as Car[];
+      const validCars = cars.filter((car) => car !== null) as Car[];
       this.comparedCars.set(validCars);
     } catch (error) {
       console.error('Error loading comparison cars:', error);
@@ -109,58 +107,63 @@ export class CarsCompareService {
     rows.push({
       label: 'Marca',
       category: 'basic',
-      values: cars.map(c => c.brand || c.brand_name || '-'),
+      values: cars.map((c) => c.brand || c.brand_name || '-'),
     });
     rows.push({
       label: 'Modelo',
       category: 'basic',
-      values: cars.map(c => c.model || c.model_name || '-'),
+      values: cars.map((c) => c.model || c.model_name || '-'),
     });
     rows.push({
       label: 'Año',
       category: 'basic',
-      values: cars.map(c => c.year),
+      values: cars.map((c) => c.year),
     });
     rows.push({
       label: 'Color',
       category: 'basic',
-      values: cars.map(c => c.color),
+      values: cars.map((c) => c.color),
     });
 
     // SPECS
     rows.push({
       label: 'Transmisión',
       category: 'specs',
-      values: cars.map(c => c.transmission === 'automatic' ? 'Automática' : 'Manual'),
+      values: cars.map((c) => (c.transmission === 'automatic' ? 'Automática' : 'Manual')),
     });
     rows.push({
       label: 'Combustible',
       category: 'specs',
-      values: cars.map(c => {
+      values: cars.map((c) => {
         const fuelType = String(c.fuel);
-        switch(fuelType) {
-          case 'gasoline': return 'Nafta';
-          case 'diesel': return 'Diesel';
-          case 'electric': return 'Eléctrico';
-          case 'hybrid': return 'Híbrido';
-          default: return fuelType;
+        switch (fuelType) {
+          case 'gasoline':
+            return 'Nafta';
+          case 'diesel':
+            return 'Diesel';
+          case 'electric':
+            return 'Eléctrico';
+          case 'hybrid':
+            return 'Híbrido';
+          default:
+            return fuelType;
         }
       }),
     });
     rows.push({
       label: 'Asientos',
       category: 'specs',
-      values: cars.map(c => c.seats),
+      values: cars.map((c) => c.seats),
     });
     rows.push({
       label: 'Puertas',
       category: 'specs',
-      values: cars.map(c => c.doors),
+      values: cars.map((c) => c.doors),
     });
     rows.push({
       label: 'Kilometraje',
       category: 'specs',
-      values: cars.map(c => `${c.mileage.toLocaleString()} km`),
+      values: cars.map((c) => `${c.mileage.toLocaleString()} km`),
       highlightBest: true, // Menor kilometraje es mejor
     });
 
@@ -168,13 +171,13 @@ export class CarsCompareService {
     rows.push({
       label: 'Precio por día',
       category: 'pricing',
-      values: cars.map(c => `${c.currency} ${c.price_per_day.toLocaleString()}`),
+      values: cars.map((c) => `${c.currency} ${c.price_per_day.toLocaleString()}`),
       highlightBest: true, // Menor precio es mejor
     });
     rows.push({
       label: 'Rating',
       category: 'pricing',
-      values: cars.map(c => `⭐ ${c.rating_avg.toFixed(1)} (${c.rating_count})`),
+      values: cars.map((c) => `⭐ ${c.rating_avg.toFixed(1)} (${c.rating_count})`),
       highlightBest: true, // Mayor rating es mejor
     });
 
@@ -182,25 +185,25 @@ export class CarsCompareService {
     rows.push({
       label: 'Ciudad',
       category: 'location',
-      values: cars.map(c => c.location_city),
+      values: cars.map((c) => c.location_city),
     });
     rows.push({
       label: 'Provincia',
       category: 'location',
-      values: cars.map(c => c.location_province || c.location_state || '-'),
+      values: cars.map((c) => c.location_province || c.location_state || '-'),
     });
 
     // OWNER
-    if (cars.every(c => c.owner)) {
+    if (cars.every((c) => c.owner)) {
       rows.push({
         label: 'Propietario',
         category: 'owner',
-        values: cars.map(c => c.owner?.full_name || '-'),
+        values: cars.map((c) => c.owner?.full_name || '-'),
       });
       rows.push({
         label: 'Rating propietario',
         category: 'owner',
-        values: cars.map(c => c.owner ? `⭐ ${c.owner.rating_avg.toFixed(1)}` : '-'),
+        values: cars.map((c) => (c.owner ? `⭐ ${c.owner.rating_avg.toFixed(1)}` : '-')),
       });
     }
 

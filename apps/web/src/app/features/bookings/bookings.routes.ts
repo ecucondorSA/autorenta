@@ -22,19 +22,20 @@ export const BOOKINGS_ROUTES: Routes = [
     path: 'detail-payment',
     loadComponent: () =>
       import('./booking-detail-payment/booking-detail-payment.page').then(
-        (m) => m.BookingDetailPaymentPage
+        (m) => m.BookingDetailPaymentPage,
       ),
     canActivate: [AuthGuard],
   },
   {
     path: 'success/:id',
-    loadComponent: () => 
+    loadComponent: () =>
       import('./booking-success/booking-success.page').then((m) => m.BookingSuccessPage),
     canActivate: [AuthGuard],
   },
   {
     path: ':id',
-    loadComponent: () => import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),
+    loadComponent: () =>
+      import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),
   },
   {
     path: ':bookingId/report-claim',

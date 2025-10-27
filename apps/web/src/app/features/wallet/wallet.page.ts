@@ -1,4 +1,12 @@
-import { Component, signal, ViewChild, AfterViewInit, computed, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  signal,
+  ViewChild,
+  AfterViewInit,
+  computed,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -49,10 +57,10 @@ import { WalletAccountNumberCardComponent } from '../../shared/components/wallet
     BankAccountFormComponent,
     BankAccountsListComponent,
     WithdrawalRequestFormComponent,
-    WithdrawalHistoryComponent, 
+    WithdrawalHistoryComponent,
     TranslateModule,
     WalletAccountNumberCardComponent,
-    GuaranteeOptionsInfoComponent
+    GuaranteeOptionsInfoComponent,
   ],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
@@ -152,7 +160,7 @@ export class WalletPage implements AfterViewInit, OnInit {
 
   constructor(
     private withdrawalService: WithdrawalService,
-    private metaService: MetaService
+    private metaService: MetaService,
   ) {
     // Update SEO meta tags (private page)
     this.metaService.updateWalletMeta();
@@ -251,7 +259,9 @@ export class WalletPage implements AfterViewInit, OnInit {
       this.toastService.success('Cuenta bancaria agregada exitosamente');
       this.setWithdrawalMode('form');
     } catch (error: any) {
-      this.toastService.error('Error al agregar cuenta bancaria: ' + (error.message || 'Error desconocido'));
+      this.toastService.error(
+        'Error al agregar cuenta bancaria: ' + (error.message || 'Error desconocido'),
+      );
     }
   }
 
@@ -262,14 +272,18 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       const result = await this.withdrawalService.requestWithdrawal(params);
       if (result.success) {
-        this.toastService.success(`Retiro solicitado exitosamente! Monto: $${params.amount}, Comisión: $${result.fee_amount}, Neto: $${result.net_amount}`);
+        this.toastService.success(
+          `Retiro solicitado exitosamente! Monto: $${params.amount}, Comisión: $${result.fee_amount}, Neto: $${result.net_amount}`,
+        );
         // Recargar historial
         await this.withdrawalService.getWithdrawalRequests();
       } else {
         this.toastService.error('Error: ' + result.message);
       }
     } catch (error: any) {
-      this.toastService.error('Error al solicitar retiro: ' + (error.message || 'Error desconocido'));
+      this.toastService.error(
+        'Error al solicitar retiro: ' + (error.message || 'Error desconocido'),
+      );
     }
   }
 
@@ -293,7 +307,9 @@ export class WalletPage implements AfterViewInit, OnInit {
       await this.withdrawalService.deleteBankAccount(accountId);
       this.toastService.success('Cuenta eliminada exitosamente');
     } catch (error: any) {
-      this.toastService.error('Error al eliminar cuenta: ' + (error.message || 'Error desconocido'));
+      this.toastService.error(
+        'Error al eliminar cuenta: ' + (error.message || 'Error desconocido'),
+      );
     }
   }
 

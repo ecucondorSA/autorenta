@@ -1,6 +1,6 @@
 /**
  * Sprint 5.3 - Error Handling Test
- * 
+ *
  * Tests de manejo de errores y escenarios de fallo
  * Verifica que el sistema maneje gracefully todos los fallos posibles
  */
@@ -23,8 +23,8 @@ describe('Sprint 5.3 - Error Handling', () => {
     (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
       Promise.resolve({
         data: { user: { id: 'user-123', email: 'test@example.com' } },
-        error: null
-      })
+        error: null,
+      }),
     );
 
     TestBed.configureTestingModule({
@@ -32,8 +32,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         BookingsService,
         CarsService,
         PaymentsService,
-        { provide: 'SUPABASE_CLIENT', useValue: mockSupabase }
-      ]
+        { provide: 'SUPABASE_CLIENT', useValue: mockSupabase },
+      ],
     });
 
     bookingsService = TestBed.inject(BookingsService);
@@ -46,13 +46,15 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: null,
-        error: {
-          message: 'Failed to fetch',
-          code: 'NETWORK_ERROR'
-        }
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: null,
+          error: {
+            message: 'Failed to fetch',
+            code: 'NETWORK_ERROR',
+          },
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -72,16 +74,16 @@ describe('Sprint 5.3 - Error Handling', () => {
           data: null,
           error: {
             message: 'Network request failed',
-            code: 'NETWORK_ERROR'
-          }
-        })
+            code: 'NETWORK_ERROR',
+          },
+        }),
       );
 
       try {
         await bookingsService.requestBooking(
           'car-123',
           '2025-11-01T10:00:00',
-          '2025-11-05T18:00:00'
+          '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error');
       } catch (error: any) {
@@ -95,13 +97,15 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'single']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: null,
-        error: {
-          message: 'Connection timeout',
-          code: 'CONNECTION_TIMEOUT'
-        }
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: null,
+          error: {
+            message: 'Connection timeout',
+            code: 'CONNECTION_TIMEOUT',
+          },
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -119,13 +123,15 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: null,
-        error: {
-          message: 'Failed to fetch',
-          code: 'NETWORK_ERROR'
-        }
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: null,
+          error: {
+            message: 'Failed to fetch',
+            code: 'NETWORK_ERROR',
+          },
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -150,10 +156,10 @@ describe('Sprint 5.3 - Error Handling', () => {
           setTimeout(() => {
             reject({
               message: 'Request timeout exceeded',
-              code: 'TIMEOUT'
+              code: 'TIMEOUT',
             });
           }, 100);
-        })
+        }),
       );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
@@ -174,17 +180,17 @@ describe('Sprint 5.3 - Error Handling', () => {
           setTimeout(() => {
             reject({
               message: 'RPC timeout after 30s',
-              code: 'RPC_TIMEOUT'
+              code: 'RPC_TIMEOUT',
             });
           }, 100);
-        })
+        }),
       );
 
       try {
         await bookingsService.requestBooking(
           'car-123',
           '2025-11-01T10:00:00',
-          '2025-11-05T18:00:00'
+          '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error de timeout');
       } catch (error: any) {
@@ -202,7 +208,7 @@ describe('Sprint 5.3 - Error Handling', () => {
           setTimeout(() => {
             reject({ message: 'Query timeout', code: 'QUERY_TIMEOUT' });
           }, 50);
-        })
+        }),
       );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
@@ -219,7 +225,7 @@ describe('Sprint 5.3 - Error Handling', () => {
     it('debería tener timeout razonable configurado (< 60s)', async () => {
       // Verificar que los timeouts no sean excesivamente largos
       const startTime = Date.now();
-      
+
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
@@ -228,7 +234,7 @@ describe('Sprint 5.3 - Error Handling', () => {
           setTimeout(() => {
             reject({ message: 'Timeout', code: 'TIMEOUT' });
           }, 100);
-        })
+        }),
       );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
@@ -248,10 +254,12 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: 'invalid-not-an-array', // Debería ser array
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: 'invalid-not-an-array', // Debería ser array
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -271,15 +279,15 @@ describe('Sprint 5.3 - Error Handling', () => {
       (mockSupabase.rpc as jasmine.Spy).and.returnValue(
         Promise.resolve({
           data: null, // No retorna ID como esperado
-          error: null
-        })
+          error: null,
+        }),
       );
 
       try {
         await bookingsService.requestBooking(
           'car-123',
           '2025-11-01T10:00:00',
-          '2025-11-05T18:00:00'
+          '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error');
       } catch (error: any) {
@@ -293,18 +301,20 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'single']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: {
-          id: 'car-123',
-          // Falta brand, model, price_per_day, etc.
-        },
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: {
+            id: 'car-123',
+            // Falta brand, model, price_per_day, etc.
+          },
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
       const car = await carsService.getCarById('car-123');
-      
+
       // Debería manejar campos faltantes sin crashear
       expect(car).toBeDefined();
       expect(car?.id).toBe('car-123');
@@ -315,21 +325,25 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [{
-          id: 'car-123',
-          brand: null,
-          model: null,
-          price_per_day: null,
-          location_city: null
-        }],
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [
+            {
+              id: 'car-123',
+              brand: null,
+              model: null,
+              price_per_day: null,
+              location_city: null,
+            },
+          ],
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
       const cars = await carsService.listActiveCars({ city: 'Test' });
-      
+
       expect(cars).toBeDefined();
       expect(Array.isArray(cars)).toBe(true);
       console.log('✅ Valores null en campos críticos manejados');
@@ -339,15 +353,19 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [{
-          id: 'car-123',
-          price_per_day: 'five-thousand', // String en lugar de number
-          year: '2023', // String en lugar de number
-          location_city: 12345 // Number en lugar de string
-        }],
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [
+            {
+              id: 'car-123',
+              price_per_day: 'five-thousand', // String en lugar de number
+              year: '2023', // String en lugar de number
+              location_city: 12345, // Number en lugar de string
+            },
+          ],
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -368,13 +386,15 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: null,
-        error: {
-          message: 'No internet connection',
-          code: 'OFFLINE'
-        }
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: null,
+          error: {
+            message: 'No internet connection',
+            code: 'OFFLINE',
+          },
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -392,13 +412,15 @@ describe('Sprint 5.3 - Error Handling', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: null,
-        error: {
-          message: 'Failed to fetch',
-          code: 'NETWORK_ERROR'
-        }
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: null,
+          error: {
+            message: 'Failed to fetch',
+            code: 'NETWORK_ERROR',
+          },
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -417,16 +439,16 @@ describe('Sprint 5.3 - Error Handling', () => {
           data: null,
           error: {
             message: 'Network unavailable',
-            code: 'NETWORK_ERROR'
-          }
-        })
+            code: 'NETWORK_ERROR',
+          },
+        }),
       );
 
       try {
         await bookingsService.requestBooking(
           'car-123',
           '2025-11-01T10:00:00',
-          '2025-11-05T18:00:00'
+          '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error');
       } catch (error: any) {
@@ -441,15 +463,15 @@ describe('Sprint 5.3 - Error Handling', () => {
       (mockSupabase.rpc as jasmine.Spy).and.returnValue(
         Promise.resolve({
           data: null,
-          error: { message: 'Offline', code: 'OFFLINE' }
-        })
+          error: { message: 'Offline', code: 'OFFLINE' },
+        }),
       );
 
       try {
         await bookingsService.requestBooking(
           'car-123',
           '2025-11-01T10:00:00',
-          '2025-11-05T18:00:00'
+          '2025-11-05T18:00:00',
         );
       } catch (error) {
         // El error debería prevenir operaciones parciales
@@ -464,15 +486,15 @@ describe('Sprint 5.3 - Error Handling', () => {
       (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
         Promise.resolve({
           data: { user: null },
-          error: { message: 'Session expired', code: 'SESSION_EXPIRED' }
-        })
+          error: { message: 'Session expired', code: 'SESSION_EXPIRED' },
+        }),
       );
 
       try {
         await carsService.createCar({
           brand: 'Toyota',
           model: 'Corolla',
-          year: 2023
+          year: 2023,
         });
         fail('Debería haber lanzado un error');
       } catch (error: any) {
@@ -486,14 +508,14 @@ describe('Sprint 5.3 - Error Handling', () => {
       (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
         Promise.resolve({
           data: { user: null },
-          error: null
-        })
+          error: null,
+        }),
       );
 
       try {
         await carsService.createCar({
           brand: 'Test',
-          model: 'Test'
+          model: 'Test',
         });
         fail('Debería haber lanzado un error');
       } catch (error: any) {
@@ -516,12 +538,12 @@ describe('Sprint 5.3 - Error Handling', () => {
         if (attemptCount === 1) {
           return Promise.resolve({
             data: null,
-            error: { message: 'Network error', code: 'NETWORK_ERROR' }
+            error: { message: 'Network error', code: 'NETWORK_ERROR' },
           });
         }
         return Promise.resolve({
           data: [{ id: 'car-123', brand: 'Toyota' }],
-          error: null
+          error: null,
         });
       });
 
@@ -546,37 +568,39 @@ describe('Sprint 5.3 - Error Handling', () => {
       (mockSupabase.rpc as jasmine.Spy).and.returnValue(
         Promise.resolve({
           data: null,
-          error: { message: 'Database error', code: 'DB_ERROR' }
-        })
+          error: { message: 'Database error', code: 'DB_ERROR' },
+        }),
       );
 
       try {
         await bookingsService.requestBooking(
           'car-123',
           '2025-11-01T10:00:00',
-          '2025-11-05T18:00:00'
+          '2025-11-05T18:00:00',
         );
       } catch {
         // Después del error, el servicio debería seguir funcionando
         (mockSupabase.rpc as jasmine.Spy).and.returnValues(
           Promise.resolve({ data: 'booking-success', error: null }),
-          Promise.resolve({ data: null, error: null })
+          Promise.resolve({ data: null, error: null }),
         );
 
         const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'single']);
         mockQuery.select.and.returnValue(mockQuery);
         mockQuery.eq.and.returnValue(mockQuery);
-        mockQuery.single.and.returnValue(Promise.resolve({
-          data: { id: 'booking-success', status: 'pending' },
-          error: null
-        }));
+        mockQuery.single.and.returnValue(
+          Promise.resolve({
+            data: { id: 'booking-success', status: 'pending' },
+            error: null,
+          }),
+        );
 
         mockSupabase.from.and.returnValue(mockQuery as any);
 
         const booking = await bookingsService.requestBooking(
           'car-123',
           '2025-11-01T10:00:00',
-          '2025-11-05T18:00:00'
+          '2025-11-05T18:00:00',
         );
 
         expect(booking).toBeDefined();

@@ -1,4 +1,3 @@
-
 import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
@@ -36,15 +35,14 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
       >
         ✅ Ya calificaste esta reserva
       </button>
-      <button
-        class="btn-secondary flex-1 px-6 py-3 font-semibold"
-      >
-        📄 Ver factura
-      </button>
+      <button class="btn-secondary flex-1 px-6 py-3 font-semibold">📄 Ver factura</button>
     </div>
 
     <!-- Review Form Modal -->
-    <div *ngIf="showReviewForm() && reviewData()" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div
+      *ngIf="showReviewForm() && reviewData()"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
+    >
       <div class="my-8">
         <app-review-form
           [bookingId]="booking.id"
@@ -60,22 +58,20 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
     </div>
 
     <!-- Existing Review Display -->
-    <div *ngIf="existingReview() && !showReviewForm()" class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
+    <div
+      *ngIf="existingReview() && !showReviewForm()"
+      class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft"
+    >
       <h3 class="h5 mb-4">📝 Tu Calificación</h3>
       <div class="info-card-warm p-4 mb-4">
-        <p class="text-sm font-semibold text-accent-warm">
-          ⏳ Review pendiente de publicación
-        </p>
+        <p class="text-sm font-semibold text-accent-warm">⏳ Review pendiente de publicación</p>
         <p class="text-xs text-charcoal-medium mt-1">
           Se publicará cuando ambas partes hayan calificado, o después de 14 días.
         </p>
       </div>
-      <app-review-card
-        [review]="existingReview()!"
-        [showCarTitle]="false"
-      ></app-review-card>
+      <app-review-card [review]="existingReview()!" [showCarTitle]="false"></app-review-card>
     </div>
-  `
+  `,
 })
 export class ReviewManagementComponent implements OnInit {
   @Input({ required: true }) booking!: Booking;
@@ -153,7 +149,7 @@ export class ReviewManagementComponent implements OnInit {
 
       if (result.success) {
         alert(
-          '¡Review enviada exitosamente! Se publicará cuando ambas partes hayan calificado, o después de 14 días.'
+          '¡Review enviada exitosamente! Se publicará cuando ambas partes hayan calificado, o después de 14 días.',
         );
         this.showReviewForm.set(false);
 

@@ -2,22 +2,19 @@
   <!-- Header -->
   <div class="header">
     <h2>Reportar Daños</h2>
-    <button class="close-btn" (click)="cancel()" [disabled]="creating()">
-      ✕
-    </button>
+    <button class="close-btn" (click)="cancel()" [disabled]="creating()">✕</button>
   </div>
 
   <!-- Error message -->
   @if (error()) {
-    <div class="error-message">
-      ⚠️ {{ error() }}
-    </div>
+    <div class="error-message">⚠️ {{ error() }}</div>
   }
 
   <!-- Intro message -->
   <div class="intro">
     <p>
-      Reportá los daños encontrados después del check-out. Incluí fotos claras y una descripción detallada de cada daño para agilizar el procesamiento.
+      Reportá los daños encontrados después del check-out. Incluí fotos claras y una descripción
+      detallada de cada daño para agilizar el procesamiento.
     </p>
   </div>
 
@@ -131,9 +128,7 @@
         <div class="form-group">
           <label [for]="'photos-' + i">Fotos de Evidencia (opcional)</label>
           <div class="photo-upload-wrapper">
-            <label [for]="'photos-' + i" class="upload-photo-btn">
-              📷 Subir Fotos
-            </label>
+            <label [for]="'photos-' + i" class="upload-photo-btn"> 📷 Subir Fotos </label>
             <input
               [id]="'photos-' + i"
               type="file"
@@ -165,11 +160,7 @@
     }
 
     <!-- Add damage button -->
-    <button
-      class="add-damage-btn"
-      (click)="addDamage()"
-      [disabled]="creating()"
-    >
+    <button class="add-damage-btn" (click)="addDamage()" [disabled]="creating()">
       ➕ Agregar Otro Daño
     </button>
   </div>
@@ -226,19 +217,9 @@
 
   <!-- Actions -->
   <div class="actions">
-    <button
-      class="btn btn-secondary"
-      (click)="cancel()"
-      [disabled]="creating()"
-    >
-      Cancelar
-    </button>
+    <button class="btn btn-secondary" (click)="cancel()" [disabled]="creating()">Cancelar</button>
 
-    <button
-      class="btn btn-primary"
-      (click)="submit()"
-      [disabled]="!isValid() || creating()"
-    >
+    <button class="btn btn-primary" (click)="submit()" [disabled]="!isValid() || creating()">
       @if (creating()) {
         <span class="spinner"></span>
         Creando Claim...

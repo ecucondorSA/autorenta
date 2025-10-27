@@ -104,10 +104,7 @@ export class TourOrchestratorService {
 
     const tourId = this.state().activeTourId;
     if (tourId) {
-      this.telemetry.trackTourCancelled(
-        tourId,
-        this.adapter.getCurrentStepId()
-      );
+      this.telemetry.trackTourCancelled(tourId, this.adapter.getCurrentStepId());
     }
 
     this.adapter.cancel();
@@ -164,9 +161,7 @@ export class TourOrchestratorService {
    * Get available tours that can be started
    */
   getAvailableTours(): TourDefinition[] {
-    return this.registry
-      .getAllDefinitions()
-      .filter((def) => !this.shouldSkipTour(def));
+    return this.registry.getAllDefinitions().filter((def) => !this.shouldSkipTour(def));
   }
 
   /**
@@ -178,10 +173,7 @@ export class TourOrchestratorService {
 
   // Private Methods
 
-  private async startTour(
-    definition: TourDefinition,
-    options: TourRequestOptions
-  ): Promise<void> {
+  private async startTour(definition: TourDefinition, options: TourRequestOptions): Promise<void> {
     try {
       this.currentDefinition = definition;
 
@@ -225,7 +217,7 @@ export class TourOrchestratorService {
   private async addStepToTour(
     step: StepDefinition,
     index: number,
-    totalSteps: number
+    totalSteps: number,
   ): Promise<void> {
     // Resolve responsive configuration
     const resolvedStep = this.resolveResponsiveStep(step);
@@ -246,7 +238,7 @@ export class TourOrchestratorService {
 
           if (!element && step.target.required) {
             console.warn(
-              `[TourOrchestrator] Required element not found, skipping step: ${step.id}`
+              `[TourOrchestrator] Required element not found, skipping step: ${step.id}`,
             );
             this.adapter.next();
             return;

@@ -73,7 +73,8 @@ export class ProfileService {
 
       // Check if it's a RLS policy violation (code 42501)
       if (error.code === '42501') {
-        const rrlsError = `RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. ` +
+        const rrlsError =
+          `RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. ` +
           `Error: ${error.message}`;
         console.error('[ProfileService]', rrlsError);
         throw new Error(rrlsError);
@@ -85,7 +86,10 @@ export class ProfileService {
       throw new Error(detailedError);
     }
 
-    console.log('[ProfileService] Profile loaded successfully:', { id: data?.id, full_name: data?.full_name });
+    console.log('[ProfileService] Profile loaded successfully:', {
+      id: data?.id,
+      full_name: data?.full_name,
+    });
     return data as UserProfile;
   }
 
@@ -225,13 +229,17 @@ export class ProfileService {
       .single();
 
     if (error) {
-      const detailedError = `Error creando perfil (${error.code}): ${error.message}. ` +
+      const detailedError =
+        `Error creando perfil (${error.code}): ${error.message}. ` +
         `Details: ${error.details}. Hint: ${error.hint}`;
       console.error('[ProfileService]', detailedError);
       throw new Error(detailedError);
     }
 
-    console.log('[ProfileService] Profile created successfully:', { id: data?.id, full_name: data?.full_name });
+    console.log('[ProfileService] Profile created successfully:', {
+      id: data?.id,
+      full_name: data?.full_name,
+    });
     return data as UserProfile;
   }
 
@@ -365,7 +373,10 @@ export class ProfileService {
         },
       });
     } catch (verificationError) {
-      console.warn('[ProfileService] No se pudo iniciar la verificación automática:', verificationError);
+      console.warn(
+        '[ProfileService] No se pudo iniciar la verificación automática:',
+        verificationError,
+      );
     }
 
     return data as UserDocument;
@@ -518,9 +529,10 @@ export class ProfileService {
    * Obtiene el perfil público de un usuario (solo datos visibles públicamente)
    */
   async getPublicProfile(userId: string): Promise<Partial<UserProfile> | null> {
-    const { data, error} = await this.supabase
+    const { data, error } = await this.supabase
       .from('profiles')
-      .select(`
+      .select(
+        `
         id,
         full_name,
         avatar_url,
@@ -530,7 +542,8 @@ export class ProfileService {
         is_driver_verified,
         kyc,
         created_at
-      `)
+      `,
+      )
       .eq('id', userId)
       .single();
 
@@ -546,8 +559,9 @@ export class ProfileService {
    * Obtiene las estadísticas públicas de un usuario
    */
   async getUserStats(userId: string): Promise<any> {
-    const { data, error } = await this.supabase
-      .rpc('get_user_public_stats', { target_user_id: userId });
+    const { data, error } = await this.supabase.rpc('get_user_public_stats', {
+      target_user_id: userId,
+    });
 
     if (error) {
       console.error('[ProfileService] Error obteniendo stats:', error);
@@ -563,14 +577,16 @@ export class ProfileService {
       };
     }
 
-    return data || {
-      owner_rating_avg: null,
-      owner_reviews_count: 0,
-      owner_trips_count: 0,
-      renter_rating_avg: null,
-      renter_reviews_count: 0,
-      renter_trips_count: 0,
-      total_cars: 0,
-    };
+    return (
+      data || {
+        owner_rating_avg: null,
+        owner_reviews_count: 0,
+        owner_trips_count: 0,
+        renter_rating_avg: null,
+        renter_reviews_count: 0,
+        renter_trips_count: 0,
+        total_cars: 0,
+      }
+    );
   }
 }

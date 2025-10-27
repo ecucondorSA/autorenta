@@ -20,7 +20,9 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-auth-callback-page',
   imports: [CommonModule, NgOptimizedImage],
   template: `
-    <div class="min-h-screen bg-ivory-soft dark:bg-graphite-dark flex items-center justify-center py-12 px-4">
+    <div
+      class="min-h-screen bg-ivory-soft dark:bg-graphite-dark flex items-center justify-center py-12 px-4"
+    >
       <div class="w-full max-w-md text-center">
         <!-- Loading State -->
         <div *ngIf="!error()" class="space-y-6">
@@ -36,9 +38,25 @@ import { AuthService } from '../../../core/services/auth.service';
           </div>
 
           <div class="flex justify-center">
-            <svg class="animate-spin h-12 w-12 text-accent-petrol" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              class="animate-spin h-12 w-12 text-accent-petrol"
+              fill="none"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           </div>
 
@@ -54,7 +72,9 @@ import { AuthService } from '../../../core/services/auth.service';
 
         <!-- Error State -->
         <div *ngIf="error()" class="space-y-6">
-          <div class="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg p-6">
+          <div
+            class="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg p-6"
+          >
             <h2 class="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
               Error de autenticación
             </h2>
@@ -93,7 +113,7 @@ export class AuthCallbackPage implements OnInit {
       await this.auth.ensureSession();
 
       // Pequeño delay para asegurar que la sesión esté completamente procesada
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Verificar si el usuario está autenticado
       if (this.auth.isAuthenticated()) {

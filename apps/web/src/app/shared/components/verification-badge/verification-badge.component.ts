@@ -20,8 +20,14 @@ import type { VerificationStatus } from '../../../core/models';
       >
         <span>{{ getStatusIcon(overallStatus()) }}</span>
         <span>{{ getStatusLabel(overallStatus()) }}</span>
-        <svg *ngIf="overallStatus() !== 'VERIFICADO'" class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        <svg
+          *ngIf="overallStatus() !== 'VERIFICADO'"
+          class="w-3 h-3 ml-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </button>
     </ng-container>
@@ -55,7 +61,10 @@ export class VerificationBadgeComponent implements OnInit {
       try {
         await this.verificationService.loadStatuses();
       } catch (error) {
-        console.warn('[VerificationBadgeComponent] No se pudo cargar el estado de verificación:', error);
+        console.warn(
+          '[VerificationBadgeComponent] No se pudo cargar el estado de verificación:',
+          error,
+        );
       }
     }
   }
@@ -96,7 +105,7 @@ export class VerificationBadgeComponent implements OnInit {
   goToVerification(): void {
     // Navigate to profile page with verification tab
     this.router.navigate(['/profile'], {
-      queryParams: { tab: 'verification' }
+      queryParams: { tab: 'verification' },
     });
   }
 

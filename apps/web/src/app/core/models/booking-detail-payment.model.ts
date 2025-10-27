@@ -52,13 +52,13 @@ export interface BookingDates {
  * Snapshot del tipo de cambio en un momento específico
  */
 export interface FxSnapshot {
-  rate: number;                    // ej: 1000.00 (1 USD = 1000 ARS)
+  rate: number; // ej: 1000.00 (1 USD = 1000 ARS)
   timestamp: Date;
-  fromCurrency: CurrencyCode;      // USD
-  toCurrency: CurrencyCode;        // ARS
-  expiresAt: Date;                 // timestamp + 7 días
+  fromCurrency: CurrencyCode; // USD
+  toCurrency: CurrencyCode; // ARS
+  expiresAt: Date; // timestamp + 7 días
   isExpired: boolean;
-  variationThreshold: number;      // 0.10 (±10%)
+  variationThreshold: number; // 0.10 (±10%)
 }
 
 /**
@@ -81,15 +81,15 @@ export interface FxSnapshotDb {
  */
 export interface RiskSnapshot {
   // Franquicias base (USD)
-  deductibleUsd: number;           // Franquicia estándar por daño/robo
-  rolloverDeductibleUsd: number;   // Franquicia por vuelco (2× estándar)
+  deductibleUsd: number; // Franquicia estándar por daño/robo
+  rolloverDeductibleUsd: number; // Franquicia por vuelco (2× estándar)
 
   // Modalidad con tarjeta
-  holdEstimatedArs: number;        // Hold/preautorización estimado en ARS
-  holdEstimatedUsd: number;        // Hold en USD (referencia)
+  holdEstimatedArs: number; // Hold/preautorización estimado en ARS
+  holdEstimatedUsd: number; // Hold en USD (referencia)
 
   // Modalidad sin tarjeta
-  creditSecurityUsd: number;       // Crédito de Seguridad requerido (300 o 500)
+  creditSecurityUsd: number; // Crédito de Seguridad requerido (300 o 500)
 
   // Metadata
   bucket: BucketType;
@@ -157,12 +157,12 @@ export interface PriceBreakdown {
   subtotalUsd: number;
 
   // Fees y cargos
-  fgoContributionUsd: number;      // α% (ej: 15% del subtotal)
-  platformFeeUsd: number;          // Fee de plataforma
-  insuranceFeeUsd: number;         // Seguro (si aplica)
+  fgoContributionUsd: number; // α% (ej: 15% del subtotal)
+  platformFeeUsd: number; // Fee de plataforma
+  insuranceFeeUsd: number; // Seguro (si aplica)
 
   // Upgrades
-  coverageUpgradeUsd: number;      // Costo del upgrade de cobertura
+  coverageUpgradeUsd: number; // Costo del upgrade de cobertura
 
   // Total
   totalUsd: number;
@@ -227,7 +227,7 @@ export interface WalletLock {
   amountUsd: number;
   reason: string;
   status: 'locked' | 'released' | 'captured';
-  isWithdrawable: boolean;        // false para Crédito de Seguridad
+  isWithdrawable: boolean; // false para Crédito de Seguridad
   createdAt: Date;
   expiresAt?: Date;
 }
@@ -253,7 +253,7 @@ export interface WalletLockResult {
 export interface UserConsents {
   termsAccepted: boolean;
   termsAcceptedAt?: Date;
-  cardOnFileAccepted: boolean;     // Solo para paymentMode='card'
+  cardOnFileAccepted: boolean; // Solo para paymentMode='card'
   cardOnFileAcceptedAt?: Date;
   privacyPolicyAccepted: boolean;
   privacyPolicyAcceptedAt?: Date;
@@ -402,15 +402,12 @@ export function calculateDeductibleUsd(vehicleValueUsd: number): number {
 /**
  * Aplica upgrade de cobertura a la franquicia
  */
-export function applyUpgradeToDeductible(
-  baseDeductible: number,
-  upgrade: CoverageUpgrade
-): number {
+export function applyUpgradeToDeductible(baseDeductible: number, upgrade: CoverageUpgrade): number {
   switch (upgrade) {
     case 'premium50':
-      return baseDeductible * 0.5;  // -50%
+      return baseDeductible * 0.5; // -50%
     case 'zero':
-      return 0;                      // Franquicia cero
+      return 0; // Franquicia cero
     case 'standard':
     default:
       return baseDeductible;
@@ -423,14 +420,14 @@ export function applyUpgradeToDeductible(
 export function calculateHoldEstimatedArs(
   rolloverDeductibleUsd: number,
   fxRate: number,
-  bucket: BucketType
+  bucket: BucketType,
 ): number {
   // Mínimo por bucket (en USD, se convierte a ARS)
   const minBucketUsd: Record<BucketType, number> = {
-    economy: 750,      // USD 750 mínimo para economy
-    standard: 900,     // USD 900 mínimo para standard
-    premium: 1200,     // USD 1200 mínimo para premium
-    luxury: 1800,      // USD 1800 mínimo para luxury
+    economy: 750, // USD 750 mínimo para economy
+    standard: 900, // USD 900 mínimo para standard
+    premium: 1200, // USD 1200 mínimo para premium
+    luxury: 1800, // USD 1800 mínimo para luxury
   };
 
   // Hold calculado: 35% del rollover deductible
@@ -463,7 +460,7 @@ export function isFxExpired(fxSnapshot: FxSnapshot): boolean {
 export function isFxVariationExceeded(
   oldRate: number,
   newRate: number,
-  threshold: number = 0.10
+  threshold: number = 0.1,
 ): boolean {
   const variation = Math.abs((newRate - oldRate) / oldRate);
   return variation > threshold;
@@ -523,15 +520,12 @@ export function getCoverageUpgradeName(upgrade: CoverageUpgrade): string {
 /**
  * Obtiene costo del upgrade (% del subtotal)
  */
-export function getCoverageUpgradeCost(
-  upgrade: CoverageUpgrade,
-  subtotalUsd: number
-): number {
+export function getCoverageUpgradeCost(upgrade: CoverageUpgrade, subtotalUsd: number): number {
   switch (upgrade) {
     case 'premium50':
-      return subtotalUsd * 0.10;  // +10%
+      return subtotalUsd * 0.1; // +10%
     case 'zero':
-      return subtotalUsd * 0.20;  // +20%
+      return subtotalUsd * 0.2; // +20%
     case 'standard':
     default:
       return 0;
@@ -543,7 +537,7 @@ export function getCoverageUpgradeCost(
  */
 export function validateConsents(
   consents: UserConsents,
-  paymentMode: PaymentMode
+  paymentMode: PaymentMode,
 ): ValidationError[] {
   const errors: ValidationError[] = [];
 
@@ -570,7 +564,7 @@ export function validateConsents(
  * Valida que la autorización de pago sea válida
  */
 export function validatePaymentAuthorization(
-  authorization: PaymentAuthorization | null
+  authorization: PaymentAuthorization | null,
 ): ValidationError[] {
   const errors: ValidationError[] = [];
 
@@ -607,7 +601,7 @@ export function validatePaymentAuthorization(
  */
 export function validateWalletBalance(
   currentBalance: number,
-  requiredAmount: number
+  requiredAmount: number,
 ): ValidationError[] {
   const errors: ValidationError[] = [];
 

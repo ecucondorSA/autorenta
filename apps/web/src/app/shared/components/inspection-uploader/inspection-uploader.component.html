@@ -2,23 +2,20 @@
   <!-- Header -->
   <div class="header">
     <h2>{{ stageLabel() }} del Vehículo</h2>
-    <button class="close-btn" (click)="cancel()" [disabled]="saving()">
-      ✕
-    </button>
+    <button class="close-btn" (click)="cancel()" [disabled]="saving()">✕</button>
   </div>
 
   <!-- Error message -->
   @if (error()) {
-    <div class="error-message">
-      ⚠️ {{ error() }}
-    </div>
+    <div class="error-message">⚠️ {{ error() }}</div>
   }
 
   <!-- Photo upload section -->
   <div class="photo-section">
     <h3>Fotos del Vehículo</h3>
     <p class="hint">
-      Subí al menos 8 fotos claras del vehículo: exterior (4 ángulos), interior, odómetro, nivel de combustible, y cualquier daño existente.
+      Subí al menos 8 fotos claras del vehículo: exterior (4 ángulos), interior, odómetro, nivel de
+      combustible, y cualquier daño existente.
     </p>
 
     <!-- Upload button -->
@@ -58,13 +55,7 @@
         @for (photo of photos(); track photo.url; let i = $index) {
           <div class="photo-item">
             <img [src]="photo.url" [alt]="'Foto ' + (i + 1)" />
-            <button
-              class="remove-photo"
-              (click)="removePhoto(i)"
-              [disabled]="saving()"
-            >
-              🗑️
-            </button>
+            <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()">🗑️</button>
           </div>
         }
       </div>
@@ -111,24 +102,13 @@
         <div class="fuel-bar" [style.width.%]="fuelLevel"></div>
       </div>
     </div>
-
   </div>
 
   <!-- Actions -->
   <div class="actions">
-    <button
-      class="btn btn-secondary"
-      (click)="cancel()"
-      [disabled]="saving()"
-    >
-      Cancelar
-    </button>
+    <button class="btn btn-secondary" (click)="cancel()" [disabled]="saving()">Cancelar</button>
 
-    <button
-      class="btn btn-primary"
-      (click)="save()"
-      [disabled]="!isValid() || saving()"
-    >
+    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid() || saving()">
       @if (saving()) {
         <span class="spinner"></span>
         Guardando...

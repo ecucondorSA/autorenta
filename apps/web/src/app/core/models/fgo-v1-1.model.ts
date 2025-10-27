@@ -37,22 +37,22 @@ export interface FgoParameters {
   bucket: BucketType;
 
   // Alpha dinámico
-  alpha: number;              // α actual (0.0 - 1.0)
-  alphaMin: number;           // Mínimo permitido
-  alphaMax: number;           // Máximo permitido
+  alpha: number; // α actual (0.0 - 1.0)
+  alphaMin: number; // Mínimo permitido
+  alphaMax: number; // Máximo permitido
 
   // Umbrales RC
-  rcFloor: number;            // RC mínimo (default: 0.90)
-  rcHardFloor: number;        // RC crítico (default: 0.80)
-  rcSoftCeiling: number;      // RC alto (default: 1.20)
+  rcFloor: number; // RC mínimo (default: 0.90)
+  rcHardFloor: number; // RC crítico (default: 0.80)
+  rcSoftCeiling: number; // RC alto (default: 1.20)
 
   // Umbrales LR
-  lossRatioTarget: number;    // LR objetivo (default: 0.80)
+  lossRatioTarget: number; // LR objetivo (default: 0.80)
 
   // Límites operativos
-  monthlyPayoutCap: number;   // % del saldo (default: 0.08 = 8%)
-  perUserLimit: number;       // Eventos por trimestre (default: 2)
-  eventCapUsd: number;        // Tope por evento en USD (default: 800)
+  monthlyPayoutCap: number; // % del saldo (default: 0.08 = 8%)
+  perUserLimit: number; // Eventos por trimestre (default: 2)
+  eventCapUsd: number; // Tope por evento en USD (default: 800)
 
   updatedAt: Date;
 }
@@ -91,8 +91,8 @@ export interface BookingRiskSnapshot {
   bucket: BucketType;
 
   // FX
-  fxSnapshot: number;         // Tipo de cambio a USD
-  currency: CurrencyCode;     // Moneda original
+  fxSnapshot: number; // Tipo de cambio a USD
+  currency: CurrencyCode; // Moneda original
 
   // Garantías estimadas (moneda local)
   estimatedHoldAmount?: number;
@@ -153,8 +153,8 @@ export interface BookingInspection {
 
   // Evidencias
   photos: InspectionPhoto[];
-  odometer?: number;          // Kilómetros
-  fuelLevel?: number;         // 0.0 - 100.0
+  odometer?: number; // Kilómetros
+  fuelLevel?: number; // 0.0 - 100.0
   latitude?: number;
   longitude?: number;
 
@@ -172,7 +172,7 @@ export interface BookingInspectionDb {
   booking_id: string;
   stage: string;
   inspector_id: string;
-  photos: InspectionPhoto[];  // JSONB
+  photos: InspectionPhoto[]; // JSONB
   odometer?: number;
   fuel_level?: number;
   latitude?: number;
@@ -206,12 +206,12 @@ export interface FgoStatusV1_1 {
   status: FgoHealthStatus;
 
   // 🆕 Campos v1.1
-  pemCents: number | null;              // PEM en centavos
-  pem: number | null;                   // PEM en USD
-  lr90d: number | null;                 // Loss Ratio 90 días
-  lr365d: number | null;                // Loss Ratio 365 días
-  totalEvents90d: number;               // Eventos en 90 días
-  avgRecoveryRate: number | null;       // Tasa de recupero (0.0 - 1.0)
+  pemCents: number | null; // PEM en centavos
+  pem: number | null; // PEM en USD
+  lr90d: number | null; // Loss Ratio 90 días
+  lr365d: number | null; // Loss Ratio 365 días
+  totalEvents90d: number; // Eventos en 90 días
+  avgRecoveryRate: number | null; // Tasa de recupero (0.0 - 1.0)
 
   lastCalculatedAt: Date;
   updatedAt: Date;
@@ -224,12 +224,12 @@ export interface PemCalculation {
   countryCode: string;
   bucket: BucketType;
   pemCents: number;
-  pem: number;                          // USD
+  pem: number; // USD
   eventCount: number;
   avgEventCents: number;
-  avgEvent: number;                     // USD
-  totalPaid: number;                    // USD
-  totalRecovered: number;               // USD
+  avgEvent: number; // USD
+  totalPaid: number; // USD
+  totalRecovered: number; // USD
 }
 
 /**
@@ -237,11 +237,11 @@ export interface PemCalculation {
  */
 export interface RcCalculationV1_1 {
   pemCents: number;
-  pem: number;                          // USD
+  pem: number; // USD
   currentBalanceCents: number;
-  currentBalance: number;               // USD
+  currentBalance: number; // USD
   targetBalanceCents: number;
-  targetBalance: number;                // USD
+  targetBalance: number; // USD
   rc: number | null;
   eventCount: number;
   status: FgoHealthStatus;
@@ -274,7 +274,7 @@ export interface EligibilityResult {
   reasons: string[];
   rc: number | null;
   rcStatus: FgoHealthStatus;
-  franchisePercentage: number;         // % franquicia interna
+  franchisePercentage: number; // % franquicia interna
   maxCoverCents: number;
   maxCoverUsd: number;
   eventCapUsd: number;
@@ -295,11 +295,11 @@ export interface EligibilityResult {
  * Breakdown del waterfall de cobros
  */
 export interface WaterfallBreakdown {
-  holdCaptured: number;                 // centavos
-  walletDebited: number;                // centavos
-  extraCharged: number;                 // centavos
-  fgoPaid: number;                      // centavos
-  remainingUncovered: number;           // centavos
+  holdCaptured: number; // centavos
+  walletDebited: number; // centavos
+  extraCharged: number; // centavos
+  fgoPaid: number; // centavos
+  remainingUncovered: number; // centavos
 }
 
 /**
@@ -533,7 +533,7 @@ export function mapBookingInspection(db: BookingInspectionDb): BookingInspection
  */
 export function isInspectionComplete(inspection: BookingInspection): boolean {
   return (
-    inspection.photos.length >= 8 &&  // Mínimo 8 fotos
+    inspection.photos.length >= 8 && // Mínimo 8 fotos
     inspection.odometer !== undefined &&
     inspection.fuelLevel !== undefined &&
     inspection.signedAt !== undefined
@@ -545,10 +545,7 @@ export function isInspectionComplete(inspection: BookingInspection): boolean {
  */
 export function calculateWaterfallTotal(breakdown: WaterfallBreakdown): number {
   return (
-    breakdown.holdCaptured +
-    breakdown.walletDebited +
-    breakdown.extraCharged +
-    breakdown.fgoPaid
+    breakdown.holdCaptured + breakdown.walletDebited + breakdown.extraCharged + breakdown.fgoPaid
   );
 }
 

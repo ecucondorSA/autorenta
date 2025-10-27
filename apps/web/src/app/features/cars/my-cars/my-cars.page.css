@@ -42,7 +42,7 @@
   border-width: 4px;
   border-color: #edeae3;
   border-top-color: #2c4a52; /* accent-petrol */
-  border-right-color: #8B7355; /* accent-warm */
+  border-right-color: #8b7355; /* accent-warm */
 }
 
 /* =================================================================
@@ -105,8 +105,8 @@
    ================================================================= */
 
 .empty-state-card {
-  background: linear-gradient(135deg, #FAF9F6 0%, #F5F3EF 100%);
-  border: 2px dashed #D9D6D0;
+  background: linear-gradient(135deg, #faf9f6 0%, #f5f3ef 100%);
+  border: 2px dashed #d9d6d0;
 }
 
 /* =================================================================

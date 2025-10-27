@@ -1,6 +1,6 @@
 /**
  * Sprint 5.2 - Edge Cases Test
- * 
+ *
  * Tests de casos borde y validaciones del sistema
  * Verifica que todas las validaciones funcionen correctamente
  */
@@ -20,7 +20,7 @@ function createCarsQueryMock(options: CarsQueryOptions = {}) {
   query.order.and.returnValue(query);
   (query as any).then = (
     resolve: (value: { data: unknown[]; error: any }) => unknown,
-    reject?: (reason: any) => unknown
+    reject?: (reason: any) => unknown,
   ) => {
     const payload = {
       data: options.data ?? [],
@@ -45,16 +45,16 @@ describe('Sprint 5.2 - Edge Cases', () => {
     (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
       Promise.resolve({
         data: { user: { id: 'user-123', email: 'test@example.com' } },
-        error: null
-      })
+        error: null,
+      }),
     );
 
     TestBed.configureTestingModule({
       providers: [
         BookingsService,
         CarsService,
-        { provide: 'SUPABASE_CLIENT', useValue: mockSupabase }
-      ]
+        { provide: 'SUPABASE_CLIENT', useValue: mockSupabase },
+      ],
     });
 
     bookingsService = TestBed.inject(BookingsService);
@@ -75,9 +75,9 @@ describe('Sprint 5.2 - Edge Cases', () => {
           data: null,
           error: {
             message: 'La fecha de inicio debe ser futura',
-            code: 'P0001'
-          }
-        })
+            code: 'P0001',
+          },
+        }),
       );
 
       try {
@@ -101,9 +101,9 @@ describe('Sprint 5.2 - Edge Cases', () => {
           data: null,
           error: {
             message: 'La fecha de fin no puede estar en el pasado',
-            code: 'P0001'
-          }
-        })
+            code: 'P0001',
+          },
+        }),
       );
 
       try {
@@ -121,7 +121,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + 10);
       const startDate = futureDate.toISOString();
-      
+
       const earlierDate = new Date();
       earlierDate.setDate(earlierDate.getDate() + 5);
       const endDate = earlierDate.toISOString();
@@ -131,9 +131,9 @@ describe('Sprint 5.2 - Edge Cases', () => {
           data: null,
           error: {
             message: 'La fecha de fin debe ser posterior a la fecha de inicio',
-            code: 'P0001'
-          }
-        })
+            code: 'P0001',
+          },
+        }),
       );
 
       try {
@@ -156,9 +156,9 @@ describe('Sprint 5.2 - Edge Cases', () => {
           data: null,
           error: {
             message: 'La reserva debe ser de al menos 1 día',
-            code: 'P0001'
-          }
-        })
+            code: 'P0001',
+          },
+        }),
       );
 
       try {
@@ -186,9 +186,9 @@ describe('Sprint 5.2 - Edge Cases', () => {
           data: null,
           error: {
             message: 'Las reservas no pueden exceder 30 días',
-            code: 'P0001'
-          }
-        })
+            code: 'P0001',
+          },
+        }),
       );
 
       try {
@@ -212,22 +212,24 @@ describe('Sprint 5.2 - Edge Cases', () => {
 
       (mockSupabase.rpc as jasmine.Spy).and.returnValues(
         Promise.resolve({ data: 'booking-30-days', error: null }),
-        Promise.resolve({ data: null, error: null })
+        Promise.resolve({ data: null, error: null }),
       );
 
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'single']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: {
-          id: 'booking-30-days',
-          car_id: 'car-123',
-          start_at: startDateStr,
-          end_at: endDateStr,
-          status: 'pending'
-        },
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: {
+            id: 'booking-30-days',
+            car_id: 'car-123',
+            start_at: startDateStr,
+            end_at: endDateStr,
+            status: 'pending',
+          },
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -248,28 +250,30 @@ describe('Sprint 5.2 - Edge Cases', () => {
 
       (mockSupabase.rpc as jasmine.Spy).and.returnValues(
         Promise.resolve({ data: 'booking-long', error: null }),
-        Promise.resolve({ data: null, error: null })
+        Promise.resolve({ data: null, error: null }),
       );
 
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'single']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: {
-          id: 'booking-long',
-          car_id: 'car-123',
-          total_price: expectedTotal,
-          status: 'pending'
-        },
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: {
+            id: 'booking-long',
+            car_id: 'car-123',
+            total_price: expectedTotal,
+            status: 'pending',
+          },
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
       const booking = await bookingsService.requestBooking(
         'car-123',
         startDate.toISOString(),
-        endDate.toISOString()
+        endDate.toISOString(),
       );
 
       expect(booking.total_amount).toBe(expectedTotal);
@@ -284,17 +288,19 @@ describe('Sprint 5.2 - Edge Cases', () => {
         'Río Gallegos',
         'Cañuelas',
         'La Matanza',
-        'José C. Paz'
+        'José C. Paz',
       ];
 
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'ilike', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
       mockQuery.ilike.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [],
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [],
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -311,17 +317,19 @@ describe('Sprint 5.2 - Edge Cases', () => {
         "'; DROP TABLE cars; --",
         '<script>alert("xss")</script>',
         '../../etc/passwd',
-        'null\0byte'
+        'null\0byte',
       ];
 
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'ilike', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
       mockQuery.ilike.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [],
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [],
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -339,18 +347,11 @@ describe('Sprint 5.2 - Edge Cases', () => {
     });
 
     it('debería manejar acentos y ñ correctamente', async () => {
-      const citiesWithAccents = [
-        'Córdoba',
-        'San Juan',
-        'La Rioja',
-        'Neuquén'
-      ];
+      const citiesWithAccents = ['Córdoba', 'San Juan', 'La Rioja', 'Neuquén'];
 
       for (const city of citiesWithAccents) {
         const builder = createCarsQueryMock({
-          data: [
-            { id: 'car-1', location_city: city, brand: 'Toyota' }
-          ],
+          data: [{ id: 'car-1', location_city: city, brand: 'Toyota' }],
         });
         mockSupabase.from.and.callFake((table: string) => {
           expect(table).toBe('cars');
@@ -367,12 +368,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
     });
 
     it('debería ser case-insensitive en búsqueda de ciudades', async () => {
-      const variations = [
-        'buenos aires',
-        'BUENOS AIRES',
-        'Buenos Aires',
-        'bUeNoS aIrEs'
-      ];
+      const variations = ['buenos aires', 'BUENOS AIRES', 'Buenos Aires', 'bUeNoS aIrEs'];
 
       const results: number[] = [];
       for (const city of variations) {
@@ -392,7 +388,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       }
 
       // Todas las variaciones deberían retornar los mismos resultados
-      const allSame = results.every(count => count === results[0]);
+      const allSame = results.every((count) => count === results[0]);
       expect(allSame).toBe(true);
       console.log('✅ Búsqueda case-insensitive funcionando correctamente');
     });
@@ -405,16 +401,16 @@ describe('Sprint 5.2 - Edge Cases', () => {
           data: null,
           error: {
             message: 'El auto no existe',
-            code: 'P0001'
-          }
-        })
+            code: 'P0001',
+          },
+        }),
       );
 
       try {
         await bookingsService.requestBooking(
           'car-does-not-exist',
           '2025-11-01T10:00:00',
-          '2025-11-05T18:00:00'
+          '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error');
       } catch (error: any) {
@@ -427,10 +423,12 @@ describe('Sprint 5.2 - Edge Cases', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'order']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [],
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [],
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -442,22 +440,24 @@ describe('Sprint 5.2 - Edge Cases', () => {
 
     it('debería manejar fechas con zonas horarias diferentes', async () => {
       const dates = [
-        '2025-11-01T10:00:00Z',      // UTC
+        '2025-11-01T10:00:00Z', // UTC
         '2025-11-01T10:00:00-03:00', // Buenos Aires
-        '2025-11-01T10:00:00+00:00'  // UTC explícito
+        '2025-11-01T10:00:00+00:00', // UTC explícito
       ];
 
       (mockSupabase.rpc as jasmine.Spy).and.returnValue(
-        Promise.resolve({ data: 'booking-tz-test', error: null })
+        Promise.resolve({ data: 'booking-tz-test', error: null }),
       );
 
       const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'single']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: { id: 'booking-tz-test', status: 'pending' },
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: { id: 'booking-tz-test', status: 'pending' },
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -465,7 +465,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
         (mockSupabase.rpc as jasmine.Spy).calls.reset();
         (mockSupabase.rpc as jasmine.Spy).and.returnValues(
           Promise.resolve({ data: 'booking-tz-test', error: null }),
-          Promise.resolve({ data: null, error: null })
+          Promise.resolve({ data: null, error: null }),
         );
 
         const endDate = new Date(date);
@@ -474,7 +474,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
         const booking = await bookingsService.requestBooking(
           'car-123',
           date,
-          endDate.toISOString()
+          endDate.toISOString(),
         );
         expect(booking).toBeDefined();
         console.log(`✅ Zona horaria manejada: ${date}`);

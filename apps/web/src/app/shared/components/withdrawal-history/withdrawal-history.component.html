@@ -14,7 +14,9 @@
   <!-- Loading State -->
   @if (loading) {
     <div class="text-center py-8">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent-petrol"></div>
+      <div
+        class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent-petrol"
+      ></div>
       <p class="mt-2 text-sm text-gray-600">Cargando historial...</p>
     </div>
   }
@@ -22,8 +24,18 @@
   <!-- Empty State -->
   @if (!loading && requests.length === 0) {
     <div class="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+      <svg
+        class="mx-auto h-12 w-12 text-gray-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        ></path>
       </svg>
       <h3 class="mt-2 text-sm font-semibold text-gray-900">No hay retiros</h3>
       <p class="mt-1 text-sm text-gray-500">Todavía no has solicitado ningún retiro</p>
@@ -34,7 +46,9 @@
   @if (!loading && requests.length > 0) {
     <div class="space-y-3">
       @for (request of requests; track request.id) {
-        <div class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+        <div
+          class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow"
+        >
           <div class="flex items-start justify-between">
             <!-- Request Info -->
             <div class="flex-1">
@@ -57,19 +71,19 @@
                 <div>
                   <p class="text-xs text-gray-500">Solicitado</p>
                   <p class="text-lg font-bold text-gray-900">
-                    ${{ request.amount | number:'1.2-2' }}
+                    ${{ request.amount | number: '1.2-2' }}
                   </p>
                 </div>
                 <div>
                   <p class="text-xs text-gray-500">Comisión</p>
                   <p class="text-sm font-semibold text-red-600">
-                    -${{ request.fee_amount | number:'1.2-2' }}
+                    -${{ request.fee_amount | number: '1.2-2' }}
                   </p>
                 </div>
                 <div>
                   <p class="text-xs text-gray-500">Neto</p>
                   <p class="text-lg font-bold text-green-600">
-                    ${{ request.net_amount | number:'1.2-2' }}
+                    ${{ request.net_amount | number: '1.2-2' }}
                   </p>
                 </div>
               </div>
@@ -82,7 +96,9 @@
               }
 
               @if (request.rejection_reason) {
-                <div class="mt-2 p-2 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg">
+                <div
+                  class="mt-2 p-2 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg"
+                >
                   <p class="text-xs text-error-900 dark:text-error-100">
                     <strong>Motivo de rechazo:</strong> {{ request.rejection_reason }}
                   </p>
@@ -90,7 +106,9 @@
               }
 
               @if (request.failure_reason) {
-                <div class="mt-2 p-2 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg">
+                <div
+                  class="mt-2 p-2 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg"
+                >
                   <p class="text-xs text-error-900 dark:text-error-100">
                     <strong>Error:</strong> {{ request.failure_reason }}
                   </p>
@@ -98,7 +116,9 @@
               }
 
               @if (request.admin_notes) {
-                <div class="mt-2 p-2 bg-info-50 dark:bg-info-500/15 border border-info-500 dark:border-info-500/40 rounded-lg">
+                <div
+                  class="mt-2 p-2 bg-info-50 dark:bg-info-500/15 border border-info-500 dark:border-info-500/40 rounded-lg"
+                >
                   <p class="text-xs text-info-900 dark:text-info-100">
                     <strong>Nota del admin:</strong> {{ request.admin_notes }}
                   </p>

@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output, EventEmitter, computed, signal, inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  computed,
+  signal,
+  inject,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,7 +33,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly pricingService = inject(DynamicPricingService);
   private readonly realtimePricing = inject(RealtimePricingService);
   private readonly supabase = injectSupabase();
-  
+
   private unsubscribeRealtime?: () => void;
 
   private readonly _car = signal<Car | undefined>(undefined);
@@ -69,9 +81,9 @@ export class CarCardComponent implements OnInit, OnDestroy {
       title: value?.title,
       region_id: value?.region_id,
       price: value?.price_per_day,
-      hasRegionId: !!value?.region_id
+      hasRegionId: !!value?.region_id,
     });
-    
+
     this._car.set(value);
     // Load dynamic price when car changes
     if (value?.region_id) {
@@ -90,7 +102,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
     // Load dynamic price on init if car already set
     if (this.car?.region_id) {
       void this.loadDynamicPrice();
-      
+
       // 🔴 REALTIME POOLING: Suscribirse a updates de pricing
       this.subscribeToRealtimePricing();
     }
@@ -100,7 +112,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
     // 🧹 Cleanup: desuscribirse de realtime
     this.unsubscribeRealtime?.();
   }
-  
+
   /**
    * 🔴 ECUCONDOR08122023 PATTERN: WebSocket Pooling
    * Suscribirse a cambios en tiempo real de:
@@ -111,7 +123,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private subscribeToRealtimePricing(): void {
     const car = this._car();
     if (!car || !car.region_id) return;
-    
+
     // Suscribirse a TODO (exchange rates + demand + events)
     this.unsubscribeRealtime = this.realtimePricing.subscribeToAllPricingUpdates({
       onExchangeRateUpdate: () => {
@@ -134,14 +146,14 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
   private async loadDynamicPrice(): Promise<void> {
     const car = this._car();
-    
+
     console.log('🔍 [CarCard] Loading dynamic price for:', {
       carId: car?.id,
       carTitle: car?.title,
       regionId: car?.region_id,
-      staticPrice: car?.price_per_day
+      staticPrice: car?.price_per_day,
     });
-    
+
     if (!car || !car.region_id) {
       console.warn('⚠️  [CarCard] Skipping - no car or region_id');
       return;
@@ -152,20 +164,22 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
     try {
       // Get current user
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       const userId = user?.id || '00000000-0000-0000-0000-000000000000';
-      
+
       console.log('📞 [CarCard] Calling RPC directly...', {
         regionId: car.region_id,
-        userId
+        userId,
       });
-      
+
       // Call RPC directly bypassing the problematic service
       const { data, error } = await this.supabase.rpc('calculate_dynamic_price', {
         p_region_id: car.region_id,
         p_user_id: userId,
         p_rental_start: new Date().toISOString(),
-        p_rental_hours: 24
+        p_rental_hours: 24,
       });
 
       if (error) {
@@ -178,13 +192,15 @@ export class CarCardComponent implements OnInit, OnDestroy {
       if (data && data.total_price) {
         const dynamicPricePerDay = data.total_price;
         this.dynamicPrice.set(dynamicPricePerDay);
-        console.log(`💰 [CarCard] Dynamic price set: $${dynamicPricePerDay} (was $${car.price_per_day})`);
-        
+        console.log(
+          `💰 [CarCard] Dynamic price set: $${dynamicPricePerDay} (was $${car.price_per_day})`,
+        );
+
         // Set surge indicator if there's significant price change
         if (data.surge_active || dynamicPricePerDay > car.price_per_day * 1.2) {
           this.priceSurgeIcon.set('🔥');
         }
-        
+
         this.cdr.detectChanges();
       }
     } catch (error) {
@@ -260,9 +276,9 @@ export class CarCardComponent implements OnInit, OnDestroy {
   onToggleAvailability(event: Event): void {
     event.stopPropagation();
     event.preventDefault();
-    this.toggleAvailability.emit({ 
-      id: this.car.id, 
-      status: this.car.status 
+    this.toggleAvailability.emit({
+      id: this.car.id,
+      status: this.car.status,
     });
   }
 

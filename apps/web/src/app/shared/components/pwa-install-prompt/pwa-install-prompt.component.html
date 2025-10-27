@@ -3,26 +3,19 @@
     <!-- Icon -->
     <div class="prompt-icon">
       <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
       </svg>
     </div>
 
     <!-- Content -->
     <div class="prompt-text">
       <h3 class="prompt-title">Instalar Autorentar</h3>
-      <p class="prompt-description">
-        Acceso rápido desde tu pantalla de inicio. Funciona offline.
-      </p>
+      <p class="prompt-description">Acceso rápido desde tu pantalla de inicio. Funciona offline.</p>
     </div>
 
     <!-- Actions -->
     <div class="prompt-actions">
-      <button
-        class="btn-install"
-        (click)="install()"
-        [disabled]="installing()"
-        type="button"
-      >
+      <button class="btn-install" (click)="install()" [disabled]="installing()" type="button">
         @if (installing()) {
           <span class="spinner"></span>
           Instalando...
@@ -30,12 +23,7 @@
           Instalar
         }
       </button>
-      <button
-        class="btn-dismiss"
-        (click)="dismiss()"
-        [disabled]="installing()"
-        type="button"
-      >
+      <button class="btn-dismiss" (click)="dismiss()" [disabled]="installing()" type="button">
         Ahora no
       </button>
     </div>
@@ -50,7 +38,12 @@
     type="button"
   >
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"
+      />
     </svg>
   </button>
 </div>

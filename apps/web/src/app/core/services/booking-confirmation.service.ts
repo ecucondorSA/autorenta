@@ -225,14 +225,14 @@ export class BookingConfirmationService {
         if (!params.damage_amount || params.damage_amount <= 0) {
           throw this.createError(
             'INVALID_DAMAGE_AMOUNT',
-            'El monto de daños debe ser mayor a 0 cuando has_damages es true'
+            'El monto de daños debe ser mayor a 0 cuando has_damages es true',
           );
         }
 
         if (params.damage_amount > 250) {
           throw this.createError(
             'DAMAGE_AMOUNT_EXCEEDS_DEPOSIT',
-            'El monto de daños no puede exceder la garantía de $250 USD'
+            'El monto de daños no puede exceder la garantía de $250 USD',
           );
         }
       }

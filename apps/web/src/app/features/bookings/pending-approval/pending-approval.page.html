@@ -22,8 +22,8 @@
 
   <!-- Bookings List -->
   <div *ngIf="!loading() && hasBookings()" class="bookings-list">
-    <div 
-      *ngFor="let booking of pendingBookings()" 
+    <div
+      *ngFor="let booking of pendingBookings()"
       class="booking-card"
       [class.processing]="processingBookingId() === booking.booking_id"
       [class.urgent]="getUrgencyClass(booking.hours_remaining) === 'urgent'"
@@ -51,7 +51,9 @@
       <div class="booking-details">
         <div class="detail-item">
           <span class="label">Total:</span>
-          <span class="value amount">{{ booking.total_amount | number:'1.2-2' }} {{ booking.currency }}</span>
+          <span class="value amount"
+            >{{ booking.total_amount | number: '1.2-2' }} {{ booking.currency }}</span
+          >
         </div>
         <div class="detail-item">
           <span class="label">Solicitud:</span>
@@ -65,7 +67,7 @@
 
       <!-- Actions -->
       <div class="booking-actions">
-        <button 
+        <button
           class="btn-approve"
           (click)="onApprove(booking.booking_id)"
           [disabled]="processingBookingId() !== null"
@@ -76,8 +78,8 @@
             Procesando...
           </span>
         </button>
-        
-        <button 
+
+        <button
           class="btn-reject"
           (click)="onRejectClick(booking.booking_id)"
           [disabled]="processingBookingId() !== null"
@@ -85,10 +87,7 @@
           ❌ Rechazar
         </button>
 
-        <button 
-          class="btn-view"
-          (click)="navigateToBooking(booking.booking_id)"
-        >
+        <button class="btn-view" (click)="navigateToBooking(booking.booking_id)">
           👁️ Ver Detalles
         </button>
       </div>
@@ -103,7 +102,9 @@
       <ul>
         <li>Al aprobar, el pago se procesará automáticamente y la reserva quedará confirmada.</li>
         <li>Al rechazar, los fondos se liberarán y el cliente recibirá una notificación.</li>
-        <li>Si no respondes antes de que expire el tiempo, la reserva se cancelará automáticamente.</li>
+        <li>
+          Si no respondes antes de que expire el tiempo, la reserva se cancelará automáticamente.
+        </li>
       </ul>
     </div>
   </div>
@@ -116,17 +117,14 @@
       <h2>Rechazar Reserva</h2>
       <button class="close-btn" (click)="onCancelReject()">×</button>
     </div>
-    
+
     <div class="modal-body">
       <p>Selecciona la razón por la cual rechazas esta solicitud:</p>
-      
+
       <div class="reason-options">
-        <label 
-          *ngFor="let reason of rejectionReasons" 
-          class="reason-option"
-        >
-          <input 
-            type="radio" 
+        <label *ngFor="let reason of rejectionReasons" class="reason-option">
+          <input
+            type="radio"
             name="rejection-reason"
             [value]="reason.value"
             [(ngModel)]="rejectionReason"
@@ -137,23 +135,13 @@
 
       <div *ngIf="rejectionReason() === 'other'" class="custom-reason">
         <label>Especifica la razón:</label>
-        <textarea 
-          [(ngModel)]="rejectionReason"
-          placeholder="Escribe aquí..."
-          rows="3"
-        ></textarea>
+        <textarea [(ngModel)]="rejectionReason" placeholder="Escribe aquí..." rows="3"></textarea>
       </div>
     </div>
 
     <div class="modal-footer">
-      <button class="btn-secondary" (click)="onCancelReject()">
-        Cancelar
-      </button>
-      <button 
-        class="btn-danger" 
-        (click)="onConfirmReject()"
-        [disabled]="!rejectionReason()"
-      >
+      <button class="btn-secondary" (click)="onCancelReject()">Cancelar</button>
+      <button class="btn-danger" (click)="onConfirmReject()" [disabled]="!rejectionReason()">
         Confirmar Rechazo
       </button>
     </div>

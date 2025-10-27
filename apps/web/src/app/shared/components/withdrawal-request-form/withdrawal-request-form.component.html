@@ -1,36 +1,58 @@
-<div class="bg-white-pure dark:bg-anthracite border border-pearl-gray/70 dark:border-slate-deep rounded-2xl shadow-soft dark:shadow-card p-6 max-w-2xl mx-auto transition-colors duration-300">
-  <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous mb-6">Solicitar Retiro</h2>
+<div
+  class="bg-white-pure dark:bg-anthracite border border-pearl-gray/70 dark:border-slate-deep rounded-2xl shadow-soft dark:shadow-card p-6 max-w-2xl mx-auto transition-colors duration-300"
+>
+  <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous mb-6">
+    Solicitar Retiro
+  </h2>
 
   <!-- Saldo disponible -->
   <div class="mb-6 grid gap-3 md:grid-cols-2">
-    <div class="p-4 bg-accent-petrol/10 dark:bg-accent-petrol/20 rounded-xl border border-accent-petrol/20 dark:border-accent-petrol/30 transition-colors">
-      <p class="text-sm text-charcoal-medium dark:text-pearl-light/80 mb-1">Saldo total en wallet</p>
+    <div
+      class="p-4 bg-accent-petrol/10 dark:bg-accent-petrol/20 rounded-xl border border-accent-petrol/20 dark:border-accent-petrol/30 transition-colors"
+    >
+      <p class="text-sm text-charcoal-medium dark:text-pearl-light/80 mb-1">
+        Saldo total en wallet
+      </p>
       <p class="text-2xl font-bold text-accent-petrol dark:text-ivory-luminous">
-        ${{ availableBalance | number:'1.2-2' }}
+        ${{ availableBalance | number: '1.2-2' }}
       </p>
     </div>
 
-    <div class="p-4 bg-success-50 dark:bg-success-500/15 rounded-xl border border-success-500 dark:border-success-500/40 transition-colors">
+    <div
+      class="p-4 bg-success-50 dark:bg-success-500/15 rounded-xl border border-success-500 dark:border-success-500/40 transition-colors"
+    >
       <p class="text-sm text-success-900 dark:text-success-100 mb-1">Disponible para retirar</p>
       <p class="text-2xl font-bold text-success-900 dark:text-success-100">
-        ${{ withdrawableBalance | number:'1.2-2' }}
+        ${{ withdrawableBalance | number: '1.2-2' }}
       </p>
     </div>
 
     @if (nonWithdrawableBalance > 0) {
-      <div class="md:col-span-2 p-4 bg-warning-50 dark:bg-warning-500/15 border border-warning-500 dark:border-warning-500/40 rounded-xl transition-colors">
-        <p class="text-sm font-semibold text-warning-900 dark:text-warning-100">Crédito Autorentar protegido</p>
+      <div
+        class="md:col-span-2 p-4 bg-warning-50 dark:bg-warning-500/15 border border-warning-500 dark:border-warning-500/40 rounded-xl transition-colors"
+      >
+        <p class="text-sm font-semibold text-warning-900 dark:text-warning-100">
+          Crédito Autorentar protegido
+        </p>
         <p class="text-xs text-warning-900 dark:text-warning-100/80 mt-1 leading-relaxed">
-          ${{ nonWithdrawableBalance | number:'1.2-2' }} deben permanecer en tu wallet para garantizar reservas y futuras locaciones. Este saldo no es reembolsable, pero puedes usarlo para alquilar vehículos o cubrir garantías.
+          ${{ nonWithdrawableBalance | number: '1.2-2' }} deben permanecer en tu wallet para
+          garantizar reservas y futuras locaciones. Este saldo no es reembolsable, pero puedes
+          usarlo para alquilar vehículos o cubrir garantías.
         </p>
       </div>
     }
   </div>
 
   @if (accounts.length === 0) {
-    <div class="text-center py-8 bg-warning-50 dark:bg-warning-500/15 rounded-xl border border-warning-500 dark:border-warning-500/40">
-      <p class="text-warning-900 dark:text-warning-100 font-semibold">⚠️ No tienes cuentas bancarias agregadas</p>
-      <p class="text-sm text-warning-900 dark:text-warning-100 mt-1">Primero debes agregar una cuenta bancaria</p>
+    <div
+      class="text-center py-8 bg-warning-50 dark:bg-warning-500/15 rounded-xl border border-warning-500 dark:border-warning-500/40"
+    >
+      <p class="text-warning-900 dark:text-warning-100 font-semibold">
+        ⚠️ No tienes cuentas bancarias agregadas
+      </p>
+      <p class="text-sm text-warning-900 dark:text-warning-100 mt-1">
+        Primero debes agregar una cuenta bancaria
+      </p>
       <button
         (click)="onCancel()"
         class="mt-4 px-4 py-2 bg-accent-petrol text-white font-semibold rounded-xl hover:bg-accent-petrol/90 transition"
@@ -42,32 +64,44 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Seleccionar cuenta -->
       <div>
-        <label for="bank_account_id" class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light mb-2">
+        <label
+          for="bank_account_id"
+          class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light mb-2"
+        >
           Cuenta de destino *
         </label>
         <select
           id="bank_account_id"
           formControlName="bank_account_id"
           class="w-full px-4 py-3 border border-pearl-gray/70 dark:border-slate-deep rounded-xl bg-white-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
-          [class.border-red-500]="form.get('bank_account_id')?.invalid && form.get('bank_account_id')?.touched"
+          [class.border-red-500]="
+            form.get('bank_account_id')?.invalid && form.get('bank_account_id')?.touched
+          "
         >
           <option value="">Seleccionar cuenta...</option>
           @for (account of accounts; track account.id) {
             <option [value]="account.id">
               {{ getAccountLabel(account) }}
-              @if (account.is_default) { (Predeterminada) }
+              @if (account.is_default) {
+                (Predeterminada)
+              }
             </option>
           }
         </select>
         @if (getErrorMessage('bank_account_id')) {
-          <p class="mt-1 text-sm text-red-600 dark:text-red-300">{{ getErrorMessage('bank_account_id') }}</p>
+          <p class="mt-1 text-sm text-red-600 dark:text-red-300">
+            {{ getErrorMessage('bank_account_id') }}
+          </p>
         }
       </div>
 
       <!-- Monto a retirar -->
       <div>
         <div class="flex items-center justify-between mb-2">
-          <label for="amount" class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light">
+          <label
+            for="amount"
+            class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light"
+          >
             Monto a retirar *
           </label>
           <button
@@ -79,7 +113,10 @@
           </button>
         </div>
         <div class="relative">
-          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-ash-gray dark:text-pearl-light/60 font-semibold">$</span>
+          <span
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-ash-gray dark:text-pearl-light/60 font-semibold"
+            >$</span
+          >
           <input
             id="amount"
             type="number"
@@ -87,13 +124,11 @@
             placeholder="0.00"
             class="w-full pl-8 pr-4 py-3 border border-pearl-gray/70 dark:border-slate-deep rounded-xl bg-white-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
             [class.border-red-500]="form.get('amount')?.invalid && form.get('amount')?.touched"
-            min="{{MIN_AMOUNT}}"
+            min="{{ MIN_AMOUNT }}"
             step="0.01"
           />
         </div>
-        <p class="mt-1 text-sm text-ash-gray dark:text-pearl-light/70">
-          Mínimo: ${{ MIN_AMOUNT }}
-        </p>
+        <p class="mt-1 text-sm text-ash-gray dark:text-pearl-light/70">Mínimo: ${{ MIN_AMOUNT }}</p>
         @if (getErrorMessage('amount')) {
           <p class="mt-1 text-sm text-red-600 dark:text-red-300">{{ getErrorMessage('amount') }}</p>
         }
@@ -101,45 +136,60 @@
 
       <!-- Desglose de costos -->
       @if (amount() > 0) {
-        <div class="bg-sand-light/70 dark:bg-slate-deep/60 rounded-xl p-4 space-y-2 border border-pearl-gray/70 dark:border-slate-deep transition-colors">
-          <h4 class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light/80 mb-3">Desglose del retiro</h4>
+        <div
+          class="bg-sand-light/70 dark:bg-slate-deep/60 rounded-xl p-4 space-y-2 border border-pearl-gray/70 dark:border-slate-deep transition-colors"
+        >
+          <h4 class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light/80 mb-3">
+            Desglose del retiro
+          </h4>
 
           <div class="flex items-center justify-between text-sm">
             <span class="text-charcoal-medium dark:text-pearl-light/70">Monto solicitado</span>
             <span class="font-semibold text-smoke-black dark:text-ivory-luminous">
-              ${{ amount() | number:'1.2-2' }}
+              ${{ amount() | number: '1.2-2' }}
             </span>
           </div>
 
           <div class="flex items-center justify-between text-sm">
             <span class="text-charcoal-medium dark:text-pearl-light/70">Comisión (1.5%)</span>
             <span class="font-semibold text-red-600 dark:text-red-300">
-              -${{ feeAmount() | number:'1.2-2' }}
+              -${{ feeAmount() | number: '1.2-2' }}
             </span>
           </div>
 
           <div class="border-t border-gray-300 pt-2 flex items-center justify-between">
-            <span class="text-sm font-bold text-smoke-black dark:text-ivory-luminous">Recibirás en tu cuenta</span>
+            <span class="text-sm font-bold text-smoke-black dark:text-ivory-luminous"
+              >Recibirás en tu cuenta</span
+            >
             <span class="text-lg font-bold text-success-700 dark:text-success-200">
-              ${{ netAmount() | number:'1.2-2' }}
+              ${{ netAmount() | number: '1.2-2' }}
             </span>
           </div>
 
-          <div class="border-t border-gray-300 dark:border-slate-deep pt-2 flex items-center justify-between text-sm">
-            <span class="text-charcoal-medium dark:text-pearl-light/70">Se debitará de tu wallet</span>
+          <div
+            class="border-t border-gray-300 dark:border-slate-deep pt-2 flex items-center justify-between text-sm"
+          >
+            <span class="text-charcoal-medium dark:text-pearl-light/70"
+              >Se debitará de tu wallet</span
+            >
             <span class="font-semibold text-smoke-black dark:text-ivory-luminous">
-              ${{ totalDebit() | number:'1.2-2' }}
+              ${{ totalDebit() | number: '1.2-2' }}
             </span>
           </div>
 
           <!-- Advertencia de saldo insuficiente -->
           @if (!hasEnoughBalance()) {
-            <div class="mt-3 p-3 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg transition-colors">
+            <div
+              class="mt-3 p-3 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg transition-colors"
+            >
               <p class="text-sm text-error-900 dark:text-error-100">
                 ⚠️ <strong>Saldo insuficiente</strong>
               </p>
               <p class="text-xs text-error-900 dark:text-error-100 mt-1">
-                Necesitas ${{ totalDebit() | number:'1.2-2' }} pero solo tienes ${{ withdrawableBalance | number:'1.2-2' }} disponibles para retiro
+                Necesitas ${{ totalDebit() | number: '1.2-2' }} pero solo tienes ${{
+                  withdrawableBalance | number: '1.2-2'
+                }}
+                disponibles para retiro
               </p>
             </div>
           }
@@ -148,7 +198,10 @@
 
       <!-- Notas (opcional) -->
       <div>
-        <label for="user_notes" class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light mb-2">
+        <label
+          for="user_notes"
+          class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light mb-2"
+        >
           Notas (opcional)
         </label>
         <textarea
@@ -161,11 +214,15 @@
       </div>
 
       <!-- Información importante -->
-      <div class="bg-accent-petrol/5 dark:bg-accent-petrol/20 border border-accent-petrol/20 dark:border-accent-petrol/30 rounded-xl p-4 transition-colors">
+      <div
+        class="bg-accent-petrol/5 dark:bg-accent-petrol/20 border border-accent-petrol/20 dark:border-accent-petrol/30 rounded-xl p-4 transition-colors"
+      >
         <p class="text-sm text-accent-petrol dark:text-ivory-luminous">
           <strong>ℹ️ Información importante:</strong>
         </p>
-        <ul class="mt-2 text-xs text-accent-petrol/80 dark:text-pearl-light/80 space-y-1 list-disc list-inside">
+        <ul
+          class="mt-2 text-xs text-accent-petrol/80 dark:text-pearl-light/80 space-y-1 list-disc list-inside"
+        >
           <li>El retiro será procesado en 24-48 horas hábiles.</li>
           <li>La transferencia puede demorar 1-2 días hábiles adicionales según el banco.</li>
           <li>Se aplicará una comisión del 1.5% sobre el monto solicitado.</li>

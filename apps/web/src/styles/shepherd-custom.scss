@@ -16,29 +16,29 @@
 // ══════════════════════════════════════════════════════════════════════
 
 // Colores Primarios
-$shepherd-primary: #2C4A52; // accent-petrol
+$shepherd-primary: #2c4a52; // accent-petrol
 $shepherd-primary-hover: #234047; // Más oscuro para hover
-$shepherd-accent-warm: #8B7355; // accent-warm para highlights
+$shepherd-accent-warm: #8b7355; // accent-warm para highlights
 
 // Fondos Light Mode
-$shepherd-bg-light: #FFFFFF; // white-pure
-$shepherd-bg-secondary-light: #F8F6F3; // ivory-soft
+$shepherd-bg-light: #ffffff; // white-pure
+$shepherd-bg-secondary-light: #f8f6f3; // ivory-soft
 
 // Textos Light Mode
-$shepherd-text-dark: #1A1A1A; // smoke-black
-$shepherd-text-medium: #4B4B4B; // charcoal-medium
-$shepherd-text-light: #8E8E8E; // ash-gray
+$shepherd-text-dark: #1a1a1a; // smoke-black
+$shepherd-text-medium: #4b4b4b; // charcoal-medium
+$shepherd-text-light: #8e8e8e; // ash-gray
 
 // Bordes
-$shepherd-border-light: #D9D6D0; // pearl-gray
+$shepherd-border-light: #d9d6d0; // pearl-gray
 
 // Fondos Dark Mode
-$shepherd-bg-dark: #1E1E1E; // anthracite
-$shepherd-bg-secondary-dark: #2A2A2A; // slate-deep
+$shepherd-bg-dark: #1e1e1e; // anthracite
+$shepherd-bg-secondary-dark: #2a2a2a; // slate-deep
 
 // Textos Dark Mode
-$shepherd-text-dark-mode: #FAF9F6; // ivory-luminous
-$shepherd-text-secondary-dark: #E5E3DD; // pearl-light
+$shepherd-text-dark-mode: #faf9f6; // ivory-luminous
+$shepherd-text-secondary-dark: #e5e3dd; // pearl-light
 
 // Sombras Premium
 $shepherd-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -64,7 +64,12 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
   box-shadow: $shepherd-shadow-elevated;
   max-width: 400px;
   z-index: 10000;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
 
   @media (max-width: 768px) {
     max-width: 92vw;
@@ -337,14 +342,14 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
       color: $shepherd-text-secondary-dark;
 
       strong {
-        color: #4A6C76; // Lighter petrol for dark mode
+        color: #4a6c76; // Lighter petrol for dark mode
       }
     }
 
     .tour-tip {
       background: $shepherd-bg-secondary-dark;
       color: $shepherd-text-secondary-dark;
-      border-left-color: #A89782; // Lighter warm accent
+      border-left-color: #a89782; // Lighter warm accent
     }
   }
 
@@ -355,8 +360,8 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
 
     &:hover {
       background: $shepherd-bg-secondary-dark;
-      border-color: #4A6C76; // Lighter petrol
-      color: #4A6C76;
+      border-color: #4a6c76; // Lighter petrol
+      color: #4a6c76;
     }
   }
 
@@ -365,7 +370,7 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
     color: $shepherd-text-secondary-dark;
 
     &:hover {
-      background: #3A3A3A;
+      background: #3a3a3a;
       color: $shepherd-text-dark-mode;
     }
   }
@@ -382,7 +387,7 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
     background: $shepherd-bg-secondary-dark;
 
     &.active {
-      background: #4A6C76; // Lighter petrol
+      background: #4a6c76; // Lighter petrol
     }
   }
 }
@@ -404,14 +409,14 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
       color: $shepherd-text-secondary-dark;
 
       strong {
-        color: #4A6C76; // Lighter petrol for dark mode
+        color: #4a6c76; // Lighter petrol for dark mode
       }
     }
 
     .tour-tip {
       background: $shepherd-bg-secondary-dark;
       color: $shepherd-text-secondary-dark;
-      border-left-color: #A89782; // Lighter warm accent
+      border-left-color: #a89782; // Lighter warm accent
     }
   }
 
@@ -422,8 +427,8 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
 
     &:hover {
       background: $shepherd-bg-secondary-dark;
-      border-color: #4A6C76; // Lighter petrol
-      color: #4A6C76;
+      border-color: #4a6c76; // Lighter petrol
+      color: #4a6c76;
     }
   }
 
@@ -432,7 +437,7 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
     color: $shepherd-text-secondary-dark;
 
     &:hover {
-      background: #3A3A3A;
+      background: #3a3a3a;
       color: $shepherd-text-dark-mode;
     }
   }
@@ -449,7 +454,7 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
     background: $shepherd-bg-secondary-dark;
 
     &.active {
-      background: #4A6C76; // Lighter petrol
+      background: #4a6c76; // Lighter petrol
     }
   }
 }

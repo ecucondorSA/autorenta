@@ -9,20 +9,30 @@
 
   <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
     <!-- Sección 1: Información Básica -->
-    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
-      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">📝 Información Básica</h2>
+    <section
+      class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300"
+    >
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+        📝 Información Básica
+      </h2>
       <div class="grid gap-4 md:grid-cols-2">
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Título del anuncio
           <input
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
             formControlName="title"
             placeholder="Ej: Toyota Corolla 2023 - Impecable, bajo kilometraje"
           />
-          <span class="text-xs text-ash-gray dark:text-neutral-400">Mínimo 10 caracteres, describe tu auto</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400"
+            >Mínimo 10 caracteres, describe tu auto</span
+          >
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2"
+        >
           Descripción
           <textarea
             class="min-h-[100px] rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -35,10 +45,16 @@
     </section>
 
     <!-- Sección 2: Marca y Modelo -->
-    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
-      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">🚗 Marca y Modelo</h2>
+    <section
+      class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300"
+    >
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+        🚗 Marca y Modelo
+      </h2>
       <div class="grid gap-4 md:grid-cols-3">
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Marca
           <select
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -50,7 +66,9 @@
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Modelo
           <select
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -59,12 +77,17 @@
           >
             <option value="">Selecciona un modelo</option>
             <option *ngFor="let model of models()" [value]="model.id">
-              {{ model.name }} <span class="text-xs text-ash-gray dark:text-neutral-400">({{ model.category }})</span>
+              {{ model.name }}
+              <span class="text-xs text-ash-gray dark:text-neutral-400"
+                >({{ model.category }})</span
+              >
             </option>
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Año
           <input
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -78,10 +101,16 @@
     </section>
 
     <!-- Sección 3: Especificaciones Técnicas -->
-    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
-      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">⚙️ Especificaciones</h2>
+    <section
+      class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300"
+    >
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+        ⚙️ Especificaciones
+      </h2>
       <div class="grid gap-4 md:grid-cols-4">
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Asientos
           <input
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -92,7 +121,9 @@
           />
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Puertas
           <input
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -103,7 +134,9 @@
           />
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Transmisión
           <select
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -114,7 +147,9 @@
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Combustible
           <select
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -127,7 +162,9 @@
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2"
+        >
           Kilometraje
           <input
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -135,16 +172,25 @@
             formControlName="mileage"
             placeholder="0"
           />
-          <span class="text-xs text-ash-gray dark:text-neutral-400">Kilometraje actual del vehículo</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400"
+            >Kilometraje actual del vehículo</span
+          >
         </label>
       </div>
     </section>
 
     <!-- Sección 4: Precio y Condiciones -->
-    <section id="pricing-section" class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
-      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">💵 Precio y Condiciones</h2>
+    <section
+      id="pricing-section"
+      class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300"
+    >
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+        💵 Precio y Condiciones
+      </h2>
       <div class="grid gap-4 md:grid-cols-3">
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Precio por día (USD)
           <input
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -156,7 +202,9 @@
           <span class="text-xs text-ash-gray dark:text-neutral-400">Precio diario en dólares</span>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2"
+        >
           Valor del vehículo (USD)
           <div class="flex flex-col gap-2 md:flex-row md:items-center">
             <input
@@ -178,14 +226,17 @@
           </div>
           <span class="text-xs text-ash-gray dark:text-neutral-400">
             @if (suggestedVehicleValueUsd(); as suggestion) {
-              Valor sugerido: {{ suggestion | number: '1.0-0' }} USD (precio diario × {{ valuationAverageDays }} días)
+              Valor sugerido: {{ suggestion | number: '1.0-0' }} USD (precio diario ×
+              {{ valuationAverageDays }} días)
             } @else {
               Indicá el valor estimado del vehículo en dólares
             }
           </span>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Mínimo de días
           <input
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -196,7 +247,9 @@
           <span class="text-xs text-ash-gray dark:text-neutral-400">Mínimo días de alquiler</span>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+        <label
+          class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+        >
           Máximo de días
           <input
             class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -215,7 +268,9 @@
               formControlName="deposit_required"
               class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">¿Requiere depósito de garantía?</span>
+            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+              >¿Requiere depósito de garantía?</span
+            >
           </label>
         </div>
 
@@ -231,7 +286,9 @@
             min="50"
             placeholder="200"
           />
-          <span class="text-xs text-ash-gray dark:text-neutral-400">Monto mínimo recomendado: $200 USD</span>
+          <span class="text-xs text-ash-gray dark:text-neutral-400"
+            >Monto mínimo recomendado: $200 USD</span
+          >
         </label>
 
         <div id="insurance-selector" class="md:col-span-3">
@@ -250,7 +307,9 @@
 
       <!-- Formas de pago -->
       <div class="mt-6 border-t border-pearl-gray/70 dark:border-slate-deep pt-6">
-        <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Formas de pago aceptadas</h3>
+        <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-ivory-luminous">
+          Formas de pago aceptadas
+        </h3>
         <div class="grid gap-3 md:grid-cols-3">
           <label class="flex items-center gap-2 cursor-pointer">
             <input
@@ -284,7 +343,9 @@
 
       <!-- Opciones de entrega -->
       <div class="mt-6 border-t border-pearl-gray/70 dark:border-slate-deep pt-6">
-        <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Opciones de entrega</h3>
+        <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-ivory-luminous">
+          Opciones de entrega
+        </h3>
         <div class="grid gap-3 md:grid-cols-2">
           <label class="flex items-center gap-2 cursor-pointer">
             <input
@@ -293,7 +354,9 @@
               (change)="toggleDeliveryOption('pickup')"
               class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">Retiro en ubicación</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light"
+              >Retiro en ubicación</span
+            >
           </label>
           <label class="flex items-center gap-2 cursor-pointer">
             <input
@@ -302,15 +365,21 @@
               (change)="toggleDeliveryOption('delivery')"
               class="h-4 w-4 rounded border-pearl-gray dark:border-slate-deep text-accent-petrol focus:ring-2 focus:ring-accent-petrol/30 dark:focus:ring-accent-petrol/40"
             />
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">Entrega a domicilio (costo adicional)</span>
+            <span class="text-sm text-charcoal-medium dark:text-pearl-light"
+              >Entrega a domicilio (costo adicional)</span
+            >
           </label>
         </div>
       </div>
     </section>
 
     <!-- Sección 5: Ubicación -->
-    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
-      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">📍 Ubicación</h2>
+    <section
+      class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300"
+    >
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+        📍 Ubicación
+      </h2>
       <p class="mb-4 text-sm text-charcoal-medium dark:text-pearl-light/80">
         Ingresá la dirección exacta donde se retirará el auto. Las coordenadas se calcularán
         automáticamente.
@@ -319,7 +388,9 @@
       <div class="grid gap-4">
         <!-- Dirección -->
         <div class="grid gap-4 md:grid-cols-3">
-          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2">
+          <label
+            class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2"
+          >
             Calle
             <input
               class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -328,7 +399,9 @@
             />
           </label>
 
-          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+          <label
+            class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+          >
             Número
             <input
               class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -340,7 +413,9 @@
 
         <!-- Ciudad y barrio -->
         <div class="grid gap-4 md:grid-cols-3">
-          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+          <label
+            class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+          >
             Ciudad
             <input
               class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -349,7 +424,9 @@
             />
           </label>
 
-          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+          <label
+            class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+          >
             Barrio (opcional)
             <input
               class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -358,7 +435,9 @@
             />
           </label>
 
-          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+          <label
+            class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+          >
             Código Postal (opcional)
             <input
               class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -370,7 +449,9 @@
 
         <!-- Departamento y país -->
         <div class="grid gap-4 md:grid-cols-2">
-          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+          <label
+            class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+          >
             Departamento
             <input
               class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
@@ -379,7 +460,9 @@
             />
           </label>
 
-          <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+          <label
+            class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+          >
             País
             <input
               class="rounded-lg border border-pearl-gray dark:border-slate-deep bg-sand-light dark:bg-graphite-dark/50 px-3 py-2 text-smoke-black dark:text-ivory-luminous"
@@ -389,7 +472,9 @@
           </label>
         </div>
 
-        <div class="rounded-lg bg-accent-petrol/10 dark:bg-accent-petrol/20 border border-accent-petrol/30 dark:border-accent-petrol/40 p-3">
+        <div
+          class="rounded-lg bg-accent-petrol/10 dark:bg-accent-petrol/20 border border-accent-petrol/30 dark:border-accent-petrol/40 p-3"
+        >
           <p class="text-xs text-accent-petrol dark:text-accent-petrol/90">
             💡 <strong>Nota:</strong> La dirección se geocodificará automáticamente al publicar el
             auto para mostrarlo en el mapa.
@@ -399,8 +484,13 @@
     </section>
 
     <!-- Sección 6: Fotos -->
-    <section id="photo-uploader" class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
-      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">📸 Fotos del Auto</h2>
+    <section
+      id="photo-uploader"
+      class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300"
+    >
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+        📸 Fotos del Auto
+      </h2>
       <app-upload-image (filesSelected)="onFilesSelected($event)"></app-upload-image>
       <p class="mt-3 text-xs text-charcoal-medium dark:text-pearl-light/80">
         Podés subir múltiples fotos. La primera será la foto principal. Se recomienda fotos de buena
@@ -409,9 +499,15 @@
     </section>
 
     <!-- Sección 7: Términos (Opcional) -->
-    <section class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300">
-      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">📄 Términos Adicionales (Opcional)</h2>
-      <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
+    <section
+      class="rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-white-pure dark:bg-anthracite p-6 shadow-soft dark:shadow-card transition-colors duration-300"
+    >
+      <h2 class="mb-4 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+        📄 Términos Adicionales (Opcional)
+      </h2>
+      <label
+        class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light"
+      >
         <textarea
           class="min-h-[100px] rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
           formControlName="terms_and_conditions"
@@ -424,9 +520,13 @@
     </section>
 
     <!-- Botón de envío -->
-    <div class="flex items-center gap-4 rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-sand-light dark:bg-graphite-dark p-6 transition-colors duration-300">
+    <div
+      class="flex items-center gap-4 rounded-xl border border-pearl-gray/70 dark:border-slate-deep bg-sand-light dark:bg-graphite-dark p-6 transition-colors duration-300"
+    >
       <div class="flex-1">
-        <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous">¿Listo para publicar?</p>
+        <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous">
+          ¿Listo para publicar?
+        </p>
         <p class="text-xs text-charcoal-medium dark:text-pearl-light/80">
           Tu anuncio será revisado por el equipo antes de publicarse.
         </p>

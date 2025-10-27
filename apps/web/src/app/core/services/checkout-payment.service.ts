@@ -68,7 +68,7 @@ export class CheckoutPaymentService {
   processWalletPayment(
     bookingId: string,
     totalCents: number,
-    securityCreditCents: number
+    securityCreditCents: number,
   ): Observable<PaymentResult> {
     const transaction: PaymentTransaction = {
       fundsLocked: false,
@@ -81,13 +81,13 @@ export class CheckoutPaymentService {
 
     return from(this.getWalletBalance()).pipe(
       // Paso 1: Validar balance
-      switchMap(balance => {
+      switchMap((balance) => {
         if (balance < totalRequired) {
           return throwError(
             () =>
               new Error(
-                `Balance insuficiente. Requerido: $${(totalRequired / 100).toFixed(2)}, Disponible: $${(balance / 100).toFixed(2)}`
-              )
+                `Balance insuficiente. Requerido: $${(totalRequired / 100).toFixed(2)}, Disponible: $${(balance / 100).toFixed(2)}`,
+              ),
           );
         }
         return of(balance);
@@ -105,7 +105,7 @@ export class CheckoutPaymentService {
         this.bookingsService.updateBooking(bookingId, {
           status: 'confirmed',
           payment_method: 'wallet',
-        })
+        }),
       ),
       tap(() => {
         transaction.bookingUpdated = true;
@@ -113,14 +113,16 @@ export class CheckoutPaymentService {
 
       // Paso 4: Crear payment intent
       switchMap(() =>
-        from(this.paymentsService.createPaymentIntentWithDetails({
-          booking_id: bookingId,
-          payment_method: 'wallet',
-          amount_cents: totalRequired,
-          status: 'succeeded',
-        }))
+        from(
+          this.paymentsService.createPaymentIntentWithDetails({
+            booking_id: bookingId,
+            payment_method: 'wallet',
+            amount_cents: totalRequired,
+            status: 'succeeded',
+          }),
+        ),
       ),
-      tap(intent => {
+      tap((intent) => {
         transaction.intentCreated = true;
         transaction.intentId = intent.id;
       }),
@@ -133,19 +135,19 @@ export class CheckoutPaymentService {
       })),
 
       // Manejo de errores con rollback
-      catchError(err => {
+      catchError((err) => {
         console.error('Error in wallet payment, rolling back:', err);
         return from(this.rollbackTransaction(bookingId, transaction)).pipe(
           switchMap(() =>
             throwError(
               () =>
                 new Error(
-                  `Error al procesar el pago: ${err.message}. Se han revertido los cambios.`
-                )
-            )
-          )
+                  `Error al procesar el pago: ${err.message}. Se han revertido los cambios.`,
+                ),
+            ),
+          ),
         );
-      })
+      }),
     );
   }
 
@@ -166,35 +168,35 @@ export class CheckoutPaymentService {
       intentCreated: false,
     };
 
-    return from(this.bookingsService
-      .updateBooking(bookingId, {
+    return from(
+      this.bookingsService.updateBooking(bookingId, {
         status: 'pending_payment',
         payment_method: 'credit_card',
-      }))
-      .pipe(
-        tap(() => {
-          transaction.bookingUpdated = true;
-        }),
+      }),
+    ).pipe(
+      tap(() => {
+        transaction.bookingUpdated = true;
+      }),
 
-        // Crear preferencia en MercadoPago
-        switchMap(() => this.mpGateway.createBookingPreference(bookingId)),
+      // Crear preferencia en MercadoPago
+      switchMap(() => this.mpGateway.createBookingPreference(bookingId)),
 
-        // Éxito
-        map((preference: { init_point: string }) => ({
-          success: true,
-          bookingId,
-          mercadoPagoInitPoint: preference.init_point,
-          message: 'Preferencia creada. Redirigiendo a MercadoPago...',
-        })),
+      // Éxito
+      map((preference: { init_point: string }) => ({
+        success: true,
+        bookingId,
+        mercadoPagoInitPoint: preference.init_point,
+        message: 'Preferencia creada. Redirigiendo a MercadoPago...',
+      })),
 
-        // Manejo de errores
-        catchError(err => {
-          console.error('Error in credit card payment, rolling back:', err);
-          return from(this.rollbackTransaction(bookingId, transaction)).pipe(
-            switchMap(() => throwError(() => new Error(err.message || 'Error al procesar el pago')))
-          );
-        })
-      );
+      // Manejo de errores
+      catchError((err) => {
+        console.error('Error in credit card payment, rolling back:', err);
+        return from(this.rollbackTransaction(bookingId, transaction)).pipe(
+          switchMap(() => throwError(() => new Error(err.message || 'Error al procesar el pago'))),
+        );
+      }),
+    );
   }
 
   /**
@@ -210,7 +212,7 @@ export class CheckoutPaymentService {
   processPartialWalletPayment(
     bookingId: string,
     totalCents: number,
-    securityCreditCents: number
+    securityCreditCents: number,
   ): Observable<PaymentResult> {
     const transaction: PaymentTransaction = {
       fundsLocked: false,
@@ -224,13 +226,13 @@ export class CheckoutPaymentService {
 
     return from(this.getWalletBalance()).pipe(
       // Paso 1: Validar balance
-      switchMap(balance => {
+      switchMap((balance) => {
         if (balance < totalRequired) {
           return throwError(
             () =>
               new Error(
-                `Balance insuficiente para pago parcial. Requerido: $${(totalRequired / 100).toFixed(2)}`
-              )
+                `Balance insuficiente para pago parcial. Requerido: $${(totalRequired / 100).toFixed(2)}`,
+              ),
           );
         }
         return of(balance);
@@ -248,7 +250,7 @@ export class CheckoutPaymentService {
         this.bookingsService.updateBooking(bookingId, {
           status: 'pending_payment',
           payment_method: 'partial_wallet',
-        })
+        }),
       ),
       tap(() => {
         transaction.bookingUpdated = true;
@@ -266,12 +268,12 @@ export class CheckoutPaymentService {
       })),
 
       // Manejo de errores
-      catchError(err => {
+      catchError((err) => {
         console.error('Error in partial wallet payment, rolling back:', err);
         return from(this.rollbackTransaction(bookingId, transaction)).pipe(
-          switchMap(() => throwError(() => new Error(err.message || 'Error al procesar el pago')))
+          switchMap(() => throwError(() => new Error(err.message || 'Error al procesar el pago'))),
         );
-      })
+      }),
     );
   }
 
@@ -342,7 +344,7 @@ export class CheckoutPaymentService {
    */
   private async rollbackTransaction(
     bookingId: string,
-    transaction: PaymentTransaction
+    transaction: PaymentTransaction,
   ): Promise<void> {
     console.log('🔄 Rolling back transaction:', transaction);
 

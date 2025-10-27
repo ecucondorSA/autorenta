@@ -7,7 +7,9 @@
 
   <!-- Loading State -->
   <div *ngIf="isLoadingBalance()" class="py-8 text-center">
-    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+    <div
+      class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"
+    ></div>
     <p class="text-sm text-gray-600 mt-2">Cargando información del wallet...</p>
   </div>
 
@@ -20,27 +22,44 @@
       [class.bg-blue-50]="selectedMethod() === 'credit_card'"
       [class.border-gray-200]="selectedMethod() !== 'credit_card'"
       [class.hover:border-gray-300]="selectedMethod() !== 'credit_card'"
-      (click)="selectMethod('credit_card')">
+      (click)="selectMethod('credit_card')"
+    >
       <div class="flex items-start">
         <input
           type="radio"
           name="paymentMethod"
           value="credit_card"
           [checked]="selectedMethod() === 'credit_card'"
-          class="mt-1 mr-3 text-blue-600 focus:ring-blue-500" />
+          class="mt-1 mr-3 text-blue-600 focus:ring-blue-500"
+        />
         <div class="flex-1">
           <div class="flex items-center justify-between mb-1">
             <span class="font-medium text-gray-900">Tarjeta de Crédito/Débito</span>
-            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+            <svg
+              class="w-5 h-5 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+              ></path>
             </svg>
           </div>
           <p class="text-sm text-gray-600">Paga con Mercado Pago</p>
           <div class="mt-2 flex items-center gap-2">
             <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded">Mercado Pago</span>
-            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded">Todas las tarjetas</span>
+            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded"
+              >Todas las tarjetas</span
+            >
           </div>
-          <div *ngIf="selectedMethod() === 'credit_card'" class="mt-3 p-3 bg-white rounded border border-blue-200">
+          <div
+            *ngIf="selectedMethod() === 'credit_card'"
+            class="mt-3 p-3 bg-white rounded border border-blue-200"
+          >
             <p class="text-sm font-medium text-gray-900">Total a pagar:</p>
             <p class="text-2xl font-bold text-blue-700">{{ formatCurrency(totalAmount) }}</p>
           </div>
@@ -56,26 +75,45 @@
       [class.bg-green-50]="selectedMethod() === 'wallet'"
       [class.border-gray-200]="selectedMethod() !== 'wallet'"
       [class.hover:border-gray-300]="selectedMethod() !== 'wallet'"
-      (click)="selectMethod('wallet')">
+      (click)="selectMethod('wallet')"
+    >
       <div class="flex items-start">
         <input
           type="radio"
           name="paymentMethod"
           value="wallet"
           [checked]="selectedMethod() === 'wallet'"
-          class="mt-1 mr-3 text-green-600 focus:ring-green-500" />
+          class="mt-1 mr-3 text-green-600 focus:ring-green-500"
+        />
         <div class="flex-1">
           <div class="flex items-center justify-between mb-1">
             <span class="font-medium text-gray-900">Pagar con Wallet</span>
-            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            <svg
+              class="w-5 h-5 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+              ></path>
             </svg>
           </div>
           <p class="text-sm text-gray-600">Usa tu saldo disponible</p>
           <div class="mt-2 flex items-center gap-2">
-            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded flex items-center gap-1">
+            <span
+              class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded flex items-center gap-1"
+            >
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
               </svg>
               Fondos suficientes
             </span>
@@ -85,15 +123,21 @@
             <div class="p-3 bg-white rounded border border-green-200">
               <div class="flex justify-between items-center">
                 <span class="text-sm text-gray-600">Balance disponible:</span>
-                <span class="text-sm font-medium text-gray-900">{{ formatCurrency(availableBalance()) }}</span>
+                <span class="text-sm font-medium text-gray-900">{{
+                  formatCurrency(availableBalance())
+                }}</span>
               </div>
               <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
                 <span class="text-sm font-medium text-gray-900">Se usará del wallet:</span>
-                <span class="text-2xl font-bold text-green-700">{{ formatCurrency(totalAmount) }}</span>
+                <span class="text-2xl font-bold text-green-700">{{
+                  formatCurrency(totalAmount)
+                }}</span>
               </div>
               <div class="flex justify-between items-center mt-1">
                 <span class="text-sm text-gray-600">Balance restante:</span>
-                <span class="text-sm font-medium text-gray-900">{{ formatCurrency(availableBalance() - totalAmount) }}</span>
+                <span class="text-sm font-medium text-gray-900">{{
+                  formatCurrency(availableBalance() - totalAmount)
+                }}</span>
               </div>
             </div>
           </div>
@@ -109,30 +153,54 @@
       [class.bg-purple-50]="selectedMethod() === 'partial_wallet'"
       [class.border-gray-200]="selectedMethod() !== 'partial_wallet'"
       [class.hover:border-gray-300]="selectedMethod() !== 'partial_wallet'"
-      (click)="selectMethod('partial_wallet')">
+      (click)="selectMethod('partial_wallet')"
+    >
       <div class="flex items-start">
         <input
           type="radio"
           name="paymentMethod"
           value="partial_wallet"
           [checked]="selectedMethod() === 'partial_wallet'"
-          class="mt-1 mr-3 text-purple-600 focus:ring-purple-500" />
+          class="mt-1 mr-3 text-purple-600 focus:ring-purple-500"
+        />
         <div class="flex-1">
           <div class="flex items-center justify-between mb-1">
             <span class="font-medium text-gray-900">Pago Mixto</span>
             <div class="flex items-center gap-1">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              <svg
+                class="w-5 h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                ></path>
               </svg>
               <span class="text-gray-400">+</span>
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+              <svg
+                class="w-5 h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                ></path>
               </svg>
             </div>
           </div>
           <p class="text-sm text-gray-600">Combina wallet y tarjeta</p>
           <div class="mt-2">
-            <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded">Optimiza tu saldo</span>
+            <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded"
+              >Optimiza tu saldo</span
+            >
           </div>
 
           <!-- Wallet Amount Adjuster (only when selected) -->
@@ -152,12 +220,14 @@
                     [min]="0"
                     [max]="Math.min(availableBalance(), totalAmount)"
                     step="10"
-                    class="pl-8 pr-3 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                    class="pl-8 pr-3 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
                 </div>
                 <button
                   type="button"
                   (click)="useMaxWallet()"
-                  class="px-3 py-2 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap">
+                  class="px-3 py-2 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap"
+                >
                   Usar Máximo
                 </button>
               </div>
@@ -165,7 +235,8 @@
                 <div class="flex-1 bg-gray-200 rounded-full h-2">
                   <div
                     class="bg-purple-600 h-2 rounded-full transition-all"
-                    [style.width.%]="walletPercentage()"></div>
+                    [style.width.%]="walletPercentage()"
+                  ></div>
                 </div>
                 <span class="ml-2 text-xs text-gray-600">{{ walletPercentage() }}%</span>
               </div>
@@ -178,15 +249,21 @@
             <div class="p-3 bg-white rounded border border-purple-200 space-y-2">
               <div class="flex justify-between items-center">
                 <span class="text-sm text-gray-600">Del wallet:</span>
-                <span class="text-sm font-medium text-purple-700">{{ formatCurrency(walletAmountToUse()) }}</span>
+                <span class="text-sm font-medium text-purple-700">{{
+                  formatCurrency(walletAmountToUse())
+                }}</span>
               </div>
               <div class="flex justify-between items-center">
                 <span class="text-sm text-gray-600">Con tarjeta:</span>
-                <span class="text-sm font-medium text-blue-700">{{ formatCurrency(cardAmount()) }}</span>
+                <span class="text-sm font-medium text-blue-700">{{
+                  formatCurrency(cardAmount())
+                }}</span>
               </div>
               <div class="flex justify-between items-center pt-2 border-t border-gray-200">
                 <span class="text-sm font-medium text-gray-900">Total:</span>
-                <span class="text-lg font-bold text-gray-900">{{ formatCurrency(totalAmount) }}</span>
+                <span class="text-lg font-bold text-gray-900">{{
+                  formatCurrency(totalAmount)
+                }}</span>
               </div>
             </div>
           </div>
@@ -195,10 +272,23 @@
     </div>
 
     <!-- No Funds Warning (only if no wallet funds) -->
-    <div *ngIf="!hasSufficientFunds() && !hasPartialFunds()" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+    <div
+      *ngIf="!hasSufficientFunds() && !hasPartialFunds()"
+      class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+    >
       <div class="flex items-start">
-        <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <svg
+          class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
         </svg>
         <div class="ml-3">
           <h4 class="text-sm font-medium text-blue-900">Sin saldo en wallet</h4>

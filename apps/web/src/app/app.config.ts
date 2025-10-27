@@ -1,4 +1,10 @@
-import { ApplicationConfig, LOCALE_ID, importProvidersFrom, isDevMode, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  LOCALE_ID,
+  importProvidersFrom,
+  isDevMode,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -25,9 +31,7 @@ export const appConfig: ApplicationConfig = {
     }),
     SupabaseClientService.forRoot(),
     { provide: LOCALE_ID, useValue: 'es-AR' },
-    importProvidersFrom(
-      TranslateModule.forRoot()
-    ),
+    importProvidersFrom(TranslateModule.forRoot()),
     provideTranslateHttpLoader({
       prefix: '/assets/i18n/',
       suffix: '.json',

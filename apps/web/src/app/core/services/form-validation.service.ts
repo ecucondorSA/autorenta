@@ -19,7 +19,7 @@ export class FormValidationService {
   getErrorMessage(
     control: AbstractControl | null,
     fieldName?: string,
-    customMessages?: Partial<Record<string, string>>
+    customMessages?: Partial<Record<string, string>>,
   ): string {
     if (!control || !control.touched || !control.errors) {
       return '';
@@ -81,7 +81,7 @@ export class FormValidationService {
   getFieldError(
     form: { get: (name: string) => AbstractControl | null },
     fieldName: string,
-    customMessages?: Partial<Record<string, string>>
+    customMessages?: Partial<Record<string, string>>,
   ): string {
     const control = form.get(fieldName);
     return this.getErrorMessage(control, fieldName, customMessages);

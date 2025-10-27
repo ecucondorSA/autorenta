@@ -4,9 +4,9 @@ import { injectSupabase } from './supabase-client.service';
 
 /**
  * 🔄 REAL-TIME PRICING SERVICE (ECUCONDOR08122023 Pattern)
- * 
+ *
  * Sistema de precios dinámicos con WebSocket pooling usando Supabase Realtime
- * 
+ *
  * Features:
  * - 🔴 WebSocket subscription a exchange_rates (tasas de Binance)
  * - 🔴 WebSocket subscription a pricing_demand_snapshots (demanda)
@@ -14,12 +14,12 @@ import { injectSupabase } from './supabase-client.service';
  * - ⚡ Updates instantáneos sin polling
  * - 🎯 Signal-based reactivity
  * - 🧹 Auto-cleanup on destroy
- * 
+ *
  * Uso:
  * ```typescript
  * // En componente
  * private realtimePricing = inject(RealtimePricingService);
- * 
+ *
  * ngOnInit() {
  *   // Suscribirse a updates
  *   this.realtimePricing.subscribeToExchangeRates(() => {
@@ -122,7 +122,7 @@ export class RealtimePricingService {
             this.latestExchangeRate.set(payload.new as ExchangeRateUpdate);
             onChange?.();
           }
-        }
+        },
       )
       .subscribe((status) => {
         console.log('💱 Exchange rates channel status:', status);
@@ -162,9 +162,9 @@ export class RealtimePricingService {
 
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
             const snapshot = payload.new as DemandSnapshot;
-            
+
             // Actualizar map de demanda por región
-            this.demandByRegion.update(map => {
+            this.demandByRegion.update((map) => {
               const newMap = new Map(map);
               newMap.set(snapshot.region_id, snapshot);
               return newMap;
@@ -172,7 +172,7 @@ export class RealtimePricingService {
 
             onChange?.(snapshot.region_id);
           }
-        }
+        },
       )
       .subscribe((status) => {
         console.log('📈 Demand channel status:', status);
@@ -210,7 +210,7 @@ export class RealtimePricingService {
           // Recargar todos los eventos activos
           void this.loadActiveEvents();
           onChange?.();
-        }
+        },
       )
       .subscribe((status) => {
         console.log('🎉 Events channel status:', status);
@@ -266,7 +266,7 @@ export class RealtimePricingService {
    * 🎉 Obtener eventos activos para una región
    */
   getActiveEventsForRegion(regionId: string): SpecialEvent[] {
-    return this.activeEvents().filter(e => e.region_id === regionId);
+    return this.activeEvents().filter((e) => e.region_id === regionId);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -304,7 +304,7 @@ export class RealtimePricingService {
       if (data) {
         // Agrupar por región (mantener solo el más reciente)
         const snapshotsByRegion = new Map<string, DemandSnapshot>();
-        (data as DemandSnapshot[]).forEach(snapshot => {
+        (data as DemandSnapshot[]).forEach((snapshot) => {
           if (!snapshotsByRegion.has(snapshot.region_id)) {
             snapshotsByRegion.set(snapshot.region_id, snapshot);
           }

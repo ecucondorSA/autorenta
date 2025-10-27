@@ -59,10 +59,7 @@ export class UserBadgesComponent {
     }
 
     // Trusted Driver badge (based on renter stats)
-    if (
-      this.userStats.renter_reviews_count >= 10 &&
-      this.userStats.renter_rating_avg >= 4.8
-    ) {
+    if (this.userStats.renter_reviews_count >= 10 && this.userStats.renter_rating_avg >= 4.8) {
       badges.push({
         type: 'trusted_driver',
         label: 'Trusted Driver',

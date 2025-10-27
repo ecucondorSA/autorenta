@@ -27,7 +27,7 @@ interface PendingApproval {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './pending-approval.page.html',
-  styleUrl: './pending-approval.page.scss'
+  styleUrl: './pending-approval.page.scss',
 })
 export class PendingApprovalPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
@@ -40,19 +40,19 @@ export class PendingApprovalPage implements OnInit {
   readonly showRejectModal = signal(false);
   readonly selectedBookingId = signal<string | null>(null);
   readonly rejectionReason = signal('');
-  
+
   readonly hasBookings = computed(() => this.pendingBookings().length > 0);
-  
+
   readonly rejectionReasons = [
     { value: 'dates_not_available', label: 'Fechas no disponibles' },
     { value: 'maintenance_required', label: 'Auto requiere mantenimiento' },
     { value: 'requirements_not_met', label: 'No cumple requisitos' },
-    { value: 'other', label: 'Otra razón' }
+    { value: 'other', label: 'Otra razón' },
   ];
 
   async ngOnInit() {
     await this.loadPendingApprovals();
-    
+
     // Auto-refresh cada 30 segundos
     setInterval(() => {
       if (!this.processingBookingId()) {
@@ -76,15 +76,17 @@ export class PendingApprovalPage implements OnInit {
 
   async onApprove(bookingId: string) {
     if (this.processingBookingId()) return;
-    
-    const confirmed = confirm('¿Estás seguro de aprobar esta reserva? El pago se procesará y la reserva quedará confirmada.');
+
+    const confirmed = confirm(
+      '¿Estás seguro de aprobar esta reserva? El pago se procesará y la reserva quedará confirmada.',
+    );
     if (!confirmed) return;
 
     this.processingBookingId.set(bookingId);
-    
+
     try {
       const result = await this.bookingsService.approveBooking(bookingId);
-      
+
       if (result.success) {
         this.toastService.success('✅ Reserva aprobada exitosamente');
         await this.loadPendingApprovals();
@@ -108,7 +110,7 @@ export class PendingApprovalPage implements OnInit {
   async onConfirmReject() {
     const bookingId = this.selectedBookingId();
     const reason = this.rejectionReason();
-    
+
     if (!bookingId || !reason) {
       this.toastService.warning('Por favor selecciona una razón');
       return;
@@ -116,10 +118,10 @@ export class PendingApprovalPage implements OnInit {
 
     this.processingBookingId.set(bookingId);
     this.showRejectModal.set(false);
-    
+
     try {
       const result = await this.bookingsService.rejectBooking(bookingId, reason);
-      
+
       if (result.success) {
         this.toastService.success('✅ Reserva rechazada. Se notificará al cliente.');
         await this.loadPendingApprovals();
@@ -158,7 +160,7 @@ export class PendingApprovalPage implements OnInit {
     return new Date(dateStr).toLocaleDateString('es-ES', {
       day: 'numeric',
       month: 'short',
-      year: 'numeric'
+      year: 'numeric',
     });
   }
 

@@ -140,7 +140,7 @@
 }
 
 .form-group select,
-.form-group input[type="number"],
+.form-group input[type='number'],
 .form-group textarea {
   width: 100%;
   padding: 10px 12px;
@@ -204,7 +204,7 @@
   background: #dbeafe;
 }
 
-.radio-option input[type="radio"] {
+.radio-option input[type='radio'] {
   cursor: pointer;
 }
 
@@ -265,7 +265,7 @@
 }
 
 /* Photo upload */
-.photo-upload-wrapper input[type="file"] {
+.photo-upload-wrapper input[type='file'] {
   display: none;
 }
 

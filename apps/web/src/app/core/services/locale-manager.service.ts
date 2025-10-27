@@ -75,9 +75,9 @@ export class LocaleManagerService {
    */
   private getLocaleFromLang(lang: string): string {
     const localeMap: Record<string, string> = {
-      'es': 'es-AR',
-      'pt': 'pt-BR',
-      'en': 'en-US',
+      es: 'es-AR',
+      pt: 'pt-BR',
+      en: 'en-US',
     };
 
     return localeMap[lang] || 'es-AR';

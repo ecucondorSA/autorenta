@@ -1,8 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import type {
-  UserVerificationStatus,
-  VerificationRole,
-} from '../models';
+import type { UserVerificationStatus, VerificationRole } from '../models';
 import { SupabaseClientService } from './supabase-client.service';
 
 @Injectable({
@@ -58,8 +55,7 @@ export class VerificationService {
       return this.setStatuses(payload);
     } catch (err) {
       console.error('[VerificationService] triggerVerification error:', err);
-      const message =
-        err instanceof Error ? err.message : 'No pudimos validar tu documentación.';
+      const message = err instanceof Error ? err.message : 'No pudimos validar tu documentación.';
       this.error.set(message);
       throw err;
     } finally {

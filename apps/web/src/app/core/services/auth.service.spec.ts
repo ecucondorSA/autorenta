@@ -4,7 +4,6 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 import { SupabaseClientService } from './supabase-client.service';
 
-
 type AuthCallback = (event: AuthChangeEvent, session: Session | null) => void;
 
 const createSession = (id: string): Session => ({

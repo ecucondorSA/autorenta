@@ -6,71 +6,96 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-splash-loader',
   standalone: true,
   imports: [CommonModule, TranslateModule, NgOptimizedImage],
-  styles: [`
-    :host { display: contents; }
-
-    /* Prefer reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      .motion-ok { animation: none !important; }
-      .video-bg { display: none !important; }
-      .splash-container {
-        background-image: url('/assets/images/splash-background-poster.jpg');
-        background-size: cover;
-        background-position: center;
+  styles: [
+    `
+      :host {
+        display: contents;
       }
-    }
 
-    /* Custom keyframes for subtle bobbing of the logo */
-    @keyframes bob {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
+      /* Prefer reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .motion-ok {
+          animation: none !important;
+        }
+        .video-bg {
+          display: none !important;
+        }
+        .splash-container {
+          background-image: url('/assets/images/splash-background-poster.jpg');
+          background-size: cover;
+          background-position: center;
+        }
+      }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+      /* Custom keyframes for subtle bobbing of the logo */
+      @keyframes bob {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
-    /* Video background styling */
-    .video-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      animation: fadeIn 0.8s ease-in;
-    }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
 
-    .overlay {
-      /* Overlay removido para mostrar video limpio */
-      display: none;
-    }
+      /* Video background styling */
+      .video-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        animation: fadeIn 0.8s ease-in;
+      }
 
-    .logo-image {
-      filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.85)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
-    }
+      .overlay {
+        /* Overlay removido para mostrar video limpio */
+        display: none;
+      }
 
-    .tagline {
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.9), 0 8px 24px rgba(0, 0, 0, 0.7);
-      color: #ffffff;
-    }
+      .logo-image {
+        filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.85))
+          drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+      }
 
-    .progress-track {
-      background: rgba(0, 0, 0, 0.45);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    }
+      .tagline {
+        text-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.9),
+          0 8px 24px rgba(0, 0, 0, 0.7);
+        color: #ffffff;
+      }
 
-    .progress-fill {
-      background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 216, 145, 1) 100%);
-      box-shadow: 0 2px 12px rgba(255, 255, 255, 0.6);
-    }
-  `],
+      .progress-track {
+        background: rgba(0, 0, 0, 0.45);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+
+      .progress-fill {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 216, 145, 1) 100%);
+        box-shadow: 0 2px 12px rgba(255, 255, 255, 0.6);
+      }
+    `,
+  ],
   template: `
     <div class="fixed inset-0 z-[9999] overflow-hidden splash-container">
       <!-- Video Background -->
@@ -89,9 +114,13 @@ import { TranslateModule } from '@ngx-translate/core';
         controlsList="nodownload nofullscreen noremoteplayback"
         poster="/assets/images/splash-background-poster.jpg"
       >
-        <source src="/assets/videos/splash-background-mobile.mp4" type="video/mp4" media="(max-aspect-ratio: 3/4)">
-        <source src="/assets/videos/splash-background.webm" type="video/webm">
-        <source src="/assets/videos/splash-background.mp4" type="video/mp4">
+        <source
+          src="/assets/videos/splash-background-mobile.mp4"
+          type="video/mp4"
+          media="(max-aspect-ratio: 3/4)"
+        />
+        <source src="/assets/videos/splash-background.webm" type="video/webm" />
+        <source src="/assets/videos/splash-background.mp4" type="video/mp4" />
       </video>
 
       <!-- Dark Overlay -->
@@ -100,7 +129,10 @@ import { TranslateModule } from '@ngx-translate/core';
       <!-- Content Over Video -->
       <div class="relative z-10 h-full flex flex-col items-center justify-center gap-8 text-white">
         <!-- Logo/Wordmark -->
-        <div class="flex items-center justify-center h-28 motion-ok" style="animation: bob 2s ease-in-out infinite;">
+        <div
+          class="flex items-center justify-center h-28 motion-ok"
+          style="animation: bob 2s ease-in-out infinite;"
+        >
           <img
             ngSrc="/assets/images/autorentar-logo.png"
             alt="Autorentar"
@@ -112,7 +144,10 @@ import { TranslateModule } from '@ngx-translate/core';
         </div>
 
         <!-- Tagline / helpful text -->
-        <div class="text-center px-6 motion-ok tagline" style="animation: pulse 2s ease-in-out infinite;">
+        <div
+          class="text-center px-6 motion-ok tagline"
+          style="animation: pulse 2s ease-in-out infinite;"
+        >
           <p class="text-[1.35rem] md:text-2xl font-light tracking-[0.15em] uppercase">
             Prendiendo los motores...
           </p>
@@ -120,18 +155,25 @@ import { TranslateModule } from '@ngx-translate/core';
 
         <!-- Loading bar -->
         <div class="progress-track w-56 md:w-64 h-1.5 rounded-full overflow-hidden mt-6">
-          <div class="progress-fill h-full rounded-full motion-ok" style="animation: loadingBar 4s ease-in-out infinite;"></div>
+          <div
+            class="progress-fill h-full rounded-full motion-ok"
+            style="animation: loadingBar 4s ease-in-out infinite;"
+          ></div>
         </div>
       </div>
     </div>
 
     <style>
       @keyframes loadingBar {
-        0% { width: 0%; }
-        100% { width: 100%; }
+        0% {
+          width: 0%;
+        }
+        100% {
+          width: 100%;
+        }
       }
     </style>
-  `
+  `,
 })
 export class SplashLoaderComponent implements AfterViewInit {
   @ViewChild('videoElement') videoElement?: ElementRef<HTMLVideoElement>;
@@ -159,7 +201,7 @@ export class SplashLoaderComponent implements AfterViewInit {
         .then(() => {
           console.log(`🎬 Splash video autoplay SUCCESS (attempt ${attempt})`);
         })
-        .catch(err => {
+        .catch((err) => {
           console.warn(`⚠️ Autoplay attempt ${attempt} failed:`, err.name);
 
           // Attempt 2: Retry after 100ms (video might still be loading)
@@ -177,7 +219,8 @@ export class SplashLoaderComponent implements AfterViewInit {
           // Final fallback: Play on first user interaction
           console.warn('🚫 All autoplay attempts failed. Waiting for user interaction...');
           const playOnInteraction = () => {
-            video.play()
+            video
+              .play()
               .then(() => console.log('🎬 Video played after user interaction'))
               .catch(() => console.error('❌ Video play failed even after interaction'));
           };

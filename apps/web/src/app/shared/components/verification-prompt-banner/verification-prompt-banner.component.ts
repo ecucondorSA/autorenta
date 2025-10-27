@@ -40,7 +40,9 @@ import { UserProfile } from '../../../core/models';
             <div class="flex-shrink-0">
               <div class="relative h-12 w-12">
                 <!-- Avatar Image or Placeholder -->
-                <div class="h-full w-full rounded-full overflow-hidden bg-white/20 border-2 border-white/40">
+                <div
+                  class="h-full w-full rounded-full overflow-hidden bg-white/20 border-2 border-white/40"
+                >
                   <img
                     *ngIf="profile()?.avatar_url; else avatarPlaceholder"
                     [src]="profile()!.avatar_url"
@@ -51,14 +53,18 @@ import { UserProfile } from '../../../core/models';
                   <ng-template #avatarPlaceholder>
                     <div class="h-full w-full flex items-center justify-center bg-white/30">
                       <svg class="h-7 w-7 text-white/80" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                        <path
+                          d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
+                        />
                       </svg>
                     </div>
                   </ng-template>
                 </div>
-                
+
                 <!-- Status Icon Badge -->
-                <div class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-accent-warm to-accent-petrol border-2 border-white flex items-center justify-center">
+                <div
+                  class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-accent-warm to-accent-petrol border-2 border-white flex items-center justify-center"
+                >
                   <svg
                     *ngIf="verificationProgress() < 100"
                     class="h-3 w-3 text-yellow-300 animate-pulse"
@@ -123,8 +129,19 @@ import { UserProfile } from '../../../core/models';
                   [queryParams]="{ tab: 'verification' }"
                   class="inline-flex items-center gap-2 px-4 py-2 bg-white text-accent-petrol rounded-lg text-sm font-semibold hover:bg-ivory-luminous transition-colors shadow-md hover:shadow-lg"
                 >
-                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
                   </svg>
                   {{ ctaButtonText() }}
                 </a>
@@ -148,8 +165,19 @@ import { UserProfile } from '../../../core/models';
             class="flex-shrink-0 text-white/80 hover:text-white transition-colors"
             aria-label="Cerrar banner"
           >
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -176,57 +204,120 @@ import { UserProfile } from '../../../core/models';
             class="text-charcoal-medium hover:text-smoke-black dark:hover:text-white transition-colors"
           >
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
         <div class="space-y-4 text-smoke-black dark:text-pearl-light">
           <div class="flex items-start gap-3">
-            <div class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-              <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            <div
+              class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-5 h-5 text-green-600 dark:text-green-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
             </div>
             <div>
               <h3 class="font-semibold mb-1">Mayor confianza en la comunidad</h3>
-              <p class="text-sm">Los usuarios verificados generan +40% más reservas porque inspiran confianza.</p>
+              <p class="text-sm">
+                Los usuarios verificados generan +40% más reservas porque inspiran confianza.
+              </p>
             </div>
           </div>
 
           <div class="flex items-start gap-3">
-            <div class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            <div
+              class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-5 h-5 text-blue-600 dark:text-blue-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
               </svg>
             </div>
             <div>
               <h3 class="font-semibold mb-1">Protección contra fraude</h3>
-              <p class="text-sm">Verificamos tu identidad para prevenir suplantaciones y actividades fraudulentas.</p>
+              <p class="text-sm">
+                Verificamos tu identidad para prevenir suplantaciones y actividades fraudulentas.
+              </p>
             </div>
           </div>
 
           <div class="flex items-start gap-3">
-            <div class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
-              <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            <div
+              class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-5 h-5 text-purple-600 dark:text-purple-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
             </div>
             <div>
               <h3 class="font-semibold mb-1">Acceso prioritario a funciones</h3>
-              <p class="text-sm">Usuarios verificados pueden publicar autos, solicitar retiros y acceder a beneficios exclusivos.</p>
+              <p class="text-sm">
+                Usuarios verificados pueden publicar autos, solicitar retiros y acceder a beneficios
+                exclusivos.
+              </p>
             </div>
           </div>
 
           <div class="flex items-start gap-3">
-            <div class="flex-shrink-0 w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
-              <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <div
+              class="flex-shrink-0 w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-5 h-5 text-yellow-600 dark:text-yellow-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div>
               <h3 class="font-semibold mb-1">Proceso rápido y seguro</h3>
-              <p class="text-sm">Solo tomará 5 minutos. Tus datos están protegidos con encriptación de nivel bancario.</p>
+              <p class="text-sm">
+                Solo tomará 5 minutos. Tus datos están protegidos con encriptación de nivel
+                bancario.
+              </p>
             </div>
           </div>
         </div>

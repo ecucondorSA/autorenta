@@ -20,7 +20,7 @@ export class StepResolverService {
 
   async resolveStepTarget(
     target: StepTarget,
-    options: ElementWaitOptions = {}
+    options: ElementWaitOptions = {},
   ): Promise<Element | null> {
     const timeout = options.timeout ?? this.DEFAULT_TIMEOUT;
     const interval = options.interval ?? this.DEFAULT_INTERVAL;
@@ -39,10 +39,7 @@ export class StepResolverService {
 
     // Check additional condition if provided
     if (element && target.waitForCondition) {
-      const conditionMet = await this.waitForCondition(
-        target.waitForCondition,
-        timeout
-      );
+      const conditionMet = await this.waitForCondition(target.waitForCondition, timeout);
       if (!conditionMet && target.required) {
         element = null;
       }
@@ -64,7 +61,7 @@ export class StepResolverService {
   async waitForElement(
     selector: string,
     timeout: number = this.DEFAULT_TIMEOUT,
-    interval: number = this.DEFAULT_INTERVAL
+    interval: number = this.DEFAULT_INTERVAL,
   ): Promise<Element | null> {
     if (typeof document === 'undefined') return null;
 
@@ -111,7 +108,7 @@ export class StepResolverService {
 
   async waitForCondition(
     condition: () => boolean | Promise<boolean>,
-    timeout: number = this.DEFAULT_TIMEOUT
+    timeout: number = this.DEFAULT_TIMEOUT,
   ): Promise<boolean> {
     const startTime = Date.now();
 

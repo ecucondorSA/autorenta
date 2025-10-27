@@ -1,4 +1,3 @@
-
 import { Component, Input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Booking } from '../../../core/models';
@@ -19,16 +18,18 @@ import { BookingsService } from '../../../core/services/bookings.service';
       {{ statusIcon() }} {{ statusLabel() }}
     </div>
   `,
-  styles: [`
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      font-weight: 500;
-      font-size: 0.875rem;
-    }
-  `]
+  styles: [
+    `
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        font-size: 0.875rem;
+      }
+    `,
+  ],
 })
 export class BookingStatusComponent {
   @Input({ required: true }) booking!: Booking;

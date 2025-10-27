@@ -47,10 +47,10 @@ export class AuthService {
   async getCurrentUser(): Promise<{ id: string; email: string } | null> {
     const session = await this.ensureSession();
     if (!session?.user) return null;
-    
+
     return {
       id: session.user.id,
-      email: session.user.email || ''
+      email: session.user.email || '',
     };
   }
 

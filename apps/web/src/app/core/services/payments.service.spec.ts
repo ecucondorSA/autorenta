@@ -12,16 +12,16 @@ describe('PaymentsService', () => {
 
   beforeEach(() => {
     originalWebhookUrl = environment.paymentsWebhookUrl;
-    
+
     // Mock completo de Supabase
     supabase = {
       from: jasmine.createSpy('from'),
       auth: {
         getUser: jasmine.createSpy('getUser').and.resolveTo({
           data: { user: { id: 'user-123', email: 'test@example.com' } },
-          error: null
-        })
-      }
+          error: null,
+        }),
+      },
     };
     fxService = jasmine.createSpyObj<FxService>('FxService', ['getCurrentRateAsync']);
     fxService.getCurrentRateAsync.and.resolveTo(1000);
@@ -48,13 +48,13 @@ describe('PaymentsService', () => {
       bookingBuilder.select = jasmine.createSpy('select').and.returnValue(bookingBuilder);
       bookingBuilder.eq = jasmine.createSpy('eq').and.returnValue(bookingBuilder);
       bookingBuilder.single = jasmine.createSpy('single').and.resolveTo({
-        data: { 
-          id: 'booking-1', 
+        data: {
+          id: 'booking-1',
           total_amount: 100000,
           currency: 'ARS',
-          renter_id: 'user-123'
+          renter_id: 'user-123',
         },
-        error: null
+        error: null,
       });
 
       // Mock para insertar payment intent
@@ -62,7 +62,7 @@ describe('PaymentsService', () => {
       intentBuilder.select = jasmine.createSpy('select').and.returnValue(intentBuilder);
       intentBuilder.single = jasmine.createSpy('single').and.resolveTo({
         data: { id: 'intent-1', status: 'pending' },
-        error: null
+        error: null,
       });
       const insert = jasmine.createSpy('insert').and.returnValue(intentBuilder);
 
@@ -140,11 +140,11 @@ describe('PaymentsService', () => {
 
     it('debería procesar el pago completo: crear intent, marcar como pagado, verificar estado', async () => {
       environment.paymentsWebhookUrl = 'https://worker.example';
-      
+
       // Mock de createIntent
       spyOn(service, 'createIntent').and.resolveTo({
         id: 'intent-123',
-        status: 'pending'
+        status: 'pending',
       } as any);
 
       // Mock de markAsPaid
@@ -153,7 +153,7 @@ describe('PaymentsService', () => {
       // Mock de getStatus
       spyOn(service, 'getStatus').and.resolveTo({
         id: 'intent-123',
-        status: 'completed'
+        status: 'completed',
       } as any);
 
       const result = await service.processPayment('booking-1');
@@ -167,7 +167,7 @@ describe('PaymentsService', () => {
 
     it('debería manejar errores durante el proceso de pago', async () => {
       environment.paymentsWebhookUrl = 'https://worker.example';
-      
+
       // Mock de createIntent que falla
       spyOn(service, 'createIntent').and.rejectWith(new Error('Error de red'));
 
@@ -198,7 +198,7 @@ describe('PaymentsService', () => {
 
     it('debería reintentar después de un fallo de red', async () => {
       let attemptCount = 0;
-      
+
       // Mock que falla 2 veces y luego tiene éxito
       const createIntentSpy = spyOn(service, 'createIntent').and.callFake(async () => {
         attemptCount++;
@@ -211,7 +211,7 @@ describe('PaymentsService', () => {
       const markAsPaidSpy = spyOn(service, 'markAsPaid').and.resolveTo();
       const getStatusSpy = spyOn(service, 'getStatus').and.resolveTo({
         id: 'intent-123',
-        status: 'completed'
+        status: 'completed',
       } as any);
 
       // Mock del delay para acelerar el test
@@ -226,7 +226,7 @@ describe('PaymentsService', () => {
 
     it('debería tener un máximo de 3 reintentos', async () => {
       let attemptCount = 0;
-      
+
       // Mock que siempre falla
       const createIntentSpy = spyOn(service, 'createIntent').and.callFake(async () => {
         attemptCount++;
@@ -246,7 +246,7 @@ describe('PaymentsService', () => {
 
     it('debería usar backoff exponencial entre reintentos', async () => {
       const delays: number[] = [];
-      
+
       // Mock del delay para capturar los valores
       const delaySpy = spyOn<any>(service, 'delay').and.callFake(async (ms: number) => {
         delays.push(ms);
@@ -283,18 +283,18 @@ describe('PaymentsService', () => {
       // Test de método privado (solo para verificación)
       const isRetryableError = (service as any).isRetryableError.bind(service);
 
-      retryableErrors.forEach(err => {
+      retryableErrors.forEach((err) => {
         expect(isRetryableError(err)).toBe(true, `${err.message} debería ser reintentable`);
       });
 
-      nonRetryableErrors.forEach(err => {
+      nonRetryableErrors.forEach((err) => {
         expect(isRetryableError(err)).toBe(false, `${err.message} NO debería ser reintentable`);
       });
     });
 
     it('no debería reintentar errores de validación', async () => {
       let attemptCount = 0;
-      
+
       // Error de validación (no reintentable)
       const createIntentSpy = spyOn(service, 'createIntent').and.callFake(async () => {
         attemptCount++;
@@ -316,7 +316,7 @@ describe('PaymentsService', () => {
     it('debería loggear los reintentos en consola', async () => {
       const logSpy = spyOn(console, 'log');
       const errorSpy = spyOn(console, 'error');
-      
+
       spyOn(service, 'createIntent').and.rejectWith(new Error('Network error'));
       spyOn<any>(service, 'delay').and.resolveTo();
 
@@ -324,7 +324,10 @@ describe('PaymentsService', () => {
 
       // Verificar que se loggearon los reintentos
       expect(logSpy).toHaveBeenCalledWith(jasmine.stringMatching(/Reintentando pago/));
-      expect(errorSpy).toHaveBeenCalledWith(jasmine.stringMatching(/Error en processPayment/), jasmine.any(Error));
+      expect(errorSpy).toHaveBeenCalledWith(
+        jasmine.stringMatching(/Error en processPayment/),
+        jasmine.any(Error),
+      );
     });
   });
 });

@@ -39,9 +39,9 @@ export class PublicProfilePage implements OnInit {
   activeTab = signal<'cars' | 'reviews-owner' | 'reviews-renter'>('cars');
 
   // Computed properties
-  hasOwnerReviews = computed(() => (this.reviewsAsOwner().length > 0));
-  hasRenterReviews = computed(() => (this.reviewsAsRenter().length > 0));
-  hasCars = computed(() => (this.userCars().length > 0));
+  hasOwnerReviews = computed(() => this.reviewsAsOwner().length > 0);
+  hasRenterReviews = computed(() => this.reviewsAsRenter().length > 0);
+  hasCars = computed(() => this.userCars().length > 0);
 
   displayedCars = computed(() => {
     const cars = this.userCars();
@@ -70,7 +70,7 @@ export class PublicProfilePage implements OnInit {
     private router: Router,
     private profileService: ProfileService,
     private carsService: CarsService,
-    private reviewsService: ReviewsService
+    private reviewsService: ReviewsService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -108,7 +108,7 @@ export class PublicProfilePage implements OnInit {
 
       // Cargar autos del usuario (solo activos)
       const cars = await this.carsService.getCarsByOwner(this.userId());
-      this.userCars.set(cars.filter(car => car.status === 'active'));
+      this.userCars.set(cars.filter((car) => car.status === 'active'));
 
       // Cargar reviews como owner
       const ownerReviews = await this.reviewsService.getReviewsForOwner(this.userId());
@@ -117,7 +117,6 @@ export class PublicProfilePage implements OnInit {
       // Cargar reviews como renter
       const renterReviews = await this.reviewsService.getReviewsForRenter(this.userId());
       this.reviewsAsRenter.set(renterReviews);
-
     } catch (err) {
       console.error('Error loading user data:', err);
       this.error.set('Error al cargar el perfil del usuario');
@@ -137,8 +136,18 @@ export class PublicProfilePage implements OnInit {
   formatMemberSince(date: string): string {
     const d = new Date(date);
     const months = [
-      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
     ];
     return `${months[d.getMonth()]} ${d.getFullYear()}`;
   }
@@ -175,7 +184,7 @@ export class PublicProfilePage implements OnInit {
       review.rating_accuracy,
       review.rating_location,
       review.rating_checkin,
-      review.rating_value
+      review.rating_value,
     ];
     const sum = ratings.reduce((acc, r) => acc + r, 0);
     return Math.round((sum / 6) * 10) / 10;

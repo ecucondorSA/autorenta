@@ -66,7 +66,7 @@ export class RiskService {
   persistRiskSnapshot(
     bookingId: string,
     riskSnapshot: RiskSnapshot,
-    paymentMode: 'card' | 'wallet'
+    paymentMode: 'card' | 'wallet',
   ): Observable<{ ok: boolean; snapshotId?: string; error?: string }> {
     const snapshotData = {
       booking_id: bookingId,
@@ -88,7 +88,11 @@ export class RiskService {
     };
 
     return from(
-      this.supabaseClient.from('booking_risk_snapshot').insert(snapshotData).select('booking_id').single()
+      this.supabaseClient
+        .from('booking_risk_snapshot')
+        .insert(snapshotData)
+        .select('booking_id')
+        .single(),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -100,7 +104,7 @@ export class RiskService {
       catchError((error) => {
         console.error('Error in persistRiskSnapshot:', error);
         return of({ ok: false, error: error.message || 'Error desconocido' });
-      })
+      }),
     );
   }
 
@@ -108,14 +112,14 @@ export class RiskService {
    * Obtiene un risk snapshot por booking ID
    */
   getRiskSnapshotByBookingId(
-    bookingId: string
+    bookingId: string,
   ): Observable<{ snapshot: RiskSnapshot | null; error?: string }> {
     return from(
       this.supabaseClient
         .from('booking_risk_snapshots')
         .select('*')
         .eq('booking_id', bookingId)
-        .single()
+        .single(),
     ).pipe(
       map((response) => {
         if (response.error || !response.data) {
@@ -142,17 +146,14 @@ export class RiskService {
       catchError((error) => {
         console.error('Error in getRiskSnapshotByBookingId:', error);
         return of({ snapshot: null, error: error.message });
-      })
+      }),
     );
   }
 
   /**
    * Recalcula el risk snapshot cuando cambia el upgrade de cobertura
    */
-  recalculateWithUpgrade(
-    currentSnapshot: RiskSnapshot,
-    newUpgrade: CoverageUpgrade
-  ): RiskSnapshot {
+  recalculateWithUpgrade(currentSnapshot: RiskSnapshot, newUpgrade: CoverageUpgrade): RiskSnapshot {
     return this.calculateRiskSnapshot({
       vehicleValueUsd: currentSnapshot.vehicleValueUsd,
       bucket: currentSnapshot.bucket,

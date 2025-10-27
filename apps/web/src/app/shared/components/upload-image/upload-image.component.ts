@@ -43,11 +43,11 @@ export class UploadImageComponent {
       // Check MIME type
       if (!this.acceptedTypes.includes(file.type)) {
         const allowedFormats = this.acceptedTypes
-          .map(type => type.split('/')[1].toUpperCase())
+          .map((type) => type.split('/')[1].toUpperCase())
           .join(', ');
         errors.push({
           fileName: file.name,
-          reason: `Formato no permitido. Solo se aceptan: ${allowedFormats}`
+          reason: `Formato no permitido. Solo se aceptan: ${allowedFormats}`,
         });
         continue;
       }
@@ -56,7 +56,7 @@ export class UploadImageComponent {
       if (file.size > maxSizeBytes) {
         errors.push({
           fileName: file.name,
-          reason: `El archivo supera el tamaño máximo de ${this.maxSizeMB}MB`
+          reason: `El archivo supera el tamaño máximo de ${this.maxSizeMB}MB`,
         });
         continue;
       }
@@ -73,7 +73,7 @@ export class UploadImageComponent {
     // Emit valid files if any
     if (validFiles.length > 0) {
       const dataTransfer = new DataTransfer();
-      validFiles.forEach(f => dataTransfer.items.add(f));
+      validFiles.forEach((f) => dataTransfer.items.add(f));
       this.filesSelected.emit(dataTransfer.files);
     }
 

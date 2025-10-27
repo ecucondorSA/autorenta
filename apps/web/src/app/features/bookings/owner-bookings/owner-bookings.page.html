@@ -1,9 +1,17 @@
-<div class="owner-bookings-page bg-ivory-soft dark:bg-graphite-dark min-h-screen transition-colors duration-300">
+<div
+  class="owner-bookings-page bg-ivory-soft dark:bg-graphite-dark min-h-screen transition-colors duration-300"
+>
   <!-- Header -->
-  <div class="bg-white-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300">
+  <div
+    class="bg-white-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">Reservas de Mis Autos</h1>
-      <p class="mt-2 text-charcoal-medium dark:text-pearl-light/70">Gestiona las reservas de tus vehículos</p>
+      <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+        Reservas de Mis Autos
+      </h1>
+      <p class="mt-2 text-charcoal-medium dark:text-pearl-light/70">
+        Gestiona las reservas de tus vehículos
+      </p>
     </div>
   </div>
 
@@ -12,19 +20,41 @@
     <!-- Loading State -->
     @if (loading()) {
       <div class="flex flex-col items-center justify-center py-16">
-        <svg class="animate-spin h-12 w-12 text-primary-600 dark:text-accent-petrol" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        <svg
+          class="animate-spin h-12 w-12 text-primary-600 dark:text-accent-petrol"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
         </svg>
-        <p class="mt-4 text-sm text-charcoal-medium dark:text-pearl-light/70">Cargando reservas...</p>
+        <p class="mt-4 text-sm text-charcoal-medium dark:text-pearl-light/70">
+          Cargando reservas...
+        </p>
       </div>
     }
 
     <!-- Error State -->
     @if (error(); as errorMsg) {
-      <div class="bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4">
+      <div
+        class="bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4"
+      >
         <p class="text-sm text-red-800 dark:text-error-200">{{ errorMsg }}</p>
-        <button (click)="loadBookings()" class="mt-2 text-sm font-medium text-red-600 dark:text-error-300 underline">
+        <button
+          (click)="loadBookings()"
+          class="mt-2 text-sm font-medium text-red-600 dark:text-error-300 underline"
+        >
           Intentar de nuevo
         </button>
       </div>
@@ -34,16 +64,32 @@
     @if (!loading() && !error()) {
       @if (bookings().length === 0) {
         <div class="text-center py-16">
-          <svg class="mx-auto h-12 w-12 text-charcoal-light dark:text-pearl-light/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          <svg
+            class="mx-auto h-12 w-12 text-charcoal-light dark:text-pearl-light/50"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-smoke-black dark:text-ivory-luminous">No tenés reservas</h3>
-          <p class="mt-1 text-sm text-charcoal-medium dark:text-pearl-light/70">Cuando alguien alquile tus autos, aparecerán acá.</p>
+          <h3 class="mt-2 text-sm font-medium text-smoke-black dark:text-ivory-luminous">
+            No tenés reservas
+          </h3>
+          <p class="mt-1 text-sm text-charcoal-medium dark:text-pearl-light/70">
+            Cuando alguien alquile tus autos, aparecerán acá.
+          </p>
         </div>
       } @else {
         <div class="space-y-4">
           @for (booking of bookings(); track booking.id) {
-            <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 transition-colors duration-300">
+            <div
+              class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 transition-colors duration-300"
+            >
               <!-- Header -->
               <div class="flex items-start justify-between mb-4">
                 <div class="flex-1">
@@ -52,7 +98,10 @@
                     <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
                       Vehículo ID: {{ booking.car_id }}
                     </h3>
-                    <span class="px-2 py-1 text-xs font-medium rounded-full" [ngClass]="statusBadgeClass(booking)">
+                    <span
+                      class="px-2 py-1 text-xs font-medium rounded-full"
+                      [ngClass]="statusBadgeClass(booking)"
+                    >
                       {{ statusLabel(booking) }}
                     </span>
                   </div>
@@ -79,7 +128,9 @@
                   <p class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
                     {{ booking.total_amount | money }}
                   </p>
-                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">{{ booking.currency }}</p>
+                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                    {{ booking.currency }}
+                  </p>
                 </div>
               </div>
 
@@ -92,7 +143,9 @@
                   </p>
                 </div>
                 <div>
-                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mb-1">Modo de pago</p>
+                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mb-1">
+                    Modo de pago
+                  </p>
                   <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous">
                     {{ booking.payment_mode === 'card' ? 'Tarjeta' : 'Wallet' }}
                   </p>

@@ -11,7 +11,7 @@ import {
   ActivateInsuranceCoverageRequest,
   ReportClaimRequest,
   CreateInspectionRequest,
-  INSURER_DISPLAY_NAMES
+  INSURER_DISPLAY_NAMES,
 } from '../models/insurance.model';
 import { injectSupabase } from './supabase-client.service';
 
@@ -20,7 +20,7 @@ import { injectSupabase } from './supabase-client.service';
  * Gestiona todo lo relacionado con seguros: pólizas, coberturas, siniestros e inspecciones
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class InsuranceService {
   private readonly supabase = injectSupabase();
@@ -38,16 +38,16 @@ export class InsuranceService {
         .from('insurance_policies')
         .select('*')
         .eq('status', 'active')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
         return (data as InsurancePolicy[]) || [];
       }),
-      catchError(err => {
+      catchError((err) => {
         console.error('Error fetching insurance policies:', err);
         return of([]);
-      })
+      }),
     );
   }
 
@@ -61,7 +61,7 @@ export class InsuranceService {
         .select('*')
         .eq('policy_type', 'platform_floating')
         .eq('status', 'active')
-        .single()
+        .single(),
     ).pipe(
       map(({ data, error }) => {
         if (error) {
@@ -70,10 +70,10 @@ export class InsuranceService {
         }
         return data as InsurancePolicy;
       }),
-      catchError(err => {
+      catchError((err) => {
         console.error('Error fetching platform policy:', err);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -88,7 +88,7 @@ export class InsuranceService {
         .eq('policy_type', 'owner_byoi')
         .eq('car_id', carId)
         .eq('status', 'active')
-        .single()
+        .single(),
     ).pipe(
       map(({ data, error }) => {
         if (error) {
@@ -97,7 +97,7 @@ export class InsuranceService {
         }
         return data as InsurancePolicy;
       }),
-      catchError(() => of(null))
+      catchError(() => of(null)),
     );
   }
 
@@ -110,7 +110,7 @@ export class InsuranceService {
       .insert({
         policy_type: 'owner_byoi',
         status: 'pending_verification',
-        ...policyData
+        ...policyData,
       })
       .select()
       .single();
@@ -128,7 +128,7 @@ export class InsuranceService {
       .update({
         verified_by_admin: approved,
         verification_date: new Date().toISOString(),
-        status: approved ? 'active' : 'cancelled'
+        status: approved ? 'active' : 'cancelled',
       })
       .eq('id', policyId);
 
@@ -145,7 +145,7 @@ export class InsuranceService {
   async activateCoverage(request: ActivateInsuranceCoverageRequest): Promise<string> {
     const { data, error } = await this.supabase.rpc('activate_insurance_coverage', {
       p_booking_id: request.booking_id,
-      p_addon_ids: request.addon_ids || []
+      p_addon_ids: request.addon_ids || [],
     });
 
     if (error) throw error;
@@ -159,13 +159,15 @@ export class InsuranceService {
     return from(
       this.supabase
         .from('booking_insurance_coverage')
-        .select(`
+        .select(
+          `
           *,
           policy:policy_id (*)
-        `)
+        `,
+        )
         .eq('booking_id', bookingId)
         .eq('status', 'active')
-        .single()
+        .single(),
     ).pipe(
       map(({ data, error }) => {
         if (error) {
@@ -174,7 +176,7 @@ export class InsuranceService {
         }
         return data as BookingInsuranceCoverage;
       }),
-      catchError(() => of(null))
+      catchError(() => of(null)),
     );
   }
 
@@ -185,10 +187,12 @@ export class InsuranceService {
     // Obtener cobertura
     const { data: coverage, error: covError } = await this.supabase
       .from('booking_insurance_coverage')
-      .select(`
+      .select(
+        `
         *,
         policy:policy_id (*)
-      `)
+      `,
+      )
       .eq('booking_id', bookingId)
       .single();
 
@@ -197,10 +201,12 @@ export class InsuranceService {
     // Obtener add-ons
     const { data: addons } = await this.supabase
       .from('booking_insurance_addons')
-      .select(`
+      .select(
+        `
         *,
         addon:addon_id (*)
-      `)
+      `,
+      )
       .eq('booking_id', bookingId);
 
     const policy = coverage.policy as InsurancePolicy;
@@ -213,14 +219,15 @@ export class InsuranceService {
       insurer_display_name: INSURER_DISPLAY_NAMES[policy.insurer],
       liability_coverage: coverage.liability_coverage,
       deductible_amount: coverage.deductible_amount,
-      daily_premium: coverage.daily_premium_charged ? 
-        coverage.daily_premium_charged / this.calculateRentalDays(coverage.coverage_start, coverage.coverage_end) : 
-        undefined,
+      daily_premium: coverage.daily_premium_charged
+        ? coverage.daily_premium_charged /
+          this.calculateRentalDays(coverage.coverage_start, coverage.coverage_end)
+        : undefined,
       total_premium: coverage.daily_premium_charged || 0,
-      addons: addonsList.map(a => ({
+      addons: addonsList.map((a) => ({
         name: (a.addon as InsuranceAddon).name,
         daily_cost: a.daily_cost,
-        total_cost: a.total_cost
+        total_cost: a.total_cost,
       })),
       security_deposit: coverage.deductible_amount,
       certificate_number: coverage.certificate_number,
@@ -230,8 +237,8 @@ export class InsuranceService {
         theft: policy.theft_coverage,
         fire: policy.fire_coverage,
         misappropriation: policy.misappropriation_coverage,
-        countries: ['Argentina'] // TODO: detectar add-on países limítrofes
-      }
+        countries: ['Argentina'], // TODO: detectar add-on países limítrofes
+      },
     };
   }
 
@@ -256,16 +263,16 @@ export class InsuranceService {
         .from('insurance_addons')
         .select('*')
         .eq('active', true)
-        .order('daily_cost', { ascending: true })
+        .order('daily_cost', { ascending: true }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
         return (data as InsuranceAddon[]) || [];
       }),
-      catchError(err => {
+      catchError((err) => {
         console.error('Error fetching insurance addons:', err);
         return of([]);
-      })
+      }),
     );
   }
 
@@ -276,17 +283,19 @@ export class InsuranceService {
     return from(
       this.supabase
         .from('booking_insurance_addons')
-        .select(`
+        .select(
+          `
           *,
           addon:addon_id (*)
-        `)
-        .eq('booking_id', bookingId)
+        `,
+        )
+        .eq('booking_id', bookingId),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
         return (data as BookingInsuranceAddon[]) || [];
       }),
-      catchError(() => of([]))
+      catchError(() => of([])),
     );
   }
 
@@ -304,7 +313,7 @@ export class InsuranceService {
       p_description: request.description,
       p_incident_date: request.incident_date,
       p_location: request.location,
-      p_photos: request.photos || []
+      p_photos: request.photos || [],
     });
 
     if (error) throw error;
@@ -316,19 +325,16 @@ export class InsuranceService {
    */
   getMyClaims(): Observable<InsuranceClaim[]> {
     return from(
-      this.supabase
-        .from('insurance_claims')
-        .select('*')
-        .order('created_at', { ascending: false })
+      this.supabase.from('insurance_claims').select('*').order('created_at', { ascending: false }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
         return (data as InsuranceClaim[]) || [];
       }),
-      catchError(err => {
+      catchError((err) => {
         console.error('Error fetching claims:', err);
         return of([]);
-      })
+      }),
     );
   }
 
@@ -336,13 +342,7 @@ export class InsuranceService {
    * Obtener un siniestro específico
    */
   getClaimById(claimId: string): Observable<InsuranceClaim | null> {
-    return from(
-      this.supabase
-        .from('insurance_claims')
-        .select('*')
-        .eq('id', claimId)
-        .single()
-    ).pipe(
+    return from(this.supabase.from('insurance_claims').select('*').eq('id', claimId).single()).pipe(
       map(({ data, error }) => {
         if (error) {
           if (error.code === 'PGRST116') return null;
@@ -350,7 +350,7 @@ export class InsuranceService {
         }
         return data as InsuranceClaim;
       }),
-      catchError(() => of(null))
+      catchError(() => of(null)),
     );
   }
 
@@ -358,16 +358,16 @@ export class InsuranceService {
    * Actualizar estado de siniestro (solo admin)
    */
   async updateClaimStatus(
-    claimId: string, 
+    claimId: string,
     status: InsuranceClaim['status'],
-    notes?: string
+    notes?: string,
   ): Promise<void> {
     const updateData: any = { status, updated_at: new Date().toISOString() };
-    
+
     if (notes) {
       updateData.resolution_notes = notes;
     }
-    
+
     if (status === 'closed') {
       updateData.closed_at = new Date().toISOString();
     }
@@ -394,7 +394,7 @@ export class InsuranceService {
         ...request,
         inspector_id: (await this.supabase.auth.getUser()).data.user?.id,
         completed: !!request.signature_data,
-        signed_at: request.signature_data ? new Date().toISOString() : null
+        signed_at: request.signature_data ? new Date().toISOString() : null,
       })
       .select()
       .single();
@@ -412,13 +412,13 @@ export class InsuranceService {
         .from('vehicle_inspections')
         .select('*')
         .eq('booking_id', bookingId)
-        .order('created_at', { ascending: true })
+        .order('created_at', { ascending: true }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
         return (data as VehicleInspection[]) || [];
       }),
-      catchError(() => of([]))
+      catchError(() => of([])),
     );
   }
 
@@ -437,20 +437,21 @@ export class InsuranceService {
       .order('created_at', { ascending: true });
 
     const inspections = (data || []) as VehicleInspection[];
-    const pre = inspections.find(i => i.inspection_type === 'pre_rental') || null;
-    const post = inspections.find(i => i.inspection_type === 'post_rental') || null;
+    const pre = inspections.find((i) => i.inspection_type === 'pre_rental') || null;
+    const post = inspections.find((i) => i.inspection_type === 'post_rental') || null;
 
     let new_damages: any[] = [];
 
     if (pre && post) {
       const preDamages = pre.damages_detected || [];
       const postDamages = post.damages_detected || [];
-      
+
       // Detectar daños que están en POST pero no en PRE
-      new_damages = postDamages.filter(postDmg => 
-        !preDamages.some(preDmg => 
-          preDmg.location === postDmg.location && preDmg.type === postDmg.type
-        )
+      new_damages = postDamages.filter(
+        (postDmg) =>
+          !preDamages.some(
+            (preDmg) => preDmg.location === postDmg.location && preDmg.type === postDmg.type,
+          ),
       );
     }
 
@@ -467,7 +468,7 @@ export class InsuranceService {
   async calculateSecurityDeposit(carId: string): Promise<number> {
     const { data, error } = await this.supabase.rpc('calculate_deductible', {
       p_car_id: carId,
-      p_policy_id: null // usará póliza flotante por defecto
+      p_policy_id: null, // usará póliza flotante por defecto
     });
 
     if (error) {

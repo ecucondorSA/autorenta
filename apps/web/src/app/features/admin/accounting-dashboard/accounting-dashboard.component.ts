@@ -9,7 +9,7 @@ import { AccountingService, AccountingDashboard } from '../../../core/services/a
   standalone: true,
   imports: [CommonModule, IonicModule, RouterModule],
   templateUrl: './accounting-dashboard.component.html',
-  styleUrls: ['./accounting-dashboard.component.scss']
+  styleUrls: ['./accounting-dashboard.component.scss'],
 })
 export class AccountingDashboardComponent implements OnInit {
   dashboard = signal<AccountingDashboard | null>(null);
@@ -47,16 +47,20 @@ export class AccountingDashboardComponent implements OnInit {
       style: 'currency',
       currency: 'COP',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(amount);
   }
 
   getHealthColor(profitability: string): string {
     switch (profitability) {
-      case 'GOOD': return 'success';
-      case 'WARNING': return 'warning';
-      case 'CRITICAL': return 'danger';
-      default: return 'medium';
+      case 'GOOD':
+        return 'success';
+      case 'WARNING':
+        return 'warning';
+      case 'CRITICAL':
+        return 'danger';
+      default:
+        return 'medium';
     }
   }
 }

@@ -469,9 +469,9 @@ export interface WithdrawalLoadingState {
  * Indica de dónde proviene el dato en la vista consolidada
  */
 export type WalletHistorySourceSystem =
-  | 'legacy'  // Solo en wallet_transactions (sistema anterior)
-  | 'ledger'  // Solo en wallet_ledger (sistema nuevo de doble partida)
-  | 'both';   // Migrada: existe en ambos sistemas
+  | 'legacy' // Solo en wallet_transactions (sistema anterior)
+  | 'ledger' // Solo en wallet_ledger (sistema nuevo de doble partida)
+  | 'both'; // Migrada: existe en ambos sistemas
 
 /**
  * Entry de la vista consolidada v_wallet_history
@@ -489,13 +489,13 @@ export interface WalletHistoryEntry {
   // Campos principales normalizados
   id: string;
   user_id: string;
-  transaction_date: string;  // TIMESTAMPTZ
-  transaction_type: string;  // Normalizado de type (legacy) o kind (ledger)
-  status: string;  // 'pending' | 'completed' | 'failed' | 'refunded'
+  transaction_date: string; // TIMESTAMPTZ
+  transaction_type: string; // Normalizado de type (legacy) o kind (ledger)
+  status: string; // 'pending' | 'completed' | 'failed' | 'refunded'
 
   // Monto (siempre en centavos para consistencia)
-  amount_cents: number;  // BIGINT
-  currency: string;  // 'USD' | 'UYU' | 'ARS'
+  amount_cents: number; // BIGINT
+  currency: string; // 'USD' | 'UYU' | 'ARS'
 
   // Metadata unificada (JSONB)
   metadata: {
@@ -507,23 +507,23 @@ export interface WalletHistoryEntry {
     provider_metadata?: Record<string, unknown>;
     admin_notes?: string;
     is_withdrawable?: boolean;
-    [key: string]: unknown;  // Campos adicionales específicos de ledger/legacy
+    [key: string]: unknown; // Campos adicionales específicos de ledger/legacy
   };
 
   // Referencias
-  booking_id?: string;  // UUID
+  booking_id?: string; // UUID
 
   // Sistema de origen (para debugging y migración)
   source_system: WalletHistorySourceSystem;
 
   // IDs originales (para traceability)
-  legacy_transaction_id?: string;  // UUID si proviene de wallet_transactions
-  ledger_entry_id?: string;        // UUID si proviene de wallet_ledger
-  ledger_ref?: string;             // Ref de idempotencia (solo ledger)
+  legacy_transaction_id?: string; // UUID si proviene de wallet_transactions
+  ledger_entry_id?: string; // UUID si proviene de wallet_ledger
+  ledger_ref?: string; // Ref de idempotencia (solo ledger)
 
   // Timestamps
-  legacy_completed_at?: string;  // completed_at de wallet_transactions
-  ledger_created_at?: string;    // created_at de wallet_ledger
+  legacy_completed_at?: string; // completed_at de wallet_transactions
+  ledger_created_at?: string; // created_at de wallet_ledger
 }
 
 /**
@@ -531,9 +531,9 @@ export interface WalletHistoryEntry {
  * Retornada por: get_wallet_migration_stats() RPC function
  */
 export interface WalletMigrationStats {
-  total_legacy_transactions: number;  // Total en wallet_transactions
-  migrated_to_ledger: number;         // Ya migradas (source_system = 'both')
-  pending_migration: number;          // Pendientes (source_system = 'legacy')
-  ledger_only_entries: number;        // Solo en ledger (source_system = 'ledger')
-  migration_percentage: number;       // % de progreso (0-100)
+  total_legacy_transactions: number; // Total en wallet_transactions
+  migrated_to_ledger: number; // Ya migradas (source_system = 'both')
+  pending_migration: number; // Pendientes (source_system = 'legacy')
+  ledger_only_entries: number; // Solo en ledger (source_system = 'ledger')
+  migration_percentage: number; // % de progreso (0-100)
 }

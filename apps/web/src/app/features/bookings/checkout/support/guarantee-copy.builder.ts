@@ -26,7 +26,10 @@ export class GuaranteeCopyBuilder {
 
     const franchiseStandard = formatterUsd.format(guarantee.franchiseStandardUsd);
     const franchiseRollover = formatterUsd.format(guarantee.franchiseRolloverUsd);
-    const fxLabel = booking.currency === 'USD' ? 'USD' : `${booking.currency}@FX ${guarantee.fxSnapshot.toFixed(2)}`;
+    const fxLabel =
+      booking.currency === 'USD'
+        ? 'USD'
+        : `${booking.currency}@FX ${guarantee.fxSnapshot.toFixed(2)}`;
 
     if (guarantee.paymentMethod === 'credit_card' || guarantee.paymentMethod === 'partial_wallet') {
       const holdArs = formatterArs.format(guarantee.holdArs);

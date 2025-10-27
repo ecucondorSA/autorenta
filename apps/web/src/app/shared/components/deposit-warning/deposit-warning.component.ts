@@ -15,7 +15,9 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="bg-warning-50 dark:bg-warning-900/20 border-l-4 border-warning-500 p-6 mb-6 rounded-r-lg">
+    <div
+      class="bg-warning-50 dark:bg-warning-900/20 border-l-4 border-warning-500 p-6 mb-6 rounded-r-lg"
+    >
       <div class="flex items-start">
         <!-- Icono de advertencia -->
         <svg
@@ -45,24 +47,26 @@ import { TranslateModule } from '@ngx-translate/core';
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    Debes garantizar el <strong>monto del alquiler + depósito</strong> correspondiente al
-                    vehículo:
-                    <strong>entre USD 300 y USD 900</strong> si usás la wallet de AutoRenta (Mercado Pago) y
-                    <strong>entre USD 500 y USD 1.200</strong> si preferís tarjeta de crédito.
+                    Debes garantizar el
+                    <strong>monto del alquiler + depósito</strong> correspondiente al vehículo:
+                    <strong>entre USD 300 y USD 900</strong> si usás la wallet de AutoRenta (Mercado
+                    Pago) y <strong>entre USD 500 y USD 1.200</strong> si preferís tarjeta de
+                    crédito.
                   </span>
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span
-                    >Al finalizar el alquiler <strong>sin daños</strong>, el propietario recibe el pago
-                    del alquiler</span
+                    >Al finalizar el alquiler <strong>sin daños</strong>, el propietario recibe el
+                    pago del alquiler</span
                   >
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    La garantía se libera según el método elegido: se desbloquea el hold de tu tarjeta o
-                    vuelve el saldo bloqueado a tu wallet (no se deposita en tu cuenta bancaria)
+                    La garantía se libera según el método elegido: se desbloquea el hold de tu
+                    tarjeta o vuelve el saldo bloqueado a tu wallet (no se deposita en tu cuenta
+                    bancaria)
                   </span>
                 </li>
               </ul>
@@ -75,8 +79,8 @@ import { TranslateModule } from '@ngx-translate/core';
                 <li class="flex items-start">
                   <span class="mr-2">✔</span>
                   <span>
-                    Alquilar otro auto (solo necesitás agregar el monto del alquiler + el depósito que
-                    corresponda a tu método de pago)
+                    Alquilar otro auto (solo necesitás agregar el monto del alquiler + el depósito
+                    que corresponda a tu método de pago)
                   </span>
                 </li>
                 <li class="flex items-start">
@@ -118,14 +122,16 @@ import { TranslateModule } from '@ngx-translate/core';
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    El propietario puede cobrar los daños <strong>del monto garantizado</strong> (hasta el
-                    depósito retenido según el vehículo y método de pago)
+                    El propietario puede cobrar los daños
+                    <strong>del monto garantizado</strong> (hasta el depósito retenido según el
+                    vehículo y método de pago)
                   </span>
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">•</span>
                   <span>
-                    Si los daños son menores, recibís el <strong>resto en tu wallet o en tu tarjeta</strong>
+                    Si los daños son menores, recibís el
+                    <strong>resto en tu wallet o en tu tarjeta</strong>
                   </span>
                 </li>
                 <li class="flex items-start">
@@ -140,12 +146,14 @@ import { TranslateModule } from '@ngx-translate/core';
           </div>
 
           <!-- Callout de beneficio -->
-          <div class="mt-4 p-4 bg-white dark:bg-slate-800 rounded-lg border border-amber-200 dark:border-amber-700">
+          <div
+            class="mt-4 p-4 bg-white dark:bg-slate-800 rounded-lg border border-amber-200 dark:border-amber-700"
+          >
             <p class="text-sm font-medium text-slate-700 dark:text-slate-300">
               💡 <strong>Beneficio principal:</strong> Este sistema está diseñado para usuarios
-              <strong>sin tarjeta de crédito</strong>. Los fondos quedan en tu cuenta de AutoRenta para
-              futuros alquileres, creando un <strong>"crédito interno"</strong> que puedes reutilizar
-              indefinidamente.
+              <strong>sin tarjeta de crédito</strong>. Los fondos quedan en tu cuenta de AutoRenta
+              para futuros alquileres, creando un <strong>"crédito interno"</strong> que puedes
+              reutilizar indefinidamente.
             </p>
           </div>
         </div>

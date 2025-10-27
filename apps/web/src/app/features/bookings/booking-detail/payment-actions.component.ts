@@ -1,4 +1,3 @@
-
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -19,7 +18,10 @@ import { PaymentsService } from '../../../core/services/payments.service';
   imports: [CommonModule],
   template: `
     <!-- Payment Status Summary -->
-    <div class="payment-summary-card card-premium rounded-2xl shadow-soft" [ngClass]="paymentSummaryToneClass()">
+    <div
+      class="payment-summary-card card-premium rounded-2xl shadow-soft"
+      [ngClass]="paymentSummaryToneClass()"
+    >
       <div class="payment-summary-card__status-row">
         <div class="payment-summary-card__badge">
           <!-- Status will be handled by BookingStatusComponent in the parent -->
@@ -32,14 +34,19 @@ import { PaymentsService } from '../../../core/services/payments.service';
         <p class="payment-summary-card__total-amount" *ngIf="booking?.breakdown?.total_cents">
           {{ formatCurrency(booking!.breakdown!.total_cents, booking!.currency) }}
         </p>
-        <p class="payment-summary-card__total-amount" *ngIf="!booking?.breakdown?.total_cents">--</p>
+        <p class="payment-summary-card__total-amount" *ngIf="!booking?.breakdown?.total_cents">
+          --
+        </p>
       </div>
 
       <p *ngIf="paymentSummaryMessage()" class="payment-summary-card__message">
         {{ paymentSummaryMessage() }}
       </p>
 
-      <div *ngIf="booking?.status === 'pending' && timeRemaining && !isExpired()" class="payment-summary-card__countdown">
+      <div
+        *ngIf="booking?.status === 'pending' && timeRemaining && !isExpired()"
+        class="payment-summary-card__countdown"
+      >
         ⏱️ Pagá dentro de {{ timeRemaining }}
       </div>
     </div>
@@ -56,15 +63,12 @@ import { PaymentsService } from '../../../core/services/payments.service';
         >
           💳 Pagar ahora
         </button>
-        <button
-          (click)="handleCancel()"
-          class="btn-secondary flex-1 px-6 py-3 font-semibold"
-        >
+        <button (click)="handleCancel()" class="btn-secondary flex-1 px-6 py-3 font-semibold">
           ❌ Cancelar reserva
         </button>
       </div>
     </div>
-  `
+  `,
 })
 export class PaymentActionsComponent {
   @Input({ required: true }) booking!: Booking;
@@ -73,7 +77,7 @@ export class PaymentActionsComponent {
   private readonly bookingsService = inject(BookingsService);
   private readonly paymentsService = inject(PaymentsService); // ✅ Inyectar PaymentService
   private readonly router = inject(Router);
-  
+
   protected isProcessing = signal(false); // ✅ Estado de carga
 
   isExpired = computed(() => {
@@ -155,7 +159,9 @@ export class PaymentActionsComponent {
       }
     } catch (err) {
       console.error('Error en handlePayNow:', err);
-      alert('Error al procesar el pago: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+      alert(
+        'Error al procesar el pago: ' + (err instanceof Error ? err.message : 'Error desconocido'),
+      );
     } finally {
       this.isProcessing.set(false);
     }

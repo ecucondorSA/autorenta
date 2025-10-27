@@ -22,12 +22,15 @@ import { TranslateService } from '@ngx-translate/core';
 @Pipe({
   name: 'dateFormat',
   standalone: true,
-  pure: false // Re-evalúa cuando cambia el idioma
+  pure: false, // Re-evalúa cuando cambia el idioma
 })
 export class DateFormatPipe implements PipeTransform {
   private readonly translateService = inject(TranslateService);
 
-  transform(value: string | Date | null | undefined, format: 'short' | 'medium' | 'long' | 'shortTime' | 'mediumTime' = 'short'): string {
+  transform(
+    value: string | Date | null | undefined,
+    format: 'short' | 'medium' | 'long' | 'shortTime' | 'mediumTime' = 'short',
+  ): string {
     if (!value) return '';
 
     const date = typeof value === 'string' ? new Date(value) : value;
@@ -38,7 +41,8 @@ export class DateFormatPipe implements PipeTransform {
     }
 
     // Obtener idioma activo (default: es-AR)
-    const currentLang = this.translateService.currentLang || this.translateService.defaultLang || 'es';
+    const currentLang =
+      this.translateService.currentLang || this.translateService.defaultLang || 'es';
     const locale = this.getLocaleFromLang(currentLang);
 
     // Configuraciones de formato por tipo
@@ -52,9 +56,9 @@ export class DateFormatPipe implements PipeTransform {
    */
   private getLocaleFromLang(lang: string): string {
     const localeMap: Record<string, string> = {
-      'es': 'es-AR',  // Español de Argentina
-      'pt': 'pt-BR',  // Portugués de Brasil
-      'en': 'en-US',  // Inglés de EEUU
+      es: 'es-AR', // Español de Argentina
+      pt: 'pt-BR', // Portugués de Brasil
+      en: 'en-US', // Inglés de EEUU
     };
 
     return localeMap[lang] || 'es-AR';

@@ -1,6 +1,6 @@
 /**
  * Responsive UI Testing Helpers
- * 
+ *
  * Utilities for testing responsive behavior in Angular/Ionic components
  * Mocks matchMedia and ResizeObserver for viewport-based tests
  */
@@ -28,31 +28,33 @@ export function mockMatchMedia(query: string, matches: boolean): MediaQueryList 
  */
 export function mockResizeObserver() {
   const callbacks: ResizeObserverCallback[] = [];
-  
+
   const mockObserver = {
     observe: jasmine.createSpy('observe'),
     unobserve: jasmine.createSpy('unobserve'),
     disconnect: jasmine.createSpy('disconnect'),
-    
+
     // Helper to trigger resize
     triggerResize: (entries: Partial<ResizeObserverEntry>[]) => {
-      callbacks.forEach(cb => cb(entries as ResizeObserverEntry[], mockObserver as ResizeObserver));
-    }
+      callbacks.forEach((cb) =>
+        cb(entries as ResizeObserverEntry[], mockObserver as ResizeObserver),
+      );
+    },
   };
-  
+
   // Store callback when ResizeObserver is instantiated
-  const ResizeObserverMock = function(callback: ResizeObserverCallback) {
+  const ResizeObserverMock = function (callback: ResizeObserverCallback) {
     callbacks.push(callback);
     return mockObserver;
   };
-  
+
   return { ResizeObserverMock, mockObserver };
 }
 
 /**
  * Setup responsive test environment
  * Configures window.matchMedia and ResizeObserver mocks
- * 
+ *
  * @param viewport - Viewport configuration
  * @returns Cleanup function
  */
@@ -64,19 +66,19 @@ export interface ViewportConfig {
 
 export function setupResponsiveEnvironment(viewport: ViewportConfig) {
   const { width, height, devicePixelRatio = 1 } = viewport;
-  
+
   // Store original functions
   const originalMatchMedia = window.matchMedia;
   const originalResizeObserver = (window as any).ResizeObserver;
-  
+
   // Mock matchMedia based on viewport
   window.matchMedia = jasmine.createSpy('matchMedia').and.callFake((query: string) => {
     // Parse common media queries
     const maxWidthMatch = query.match(/max-width:\s*(\d+)px/);
     const minWidthMatch = query.match(/min-width:\s*(\d+)px/);
-    
+
     let matches = false;
-    
+
     if (maxWidthMatch) {
       const maxWidth = parseInt(maxWidthMatch[1], 10);
       matches = width <= maxWidth;
@@ -84,33 +86,33 @@ export function setupResponsiveEnvironment(viewport: ViewportConfig) {
       const minWidth = parseInt(minWidthMatch[1], 10);
       matches = width >= minWidth;
     }
-    
+
     return mockMatchMedia(query, matches);
   });
-  
+
   // Mock ResizeObserver
   const { ResizeObserverMock, mockObserver } = mockResizeObserver();
   (window as any).ResizeObserver = ResizeObserverMock;
-  
+
   // Mock window dimensions
   Object.defineProperty(window, 'innerWidth', {
     writable: true,
     configurable: true,
     value: width,
   });
-  
+
   Object.defineProperty(window, 'innerHeight', {
     writable: true,
     configurable: true,
     value: height,
   });
-  
+
   Object.defineProperty(window, 'devicePixelRatio', {
     writable: true,
     configurable: true,
     value: devicePixelRatio,
   });
-  
+
   // Return cleanup function
   return {
     cleanup: () => {
@@ -121,17 +123,17 @@ export function setupResponsiveEnvironment(viewport: ViewportConfig) {
     triggerResize: (newWidth: number, newHeight: number) => {
       (window as any).innerWidth = newWidth;
       (window as any).innerHeight = newHeight;
-      
+
       // Trigger resize event
       window.dispatchEvent(new Event('resize'));
-      
+
       // Update matchMedia
       window.matchMedia = jasmine.createSpy('matchMedia').and.callFake((query: string) => {
         const maxWidthMatch = query.match(/max-width:\s*(\d+)px/);
         const minWidthMatch = query.match(/min-width:\s*(\d+)px/);
-        
+
         let matches = false;
-        
+
         if (maxWidthMatch) {
           const maxWidth = parseInt(maxWidthMatch[1], 10);
           matches = newWidth <= maxWidth;
@@ -139,10 +141,10 @@ export function setupResponsiveEnvironment(viewport: ViewportConfig) {
           const minWidth = parseInt(minWidthMatch[1], 10);
           matches = newWidth >= minWidth;
         }
-        
+
         return mockMatchMedia(query, matches);
       });
-    }
+    },
   };
 }
 
@@ -154,11 +156,11 @@ export const VIEWPORTS = {
   IPHONE_SE: { width: 375, height: 667, devicePixelRatio: 2 },
   IPHONE_12: { width: 390, height: 844, devicePixelRatio: 3 },
   SAMSUNG_S20: { width: 360, height: 800, devicePixelRatio: 3 },
-  
+
   // Tablet
   IPAD: { width: 768, height: 1024, devicePixelRatio: 2 },
   IPAD_PRO: { width: 1024, height: 1366, devicePixelRatio: 2 },
-  
+
   // Desktop
   DESKTOP_SM: { width: 1024, height: 768, devicePixelRatio: 1 },
   DESKTOP_MD: { width: 1440, height: 900, devicePixelRatio: 1 },

@@ -1,11 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  input,
-} from '@angular/core';
+import { Directive, ElementRef, OnInit, OnDestroy, AfterViewInit, input } from '@angular/core';
 
 /**
  * Focus Trap Directive
@@ -101,16 +94,15 @@ export class FocusTrapDirective implements OnInit, AfterViewInit, OnDestroy {
    */
   private updateFocusableElements(): void {
     const elements = this.elementRef.nativeElement.querySelectorAll<HTMLElement>(
-      this.focusableSelectors
+      this.focusableSelectors,
     );
 
     this.focusableElements = Array.from(elements).filter(
-      (el) => el.offsetParent !== null && !el.hasAttribute('disabled')
+      (el) => el.offsetParent !== null && !el.hasAttribute('disabled'),
     );
 
     this.firstFocusableElement = this.focusableElements[0] || null;
-    this.lastFocusableElement =
-      this.focusableElements[this.focusableElements.length - 1] || null;
+    this.lastFocusableElement = this.focusableElements[this.focusableElements.length - 1] || null;
   }
 
   /**

@@ -5,7 +5,7 @@ import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 declare var window: any;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MercadoPagoScriptService {
   private renderer: Renderer2;
@@ -16,7 +16,7 @@ export class MercadoPagoScriptService {
   constructor(
     rendererFactory: RendererFactory2,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: object
+    @Inject(PLATFORM_ID) private platformId: object,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
@@ -74,13 +74,16 @@ export class MercadoPagoScriptService {
 
       console.log('MercadoPago global found. Initializing instance...');
       this.mercadoPagoInstance = new MercadoPagoGlobal(publicKey, {
-        locale: 'es-AR' // Or your desired locale
+        locale: 'es-AR', // Or your desired locale
       });
       console.log('MercadoPago instance initialized.');
       return this.mercadoPagoInstance;
     } catch (error) {
       console.error('Error in getMercadoPago:', error);
-      console.error('Detailed error object in getMercadoPago:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+      console.error(
+        'Detailed error object in getMercadoPago:',
+        JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
+      );
       return Promise.reject(error);
     }
   }

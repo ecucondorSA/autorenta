@@ -59,20 +59,19 @@ export class PwaService {
 
     // Listen for version updates
     this.swUpdate.versionUpdates
-      .pipe(
-        filter(
-          (evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'
-        )
-      )
+      .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
       .subscribe((event) => {
         console.log('🔄 PWA: New version available', event);
         this.updateAvailable.set(true);
       });
 
     // Check for updates every 30 minutes
-    setInterval(() => {
-      this.swUpdate?.checkForUpdate();
-    }, 30 * 60 * 1000);
+    setInterval(
+      () => {
+        this.swUpdate?.checkForUpdate();
+      },
+      30 * 60 * 1000,
+    );
   }
 
   /**
@@ -162,10 +161,7 @@ export class PwaService {
   /**
    * Show a notification
    */
-  async showNotification(
-    title: string,
-    options?: NotificationOptions
-  ): Promise<void> {
+  async showNotification(title: string, options?: NotificationOptions): Promise<void> {
     if (!('Notification' in window)) {
       console.warn('⚠️ PWA: Notifications not supported');
       return;
@@ -260,7 +256,7 @@ export class PwaService {
    */
   async pickContacts(
     properties: string[] = ['name', 'email', 'tel'],
-    multiple = true
+    multiple = true,
   ): Promise<any[] | null> {
     if (!('contacts' in navigator)) {
       console.warn('⚠️ PWA: Contact Picker API not supported');
@@ -309,11 +305,7 @@ export class PwaService {
   /**
    * Clipboard API - Write rich content (text + images)
    */
-  async writeToClipboard(data: {
-    text?: string;
-    html?: string;
-    image?: Blob;
-  }): Promise<boolean> {
+  async writeToClipboard(data: { text?: string; html?: string; image?: Blob }): Promise<boolean> {
     if (!navigator.clipboard?.write) {
       console.warn('⚠️ PWA: Advanced Clipboard API not supported');
       return false;
@@ -346,9 +338,7 @@ export class PwaService {
   /**
    * Screen Orientation API - Lock orientation
    */
-  async lockOrientation(
-    orientation: 'portrait' | 'landscape'
-  ): Promise<boolean> {
+  async lockOrientation(orientation: 'portrait' | 'landscape'): Promise<boolean> {
     const screenOrientation = screen.orientation as any;
     if (!screenOrientation?.lock) {
       console.warn('⚠️ PWA: Screen Orientation API not supported');
@@ -379,10 +369,7 @@ export class PwaService {
   /**
    * Periodic Background Sync API - Register periodic sync
    */
-  async registerPeriodicSync(
-    tag: string,
-    minInterval: number
-  ): Promise<boolean> {
+  async registerPeriodicSync(tag: string, minInterval: number): Promise<boolean> {
     if (!('serviceWorker' in navigator)) {
       return false;
     }

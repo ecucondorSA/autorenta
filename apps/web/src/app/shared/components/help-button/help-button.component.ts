@@ -20,7 +20,13 @@ import { GuidedTourService, TourId as NewTourId } from '../../../core/guided-tou
         [attr.aria-expanded]="showMenu()"
         type="button"
       >
-        <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg
+          class="w-5 h-5 lg:w-6 lg:h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -32,11 +38,7 @@ import { GuidedTourService, TourId as NewTourId } from '../../../core/guided-tou
 
       @if (showMenu()) {
         <!-- Backdrop -->
-        <div
-          class="fixed inset-0 z-40"
-          (click)="closeMenu()"
-          aria-hidden="true"
-        ></div>
+        <div class="fixed inset-0 z-40" (click)="closeMenu()" aria-hidden="true"></div>
 
         <!-- Menu dropdown -->
         <div
@@ -72,14 +74,20 @@ import { GuidedTourService, TourId as NewTourId } from '../../../core/guided-tou
             💸 Cómo publicar mi auto
           </button>
 
-          <hr class="my-2 border-pearl-gray/40 dark:border-white/10">
+          <hr class="my-2 border-pearl-gray/40 dark:border-white/10" />
 
           <a
             href="mailto:soporte@autorentar.com"
             class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm flex items-center gap-2 transition-base text-charcoal-medium dark:text-pearl-light"
             role="menuitem"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -121,9 +129,9 @@ export class HelpButtonComponent {
 
     // NEW TOUR SYSTEM: Use GuidedTourService
     const tourIdMap: Record<'welcome' | 'renter' | 'owner', NewTourId> = {
-      'welcome': NewTourId.Welcome,
-      'renter': NewTourId.Renter,
-      'owner': NewTourId.Owner,
+      welcome: NewTourId.Welcome,
+      renter: NewTourId.Renter,
+      owner: NewTourId.Owner,
     };
     const tourId = tourIdMap[tourType];
 
@@ -132,10 +140,10 @@ export class HelpButtonComponent {
       this.router.navigate(['/cars']).then(() => {
         setTimeout(() => {
           this.guidedTour.reset(tourId);
-          this.guidedTour.request({ 
-            id: tourId, 
+          this.guidedTour.request({
+            id: tourId,
             mode: 'user-triggered',
-            force: true 
+            force: true,
           });
         }, 500);
       });
@@ -143,20 +151,20 @@ export class HelpButtonComponent {
       this.router.navigate(['/cars/publish']).then(() => {
         setTimeout(() => {
           this.guidedTour.reset(tourId);
-          this.guidedTour.request({ 
-            id: tourId, 
+          this.guidedTour.request({
+            id: tourId,
             mode: 'user-triggered',
-            force: true 
+            force: true,
           });
         }, 500);
       });
     } else {
       // Reset and start tour (user-triggered = bypass throttling)
       this.guidedTour.reset(tourId);
-      this.guidedTour.request({ 
-        id: tourId, 
+      this.guidedTour.request({
+        id: tourId,
         mode: 'user-triggered',
-        force: true 
+        force: true,
       });
     }
   }

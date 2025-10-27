@@ -13,20 +13,22 @@
 
 .payment-option:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 /* Smooth transitions for input slider */
-input[type="number"] {
+input[type='number'] {
   transition: border-color 0.2s ease-in-out;
 }
 
-input[type="number"]:focus {
+input[type='number']:focus {
   outline: none;
 }
 
 /* Custom styling for radio buttons */
-input[type="radio"] {
+input[type='radio'] {
   cursor: pointer;
   width: 1rem;
   height: 1rem;

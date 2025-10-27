@@ -101,6 +101,8 @@
       {{ loading() ? 'Guardando...' : 'Enviar publicación' }}
     </button>
 
-    <p *ngIf="message()" class="text-sm text-blue-600 dark:text-accent-petrol/80">{{ message() }}</p>
+    <p *ngIf="message()" class="text-sm text-blue-600 dark:text-accent-petrol/80">
+      {{ message() }}
+    </p>
   </form>
 </section>

@@ -52,12 +52,12 @@
 .fab-location {
   top: 80px;
   right: 16px;
-  
+
   ion-fab-button {
     --background: white;
     --color: #4f46e5;
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    
+
     &:hover {
       --background: #f9fafb;
     }
@@ -66,7 +66,7 @@
 
 .fab-list {
   bottom: 80px; // Above tab bar
-  
+
   ion-fab-button {
     --background: #4f46e5;
     --color: white;
@@ -78,7 +78,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    
+
     .fab-label {
       font-size: 14px;
       font-weight: 600;
@@ -92,12 +92,12 @@
   --height: auto;
   --border-radius: 16px 16px 0 0;
   --box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.15);
-  
+
   ion-header {
     ion-toolbar {
       --background: white;
       padding: 8px 16px;
-      
+
       ion-label {
         font-size: 18px;
         color: #111827;
@@ -109,7 +109,7 @@
 .list-content {
   --background: #f9fafb;
   padding: 16px;
-  
+
   ion-list {
     background: transparent;
     padding: 0;
@@ -120,11 +120,11 @@
   margin-bottom: 16px;
   cursor: pointer;
   transition: transform 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -134,18 +134,18 @@
 .empty-state {
   text-align: center;
   padding: 48px 16px;
-  
+
   ion-icon {
     font-size: 64px;
     color: #9ca3af;
     margin-bottom: 16px;
   }
-  
+
   p {
     color: #6b7280;
     margin-bottom: 24px;
   }
-  
+
   ion-button {
     --background: #4f46e5;
   }
@@ -156,26 +156,26 @@
   .search-bar-toolbar {
     --background: rgba(31, 41, 55, 0.95);
   }
-  
+
   .filters-panel {
     background: #1f2937;
   }
-  
+
   .fab-location ion-fab-button {
     --background: #1f2937;
     --color: #818cf8;
   }
-  
+
   .list-modal {
     ion-header ion-toolbar {
       --background: #1f2937;
-      
+
       ion-label {
         color: #f9fafb;
       }
     }
   }
-  
+
   .list-content {
     --background: #111827;
   }
@@ -185,7 +185,7 @@
 @media (max-width: 768px) {
   .fab-list {
     bottom: 90px; // More space on mobile
-    
+
     ion-fab-button {
       .fab-label {
         display: none; // Hide label on very small screens

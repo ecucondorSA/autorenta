@@ -25,10 +25,14 @@ export class BankAccountsListComponent {
 
   getAccountTypeLabel(type: string): string {
     switch (type) {
-      case 'cbu': return 'CBU';
-      case 'cvu': return 'CVU';
-      case 'alias': return 'Alias';
-      default: return type.toUpperCase();
+      case 'cbu':
+        return 'CBU';
+      case 'cvu':
+        return 'CVU';
+      case 'alias':
+        return 'Alias';
+      default:
+        return type.toUpperCase();
     }
   }
 

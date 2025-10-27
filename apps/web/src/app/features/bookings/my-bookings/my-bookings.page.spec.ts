@@ -56,9 +56,7 @@ describe('MyBookingsPage - Sprint 3', () => {
         start_at: new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString(), // 25h from now
       };
 
-      bookingsService.cancelBooking.and.returnValue(
-        Promise.resolve({ success: true })
-      );
+      bookingsService.cancelBooking.and.returnValue(Promise.resolve({ success: true }));
       bookingsService.getMyBookings.and.returnValue(Promise.resolve([booking25hAway]));
 
       spyOn(window, 'confirm').and.returnValue(true);
@@ -76,9 +74,7 @@ describe('MyBookingsPage - Sprint 3', () => {
     it('debería actualizar la lista de reservas después de cancelar', async () => {
       // Arrange
       const updatedBookings = [{ ...mockBooking, status: 'cancelled' as const }];
-      bookingsService.cancelBooking.and.returnValue(
-        Promise.resolve({ success: true })
-      );
+      bookingsService.cancelBooking.and.returnValue(Promise.resolve({ success: true }));
       bookingsService.getMyBookings.and.returnValue(Promise.resolve(updatedBookings));
 
       spyOn(window, 'confirm').and.returnValue(true);
@@ -93,9 +89,7 @@ describe('MyBookingsPage - Sprint 3', () => {
 
     it('debería mostrar mensaje de éxito al cancelar', async () => {
       // Arrange
-      bookingsService.cancelBooking.and.returnValue(
-        Promise.resolve({ success: true })
-      );
+      bookingsService.cancelBooking.and.returnValue(Promise.resolve({ success: true }));
       bookingsService.getMyBookings.and.returnValue(Promise.resolve([]));
 
       spyOn(window, 'confirm').and.returnValue(true);
@@ -121,7 +115,7 @@ describe('MyBookingsPage - Sprint 3', () => {
         Promise.resolve({
           success: false,
           error: 'Solo puedes cancelar con al menos 24 horas de anticipación',
-        })
+        }),
       );
 
       spyOn(window, 'confirm').and.returnValue(true);
@@ -133,7 +127,7 @@ describe('MyBookingsPage - Sprint 3', () => {
       // Assert
       expect(bookingsService.cancelBooking).toHaveBeenCalledWith(booking23hAway.id);
       expect(window.alert).toHaveBeenCalledWith(
-        '❌ Error: Solo puedes cancelar con al menos 24 horas de anticipación'
+        '❌ Error: Solo puedes cancelar con al menos 24 horas de anticipación',
       );
     });
 
@@ -146,7 +140,7 @@ describe('MyBookingsPage - Sprint 3', () => {
         Promise.resolve({
           success: false,
           error: 'Solo puedes cancelar con al menos 24 horas de anticipación',
-        })
+        }),
       );
       bookingsService.getMyBookings.and.returnValue(Promise.resolve(initialBookings));
 
@@ -164,7 +158,7 @@ describe('MyBookingsPage - Sprint 3', () => {
       // Arrange
       const errorMessage = 'Solo puedes cancelar con al menos 24 horas de anticipación';
       bookingsService.cancelBooking.and.returnValue(
-        Promise.resolve({ success: false, error: errorMessage })
+        Promise.resolve({ success: false, error: errorMessage }),
       );
 
       spyOn(window, 'confirm').and.returnValue(true);
@@ -391,9 +385,7 @@ describe('MyBookingsPage - Sprint 3', () => {
       component.showMap(bookingWithoutLocation);
 
       // Assert
-      expect(window.alert).toHaveBeenCalledWith(
-        '🗺️ Ubicación no disponible para esta reserva.'
-      );
+      expect(window.alert).toHaveBeenCalledWith('🗺️ Ubicación no disponible para esta reserva.');
       expect(window.open).not.toHaveBeenCalled();
     });
 
@@ -412,9 +404,7 @@ describe('MyBookingsPage - Sprint 3', () => {
       component.showMap(bookingWithPartialLocation);
 
       // Assert
-      expect(window.alert).toHaveBeenCalledWith(
-        '🗺️ Ubicación no disponible para esta reserva.'
-      );
+      expect(window.alert).toHaveBeenCalledWith('🗺️ Ubicación no disponible para esta reserva.');
     });
 
     it('debería mostrar mensaje si solo falta ciudad', () => {
@@ -432,9 +422,7 @@ describe('MyBookingsPage - Sprint 3', () => {
       component.showMap(bookingWithPartialLocation);
 
       // Assert
-      expect(window.alert).toHaveBeenCalledWith(
-        '🗺️ Ubicación no disponible para esta reserva.'
-      );
+      expect(window.alert).toHaveBeenCalledWith('🗺️ Ubicación no disponible para esta reserva.');
     });
   });
 
@@ -442,7 +430,7 @@ describe('MyBookingsPage - Sprint 3', () => {
     it('debería manejar error al obtener contacto del owner', async () => {
       // Arrange
       bookingsService.getOwnerContact.and.returnValue(
-        Promise.resolve({ success: false, error: 'Owner not found' })
+        Promise.resolve({ success: false, error: 'Owner not found' }),
       );
 
       spyOn(window, 'alert');
@@ -470,7 +458,7 @@ describe('MyBookingsPage - Sprint 3', () => {
 
       // Assert
       expect(window.alert).toHaveBeenCalledWith(
-        '❌ No se pudo obtener información del propietario'
+        '❌ No se pudo obtener información del propietario',
       );
     });
 
@@ -487,9 +475,7 @@ describe('MyBookingsPage - Sprint 3', () => {
 
     it('debería manejar error inesperado en cancelación', async () => {
       // Arrange
-      bookingsService.cancelBooking.and.returnValue(
-        Promise.reject(new Error('Network error'))
-      );
+      bookingsService.cancelBooking.and.returnValue(Promise.reject(new Error('Network error')));
       bookingsService.getMyBookings.and.returnValue(Promise.resolve([]));
 
       spyOn(window, 'confirm').and.returnValue(true);
@@ -500,9 +486,7 @@ describe('MyBookingsPage - Sprint 3', () => {
       await component.cancelBooking(mockBooking.id);
 
       // Assert
-      expect(window.alert).toHaveBeenCalledWith(
-        '❌ Error inesperado al cancelar la reserva'
-      );
+      expect(window.alert).toHaveBeenCalledWith('❌ Error inesperado al cancelar la reserva');
       expect(console.error).toHaveBeenCalled();
     });
   });

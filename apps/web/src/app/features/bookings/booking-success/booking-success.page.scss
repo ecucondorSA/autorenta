@@ -27,7 +27,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  
+
   .label {
     font-weight: 500;
     color: var(--ion-color-medium);
@@ -47,12 +47,14 @@
 }
 
 ion-card {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 ion-item {
   --padding-start: 0;
-  
+
   h3 {
     margin-bottom: 0.25rem;
   }
@@ -70,11 +72,11 @@ ion-item {
   .success-container {
     padding: 1rem 0.5rem;
   }
-  
+
   .success-icon {
     font-size: 80px !important;
   }
-  
+
   h1 {
     font-size: 1.75rem;
   }

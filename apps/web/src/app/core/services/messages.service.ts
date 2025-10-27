@@ -127,9 +127,9 @@ export class MessagesService {
           },
         },
       });
-      
+
       await channel.subscribe();
-      
+
       if (isTyping) {
         await channel.track({ user_id: userId, typing: true });
       } else {
@@ -164,7 +164,7 @@ export class MessagesService {
         }
       })
       .subscribe();
-    
+
     return channel;
   }
 

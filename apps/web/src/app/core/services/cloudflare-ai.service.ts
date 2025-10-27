@@ -7,7 +7,15 @@ export interface CloudflareAIRequest {
   model: string;
   year?: number;
   color?: string;
-  body_type?: 'sedan' | 'hatchback' | 'suv' | 'crossover' | 'pickup' | 'coupe' | 'wagon' | 'minivan';
+  body_type?:
+    | 'sedan'
+    | 'hatchback'
+    | 'suv'
+    | 'crossover'
+    | 'pickup'
+    | 'coupe'
+    | 'wagon'
+    | 'minivan';
   trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
   angle?: 'front' | 'side' | 'rear' | '3/4-front' | 'interior';
   style?: 'showroom' | 'street' | 'studio' | 'outdoor';
@@ -39,7 +47,8 @@ export class CloudflareAiService {
   private readonly http = inject(HttpClient);
 
   // URL del worker desplegado en Cloudflare
-  private readonly WORKER_URL = 'https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev';
+  private readonly WORKER_URL =
+    'https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev';
 
   /**
    * Genera una imagen de un auto usando FLUX.1-schnell
@@ -49,7 +58,7 @@ export class CloudflareAiService {
 
     try {
       const response = await firstValueFrom(
-        this.http.post<CloudflareAIResponse>(this.WORKER_URL, params)
+        this.http.post<CloudflareAIResponse>(this.WORKER_URL, params),
       );
 
       if (!response.success || !response.image) {
@@ -76,7 +85,15 @@ export class CloudflareAiService {
     model: string;
     year?: number;
     color?: string;
-    body_type?: 'sedan' | 'hatchback' | 'suv' | 'crossover' | 'pickup' | 'coupe' | 'wagon' | 'minivan';
+    body_type?:
+      | 'sedan'
+      | 'hatchback'
+      | 'suv'
+      | 'crossover'
+      | 'pickup'
+      | 'coupe'
+      | 'wagon'
+      | 'minivan';
     trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
     angles?: Array<'front' | 'side' | 'rear' | '3/4-front' | 'interior'>;
   }): Promise<Blob[]> {
@@ -90,7 +107,7 @@ export class CloudflareAiService {
         angle,
         style: 'showroom',
         num_steps: 8, // Max quality for FLUX.1-schnell
-      })
+      }),
     );
 
     return await Promise.all(promises);

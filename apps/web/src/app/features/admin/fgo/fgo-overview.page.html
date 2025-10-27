@@ -122,8 +122,8 @@
           <div
             class="progress-bar"
             [style.width.%]="subfund.percentage"
-            [style.background-color]="getSubfundColor(subfund.type)">
-          </div>
+            [style.background-color]="getSubfundColor(subfund.type)"
+          ></div>
         </div>
       </div>
     </div>
@@ -161,18 +161,28 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let movement of recentMovements"
-              [class.movement-credit]="movement.operation === 'credit'"
-              [class.movement-debit]="movement.operation === 'debit'">
+          <tr
+            *ngFor="let movement of recentMovements"
+            [class.movement-credit]="movement.operation === 'credit'"
+            [class.movement-debit]="movement.operation === 'debit'"
+          >
             <td class="movement-date">{{ formatDate(movement.timestamp) }}</td>
             <td class="movement-type">{{ getMovementTypeName(movement.movementType) }}</td>
             <td class="movement-subfund">{{ getSubfundName(movement.subfundType) }}</td>
-            <td class="movement-amount" [class.positive]="movement.operation === 'credit'" [class.negative]="movement.operation === 'debit'">
+            <td
+              class="movement-amount"
+              [class.positive]="movement.operation === 'credit'"
+              [class.negative]="movement.operation === 'debit'"
+            >
               <span class="operation-sign">{{ movement.operation === 'credit' ? '+' : '-' }}</span>
               {{ formatUsd(movement.amount) }}
             </td>
             <td class="movement-operation">
-              <span class="badge" [class.badge-credit]="movement.operation === 'credit'" [class.badge-debit]="movement.operation === 'debit'">
+              <span
+                class="badge"
+                [class.badge-credit]="movement.operation === 'credit'"
+                [class.badge-debit]="movement.operation === 'debit'"
+              >
                 {{ movement.operation === 'credit' ? 'Crédito' : 'Débito' }}
               </span>
             </td>
@@ -308,7 +318,8 @@
             ></textarea>
           </div>
           <div class="alert-warning">
-            ⚠️ Esta acción debitará <strong>{{ formatUsd(siniestroForm.amount || 0) }}</strong> del subfondo de Liquidez.
+            ⚠️ Esta acción debitará <strong>{{ formatUsd(siniestroForm.amount || 0) }}</strong> del
+            subfondo de Liquidez.
           </div>
         </form>
       </div>

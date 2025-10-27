@@ -141,9 +141,10 @@ export class TourRegistryService {
         {
           name: 'isOnCarsPage',
           check: () => {
-            return typeof window !== 'undefined' && 
-                   (window.location.pathname === '/cars' || 
-                    window.location.pathname.startsWith('/cars'));
+            return (
+              typeof window !== 'undefined' &&
+              (window.location.pathname === '/cars' || window.location.pathname.startsWith('/cars'))
+            );
           },
         },
       ],
@@ -185,7 +186,7 @@ export class TourRegistryService {
             step_order: 1,
           },
         },
-        
+
         // Step 2: Select Car from Carousel
         {
           id: 'guided-select-car',
@@ -205,7 +206,7 @@ export class TourRegistryService {
             if (carousel && !carousel.classList.contains('visible')) {
               // Scroll into view if needed
               carousel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              await new Promise(resolve => setTimeout(resolve, 500));
+              await new Promise((resolve) => setTimeout(resolve, 500));
             }
           },
           responsive: {
@@ -510,16 +511,14 @@ export class TourRegistryService {
   createStep(
     id: string,
     content: string | StepContent,
-    options: Partial<StepDefinition> = {}
+    options: Partial<StepDefinition> = {},
   ): StepDefinition {
     return {
       id,
       content: typeof content === 'string' ? { text: content } : content,
       position: options.position || 'bottom',
       target: options.target,
-      buttons: options.buttons || [
-        { text: 'Siguiente', action: 'next' },
-      ],
+      buttons: options.buttons || [{ text: 'Siguiente', action: 'next' }],
       ...options,
     };
   }

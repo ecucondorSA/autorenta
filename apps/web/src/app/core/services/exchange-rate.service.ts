@@ -59,7 +59,7 @@ export class ExchangeRateService {
     // Si el cache es válido (< 60s), retornar valor cacheado
     if (this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS) {
       console.log(
-        `💱 Usando cotización cacheada: 1 USD = ${this.lastRate()!.platform_rate} ARS (age: ${Math.round(cacheAge / 1000)}s)`
+        `💱 Usando cotización cacheada: 1 USD = ${this.lastRate()!.platform_rate} ARS (age: ${Math.round(cacheAge / 1000)}s)`,
       );
       return this.lastRate()!.platform_rate;
     }
@@ -89,7 +89,7 @@ export class ExchangeRateService {
       this.lastFetch.set(now);
 
       console.log(
-        `✅ Cotización de plataforma (con margen ${data.margin_percent}%): 1 USD = ${data.platform_rate} ARS (Binance: ${data.binance_rate})`
+        `✅ Cotización de plataforma (con margen ${data.margin_percent}%): 1 USD = ${data.platform_rate} ARS (Binance: ${data.binance_rate})`,
       );
 
       return data.platform_rate;
@@ -140,7 +140,7 @@ export class ExchangeRateService {
     // Si no hay cache, obtener platform rate primero (que actualiza el cache)
     await this.getPlatformRate();
 
-    throw new Error("No se pudo obtener tasa de Binance");
+    throw new Error('No se pudo obtener tasa de Binance');
   }
 
   /**

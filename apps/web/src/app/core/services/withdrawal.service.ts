@@ -67,29 +67,25 @@ export class WithdrawalService {
   /**
    * Cuenta bancaria por defecto del usuario
    */
-  readonly defaultBankAccount = computed(() =>
-    this.bankAccounts().find((acc) => acc.is_default)
-  );
+  readonly defaultBankAccount = computed(() => this.bankAccounts().find((acc) => acc.is_default));
 
   /**
    * Cuentas bancarias activas
    */
-  readonly activeBankAccounts = computed(() =>
-    this.bankAccounts().filter((acc) => acc.is_active)
-  );
+  readonly activeBankAccounts = computed(() => this.bankAccounts().filter((acc) => acc.is_active));
 
   /**
    * Retiros pendientes
    */
   readonly pendingWithdrawals = computed(() =>
-    this.withdrawalRequests().filter((req) => req.status === 'pending')
+    this.withdrawalRequests().filter((req) => req.status === 'pending'),
   );
 
   /**
    * Retiros completados
    */
   readonly completedWithdrawals = computed(() =>
-    this.withdrawalRequests().filter((req) => req.status === 'completed')
+    this.withdrawalRequests().filter((req) => req.status === 'completed'),
   );
 
   /**
@@ -191,11 +187,9 @@ export class WithdrawalService {
     this.clearError();
 
     try {
-      const { error } = await this.supabase
-        .getClient()
-        .rpc('set_default_bank_account', {
-          p_bank_account_id: accountId,
-        });
+      const { error } = await this.supabase.getClient().rpc('set_default_bank_account', {
+        p_bank_account_id: accountId,
+      });
 
       if (error) {
         throw this.createError('SET_DEFAULT_ERROR', error.message, error);
@@ -206,7 +200,7 @@ export class WithdrawalService {
         accounts.map((acc) => ({
           ...acc,
           is_default: acc.id === accountId,
-        }))
+        })),
       );
     } catch (err) {
       const walletError = this.handleError(err, 'Error al establecer cuenta predeterminada');
@@ -244,7 +238,9 @@ export class WithdrawalService {
   /**
    * Solicita un retiro de fondos
    */
-  async requestWithdrawal(params: RequestWithdrawalParams): Promise<WalletRequestWithdrawalResponse> {
+  async requestWithdrawal(
+    params: RequestWithdrawalParams,
+  ): Promise<WalletRequestWithdrawalResponse> {
     this.setLoadingState('requesting', true);
     this.clearError();
 
@@ -362,8 +358,8 @@ export class WithdrawalService {
       // Actualizar estado local
       this.withdrawalRequests.update((requests) =>
         requests.map((req) =>
-          req.id === requestId ? { ...req, status: 'cancelled' as const } : req
-        )
+          req.id === requestId ? { ...req, status: 'cancelled' as const } : req,
+        ),
       );
     } catch (err) {
       const walletError = this.handleError(err, 'Error al cancelar solicitud de retiro');
@@ -376,7 +372,9 @@ export class WithdrawalService {
   /**
    * Aprueba una solicitud de retiro (admin only)
    */
-  async approveWithdrawal(params: ApproveWithdrawalParams): Promise<WalletApproveWithdrawalResponse> {
+  async approveWithdrawal(
+    params: ApproveWithdrawalParams,
+  ): Promise<WalletApproveWithdrawalResponse> {
     this.setLoadingState('approving', true);
     this.clearError();
 
@@ -446,8 +444,8 @@ export class WithdrawalService {
                 status: 'rejected' as const,
                 rejection_reason: params.rejection_reason,
               }
-            : req
-        )
+            : req,
+        ),
       );
     } catch (err) {
       const walletError = this.handleError(err, 'Error al rechazar retiro');
@@ -501,7 +499,7 @@ export class WithdrawalService {
         if (!/^[a-zA-Z0-9.]+$/.test(number) || number.length < 6 || number.length > 20) {
           throw this.createError(
             'INVALID_ALIAS',
-            'El alias debe tener entre 6 y 20 caracteres alfanuméricos'
+            'El alias debe tener entre 6 y 20 caracteres alfanuméricos',
           );
         }
         break;

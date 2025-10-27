@@ -3,7 +3,7 @@ import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * SPRINT 4 - TEST 3: Concurrencia de Múltiples Usuarios
- * 
+ *
  * Este test verifica que:
  * 1. 10 usuarios simultáneos pueden hacer búsquedas sin errores
  * 2. No hay errores de "too many connections"
@@ -24,7 +24,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
     it('debe manejar 10 usuarios haciendo búsquedas simultáneas', async () => {
       const userCount = 10;
       const queriesPerUser = 5;
-      
+
       // Simular 10 usuarios, cada uno haciendo 5 búsquedas
       const userSessions = Array.from({ length: userCount }, (_, userId) => {
         return simulateUserSession(userId, queriesPerUser);
@@ -35,8 +35,8 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       const elapsedTime = Date.now() - startTime;
 
       // Todas las sesiones deben completarse exitosamente
-      expect(results.every(r => r.success)).toBe(true);
-      
+      expect(results.every((r) => r.success)).toBe(true);
+
       // Total: 50 queries (10 usuarios × 5 queries)
       const totalQueries = results.reduce((sum, r) => sum + r.completedQueries, 0);
       expect(totalQueries).toBe(userCount * queriesPerUser);
@@ -67,18 +67,19 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       });
 
       const results = await Promise.all(users);
-      
+
       // No debe haber errores de "too many connections"
-      const connectionErrors = errors.filter(e => 
-        e.includes('too many connections') || 
-        e.includes('connection pool') ||
-        e.includes('connection limit')
+      const connectionErrors = errors.filter(
+        (e) =>
+          e.includes('too many connections') ||
+          e.includes('connection pool') ||
+          e.includes('connection limit'),
       );
-      
+
       expect(connectionErrors.length).toBe(0);
-      
+
       // Todas las búsquedas deben ser exitosas
-      const successfulSearches = results.filter(r => r.success);
+      const successfulSearches = results.filter((r) => r.success);
       expect(successfulSearches.length).toBe(userCount);
 
       console.log(`✅ Búsquedas exitosas: ${successfulSearches.length}/${userCount}`);
@@ -98,8 +99,8 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
         ];
 
         const results = await Promise.allSettled(queries);
-        
-        results.forEach(result => {
+
+        results.forEach((result) => {
           if (result.status === 'fulfilled') {
             completedQueries++;
           } else {
@@ -107,7 +108,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
           }
         });
 
-        return { userId, completed: results.filter(r => r.status === 'fulfilled').length };
+        return { userId, completed: results.filter((r) => r.status === 'fulfilled').length };
       });
 
       await Promise.all(users);
@@ -130,10 +131,10 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
           // Simular query con latencia variable
           const latency = 20 + Math.random() * 30;
           setTimeout(() => {
-            resolve({ 
-              id: i, 
-              data: [{ result: 'success' }], 
-              error: null 
+            resolve({
+              id: i,
+              data: [{ result: 'success' }],
+              error: null,
             });
           }, latency);
         });
@@ -165,7 +166,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
 
         while (attempts < maxAttempts) {
           attempts++;
-          
+
           // 80% de éxito, 20% de error transitorio
           if (Math.random() < 0.8) {
             successCount++;
@@ -173,7 +174,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
           } else {
             retryCount++;
             // Esperar antes de reintentar
-            await new Promise(resolve => setTimeout(resolve, 10));
+            await new Promise((resolve) => setTimeout(resolve, 10));
           }
         }
 
@@ -181,9 +182,9 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       });
 
       const results = await Promise.all(queries);
-      
+
       // La mayoría debe ser exitosa después de reintentos
-      const successful = results.filter(r => r.success);
+      const successful = results.filter((r) => r.success);
       expect(successful.length).toBeGreaterThanOrEqual(queryCount * 0.8);
 
       console.log(`✅ Exitosas: ${successful.length}/${queryCount}`);
@@ -198,7 +199,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       // Ejecutar 5 batches de 10 queries cada uno
       for (let i = 0; i < batchCount; i++) {
         const start = Date.now();
-        
+
         const batch = Array.from({ length: queriesPerBatch }, () => {
           return new Promise((resolve) => {
             setTimeout(() => resolve({ data: [], error: null }), 25);
@@ -226,7 +227,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
     it('debe manejar correctamente el límite de conexiones', async () => {
       // Simular acercamiento al límite del pool
       const nearLimitQueries = 15; // Cerca del pool size típico (10-15)
-      
+
       const queries = Array.from({ length: nearLimitQueries }, (_, i) => {
         return new Promise((resolve) => {
           // Queries con duración variable
@@ -238,7 +239,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       });
 
       const results = await Promise.all(queries);
-      
+
       // Todas deben completarse sin errores
       expect(results.every((r: any) => r.success)).toBe(true);
       expect(results.length).toBe(nearLimitQueries);
@@ -251,11 +252,11 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
 
       const queries = Array.from({ length: overloadQueries }, async (_, i) => {
         const start = Date.now();
-        
+
         // Simular espera en cola si pool está lleno
         const queueDelay = i > 15 ? 20 + (i - 15) * 2 : 0;
-        await new Promise(resolve => setTimeout(resolve, 25 + queueDelay));
-        
+        await new Promise((resolve) => setTimeout(resolve, 25 + queueDelay));
+
         timeouts.push(Date.now() - start);
         return { id: i, queued: i > 15 };
       });
@@ -284,7 +285,10 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
 /**
  * Simula una sesión completa de usuario con múltiples queries
  */
-async function simulateUserSession(userId: number, queryCount: number): Promise<{
+async function simulateUserSession(
+  userId: number,
+  queryCount: number,
+): Promise<{
   userId: number;
   success: boolean;
   completedQueries: number;
@@ -297,7 +301,7 @@ async function simulateUserSession(userId: number, queryCount: number): Promise<
     try {
       // Simular diferentes tipos de queries
       const queryType = i % 3;
-      
+
       if (queryType === 0) {
         await simulateCarSearch(userId);
       } else if (queryType === 1) {
@@ -305,7 +309,7 @@ async function simulateUserSession(userId: number, queryCount: number): Promise<
       } else {
         await simulateBookingList(userId);
       }
-      
+
       completedQueries++;
     } catch (error) {
       errors++;
@@ -326,16 +330,19 @@ async function simulateUserSession(userId: number, queryCount: number): Promise<
 async function simulateCarSearch(userId: number): Promise<any> {
   return new Promise((resolve) => {
     // Simular latencia de búsqueda (30-60ms)
-    setTimeout(() => {
-      resolve({
-        userId,
-        type: 'car_search',
-        data: [
-          { id: 1, brand: 'Toyota', model: 'Corolla' },
-          { id: 2, brand: 'Honda', model: 'Civic' },
-        ],
-      });
-    }, 30 + Math.random() * 30);
+    setTimeout(
+      () => {
+        resolve({
+          userId,
+          type: 'car_search',
+          data: [
+            { id: 1, brand: 'Toyota', model: 'Corolla' },
+            { id: 2, brand: 'Honda', model: 'Civic' },
+          ],
+        });
+      },
+      30 + Math.random() * 30,
+    );
   });
 }
 
@@ -345,13 +352,16 @@ async function simulateCarSearch(userId: number): Promise<any> {
 async function simulateProfileFetch(userId: number): Promise<any> {
   return new Promise((resolve) => {
     // Simular latencia de perfil (20-40ms)
-    setTimeout(() => {
-      resolve({
-        userId,
-        type: 'profile_fetch',
-        data: { id: userId, name: `User ${userId}` },
-      });
-    }, 20 + Math.random() * 20);
+    setTimeout(
+      () => {
+        resolve({
+          userId,
+          type: 'profile_fetch',
+          data: { id: userId, name: `User ${userId}` },
+        });
+      },
+      20 + Math.random() * 20,
+    );
   });
 }
 
@@ -361,42 +371,45 @@ async function simulateProfileFetch(userId: number): Promise<any> {
 async function simulateBookingList(userId: number): Promise<any> {
   return new Promise((resolve) => {
     // Simular latencia de reservas (40-70ms)
-    setTimeout(() => {
-      resolve({
-        userId,
-        type: 'booking_list',
-        data: [
-          { id: 1, car_id: 1, status: 'active' },
-          { id: 2, car_id: 3, status: 'completed' },
-        ],
-      });
-    }, 40 + Math.random() * 30);
+    setTimeout(
+      () => {
+        resolve({
+          userId,
+          type: 'booking_list',
+          data: [
+            { id: 1, car_id: 1, status: 'active' },
+            { id: 2, car_id: 3, status: 'completed' },
+          ],
+        });
+      },
+      40 + Math.random() * 30,
+    );
   });
 }
 
 /**
  * ESCENARIOS DE CONCURRENCIA PROBADOS:
- * 
+ *
  * 1. CARGA NORMAL (1-5 usuarios):
  *    - Latencia: 20-50ms
  *    - Sin esperas en cola
  *    - Performance óptimo
- * 
+ *
  * 2. CARGA MEDIA (5-10 usuarios):
  *    - Latencia: 30-70ms
  *    - Pooling mantiene estabilidad
  *    - Sin errores de conexión
- * 
+ *
  * 3. CARGA ALTA (10-20 usuarios):
  *    - Latencia: 50-120ms
  *    - Algunas queries esperan en cola
  *    - Pool se mantiene eficiente
- * 
+ *
  * 4. CARGA EXTREMA (20+ usuarios):
  *    - Latencia: 100-200ms
  *    - Cola de espera activa
  *    - Degradación graceful
- * 
+ *
  * RECOMENDACIONES:
  * - Pool size óptimo: 15 conexiones
  * - Timeout por query: 30 segundos

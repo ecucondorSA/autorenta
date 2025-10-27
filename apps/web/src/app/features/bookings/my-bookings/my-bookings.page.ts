@@ -158,16 +158,15 @@ export class MyBookingsPage implements OnInit {
    */
   async cancelBooking(bookingId: string): Promise<void> {
     const confirmed = confirm(
-      '¿Estás seguro de cancelar esta reserva?\n\n' +
-      'Esta acción no se puede deshacer.'
+      '¿Estás seguro de cancelar esta reserva?\n\n' + 'Esta acción no se puede deshacer.',
     );
-    
+
     if (!confirmed) return;
 
     this.loading.set(true);
     try {
       const result = await this.bookingsService.cancelBooking(bookingId);
-      
+
       if (!result.success) {
         alert(`❌ Error: ${result.error}`);
         return;
@@ -175,7 +174,6 @@ export class MyBookingsPage implements OnInit {
 
       alert('✅ Reserva cancelada exitosamente');
       await this.loadBookings(); // Recargar lista
-      
     } catch (error) {
       console.error('Error cancelando reserva:', error);
       alert('❌ Error inesperado al cancelar la reserva');
@@ -186,11 +184,14 @@ export class MyBookingsPage implements OnInit {
 
   showInstructions(booking: Booking): void {
     console.log('Show instructions for:', booking.id);
-    const location = booking.car_city && booking.car_province 
-      ? `${booking.car_city}, ${booking.car_province}` 
-      : 'Ver en detalle';
+    const location =
+      booking.car_city && booking.car_province
+        ? `${booking.car_city}, ${booking.car_province}`
+        : 'Ver en detalle';
     // TODO: Open modal with instructions
-    alert(`📋 Instrucciones para ${booking.car_title}\n\n1. Documentos: DNI y Licencia\n2. Ubicación: ${location}\n3. Hora: ${booking.start_at}\n\n[En próxima actualización: Modal completo con checklist]`);
+    alert(
+      `📋 Instrucciones para ${booking.car_title}\n\n1. Documentos: DNI y Licencia\n2. Ubicación: ${location}\n3. Hora: ${booking.start_at}\n\n[En próxima actualización: Modal completo con checklist]`,
+    );
   }
 
   /**
@@ -207,14 +208,14 @@ export class MyBookingsPage implements OnInit {
     this.loading.set(true);
     try {
       const contact = await this.bookingsService.getOwnerContact(booking.owner_id);
-      
+
       if (!contact.success || !contact.phone) {
         // Fallback: mostrar email
         alert(
           `📧 Contacto del propietario:\n\n` +
-          `${contact.name || 'Propietario'}\n` +
-          `Email: ${contact.email || 'No disponible'}\n\n` +
-          `Puedes contactarlo por email para coordinar el retiro.`
+            `${contact.name || 'Propietario'}\n` +
+            `Email: ${contact.email || 'No disponible'}\n\n` +
+            `Puedes contactarlo por email para coordinar el retiro.`,
         );
         return;
       }
@@ -223,12 +224,11 @@ export class MyBookingsPage implements OnInit {
       const carInfo = `${booking.car_title || 'auto'}`;
       const dates = this.rangeLabel(booking);
       const message = encodeURIComponent(
-        `Hola! Te contacto por la reserva del ${carInfo} para ${dates}.`
+        `Hola! Te contacto por la reserva del ${carInfo} para ${dates}.`,
       );
-      
+
       const whatsappUrl = `https://wa.me/${contact.phone}?text=${message}`;
       window.open(whatsappUrl, '_blank');
-      
     } catch (error) {
       console.error('Error obteniendo contacto:', error);
       alert('❌ Error al obtener información de contacto');
@@ -243,7 +243,7 @@ export class MyBookingsPage implements OnInit {
    */
   showMap(booking: Booking): void {
     const { car_city, car_province } = booking;
-    
+
     // Show location based on available data
     if (car_city && car_province) {
       // Open Google Maps search with city/province

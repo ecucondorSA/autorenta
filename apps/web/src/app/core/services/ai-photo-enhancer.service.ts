@@ -191,7 +191,7 @@ export class AiPhotoEnhancerService {
    */
   async addPremiumBackground(
     photoWithoutBg: Blob,
-    backgroundType: 'showroom' | 'street' | 'white' = 'white'
+    backgroundType: 'showroom' | 'street' | 'white' = 'white',
   ): Promise<Blob> {
     // Crear canvas
     const canvas = document.createElement('canvas');

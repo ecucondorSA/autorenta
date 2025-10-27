@@ -70,10 +70,7 @@ export class ReviewsService {
   /**
    * Get reviews for a specific user (as owner or renter)
    */
-  async getReviewsForUser(
-    userId: string,
-    asOwner: boolean = true
-  ): Promise<Review[]> {
+  async getReviewsForUser(userId: string, asOwner: boolean = true): Promise<Review[]> {
     try {
       const reviewType: ReviewType = asOwner ? 'renter_to_owner' : 'owner_to_renter';
 
@@ -84,7 +81,7 @@ export class ReviewsService {
           *,
           reviewer:profiles!reviews_reviewer_id_fkey(id, full_name, avatar_url),
           car:cars(id, title)
-        `
+        `,
         )
         .eq('reviewee_id', userId)
         .eq('review_type', reviewType)
@@ -116,7 +113,7 @@ export class ReviewsService {
           `
           *,
           reviewer:profiles!reviews_reviewer_id_fkey(id, full_name, avatar_url)
-        `
+        `,
         )
         .eq('car_id', carId)
         .eq('is_visible', true)
@@ -283,23 +280,18 @@ export class ReviewsService {
             r.rating_location +
             r.rating_checkin +
             r.rating_value) /
-            6
+            6,
         );
         distribution[avg as keyof typeof distribution]++;
       });
 
       // Calculate category averages
       const categoryAverages = {
-        cleanliness:
-          reviewList.reduce((sum, r) => sum + r.rating_cleanliness, 0) / totalCount,
-        communication:
-          reviewList.reduce((sum, r) => sum + r.rating_communication, 0) / totalCount,
-        accuracy:
-          reviewList.reduce((sum, r) => sum + r.rating_accuracy, 0) / totalCount,
-        location:
-          reviewList.reduce((sum, r) => sum + r.rating_location, 0) / totalCount,
-        checkin:
-          reviewList.reduce((sum, r) => sum + r.rating_checkin, 0) / totalCount,
+        cleanliness: reviewList.reduce((sum, r) => sum + r.rating_cleanliness, 0) / totalCount,
+        communication: reviewList.reduce((sum, r) => sum + r.rating_communication, 0) / totalCount,
+        accuracy: reviewList.reduce((sum, r) => sum + r.rating_accuracy, 0) / totalCount,
+        location: reviewList.reduce((sum, r) => sum + r.rating_location, 0) / totalCount,
+        checkin: reviewList.reduce((sum, r) => sum + r.rating_checkin, 0) / totalCount,
         value: reviewList.reduce((sum, r) => sum + r.rating_value, 0) / totalCount,
       };
 
@@ -385,7 +377,7 @@ export class ReviewsService {
           const checkoutDate = new Date(booking.end_at);
           const now = new Date();
           const daysElapsed = Math.floor(
-            (now.getTime() - checkoutDate.getTime()) / (1000 * 60 * 60 * 24)
+            (now.getTime() - checkoutDate.getTime()) / (1000 * 60 * 60 * 24),
           );
           const daysRemaining = 14 - daysElapsed;
 
@@ -414,10 +406,12 @@ export class ReviewsService {
   async getReviewsForOwner(ownerId: string): Promise<Review[]> {
     const { data, error } = await this.supabase
       .from('reviews')
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviews_reviewer_id_fkey(full_name, avatar_url)
-      `)
+      `,
+      )
       .eq('reviewee_id', ownerId)
       .eq('reviewee_role', 'owner')
       .order('created_at', { ascending: false });
@@ -440,13 +434,15 @@ export class ReviewsService {
   async getReviewsForRenter(renterId: string): Promise<Review[]> {
     const { data, error } = await this.supabase
       .from('reviews')
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviews_reviewer_id_fkey(full_name, avatar_url)
-      `)
+      `,
+      )
       .eq('reviewee_id', renterId)
       .eq('reviewee_role', 'renter')
-      .order('created_at', { ascending: false});
+      .order('created_at', { ascending: false });
 
     if (error) {
       console.error('[ReviewsService] Error fetching renter reviews:', error);

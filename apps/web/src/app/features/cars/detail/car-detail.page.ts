@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, signal, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  signal,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,7 +32,17 @@ import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 @Component({
   standalone: true,
   selector: 'app-car-detail-page',
-  imports: [CommonModule, RouterLink, DateRangePickerComponent, MoneyPipe, ReviewCardComponent, PaymentMethodSelectorComponent, ShareMenuComponent, DynamicPriceDisplayComponent, TranslateModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    DateRangePickerComponent,
+    MoneyPipe,
+    ReviewCardComponent,
+    PaymentMethodSelectorComponent,
+    ShareMenuComponent,
+    DynamicPriceDisplayComponent,
+    TranslateModule,
+  ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -70,52 +87,51 @@ export class CarDetailPage implements OnInit {
   readonly totalPrice = computed(() => {
     const range = this.dateRange();
     const car = this.car();
-    
+
     // Check if we have valid dates (not null and not empty strings)
     const hasValidFrom = range.from && range.from.trim() !== '';
     const hasValidTo = range.to && range.to.trim() !== '';
-    
+
     if (!hasValidFrom || !hasValidTo || !car) {
-      console.log('⚠️ Missing data:', { 
+      console.log('⚠️ Missing data:', {
         from: range.from,
         to: range.to,
-        hasValidFrom, 
-        hasValidTo, 
-        hasCar: !!car 
+        hasValidFrom,
+        hasValidTo,
+        hasCar: !!car,
       });
       return null;
     }
-    
+
     // Convert price_per_day to number if it's a string
-    const pricePerDay = typeof car.price_per_day === 'string' 
-      ? parseFloat(car.price_per_day) 
-      : car.price_per_day;
-    
+    const pricePerDay =
+      typeof car.price_per_day === 'string' ? parseFloat(car.price_per_day) : car.price_per_day;
+
     // Validate price_per_day exists and is a valid number
     if (!pricePerDay || isNaN(pricePerDay) || pricePerDay <= 0) {
       console.error('❌ Invalid price_per_day:', {
         original: car.price_per_day,
         converted: pricePerDay,
         type: typeof car.price_per_day,
-        carId: car.id
+        carId: car.id,
       });
       return null;
     }
-    
+
     // TypeScript knows that range.from and range.to are strings here
     const start = new Date(range.from!);
     const end = new Date(range.to!);
     const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     if (diff <= 0) {
       console.warn('⚠️ Invalid date range:', {
         from: range.from,
         to: range.to,
-        diff: diff
+        diff: diff,
       });
       return null;
     }
-    
+
     const total = diff * pricePerDay;
     console.log(`💰 Price calculation: ${diff} days × $${pricePerDay} = $${total}`);
     return total;
@@ -201,7 +217,7 @@ export class CarDetailPage implements OnInit {
       error: (err) => {
         console.error('Error al cargar tasa de cambio:', err);
         this.currentFxRate.set(null);
-      }
+      },
     });
   }
 
@@ -234,7 +250,7 @@ export class CarDetailPage implements OnInit {
           title: car.title,
           price_per_day: car.price_per_day,
           currency: car.currency,
-          priceType: typeof car.price_per_day
+          priceType: typeof car.price_per_day,
         });
         this.car.set(car);
 
@@ -242,7 +258,9 @@ export class CarDetailPage implements OnInit {
         const mainPhoto = (car.photos?.[0] ?? car.car_photos?.[0])?.url;
         this.metaService.updateCarDetailMeta({
           title: car.title,
-          description: car.description || `${car.brand} ${car.model} ${car.year} - Alquiler de auto en ${car.location_city}`,
+          description:
+            car.description ||
+            `${car.brand} ${car.model} ${car.year} - Alquiler de auto en ${car.location_city}`,
           main_photo_url: mainPhoto,
           price_per_day: car.price_per_day,
           currency: car.currency || 'ARS',
@@ -295,7 +313,7 @@ export class CarDetailPage implements OnInit {
       from: range.from,
       to: range.to,
       fromDate: range.from ? new Date(range.from) : null,
-      toDate: range.to ? new Date(range.to) : null
+      toDate: range.to ? new Date(range.to) : null,
     });
     this.dateRange.set(range);
   }
@@ -364,7 +382,7 @@ export class CarDetailPage implements OnInit {
       const result = await this.bookingsService.createBookingWithValidation(
         car.id,
         startIso,
-        endIso
+        endIso,
       );
 
       if (!result.success || !result.booking) {
@@ -388,7 +406,7 @@ export class CarDetailPage implements OnInit {
           bucket,
           vehicleValueUsd,
           country: 'AR',
-        })
+        }),
       );
 
       await this.router.navigate(['/bookings/detail-payment'], {
@@ -416,7 +434,7 @@ export class CarDetailPage implements OnInit {
 
     // PRIORIDAD 2: Calcular desde precio diario
     console.warn(`Auto ${car.id} sin value_usd, calculando desde precio diario`);
-    
+
     let pricePerDayUsd = car.price_per_day;
 
     // Si el precio está en ARS, convertir a USD usando tasa actual
@@ -496,7 +514,12 @@ export class CarDetailPage implements OnInit {
   /**
    * Muestra opciones de navegación para el usuario
    */
-  private showNavigationOptions(primary: string, secondary: string, tertiary: string, carName: string): void {
+  private showNavigationOptions(
+    primary: string,
+    secondary: string,
+    tertiary: string,
+    carName: string,
+  ): void {
     // En móvil, intentar abrir directamente la app de mapas nativa
     if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
       window.location.href = primary;
@@ -521,7 +544,7 @@ export class CarDetailPage implements OnInit {
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             enableHighAccuracy: true,
             timeout: 5000,
-            maximumAge: 0
+            maximumAge: 0,
           });
         });
 
@@ -560,9 +583,9 @@ export class CarDetailPage implements OnInit {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(userLat)) *
-      Math.cos(this.deg2rad(carLat)) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
+        Math.cos(this.deg2rad(carLat)) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distancia en km
     return Math.round(distance * 10) / 10; // Redondear a 1 decimal
@@ -588,8 +611,8 @@ export class CarDetailPage implements OnInit {
         queryParams: {
           userId: car.owner.id,
           carId: car.id,
-          carName: car.title
-        }
+          carName: car.title,
+        },
       });
     } catch (error) {
       console.error('Error al abrir chat:', error);

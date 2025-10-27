@@ -1,6 +1,6 @@
 /**
  * EXAMPLES: Guided Tour System Usage
- * 
+ *
  * Practical examples for common use cases
  */
 
@@ -13,11 +13,7 @@ import { GuidedTourService, TourId, TourDefinition, TourPriority } from '@core/g
 
 @Component({
   selector: 'app-help-menu',
-  template: `
-    <button (click)="showWelcomeTour()">
-      Show Welcome Tour
-    </button>
-  `
+  template: ` <button (click)="showWelcomeTour()">Show Welcome Tour</button> `,
 })
 export class HelpMenuComponent {
   private guidedTour = inject(GuidedTourService);
@@ -25,7 +21,7 @@ export class HelpMenuComponent {
   async showWelcomeTour() {
     const started = await this.guidedTour.request({
       id: TourId.Welcome,
-      mode: 'user-triggered'
+      mode: 'user-triggered',
     });
 
     if (!started) {
@@ -40,7 +36,7 @@ export class HelpMenuComponent {
 
 @Component({
   selector: 'app-cars-list',
-  template: `<div>Cars List</div>`
+  template: `<div>Cars List</div>`,
 })
 export class CarsListComponent implements OnInit {
   private guidedTour = inject(GuidedTourService);
@@ -48,13 +44,13 @@ export class CarsListComponent implements OnInit {
   ngOnInit() {
     // Tours with autoStart: true in their definition will start automatically
     // when guards and triggers match
-    
+
     // Optionally, you can manually trigger a tour after data loads:
     this.loadCars().then(() => {
       this.guidedTour.request({
         id: TourId.GuidedBooking,
         mode: 'auto',
-        reason: 'inventory-loaded'
+        reason: 'inventory-loaded',
       });
     });
   }
@@ -74,7 +70,7 @@ export class CarsListComponent implements OnInit {
     <div [class.tour-active]="isTourActive()">
       <ng-content></ng-content>
     </div>
-  `
+  `,
 })
 export class LayoutComponent {
   private guidedTour = inject(GuidedTourService);
@@ -94,7 +90,7 @@ export class LayoutComponent {
 
 @Component({
   selector: 'app-custom-feature',
-  template: `<div>Custom Feature</div>`
+  template: `<div>Custom Feature</div>`,
 })
 export class CustomFeatureComponent implements OnInit {
   private guidedTour = inject(GuidedTourService);
@@ -115,29 +111,27 @@ export class CustomFeatureComponent implements OnInit {
           id: 'intro',
           content: {
             title: 'Introducción',
-            text: 'Bienvenido a mi feature personalizado!'
+            text: 'Bienvenido a mi feature personalizado!',
           },
           position: 'center',
-          buttons: [
-            { text: 'Siguiente', action: 'next' }
-          ]
+          buttons: [{ text: 'Siguiente', action: 'next' }],
         },
         {
           id: 'feature-button',
           content: {
             title: 'Botón Principal',
-            text: 'Este botón activa la funcionalidad'
+            text: 'Este botón activa la funcionalidad',
           },
           position: 'bottom',
           target: {
             selector: '[data-tour-step="my-feature-button"]',
-            required: true
+            required: true,
           },
           buttons: [
             { text: 'Atrás', action: 'back' },
-            { text: 'Entendido', action: 'complete' }
-          ]
-        }
+            { text: 'Entendido', action: 'complete' },
+          ],
+        },
       ],
       guards: [
         {
@@ -145,9 +139,9 @@ export class CustomFeatureComponent implements OnInit {
           check: () => {
             // Check if feature is enabled for user
             return this.isFeatureEnabled();
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
 
     this.guidedTour.registerTour(customTour);
@@ -171,7 +165,7 @@ export class CustomFeatureComponent implements OnInit {
       <button (click)="forceTour()">Force Start Tour</button>
       <button (click)="enableDebug()">Enable Debug</button>
     </div>
-  `
+  `,
 })
 export class DevToolsComponent {
   private guidedTour = inject(GuidedTourService);
@@ -185,7 +179,7 @@ export class DevToolsComponent {
     this.guidedTour.request({
       id: TourId.Welcome,
       mode: 'user-triggered',
-      force: true // Bypass all checks
+      force: true, // Bypass all checks
     });
   }
 
@@ -201,7 +195,7 @@ export class DevToolsComponent {
 
 @Component({
   selector: 'app-premium-feature',
-  template: `<div>Premium Feature</div>`
+  template: `<div>Premium Feature</div>`,
 })
 export class PremiumFeatureComponent implements OnInit {
   private guidedTour = inject(GuidedTourService);
@@ -218,26 +212,26 @@ export class PremiumFeatureComponent implements OnInit {
           check: async () => {
             const user = await this.getCurrentUser();
             return user?.isPremium === true;
-          }
+          },
         },
         {
           name: 'hasNotSeenBefore',
           check: () => {
             return !localStorage.getItem('premium-tour-seen');
-          }
-        }
+          },
+        },
       ],
       steps: [
         {
           id: 'premium-intro',
           content: {
             title: '¡Bienvenido Premium! 🌟',
-            text: 'Gracias por ser usuario premium. Te mostramos las funciones exclusivas.'
+            text: 'Gracias por ser usuario premium. Te mostramos las funciones exclusivas.',
           },
           position: 'center',
-          buttons: [{ text: 'Ver funciones', action: 'next' }]
-        }
-      ]
+          buttons: [{ text: 'Ver funciones', action: 'next' }],
+        },
+      ],
     };
 
     this.guidedTour.registerTour(premiumTour);
@@ -261,14 +255,12 @@ export class PremiumFeatureComponent implements OnInit {
         <button (click)="togglePanel()">Toggle Panel</button>
         @if (isPanelExpanded) {
           <div class="content">
-            <div data-tour-step="panel-content">
-              Panel Content Here
-            </div>
+            <div data-tour-step="panel-content">Panel Content Here</div>
           </div>
         }
       </div>
     </div>
-  `
+  `,
 })
 export class AccordionComponent implements OnInit {
   private guidedTour = inject(GuidedTourService);
@@ -283,26 +275,26 @@ export class AccordionComponent implements OnInit {
         {
           id: 'panel-intro',
           content: {
-            text: 'Este es un panel colapsable'
+            text: 'Este es un panel colapsable',
           },
           target: { selector: '.panel' },
-          buttons: [{ text: 'Ver contenido', action: 'next' }]
+          buttons: [{ text: 'Ver contenido', action: 'next' }],
         },
         {
           id: 'panel-content',
           content: {
-            text: 'Este es el contenido interno del panel'
+            text: 'Este es el contenido interno del panel',
           },
-          target: { 
+          target: {
             selector: '[data-tour-step="panel-content"]',
-            required: true 
+            required: true,
           },
           // Hook to expand panel before showing step
           onBefore: async () => {
             console.log('Expanding panel...');
             this.isPanelExpanded = true;
             // Wait for animation
-            await new Promise(resolve => setTimeout(resolve, 300));
+            await new Promise((resolve) => setTimeout(resolve, 300));
           },
           // Hook to collapse after step
           onAfter: async () => {
@@ -311,10 +303,10 @@ export class AccordionComponent implements OnInit {
           },
           buttons: [
             { text: 'Atrás', action: 'back' },
-            { text: 'Entendido', action: 'complete' }
-          ]
-        }
-      ]
+            { text: 'Entendido', action: 'complete' },
+          ],
+        },
+      ],
     };
 
     this.guidedTour.registerTour(accordionTour);
@@ -331,7 +323,7 @@ export class AccordionComponent implements OnInit {
 
 @Component({
   selector: 'app-responsive-feature',
-  template: `<div>Responsive Feature</div>`
+  template: `<div>Responsive Feature</div>`,
 })
 export class ResponsiveFeatureComponent implements OnInit {
   private guidedTour = inject(GuidedTourService);
@@ -346,12 +338,12 @@ export class ResponsiveFeatureComponent implements OnInit {
           id: 'main-menu',
           content: {
             title: 'Menú Principal',
-            text: 'Accede al menú desde aquí'
+            text: 'Accede al menú desde aquí',
           },
           // Default configuration
           position: 'bottom',
           target: {
-            selector: '[data-tour-step="desktop-menu"]'
+            selector: '[data-tour-step="desktop-menu"]',
           },
           // Override for mobile
           responsive: {
@@ -359,17 +351,17 @@ export class ResponsiveFeatureComponent implements OnInit {
               position: 'top',
               target: {
                 selector: '[data-tour-step="mobile-hamburger"]',
-                altSelectors: ['.mobile-menu-button']
+                altSelectors: ['.mobile-menu-button'],
               },
               content: {
                 title: 'Menú',
-                text: 'Toca el ícono de menú'
-              }
-            }
+                text: 'Toca el ícono de menú',
+              },
+            },
           },
-          buttons: [{ text: 'Siguiente', action: 'next' }]
-        }
-      ]
+          buttons: [{ text: 'Siguiente', action: 'next' }],
+        },
+      ],
     };
 
     this.guidedTour.registerTour(responsiveTour);
@@ -382,7 +374,7 @@ export class ResponsiveFeatureComponent implements OnInit {
 
 @Component({
   selector: 'app-analytics-demo',
-  template: `<div>Analytics Demo</div>`
+  template: `<div>Analytics Demo</div>`,
 })
 export class AnalyticsDemoComponent implements OnInit {
   private guidedTour = inject(GuidedTourService);
@@ -390,7 +382,7 @@ export class AnalyticsDemoComponent implements OnInit {
   ngOnInit() {
     // All tour events are automatically tracked via TelemetryBridge
     // You can also access event history:
-    
+
     const history = this.guidedTour.getEventHistory();
     console.log('Tour events:', history);
 
@@ -410,7 +402,7 @@ export class AnalyticsDemoComponent implements OnInit {
 
 @Component({
   selector: 'app-onboarding',
-  template: `<div>Onboarding</div>`
+  template: `<div>Onboarding</div>`,
 })
 export class OnboardingComponent implements OnInit {
   private guidedTour = inject(GuidedTourService);
@@ -419,19 +411,19 @@ export class OnboardingComponent implements OnInit {
     // Request multiple tours - they'll be queued by priority
     await this.guidedTour.request({
       id: TourId.Welcome,
-      mode: 'auto'
+      mode: 'auto',
     });
 
     // This will be queued if Welcome is running
     await this.guidedTour.request({
       id: TourId.GuidedBooking,
-      mode: 'auto'
+      mode: 'auto',
     });
 
     // This will be queued but has higher priority
     await this.guidedTour.request({
       id: 'critical-announcement' as TourId,
-      mode: 'auto'
+      mode: 'auto',
     });
 
     // Priority order: Critical → Welcome → GuidedBooking
@@ -447,7 +439,7 @@ export class OnboardingComponent implements OnInit {
   template: `
     <button (click)="showTour()">Show Tour</button>
     <button (click)="dismissTour()">Dismiss for 24h</button>
-  `
+  `,
 })
 export class DismissibleTourComponent {
   private guidedTour = inject(GuidedTourService);
@@ -471,16 +463,12 @@ export class DismissibleTourComponent {
   template: `
     @if (!hasCompletedWelcome()) {
       <div>
-        <button (click)="startTour()">
-          Start Welcome Tour
-        </button>
+        <button (click)="startTour()">Start Welcome Tour</button>
       </div>
     } @else {
-      <div>
-        ✓ You've completed the welcome tour!
-      </div>
+      <div>✓ You've completed the welcome tour!</div>
     }
-  `
+  `,
 })
 export class TourStatusComponent {
   private guidedTour = inject(GuidedTourService);

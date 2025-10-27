@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  signal,
-  computed,
-  effect,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil, firstValueFrom } from 'rxjs';
@@ -96,7 +88,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private walletService = inject(WalletService);
   private bookingsService = inject(BookingsService);
   private supabaseClient = inject(SupabaseClientService).getClient();
-  
+
   // ✅ NUEVO: Servicios para procesamiento de pago final
   private paymentsService = inject(PaymentsService);
   private mpGateway = inject(MercadoPagoBookingGateway);
@@ -161,7 +153,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly loadingPricing = signal(false);
   readonly error = signal<string | null>(null);
   readonly validationErrors = signal<ValidationError[]>([]);
-  
+
   // ✅ NUEVO: Estado de fallback a wallet
   readonly showFallbackMessage = signal(false);
   readonly fallbackReason = signal<string>('');
@@ -284,7 +276,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private async loadBookingInput(): Promise<void> {
     // NUEVO: Intentar cargar desde bookingId existente
     const bookingId = this.route.snapshot.queryParamMap.get('bookingId');
-    
+
     if (bookingId) {
       // Flujo: booking existente desde /bookings
       await this.loadExistingBooking(bookingId);
@@ -333,14 +325,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     });
 
     // Guardar en sessionStorage para navegación futura
-    sessionStorage.setItem('booking_detail_input', JSON.stringify({
-      carId,
-      startDate,
-      endDate,
-      bucket: bucket || 'standard',
-      vehicleValueUsd: vehicleValueUsd ? parseInt(vehicleValueUsd, 10) : 15000,
-      country: country || 'AR',
-    }));
+    sessionStorage.setItem(
+      'booking_detail_input',
+      JSON.stringify({
+        carId,
+        startDate,
+        endDate,
+        bucket: bucket || 'standard',
+        vehicleValueUsd: vehicleValueUsd ? parseInt(vehicleValueUsd, 10) : 15000,
+        country: country || 'AR',
+      }),
+    );
   }
 
   /**
@@ -350,10 +345,12 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     try {
       const { data, error } = await this.supabaseClient
         .from('bookings')
-        .select(`
+        .select(
+          `
           *,
           car:cars(*)
-        `)
+        `,
+        )
         .eq('id', bookingId)
         .single();
 
@@ -366,11 +363,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Reconstruir bookingInput desde el booking
       const carRecord = (data.car ?? null) as (Car & { bucket?: string }) | null;
 
-      const bucket: BucketType =
-        (carRecord?.bucket as BucketType | undefined) ?? 'standard';
+      const bucket: BucketType = (carRecord?.bucket as BucketType | undefined) ?? 'standard';
 
-      const vehicleValueUsd =
-        carRecord?.value_usd != null ? Number(carRecord.value_usd) : 15000;
+      const vehicleValueUsd = carRecord?.value_usd != null ? Number(carRecord.value_usd) : 15000;
 
       this.bookingInput.set({
         carId: data.car_id,
@@ -520,9 +515,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       const rawCurrency = (carData.currency ?? 'USD').toUpperCase();
       const rawDailyRate = Number(carData.price_per_day ?? 0);
       const computedDailyRateUsd =
-        rawCurrency === 'ARS'
-          ? this.fxService.convertReverse(rawDailyRate, fx)
-          : rawDailyRate;
+        rawCurrency === 'ARS' ? this.fxService.convertReverse(rawDailyRate, fx) : rawDailyRate;
       const dailyRateUsd =
         Number.isFinite(computedDailyRateUsd) && computedDailyRateUsd > 0
           ? computedDailyRateUsd
@@ -619,18 +612,16 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    */
   protected onFallbackToWallet(reason?: string): void {
     console.log('[Detalle & Pago] Fallback a Wallet activado:', reason);
-    
+
     // Establecer razón del fallback
-    this.fallbackReason.set(
-      reason || 'La pre-autorización con tu tarjeta fue rechazada'
-    );
-    
+    this.fallbackReason.set(reason || 'La pre-autorización con tu tarjeta fue rechazada');
+
     // Mostrar mensaje explicativo
     this.showFallbackMessage.set(true);
-    
+
     // Cambiar modo de pago a wallet
     this.paymentMode.set('wallet');
-    
+
     // Ocultar mensaje después de 8 segundos
     setTimeout(() => {
       this.showFallbackMessage.set(false);
@@ -749,8 +740,8 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         paymentMode: this.paymentMode(),
         totalUsd: pricing.totalUsd,
         totalArs: pricing.totalArs,
-        exchangeRate: risk.fxRate
-      }
+        exchangeRate: risk.fxRate,
+      },
     });
 
     if (!result.success || !result.bookingId) {
@@ -758,7 +749,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     }
 
     console.log('✅ Booking creado exitosamente (atómico):', result.bookingId);
-    
+
     // ✅ NUEVO: Guardar booking ID para procesamiento de pago
     this.lastCreatedBookingId.set(result.bookingId);
 
@@ -774,7 +765,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   /**
    * Persiste el risk snapshot en DB
    */
-  private async persistRiskSnapshot(bookingId: string): Promise<{ ok: boolean; snapshotId?: string; error?: string }> {
+  private async persistRiskSnapshot(
+    bookingId: string,
+  ): Promise<{ ok: boolean; snapshotId?: string; error?: string }> {
     const risk = this.riskSnapshot();
     const input = this.bookingInput();
 
@@ -783,7 +776,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     }
 
     return firstValueFrom(
-      this.riskService.persistRiskSnapshot(bookingId, risk, this.paymentMode())
+      this.riskService.persistRiskSnapshot(bookingId, risk, this.paymentMode()),
     );
   }
 
@@ -805,14 +798,14 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       const result = await this.bookingsService.createBookingWithValidation(
         input.carId,
         input.startDate.toISOString(),
-        input.endDate.toISOString()
+        input.endDate.toISOString(),
       );
 
       if (!result.success || !result.booking?.id) {
         console.error('❌ Error creando reserva:', result.error);
         return {
           ok: false,
-          error: result.error || 'Error desconocido al crear reserva'
+          error: result.error || 'Error desconocido al crear reserva',
         };
       }
 
@@ -832,7 +825,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         // Opcional: Considerar cancelar la reserva si la actualización falla
         return {
           ok: false,
-          error: `La reserva se creó pero no se pudo actualizar: ${updateError.message}`
+          error: `La reserva se creó pero no se pudo actualizar: ${updateError.message}`,
         };
       }
 
@@ -853,12 +846,15 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   /**
    * Actualiza el booking con el risk_snapshot_booking_id
    */
-  private async updateBookingRiskSnapshot(bookingId: string, riskSnapshotId: string): Promise<void> {
+  private async updateBookingRiskSnapshot(
+    bookingId: string,
+    riskSnapshotId: string,
+  ): Promise<void> {
     const { error } = await this.supabaseClient
       .from('bookings')
-      .update({ 
+      .update({
         risk_snapshot_booking_id: bookingId, // FIXED: Column is risk_snapshot_booking_id
-        risk_snapshot_date: new Date().toISOString()
+        risk_snapshot_date: new Date().toISOString(),
       })
       .eq('id', bookingId);
 
@@ -942,7 +938,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       } else {
         await this.processCreditCardPayment(booking);
       }
-
     } catch (error: any) {
       console.error('[Pago Final] Error:', error);
       this.error.set(error.message || 'Error al procesar el pago');
@@ -993,7 +988,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // Redirigir a página de éxito
       this.router.navigate(['/bookings/success', bookingId]);
-
     } catch (error: any) {
       console.error('[Wallet] Error en pago:', error);
       // Intentar desbloquear wallet si hubo error
@@ -1043,7 +1037,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       } else {
         throw new Error('No se pudo crear preferencia de pago');
       }
-
     } catch (error: any) {
       console.error('[Tarjeta] Error en pago:', error);
       throw error;

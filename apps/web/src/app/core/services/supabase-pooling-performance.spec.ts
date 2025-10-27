@@ -3,7 +3,7 @@ import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * SPRINT 4 - TEST 2: Performance con Connection Pooling
- * 
+ *
  * Este test verifica que:
  * 1. 50 queries concurrentes se completan en menos de 2 segundos
  * 2. No hay errores de "too many connections"
@@ -24,16 +24,16 @@ describe('SupabaseClientService - Pooling Performance', () => {
     it('debe completar 50 queries concurrentes en menos de 2 segundos', async () => {
       const startTime = Date.now();
       const queryCount = 50;
-      
+
       // Mockear las queries para no hacer llamadas reales a Supabase
       const client = service.getClient();
       const mockQuery = jasmine.createSpy('select').and.returnValue(
-        Promise.resolve({ 
-          data: [{ id: 1 }], 
-          error: null 
-        })
+        Promise.resolve({
+          data: [{ id: 1 }],
+          error: null,
+        }),
       );
-      
+
       // Simular 50 queries concurrentes
       const queries = Array.from({ length: queryCount }, (_, i) => {
         return new Promise((resolve) => {
@@ -49,10 +49,10 @@ describe('SupabaseClientService - Pooling Performance', () => {
       await Promise.all(queries);
 
       const elapsedTime = Date.now() - startTime;
-      
+
       // Con pooling habilitado, debe completarse en menos de 2 segundos
       expect(elapsedTime).toBeLessThan(2000);
-      
+
       console.log(`✅ ${queryCount} queries completadas en ${elapsedTime}ms`);
     }, 3000); // Timeout de 3 segundos para el test
 
@@ -82,14 +82,14 @@ describe('SupabaseClientService - Pooling Performance', () => {
 
       // Al menos 90% de queries deben ser exitosas
       expect(successCount).toBeGreaterThanOrEqual(queryCount * 0.9);
-      
+
       console.log(`✅ Success: ${successCount}/${queryCount} queries`);
       console.log(`⚠️ Errors: ${errorCount}/${queryCount} queries`);
     });
 
     it('debe tener mejor performance que sin pooling', async () => {
       // Test comparativo: con pooling vs sin pooling
-      
+
       // Simular queries CON pooling
       const startWithPooling = Date.now();
       const withPoolingQueries = Array.from({ length: 30 }, () => {
@@ -128,12 +128,12 @@ describe('SupabaseClientService - Pooling Performance', () => {
       // Medir latencia de cada query
       for (let i = 0; i < queryCount; i++) {
         const start = Date.now();
-        
+
         // Simular query con pooling
         await new Promise((resolve) => {
           setTimeout(() => resolve({ data: [], error: null }), 25 + Math.random() * 15);
         });
-        
+
         const latency = Date.now() - start;
         latencies.push(latency);
       }
@@ -143,7 +143,7 @@ describe('SupabaseClientService - Pooling Performance', () => {
 
       // Latencia promedio debe ser menor a 50ms con pooling
       expect(avgLatency).toBeLessThan(50);
-      
+
       // Latencia máxima no debe exceder 100ms
       expect(maxLatency).toBeLessThan(100);
 
@@ -156,13 +156,13 @@ describe('SupabaseClientService - Pooling Performance', () => {
     it('debe reutilizar conexiones del pool', async () => {
       // Con pooling, las conexiones se reutilizan
       // Esto se verifica indirectamente con el tiempo de respuesta
-      
+
       const iterations = 10;
       const timings: number[] = [];
 
       for (let i = 0; i < iterations; i++) {
         const start = Date.now();
-        
+
         // Simular query con conexión reutilizada
         await new Promise((resolve) => {
           // Primera conexión puede ser más lenta (30-40ms)
@@ -170,7 +170,7 @@ describe('SupabaseClientService - Pooling Performance', () => {
           const baseLatency = i === 0 ? 35 : 20;
           setTimeout(() => resolve({ data: [], error: null }), baseLatency + Math.random() * 10);
         });
-        
+
         timings.push(Date.now() - start);
       }
 
@@ -190,9 +190,12 @@ describe('SupabaseClientService - Pooling Performance', () => {
       const queries = Array.from({ length: poolSize * 2 }, (_, i) => {
         return new Promise((resolve) => {
           // Simular query corta que libera conexión rápidamente
-          setTimeout(() => {
-            resolve({ data: [{ id: i }], error: null });
-          }, 10 + Math.random() * 10);
+          setTimeout(
+            () => {
+              resolve({ data: [{ id: i }], error: null });
+            },
+            10 + Math.random() * 10,
+          );
         });
       });
 
@@ -224,13 +227,13 @@ describe('SupabaseClientService - Pooling Performance', () => {
       });
 
       const results = await Promise.all(queries);
-      
+
       const successfulQueries = results.filter((r: any) => !r.error);
       const failedQueries = results.filter((r: any) => r.error);
 
       // La mayoría debe ser exitosa
       expect(successfulQueries.length).toBeGreaterThan(failedQueries.length);
-      
+
       // El pool debe seguir funcionando después de errores
       expect(successfulQueries.length).toBeGreaterThan(0);
 
@@ -242,7 +245,7 @@ describe('SupabaseClientService - Pooling Performance', () => {
 
 /**
  * MÉTRICAS DE PERFORMANCE ESPERADAS CON POOLING:
- * 
+ *
  * | Métrica                     | Sin Pooling | Con Pooling | Mejora  |
  * |-----------------------------|-------------|-------------|---------|
  * | 50 queries concurrentes     | ~5-8s       | <2s         | 70%     |
@@ -250,7 +253,7 @@ describe('SupabaseClientService - Pooling Performance', () => {
  * | Usuarios concurrentes       | ~60         | 200+        | 230%    |
  * | Errores "too many conns"    | 15-20%      | <1%         | 95%     |
  * | Throughput (queries/seg)    | ~50         | ~200        | 300%    |
- * 
+ *
  * CONFIGURACIÓN ÓPTIMA:
  * - Mode: transaction (mejor para AutoRenta)
  * - Pool size: 10-15 conexiones (default de Supabase)

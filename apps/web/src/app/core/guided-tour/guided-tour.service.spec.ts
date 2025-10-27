@@ -2,10 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { GuidedTourService } from './guided-tour.service';
-import {
-  TourId,
-  TourState,
-} from './interfaces/tour-definition.interface';
+import { TourId, TourState } from './interfaces/tour-definition.interface';
 import { TourOrchestratorService } from './services/tour-orchestrator.service';
 import { TourRegistryService } from './registry/tour-registry.service';
 import { TelemetryBridgeService } from './services/telemetry-bridge.service';
@@ -44,10 +41,11 @@ describe('GuidedTourService', () => {
     } as unknown as jasmine.SpyObj<TourOrchestratorService>;
 
     registry = jasmine.createSpyObj<TourRegistryService>('TourRegistryService', ['register']);
-    telemetry = jasmine.createSpyObj<TelemetryBridgeService>(
-      'TelemetryBridgeService',
-      ['enableDebug', 'disableDebug', 'getEventHistory']
-    );
+    telemetry = jasmine.createSpyObj<TelemetryBridgeService>('TelemetryBridgeService', [
+      'enableDebug',
+      'disableDebug',
+      'getEventHistory',
+    ]);
     telemetry.getEventHistory.and.returnValue([]);
 
     TestBed.configureTestingModule({
@@ -105,7 +103,7 @@ describe('GuidedTourService', () => {
   it('should enable/disable debug mode', () => {
     service.enableDebug();
     expect(telemetry.enableDebug).toHaveBeenCalled();
-    
+
     service.disableDebug();
     expect(telemetry.disableDebug).toHaveBeenCalled();
   });

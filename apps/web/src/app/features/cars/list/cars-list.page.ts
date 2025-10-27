@@ -20,11 +20,12 @@ import { MetaService } from '../../../core/services/meta.service';
 import { TourService } from '../../../core/services/tour.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { Car } from '../../../core/models';
-import {
-  DateRange,
-} from '../../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
-import { MapFiltersComponent, MapFilters } from '../../../shared/components/map-filters/map-filters.component';
+import {
+  MapFiltersComponent,
+  MapFilters,
+} from '../../../shared/components/map-filters/map-filters.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 
 // Interface para auto con distancia
@@ -48,13 +49,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
 @Component({
   standalone: true,
   selector: 'app-cars-list-page',
-  imports: [
-    CommonModule,
-    CarsMapComponent,
-    MapFiltersComponent,
-    CarCardComponent,
-    TranslateModule,
-  ],
+  imports: [CommonModule, CarsMapComponent, MapFiltersComponent, CarCardComponent, TranslateModule],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -132,7 +127,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     // Aplicar filtros
     if (filters) {
-      carsList = carsList.filter(car => {
+      carsList = carsList.filter((car) => {
         // Filtro de precio
         if (car.price_per_day < filters.minPrice || car.price_per_day > filters.maxPrice) {
           return false;
@@ -176,7 +171,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         userLoc.lat,
         userLoc.lng,
         car.location_lat,
-        car.location_lng
+        car.location_lng,
       );
 
       // Formatear texto de distancia
@@ -204,8 +199,8 @@ export class CarsListPage implements OnInit, OnDestroy {
     }
 
     const prices = cars
-      .map(car => car.price_per_day)
-      .filter(price => typeof price === 'number' && !Number.isNaN(price));
+      .map((car) => car.price_per_day)
+      .filter((price) => typeof price === 'number' && !Number.isNaN(price));
 
     if (!prices.length) {
       return null;
@@ -215,23 +210,23 @@ export class CarsListPage implements OnInit, OnDestroy {
     const maxPrice = Math.max(...prices);
     const priceRange = Math.max(maxPrice - minPrice, 1);
 
-    const entries = cars.map(car => {
+    const entries = cars.map((car) => {
       const priceNormalized = (car.price_per_day - minPrice) / priceRange;
       const ratingNormalized = Math.min((car.owner?.rating_avg ?? 0) / 5, 1);
-      const score = priceNormalized * PREMIUM_SCORE_PRICE_WEIGHT + ratingNormalized * PREMIUM_SCORE_RATING_WEIGHT;
+      const score =
+        priceNormalized * PREMIUM_SCORE_PRICE_WEIGHT +
+        ratingNormalized * PREMIUM_SCORE_RATING_WEIGHT;
       return { id: car.id, score };
     });
 
-    const sortedScores = entries
-      .map(entry => entry.score)
-      .sort((a, b) => a - b);
+    const sortedScores = entries.map((entry) => entry.score).sort((a, b) => a - b);
 
     const thresholdIndex = Math.max(0, Math.floor(sortedScores.length * 0.6));
     const threshold = sortedScores[Math.min(thresholdIndex, sortedScores.length - 1)];
 
     return {
       threshold,
-      scores: new Map(entries.map(entry => [entry.id, entry.score])),
+      scores: new Map(entries.map((entry) => [entry.id, entry.score])),
     };
   });
 
@@ -245,7 +240,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     const list = !segmentation
       ? cars
-      : cars.filter(car => {
+      : cars.filter((car) => {
           const score = segmentation.scores.get(car.id) ?? 0;
           return score >= segmentation.threshold;
         });
@@ -360,12 +355,12 @@ export class CarsListPage implements OnInit, OnDestroy {
     const premiumSet = segmentation
       ? new Set(
           cars
-            .filter(car => (segmentation.scores.get(car.id) ?? 0) >= segmentation.threshold)
-            .map(car => car.id)
+            .filter((car) => (segmentation.scores.get(car.id) ?? 0) >= segmentation.threshold)
+            .map((car) => car.id),
         )
       : new Set<string>();
 
-    let list = cars.filter(car => {
+    let list = cars.filter((car) => {
       const withinRadius = car.distance === undefined || car.distance <= this.economyRadiusKm;
       if (!withinRadius) {
         return false;
@@ -380,7 +375,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     });
 
     if (!list.length) {
-      const nonPremium = cars.filter(car => !premiumSet.has(car.id));
+      const nonPremium = cars.filter((car) => !premiumSet.has(car.id));
       const source = nonPremium.length ? nonPremium : cars;
 
       list = source
@@ -419,14 +414,14 @@ export class CarsListPage implements OnInit, OnDestroy {
       return false;
     }
 
-    const premiumSet = new Set(this.premiumCars().map(car => car.id));
+    const premiumSet = new Set(this.premiumCars().map((car) => car.id));
 
     if (premiumSet.size === 0) {
       const allCount = this.filteredCarsWithDistance().length;
       return economy.length < allCount;
     }
 
-    return economy.some(car => !premiumSet.has(car.id));
+    return economy.some((car) => !premiumSet.has(car.id));
   });
 
   // Comparación
@@ -462,17 +457,13 @@ export class CarsListPage implements OnInit, OnDestroy {
     this.loading.set(true);
     try {
       const dateRange = this.dateRange();
-      
+
       // ✅ SPRINT 2 INTEGRATION: Usar getAvailableCars si hay fechas seleccionadas
       if (dateRange.from && dateRange.to) {
-        const items = await this.carsService.getAvailableCars(
-          dateRange.from,
-          dateRange.to,
-          {
-            city: this.city() ?? undefined,
-            limit: 100
-          }
-        );
+        const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
+          city: this.city() ?? undefined,
+          limit: 100,
+        });
         this.cars.set(items);
       } else {
         // Si no hay fechas, usar método tradicional
@@ -483,10 +474,10 @@ export class CarsListPage implements OnInit, OnDestroy {
         });
         this.cars.set(items);
       }
-      
+
       // Collapse search form on mobile after search
       this.searchExpanded.set(false);
-      
+
       // Notificar que el inventario está listo y esperar a que el DOM se actualice
       if (this.isBrowser && !this.inventoryReady()) {
         this.inventoryReady.set(true);
@@ -503,7 +494,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       console.error('loadCars error', err);
     } finally {
       this.loading.set(false);
-      
+
       // Iniciar auto-scroll del carousel después de cargar los autos
       if (this.autoScrollKickoffTimeout) {
         clearTimeout(this.autoScrollKickoffTimeout);
@@ -521,19 +512,18 @@ export class CarsListPage implements OnInit, OnDestroy {
   private setupRealtimeSubscription(): void {
     this.realtimeChannel = this.supabase
       .channel('cars-realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'cars' },
-        (payload) => {
-          this.handleRealtimeUpdate(payload);
-        }
-      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cars' }, (payload) => {
+        this.handleRealtimeUpdate(payload);
+      })
       .subscribe();
   }
 
-  private async handleRealtimeUpdate(payload: { eventType: string; [key: string]: unknown }): Promise<void> {
+  private async handleRealtimeUpdate(payload: {
+    eventType: string;
+    [key: string]: unknown;
+  }): Promise<void> {
     const eventType = payload.eventType;
-    
+
     if (eventType === 'INSERT') {
       await this.showNewCarToast();
     } else if (eventType === 'UPDATE' || eventType === 'DELETE') {
@@ -544,23 +534,24 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   private async showNewCarToast(): Promise<void> {
     if (typeof window === 'undefined') return;
-    
+
     // Show simple notification banner
     const banner = document.createElement('div');
-    banner.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
+    banner.className =
+      'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
     banner.innerHTML = `
       <span>¡Nuevos vehículos disponibles!</span>
       <button class="underline font-medium" onclick="this.parentElement.dispatchEvent(new CustomEvent('refresh'))">Ver ahora</button>
       <button class="ml-2" onclick="this.parentElement.remove()">✕</button>
     `;
-    
+
     banner.addEventListener('refresh', () => {
       void this.loadCars();
       banner.remove();
     });
-    
+
     document.body.appendChild(banner);
-    
+
     // Auto-remove after 5 seconds
     setTimeout(() => banner.remove(), 5000);
   }
@@ -659,7 +650,6 @@ export class CarsListPage implements OnInit, OnDestroy {
     this.dateRange.set(range);
   }
 
-
   onCarSelected(carId: string): void {
     this.selectedCarId.set(carId);
     if (this.carsMapComponent) {
@@ -697,12 +687,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   }
 
   // Cálculo de distancia usando Haversine Formula
-  private calculateDistance(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ): number {
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Radio de la Tierra en km
     const dLat = this.deg2rad(lat2 - lat1);
     const dLon = this.deg2rad(lon2 - lon1);
@@ -737,7 +722,9 @@ export class CarsListPage implements OnInit, OnDestroy {
     return car.id;
   }
 
-  private getSortLabel(sort: 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'): string {
+  private getSortLabel(
+    sort: 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest',
+  ): string {
     switch (sort) {
       case 'distance':
         return 'distancia';
@@ -765,7 +752,9 @@ export class CarsListPage implements OnInit, OnDestroy {
     }
   }
 
-  private isValidSort(value: string): value is 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest' {
+  private isValidSort(
+    value: string,
+  ): value is 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest' {
     return ['distance', 'price_asc', 'price_desc', 'rating', 'newest'].includes(value);
   }
 
@@ -782,8 +771,7 @@ export class CarsListPage implements OnInit, OnDestroy {
           source: 'cars-list-page',
           ...payload,
         },
-      })
+      }),
     );
   }
-
 }

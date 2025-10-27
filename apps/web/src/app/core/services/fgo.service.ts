@@ -3,10 +3,9 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseClientService } from './supabase-client.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FgoService {
-
   private readonly supabase: SupabaseClient;
 
   constructor() {
@@ -24,7 +23,10 @@ export class FgoService {
     }
 
     const balance = data.reduce((acc, transaction) => {
-      if (transaction.transaction_type === 'FGO_CONTRIBUTION' || transaction.transaction_type === 'FGO_RECOVERY') {
+      if (
+        transaction.transaction_type === 'FGO_CONTRIBUTION' ||
+        transaction.transaction_type === 'FGO_RECOVERY'
+      ) {
         return acc + transaction.amount_usd;
       } else {
         return acc - transaction.amount_usd;
@@ -64,7 +66,7 @@ export class FgoService {
     const rc = await this.getReserveCoefficient();
 
     if (rc < 0.9) {
-      return 0.20;
+      return 0.2;
     }
 
     const sixtyDaysAgo = new Date();
@@ -80,10 +82,12 @@ export class FgoService {
       throw error;
     }
 
-    const allRcsAbove1_2 = data.every(transaction => transaction.rc_snapshot && transaction.rc_snapshot > 1.2);
+    const allRcsAbove1_2 = data.every(
+      (transaction) => transaction.rc_snapshot && transaction.rc_snapshot > 1.2,
+    );
 
     if (allRcsAbove1_2) {
-      return 0.10;
+      return 0.1;
     }
 
     return 0.15;
@@ -142,6 +146,4 @@ export class FgoService {
       throw error;
     }
   }
-
-
 }

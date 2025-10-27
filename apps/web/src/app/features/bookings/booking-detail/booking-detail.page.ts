@@ -10,8 +10,20 @@ import { ReviewsService } from '../../../core/services/reviews.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { SettlementService, Claim, ClaimProcessingResult } from '../../../core/services/settlement.service';
-import { BookingInspection, BookingRiskSnapshot, EligibilityResult, WaterfallResult, FgoParameters, BucketType, InspectionStage } from '../../../core/models/fgo-v1-1.model';
+import {
+  SettlementService,
+  Claim,
+  ClaimProcessingResult,
+} from '../../../core/services/settlement.service';
+import {
+  BookingInspection,
+  BookingRiskSnapshot,
+  EligibilityResult,
+  WaterfallResult,
+  FgoParameters,
+  BucketType,
+  InspectionStage,
+} from '../../../core/models/fgo-v1-1.model';
 import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
@@ -51,7 +63,6 @@ import { ReviewManagementComponent } from './review-management.component';
   styleUrl: './booking-detail.page.css',
 })
 export class BookingDetailPage implements OnInit, OnDestroy {
-
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
@@ -88,11 +99,13 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   // Confirmations - show if booking is in "returned" status
   showConfirmationSection = computed(() => {
     const booking = this.booking();
-    return booking?.completion_status === 'returned' ||
-           booking?.completion_status === 'pending_owner' ||
-           booking?.completion_status === 'pending_renter' ||
-           booking?.completion_status === 'pending_both' ||
-           booking?.completion_status === 'funds_released';
+    return (
+      booking?.completion_status === 'returned' ||
+      booking?.completion_status === 'pending_owner' ||
+      booking?.completion_status === 'pending_renter' ||
+      booking?.completion_status === 'pending_both' ||
+      booking?.completion_status === 'funds_released'
+    );
   });
 
   isOwner = computed(() => {
@@ -220,9 +233,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking) return;
 
     try {
-      const inspections = await firstValueFrom(
-        this.fgoService.getInspections(booking.id)
-      );
+      const inspections = await firstValueFrom(this.fgoService.getInspections(booking.id));
       this.inspections.set(inspections);
     } catch (error) {
       console.error('Error loading inspections:', error);

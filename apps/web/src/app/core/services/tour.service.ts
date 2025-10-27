@@ -93,18 +93,32 @@ export class TourService {
   // #region Public API
   getAvailableTours(): AvailableTour[] {
     return [
-      { id: TourId.Welcome, name: 'Bienvenida', description: 'Un recorrido rápido por las funciones principales.' },
-      { id: TourId.GuidedBooking, name: 'Cómo Reservar', description: 'Una guía paso a paso para alquilar tu primer auto.' },
-      { id: TourId.Owner, name: 'Cómo Publicar tu Auto', description: 'Aprendé a ganar dinero con tu vehículo.' },
+      {
+        id: TourId.Welcome,
+        name: 'Bienvenida',
+        description: 'Un recorrido rápido por las funciones principales.',
+      },
+      {
+        id: TourId.GuidedBooking,
+        name: 'Cómo Reservar',
+        description: 'Una guía paso a paso para alquilar tu primer auto.',
+      },
+      {
+        id: TourId.Owner,
+        name: 'Cómo Publicar tu Auto',
+        description: 'Aprendé a ganar dinero con tu vehículo.',
+      },
     ];
   }
 
   startWelcomeTour(): void {
     // DEPRECATED: This service is being replaced by GuidedTourService
     // Uncomment the line below to temporarily disable old system
-    console.warn('[OLD TourService] startWelcomeTour() called - This will be removed soon. Use GuidedTourService instead.');
+    console.warn(
+      '[OLD TourService] startWelcomeTour() called - This will be removed soon. Use GuidedTourService instead.',
+    );
     return; // Disabled - use new GuidedTourService
-    
+
     // if (this.shouldSkipTour(TourId.Welcome)) return;
     // const steps = this.getWelcomeTourSteps();
     // this.buildTour(TourId.Welcome, steps);
@@ -112,9 +126,11 @@ export class TourService {
 
   startGuidedBookingTour(): void {
     // DEPRECATED: This service is being replaced by GuidedTourService
-    console.warn('[OLD TourService] startGuidedBookingTour() called - This will be removed soon. Use GuidedTourService instead.');
+    console.warn(
+      '[OLD TourService] startGuidedBookingTour() called - This will be removed soon. Use GuidedTourService instead.',
+    );
     return; // Disabled - use new GuidedTourService
-    
+
     // if (this.shouldSkipTour(TourId.GuidedBooking)) return;
     // if (this.activeTourId && this.activeTourId !== TourId.GuidedBooking) {
     //   this.tour?.cancel();
@@ -151,22 +167,46 @@ export class TourService {
     this.buildTour(TourId.CarDetail, steps);
   }
 
-  showQuickTip(stepId: TourStepId, message: string, position: 'top' | 'bottom' | 'left' | 'right' = 'bottom'): void {
+  showQuickTip(
+    stepId: TourStepId,
+    message: string,
+    position: 'top' | 'bottom' | 'left' | 'right' = 'bottom',
+  ): void {
     const selector = this.getSelectorForStep(stepId);
-    const tip = new Shepherd.Tour({ useModalOverlay: false, defaultStepOptions: { scrollTo: false, classes: 'shepherd-theme-custom shepherd-quick-tip' } });
-    tip.addStep({ id: 'quick-tip', text: `<div class="tour-content">${message}</div>`, attachTo: { element: selector, on: position }, buttons: [{ text: 'Entendido', action: () => tip.complete() }] });
+    const tip = new Shepherd.Tour({
+      useModalOverlay: false,
+      defaultStepOptions: { scrollTo: false, classes: 'shepherd-theme-custom shepherd-quick-tip' },
+    });
+    tip.addStep({
+      id: 'quick-tip',
+      text: `<div class="tour-content">${message}</div>`,
+      attachTo: { element: selector, on: position },
+      buttons: [{ text: 'Entendido', action: () => tip.complete() }],
+    });
     tip.start();
-    setTimeout(() => { if (tip.isActive()) tip.complete(); }, 8000);
+    setTimeout(() => {
+      if (tip.isActive()) tip.complete();
+    }, 8000);
   }
 
   restartTour(tourId: TourId): void {
     this.clearTourState(tourId);
     switch (tourId) {
-      case TourId.Welcome: this.startWelcomeTour(); break;
-      case TourId.Renter: this.startRenterTour(); break;
-      case TourId.Owner: this.startOwnerTour(); break;
-      case TourId.CarDetail: this.startCarDetailTour(); break;
-      case TourId.GuidedBooking: this.startGuidedBookingTour(); break;
+      case TourId.Welcome:
+        this.startWelcomeTour();
+        break;
+      case TourId.Renter:
+        this.startRenterTour();
+        break;
+      case TourId.Owner:
+        this.startOwnerTour();
+        break;
+      case TourId.CarDetail:
+        this.startCarDetailTour();
+        break;
+      case TourId.GuidedBooking:
+        this.startGuidedBookingTour();
+        break;
     }
   }
   // #endregion
@@ -215,10 +255,15 @@ export class TourService {
     this.tour?.addStep({
       id: GuidedBookingStep.Search,
       text: `...`,
-      beforeShowPromise: () => this.waitForElement(this.getSelectorForStep(GuidedBookingStep.Search)),
+      beforeShowPromise: () =>
+        this.waitForElement(this.getSelectorForStep(GuidedBookingStep.Search)),
       attachTo: { element: this.getSelectorForStep(GuidedBookingStep.Search), on: 'right' },
       buttons: [
-        { text: 'Ver después', classes: 'shepherd-button-secondary', action: () => this.dismissTour(TourId.GuidedBooking) },
+        {
+          text: 'Ver después',
+          classes: 'shepherd-button-secondary',
+          action: () => this.dismissTour(TourId.GuidedBooking),
+        },
         { text: 'Siguiente →', action: () => this.tour?.next() },
       ],
     });
@@ -226,11 +271,17 @@ export class TourService {
     this.tour?.addStep({
       id: GuidedBookingStep.SelectCar,
       text: `...`,
-      beforeShowPromise: () => this.waitForElement(this.getSelectorForStep(GuidedBookingStep.SelectCar)),
+      beforeShowPromise: () =>
+        this.waitForElement(this.getSelectorForStep(GuidedBookingStep.SelectCar)),
       attachTo: { element: this.getSelectorForStep(GuidedBookingStep.SelectCar), on: 'top' },
       buttons: [
         { text: '← Atrás', classes: 'shepherd-button-secondary', action: () => this.tour?.back() },
-        { text: 'Continuar →', classes: 'shepherd-button-primary shepherd-button-loading-indicator', action: () => this.goToNextWhenReady(this.getSelectorForStep(GuidedBookingStep.CarDetail)) },
+        {
+          text: 'Continuar →',
+          classes: 'shepherd-button-primary shepherd-button-loading-indicator',
+          action: () =>
+            this.goToNextWhenReady(this.getSelectorForStep(GuidedBookingStep.CarDetail)),
+        },
       ],
     });
   }
@@ -263,8 +314,14 @@ export class TourService {
           ...(index > 0 ? [{ text: 'Atrás', action: () => this.tour?.back() }] : []),
           {
             text: index === steps.length - 1 ? '¡Entendido!' : 'Siguiente',
-            classes: index === steps.length - 1 ? 'shepherd-button-primary' : 'shepherd-button-primary shepherd-button-loading-indicator',
-            action: index === steps.length - 1 ? () => this.completeTour(tourId, false) : () => this.tour?.next(),
+            classes:
+              index === steps.length - 1
+                ? 'shepherd-button-primary'
+                : 'shepherd-button-primary shepherd-button-loading-indicator',
+            action:
+              index === steps.length - 1
+                ? () => this.completeTour(tourId, false)
+                : () => this.tour?.next(),
           },
         ],
       });
@@ -275,9 +332,31 @@ export class TourService {
 
   private createTour(tourId: TourId, useModalOverlay = true): Tour {
     this.activeTourId = tourId;
-    const tour = new Shepherd.Tour({ useModalOverlay, defaultStepOptions: { cancelIcon: { enabled: true }, canClickTarget: true, scrollTo: { behavior: 'smooth', block: 'center' }, classes: 'shepherd-theme-custom', when: { show: () => { this.trackEvent('tour_step_viewed', { tour_id: tourId, step_id: tour.getCurrentStep()?.id }); } } } });
-    tour.on('cancel', () => { this.trackEvent('tour_cancelled', { tour_id: tourId, step_id: tour.getCurrentStep()?.id }); this.handleTourFinished(tourId); });
-    tour.on('complete', () => { this.trackEvent('tour_completed', { tour_id: tourId }); this.handleTourFinished(tourId); });
+    const tour = new Shepherd.Tour({
+      useModalOverlay,
+      defaultStepOptions: {
+        cancelIcon: { enabled: true },
+        canClickTarget: true,
+        scrollTo: { behavior: 'smooth', block: 'center' },
+        classes: 'shepherd-theme-custom',
+        when: {
+          show: () => {
+            this.trackEvent('tour_step_viewed', {
+              tour_id: tourId,
+              step_id: tour.getCurrentStep()?.id,
+            });
+          },
+        },
+      },
+    });
+    tour.on('cancel', () => {
+      this.trackEvent('tour_cancelled', { tour_id: tourId, step_id: tour.getCurrentStep()?.id });
+      this.handleTourFinished(tourId);
+    });
+    tour.on('complete', () => {
+      this.trackEvent('tour_completed', { tour_id: tourId });
+      this.handleTourFinished(tourId);
+    });
     return tour;
   }
 
@@ -346,7 +425,9 @@ export class TourService {
 
   private ensureRouterListener(): void {
     if (typeof window === 'undefined' || this.routeSubscription) return;
-    this.routeSubscription = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event) => this.handleNavigation(event));
+    this.routeSubscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => this.handleNavigation(event));
   }
 
   private handleNavigation(event: NavigationEnd): void {
@@ -357,10 +438,16 @@ export class TourService {
     if (!this.tour || this.activeTourId !== TourId.GuidedBooking) return;
     const carDetailPattern = /^\/cars\/[^/]+/;
     const bookingDetailPattern = /^\/bookings\/[^/]+/;
-    if (carDetailPattern.test(url) && !this.guidedRouteStepsShown.has(GuidedBookingStep.CarDetail)) {
+    if (
+      carDetailPattern.test(url) &&
+      !this.guidedRouteStepsShown.has(GuidedBookingStep.CarDetail)
+    ) {
       this.guidedRouteStepsShown.add(GuidedBookingStep.CarDetail);
       this.tour.show(GuidedBookingStep.CarDetail);
-    } else if (bookingDetailPattern.test(url) && !this.guidedRouteStepsShown.has(GuidedBookingStep.BookingDetail)) {
+    } else if (
+      bookingDetailPattern.test(url) &&
+      !this.guidedRouteStepsShown.has(GuidedBookingStep.BookingDetail)
+    ) {
       this.guidedRouteStepsShown.add(GuidedBookingStep.BookingDetail);
       this.tour.show(GuidedBookingStep.BookingDetail);
     }
@@ -403,7 +490,9 @@ export class TourService {
     if (!this.tour) return;
     const currentStep = this.tour.getCurrentStep();
     const currentStepId = currentStep?.id;
-    const nextButton = currentStep?.getElement()?.querySelector('.shepherd-button-loading-indicator');
+    const nextButton = currentStep
+      ?.getElement()
+      ?.querySelector('.shepherd-button-loading-indicator');
     nextButton?.classList.add('is-loading');
 
     this.waitForElement(selector)

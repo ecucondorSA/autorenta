@@ -1,15 +1,15 @@
 /**
  * Guided Tour System - Public API
- * 
+ *
  * A modular, event-driven system for creating interactive product tours
- * 
+ *
  * @example
  * ```typescript
  * import { GuidedTourService, TourId } from '@core/guided-tour';
- * 
+ *
  * export class MyComponent {
  *   private guidedTour = inject(GuidedTourService);
- * 
+ *
  *   startTour() {
  *     this.guidedTour.request({ id: TourId.Welcome });
  *   }

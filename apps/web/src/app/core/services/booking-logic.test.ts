@@ -21,7 +21,10 @@ describe('Booking Logic Integration', () => {
       from: jasmine.createSpy('from'),
     };
     pwaService = jasmine.createSpyObj<PwaService>('PwaService', ['setAppBadge', 'clearAppBadge']);
-    walletService = jasmine.createSpyObj<WalletService>('WalletService', ['unlockFunds', 'lockFunds']);
+    walletService = jasmine.createSpyObj<WalletService>('WalletService', [
+      'unlockFunds',
+      'lockFunds',
+    ]);
 
     TestBed.configureTestingModule({
       providers: [
@@ -103,14 +106,18 @@ describe('Booking Logic Integration', () => {
 
     it('should not create a booking when the car is unavailable', async () => {
       // Mock is_car_available to return false
-      supabase.rpc.withArgs('is_car_available', jasmine.any(Object)).and.resolveTo({ data: false, error: null });
+      supabase.rpc
+        .withArgs('is_car_available', jasmine.any(Object))
+        .and.resolveTo({ data: false, error: null });
 
       const result = await service.createBookingWithValidation(carId, startDate, endDate);
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('El auto no está disponible para esas fechas. Por favor elige otras fechas.');
+      expect(result.error).toBe(
+        'El auto no está disponible para esas fechas. Por favor elige otras fechas.',
+      );
       expect(result.booking).toBeUndefined();
-      
+
       // Verify that request_booking was not called
       expect(supabase.rpc).not.toHaveBeenCalledWith('request_booking', jasmine.any(Object));
     });
@@ -160,7 +167,11 @@ describe('Booking Logic Integration', () => {
         }),
       } as any);
 
-      const result = await service.createBookingWithValidation(carId, '2026-01-01T10:00:00Z', '2026-01-05T10:00:00Z');
+      const result = await service.createBookingWithValidation(
+        carId,
+        '2026-01-01T10:00:00Z',
+        '2026-01-05T10:00:00Z',
+      );
 
       expect(result.success).toBe(true);
       expect(supabase.rpc).toHaveBeenCalledWith('is_car_available', {
@@ -212,12 +223,20 @@ describe('Booking Logic Integration', () => {
         }),
       } as any);
 
-      const result1 = await service.createBookingWithValidation(carId, '2026-02-01T10:00:00Z', '2026-02-05T10:00:00Z');
+      const result1 = await service.createBookingWithValidation(
+        carId,
+        '2026-02-01T10:00:00Z',
+        '2026-02-05T10:00:00Z',
+      );
       expect(result1.success).toBe(true);
       expect(result1.booking).toEqual(firstBooking);
 
       // Second call with overlapping dates should fail
-      const result2 = await service.createBookingWithValidation(carId, '2026-02-03T10:00:00Z', '2026-02-07T10:00:00Z');
+      const result2 = await service.createBookingWithValidation(
+        carId,
+        '2026-02-03T10:00:00Z',
+        '2026-02-07T10:00:00Z',
+      );
 
       expect(result2.success).toBe(false);
       expect(result2.error).toContain('El auto no está disponible');
@@ -226,7 +245,7 @@ describe('Booking Logic Integration', () => {
 
   /**
    * SPRINT 2 - Test 2.3: Prevención de doble reserva (CRÍTICO)
-   * 
+   *
    * Tests mejorados para verificar que el sistema previene correctamente
    * reservas solapadas y que los mensajes de error son descriptivos
    */
@@ -272,7 +291,7 @@ describe('Booking Logic Integration', () => {
       const result = await service.createBookingWithValidation(
         carId,
         '2026-03-01T10:00:00Z',
-        '2026-03-05T18:00:00Z'
+        '2026-03-05T18:00:00Z',
       );
 
       expect(result.success).toBe(true);
@@ -283,7 +302,7 @@ describe('Booking Logic Integration', () => {
     it('❌ Segunda reserva SOLAPADA debe fallar', async () => {
       // Primera reserva: 1-5 marzo
       // Segunda reserva intentada: 3-7 marzo (solapa con la primera)
-      
+
       supabase.rpc.and.callFake(async (method: string) => {
         if (method === 'is_car_available') {
           // Retorna false porque ya hay una reserva en ese periodo
@@ -295,14 +314,14 @@ describe('Booking Logic Integration', () => {
       const result = await service.createBookingWithValidation(
         carId,
         '2026-03-03T10:00:00Z',
-        '2026-03-07T18:00:00Z'
+        '2026-03-07T18:00:00Z',
       );
 
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
       expect(result.error).toContain('no está disponible');
       expect(result.booking).toBeUndefined();
-      
+
       // Verificar que NO se intentó crear la reserva
       expect(supabase.rpc).not.toHaveBeenCalledWith('request_booking', jasmine.any(Object));
     });
@@ -310,10 +329,10 @@ describe('Booking Logic Integration', () => {
     it('✅ Reservas SECUENCIALES (no solapadas) deben ser exitosas', async () => {
       // Primera reserva: 1-5 marzo
       // Segunda reserva: 6-10 marzo (NO solapa)
-      
+
       const booking1Id = 'seq-booking-1';
       const booking2Id = 'seq-booking-2';
-      
+
       let callCount = 0;
 
       supabase.rpc.and.callFake(async (method: string) => {
@@ -330,33 +349,36 @@ describe('Booking Logic Integration', () => {
         return { data: null, error: new Error(`Unknown RPC: ${method}`) };
       });
 
-      supabase.from.and.callFake(() => ({
-        select: () => ({
-          eq: () => ({
-            single: async () => ({
-              data: {
-                id: callCount === 1 ? booking1Id : booking2Id,
-                car_id: carId,
-                status: 'confirmed',
-                user_id: 'user-1',
-                renter_id: 'user-1',
-                start_at: callCount === 1 ? '2026-03-01T10:00:00Z' : '2026-03-06T10:00:00Z',
-                end_at: callCount === 1 ? '2026-03-05T18:00:00Z' : '2026-03-10T18:00:00Z',
-                total_amount: 20000,
-                currency: 'ARS',
-                created_at: new Date().toISOString(),
-              },
-              error: null,
+      supabase.from.and.callFake(
+        () =>
+          ({
+            select: () => ({
+              eq: () => ({
+                single: async () => ({
+                  data: {
+                    id: callCount === 1 ? booking1Id : booking2Id,
+                    car_id: carId,
+                    status: 'confirmed',
+                    user_id: 'user-1',
+                    renter_id: 'user-1',
+                    start_at: callCount === 1 ? '2026-03-01T10:00:00Z' : '2026-03-06T10:00:00Z',
+                    end_at: callCount === 1 ? '2026-03-05T18:00:00Z' : '2026-03-10T18:00:00Z',
+                    total_amount: 20000,
+                    currency: 'ARS',
+                    created_at: new Date().toISOString(),
+                  },
+                  error: null,
+                }),
+              }),
             }),
-          }),
-        }),
-      }) as any);
+          }) as any,
+      );
 
       // Primera reserva: 1-5 marzo
       const result1 = await service.createBookingWithValidation(
         carId,
         '2026-03-01T10:00:00Z',
-        '2026-03-05T18:00:00Z'
+        '2026-03-05T18:00:00Z',
       );
 
       expect(result1.success).toBe(true);
@@ -366,7 +388,7 @@ describe('Booking Logic Integration', () => {
       const result2 = await service.createBookingWithValidation(
         carId,
         '2026-03-06T10:00:00Z',
-        '2026-03-10T18:00:00Z'
+        '2026-03-10T18:00:00Z',
       );
 
       expect(result2.success).toBe(true);
@@ -384,20 +406,20 @@ describe('Booking Logic Integration', () => {
       const result = await service.createBookingWithValidation(
         carId,
         '2026-04-01T10:00:00Z',
-        '2026-04-05T18:00:00Z'
+        '2026-04-05T18:00:00Z',
       );
 
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
-      
+
       // Verificar que el mensaje es descriptivo
       const errorMsg = result.error!.toLowerCase();
       expect(
         errorMsg.includes('no está disponible') ||
-        errorMsg.includes('no disponible') ||
-        errorMsg.includes('ocupado')
+          errorMsg.includes('no disponible') ||
+          errorMsg.includes('ocupado'),
       ).toBe(true);
-      
+
       // NO debe ser un error genérico
       expect(errorMsg).not.toContain('unknown error');
       expect(errorMsg).not.toContain('undefined');
@@ -406,7 +428,7 @@ describe('Booking Logic Integration', () => {
     it('❌ Solape PARCIAL al inicio debe fallar', async () => {
       // Reserva existente: 1-5 marzo
       // Nueva reserva: 28 feb - 3 marzo (solapa al inicio)
-      
+
       supabase.rpc.and.callFake(async (method: string) => {
         if (method === 'is_car_available') {
           return { data: false, error: null };
@@ -417,7 +439,7 @@ describe('Booking Logic Integration', () => {
       const result = await service.createBookingWithValidation(
         carId,
         '2026-02-28T10:00:00Z',
-        '2026-03-03T18:00:00Z'
+        '2026-03-03T18:00:00Z',
       );
 
       expect(result.success).toBe(false);
@@ -427,7 +449,7 @@ describe('Booking Logic Integration', () => {
     it('❌ Solape PARCIAL al final debe fallar', async () => {
       // Reserva existente: 1-5 marzo
       // Nueva reserva: 4-8 marzo (solapa al final)
-      
+
       supabase.rpc.and.callFake(async (method: string) => {
         if (method === 'is_car_available') {
           return { data: false, error: null };
@@ -438,7 +460,7 @@ describe('Booking Logic Integration', () => {
       const result = await service.createBookingWithValidation(
         carId,
         '2026-03-04T10:00:00Z',
-        '2026-03-08T18:00:00Z'
+        '2026-03-08T18:00:00Z',
       );
 
       expect(result.success).toBe(false);
@@ -448,7 +470,7 @@ describe('Booking Logic Integration', () => {
     it('❌ Solape COMPLETO (reserva dentro de otra) debe fallar', async () => {
       // Reserva existente: 1-10 marzo
       // Nueva reserva: 3-7 marzo (completamente dentro)
-      
+
       supabase.rpc.and.callFake(async (method: string) => {
         if (method === 'is_car_available') {
           return { data: false, error: null };
@@ -459,7 +481,7 @@ describe('Booking Logic Integration', () => {
       const result = await service.createBookingWithValidation(
         carId,
         '2026-03-03T10:00:00Z',
-        '2026-03-07T18:00:00Z'
+        '2026-03-07T18:00:00Z',
       );
 
       expect(result.success).toBe(false);
@@ -470,9 +492,9 @@ describe('Booking Logic Integration', () => {
       // Reserva existente: 1-5 marzo, termina a las 18:00
       // Nueva reserva: 5 marzo a las 18:00 - 10 marzo
       // Esto es válido si is_car_available lo permite
-      
+
       const bookingId = 'same-day-transition';
-      
+
       supabase.rpc.and.callFake(async (method: string) => {
         if (method === 'is_car_available') {
           // La RPC verifica rangos y permite si no hay solape real
@@ -512,12 +534,11 @@ describe('Booking Logic Integration', () => {
       const result = await service.createBookingWithValidation(
         carId,
         '2026-03-05T18:00:00Z',
-        '2026-03-10T18:00:00Z'
+        '2026-03-10T18:00:00Z',
       );
 
       expect(result.success).toBe(true);
       expect(result.booking?.id).toBe(bookingId);
     });
   });
-
 });

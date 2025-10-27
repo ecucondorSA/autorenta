@@ -58,44 +58,45 @@ export const routes: Routes = [
         path: '',
         loadComponent: () =>
           import('./features/admin/dashboard/admin-dashboard.page').then(
-            (m) => m.AdminDashboardPage
+            (m) => m.AdminDashboardPage,
           ),
       },
       {
         path: 'withdrawals',
         loadComponent: () =>
           import('./features/admin/withdrawals/admin-withdrawals.page').then(
-            (m) => m.AdminWithdrawalsPage
+            (m) => m.AdminWithdrawalsPage,
           ),
       },
       {
         path: 'coverage-fund',
         loadComponent: () =>
           import('./features/admin/components/coverage-fund-dashboard.component').then(
-            (m) => m.CoverageFundDashboardComponent
+            (m) => m.CoverageFundDashboardComponent,
           ),
       },
       {
         path: 'fgo',
         loadComponent: () =>
-          import('./features/admin/fgo/fgo-overview.page').then(
-            (m) => m.FgoOverviewPage
-          ),
+          import('./features/admin/fgo/fgo-overview.page').then((m) => m.FgoOverviewPage),
       },
     ],
   },
   {
     path: 'mp-callback',
-    loadComponent: () => import('./features/mp-callback/mp-callback.page').then((m) => m.MpCallbackPage),
+    loadComponent: () =>
+      import('./features/mp-callback/mp-callback.page').then((m) => m.MpCallbackPage),
   },
   {
     path: 'profile',
     canMatch: [AuthGuard],
-    loadComponent: () => import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
+    loadComponent: () =>
+      import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
   },
   {
     path: 'users/:id',
-    loadComponent: () => import('./features/users/public-profile.page').then((m) => m.PublicProfilePage),
+    loadComponent: () =>
+      import('./features/users/public-profile.page').then((m) => m.PublicProfilePage),
   },
   {
     path: 'wallet',
@@ -109,14 +110,14 @@ export const routes: Routes = [
         path: 'history',
         loadComponent: () =>
           import('./features/wallet/components/ledger-history.component').then(
-            (m) => m.LedgerHistoryComponent
+            (m) => m.LedgerHistoryComponent,
           ),
       },
       {
         path: 'transfer',
         loadComponent: () =>
           import('./features/wallet/components/transfer-funds.component').then(
-            (m) => m.TransferFundsComponent
+            (m) => m.TransferFundsComponent,
           ),
       },
     ],
