@@ -185,7 +185,6 @@
             </div>
           </div>
         </div>
-        <app-fgo-management [booking]="booking()!" [exchangeRate]="exchangeRate()"></app-fgo-management>
 
         <!-- ✅ INSURANCE SUMMARY CARD -->
         <div class="insurance-card-container">
@@ -197,9 +196,7 @@
         <!-- Pricing Breakdown Card -->
       </section>
 
-      <aside class="booking-detail-side">
-        <app-payment-actions [booking]="booking()!" [timeRemaining]="timeRemaining()"></app-payment-actions>
-      </aside>
+      <!-- Removed: app-payment-actions component -->
     </div>
 
     <app-review-management [booking]="booking()!"></app-review-management>
