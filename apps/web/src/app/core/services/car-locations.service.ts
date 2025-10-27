@@ -71,14 +71,16 @@ export class CarLocationsService {
     channel.on(
       'postgres_changes',
       { schema: 'public', table: 'car_locations', event: '*' },
-      (_payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => onChange(),
+      (_payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => onChange(),
     );
     channel.on(
       'postgres_changes',
       { schema: 'public', table: 'cars', event: '*' },
-      (payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => {
-        const newStatus = (payload.new as any)?.status;
-        const oldStatus = (payload.old as any)?.status;
+      (payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => {
+        const newRecord = payload.new as Record<string, unknown> | undefined;
+        const oldRecord = payload.old as Record<string, unknown> | undefined;
+        const newStatus = newRecord?.status;
+        const oldStatus = oldRecord?.status;
         if (newStatus === 'active' || oldStatus === 'active') {
           onChange();
         }
@@ -148,7 +150,7 @@ export class CarLocationsService {
     }
 
     return carsArray
-      .map((car: any) => this.normalizeEntry(car))
+      .map((car: unknown) => this.normalizeEntry(car))
       .filter((value): value is CarMapLocation => !!value);
   }
 
@@ -158,22 +160,23 @@ export class CarLocationsService {
       .filter((value): value is CarMapLocation => !!value);
   }
 
-  private normalizeEntry(entry: any): CarMapLocation | null {
-    if (!entry) {
+  private normalizeEntry(entry: unknown): CarMapLocation | null {
+    if (!entry || typeof entry !== 'object') {
       return null;
     }
 
-    const car = entry.car ?? entry;
-    const meta = entry.meta ?? {};
-    const carId = String(entry.car_id ?? car.id ?? meta.car_id ?? '');
+    const record = entry as Record<string, unknown>;
+    const car = (record.car ?? record) as Record<string, unknown>;
+    const meta = (record.meta ?? {}) as Record<string, unknown>;
+    const carId = String(record.car_id ?? car.id ?? meta.car_id ?? '');
     if (!carId) {
       return null;
     }
 
-    const latRaw = entry.lat ?? entry.location_lat ?? car.location_lat;
-    const lngRaw = entry.lng ?? entry.location_lng ?? car.location_lng;
-    const lat = typeof latRaw === 'string' ? Number.parseFloat(latRaw) : latRaw;
-    const lng = typeof lngRaw === 'string' ? Number.parseFloat(lngRaw) : lngRaw;
+    const latRaw = record.lat ?? record.location_lat ?? car.location_lat;
+    const lngRaw = record.lng ?? record.location_lng ?? car.location_lng;
+    const lat = typeof latRaw === 'string' ? Number.parseFloat(latRaw) : (latRaw as number);
+    const lng = typeof lngRaw === 'string' ? Number.parseFloat(lngRaw) : (lngRaw as number);
     if (
       typeof lat !== 'number' ||
       Number.isNaN(lat) ||
@@ -183,30 +186,30 @@ export class CarLocationsService {
       return null;
     }
 
-    const status = car.status ?? entry.status;
+    const status = car.status ?? record.status;
     if (status && status !== 'active') {
       return null;
     }
 
-    const title = String(car.title ?? entry.title ?? 'Auto disponible');
-    const pricePerDayRaw = car.price_per_day ?? entry.price_per_day ?? 0;
+    const title = String(car.title ?? record.title ?? 'Auto disponible');
+    const pricePerDayRaw = car.price_per_day ?? record.price_per_day ?? 0;
     const pricePerDay =
       typeof pricePerDayRaw === 'string'
         ? Number.parseFloat(pricePerDayRaw)
         : Number(pricePerDayRaw ?? 0);
     const currency = String(
-      car.currency ?? entry.currency ?? environment.defaultCurrency ?? 'USD',
+      car.currency ?? record.currency ?? environment.defaultCurrency ?? 'USD',
     ).toUpperCase();
-    const regionId = car.region_id ?? entry.region_id ?? null;
-    const city = car.location_city ?? entry.city ?? entry.location_city ?? null;
-    const state = car.location_state ?? entry.state ?? entry.location_state ?? null;
-    const country = car.location_country ?? entry.country ?? entry.location_country ?? null;
+    const regionId = car.region_id ?? record.region_id ?? null;
+    const city = car.location_city ?? record.city ?? record.location_city ?? null;
+    const state = car.location_state ?? record.state ?? record.location_state ?? null;
+    const country = car.location_country ?? record.country ?? record.location_country ?? null;
     const formattedAddress =
-      car.location_formatted_address ?? entry.location_formatted_address ?? null;
-    const updatedAt = String(entry.updated_at ?? car.updated_at ?? new Date().toISOString());
-    const photoUrl = car.main_photo_url ?? entry.main_photo_url ?? entry.photo_url ?? null;
+      car.location_formatted_address ?? record.location_formatted_address ?? null;
+    const updatedAt = String(record.updated_at ?? car.updated_at ?? new Date().toISOString());
+    const photoUrl = car.main_photo_url ?? record.main_photo_url ?? record.photo_url ?? null;
     const description = this.buildSummary(
-      car.description ?? entry.description ?? meta.description ?? '',
+      car.description ?? record.description ?? meta.description ?? '',
     );
 
     return {

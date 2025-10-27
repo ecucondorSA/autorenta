@@ -10,6 +10,12 @@ interface ImageOptimizeOptions {
   format: 'webp' | 'jpeg';
 }
 
+// Type for raw car data from Supabase with photos joined
+type CarWithPhotosRaw = Record<string, unknown> & {
+  car_photos?: unknown[];
+  owner?: unknown | unknown[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -185,14 +191,14 @@ export class CarsService {
         filters.to,
         filters.blockedCarIds || [],
       );
-      return availableCars.map((car: any) => ({
+      return availableCars.map((car: CarWithPhotosRaw) => ({
         ...car,
         photos: car.car_photos || [],
         owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
       })) as Car[];
     }
 
-    return (data ?? []).map((car: any) => ({
+    return (data ?? []).map((car: CarWithPhotosRaw) => ({
       ...car,
       photos: car.car_photos || [],
       owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
@@ -278,7 +284,7 @@ export class CarsService {
       .order('created_at', { ascending: false });
     if (error) throw error;
 
-    return (data ?? []).map((car: any) => ({
+    return (data ?? []).map((car: CarWithPhotosRaw) => ({
       ...car,
       photos: car.car_photos || [],
     })) as Car[];
@@ -339,7 +345,7 @@ export class CarsService {
       .order('created_at', { ascending: false });
     if (error) throw error;
 
-    return (data ?? []).map((car: any) => ({
+    return (data ?? []).map((car: CarWithPhotosRaw) => ({
       ...car,
       photos: car.car_photos || [],
     })) as Car[];
@@ -461,15 +467,16 @@ export class CarsService {
       // Filtrar por ciudad si se especificó
       let filteredCars = data;
       if (options.city) {
-        filteredCars = data.filter((car: any) => {
-          const cityInLocation = car.location?.city?.toLowerCase();
+        filteredCars = data.filter((car: Record<string, unknown>) => {
+          const carLocation = car.location as Record<string, unknown> | undefined;
+          const cityInLocation = (carLocation?.city as string | undefined)?.toLowerCase();
           return cityInLocation?.includes(options.city!.toLowerCase());
         });
       }
 
       // Cargar fotos para cada auto (la RPC no las incluye por performance)
       const carsWithPhotos = await Promise.all(
-        filteredCars.map(async (car: any) => {
+        filteredCars.map(async (car: Record<string, unknown>) => {
           const { data: photos } = await this.supabase
             .from('car_photos')
             .select('*')
