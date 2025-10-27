@@ -259,7 +259,10 @@
     </div>
 
     <!-- Chat Section - Visible for confirmed, in_progress bookings -->
-    <div *ngIf="(booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'pending' || showConfirmationSection()) && carOwnerId()" id="tour-booking-chat">
+    <div *ngIf="(booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'pending' || showConfirmationSection()) && carOwnerId()" 
+         id="tour-booking-chat"
+         class="mx-auto max-w-2xl">
+      <h2 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-100">Chat con el anfitrión</h2>
       <app-booking-chat
         [bookingId]="booking()!.id"
         [recipientId]="carOwnerId()!"
