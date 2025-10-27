@@ -71,10 +71,25 @@ export class CarDetailPage implements OnInit {
     const range = this.dateRange();
     const car = this.car();
     if (!range.from || !range.to || !car) return null;
+    
+    // Validate price_per_day exists and is a valid number
+    if (!car.price_per_day || typeof car.price_per_day !== 'number' || car.price_per_day <= 0) {
+      console.error('❌ Invalid price_per_day:', car.price_per_day, 'for car:', car.id);
+      return null;
+    }
+    
     const start = new Date(range.from);
     const end = new Date(range.to);
     const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    return diff > 0 ? diff * car.price_per_day : null;
+    
+    if (diff <= 0) {
+      console.warn('⚠️ Invalid date range, diff:', diff);
+      return null;
+    }
+    
+    const total = diff * car.price_per_day;
+    console.log(`💰 Price calculation: ${diff} days × $${car.price_per_day} = $${total}`);
+    return total;
   });
 
   readonly canBook = computed(() => {
@@ -183,6 +198,13 @@ export class CarDetailPage implements OnInit {
       if (!car) {
         this.error.set('Auto no disponible');
       } else {
+        console.log('🚗 Auto cargado:', {
+          id: car.id,
+          title: car.title,
+          price_per_day: car.price_per_day,
+          currency: car.currency,
+          priceType: typeof car.price_per_day
+        });
         this.car.set(car);
 
         // Update SEO meta tags
