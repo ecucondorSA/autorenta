@@ -25,6 +25,7 @@ import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 
 // Models
 import {
+  BucketType,
   BookingInput,
   FxSnapshot,
   RiskSnapshot,
@@ -45,6 +46,7 @@ import {
   formatUsd,
   formatArs,
 } from '../../../core/models/booking-detail-payment.model';
+import type { Car } from '../../../core/models';
 
 // Components
 import { BookingSummaryCardComponent } from './components/booking-summary-card.component';
@@ -130,7 +132,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   });
 
   // Información del auto
-  readonly car = signal<any>(null); // TODO: Tipear con Car interface
+  readonly car = signal<Car | null>(null);
 
   // Snapshots
   readonly fxSnapshot = signal<FxSnapshot | null>(null);
@@ -362,18 +364,26 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       }
 
       // Reconstruir bookingInput desde el booking
+      const carRecord = (data.car ?? null) as (Car & { bucket?: string }) | null;
+
+      const bucket: BucketType =
+        (carRecord?.bucket as BucketType | undefined) ?? 'standard';
+
+      const vehicleValueUsd =
+        carRecord?.value_usd != null ? Number(carRecord.value_usd) : 15000;
+
       this.bookingInput.set({
         carId: data.car_id,
         startDate: new Date(data.start_at),
         endDate: new Date(data.end_at),
-        bucket: data.car?.bucket || 'standard',
-        vehicleValueUsd: data.car?.value_usd || 15000,
+        bucket,
+        vehicleValueUsd,
         country: 'AR',
       });
 
       // Pre-cargar info del auto
-      if (data.car) {
-        this.car.set(data.car);
+      if (carRecord) {
+        this.car.set(carRecord);
       }
 
       // Pre-seleccionar payment_mode si ya existe
@@ -412,7 +422,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       if (error) throw error;
 
-      this.car.set(data);
+      if (data) {
+        this.car.set(data as Car);
+      }
 
       // Actualizar bookingInput con datos reales del auto (si vinieron en query params, ya están seteados)
       // No sobrescribimos porque bucket y value_usd ya vienen calculados de car-detail.page.ts
@@ -505,11 +517,16 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     this.loadingPricing.set(true);
     try {
-      // Convert price to USD if it's in ARS
-      let dailyRateUsd = carData.price_per_day || 50;
-      if (carData.currency === 'ARS') {
-        dailyRateUsd = carData.price_per_day / fx.rate; // Convert ARS to USD using FX rate
-      }
+      const rawCurrency = (carData.currency ?? 'USD').toUpperCase();
+      const rawDailyRate = Number(carData.price_per_day ?? 0);
+      const computedDailyRateUsd =
+        rawCurrency === 'ARS'
+          ? this.fxService.convertReverse(rawDailyRate, fx)
+          : rawDailyRate;
+      const dailyRateUsd =
+        Number.isFinite(computedDailyRateUsd) && computedDailyRateUsd > 0
+          ? computedDailyRateUsd
+          : 50;
 
       const subtotalUsd = dailyRateUsd * dates.totalDays;
 
@@ -530,7 +547,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         subtotalUsd + fgoContributionUsd + platformFeeUsd + insuranceFeeUsd + coverageUpgradeUsd;
 
       // Total ARS
-      const totalArs = totalUsd * fx.rate;
+      const totalArs = this.fxService.convert(totalUsd, fx);
 
       const breakdown: PriceBreakdown = {
         dailyRateUsd,

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, effect, EffectRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
@@ -106,7 +106,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   /**
    * Depósitos pendientes
    */
-  readonly pendingDeposits = signal<number>(0);
+  readonly pendingDeposits = this.walletService.pendingDepositsCount;
 
   /**
    * Indica si hay depósitos pendientes
@@ -156,6 +156,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
   // ==================== LIFECYCLE ====================
 
+  private previousPendingCount = 0;
+  private pendingWatcher?: EffectRef;
+
   async ngOnInit(): Promise<void> {
     // Auto-cargar balance al inicializar
     await this.loadBalance();
@@ -187,6 +190,17 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     if (this.autoRefreshEnabled()) {
       this.startAutoRefresh();
     }
+
+    this.pendingWatcher = effect(
+      () => {
+        const newCount = this.walletService.pendingDepositsCount();
+        if (newCount > 0 && newCount > this.previousPendingCount) {
+          this.showPendingNotification();
+        }
+        this.previousPendingCount = newCount;
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   ngOnDestroy(): void {
@@ -204,6 +218,8 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     if (this.notificationTimer) {
       clearTimeout(this.notificationTimer);
     }
+
+    this.pendingWatcher?.destroy();
   }
 
   // ==================== PUBLIC METHODS ====================
@@ -274,28 +290,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    */
   async loadPendingDeposits(): Promise<void> {
     try {
-      // Obtener transacciones pendientes de tipo deposit
-      const transactions = await this.walletService.getTransactions({
-        type: 'deposit',
-        status: 'pending',
-      });
-
-      const previousCount = this.pendingDeposits();
-      const newCount = transactions.length;
-
-      this.pendingDeposits.set(newCount);
-
-      // Mostrar notificación solo si:
-      // 1. Hay depósitos pendientes
-      // 2. Es la primera vez (previousCount === 0) O hay nuevos depósitos
-      if (newCount > 0 && (previousCount === 0 || newCount > previousCount)) {
-        this.showPendingNotification();
-      }
-
-      // Log para debugging
-      if (transactions.length > 0) {
-        console.log(`⚠️  Tienes ${transactions.length} depósito(s) pendiente(s):`, transactions);
-      }
+      await this.walletService.refreshPendingDepositsCount();
     } catch (err) {
       console.error('Error loading pending deposits:', err);
     }

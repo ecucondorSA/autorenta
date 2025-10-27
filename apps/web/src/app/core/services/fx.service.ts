@@ -1,7 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
-import { SupabaseClientService } from './supabase-client.service';
-import { ExchangeRateService } from './exchange-rate.service';
 import {
   FxSnapshot,
   FxSnapshotDb,
@@ -9,6 +7,8 @@ import {
   isFxExpired,
   isFxVariationExceeded,
 } from '../models/booking-detail-payment.model';
+import { SupabaseClientService } from './supabase-client.service';
+import { ExchangeRateService } from './exchange-rate.service';
 
 /**
  * Servicio para gestionar tipos de cambio (FX)

@@ -6,9 +6,33 @@
  */
 
 import { TestBed } from '@angular/core/testing';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { BookingsService } from './bookings.service';
 import { CarsService } from './cars.service';
-import { SupabaseClient } from '@supabase/supabase-js';
+
+type CarsQueryOptions = { data?: unknown[]; error?: any; reject?: boolean };
+
+function createCarsQueryMock(options: CarsQueryOptions = {}) {
+  const query = jasmine.createSpyObj('CarsQuery', ['select', 'eq', 'ilike', 'order']);
+  query.select.and.returnValue(query);
+  query.eq.and.returnValue(query);
+  query.ilike.and.returnValue(query);
+  query.order.and.returnValue(query);
+  (query as any).then = (
+    resolve: (value: { data: unknown[]; error: any }) => unknown,
+    reject?: (reason: any) => unknown
+  ) => {
+    const payload = {
+      data: options.data ?? [],
+      error: options.error ?? null,
+    };
+    if (options.reject && reject) {
+      return reject(payload.error);
+    }
+    return resolve(payload);
+  };
+  return query;
+}
 
 describe('Sprint 5.2 - Edge Cases', () => {
   let bookingsService: BookingsService;
@@ -322,24 +346,23 @@ describe('Sprint 5.2 - Edge Cases', () => {
         'Neuquén'
       ];
 
-      const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'ilike', 'order']);
-      mockQuery.select.and.returnValue(mockQuery);
-      mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.ilike.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [
-          { id: 'car-1', location_city: 'Córdoba', brand: 'Toyota' }
-        ],
-        error: null
-      }));
-
-      mockSupabase.from.and.returnValue(mockQuery as any);
-
       for (const city of citiesWithAccents) {
+        const builder = createCarsQueryMock({
+          data: [
+            { id: 'car-1', location_city: city, brand: 'Toyota' }
+          ],
+        });
+        mockSupabase.from.and.callFake((table: string) => {
+          expect(table).toBe('cars');
+          return builder;
+        });
+
         const cars = await carsService.listActiveCars({ city });
         expect(cars).toBeDefined();
-        expect(mockQuery.ilike).toHaveBeenCalled();
+        expect(builder.ilike).toHaveBeenCalledWith('location_city', `%${city}%`);
         console.log(`✅ Acentos manejados correctamente: "${city}"`);
+
+        mockSupabase.from.calls.reset();
       }
     });
 
@@ -351,21 +374,21 @@ describe('Sprint 5.2 - Edge Cases', () => {
         'bUeNoS aIrEs'
       ];
 
-      const mockQuery = jasmine.createSpyObj('Query', ['select', 'eq', 'ilike', 'order']);
-      mockQuery.select.and.returnValue(mockQuery);
-      mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.ilike.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [{ id: 'car-1', location_city: 'Buenos Aires' }],
-        error: null
-      }));
-
-      mockSupabase.from.and.returnValue(mockQuery as any);
-
       const results: number[] = [];
       for (const city of variations) {
+        const builder = createCarsQueryMock({
+          data: [{ id: 'car-1', location_city: 'Buenos Aires' }],
+        });
+        mockSupabase.from.and.callFake((table: string) => {
+          expect(table).toBe('cars');
+          return builder;
+        });
+
         const cars = await carsService.listActiveCars({ city });
         results.push(cars.length);
+        expect(builder.ilike).toHaveBeenCalledWith('location_city', `%${city}%`);
+
+        mockSupabase.from.calls.reset();
       }
 
       // Todas las variaciones deberían retornar los mismos resultados

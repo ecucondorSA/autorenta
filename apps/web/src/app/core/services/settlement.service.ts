@@ -1,12 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Observable, from, map, catchError, of, firstValueFrom } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
-import { FgoV1_1Service } from './fgo-v1-1.service';
-import { RiskMatrixService } from './risk-matrix.service';
-import { FgoService } from './fgo.service';
-
-// Models
 import {
   EligibilityResult,
   WaterfallResult,
@@ -21,6 +15,10 @@ import {
   calculateWaterfallTotal,
   isInspectionComplete,
 } from '../models/fgo-v1-1.model';
+import { SupabaseClientService } from './supabase-client.service';
+import { FgoV1_1Service } from './fgo-v1-1.service';
+import { RiskMatrixService } from './risk-matrix.service';
+import { FgoService } from './fgo.service';
 
 /**
  * Tipo de daño reportado

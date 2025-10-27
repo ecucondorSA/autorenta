@@ -1,11 +1,11 @@
 
 import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SettlementService, Claim, ClaimProcessingResult } from '../../../core/services/settlement.service';
 import { BookingInspection, BookingRiskSnapshot, EligibilityResult, WaterfallResult, FgoParameters, BucketType, InspectionStage } from '../../../core/models/fgo-v1-1.model';
-import { firstValueFrom } from 'rxjs';
 import { RiskMatrixService, RiskPolicy } from '../../../core/services/risk-matrix.service';
 import { FgoService } from '../../../core/services/fgo.service';
 

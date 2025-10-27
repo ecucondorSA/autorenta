@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild, AfterViewInit, computed, inject } from '@angular/core';
+import { Component, signal, ViewChild, AfterViewInit, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -57,7 +57,7 @@ import { WalletAccountNumberCardComponent } from '../../shared/components/wallet
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
 })
-export class WalletPage implements AfterViewInit {
+export class WalletPage implements AfterViewInit, OnInit {
   /**
    * Referencia al componente de balance card
    */
@@ -124,6 +124,11 @@ export class WalletPage implements AfterViewInit {
   readonly protectedCreditBalance = this.walletService.protectedCreditBalance;
 
   /**
+   * Depósitos pendientes
+   */
+  readonly pendingDepositsCount = this.walletService.pendingDepositsCount;
+
+  /**
    * Estado del crédito protegido (pending | partial | active)
    */
   readonly protectedCreditStatus = computed<'pending' | 'partial' | 'active'>(() => {
@@ -155,6 +160,14 @@ export class WalletPage implements AfterViewInit {
     // Cargar datos al iniciar
     this.loadWithdrawalData();
     this.loadWalletAccountNumber();
+  }
+
+  async ngOnInit(): Promise<void> {
+    try {
+      await this.walletService.refreshPendingDepositsCount();
+    } catch (error) {
+      console.error('Error al cargar depósitos pendientes:', error);
+    }
   }
 
   /**
@@ -201,6 +214,18 @@ export class WalletPage implements AfterViewInit {
    */
   setWithdrawalMode(mode: 'form' | 'accounts'): void {
     this.withdrawalMode.set(mode);
+  }
+
+  /**
+   * Refresh manual del balance y depósitos pendientes
+   */
+  async refreshWalletData(): Promise<void> {
+    try {
+      const balanceRefresh = this.balanceCard ? this.balanceCard.loadBalance() : Promise.resolve();
+      await Promise.all([balanceRefresh, this.walletService.refreshPendingDepositsCount()]);
+    } catch (error) {
+      console.error('Error al refrescar wallet:', error);
+    }
   }
 
   /**

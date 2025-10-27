@@ -113,6 +113,11 @@ export class WalletService {
   readonly totalBalance = computed(() => this.balance()?.total_balance ?? 0);
 
   /**
+   * Número de depósitos pendientes
+   */
+  readonly pendingDepositsCount = signal(0);
+
+  /**
    * Indica si hay alguna operación en progreso
    */
   readonly isLoading = computed(() => {
@@ -138,6 +143,30 @@ export class WalletService {
    */
   hasSufficientWithdrawableFunds(amount: number): boolean {
     return this.withdrawableBalance() >= amount;
+  }
+
+  /**
+   * Refresca el número de depósitos pendientes (transaction_type = deposit, status = pending)
+   */
+  async refreshPendingDepositsCount(): Promise<number> {
+    try {
+      const { data, error } = await this.supabase.getClient()
+        .from('v_wallet_history')
+        .select('id')
+        .eq('transaction_type', 'deposit')
+        .eq('status', 'pending');
+
+      if (error) {
+        throw this.createError('PENDING_DEPOSITS_ERROR', error.message, error);
+      }
+
+      const count = data?.length ?? 0;
+      this.pendingDepositsCount.set(count);
+      return count;
+    } catch (err) {
+      this.handleError(err, 'No se pudieron obtener los depósitos pendientes');
+      return this.pendingDepositsCount();
+    }
   }
 
   // ==================== PUBLIC METHODS ====================

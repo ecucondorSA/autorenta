@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { SupabaseClientService } from './supabase-client.service';
 import { environment } from '../../../environments/environment';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * SPRINT 4 - TEST 1: Verificar configuración de Supabase con pooling

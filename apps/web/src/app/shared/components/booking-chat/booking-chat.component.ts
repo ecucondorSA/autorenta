@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy, input, signal, inject, effect } from '@an
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
-import type { RealtimeChannel } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-booking-chat',
@@ -121,6 +121,10 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  get draftMessage(): string {
+    return this.newMessage();
+  }
+
   async sendMessage(): Promise<void> {
     const text = this.newMessage().trim();
     if (!text) return;
@@ -154,7 +158,12 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  onInputChange(): void {
+  onMessageDraftChange(value: string): void {
+    this.newMessage.set(value);
+    this.onInputChange();
+  }
+
+  private onInputChange(): void {
     if (!this.currentUserId()) return;
 
     // Set typing status (non-blocking)

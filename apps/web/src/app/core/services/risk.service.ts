@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
-import { SupabaseClientService } from './supabase-client.service';
 import {
   RiskSnapshot,
   CalculateRiskSnapshotParams,
@@ -11,6 +10,7 @@ import {
   calculateHoldEstimatedArs,
   calculateCreditSecurityUsd,
 } from '../models/booking-detail-payment.model';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Servicio para cálculo de riesgos y garantías

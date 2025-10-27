@@ -75,6 +75,8 @@ export class CarsListPage implements OnInit, OnDestroy {
   private analyticsLastKey: string | null = null;
   private realtimeChannel?: RealtimeChannel;
   private carouselAutoScrollInterval?: ReturnType<typeof setInterval>;
+  private autoScrollKickoffTimeout?: ReturnType<typeof setTimeout>;
+  private carouselAutoScrollTimeout?: ReturnType<typeof setTimeout>;
 
   readonly city = signal<string | null>(null);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -472,7 +474,6 @@ export class CarsListPage implements OnInit, OnDestroy {
           }
         );
         this.cars.set(items);
-        console.log(`✅ Cargados ${items.length} autos disponibles para ${dateRange.from} - ${dateRange.to}`);
       } else {
         // Si no hay fechas, usar método tradicional
         const items = await this.carsService.listActiveCars({
@@ -504,8 +505,15 @@ export class CarsListPage implements OnInit, OnDestroy {
       this.loading.set(false);
       
       // Iniciar auto-scroll del carousel después de cargar los autos
+      if (this.autoScrollKickoffTimeout) {
+        clearTimeout(this.autoScrollKickoffTimeout);
+        this.autoScrollKickoffTimeout = undefined;
+      }
+
       if (this.economyCars().length >= 3) {
-        setTimeout(() => this.startCarouselAutoScroll(), 1000);
+        this.autoScrollKickoffTimeout = setTimeout(() => this.startCarouselAutoScroll(), 1000);
+      } else {
+        this.stopCarouselAutoScroll();
       }
     }
   }
@@ -561,6 +569,10 @@ export class CarsListPage implements OnInit, OnDestroy {
     if (this.realtimeChannel) {
       this.supabase.removeChannel(this.realtimeChannel);
     }
+    if (this.autoScrollKickoffTimeout) {
+      clearTimeout(this.autoScrollKickoffTimeout);
+      this.autoScrollKickoffTimeout = undefined;
+    }
     this.stopCarouselAutoScroll();
   }
 
@@ -575,7 +587,11 @@ export class CarsListPage implements OnInit, OnDestroy {
     this.stopCarouselAutoScroll();
 
     // Iniciar auto-scroll después de 2 segundos (dar tiempo a que cargue)
-    setTimeout(() => {
+    if (this.carouselAutoScrollTimeout) {
+      clearTimeout(this.carouselAutoScrollTimeout);
+    }
+
+    this.carouselAutoScrollTimeout = setTimeout(() => {
       this.carouselAutoScrollInterval = setInterval(() => {
         this.scrollCarouselNext();
       }, 3000); // Cada 3 segundos
@@ -586,6 +602,10 @@ export class CarsListPage implements OnInit, OnDestroy {
    * Detiene el auto-scroll del carousel
    */
   stopCarouselAutoScroll(): void {
+    if (this.carouselAutoScrollTimeout) {
+      clearTimeout(this.carouselAutoScrollTimeout);
+      this.carouselAutoScrollTimeout = undefined;
+    }
     if (this.carouselAutoScrollInterval) {
       clearInterval(this.carouselAutoScrollInterval);
       this.carouselAutoScrollInterval = undefined;

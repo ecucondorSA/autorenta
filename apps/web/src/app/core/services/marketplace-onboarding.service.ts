@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { SupabaseClientService } from './supabase-client.service';
 import { environment } from '../../../environments/environment';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Estado de onboarding de Mercado Pago

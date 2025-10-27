@@ -138,8 +138,8 @@
     <form (ngSubmit)="sendMessage()" class="flex flex-1 items-center gap-2">
       <input
         type="text"
-        [(ngModel)]="newMessage"
-        (ngModelChange)="onInputChange()"
+        [ngModel]="draftMessage"
+        (ngModelChange)="onMessageDraftChange($event)"
         name="message"
         [disabled]="sending()"
         placeholder="Escribe un mensaje"
@@ -149,7 +149,7 @@
       <!-- Send button -->
       <button
         type="submit"
-        [disabled]="!newMessage().trim() || sending()"
+        [disabled]="!draftMessage.trim() || sending()"
         class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#128C7E] text-white transition-all hover:bg-[#075E54] disabled:opacity-50 dark:bg-[#00A884] dark:hover:bg-[#008069]">
         <svg *ngIf="!sending()" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>

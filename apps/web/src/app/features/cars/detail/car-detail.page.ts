@@ -354,22 +354,53 @@ export class CarDetailPage implements OnInit {
       return;
     }
 
-    // Navigate to detail-payment page with booking parameters
+    this.bookingInProgress.set(true);
+    this.bookingError.set(null);
+
     try {
+      const startIso = new Date(range.from).toISOString();
+      const endIso = new Date(range.to).toISOString();
+
+      const result = await this.bookingsService.createBookingWithValidation(
+        car.id,
+        startIso,
+        endIso
+      );
+
+      if (!result.success || !result.booking) {
+        const message =
+          result.error ||
+          'No pudimos crear la reserva. Por favor verificá la disponibilidad e intentá nuevamente.';
+        this.bookingError.set(message);
+        return;
+      }
+
+      const vehicleValueUsd = this.estimateVehicleValue(car);
+      const bucket = this.determineVehicleBucket(car);
+
+      // Persist booking input for fallback flows (detalle & pago leerá bookingId)
+      sessionStorage.setItem(
+        'booking_detail_input',
+        JSON.stringify({
+          carId: car.id,
+          startDate: startIso,
+          endDate: endIso,
+          bucket,
+          vehicleValueUsd,
+          country: 'AR',
+        })
+      );
+
       await this.router.navigate(['/bookings/detail-payment'], {
         queryParams: {
-          carId: car.id,
-          startDate: new Date(range.from).toISOString(),
-          endDate: new Date(range.to).toISOString(),
-          // Vehicle details for risk calculation
-          vehicleValueUsd: this.estimateVehicleValue(car),
-          bucket: this.determineVehicleBucket(car),
-          country: 'AR', // Argentina
+          bookingId: result.booking.id,
         },
       });
     } catch (err: any) {
-      console.error('Error navigating to detail-payment', err);
-      this.bookingError.set('Error al proceder con la reserva');
+      console.error('Error creating booking before detail-payment', err);
+      this.bookingError.set(err?.message || 'Error al crear la reserva');
+    } finally {
+      this.bookingInProgress.set(false);
     }
   }
 

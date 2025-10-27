@@ -1,327 +1,364 @@
 <div class="wallet-page min-h-screen bg-ivory-soft dark:bg-graphite-dark dark:text-pearl-light py-section-sm">
-  <div class="container-page px-container">
-    <!-- Page Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold mb-2">Mi Wallet</h1>
-      <p class="text-body">
-        Administra tus fondos, realiza depósitos y consulta tu historial de transacciones
-      </p>
-    </div>
-
-    <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-      <!-- Left Column: Balance Card + WAN Card -->
-      <div class="lg:col-span-1 space-y-6">
-        <app-wallet-balance-card #balanceCard></app-wallet-balance-card>
-
-        <!-- Wallet Account Number Card -->
-        @if (walletAccountNumber()) {
-          <app-wallet-account-number-card
-          [walletAccountNumber]="walletAccountNumber()"
-          [copied]="copied()"
-          (copyWAN)="copyWalletAccountNumber()"
-        ></app-wallet-account-number-card>
-        }
-      </div>
-
-      <!-- Right Column: Tabs (Transactions / Withdrawals) -->
-      <div class="lg:col-span-2">
-        <!-- Guarantee Options Info -->
-        <div class="mb-6 space-y-4">
-          <app-guarantee-options-info
-            [protectedCreditStatus]="protectedCreditStatus()"
-            [protectedCreditBalance]="protectedCreditBalance()"
-            [protectedCreditTarget]="protectedCreditTarget"
-            [protectedCreditProgress]="protectedCreditProgress()"
-            (openDepositModal)="openDepositModal()"
-          ></app-guarantee-options-info>
-
-          <div class="info-card-warm">
-            <div class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-accent-warm mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <div class="space-y-2">
-                <h3 class="text-base font-semibold mb-1">Crédito Autorentar (USD 300-900)</h3>
-                <p class="text-caption leading-relaxed text-smoke-black dark:text-pearl-light/80">
-                  Depósitalo una vez, úsalo para cubrir garantías y cargos dentro de la plataforma y mantenelo activo para reservar sin tarjeta.
-                  Siempre lo verás como <strong>crédito protegido</strong>. No se devuelve en efectivo pero se libera para tu próximo viaje.
-                </p>
-                <p class="text-caption text-charcoal-medium dark:text-pearl-light/60">
-                  Podés sumar fondos extra (retirables) para completar pagos o solicitar retiros cuando lo necesites.
-                </p>
-                <div class="grid gap-3 sm:grid-cols-3">
-                  <div class="rounded-lg border border-warning-300 bg-warning-50/60 dark:bg-warning-500/10 px-3 py-2">
-                    <div class="flex items-center gap-1.5 mb-1">
-<p class="text-xs uppercase tracking-wide text-warning-800/90">Crédito protegido</p>
-                      <svg class="w-3.5 h-3.5 text-warning-700/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="No retirable, no transferible. Solo para garantías.">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                    </div>
-                    <p class="text-sm font-semibold text-smoke-black dark:text-warning-100">
-                      USD {{ protectedCreditBalance() / 100 | number:'1.2-2' }}
-                    </p>
-                    <p class="text-xs text-warning-700/70 dark:text-warning-100/70 mt-1">Meta inicial: USD 300</p>
-                  </div>
-                  <div class="rounded-lg border border-success-500/30 bg-success-50/60 dark:bg-success-500/10 px-3 py-2">
-                    <div class="flex items-center gap-1.5 mb-1">
-                      <p class="text-xs uppercase tracking-wide text-success-700/90 dark:text-success-300/90">Transferible</p>
-                      <svg class="w-3.5 h-3.5 text-success-600/70 dark:text-success-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Usar en Autorentar o transferir a otros usuarios">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                      </svg>
-                    </div>
-                    <p class="text-sm font-semibold text-smoke-black dark:text-success-100">
-                      USD {{ transferableBalance() / 100 | number:'1.2-2' }}
-                    </p>
-                    <p class="text-xs text-success-700/70 dark:text-success-100/70 mt-1">In-app</p>
-                  </div>
-                  <div class="rounded-lg border border-pearl-gray/50 bg-white/70 dark:bg-slate-deep/70 px-3 py-2">
-                    <div class="flex items-center gap-1.5 mb-1">
-                      <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/70">Retirable</p>
-                      <svg class="w-3.5 h-3.5 text-charcoal-medium/60 dark:text-pearl-light/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Retirar a tu cuenta bancaria">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                      </svg>
-                    </div>
-                    <p class="text-sm font-semibold text-smoke-black dark:text-pearl-light">
-                      USD {{ withdrawableBalance() / 100 | number:'1.2-2' }}
-                    </p>
-                    <p class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60 mt-1">Off-ramp</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <div class="container-page px-container space-y-10">
+    <!-- Hero Snapshot -->
+    <section class="rounded-3xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft">
+      <div class="grid gap-6 lg:grid-cols-5 items-start">
+        <div class="lg:col-span-3 flex flex-col gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Panel de control</p>
+            <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous mt-1">Mi Wallet</h1>
+            <p class="text-body text-charcoal-medium dark:text-pearl-light/80 mt-1">
+              Administra tus fondos, realiza depósitos y consulta tu historial de transacciones en un solo lugar.
+            </p>
           </div>
-
-          <div class="info-card-petrol">
-            <div class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-accent-petrol mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <div>
-                <h3 class="text-base font-semibold mb-1">Beneficios</h3>
-                <ul class="text-caption space-y-1">
-                  <li>✓ Reservas sin necesidad de tarjeta corporativa o internacional.</li>
-                  <li>✓ Procesos más rápidos en cada alquiler.</li>
-                  <li>✓ Control claro de crédito protegido y fondos retirables.</li>
-                  <li>✓ Protección inmediata en caso de daños o cancelaciones.</li>
-                </ul>
-              </div>
+          <div class="space-y-3">
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 dark:bg-accent-petrol/20 dark:text-accent-petrol">
+                ✅ Saldo actualizado
+              </span>
+              <span
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                [class.bg-green-50]="protectedCreditStatus() === 'active'"
+                [class.text-green-700]="protectedCreditStatus() === 'active'"
+                [class.bg-amber-50]="protectedCreditStatus() !== 'active'"
+                [class.text-amber-700]="protectedCreditStatus() !== 'active'"
+              >
+                {{ protectedCreditStatus() === 'active' ? 'Crédito protegido listo' : 'Crédito protegido pendiente' }}
+              </span>
+              @if (pendingDepositsCount() > 0) {
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-200">
+                  {{ pendingDepositsCount() }} depósito(s) pendiente(s)
+                </span>
+              }
             </div>
-          </div>
-
-          <div class="info-card">
-            <div class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-accent-petrol mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-              </svg>
-              <div class="space-y-2">
-                <h3 class="text-base font-semibold mb-1">Seguridad</h3>
-                <p class="text-caption leading-relaxed">
-                  Tus fondos se administran con estándares bancarios, monitoreo en tiempo real y auditoría contable. Los saldos protegidos y retirables
-                  se muestran en tu wallet para que sepas exactamente qué podés retirar y qué necesitas mantener para tus próximas reservas.
-                </p>
-                <a
-                  href="/terminos/credito-autorentar"
-                  class="inline-flex items-center gap-2 text-xs font-semibold text-accent-petrol hover:text-accent-warm transition-base"
+            <div class="flex flex-wrap gap-3">
+              <button
+                type="button"
+                (click)="openDepositModal()"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition shadow-soft"
+              >
+                <span>Depositar fondos</span>
+              </button>
+              <button
+                type="button"
+                (click)="setActiveTab('transactions')"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-primary-100 text-primary-700 dark:text-accent-petrol font-semibold hover:bg-primary-50 dark:hover:bg-accent-petrol/10 transition"
+              >
+                Ver transacciones
+              </button>
+              <button
+                type="button"
+                (click)="setActiveTab('withdrawals')"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-pearl-gray text-charcoal-medium dark:text-pearl-light font-semibold hover:border-primary-300 transition"
+              >
+                Solicitar retiro
+              </button>
+            </div>
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 flex flex-wrap items-center gap-3">
+              @if (pendingDepositsCount() > 0) {
+                <span>
+                  Tienes {{ pendingDepositsCount() }} depósito(s) pendiente(s). Se acreditan automáticamente en unos minutos.
+                </span>
+                <button
+                  type="button"
+                  (click)="refreshWalletData()"
+                  class="inline-flex items-center gap-1 text-primary-700 dark:text-accent-petrol font-semibold hover:text-primary-900 dark:hover:text-accent-petrol/80 transition"
                 >
-                  Consultar política del Crédito Autorentar
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 0119 5" />
                   </svg>
-                </a>
-              </div>
-            </div>
+                  Actualizar ahora
+                </button>
+              } @else {
+                <span>
+                  Tus depósitos se acreditan automáticamente. Te avisaremos si algún movimiento necesita atención.
+                </span>
+              }
+            </p>
           </div>
         </div>
+        <div class="lg:col-span-2">
+          <app-wallet-balance-card #balanceCard></app-wallet-balance-card>
+        </div>
+      </div>
+    </section>
 
-        <!-- Tabs Navigation -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-t-xl shadow-soft dark:shadow-card border-b border-pearl-gray dark:border-slate-deep">
-          <div class="flex">
+    <!-- Protection + Quick Info -->
+    <section class="grid gap-6 lg:grid-cols-3">
+      <div class="lg:col-span-2 space-y-6">
+        <section class="rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft">
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Protección de reservas</p>
+              <h2 class="text-2xl font-semibold text-smoke-black dark:text-ivory-luminous mt-1">Crédito Autorentar</h2>
+              <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                Elegí cómo garantizar tus viajes: tarjeta de crédito o crédito protegido dentro de la plataforma.
+              </p>
+            </div>
             <button
               type="button"
-              (click)="setActiveTab('transactions')"
-              [class.border-b-2]="activeTab() === 'transactions'"
-              [class.border-accent-petrol]="activeTab() === 'transactions'"
-              [class.text-accent-petrol]="activeTab() === 'transactions'"
-              [class.text-charcoal-medium]="activeTab() !== 'transactions'"
-              [class.dark\\:text-pearl-light]="activeTab() !== 'transactions'"
-              class="flex-1 px-6 py-4 text-sm font-semibold hover:text-accent-petrol dark:hover:text-ivory-luminous transition-base">
-              Transacciones
+              (click)="openDepositModal()"
+              class="px-4 py-2 rounded-lg border border-primary-200 text-primary-700 dark:text-accent-petrol font-semibold hover:bg-primary-50 dark:hover:bg-accent-petrol/10 transition"
+            >
+              Configurar crédito
+            </button>
+          </div>
+          <div class="mt-5 space-y-4">
+            <app-guarantee-options-info
+              [protectedCreditStatus]="protectedCreditStatus()"
+              [protectedCreditBalance]="protectedCreditBalance()"
+              [protectedCreditTarget]="protectedCreditTarget"
+              [protectedCreditProgress]="protectedCreditProgress()"
+              (openDepositModal)="openDepositModal()"
+            ></app-guarantee-options-info>
+
+            <div class="grid gap-3 sm:grid-cols-3">
+              <div class="rounded-xl border border-warning-200 bg-warning-50/70 dark:bg-warning-500/10 px-3 py-3">
+                <p class="text-xs uppercase tracking-wide text-warning-800/90 dark:text-warning-200">Crédito protegido</p>
+                <p class="text-lg font-semibold text-smoke-black dark:text-warning-50">
+                  USD {{ protectedCreditBalance() / 100 | number:'1.2-2' }}
+                </p>
+                <p class="text-xs text-warning-700/80 dark:text-warning-200/80 mt-1">Meta inicial: USD 300</p>
+              </div>
+              <div class="rounded-xl border border-success-200 bg-success-50/70 dark:bg-success-500/10 px-3 py-3">
+                <p class="text-xs uppercase tracking-wide text-success-700/90 dark:text-success-200">Transferible (in-app)</p>
+                <p class="text-lg font-semibold text-smoke-black dark:text-success-50">
+                  USD {{ transferableBalance() / 100 | number:'1.2-2' }}
+                </p>
+                <p class="text-xs text-success-700/80 dark:text-success-100/70 mt-1">Envíalo a otros usuarios</p>
+              </div>
+              <div class="rounded-xl border border-pearl-gray/60 dark:border-neutral-700 px-3 py-3 bg-white/80 dark:bg-slate-deep/80">
+                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/70">Retirable (off-ramp)</p>
+                <p class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+                  USD {{ withdrawableBalance() / 100 | number:'1.2-2' }}
+                </p>
+                <p class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60 mt-1">Disponible para tu cuenta bancaria</p>
+              </div>
+            </div>
+
+            <p class="text-xs text-charcoal-medium/80 dark:text-pearl-light/70">
+              Los fondos bloqueados se liberan automáticamente cuando finalizan tus reservas. Podés sumar saldo retirables para completar pagos o solicitar retiros cuando quieras.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <aside class="space-y-6">
+        @if (walletAccountNumber()) {
+          <app-wallet-account-number-card
+            [walletAccountNumber]="walletAccountNumber()"
+            [copied]="copied()"
+            (copyWAN)="copyWalletAccountNumber()"
+          ></app-wallet-account-number-card>
+        }
+
+        <section class="rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-5 shadow-soft">
+          <h3 class="text-base font-semibold text-smoke-black dark:text-ivory-luminous mb-2">Acciones rápidas</h3>
+          <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mb-4">
+            Sumá fondos, transfere a otros usuarios o retiralos cuando lo necesites.
+          </p>
+          <div class="flex flex-col gap-3">
+            <button
+              type="button"
+              (click)="openDepositModal()"
+              class="w-full inline-flex items-center justify-between rounded-lg border border-primary-100 text-primary-700 dark:text-accent-petrol px-4 py-3 font-semibold hover:bg-primary-50 dark:hover:bg-accent-petrol/10 transition"
+            >
+              Depositar
+              <span aria-hidden="true">→</span>
+            </button>
+            <button
+              type="button"
+              (click)="goToTransfer()"
+              class="w-full inline-flex items-center justify-between rounded-lg border border-pearl-gray dark:border-neutral-700 text-charcoal-medium dark:text-pearl-light px-4 py-3 font-semibold hover:border-primary-300 transition"
+            >
+              Transferir
+              <span aria-hidden="true">→</span>
             </button>
             <button
               type="button"
               (click)="setActiveTab('withdrawals')"
-              [class.border-b-2]="activeTab() === 'withdrawals'"
-              [class.border-accent-petrol]="activeTab() === 'withdrawals'"
-              [class.text-accent-petrol]="activeTab() === 'withdrawals'"
-              [class.text-charcoal-medium]="activeTab() !== 'withdrawals'"
-              [class.dark\\:text-pearl-light]="activeTab() !== 'withdrawals'"
-              class="flex-1 px-6 py-4 text-sm font-semibold hover:text-accent-petrol dark:hover:text-ivory-luminous transition-base">
-              Retiros
+              class="w-full inline-flex items-center justify-between rounded-lg border border-pearl-gray dark:border-neutral-700 text-charcoal-medium dark:text-pearl-light px-4 py-3 font-semibold hover:border-primary-300 transition"
+            >
+              Retirar
+              <span aria-hidden="true">→</span>
             </button>
           </div>
+        </section>
+      </aside>
+    </section>
+
+    <!-- Transactions & Withdrawals -->
+    <section class="rounded-3xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Movimientos y retiros</p>
+          <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">Historial y gestión</h2>
+          <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+            Consulta depósitos, cargos y gestiona tus solicitudes de retiro desde un mismo lugar.
+          </p>
         </div>
-
-        <!-- Tab Content -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-b-xl shadow-soft dark:shadow-card border border-pearl-gray/70 dark:border-slate-deep">
-          <!-- Transactions Tab -->
-          @if (activeTab() === 'transactions') {
-            <app-transaction-history></app-transaction-history>
-          }
-
-          <!-- Withdrawals Tab -->
-          @if (activeTab() === 'withdrawals') {
-            <div class="p-6 space-y-6">
-              <!-- Withdrawal Mode Toggle -->
-              <div class="flex items-center justify-between mb-4">
-                <h2 class="text-2xl font-bold">Gestión de Retiros</h2>
-                <div class="flex gap-2">
-                  <button
-                    type="button"
-                    (click)="setWithdrawalMode('form')"
-                    [class.bg-accent-petrol]="withdrawalMode() === 'form'"
-                    [class.text-white]="withdrawalMode() === 'form'"
-                    [class.bg-sand-light]="withdrawalMode() !== 'form'"
-                    [class.text-charcoal-medium]="withdrawalMode() !== 'form'"
-                    [class.dark\\:bg-slate-deep]="withdrawalMode() !== 'form'"
-                    [class.dark\\:text-pearl-light]="withdrawalMode() !== 'form'"
-                    class="px-4 py-2 text-sm font-medium rounded-xl transition-base border border-transparent dark:border-slate-deep/60 hover:border-accent-petrol/40 dark:hover:border-accent-petrol/40 hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80">
-                    Solicitar Retiro
-                  </button>
-                  <button
-                    type="button"
-                    (click)="setWithdrawalMode('accounts')"
-                    [class.bg-accent-petrol]="withdrawalMode() === 'accounts'"
-                    [class.text-white]="withdrawalMode() === 'accounts'"
-                    [class.bg-sand-light]="withdrawalMode() !== 'accounts'"
-                    [class.text-charcoal-medium]="withdrawalMode() !== 'accounts'"
-                    [class.dark\\:bg-slate-deep]="withdrawalMode() !== 'accounts'"
-                    [class.dark\\:text-pearl-light]="withdrawalMode() !== 'accounts'"
-                    class="px-4 py-2 text-sm font-medium rounded-xl transition-base border border-transparent dark:border-slate-deep/60 hover:border-accent-petrol/40 dark:hover:border-accent-petrol/40 hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80">
-                    Mis Cuentas
-                  </button>
-                </div>
-              </div>
-
-              <!-- Form Mode: Withdrawal Request -->
-              @if (withdrawalMode() === 'form') {
-                <div class="space-y-6">
-                  <!-- Withdrawal Request Form -->
-                  <app-withdrawal-request-form
-                    [availableBalance]="availableBalanceSummary()"
-                    [withdrawableBalance]="withdrawableBalance()"
-                    [nonWithdrawableBalance]="protectedCreditBalance()"
-                    [accounts]="activeBankAccounts()"
-                    (submitWithdrawal)="handleWithdrawalRequest($event)">
-                  </app-withdrawal-request-form>
-
-                  <!-- Quick Link to Add Account -->
-                  @if (activeBankAccounts().length === 0) {
-                    <div class="info-card-warm">
-                      <div class="flex items-start">
-                        <svg class="w-5 h-5 text-accent-warm mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                        </svg>
-                        <div class="ml-3 flex-1">
-                          <p class="text-sm text-smoke-black dark:text-pearl-light">
-                            No tienes cuentas bancarias registradas.
-                          </p>
-                          <button
-                            type="button"
-                            (click)="setWithdrawalMode('accounts')"
-                            class="mt-2 text-sm font-medium text-accent-warm dark:text-pearl-light hover:text-accent-petrol dark:hover:text-ivory-luminous underline transition-base">
-                            Agregar cuenta bancaria
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  }
-
-                  <!-- Withdrawal History -->
-                  <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
-                    <app-withdrawal-history
-                      [requests]="withdrawalRequests()"
-                      [loading]="loading().fetchingRequests"
-                      (cancelRequest)="handleCancelWithdrawal($event)"
-                      (refresh)="handleRefreshWithdrawals()">
-                    </app-withdrawal-history>
-                  </div>
-                </div>
-              }
-
-              <!-- Accounts Mode: Bank Accounts Management -->
-              @if (withdrawalMode() === 'accounts') {
-                <div class="space-y-6">
-                  <!-- Bank Accounts List -->
-                  <app-bank-accounts-list
-                    [accounts]="bankAccounts()"
-                    [loading]="loading().fetchingBankAccounts"
-                    (setDefault)="handleSetDefaultAccount($event)"
-                    (deleteAccount)="handleDeleteAccount($event)">
-                  </app-bank-accounts-list>
-
-                  <!-- Add New Bank Account Form -->
-                  <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
-                    <h3 class="text-lg font-semibold mb-4">Agregar Nueva Cuenta</h3>
-                    <app-bank-account-form
-                      (submitAccount)="handleAddBankAccount($event)">
-                    </app-bank-account-form>
-                  </div>
-                </div>
-              }
-            </div>
-          }
+        <div class="flex gap-2">
+          <button
+            type="button"
+            (click)="setActiveTab('transactions')"
+            [class.bg-accent-petrol]="activeTab() === 'transactions'"
+            [class.text-white]="activeTab() === 'transactions'"
+            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-charcoal-medium dark:text-pearl-light hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80 transition"
+          >
+            Transacciones
+          </button>
+          <button
+            type="button"
+            (click)="setActiveTab('withdrawals')"
+            [class.bg-accent-petrol]="activeTab() === 'withdrawals'"
+            [class.text-white]="activeTab() === 'withdrawals'"
+            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-charcoal-medium dark:text-pearl-light hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80 transition"
+          >
+            Retiros
+          </button>
         </div>
       </div>
-    </div>
 
-    <!-- Quick Actions Section -->
-    <div class="bg-gradient-to-r from-accent-petrol to-accent-warm rounded-2xl shadow-elevated p-6 text-white">
-      <div class="flex flex-col md:flex-row items-center justify-between">
-        <div class="mb-4 md:mb-0">
+      <div class="mt-6">
+        @if (activeTab() === 'transactions') {
+          <app-transaction-history></app-transaction-history>
+        }
+
+        @if (activeTab() === 'withdrawals') {
+          <div class="space-y-6">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">Gestión de Retiros</h3>
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  (click)="setWithdrawalMode('form')"
+                  [class.bg-accent-petrol]="withdrawalMode() === 'form'"
+                  [class.text-white]="withdrawalMode() === 'form'"
+                  class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-charcoal-medium dark:text-pearl-light hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80 transition"
+                >
+                  Solicitar retiro
+                </button>
+                <button
+                  type="button"
+                  (click)="setWithdrawalMode('accounts')"
+                  [class.bg-accent-petrol]="withdrawalMode() === 'accounts'"
+                  [class.text-white]="withdrawalMode() === 'accounts'"
+                  class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-charcoal-medium dark:text-pearl-light hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80 transition"
+                >
+                  Cuentas bancarias
+                </button>
+              </div>
+            </div>
+
+            @if (withdrawalMode() === 'form') {
+              <div class="space-y-6">
+                <app-withdrawal-request-form
+                  [availableBalance]="availableBalanceSummary()"
+                  [withdrawableBalance]="withdrawableBalance()"
+                  [nonWithdrawableBalance]="protectedCreditBalance()"
+                  [accounts]="activeBankAccounts()"
+                  (submitWithdrawal)="handleWithdrawalRequest($event)"
+                ></app-withdrawal-request-form>
+
+                @if (activeBankAccounts().length === 0) {
+                  <div class="info-card-warm">
+                    <div class="flex items-start gap-3">
+                      <svg class="w-5 h-5 text-accent-warm mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                      </svg>
+                      <div class="flex-1">
+                        <p class="text-sm text-smoke-black dark:text-pearl-light">Aún no registraste cuentas bancarias.</p>
+                        <button
+                          type="button"
+                          (click)="setWithdrawalMode('accounts')"
+                          class="mt-2 text-sm font-medium text-accent-warm dark:text-pearl-light hover:text-accent-petrol dark:hover:text-ivory-luminous underline transition"
+                        >
+                          Agregar cuenta bancaria
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
+                  <app-withdrawal-history
+                    [requests]="withdrawalRequests()"
+                    [loading]="loading().fetchingRequests"
+                    (cancelRequest)="handleCancelWithdrawal($event)"
+                    (refresh)="handleRefreshWithdrawals()"
+                  ></app-withdrawal-history>
+                </div>
+              </div>
+            }
+
+            @if (withdrawalMode() === 'accounts') {
+              <div class="space-y-6">
+                <app-bank-accounts-list
+                  [accounts]="bankAccounts()"
+                  [loading]="loading().fetchingBankAccounts"
+                  (setDefault)="handleSetDefaultAccount($event)"
+                  (deleteAccount)="handleDeleteAccount($event)"
+                ></app-bank-accounts-list>
+
+                <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
+                  <h4 class="text-base font-semibold mb-4">Agregar nueva cuenta</h4>
+                  <app-bank-account-form (submitAccount)="handleAddBankAccount($event)"></app-bank-account-form>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Gradient CTA -->
+    <section class="bg-gradient-to-r from-accent-petrol to-accent-warm rounded-2xl shadow-elevated p-6 text-white">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
           <h2 class="text-2xl font-bold mb-2">Gestiona tu dinero fácilmente</h2>
-          <p class="text-ivory-soft/90 text-sm">
-            Deposita fondos, transfiere a otros usuarios o retira tus ganancias a tu cuenta bancaria
+          <p class="text-sm text-ivory-soft/90">
+            Carga fondos, transfiere a otros usuarios o retira tus ganancias a tu cuenta bancaria cuando lo necesites.
           </p>
         </div>
         <div class="flex flex-wrap gap-3 justify-center md:justify-end">
           <button
             type="button"
             (click)="openDepositModal()"
-            class="px-6 py-3 bg-white-pure text-accent-petrol font-semibold rounded-xl hover:bg-sand-light transition-base shadow-soft">
+            class="px-5 py-3 bg-white text-accent-petrol font-semibold rounded-xl hover:bg-sand-light transition"
+          >
             Depositar
           </button>
           <button
             type="button"
             (click)="goToTransfer()"
-            class="px-6 py-3 bg-white-pure text-accent-petrol font-semibold rounded-xl hover:bg-sand-light transition-base shadow-soft">
+            class="px-5 py-3 bg-white/20 border border-white/40 text-white font-semibold rounded-xl hover:bg-white/30 transition"
+          >
             Transferir
           </button>
           <button
             type="button"
             (click)="setActiveTab('withdrawals')"
-            class="px-6 py-3 bg-accent-petrol/80 text-white font-semibold rounded-xl hover:bg-accent-petrol transition-base shadow-soft border-2 border-white-pure">
+            class="px-5 py-3 bg-accent-petrol/80 text-white font-semibold rounded-xl hover:bg-accent-petrol transition"
+          >
             Retirar
           </button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Help Section -->
-    <div class="mt-8 text-center">
-      <p class="text-sm text-charcoal-medium">
+    <!-- Help -->
+    <section class="text-center">
+      <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
         ¿Necesitas ayuda?
-        <a href="/ayuda/wallet" class="text-accent-petrol hover:text-accent-warm font-medium ml-1 transition-base">
-          Consulta nuestras preguntas frecuentes
-        </a>
+        <a href="/ayuda/wallet" class="text-accent-petrol hover:text-accent-warm font-semibold ml-1 transition">Consulta nuestras preguntas frecuentes</a>
       </p>
-    </div>
+    </section>
   </div>
 
-  <!-- Deposit Modal (Conditional) -->
+  <!-- Deposit Modal -->
   <app-deposit-modal
     *ngIf="showDepositModal()"
     (closeModal)="closeDepositModal()"
-    (depositSuccess)="handleDepositSuccess($event)">
-  </app-deposit-modal>
+    (depositSuccess)="handleDepositSuccess($event)"
+  ></app-deposit-modal>
 </div>

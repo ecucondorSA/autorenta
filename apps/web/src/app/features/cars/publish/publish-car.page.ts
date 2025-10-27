@@ -6,6 +6,7 @@ import {
   inject,
   signal,
   OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ import { GeocodingService } from '@core/services/geocoding.service';
 import { UploadImageComponent } from '@shared/components/upload-image/upload-image.component';
 import type { FuelType, Transmission, CarStatus } from '@core/types/database.types';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 interface CarBrand {
   id: string;
@@ -36,7 +38,7 @@ interface CarModel {
   styleUrl: './publish-car.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PublishCarPage implements OnInit {
+export class PublishCarPage implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly carsService = inject(CarsService);
   private readonly authService = inject(AuthService);
@@ -67,6 +69,7 @@ export class PublishCarPage implements OnInit {
     // Precio y condiciones
     price_per_day: [0, [Validators.required, Validators.min(10)]],
     currency: ['USD', Validators.required],
+    value_usd: [null as number | null, [Validators.required, Validators.min(1000), Validators.max(1000000)]],
     deposit_required: [true],
     deposit_amount: [0, [Validators.min(0)]],
     min_rental_days: [1, [Validators.required, Validators.min(1)]],
@@ -107,6 +110,10 @@ export class PublishCarPage implements OnInit {
 
   private readonly uploadingSignal = signal(false);
   private readonly selectedFilesSignal = signal<File[]>([]);
+  private readonly formSubscriptions: Subscription[] = [];
+  private hasManualValueUsdOverride = false;
+  readonly suggestedVehicleValueUsd = signal<number | null>(null);
+  readonly valuationAverageDays = this.carsService.getDefaultAverageRentalDays();
   readonly submitting = computed(() => this.uploadingSignal());
   readonly hasFiles = computed(() => this.selectedFilesSignal().length > 0);
 
@@ -148,6 +155,12 @@ export class PublishCarPage implements OnInit {
       }
       depositControl?.updateValueAndValidity();
     });
+
+    this.setupValueUsdSuggestion();
+  }
+
+  ngOnDestroy(): void {
+    this.formSubscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   private async loadBrands(): Promise<void> {
@@ -194,6 +207,20 @@ export class PublishCarPage implements OnInit {
     this.form.patchValue({ delivery_options: updated });
   }
 
+  applySuggestedVehicleValue(): void {
+    const suggestion = this.suggestedVehicleValueUsd();
+    const control = this.form.get('value_usd');
+    if (!control || suggestion === null) {
+      return;
+    }
+
+    this.hasManualValueUsdOverride = false;
+    control.setValue(suggestion, { emitEvent: false });
+    control.markAsDirty();
+    control.markAsTouched();
+    control.updateValueAndValidity();
+  }
+
   async submit(): Promise<void> {
     if (this.form.invalid || this.submitting()) {
       this.form.markAllAsTouched();
@@ -213,7 +240,12 @@ export class PublishCarPage implements OnInit {
       await this.geocodeCurrentAddress();
 
       const formValue = this.form.getRawValue();
-      const car = await this.carsService.createCar(formValue);
+      const payload = {
+        ...formValue,
+        value_usd:
+          formValue.value_usd != null ? Number(formValue.value_usd) : undefined,
+      };
+      const car = await this.carsService.createCar(payload);
 
       const files = this.selectedFilesSignal();
       for (let i = 0; i < files.length; i++) {
@@ -295,5 +327,52 @@ export class PublishCarPage implements OnInit {
       }
     });
     return errors;
+  }
+
+  private setupValueUsdSuggestion(): void {
+    const priceControl = this.form.get('price_per_day');
+    const valueControl = this.form.get('value_usd');
+
+    if (!priceControl || !valueControl) {
+      return;
+    }
+
+    const handlePriceChange = (rawValue: unknown): void => {
+      const numericValue =
+        typeof rawValue === 'string' ? parseFloat(rawValue) : (rawValue as number | null);
+
+      if (!numericValue || Number.isNaN(numericValue) || numericValue <= 0) {
+        this.suggestedVehicleValueUsd.set(null);
+        if (!this.hasManualValueUsdOverride) {
+          valueControl.setValue(null, { emitEvent: false });
+          valueControl.updateValueAndValidity({ onlySelf: true });
+        }
+        return;
+      }
+
+      const suggestion = this.carsService.suggestVehicleValueUsd(numericValue);
+      this.suggestedVehicleValueUsd.set(suggestion > 0 ? suggestion : null);
+
+      if (!this.hasManualValueUsdOverride && suggestion > 0) {
+        valueControl.setValue(suggestion, { emitEvent: false });
+        valueControl.markAsPristine();
+        valueControl.markAsUntouched();
+        valueControl.updateValueAndValidity({ onlySelf: true });
+      }
+    };
+
+    handlePriceChange(priceControl.value);
+
+    const priceSub = priceControl.valueChanges.subscribe(handlePriceChange);
+    this.formSubscriptions.push(priceSub);
+
+    const valueSub = valueControl.valueChanges.subscribe((val) => {
+      if (val === null || val === undefined) {
+        this.hasManualValueUsdOverride = false;
+        return;
+      }
+      this.hasManualValueUsdOverride = true;
+    });
+    this.formSubscriptions.push(valueSub);
   }
 }

@@ -1,10 +1,10 @@
 
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Booking } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
-import { Router } from '@angular/router';
 
 /**
  * PaymentActionsComponent

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Geolocation } from '@capacitor/geolocation';
 import {
   IonContent,
   IonHeader,
@@ -23,7 +24,6 @@ import { MapFiltersComponent } from '../../shared/components/map-filters/map-fil
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
 import { CarsService } from '../../core/services/cars.service';
 import { Car } from '../../core/models';
-import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-explore',
@@ -53,6 +53,7 @@ import { Geolocation } from '@capacitor/geolocation';
 })
 export class ExplorePage implements OnInit, AfterViewInit {
   @ViewChild('listModal') listModal!: IonModal;
+  @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
   
   cars: Car[] = [];
   filteredCars: Car[] = [];
@@ -79,7 +80,9 @@ export class ExplorePage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Map initialization happens here
+    if (this.mapContainer?.nativeElement) {
+      // Initialize map after view is ready
+    }
   }
 
   async loadCars() {

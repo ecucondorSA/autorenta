@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
-import { injectSupabase } from './supabase-client.service';
 import {
   InsurancePolicy,
   BookingInsuranceCoverage,
@@ -14,6 +13,7 @@ import {
   CreateInspectionRequest,
   INSURER_DISPLAY_NAMES
 } from '../models/insurance.model';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Servicio de Seguros P2P
