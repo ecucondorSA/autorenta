@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   DynamicPricingService,
@@ -153,7 +153,7 @@ import {
   `,
   styles: [],
 })
-export class DynamicPriceDisplayComponent implements OnInit {
+export class DynamicPriceDisplayComponent implements OnInit, OnDestroy {
   private readonly pricingService = inject(DynamicPricingService);
 
   // Inputs

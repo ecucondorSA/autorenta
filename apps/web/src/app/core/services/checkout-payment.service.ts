@@ -4,7 +4,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { BookingsService } from './bookings.service';
 import { PaymentsService } from './payments.service';
 import { MercadoPagoBookingGatewayService } from './mercadopago-booking-gateway.service';
-import { RiskCalculatorService, PaymentMethodType } from './risk-calculator.service';
+import { RiskCalculatorService } from './risk-calculator.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 /**
@@ -160,7 +160,7 @@ export class CheckoutPaymentService {
    * 3. Retornar init_point para redirección
    * 4. Si falla, revertir booking a 'pending'
    */
-  processCreditCardPayment(bookingId: string, totalCents: number): Observable<PaymentResult> {
+  processCreditCardPayment(bookingId: string, _totalCents: number): Observable<PaymentResult> {
     const transaction: PaymentTransaction = {
       fundsLocked: false,
       lockedAmountCents: 0,

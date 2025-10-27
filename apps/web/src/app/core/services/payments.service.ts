@@ -137,7 +137,8 @@ export class PaymentsService {
   }
 
   async simulateWebhook(
-    provider: string,
+    
+    _provider: string,
     intentId: string,
     status: 'approved' | 'rejected',
   ): Promise<void> {

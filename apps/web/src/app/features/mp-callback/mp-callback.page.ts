@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -278,7 +278,7 @@ import { MarketplaceOnboardingService } from '../../core/services/marketplace-on
     `,
   ],
 })
-export class MpCallbackPage implements OnInit {
+export class MpCallbackPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly onboardingService = inject(MarketplaceOnboardingService);

@@ -5,7 +5,6 @@ import type {
   RequestWithdrawalParams,
   WalletRequestWithdrawalResponse,
   WalletApproveWithdrawalResponse,
-  WalletCompleteWithdrawalResponse,
   ApproveWithdrawalParams,
   RejectWithdrawalParams,
   AddBankAccountParams,
