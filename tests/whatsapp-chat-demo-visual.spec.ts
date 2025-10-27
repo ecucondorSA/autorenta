@@ -33,8 +33,8 @@ test.describe('WhatsApp Chat Demo - AutoRentar', () => {
       fullPage: true,
     });
 
-    // Captura solo del chat
-    const chatContainer = page.locator('.whatsapp-chat-container');
+    // Captura solo del chat (primer elemento)
+    const chatContainer = page.locator('.whatsapp-chat-container').first();
     await chatContainer.screenshot({
       path: 'test-results/whatsapp-chat-locatario-chat.png',
     });
@@ -44,17 +44,13 @@ test.describe('WhatsApp Chat Demo - AutoRentar', () => {
     // LOCADOR (dueño del auto)
     console.log('📱 Capturando vista del LOCADOR...');
     await page.goto(`file://${htmlPath}?user=owner`);
-    await page.waitForTimeout(1000);
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000);
     
     // Captura completa del locador
     await page.screenshot({
       path: 'test-results/whatsapp-chat-locador-completo.png',
       fullPage: true,
-    });
-
-    // Captura solo del chat
-    await chatContainer.screenshot({
-      path: 'test-results/whatsapp-chat-locador-chat.png',
     });
 
     console.log('✅ Capturas del locador guardadas');

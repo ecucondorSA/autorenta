@@ -45,7 +45,7 @@ export interface StepContent {
 }
 
 export interface AnalyticsPayload {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export type StepHook = () => void | Promise<void>;
@@ -108,5 +108,5 @@ export interface TourEvent {
   tourId: TourId;
   stepId?: string;
   timestamp: number;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }

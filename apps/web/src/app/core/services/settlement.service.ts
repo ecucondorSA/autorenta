@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Observable, from, map, catchError, of, firstValueFrom } from 'rxjs';
+import { of, firstValueFrom } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
   EligibilityResult,

@@ -19,7 +19,7 @@ export class TelemetryBridgeService {
     }
   }
 
-  trackTourStarted(tourId: TourId, metadata?: any): void {
+  trackTourStarted(tourId: TourId, metadata?: Record<string, unknown>): void {
     this.trackTourEvent({
       type: 'started',
       tourId,
@@ -28,7 +28,7 @@ export class TelemetryBridgeService {
     });
   }
 
-  trackStepShown(tourId: TourId, stepId: string, metadata?: any): void {
+  trackStepShown(tourId: TourId, stepId: string, metadata?: Record<string, unknown>): void {
     this.trackTourEvent({
       type: 'step_shown',
       tourId,
@@ -38,7 +38,7 @@ export class TelemetryBridgeService {
     });
   }
 
-  trackStepCompleted(tourId: TourId, stepId: string, metadata?: any): void {
+  trackStepCompleted(tourId: TourId, stepId: string, metadata?: Record<string, unknown>): void {
     this.trackTourEvent({
       type: 'step_completed',
       tourId,
@@ -48,7 +48,7 @@ export class TelemetryBridgeService {
     });
   }
 
-  trackTourCompleted(tourId: TourId, metadata?: any): void {
+  trackTourCompleted(tourId: TourId, metadata?: Record<string, unknown>): void {
     this.trackTourEvent({
       type: 'completed',
       tourId,
@@ -57,7 +57,7 @@ export class TelemetryBridgeService {
     });
   }
 
-  trackTourCancelled(tourId: TourId, stepId?: string, metadata?: any): void {
+  trackTourCancelled(tourId: TourId, stepId?: string, metadata?: Record<string, unknown>): void {
     this.trackTourEvent({
       type: 'cancelled',
       tourId,
@@ -67,13 +67,13 @@ export class TelemetryBridgeService {
     });
   }
 
-  trackTourError(tourId: TourId, error: any, stepId?: string): void {
+  trackTourError(tourId: TourId, error: Error | string, stepId?: string): void {
     this.trackTourEvent({
       type: 'error',
       tourId,
       stepId,
       timestamp: Date.now(),
-      metadata: { error: error.message || error },
+      metadata: { error: typeof error === 'string' ? error : error.message },
     });
   }
 
@@ -88,8 +88,8 @@ export class TelemetryBridgeService {
   private sendToAnalytics(event: TourEvent): void {
     // TODO: Integrate with actual analytics service
     // Example: window.gtag, Mixpanel, Segment, etc.
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', `tour_${event.type}`, {
+    if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as Window & { gtag: (...args: unknown[]) => void }).gtag('event', `tour_${event.type}`, {
         tour_id: event.tourId,
         step_id: event.stepId,
         ...event.metadata,
