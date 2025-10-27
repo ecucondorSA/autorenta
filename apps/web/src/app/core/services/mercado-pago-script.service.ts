@@ -1,8 +1,15 @@
 import { Injectable, Renderer2, RendererFactory2, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 
-// Declare window to access MercadoPago global object after script loads
-declare var window: any;
+// Type-safe interface for MercadoPago SDK
+interface MercadoPagoConstructor {
+  new (publicKey: string, options?: { locale?: string }): unknown;
+}
+
+interface WindowWithMercadoPago {
+  MercadoPago?: MercadoPagoConstructor;
+  Mercadopago?: MercadoPagoConstructor;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +17,7 @@ declare var window: any;
 export class MercadoPagoScriptService {
   private renderer: Renderer2;
   private scriptLoaded = false;
-  private mercadoPagoInstance: any; // To store the single instance of MercadoPago
+  private mercadoPagoInstance: unknown; // To store the single instance of MercadoPago
   private scriptPromise: Promise<void> | null = null;
 
   constructor(
@@ -36,7 +43,7 @@ export class MercadoPagoScriptService {
         this.scriptLoaded = true;
         resolve();
       };
-      script.onerror = (error: any) => {
+      script.onerror = (error: unknown) => {
         console.error('Failed to load Mercado Pago script manually:', error);
         reject(new Error('Failed to load Mercado Pago script.'));
       };
@@ -65,7 +72,9 @@ export class MercadoPagoScriptService {
       console.log('Calling loadScript()...');
       await this.loadScript();
       console.log('loadScript() resolved. Checking MercadoPago global...');
-      const MercadoPagoGlobal = window.MercadoPago ?? window.Mercadopago;
+
+      const windowWithMP = globalThis as unknown as WindowWithMercadoPago;
+      const MercadoPagoGlobal = windowWithMP.MercadoPago ?? windowWithMP.Mercadopago;
 
       if (typeof MercadoPagoGlobal === 'undefined') {
         console.error('MercadoPago global is undefined after script load.');
