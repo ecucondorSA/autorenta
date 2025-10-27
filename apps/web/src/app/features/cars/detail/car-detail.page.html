@@ -512,22 +512,22 @@
     <!-- 💰 COLUMNA DERECHA: Booking Card -->
     <aside class="space-y-4">
       <!-- Estado de disponibilidad -->
-      <div class="mb-4 rounded-xl border-2 p-4" [class.border-green-500]="car()?.status === 'available'" [class.bg-green-50]="car()?.status === 'available'" [class.border-yellow-500]="car()?.status !== 'available'" [class.bg-yellow-50]="car()?.status !== 'available'">
+      <div class="mb-4 rounded-xl border-2 p-4" [class.border-green-500]="car()?.status === 'active'" [class.bg-green-50]="car()?.status === 'active'" [class.border-yellow-500]="car()?.status !== 'active'" [class.bg-yellow-50]="car()?.status !== 'active'">
         <div class="flex items-center gap-3">
-          <div class="flex h-10 w-10 items-center justify-center rounded-full" [class.bg-green-100]="car()?.status === 'available'" [class.bg-yellow-100]="car()?.status !== 'available'">
-            <svg *ngIf="car()?.status === 'available'" class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full" [class.bg-green-100]="car()?.status === 'active'" [class.bg-yellow-100]="car()?.status !== 'active'">
+            <svg *ngIf="car()?.status === 'active'" class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <svg *ngIf="car()?.status !== 'available'" class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg *ngIf="car()?.status !== 'active'" class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
           <div>
-            <p class="text-sm font-semibold" [class.text-green-900]="car()?.status === 'available'" [class.text-yellow-900]="car()?.status !== 'available'">
-              {{ car()?.status === 'available' ? '✓ Disponible para reservar' : 'Revisar disponibilidad' }}
+            <p class="text-sm font-semibold" [class.text-green-900]="car()?.status === 'active'" [class.text-yellow-900]="car()?.status !== 'active'">
+              {{ car()?.status === 'active' ? '✓ Disponible para reservar' : 'Revisar disponibilidad' }}
             </p>
-            <p class="text-xs" [class.text-green-700]="car()?.status === 'available'" [class.text-yellow-700]="car()?.status !== 'available'">
-              {{ car()?.status === 'available' ? 'Este auto está listo para tu viaje' : 'Consultá con el propietario' }}
+            <p class="text-xs" [class.text-green-700]="car()?.status === 'active'" [class.text-yellow-700]="car()?.status !== 'active'">
+              {{ car()?.status === 'active' ? 'Este auto está listo para tu viaje' : 'Consultá con el propietario' }}
             </p>
           </div>
         </div>
@@ -626,13 +626,13 @@
               </svg>
               <p class="text-sm text-green-800">
                 <span class="font-semibold">
-                  {{ selectedPaymentMethod() === 'wallet_only' ? 'Pagarás con tu Wallet' : 
-                     selectedPaymentMethod() === 'wallet_and_card' ? 'Pagarás con Wallet + Tarjeta' : 
+                  {{ selectedPaymentMethod() === 'wallet' ? 'Pagarás con tu Wallet' : 
+                     selectedPaymentMethod() === 'partial_wallet' ? 'Pagarás con Wallet + Tarjeta' : 
                      'Pagarás con Mercado Pago' }}
                 </span>
               </p>
             </div>
-            <div *ngIf="selectedPaymentMethod() === 'wallet_and_card'" class="mt-2 text-xs text-green-700 pl-7">
+            <div *ngIf="selectedPaymentMethod() === 'partial_wallet'" class="mt-2 text-xs text-green-700 pl-7">
               Wallet: ${{ walletAmountToUse() | number:'1.2-2' }} + Tarjeta: ${{ cardAmountToUse() | number:'1.2-2' }}
             </div>
           </div>
