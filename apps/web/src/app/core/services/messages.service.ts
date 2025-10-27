@@ -10,6 +10,8 @@ export interface Message {
   recipient_id: string;
   body: string;
   created_at: string;
+  read_at: string | null;
+  delivered_at: string | null;
 }
 
 @Injectable({
@@ -83,6 +85,60 @@ export class MessagesService {
           handler(payload.new as Message);
         },
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: `booking_id=eq.${bookingId}`,
+        },
+        (payload: RealtimePostgresChangesPayload<Message>) => {
+          handler(payload.new as Message);
+        },
+      )
+      .subscribe();
+  }
+
+  async markAsRead(messageId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('messages')
+      .update({ read_at: new Date().toISOString() })
+      .eq('id', messageId);
+    if (error) throw error;
+  }
+
+  async markAsDelivered(messageId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('messages')
+      .update({ delivered_at: new Date().toISOString() })
+      .eq('id', messageId)
+      .is('delivered_at', null);
+    if (error) throw error;
+  }
+
+  // Typing indicator usando presence
+  async setTyping(bookingId: string, userId: string, isTyping: boolean): Promise<void> {
+    const channel = this.supabase.channel(`presence-${bookingId}`);
+    
+    if (isTyping) {
+      await channel.track({ user_id: userId, typing: true });
+    } else {
+      await channel.untrack();
+    }
+  }
+
+  subscribeToTyping(bookingId: string, callback: (typingUsers: string[]) => void): RealtimeChannel {
+    return this.supabase
+      .channel(`presence-${bookingId}`)
+      .on('presence', { event: 'sync' }, () => {
+        const state = this.supabase.channel(`presence-${bookingId}`).presenceState();
+        const typingUsers = Object.values(state)
+          .flat()
+          .filter((presence: any) => presence.typing)
+          .map((presence: any) => presence.user_id);
+        callback(typingUsers);
+      })
       .subscribe();
   }
 
