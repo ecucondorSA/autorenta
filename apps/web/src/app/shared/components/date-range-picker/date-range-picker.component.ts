@@ -31,12 +31,16 @@ export class DateRangePickerComponent {
   readonly to = signal<string | null>(this.initialTo);
 
   onFromChange(value: string): void {
-    this.from.set(value);
+    // Convert empty string to null
+    const newValue = value && value.trim() !== '' ? value : null;
+    this.from.set(newValue);
     this.emit();
   }
 
   onToChange(value: string): void {
-    this.to.set(value);
+    // Convert empty string to null
+    const newValue = value && value.trim() !== '' ? value : null;
+    this.to.set(newValue);
     this.emit();
   }
 
