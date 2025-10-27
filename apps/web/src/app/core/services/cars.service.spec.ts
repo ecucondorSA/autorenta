@@ -5,9 +5,9 @@ import { SupabaseClientService } from './supabase-client.service';
 describe('CarsService', () => {
   let service: CarsService;
   let supabase: {
-    auth: jasmine.SpyObj<any>;
-    from: jasmine.Spy<any>;
-    storage: { from: jasmine.Spy<any> };
+    auth: jasmine.SpyObj<unknown>;
+    from: jasmine.Spy<unknown>;
+    storage: { from: jasmine.Spy<unknown> };
   };
 
   beforeEach(() => {

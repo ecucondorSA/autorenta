@@ -144,7 +144,7 @@ export class AdminDashboardPage implements OnInit {
       const { blob, filename } = await this.databaseExportService.exportSnapshot();
       this.triggerDownload(blob, filename);
       this.exportMessage.set(`Exportación generada (${filename}).`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       this.exportMessage.set(err?.message ?? 'No pudimos exportar la base de datos.');
     } finally {

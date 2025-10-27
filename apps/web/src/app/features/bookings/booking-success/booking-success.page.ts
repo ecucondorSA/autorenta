@@ -41,7 +41,7 @@ export class BookingSuccessPage implements OnInit {
         throw new Error('Reserva no encontrada');
       }
       this.booking.set(booking);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading booking:', err);
       this.error.set(err.message || 'Error al cargar la reserva');
     } finally {

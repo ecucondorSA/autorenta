@@ -105,7 +105,7 @@ export class MyCarsPage implements OnInit {
       await this.carsService.deleteCar(carId);
       await this.loadCars();
       alert('✅ Auto eliminado exitosamente');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting car:', error);
       console.error('Error details:', {
         code: error?.code,

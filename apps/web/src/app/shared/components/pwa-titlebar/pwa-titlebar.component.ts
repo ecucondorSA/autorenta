@@ -19,7 +19,7 @@ export class PwaTitlebarComponent implements OnInit {
   readonly isWCOSupported = signal(false);
   readonly isWCOActive = signal(false);
   readonly titlebarRect = signal<DOMRect | null>(null);
-  readonly userProfile = signal<any>(null);
+  readonly userProfile = signal<unknown>(null);
 
   readonly isAuthenticated = computed(() => !!this.userProfile());
 

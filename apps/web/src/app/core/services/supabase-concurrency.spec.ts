@@ -327,7 +327,7 @@ async function simulateUserSession(
 /**
  * Simula búsqueda de autos
  */
-async function simulateCarSearch(userId: number): Promise<any> {
+async function simulateCarSearch(userId: number): Promise<unknown> {
   return new Promise((resolve) => {
     // Simular latencia de búsqueda (30-60ms)
     setTimeout(
@@ -349,7 +349,7 @@ async function simulateCarSearch(userId: number): Promise<any> {
 /**
  * Simula obtención de perfil
  */
-async function simulateProfileFetch(userId: number): Promise<any> {
+async function simulateProfileFetch(userId: number): Promise<unknown> {
   return new Promise((resolve) => {
     // Simular latencia de perfil (20-40ms)
     setTimeout(
@@ -368,7 +368,7 @@ async function simulateProfileFetch(userId: number): Promise<any> {
 /**
  * Simula listado de reservas
  */
-async function simulateBookingList(userId: number): Promise<any> {
+async function simulateBookingList(userId: number): Promise<unknown> {
   return new Promise((resolve) => {
     // Simular latencia de reservas (40-70ms)
     setTimeout(

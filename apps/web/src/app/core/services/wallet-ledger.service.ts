@@ -27,7 +27,7 @@ export interface LedgerEntry {
   amount_cents: number;
   balance_change_cents: number; // Positivo o negativo
   ref: string;
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
   booking_id?: string | null;
   transaction_id?: string | null;
   created_at: string;
@@ -45,7 +45,7 @@ export interface WalletTransfer {
   amount_cents: number;
   status: 'pending' | 'completed' | 'failed' | 'cancelled';
   ref: string;
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
   created_at: string;
   completed_at?: string | null;
 }
@@ -54,7 +54,7 @@ export interface TransferRequest {
   to_user_id: string;
   amount_cents: number;
   description?: string;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
 }
 
 export interface TransferResponse {

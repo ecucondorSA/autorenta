@@ -93,7 +93,7 @@ export class PendingApprovalPage implements OnInit {
       } else {
         this.toastService.error(`Error: ${result.error}`);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error approving booking:', error);
       this.toastService.error('Error al aprobar reserva');
     } finally {
@@ -128,7 +128,7 @@ export class PendingApprovalPage implements OnInit {
       } else {
         this.toastService.error(`Error: ${result.error}`);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error rejecting booking:', error);
       this.toastService.error('Error al rechazar reserva');
     } finally {

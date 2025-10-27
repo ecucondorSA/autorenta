@@ -512,7 +512,7 @@ export class TourService {
   // #endregion
 
   // #region Analytics
-  private trackEvent(eventName: string, properties: Record<string, any>): void {
+  private trackEvent(eventName: string, properties: Record<string, unknown>): void {
     // TODO: Integrate with your actual analytics service.
     console.log(`[Analytics] Event: ${eventName}`, properties);
   }

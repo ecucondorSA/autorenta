@@ -14,7 +14,7 @@ import { AccountingService, AccountingDashboard } from '../../../core/services/a
 export class AccountingDashboardComponent implements OnInit {
   dashboard = signal<AccountingDashboard | null>(null);
   loading = signal(true);
-  healthCheck = signal<any>(null);
+  healthCheck = signal<unknown>(null);
 
   constructor(private accountingService: AccountingService) {}
 

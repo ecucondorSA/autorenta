@@ -51,7 +51,7 @@ export class MercadoPagoScriptService {
    * @param publicKey Your Mercado Pago public key.
    * @returns A Promise that resolves with the MercadoPago instance.
    */
-  public async getMercadoPago(publicKey: string): Promise<any> {
+  public async getMercadoPago(publicKey: string): Promise<unknown> {
     if (!isPlatformBrowser(this.platformId)) {
       // Handle server-side rendering (SSR) if applicable
       return Promise.reject('Mercado Pago SDK cannot be loaded on the server.');

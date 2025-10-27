@@ -558,7 +558,7 @@ export class ProfileService {
   /**
    * Obtiene las estadísticas públicas de un usuario
    */
-  async getUserStats(userId: string): Promise<any> {
+  async getUserStats(userId: string): Promise<unknown> {
     const { data, error } = await this.supabase.rpc('get_user_public_stats', {
       target_user_id: userId,
     });
