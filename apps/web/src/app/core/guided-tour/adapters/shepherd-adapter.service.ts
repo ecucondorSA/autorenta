@@ -4,7 +4,7 @@ import type { Tour, StepOptions } from 'shepherd.js';
 import { StepDefinition, TourId } from '../interfaces/tour-definition.interface';
 
 export interface TourRendererAdapter {
-  createTour(tourId: TourId, options?: any): void;
+  createTour(tourId: TourId, options?: Record<string, unknown>): void;
   addStep(step: StepDefinition, callbacks?: StepCallbacks): void;
   start(): void;
   next(): void;
@@ -32,7 +32,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
   private currentTourId?: TourId;
   private stepCallbacks = new Map<string, StepCallbacks>();
 
-  createTour(tourId: TourId, options: any = {}): void {
+  createTour(tourId: TourId, options: Record<string, unknown> = {}): void {
     // Cleanup existing tour
     if (this.tour) {
       this.destroy();
@@ -109,7 +109,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
     if (stepDef.target?.selector) {
       shepherdStep.attachTo = {
         element: stepDef.target.selector,
-        on: (stepDef.position as any) || 'bottom',
+        on: (stepDef.position as 'top' | 'bottom' | 'left' | 'right') || 'bottom',
       };
     }
 

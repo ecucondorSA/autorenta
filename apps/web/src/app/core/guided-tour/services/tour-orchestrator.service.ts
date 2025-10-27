@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import {
@@ -24,7 +24,7 @@ interface QueuedTour {
 @Injectable({
   providedIn: 'root',
 })
-export class TourOrchestratorService {
+export class TourOrchestratorService implements OnDestroy {
   private readonly STORAGE_PREFIX = 'autorenta:tour:';
   private readonly router = inject(Router);
   private readonly registry = inject(TourRegistryService);
@@ -57,7 +57,7 @@ export class TourOrchestratorService {
    * Request a tour to be started
    */
   async requestTour(options: TourRequestOptions): Promise<boolean> {
-    const { id, mode = 'auto', force = false } = options;
+    const { id, force = false } = options;
 
     // Get definition
     const definition = this.registry.getDefinition(id);
@@ -338,7 +338,7 @@ export class TourOrchestratorService {
     return false;
   }
 
-  private async evaluateGuards(guards: any[]): Promise<boolean> {
+  private async evaluateGuards(guards: Array<{ check: () => Promise<boolean> | boolean }>): Promise<boolean> {
     for (const guard of guards) {
       try {
         const result = await guard.check();

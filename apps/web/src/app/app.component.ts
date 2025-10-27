@@ -91,7 +91,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   readonly sidebarOpen = signal(false);
   readonly darkMode = signal(false);
   readonly fullBleedLayout = signal(false);
-  readonly userProfile = signal<any>(null);
+  readonly userProfile = signal<Record<string, unknown> | null>(null);
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;

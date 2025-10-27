@@ -402,7 +402,7 @@ export interface Booking {
   has_active_claim?: boolean | null; // Si tiene un siniestro activo
 
   // Relación con cobertura (populated via JOIN)
-  insurance_coverage?: any; // BookingInsuranceCoverage
+  insurance_coverage?: Record<string, unknown>; // BookingInsuranceCoverage
 }
 
 export interface PaymentIntent {

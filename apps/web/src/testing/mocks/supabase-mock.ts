@@ -66,7 +66,7 @@ export function mockAvailabilityRPCs(supabaseMock: ReturnType<typeof createSupab
   // Mock get_available_cars RPC
   supabaseMock.rpc.and.callFake((functionName: string, params?: any) => {
     if (functionName === 'get_available_cars') {
-      // Define mock car data
+      // Define mock car data - match actual RPC response structure
       const allCars = [
         {
           id: '8a854591-3fec-4425-946e-c7bb764a7333',
@@ -75,6 +75,7 @@ export function mockAvailabilityRPCs(supabaseMock: ReturnType<typeof createSupab
           model: 'Onix',
           year: 2025,
           location_city: 'Buenos Aires',
+          location: { city: 'Buenos Aires' }, // Also for filtering
           price_per_day: 15000,
           currency: 'ARS',
           status: 'available',
@@ -87,6 +88,7 @@ export function mockAvailabilityRPCs(supabaseMock: ReturnType<typeof createSupab
           model: 'Corolla',
           year: 2024,
           location_city: 'Córdoba',
+          location: { city: 'Córdoba' }, // Also for filtering
           price_per_day: 18000,
           currency: 'ARS',
           status: 'available',
@@ -96,10 +98,11 @@ export function mockAvailabilityRPCs(supabaseMock: ReturnType<typeof createSupab
 
       let filtered = [...allCars];
 
-      // Filter by city (case-insensitive)
+      // Filter by city (case-insensitive) - RPC doesn't filter by city
+      // The service filters after getting results
       if (params?.p_city) {
         filtered = filtered.filter(
-          (car) => car.location_city.toLowerCase() === params.p_city.toLowerCase(),
+          (car) => car.location?.city?.toLowerCase() === params.p_city.toLowerCase(),
         );
       }
 

@@ -3,7 +3,7 @@
  * Integración con sistema contable basado en NIIF 15 y NIIF 37
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export interface AccountingAccount {
   id: string;
@@ -221,7 +221,7 @@ export class AccountingService {
     accountCode?: string;
     transactionType?: string;
     limit?: number;
-  }): Promise<any[]> {
+  }): Promise<unknown[]> {
     let query = this.supabase
       .from('accounting_ledger')
       .select(
@@ -265,7 +265,7 @@ export class AccountingService {
   /**
    * Obtener flujo de caja
    */
-  async getCashFlow(limit: number = 100): Promise<any[]> {
+  async getCashFlow(limit: number = 100): Promise<unknown[]> {
     const { data, error } = await this.supabase
       .from('accounting_cash_flow')
       .select('*')

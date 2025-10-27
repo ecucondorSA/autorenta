@@ -5,8 +5,6 @@ import {
   TourPriority,
   StepDefinition,
   StepContent,
-  TourGuard,
-  TourTrigger,
 } from '../interfaces/tour-definition.interface';
 
 @Injectable({

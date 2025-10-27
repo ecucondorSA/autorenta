@@ -63,7 +63,7 @@ export interface InsurancePolicy {
 
   created_at: string;
   updated_at: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -157,7 +157,7 @@ export interface InsuranceClaim {
 
   created_at: string;
   updated_at: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -196,7 +196,7 @@ export interface VehicleInspection {
 
   damages_detected?: VehicleDamage[];
 
-  ai_analysis?: any;
+  ai_analysis?: Record<string, unknown>;
   ai_detected_damages?: VehicleDamage[];
 
   signature_data?: string;

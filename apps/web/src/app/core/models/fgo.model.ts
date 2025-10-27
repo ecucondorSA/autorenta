@@ -114,7 +114,7 @@ export interface FgoMovement {
   created_by_name?: string;
 
   // Metadata
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
   created_at: string;
 }
 
@@ -139,7 +139,7 @@ export interface FgoMovementView {
 
   // Metadata
   description?: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   createdAt: Date;
 }
 
@@ -252,7 +252,7 @@ export interface FgoRpcResult {
   ref?: string;
   status?: string;
   error?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // ============================================================================

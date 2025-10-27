@@ -76,9 +76,24 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
   describe('✅ Flujo completo: Búsqueda → Selección → Booking', () => {
     it('debería completar el flujo completo de reserva desde búsqueda hasta confirmación', async () => {
       // PASO 1: Búsqueda de autos disponibles
-      const mockQuery = jasmine.createSpyObj('Query', ['eq', 'ilike', 'order', 'select']);
+      const mockQuery = jasmine.createSpyObj('Query', [
+        'eq',
+        'ilike',
+        'order',
+        'select',
+        'single',
+        'in',
+        'or',
+      ]);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
+      mockQuery.in.and.returnValue(mockQuery);
+      mockQuery.or.and.returnValue(
+        Promise.resolve({
+          data: [], // No conflicts
+          error: null,
+        }),
+      );
       mockQuery.order.and.returnValue(
         Promise.resolve({
           data: [mockCar],
@@ -170,9 +185,24 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
     });
 
     it('debería retornar datos válidos en cada paso del flujo', async () => {
-      const mockQuery = jasmine.createSpyObj('Query', ['eq', 'ilike', 'order', 'select', 'single']);
+      const mockQuery = jasmine.createSpyObj('Query', [
+        'eq',
+        'ilike',
+        'order',
+        'select',
+        'single',
+        'in',
+        'or',
+      ]);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
+      mockQuery.in.and.returnValue(mockQuery);
+      mockQuery.or.and.returnValue(
+        Promise.resolve({
+          data: [],
+          error: null,
+        }),
+      );
       mockQuery.order.and.returnValue(
         Promise.resolve({
           data: [mockCar],
@@ -276,9 +306,23 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
 
   describe('✅ Consistencia de datos a través del flujo', () => {
     it('debería mantener consistencia de precios entre búsqueda y reserva', async () => {
-      const mockQuery = jasmine.createSpyObj('Query', ['eq', 'order', 'select', 'single']);
+      const mockQuery = jasmine.createSpyObj('Query', [
+        'eq',
+        'order',
+        'select',
+        'single',
+        'in',
+        'or',
+      ]);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
+      mockQuery.in.and.returnValue(mockQuery);
+      mockQuery.or.and.returnValue(
+        Promise.resolve({
+          data: [],
+          error: null,
+        }),
+      );
       mockQuery.order.and.returnValue(
         Promise.resolve({
           data: [mockCar],
@@ -306,9 +350,23 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
 
     it('debería mantener el car_id correcto a través de todo el flujo', async () => {
       const testCarId = 'car-consistency-test';
-      const mockQuery = jasmine.createSpyObj('Query', ['eq', 'order', 'select', 'single']);
+      const mockQuery = jasmine.createSpyObj('Query', [
+        'eq',
+        'order',
+        'select',
+        'single',
+        'in',
+        'or',
+      ]);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
+      mockQuery.in.and.returnValue(mockQuery);
+      mockQuery.or.and.returnValue(
+        Promise.resolve({
+          data: [],
+          error: null,
+        }),
+      );
       mockQuery.order.and.returnValue(
         Promise.resolve({
           data: [{ ...mockCar, id: testCarId }],

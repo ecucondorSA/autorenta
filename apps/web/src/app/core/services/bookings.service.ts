@@ -133,7 +133,7 @@ export class BookingsService {
               .single();
 
             if (!policyError && policy) {
-              (coverage as any).policy = policy;
+              (coverage as Record<string, unknown>).policy = policy;
             } else if (policyError) {
               console.warn('⚠️ No se pudo cargar la póliza de seguro:', policyError.message);
             }
@@ -259,7 +259,7 @@ export class BookingsService {
       const ref = `rental-${bookingId}-${Date.now()}`;
 
       // Call wallet_charge_rental RPC function
-      const { data, error } = await this.supabase.rpc('wallet_charge_rental', {
+      const { error } = await this.supabase.rpc('wallet_charge_rental', {
         p_user_id: booking.user_id,
         p_booking_id: bookingId,
         p_amount_cents: amountCents,
@@ -380,8 +380,6 @@ export class BookingsService {
           error: `Saldo insuficiente. Disponible: ${wallet.available_balance / 100}, Requerido: ${depositAmountCents / 100}`,
         };
       }
-
-      const ref = `security-deposit-lock-${bookingId}-${Date.now()}`;
 
       // Lock funds using wallet service
       const lockResult = await this.walletService.lockFunds({
@@ -711,11 +709,12 @@ export class BookingsService {
         success: true,
         booking: booking,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error en createBookingWithValidation:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error al crear la reserva';
       return {
         success: false,
-        error: error.message || 'Error al crear la reserva',
+        error: errorMessage,
       };
     }
   }
@@ -792,11 +791,12 @@ export class BookingsService {
       // - Reembolso automático si aplica
 
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Excepción en cancelBooking:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error inesperado al cancelar';
       return {
         success: false,
-        error: error.message || 'Error inesperado al cancelar',
+        error: errorMessage,
       };
     }
   }

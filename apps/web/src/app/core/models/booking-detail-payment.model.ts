@@ -139,7 +139,7 @@ export interface BookingRiskSnapshotDb {
   coverage_upgrade: string;
 
   // Metadata
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
   created_at: string;
 }
 

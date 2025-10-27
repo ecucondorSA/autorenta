@@ -106,7 +106,7 @@ export interface BookingRiskSnapshot {
   hasWalletSecurity: boolean;
 
   // Metadata
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
   createdAt: Date;
 }
 
@@ -124,7 +124,7 @@ export interface BookingRiskSnapshotDb {
   franchise_usd: number;
   has_card: boolean;
   has_wallet_security: boolean;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
   created_at: string;
 }
 

@@ -1,1 +1,215 @@
 [33m❯[39m Building...
+[32m✔[39m Building...
+Application bundle generation failed. [25.472 seconds] - 2025-10-27T08:40:19.781Z
+
+[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:17:17:
+[37m      17 │     addListener: [32mjasmine[37m.createSpy('addListener'),
+         ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:18:20:
+[37m      18 │     removeListener: [32mjasmine[37m.createSpy('removeListener'),
+         ╵                     [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:19:22:
+[37m      19 │     addEventListener: [32mjasmine[37m.createSpy('addEventListener'),
+         ╵                       [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:20:25:
+[37m      20 │     removeEventListener: [32mjasmine[37m.createSpy('removeEventListener'),
+         ╵                          [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:21:19:
+[37m      21 │     dispatchEvent: [32mjasmine[37m.createSpy('dispatchEvent').and.returnVa...
+         ╵                    [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:33:13:
+[37m      33 │     observe: [32mjasmine[37m.createSpy('observe'),
+         ╵              [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:34:15:
+[37m      34 │     unobserve: [32mjasmine[37m.createSpy('unobserve'),
+         ╵                [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:35:16:
+[37m      35 │     disconnect: [32mjasmine[37m.createSpy('disconnect'),
+         ╵                 [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:75:22:
+[37m      75 │   window.matchMedia = [32mjasmine[37m.createSpy('matchMedia').and.callFake...
+         ╵                       [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/helpers/responsive-test-helpers.ts:131:26:
+[37m      131 │       window.matchMedia = [32mjasmine[37m.createSpy('matchMedia').and.cal...
+          ╵                           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:8:17:
+[37m      8 │   const rpcSpy = [32mjasmine[37m.createSpy('rpc');
+        ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:9:18:
+[37m      9 │   const authSpy = [32mjasmine[37m.createSpyObj('auth', ['getUser']);
+        ╵                   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:10:18:
+[37m      10 │   const fromSpy = [32mjasmine[37m.createSpy('from');
+         ╵                   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:11:21:
+[37m      11 │   const storageSpy = [32mjasmine[37m.createSpyObj('storage', ['from']);
+         ╵                      [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:18:21:
+[37m      18 │     builder.select = [32mjasmine[37m.createSpy('select').and.returnValue(b...
+         ╵                      [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:19:17:
+[37m      19 │     builder.eq = [32mjasmine[37m.createSpy('eq').and.returnValue(builder);
+         ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:20:18:
+[37m      20 │     builder.neq = [32mjasmine[37m.createSpy('neq').and.returnValue(builder);
+         ╵                   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:21:17:
+[37m      21 │     builder.gt = [32mjasmine[37m.createSpy('gt').and.returnValue(builder);
+         ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:22:18:
+[37m      22 │     builder.gte = [32mjasmine[37m.createSpy('gte').and.returnValue(builder);
+         ╵                   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:23:17:
+[37m      23 │     builder.lt = [32mjasmine[37m.createSpy('lt').and.returnValue(builder);
+         ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:24:18:
+[37m      24 │     builder.lte = [32mjasmine[37m.createSpy('lte').and.returnValue(builder);
+         ╵                   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:25:19:
+[37m      25 │     builder.like = [32mjasmine[37m.createSpy('like').and.returnValue(build...
+         ╵                    [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:26:20:
+[37m      26 │     builder.ilike = [32mjasmine[37m.createSpy('ilike').and.returnValue(bui...
+         ╵                     [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:27:17:
+[37m      27 │     builder.in = [32mjasmine[37m.createSpy('in').and.returnValue(builder);
+         ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:28:17:
+[37m      28 │     builder.is = [32mjasmine[37m.createSpy('is').and.returnValue(builder);
+         ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:29:20:
+[37m      29 │     builder.order = [32mjasmine[37m.createSpy('order').and.returnValue(bui...
+         ╵                     [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:30:20:
+[37m      30 │     builder.limit = [32mjasmine[37m.createSpy('limit').and.returnValue(bui...
+         ╵                     [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:31:20:
+[37m      31 │     builder.range = [32mjasmine[37m.createSpy('range').and.returnValue(bui...
+         ╵                     [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:32:21:
+[37m      32 │     builder.single = [32mjasmine[37m
+         ╵                      [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/testing/mocks/supabase-mock.ts:35:26:
+[37m      35 │     builder.maybeSingle = [32mjasmine[37m
+         ╵                           [32m~~~~~~~[0m
+
+[39m[22m
+Watch mode enabled. Watching for file changes...

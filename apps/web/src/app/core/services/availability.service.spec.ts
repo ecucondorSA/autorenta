@@ -82,9 +82,13 @@ describe('Availability Service - get_available_cars RPC', () => {
     const mockError = { message: 'Database connection failed' };
     supabase.rpc.and.returnValue(Promise.resolve({ data: null, error: mockError }));
 
-    await expectAsync(
-      service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z'),
-    ).toBeRejectedWithError('Database connection failed');
+    try {
+      await service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z');
+      fail('Should have thrown an error');
+    } catch (error: any) {
+      expect(error).toBeDefined();
+      expect(error.message).toBe('Database connection failed');
+    }
   });
 
   it('debería manejar ciudades con mayúsculas y minúsculas', async () => {
