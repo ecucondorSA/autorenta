@@ -102,8 +102,9 @@ export class CarDetailPage implements OnInit {
       return null;
     }
     
-    const start = new Date(range.from);
-    const end = new Date(range.to);
+    // TypeScript knows that range.from and range.to are strings here
+    const start = new Date(range.from!);
+    const end = new Date(range.to!);
     const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
     
     if (diff <= 0) {
