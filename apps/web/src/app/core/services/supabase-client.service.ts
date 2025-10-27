@@ -4,8 +4,28 @@ import { environment } from '../../../environments/environment';
 
 type SupabaseLock = <T>(name: string, acquireTimeout: number, fn: () => Promise<T>) => Promise<T>;
 
+// Type-safe interfaces for Navigator Locks API
+interface NavigatorLockOptions {
+  mode: 'exclusive' | 'shared';
+  signal?: AbortSignal;
+}
+
+interface NavigatorLocks {
+  request<T>(
+    name: string,
+    options: NavigatorLockOptions,
+    callback: () => Promise<T>,
+  ): Promise<T>;
+}
+
+interface GlobalWithNavigator {
+  navigator?: {
+    locks?: NavigatorLocks;
+  };
+}
+
 const createResilientLock = (): SupabaseLock => {
-  const navigatorLocks = (globalThis as any)?.navigator?.locks;
+  const navigatorLocks = (globalThis as unknown as GlobalWithNavigator)?.navigator?.locks;
   if (!navigatorLocks?.request) {
     return async (_name, _acquireTimeout, fn) => fn();
   }
@@ -20,7 +40,7 @@ const createResilientLock = (): SupabaseLock => {
         timeoutId = setTimeout(() => controller.abort(), acquireTimeout);
       }
 
-      const options: any = { mode: 'exclusive' };
+      const options: NavigatorLockOptions = { mode: 'exclusive' };
       if (controller) {
         options.signal = controller.signal;
       }

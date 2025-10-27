@@ -15,24 +15,36 @@ interface EnvDefaults {
   appUrl?: string;
 }
 
+// Type-safe interfaces for global environment access
+interface GlobalWithEnv {
+  __env?: Record<string, string | undefined>;
+  process?: {
+    env?: Record<string, string | undefined>;
+  };
+}
+
+interface ImportMetaWithEnv {
+  env?: Record<string, string | undefined>;
+}
+
 const readEnv = (key: string): string | undefined => {
   // Runtime window-based env (assets/env.js pattern)
-  const globalEnv = (globalThis as any)?.__env?.[key];
+  const globalEnv = (globalThis as unknown as GlobalWithEnv)?.__env?.[key];
   if (typeof globalEnv === 'string' && globalEnv.length > 0) {
     return globalEnv;
   }
 
   // import.meta.env (Angular 17+ builder exposes env vars at build time)
   const metaEnv =
-    typeof import.meta !== 'undefined' && (import.meta as any).env
-      ? (import.meta as any).env[key]
+    typeof import.meta !== 'undefined' && (import.meta as unknown as ImportMetaWithEnv).env
+      ? (import.meta as unknown as ImportMetaWithEnv).env[key]
       : undefined;
   if (typeof metaEnv === 'string' && metaEnv.length > 0) {
     return metaEnv;
   }
 
   // process.env (guarded via globalThis) as last resort for SSR/tests
-  const nodeEnv = (globalThis as any)?.process?.env?.[key];
+  const nodeEnv = (globalThis as unknown as GlobalWithEnv)?.process?.env?.[key];
   if (typeof nodeEnv === 'string' && nodeEnv.length > 0) {
     return nodeEnv;
   }
