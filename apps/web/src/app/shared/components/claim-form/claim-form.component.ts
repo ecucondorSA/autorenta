@@ -5,7 +5,6 @@ import {
   SettlementService,
   DamageItem,
   DamageType,
-  Claim,
 } from '../../../core/services/settlement.service';
 
 /**
@@ -121,7 +120,7 @@ export class ClaimFormComponent implements OnInit {
   /**
    * Actualiza un daño específico
    */
-  updateDamage(index: number, field: keyof DamageItem, value: any): void {
+  updateDamage(index: number, field: keyof DamageItem, value: unknown): void {
     this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = { ...updated[index], [field]: value };
@@ -260,13 +259,14 @@ export class ClaimFormComponent implements OnInit {
   /**
    * Cierra el modal (placeholder - implementar según framework de modals usado)
    */
-  private closeModal(data: any): void {
+  private closeModal(data: unknown): void {
     // TODO: Implementar cierre de modal según framework usado
     console.log('Modal should close with data:', data);
 
     // Si hay un callback en el window (workaround temporal)
-    if ((window as any).claimFormCallback) {
-      (window as any).claimFormCallback(data);
+    const windowWithCallback = window as Window & { claimFormCallback?: (data: unknown) => void };
+    if (windowWithCallback.claimFormCallback) {
+      windowWithCallback.claimFormCallback(data);
     }
   }
 }
