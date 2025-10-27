@@ -196,8 +196,15 @@ export class FxService {
       return rate;
     } catch (error) {
       console.error('Error fetching current rate from ExchangeRateService:', error);
-      // Fallback hardcoded para desarrollo (actualizado a tasa más realista)
-      return 1700; // 1 USD = 1700 ARS (aproximado Oct 2025)
+      // Si falla la consulta a la DB, intentar Binance directamente
+      try {
+        const binanceRate = await this.exchangeRateService.getBinanceRate();
+        console.log(`💱 Fallback to direct Binance: 1 USD = ${binanceRate} ARS`);
+        return binanceRate * 1.20; // Aplicar margen del 20%
+      } catch (binanceError) {
+        console.error('Error fetching from Binance directly:', binanceError);
+        throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
+      }
     }
   }
 }

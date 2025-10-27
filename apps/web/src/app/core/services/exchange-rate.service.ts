@@ -46,9 +46,6 @@ export class ExchangeRateService {
   private lastRate = signal<ExchangeRate | null>(null);
   private lastFetch = signal<number>(0);
 
-  // Tasa de fallback si todo falla (actualizar manualmente cada semana)
-  private readonly FALLBACK_RATE = 1015.0; // 1 USD = 1015 ARS (aproximado enero 2025)
-
   /**
    * Obtiene la tasa de cambio platform_rate (incluye margen del 20%) desde la base de datos
    *
@@ -124,9 +121,7 @@ export class ExchangeRateService {
         return platformRate;
       } catch (binanceError) {
         console.error('❌ Error al consultar Binance:', binanceError);
-        console.warn(`⚠️  Usando tasa de fallback: 1 USD = ${this.FALLBACK_RATE} ARS`);
-
-        return this.FALLBACK_RATE;
+        throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
       }
     }
   }

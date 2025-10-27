@@ -6,7 +6,7 @@ import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SettlementService, Claim, ClaimProcessingResult } from '../../../core/services/settlement.service';
 import { BookingInspection, BookingRiskSnapshot, EligibilityResult, WaterfallResult, FgoParameters, BucketType, InspectionStage } from '../../../core/models/fgo-v1-1.model';
 import { firstValueFrom } from 'rxjs';
-import { RiskService } from '../../../core/services/risk.service';
+import { RiskMatrixService } from '../../../core/services/risk.service';
 import { FgoService } from '../../../core/services/fgo.service';
 
 /**
@@ -109,7 +109,7 @@ export class FgoManagementComponent implements OnInit {
 
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly settlementService = inject(SettlementService);
-  private readonly riskMatrixService = inject(RiskService);
+  private readonly riskMatrixService = inject(RiskMatrixService);
   private readonly fgoServiceV2 = inject(FgoService);
 
   readonly fgoParams = signal<FgoParameters | null>(null);

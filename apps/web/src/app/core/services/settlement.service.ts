@@ -3,7 +3,7 @@ import { Observable, from, map, catchError, of, firstValueFrom } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseClientService } from './supabase-client.service';
 import { FgoV1_1Service } from './fgo-v1-1.service';
-import { RiskService } from './risk.service';
+import { RiskMatrixService } from './risk-matrix.service';
 import { FgoService } from './fgo.service';
 
 // Models
@@ -96,7 +96,7 @@ export class SettlementService {
   constructor(
     private readonly supabaseService: SupabaseClientService,
     private readonly fgoV1_1Service: FgoV1_1Service,
-    private readonly riskMatrixService: RiskService,
+    private readonly riskMatrixService: RiskMatrixService,
     private readonly fgoService: FgoService
   ) {
     this.supabaseClient = this.supabaseService.getClient();
