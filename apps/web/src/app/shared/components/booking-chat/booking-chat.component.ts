@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-booking-chat',
@@ -28,11 +29,15 @@ export class BookingChatComponent implements OnInit, OnDestroy {
   readonly error = signal<string | null>(null);
   readonly newMessage = signal('');
   readonly notification = signal<string | null>(null);
+  readonly isTyping = signal(false);
+  readonly recipientTyping = signal(false);
 
   // Computed
   readonly currentUserId = signal<string | null>(null);
 
   private notificationTimeout: ReturnType<typeof setTimeout> | null = null;
+  private typingTimeout: ReturnType<typeof setTimeout> | null = null;
+  private typingChannel?: RealtimeChannel;
 
   constructor() {
     // Update current user ID when session changes
@@ -45,24 +50,57 @@ export class BookingChatComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     await this.loadMessages();
 
-    this.messagesService.subscribeToBooking(this.bookingId(), message => {
+    // Subscribe to messages
+    this.messagesService.subscribeToBooking(this.bookingId(), async message => {
       this.messages.update(prev => {
-        if (prev.some(existing => existing.id === message.id)) {
-          return prev;
+        const existing = prev.find(m => m.id === message.id);
+        if (existing) {
+          // Update existing message (for read/delivered status)
+          return prev.map(m => m.id === message.id ? message : m);
         }
         return [...prev, message];
       });
+
+      // Mark as delivered if it's for us
+      if (message.recipient_id === this.currentUserId() && !message.delivered_at) {
+        await this.messagesService.markAsDelivered(message.id);
+      }
+
+      // Mark as read if we're viewing and it's for us
+      if (message.recipient_id === this.currentUserId() && !message.read_at) {
+        setTimeout(async () => {
+          await this.messagesService.markAsRead(message.id);
+        }, 1000);
+      }
 
       if (message.sender_id !== this.currentUserId()) {
         this.showNotification(`Nuevo mensaje de ${this.recipientName()}`);
       }
     });
+
+    // Subscribe to typing indicator
+    this.typingChannel = this.messagesService.subscribeToTyping(
+      this.bookingId(),
+      (typingUsers) => {
+        this.recipientTyping.set(typingUsers.includes(this.recipientId()));
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this.messagesService.unsubscribe();
+    if (this.typingChannel) {
+      this.typingChannel.unsubscribe();
+    }
     if (this.notificationTimeout) {
       clearTimeout(this.notificationTimeout);
+    }
+    if (this.typingTimeout) {
+      clearTimeout(this.typingTimeout);
+    }
+    // Stop typing on unmount
+    if (this.currentUserId()) {
+      this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false);
     }
   }
 
@@ -88,6 +126,11 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     this.sending.set(true);
     this.error.set(null);
 
+    // Stop typing
+    if (this.currentUserId()) {
+      await this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false);
+    }
+
     try {
       await this.messagesService.sendMessage({
         recipientId: this.recipientId(),
@@ -108,8 +151,33 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  onInputChange(): void {
+    if (!this.currentUserId()) return;
+
+    // Set typing status
+    this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, true);
+
+    // Clear previous timeout
+    if (this.typingTimeout) {
+      clearTimeout(this.typingTimeout);
+    }
+
+    // Stop typing after 3 seconds of inactivity
+    this.typingTimeout = setTimeout(() => {
+      if (this.currentUserId()) {
+        this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false);
+      }
+    }, 3000);
+  }
+
   isOwnMessage(message: Message): boolean {
     return message.sender_id === this.currentUserId();
+  }
+
+  getMessageStatus(message: Message): 'sent' | 'delivered' | 'read' {
+    if (message.read_at) return 'read';
+    if (message.delivered_at) return 'delivered';
+    return 'sent';
   }
 
   formatTime(dateStr: string): string {

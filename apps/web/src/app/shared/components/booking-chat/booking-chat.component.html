@@ -82,13 +82,44 @@
           <p class="break-words text-sm text-gray-800 dark:text-gray-100">{{ message.body }}</p>
           <div class="mt-1 flex items-center justify-end gap-1">
             <span class="text-[10px] text-gray-600 dark:text-gray-300">{{ formatTime(message.created_at) }}</span>
-            <!-- Check marks -->
-            <svg class="h-4 w-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M0 12.116l2.053-1.897c2.401 1.162 3.924 2.045 6.622 3.969 5.073-5.757 8.426-8.678 14.657-12.555l.668 1.536c-5.139 4.484-8.902 9.479-14.321 19.198-3.343-3.936-5.574-6.446-9.679-10.251z"/>
+            
+            <!-- Check marks - Single check (sent) -->
+            <svg *ngIf="getMessageStatus(message) === 'sent'" 
+                 class="h-4 w-4 text-gray-500 dark:text-gray-400" 
+                 fill="currentColor" 
+                 viewBox="0 0 16 15">
+              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512z"/>
+            </svg>
+
+            <!-- Double check (delivered) -->
+            <svg *ngIf="getMessageStatus(message) === 'delivered'" 
+                 class="h-4 w-4 text-gray-500 dark:text-gray-400" 
+                 fill="currentColor" 
+                 viewBox="0 0 16 15">
+              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/>
+            </svg>
+
+            <!-- Double check blue (read) -->
+            <svg *ngIf="getMessageStatus(message) === 'read'" 
+                 class="h-4 w-4 text-blue-500" 
+                 fill="currentColor" 
+                 viewBox="0 0 16 15">
+              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/>
             </svg>
           </div>
           <!-- Tail derecho -->
           <div class="absolute -right-2 top-0 h-0 w-0 border-l-8 border-t-8 border-l-transparent border-t-[#D9FDD3] dark:border-t-[#005C4B]"></div>
+        </div>
+      </div>
+
+      <!-- Typing indicator -->
+      <div *ngIf="recipientTyping()" class="flex justify-start px-4 py-2">
+        <div class="rounded-lg rounded-tl-none bg-white px-4 py-3 shadow-sm dark:bg-[#202C33]">
+          <div class="flex items-center gap-1">
+            <div class="h-2 w-2 animate-bounce rounded-full bg-gray-400" style="animation-delay: 0ms"></div>
+            <div class="h-2 w-2 animate-bounce rounded-full bg-gray-400" style="animation-delay: 150ms"></div>
+            <div class="h-2 w-2 animate-bounce rounded-full bg-gray-400" style="animation-delay: 300ms"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -108,6 +139,7 @@
       <input
         type="text"
         [(ngModel)]="newMessage"
+        (ngModelChange)="onInputChange()"
         name="message"
         [disabled]="sending()"
         placeholder="Escribe un mensaje"
