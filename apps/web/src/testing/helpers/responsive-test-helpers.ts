@@ -5,6 +5,13 @@
  * Mocks matchMedia and ResizeObserver for viewport-based tests
  */
 
+// Type-safe interface for window with ResizeObserver
+interface WindowWithResizeObserver extends Window {
+  ResizeObserver: typeof ResizeObserver;
+  innerWidth: number;
+  innerHeight: number;
+}
+
 /**
  * Mock for window.matchMedia
  * Usage: mockMatchMedia('(max-width: 768px)', true)
@@ -69,7 +76,8 @@ export function setupResponsiveEnvironment(viewport: ViewportConfig) {
 
   // Store original functions
   const originalMatchMedia = window.matchMedia;
-  const originalResizeObserver = (window as any).ResizeObserver;
+  const windowWithRO = window as unknown as WindowWithResizeObserver;
+  const originalResizeObserver = windowWithRO.ResizeObserver;
 
   // Mock matchMedia based on viewport
   window.matchMedia = jasmine.createSpy('matchMedia').and.callFake((query: string) => {
@@ -92,7 +100,7 @@ export function setupResponsiveEnvironment(viewport: ViewportConfig) {
 
   // Mock ResizeObserver
   const { ResizeObserverMock, mockObserver } = mockResizeObserver();
-  (window as any).ResizeObserver = ResizeObserverMock;
+  windowWithRO.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
 
   // Mock window dimensions
   Object.defineProperty(window, 'innerWidth', {
@@ -117,12 +125,12 @@ export function setupResponsiveEnvironment(viewport: ViewportConfig) {
   return {
     cleanup: () => {
       window.matchMedia = originalMatchMedia;
-      (window as any).ResizeObserver = originalResizeObserver;
+      windowWithRO.ResizeObserver = originalResizeObserver;
     },
     resizeObserver: mockObserver,
     triggerResize: (newWidth: number, newHeight: number) => {
-      (window as any).innerWidth = newWidth;
-      (window as any).innerHeight = newHeight;
+      windowWithRO.innerWidth = newWidth;
+      windowWithRO.innerHeight = newHeight;
 
       // Trigger resize event
       window.dispatchEvent(new Event('resize'));
