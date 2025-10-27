@@ -24,9 +24,133 @@ import {
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { environment } from '../../../../environments/environment';
 
-// Dynamic import types
-type MapboxMap = any;
-type Marker = any;
+// Dynamic import types for Mapbox GL
+interface MapboxGL {
+  accessToken: string;
+  Map: new (options: MapboxMapOptions) => MapboxMap;
+  Marker: new (options?: MarkerOptions) => Marker;
+  Popup: new (options?: PopupOptions) => Popup;
+}
+
+interface MapboxMapOptions {
+  container: HTMLElement | string;
+  style: string;
+  center: LngLatLike;
+  zoom: number;
+  cooperativeGestures?: boolean;
+  trackResize?: boolean;
+}
+
+interface MapboxMap {
+  on(event: string, callback: (e: MapEvent) => void): void;
+  on(event: string, layerId: string, callback: (e: MapEvent) => void): void;
+  off(event: string, callback: (e: MapEvent) => void): void;
+  getCanvas(): HTMLCanvasElement;
+  resize(): void;
+  remove(): void;
+  flyTo(options: FlyToOptions): void;
+  addSource(id: string, source: GeoJSONSource): void;
+  getSource(id: string): MapSource;
+  addLayer(layer: MapLayer): void;
+  setPaintProperty(layerId: string, property: string, value: unknown): void;
+  queryRenderedFeatures(point: Point, options?: QueryOptions): MapFeature[];
+  getZoom(): number;
+}
+
+interface MapSource {
+  setData(data: GeoJSONFeatureCollection): void;
+  getClusterExpansionZoom(
+    clusterId: number,
+    callback: (err: Error | null, zoom: number) => void,
+  ): void;
+}
+
+interface MapEvent {
+  type: string;
+  point: Point;
+  lngLat: LngLat;
+  features?: MapFeature[];
+}
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+interface LngLat {
+  lng: number;
+  lat: number;
+}
+
+interface Marker {
+  setLngLat(lngLat: LngLatLike): Marker;
+  addTo(map: MapboxMap): Marker;
+  remove(): void;
+}
+
+interface Popup {
+  setLngLat(lngLat: LngLatLike): Popup;
+  setHTML(html: string): Popup;
+  addTo(map: MapboxMap): Popup;
+  isOpen(): boolean;
+  remove(): void;
+}
+
+interface MapFeature {
+  type: string;
+  id?: string | number;
+  properties: Record<string, unknown>;
+  geometry: {
+    type: string;
+    coordinates: number[] | number[][];
+  };
+}
+
+interface GeoJSONFeatureCollection {
+  type: 'FeatureCollection';
+  features: MapFeature[];
+}
+
+interface GeoJSONSource {
+  type: 'geojson';
+  data: GeoJSONFeatureCollection;
+  cluster?: boolean;
+  clusterMaxZoom?: number;
+  clusterRadius?: number;
+}
+
+interface MapLayer {
+  id: string;
+  type: string;
+  source: string;
+  filter?: unknown[];
+  paint?: Record<string, unknown>;
+  layout?: Record<string, unknown>;
+}
+
+interface FlyToOptions {
+  center: LngLatLike;
+  zoom?: number;
+  speed?: number;
+  curve?: number;
+}
+
+interface QueryOptions {
+  layers: string[];
+}
+
+interface MarkerOptions {
+  element?: HTMLElement;
+  color?: string;
+}
+
+interface PopupOptions {
+  closeButton?: boolean;
+  closeOnClick?: boolean;
+  maxWidth?: string;
+  offset?: number;
+}
+
 type LngLatLike = [number, number];
 
 @Component({
@@ -40,7 +164,7 @@ type LngLatLike = [number, number];
 export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
 
-  @Input() cars: any[] = [];
+  @Input() cars: CarMapLocation[] = [];
   @Input() selectedCarId: string | null = null;
   @Output() carSelected = new EventEmitter<string>();
   @Output() userLocationChange = new EventEmitter<{ lat: number; lng: number }>();
@@ -58,10 +182,10 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private userMarker: Marker | null = null;
   private realtimeUnsubscribe: (() => void) | null = null;
   private refreshInterval: ReturnType<typeof setInterval> | null = null;
-  private mapboxgl: any | null = null;
+  private mapboxgl: MapboxGL | null = null;
   private geolocationWatchId: number | null = null;
   private currentLocations: CarMapLocation[] = []; // Para tracking de locations
-  private selectedPopup: any | null = null; // Popup actual abierto
+  private selectedPopup: Popup | null = null; // Popup actual abierto
   private resizeObserver: ResizeObserver | null = null; // Observer para cambios de tamaño
   private themeChangeListener: ((event: CustomEvent<{ dark: boolean }>) => void) | null = null;
 
@@ -88,7 +212,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
   }
 
-  ngOnChanges(changes: any): void {
+  ngOnChanges(changes: Record<string, unknown>): void {
     // Detectar cambios en selectedCarId y mover el mapa
     if (changes.selectedCarId && !changes.selectedCarId.firstChange) {
       const carId = changes.selectedCarId.currentValue;
@@ -156,8 +280,8 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       }
 
       // Configurar access token
-      if (environment.mapboxAccessToken) {
-        (this.mapboxgl as any).accessToken = environment.mapboxAccessToken;
+      if (environment.mapboxAccessToken && this.mapboxgl) {
+        this.mapboxgl.accessToken = environment.mapboxAccessToken;
       }
     } catch (err) {
       console.error('[CarsMapComponent] Error loading Mapbox', err);
@@ -288,7 +412,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       });
 
       // Manejo de errores
-      this.map.on('error', (e: any) => {
+      this.map.on('error', (e: MapEvent) => {
         console.error('[CarsMapComponent] Map error', e);
       });
     } catch (err) {
@@ -530,7 +654,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // OPTIMIZACIÓN: Si layers ya están creados, solo actualizar data
     if (this.layersCreated && this.map.getSource('cars')) {
       console.log('[CarsMapComponent] Updating existing source data (no layer recreation)');
-      (this.map.getSource('cars') as any).setData(geojsonData);
+      (this.map.getSource('cars') as MapSource).setData(geojsonData);
       return; // No recrear layers
     }
 
@@ -542,7 +666,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     // Agregar source
     if (this.map.getSource('cars')) {
-      (this.map.getSource('cars') as any).setData(geojsonData);
+      (this.map.getSource('cars') as MapSource).setData(geojsonData);
     } else {
       this.map.addSource('cars', {
         type: 'geojson',
@@ -665,22 +789,22 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
 
     // Click en auto individual
-    this.map.on('click', 'car-markers-bg', (e: any) => {
+    this.map.on('click', 'car-markers-bg', (e: MapEvent) => {
       if (!e.features || e.features.length === 0) return;
 
       const feature = e.features[0];
       const carId = feature.properties.carId;
-      const coords = (feature.geometry as any).coordinates;
+      const coords = feature.geometry.coordinates as [number, number];
 
       // Emitir evento de selección para que el componente padre maneje la interacción
-      this.carSelected.emit(carId);
+      this.carSelected.emit(carId as string);
 
       // Hacer zoom suave al auto (opcional pero mejora la UX)
       this.map?.flyTo({
         center: coords,
         zoom: Math.max(this.map.getZoom(), 14), // Aumentado de 13 a 14 - muy cerca del marcador
-        duration: 400,
-        essential: true,
+        speed: 1.2,
+        curve: 1,
       });
 
       // NO mostrar popup aquí - el popup solo aparece cuando se selecciona desde el card
@@ -688,7 +812,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
 
     // Click en cluster - hacer zoom
-    this.map.on('click', 'clusters', (e: any) => {
+    this.map.on('click', 'clusters', (e: MapEvent) => {
       if (!this.map || !e.features || e.features.length === 0) return;
 
       const features = this.map.queryRenderedFeatures(e.point, {
@@ -697,16 +821,16 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
       if (features.length === 0) return;
 
-      const clusterId = features[0].properties.cluster_id;
-      const source = this.map.getSource('cars') as any;
+      const clusterId = features[0].properties.cluster_id as number;
+      const source = this.map.getSource('cars') as MapSource;
 
-      source.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
+      source.getClusterExpansionZoom(clusterId, (err: Error | null, zoom: number) => {
         if (err || !this.map) return;
 
-        this.map.easeTo({
-          center: (features[0].geometry as any).coordinates,
+        this.map.flyTo({
+          center: features[0].geometry.coordinates as [number, number],
           zoom: zoom,
-          duration: 500,
+          speed: 1.2,
         });
       });
     });
@@ -730,7 +854,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   /**
    * Muestra un popup para un auto específico
    */
-  private showCarPopup(feature: any): void {
+  private showCarPopup(feature: MapFeature): void {
     if (!this.map || !this.mapboxgl) return;
 
     // Cerrar popup anterior si existe
@@ -740,7 +864,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
     const props = feature.properties;
-    const coords = (feature.geometry as any).coordinates;
+    const coords = feature.geometry.coordinates as [number, number];
 
     // Crear HTML del popup usando el mismo método existente
     const location: CarMapLocation = {

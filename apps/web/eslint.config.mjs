@@ -48,4 +48,12 @@ export default [
       '@angular-eslint/prefer-inject': 'off', // Allow constructor injection for now
     },
   },
+  // Relaxed rules for test files
+  {
+    files: ['**/*.spec.ts', '**/*.test.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off', // Allow 'any' in tests for mocking
+      '@typescript-eslint/no-unused-vars': 'off', // Allow unused vars in test setup
+    },
+  },
 ];
