@@ -6,7 +6,7 @@ import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SettlementService, Claim, ClaimProcessingResult } from '../../../core/services/settlement.service';
 import { BookingInspection, BookingRiskSnapshot, EligibilityResult, WaterfallResult, FgoParameters, BucketType, InspectionStage } from '../../../core/models/fgo-v1-1.model';
 import { firstValueFrom } from 'rxjs';
-import { RiskMatrixService } from '../../../core/services/risk.service';
+import { RiskMatrixService } from '../../../core/services/risk-matrix.service';
 import { FgoService } from '../../../core/services/fgo.service';
 
 /**
