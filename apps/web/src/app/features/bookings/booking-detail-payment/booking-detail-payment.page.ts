@@ -17,6 +17,7 @@ import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 // Models
 import {
   BucketType,
+  CountryCode,
   BookingInput,
   FxSnapshot,
   RiskSnapshot,
@@ -36,7 +37,7 @@ import {
   formatUsd,
   formatArs,
 } from '../../../core/models/booking-detail-payment.model';
-import type { Car } from '../../../core/models';
+import type { Car, Booking } from '../../../core/models';
 
 // Components
 import { BookingSummaryCardComponent } from './components/booking-summary-card.component';
@@ -91,6 +92,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private paymentsService = inject(PaymentsService);
   private mpGateway = inject(MercadoPagoBookingGateway);
   private fgoService = inject(FgoV1_1Service);
+
+  // Booking ID for update operations
+  private existingBookingId: string | null = null;
 
   // Helper to convert CoverageUpgrade to Booking type
   private mapCoverageUpgrade(upgrade: CoverageUpgrade): 'standard' | 'premium' | 'zero_franchise' {
@@ -317,9 +321,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       carId,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
-      bucket: (bucket as any) || 'standard',
+      bucket: (bucket as BucketType) || 'standard',
       vehicleValueUsd: vehicleValueUsd ? parseInt(vehicleValueUsd, 10) : 15000,
-      country: (country as any) || 'AR',
+      country: (country as CountryCode) || 'AR',
     });
 
     // Guardar en sessionStorage para navegación futura
@@ -390,7 +394,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       }
 
       // Guardar bookingId para UPDATE posterior
-      (this as any).existingBookingId = bookingId;
+      this.existingBookingId = bookingId;
 
       console.log('[Detalle & Pago] Booking existente cargado:', bookingId);
     } catch (err: unknown) {
@@ -642,7 +646,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     this.validationErrors.set([]);
 
     try {
-      const existingBookingId = (this as any).existingBookingId;
+      const existingBookingId = this.existingBookingId;
 
       if (existingBookingId) {
         // FLUJO UPDATE: Booking existente desde /bookings
@@ -818,12 +822,16 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           wallet_lock_id: this.walletLock()?.lockId, // Corregido a snake_case
           status: 'pending',
         });
-      } catch (updateError: any) {
+      } catch (updateError: unknown) {
+        const errorMessage =
+          updateError instanceof Error
+            ? updateError.message
+            : 'Error desconocido al actualizar la reserva';
         console.error('❌ Error actualizando la reserva con detalles de pago:', updateError);
         // Opcional: Considerar cancelar la reserva si la actualización falla
         return {
           ok: false,
-          error: `La reserva se creó pero no se pudo actualizar: ${updateError.message}`,
+          error: `La reserva se creó pero no se pudo actualizar: ${errorMessage}`,
         };
       }
 
@@ -948,7 +956,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * ✅ NUEVO: Procesa pago con wallet
    * Lógica consolidada de checkout-payment.service.ts -> payWithWallet()
    */
-  private async processWalletPayment(booking: any): Promise<void> {
+  private async processWalletPayment(booking: Booking): Promise<void> {
     const bookingId = booking.id;
     const rentalAmount = booking.total_amount || 0;
     const riskSnap = this.riskSnapshot();
@@ -1002,7 +1010,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * ✅ NUEVO: Procesa pago con tarjeta (MercadoPago)
    * Lógica consolidada de checkout-payment.service.ts -> payWithCreditCard()
    */
-  private async processCreditCardPayment(booking: any): Promise<void> {
+  private async processCreditCardPayment(booking: Booking): Promise<void> {
     const bookingId = booking.id;
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;

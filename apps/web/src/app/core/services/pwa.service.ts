@@ -2,11 +2,56 @@ import { Injectable, Optional, signal } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
 
+// Types for experimental PWA APIs
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+interface NavigatorWithExperimentalAPIs extends Navigator {
+  standalone?: boolean;
+  setAppBadge?: (count: number) => Promise<void>;
+  clearAppBadge?: () => Promise<void>;
+  contacts?: {
+    select: (properties: string[], options: { multiple: boolean }) => Promise<ContactInfo[]>;
+  };
+  wakeLock?: {
+    request: (type: 'screen') => Promise<WakeLockSentinel>;
+  };
+}
+
+interface ContactInfo {
+  name?: string[];
+  email?: string[];
+  tel?: string[];
+}
+
+interface WakeLockSentinel extends EventTarget {
+  released: boolean;
+  type: 'screen';
+  release: () => Promise<void>;
+}
+
+interface ServiceWorkerRegistrationWithPeriodicSync extends ServiceWorkerRegistration {
+  periodicSync?: {
+    register: (tag: string, options: { minInterval: number }) => Promise<void>;
+  };
+}
+
+interface ScreenOrientationWithLock extends ScreenOrientation {
+  lock?: (orientation: 'portrait' | 'landscape') => Promise<void>;
+  unlock?: () => void;
+}
+
+interface WindowWithGtag extends Window {
+  gtag?: (command: string, eventName: string, params: Record<string, string>) => void;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class PwaService {
-  private deferredPrompt: any = null;
+  private deferredPrompt: BeforeInstallPromptEvent | null = null;
   readonly installable = signal(false);
   readonly updateAvailable = signal(false);
   readonly isStandalone = signal(false);
@@ -23,7 +68,7 @@ export class PwaService {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       // Stash the event so it can be triggered later
-      this.deferredPrompt = e;
+      this.deferredPrompt = e as BeforeInstallPromptEvent;
       // Update installable state
       this.installable.set(true);
 
@@ -46,7 +91,7 @@ export class PwaService {
     // Check if app is running in standalone mode
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone ||
+      (window.navigator as NavigatorWithExperimentalAPIs).standalone ||
       document.referrer.includes('android-app://');
 
     this.isStandalone.set(isStandalone);
@@ -191,8 +236,9 @@ export class PwaService {
    */
   private trackInstallation(): void {
     // Opcional: enviar evento a Google Analytics, Mixpanel, etc.
-    if ((window as any).gtag) {
-      (window as any).gtag('event', 'pwa_install', {
+    const windowWithGtag = window as WindowWithGtag;
+    if (windowWithGtag.gtag) {
+      windowWithGtag.gtag('event', 'pwa_install', {
         event_category: 'engagement',
         event_label: 'PWA Installation',
       });
@@ -222,13 +268,14 @@ export class PwaService {
    * Badging API - Set app icon badge count
    */
   async setAppBadge(count: number): Promise<void> {
-    if (!('setAppBadge' in navigator)) {
+    const nav = navigator as NavigatorWithExperimentalAPIs;
+    if (!nav.setAppBadge) {
       console.warn('⚠️ PWA: Badging API not supported');
       return;
     }
 
     try {
-      await (navigator as any).setAppBadge(count);
+      await nav.setAppBadge(count);
       console.log(`✅ PWA: Badge set to ${count}`);
     } catch (error) {
       console.error('❌ PWA: Error setting badge', error);
@@ -239,12 +286,13 @@ export class PwaService {
    * Badging API - Clear app icon badge
    */
   async clearAppBadge(): Promise<void> {
-    if (!('clearAppBadge' in navigator)) {
+    const nav = navigator as NavigatorWithExperimentalAPIs;
+    if (!nav.clearAppBadge) {
       return;
     }
 
     try {
-      await (navigator as any).clearAppBadge();
+      await nav.clearAppBadge();
       console.log('✅ PWA: Badge cleared');
     } catch (error) {
       console.error('❌ PWA: Error clearing badge', error);
@@ -257,14 +305,15 @@ export class PwaService {
   async pickContacts(
     properties: string[] = ['name', 'email', 'tel'],
     multiple = true,
-  ): Promise<any[] | null> {
-    if (!('contacts' in navigator)) {
+  ): Promise<ContactInfo[] | null> {
+    const nav = navigator as NavigatorWithExperimentalAPIs;
+    if (!nav.contacts) {
       console.warn('⚠️ PWA: Contact Picker API not supported');
       return null;
     }
 
     try {
-      const contacts = await (navigator as any).contacts.select(properties, {
+      const contacts = await nav.contacts.select(properties, {
         multiple,
       });
       console.log(`✅ PWA: ${contacts.length} contacts selected`);
@@ -280,14 +329,15 @@ export class PwaService {
   /**
    * Wake Lock API - Keep screen awake
    */
-  async requestWakeLock(): Promise<any | null> {
-    if (!('wakeLock' in navigator)) {
+  async requestWakeLock(): Promise<WakeLockSentinel | null> {
+    const nav = navigator as NavigatorWithExperimentalAPIs;
+    if (!nav.wakeLock) {
       console.warn('⚠️ PWA: Wake Lock API not supported');
       return null;
     }
 
     try {
-      const wakeLock = await (navigator as any).wakeLock.request('screen');
+      const wakeLock = await nav.wakeLock.request('screen');
       console.log('✅ PWA: Wake lock activated');
 
       // Listen for release
@@ -339,7 +389,7 @@ export class PwaService {
    * Screen Orientation API - Lock orientation
    */
   async lockOrientation(orientation: 'portrait' | 'landscape'): Promise<boolean> {
-    const screenOrientation = screen.orientation as any;
+    const screenOrientation = screen.orientation as ScreenOrientationWithLock;
     if (!screenOrientation?.lock) {
       console.warn('⚠️ PWA: Screen Orientation API not supported');
       return false;
@@ -359,7 +409,7 @@ export class PwaService {
    * Screen Orientation API - Unlock orientation
    */
   unlockOrientation(): void {
-    const screenOrientation = screen.orientation as any;
+    const screenOrientation = screen.orientation as ScreenOrientationWithLock;
     if (screenOrientation?.unlock) {
       screenOrientation.unlock();
       console.log('🔓 PWA: Orientation unlocked');
@@ -375,14 +425,15 @@ export class PwaService {
     }
 
     try {
-      const registration = await navigator.serviceWorker.ready;
+      const registration =
+        (await navigator.serviceWorker.ready) as ServiceWorkerRegistrationWithPeriodicSync;
 
-      if (!('periodicSync' in registration)) {
+      if (!registration.periodicSync) {
         console.warn('⚠️ PWA: Periodic Background Sync not supported');
         return false;
       }
 
-      await (registration as any).periodicSync.register(tag, { minInterval });
+      await registration.periodicSync.register(tag, { minInterval });
       console.log(`✅ PWA: Periodic sync registered: ${tag}`);
       return true;
     } catch (error) {
@@ -424,7 +475,7 @@ export class PwaService {
     periodicBackgroundSync: boolean;
     webShare: boolean;
   } {
-    const screenOrientation = screen.orientation as any;
+    const screenOrientation = screen.orientation as ScreenOrientationWithLock;
     return {
       badging: this.isBadgingSupported(),
       contactPicker: this.isContactPickerSupported(),
