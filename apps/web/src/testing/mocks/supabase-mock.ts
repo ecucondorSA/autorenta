@@ -1,3 +1,31 @@
+// Type-safe interfaces for test mocks
+interface SupabaseResponse<T = unknown> {
+  data: T | null;
+  error: { message: string; code?: string } | null;
+}
+
+interface QueryBuilder {
+  select: jasmine.Spy;
+  eq: jasmine.Spy;
+  neq: jasmine.Spy;
+  gt: jasmine.Spy;
+  gte: jasmine.Spy;
+  lt: jasmine.Spy;
+  lte: jasmine.Spy;
+  like: jasmine.Spy;
+  ilike: jasmine.Spy;
+  in: jasmine.Spy;
+  is: jasmine.Spy;
+  order: jasmine.Spy;
+  limit: jasmine.Spy;
+  range: jasmine.Spy;
+  single: jasmine.Spy;
+  maybeSingle: jasmine.Spy;
+  then: <T>(
+    resolve: (value: SupabaseResponse<T[]>) => void,
+  ) => Promise<SupabaseResponse<T[]>>;
+}
+
 /**
  * Mock factory for Supabase client used in tests
  * Provides pre-configured mocks for common RPC calls
@@ -9,8 +37,8 @@ export function createSupabaseMock() {
   const storageSpy = jasmine.createSpyObj('storage', ['from']);
 
   // Create a chainable query builder mock
-  const createQueryBuilder = () => {
-    const builder: any = {};
+  const createQueryBuilder = (): QueryBuilder => {
+    const builder = {} as QueryBuilder;
 
     // Define methods that return builder
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
@@ -35,9 +63,9 @@ export function createSupabaseMock() {
       .and.returnValue(Promise.resolve({ data: null, error: null }));
 
     // Make builder thenable for awaiting
-    builder.then = (resolve: any) => {
-      resolve({ data: [], error: null });
-      return Promise.resolve({ data: [], error: null });
+    builder.then = <T>(resolve: (value: SupabaseResponse<T[]>) => void) => {
+      resolve({ data: [] as T[], error: null });
+      return Promise.resolve({ data: [] as T[], error: null });
     };
 
     return builder;
@@ -57,12 +85,15 @@ export function createSupabaseMock() {
   return mock;
 }
 
+// Type for RPC parameters (varies by function)
+type RPCParams = Record<string, unknown>;
+
 /**
  * Configure RPC responses for availability tests
  */
 export function mockAvailabilityRPCs(supabaseMock: ReturnType<typeof createSupabaseMock>) {
   // Mock get_available_cars RPC
-  supabaseMock.rpc.and.callFake((functionName: string, params?: any) => {
+  supabaseMock.rpc.and.callFake((functionName: string, params?: RPCParams) => {
     if (functionName === 'get_available_cars') {
       // Define mock car data - match actual RPC response structure
       const allCars = [
@@ -128,7 +159,7 @@ export function mockAvailabilityRPCs(supabaseMock: ReturnType<typeof createSupab
  * Configure RPC responses for booking logic tests
  */
 export function mockBookingRPCs(supabaseMock: ReturnType<typeof createSupabaseMock>) {
-  supabaseMock.rpc.and.callFake((functionName: string, params?: any) => {
+  supabaseMock.rpc.and.callFake((functionName: string, params?: RPCParams) => {
     if (functionName === 'request_booking' || functionName === 'create_booking_with_payment') {
       // Validate UUID format
       const carId = params?.p_car_id || params?.car_id;
@@ -247,7 +278,7 @@ export function mockPaymentRPCs(supabaseMock: ReturnType<typeof createSupabaseMo
  * Use this for most tests that need full coverage
  */
 export function mockAllRPCs(supabaseMock: ReturnType<typeof createSupabaseMock>) {
-  supabaseMock.rpc.and.callFake((functionName: string, params?: any) => {
+  supabaseMock.rpc.and.callFake((functionName: string, params?: RPCParams) => {
     // Availability RPCs
     if (functionName === 'get_available_cars') {
       const allCars = [
