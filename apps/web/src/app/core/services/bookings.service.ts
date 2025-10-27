@@ -115,19 +115,30 @@ export class BookingsService {
     const booking = data as Booking;
 
     // my_bookings es una vista sin metadatos de FK, por lo que PostgREST
-    // no puede resolver joins automáticos; cargamos la cobertura aparte.
+    // no puede resolver joins automáticos; cargamos la cobertura y su póliza aparte.
     if (booking?.insurance_coverage_id) {
       try {
         const { data: coverage, error: coverageError } = await this.supabase
           .from('booking_insurance_coverage')
-          .select(`
-            *,
-            policy:policy_id (*)
-          `)
+          .select('*')
           .eq('id', booking.insurance_coverage_id)
           .single();
 
         if (!coverageError && coverage) {
+          if (coverage.policy_id) {
+            const { data: policy, error: policyError } = await this.supabase
+              .from('insurance_policies')
+              .select('*')
+              .eq('id', coverage.policy_id)
+              .single();
+
+            if (!policyError && policy) {
+              (coverage as any).policy = policy;
+            } else if (policyError) {
+              console.warn('⚠️ No se pudo cargar la póliza de seguro:', policyError.message);
+            }
+          }
+
           (booking as Booking).insurance_coverage = coverage;
         } else if (coverageError) {
           console.warn('⚠️ No se pudo cargar la cobertura de seguro:', coverageError.message);
