@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -68,56 +68,127 @@ export class CarDetailPage implements OnInit {
   });
 
   readonly totalPrice = computed(() => {
+    console.log('🔍 [totalPrice] === COMPUTATION START ===');
+    
     const range = this.dateRange();
     const car = this.car();
+    
+    console.log('🔍 [totalPrice] Step 1 - Got values:', {
+      range: range,
+      rangeFrom: range?.from,
+      rangeTo: range?.to,
+      car: car ? { id: car.id, title: car.title, price_per_day: car.price_per_day } : null
+    });
     
     // Check if we have valid dates (not null and not empty strings)
     const hasValidFrom = range.from && range.from.trim() !== '';
     const hasValidTo = range.to && range.to.trim() !== '';
     
+    console.log('🔍 [totalPrice] Step 2 - Validation checks:', {
+      'range.from': range.from,
+      'range.from type': typeof range.from,
+      'range.from truthy': !!range.from,
+      'hasValidFrom': hasValidFrom,
+      'range.to': range.to,
+      'range.to type': typeof range.to,
+      'range.to truthy': !!range.to,
+      'hasValidTo': hasValidTo,
+      'hasCar': !!car
+    });
+    
     if (!hasValidFrom || !hasValidTo || !car) {
-      console.log('⚠️ Missing data:', { 
+      console.error('❌ [totalPrice] FAILED - Missing required data:', { 
         from: range.from,
         to: range.to,
         hasValidFrom, 
         hasValidTo, 
-        hasCar: !!car 
+        hasCar: !!car,
+        reason: !hasValidFrom ? 'Invalid FROM date' : !hasValidTo ? 'Invalid TO date' : 'Missing car'
       });
+      console.log('🔍 [totalPrice] === COMPUTATION END (NULL) ===');
       return null;
     }
+    
+    console.log('🔍 [totalPrice] Step 3 - Validations PASSED');
     
     // Convert price_per_day to number if it's a string
     const pricePerDay = typeof car.price_per_day === 'string' 
       ? parseFloat(car.price_per_day) 
       : car.price_per_day;
     
+    console.log('🔍 [totalPrice] Step 4 - Price conversion:', {
+      original: car.price_per_day,
+      originalType: typeof car.price_per_day,
+      converted: pricePerDay,
+      convertedType: typeof pricePerDay,
+      isNaN: isNaN(pricePerDay),
+      isPositive: pricePerDay > 0
+    });
+    
     // Validate price_per_day exists and is a valid number
     if (!pricePerDay || isNaN(pricePerDay) || pricePerDay <= 0) {
-      console.error('❌ Invalid price_per_day:', {
+      console.error('❌ [totalPrice] FAILED - Invalid price_per_day:', {
         original: car.price_per_day,
         converted: pricePerDay,
         type: typeof car.price_per_day,
-        carId: car.id
+        carId: car.id,
+        reason: !pricePerDay ? 'Falsy value' : isNaN(pricePerDay) ? 'NaN' : 'Not positive'
       });
+      console.log('🔍 [totalPrice] === COMPUTATION END (NULL) ===');
       return null;
     }
+    
+    console.log('🔍 [totalPrice] Step 5 - Price validation PASSED');
     
     // TypeScript knows that range.from and range.to are strings here
     const start = new Date(range.from!);
     const end = new Date(range.to!);
+    
+    console.log('🔍 [totalPrice] Step 6 - Date objects created:', {
+      startDate: start,
+      startTime: start.getTime(),
+      startISO: start.toISOString(),
+      endDate: end,
+      endTime: end.getTime(),
+      endISO: end.toISOString()
+    });
+    
     const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
     
+    console.log('🔍 [totalPrice] Step 7 - Date diff calculation:', {
+      startTime: start.getTime(),
+      endTime: end.getTime(),
+      timeDiff: end.getTime() - start.getTime(),
+      timeDiffInDays: (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24),
+      diff: diff,
+      isPositive: diff > 0
+    });
+    
     if (diff <= 0) {
-      console.warn('⚠️ Invalid date range:', {
+      console.error('❌ [totalPrice] FAILED - Invalid date range:', {
         from: range.from,
         to: range.to,
-        diff: diff
+        start: start.toISOString(),
+        end: end.toISOString(),
+        diff: diff,
+        reason: 'Date difference is not positive'
       });
+      console.log('🔍 [totalPrice] === COMPUTATION END (NULL) ===');
       return null;
     }
     
+    console.log('🔍 [totalPrice] Step 8 - Date diff validation PASSED');
+    
     const total = diff * pricePerDay;
-    console.log(`💰 Price calculation: ${diff} days × $${pricePerDay} = $${total}`);
+    
+    console.log('✅ [totalPrice] SUCCESS - Calculation complete:', {
+      days: diff,
+      pricePerDay: pricePerDay,
+      total: total,
+      formula: `${diff} days × $${pricePerDay} = $${total}`
+    });
+    console.log('🔍 [totalPrice] === COMPUTATION END (SUCCESS) ===');
+    
     return total;
   });
 
@@ -176,12 +247,46 @@ export class CarDetailPage implements OnInit {
     private readonly router: Router,
     readonly pricingService: DynamicPricingService,
     private readonly fxService: FxService, // ✅ NUEVO: Para tasas de cambio actuales
-  ) {}
+  ) {
+    // Debug effect to track signal changes
+    effect(() => {
+      const range = this.dateRange();
+      console.log('🔍 [Effect] dateRange changed:', {
+        from: range.from,
+        to: range.to,
+        timestamp: new Date().toISOString()
+      });
+    });
+    
+    effect(() => {
+      const car = this.car();
+      if (car) {
+        console.log('🔍 [Effect] car changed:', {
+          id: car.id,
+          price_per_day: car.price_per_day,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+    
+    effect(() => {
+      const total = this.totalPrice();
+      console.log('🔍 [Effect] totalPrice changed:', {
+        total: total,
+        isNull: total === null,
+        timestamp: new Date().toISOString()
+      });
+    });
+  }
 
   ngOnInit(): void {
+    console.log('🔍 [CarDetail] === COMPONENT INITIALIZED ===');
     void this.loadCar();
     void this.loadWalletBalance();
     void this.loadCurrentFxRate(); // ✅ NUEVO: Cargar tasa de cambio actual
+    
+    // Debug: Watch for changes in dateRange signal
+    console.log('🔍 [CarDetail] Setting up dateRange watcher');
   }
 
   /**
@@ -227,13 +332,20 @@ export class CarDetailPage implements OnInit {
       if (!car) {
         this.error.set('Auto no disponible');
       } else {
-        console.log('🚗 Auto cargado:', {
+        console.log('✅ [CarDetail] Auto cargado exitosamente');
+        console.log('🔍 [CarDetail] Car data FULL DUMP:', {
           id: car.id,
           title: car.title,
           price_per_day: car.price_per_day,
+          price_per_day_type: typeof car.price_per_day,
           currency: car.currency,
-          priceType: typeof car.price_per_day
+          brand: car.brand,
+          model: car.model,
+          year: car.year,
+          status: car.status,
+          ALL_FIELDS: JSON.stringify(car, null, 2)
         });
+        
         this.car.set(car);
 
         // Update SEO meta tags
@@ -289,13 +401,36 @@ export class CarDetailPage implements OnInit {
   }
 
   onRangeChange(range: DateRange): void {
-    console.log('📅 Date range changed:', {
+    console.log('🔍 [CarDetail] onRangeChange called:', {
+      range: range,
       from: range.from,
       to: range.to,
-      fromDate: range.from ? new Date(range.from) : null,
-      toDate: range.to ? new Date(range.to) : null
+      fromType: typeof range.from,
+      toType: typeof range.to,
+      fromNull: range.from === null,
+      toNull: range.to === null,
+      fromEmpty: range.from === '',
+      toEmpty: range.to === ''
     });
+    
+    console.log('🔍 [CarDetail] Current dateRange before update:', {
+      current: this.dateRange()
+    });
+    
     this.dateRange.set(range);
+    
+    console.log('🔍 [CarDetail] dateRange after update:', {
+      updated: this.dateRange(),
+      sameReference: this.dateRange() === range
+    });
+    
+    // Force check totalPrice computation
+    const total = this.totalPrice();
+    console.log('🔍 [CarDetail] totalPrice after range change:', {
+      total: total,
+      isNull: total === null,
+      type: typeof total
+    });
   }
 
   onPaymentMethodChange(event: {

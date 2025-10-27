@@ -31,20 +31,50 @@ export class DateRangePickerComponent {
   readonly to = signal<string | null>(this.initialTo);
 
   onFromChange(value: string): void {
+    console.log('🔍 [DateRangePicker] onFromChange called:', {
+      rawValue: value,
+      valueType: typeof value,
+      valueLength: value?.length,
+      isEmpty: value === '',
+      isNull: value === null,
+      isUndefined: value === undefined
+    });
+    
     // Convert empty string to null
     const newValue = value && value.trim() !== '' ? value : null;
+    console.log('🔍 [DateRangePicker] From value converted:', {
+      oldValue: this.from(),
+      newValue: newValue
+    });
+    
     this.from.set(newValue);
     this.emit();
   }
 
   onToChange(value: string): void {
+    console.log('🔍 [DateRangePicker] onToChange called:', {
+      rawValue: value,
+      valueType: typeof value,
+      valueLength: value?.length,
+      isEmpty: value === '',
+      isNull: value === null,
+      isUndefined: value === undefined
+    });
+    
     // Convert empty string to null
     const newValue = value && value.trim() !== '' ? value : null;
+    console.log('🔍 [DateRangePicker] To value converted:', {
+      oldValue: this.to(),
+      newValue: newValue
+    });
+    
     this.to.set(newValue);
     this.emit();
   }
 
   private emit(): void {
-    this.rangeChange.emit({ from: this.from(), to: this.to() });
+    const range = { from: this.from(), to: this.to() };
+    console.log('🔍 [DateRangePicker] Emitting range:', range);
+    this.rangeChange.emit(range);
   }
 }
