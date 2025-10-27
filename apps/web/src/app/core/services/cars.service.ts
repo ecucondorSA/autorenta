@@ -507,23 +507,41 @@ export class CarsService {
     bookings?: Array<{ id: string; status: string; start_date: string; end_date: string }>;
   }> {
     try {
-      const { data, error } = await this.supabase
+      // Verificar TODAS las reservas (incluidas completadas y canceladas)
+      // porque el foreign key no tiene ON DELETE CASCADE
+      const { data: allBookings, error: allError } = await this.supabase
         .from('bookings')
-        .select('id, status, start_date, end_date')
-        .eq('car_id', carId)
-        .in('status', ['pending', 'confirmed', 'in_progress'])
-        .order('start_date', { ascending: true });
+        .select('id, status')
+        .eq('car_id', carId);
 
-      if (error) {
-        console.error('Error checking active bookings:', error);
-        throw error;
+      if (allError) {
+        console.error('Error checking bookings:', allError);
+        throw allError;
       }
 
-      const activeBookings = data || [];
+      // Si hay CUALQUIER reserva, no permitir eliminar
+      if (allBookings && allBookings.length > 0) {
+        // Contar activas para el mensaje
+        const { data: activeBookings, error: activeError } = await this.supabase
+          .from('bookings')
+          .select('id, status, start_date, end_date')
+          .eq('car_id', carId)
+          .in('status', ['pending', 'confirmed', 'in_progress'])
+          .order('start_date', { ascending: true });
+
+        if (activeError) throw activeError;
+
+        return {
+          hasActive: true,
+          count: allBookings.length,
+          bookings: activeBookings || []
+        };
+      }
+
       return {
-        hasActive: activeBookings.length > 0,
-        count: activeBookings.length,
-        bookings: activeBookings
+        hasActive: false,
+        count: 0,
+        bookings: []
       };
     } catch (error) {
       console.error('Error en hasActiveBookings:', error);

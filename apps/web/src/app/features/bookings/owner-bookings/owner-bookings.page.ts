@@ -136,7 +136,7 @@ export class OwnerBookingsPage implements OnInit {
     
     this.processingAction.set(bookingId);
     try {
-      await this.bookingsService.updateBookingStatus(bookingId, 'in_progress');
+      await this.bookingsService.updateBooking(bookingId, { status: 'in_progress' });
       await this.loadBookings();
       alert('✅ Alquiler iniciado correctamente');
     } catch (error) {
@@ -152,7 +152,7 @@ export class OwnerBookingsPage implements OnInit {
     
     this.processingAction.set(bookingId);
     try {
-      await this.bookingsService.updateBookingStatus(bookingId, 'completed');
+      await this.bookingsService.updateBooking(bookingId, { status: 'completed' });
       await this.loadBookings();
       alert('✅ Alquiler finalizado correctamente');
     } catch (error) {
@@ -164,12 +164,12 @@ export class OwnerBookingsPage implements OnInit {
   }
 
   async onCancelBooking(bookingId: string): Promise<void> {
-    const reason = prompt('Motivo de cancelación (opcional):');
-    if (reason === null) return; // Usuario canceló el prompt
+    const shouldCancel = confirm('¿Estás seguro de cancelar esta reserva?');
+    if (!shouldCancel) return;
     
     this.processingAction.set(bookingId);
     try {
-      await this.bookingsService.cancelBooking(bookingId, reason || undefined);
+      await this.bookingsService.cancelBooking(bookingId, false);
       await this.loadBookings();
       alert('✅ Reserva cancelada');
     } catch (error) {

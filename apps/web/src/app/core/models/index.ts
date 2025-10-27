@@ -249,6 +249,7 @@ export interface Car {
   deposit_required?: boolean;
   deposit_amount?: number;
   insurance_included?: boolean;
+  auto_approval?: boolean; // ✅ NUEVO: Auto-aprobación de reservas
   min_rental_days?: number;
   max_rental_days?: number;
   terms_and_conditions?: string;

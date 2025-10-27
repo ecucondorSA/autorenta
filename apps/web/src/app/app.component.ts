@@ -11,6 +11,7 @@ import { PwaService } from './core/services/pwa.service';
 import { TourService } from './core/services/tour.service';
 import { GuidedTourService } from './core/guided-tour';
 import { LocaleManagerService } from './core/services/locale-manager.service';
+import { PushNotificationService } from './core/services/push-notification.service';
 import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
 import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
 import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
@@ -61,6 +62,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   private readonly tourService = inject(TourService); // OLD - Keeping for compatibility
   private readonly guidedTour = inject(GuidedTourService); // NEW
   private readonly localeManager = inject(LocaleManagerService);
+  private readonly pushNotificationService = inject(PushNotificationService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
@@ -86,6 +88,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initializeTheme();
     this.initializeLayoutWatcher();
     this.loadUserProfile();
+    this.pushNotificationService.initializePushNotifications();
   }
 
   ngAfterViewInit(): void {

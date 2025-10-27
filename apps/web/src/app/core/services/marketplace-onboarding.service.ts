@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { SupabaseClientService } from './supabase-client.service';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -64,7 +64,7 @@ export interface MarketplaceStatus {
   providedIn: 'root'
 })
 export class MarketplaceOnboardingService {
-  private readonly supabase = inject(SupabaseClient);
+  private readonly supabase = inject(SupabaseClientService).getClient();
 
   // URLs de Mercado Pago
   private readonly MP_OAUTH_URL = 'https://auth.mercadopago.com.ar/authorization';

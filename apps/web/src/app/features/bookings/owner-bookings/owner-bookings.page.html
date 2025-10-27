@@ -50,7 +50,7 @@
                   <div class="flex items-center gap-3 mb-2">
                     <span class="text-2xl">{{ statusIcon(booking) }}</span>
                     <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
-                      {{ booking.car?.brand }} {{ booking.car?.model }}
+                      Vehículo ID: {{ booking.car_id }}
                     </h3>
                     <span class="px-2 py-1 text-xs font-medium rounded-full" [ngClass]="statusBadgeClass(booking)">
                       {{ statusLabel(booking) }}
