@@ -74,7 +74,7 @@ export class SupabaseClientService {
 
     // Log para debug en producción
     console.log('🔍 [SUPABASE CLIENT] Inicializando con URL:', supabaseUrl);
-    console.log('🔌 [SUPABASE CLIENT] Connection Pooling: ENABLED (transaction mode)');
+    console.log('🔌 [SUPABASE CLIENT] Connection Pooling: Configurado en connection string');
 
     this.client = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
@@ -85,15 +85,8 @@ export class SupabaseClientService {
       db: {
         schema: 'public',
       },
-      global: {
-        headers: {
-          // ⚡ HABILITAR CONNECTION POOLING
-          // Transaction mode: cada query obtiene una conexión del pool
-          // Mejor para queries cortos y APIs REST
-          // Mejora performance ~70% y soporta 200+ usuarios concurrentes
-          'x-supabase-pooling-mode': 'transaction',
-        },
-      },
+      // ⚠️ REMOVED: global pooling header causes CORS errors with Edge Functions
+      // Pooling should be handled by Supabase connection string configuration instead
       realtime: {
         params: {
           // Limitar eventos realtime para no saturar cliente

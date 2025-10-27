@@ -103,13 +103,7 @@ export class BookingsService {
   async getBookingById(bookingId: string): Promise<Booking | null> {
     const { data, error } = await this.supabase
       .from('my_bookings')
-      .select(`
-        *,
-        insurance_coverage:insurance_coverage_id (
-          *,
-          policy:policy_id (*)
-        )
-      `)
+      .select('*')
       .eq('id', bookingId)
       .single();
 
@@ -117,7 +111,33 @@ export class BookingsService {
       if (error.code === 'PGRST116') return null;
       throw error;
     }
-    return data as Booking;
+
+    const booking = data as Booking;
+
+    // my_bookings es una vista sin metadatos de FK, por lo que PostgREST
+    // no puede resolver joins automáticos; cargamos la cobertura aparte.
+    if (booking?.insurance_coverage_id) {
+      try {
+        const { data: coverage, error: coverageError } = await this.supabase
+          .from('booking_insurance_coverage')
+          .select(`
+            *,
+            policy:policy_id (*)
+          `)
+          .eq('id', booking.insurance_coverage_id)
+          .single();
+
+        if (!coverageError && coverage) {
+          (booking as Booking).insurance_coverage = coverage;
+        } else if (coverageError) {
+          console.warn('⚠️ No se pudo cargar la cobertura de seguro:', coverageError.message);
+        }
+      } catch (coverageException) {
+        console.warn('⚠️ Excepción cargando cobertura de seguro', coverageException);
+      }
+    }
+
+    return booking;
   }
 
   /**
