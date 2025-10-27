@@ -1,14 +1,11 @@
 import { Injectable, signal } from '@angular/core';
-import { of, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
   EligibilityResult,
   WaterfallResult,
   WaterfallBreakdown,
-  BookingInspection,
-  InspectionPhoto,
   InspectionStage,
-  BucketType,
   CurrencyCode,
   centsToUsd,
   usdToCents,

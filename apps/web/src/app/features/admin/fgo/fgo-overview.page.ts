@@ -195,7 +195,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           this.recentMovements = movements;
           this.loadingMovements = false;
         },
-        error: (error: any) => {
+        error: (error: unknown) => {
           console.error('Error loading movements:', error);
           this.loadingMovements = false;
         },
@@ -225,7 +225,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
             this.refreshData();
           }
         },
-        error: (error: any) => {
+        error: (error: unknown) => {
           console.error('Error recalculating metrics:', error);
         },
       });
@@ -352,8 +352,8 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
 
       const result = await firstValueFrom(
         this.fgoService.transferBetweenSubfunds({
-          fromSubfund: this.transferForm.fromSubfund as any,
-          toSubfund: this.transferForm.toSubfund as any,
+          fromSubfund: this.transferForm.fromSubfund,
+          toSubfund: this.transferForm.toSubfund,
           amountCents: Math.round(this.transferForm.amount * 100),
           reason: this.transferForm.reason,
           adminId,
