@@ -140,7 +140,7 @@ export class ExchangeRateService {
     // Si no hay cache, obtener platform rate primero (que actualiza el cache)
     await this.getPlatformRate();
 
-    return this.lastRate()?.binance_rate || this.FALLBACK_RATE;
+    throw new Error("No se pudo obtener tasa de Binance");
   }
 
   /**
