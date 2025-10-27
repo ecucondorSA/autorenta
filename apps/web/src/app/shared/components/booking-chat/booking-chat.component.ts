@@ -98,9 +98,11 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     if (this.typingTimeout) {
       clearTimeout(this.typingTimeout);
     }
-    // Stop typing on unmount
+    // Stop typing on unmount (non-blocking)
     if (this.currentUserId()) {
-      this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false);
+      this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false).catch(() => {
+        // Ignore errors during cleanup
+      });
     }
   }
 
@@ -126,9 +128,11 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     this.sending.set(true);
     this.error.set(null);
 
-    // Stop typing
+    // Stop typing (no await - don't block send)
     if (this.currentUserId()) {
-      await this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false);
+      this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false).catch(() => {
+        // Ignore typing errors
+      });
     }
 
     try {
@@ -141,8 +145,7 @@ export class BookingChatComponent implements OnInit, OnDestroy {
       // Clear input
       this.newMessage.set('');
 
-      // Reload messages
-      await this.loadMessages();
+      // Don't reload - realtime will update
     } catch (err) {
       console.error('Error sending message:', err);
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
@@ -154,8 +157,10 @@ export class BookingChatComponent implements OnInit, OnDestroy {
   onInputChange(): void {
     if (!this.currentUserId()) return;
 
-    // Set typing status
-    this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, true);
+    // Set typing status (non-blocking)
+    this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, true).catch(() => {
+      // Typing is not critical, ignore errors
+    });
 
     // Clear previous timeout
     if (this.typingTimeout) {
@@ -165,7 +170,9 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     // Stop typing after 3 seconds of inactivity
     this.typingTimeout = setTimeout(() => {
       if (this.currentUserId()) {
-        this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false);
+        this.messagesService.setTyping(this.bookingId(), this.currentUserId()!, false).catch(() => {
+          // Ignore errors
+        });
       }
     }, 3000);
   }
