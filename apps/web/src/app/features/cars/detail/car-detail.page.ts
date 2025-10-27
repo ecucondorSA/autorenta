@@ -70,11 +70,35 @@ export class CarDetailPage implements OnInit {
   readonly totalPrice = computed(() => {
     const range = this.dateRange();
     const car = this.car();
-    if (!range.from || !range.to || !car) return null;
+    
+    // Check if we have valid dates (not null and not empty strings)
+    const hasValidFrom = range.from && range.from.trim() !== '';
+    const hasValidTo = range.to && range.to.trim() !== '';
+    
+    if (!hasValidFrom || !hasValidTo || !car) {
+      console.log('⚠️ Missing data:', { 
+        from: range.from,
+        to: range.to,
+        hasValidFrom, 
+        hasValidTo, 
+        hasCar: !!car 
+      });
+      return null;
+    }
+    
+    // Convert price_per_day to number if it's a string
+    const pricePerDay = typeof car.price_per_day === 'string' 
+      ? parseFloat(car.price_per_day) 
+      : car.price_per_day;
     
     // Validate price_per_day exists and is a valid number
-    if (!car.price_per_day || typeof car.price_per_day !== 'number' || car.price_per_day <= 0) {
-      console.error('❌ Invalid price_per_day:', car.price_per_day, 'for car:', car.id);
+    if (!pricePerDay || isNaN(pricePerDay) || pricePerDay <= 0) {
+      console.error('❌ Invalid price_per_day:', {
+        original: car.price_per_day,
+        converted: pricePerDay,
+        type: typeof car.price_per_day,
+        carId: car.id
+      });
       return null;
     }
     
@@ -83,12 +107,16 @@ export class CarDetailPage implements OnInit {
     const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
     
     if (diff <= 0) {
-      console.warn('⚠️ Invalid date range, diff:', diff);
+      console.warn('⚠️ Invalid date range:', {
+        from: range.from,
+        to: range.to,
+        diff: diff
+      });
       return null;
     }
     
-    const total = diff * car.price_per_day;
-    console.log(`💰 Price calculation: ${diff} days × $${car.price_per_day} = $${total}`);
+    const total = diff * pricePerDay;
+    console.log(`💰 Price calculation: ${diff} days × $${pricePerDay} = $${total}`);
     return total;
   });
 
@@ -260,6 +288,12 @@ export class CarDetailPage implements OnInit {
   }
 
   onRangeChange(range: DateRange): void {
+    console.log('📅 Date range changed:', {
+      from: range.from,
+      to: range.to,
+      fromDate: range.from ? new Date(range.from) : null,
+      toDate: range.to ? new Date(range.to) : null
+    });
     this.dateRange.set(range);
   }
 
