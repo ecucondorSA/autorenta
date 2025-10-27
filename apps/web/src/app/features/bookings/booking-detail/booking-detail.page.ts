@@ -21,7 +21,6 @@ import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confir
 import { MetaService } from '../../../core/services/meta.service';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
-import { InsuranceSummaryCardComponent } from '../../../shared/components/insurance-summary-card/insurance-summary-card.component';
 
 /**
  * BookingDetailPage
@@ -47,7 +46,6 @@ import { InsuranceSummaryCardComponent } from '../../../shared/components/insura
     TranslateModule,
     BookingStatusComponent,
     ReviewManagementComponent,
-    InsuranceSummaryCardComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
