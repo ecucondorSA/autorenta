@@ -325,11 +325,7 @@ export class ProfileExpandedPage implements OnInit {
   }
 
   private createDriverChecklist(): VerificationChecklistItem[] {
-    const verification = this.driverVerification();
-    const missingDocs = verification?.missing_docs ?? [];
-
     const licenseStatus = this.getDocumentStatusForKinds('driver_license');
-    const selfieStatus = this.getDocumentStatusForKinds('selfie');
 
     return [
       {
@@ -341,15 +337,6 @@ export class ProfileExpandedPage implements OnInit {
         completed: licenseStatus.completed,
         missingKey: 'licencia',
         notes: licenseStatus.notes ?? null,
-      },
-      {
-        id: 'driver_selfie',
-        label: 'Selfie con licencia (recomendado)',
-        description: 'Acelera la verificación.',
-        statusType: 'document',
-        status: selfieStatus.status,
-        completed: selfieStatus.completed,
-        notes: selfieStatus.notes ?? null,
       },
     ];
   }

@@ -539,33 +539,6 @@
           </ul>
         </div>
 
-        <!-- Document Upload Section -->
-        <div class="mb-6 p-4 rounded-lg bg-sand-light dark:bg-slate-deep/50 border border-pearl-gray dark:border-slate-deep/70 transition-colors">
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-3">Documentos Subidos</h4>
-
-          <div *ngIf="documents().length === 0" class="text-center py-6">
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">No has subido documentos aún</p>
-          </div>
-
-          <div *ngIf="documents().length > 0" class="space-y-2">
-            <div *ngFor="let doc of documents()" class="flex items-center justify-between p-3 rounded-lg bg-white-pure dark:bg-anthracite border border-pearl-gray/30 dark:border-slate-deep/50 transition-colors">
-              <div class="flex items-center gap-3">
-                <div [class]="'flex-shrink-0 w-2 h-2 rounded-full ' + getKycStatusClass(doc.status)"></div>
-                <div>
-                  <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous">{{ getDocumentLabel(doc.kind) }}</p>
-                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/60">{{ doc.created_at | date:'short' }}</p>
-                </div>
-              </div>
-              <button
-                (click)="deleteDocument(doc.id)"
-                class="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-semibold transition-colors"
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
-
         <!-- Upload Buttons -->
         <div class="space-y-4 mb-6">
           <div *ngFor="let kind of documentKinds()" class="border-2 border-pearl-gray dark:border-slate-deep rounded-xl p-4 hover:border-accent-petrol dark:hover:border-accent-petrol transition-all">
