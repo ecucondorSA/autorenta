@@ -20,7 +20,7 @@ function createCarsQueryMock(options: CarsQueryOptions = {}) {
   query.order.and.returnValue(query);
   (query as any).then = (
     resolve: (value: { data: unknown[]; error: any }) => unknown,
-    reject?: (reason: any) => unknown,
+    reject?: (reason: unknown) => unknown,
   ) => {
     const payload = {
       data: options.data ?? [],
@@ -41,7 +41,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
 
   beforeEach(() => {
     mockSupabase = jasmine.createSpyObj('SupabaseClient', ['from', 'rpc', 'auth', 'storage']);
-    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']) as any;
+    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']) as unknown;
     (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
       Promise.resolve({
         data: { user: { id: 'user-123', email: 'test@example.com' } },
@@ -83,7 +83,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       try {
         await bookingsService.requestBooking('car-123', pastDateStr, futureDateStr);
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toContain('fecha');
         console.log('✅ Fecha pasada rechazada correctamente:', error.message);
@@ -109,7 +109,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       try {
         await bookingsService.requestBooking('car-123', today, yesterdayStr);
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         console.log('✅ Fecha de fin pasada rechazada');
       }
@@ -139,7 +139,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       try {
         await bookingsService.requestBooking('car-123', startDate, endDate);
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toContain('posterior');
         console.log('✅ Fechas invertidas rechazadas correctamente');
@@ -164,7 +164,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       try {
         await bookingsService.requestBooking('car-123', sameDateStr, sameDateStr);
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         console.log('✅ Reserva de 0 días rechazada');
       }
@@ -194,7 +194,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       try {
         await bookingsService.requestBooking('car-123', startDateStr, endDateStr);
         fail('Debería haber lanzado un error o advertencia');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toContain('30 días');
         console.log('✅ Periodo largo (35 días) validado:', error.message);
@@ -413,7 +413,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
           '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         console.log('✅ Car ID inexistente manejado correctamente');
       }

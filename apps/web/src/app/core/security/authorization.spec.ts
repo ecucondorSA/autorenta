@@ -135,7 +135,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       try {
         await bookingsService.cancelBooking(mockBookingFromOtherUser.id);
         fail('Debería haber lanzado error de autorización');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error.code).toBe('UNAUTHORIZED');
         expect(error.message).toContain('No autorizado');
       }
@@ -194,7 +194,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       try {
         await bookingsService.cancelBooking(mockBooking.id);
         fail('Debería bloquear cancelación < 24h');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error.code).toBe('CANCELLATION_BLOCKED');
         expect(error.message).toContain('24 horas');
       }
@@ -239,7 +239,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       try {
         await adminService.listRecentBookings();
         fail('Usuario normal no debería acceder a todas las bookings');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error.code).toBe('FORBIDDEN');
         expect(error.message).toContain('administradores');
       }
@@ -285,7 +285,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       try {
         await adminService.listRecentBookings();
         fail('Usuario sin is_admin no debería acceder');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error.code).toBe('FORBIDDEN');
       }
     });
@@ -348,7 +348,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
           price_per_day: 10000,
         });
         fail('Debería haber lanzado error de autorización');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error.code).toBe('UNAUTHORIZED');
         expect(error.message).toContain('dueño del auto');
       }
@@ -366,13 +366,15 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(currentUser));
 
       // Mock: Servicio valida ownership
-      (carsService.updateCar as jasmine.Spy).and.callFake(async (carId: string, updates: any) => {
-        const user = await authService.getCurrentUser();
-        if (!user || user.id !== car.owner_id) {
-          throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
-        }
-        return { ...car, ...updates };
-      });
+      (carsService.updateCar as jasmine.Spy).and.callFake(
+        async (carId: string, updates: unknown) => {
+          const user = await authService.getCurrentUser();
+          if (!user || user.id !== car.owner_id) {
+            throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
+          }
+          return { ...car, ...updates };
+        },
+      );
 
       // Act
       const result = await carsService.updateCar(car.id, { brand: 'Chevrolet Cruze' });
@@ -393,14 +395,16 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       };
 
       // Mock: Admin puede modificar estado de cualquier auto
-      (carsService.updateCar as jasmine.Spy).and.callFake(async (carId: string, updates: any) => {
-        const user = await authService.getCurrentUser();
-        const isAdmin = user && (user as any).is_admin;
-        if (isAdmin) {
-          return { ...mockCar, ...updates };
-        }
-        throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
-      });
+      (carsService.updateCar as jasmine.Spy).and.callFake(
+        async (carId: string, updates: unknown) => {
+          const user = await authService.getCurrentUser();
+          const isAdmin = user && (user as any).is_admin;
+          if (isAdmin) {
+            return { ...mockCar, ...updates };
+          }
+          throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
+        },
+      );
 
       // Act
       const result = await carsService.updateCar(mockCar.id, { status: 'suspended' });
@@ -475,7 +479,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       try {
         await bookingsService.cancelBooking('any-booking-id');
         fail('Debería bloquear acciones sin autenticación');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error.code).toBe('UNAUTHENTICATED');
       }
     });
@@ -493,7 +497,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       try {
         await authService.getCurrentUser();
         fail('Debería rechazar token expirado');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error.code).toBe('TOKEN_EXPIRED');
       }
     });

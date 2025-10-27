@@ -47,7 +47,7 @@ describe('BookingsService', () => {
       .withArgs('pricing_recalculate', jasmine.any(Object))
       .and.resolveTo({ data: booking, error: null });
 
-    const builder: any = {};
+    const builder: unknown = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
     builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
     builder.single = jasmine.createSpy('single').and.resolveTo({
@@ -76,7 +76,7 @@ describe('BookingsService', () => {
       .withArgs('pricing_recalculate', jasmine.any(Object))
       .and.resolveTo({ data: null, error: null });
 
-    const builder: any = {};
+    const builder: unknown = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
     builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
     builder.single = jasmine.createSpy('single').and.resolveTo({
@@ -96,7 +96,7 @@ describe('BookingsService', () => {
   it('returns the authenticated renter bookings ordered by creation', async () => {
     supabase.auth.getUser.and.resolveTo({ data: { user: { id: 'user-77' } }, error: null });
     const rows = [{ id: 'booking-1' }];
-    const builder: any = {};
+    const builder: unknown = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
     builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
     builder.order = jasmine.createSpy('order').and.returnValue(builder);
@@ -111,7 +111,7 @@ describe('BookingsService', () => {
   });
 
   it('returns null when booking does not exist', async () => {
-    const builder: any = {};
+    const builder: unknown = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
     builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
     builder.single = jasmine.createSpy('single').and.resolveTo({

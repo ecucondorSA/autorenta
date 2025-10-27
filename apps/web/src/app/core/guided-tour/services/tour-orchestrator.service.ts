@@ -209,7 +209,7 @@ export class TourOrchestratorService implements OnDestroy {
       this.adapter.start();
     } catch (error) {
       console.error('[TourOrchestrator] Error starting tour:', error);
-      this.telemetry.trackTourError(definition.id, error);
+      this.telemetry.trackTourError(definition.id, error instanceof Error ? error : String(error));
       this.cleanupTour();
     }
   }
@@ -338,7 +338,9 @@ export class TourOrchestratorService implements OnDestroy {
     return false;
   }
 
-  private async evaluateGuards(guards: Array<{ check: () => Promise<boolean> | boolean }>): Promise<boolean> {
+  private async evaluateGuards(
+    guards: Array<{ check: () => Promise<boolean> | boolean }>,
+  ): Promise<boolean> {
     for (const guard of guards) {
       try {
         const result = await guard.check();

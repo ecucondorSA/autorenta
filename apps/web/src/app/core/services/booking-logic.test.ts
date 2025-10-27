@@ -63,10 +63,10 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as any;
+      } as unknown;
 
       // Mock RPC calls
-      supabase.rpc.and.callFake(async (method: string, params: any) => {
+      supabase.rpc.and.callFake(async (method: string, params: unknown) => {
         if (method === 'is_car_available') {
           return { data: true, error: null };
         }
@@ -80,9 +80,9 @@ describe('Booking Logic Integration', () => {
       });
 
       // Mock getBookingById which is called after creation
-      const fromSpy = supabase.from.and.returnValue({
+      const _fromSpy = supabase.from.and.returnValue({
         select: (columns: string) => ({
-          eq: (column: string, value: any) => ({
+          eq: (column: string, value: unknown) => ({
             single: async () => ({ data: mockBooking, error: null }),
           }),
         }),
@@ -144,9 +144,9 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as any;
+      } as unknown;
 
-      supabase.rpc.and.callFake(async (method: string, params: any) => {
+      supabase.rpc.and.callFake(async (method: string, params: unknown) => {
         if (method === 'is_car_available') {
           return { data: true, error: null };
         }
@@ -159,9 +159,9 @@ describe('Booking Logic Integration', () => {
         return { data: null, error: new Error(`Unknown RPC: ${method}`) };
       });
 
-      const fromSpy = supabase.from.and.returnValue({
+      const _fromSpy = supabase.from.and.returnValue({
         select: (columns: string) => ({
-          eq: (column: string, value: any) => ({
+          eq: (column: string, value: unknown) => ({
             single: async () => ({ data: mockBooking, error: null }),
           }),
         }),
@@ -194,11 +194,11 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as any;
+      } as unknown;
 
       // First call is successful
       let callCount = 0;
-      supabase.rpc.and.callFake(async (method: string, params: any) => {
+      supabase.rpc.and.callFake(async (method: string, params: unknown) => {
         if (method === 'is_car_available' && callCount === 0) {
           return { data: true, error: null };
         }
@@ -265,7 +265,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 20000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as any;
+      } as unknown;
 
       supabase.rpc.and.callFake(async (method: string) => {
         if (method === 'is_car_available') {

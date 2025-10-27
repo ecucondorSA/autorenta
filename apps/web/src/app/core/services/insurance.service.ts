@@ -426,7 +426,7 @@ export class InsuranceService {
    * Comparar inspecciones pre y post para detectar nuevos daños
    */
   async compareInspections(bookingId: string): Promise<{
-    new_damages: any[];
+    new_damages: unknown[];
     inspection_pre: VehicleInspection | null;
     inspection_post: VehicleInspection | null;
   }> {
@@ -440,7 +440,7 @@ export class InsuranceService {
     const pre = inspections.find((i) => i.inspection_type === 'pre_rental') || null;
     const post = inspections.find((i) => i.inspection_type === 'post_rental') || null;
 
-    let new_damages: any[] = [];
+    let new_damages: unknown[] = [];
 
     if (pre && post) {
       const preDamages = pre.damages_detected || [];

@@ -152,7 +152,7 @@ export class CarLocationsService {
       .filter((value): value is CarMapLocation => !!value);
   }
 
-  private normalizePayloadArray(payload: any[]): CarMapLocation[] {
+  private normalizePayloadArray(payload: unknown[]): CarMapLocation[] {
     return payload
       .map((entry) => this.normalizeEntry(entry))
       .filter((value): value is CarMapLocation => !!value);

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, signal, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, takeUntil, firstValueFrom } from 'rxjs';
 
 // Services
 import { FxService } from '../../../core/services/fx.service';
@@ -30,7 +29,6 @@ import {
   BookingDates,
   CreateBookingResult,
   ValidationError,
-  generateIdempotencyKey,
   calculateTotalDays,
   getCoverageUpgradeCost,
   validateConsents,
@@ -395,7 +393,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       (this as any).existingBookingId = bookingId;
 
       console.log('[Detalle & Pago] Booking existente cargado:', bookingId);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading existing booking:', err);
       this.error.set('Error al cargar el booking: ' + err.message);
     }
@@ -424,7 +422,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Actualizar bookingInput con datos reales del auto (si vinieron en query params, ya están seteados)
       // No sobrescribimos porque bucket y value_usd ya vienen calculados de car-detail.page.ts
       // this.bookingInput.update() - No es necesario, ya tenemos los valores correctos
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading car:', err);
       this.error.set('Error al cargar información del vehículo');
     }
@@ -446,7 +444,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // Guardar estado en sessionStorage para recuperación
       this.saveStateToSession();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error initializing snapshots:', err);
       this.error.set('Error al inicializar cálculos de reserva');
     }
@@ -463,7 +461,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         throw new Error('No se pudo obtener tipo de cambio');
       }
       this.fxSnapshot.set(snapshot);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading FX snapshot:', err);
       throw err;
     } finally {
@@ -491,7 +489,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       });
 
       this.riskSnapshot.set(snapshot);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error calculating risk snapshot:', err);
       throw err;
     } finally {
@@ -653,7 +651,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         // FLUJO CREATE: Nueva reserva desde car-detail
         await this.createNewBooking();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error confirming booking:', err);
       this.error.set(err.message || 'Error al confirmar reserva');
     } finally {
@@ -834,7 +832,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         ok: true,
         bookingId: result.booking!.id,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('❌ Excepción en createBooking:', err);
       return {
         ok: false,
@@ -938,7 +936,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       } else {
         await this.processCreditCardPayment(booking);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('[Pago Final] Error:', error);
       this.error.set(error.message || 'Error al procesar el pago');
       this.processingFinalPayment.set(false);
@@ -988,7 +986,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // Redirigir a página de éxito
       this.router.navigate(['/bookings/success', bookingId]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('[Wallet] Error en pago:', error);
       // Intentar desbloquear wallet si hubo error
       try {
@@ -1037,7 +1035,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       } else {
         throw new Error('No se pudo crear preferencia de pago');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('[Tarjeta] Error en pago:', error);
       throw error;
     }
