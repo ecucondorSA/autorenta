@@ -19,7 +19,6 @@ import {
   DocumentKind,
   NotificationPrefs,
   KycStatus,
-  UserVerificationStatus,
   VerificationStatus,
 } from '../../core/models';
 import { VerificationService } from '../../core/services/verification.service';
@@ -352,7 +351,7 @@ export class ProfileExpandedPage implements OnInit {
 
   private createOwnerChecklist(): VerificationChecklistItem[] {
     const verification = this.ownerVerification();
-    const missingDocs = verification?.missing_docs ?? [];
+    const _missingDocs = verification?.missing_docs ?? [];
 
     const vehicleStatus = this.getDocumentStatusForKinds('vehicle_registration');
     const insuranceStatus = this.getDocumentStatusForKinds('vehicle_insurance');

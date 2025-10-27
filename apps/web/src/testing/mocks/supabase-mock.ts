@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 /**
  * Mock factory for Supabase client used in tests
