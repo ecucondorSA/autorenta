@@ -474,4 +474,28 @@ export class CarDetailPage implements OnInit {
   private deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
   }
+
+  /**
+   * Abre el chat con el propietario del auto
+   */
+  async openChatWithOwner(): Promise<void> {
+    const car = this.car();
+    if (!car?.owner?.id) {
+      console.error('No hay información del propietario');
+      return;
+    }
+
+    try {
+      // Navegar a la página de mensajes con el propietario
+      await this.router.navigate(['/messages'], {
+        queryParams: {
+          userId: car.owner.id,
+          carId: car.id,
+          carName: car.title
+        }
+      });
+    } catch (error) {
+      console.error('Error al abrir chat:', error);
+    }
+  }
 }
