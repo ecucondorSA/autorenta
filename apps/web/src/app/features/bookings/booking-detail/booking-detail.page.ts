@@ -20,9 +20,7 @@ import { ClaimFormComponent } from '../../../shared/components/claim-form/claim-
 import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { BookingStatusComponent } from './booking-status.component';
-import { PaymentActionsComponent } from './payment-actions.component';
 import { ReviewManagementComponent } from './review-management.component';
-import { FgoManagementComponent } from './fgo-management.component';
 import { InsuranceSummaryCardComponent } from '../../../shared/components/insurance-summary-card/insurance-summary-card.component';
 
 /**
@@ -35,9 +33,7 @@ import { InsuranceSummaryCardComponent } from '../../../shared/components/insura
  *
  * The component has been refactored to delegate responsibilities to smaller, more focused child components:
  * - app-booking-status: Displays the current status of the booking.
- * - app-payment-actions: Handles all payment-related logic and UI.
  * - app-review-management: Manages the creation and display of reviews.
- * - app-fgo-management: Encapsulates all logic related to the FGO (Fondo de Garantía Operativa).
  */
 @Component({
   selector: 'app-booking-detail',
@@ -50,9 +46,7 @@ import { InsuranceSummaryCardComponent } from '../../../shared/components/insura
     BookingChatComponent,
     TranslateModule,
     BookingStatusComponent,
-    PaymentActionsComponent,
     ReviewManagementComponent,
-    FgoManagementComponent,
     InsuranceSummaryCardComponent,
   ],
   templateUrl: './booking-detail.page.html',
