@@ -215,7 +215,7 @@ describe('PaymentsService', () => {
       } as any);
 
       // Mock del delay para acelerar el test
-      spyOn<any>(service, 'delay').and.resolveTo();
+      spyOn<unknown>(service, 'delay').and.resolveTo();
 
       const result = await service.processPayment('booking-1');
 
@@ -234,7 +234,7 @@ describe('PaymentsService', () => {
       });
 
       // Mock del delay para acelerar el test
-      spyOn<any>(service, 'delay').and.resolveTo();
+      spyOn<unknown>(service, 'delay').and.resolveTo();
 
       const result = await service.processPayment('booking-1');
 
@@ -248,7 +248,7 @@ describe('PaymentsService', () => {
       const delays: number[] = [];
 
       // Mock del delay para capturar los valores
-      const delaySpy = spyOn<any>(service, 'delay').and.callFake(async (ms: number) => {
+      const delaySpy = spyOn<unknown>(service, 'delay').and.callFake(async (ms: number) => {
         delays.push(ms);
         return Promise.resolve();
       });
@@ -302,7 +302,7 @@ describe('PaymentsService', () => {
       });
 
       // Mock del delay (no debería llamarse)
-      const delaySpy = spyOn<any>(service, 'delay').and.resolveTo();
+      const delaySpy = spyOn<unknown>(service, 'delay').and.resolveTo();
 
       const result = await service.processPayment('booking-1');
 
@@ -318,7 +318,7 @@ describe('PaymentsService', () => {
       const errorSpy = spyOn(console, 'error');
 
       spyOn(service, 'createIntent').and.rejectWith(new Error('Network error'));
-      spyOn<any>(service, 'delay').and.resolveTo();
+      spyOn<unknown>(service, 'delay').and.resolveTo();
 
       await service.processPayment('booking-1');
 

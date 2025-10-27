@@ -512,7 +512,7 @@ export class ReportClaimPage implements OnInit {
         ],
       });
       await alert.present();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error reporting claim:', error);
 
       const alert = await this.alertController.create({

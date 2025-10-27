@@ -7,7 +7,7 @@ interface CoverageFund {
   balance_cents: number;
   created_at: string;
   updated_at: string;
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
 }
 
 interface FundStats {

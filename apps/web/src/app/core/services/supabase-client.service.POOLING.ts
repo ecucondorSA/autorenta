@@ -26,7 +26,7 @@ const createResilientLock = (): SupabaseLock => {
       }
 
       return await navigatorLocks.request(name, options, async () => fn());
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (
         error?.name === 'AbortError' ||
         error?.name === 'NavigatorLockAcquireTimeoutError' ||

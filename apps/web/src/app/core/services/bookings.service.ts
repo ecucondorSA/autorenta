@@ -834,7 +834,7 @@ export class BookingsService {
         phone: data.phone || undefined,
         name: data.full_name || undefined,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         success: false,
         error: error.message || 'Error al obtener contacto',
@@ -860,7 +860,7 @@ export class BookingsService {
         success: true,
         coverage_id: coverageId,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error activating insurance coverage:', error);
       return {
         success: false,
@@ -1000,7 +1000,7 @@ export class BookingsService {
         bookingId: result.booking_id,
         riskSnapshotId: result.risk_snapshot_id,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error en createBookingAtomic:', error);
       return {
         success: false,
@@ -1065,7 +1065,7 @@ export class BookingsService {
         success: true,
         message: 'Reserva aprobada exitosamente',
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Exception approving booking:', error);
       return {
         success: false,
@@ -1114,7 +1114,7 @@ export class BookingsService {
         success: true,
         message: 'Reserva rechazada exitosamente',
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Exception rejecting booking:', error);
       return {
         success: false,

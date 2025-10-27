@@ -180,7 +180,7 @@ export class PaymentsService {
       }
 
       throw new Error('El pago no se completó correctamente');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error en processPayment:', error);
 
       // Retry logic para errores de red

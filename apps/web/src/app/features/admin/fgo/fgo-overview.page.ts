@@ -367,7 +367,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       } else {
         alert(`❌ Error: ${result?.error || 'Transferencia fallida'}`);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error transferring:', error);
       alert(`❌ Error: ${error.message || 'Error desconocido'}`);
     } finally {
@@ -436,7 +436,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       } else {
         alert(`❌ Error: ${result?.error || 'Pago fallido'}`);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error paying siniestro:', error);
       alert(`❌ Error: ${error.message || 'Error desconocido'}`);
     } finally {

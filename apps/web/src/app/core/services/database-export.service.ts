@@ -116,7 +116,7 @@ export class DatabaseExportService {
         return { error: error.message, buckets: [] };
       }
       return { buckets: data ?? [] };
-    } catch (err: any) {
+    } catch (err: unknown) {
       return { error: err?.message ?? 'Error inesperado', buckets: [] };
     }
   }

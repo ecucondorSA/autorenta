@@ -7,9 +7,9 @@ import { WalletService } from './wallet.service';
 describe('BookingsService', () => {
   let service: BookingsService;
   let supabase: {
-    rpc: jasmine.Spy<any>;
-    auth: jasmine.SpyObj<any>;
-    from: jasmine.Spy<any>;
+    rpc: jasmine.Spy<unknown>;
+    auth: jasmine.SpyObj<unknown>;
+    from: jasmine.Spy<unknown>;
   };
   let pwaService: jasmine.SpyObj<PwaService>;
   let walletService: jasmine.SpyObj<WalletService>;

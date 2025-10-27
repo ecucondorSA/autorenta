@@ -72,7 +72,7 @@ export interface Car {
   doors: number | null;
   color: string | null;
   mileage: number | null;
-  features: Record<string, any>;
+  features: Record<string, unknown>;
   description: string | null;
   status: CarStatus;
   price_per_day: number;
@@ -119,7 +119,7 @@ export interface Booking {
   total_amount: number;
   currency: string;
   notes: string | null;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
   payment_method: 'credit_card' | 'wallet' | 'partial_wallet' | null;
@@ -145,7 +145,7 @@ export interface Payment {
   refund_reason: string | null;
   refunded_at: string | null;
   refunded_by: string | null;
-  raw: Record<string, any>;
+  raw: Record<string, unknown>;
   created_at: string;
 }
 

@@ -258,7 +258,7 @@ export class WalletPage implements AfterViewInit, OnInit {
       await this.withdrawalService.addBankAccount(params);
       this.toastService.success('Cuenta bancaria agregada exitosamente');
       this.setWithdrawalMode('form');
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.toastService.error(
         'Error al agregar cuenta bancaria: ' + (error.message || 'Error desconocido'),
       );
@@ -280,7 +280,7 @@ export class WalletPage implements AfterViewInit, OnInit {
       } else {
         this.toastService.error('Error: ' + result.message);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.toastService.error(
         'Error al solicitar retiro: ' + (error.message || 'Error desconocido'),
       );
@@ -294,7 +294,7 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       await this.withdrawalService.setDefaultBankAccount(accountId);
       this.toastService.success('Cuenta establecida como predeterminada');
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.toastService.error('Error: ' + (error.message || 'Error desconocido'));
     }
   }
@@ -306,7 +306,7 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       await this.withdrawalService.deleteBankAccount(accountId);
       this.toastService.success('Cuenta eliminada exitosamente');
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.toastService.error(
         'Error al eliminar cuenta: ' + (error.message || 'Error desconocido'),
       );
@@ -320,7 +320,7 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       await this.withdrawalService.cancelWithdrawalRequest(requestId);
       this.toastService.success('Solicitud de retiro cancelada');
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.toastService.error('Error al cancelar: ' + (error.message || 'Error desconocido'));
     }
   }

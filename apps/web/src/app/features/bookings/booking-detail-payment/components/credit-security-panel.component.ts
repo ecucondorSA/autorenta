@@ -444,7 +444,7 @@ export class CreditSecurityPanelComponent implements OnInit {
       const balance = await this.walletService.getBalance();
       this.currentProtectedCredit.set(balance.protected_credit_balance || 0);
       this.updateLockStatus();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching balance:', error);
       this.errorMessage.set(error.message || 'Error al obtener balance');
       this.lockStatus.set('error');
@@ -508,7 +508,7 @@ export class CreditSecurityPanelComponent implements OnInit {
       this.currentLock.set(lock);
       this.lockStatus.set('locked');
       this.lockChange.emit(lock);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error locking funds:', error);
       this.errorMessage.set(error.message || 'Error al bloquear fondos');
       this.lockStatus.set('error');
@@ -539,7 +539,7 @@ export class CreditSecurityPanelComponent implements OnInit {
       } else {
         throw new Error(result.message || 'Error al iniciar depósito');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error loading credit:', error);
       this.errorMessage.set(error.message || 'Error al cargar crédito');
       this.lockStatus.set('error');
