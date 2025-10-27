@@ -119,27 +119,53 @@ export class MessagesService {
 
   // Typing indicator usando presence
   async setTyping(bookingId: string, userId: string, isTyping: boolean): Promise<void> {
-    const channel = this.supabase.channel(`presence-${bookingId}`);
-    
-    if (isTyping) {
-      await channel.track({ user_id: userId, typing: true });
-    } else {
-      await channel.untrack();
+    try {
+      const channel = this.supabase.channel(`presence-${bookingId}`, {
+        config: {
+          presence: {
+            key: userId,
+          },
+        },
+      });
+      
+      await channel.subscribe();
+      
+      if (isTyping) {
+        await channel.track({ user_id: userId, typing: true });
+      } else {
+        await channel.untrack();
+      }
+    } catch (error) {
+      console.warn('Error setting typing status:', error);
+      // Don't throw - typing is not critical
     }
   }
 
   subscribeToTyping(bookingId: string, callback: (typingUsers: string[]) => void): RealtimeChannel {
-    return this.supabase
-      .channel(`presence-${bookingId}`)
+    const channel = this.supabase
+      .channel(`presence-${bookingId}`, {
+        config: {
+          presence: {
+            key: 'typing',
+          },
+        },
+      })
       .on('presence', { event: 'sync' }, () => {
-        const state = this.supabase.channel(`presence-${bookingId}`).presenceState();
-        const typingUsers = Object.values(state)
-          .flat()
-          .filter((presence: any) => presence.typing)
-          .map((presence: any) => presence.user_id);
-        callback(typingUsers);
+        try {
+          const state = channel.presenceState();
+          const typingUsers = Object.values(state)
+            .flat()
+            .filter((presence: any) => presence?.typing)
+            .map((presence: any) => presence?.user_id)
+            .filter(Boolean);
+          callback(typingUsers);
+        } catch (error) {
+          console.warn('Error getting typing status:', error);
+        }
       })
       .subscribe();
+    
+    return channel;
   }
 
   unsubscribe(): void {
