@@ -6,7 +6,7 @@ import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SettlementService, Claim, ClaimProcessingResult } from '../../../core/services/settlement.service';
 import { BookingInspection, BookingRiskSnapshot, EligibilityResult, WaterfallResult, FgoParameters, BucketType, InspectionStage } from '../../../core/models/fgo-v1-1.model';
 import { firstValueFrom } from 'rxjs';
-import { RiskMatrixService } from '../../../core/services/risk-matrix.service';
+import { RiskMatrixService, RiskPolicy } from '../../../core/services/risk-matrix.service';
 import { FgoService } from '../../../core/services/fgo.service';
 
 /**
@@ -136,7 +136,7 @@ export class FgoManagementComponent implements OnInit {
   });
 
   // 🇦🇷 Franchise matrix based on car value (AR specific)
-  readonly riskPolicy = signal<any>(null);
+  readonly riskPolicy = signal<RiskPolicy | null>(null);
 
   readonly franchiseMatrix = computed<{
     bucket: 'economy' | 'standard' | 'premium' | 'luxury';
@@ -157,8 +157,10 @@ export class FgoManagementComponent implements OnInit {
     const franchise = this.riskMatrixService.calculateFranchise(policy);
 
     return {
-      bucket: policy.bucket,
-      carValueRange: `$${policy.car_value_min} - $${policy.car_value_max}`,
+      bucket: policy.bucket === 'standard' ? 'standard' : policy.bucket,
+      carValueRange: Number.isFinite(policy.car_value_max)
+        ? `$${policy.car_value_min.toLocaleString()} - $${policy.car_value_max.toLocaleString()}`
+        : `≥ $${policy.car_value_min.toLocaleString()}`,
       standardFranchiseUsd: franchise.standard,
       rolloverFranchiseUsd: franchise.rollover,
     };
@@ -182,12 +184,7 @@ export class FgoManagementComponent implements OnInit {
   });
 
   // 🇦🇷 Wallet security credit amount (USD 300 for ≤20k, USD 500 for >20k)
-  readonly walletSecurityCreditUsd = computed<number>(() => {
-    const policy = this.riskPolicy();
-    if (!policy) return 0;
-
-    return policy.security_credit_usd;
-  });
+  readonly walletSecurityCreditUsd = computed<number>(() => this.riskPolicy()?.security_credit_usd ?? 0);
 
   readonly securitySource = computed<'card' | 'wallet' | 'mixed' | 'none'>(() => {
     if (!this.booking) {
@@ -326,8 +323,12 @@ export class FgoManagementComponent implements OnInit {
   async ngOnInit() {
     await this.loadFgoData();
     const carValue = this.estimatedCarValueUsd();
-    const policy = await this.riskMatrixService.getRiskPolicy(carValue);
-    this.riskPolicy.set(policy);
+    try {
+      const policy = await this.riskMatrixService.getRiskPolicy(carValue);
+      this.riskPolicy.set(policy);
+    } catch (error) {
+      console.error('Error obteniendo política de riesgo:', error);
+    }
   }
 
   private async loadFgoData(): Promise<void> {

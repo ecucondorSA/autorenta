@@ -74,7 +74,7 @@ export class RiskMatrixService {
     return {
       bucket: band.bucket,
       car_value_min: band.minValueUsd,
-      car_value_max: band.maxValueUsd === Number.POSITIVE_INFINITY ? carValueUsd : band.maxValueUsd,
+      car_value_max: band.maxValueUsd,
       standard_franchise_usd: standard,
       rollover_franchise_multiplier: RiskMatrixService.ROLLOVER_MULTIPLIER,
       hold_min_ars: band.minHoldArs,
