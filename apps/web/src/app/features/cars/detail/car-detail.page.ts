@@ -40,7 +40,7 @@ export class CarDetailPage implements OnInit {
   readonly walletAmountToUse = signal<number>(0);
   readonly cardAmountToUse = signal<number>(0);
   readonly currentPhotoIndex = signal(0);
-  readonly currentFxRate = signal<number>(1000); // ✅ NUEVO: Tasa de cambio USD/ARS actual (default: 1000)
+  readonly currentFxRate = signal<number | null>(null); // Tasa de cambio USD/ARS actual (se carga desde DB)
 
   // Reviews-related signals
   readonly reviews = signal<Review[]>([]);
@@ -185,7 +185,7 @@ export class CarDetailPage implements OnInit {
   }
 
   /**
-   * ✅ NUEVO: Carga la tasa de cambio actual desde Binance
+   * Carga la tasa de cambio actual desde la base de datos
    */
   async loadCurrentFxRate(): Promise<void> {
     this.fxService.getFxSnapshot('USD', 'ARS').subscribe({
@@ -194,11 +194,13 @@ export class CarDetailPage implements OnInit {
           this.currentFxRate.set(snapshot.rate);
           console.log(`💱 Tasa USD/ARS actualizada: ${snapshot.rate}`);
         } else {
-          console.warn('⚠️ No se pudo obtener tasa de cambio, usando default 1000');
+          console.error('⚠️ Tipo de cambio expirado o no disponible');
+          this.currentFxRate.set(null);
         }
       },
       error: (err) => {
         console.error('Error al cargar tasa de cambio:', err);
+        this.currentFxRate.set(null);
       }
     });
   }
@@ -373,27 +375,31 @@ export class CarDetailPage implements OnInit {
 
   /**
    * Get vehicle value in USD
-   * ✅ FIXED: Usa value_usd de la DB en lugar de estimación hardcodeada
-   * Fallback a estimación solo si value_usd no está disponible (autos antiguos)
+   * Usa value_usd de la DB, si no existe calcula desde el precio diario
    */
   private estimateVehicleValue(car: any): number {
-    // ✅ PRIORIDAD: Usar valor real de la DB si existe
+    // PRIORIDAD 1: Usar valor real de la DB si existe
     if (car.value_usd && car.value_usd > 0) {
       return Math.round(car.value_usd);
     }
 
-    // ⚠️  FALLBACK: Solo para autos sin value_usd (legacy)
-    console.warn(`Auto ${car.id} sin value_usd, usando estimación`);
+    // PRIORIDAD 2: Calcular desde precio diario
+    console.warn(`Auto ${car.id} sin value_usd, calculando desde precio diario`);
     
     let pricePerDayUsd = car.price_per_day;
 
-    // If price is in ARS, convert to USD using CURRENT rate
+    // Si el precio está en ARS, convertir a USD
     if (car.currency === 'ARS') {
-      const fxRate = this.currentFxRate(); // ✅ USA TASA ACTUAL en lugar de 1000 hardcodeado
+      const fxRate = this.currentFxRate();
+      if (!fxRate) {
+        console.error('No hay tasa de cambio disponible para calcular valor del vehículo');
+        // Devolver un valor conservador basado solo en el precio ARS
+        return Math.round((car.price_per_day / 1500) * 300); // Asume ~1500 ARS/USD
+      }
       pricePerDayUsd = car.price_per_day / fxRate;
     }
 
-    // Rough estimation: daily rate * 300 gives approximate value
+    // Estimación: precio diario * 300 ≈ valor del vehículo
     return Math.round(pricePerDayUsd * 300);
   }
 
@@ -403,10 +409,16 @@ export class CarDetailPage implements OnInit {
   private determineVehicleBucket(car: Car): 'economy' | 'standard' | 'premium' | 'luxury' {
     let pricePerDayUsd = car.price_per_day;
 
-    // If price is in ARS, convert to USD using CURRENT rate
+    // Si el precio está en ARS, convertir a USD
     if (car.currency === 'ARS') {
-      const fxRate = this.currentFxRate(); // ✅ USA TASA ACTUAL
-      pricePerDayUsd = car.price_per_day / fxRate;
+      const fxRate = this.currentFxRate();
+      if (!fxRate) {
+        console.error('No hay tasa de cambio disponible para determinar bucket');
+        // Fallback: usar el precio ARS como guía (asumiendo ~1500 ARS/USD)
+        pricePerDayUsd = car.price_per_day / 1500;
+      } else {
+        pricePerDayUsd = car.price_per_day / fxRate;
+      }
     }
 
     if (pricePerDayUsd <= 30) return 'economy';

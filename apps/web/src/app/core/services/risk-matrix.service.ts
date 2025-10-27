@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-type RiskBucket = 'economy' | 'default' | 'premium' | 'luxury';
+export type RiskPolicyBucket = 'economy' | 'standard' | 'premium' | 'luxury';
 
-type RiskPolicy = {
-  bucket: RiskBucket;
+export interface RiskPolicy {
+  bucket: RiskPolicyBucket;
   car_value_min: number;
   car_value_max: number;
   standard_franchise_usd: number;
@@ -11,10 +11,10 @@ type RiskPolicy = {
   hold_min_ars: number;
   hold_rollover_multiplier: number;
   security_credit_usd: number;
-};
+}
 
 type RiskPolicyBand = {
-  bucket: RiskBucket;
+  bucket: RiskPolicyBucket;
   minValueUsd: number;
   maxValueUsd: number;
   standardFranchiseUsd: number;
@@ -37,7 +37,7 @@ export class RiskMatrixService {
       minHoldArs: 600_000,
     },
     {
-      bucket: 'default',
+      bucket: 'standard',
       minValueUsd: 10_001,
       maxValueUsd: 20_000,
       standardFranchiseUsd: 800,
