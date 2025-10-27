@@ -36,6 +36,20 @@ export type RatingRole = 'owner_rates_renter' | 'renter_rates_owner';
 export type WebhookStatus = 'pending' | 'processed' | 'error';
 
 // ============================================================================
+// COMMON TYPES
+// ============================================================================
+
+/** Location data (coordinates + address) */
+export interface LocationData {
+  lat?: number;
+  lng?: number;
+  address?: string;
+  city?: string;
+  country?: string;
+  [key: string]: unknown; // Allow additional fields
+}
+
+// ============================================================================
 // TABLES
 // ============================================================================
 
@@ -108,8 +122,8 @@ export interface Booking {
   end_at: string;
   time_range: string | null;
   status: BookingStatus;
-  pickup_location: any | null;
-  dropoff_location: any | null;
+  pickup_location: LocationData | null;
+  dropoff_location: LocationData | null;
   pickup_confirmed_at: string | null;
   dropoff_confirmed_at: string | null;
   pickup_confirmed_by: string | null;

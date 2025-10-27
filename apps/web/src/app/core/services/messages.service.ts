@@ -153,10 +153,14 @@ export class MessagesService {
       .on('presence', { event: 'sync' }, () => {
         try {
           const state = channel.presenceState();
+          // Presence state is Record<string, unknown[]>
           const typingUsers = Object.values(state)
             .flat()
-            .filter((presence: any) => presence?.typing)
-            .map((presence: any) => presence?.user_id)
+            .filter((presence): presence is { typing?: boolean; user_id?: string } => {
+              return typeof presence === 'object' && presence !== null && 'typing' in presence;
+            })
+            .filter((presence) => presence.typing)
+            .map((presence) => presence.user_id)
             .filter(Boolean);
           callback(typingUsers);
         } catch (error) {
