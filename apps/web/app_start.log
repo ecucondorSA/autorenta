@@ -1,1 +1,240 @@
 ❯ Building...
+✔ Building...
+Application bundle generation failed. [20.589 seconds] - 2025-10-27T00:54:03.238Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CarsListPage[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/list/cars-list.page.ts:55:4:
+[37m      55 │     [32mRouterLink[37m,
+         ╵     [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: MoneyPipe is not used within the template of CarsListPage[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/list/cars-list.page.ts:59:4:
+[37m      59 │     [32mMoneyPipe[37m,
+         ╵     [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:515:74:
+[37m      515 │ ...rder-green-500]="[32mcar()?.status === 'available'[37m" [class.bg-gree...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:515:126:
+[37m      515 │ ...ss.bg-green-50]="[32mcar()?.status === 'available'[37m" [class.border-...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:515:184:
+[37m      515 │ ...der-yellow-500]="[32mcar()?.status !== 'available'[37m" [class.bg-yell...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:515:237:
+[37m      515 │ ...available'" [class.bg-yellow-50]="[32mcar()?.status !== 'available'[37m">
+          ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:517:101:
+[37m      517 │ ...s.bg-green-100]="[32mcar()?.status === 'available'[37m" [class.bg-yell...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:517:155:
+[37m      517 │ ...vailable'" [class.bg-yellow-100]="[32mcar()?.status !== 'available'[37m">
+          ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:518:24:
+[37m      518 │ ...     <svg *ngIf="[32mcar()?.status === 'available'[37m" class="h-6 w-6...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:521:24:
+[37m      521 │ ...     <svg *ngIf="[32mcar()?.status !== 'available'[37m" class="h-6 w-6...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:526:69:
+[37m      526 │ ...text-green-900]="[32mcar()?.status === 'available'[37m" [class.text-ye...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:526:125:
+[37m      526 │ ...ilable'" [class.text-yellow-900]="[32mcar()?.status !== 'available'[37m">
+          ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:527:17:
+[37m      527 │               {{ [32mcar()?.status === 'available'[37m ? '✓ Disponible ...
+          ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:529:55:
+[37m      529 │ ...text-green-700]="[32mcar()?.status === 'available'[37m" [class.text-ye...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:529:111:
+[37m      529 │ ...ilable'" [class.text-yellow-700]="[32mcar()?.status !== 'available'[37m">
+          ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'CarStatus | undefined' and '"available"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:530:17:
+[37m      530 │               {{ [32mcar()?.status === 'available'[37m ? 'Este auto está...
+          ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'BookingPaymentMethod' and '"wallet_only"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:629:21:
+[37m      629 │ ...        {{ [32mselectedPaymentMethod() === 'wallet_only'[37m ? 'Pagar�...
+          ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'BookingPaymentMethod' and '"wallet_and_card"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:630:21:
+[37m      630 │ ...          [32mselectedPaymentMethod() === 'wallet_and_card'[37m ? 'Pag...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'BookingPaymentMethod' and '"wallet_and_card"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:635:24:
+[37m      635 │ ...iv *ngIf="[32mselectedPaymentMethod() === 'wallet_and_card'[37m" class...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:29:15:
+[37m      29 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Watch mode enabled. Watching for file changes...
