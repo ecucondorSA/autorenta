@@ -388,13 +388,12 @@ export class CarDetailPage implements OnInit {
     
     let pricePerDayUsd = car.price_per_day;
 
-    // Si el precio está en ARS, convertir a USD
+    // Si el precio está en ARS, convertir a USD usando tasa actual
     if (car.currency === 'ARS') {
       const fxRate = this.currentFxRate();
       if (!fxRate) {
         console.error('No hay tasa de cambio disponible para calcular valor del vehículo');
-        // Devolver un valor conservador basado solo en el precio ARS
-        return Math.round((car.price_per_day / 1500) * 300); // Asume ~1500 ARS/USD
+        throw new Error('Tipo de cambio no disponible');
       }
       pricePerDayUsd = car.price_per_day / fxRate;
     }
@@ -414,11 +413,9 @@ export class CarDetailPage implements OnInit {
       const fxRate = this.currentFxRate();
       if (!fxRate) {
         console.error('No hay tasa de cambio disponible para determinar bucket');
-        // Fallback: usar el precio ARS como guía (asumiendo ~1500 ARS/USD)
-        pricePerDayUsd = car.price_per_day / 1500;
-      } else {
-        pricePerDayUsd = car.price_per_day / fxRate;
+        throw new Error('Tipo de cambio no disponible');
       }
+      pricePerDayUsd = car.price_per_day / fxRate;
     }
 
     if (pricePerDayUsd <= 30) return 'economy';
