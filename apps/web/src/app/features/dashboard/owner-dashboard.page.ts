@@ -66,7 +66,7 @@ export class OwnerDashboardPage implements OnInit {
       // Cargar estadísticas de reservas
       const bookings = await this.bookingsService.getOwnerBookings();
       this.upcomingBookings.set(
-        bookings.filter(b => b.status === 'confirmed' && new Date(b.start_date) > new Date()).length
+        bookings.filter(b => b.status === 'confirmed' && new Date(b.start_at) > new Date()).length
       );
       this.activeBookings.set(
         bookings.filter(b => b.status === 'in_progress').length
@@ -79,6 +79,7 @@ export class OwnerDashboardPage implements OnInit {
       const now = new Date();
       const thisMonth = bookings
         .filter(b => {
+          if (!b.updated_at) return false;
           const completedDate = new Date(b.updated_at);
           return b.status === 'completed' &&
             completedDate.getMonth() === now.getMonth() &&
@@ -88,6 +89,7 @@ export class OwnerDashboardPage implements OnInit {
 
       const lastMonth = bookings
         .filter(b => {
+          if (!b.updated_at) return false;
           const completedDate = new Date(b.updated_at);
           const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1);
           return b.status === 'completed' &&

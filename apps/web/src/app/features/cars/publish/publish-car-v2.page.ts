@@ -215,6 +215,22 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
                   </label>
                 </div>
               </div>
+
+              <!-- Auto-approval -->
+              <div class="md:col-span-2">
+                <div class="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <input type="checkbox" formControlName="auto_approval" id="auto_approval"
+                         class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 mt-0.5">
+                  <div class="flex-1">
+                    <label for="auto_approval" class="text-sm font-medium text-gray-900 dark:text-ivory-luminous cursor-pointer block mb-1">
+                      Aprobar reservas automáticamente
+                    </label>
+                    <p class="text-xs text-gray-600 dark:text-pearl-light/75">
+                      Las reservas se aprobarán instantáneamente sin tu intervención. Si no está activado, tendrás 24 horas para revisar y aprobar cada solicitud.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -522,7 +538,9 @@ export class PublishCarV2Page implements OnInit {
 
       const canList = await this.marketplaceService.canListCars(user.id);
       
-      if (!canList) {
+      // TODO: Activar cuando la tabla mp_onboarding_states esté creada
+      // Por ahora permitir publicar sin onboarding de MP
+      if (false && !canList) {
         console.log('⚠️ User needs to onboard to Mercado Pago');
         
         // Mostrar modal de onboarding
@@ -567,6 +585,7 @@ export class PublishCarV2Page implements OnInit {
       deposit_required: [true],
       deposit_amount: [200],
       insurance_included: [false],
+      auto_approval: [true], // ✅ NUEVO: Auto-aprobación por defecto activada
 
       // Location
       location_street: ['', Validators.required],
@@ -608,6 +627,7 @@ export class PublishCarV2Page implements OnInit {
           deposit_required: lastCar.deposit_required,
           deposit_amount: lastCar.deposit_amount,
           insurance_included: lastCar.insurance_included,
+          auto_approval: lastCar.auto_approval ?? true, // ✅ Mantener preferencia o true por defecto
           location_street: lastCar.location_street,
           location_street_number: lastCar.location_street_number,
           location_city: lastCar.location_city,
@@ -650,6 +670,7 @@ export class PublishCarV2Page implements OnInit {
         deposit_required: car.deposit_required,
         deposit_amount: car.deposit_amount,
         insurance_included: car.insurance_included,
+        auto_approval: car.auto_approval ?? true, // ✅ Cargar auto_approval
         location_street: car.location_street,
         location_street_number: car.location_street_number,
         location_city: car.location_city,
@@ -979,6 +1000,7 @@ export class PublishCarV2Page implements OnInit {
         deposit_required: formValue.deposit_required,
         deposit_amount: formValue.deposit_amount,
         insurance_included: formValue.insurance_included,
+        auto_approval: formValue.auto_approval ?? true, // ✅ NUEVO: Auto-aprobación
         location_street: formValue.location_street,
         location_street_number: formValue.location_street_number,
         location_city: formValue.location_city,

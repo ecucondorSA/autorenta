@@ -67,7 +67,7 @@ export class ToastService {
   /**
    * Muestra un toast genérico
    */
-  private show(message: string, type: Toast['type'], duration: number): void {
+  private show(message: string, type: Toast['type'], duration: number = 3000): void {
     const id = this.generateId();
     const toast: Toast = { id, message, type, duration };
 

@@ -14,7 +14,6 @@
     "lint": "node_modules/.bin/ng lint",
     "test": "ng test",
     "format": "prettier --cache --write \"src/**/*.{ts,html,css,scss}\"",
-    "prepare": "husky install",
     "deploy:pages": "npm run build && CLOUDFLARE_ACCOUNT_ID=5b448192fe4b369642b68ad8f53a7603 npx wrangler pages deploy dist/web/browser --project-name=autorenta-web",
     "worker:dev": "cd ../../functions/workers/payments_webhook && npm run dev",
     "worker:deploy": "cd ../../functions/workers/payments_webhook && npm run deploy"
@@ -69,12 +68,13 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^20.3.7",
     "@angular-eslint/builder": "^20.4.0",
     "@angular-eslint/eslint-plugin": "^20.4.0",
     "@angular-eslint/eslint-plugin-template": "^20.4.0",
     "@angular-eslint/template-parser": "^20.4.0",
     "@angular/build": "~20.3.7",
-    "@angular/cli": "~20.3.7",
+    "@angular/cli": "^20.3.7",
     "@angular/compiler-cli": "~20.3.7",
     "@types/jasmine": "~5.1.0",
     "@types/mercadopago-sdk-js": "^2.0.17",

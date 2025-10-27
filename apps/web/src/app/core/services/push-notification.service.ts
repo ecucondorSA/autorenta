@@ -1,0 +1,112 @@
+import { Injectable, inject } from '@angular/core';
+import { SupabaseClientService } from './supabase-client.service';
+import { AuthService } from './auth.service';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PushNotificationService {
+  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly authService = inject(AuthService);
+
+  // VAPID public key - should be stored in environment variables
+  private readonly VAPID_PUBLIC_KEY = '';
+
+  /**
+   * Initializes the push notification subscription process.
+   * This should be called once when the application bootstraps.
+   */
+  public async initializePushNotifications(): Promise<void> {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      console.warn('Push notifications are not supported in this browser.');
+      return;
+    }
+
+    // Wait for the user to be logged in
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      console.log('User not logged in, skipping push notification setup.');
+      return;
+    }
+
+    try {
+      const subscription = await this.subscribeUserToPush();
+      if (subscription) {
+        await this.saveTokenToDatabase(subscription);
+      }
+    } catch (error) {
+      console.error('Error during push notification subscription:', error);
+    }
+  }
+
+  /**
+   * Subscribes the user to push notifications.
+   * @returns The PushSubscription object or null if permission is denied.
+   */
+  private async subscribeUserToPush(): Promise<PushSubscription | null> {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      console.log('Push notification permission not granted.');
+      return null;
+    }
+
+    const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+    const existingSubscription = await serviceWorkerRegistration.pushManager.getSubscription();
+
+    if (existingSubscription) {
+      console.log('User is already subscribed.');
+      return existingSubscription;
+    }
+
+    console.log('Subscribing new user...');
+    const subscription = await serviceWorkerRegistration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: this.urlBase64ToUint8Array(this.VAPID_PUBLIC_KEY),
+    });
+
+    return subscription;
+  }
+
+  /**
+   * Saves the push subscription token to the database.
+   * @param subscription The PushSubscription object.
+   */
+  private async saveTokenToDatabase(subscription: PushSubscription): Promise<void> {
+    const token = subscription.toJSON();
+
+    // Ensure we have a user
+    const user = await this.authService.getCurrentUser();
+    if (!user) return;
+
+    console.log('Saving push token to database...', token.endpoint);
+
+    const { error } = await this.supabase.from('push_tokens').upsert(
+      {
+        user_id: user.id,
+        token: token.endpoint, // The endpoint is a unique identifier for the device
+      },
+      { onConflict: 'token' } // If the token already exists, do nothing
+    );
+
+    if (error) {
+      console.error('Error saving push token:', error);
+      throw error;
+    }
+
+    console.log('Push token saved successfully.');
+  }
+
+  /**
+   * Helper function to convert VAPID key.
+   */
+  private urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray as Uint8Array<ArrayBuffer>;
+  }
+}

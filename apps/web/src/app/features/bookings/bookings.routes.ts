@@ -13,6 +13,12 @@ export const BOOKINGS_ROUTES: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'pending-approval',
+    loadComponent: () =>
+      import('./pending-approval/pending-approval.page').then((m) => m.PendingApprovalPage),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'detail-payment',
     loadComponent: () =>
       import('./booking-detail-payment/booking-detail-payment.page').then(

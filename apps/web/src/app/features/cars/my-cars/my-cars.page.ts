@@ -55,19 +55,41 @@ export class MyCarsPage implements OnInit {
 
   async onDeleteCar(carId: string): Promise<void> {
     try {
-      // ✅ NUEVO: Verificar reservas activas
-      const { hasActive, count, bookings } = await this.carsService.hasActiveBookings(carId);
+      // ✅ NUEVO: Verificar reservas (activas e históricas)
+      let hasBookings = false;
+      let bookingsCount = 0;
+      let activeBookings: any[] = [];
       
-      if (hasActive) {
-        const nextBooking = bookings?.[0];
+      try {
+        const result = await this.carsService.hasActiveBookings(carId);
+        hasBookings = result.hasActive;
+        bookingsCount = result.count;
+        activeBookings = result.bookings || [];
+      } catch (checkError) {
+        console.error('Error checking bookings:', checkError);
+        // Continuar con el intento de eliminación si falla la verificación
+      }
+      
+      if (hasBookings) {
+        const activeCount = activeBookings.length;
+        const nextBooking = activeBookings[0];
         const startDate = nextBooking ? new Date(nextBooking.start_date).toLocaleDateString() : '';
         
-        alert(
-          `❌ No puedes eliminar este auto\n\n` +
-          `Tiene ${count} reserva${count > 1 ? 's' : ''} activa${count > 1 ? 's' : ''}.\n` +
-          `Próxima reserva: ${startDate}\n\n` +
-          `Esperá a que finalicen las reservas o contactá a los locatarios para cancelarlas.`
-        );
+        let message = `❌ No puedes eliminar este auto\n\n`;
+        
+        if (activeCount > 0) {
+          message += `Tiene ${activeCount} reserva${activeCount > 1 ? 's' : ''} activa${activeCount > 1 ? 's' : ''}.\n`;
+          if (startDate) {
+            message += `Próxima reserva: ${startDate}\n\n`;
+          }
+        } else {
+          message += `Este auto tiene ${bookingsCount} reserva${bookingsCount > 1 ? 's' : ''} en el historial.\n\n`;
+        }
+        
+        message += `Los autos con reservas no pueden eliminarse para mantener el historial.\n`;
+        message += `Podés desactivar el auto en su lugar.`;
+        
+        alert(message);
         return;
       }
 
@@ -85,9 +107,32 @@ export class MyCarsPage implements OnInit {
       await this.carsService.deleteCar(carId);
       await this.loadCars();
       alert('✅ Auto eliminado exitosamente');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting car:', error);
-      alert('❌ Error al eliminar el auto. Por favor intenta nuevamente.');
+      console.error('Error details:', {
+        code: error?.code,
+        message: error?.message,
+        details: error?.details,
+        hint: error?.hint
+      });
+      
+      // Mensaje específico para foreign key constraint
+      if (error?.code === '23503' || error?.message?.includes('foreign key')) {
+        alert(
+          '❌ No se puede eliminar este auto\n\n' +
+          'Este auto tiene reservas asociadas en el sistema.\n' +
+          'Para mantener el historial, no es posible eliminarlo.\n\n' +
+          'Podés desactivar el auto si no querés que aparezca en las búsquedas.'
+        );
+      } else {
+        // Mostrar mensaje más detallado para debugging
+        const errorMsg = error?.message || 'Error desconocido';
+        alert(
+          '❌ Error al eliminar el auto\n\n' +
+          `Detalles: ${errorMsg}\n\n` +
+          'Por favor intenta nuevamente o contacta soporte.'
+        );
+      }
     }
   }
 
