@@ -16,6 +16,15 @@ export interface CreateReviewResult {
   published_immediately?: boolean;
 }
 
+/** Raw review data from database with reviewer join */
+interface ReviewWithReviewer {
+  reviewer?: {
+    full_name?: string | null;
+    avatar_url?: string | null;
+  } | null;
+  [key: string]: unknown;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -421,7 +430,7 @@ export class ReviewsService {
       return [];
     }
 
-    return ((data || []) as any[]).map((review) => ({
+    return (data || []).map((review: ReviewWithReviewer) => ({
       ...review,
       reviewer_name: review.reviewer?.full_name || 'Usuario',
       reviewer_avatar: review.reviewer?.avatar_url || null,
@@ -449,7 +458,7 @@ export class ReviewsService {
       return [];
     }
 
-    return ((data || []) as any[]).map((review) => ({
+    return (data || []).map((review: ReviewWithReviewer) => ({
       ...review,
       reviewer_name: review.reviewer?.full_name || 'Usuario',
       reviewer_avatar: review.reviewer?.avatar_url || null,
