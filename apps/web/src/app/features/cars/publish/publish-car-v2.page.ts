@@ -9,7 +9,6 @@ import { GeocodingService } from '../../../core/services/geocoding.service';
 import { BackgroundRemovalService } from '../../../core/services/background-removal.service';
 import {
   AiPhotoEnhancerService,
-  EnhancedPhoto,
 } from '../../../core/services/ai-photo-enhancer.service';
 import { MarketplaceOnboardingService } from '../../../core/services/marketplace-onboarding.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -1411,7 +1410,7 @@ export class PublishCarV2Page implements OnInit {
 
       const rawValue = this.publishForm.getRawValue();
       const { pricing_strategy, ...formValue } = rawValue as any;
-      const dynamicPricing = (pricing_strategy ?? 'dynamic') === 'dynamic';
+      const _dynamicPricing = (pricing_strategy ?? 'dynamic') === 'dynamic';
 
       // Get brand and model names for backup fields
       const brand = this.brands().find((b) => b.id === formValue.brand_id);

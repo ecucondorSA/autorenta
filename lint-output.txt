@@ -1,0 +1,495 @@
+
+> lint
+> cd apps/web && npm run lint
+
+
+> autorenta-web@0.1.0 lint
+> node_modules/.bin/ng lint
+
+
+Linting "web"...
+
+/home/edu/autorenta/apps/web/src/app/core/database/database-indexes.spec.ts
+   37:13  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+   64:13  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  117:13  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  141:13  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  165:13  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  192:13  warning  '_queryPattern' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/database/rpc-functions.spec.ts
+   39:76  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   86:73  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:76  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  127:88  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  139:89  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  162:80  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  188:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  211:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  238:80  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  266:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  290:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/guards/auth.guard.spec.ts
+  12:83  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  39:78  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  49:79  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/guided-tour/guided-tour.service.spec.ts
+  72:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/security/authorization.spec.ts
+  156:74  warning  'bookingId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  278:32  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  401:44  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  456:38  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  460:29  warning  'action' is defined but never used. Allowed unused args must match /^_/u     @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/security/rls-security.spec.ts
+    2:10  warning  'createClient' is defined but never used             @typescript-eslint/no-unused-vars
+   36:9   warning  '_mockAdminUuid' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  115:64  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  176:64  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/admin.service.ts
+  60:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/availability-performance.spec.ts
+  59:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  89:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/booking-logic.test.ts
+   69:56  warning  'params' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+   83:13  warning  '_fromSpy' is assigned a value but never used                              @typescript-eslint/no-unused-vars
+   84:18  warning  'columns' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   85:16  warning  'column' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+   85:32  warning  'value' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+   89:12  warning  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  149:56  warning  'params' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  162:13  warning  '_fromSpy' is assigned a value but never used                              @typescript-eslint/no-unused-vars
+  163:18  warning  'columns' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  164:16  warning  'column' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  164:32  warning  'value' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+  168:12  warning  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  201:56  warning  'params' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  224:12  warning  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  289:12  warning  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  374:17  warning  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  532:12  warning  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/bookings.service.spec.ts
+   66:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   93:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  110:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/bookings.service.ts
+  1019:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/car-locations.service.ts
+   74:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   79:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   81:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  151:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  161:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/cars.service.spec.ts
+   49:65  warning  Unexpected any. Specify a different type                                @typescript-eslint/no-explicit-any
+   69:77  warning  Unexpected any. Specify a different type                                @typescript-eslint/no-explicit-any
+   81:79  warning  'args' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  127:13  warning  Unexpected any. Specify a different type                                @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/cars.service.ts
+  188:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  195:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  281:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  342:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  464:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  472:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/checkout-payment.service.ts
+    7:33  warning  'PaymentMethodType' is defined but never used                                 @typescript-eslint/no-unused-vars
+  163:47  warning  'totalCents' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/dynamic-pricing.service.ts
+  1:22  warning  'inject' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/edge-cases.spec.ts
+   13:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   21:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   22:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  234:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  271:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  305:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  334:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  342:18  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  433:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  462:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/error-handling.spec.ts
+   12:1   warning  `@supabase/supabase-js` import should occur before import of `./bookings.service`  import/order
+   17:7   warning  'paymentsService' is assigned a value but never used                               @typescript-eslint/no-unused-vars
+   59:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  110:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  136:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  165:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  214:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  241:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  265:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  318:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  347:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  374:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  403:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  429:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  564:54  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  621:56  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/exchange-rate.service.ts
+  1:22  warning  'inject' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/fgo-v1-1.service.ts
+  394:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/franchise-table.service.ts
+  1:22  warning  'inject' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/fx.service.ts
+    5:3   warning  'FxSnapshotDb' is defined but never used                                                 @typescript-eslint/no-unused-vars
+   30:5   warning  'fromCurrency' is assigned a value but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  165:35  warning  Unexpected any. Specify a different type                                                 @typescript-eslint/no-explicit-any
+  187:5   warning  'fromCurrency' is assigned a value but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  188:5   warning  'toCurrency' is assigned a value but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/geocoding.service.ts
+    1:22  warning  'inject' is defined but never used        @typescript-eslint/no-unused-vars
+  180:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/insurance.service.ts
+    1:22  warning  'inject' is defined but never used        @typescript-eslint/no-unused-vars
+  365:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/mercado-pago-script.service.ts
+   5:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  39:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/mercadopago-booking-gateway.service.ts
+    3:22  warning  'map' is defined but never used           @typescript-eslint/no-unused-vars
+  114:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/messages.service.ts
+  158:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/payments.service.spec.ts
+    9:17  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+   77:71  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  148:12  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  157:12  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  211:13  warning  'markAsPaidSpy' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  212:13  warning  'getStatusSpy' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  215:12  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  284:44  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/payments.service.ts
+  135:48  warning  'provider' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  142:5   warning  'status' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+  203:35  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/platform-config.service.ts
+  248:44  warning  'dataType' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/profile.service.ts
+  505:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/pwa.service.ts
+    9:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  194:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  195:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  231:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  247:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  260:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  267:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  283:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  290:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  342:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  362:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  385:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  427:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/realtime-pricing.service.ts
+  1:22  warning  'inject' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/reviews.service.ts
+  424:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  452:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/settlement.service.ts
+   2:10  warning  'of' is defined but never used                 @typescript-eslint/no-unused-vars
+   8:3   warning  'BookingInspection' is defined but never used  @typescript-eslint/no-unused-vars
+   9:3   warning  'InspectionPhoto' is defined but never used    @typescript-eslint/no-unused-vars
+  11:3   warning  'BucketType' is defined but never used         @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/supabase-client.service.POOLING.ts
+   8:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/supabase-client.service.ts
+   8:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/supabase-concurrency.spec.ts
+   14:7   warning  'service' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  159:11  warning  'successCount' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  314:14  warning  'error' is defined but never used                  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/supabase-pooling-performance.spec.ts
+  29:13  warning  'client' is assigned a value but never used                          @typescript-eslint/no-unused-vars
+  38:62  warning  'i' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/tour.service.ts
+  473:34  warning  'reject' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/wallet-ledger.service.ts
+  1:22  warning  'inject' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/services/wallet.service.ts
+  316:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  635:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  869:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  870:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  948:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/core/services/withdrawal.service.ts
+  8:3  warning  'WalletCompleteWithdrawalResponse' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/core/types/database.types.ts
+  111:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  112:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/e2e/booking-flow-e2e.spec.ts
+   17:7   warning  'walletService' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  104:54  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  213:54  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  292:54  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  339:54  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  383:54  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/admin/components/coverage-fund-dashboard.component.ts
+    1:29  warning  'inject' is defined but never used        @typescript-eslint/no-unused-vars
+  285:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/admin/deposits-monitoring/deposits-monitoring.page.ts
+  166:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  200:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  238:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/admin/fgo/fgo-overview.page.ts
+  198:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  228:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  355:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  356:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/auth/callback/auth-callback.page.ts
+  106:15  warning  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.ts
+   320:26  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+   322:28  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+   393:16  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+   645:42  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+   821:29  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+   849:5   warning  'riskSnapshotId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   951:47  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+  1005:51  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/booking-detail-payment/components/coverage-upgrade-selector.component.ts
+  5:3  warning  'getCoverageUpgradeName' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/booking-detail/booking-detail.page.ts
+    6:19  warning  'CreateReviewParams' is defined but never used           @typescript-eslint/no-unused-vars
+    6:39  warning  'Review' is defined but never used                       @typescript-eslint/no-unused-vars
+   14:3   warning  'SettlementService' is defined but never used            @typescript-eslint/no-unused-vars
+   15:3   warning  'Claim' is defined but never used                        @typescript-eslint/no-unused-vars
+   16:3   warning  'ClaimProcessingResult' is defined but never used        @typescript-eslint/no-unused-vars
+   20:3   warning  'BookingRiskSnapshot' is defined but never used          @typescript-eslint/no-unused-vars
+   21:3   warning  'EligibilityResult' is defined but never used            @typescript-eslint/no-unused-vars
+   22:3   warning  'WaterfallResult' is defined but never used              @typescript-eslint/no-unused-vars
+   23:3   warning  'FgoParameters' is defined but never used                @typescript-eslint/no-unused-vars
+   24:3   warning  'BucketType' is defined but never used                   @typescript-eslint/no-unused-vars
+   25:3   warning  'InspectionStage' is defined but never used              @typescript-eslint/no-unused-vars
+   30:10  warning  'InspectionUploaderComponent' is defined but never used  @typescript-eslint/no-unused-vars
+   31:10  warning  'ClaimFormComponent' is defined but never used           @typescript-eslint/no-unused-vars
+  223:39  warning  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/booking-detail/fgo-management.component.ts
+   9:3  warning  'ClaimProcessingResult' is defined but never used  @typescript-eslint/no-unused-vars
+  18:3  warning  'InspectionStage' is defined but never used        @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/booking-detail/payment-actions.component.ts
+  185:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/booking-detail/review-management.component.ts
+  192:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/my-bookings/my-bookings-mobile.spec.ts
+    2:10  warning  'DebugElement' is defined but never used                                         @typescript-eslint/no-unused-vars
+    3:10  warning  'By' is defined but never used                                                   @typescript-eslint/no-unused-vars
+    8:3   warning  'hasHorizontalOverflow' is defined but never used                                @typescript-eslint/no-unused-vars
+    9:3   warning  'meetsMinimumTouchTarget' is defined but never used                              @typescript-eslint/no-unused-vars
+   10:3   warning  'isElementInViewport' is defined but never used                                  @typescript-eslint/no-unused-vars
+   12:1   warning  `./my-bookings.page` import should occur after import of `../../../core/models`  import/order
+  458:15  warning  'width' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+  575:15  warning  'backgroundColor' is assigned a value but never used                             @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/my-bookings/my-bookings.page.spec.ts
+  2:10  warning  'signal' is defined but never used                                               @typescript-eslint/no-unused-vars
+  4:1   warning  `./my-bookings.page` import should occur after import of `../../../core/models`  import/order
+
+/home/edu/autorenta/apps/web/src/app/features/bookings/report-claim/report-claim.page.ts
+  406:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  423:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/cars/detail/car-detail.page.ts
+    7:3   warning  'inject' is defined but never used                                           @typescript-eslint/no-unused-vars
+   20:33  warning  'ReviewSummary' is defined but never used                                    @typescript-eslint/no-unused-vars
+  429:37  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  489:11  warning  'address' is assigned a value but never used                                 @typescript-eslint/no-unused-vars
+  519:5   warning  'secondary' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  520:5   warning  'tertiary' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  521:5   warning  'carName' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/features/cars/my-cars/my-cars.page.ts
+  59:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/cars/publish/car-publish.page.ts
+  40:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/cars/publish/publish-car-v2.page.ts
+    12:3   warning  'EnhancedPhoto' is defined but never used            @typescript-eslint/no-unused-vars
+  1413:62  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  1414:13  warning  'dynamicPricing' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/features/cars/publish/publish-car.page.ts
+  274:11  warning  'neighborhood' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  326:38  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  327:19  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/explore/explore.page.ts
+  124:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/home/home.page.ts
+  80:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/features/mp-callback/mp-callback.page.ts
+  371:3  warning  Lifecycle interface 'OnDestroy' should be implemented for method 'ngOnDestroy'. (https://angular.dev/style-guide#style-09-01)  @angular-eslint/use-lifecycle-interface
+
+/home/edu/autorenta/apps/web/src/app/features/profile/profile-expanded.page.ts
+   22:3   warning  'UserVerificationStatus' is defined but never used  @typescript-eslint/no-unused-vars
+  355:11  warning  'missingDocs' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  458:20  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/components/cars-map/cars-map.component.ts
+   28:18  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+   29:15  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+   43:18  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+   61:21  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+   64:26  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+   91:24  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  160:27  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  291:32  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  370:13  warning  'originalCount' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  430:38  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  533:38  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  545:38  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  668:48  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  673:43  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  691:42  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  701:52  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  703:55  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  707:44  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  733:33  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  743:41  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/components/claim-form/claim-form.component.ts
+    8:3   warning  'Claim' is defined but never used         @typescript-eslint/no-unused-vars
+  124:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  263:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  268:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  269:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/components/deposit-modal/deposit-modal.component.ts
+    1:59  warning  'computed' is defined but never used      @typescript-eslint/no-unused-vars
+  394:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/components/dynamic-price-display/dynamic-price-display.component.ts
+  187:3  warning  Lifecycle interface 'OnDestroy' should be implemented for method 'ngOnDestroy'. (https://angular.dev/style-guide#style-09-01)  @angular-eslint/use-lifecycle-interface
+
+/home/edu/autorenta/apps/web/src/app/shared/components/help-button/help-button.component.ts
+  5:23  warning  'TourId' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/shared/components/inspection-uploader/inspection-uploader.component.ts
+  250:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  262:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  263:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/components/mercadopago-card-form/mercadopago-card-form.component.ts
+   15:6   warning  'MercadoPagoCardFormData' is defined but never used  @typescript-eslint/no-unused-vars
+  184:21  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  185:15  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  206:24  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  209:25  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  210:27  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  273:34  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  301:36  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  312:28  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  328:40  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  328:52  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  363:31  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  387:20  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/components/mp-onboarding-modal/mp-onboarding-modal.component.ts
+  495:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/components/pwa-install-prompt/pwa-install-prompt.component.ts
+  4:19  warning  'state' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/edu/autorenta/apps/web/src/app/shared/components/pwa-titlebar/pwa-titlebar.component.ts
+  33:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts
+  401:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/app/shared/utils/car-placeholder-images.ts
+  83:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/environments/environment.base.ts
+  20:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/testing/helpers/responsive-test-helpers.ts
+   72:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   95:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  120:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  124:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/edu/autorenta/apps/web/src/testing/mocks/supabase-mock.ts
+    1:10  warning  'SupabaseClient' is defined but never used                               @typescript-eslint/no-unused-vars
+   15:20  warning  Unexpected any. Specify a different type                                 @typescript-eslint/no-explicit-any
+   40:30  warning  Unexpected any. Specify a different type                                 @typescript-eslint/no-explicit-any
+   49:25  warning  'table' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   67:65  warning  Unexpected any. Specify a different type                                 @typescript-eslint/no-explicit-any
+  133:65  warning  Unexpected any. Specify a different type                                 @typescript-eslint/no-explicit-any
+  252:65  warning  Unexpected any. Specify a different type                                 @typescript-eslint/no-explicit-any
+
+✖ 315 problems (0 errors, 315 warnings)
+  0 errors and 5 warnings potentially fixable with the `--fix` option.
+
+Lint warnings found in the listed files.
+

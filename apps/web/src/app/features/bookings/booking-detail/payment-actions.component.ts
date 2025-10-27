@@ -157,7 +157,7 @@ export class PaymentActionsComponent {
       } else {
         throw new Error(result.error || 'Error al procesar el pago');
       }
-    } catch (err) {
+    } catch (_err) {
       console.error('Error en handlePayNow:', err);
       alert(
         'Error al procesar el pago: ' + (err instanceof Error ? err.message : 'Error desconocido'),
@@ -182,7 +182,7 @@ export class PaymentActionsComponent {
       }
       // Reloading should be handled by the parent component
       window.location.reload();
-    } catch (err) {
+    } catch (_err) {
       alert('Error al cancelar la reserva');
     }
   }

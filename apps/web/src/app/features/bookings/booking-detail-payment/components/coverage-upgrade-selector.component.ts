@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   CoverageUpgrade,
-  getCoverageUpgradeName,
 } from '../../../../core/models/booking-detail-payment.model';
 
 @Component({

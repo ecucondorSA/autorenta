@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 import { PwaService } from '../../../core/services/pwa.service';
 
 @Component({

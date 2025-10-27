@@ -854,7 +854,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    */
   private async updateBookingRiskSnapshot(
     bookingId: string,
-    riskSnapshotId: string,
+    _riskSnapshotId: string,
   ): Promise<void> {
     const { error } = await this.supabaseClient
       .from('bookings')
