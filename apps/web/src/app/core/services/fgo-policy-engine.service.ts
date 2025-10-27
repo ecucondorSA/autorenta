@@ -94,11 +94,16 @@ export class FgoPolicyEngineService {
     lr90d: number,
     totalBalanceUsd: number,
     userEventCountThisQuarter: number,
-    monthlyPayoutsUsd: number
+    monthlyPayoutsUsd: number,
   ): FgoPolicyDecision {
     const solvencyStatus = this.determineSolvencyStatus(rc, lr90d);
     const contributionAlpha = this.calculateContributionAlpha(rc);
-    const canUseFgo = this.canUseFgo(rc, userEventCountThisQuarter, monthlyPayoutsUsd, totalBalanceUsd);
+    const canUseFgo = this.canUseFgo(
+      rc,
+      userEventCountThisQuarter,
+      monthlyPayoutsUsd,
+      totalBalanceUsd,
+    );
 
     let maxCoveragePerEventUsd = this.MAX_COVERAGE_PER_EVENT_USD;
     let requiresCoPay = false;
@@ -117,7 +122,7 @@ export class FgoPolicyEngineService {
     // Límites de eventos por usuario
     const remainingEventsThisQuarter = Math.max(
       0,
-      this.MAX_EVENTS_PER_QUARTER - userEventCountThisQuarter
+      this.MAX_EVENTS_PER_QUARTER - userEventCountThisQuarter,
     );
 
     // Mensajes y restricciones
@@ -125,7 +130,7 @@ export class FgoPolicyEngineService {
       solvencyStatus,
       rc,
       remainingEventsThisQuarter,
-      canUseFgo
+      canUseFgo,
     );
 
     return {
@@ -170,7 +175,7 @@ export class FgoPolicyEngineService {
     rc: number,
     userEventCountThisQuarter: number,
     monthlyPayoutsUsd: number,
-    totalBalanceUsd: number
+    totalBalanceUsd: number,
   ): boolean {
     // Gate 1: RC mínimo
     if (rc < 0.8) return false;
@@ -192,7 +197,7 @@ export class FgoPolicyEngineService {
     status: FgoSolvencyStatus,
     rc: number,
     remainingEvents: number,
-    canUseFgo: boolean
+    canUseFgo: boolean,
   ): {
     statusMessage: string;
     restrictions: string[];
@@ -202,7 +207,8 @@ export class FgoPolicyEngineService {
 
     switch (status) {
       case 'healthy':
-        statusMessage = 'FGO operando con normalidad. Cobertura disponible hasta USD 800 por evento.';
+        statusMessage =
+          'FGO operando con normalidad. Cobertura disponible hasta USD 800 por evento.';
         break;
 
       case 'warning':
@@ -246,7 +252,7 @@ export class FgoPolicyEngineService {
   calculateContribution(
     amountCents: number,
     transactionType: 'deposit' | 'commission' | 'membership',
-    rc: number
+    rc: number,
   ): number {
     const alpha = this.calculateContributionAlpha(rc);
 
@@ -277,7 +283,7 @@ export class FgoPolicyEngineService {
    */
   validatePayout(
     requestedAmountUsd: number,
-    policy: FgoPolicyDecision
+    policy: FgoPolicyDecision,
   ): {
     approved: boolean;
     reason?: string;

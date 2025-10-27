@@ -10,7 +10,7 @@ import { Booking } from '../../../core/models';
   standalone: true,
   imports: [CommonModule, IonicModule, RouterModule],
   templateUrl: './booking-success.page.html',
-  styleUrls: ['./booking-success.page.scss']
+  styleUrls: ['./booking-success.page.scss'],
 })
 export class BookingSuccessPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -52,7 +52,7 @@ export class BookingSuccessPage implements OnInit {
   getCarName(): string {
     const booking = this.booking();
     if (!booking) return 'Vehículo';
-    
+
     // Booking no tiene car directamente, solo car_id
     // Se necesitaría cargar el car por separado
     return 'Vehículo';

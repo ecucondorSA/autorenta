@@ -1,4 +1,6 @@
-<div class="wallet-balance-card bg-white-pure dark:bg-anthracite border border-pearl-gray/70 dark:border-slate-deep rounded-xl shadow-soft dark:shadow-card p-6 transition-colors duration-300">
+<div
+  class="wallet-balance-card bg-white-pure dark:bg-anthracite border border-pearl-gray/70 dark:border-slate-deep rounded-xl shadow-soft dark:shadow-card p-6 transition-colors duration-300"
+>
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
     <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous">Mi Wallet</h2>
@@ -9,19 +11,22 @@
       (click)="loadBalance()"
       [disabled]="isLoadingBalance()"
       class="text-accent-petrol hover:text-accent-petrol/80 disabled:text-ash-gray dark:text-pearl-light dark:hover:text-ivory-luminous dark:disabled:text-neutral-500 transition-colors"
-      aria-label="Refrescar balance">
+      aria-label="Refrescar balance"
+    >
       <svg
         class="w-5 h-5"
         [class.animate-spin]="isLoadingBalance()"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg">
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+        ></path>
       </svg>
     </button>
   </div>
@@ -29,22 +34,43 @@
   <!-- Pending Deposits Toast Notification -->
   <div
     *ngIf="showPendingDepositsNotification() && hasPendingDeposits()"
-    class="mb-4 bg-warning-50 dark:bg-warning-500/15 border-l-4 border-warning-500 dark:border-warning-500/60 p-4 rounded-r-lg shadow-lg animate-slide-in-right">
+    class="mb-4 bg-warning-50 dark:bg-warning-500/15 border-l-4 border-warning-500 dark:border-warning-500/60 p-4 rounded-r-lg shadow-lg animate-slide-in-right"
+  >
     <div class="flex items-start">
-      <svg class="w-6 h-6 text-warning-600 dark:text-warning-100 mt-0.5 flex-shrink-0 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      <svg
+        class="w-6 h-6 text-warning-600 dark:text-warning-100 mt-0.5 flex-shrink-0 animate-pulse"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
       </svg>
       <div class="ml-3 flex-1">
         <h3 class="text-sm font-medium text-warning-900 dark:text-warning-100">
-          {{ pendingDeposits() === 1 ? 'Tienes 1 depósito pendiente' : 'Tienes ' + pendingDeposits() + ' depósitos pendientes' }}
+          {{
+            pendingDeposits() === 1
+              ? 'Tienes 1 depósito pendiente'
+              : 'Tienes ' + pendingDeposits() + ' depósitos pendientes'
+          }}
         </h3>
         <p class="text-sm text-warning-700 dark:text-warning-100 mt-1">
-          {{ pendingDeposits() === 1 ? 'Tu depósito está siendo procesado' : 'Tus depósitos están siendo procesados' }} y se reflejarán en tu balance en unos minutos.
+          {{
+            pendingDeposits() === 1
+              ? 'Tu depósito está siendo procesado'
+              : 'Tus depósitos están siendo procesados'
+          }}
+          y se reflejarán en tu balance en unos minutos.
         </p>
         <button
           type="button"
           (click)="retry()"
-          class="mt-2 text-xs font-medium text-warning-900 dark:text-warning-100 hover:text-warning-700 dark:hover:text-ivory-luminous underline">
+          class="mt-2 text-xs font-medium text-warning-900 dark:text-warning-100 hover:text-warning-700 dark:hover:text-ivory-luminous underline"
+        >
           Actualizar ahora
         </button>
       </div>
@@ -53,9 +79,15 @@
         type="button"
         (click)="dismissPendingNotification()"
         class="ml-2 text-warning-600 dark:text-warning-100 hover:text-warning-900 dark:hover:text-ivory-luminous transition-colors"
-        aria-label="Cerrar notificación">
+        aria-label="Cerrar notificación"
+      >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
         </svg>
       </button>
     </div>
@@ -63,37 +95,52 @@
 
   <!-- Loading State -->
   <div *ngIf="isLoadingBalance()" class="text-center py-8">
-    <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-petrol dark:border-pearl-light"></div>
+    <div
+      class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-petrol dark:border-pearl-light"
+    ></div>
     <p class="text-charcoal-medium dark:text-pearl-light/80 mt-4">Cargando balance...</p>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error() && !isLoadingBalance()" class="text-center py-8">
-    <div class="bg-error-50 dark:bg-error-500/10 border border-error-500 dark:border-error-500/40 rounded-lg p-4 mb-4">
+    <div
+      class="bg-error-50 dark:bg-error-500/10 border border-error-500 dark:border-error-500/40 rounded-lg p-4 mb-4"
+    >
       <div class="flex items-start">
-        <svg class="w-6 h-6 text-error-600 dark:text-error-100 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <svg
+          class="w-6 h-6 text-error-600 dark:text-error-100 mt-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
         </svg>
         <div class="ml-3 flex-1">
-          <h3 class="text-sm font-medium text-error-900 dark:text-error-100">Error al cargar el balance</h3>
+          <h3 class="text-sm font-medium text-error-900 dark:text-error-100">
+            Error al cargar el balance
+          </h3>
           <p class="text-sm text-error-700 dark:text-error-100 mt-1">{{ error()?.message }}</p>
         </div>
       </div>
     </div>
 
-    <button
-      type="button"
-      (click)="retry()"
-      class="btn-primary">
-      Reintentar
-    </button>
+    <button type="button" (click)="retry()" class="btn-primary">Reintentar</button>
   </div>
 
   <!-- Balance Display -->
   <div *ngIf="balance() && !isLoadingBalance()" class="space-y-4">
     <!-- Total Balance -->
-    <div class="bg-white-pure dark:bg-slate-deep rounded-xl p-6 border-2 border-accent-petrol/30 dark:border-accent-petrol/40 shadow-soft hover:border-accent-petrol/50 dark:hover:border-accent-petrol/60 transition-all">
-      <p class="text-sm text-charcoal-medium dark:text-pearl-light/90 font-medium mb-1">Balance Total</p>
+    <div
+      class="bg-white-pure dark:bg-slate-deep rounded-xl p-6 border-2 border-accent-petrol/30 dark:border-accent-petrol/40 shadow-soft hover:border-accent-petrol/50 dark:hover:border-accent-petrol/60 transition-all"
+    >
+      <p class="text-sm text-charcoal-medium dark:text-pearl-light/90 font-medium mb-1">
+        Balance Total
+      </p>
       <p class="text-4xl font-bold text-smoke-black dark:text-ivory-luminous">
         {{ formatCurrency(totalBalance()) }}
       </p>
@@ -102,29 +149,52 @@
     <!-- Available & Locked Balance -->
     <div class="grid grid-cols-2 gap-4">
       <!-- Available Balance -->
-      <div class="bg-success-50 dark:bg-success-500/15 rounded-xl p-4 border border-success-500 dark:border-success-500/40">
+      <div
+        class="bg-success-50 dark:bg-success-500/15 rounded-xl p-4 border border-success-500 dark:border-success-500/40"
+      >
         <div class="flex items-center justify-between mb-2">
           <p class="text-xs text-success-700 dark:text-success-100 font-medium">Disponible</p>
-          <svg class="w-5 h-5 text-success-600 dark:text-success-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <svg
+            class="w-5 h-5 text-success-600 dark:text-success-100"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
           </svg>
         </div>
         <p class="text-2xl font-bold text-success-900 dark:text-success-100">
           {{ formatCurrency(availableBalance()) }}
         </p>
-        <p class="text-xs text-success-700 dark:text-success-100/80 mt-1">Fondos totales listos para usar</p>
+        <p class="text-xs text-success-700 dark:text-success-100/80 mt-1">
+          Fondos totales listos para usar
+        </p>
 
         <div class="mt-3 space-y-2">
-          <div class="flex items-center justify-between text-xs text-success-700 dark:text-success-100">
+          <div
+            class="flex items-center justify-between text-xs text-success-700 dark:text-success-100"
+          >
             <span>Retirable</span>
-            <span class="font-semibold text-success-900 dark:text-success-100">{{ formatCurrency(withdrawableBalance()) }}</span>
+            <span class="font-semibold text-success-900 dark:text-success-100">{{
+              formatCurrency(withdrawableBalance())
+            }}</span>
           </div>
 
           @if (nonWithdrawableBalance() > 0) {
             <div class="flex items-start justify-between text-xs text-info-700 dark:text-info-100">
               <span class="flex items-center gap-1">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 18.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M12 18.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z"
+                  ></path>
                 </svg>
                 Crédito Autorentar
               </span>
@@ -135,11 +205,23 @@
       </div>
 
       <!-- Locked Balance -->
-      <div class="bg-warning-50 dark:bg-warning-500/15 rounded-xl p-4 border border-warning-500 dark:border-warning-500/40">
+      <div
+        class="bg-warning-50 dark:bg-warning-500/15 rounded-xl p-4 border border-warning-500 dark:border-warning-500/40"
+      >
         <div class="flex items-center justify-between mb-2">
           <p class="text-xs text-warning-700 dark:text-warning-100 font-medium">Bloqueado</p>
-          <svg class="w-5 h-5 text-warning-600 dark:text-warning-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          <svg
+            class="w-5 h-5 text-warning-600 dark:text-warning-100"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            ></path>
           </svg>
         </div>
         <p class="text-2xl font-bold text-warning-900 dark:text-warning-100">
@@ -154,10 +236,16 @@
       *ngIf="showDepositButton()"
       type="button"
       (click)="onDepositClick()"
-      class="btn-primary w-full">
+      class="btn-primary w-full"
+    >
       <div class="flex items-center justify-center">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4v16m8-8H4"
+          ></path>
         </svg>
         Depositar Fondos
       </div>
@@ -168,36 +256,60 @@
       <button
         type="button"
         (click)="showBankInfo.set(!showBankInfo())"
-        class="w-full px-4 py-3 bg-sand-light dark:bg-anthracite text-smoke-black dark:text-pearl-light font-medium flex items-center justify-between hover:bg-pearl-gray dark:hover:bg-slate-deep transition-colors rounded-t-xl">
+        class="w-full px-4 py-3 bg-sand-light dark:bg-anthracite text-smoke-black dark:text-pearl-light font-medium flex items-center justify-between hover:bg-pearl-gray dark:hover:bg-slate-deep transition-colors rounded-t-xl"
+      >
         <span class="text-sm">Ver datos para transferencia bancaria</span>
         <svg
           class="w-5 h-5 transition-transform"
           [class.rotate-180]="showBankInfo()"
-          fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          ></path>
         </svg>
       </button>
 
-      <div *ngIf="showBankInfo()" class="p-4 bg-white-pure dark:bg-slate-deep space-y-3 text-sm border-t border-pearl-gray dark:border-slate-deep">
+      <div
+        *ngIf="showBankInfo()"
+        class="p-4 bg-white-pure dark:bg-slate-deep space-y-3 text-sm border-t border-pearl-gray dark:border-slate-deep"
+      >
         <div class="flex items-center justify-between">
           <span class="text-charcoal-medium dark:text-pearl-light/70">Titular:</span>
-          <span class="font-semibold text-smoke-black dark:text-ivory-luminous">{{ bankDetails.accountName }}</span>
+          <span class="font-semibold text-smoke-black dark:text-ivory-luminous">{{
+            bankDetails.accountName
+          }}</span>
         </div>
         <div class="flex items-center justify-between">
           <span class="text-charcoal-medium dark:text-pearl-light/70">Banco:</span>
-          <span class="font-semibold text-smoke-black dark:text-ivory-luminous">{{ bankDetails.bank }}</span>
+          <span class="font-semibold text-smoke-black dark:text-ivory-luminous">{{
+            bankDetails.bank
+          }}</span>
         </div>
         <div class="flex items-center justify-between">
           <span class="text-charcoal-medium dark:text-pearl-light/70">Alias:</span>
           <div class="flex items-center gap-2">
-            <span class="font-semibold text-smoke-black dark:text-ivory-luminous font-mono">{{ bankDetails.alias }}</span>
+            <span class="font-semibold text-smoke-black dark:text-ivory-luminous font-mono">{{
+              bankDetails.alias
+            }}</span>
             <button
               type="button"
               (click)="copyToClipboard(bankDetails.alias)"
               class="text-accent-petrol hover:text-accent-petrol/80 dark:text-pearl-light dark:hover:text-ivory-luminous transition-colors"
-              aria-label="Copiar alias">
+              aria-label="Copiar alias"
+            >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
               </svg>
             </button>
           </div>
@@ -205,24 +317,40 @@
         <div class="flex items-center justify-between">
           <span class="text-charcoal-medium dark:text-pearl-light/70">CBU:</span>
           <div class="flex items-center gap-2">
-            <span class="font-semibold text-smoke-black dark:text-ivory-luminous font-mono text-xs">{{ bankDetails.cbu }}</span>
+            <span
+              class="font-semibold text-smoke-black dark:text-ivory-luminous font-mono text-xs"
+              >{{ bankDetails.cbu }}</span
+            >
             <button
               type="button"
               (click)="copyToClipboard(bankDetails.cbu)"
               class="text-accent-petrol hover:text-accent-petrol/80 dark:text-pearl-light dark:hover:text-ivory-luminous transition-colors"
-              aria-label="Copiar CBU">
+              aria-label="Copiar CBU"
+            >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
               </svg>
             </button>
           </div>
         </div>
-        <div class="text-xs text-warning-900 dark:text-warning-100 mt-4 p-3 bg-warning-50 dark:bg-warning-500/15 rounded-lg border border-warning-500 dark:border-warning-500/40">
+        <div
+          class="text-xs text-warning-900 dark:text-warning-100 mt-4 p-3 bg-warning-50 dark:bg-warning-500/15 rounded-lg border border-warning-500 dark:border-warning-500/40"
+        >
           <p class="font-semibold mb-1">Importante:</p>
           <p>
             Enviá el comprobante a
-            <a href="mailto:{{ bankDetails.email }}" class="underline font-semibold hover:text-warning-700 dark:hover:text-ivory-luminous">{{ bankDetails.email }}</a>
-            indicando tu email de cuenta. La acreditación se realiza en horario hábil (Lun-Vie 9-18hs).
+            <a
+              href="mailto:{{ bankDetails.email }}"
+              class="underline font-semibold hover:text-warning-700 dark:hover:text-ivory-luminous"
+              >{{ bankDetails.email }}</a
+            >
+            indicando tu email de cuenta. La acreditación se realiza en horario hábil (Lun-Vie
+            9-18hs).
           </p>
         </div>
       </div>
@@ -231,8 +359,18 @@
     <!-- Info Message -->
     <div class="info-card">
       <div class="flex items-start">
-        <svg class="w-5 h-5 text-charcoal-medium dark:text-pearl-light mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <svg
+          class="w-5 h-5 text-charcoal-medium dark:text-pearl-light mt-0.5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
         </svg>
         <div class="ml-2 space-y-1">
           <p class="text-xs text-charcoal-medium dark:text-pearl-light/80">
@@ -240,8 +378,13 @@
           </p>
           @if (nonWithdrawableBalance() > 0) {
             <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
-              Tu crédito Autorentar se mantiene disponible para nuevas reservas y no puede retirarse como efectivo.
-              <a href="/politica-credito-autorentar" class="underline font-semibold hover:text-smoke-black dark:hover:text-ivory-luminous" target="_blank">
+              Tu crédito Autorentar se mantiene disponible para nuevas reservas y no puede retirarse
+              como efectivo.
+              <a
+                href="/politica-credito-autorentar"
+                class="underline font-semibold hover:text-smoke-black dark:hover:text-ivory-luminous"
+                target="_blank"
+              >
                 Consultar política
               </a>
             </p>

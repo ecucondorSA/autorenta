@@ -28,7 +28,7 @@ export class OwnerBookingsPage implements OnInit {
   constructor(
     private readonly bookingsService: BookingsService,
     private readonly alertController: AlertController,
-    private readonly toastController: ToastController
+    private readonly toastController: ToastController,
   ) {}
 
   ngOnInit(): void {
@@ -148,7 +148,7 @@ export class OwnerBookingsPage implements OnInit {
       confirmText: 'Iniciar',
     });
     if (!confirmed) return;
-    
+
     this.processingAction.set(bookingId);
     try {
       await this.bookingsService.updateBooking(bookingId, { status: 'in_progress' });
@@ -169,7 +169,7 @@ export class OwnerBookingsPage implements OnInit {
       confirmText: 'Finalizar',
     });
     if (!confirmed) return;
-    
+
     this.processingAction.set(bookingId);
     try {
       await this.bookingsService.updateBooking(bookingId, { status: 'completed' });
@@ -191,7 +191,7 @@ export class OwnerBookingsPage implements OnInit {
       confirmColor: 'danger',
     });
     if (!confirmed) return;
-    
+
     this.processingAction.set(bookingId);
     try {
       await this.bookingsService.cancelBooking(bookingId, false);
@@ -243,7 +243,7 @@ export class OwnerBookingsPage implements OnInit {
         } catch (error) {
           console.error('Error fetching renter contact info:', error);
         }
-      })
+      }),
     );
 
     this.renterContacts.set(contacts);
@@ -277,7 +277,10 @@ export class OwnerBookingsPage implements OnInit {
     return role === 'confirm';
   }
 
-  private async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success'): Promise<void> {
+  private async presentToast(
+    message: string,
+    color: 'success' | 'danger' | 'warning' = 'success',
+  ): Promise<void> {
     const toast = await this.toastController.create({
       message,
       duration: 2500,

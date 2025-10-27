@@ -1,20 +1,20 @@
 /* Profile Expanded Page - Estilos Premium Neutros */
 
 /* Scroll suave para tabs */
-nav[aria-label="Tabs"] {
+nav[aria-label='Tabs'] {
   scrollbar-width: thin;
   scrollbar-color: var(--border-color) transparent;
 }
 
-nav[aria-label="Tabs"]::-webkit-scrollbar {
+nav[aria-label='Tabs']::-webkit-scrollbar {
   height: 4px;
 }
 
-nav[aria-label="Tabs"]::-webkit-scrollbar-track {
+nav[aria-label='Tabs']::-webkit-scrollbar-track {
   background: transparent;
 }
 
-nav[aria-label="Tabs"]::-webkit-scrollbar-thumb {
+nav[aria-label='Tabs']::-webkit-scrollbar-thumb {
   background-color: var(--border-color);
   border-radius: 2px;
 }
@@ -29,25 +29,25 @@ nav[aria-label="Tabs"]::-webkit-scrollbar-thumb {
 }
 
 /* Radio button cards */
-label:has(input[type="radio"]) {
+label:has(input[type='radio']) {
   cursor: pointer;
 }
 
-label:has(input[type="radio"]:checked) {
+label:has(input[type='radio']:checked) {
   box-shadow: 0 0 0 2px var(--accent-primary);
 }
 
 /* Document upload cards */
-label:has(input[type="file"]) .flex {
+label:has(input[type='file']) .flex {
   transition: all 0.2s ease;
 }
 
-label:has(input[type="file"]):hover .flex {
+label:has(input[type='file']):hover .flex {
   transform: translateY(-2px);
 }
 
 /* Checkbox custom styles */
-input[type="checkbox"]:checked {
+input[type='checkbox']:checked {
   background-color: var(--accent-primary);
   border-color: var(--accent-primary);
 }

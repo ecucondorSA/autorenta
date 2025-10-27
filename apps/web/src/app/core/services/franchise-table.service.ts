@@ -55,7 +55,7 @@ export class FranchiseTableService {
    * Obtiene la franquicia estándar en USD según el valor del auto
    */
   getStandardFranchiseUsd(carValueUsd: number): number {
-    const band = this.FRANCHISE_BANDS.find(b => carValueUsd <= b.maxValue);
+    const band = this.FRANCHISE_BANDS.find((b) => carValueUsd <= b.maxValue);
     return band?.standardUsd ?? this.FRANCHISE_BANDS[this.FRANCHISE_BANDS.length - 1].standardUsd;
   }
 
@@ -78,7 +78,7 @@ export class FranchiseTableService {
   calculateHoldArs(
     carValueUsd: number,
     bucket: 'economy' | 'standard' | 'premium' | 'luxury' | 'ultra-luxury',
-    fxRate: number
+    fxRate: number,
   ): number {
     const rolloverUsd = this.getRolloverFranchiseUsd(carValueUsd);
     const calculatedHold = this.HOLD_PERCENTAGE * rolloverUsd * fxRate;
@@ -107,7 +107,7 @@ export class FranchiseTableService {
   getFranchiseInfo(
     carValueUsd: number,
     bucket: 'economy' | 'standard' | 'premium' | 'luxury' | 'ultra-luxury',
-    fxRate: number
+    fxRate: number,
   ): {
     standardUsd: number;
     rolloverUsd: number;

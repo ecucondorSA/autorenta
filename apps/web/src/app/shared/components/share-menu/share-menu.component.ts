@@ -21,7 +21,7 @@ export class ShareMenuComponent {
   constructor(public pwaService: PwaService) {}
 
   toggleMenu(): void {
-    this.menuOpen.update(v => !v);
+    this.menuOpen.update((v) => !v);
   }
 
   async shareNative(): Promise<void> {

@@ -68,16 +68,22 @@ export class CarLocationsService {
     }
 
     const channel = this.supabase.channel('public:car_map_feed');
-    channel.on('postgres_changes', { schema: 'public', table: 'car_locations', event: '*' }, (_payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) =>
-      onChange(),
+    channel.on(
+      'postgres_changes',
+      { schema: 'public', table: 'car_locations', event: '*' },
+      (_payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => onChange(),
     );
-    channel.on('postgres_changes', { schema: 'public', table: 'cars', event: '*' }, (payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => {
-      const newStatus = (payload.new as any)?.status;
-      const oldStatus = (payload.old as any)?.status;
-      if (newStatus === 'active' || oldStatus === 'active') {
-        onChange();
-      }
-    });
+    channel.on(
+      'postgres_changes',
+      { schema: 'public', table: 'cars', event: '*' },
+      (payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => {
+        const newStatus = (payload.new as any)?.status;
+        const oldStatus = (payload.old as any)?.status;
+        if (newStatus === 'active' || oldStatus === 'active') {
+          onChange();
+        }
+      },
+    );
 
     void channel.subscribe();
     this.realtimeChannel = channel;

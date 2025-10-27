@@ -182,7 +182,7 @@ export class CheckoutPaymentService {
         `${walletText} bloqueados de tu wallet. Redirigiendo a Mercado Pago para pagar ${cardText}...`,
       );
 
-      this.scheduleRiskSnapshot(booking, 'partial_wallet').catch(err => {
+      this.scheduleRiskSnapshot(booking, 'partial_wallet').catch((err) => {
         console.warn('Risk snapshot failed (non-blocking)', err);
       });
 
@@ -218,7 +218,10 @@ export class CheckoutPaymentService {
     }
   }
 
-  private async scheduleRiskSnapshot(booking: Booking, method: BookingPaymentMethod): Promise<void> {
+  private async scheduleRiskSnapshot(
+    booking: Booking,
+    method: BookingPaymentMethod,
+  ): Promise<void> {
     const bucket = this.state.getBucket();
     if (!bucket) {
       console.warn('Sin bucket FGO. Se omite risk snapshot.');
@@ -239,24 +242,26 @@ export class CheckoutPaymentService {
       walletSplit: this.state.getWalletSplit(),
     });
 
-    const request$ = this.fgoService.createRiskSnapshot({
-      bookingId: booking.id,
-      countryCode: 'AR',
-      bucket,
-      fxSnapshot: this.state.getFxSnapshot(),
-      currency: booking.currency as 'USD' | 'ARS',
-      estimatedHoldAmount: guarantee.holdUsd,
-      estimatedDeposit: guarantee.creditSecurityUsd,
-      franchiseUsd: guarantee.franchiseStandardUsd,
-      hasCard: method === 'credit_card' || method === 'partial_wallet',
-      hasWalletSecurity: method === 'wallet' || method === 'partial_wallet',
-    }).pipe(
-      timeout({ each: 10_000 }),
-      catchError((error) => {
-        console.warn('Snapshot error or timeout', error);
-        return of(null);
-      }),
-    );
+    const request$ = this.fgoService
+      .createRiskSnapshot({
+        bookingId: booking.id,
+        countryCode: 'AR',
+        bucket,
+        fxSnapshot: this.state.getFxSnapshot(),
+        currency: booking.currency as 'USD' | 'ARS',
+        estimatedHoldAmount: guarantee.holdUsd,
+        estimatedDeposit: guarantee.creditSecurityUsd,
+        franchiseUsd: guarantee.franchiseStandardUsd,
+        hasCard: method === 'credit_card' || method === 'partial_wallet',
+        hasWalletSecurity: method === 'wallet' || method === 'partial_wallet',
+      })
+      .pipe(
+        timeout({ each: 10_000 }),
+        catchError((error) => {
+          console.warn('Snapshot error or timeout', error);
+          return of(null);
+        }),
+      );
 
     await firstValueFrom(request$);
   }

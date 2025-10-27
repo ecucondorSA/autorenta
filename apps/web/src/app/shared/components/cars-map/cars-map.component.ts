@@ -70,7 +70,10 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private lastLocationUpdate: { lat: number; lng: number; timestamp: number } | null = null;
   private readonly MIN_LOCATION_CHANGE_THRESHOLD = 0.0001; // ~10 metros
   private readonly MIN_LOCATION_TIME_THRESHOLD = 5000; // 5 segundos
-  private pricingCache: Map<string, { price: number; pricePerHour: number | null; timestamp: number; surgeActive: boolean }> = new Map();
+  private pricingCache: Map<
+    string,
+    { price: number; pricePerHour: number | null; timestamp: number; surgeActive: boolean }
+  > = new Map();
   private readonly PRICING_CACHE_TTL = 30000; // 30 segundos
   private cachedSortedLocations: CarMapLocation[] | null = null;
   private lastSortLocation: { lat: number; lng: number } | null = null;
@@ -170,7 +173,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     try {
       // CRITICAL: Esperar a que el contenedor tenga dimensiones reales
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Verificar que el contenedor tenga altura
       const containerEl = this.mapContainer.nativeElement;
@@ -193,14 +196,17 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         width: parentEl?.offsetWidth,
         height: parentEl?.offsetHeight,
       });
-      console.log('Parent computed style:', parentStyle
-        ? {
-            width: parentStyle.width,
-            height: parentStyle.height,
-            flex: parentStyle.flex,
-            display: parentStyle.display,
-          }
-        : 'N/A');
+      console.log(
+        'Parent computed style:',
+        parentStyle
+          ? {
+              width: parentStyle.width,
+              height: parentStyle.height,
+              flex: parentStyle.flex,
+              display: parentStyle.display,
+            }
+          : 'N/A',
+      );
 
       if (containerHeight === 0) {
         console.warn('[CarsMapComponent] ⚠️ Container height is 0, forcing height...');
@@ -444,7 +450,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       // Si hay autos que necesitan fetch, hacerlo
       if (carsNeedingFetch.length > 0) {
         console.log(
-          `[CarsMapComponent] Fetching prices for ${carsNeedingFetch.length} cars (${prices.size} from cache)`
+          `[CarsMapComponent] Fetching prices for ${carsNeedingFetch.length} cars (${prices.size} from cache)`,
         );
 
         const fetchedPrices = await this.pricingService.getBatchPrices(carsNeedingFetch);
@@ -770,7 +776,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
   }
 
-
   private createPopupHTML(location: CarMapLocation): string {
     const priceFormatted = new Intl.NumberFormat('es-AR', {
       style: 'currency',
@@ -1056,7 +1061,9 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
     this.themeChangeListener = (event: CustomEvent<{ dark: boolean }>) => {
-      this.applyThemeToMap(event.detail?.dark ?? document.documentElement.classList.contains('dark'));
+      this.applyThemeToMap(
+        event.detail?.dark ?? document.documentElement.classList.contains('dark'),
+      );
     };
 
     window.addEventListener('autorenta:theme-change', this.themeChangeListener as EventListener);
@@ -1086,7 +1093,11 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     if (this.map.getLayer('clusters')) {
       this.map.setPaintProperty('clusters', 'circle-color', isDark ? '#20353b' : '#2c4a52');
-      this.map.setPaintProperty('clusters', 'circle-stroke-color', isDark ? 'rgba(139, 115, 85, 0.55)' : '#8B7355');
+      this.map.setPaintProperty(
+        'clusters',
+        'circle-stroke-color',
+        isDark ? 'rgba(139, 115, 85, 0.55)' : '#8B7355',
+      );
     }
 
     if (this.map.getLayer('cluster-count')) {
@@ -1158,7 +1169,10 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
     if (this.themeChangeListener) {
-      window.removeEventListener('autorenta:theme-change', this.themeChangeListener as EventListener);
+      window.removeEventListener(
+        'autorenta:theme-change',
+        this.themeChangeListener as EventListener,
+      );
       this.themeChangeListener = null;
     }
 

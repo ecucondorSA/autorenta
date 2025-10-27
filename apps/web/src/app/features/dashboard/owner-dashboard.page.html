@@ -1,11 +1,19 @@
-<div class="owner-dashboard bg-ivory-soft dark:bg-graphite-dark min-h-screen transition-colors duration-300">
+<div
+  class="owner-dashboard bg-ivory-soft dark:bg-graphite-dark min-h-screen transition-colors duration-300"
+>
   <!-- Header -->
-  <div class="bg-white-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300">
+  <div
+    class="bg-white-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">Panel del Locador</h1>
-          <p class="mt-2 text-charcoal-medium dark:text-pearl-light/70">Gestiona tus autos y ganancias</p>
+          <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+            Panel del Locador
+          </h1>
+          <p class="mt-2 text-charcoal-medium dark:text-pearl-light/70">
+            Gestiona tus autos y ganancias
+          </p>
         </div>
         <a
           routerLink="/wallet"
@@ -23,8 +31,19 @@
     @if (loading()) {
       <div class="flex items-center justify-center py-16">
         <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
         </svg>
       </div>
     }
@@ -33,7 +52,10 @@
     @if (error(); as errorMsg) {
       <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
         <p class="text-sm text-red-800">{{ errorMsg }}</p>
-        <button (click)="loadDashboardData()" class="mt-2 text-sm font-medium text-red-600 underline">
+        <button
+          (click)="loadDashboardData()"
+          class="mt-2 text-sm font-medium text-red-600 underline"
+        >
           Reintentar
         </button>
       </div>
@@ -43,9 +65,13 @@
       <!-- Balance Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Balance Disponible -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6">
+        <div
+          class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">Balance Disponible</p>
+            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">
+              Balance Disponible
+            </p>
             <span class="text-2xl">💵</span>
           </div>
           <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
@@ -57,9 +83,13 @@
         </div>
 
         <!-- Balance Pendiente -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6">
+        <div
+          class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">Balance Pendiente</p>
+            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">
+              Balance Pendiente
+            </p>
             <span class="text-2xl">⏳</span>
           </div>
           <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
@@ -71,22 +101,26 @@
         </div>
 
         <!-- Total Ganado -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6">
+        <div
+          class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">Total Ganado</p>
+            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">
+              Total Ganado
+            </p>
             <span class="text-2xl">💰</span>
           </div>
           <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
             {{ totalEarnings() | money }}
           </p>
-          <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
-            Histórico total
-          </p>
+          <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Histórico total</p>
         </div>
       </div>
 
       <!-- Earnings by Month -->
-      <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8">
+      <div
+        class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8"
+      >
         <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
           📊 Ganancias Mensuales
         </h2>
@@ -105,7 +139,11 @@
           </div>
           <div>
             <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mb-1">Crecimiento</p>
-            <p class="text-2xl font-bold" [class.text-green-600]="isGrowthPositive" [class.text-red-600]="!isGrowthPositive">
+            <p
+              class="text-2xl font-bold"
+              [class.text-green-600]="isGrowthPositive"
+              [class.text-red-600]="!isGrowthPositive"
+            >
               {{ isGrowthPositive ? '+' : '' }}{{ growthPercentage }}%
             </p>
           </div>
@@ -115,7 +153,9 @@
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Cars -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6">
+        <div
+          class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">Mis Autos</p>
@@ -125,13 +165,18 @@
             </div>
             <span class="text-4xl">🚗</span>
           </div>
-          <a routerLink="/cars/my-cars" class="text-xs text-primary-600 hover:underline mt-2 inline-block">
+          <a
+            routerLink="/cars/my-cars"
+            class="text-xs text-primary-600 hover:underline mt-2 inline-block"
+          >
             Ver todos →
           </a>
         </div>
 
         <!-- Active Cars -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6">
+        <div
+          class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">Activos</p>
@@ -147,7 +192,9 @@
         </div>
 
         <!-- Upcoming Bookings -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6">
+        <div
+          class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">Próximas</p>
@@ -157,13 +204,18 @@
             </div>
             <span class="text-4xl">📅</span>
           </div>
-          <a routerLink="/bookings/owner" class="text-xs text-primary-600 hover:underline mt-2 inline-block">
+          <a
+            routerLink="/bookings/owner"
+            class="text-xs text-primary-600 hover:underline mt-2 inline-block"
+          >
             Ver reservas →
           </a>
         </div>
 
         <!-- Active Rentals -->
-        <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6">
+        <div
+          class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">En Curso</p>
@@ -180,7 +232,9 @@
       </div>
 
       <!-- Quick Actions -->
-      <div class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6">
+      <div
+        class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+      >
         <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
           ⚡ Acciones Rápidas
         </h2>
@@ -192,7 +246,9 @@
             <span class="text-2xl">➕</span>
             <div>
               <p class="font-medium text-smoke-black dark:text-ivory-luminous">Publicar Auto</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">Añade un nuevo vehículo</p>
+              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                Añade un nuevo vehículo
+              </p>
             </div>
           </a>
 
@@ -203,7 +259,9 @@
             <span class="text-2xl">📋</span>
             <div>
               <p class="font-medium text-smoke-black dark:text-ivory-luminous">Mis Reservas</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">Gestiona alquileres</p>
+              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                Gestiona alquileres
+              </p>
             </div>
           </a>
 

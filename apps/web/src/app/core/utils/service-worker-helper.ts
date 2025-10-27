@@ -68,9 +68,8 @@ export async function checkServiceWorkerHealth(): Promise<boolean> {
         const requests = await cache.keys();
 
         // Check if any RPC calls are cached
-        const problematicRequests = requests.filter(req =>
-          req.url.includes('/rest/v1/rpc/') ||
-          req.url.includes('/functions/v1/')
+        const problematicRequests = requests.filter(
+          (req) => req.url.includes('/rest/v1/rpc/') || req.url.includes('/functions/v1/'),
         );
 
         if (problematicRequests.length > 0) {

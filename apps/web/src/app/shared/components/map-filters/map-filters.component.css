@@ -171,11 +171,13 @@
 }
 
 .range-slider .min-slider {
-  background: linear-gradient(to right,
+  background: linear-gradient(
+    to right,
     #e0e0e0 0%,
     #e0e0e0 var(--min-percent, 0%),
     #2c4a52 var(--min-percent, 0%),
-    #2c4a52 100%);
+    #2c4a52 100%
+  );
   pointer-events: auto;
 }
 
@@ -252,7 +254,7 @@
   color: #444;
 }
 
-.feature-checkbox input[type="checkbox"] {
+.feature-checkbox input[type='checkbox'] {
   width: 18px;
   height: 18px;
   cursor: pointer;

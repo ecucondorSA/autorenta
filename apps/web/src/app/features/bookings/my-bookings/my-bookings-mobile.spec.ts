@@ -15,20 +15,20 @@ import { Booking } from '../../../core/models';
 
 /**
  * SPRINT 6 - Tests de Responsive Design y Funcionalidad Móvil
- * 
+ *
  * Breakpoints de referencia (Bootstrap/Tailwind estándar):
  * - xs: 0-575px (Móvil pequeño)
  * - sm: 576-767px (Móvil grande)
  * - md: 768-991px (Tablet)
  * - lg: 992-1199px (Desktop)
  * - xl: 1200px+ (Desktop grande)
- * 
+ *
  * Devices de prueba:
  * - iPhone SE: 375x667 (referencia móvil pequeño)
  * - iPhone 12/13: 390x844
  * - Samsung Galaxy S20: 360x800
  * - iPhone 12 Pro Max: 428x926
- * 
+ *
  * Guía de tap targets (Apple HIG / Material Design):
  * - Mínimo: 44x44px (iOS) / 48x48px (Android)
  * - Recomendado: 48x48px para ambos
@@ -66,18 +66,18 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
   beforeEach(async () => {
     // Setup responsive environment for iPhone SE by default
     responsiveEnv = setupResponsiveEnvironment(VIEWPORTS.IPHONE_SE);
-    
+
     // Mock DOM properties for responsive tests
     Object.defineProperty(document.body, 'scrollWidth', {
       configurable: true,
-      get: () => 375
+      get: () => 375,
     });
-    
+
     Object.defineProperty(document.body, 'clientWidth', {
       configurable: true,
-      get: () => 375
+      get: () => 375,
     });
-    
+
     const bookingsServiceSpy = jasmine.createSpyObj('BookingsService', [
       'getMyBookings',
       'cancelBooking',
@@ -95,7 +95,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     fixture = TestBed.createComponent(MyBookingsPage);
     component = fixture.componentInstance;
     compiled = fixture.nativeElement as HTMLElement;
-    
+
     // Mock getComputedStyle for image tests
     const originalGetComputedStyle = window.getComputedStyle;
     spyOn(window, 'getComputedStyle').and.callFake((element: Element) => {
@@ -104,7 +104,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
         return {
           ...style,
           maxWidth: '100%',
-          width: '100%'
+          width: '100%',
         } as CSSStyleDeclaration;
       }
       return style;
@@ -121,7 +121,8 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
   function setMobileUserAgent(platform: 'iOS' | 'Android'): void {
     const userAgents = {
       iOS: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
-      Android: 'Mozilla/5.0 (Linux; Android 11; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Mobile Safari/537.36',
+      Android:
+        'Mozilla/5.0 (Linux; Android 11; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Mobile Safari/537.36',
     };
 
     Object.defineProperty(navigator, 'userAgent', {
@@ -172,11 +173,11 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert - buscar elementos que contengan información del booking
       const bookingCards = compiled.querySelectorAll('[class*="booking"]');
-      
+
       if (bookingCards.length > 0) {
         const firstCard = bookingCards[0] as HTMLElement;
         const cardWidth = firstCard.offsetWidth;
-        
+
         // La tarjeta no debe exceder el viewport (con margen de 32px para padding)
         expect(cardWidth).toBeLessThanOrEqual(375);
       }
@@ -189,11 +190,11 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert
       const images = compiled.querySelectorAll('img');
-      
+
       images.forEach((img) => {
         const computedStyle = window.getComputedStyle(img);
         const maxWidth = computedStyle.maxWidth;
-        
+
         // Las imágenes deben tener max-width: 100% o un valor absoluto menor al viewport
         expect(maxWidth === '100%' || parseInt(maxWidth) <= 375).toBeTruthy();
       });
@@ -211,7 +212,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
       textElements.forEach((element) => {
         const computedStyle = window.getComputedStyle(element);
         const fontSize = parseInt(computedStyle.fontSize);
-        
+
         // Al menos algunos elementos deben tener tamaño legible
         if (fontSize >= 14) {
           hasReadableText = true;
@@ -228,12 +229,12 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert - verificar botones y elementos interactivos
       const buttons = compiled.querySelectorAll('button, a[role="button"], .btn');
-      
+
       buttons.forEach((button) => {
         const element = button as HTMLElement;
         const height = element.offsetHeight;
         const width = element.offsetWidth;
-        
+
         // Botones deben tener al menos 44x44px (estándar iOS)
         // Permitimos cierta flexibilidad para botones de texto
         if (element.textContent && element.textContent.trim().length > 0) {
@@ -250,14 +251,14 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert
       const interactiveElements = compiled.querySelectorAll('button, a');
-      
+
       for (let i = 0; i < interactiveElements.length - 1; i++) {
         const current = interactiveElements[i] as HTMLElement;
         const next = interactiveElements[i + 1] as HTMLElement;
-        
+
         const currentRect = current.getBoundingClientRect();
         const nextRect = next.getBoundingClientRect();
-        
+
         // Si están en la misma línea vertical
         if (Math.abs(currentRect.top - nextRect.top) < 10) {
           const spacing = nextRect.left - currentRect.right;
@@ -274,7 +275,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert - Just verify elements exist, skip exact positioning in headless tests
       const criticalSelectors = ['h1', 'h2', 'button'];
-      
+
       criticalSelectors.forEach((selector) => {
         const elements = compiled.querySelectorAll(selector);
         if (elements.length > 0) {
@@ -343,7 +344,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert
       expect(window.open).toHaveBeenCalled();
-      
+
       const callArgs = (window.open as jasmine.Spy).calls.mostRecent().args;
       const whatsappUrl = callArgs[0] as string;
       const target = callArgs[1];
@@ -364,7 +365,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert
       expect(window.open).toHaveBeenCalled();
-      
+
       const callArgs = (window.open as jasmine.Spy).calls.mostRecent().args;
       const whatsappUrl = callArgs[0] as string;
 
@@ -427,7 +428,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería manejar el caso cuando WhatsApp no está instalado', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      
+
       // Mock window.open para simular fallo de apertura
       spyOn(window, 'open').and.returnValue(null);
 
@@ -446,10 +447,10 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Act - buscar botón de contacto/WhatsApp
       const contactButtons = compiled.querySelectorAll('button');
-      
+
       // Assert - al menos un botón debe ser interactivo
       expect(contactButtons.length).toBeGreaterThan(0);
-      
+
       contactButtons.forEach((button) => {
         const height = button.offsetHeight;
         // Botones deben ser táctiles
@@ -467,7 +468,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
       // Act - llamar dos veces rápidamente
       const promise1 = component.openChat(mockBooking);
       const promise2 = component.openChat(mockBooking);
-      
+
       await Promise.all([promise1, promise2]);
 
       // Assert - debería abrir solo dos veces (una por cada llamada)
@@ -533,7 +534,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
         // Debe tener contenido de texto o aria-label
         const hasText = button.textContent && button.textContent.trim().length > 0;
         const hasAriaLabel = button.getAttribute('aria-label');
-        
+
         expect(hasText || hasAriaLabel).toBeTruthy();
       });
     });
@@ -545,7 +546,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert - elementos interactivos deben tener tabindex
       const interactiveElements = compiled.querySelectorAll('button, a, input');
-      
+
       interactiveElements.forEach((element) => {
         const tabindex = element.getAttribute('tabindex');
         // No debe tener tabindex negativo (excepto -1 para ocultos)
@@ -562,12 +563,12 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
       // Assert - verificación básica de colores
       const textElements = compiled.querySelectorAll('p, span, h1, h2, h3');
-      
+
       textElements.forEach((element) => {
         const styles = window.getComputedStyle(element);
         const color = styles.color;
         const backgroundColor = styles.backgroundColor;
-        
+
         // Debe tener color definido
         expect(color).toBeTruthy();
       });
@@ -597,11 +598,13 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
 
     it('debería manejar listas largas eficientemente en móvil', async () => {
       // Arrange
-      const manyBookings = Array(50).fill(mockBooking).map((b, i) => ({
-        ...b,
-        id: `booking-${i}`,
-      }));
-      
+      const manyBookings = Array(50)
+        .fill(mockBooking)
+        .map((b, i) => ({
+          ...b,
+          id: `booking-${i}`,
+        }));
+
       bookingsService.getMyBookings.and.returnValue(Promise.resolve(manyBookings));
 
       // Act

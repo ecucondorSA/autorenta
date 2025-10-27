@@ -61,10 +61,7 @@ export class WithdrawalRequestFormComponent {
   constructor(private readonly fb: FormBuilder) {
     this.form = this.fb.group({
       bank_account_id: ['', Validators.required],
-      amount: [
-        '',
-        [Validators.required, Validators.min(this.MIN_AMOUNT), Validators.max(999999)],
-      ],
+      amount: ['', [Validators.required, Validators.min(this.MIN_AMOUNT), Validators.max(999999)]],
       user_notes: [''],
     });
 

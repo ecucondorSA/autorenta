@@ -1,11 +1,22 @@
-
 import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { SettlementService, Claim, ClaimProcessingResult } from '../../../core/services/settlement.service';
-import { BookingInspection, BookingRiskSnapshot, EligibilityResult, WaterfallResult, FgoParameters, BucketType, InspectionStage } from '../../../core/models/fgo-v1-1.model';
+import {
+  SettlementService,
+  Claim,
+  ClaimProcessingResult,
+} from '../../../core/services/settlement.service';
+import {
+  BookingInspection,
+  BookingRiskSnapshot,
+  EligibilityResult,
+  WaterfallResult,
+  FgoParameters,
+  BucketType,
+  InspectionStage,
+} from '../../../core/models/fgo-v1-1.model';
 import { RiskMatrixService, RiskPolicy } from '../../../core/services/risk-matrix.service';
 import { FgoService } from '../../../core/services/fgo.service';
 
@@ -30,10 +41,17 @@ import { FgoService } from '../../../core/services/fgo.service';
       </div>
 
       <!-- 🇦🇷 Argentina Franchise Matrix Info -->
-      <div class="fgo-card__hint" style="margin-bottom: 1.5rem; background: rgba(33, 150, 83, 0.08);">
-        <strong>Categoría del vehículo:</strong> {{ franchiseMatrix().bucket | uppercase }} ({{ franchiseMatrix().carValueRange }})<br>
-        <strong>Franquicia estándar:</strong> {{ formatUsd(franchiseMatrix().standardFranchiseUsd) }}<br>
-        <strong>Franquicia por vuelco:</strong> {{ formatUsd(franchiseMatrix().rolloverFranchiseUsd) }}
+      <div
+        class="fgo-card__hint"
+        style="margin-bottom: 1.5rem; background: rgba(33, 150, 83, 0.08);"
+      >
+        <strong>Categoría del vehículo:</strong> {{ franchiseMatrix().bucket | uppercase }} ({{
+          franchiseMatrix().carValueRange
+        }})<br />
+        <strong>Franquicia estándar:</strong> {{ formatUsd(franchiseMatrix().standardFranchiseUsd)
+        }}<br />
+        <strong>Franquicia por vuelco:</strong>
+        {{ formatUsd(franchiseMatrix().rolloverFranchiseUsd) }}
       </div>
 
       <div class="fgo-card__stat-grid">
@@ -45,7 +63,10 @@ import { FgoService } from '../../../core/services/fgo.service';
           <p class="fgo-card__stat-value" *ngIf="securitySource() === 'card'">
             {{ formatUsd(holdAmountCard().usd) }}
           </p>
-          <p class="fgo-card__stat-hint" *ngIf="securitySource() === 'card' && holdAmountCard().local !== null && exchangeRate">
+          <p
+            class="fgo-card__stat-hint"
+            *ngIf="securitySource() === 'card' && holdAmountCard().local !== null && exchangeRate"
+          >
             Equivalente: {{ formatCurrency(holdAmountCard().local!, booking.currency) }}
           </p>
           <p class="fgo-card__stat-hint" *ngIf="securitySource() === 'card'">
@@ -57,14 +78,18 @@ import { FgoService } from '../../../core/services/fgo.service';
             {{ formatUsd(walletSecurityCreditUsd()) }}
           </p>
           <p class="fgo-card__stat-hint" *ngIf="securitySource() === 'wallet' && exchangeRate">
-            Equivalente: {{ formatCurrency(walletSecurityCreditUsd() * exchangeRate! * 100, booking.currency) }}
+            Equivalente:
+            {{ formatCurrency(walletSecurityCreditUsd() * exchangeRate! * 100, booking.currency) }}
           </p>
           <p class="fgo-card__stat-hint" *ngIf="securitySource() === 'wallet'">
             Crédito de seguridad bloqueado en tu wallet
           </p>
 
           <!-- For Mixed or None -->
-          <p class="fgo-card__stat-value" *ngIf="securitySource() === 'mixed' || securitySource() === 'none'">
+          <p
+            class="fgo-card__stat-value"
+            *ngIf="securitySource() === 'mixed' || securitySource() === 'none'"
+          >
             {{ depositAmountUsdDisplay() ?? '—' }}
           </p>
           <p class="fgo-card__stat-hint" *ngIf="depositAmountLocalDisplay()">
@@ -98,10 +123,11 @@ import { FgoService } from '../../../core/services/fgo.service';
       </div>
 
       <div class="fgo-card__hint">
-        ℹ️ El FGO interviene cuando la reserva está verificada, la evidencia está cargada y el fondo mantiene RC (Reserve Coverage) ≥ 1.0.
+        ℹ️ El FGO interviene cuando la reserva está verificada, la evidencia está cargada y el fondo
+        mantiene RC (Reserve Coverage) ≥ 1.0.
       </div>
     </section>
-  `
+  `,
 })
 export class FgoManagementComponent implements OnInit {
   @Input({ required: true }) booking!: Booking;
@@ -130,7 +156,8 @@ export class FgoManagementComponent implements OnInit {
     const booking = this.booking;
     if (!booking) return 0;
 
-    const nightlyRateCents = booking.nightly_rate_cents ?? booking.breakdown?.nightly_rate_cents ?? 0;
+    const nightlyRateCents =
+      booking.nightly_rate_cents ?? booking.breakdown?.nightly_rate_cents ?? 0;
     const nightlyRateUsd = nightlyRateCents / 100;
     return nightlyRateUsd * 125;
   });
@@ -184,7 +211,9 @@ export class FgoManagementComponent implements OnInit {
   });
 
   // 🇦🇷 Wallet security credit amount (USD 300 for ≤20k, USD 500 for >20k)
-  readonly walletSecurityCreditUsd = computed<number>(() => this.riskPolicy()?.security_credit_usd ?? 0);
+  readonly walletSecurityCreditUsd = computed<number>(
+    () => this.riskPolicy()?.security_credit_usd ?? 0,
+  );
 
   readonly securitySource = computed<'card' | 'wallet' | 'mixed' | 'none'>(() => {
     if (!this.booking) {
@@ -232,9 +261,7 @@ export class FgoManagementComponent implements OnInit {
   readonly depositAmountUsd = computed<number | null>(() => {
     if (!this.booking) return null;
 
-    const baseUsd = this.booking.deposit_amount_cents
-      ? this.booking.deposit_amount_cents / 100
-      : 0;
+    const baseUsd = this.booking.deposit_amount_cents ? this.booking.deposit_amount_cents / 100 : 0;
 
     const walletFloor =
       this.securitySource() === 'wallet' || this.securitySource() === 'mixed'
@@ -309,11 +336,11 @@ export class FgoManagementComponent implements OnInit {
   });
 
   readonly hasCheckIn = computed(() => {
-    return this.inspections().some(i => i.stage === 'check_in' && i.signedAt);
+    return this.inspections().some((i) => i.stage === 'check_in' && i.signedAt);
   });
 
   readonly hasCheckOut = computed(() => {
-    return this.inspections().some(i => i.stage === 'check_out' && i.signedAt);
+    return this.inspections().some((i) => i.stage === 'check_out' && i.signedAt);
   });
 
   readonly hasClaim = computed(() => {
@@ -338,19 +365,13 @@ export class FgoManagementComponent implements OnInit {
       this.fgoLoading.set(true);
 
       const bucket = this.determineBucket(this.booking);
-      const params = await firstValueFrom(
-        this.fgoService.getParameters('AR', bucket)
-      );
+      const params = await firstValueFrom(this.fgoService.getParameters('AR', bucket));
       this.fgoParams.set(params);
 
-      const snapshot = await firstValueFrom(
-        this.fgoService.getRiskSnapshot(this.booking.id)
-      );
+      const snapshot = await firstValueFrom(this.fgoService.getRiskSnapshot(this.booking.id));
       this.riskSnapshot.set(snapshot);
 
-      const inspections = await firstValueFrom(
-        this.fgoService.getInspections(this.booking.id)
-      );
+      const inspections = await firstValueFrom(this.fgoService.getInspections(this.booking.id));
       this.inspections.set(inspections);
     } catch (error) {
       console.error('Error loading FGO data:', error);
@@ -360,7 +381,8 @@ export class FgoManagementComponent implements OnInit {
   }
 
   private determineBucket(booking: Booking): BucketType {
-    const nightlyRateCents = booking.nightly_rate_cents ?? booking.breakdown?.nightly_rate_cents ?? 0;
+    const nightlyRateCents =
+      booking.nightly_rate_cents ?? booking.breakdown?.nightly_rate_cents ?? 0;
     const nightlyRateUsd = nightlyRateCents / 100;
     const estimatedCarValueUsd = nightlyRateUsd * 125;
 

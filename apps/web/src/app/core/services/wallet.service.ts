@@ -150,7 +150,8 @@ export class WalletService {
    */
   async refreshPendingDepositsCount(): Promise<number> {
     try {
-      const { data, error } = await this.supabase.getClient()
+      const { data, error } = await this.supabase
+        .getClient()
         .from('v_wallet_history')
         .select('id')
         .eq('transaction_type', 'deposit')
@@ -180,7 +181,7 @@ export class WalletService {
     this.clearError();
 
     try {
-      const { data, error} = await this.supabase.getClient().rpc('wallet_get_balance');
+      const { data, error } = await this.supabase.getClient().rpc('wallet_get_balance');
 
       if (error) {
         throw this.createError('BALANCE_FETCH_ERROR', error.message, error);
@@ -300,7 +301,7 @@ export class WalletService {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${accessToken}`,
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify(requestBody),
           });
@@ -322,7 +323,7 @@ export class WalletService {
             throw this.createError(
               'MERCADOPAGO_ERROR',
               `Error al crear preferencia de pago (${mpResponse.status}): ${errorData.error || errorText}`,
-              errorData
+              errorData,
             );
           }
 
@@ -370,12 +371,18 @@ export class WalletService {
    *
    * @returns Promise con resultado del polling
    */
-  async forcePollPendingPayments(): Promise<{ success: boolean; confirmed: number; message: string }> {
+  async forcePollPendingPayments(): Promise<{
+    success: boolean;
+    confirmed: number;
+    message: string;
+  }> {
     try {
       console.log('🔄 Forzando polling de pagos pendientes...');
 
       // Obtener access token
-      const { data: { session } } = await this.supabase.getClient().auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.getClient().auth.getSession();
       const accessToken = session?.access_token;
 
       if (!accessToken) {
@@ -392,7 +399,7 @@ export class WalletService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({}),
       });
@@ -400,11 +407,9 @@ export class WalletService {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('❌ Error en polling:', errorText);
-        throw this.createError(
-          'POLLING_ERROR',
-          `Error al ejecutar polling (${response.status})`,
-          { rawError: errorText }
-        );
+        throw this.createError('POLLING_ERROR', `Error al ejecutar polling (${response.status})`, {
+          rawError: errorText,
+        });
       }
 
       const result = await response.json();
@@ -418,9 +423,10 @@ export class WalletService {
       return {
         success: result.success || false,
         confirmed: result.summary?.confirmed || 0,
-        message: result.summary?.confirmed > 0
-          ? `Se confirmaron ${result.summary.confirmed} depósito(s)`
-          : 'No se encontraron pagos aprobados para confirmar',
+        message:
+          result.summary?.confirmed > 0
+            ? `Se confirmaron ${result.summary.confirmed} depósito(s)`
+            : 'No se encontraron pagos aprobados para confirmar',
       };
     } catch (err) {
       console.error('❌ Error al forzar polling:', err);
@@ -576,7 +582,8 @@ export class WalletService {
 
     try {
       // Usar vista consolidada en vez de wallet_transactions directamente
-      let query = this.supabase.getClient()
+      let query = this.supabase
+        .getClient()
         .from('v_wallet_history')
         .select('*')
         .order('transaction_date', { ascending: false });
@@ -605,7 +612,9 @@ export class WalletService {
 
       if (filters?.reference_id) {
         // Filtrar por booking_id (más común) o por metadata.reference_id
-        query = query.or(`booking_id.eq.${filters.reference_id},metadata.cs.{"reference_id":"${filters.reference_id}"}`);
+        query = query.or(
+          `booking_id.eq.${filters.reference_id},metadata.cs.{"reference_id":"${filters.reference_id}"}`,
+        );
       }
 
       if (filters?.from_date) {
@@ -640,7 +649,9 @@ export class WalletService {
         admin_notes: row.metadata?.admin_notes,
         created_at: row.transaction_date,
         updated_at: row.transaction_date,
-        completed_at: row.legacy_completed_at || (row.status === 'completed' ? row.transaction_date : undefined),
+        completed_at:
+          row.legacy_completed_at ||
+          (row.status === 'completed' ? row.transaction_date : undefined),
       })) as WalletTransaction[];
 
       this.transactions.set(transactions);
@@ -682,19 +693,24 @@ export class WalletService {
    *   deposit_amount: 250 // Opcional, default $250
    * });
    */
-  async lockRentalAndDeposit(params: LockRentalAndDepositParams): Promise<WalletLockRentalAndDepositResponse> {
+  async lockRentalAndDeposit(
+    params: LockRentalAndDepositParams,
+  ): Promise<WalletLockRentalAndDepositResponse> {
     this.setLoadingState('lockingFunds', true);
     this.clearError();
 
     try {
-      const { data, error } = await this.supabase.getClient().rpc('wallet_lock_rental_and_deposit', {
-        p_booking_id: params.booking_id,
-        p_rental_amount: params.rental_amount,
-        p_deposit_amount: params.deposit_amount ?? 250,
-      });
+      const { data, error } = await this.supabase
+        .getClient()
+        .rpc('wallet_lock_rental_and_deposit', {
+          p_booking_id: params.booking_id,
+          p_rental_amount: params.rental_amount,
+          p_deposit_amount: params.deposit_amount ?? 250,
+        });
 
       if (error) throw this.createError('LOCK_RENTAL_DEPOSIT_ERROR', error.message, error);
-      if (!data || data.length === 0) throw this.createError('LOCK_EMPTY', 'No se pudo bloquear fondos');
+      if (!data || data.length === 0)
+        throw this.createError('LOCK_EMPTY', 'No se pudo bloquear fondos');
 
       const result = data[0] as WalletLockRentalAndDepositResponse;
       if (!result.success) throw this.createError('LOCK_FAILED', result.message);
@@ -731,7 +747,10 @@ export class WalletService {
    * - Transfiere el pago del alquiler al propietario
    * - Devuelve la garantía completa al usuario (a su wallet)
    */
-  async completeBooking(bookingId: string, completionNotes?: string): Promise<WalletCompleteBookingResponse> {
+  async completeBooking(
+    bookingId: string,
+    completionNotes?: string,
+  ): Promise<WalletCompleteBookingResponse> {
     this.setLoadingState('unlockingFunds', true);
     this.clearError();
 
@@ -742,7 +761,8 @@ export class WalletService {
       });
 
       if (error) throw this.createError('COMPLETE_BOOKING_ERROR', error.message, error);
-      if (!data || data.length === 0) throw this.createError('COMPLETE_EMPTY', 'No se pudo completar booking');
+      if (!data || data.length === 0)
+        throw this.createError('COMPLETE_EMPTY', 'No se pudo completar booking');
 
       const result = data[0] as WalletCompleteBookingResponse;
       if (!result.success) throw this.createError('COMPLETE_FAILED', result.message);
@@ -766,19 +786,24 @@ export class WalletService {
    * - Cobra daños de la garantía (parcial o total)
    * - Devuelve el resto de la garantía al usuario (si aplica)
    */
-  async completeBookingWithDamages(params: CompleteBookingWithDamagesParams): Promise<WalletCompleteBookingWithDamagesResponse> {
+  async completeBookingWithDamages(
+    params: CompleteBookingWithDamagesParams,
+  ): Promise<WalletCompleteBookingWithDamagesResponse> {
     this.setLoadingState('unlockingFunds', true);
     this.clearError();
 
     try {
-      const { data, error } = await this.supabase.getClient().rpc('wallet_complete_booking_with_damages', {
-        p_booking_id: params.booking_id,
-        p_damage_amount: params.damage_amount,
-        p_damage_description: params.damage_description,
-      });
+      const { data, error } = await this.supabase
+        .getClient()
+        .rpc('wallet_complete_booking_with_damages', {
+          p_booking_id: params.booking_id,
+          p_damage_amount: params.damage_amount,
+          p_damage_description: params.damage_description,
+        });
 
       if (error) throw this.createError('COMPLETE_WITH_DAMAGES_ERROR', error.message, error);
-      if (!data || data.length === 0) throw this.createError('COMPLETE_EMPTY', 'No se pudo completar booking');
+      if (!data || data.length === 0)
+        throw this.createError('COMPLETE_EMPTY', 'No se pudo completar booking');
 
       const result = data[0] as WalletCompleteBookingWithDamagesResponse;
       if (!result.success) throw this.createError('COMPLETE_FAILED', result.message);
@@ -807,11 +832,13 @@ export class WalletService {
    */
   async subscribeToWalletChanges(
     onDepositConfirmed?: (transaction: WalletTransaction) => void,
-    onTransactionUpdate?: (transaction: WalletTransaction) => void
+    onTransactionUpdate?: (transaction: WalletTransaction) => void,
   ): Promise<void> {
     try {
       // Obtener user_id actual
-      const { data: { user } } = await this.supabase.getClient().auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.getClient().auth.getUser();
       if (!user) {
         console.warn('⚠️ No hay usuario autenticado para subscribirse a cambios');
         return;
@@ -825,7 +852,8 @@ export class WalletService {
       console.log('🔔 Iniciando subscripción realtime para wallet...');
 
       // Crear canal de subscripción
-      this.realtimeChannel = this.supabase.getClient()
+      this.realtimeChannel = this.supabase
+        .getClient()
         .channel(`wallet_updates_${user.id}`)
         .on(
           'postgres_changes',
@@ -904,7 +932,7 @@ export class WalletService {
               // Agregar nueva transacción al inicio
               return [transaction, ...current];
             });
-          }
+          },
         )
         .on(
           'postgres_changes',
@@ -945,7 +973,7 @@ export class WalletService {
 
             // Agregar a lista de transacciones
             this.transactions.update((current) => [transaction, ...current]);
-          }
+          },
         )
         .subscribe((status) => {
           console.log('🔔 Estado de subscripción realtime:', status);
@@ -960,7 +988,6 @@ export class WalletService {
             console.log('🔒 Canal de subscripción cerrado');
           }
         });
-
     } catch (err) {
       console.error('❌ Error al subscribirse a cambios en wallet:', err);
       throw this.handleError(err, 'Error al iniciar subscripción realtime');
@@ -1085,7 +1112,7 @@ export class WalletService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           transaction_id: transaction.id,
@@ -1108,5 +1135,4 @@ export class WalletService {
       // No propagar el error, el email es opcional
     }
   }
-
 }

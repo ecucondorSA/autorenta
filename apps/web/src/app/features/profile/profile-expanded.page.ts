@@ -82,12 +82,12 @@ export class ProfileExpandedPage implements OnInit {
   readonly verificationLoading = this.verificationService.loading;
   readonly verificationError = this.verificationService.error;
 
-  readonly driverVerification = computed(() =>
-    this.verificationStatuses().find((status) => status.role === 'driver') ?? null,
+  readonly driverVerification = computed(
+    () => this.verificationStatuses().find((status) => status.role === 'driver') ?? null,
   );
 
-  readonly ownerVerification = computed(() =>
-    this.verificationStatuses().find((status) => status.role === 'owner') ?? null,
+  readonly ownerVerification = computed(
+    () => this.verificationStatuses().find((status) => status.role === 'owner') ?? null,
   );
 
   readonly overallVerificationStatus = computed<VerificationStatus>(() => {
@@ -123,13 +123,13 @@ export class ProfileExpandedPage implements OnInit {
   // Document verification status
   readonly driverLicenseStatus = computed(() => {
     const docs = this.documents();
-    const license = docs.find(d => d.kind === 'driver_license');
+    const license = docs.find((d) => d.kind === 'driver_license');
     return license?.status ?? 'not_started';
   });
 
   readonly vehicleRegistrationStatus = computed(() => {
     const docs = this.documents();
-    const registration = docs.find(d => d.kind === 'vehicle_registration');
+    const registration = docs.find((d) => d.kind === 'vehicle_registration');
     return registration?.status ?? 'not_started';
   });
 
@@ -209,7 +209,7 @@ export class ProfileExpandedPage implements OnInit {
     if (role === 'renter' || role === 'both') {
       kinds.push({
         value: 'driver_license',
-        label: 'Licencia de conducir (frente y dorso en una sola foto)'
+        label: 'Licencia de conducir (frente y dorso en una sola foto)',
       });
     }
 
@@ -217,7 +217,7 @@ export class ProfileExpandedPage implements OnInit {
     if (role === 'owner' || role === 'both') {
       kinds.push({
         value: 'vehicle_registration',
-        label: 'Cédula del vehículo (digital PDF o foto)'
+        label: 'Cédula del vehículo (digital PDF o foto)',
       });
     }
 
@@ -240,7 +240,15 @@ export class ProfileExpandedPage implements OnInit {
   }
 
   private isValidTab(tab: string): boolean {
-    const validTabs: TabId[] = ['general', 'contact', 'address', 'verification', 'notifications', 'preferences', 'security'];
+    const validTabs: TabId[] = [
+      'general',
+      'contact',
+      'address',
+      'verification',
+      'notifications',
+      'preferences',
+      'security',
+    ];
     return validTabs.includes(tab as TabId);
   }
 
@@ -331,7 +339,8 @@ export class ProfileExpandedPage implements OnInit {
       {
         id: 'driver_license_upload',
         label: 'Licencia de conducir (OBLIGATORIO)',
-        description: 'Foto clara del frente. IA extrae automáticamente: nombre, vencimiento, categoría.',
+        description:
+          'Foto clara del frente. IA extrae automáticamente: nombre, vencimiento, categoría.',
         statusType: 'document',
         status: licenseStatus.status,
         completed: licenseStatus.completed,
@@ -353,7 +362,8 @@ export class ProfileExpandedPage implements OnInit {
       {
         id: 'owner_vehicle_doc',
         label: 'Cédula del vehículo (digital O física)',
-        description: 'PDF digital desde Mi Argentina O foto de cédula verde/azul. IA extrae: patente, titular, vigencia.',
+        description:
+          'PDF digital desde Mi Argentina O foto de cédula verde/azul. IA extrae: patente, titular, vigencia.',
         statusType: 'document',
         status: vehicleStatus.status,
         completed: vehicleStatus.completed,
@@ -554,9 +564,10 @@ export class ProfileExpandedPage implements OnInit {
     if (!file) return;
 
     // Client-side validation BEFORE upload
-    const allowedTypes = kind === 'vehicle_registration'
-      ? ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
-      : ['image/jpeg', 'image/jpg', 'image/png'];
+    const allowedTypes =
+      kind === 'vehicle_registration'
+        ? ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
+        : ['image/jpeg', 'image/jpg', 'image/png'];
 
     const maxSizeMB = 5;
     const maxSizeBytes = maxSizeMB * 1024 * 1024;
@@ -564,7 +575,7 @@ export class ProfileExpandedPage implements OnInit {
     // Validate file type
     if (!allowedTypes.includes(file.type)) {
       const allowedFormats = allowedTypes
-        .map(type => type.split('/')[1].toUpperCase())
+        .map((type) => type.split('/')[1].toUpperCase())
         .join(', ');
       this.error.set(`Formato no permitido. Solo se aceptan: ${allowedFormats}`);
       input.value = '';
@@ -733,7 +744,9 @@ export class ProfileExpandedPage implements OnInit {
     if (typeof window === 'undefined') {
       return false;
     }
-    return this.isMobileDevice() &&
-           (window.location.protocol === 'https:' || window.location.hostname === 'localhost');
+    return (
+      this.isMobileDevice() &&
+      (window.location.protocol === 'https:' || window.location.hostname === 'localhost')
+    );
   }
 }

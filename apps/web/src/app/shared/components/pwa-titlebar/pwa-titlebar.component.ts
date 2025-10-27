@@ -8,7 +8,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pwa-titlebar.component.html',
-  styleUrls: ['./pwa-titlebar.component.css']
+  styleUrls: ['./pwa-titlebar.component.css'],
 })
 export class PwaTitlebarComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
@@ -29,9 +29,9 @@ export class PwaTitlebarComponent implements OnInit {
     // Detectar si Window Controls Overlay está disponible
     if ('windowControlsOverlay' in navigator) {
       this.isWCOSupported.set(true);
-      
+
       const wco = (navigator as any).windowControlsOverlay;
-      
+
       // Verificar si WCO está activo
       if (wco.visible) {
         this.isWCOActive.set(true);
@@ -56,14 +56,16 @@ export class PwaTitlebarComponent implements OnInit {
   }
 
   private async loadUserProfile(): Promise<void> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (user) {
       const { data: profile } = await this.supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
-      
+
       this.userProfile.set(profile);
     }
   }

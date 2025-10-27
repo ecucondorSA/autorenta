@@ -20,7 +20,7 @@ export interface ReverseGeocodingResult {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GeocodingService {
   private readonly MAPBOX_BASE_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places';
@@ -71,7 +71,7 @@ export class GeocodingService {
         latitude,
         longitude,
         fullAddress: feature.place_name,
-        placeName: feature.text
+        placeName: feature.text,
       };
     } catch (error) {
       console.error('Geocoding error:', error);
@@ -99,7 +99,7 @@ export class GeocodingService {
     streetNumber: string,
     city: string,
     state: string,
-    country: string
+    country: string,
   ): Promise<GeocodingResult> {
     // Build address string WITHOUT country (Mapbox best practice)
     // Format: {street number} {street}, {city}
@@ -200,7 +200,9 @@ export class GeocodingService {
         throw error;
       }
 
-      throw new Error('Error al obtener la dirección desde las coordenadas. Por favor intenta nuevamente.');
+      throw new Error(
+        'Error al obtener la dirección desde las coordenadas. Por favor intenta nuevamente.',
+      );
     }
   }
 }

@@ -53,7 +53,7 @@ export interface MarketplaceStatus {
 
 /**
  * Servicio para gestionar el onboarding de propietarios en Mercado Pago Marketplace
- * 
+ *
  * Flujo:
  * 1. startOnboarding() - Genera URL OAuth y guarda state
  * 2. Usuario autoriza en Mercado Pago
@@ -61,7 +61,7 @@ export interface MarketplaceStatus {
  * 4. Usuario puede recibir pagos split
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MarketplaceOnboardingService {
   private readonly supabase = inject(SupabaseClientService).getClient();
@@ -80,7 +80,7 @@ export class MarketplaceOnboardingService {
 
   /**
    * Inicia el flujo OAuth para vincular cuenta MP del propietario
-   * 
+   *
    * @param userId ID del usuario que va a vincular su cuenta
    * @returns URL de autorización de Mercado Pago
    */
@@ -93,14 +93,12 @@ export class MarketplaceOnboardingService {
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
       // Guardar state en BD
-      const { error: insertError } = await this.supabase
-        .from('mp_onboarding_states')
-        .insert({
-          user_id: userId,
-          state,
-          redirect_uri: this.REDIRECT_URI,
-          expires_at: expiresAt
-        });
+      const { error: insertError } = await this.supabase.from('mp_onboarding_states').insert({
+        user_id: userId,
+        state,
+        redirect_uri: this.REDIRECT_URI,
+        expires_at: expiresAt,
+      });
 
       if (insertError) {
         console.error('Error saving onboarding state:', insertError);
@@ -120,7 +118,7 @@ export class MarketplaceOnboardingService {
 
   /**
    * Maneja el callback de OAuth después de la autorización
-   * 
+   *
    * @param code Code de autorización
    * @param state State para validación CSRF
    * @returns Collector ID del vendedor
@@ -134,10 +132,7 @@ export class MarketplaceOnboardingService {
       const tokenResponse = await this.exchangeCodeForToken(code);
 
       // 3. Guardar datos en BD
-      await this.saveMarketplaceCredentials(
-        stateData.user_id,
-        tokenResponse
-      );
+      await this.saveMarketplaceCredentials(stateData.user_id, tokenResponse);
 
       // 4. Marcar state como completado
       await this.completeOnboardingState(state);
@@ -146,24 +141,24 @@ export class MarketplaceOnboardingService {
       return tokenResponse.user_id;
     } catch (error) {
       console.error('Error in handleCallback:', error);
-      
+
       // Guardar error en state
       if (state) {
         await this.supabase
           .from('mp_onboarding_states')
-          .update({ 
-            error: error instanceof Error ? error.message : 'Unknown error' 
+          .update({
+            error: error instanceof Error ? error.message : 'Unknown error',
           })
           .eq('state', state);
       }
-      
+
       throw error;
     }
   }
 
   /**
    * Obtiene el estado de marketplace del usuario
-   * 
+   *
    * @param userId ID del usuario
    * @returns Estado de marketplace
    */
@@ -171,7 +166,9 @@ export class MarketplaceOnboardingService {
     try {
       const { data, error } = await this.supabase
         .from('users')
-        .select('mercadopago_collector_id, marketplace_approved, mp_onboarding_completed_at, mp_token_expires_at')
+        .select(
+          'mercadopago_collector_id, marketplace_approved, mp_onboarding_completed_at, mp_token_expires_at',
+        )
         .eq('id', userId)
         .single();
 
@@ -179,11 +176,11 @@ export class MarketplaceOnboardingService {
         console.error('Error fetching marketplace status:', error);
         return {
           isApproved: false,
-          hasActiveTokens: false
+          hasActiveTokens: false,
         };
       }
 
-      const hasActiveTokens = data.mp_token_expires_at 
+      const hasActiveTokens = data.mp_token_expires_at
         ? new Date(data.mp_token_expires_at) > new Date()
         : false;
 
@@ -191,20 +188,20 @@ export class MarketplaceOnboardingService {
         isApproved: data.marketplace_approved || false,
         collectorId: data.mercadopago_collector_id || undefined,
         completedAt: data.mp_onboarding_completed_at || undefined,
-        hasActiveTokens
+        hasActiveTokens,
       };
     } catch (error) {
       console.error('Error in getMarketplaceStatus:', error);
       return {
         isApproved: false,
-        hasActiveTokens: false
+        hasActiveTokens: false,
       };
     }
   }
 
   /**
    * Verifica si el usuario puede listar autos (tiene MP vinculado)
-   * 
+   *
    * @param userId ID del usuario
    * @returns true si puede listar
    */
@@ -216,7 +213,7 @@ export class MarketplaceOnboardingService {
   /**
    * Desvincula la cuenta de Mercado Pago
    * (Requiere revocar tokens en MP)
-   * 
+   *
    * @param userId ID del usuario
    */
   async unlinkAccount(userId: string): Promise<void> {
@@ -232,7 +229,7 @@ export class MarketplaceOnboardingService {
           marketplace_approved: false,
           mp_access_token_encrypted: null,
           mp_refresh_token_encrypted: null,
-          mp_token_expires_at: null
+          mp_token_expires_at: null,
         })
         .eq('id', userId);
 
@@ -256,7 +253,7 @@ export class MarketplaceOnboardingService {
     // Generar 32 bytes random en hex
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
   }
 
   /**
@@ -268,7 +265,7 @@ export class MarketplaceOnboardingService {
       response_type: 'code',
       platform_id: 'mp',
       state: state,
-      redirect_uri: this.REDIRECT_URI
+      redirect_uri: this.REDIRECT_URI,
     });
 
     return `${this.MP_OAUTH_URL}?${params.toString()}`;
@@ -310,7 +307,7 @@ export class MarketplaceOnboardingService {
       client_secret: this.CLIENT_SECRET,
       code,
       grant_type: 'authorization_code',
-      redirect_uri: this.REDIRECT_URI
+      redirect_uri: this.REDIRECT_URI,
     };
 
     try {
@@ -318,9 +315,9 @@ export class MarketplaceOnboardingService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          Accept: 'application/json',
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -343,7 +340,7 @@ export class MarketplaceOnboardingService {
    */
   private async saveMarketplaceCredentials(
     userId: string,
-    tokenResponse: MpTokenResponse
+    tokenResponse: MpTokenResponse,
   ): Promise<void> {
     // Calcular expiración del token
     const expiresAt = new Date(Date.now() + tokenResponse.expires_in * 1000).toISOString();
@@ -359,7 +356,7 @@ export class MarketplaceOnboardingService {
         mp_onboarding_completed_at: new Date().toISOString(),
         mp_access_token_encrypted: tokenResponse.access_token, // ⚠️ ENCRIPTAR
         mp_refresh_token_encrypted: tokenResponse.refresh_token, // ⚠️ ENCRIPTAR
-        mp_token_expires_at: expiresAt
+        mp_token_expires_at: expiresAt,
       })
       .eq('id', userId);
 
@@ -377,7 +374,7 @@ export class MarketplaceOnboardingService {
       .from('mp_onboarding_states')
       .update({
         completed: true,
-        completed_at: new Date().toISOString()
+        completed_at: new Date().toISOString(),
       })
       .eq('state', state);
 
@@ -396,15 +393,15 @@ export class MarketplaceOnboardingService {
       client_id: this.CLIENT_ID,
       client_secret: this.CLIENT_SECRET,
       grant_type: 'refresh_token',
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
     };
 
     const response = await fetch(this.MP_TOKEN_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {

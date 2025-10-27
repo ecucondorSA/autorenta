@@ -136,7 +136,11 @@ export class PaymentsService {
     return this.createIntent(bookingId);
   }
 
-  async simulateWebhook(provider: string, intentId: string, status: 'approved' | 'rejected'): Promise<void> {
+  async simulateWebhook(
+    provider: string,
+    intentId: string,
+    status: 'approved' | 'rejected',
+  ): Promise<void> {
     return this.markAsPaid(intentId);
   }
 
@@ -144,17 +148,20 @@ export class PaymentsService {
    * ✅ FIX P0.2: Proceso centralizado de pago para un booking
    * Reemplaza código duplicado en payment-actions.component.ts
    */
-  async processPayment(bookingId: string, retryCount = 0): Promise<{
+  async processPayment(
+    bookingId: string,
+    retryCount = 0,
+  ): Promise<{
     success: boolean;
     paymentIntentId?: string;
     error?: string;
   }> {
     const MAX_RETRIES = 3;
-    
+
     try {
       // 1. Crear payment intent
       const intent = await this.createIntent(bookingId);
-      
+
       if (!intent || !intent.id) {
         throw new Error('No se pudo crear el payment intent');
       }
@@ -164,19 +171,18 @@ export class PaymentsService {
 
       // 3. Verificar estado
       const status = await this.getStatus(intent.id);
-      
+
       if (status?.status === 'completed') {
         return {
           success: true,
-          paymentIntentId: intent.id
+          paymentIntentId: intent.id,
         };
       }
 
       throw new Error('El pago no se completó correctamente');
-      
     } catch (error: any) {
       console.error('Error en processPayment:', error);
-      
+
       // Retry logic para errores de red
       if (retryCount < MAX_RETRIES && this.isRetryableError(error)) {
         console.log(`Reintentando pago (${retryCount + 1}/${MAX_RETRIES})...`);
@@ -186,7 +192,7 @@ export class PaymentsService {
 
       return {
         success: false,
-        error: error.message || 'Error al procesar el pago'
+        error: error.message || 'Error al procesar el pago',
       };
     }
   }
@@ -200,17 +206,17 @@ export class PaymentsService {
       'timeout',
       'ECONNRESET',
       'ETIMEDOUT',
-      'Failed to fetch'
+      'Failed to fetch',
     ];
-    
+
     const errorMessage = error.message || error.toString();
-    return retryableErrors.some(msg => errorMessage.includes(msg));
+    return retryableErrors.some((msg) => errorMessage.includes(msg));
   }
 
   /**
    * Delay helper para retry logic
    */
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

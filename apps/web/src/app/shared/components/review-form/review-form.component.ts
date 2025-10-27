@@ -5,7 +5,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import type { CreateReviewParams, ReviewType } from '../../../core/models';
 
 interface RatingCategory {
-  key: keyof Omit<CreateReviewParams, 'booking_id' | 'reviewee_id' | 'car_id' | 'review_type' | 'comment_public' | 'comment_private'>;
+  key: keyof Omit<
+    CreateReviewParams,
+    'booking_id' | 'reviewee_id' | 'car_id' | 'review_type' | 'comment_public' | 'comment_private'
+  >;
   label: string;
   icon: string;
   description: string;

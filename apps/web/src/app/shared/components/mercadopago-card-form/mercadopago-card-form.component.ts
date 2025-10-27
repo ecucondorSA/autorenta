@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter, signal, inject, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Output,
+  EventEmitter,
+  signal,
+  inject,
+  Input,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { environment } from '@environment';
 import { MercadoPagoScriptService } from '../../../core/services/mercado-pago-script.service';
@@ -101,8 +110,19 @@ type MercadoPagoCardFormData = {
           @if (isSubmitting()) {
             <span class="flex items-center justify-center">
               <svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Autorizando...
             </span>
@@ -122,31 +142,34 @@ type MercadoPagoCardFormData = {
       <!-- Información de seguridad -->
       <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
         <p class="text-xs text-blue-700">
-          🔒 Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu tarjeta.
+          🔒 Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu
+          tarjeta.
         </p>
       </div>
     </div>
   `,
-  styles: [`
-    .mp-card-form-container {
-      max-width: 500px;
-      margin: 0 auto;
-    }
+  styles: [
+    `
+      .mp-card-form-container {
+        max-width: 500px;
+        margin: 0 auto;
+      }
 
-    .mp-input {
-      height: 42px;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
-      padding: 0.5rem 0.75rem;
-    }
+      .mp-input {
+        height: 42px;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        padding: 0.5rem 0.75rem;
+      }
 
-    .mp-input:focus {
-      outline: none;
-      border-color: #3b82f6;
-      ring: 2px;
-      ring-color: #3b82f64d;
-    }
-  `]
+      .mp-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        ring: 2px;
+        ring-color: #3b82f64d;
+      }
+    `,
+  ],
 })
 export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
   @Input() amountArs = 0;
@@ -270,9 +293,9 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
             console.error('Mercado Pago form error:', errors);
             console.error('Full error details:', JSON.stringify(errors, null, 2));
             this.isSubmitting.set(false);
-            
+
             let message = 'Error desconocido con Mercado Pago';
-            
+
             if (Array.isArray(errors)) {
               // Log each error for debugging
               errors.forEach((err: any, idx: number) => {
@@ -281,10 +304,10 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
                   description: err?.description,
                   cause: err?.cause,
                   code: err?.code,
-                  field: err?.field
+                  field: err?.field,
                 });
               });
-              
+
               message = errors
                 .map((err: any) => {
                   const field = err?.field || '';
@@ -325,14 +348,13 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
           },
         },
       });
-
     } catch (err) {
       console.error('MP initialization error:', err);
       console.error('MP error type:', typeof err);
       console.error('MP error stringified:', JSON.stringify(err, null, 2));
-      
+
       let message = 'Error al inicializar Mercado Pago';
-      
+
       if (Array.isArray(err)) {
         console.error('MP Error is an array with', err.length, 'items:');
         err.forEach((e, i) => {
@@ -344,7 +366,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       } else if (typeof err === 'string') {
         message = err;
       }
-      
+
       this.errorMessage.set(message);
       this.cardError.emit(message);
     }
@@ -388,5 +410,4 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
     this.errorMessage.set(message);
     this.cardError.emit(message);
   }
-
 }

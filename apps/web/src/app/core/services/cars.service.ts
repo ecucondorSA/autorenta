@@ -33,7 +33,7 @@ export class CarsService {
 
     return {
       ...data,
-      photos: data.car_photos || []
+      photos: data.car_photos || [],
     } as Car;
   }
 
@@ -45,15 +45,17 @@ export class CarsService {
       maxWidth: 1200,
       maxHeight: 900,
       quality: 0.85,
-      format: 'webp'
+      format: 'webp',
     });
 
     const extension = 'webp';
     const filePath = `${userId}/${carId}/${uuidv4()}.${extension}`;
-    const { error } = await this.supabase.storage.from('car-images').upload(filePath, optimizedFile, {
-      cacheControl: '3600',
-      upsert: false,
-    });
+    const { error } = await this.supabase.storage
+      .from('car-images')
+      .upload(filePath, optimizedFile, {
+        cacheControl: '3600',
+        upsert: false,
+      });
     if (error) throw error;
     const { data } = this.supabase.storage.from('car-images').getPublicUrl(filePath);
 
@@ -77,7 +79,7 @@ export class CarsService {
 
   suggestVehicleValueUsd(
     pricePerDay: number | null | undefined,
-    options?: { averageRentalDays?: number }
+    options?: { averageRentalDays?: number },
   ): number {
     if (!pricePerDay || pricePerDay <= 0) {
       return 0;
@@ -118,13 +120,15 @@ export class CarsService {
         canvas.toBlob(
           (blob) => {
             if (blob) {
-              resolve(new File([blob], file.name.replace(/\.[^/.]+$/, ".webp"), { type: 'image/webp' }));
+              resolve(
+                new File([blob], file.name.replace(/\.[^/.]+$/, '.webp'), { type: 'image/webp' }),
+              );
             } else {
               reject(new Error('Failed to optimize image'));
             }
           },
           'image/webp',
-          options.quality
+          options.quality,
         );
       };
 
@@ -136,7 +140,8 @@ export class CarsService {
   async listActiveCars(filters: CarFilters): Promise<Car[]> {
     let query = this.supabase
       .from('cars')
-      .select(`
+      .select(
+        `
         *,
         car_photos(*),
         owner:v_car_owner_info!owner_id(
@@ -147,14 +152,15 @@ export class CarsService {
           rating_count,
           created_at
         )
-      `)
+      `,
+      )
       .eq('status', 'active')
       .order('created_at', { ascending: false });
-    
+
     if (filters.city) {
       query = query.ilike('location_city', `%${filters.city}%`);
     }
-    
+
     const { data, error } = await query;
     if (error) throw error;
 
@@ -166,8 +172,8 @@ export class CarsService {
           id: data[0].id,
           title: data[0].title,
           region_id: data[0].region_id,
-          hasRegionId: !!data[0].region_id
-        }
+          hasRegionId: !!data[0].region_id,
+        },
       });
     }
 
@@ -177,19 +183,19 @@ export class CarsService {
         data as Car[],
         filters.from,
         filters.to,
-        filters.blockedCarIds || []
+        filters.blockedCarIds || [],
       );
       return availableCars.map((car: any) => ({
         ...car,
         photos: car.car_photos || [],
-        owner: Array.isArray(car.owner) ? car.owner[0] : car.owner
+        owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
       })) as Car[];
     }
 
     return (data ?? []).map((car: any) => ({
       ...car,
       photos: car.car_photos || [],
-      owner: Array.isArray(car.owner) ? car.owner[0] : car.owner
+      owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
     })) as Car[];
   }
 
@@ -201,11 +207,11 @@ export class CarsService {
     cars: Car[],
     startDate: string,
     endDate: string,
-    additionalBlockedIds: string[] = []
+    additionalBlockedIds: string[] = [],
   ): Promise<Car[]> {
     if (cars.length === 0) return [];
 
-    const carIds = cars.map(c => c.id);
+    const carIds = cars.map((c) => c.id);
 
     // Buscar bookings que se solapan con las fechas solicitadas
     const { data: conflicts, error } = await this.supabase
@@ -223,19 +229,20 @@ export class CarsService {
     // IDs de autos bloqueados
     const blockedIds = new Set([
       ...additionalBlockedIds,
-      ...(conflicts || []).map(c => c.car_id)
+      ...(conflicts || []).map((c) => c.car_id),
     ]);
 
     console.log(`🚗 Filtered ${blockedIds.size} unavailable cars from ${cars.length} total cars`);
 
     // Filtrar autos disponibles
-    return cars.filter(car => !blockedIds.has(car.id));
+    return cars.filter((car) => !blockedIds.has(car.id));
   }
 
   async getCarById(id: string): Promise<Car | null> {
     const { data, error } = await this.supabase
       .from('cars')
-      .select(`
+      .select(
+        `
         *,
         car_photos(*),
         owner:v_car_owner_info!owner_id(
@@ -246,7 +253,8 @@ export class CarsService {
           rating_count,
           created_at
         )
-      `)
+      `,
+      )
       .eq('id', id)
       .single();
     if (error) {
@@ -256,7 +264,7 @@ export class CarsService {
 
     return {
       ...data,
-      photos: data.car_photos || []
+      photos: data.car_photos || [],
     } as Car;
   }
 
@@ -272,7 +280,7 @@ export class CarsService {
 
     return (data ?? []).map((car: any) => ({
       ...car,
-      photos: car.car_photos || []
+      photos: car.car_photos || [],
     })) as Car[];
   }
 
@@ -293,13 +301,13 @@ export class CarsService {
   async updateCarStatus(carId: string, status: string): Promise<void> {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
     if (!userId) throw new Error('Usuario no autenticado');
-    
+
     const { error } = await this.supabase
       .from('cars')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', carId)
       .eq('owner_id', userId);
-    
+
     if (error) throw error;
   }
 
@@ -319,7 +327,7 @@ export class CarsService {
 
     return {
       ...data,
-      photos: data.car_photos || []
+      photos: data.car_photos || [],
     } as Car;
   }
 
@@ -333,7 +341,7 @@ export class CarsService {
 
     return (data ?? []).map((car: any) => ({
       ...car,
-      photos: car.car_photos || []
+      photos: car.car_photos || [],
     })) as Car[];
   }
 
@@ -355,7 +363,16 @@ export class CarsService {
     return data ?? [];
   }
 
-  async getAllCarModels(): Promise<Array<{ id: string; brand_id: string; name: string; category: string; seats: number; doors: number }>> {
+  async getAllCarModels(): Promise<
+    Array<{
+      id: string;
+      brand_id: string;
+      name: string;
+      category: string;
+      seats: number;
+      doors: number;
+    }>
+  > {
     const { data, error } = await this.supabase
       .from('car_models')
       .select('id, brand_id, name, category, seats, doors')
@@ -401,12 +418,12 @@ export class CarsService {
   /**
    * ✅ SPRINT 2 FIX: Obtener autos disponibles usando RPC function
    * Previene doble reserva validando en base de datos
-   * 
+   *
    * @param startDate - Fecha inicio (ISO string)
    * @param endDate - Fecha fin (ISO string)
    * @param options - Opciones adicionales (limit, offset, city)
    * @returns Promise<Car[]> - Solo autos SIN conflictos de fechas
-   * 
+   *
    * @example
    * const cars = await carsService.getAvailableCars(
    *   '2025-11-01T00:00:00Z',
@@ -421,7 +438,7 @@ export class CarsService {
       limit?: number;
       offset?: number;
       city?: string;
-    } = {}
+    } = {},
   ): Promise<Car[]> {
     try {
       // Llamar a la función RPC que creamos en Sprint 2
@@ -429,7 +446,7 @@ export class CarsService {
         p_start_date: startDate,
         p_end_date: endDate,
         p_limit: options.limit || 100,
-        p_offset: options.offset || 0
+        p_offset: options.offset || 0,
       });
 
       if (error) {
@@ -461,9 +478,9 @@ export class CarsService {
 
           return {
             ...car,
-            photos: photos || []
+            photos: photos || [],
           } as Car;
-        })
+        }),
       );
 
       return carsWithPhotos;
@@ -476,12 +493,12 @@ export class CarsService {
   /**
    * ✅ SPRINT 2 FIX: Verificar si un auto específico está disponible
    * Útil antes de crear una reserva
-   * 
+   *
    * @param carId - ID del auto
    * @param startDate - Fecha inicio (ISO string)
    * @param endDate - Fecha fin (ISO string)
    * @returns Promise<boolean> - true si está disponible, false si no
-   * 
+   *
    * @example
    * const available = await carsService.isCarAvailable(
    *   'uuid-del-auto',
@@ -492,16 +509,12 @@ export class CarsService {
    *   alert('Auto no disponible para esas fechas');
    * }
    */
-  async isCarAvailable(
-    carId: string,
-    startDate: string,
-    endDate: string
-  ): Promise<boolean> {
+  async isCarAvailable(carId: string, startDate: string, endDate: string): Promise<boolean> {
     try {
       const { data, error } = await this.supabase.rpc('is_car_available', {
         p_car_id: carId,
         p_start_date: startDate,
-        p_end_date: endDate
+        p_end_date: endDate,
       });
 
       if (error) {
@@ -553,14 +566,14 @@ export class CarsService {
         return {
           hasActive: true,
           count: allBookings.length,
-          bookings: activeBookings || []
+          bookings: activeBookings || [],
         };
       }
 
       return {
         hasActive: false,
         count: 0,
-        bookings: []
+        bookings: [],
       };
     } catch (error) {
       console.error('Error en hasActiveBookings:', error);

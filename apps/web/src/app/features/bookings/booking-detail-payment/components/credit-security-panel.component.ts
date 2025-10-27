@@ -26,11 +26,18 @@ import { WalletService } from '../../../../core/services/wallet.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300">
+    <div
+      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
+    >
       <!-- Header -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center space-x-2">
-          <svg class="w-6 h-6 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="w-6 h-6 text-purple-600 dark:text-purple-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -38,7 +45,9 @@ import { WalletService } from '../../../../core/services/wallet.service';
               d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
             />
           </svg>
-          <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">Crédito de Seguridad</h3>
+          <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+            Crédito de Seguridad
+          </h3>
         </div>
         @if (lockStatus() === 'locked') {
           <span
@@ -57,8 +66,12 @@ import { WalletService } from '../../../../core/services/wallet.service';
       </div>
 
       <!-- Amount Required -->
-      <div class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/10 rounded-lg p-4 mb-4 transition-colors duration-300">
-        <p class="text-sm text-gray-700 dark:text-pearl-light/70 mb-2">Crédito de Seguridad requerido</p>
+      <div
+        class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/10 rounded-lg p-4 mb-4 transition-colors duration-300"
+      >
+        <p class="text-sm text-gray-700 dark:text-pearl-light/70 mb-2">
+          Crédito de Seguridad requerido
+        </p>
         <div class="flex items-baseline justify-between">
           <p class="text-3xl font-bold text-purple-900 dark:text-purple-200">
             {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
@@ -72,9 +85,15 @@ import { WalletService } from '../../../../core/services/wallet.service';
       </div>
 
       <!-- Explanation -->
-      <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg transition-colors duration-300">
+      <div
+        class="mb-4 p-3 bg-yellow-50 border border-yellow-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg transition-colors duration-300"
+      >
         <div class="flex space-x-2">
-          <svg class="w-5 h-5 text-yellow-600 dark:text-warning-200 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <svg
+            class="w-5 h-5 text-yellow-600 dark:text-warning-200 flex-shrink-0 mt-0.5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
             <path
               fill-rule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
@@ -82,11 +101,13 @@ import { WalletService } from '../../../../core/services/wallet.service';
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-yellow-900 dark:text-warning-50">⚠️ NO reembolsable</p>
+            <p class="text-sm font-medium text-yellow-900 dark:text-warning-50">
+              ⚠️ NO reembolsable
+            </p>
             <p class="text-xs text-yellow-700 dark:text-warning-200 mt-1">
               Este crédito <strong>NO es reembolsable</strong> y queda como saldo
-              <strong>no retirable</strong> en tu wallet. Se usa primero para gastos/daños. Si no se usa,
-              queda disponible para futuras reservas.
+              <strong>no retirable</strong> en tu wallet. Se usa primero para gastos/daños. Si no se
+              usa, queda disponible para futuras reservas.
             </p>
           </div>
         </div>
@@ -96,19 +117,34 @@ import { WalletService } from '../../../../core/services/wallet.service';
       @if (isCheckingBalance()) {
         <!-- Loading Balance -->
         <div class="flex items-center justify-center py-8">
-          <svg class="animate-spin h-8 w-8 text-purple-600 dark:text-purple-300" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <svg
+            class="animate-spin h-8 w-8 text-purple-600 dark:text-purple-300"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
             <path
               class="opacity-75"
               fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          <span class="ml-3 text-sm text-gray-600 dark:text-pearl-light/70">Verificando saldo...</span>
+          <span class="ml-3 text-sm text-gray-600 dark:text-pearl-light/70"
+            >Verificando saldo...</span
+          >
         </div>
       } @else {
         <!-- Balance Info -->
-        <div class="mb-4 p-4 bg-gray-50 border border-gray-200 dark:bg-slate-deep/40 dark:border-neutral-700 rounded-lg transition-colors duration-300">
+        <div
+          class="mb-4 p-4 bg-gray-50 border border-gray-200 dark:bg-slate-deep/40 dark:border-neutral-700 rounded-lg transition-colors duration-300"
+        >
           <div class="space-y-2">
             <div class="flex justify-between text-sm">
               <span class="text-gray-600 dark:text-pearl-light/70">Crédito disponible:</span>
@@ -129,7 +165,11 @@ import { WalletService } from '../../../../core/services/wallet.service';
               </span>
               <span
                 class="font-bold"
-                [ngClass]="creditDifference() >= 0 ? 'text-green-600 dark:text-success-200' : 'text-red-600 dark:text-error-200'"
+                [ngClass]="
+                  creditDifference() >= 0
+                    ? 'text-green-600 dark:text-success-200'
+                    : 'text-red-600 dark:text-error-200'
+                "
               >
                 {{ formatUsd(Math.abs(creditDifference())) }}
               </span>
@@ -148,8 +188,19 @@ import { WalletService } from '../../../../core/services/wallet.service';
               class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               @if (isLoading()) {
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white dark:text-ivory-luminous" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <svg
+                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-white dark:text-ivory-luminous"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
                   <path
                     class="opacity-75"
                     fill="currentColor"
@@ -177,7 +228,11 @@ import { WalletService } from '../../../../core/services/wallet.service';
               <div
                 class="flex items-start space-x-2 p-3 bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
               >
-                <svg class="w-5 h-5 text-red-600 dark:text-error-300 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  class="w-5 h-5 text-red-600 dark:text-error-300 flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -185,7 +240,9 @@ import { WalletService } from '../../../../core/services/wallet.service';
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-red-900 dark:text-error-100">Crédito insuficiente</p>
+                  <p class="text-sm font-medium text-red-900 dark:text-error-100">
+                    Crédito insuficiente
+                  </p>
                   <p class="text-xs text-red-700 dark:text-error-200 mt-1">
                     Necesitas cargar {{ formatUsd(Math.abs(creditDifference())) }} adicionales.
                   </p>
@@ -196,7 +253,12 @@ import { WalletService } from '../../../../core/services/wallet.service';
                 (click)="onLoadCredit()"
                 class="w-full px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
               >
-                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="w-5 h-5 inline-block mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -212,8 +274,14 @@ import { WalletService } from '../../../../core/services/wallet.service';
           <!-- LOCKED: Ya está bloqueado -->
           @case ('locked') {
             <div class="space-y-3">
-              <div class="flex items-start space-x-2 p-3 bg-green-50 border border-green-200 dark:bg-success-900/25 dark:border-success-700/60 rounded-lg transition-colors duration-300">
-                <svg class="w-5 h-5 text-green-600 dark:text-success-200 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <div
+                class="flex items-start space-x-2 p-3 bg-green-50 border border-green-200 dark:bg-success-900/25 dark:border-success-700/60 rounded-lg transition-colors duration-300"
+              >
+                <svg
+                  class="w-5 h-5 text-green-600 dark:text-success-200 flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -221,7 +289,9 @@ import { WalletService } from '../../../../core/services/wallet.service';
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-green-900 dark:text-success-50">Crédito bloqueado</p>
+                  <p class="text-sm font-medium text-green-900 dark:text-success-50">
+                    Crédito bloqueado
+                  </p>
                   <p class="text-xs text-green-700 dark:text-success-200 mt-1">
                     El Crédito de Seguridad de {{ formatUsd(riskSnapshot.creditSecurityUsd) }} está
                     bloqueado correctamente para esta reserva.
@@ -229,7 +299,9 @@ import { WalletService } from '../../../../core/services/wallet.service';
                 </div>
               </div>
               @if (currentLock(); as lock) {
-                <div class="p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300">
+                <div
+                  class="p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300"
+                >
                   <p class="text-xs text-gray-600 dark:text-pearl-light/70">
                     Lock ID: <span class="font-mono">{{ lock.lockId }}</span>
                   </p>
@@ -241,8 +313,14 @@ import { WalletService } from '../../../../core/services/wallet.service';
           <!-- ERROR -->
           @case ('error') {
             <div class="space-y-3">
-              <div class="flex items-start space-x-2 p-3 bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300">
-                <svg class="w-5 h-5 text-red-600 dark:text-error-300 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <div
+                class="flex items-start space-x-2 p-3 bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
+              >
+                <svg
+                  class="w-5 h-5 text-red-600 dark:text-error-300 flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -269,9 +347,15 @@ import { WalletService } from '../../../../core/services/wallet.service';
       }
 
       <!-- Info adicional -->
-      <div class="mt-4 p-3 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300">
+      <div
+        class="mt-4 p-3 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
+      >
         <div class="flex space-x-2">
-          <svg class="w-5 h-5 text-blue-600 dark:text-info-200 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <svg
+            class="w-5 h-5 text-blue-600 dark:text-info-200 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
             <path
               fill-rule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
@@ -280,8 +364,8 @@ import { WalletService } from '../../../../core/services/wallet.service';
           </svg>
           <div class="flex-1">
             <p class="text-xs text-blue-800 dark:text-info-100">
-              <strong>Waterfall de cobro:</strong> Si hay daños/consumos, cobramos en este orden:
-              1) Crédito de Seguridad, 2) Top-up adicional, 3) FGO (hasta $800), 4) Recupero.
+              <strong>Waterfall de cobro:</strong> Si hay daños/consumos, cobramos en este orden: 1)
+              Crédito de Seguridad, 2) Top-up adicional, 3) FGO (hasta $800), 4) Recupero.
             </p>
           </div>
         </div>
@@ -309,7 +393,7 @@ export class CreditSecurityPanelComponent implements OnInit {
 
   // Signals
   protected lockStatus = signal<'checking' | 'sufficient' | 'insufficient' | 'locked' | 'error'>(
-    'checking'
+    'checking',
   );
   protected isLoading = signal(false);
   protected isCheckingBalance = signal(true);

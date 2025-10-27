@@ -34,7 +34,7 @@ describe('CarsService', () => {
 
   it('creates a car for the authenticated owner', async () => {
     supabase.auth.getUser.and.resolveTo({ data: { user: { id: 'user-1' } }, error: null });
-    const insertedCar = { id: 'car-1', owner_id: 'user-1' };
+    const insertedCar = { id: 'car-1', owner_id: 'user-1', car_photos: [] };
     const single = jasmine.createSpy('single').and.resolveTo({ data: insertedCar, error: null });
     const select = jasmine.createSpy('select').and.returnValue({ single });
     const insert = jasmine.createSpy('insert').and.callFake((payload: Record<string, unknown>) => {
@@ -49,11 +49,13 @@ describe('CarsService', () => {
     const result = await service.createCar({ brand: 'Fiat' } as any);
 
     expect(insert).toHaveBeenCalledWith(jasmine.objectContaining({ brand: 'Fiat' }));
-    expect(result).toBe(insertedCar as any);
+    expect(result).toEqual(
+      jasmine.objectContaining({ id: 'car-1', owner_id: 'user-1', photos: [] }),
+    );
   });
 
   it('filters active cars by city when provided', async () => {
-    const rows = [{ id: 'car-1' }];
+    const rows = [{ id: 'car-1', car_photos: [] }];
     const builder: any = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
     builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
@@ -69,7 +71,8 @@ describe('CarsService', () => {
     expect(builder.select).toHaveBeenCalledWith('*, car_photos(*)');
     expect(builder.eq).toHaveBeenCalledWith('status', 'active');
     expect(builder.ilike).toHaveBeenCalledWith('location_city', '%Buenos Aires%');
-    expect(result).toEqual(rows as any);
+    // Result should have photos array
+    expect(result).toEqual([jasmine.objectContaining({ id: 'car-1', photos: [] })]);
   });
 
   it('uploads a photo and returns metadata', async () => {
@@ -87,7 +90,21 @@ describe('CarsService', () => {
       return { upload, getPublicUrl };
     });
 
-    const single = jasmine.createSpy('single').and.callFake(() => Promise.resolve({ data: { id: 'photo-1', car_id: 'car-123', stored_path: uploadedPaths[0], url: 'https://cdn.example/car.jpg', position: 0, sort_order: 0 }, error: null }));
+    const single = jasmine
+      .createSpy('single')
+      .and.callFake(() =>
+        Promise.resolve({
+          data: {
+            id: 'photo-1',
+            car_id: 'car-123',
+            stored_path: uploadedPaths[0],
+            url: 'https://cdn.example/car.jpg',
+            position: 0,
+            sort_order: 0,
+          },
+          error: null,
+        }),
+      );
     const select = jasmine.createSpy('select').and.returnValue({ single });
     const insert = jasmine.createSpy('insert').and.returnValue({ select });
     supabase.from.withArgs('car_photos').and.returnValue({ insert });

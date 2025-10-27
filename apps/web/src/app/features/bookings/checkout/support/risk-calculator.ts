@@ -34,7 +34,9 @@ export class CheckoutRiskCalculator {
 
     const rolloverUsd = franchise.rolloverDeductibleUsd;
     const holdUsd = hasCard ? this.calculateHoldUsd(rolloverUsd) : 0;
-    const holdArs = hasCard ? this.calculateHoldArs(holdUsd, franchise.holdMinimumArs, fxSnapshot) : 0;
+    const holdArs = hasCard
+      ? this.calculateHoldArs(holdUsd, franchise.holdMinimumArs, fxSnapshot)
+      : 0;
 
     const needsWalletSecurity = !hasCard;
     const creditSecurityUsd = needsWalletSecurity ? franchise.walletCreditUsd : 0;

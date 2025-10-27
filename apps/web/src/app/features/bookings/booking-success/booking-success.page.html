@@ -35,11 +35,12 @@
     <div class="success-container max-w-3xl mx-auto">
       <!-- Success Icon -->
       <div class="text-center mb-6">
-        <ion-icon 
-          name="checkmark-circle" 
-          color="success" 
+        <ion-icon
+          name="checkmark-circle"
+          color="success"
           class="success-icon"
-          style="font-size: 120px;">
+          style="font-size: 120px"
+        >
         </ion-icon>
       </div>
 
@@ -47,7 +48,7 @@
       <h1 class="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
         ¡Tu reserva está confirmada!
       </h1>
-      
+
       <p class="text-center text-gray-600 dark:text-gray-400 mb-8">
         Hemos enviado los detalles a tu email
       </p>
@@ -63,8 +64,12 @@
         <ion-card-content>
           <div class="space-y-4">
             <!-- Car Info -->
-            <div class="flex items-center space-x-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-              <div class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+            <div
+              class="flex items-center space-x-4 pb-4 border-b border-gray-200 dark:border-gray-700"
+            >
+              <div
+                class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+              >
                 <ion-icon name="car-outline" class="text-4xl text-gray-400"></ion-icon>
               </div>
               <div>
@@ -82,15 +87,15 @@
                 <ion-icon name="log-in-outline"></ion-icon>
                 Desde:
               </span>
-              <span class="value">{{ bkg.start_at | date:'dd/MM/yyyy HH:mm' }}</span>
+              <span class="value">{{ bkg.start_at | date: 'dd/MM/yyyy HH:mm' }}</span>
             </div>
-            
+
             <div class="detail-row">
               <span class="label">
                 <ion-icon name="log-out-outline"></ion-icon>
                 Hasta:
               </span>
-              <span class="value">{{ bkg.end_at | date:'dd/MM/yyyy HH:mm' }}</span>
+              <span class="value">{{ bkg.end_at | date: 'dd/MM/yyyy HH:mm' }}</span>
             </div>
 
             <!-- Total -->
@@ -100,7 +105,7 @@
                 Total Pagado:
               </span>
               <span class="value font-bold text-green-600">
-                {{ bkg.total_amount | currency:'ARS':'symbol':'1.0-0' }}
+                {{ bkg.total_amount | currency: 'ARS' : 'symbol' : '1.0-0' }}
               </span>
             </div>
 
@@ -108,7 +113,7 @@
             <div class="detail-row text-xs">
               <span class="label text-gray-500">Número de Reserva:</span>
               <span class="value font-mono text-gray-700 dark:text-gray-300">
-                {{ bookingId() | slice:0:8 }}...
+                {{ bookingId() | slice: 0 : 8 }}...
               </span>
             </div>
           </div>
@@ -170,30 +175,28 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons space-y-3">
-        <ion-button 
-          expand="block" 
+        <ion-button
+          expand="block"
           [routerLink]="['/bookings', bookingId()]"
           color="primary"
-          size="large">
+          size="large"
+        >
           <ion-icon name="document-text-outline" slot="start"></ion-icon>
           Ver Detalles de la Reserva
         </ion-button>
-        
-        <ion-button 
-          expand="block" 
+
+        <ion-button
+          expand="block"
           [routerLink]="['/cars']"
           fill="outline"
           color="primary"
-          size="large">
+          size="large"
+        >
           <ion-icon name="search-outline" slot="start"></ion-icon>
           Buscar Más Vehículos
         </ion-button>
 
-        <ion-button 
-          expand="block" 
-          [routerLink]="['/']"
-          fill="clear"
-          color="medium">
+        <ion-button expand="block" [routerLink]="['/']" fill="clear" color="medium">
           <ion-icon name="home-outline" slot="start"></ion-icon>
           Ir al Inicio
         </ion-button>

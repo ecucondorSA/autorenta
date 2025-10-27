@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { WalletLedgerService, LedgerEntry, LedgerKind } from '@app/core/services/wallet-ledger.service';
+import {
+  WalletLedgerService,
+  LedgerEntry,
+  LedgerKind,
+} from '@app/core/services/wallet-ledger.service';
 import { injectSupabase } from '@app/core/services/supabase-client.service';
 import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
 
@@ -16,9 +20,7 @@ import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Historial de Movimientos
         </h1>
-        <p class="text-gray-600 dark:text-gray-400">
-          Todos tus movimientos de AutoCréditos
-        </p>
+        <p class="text-gray-600 dark:text-gray-400">Todos tus movimientos de AutoCréditos</p>
       </div>
 
       <!-- Filters -->
@@ -64,8 +66,10 @@ import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
 
       <!-- Error message -->
       @if (error()) {
-        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800
-                    rounded-lg p-4 mb-4">
+        <div
+          class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800
+                    rounded-lg p-4 mb-4"
+        >
           <p class="text-red-800 dark:text-red-200">{{ error() }}</p>
         </div>
       }
@@ -73,7 +77,9 @@ import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
       <!-- Loading state -->
       @if (loading() && filteredHistory().length === 0) {
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+          ></div>
           <p class="text-gray-600 dark:text-gray-400">Cargando historial...</p>
         </div>
       }
@@ -86,7 +92,11 @@ import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
             No hay movimientos
           </h3>
           <p class="text-gray-600 dark:text-gray-400">
-            {{ selectedKind ? 'No hay movimientos de este tipo' : 'Aún no tienes movimientos en tu wallet' }}
+            {{
+              selectedKind
+                ? 'No hay movimientos de este tipo'
+                : 'Aún no tienes movimientos en tu wallet'
+            }}
           </p>
         </div>
       }
@@ -95,7 +105,9 @@ import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
       @else {
         <div class="space-y-3">
           @for (entry of filteredHistory(); track entry.id) {
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow">
+            <div
+              class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow"
+            >
               <div class="p-4">
                 <div class="flex items-start justify-between">
                   <!-- Left: Icon + Details -->
@@ -143,8 +155,10 @@ import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
 
                       <!-- 🆕 FGO v1.1: Aporte FGO (solo para depósitos) -->
                       @if (entry.kind === 'deposit') {
-                        <div class="mt-2 inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20
-                                    border border-green-200 dark:border-green-800 rounded text-xs">
+                        <div
+                          class="mt-2 inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20
+                                    border border-green-200 dark:border-green-800 rounded text-xs"
+                        >
                           <span class="mr-1">🛡️</span>
                           <span class="text-green-800 dark:text-green-200 font-medium">
                             Aporte FGO: {{ formatFgoContribution(entry) }}
@@ -156,10 +170,7 @@ import { FgoV1_1Service } from '@app/core/services/fgo-v1-1.service';
 
                   <!-- Right: Amount -->
                   <div class="text-right ml-4">
-                    <p
-                      class="text-lg font-bold"
-                      [ngClass]="ledgerService.getKindColor(entry.kind)"
-                    >
+                    <p class="text-lg font-bold" [ngClass]="ledgerService.getKindColor(entry.kind)">
                       {{ formatBalanceChange(entry.balance_change_cents) }}
                     </p>
                     <p class="text-xs text-gray-500 dark:text-gray-500">
@@ -262,7 +273,9 @@ export class LedgerHistoryComponent implements OnInit, OnDestroy {
   }
 
   private async setupRealtimeSubscription(): Promise<void> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
     this.unsubscribe = this.ledgerService.subscribeToLedgerChanges(user.id, () => {
@@ -321,6 +334,6 @@ export class LedgerHistoryComponent implements OnInit, OnDestroy {
     const contributionCents = Math.round(entry.amount_cents * alpha);
     const contributionUsd = contributionCents / 100;
 
-    return `USD $${contributionUsd.toFixed(2)} (${(alpha * 100)}%)`;
+    return `USD $${contributionUsd.toFixed(2)} (${alpha * 100}%)`;
   }
 }

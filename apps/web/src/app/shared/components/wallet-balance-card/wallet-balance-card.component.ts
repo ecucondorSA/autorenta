@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed, effect, EffectRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  signal,
+  computed,
+  effect,
+  EffectRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
@@ -183,7 +192,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       // Callback para cualquier cambio en transacciones
       (transaction) => {
         console.log('🔔 Transacción actualizada en realtime:', transaction);
-      }
+      },
     );
 
     // Iniciar auto-refresh si está habilitado
@@ -199,7 +208,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
         }
         this.previousPendingCount = newCount;
       },
-      { allowSignalWrites: true }
+      { allowSignalWrites: true },
     );
   }
 
@@ -273,7 +282,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       if (pollResult.confirmed > 0) {
         alert(`✅ ${pollResult.message}\n\nTu balance se ha actualizado.`);
       } else if (this.pendingDeposits() > 0) {
-        alert('⏳ Tus depósitos aún están pendientes de aprobación en MercadoPago.\n\nPueden tardar algunos minutos. Te notificaremos cuando se acrediten.');
+        alert(
+          '⏳ Tus depósitos aún están pendientes de aprobación en MercadoPago.\n\nPueden tardar algunos minutos. Te notificaremos cuando se acrediten.',
+        );
       }
     } catch (err) {
       console.error('Error al actualizar:', err);
@@ -401,7 +412,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     }).format(amount);
 
     // Mostrar notificación con alert (temporal hasta implementar un sistema de toasts)
-    alert(`✅ Depósito Confirmado!\n\n${formattedAmount} se acreditaron a tu wallet.\n\nTu balance ha sido actualizado.`);
+    alert(
+      `✅ Depósito Confirmado!\n\n${formattedAmount} se acreditaron a tu wallet.\n\nTu balance ha sido actualizado.`,
+    );
 
     // TODO: Reemplazar con un toast notification component más elegante
     console.log('✅ Toast mostrado para depósito confirmado:', transaction);

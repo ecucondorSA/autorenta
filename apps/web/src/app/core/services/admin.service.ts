@@ -45,7 +45,7 @@ export class AdminService {
         *,
         user:profiles!withdrawal_requests_user_id_fkey(full_name, email:auth.users(email)),
         bank_account:bank_accounts(*)
-      `
+      `,
       )
       .order('created_at', { ascending: false });
 
@@ -75,7 +75,7 @@ export class AdminService {
   async completeWithdrawal(
     requestId: string,
     providerTransactionId: string,
-    providerMetadata?: Record<string, unknown>
+    providerMetadata?: Record<string, unknown>,
   ): Promise<void> {
     const { error } = await this.supabase.rpc('wallet_complete_withdrawal', {
       p_request_id: requestId,

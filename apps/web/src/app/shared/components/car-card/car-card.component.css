@@ -20,9 +20,9 @@
   border-width: 2px;
   transform: scale(1.02) translateY(-2px);
   box-shadow:
-    0 0 0 3px rgba(44, 74, 82, 0.15), /* Glow petrol */
-    0 0 0 6px rgba(139, 115, 85, 0.08), /* Glow warm */
-    0 12px 32px rgba(44, 74, 82, 0.2); /* Shadow profunda */
+    0 0 0 3px rgba(44, 74, 82, 0.15),
+    /* Glow petrol */ 0 0 0 6px rgba(139, 115, 85, 0.08),
+    /* Glow warm */ 0 12px 32px rgba(44, 74, 82, 0.2); /* Shadow profunda */
   z-index: 10;
   position: relative;
 }

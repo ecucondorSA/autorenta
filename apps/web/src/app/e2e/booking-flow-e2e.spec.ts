@@ -1,6 +1,6 @@
 /**
  * Sprint 5.1 - E2E Booking Flow Test
- * 
+ *
  * Tests del flujo completo de reserva: búsqueda → selección → booking → confirmación
  * Estos tests simulan la experiencia completa del usuario desde la búsqueda hasta ver la reserva
  */
@@ -33,8 +33,8 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       full_name: 'Owner Test',
       avatar_url: '',
       rating_avg: 4.5,
-      rating_count: 10
-    }
+      rating_count: 10,
+    },
   };
 
   const mockBooking = {
@@ -45,7 +45,7 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
     end_at: '2025-11-05T18:00:00',
     status: 'pending',
     total_price: 20000,
-    created_at: new Date().toISOString()
+    created_at: new Date().toISOString(),
   };
 
   beforeEach(() => {
@@ -55,8 +55,8 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
     (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
       Promise.resolve({
         data: { user: { id: 'user-123', email: 'test@example.com' } },
-        error: null
-      })
+        error: null,
+      }),
     );
 
     TestBed.configureTestingModule({
@@ -64,8 +64,8 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
         CarsService,
         BookingsService,
         WalletService,
-        { provide: 'SUPABASE_CLIENT', useValue: mockSupabase }
-      ]
+        { provide: 'SUPABASE_CLIENT', useValue: mockSupabase },
+      ],
     });
 
     carsService = TestBed.inject(CarsService);
@@ -79,17 +79,19 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['eq', 'ilike', 'order', 'select']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [mockCar],
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [mockCar],
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
       const availableCars = await carsService.listActiveCars({
         city: 'Buenos Aires',
         from: '2025-11-01T10:00:00',
-        to: '2025-11-05T18:00:00'
+        to: '2025-11-05T18:00:00',
       });
 
       expect(availableCars).toBeDefined();
@@ -100,13 +102,15 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
 
       // PASO 2: Selección de auto específico
       const selectedCarId = availableCars[0].id;
-      
+
       mockQuery.eq.and.returnValue(mockQuery);
       mockQuery.select.and.returnValue(mockQuery);
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: { ...mockCar, car_photos: [] },
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: { ...mockCar, car_photos: [] },
+          error: null,
+        }),
+      );
 
       const selectedCar = await carsService.getCarById(selectedCarId);
 
@@ -120,21 +124,23 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
         // Primera llamada: request_booking
         Promise.resolve({
           data: mockBooking.id,
-          error: null
+          error: null,
         }),
         // Segunda llamada: pricing_recalculate
-        Promise.resolve({ data: null, error: null })
+        Promise.resolve({ data: null, error: null }),
       );
 
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: mockBooking,
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: mockBooking,
+          error: null,
+        }),
+      );
 
       const booking = await bookingsService.requestBooking(
         selectedCarId,
         '2025-11-01T10:00:00',
-        '2025-11-05T18:00:00'
+        '2025-11-05T18:00:00',
       );
 
       expect(booking).toBeDefined();
@@ -144,10 +150,12 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       console.log('✅ PASO 3: Reserva creada - ID:', booking.id, 'Total:', booking.total_amount);
 
       // PASO 4: Verificar que la reserva aparece en "Mis Reservas"
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [booking],
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [booking],
+          error: null,
+        }),
+      );
 
       const myBookings = await bookingsService.getMyBookings();
 
@@ -165,16 +173,18 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['eq', 'ilike', 'order', 'select', 'single']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [mockCar],
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [mockCar],
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
       // Búsqueda
       const cars = await carsService.listActiveCars({ city: 'Buenos Aires' });
-      
+
       expect(cars[0].id).toBeDefined();
       expect(cars[0].brand).toBeDefined();
       expect(cars[0].model).toBeDefined();
@@ -182,10 +192,12 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(cars[0].location_city).toBeDefined();
 
       // Detalle
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: { ...mockCar, car_photos: [] },
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: { ...mockCar, car_photos: [] },
+          error: null,
+        }),
+      );
 
       const carDetail = await carsService.getCarById(cars[0].id);
 
@@ -196,18 +208,20 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       // Booking
       (mockSupabase.rpc as jasmine.Spy).and.returnValues(
         Promise.resolve({ data: 'booking-123', error: null }),
-        Promise.resolve({ data: null, error: null })
+        Promise.resolve({ data: null, error: null }),
       );
 
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: mockBooking,
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: mockBooking,
+          error: null,
+        }),
+      );
 
       const booking = await bookingsService.requestBooking(
         cars[0].id,
         '2025-11-01T10:00:00',
-        '2025-11-05T18:00:00'
+        '2025-11-05T18:00:00',
       );
 
       expect(booking.id).toBeDefined();
@@ -221,30 +235,41 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
     });
 
     it('debería validar disponibilidad antes de permitir reserva', async () => {
-      const mockQuery = jasmine.createSpyObj('Query', ['eq', 'ilike', 'order', 'select', 'in', 'or']);
+      const mockQuery = jasmine.createSpyObj('Query', [
+        'eq',
+        'ilike',
+        'order',
+        'select',
+        'in',
+        'or',
+      ]);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
       mockQuery.in.and.returnValue(mockQuery);
-      mockQuery.or.and.returnValue(Promise.resolve({
-        data: [], // Sin conflictos = disponible
-        error: null
-      }));
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [mockCar],
-        error: null
-      }));
+      mockQuery.or.and.returnValue(
+        Promise.resolve({
+          data: [], // Sin conflictos = disponible
+          error: null,
+        }),
+      );
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [mockCar],
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
       const cars = await carsService.listActiveCars({
         city: 'Buenos Aires',
         from: '2025-11-01T10:00:00',
-        to: '2025-11-05T18:00:00'
+        to: '2025-11-05T18:00:00',
       });
 
       expect(cars.length).toBeGreaterThan(0);
       expect(mockSupabase.from).toHaveBeenCalledWith('bookings');
-      
+
       console.log('✅ Validación de disponibilidad ejecutada antes de mostrar resultados');
     });
   });
@@ -254,14 +279,18 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['eq', 'order', 'select', 'single']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [mockCar],
-        error: null
-      }));
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: { ...mockCar, car_photos: [] },
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [mockCar],
+          error: null,
+        }),
+      );
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: { ...mockCar, car_photos: [] },
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -280,14 +309,18 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       const mockQuery = jasmine.createSpyObj('Query', ['eq', 'order', 'select', 'single']);
       mockQuery.select.and.returnValue(mockQuery);
       mockQuery.eq.and.returnValue(mockQuery);
-      mockQuery.order.and.returnValue(Promise.resolve({
-        data: [{ ...mockCar, id: testCarId }],
-        error: null
-      }));
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: { ...mockCar, id: testCarId, car_photos: [] },
-        error: null
-      }));
+      mockQuery.order.and.returnValue(
+        Promise.resolve({
+          data: [{ ...mockCar, id: testCarId }],
+          error: null,
+        }),
+      );
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: { ...mockCar, id: testCarId, car_photos: [] },
+          error: null,
+        }),
+      );
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
@@ -299,18 +332,20 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
 
       (mockSupabase.rpc as jasmine.Spy).and.returnValues(
         Promise.resolve({ data: 'booking-123', error: null }),
-        Promise.resolve({ data: null, error: null })
+        Promise.resolve({ data: null, error: null }),
       );
 
-      mockQuery.single.and.returnValue(Promise.resolve({
-        data: { ...mockBooking, car_id: testCarId },
-        error: null
-      }));
+      mockQuery.single.and.returnValue(
+        Promise.resolve({
+          data: { ...mockBooking, car_id: testCarId },
+          error: null,
+        }),
+      );
 
       const booking = await bookingsService.requestBooking(
         testCarId,
         '2025-11-01T10:00:00',
-        '2025-11-05T18:00:00'
+        '2025-11-05T18:00:00',
       );
       const carIdAtBooking = booking.car_id;
 

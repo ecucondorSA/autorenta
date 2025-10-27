@@ -80,7 +80,7 @@ export class StockPhotosService {
             orientation: 'landscape',
             client_id: this.UNSPLASH_ACCESS_KEY,
           },
-        })
+        }),
       );
 
       return response.results.map((photo) => ({
@@ -108,7 +108,7 @@ export class StockPhotosService {
       const response = await firstValueFrom(
         this.http.get(stockPhoto.downloadUrl, {
           responseType: 'blob',
-        })
+        }),
       );
 
       // Crear File desde Blob
@@ -136,7 +136,7 @@ export class StockPhotosService {
             per_page: '6',
             client_id: this.UNSPLASH_ACCESS_KEY,
           },
-        })
+        }),
       );
 
       return response.results.map((photo) => ({
@@ -164,7 +164,7 @@ export class StockPhotosService {
           params: {
             client_id: this.UNSPLASH_ACCESS_KEY,
           },
-        })
+        }),
       );
     } catch (error) {
       // No crítico si falla el tracking

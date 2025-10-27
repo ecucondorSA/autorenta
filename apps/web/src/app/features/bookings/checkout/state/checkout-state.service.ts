@@ -49,7 +49,11 @@ export class CheckoutStateService {
       }
 
       // Sync selección con método real de la reserva si aún no hay override manual.
-      if (this.paymentMethod() === 'credit_card' && booking.payment_method && booking.payment_method !== 'credit_card') {
+      if (
+        this.paymentMethod() === 'credit_card' &&
+        booking.payment_method &&
+        booking.payment_method !== 'credit_card'
+      ) {
         this.paymentMethod.set(booking.payment_method);
       }
     });
@@ -167,7 +171,11 @@ export class CheckoutStateService {
     this.status.set(status);
   }
 
-  setPaymentSelection(method: BookingPaymentMethod, walletAmount: number, cardAmount: number): void {
+  setPaymentSelection(
+    method: BookingPaymentMethod,
+    walletAmount: number,
+    cardAmount: number,
+  ): void {
     this.paymentMethod.set(method);
     this.walletSplit.set({ wallet: walletAmount, card: cardAmount });
   }
@@ -241,18 +249,13 @@ export class CheckoutStateService {
   }
 
   private getDepositFromBooking(booking: Booking): number {
-    const depositCents =
-      booking.deposit_amount_cents ??
-      booking.breakdown?.deposit_cents ??
-      null;
+    const depositCents = booking.deposit_amount_cents ?? booking.breakdown?.deposit_cents ?? null;
     return depositCents ? depositCents / 100 : 0;
   }
 
   private recommendByNightlyRate(booking: Booking): number {
     const nightlyRateCents =
-      booking.breakdown?.nightly_rate_cents ??
-      booking.nightly_rate_cents ??
-      null;
+      booking.breakdown?.nightly_rate_cents ?? booking.nightly_rate_cents ?? null;
     if (!nightlyRateCents) {
       return 300;
     }

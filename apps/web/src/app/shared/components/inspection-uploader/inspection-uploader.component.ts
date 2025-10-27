@@ -50,10 +50,7 @@ export class InspectionUploaderComponent implements OnInit {
   // Computed properties
   readonly isValid = computed(() => {
     return (
-      this.photos().length >= 8 &&
-      this.odometer > 0 &&
-      this.fuelLevel >= 0 &&
-      this.fuelLevel <= 100
+      this.photos().length >= 8 && this.odometer > 0 && this.fuelLevel >= 0 && this.fuelLevel <= 100
     );
   });
 
@@ -88,14 +85,14 @@ export class InspectionUploaderComponent implements OnInit {
       const files = Array.from(input.files);
 
       // Validar que sean imágenes
-      const invalidFiles = files.filter(f => !f.type.startsWith('image/'));
+      const invalidFiles = files.filter((f) => !f.type.startsWith('image/'));
       if (invalidFiles.length > 0) {
         this.error.set('Solo se permiten archivos de imagen');
         return;
       }
 
       // Validar tamaño (max 5MB por foto)
-      const largeFiles = files.filter(f => f.size > 5 * 1024 * 1024);
+      const largeFiles = files.filter((f) => f.size > 5 * 1024 * 1024);
       if (largeFiles.length > 0) {
         this.error.set('Las fotos no deben superar 5MB cada una');
         return;
@@ -105,7 +102,7 @@ export class InspectionUploaderComponent implements OnInit {
       for (const file of files) {
         const photo = await this.uploadPhoto(file);
         if (photo) {
-          this.photos.update(p => [...p, photo]);
+          this.photos.update((p) => [...p, photo]);
         }
       }
 
@@ -152,9 +149,9 @@ export class InspectionUploaderComponent implements OnInit {
       }
 
       // Obtener URL pública
-      const { data: { publicUrl } } = supabase.storage
-        .from('car-images')
-        .getPublicUrl(filePath);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('car-images').getPublicUrl(filePath);
 
       return {
         url: publicUrl,
@@ -170,7 +167,7 @@ export class InspectionUploaderComponent implements OnInit {
    * Elimina una foto de la lista
    */
   removePhoto(index: number): void {
-    this.photos.update(p => p.filter((_, i) => i !== index));
+    this.photos.update((p) => p.filter((_, i) => i !== index));
   }
 
   /**
@@ -188,7 +185,9 @@ export class InspectionUploaderComponent implements OnInit {
     try {
       // 1. Obtener ID del usuario actual (inspector)
       const supabase = this.supabaseService.getClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         throw new Error('Usuario no autenticado');
@@ -203,7 +202,7 @@ export class InspectionUploaderComponent implements OnInit {
           photos: this.photos(),
           odometer: this.odometer,
           fuelLevel: this.fuelLevel,
-        })
+        }),
       );
 
       if (!inspection) {
@@ -213,9 +212,7 @@ export class InspectionUploaderComponent implements OnInit {
       console.log('✅ Inspección creada:', inspection);
 
       // 3. Firmar inspección
-      const signed = await firstValueFrom(
-        this.fgoService.signInspection(inspection.id)
-      );
+      const signed = await firstValueFrom(this.fgoService.signInspection(inspection.id));
 
       if (!signed) {
         throw new Error('No se pudo firmar la inspección');
@@ -228,9 +225,7 @@ export class InspectionUploaderComponent implements OnInit {
     } catch (error) {
       console.error('Error saving inspection:', error);
       this.error.set(
-        error instanceof Error
-          ? error.message
-          : 'Error al guardar inspección. Intente nuevamente.'
+        error instanceof Error ? error.message : 'Error al guardar inspección. Intente nuevamente.',
       );
     } finally {
       this.saving.set(false);

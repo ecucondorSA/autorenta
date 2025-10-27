@@ -3,27 +3,27 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * SPRINT 8 - SEGURIDAD - Test 1: Row Level Security (RLS)
- * 
+ *
  * Tests que verifican que las políticas RLS están funcionando correctamente
  * y bloqueando acceso no autorizado a datos de otros usuarios.
- * 
+ *
  * TABLAS CRÍTICAS TESTEADAS:
  * - bookings: Solo usuario puede ver sus propias reservas
  * - cars: Solo owner puede editar sus autos
  * - profiles: Solo usuario puede editar su propio perfil
- * 
+ *
  * POLÍTICAS RLS NECESARIAS (deben existir en Supabase):
- * 
+ *
  * 1. bookings - SELECT:
  *    CREATE POLICY "Users can view own bookings"
  *    ON bookings FOR SELECT
  *    USING (auth.uid() = user_id OR auth.uid() = (SELECT owner_id FROM cars WHERE id = car_id));
- * 
+ *
  * 2. cars - UPDATE:
  *    CREATE POLICY "Owners can update own cars"
  *    ON cars FOR UPDATE
  *    USING (auth.uid() = owner_id);
- * 
+ *
  * 3. profiles - UPDATE:
  *    CREATE POLICY "Users can update own profile"
  *    ON profiles FOR UPDATE
@@ -59,7 +59,7 @@ describe('RLS Security - Row Level Security Policies', () => {
     it('debería verificar que RLS está habilitado en tabla bookings', async () => {
       // NOTA: Este test debe ejecutarse contra la DB real en CI/CD
       // o usar un mock que simule las políticas RLS
-      
+
       const rlsCheck = {
         table: 'bookings',
         rlsEnabled: true,
@@ -100,7 +100,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: { user: { id: mockUserUuid1 } },
           error: null,
-        })
+        }),
       );
 
       const mockBookingFromOtherUser = {
@@ -117,7 +117,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: null,
           error: { message: 'Row level security policy violation', code: 'PGRST116' },
-        })
+        }),
       );
 
       const result = await supabase
@@ -136,7 +136,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: { user: { id: mockUserUuid1 } },
           error: null,
-        })
+        }),
       );
 
       // Mock: RLS filtra automáticamente bookings ajenos
@@ -145,7 +145,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: [], // ← RLS retorna array vacío
           error: null,
-        })
+        }),
       );
 
       const result = await supabase.from('bookings').select();
@@ -161,7 +161,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: { user: { id: mockUserUuid1 } },
           error: null,
-        })
+        }),
       );
 
       const mockOwnBooking = {
@@ -178,14 +178,10 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: mockOwnBooking,
           error: null,
-        })
+        }),
       );
 
-      const result = await supabase
-        .from('bookings')
-        .select()
-        .eq('id', mockOwnBooking.id)
-        .single();
+      const result = await supabase.from('bookings').select().eq('id', mockOwnBooking.id).single();
 
       expect(result.data).toEqual(mockOwnBooking);
       expect(result.error).toBeNull();
@@ -196,7 +192,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: { user: { id: mockUserUuid1 } },
           error: null,
-        })
+        }),
       );
 
       const mockOwnBookings = [
@@ -210,7 +206,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: mockOwnBookings,
           error: null,
-        })
+        }),
       );
 
       const result = await supabase.from('bookings').select();
@@ -226,7 +222,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: { user: { id: mockUserUuid1 } },
           error: null,
-        })
+        }),
       );
 
       const updateSpy = supabase.from('cars').update as jasmine.Spy;
@@ -234,7 +230,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: null,
           error: { message: 'Row level security policy violation', code: 'PGRST116' },
-        })
+        }),
       );
 
       const result = await supabase.from('cars').update({
@@ -250,7 +246,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: { user: { id: mockUserUuid1 } },
           error: null,
-        })
+        }),
       );
 
       const updatedCar = {
@@ -265,7 +261,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: updatedCar,
           error: null,
-        })
+        }),
       );
 
       const result = await supabase.from('cars').update({
@@ -286,7 +282,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: { user: { id: mockUserUuid1 } },
           error: null,
-        })
+        }),
       );
 
       const updateSpy = supabase.from('profiles').update as jasmine.Spy;
@@ -294,7 +290,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: null,
           error: { message: 'Row level security policy violation' },
-        })
+        }),
       );
 
       // Intentar modificar perfil de otro usuario
@@ -311,7 +307,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: { user: { id: mockUserUuid1 } },
           error: null,
-        })
+        }),
       );
 
       const updatedProfile = {
@@ -325,7 +321,7 @@ describe('RLS Security - Row Level Security Policies', () => {
         Promise.resolve({
           data: updatedProfile,
           error: null,
-        })
+        }),
       );
 
       const result = await supabase.from('profiles').update({
@@ -356,7 +352,7 @@ describe('RLS Security - Row Level Security Policies', () => {
             },
           },
           error: null,
-        })
+        }),
       );
 
       expect(supabase.auth.getUser).toBeDefined();
@@ -381,7 +377,7 @@ describe('RLS Security - Row Level Security Policies', () => {
             },
           },
           error: null,
-        })
+        }),
       );
 
       expect(mockJwtClaims.sub).toBe(mockUserUuid1);
@@ -393,7 +389,7 @@ describe('RLS Security - Row Level Security Policies', () => {
     it('debería documentar que admins pueden tener políticas especiales', () => {
       // NOTA: Si hay tabla is_admin en profiles, las políticas RLS pueden permitir
       // que los admins vean todas las bookings
-      
+
       const adminPolicy = {
         table: 'bookings',
         policy: 'Admins can view all bookings',
@@ -409,72 +405,72 @@ describe('RLS Security - Row Level Security Policies', () => {
 /**
  * DOCUMENTACIÓN DE POLÍTICAS RLS NECESARIAS
  * ==========================================
- * 
+ *
  * Este archivo documenta las políticas RLS que deben existir en Supabase.
- * 
+ *
  * TABLA: bookings
  * ---------------
- * 
+ *
  * 1. SELECT - Users can view own bookings:
  *    CREATE POLICY "Users can view own bookings"
  *    ON bookings FOR SELECT
  *    USING (auth.uid() = user_id);
- * 
+ *
  * 2. SELECT - Owners can view bookings of their cars:
  *    CREATE POLICY "Owners can view bookings of their cars"
  *    ON bookings FOR SELECT
  *    USING (auth.uid() = (SELECT owner_id FROM cars WHERE id = car_id));
- * 
+ *
  * 3. UPDATE - Users can update own bookings:
  *    CREATE POLICY "Users can update own bookings"
  *    ON bookings FOR UPDATE
  *    USING (auth.uid() = user_id);
- * 
+ *
  * TABLA: cars
  * -----------
- * 
+ *
  * 1. SELECT - Anyone can view active cars:
  *    CREATE POLICY "Anyone can view active cars"
  *    ON cars FOR SELECT
  *    USING (status = 'active');
- * 
+ *
  * 2. UPDATE - Owners can update own cars:
  *    CREATE POLICY "Owners can update own cars"
  *    ON cars FOR UPDATE
  *    USING (auth.uid() = owner_id);
- * 
+ *
  * 3. DELETE - Owners can delete own cars:
  *    CREATE POLICY "Owners can delete own cars"
  *    ON cars FOR DELETE
  *    USING (auth.uid() = owner_id);
- * 
+ *
  * TABLA: profiles
  * ---------------
- * 
+ *
  * 1. SELECT - Users can view own profile:
  *    CREATE POLICY "Users can view own profile"
  *    ON profiles FOR SELECT
  *    USING (auth.uid() = id);
- * 
+ *
  * 2. UPDATE - Users can update own profile:
  *    CREATE POLICY "Users can update own profile"
  *    ON profiles FOR UPDATE
  *    USING (auth.uid() = id);
- * 
+ *
  * VERIFICACIÓN EN SUPABASE
  * ------------------------
- * 
+ *
  * SQL para verificar que RLS está habilitado:
- * 
- * SELECT tablename, rowsecurity 
- * FROM pg_tables 
- * WHERE schemaname = 'public' 
+ *
+ * SELECT tablename, rowsecurity
+ * FROM pg_tables
+ * WHERE schemaname = 'public'
  * AND tablename IN ('bookings', 'cars', 'profiles');
- * 
+ *
  * SQL para listar políticas existentes:
- * 
- * SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual 
- * FROM pg_policies 
- * WHERE schemaname = 'public' 
+ *
+ * SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual
+ * FROM pg_policies
+ * WHERE schemaname = 'public'
  * AND tablename IN ('bookings', 'cars', 'profiles');
  */

@@ -54,7 +54,7 @@ export class RiskCalculatorService {
    * Determina el bucket del auto según su valor
    */
   private determineBucket(
-    carValueUsd: number
+    carValueUsd: number,
   ): 'economy' | 'standard' | 'premium' | 'luxury' | 'ultra-luxury' {
     if (carValueUsd <= 10000) return 'economy';
     if (carValueUsd <= 20000) return 'standard';
@@ -79,7 +79,7 @@ export class RiskCalculatorService {
     existingSnapshot?: {
       fxRate: number;
       snapshotDate: Date;
-    }
+    },
   ): RiskCalculation {
     const bucket = this.determineBucket(carValueUsd);
     const franchiseInfo = this.franchiseService.getFranchiseInfo(carValueUsd, bucket, fxRate);
@@ -104,12 +104,12 @@ export class RiskCalculatorService {
     let requiresRevalidation = false;
     if (existingSnapshot) {
       const daysSince = Math.floor(
-        (new Date().getTime() - existingSnapshot.snapshotDate.getTime()) / (1000 * 60 * 60 * 24)
+        (new Date().getTime() - existingSnapshot.snapshotDate.getTime()) / (1000 * 60 * 60 * 24),
       );
       requiresRevalidation = this.franchiseService.shouldRevalidate(
         existingSnapshot.fxRate,
         fxRate,
-        daysSince
+        daysSince,
       );
     }
 
@@ -138,7 +138,7 @@ export class RiskCalculatorService {
   calculateDepositCents(
     totalBookingCents: number,
     paymentMethod: PaymentMethodType,
-    guaranteeAmountUsd: number
+    guaranteeAmountUsd: number,
   ): number {
     switch (paymentMethod) {
       case 'wallet':
@@ -172,7 +172,7 @@ export class RiskCalculatorService {
   canAffordPaymentMethod(
     walletBalanceCents: number,
     requiredDepositCents: number,
-    paymentMethod: PaymentMethodType
+    paymentMethod: PaymentMethodType,
   ): boolean {
     if (paymentMethod === 'credit_card') {
       // Tarjeta no requiere fondos en wallet
@@ -225,14 +225,14 @@ export class RiskCalculatorService {
           label: 'Franquicia Daño/Robo',
           amountUsd: this.franchiseService.formatUsd(risk.standardFranchiseUsd),
           amountArs: this.franchiseService.formatArs(
-            Math.round(risk.standardFranchiseUsd * risk.fxRate)
+            Math.round(risk.standardFranchiseUsd * risk.fxRate),
           ),
         },
         {
           label: 'Franquicia por Vuelco',
           amountUsd: this.franchiseService.formatUsd(risk.rolloverFranchiseUsd),
           amountArs: this.franchiseService.formatArs(
-            Math.round(risk.rolloverFranchiseUsd * risk.fxRate)
+            Math.round(risk.rolloverFranchiseUsd * risk.fxRate),
           ),
         },
         {

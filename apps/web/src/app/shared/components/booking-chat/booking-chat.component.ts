@@ -51,12 +51,12 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     await this.loadMessages();
 
     // Subscribe to messages
-    this.messagesService.subscribeToBooking(this.bookingId(), async message => {
-      this.messages.update(prev => {
-        const existing = prev.find(m => m.id === message.id);
+    this.messagesService.subscribeToBooking(this.bookingId(), async (message) => {
+      this.messages.update((prev) => {
+        const existing = prev.find((m) => m.id === message.id);
         if (existing) {
           // Update existing message (for read/delivered status)
-          return prev.map(m => m.id === message.id ? message : m);
+          return prev.map((m) => (m.id === message.id ? message : m));
         }
         return [...prev, message];
       });
@@ -79,12 +79,9 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     });
 
     // Subscribe to typing indicator
-    this.typingChannel = this.messagesService.subscribeToTyping(
-      this.bookingId(),
-      (typingUsers) => {
-        this.recipientTyping.set(typingUsers.includes(this.recipientId()));
-      }
-    );
+    this.typingChannel = this.messagesService.subscribeToTyping(this.bookingId(), (typingUsers) => {
+      this.recipientTyping.set(typingUsers.includes(this.recipientId()));
+    });
   }
 
   ngOnDestroy(): void {

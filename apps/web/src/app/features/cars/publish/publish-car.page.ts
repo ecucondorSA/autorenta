@@ -69,7 +69,10 @@ export class PublishCarPage implements OnInit, OnDestroy {
     // Precio y condiciones
     price_per_day: [0, [Validators.required, Validators.min(10)]],
     currency: ['USD', Validators.required],
-    value_usd: [null as number | null, [Validators.required, Validators.min(1000), Validators.max(1000000)]],
+    value_usd: [
+      null as number | null,
+      [Validators.required, Validators.min(1000), Validators.max(1000000)],
+    ],
     deposit_required: [true],
     deposit_amount: [0, [Validators.min(0)]],
     min_rental_days: [1, [Validators.required, Validators.min(1)]],
@@ -242,8 +245,7 @@ export class PublishCarPage implements OnInit, OnDestroy {
       const formValue = this.form.getRawValue();
       const payload = {
         ...formValue,
-        value_usd:
-          formValue.value_usd != null ? Number(formValue.value_usd) : undefined,
+        value_usd: formValue.value_usd != null ? Number(formValue.value_usd) : undefined,
       };
       const car = await this.carsService.createCar(payload);
 
@@ -286,7 +288,7 @@ export class PublishCarPage implements OnInit, OnDestroy {
         streetNumber || '',
         city,
         state || '',
-        country || 'Uruguay'
+        country || 'Uruguay',
       );
 
       console.log('[PublishCarPage] Geocoding successful:', result);
@@ -299,7 +301,10 @@ export class PublishCarPage implements OnInit, OnDestroy {
       console.warn('[PublishCarPage] Geocoding failed, trying city fallback...', error);
       try {
         // Fallback: Try geocoding just the city
-        const cityResult = await this.geocodingService.getCityCoordinates(city, country || 'Uruguay');
+        const cityResult = await this.geocodingService.getCityCoordinates(
+          city,
+          country || 'Uruguay',
+        );
         console.log('[PublishCarPage] City fallback successful:', cityResult);
         this.form.patchValue({
           location_lat: cityResult.latitude,

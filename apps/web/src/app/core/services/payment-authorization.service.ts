@@ -31,28 +31,36 @@ export class PaymentAuthorizationService {
    */
   private readonly MP_ERROR_MESSAGES: Record<string, string> = {
     // Rechazos por la tarjeta
-    'cc_rejected_high_risk': 'Tu pago fue rechazado por políticas de seguridad. Intenta con otra tarjeta o contacta a tu banco.',
-    'cc_rejected_insufficient_amount': 'Tu tarjeta no tiene fondos suficientes. Intenta con otra tarjeta.',
-    'cc_rejected_bad_filled_card_number': 'Revisa el número de tu tarjeta e intenta nuevamente.',
-    'cc_rejected_bad_filled_security_code': 'El código de seguridad (CVV) es incorrecto. Verifica e intenta nuevamente.',
-    'cc_rejected_bad_filled_date': 'La fecha de vencimiento es incorrecta. Verifica e intenta nuevamente.',
-    'cc_rejected_bad_filled_other': 'Revisa los datos de tu tarjeta e intenta nuevamente.',
-    'cc_rejected_call_for_authorize': 'Debes autorizar este pago con tu banco. Contacta a tu entidad bancaria.',
-    'cc_rejected_card_disabled': 'Tu tarjeta está deshabilitada. Contacta a tu banco o intenta con otra tarjeta.',
-    'cc_rejected_duplicated_payment': 'Ya realizaste un pago similar recientemente.',
-    'cc_rejected_invalid_installments': 'El plan de cuotas seleccionado no está disponible para esta tarjeta.',
-    'cc_rejected_max_attempts': 'Alcanzaste el límite de intentos. Intenta con otra tarjeta.',
-    'cc_rejected_blacklist': 'No pudimos procesar tu pago. Intenta con otra tarjeta.',
-    'cc_rejected_card_error': 'No pudimos procesar tu tarjeta. Intenta nuevamente o usa otra tarjeta.',
-    
+    cc_rejected_high_risk:
+      'Tu pago fue rechazado por políticas de seguridad. Intenta con otra tarjeta o contacta a tu banco.',
+    cc_rejected_insufficient_amount:
+      'Tu tarjeta no tiene fondos suficientes. Intenta con otra tarjeta.',
+    cc_rejected_bad_filled_card_number: 'Revisa el número de tu tarjeta e intenta nuevamente.',
+    cc_rejected_bad_filled_security_code:
+      'El código de seguridad (CVV) es incorrecto. Verifica e intenta nuevamente.',
+    cc_rejected_bad_filled_date:
+      'La fecha de vencimiento es incorrecta. Verifica e intenta nuevamente.',
+    cc_rejected_bad_filled_other: 'Revisa los datos de tu tarjeta e intenta nuevamente.',
+    cc_rejected_call_for_authorize:
+      'Debes autorizar este pago con tu banco. Contacta a tu entidad bancaria.',
+    cc_rejected_card_disabled:
+      'Tu tarjeta está deshabilitada. Contacta a tu banco o intenta con otra tarjeta.',
+    cc_rejected_duplicated_payment: 'Ya realizaste un pago similar recientemente.',
+    cc_rejected_invalid_installments:
+      'El plan de cuotas seleccionado no está disponible para esta tarjeta.',
+    cc_rejected_max_attempts: 'Alcanzaste el límite de intentos. Intenta con otra tarjeta.',
+    cc_rejected_blacklist: 'No pudimos procesar tu pago. Intenta con otra tarjeta.',
+    cc_rejected_card_error:
+      'No pudimos procesar tu tarjeta. Intenta nuevamente o usa otra tarjeta.',
+
     // Errores del comercio
-    'cc_amount_rate_limit_exceeded': 'Excediste el límite de monto. Intenta con un monto menor.',
-    
+    cc_amount_rate_limit_exceeded: 'Excediste el límite de monto. Intenta con un monto menor.',
+
     // Errores de fraude
-    'cc_rejected_fraud': 'Tu pago fue rechazado por razones de seguridad.',
-    
+    cc_rejected_fraud: 'Tu pago fue rechazado por razones de seguridad.',
+
     // Otros
-    'rejected_other_reason': 'Tu pago fue rechazado. Intenta nuevamente o contacta a tu banco.',
+    rejected_other_reason: 'Tu pago fue rechazado. Intenta nuevamente o contacta a tu banco.',
   };
 
   /**
@@ -62,9 +70,11 @@ export class PaymentAuthorizationService {
     if (!statusDetail) {
       return 'No pudimos procesar tu pago. Por favor, intenta nuevamente.';
     }
-    
-    return this.MP_ERROR_MESSAGES[statusDetail] 
-      || `Tu pago fue rechazado (${statusDetail}). Intenta con otra tarjeta o contacta a tu banco.`;
+
+    return (
+      this.MP_ERROR_MESSAGES[statusDetail] ||
+      `Tu pago fue rechazado (${statusDetail}). Intenta con otra tarjeta o contacta a tu banco.`
+    );
   }
 
   /**
@@ -73,7 +83,7 @@ export class PaymentAuthorizationService {
   private getTestSafeAmount(amountArs: number): number {
     if (!environment.production && amountArs > this.MP_TEST_MAX_AMOUNT_ARS) {
       console.warn(
-        `💡 [TEST MODE] Monto reducido de $${amountArs} ARS a $${this.MP_TEST_MAX_AMOUNT_ARS} ARS para evitar rechazo por alto riesgo en sandbox`
+        `💡 [TEST MODE] Monto reducido de $${amountArs} ARS a $${this.MP_TEST_MAX_AMOUNT_ARS} ARS para evitar rechazo por alto riesgo en sandbox`,
       );
       return this.MP_TEST_MAX_AMOUNT_ARS;
     }
@@ -107,25 +117,24 @@ export class PaymentAuthorizationService {
 
     // Ajustar monto para TEST mode si es necesario
     const safeAmountArs = this.getTestSafeAmount(amountArs);
-    const safeAmountUsd = safeAmountArs !== amountArs 
-      ? safeAmountArs / fxRate 
-      : amountUsd;
+    const safeAmountUsd = safeAmountArs !== amountArs ? safeAmountArs / fxRate : amountUsd;
 
     console.log('💳 Creating payment authorization...', {
       amountUsd: safeAmountUsd,
       amountArs: safeAmountArs,
       bookingId,
-      ...(safeAmountArs !== amountArs && { 
+      ...(safeAmountArs !== amountArs && {
         originalAmountArs: amountArs,
-        testMode: true 
-      })
+        testMode: true,
+      }),
     });
 
     return from(
       (async () => {
         // 1. Crear payment intent en DB
-        const { data: intent, error: intentError } = await this.supabaseClient
-          .rpc('create_payment_authorization', {
+        const { data: intent, error: intentError } = await this.supabaseClient.rpc(
+          'create_payment_authorization',
+          {
             p_user_id: userId,
             p_booking_id: bookingId || null,
             p_amount_usd: safeAmountUsd,
@@ -133,7 +142,8 @@ export class PaymentAuthorizationService {
             p_fx_rate: fxRate,
             p_description: description,
             p_external_reference: `preauth_${bookingId || Date.now()}`,
-          });
+          },
+        );
 
         if (intentError || !intent?.success) {
           console.error('Error creating payment intent:', intentError);
@@ -151,27 +161,24 @@ export class PaymentAuthorizationService {
 
         // 3. Llamar Edge Function para crear preauth en MP
         const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
-        const mpResponse = await fetch(
-          `${supabaseUrl}/functions/v1/mp-create-preauth`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              intent_id: intentId,
-              user_id: userId,
-              booking_id: bookingId,
-              amount_ars: safeAmountArs,
-              amount_usd: safeAmountUsd,
-              card_token: cardToken,
-              payer_email: payerEmail,
-              description: description,
-              external_reference: intent.external_reference,
-            }),
-          }
-        );
+        const mpResponse = await fetch(`${supabaseUrl}/functions/v1/mp-create-preauth`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            intent_id: intentId,
+            user_id: userId,
+            booking_id: bookingId,
+            amount_ars: safeAmountArs,
+            amount_usd: safeAmountUsd,
+            card_token: cardToken,
+            payer_email: payerEmail,
+            description: description,
+            external_reference: intent.external_reference,
+          }),
+        });
 
         if (!mpResponse.ok) {
           const errorData = await mpResponse.json();
@@ -188,7 +195,7 @@ export class PaymentAuthorizationService {
           const errorMsg = this.getErrorMessage(mpData.status_detail);
           console.error('❌ Payment rejected:', {
             status_detail: mpData.status_detail,
-            mp_payment_id: mpData.mp_payment_id
+            mp_payment_id: mpData.mp_payment_id,
           });
           throw new Error(errorMsg);
         }
@@ -205,7 +212,7 @@ export class PaymentAuthorizationService {
         };
 
         return result;
-      })()
+      })(),
     ).pipe(
       catchError((error) => {
         console.error('❌ Error in authorizePayment:', error);
@@ -213,22 +220,20 @@ export class PaymentAuthorizationService {
           ok: false,
           error: error.message || 'Error desconocido al autorizar',
         });
-      })
+      }),
     );
   }
 
   /**
    * Obtiene el estado actual de una autorización de pago
    */
-  getAuthorizationStatus(
-    authorizedPaymentId: string
-  ): Observable<PaymentAuthorization | null> {
+  getAuthorizationStatus(authorizedPaymentId: string): Observable<PaymentAuthorization | null> {
     return from(
       this.supabaseClient
         .from('payment_intents')
         .select('*')
         .eq('id', authorizedPaymentId)
-        .single()
+        .single(),
     ).pipe(
       map((response) => {
         if (response.error || !response.data) {
@@ -255,7 +260,7 @@ export class PaymentAuthorizationService {
       catchError((error) => {
         console.error('Error in getAuthorizationStatus:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -265,7 +270,7 @@ export class PaymentAuthorizationService {
    */
   captureAuthorization(
     authorizedPaymentId: string,
-    amountArs?: number
+    amountArs?: number,
   ): Observable<{ ok: boolean; error?: string }> {
     console.log('💰 Capturing preauthorization:', authorizedPaymentId);
 
@@ -279,20 +284,17 @@ export class PaymentAuthorizationService {
 
         // Llamar Edge Function para capturar preauth
         const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
-        const response = await fetch(
-          `${supabaseUrl}/functions/v1/mp-capture-preauth`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              intent_id: authorizedPaymentId,
-              ...(amountArs ? { amount_ars: amountArs } : {}),
-            }),
-          }
-        );
+        const response = await fetch(`${supabaseUrl}/functions/v1/mp-capture-preauth`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            intent_id: authorizedPaymentId,
+            ...(amountArs ? { amount_ars: amountArs } : {}),
+          }),
+        });
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -308,7 +310,7 @@ export class PaymentAuthorizationService {
         }
 
         return { ok: true };
-      })()
+      })(),
     ).pipe(
       catchError((error) => {
         console.error('❌ Error in captureAuthorization:', error);
@@ -316,7 +318,7 @@ export class PaymentAuthorizationService {
           ok: false,
           error: error.message || 'Error desconocido al capturar',
         });
-      })
+      }),
     );
   }
 
@@ -337,19 +339,16 @@ export class PaymentAuthorizationService {
 
         // Llamar Edge Function para cancelar preauth
         const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
-        const response = await fetch(
-          `${supabaseUrl}/functions/v1/mp-cancel-preauth`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              intent_id: authorizedPaymentId,
-            }),
-          }
-        );
+        const response = await fetch(`${supabaseUrl}/functions/v1/mp-cancel-preauth`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            intent_id: authorizedPaymentId,
+          }),
+        });
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -365,7 +364,7 @@ export class PaymentAuthorizationService {
         }
 
         return { ok: true };
-      })()
+      })(),
     ).pipe(
       catchError((error) => {
         console.error('❌ Error in cancelAuthorization:', error);
@@ -373,7 +372,7 @@ export class PaymentAuthorizationService {
           ok: false,
           error: error.message || 'Error desconocido al cancelar',
         });
-      })
+      }),
     );
   }
 
@@ -388,9 +387,7 @@ export class PaymentAuthorizationService {
   /**
    * Mapea estado de DB a estado de modelo
    */
-  private mapStatus(
-    dbStatus: string
-  ): 'pending' | 'authorized' | 'expired' | 'failed' {
+  private mapStatus(dbStatus: string): 'pending' | 'authorized' | 'expired' | 'failed' {
     switch (dbStatus) {
       case 'authorized':
         return 'authorized';

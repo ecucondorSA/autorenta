@@ -24,14 +24,14 @@ import { FgoService } from './fgo.service';
  * Tipo de daño reportado
  */
 export type DamageType =
-  | 'scratch'         // Rayón
-  | 'dent'            // Abolladura
-  | 'broken_glass'    // Vidrio roto
-  | 'tire_damage'     // Daño en neumático
-  | 'mechanical'      // Falla mecánica
-  | 'interior'        // Daño interior
-  | 'missing_item'    // Artículo faltante
-  | 'other';          // Otro
+  | 'scratch' // Rayón
+  | 'dent' // Abolladura
+  | 'broken_glass' // Vidrio roto
+  | 'tire_damage' // Daño en neumático
+  | 'mechanical' // Falla mecánica
+  | 'interior' // Daño interior
+  | 'missing_item' // Artículo faltante
+  | 'other'; // Otro
 
 /**
  * Daño individual reportado
@@ -40,7 +40,7 @@ export interface DamageItem {
   type: DamageType;
   description: string;
   estimatedCostUsd: number;
-  photos: string[];           // URLs de evidencia
+  photos: string[]; // URLs de evidencia
   severity: 'minor' | 'moderate' | 'severe';
 }
 
@@ -50,7 +50,7 @@ export interface DamageItem {
 export interface Claim {
   id: string;
   bookingId: string;
-  reportedBy: string;         // locador_id
+  reportedBy: string; // locador_id
   damages: DamageItem[];
   totalEstimatedCostUsd: number;
   status: 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected' | 'paid';
@@ -95,7 +95,7 @@ export class SettlementService {
     private readonly supabaseService: SupabaseClientService,
     private readonly fgoV1_1Service: FgoV1_1Service,
     private readonly riskMatrixService: RiskMatrixService,
-    private readonly fgoService: FgoService
+    private readonly fgoService: FgoService,
   ) {
     this.supabaseClient = this.supabaseService.getClient();
   }
@@ -107,12 +107,16 @@ export class SettlementService {
   /**
    * Valida que un booking tenga inspecciones completas (check-in y check-out)
    */
-  async validateInspections(bookingId: string): Promise<{ valid: boolean; missing: InspectionStage[] }> {
+  async validateInspections(
+    bookingId: string,
+  ): Promise<{ valid: boolean; missing: InspectionStage[] }> {
     try {
       const inspections = await firstValueFrom(this.fgoV1_1Service.getInspections(bookingId));
 
       const hasCheckIn = inspections.some((i) => i.stage === 'check_in' && isInspectionComplete(i));
-      const hasCheckOut = inspections.some((i) => i.stage === 'check_out' && isInspectionComplete(i));
+      const hasCheckOut = inspections.some(
+        (i) => i.stage === 'check_out' && isInspectionComplete(i),
+      );
 
       const missing: InspectionStage[] = [];
       if (!hasCheckIn) missing.push('check_in');
@@ -161,7 +165,11 @@ export class SettlementService {
    * Crea un claim de siniestro
    * NOTA: Los claims no están en la DB todavía, se implementarán en futura migración
    */
-  async createClaim(bookingId: string, damages: DamageItem[], notes?: string): Promise<Claim | null> {
+  async createClaim(
+    bookingId: string,
+    damages: DamageItem[],
+    notes?: string,
+  ): Promise<Claim | null> {
     try {
       this.processing.set(true);
       this.error.set(null);
@@ -177,7 +185,9 @@ export class SettlementService {
       const totalEstimatedCostUsd = damages.reduce((sum, d) => sum + d.estimatedCostUsd, 0);
 
       // Obtener usuario actual
-      const { data: { user } } = await this.supabaseClient.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabaseClient.auth.getUser();
       if (!user) {
         this.error.set('Usuario no autenticado');
         return null;
@@ -230,7 +240,7 @@ export class SettlementService {
         this.fgoV1_1Service.assessEligibility({
           bookingId: claim.bookingId,
           claimAmountCents,
-        })
+        }),
       );
 
       return eligibility;
@@ -262,7 +272,11 @@ export class SettlementService {
         };
       }
 
-      const { data: booking } = await this.supabaseClient.from('bookings').select('car_id').eq('id', claim.bookingId).single();
+      const { data: booking } = await this.supabaseClient
+        .from('bookings')
+        .select('car_id')
+        .eq('id', claim.bookingId)
+        .single();
       if (!booking) {
         return {
           ok: false,
@@ -271,7 +285,11 @@ export class SettlementService {
         };
       }
 
-      const { data: car } = await this.supabaseClient.from('cars').select('price_per_day').eq('id', booking.car_id).single();
+      const { data: car } = await this.supabaseClient
+        .from('cars')
+        .select('price_per_day')
+        .eq('id', booking.car_id)
+        .single();
       if (!car) {
         return {
           ok: false,
@@ -318,7 +336,6 @@ export class SettlementService {
         // TODO: Implement partial capture logic with payment provider
         breakdown.holdCaptured = captureAmount;
         remainingCents -= captureAmount;
-
       } else {
         // Without credit card
         const securityCredit = snapshot.estimatedDeposit ?? 0;
@@ -388,7 +405,7 @@ export class SettlementService {
    */
   async simulateWaterfall(
     bookingId: string,
-    claimAmountUsd: number
+    claimAmountUsd: number,
   ): Promise<{
     eligibility: EligibilityResult | null;
     estimatedBreakdown: Partial<WaterfallBreakdown> | null;
@@ -406,7 +423,7 @@ export class SettlementService {
         this.fgoV1_1Service.assessEligibility({
           bookingId,
           claimAmountCents,
-        })
+        }),
       );
 
       if (!eligibility) {

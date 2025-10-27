@@ -6,10 +6,10 @@ import { AuthService } from '../services/auth.service';
 
 /**
  * SPRINT 8 - SEGURIDAD - Test 2: Autorización de Acciones
- * 
+ *
  * Tests que verifican que las acciones críticas solo puedan ser ejecutadas
  * por usuarios autorizados según su rol y relación con los recursos.
- * 
+ *
  * CASOS DE PRUEBA:
  * 1. Solo el owner puede cancelar su booking
  * 2. Usuario no puede cancelar booking de otro
@@ -87,9 +87,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
   describe('1. Cancelación de Bookings - Solo Owner', () => {
     it('debería permitir al owner cancelar su propio booking', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockUser1)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(mockUser1));
 
       const mockBooking = {
         id: 'booking-123',
@@ -103,7 +101,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       (bookingsService.cancelBooking as jasmine.Spy).and.returnValue(
         Promise.resolve({
           success: true,
-        })
+        }),
       );
 
       // Act
@@ -116,9 +114,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
     it('debería fallar al intentar cancelar booking de otro usuario', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockUser1)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(mockUser1));
 
       const mockBookingFromOtherUser = {
         id: 'booking-789',
@@ -132,7 +128,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         Promise.reject({
           message: 'No autorizado: Solo el dueño de la reserva puede cancelarla',
           code: 'UNAUTHORIZED',
-        })
+        }),
       );
 
       // Act & Assert
@@ -154,20 +150,16 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         status: 'confirmed',
       };
 
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(currentUser)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(currentUser));
 
       // Mock: Servicio valida ownership
-      (bookingsService.cancelBooking as jasmine.Spy).and.callFake(
-        async (bookingId: string) => {
-          const user = await authService.getCurrentUser();
-          if (!user || user.id !== booking.user_id) {
-            throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
-          }
-          return { success: true };
+      (bookingsService.cancelBooking as jasmine.Spy).and.callFake(async (bookingId: string) => {
+        const user = await authService.getCurrentUser();
+        if (!user || user.id !== booking.user_id) {
+          throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
         }
-      );
+        return { success: true };
+      });
 
       // Act
       const result = await bookingsService.cancelBooking(booking.id);
@@ -179,9 +171,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
     it('debería bloquear cancelación si faltan menos de 24h', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockUser1)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(mockUser1));
 
       const tomorrow = new Date();
       tomorrow.setHours(tomorrow.getHours() + 20); // 20 horas después
@@ -197,7 +187,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         Promise.reject({
           message: 'No se puede cancelar: faltan menos de 24 horas',
           code: 'CANCELLATION_BLOCKED',
-        })
+        }),
       );
 
       // Act & Assert
@@ -214,9 +204,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
   describe('2. Visualización de Bookings - Usuario vs Admin', () => {
     it('debería permitir a usuario normal ver solo sus bookings', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockUser1)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(mockUser1));
 
       const mockOwnBookings = [
         { id: 'b1', user_id: mockUser1.id, car_id: 'c1' },
@@ -224,7 +212,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       ];
 
       (bookingsService.getMyBookings as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockOwnBookings)
+        Promise.resolve(mockOwnBookings),
       );
 
       // Act
@@ -237,16 +225,14 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
     it('debería bloquear a usuario normal acceso a todas las bookings', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockUser1)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(mockUser1));
 
       // Usuario normal intenta usar método de admin
       (adminService.listRecentBookings as jasmine.Spy).and.returnValue(
         Promise.reject({
           message: 'Solo administradores pueden ver todas las reservas',
           code: 'FORBIDDEN',
-        })
+        }),
       );
 
       // Act & Assert
@@ -261,9 +247,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
     it('debería permitir a admin ver todas las bookings', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockAdmin)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(mockAdmin));
 
       const mockAllBookings = [
         { id: 'b1', user_id: mockUser1.id, car_id: 'c1' },
@@ -272,7 +256,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       ];
 
       (adminService.listRecentBookings as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockAllBookings)
+        Promise.resolve(mockAllBookings),
       );
 
       // Act
@@ -287,9 +271,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
     it('debería verificar flag is_admin antes de permitir acceso total', async () => {
       // Arrange - Usuario normal intenta actuar como admin
       const fakeAdmin = { ...mockUser1, is_admin: false };
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(fakeAdmin)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(fakeAdmin));
 
       (adminService.listRecentBookings as jasmine.Spy).and.callFake(async () => {
         const user = await authService.getCurrentUser();
@@ -312,9 +294,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
   describe('3. Modificación de Autos - Solo Owner', () => {
     it('debería permitir al owner modificar su propio auto', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockUser2)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(mockUser2));
 
       const mockCar = {
         id: 'car-123',
@@ -328,7 +308,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         Promise.resolve({
           ...mockCar,
           price_per_day: 6000, // Precio actualizado
-        })
+        }),
       );
 
       // Act
@@ -344,7 +324,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
     it('debería fallar al intentar modificar auto de otro usuario', async () => {
       // Arrange
       (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockUser1) // Usuario 1
+        Promise.resolve(mockUser1), // Usuario 1
       );
 
       const mockCarFromOtherUser = {
@@ -359,7 +339,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         Promise.reject({
           message: 'No autorizado: Solo el dueño del auto puede modificarlo',
           code: 'UNAUTHORIZED',
-        })
+        }),
       );
 
       // Act & Assert
@@ -383,20 +363,16 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         brand: 'Chevrolet',
       };
 
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(currentUser)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(currentUser));
 
       // Mock: Servicio valida ownership
-      (carsService.updateCar as jasmine.Spy).and.callFake(
-        async (carId: string, updates: any) => {
-          const user = await authService.getCurrentUser();
-          if (!user || user.id !== car.owner_id) {
-            throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
-          }
-          return { ...car, ...updates };
+      (carsService.updateCar as jasmine.Spy).and.callFake(async (carId: string, updates: any) => {
+        const user = await authService.getCurrentUser();
+        if (!user || user.id !== car.owner_id) {
+          throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
         }
-      );
+        return { ...car, ...updates };
+      });
 
       // Act
       const result = await carsService.updateCar(car.id, { brand: 'Chevrolet Cruze' });
@@ -408,9 +384,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
     it('debería permitir a admin modificar cualquier auto (si aplica)', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockAdmin)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(mockAdmin));
 
       const mockCar = {
         id: 'car-suspended',
@@ -419,16 +393,14 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       };
 
       // Mock: Admin puede modificar estado de cualquier auto
-      (carsService.updateCar as jasmine.Spy).and.callFake(
-        async (carId: string, updates: any) => {
-          const user = await authService.getCurrentUser();
-          const isAdmin = user && (user as any).is_admin;
-          if (isAdmin) {
-            return { ...mockCar, ...updates };
-          }
-          throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
+      (carsService.updateCar as jasmine.Spy).and.callFake(async (carId: string, updates: any) => {
+        const user = await authService.getCurrentUser();
+        const isAdmin = user && (user as any).is_admin;
+        if (isAdmin) {
+          return { ...mockCar, ...updates };
         }
-      );
+        throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
+      });
 
       // Act
       const result = await carsService.updateCar(mockCar.id, { status: 'suspended' });
@@ -441,9 +413,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
   describe('4. Autorización por Roles', () => {
     it('debería verificar rol "locador" puede publicar autos', async () => {
       const locador = { ...mockUser2, role: 'locador' };
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(locador)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(locador));
 
       // Un locador debería poder publicar autos
       expect(locador.role).toBe('locador');
@@ -451,9 +421,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
     it('debería verificar rol "locatario" NO puede publicar autos', async () => {
       const locatario = { ...mockUser1, role: 'locatario' };
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(locatario)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(locatario));
 
       // Mock: Validación de rol antes de publicar
       const canPublishCars = locatario.role === 'locador' || locatario.role === 'ambos';
@@ -466,9 +434,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         role: 'ambos', // ← Puede ser locador y locatario
       };
 
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(userAmbos)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(userAmbos));
 
       const canPublish = ['locador', 'ambos'].includes(userAmbos.role);
       const canRent = ['locatario', 'ambos'].includes(userAmbos.role);
@@ -479,16 +445,9 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
     it('debería bloquear acciones de admin a usuarios normales', async () => {
       const normalUser = { ...mockUser1, is_admin: false };
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(normalUser)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(normalUser));
 
-      const adminActions = [
-        'view_all_bookings',
-        'suspend_users',
-        'approve_cars',
-        'view_analytics',
-      ];
+      const adminActions = ['view_all_bookings', 'suspend_users', 'approve_cars', 'view_analytics'];
 
       const isAdmin = (normalUser as any).is_admin;
       expect(isAdmin).toBe(false);
@@ -503,15 +462,13 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
   describe('5. Autorización en Edge Cases', () => {
     it('debería bloquear acciones cuando no hay usuario autenticado', async () => {
       // Arrange
-      (authService.getCurrentUser as jasmine.Spy).and.returnValue(
-        Promise.resolve(null)
-      );
+      (authService.getCurrentUser as jasmine.Spy).and.returnValue(Promise.resolve(null));
 
       (bookingsService.cancelBooking as jasmine.Spy).and.returnValue(
         Promise.reject({
           message: 'No autenticado',
           code: 'UNAUTHENTICATED',
-        })
+        }),
       );
 
       // Act & Assert
@@ -529,7 +486,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         Promise.reject({
           message: 'Token expirado',
           code: 'TOKEN_EXPIRED',
-        })
+        }),
       );
 
       // Act & Assert
@@ -542,12 +499,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
     });
 
     it('debería validar permisos antes de cada acción crítica', async () => {
-      const criticalActions = [
-        'cancelBooking',
-        'updateCar',
-        'getAllBookings',
-        'suspendUser',
-      ];
+      const criticalActions = ['cancelBooking', 'updateCar', 'getAllBookings', 'suspendUser'];
 
       // Todas las acciones críticas deben validar autenticación
       criticalActions.forEach((action) => {
@@ -561,48 +513,48 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 /**
  * RESUMEN DE AUTORIZACIÓN
  * ========================
- * 
+ *
  * Este archivo testea las siguientes reglas de autorización:
- * 
+ *
  * BOOKINGS:
  * - ✅ Solo owner puede cancelar su booking
  * - ✅ Usuario no puede cancelar booking de otro
  * - ✅ Cancelación bloqueada < 24h
  * - ✅ Admin puede ver todas las bookings
  * - ✅ Usuario normal solo ve sus bookings
- * 
+ *
  * CARS:
  * - ✅ Solo owner puede modificar su auto
  * - ✅ Usuario no puede modificar auto de otro
  * - ✅ Admin puede modificar cualquier auto (opcional)
- * 
+ *
  * ROLES:
  * - ✅ "locador" puede publicar autos
  * - ✅ "locatario" solo puede rentar
  * - ✅ "ambos" puede publicar y rentar
  * - ✅ is_admin flag controla acceso a funciones admin
- * 
+ *
  * EDGE CASES:
  * - ✅ Bloquea acciones sin autenticación
  * - ✅ Maneja token JWT expirado
  * - ✅ Valida permisos antes de acciones críticas
- * 
+ *
  * IMPLEMENTACIÓN RECOMENDADA:
  * ---------------------------
- * 
+ *
  * 1. En cada servicio, validar usuario actual:
  *    const user = await this.authService.getCurrentUser();
  *    if (!user) throw { code: 'UNAUTHENTICATED' };
- * 
+ *
  * 2. Validar ownership antes de modificar:
  *    if (user.id !== resource.owner_id && !user.is_admin) {
  *      throw { code: 'UNAUTHORIZED' };
  *    }
- * 
+ *
  * 3. Usar RLS en Supabase para doble validación:
  *    - Backend: RLS policies bloquean queries no autorizadas
  *    - Frontend: Servicios validan antes de llamar a Supabase
- * 
+ *
  * 4. Para admins, verificar flag is_admin:
  *    const isAdmin = await this.authService.isAdmin();
  *    if (!isAdmin) throw { code: 'FORBIDDEN' };

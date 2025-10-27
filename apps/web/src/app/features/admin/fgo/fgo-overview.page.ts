@@ -53,7 +53,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
 
   constructor(
     private readonly fgoService: FgoV1_1Service,
-    private readonly supabaseService: SupabaseClientService
+    private readonly supabaseService: SupabaseClientService,
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +100,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           console.log('FGO movement change detected:', payload);
           // Recargar todos los datos cuando hay un cambio
           this.refreshData();
-        }
+        },
       )
       .on(
         'postgres_changes',
@@ -113,7 +113,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           console.log('FGO metrics change detected:', payload);
           // Recargar estado cuando cambian las métricas
           this.loadFgoStatus();
-        }
+        },
       )
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
@@ -157,7 +157,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           balanceUsd: this.fgoStatus.liquidityBalance,
           percentage: (this.fgoStatus.liquidityBalance / this.fgoStatus.totalBalance) * 100,
           description: 'Liquidez',
-          purpose: 'Fondos disponibles para pagos inmediatos'
+          purpose: 'Fondos disponibles para pagos inmediatos',
         },
         {
           type: 'capitalization',
@@ -165,7 +165,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           balanceUsd: this.fgoStatus.capitalizationBalance,
           percentage: (this.fgoStatus.capitalizationBalance / this.fgoStatus.totalBalance) * 100,
           description: 'Capitalización',
-          purpose: 'Fondos acumulados para crecimiento'
+          purpose: 'Fondos acumulados para crecimiento',
         },
         {
           type: 'profitability',
@@ -173,7 +173,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           balanceUsd: this.fgoStatus.profitabilityBalance,
           percentage: (this.fgoStatus.profitabilityBalance / this.fgoStatus.totalBalance) * 100,
           description: 'Rentabilidad',
-          purpose: 'Fondos para generar intereses'
+          purpose: 'Fondos para generar intereses',
         },
       ];
       this.loadingSubfunds = false;
@@ -350,14 +350,15 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
         return;
       }
 
-      const result = await firstValueFrom(this.fgoService
-        .transferBetweenSubfunds({
+      const result = await firstValueFrom(
+        this.fgoService.transferBetweenSubfunds({
           fromSubfund: this.transferForm.fromSubfund as any,
           toSubfund: this.transferForm.toSubfund as any,
           amountCents: Math.round(this.transferForm.amount * 100),
           reason: this.transferForm.reason,
           adminId,
-        }));
+        }),
+      );
 
       if (result?.ok) {
         alert(`✅ Transferencia exitosa!\nReferencia: ${result.ref || 'N/A'}`);
@@ -412,7 +413,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     if (!this.isSiniestroFormValid()) return;
 
     const confirmed = confirm(
-      `⚠️ ¿Confirmas el pago de ${this.formatUsd(this.siniestroForm.amount)} para el siniestro?\n\nEsto debitará el subfondo de Liquidez.`
+      `⚠️ ¿Confirmas el pago de ${this.formatUsd(this.siniestroForm.amount)} para el siniestro?\n\nEsto debitará el subfondo de Liquidez.`,
     );
 
     if (!confirmed) return;
@@ -420,12 +421,13 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     this.processingSiniestro = true;
 
     try {
-      const result = await firstValueFrom(this.fgoService
-        .paySiniestro({
+      const result = await firstValueFrom(
+        this.fgoService.paySiniestro({
           bookingId: this.siniestroForm.bookingId,
           amountCents: Math.round(this.siniestroForm.amount * 100),
           description: this.siniestroForm.description,
-        }));
+        }),
+      );
 
       if (result?.ok) {
         alert(`✅ Siniestro pagado exitosamente!\nReferencia: ${result.ref || 'N/A'}`);

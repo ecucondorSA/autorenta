@@ -1,7 +1,12 @@
 import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SettlementService, DamageItem, DamageType, Claim } from '../../../core/services/settlement.service';
+import {
+  SettlementService,
+  DamageItem,
+  DamageType,
+  Claim,
+} from '../../../core/services/settlement.service';
 
 /**
  * Componente para reportar daños y crear claims
@@ -50,7 +55,11 @@ export class ClaimFormComponent implements OnInit {
     { value: 'other', label: 'Otro' },
   ];
 
-  readonly severityOptions: Array<{ value: 'minor' | 'moderate' | 'severe'; label: string; hint: string }> = [
+  readonly severityOptions: Array<{
+    value: 'minor' | 'moderate' | 'severe';
+    label: string;
+    hint: string;
+  }> = [
     { value: 'minor', label: 'Menor', hint: 'Daño superficial, fácil de reparar' },
     { value: 'moderate', label: 'Moderado', hint: 'Requiere reparación profesional' },
     { value: 'severe', label: 'Severo', hint: 'Daño significativo o estructural' },
@@ -66,11 +75,8 @@ export class ClaimFormComponent implements OnInit {
     if (damagesList.length === 0) return false;
 
     // Validar que todos los daños tengan los campos requeridos
-    return damagesList.every(d =>
-      d.type &&
-      d.description.trim().length > 0 &&
-      d.severity &&
-      d.estimatedCostUsd > 0
+    return damagesList.every(
+      (d) => d.type && d.description.trim().length > 0 && d.severity && d.estimatedCostUsd > 0,
     );
   });
 
@@ -97,7 +103,7 @@ export class ClaimFormComponent implements OnInit {
       severity: 'minor',
     };
 
-    this.damages.update(d => [...d, newDamage]);
+    this.damages.update((d) => [...d, newDamage]);
   }
 
   /**
@@ -109,14 +115,14 @@ export class ClaimFormComponent implements OnInit {
       return;
     }
 
-    this.damages.update(d => d.filter((_, i) => i !== index));
+    this.damages.update((d) => d.filter((_, i) => i !== index));
   }
 
   /**
    * Actualiza un daño específico
    */
   updateDamage(index: number, field: keyof DamageItem, value: any): void {
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = { ...updated[index], [field]: value };
       return updated;
@@ -145,14 +151,14 @@ export class ClaimFormComponent implements OnInit {
    * Obtiene el label de un tipo de daño
    */
   getDamageTypeLabel(type: DamageType): string {
-    return this.damageTypes.find(t => t.value === type)?.label ?? type;
+    return this.damageTypes.find((t) => t.value === type)?.label ?? type;
   }
 
   /**
    * Obtiene el label de una severidad
    */
   getSeverityLabel(severity: 'minor' | 'moderate' | 'severe'): string {
-    return this.severityOptions.find(s => s.value === severity)?.label ?? severity;
+    return this.severityOptions.find((s) => s.value === severity)?.label ?? severity;
   }
 
   /**
@@ -165,7 +171,7 @@ export class ClaimFormComponent implements OnInit {
     const files = Array.from(input.files);
 
     // Validar que sean imágenes
-    const invalidFiles = files.filter(f => !f.type.startsWith('image/'));
+    const invalidFiles = files.filter((f) => !f.type.startsWith('image/'));
     if (invalidFiles.length > 0) {
       this.error.set('Solo se permiten archivos de imagen');
       return;
@@ -173,9 +179,9 @@ export class ClaimFormComponent implements OnInit {
 
     // TODO: Subir fotos a Supabase Storage
     // Por ahora, crear URLs temporales
-    const photoUrls = files.map(f => URL.createObjectURL(f));
+    const photoUrls = files.map((f) => URL.createObjectURL(f));
 
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = {
         ...updated[index],
@@ -192,7 +198,7 @@ export class ClaimFormComponent implements OnInit {
    * Elimina una foto de un daño
    */
   removePhoto(damageIndex: number, photoIndex: number): void {
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[damageIndex] = {
         ...updated[damageIndex],
@@ -218,7 +224,7 @@ export class ClaimFormComponent implements OnInit {
       const claim = await this.settlementService.createClaim(
         this.bookingId,
         this.damages(),
-        this.notes || undefined
+        this.notes || undefined,
       );
 
       if (!claim) {
@@ -232,9 +238,7 @@ export class ClaimFormComponent implements OnInit {
     } catch (error) {
       console.error('Error creating claim:', error);
       this.error.set(
-        error instanceof Error
-          ? error.message
-          : 'Error al crear claim. Intente nuevamente.'
+        error instanceof Error ? error.message : 'Error al crear claim. Intente nuevamente.',
       );
     } finally {
       this.creating.set(false);
@@ -245,7 +249,7 @@ export class ClaimFormComponent implements OnInit {
    * Cancela y cierra el modal
    */
   cancel(): void {
-    if (this.damages().some(d => d.description.trim().length > 0)) {
+    if (this.damages().some((d) => d.description.trim().length > 0)) {
       if (!confirm('¿Descartar claim? Se perderán los datos ingresados.')) {
         return;
       }

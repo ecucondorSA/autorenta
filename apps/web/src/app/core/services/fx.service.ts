@@ -28,7 +28,7 @@ export class FxService {
    */
   getFxSnapshot(
     fromCurrency: CurrencyCode = 'USD',
-    toCurrency: CurrencyCode = 'ARS'
+    toCurrency: CurrencyCode = 'ARS',
   ): Observable<FxSnapshot | null> {
     // Mapear a formato Binance pair
     const pair = `USDT${toCurrency}`; // USDTARS
@@ -41,7 +41,7 @@ export class FxService {
         .eq('is_active', true)
         .order('last_updated', { ascending: false })
         .limit(1)
-        .single()
+        .single(),
     ).pipe(
       map((response) => {
         if (response.error || !response.data) {
@@ -61,11 +61,11 @@ export class FxService {
           toCurrency: toCurrency as CurrencyCode,
           expiresAt,
           isExpired: new Date() > expiresAt,
-          variationThreshold: 0.10, // ±10%
+          variationThreshold: 0.1, // ±10%
         };
 
         console.log(
-          `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Binance: ${data.binance_rate}, Margen: ${data.margin_percent}%)`
+          `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Binance: ${data.binance_rate}, Margen: ${data.margin_percent}%)`,
         );
 
         return snapshot;
@@ -73,7 +73,7 @@ export class FxService {
       catchError((error) => {
         console.error('Error in getFxSnapshot:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -99,9 +99,7 @@ export class FxService {
    * Revalida un FX snapshot obteniendo la tasa actual
    * y comparando con el snapshot anterior
    */
-  revalidateFxSnapshot(
-    oldSnapshot: FxSnapshot
-  ): Observable<{
+  revalidateFxSnapshot(oldSnapshot: FxSnapshot): Observable<{
     needsUpdate: boolean;
     newSnapshot?: FxSnapshot;
     reason?: string;
@@ -119,7 +117,7 @@ export class FxService {
         const variationExceeded = isFxVariationExceeded(
           oldSnapshot.rate,
           newSnapshot.rate,
-          oldSnapshot.variationThreshold
+          oldSnapshot.variationThreshold,
         );
 
         if (variationExceeded) {
@@ -143,7 +141,7 @@ export class FxService {
           needsUpdate: false,
           newSnapshot,
         };
-      })
+      }),
     );
   }
 
@@ -176,7 +174,7 @@ export class FxService {
       toCurrency: db.to_currency as CurrencyCode,
       expiresAt,
       isExpired: new Date() > expiresAt,
-      variationThreshold: 0.10, // ±10%
+      variationThreshold: 0.1, // ±10%
     };
   }
 
@@ -187,7 +185,7 @@ export class FxService {
    */
   async getCurrentRateAsync(
     fromCurrency: CurrencyCode = 'USD',
-    toCurrency: CurrencyCode = 'ARS'
+    toCurrency: CurrencyCode = 'ARS',
   ): Promise<number> {
     try {
       // Usar ExchangeRateService que consulta exchange_rates (Binance)
@@ -200,7 +198,7 @@ export class FxService {
       try {
         const binanceRate = await this.exchangeRateService.getBinanceRate();
         console.log(`💱 Fallback to direct Binance: 1 USD = ${binanceRate} ARS`);
-        return binanceRate * 1.20; // Aplicar margen del 20%
+        return binanceRate * 1.2; // Aplicar margen del 20%
       } catch (binanceError) {
         console.error('Error fetching from Binance directly:', binanceError);
         throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');

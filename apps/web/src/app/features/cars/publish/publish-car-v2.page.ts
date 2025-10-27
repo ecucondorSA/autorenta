@@ -7,7 +7,10 @@ import { ModalController } from '@ionic/angular/standalone';
 import { CarsService } from '../../../core/services/cars.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 import { BackgroundRemovalService } from '../../../core/services/background-removal.service';
-import { AiPhotoEnhancerService, EnhancedPhoto } from '../../../core/services/ai-photo-enhancer.service';
+import {
+  AiPhotoEnhancerService,
+  EnhancedPhoto,
+} from '../../../core/services/ai-photo-enhancer.service';
 import { MarketplaceOnboardingService } from '../../../core/services/marketplace-onboarding.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
@@ -19,19 +22,28 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslateModule, HostSupportInfoPanelComponent],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-graphite-dark py-8 px-4 transition-colors duration-300 text-gray-900 dark:text-pearl-light">
+    <div
+      class="min-h-screen bg-gray-50 dark:bg-graphite-dark py-8 px-4 transition-colors duration-300 text-gray-900 dark:text-pearl-light"
+    >
       <div class="max-w-6xl mx-auto">
         <!-- Hero -->
         <div class="grid gap-6 mb-8 lg:grid-cols-5">
-          <div class="lg:col-span-3 bg-white dark:bg-anthracite rounded-2xl shadow-soft border border-pearl-gray/70 dark:border-neutral-800/70 p-6 transition-colors">
+          <div
+            class="lg:col-span-3 bg-white dark:bg-anthracite rounded-2xl shadow-soft border border-pearl-gray/70 dark:border-neutral-800/70 p-6 transition-colors"
+          >
             <div class="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Publicar Auto</p>
+                <p
+                  class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60"
+                >
+                  Publicar Auto
+                </p>
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-luminous mt-1">
                   {{ editMode() ? 'Editar Auto' : 'Completa la información de tu vehículo' }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-pearl-light/75 mt-2 max-w-xl">
-                  Ingresá datos del vehículo, condiciones y fotos. Este flujo te guía para que la publicación quede lista para revisión.
+                  Ingresá datos del vehículo, condiciones y fotos. Este flujo te guía para que la
+                  publicación quede lista para revisión.
                 </p>
               </div>
               <div class="hidden sm:flex flex-col text-right">
@@ -45,23 +57,48 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
 
             <div class="mt-6 grid gap-4 sm:grid-cols-3">
               <div class="rounded-xl border border-pearl-gray/70 dark:border-neutral-800/70 p-4">
-                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Fotos listas</p>
-                <p class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">{{ uploadedPhotos().length }}/10</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Necesitás al menos 3</p>
+                <p
+                  class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60"
+                >
+                  Fotos listas
+                </p>
+                <p class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">
+                  {{ uploadedPhotos().length }}/10
+                </p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                  Necesitás al menos 3
+                </p>
               </div>
               <div class="rounded-xl border border-pearl-gray/70 dark:border-neutral-800/70 p-4">
-                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Revisión estimada</p>
+                <p
+                  class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60"
+                >
+                  Revisión estimada
+                </p>
                 <p class="text-2xl font-bold text-accent-warm dark:text-accent-warm/90">24-48h</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Te avisamos por mail cada cambio</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                  Te avisamos por mail cada cambio
+                </p>
               </div>
               <div class="rounded-xl border border-pearl-gray/70 dark:border-neutral-800/70 p-4">
-                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Comisión</p>
-                <p class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">15-25%</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Dependiendo de categoría</p>
+                <p
+                  class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60"
+                >
+                  Comisión
+                </p>
+                <p class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">
+                  15-25%
+                </p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                  Dependiendo de categoría
+                </p>
               </div>
             </div>
 
-            <div *ngIf="editMode()" class="mt-4 bg-amber-50/90 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/50 rounded-lg p-3 flex items-start gap-2">
+            <div
+              *ngIf="editMode()"
+              class="mt-4 bg-amber-50/90 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/50 rounded-lg p-3 flex items-start gap-2"
+            >
               <span class="text-amber-600 dark:text-amber-200 text-lg">✏️</span>
               <div class="flex-1">
                 <p class="text-sm text-amber-800 dark:text-amber-100 font-medium">Modo edición</p>
@@ -70,30 +107,56 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
                 </p>
               </div>
             </div>
-            <div *ngIf="autofilledFromLast() && !editMode()" class="mt-4 bg-accent-petrol/10 dark:bg-accent-petrol/15 border border-accent-petrol/30 dark:border-accent-petrol/40 rounded-lg p-3 flex items-start gap-2">
+            <div
+              *ngIf="autofilledFromLast() && !editMode()"
+              class="mt-4 bg-accent-petrol/10 dark:bg-accent-petrol/15 border border-accent-petrol/30 dark:border-accent-petrol/40 rounded-lg p-3 flex items-start gap-2"
+            >
               <span class="text-accent-petrol dark:text-ivory-luminous text-lg">ℹ️</span>
               <div class="flex-1">
-                <p class="text-sm text-accent-petrol dark:text-ivory-luminous font-medium">Datos autocompletados</p>
+                <p class="text-sm text-accent-petrol dark:text-ivory-luminous font-medium">
+                  Datos autocompletados
+                </p>
                 <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/80 mt-1">
-                  Usamos tu última publicación para ahorrar tiempo. Revisá marca, modelo y fotos antes de confirmar.
+                  Usamos tu última publicación para ahorrar tiempo. Revisá marca, modelo y fotos
+                  antes de confirmar.
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="lg:col-span-2 rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-gradient-to-br from-sand-light to-ivory-soft dark:from-slate-deep/40 dark:to-anthracite p-6 shadow-soft">
-            <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-3 flex items-center gap-2">
+          <div
+            class="lg:col-span-2 rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-gradient-to-br from-sand-light to-ivory-soft dark:from-slate-deep/40 dark:to-anthracite p-6 shadow-soft"
+          >
+            <h3
+              class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-3 flex items-center gap-2"
+            >
               <span>🧭</span> Checklist rápido
             </h3>
             <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
-              <li class="flex items-start gap-2"><span class="text-accent-petrol mt-0.5">•</span>Subí al menos 3 fotos con buena iluminación.</li>
-              <li class="flex items-start gap-2"><span class="text-accent-petrol mt-0.5">•</span>Ingresá el valor estimado para calcular seguros y depósitos.</li>
-              <li class="flex items-start gap-2"><span class="text-accent-petrol mt-0.5">•</span>Definí precios, mínimos y depósito según tu disponibilidad.</li>
-              <li class="flex items-start gap-2"><span class="text-accent-petrol mt-0.5">•</span>Completá dirección exacta para habilitar mapa y retiro.</li>
+              <li class="flex items-start gap-2">
+                <span class="text-accent-petrol mt-0.5">•</span>Subí al menos 3 fotos con buena
+                iluminación.
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-accent-petrol mt-0.5">•</span>Ingresá el valor estimado para
+                calcular seguros y depósitos.
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-accent-petrol mt-0.5">•</span>Definí precios, mínimos y depósito
+                según tu disponibilidad.
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-accent-petrol mt-0.5">•</span>Completá dirección exacta para
+                habilitar mapa y retiro.
+              </li>
             </ul>
-            <div class="mt-5 rounded-xl bg-white dark:bg-anthracite border border-pearl-gray/50 dark:border-neutral-800/50 p-4 text-sm">
+            <div
+              class="mt-5 rounded-xl bg-white dark:bg-anthracite border border-pearl-gray/50 dark:border-neutral-800/50 p-4 text-sm"
+            >
               <p class="font-semibold text-smoke-black dark:text-ivory-luminous mb-2">Workflow</p>
-              <ol class="list-decimal list-inside space-y-1 text-charcoal-medium dark:text-pearl-light/70">
+              <ol
+                class="list-decimal list-inside space-y-1 text-charcoal-medium dark:text-pearl-light/70"
+              >
                 <li>Información del vehículo</li>
                 <li>Precio y condiciones</li>
                 <li>Ubicación</li>
@@ -107,390 +170,629 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
           <div class="lg:col-span-3">
             <!-- Main Form -->
             <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-6">
+              <!-- 1. Vehículo -->
+              <div class="publish-card bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="text-2xl">🚗</span>
+                  Información del Vehículo
+                </h2>
 
-          <!-- 1. Vehículo -->
-          <div class="publish-card bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <span class="text-2xl">🚗</span>
-              Información del Vehículo
-            </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Brand -->
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Marca *</label>
+                    <select
+                      formControlName="brand_id"
+                      (change)="onBrandChange()"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    >
+                      <option value="">Selecciona una marca</option>
+                      <option *ngFor="let brand of brands()" [value]="brand.id">
+                        {{ brand.name }}
+                      </option>
+                    </select>
+                  </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Brand -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Marca *</label>
-                <select formControlName="brand_id" (change)="onBrandChange()"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-                  <option value="">Selecciona una marca</option>
-                  <option *ngFor="let brand of brands()" [value]="brand.id">{{ brand.name }}</option>
-                </select>
-              </div>
-
-              <!-- Model -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Modelo *</label>
-                <select formControlName="model_id" (change)="onModelChange()"
-                        [disabled]="!publishForm.get('brand_id')?.value"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent disabled:bg-gray-100">
-                  <option value="">Selecciona un modelo</option>
-                  <option *ngFor="let model of filteredModels()" [value]="model.id">{{ model.name }}</option>
-                </select>
-                <p *ngIf="selectedModelInfo()" class="mt-1 text-xs text-gray-500">
-                  {{ selectedModelInfo()?.category }} • {{ selectedModelInfo()?.seats }} asientos • {{ selectedModelInfo()?.doors }} puertas
-                </p>
-              </div>
-
-              <!-- Year -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Año *</label>
-                <input type="number" formControlName="year" [min]="minYear" [max]="maxYear" placeholder="2024"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-              </div>
-
-              <!-- Mileage -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Kilometraje *</label>
-                <input type="number" formControlName="mileage" min="0" placeholder="50000"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-              </div>
-
-              <!-- Color -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Color *</label>
-                <input type="text" formControlName="color" placeholder="Ej: Blanco, Negro"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-              </div>
-
-              <!-- Transmission -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Transmisión *</label>
-                <select formControlName="transmission"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol">
-                  <option value="">Selecciona</option>
-                  <option value="manual">Manual</option>
-                  <option value="automatic">Automática</option>
-                </select>
-              </div>
-
-              <!-- Fuel -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Combustible *</label>
-                <select formControlName="fuel"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol">
-                  <option value="">Selecciona</option>
-                  <option value="nafta">Nafta</option>
-                  <option value="gasoil">Diesel</option>
-                  <option value="electrico">Eléctrico</option>
-                  <option value="hibrido">Híbrido</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- 2. Precio -->
-          <div class="publish-card bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <span class="text-2xl">💰</span>
-              Precio y Condiciones
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Price per day -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Modo de precios *</label>
-                <div class="grid xs:grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    class="w-full rounded-xl border px-4 py-3 text-left transition"
-                    [class.border-primary-600]="isDynamicPricing()"
-                    [class.bg-primary-50]="isDynamicPricing()"
-                    [class.text-primary-700]="isDynamicPricing()"
-                    [class.border-gray-300]="!isDynamicPricing()"
-                    (click)="setPricingStrategy('dynamic')"
-                  >
-                    <p class="text-sm font-semibold flex items-center gap-2">
-                      Precio dinámico
-                      <span class="text-2xs uppercase tracking-wide bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">Recomendado</span>
+                  <!-- Model -->
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Modelo *</label>
+                    <select
+                      formControlName="model_id"
+                      (change)="onModelChange()"
+                      [disabled]="!publishForm.get('brand_id')?.value"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent disabled:bg-gray-100"
+                    >
+                      <option value="">Selecciona un modelo</option>
+                      <option *ngFor="let model of filteredModels()" [value]="model.id">
+                        {{ model.name }}
+                      </option>
+                    </select>
+                    <p *ngIf="selectedModelInfo()" class="mt-1 text-xs text-gray-500">
+                      {{ selectedModelInfo()?.category }} •
+                      {{ selectedModelInfo()?.seats }} asientos •
+                      {{ selectedModelInfo()?.doors }} puertas
                     </p>
-                    <p class="text-xs text-gray-600 mt-1">AutoRenta ajusta el valor según demanda y temporada.</p>
-                  </button>
-                  <button
-                    type="button"
-                    class="w-full rounded-xl border px-4 py-3 text-left transition"
-                    [class.border-primary-600]="!isDynamicPricing()"
-                    [class.bg-primary-50]="!isDynamicPricing()"
-                    [class.text-primary-700]="!isDynamicPricing()"
-                    [class.border-gray-300]="isDynamicPricing()"
-                    (click)="setPricingStrategy('custom')"
-                  >
-                    <p class="text-sm font-semibold">Precio personalizado</p>
-                    <p class="text-xs text-gray-600 mt-1">Definí manualmente el valor diario.</p>
-                  </button>
-                </div>
-              </div>
+                  </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                  Precio por día * <span class="text-xs text-gray-500" *ngIf="isDynamicPricing()">(AutoRenta lo ajustará automáticamente)</span>
-                </label>
-                <input type="number"
-                       formControlName="price_per_day"
-                       min="1"
-                       placeholder="50"
-                       [readonly]="isDynamicPricing()"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent disabled:bg-gray-100"
-                >
-                <p class="mt-1 text-xs text-gray-500" *ngIf="!isDynamicPricing()">Puedes actualizar este valor cuando quieras desde tu panel.</p>
-              </div>
+                  <!-- Year -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Año *</label>
+                    <input
+                      type="number"
+                      formControlName="year"
+                      [min]="minYear"
+                      [max]="maxYear"
+                      placeholder="2024"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                  </div>
 
-              <!-- Currency -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Moneda *</label>
-                <select formControlName="currency"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol">
-                  <option value="USD">USD - Dólar</option>
-                  <option value="ARS">ARS - Peso Argentino</option>
-                  <option value="UYU">UYU - Peso Uruguayo</option>
-                </select>
-              </div>
+                  <!-- Mileage -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Kilometraje *</label
+                    >
+                    <input
+                      type="number"
+                      formControlName="mileage"
+                      min="0"
+                      placeholder="50000"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                  </div>
 
-              <!-- ✅ NUEVO: Valor del Vehículo (USD) -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                  Valor Estimado del Vehículo (USD) *
-                  <span class="text-xs text-gray-500 font-normal" title="Este valor se usa para calcular seguros y garantías">ℹ️</span>
-                </label>
-                <input type="number" formControlName="value_usd" min="5000" max="500000" placeholder="15000"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-                <p class="mt-1 text-xs text-gray-500">
-                  Ingresa el valor aproximado de mercado de tu vehículo. Este valor se usa para calcular coberturas de seguro y depósitos de garantía.
-                </p>
-              </div>
+                  <!-- Color -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Color *</label>
+                    <input
+                      type="text"
+                      formControlName="color"
+                      placeholder="Ej: Blanco, Negro"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                  </div>
 
-              <!-- Min rental days -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Días mínimos *</label>
-                <input type="number" formControlName="min_rental_days" min="1" placeholder="1"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-              </div>
+                  <!-- Transmission -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Transmisión *</label
+                    >
+                    <select
+                      formControlName="transmission"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol"
+                    >
+                      <option value="">Selecciona</option>
+                      <option value="manual">Manual</option>
+                      <option value="automatic">Automática</option>
+                    </select>
+                  </div>
 
-              <!-- Max rental days -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Días máximos</label>
-                <input type="number" formControlName="max_rental_days" min="1" placeholder="30"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-                <p class="mt-1 text-xs text-gray-500">Dejar vacío = sin límite</p>
-              </div>
-
-              <!-- Deposit -->
-              <div class="md:col-span-2 border-t border-gray-200 pt-4">
-                <div class="flex items-center gap-3 mb-3">
-                  <input type="checkbox" formControlName="deposit_required" id="deposit_required"
-                         class="w-5 h-5 text-accent-petrol rounded focus:ring-2 focus:ring-accent-petrol">
-                  <label for="deposit_required" class="text-sm font-medium text-gray-700 cursor-pointer">
-                    Requiere depósito de garantía
-                  </label>
-                </div>
-                <div *ngIf="publishForm.get('deposit_required')?.value">
-                  <input type="number" formControlName="deposit_amount" min="0" placeholder="200"
-                         class="w-full md:w-1/2 rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-                  <p class="mt-1 text-xs text-gray-500">Monto del depósito</p>
-                </div>
-              </div>
-
-              <!-- Insurance -->
-              <div class="md:col-span-2">
-                <div class="flex items-center gap-3">
-                  <input type="checkbox" formControlName="insurance_included" id="insurance_included"
-                         class="w-5 h-5 text-accent-petrol rounded focus:ring-2 focus:ring-accent-petrol">
-                  <label for="insurance_included" class="text-sm font-medium text-gray-700 cursor-pointer">
-                    El seguro está incluido en el precio
-                  </label>
-                </div>
-              </div>
-
-              <!-- Auto-approval -->
-              <div class="md:col-span-2">
-                <div class="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-                  <input type="checkbox" formControlName="auto_approval" id="auto_approval"
-                         class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 mt-0.5">
-                  <div class="flex-1">
-                    <label for="auto_approval" class="text-sm font-medium text-gray-900 dark:text-ivory-luminous cursor-pointer block mb-1">
-                      Aprobar reservas automáticamente
-                    </label>
-                    <p class="text-xs text-gray-600 dark:text-pearl-light/75">
-                      Las reservas se aprobarán instantáneamente sin tu intervención. Si no está activado, tendrás 24 horas para revisar y aprobar cada solicitud.
-                    </p>
+                  <!-- Fuel -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Combustible *</label
+                    >
+                    <select
+                      formControlName="fuel"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol"
+                    >
+                      <option value="">Selecciona</option>
+                      <option value="nafta">Nafta</option>
+                      <option value="gasoil">Diesel</option>
+                      <option value="electrico">Eléctrico</option>
+                      <option value="hibrido">Híbrido</option>
+                    </select>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <!-- 3. Ubicación -->
-          <div class="publish-card bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <span class="text-2xl">📍</span>
-              Ubicación
-            </h2>
+              <!-- 2. Precio -->
+              <div class="publish-card bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="text-2xl">💰</span>
+                  Precio y Condiciones
+                </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <!-- Street -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Calle *</label>
-                <input type="text" formControlName="location_street" placeholder="Ej: Av. Corrientes"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-              </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Price per day -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Modo de precios *</label
+                    >
+                    <div class="grid xs:grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        class="w-full rounded-xl border px-4 py-3 text-left transition"
+                        [class.border-primary-600]="isDynamicPricing()"
+                        [class.bg-primary-50]="isDynamicPricing()"
+                        [class.text-primary-700]="isDynamicPricing()"
+                        [class.border-gray-300]="!isDynamicPricing()"
+                        (click)="setPricingStrategy('dynamic')"
+                      >
+                        <p class="text-sm font-semibold flex items-center gap-2">
+                          Precio dinámico
+                          <span
+                            class="text-2xs uppercase tracking-wide bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full"
+                            >Recomendado</span
+                          >
+                        </p>
+                        <p class="text-xs text-gray-600 mt-1">
+                          AutoRenta ajusta el valor según demanda y temporada.
+                        </p>
+                      </button>
+                      <button
+                        type="button"
+                        class="w-full rounded-xl border px-4 py-3 text-left transition"
+                        [class.border-primary-600]="!isDynamicPricing()"
+                        [class.bg-primary-50]="!isDynamicPricing()"
+                        [class.text-primary-700]="!isDynamicPricing()"
+                        [class.border-gray-300]="isDynamicPricing()"
+                        (click)="setPricingStrategy('custom')"
+                      >
+                        <p class="text-sm font-semibold">Precio personalizado</p>
+                        <p class="text-xs text-gray-600 mt-1">
+                          Definí manualmente el valor diario.
+                        </p>
+                      </button>
+                    </div>
+                  </div>
 
-              <!-- Street number -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Número *</label>
-                <input type="text" formControlName="location_street_number" placeholder="1234"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-              </div>
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2"
+                    >
+                      Precio por día *
+                      <span class="text-xs text-gray-500" *ngIf="isDynamicPricing()"
+                        >(AutoRenta lo ajustará automáticamente)</span
+                      >
+                    </label>
+                    <input
+                      type="number"
+                      formControlName="price_per_day"
+                      min="1"
+                      placeholder="50"
+                      [readonly]="isDynamicPricing()"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent disabled:bg-gray-100"
+                    />
+                    <p class="mt-1 text-xs text-gray-500" *ngIf="!isDynamicPricing()">
+                      Puedes actualizar este valor cuando quieras desde tu panel.
+                    </p>
+                  </div>
 
-              <!-- City -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Ciudad *</label>
-                <input type="text" formControlName="location_city" placeholder="Ej: Buenos Aires"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-              </div>
+                  <!-- Currency -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Moneda *</label>
+                    <select
+                      formControlName="currency"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol"
+                    >
+                      <option value="USD">USD - Dólar</option>
+                      <option value="ARS">ARS - Peso Argentino</option>
+                      <option value="UYU">UYU - Peso Uruguayo</option>
+                    </select>
+                  </div>
 
-              <!-- State -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Provincia *</label>
-                <input type="text" formControlName="location_state" placeholder="Ej: Buenos Aires"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
-              </div>
+                  <!-- ✅ NUEVO: Valor del Vehículo (USD) -->
+                  <div class="md:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2"
+                    >
+                      Valor Estimado del Vehículo (USD) *
+                      <span
+                        class="text-xs text-gray-500 font-normal"
+                        title="Este valor se usa para calcular seguros y garantías"
+                        >ℹ️</span
+                      >
+                    </label>
+                    <input
+                      type="number"
+                      formControlName="value_usd"
+                      min="5000"
+                      max="500000"
+                      placeholder="15000"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                    <p class="mt-1 text-xs text-gray-500">
+                      Ingresa el valor aproximado de mercado de tu vehículo. Este valor se usa para
+                      calcular coberturas de seguro y depósitos de garantía.
+                    </p>
+                  </div>
 
-              <!-- Country -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">País *</label>
-                <select formControlName="location_country"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol">
-                  <option value="AR">Argentina</option>
-                  <option value="UY">Uruguay</option>
-                  <option value="BR">Brasil</option>
-                  <option value="CL">Chile</option>
-                  <option value="PY">Paraguay</option>
-                </select>
-              </div>
-            </div>
+                  <!-- Min rental days -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Días mínimos *</label
+                    >
+                    <input
+                      type="number"
+                      formControlName="min_rental_days"
+                      min="1"
+                      placeholder="1"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                  </div>
 
-            <!-- GPS Location Button - Minimalist -->
-            <div class="mt-4 flex items-center justify-between">
-              <button type="button" (click)="useCurrentLocation()"
-                      class="btn-secondary flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-                </svg>
-                📍 Usar Mi Ubicación
-              </button>
-              <div *ngIf="manualCoordinates()" class="text-xs text-smoke-black">
-                ✓ GPS activo
-              </div>
-            </div>
-          </div>
+                  <!-- Max rental days -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Días máximos</label>
+                    <input
+                      type="number"
+                      formControlName="max_rental_days"
+                      min="1"
+                      placeholder="30"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                    <p class="mt-1 text-xs text-gray-500">Dejar vacío = sin límite</p>
+                  </div>
 
-          <!-- 4. Fotos -->
-          <div class="publish-card bg-white dark:bg-anthracite rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <span class="text-2xl">📸</span>
-              Fotos ({{ uploadedPhotos().length }}/10)
-            </h2>
+                  <!-- Deposit -->
+                  <div class="md:col-span-2 border-t border-gray-200 pt-4">
+                    <div class="flex items-center gap-3 mb-3">
+                      <input
+                        type="checkbox"
+                        formControlName="deposit_required"
+                        id="deposit_required"
+                        class="w-5 h-5 text-accent-petrol rounded focus:ring-2 focus:ring-accent-petrol"
+                      />
+                      <label
+                        for="deposit_required"
+                        class="text-sm font-medium text-gray-700 cursor-pointer"
+                      >
+                        Requiere depósito de garantía
+                      </label>
+                    </div>
+                    <div *ngIf="publishForm.get('deposit_required')?.value">
+                      <input
+                        type="number"
+                        formControlName="deposit_amount"
+                        min="0"
+                        placeholder="200"
+                        class="w-full md:w-1/2 rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                      />
+                      <p class="mt-1 text-xs text-gray-500">Monto del depósito</p>
+                    </div>
+                  </div>
 
-            <div class="mb-4 space-y-3">
-              <!-- Botón principal: Agregar fotos manuales -->
-              <div class="flex flex-wrap gap-3">
-                <label class="cursor-pointer bg-accent-petrol hover:bg-accent-petrol/90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
-                       [class.opacity-50]="isProcessingPhotos()"
-                       [class.cursor-not-allowed]="isProcessingPhotos()">
-                  <span *ngIf="!isProcessingPhotos()">➕ Agregar Fotos</span>
-                  <span *ngIf="isProcessingPhotos()" class="flex items-center gap-2">
-                    <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Procesando...
-                  </span>
-                  <input type="file" accept="image/*" multiple (change)="onPhotoSelected($event)" class="hidden" [disabled]="isProcessingPhotos()" />
-                </label>
+                  <!-- Insurance -->
+                  <div class="md:col-span-2">
+                    <div class="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        formControlName="insurance_included"
+                        id="insurance_included"
+                        class="w-5 h-5 text-accent-petrol rounded focus:ring-2 focus:ring-accent-petrol"
+                      />
+                      <label
+                        for="insurance_included"
+                        class="text-sm font-medium text-gray-700 cursor-pointer"
+                      >
+                        El seguro está incluido en el precio
+                      </label>
+                    </div>
+                  </div>
 
-                <!-- Botón secundario: Generar con IA -->
-                <button type="button" (click)="generateAIPhotos()"
-                        [disabled]="isGeneratingAIPhotos() || uploadedPhotos().length >= 10"
-                        class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
-                        [class.opacity-50]="isGeneratingAIPhotos()">
-                  <span *ngIf="!isGeneratingAIPhotos()">Generar fotos AutorentA</span>
-                  <span *ngIf="isGeneratingAIPhotos()" class="flex items-center gap-2">
-                    <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Generando con IA...
-                  </span>
-                </button>
-              </div>
-
-              <!-- Ayuda y tips -->
-              <p class="text-xs text-gray-500">
-                Mínimo 3 fotos, máximo 10. Primera foto será la portada.
-                <br>
-                <span class="text-accent-petrol dark:text-accent-warm font-medium">✨ Las fotos se procesarán automáticamente para remover el fondo</span>
-                <br>
-                <span class="text-purple-600 dark:text-pink-400 font-medium">🤖 O genera fotos profesionales con IA seleccionando primero marca y modelo</span>
-              </p>
-            </div>
-
-            <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative group">
-                <img [src]="photo.preview" [alt]="'Foto ' + (i + 1)" class="w-full h-32 object-cover rounded-lg border-2"
-                     [class.border-accent-petrol]="i === 0" [class.border-gray-300]="i !== 0">
-                <div *ngIf="i === 0" class="absolute top-2 left-2 bg-accent-petrol text-white text-xs font-semibold px-2 py-1 rounded">
-                  PORTADA
+                  <!-- Auto-approval -->
+                  <div class="md:col-span-2">
+                    <div
+                      class="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700"
+                    >
+                      <input
+                        type="checkbox"
+                        formControlName="auto_approval"
+                        id="auto_approval"
+                        class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 mt-0.5"
+                      />
+                      <div class="flex-1">
+                        <label
+                          for="auto_approval"
+                          class="text-sm font-medium text-gray-900 dark:text-ivory-luminous cursor-pointer block mb-1"
+                        >
+                          Aprobar reservas automáticamente
+                        </label>
+                        <p class="text-xs text-gray-600 dark:text-pearl-light/75">
+                          Las reservas se aprobarán instantáneamente sin tu intervención. Si no está
+                          activado, tendrás 24 horas para revisar y aprobar cada solicitud.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <button type="button" (click)="removePhoto(i)"
-                        class="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded opacity-0 group-hover:opacity-100 transition">
-                  ✕
-                </button>
               </div>
-            </div>
 
-            <div class="mt-3 rounded-xl border border-dashed border-pearl-gray/70 dark:border-neutral-800/70 bg-gray-50/70 dark:bg-neutral-900/60 p-3 text-xs text-charcoal-medium dark:text-pearl-light/70">
-              💡 Tip: combiná exteriores, interiores y tablero. La primera foto debe mostrar el auto completo con buena iluminación.
-            </div>
+              <!-- 3. Ubicación -->
+              <div class="publish-card bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="text-2xl">📍</span>
+                  Ubicación
+                </h2>
 
-            <div *ngIf="uploadedPhotos().length < 3" class="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-              <p class="text-sm text-yellow-800">
-                ⚠️ Necesitas al menos 3 fotos para publicar. Actualmente tienes {{ uploadedPhotos().length }}.
-              </p>
-            </div>
-          </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <!-- Street -->
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Calle *</label>
+                    <input
+                      type="text"
+                      formControlName="location_street"
+                      placeholder="Ej: Av. Corrientes"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                  </div>
 
-          <!-- Actions -->
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-200 dark:border-neutral-800/60">
-            <div class="text-xs text-gray-500 dark:text-pearl-light/60">
-              Al enviar, revisaremos la publicación y te avisaremos si necesitamos más información.
-            </div>
-            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <button type="button" (click)="goBack()" class="w-full sm:w-auto text-sm font-semibold text-gray-600 dark:text-pearl-light hover:text-gray-900">
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                [disabled]="publishForm.invalid || isSubmitting()"
-                class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg text-white font-semibold bg-primary-600 hover:bg-primary-700 dark:bg-accent-petrol dark:hover:bg-accent-petrol/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  <!-- Street number -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Número *</label>
+                    <input
+                      type="text"
+                      formControlName="location_street_number"
+                      placeholder="1234"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                  </div>
+
+                  <!-- City -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ciudad *</label>
+                    <input
+                      type="text"
+                      formControlName="location_city"
+                      placeholder="Ej: Buenos Aires"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                  </div>
+
+                  <!-- State -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Provincia *</label>
+                    <input
+                      type="text"
+                      formControlName="location_state"
+                      placeholder="Ej: Buenos Aires"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+                    />
+                  </div>
+
+                  <!-- Country -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">País *</label>
+                    <select
+                      formControlName="location_country"
+                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol"
+                    >
+                      <option value="AR">Argentina</option>
+                      <option value="UY">Uruguay</option>
+                      <option value="BR">Brasil</option>
+                      <option value="CL">Chile</option>
+                      <option value="PY">Paraguay</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- GPS Location Button - Minimalist -->
+                <div class="mt-4 flex items-center justify-between">
+                  <button
+                    type="button"
+                    (click)="useCurrentLocation()"
+                    class="btn-secondary flex items-center gap-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    📍 Usar Mi Ubicación
+                  </button>
+                  <div *ngIf="manualCoordinates()" class="text-xs text-smoke-black">
+                    ✓ GPS activo
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. Fotos -->
+              <div
+                class="publish-card bg-white dark:bg-anthracite rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 shadow-sm p-6"
               >
-                <svg *ngIf="isSubmitting()" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span *ngIf="!isSubmitting()">{{ editMode() ? 'Guardar cambios' : 'Publicar Auto' }}</span>
-                <span *ngIf="isSubmitting()">{{ editMode() ? 'Guardando...' : 'Publicando...' }}</span>
-              </button>
-            </div>
-          </div>
-        </form>
+                <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="text-2xl">📸</span>
+                  Fotos ({{ uploadedPhotos().length }}/10)
+                </h2>
+
+                <div class="mb-4 space-y-3">
+                  <!-- Botón principal: Agregar fotos manuales -->
+                  <div class="flex flex-wrap gap-3">
+                    <label
+                      class="cursor-pointer bg-accent-petrol hover:bg-accent-petrol/90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
+                      [class.opacity-50]="isProcessingPhotos()"
+                      [class.cursor-not-allowed]="isProcessingPhotos()"
+                    >
+                      <span *ngIf="!isProcessingPhotos()">➕ Agregar Fotos</span>
+                      <span *ngIf="isProcessingPhotos()" class="flex items-center gap-2">
+                        <svg
+                          class="animate-spin h-5 w-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Procesando...
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        (change)="onPhotoSelected($event)"
+                        class="hidden"
+                        [disabled]="isProcessingPhotos()"
+                      />
+                    </label>
+
+                    <!-- Botón secundario: Generar con IA -->
+                    <button
+                      type="button"
+                      (click)="generateAIPhotos()"
+                      [disabled]="isGeneratingAIPhotos() || uploadedPhotos().length >= 10"
+                      class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
+                      [class.opacity-50]="isGeneratingAIPhotos()"
+                    >
+                      <span *ngIf="!isGeneratingAIPhotos()">Generar fotos AutorentA</span>
+                      <span *ngIf="isGeneratingAIPhotos()" class="flex items-center gap-2">
+                        <svg
+                          class="animate-spin h-5 w-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Generando con IA...
+                      </span>
+                    </button>
+                  </div>
+
+                  <!-- Ayuda y tips -->
+                  <p class="text-xs text-gray-500">
+                    Mínimo 3 fotos, máximo 10. Primera foto será la portada.
+                    <br />
+                    <span class="text-accent-petrol dark:text-accent-warm font-medium"
+                      >✨ Las fotos se procesarán automáticamente para remover el fondo</span
+                    >
+                    <br />
+                    <span class="text-purple-600 dark:text-pink-400 font-medium"
+                      >🤖 O genera fotos profesionales con IA seleccionando primero marca y
+                      modelo</span
+                    >
+                  </p>
+                </div>
+
+                <div
+                  *ngIf="uploadedPhotos().length > 0"
+                  class="grid grid-cols-2 md:grid-cols-4 gap-4"
+                >
+                  <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative group">
+                    <img
+                      [src]="photo.preview"
+                      [alt]="'Foto ' + (i + 1)"
+                      class="w-full h-32 object-cover rounded-lg border-2"
+                      [class.border-accent-petrol]="i === 0"
+                      [class.border-gray-300]="i !== 0"
+                    />
+                    <div
+                      *ngIf="i === 0"
+                      class="absolute top-2 left-2 bg-accent-petrol text-white text-xs font-semibold px-2 py-1 rounded"
+                    >
+                      PORTADA
+                    </div>
+                    <button
+                      type="button"
+                      (click)="removePhoto(i)"
+                      class="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded opacity-0 group-hover:opacity-100 transition"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="mt-3 rounded-xl border border-dashed border-pearl-gray/70 dark:border-neutral-800/70 bg-gray-50/70 dark:bg-neutral-900/60 p-3 text-xs text-charcoal-medium dark:text-pearl-light/70"
+                >
+                  💡 Tip: combiná exteriores, interiores y tablero. La primera foto debe mostrar el
+                  auto completo con buena iluminación.
+                </div>
+
+                <div
+                  *ngIf="uploadedPhotos().length < 3"
+                  class="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3"
+                >
+                  <p class="text-sm text-yellow-800">
+                    ⚠️ Necesitas al menos 3 fotos para publicar. Actualmente tienes
+                    {{ uploadedPhotos().length }}.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-200 dark:border-neutral-800/60"
+              >
+                <div class="text-xs text-gray-500 dark:text-pearl-light/60">
+                  Al enviar, revisaremos la publicación y te avisaremos si necesitamos más
+                  información.
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    (click)="goBack()"
+                    class="w-full sm:w-auto text-sm font-semibold text-gray-600 dark:text-pearl-light hover:text-gray-900"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    [disabled]="publishForm.invalid || isSubmitting()"
+                    class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg text-white font-semibold bg-primary-600 hover:bg-primary-700 dark:bg-accent-petrol dark:hover:bg-accent-petrol/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <svg
+                      *ngIf="isSubmitting()"
+                      class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      ></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    <span *ngIf="!isSubmitting()">{{
+                      editMode() ? 'Guardar cambios' : 'Publicar Auto'
+                    }}</span>
+                    <span *ngIf="isSubmitting()">{{
+                      editMode() ? 'Guardando...' : 'Publicando...'
+                    }}</span>
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
 
           <!-- Sidebar -->
@@ -498,8 +800,12 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
             <div class="lg:sticky lg:top-6 space-y-6">
               <app-host-support-info-panel></app-host-support-info-panel>
 
-              <section class="rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-5 shadow-soft">
-                <h3 class="text-base font-semibold text-smoke-black dark:text-ivory-luminous mb-3 flex items-center gap-2">
+              <section
+                class="rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-5 shadow-soft"
+              >
+                <h3
+                  class="text-base font-semibold text-smoke-black dark:text-ivory-luminous mb-3 flex items-center gap-2"
+                >
                   <span>📚</span> Obligaciones clave
                 </h3>
                 <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
@@ -526,7 +832,12 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
                 >
                   Ver guía completa
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h6m0 0v6m0-6L10 16" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7h6m0 0v6m0-6L10 16"
+                    />
                   </svg>
                 </a>
               </section>
@@ -546,7 +857,9 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
         background-color: #1f2426;
         border-color: rgba(255, 255, 255, 0.08);
         color: #f7f5ee;
-        transition: background-color 0.3s ease, border-color 0.3s ease;
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease;
       }
 
       :host-context(.dark) label,
@@ -618,7 +931,7 @@ export class PublishCarV2Page implements OnInit {
   selectedModelInfo = computed(() => {
     const modelId = this.publishForm?.get('model_id')?.value;
     if (!modelId) return null;
-    return this.filteredModels().find(m => m.id === modelId);
+    return this.filteredModels().find((m) => m.id === modelId);
   });
 
   generatedTitle = computed(() => {
@@ -628,8 +941,8 @@ export class PublishCarV2Page implements OnInit {
 
     if (!brandId || !modelId || !year) return '';
 
-    const brand = this.brands().find(b => b.id === brandId);
-    const model = this.models().find(m => m.id === modelId);
+    const brand = this.brands().find((b) => b.id === brandId);
+    const model = this.models().find((m) => m.id === modelId);
 
     if (!brand || !model) return '';
 
@@ -649,7 +962,7 @@ export class PublishCarV2Page implements OnInit {
     carsService: CarsService,
     geocodingService: GeocodingService,
     router: Router,
-    route: ActivatedRoute
+    route: ActivatedRoute,
   ) {
     this.fb = fb;
     this.carsService = carsService;
@@ -687,30 +1000,32 @@ export class PublishCarV2Page implements OnInit {
    */
   private async checkMarketplaceOnboarding(): Promise<void> {
     try {
-      const { data: { user } } = await this.supabaseClient.getClient().auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabaseClient.getClient().auth.getUser();
       if (!user) {
         console.error('No user found');
         return;
       }
 
       const canList = await this.marketplaceService.canListCars(user.id);
-      
+
       // TODO: Activar cuando la tabla mp_onboarding_states esté creada
       // Por ahora permitir publicar sin onboarding de MP
       const requiresOnboarding = false;
       if (requiresOnboarding && !canList) {
         console.log('⚠️ User needs to onboard to Mercado Pago');
-        
+
         // Mostrar modal de onboarding
         const modal = await this.modalCtrl.create({
           component: MpOnboardingModalComponent,
           backdropDismiss: false,
         });
-        
+
         await modal.present();
-        
+
         const { data } = await modal.onWillDismiss();
-        
+
         // Si el usuario no completa el onboarding, redirigir al listado
         if (!data?.completed) {
           console.log('User cancelled MP onboarding, redirecting to cars list');
@@ -728,7 +1043,10 @@ export class PublishCarV2Page implements OnInit {
       // Vehicle
       brand_id: ['', Validators.required],
       model_id: ['', Validators.required],
-      year: [new Date().getFullYear(), [Validators.required, Validators.min(this.minYear), Validators.max(this.maxYear)]],
+      year: [
+        new Date().getFullYear(),
+        [Validators.required, Validators.min(this.minYear), Validators.max(this.maxYear)],
+      ],
       color: ['', Validators.required],
       mileage: [null, [Validators.required, Validators.min(0)]],
       transmission: ['', Validators.required],
@@ -759,7 +1077,7 @@ export class PublishCarV2Page implements OnInit {
     try {
       const [brandsData, modelsData] = await Promise.all([
         this.carsService.getCarBrands(),
-        this.carsService.getAllCarModels()
+        this.carsService.getAllCarModels(),
       ]);
 
       this.brands.set(brandsData as CarBrand[]);
@@ -843,7 +1161,7 @@ export class PublishCarV2Page implements OnInit {
       if (car.location_lat && car.location_lng) {
         this.manualCoordinates.set({
           latitude: car.location_lat,
-          longitude: car.location_lng
+          longitude: car.location_lng,
         });
       }
 
@@ -864,7 +1182,7 @@ export class PublishCarV2Page implements OnInit {
     if (!brandId) {
       this.filteredModels.set([]);
     } else {
-      const filtered = this.models().filter(m => m.brand_id === brandId);
+      const filtered = this.models().filter((m) => m.brand_id === brandId);
       this.filteredModels.set(filtered);
     }
 
@@ -948,8 +1266,8 @@ export class PublishCarV2Page implements OnInit {
     }
 
     // Obtener nombres de marca y modelo
-    const brand = this.brands().find(b => b.id === brandId);
-    const model = this.models().find(m => m.id === modelId);
+    const brand = this.brands().find((b) => b.id === brandId);
+    const model = this.models().find((m) => m.id === modelId);
 
     if (!brand || !model) {
       alert('Error al obtener la información del auto');
@@ -974,9 +1292,13 @@ export class PublishCarV2Page implements OnInit {
 
       // Agregar las fotos generadas a la lista
       for (const enhancedPhoto of enhancedPhotos) {
-        const file = new File([enhancedPhoto.enhanced], `ai-${brand.name}-${model.name}-${Date.now()}.png`, {
-          type: 'image/png',
-        });
+        const file = new File(
+          [enhancedPhoto.enhanced],
+          `ai-${brand.name}-${model.name}-${Date.now()}.png`,
+          {
+            type: 'image/png',
+          },
+        );
 
         this.uploadedPhotos.update((photos) => [
           ...photos,
@@ -984,11 +1306,13 @@ export class PublishCarV2Page implements OnInit {
         ]);
       }
 
-      alert(`✅ Se generaron ${enhancedPhotos.length} fotos con IA. Puedes agregar más o reemplazarlas.`);
+      alert(
+        `✅ Se generaron ${enhancedPhotos.length} fotos con IA. Puedes agregar más o reemplazarlas.`,
+      );
     } catch (error) {
       console.error('[AI Photos] Error:', error);
       alert(
-        'No pudimos generar las fotos con IA. Por favor, sube tus propias fotos o intenta de nuevo.'
+        'No pudimos generar las fotos con IA. Por favor, sube tus propias fotos o intenta de nuevo.',
       );
     } finally {
       this.isGeneratingAIPhotos.set(false);
@@ -1015,7 +1339,7 @@ export class PublishCarV2Page implements OnInit {
           console.log('🔄 Reverse geocoding coordinates...');
           const addressResult = await this.geocodingService.reverseGeocode(
             coords.latitude,
-            coords.longitude
+            coords.longitude,
           );
 
           console.log('✅ Reverse geocoding result:', addressResult);
@@ -1034,7 +1358,9 @@ export class PublishCarV2Page implements OnInit {
         } catch (reverseGeoError) {
           console.warn('⚠️ Reverse geocoding failed:', reverseGeoError);
           // Still keep the coordinates even if reverse geocoding fails
-          alert('Coordenadas capturadas, pero no se pudo obtener la dirección automáticamente. Por favor ingresa la dirección manualmente.');
+          alert(
+            'Coordenadas capturadas, pero no se pudo obtener la dirección automáticamente. Por favor ingresa la dirección manualmente.',
+          );
         }
       },
       (error) => {
@@ -1044,7 +1370,8 @@ export class PublishCarV2Page implements OnInit {
 
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            errorMessage += 'Por favor permite el acceso a tu ubicación en la configuración del navegador.';
+            errorMessage +=
+              'Por favor permite el acceso a tu ubicación en la configuración del navegador.';
             break;
           case error.POSITION_UNAVAILABLE:
             errorMessage += 'La información de ubicación no está disponible en este momento.';
@@ -1062,7 +1389,7 @@ export class PublishCarV2Page implements OnInit {
         enableHighAccuracy: true,
         timeout: 10000,
         maximumAge: 0,
-      }
+      },
     );
   }
 
@@ -1087,8 +1414,8 @@ export class PublishCarV2Page implements OnInit {
       const dynamicPricing = (pricing_strategy ?? 'dynamic') === 'dynamic';
 
       // Get brand and model names for backup fields
-      const brand = this.brands().find(b => b.id === formValue.brand_id);
-      const model = this.models().find(m => m.id === formValue.model_id);
+      const brand = this.brands().find((b) => b.id === formValue.brand_id);
+      const model = this.models().find((m) => m.id === formValue.model_id);
       const selectedModel = this.selectedModelInfo();
 
       if (!brand || !model) {
@@ -1116,7 +1443,7 @@ export class PublishCarV2Page implements OnInit {
             formValue.location_street_number,
             formValue.location_city,
             formValue.location_state,
-            formValue.location_country
+            formValue.location_country,
           );
 
           location_lat = geocodingResult.latitude;
@@ -1129,14 +1456,16 @@ export class PublishCarV2Page implements OnInit {
           try {
             const cityResult = await this.geocodingService.getCityCoordinates(
               formValue.location_city,
-              formValue.location_country
+              formValue.location_country,
             );
             location_lat = cityResult.latitude;
             location_lng = cityResult.longitude;
             console.log(`✅ City fallback success: ${location_lat}, ${location_lng}`);
           } catch (cityError) {
             console.error('❌ City geocoding also failed:', cityError);
-            alert('No se pudieron obtener las coordenadas de la dirección. Por favor verifica la ubicación.');
+            alert(
+              'No se pudieron obtener las coordenadas de la dirección. Por favor verifica la ubicación.',
+            );
             this.isSubmitting.set(false);
             return;
           }
@@ -1146,15 +1475,15 @@ export class PublishCarV2Page implements OnInit {
       const carData: Partial<Car> = {
         brand_id: formValue.brand_id,
         model_id: formValue.model_id,
-        brand_text_backup: brand.name,  // Campo requerido NOT NULL
-        model_text_backup: model.name,  // Campo requerido NOT NULL
+        brand_text_backup: brand.name, // Campo requerido NOT NULL
+        model_text_backup: model.name, // Campo requerido NOT NULL
         year: formValue.year,
         color: formValue.color,
         mileage: formValue.mileage,
         transmission: formValue.transmission,
         fuel: formValue.fuel,
-        seats: selectedModel?.seats,  // Desde car_models
-        doors: selectedModel?.doors,  // Desde car_models
+        seats: selectedModel?.seats, // Desde car_models
+        doors: selectedModel?.doors, // Desde car_models
         price_per_day: formValue.price_per_day,
         currency: formValue.currency,
         value_usd: formValue.value_usd, // ✅ NUEVO: Valor del vehículo para cálculos de riesgo
@@ -1170,11 +1499,11 @@ export class PublishCarV2Page implements OnInit {
         location_state: formValue.location_state,
         location_province: formValue.location_state,
         location_country: formValue.location_country,
-        location_lat,  // ✅ NEW: Geocoded coordinates
-        location_lng,  // ✅ NEW: Geocoded coordinates
+        location_lat, // ✅ NEW: Geocoded coordinates
+        location_lng, // ✅ NEW: Geocoded coordinates
         title: this.generatedTitle(),
         description: `${this.generatedTitle()} disponible para alquiler`,
-        status: 'active',  // ✅ Changed from 'draft' to 'active' for immediate visibility
+        status: 'active', // ✅ Changed from 'draft' to 'active' for immediate visibility
         cancel_policy: 'flex',
         features: {},
       };

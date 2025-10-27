@@ -85,7 +85,7 @@ export class PushNotificationService {
         user_id: user.id,
         token: token.endpoint, // The endpoint is a unique identifier for the device
       },
-      { onConflict: 'token' } // If the token already exists, do nothing
+      { onConflict: 'token' }, // If the token already exists, do nothing
     );
 
     if (error) {

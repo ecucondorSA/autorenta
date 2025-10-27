@@ -85,9 +85,7 @@ export class PlatformConfigService {
 
     // Auto-reload if cache expired
     if (Date.now() - this.configCacheTimestamp > this.CACHE_TTL) {
-      this.loadPublicConfig().catch((err) =>
-        console.error('Failed to reload config:', err)
-      );
+      this.loadPublicConfig().catch((err) => console.error('Failed to reload config:', err));
     }
 
     const value = cache.get(key);

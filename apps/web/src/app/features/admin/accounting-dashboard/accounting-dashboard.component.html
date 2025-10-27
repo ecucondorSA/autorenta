@@ -18,9 +18,11 @@
 
   <!-- Dashboard Content -->
   <div *ngIf="!loading() && dashboard()">
-    
     <!-- Health Check Alerts -->
-    <ion-card *ngIf="healthCheck()?.alerts?.length > 0" [color]="getHealthColor(healthCheck()?.profitability)">
+    <ion-card
+      *ngIf="healthCheck()?.alerts?.length > 0"
+      [color]="getHealthColor(healthCheck()?.profitability)"
+    >
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="warning-outline"></ion-icon>
@@ -119,20 +121,27 @@
               <h2><strong>📊 Utilidad Neta</strong></h2>
               <p>Resultado del período</p>
             </ion-label>
-            <ion-note 
-              slot="end" 
-              [color]="(dashboard()?.monthly_profit ?? 0) >= 0 ? 'success' : 'danger'">
+            <ion-note
+              slot="end"
+              [color]="(dashboard()?.monthly_profit ?? 0) >= 0 ? 'success' : 'danger'"
+            >
               <strong>{{ formatCurrency(dashboard()?.monthly_profit) }}</strong>
             </ion-note>
           </ion-item>
         </ion-list>
 
         <!-- Profit Margin -->
-        <div class="profit-margin" *ngIf="dashboard()?.monthly_income && (dashboard()?.monthly_income ?? 0) > 0">
+        <div
+          class="profit-margin"
+          *ngIf="dashboard()?.monthly_income && (dashboard()?.monthly_income ?? 0) > 0"
+        >
           <ion-text color="medium">
             <p class="ion-text-center">
               <small>
-                Margen: {{ ((dashboard()!.monthly_profit / dashboard()!.monthly_income) * 100).toFixed(1) }}%
+                Margen:
+                {{
+                  ((dashboard()!.monthly_profit / dashboard()!.monthly_income) * 100).toFixed(1)
+                }}%
               </small>
             </p>
           </ion-text>
@@ -190,22 +199,26 @@
       <ion-card-content>
         <ion-list>
           <ion-item>
-            <ion-icon 
-              [name]="healthCheck()?.walletReconciled ? 'checkmark-circle' : 'close-circle'" 
+            <ion-icon
+              [name]="healthCheck()?.walletReconciled ? 'checkmark-circle' : 'close-circle'"
               [color]="healthCheck()?.walletReconciled ? 'success' : 'danger'"
-              slot="start">
+              slot="start"
+            >
             </ion-icon>
             <ion-label>
               <h3>Conciliación Wallet</h3>
-              <p>{{ healthCheck()?.walletReconciled ? 'OK - Sin diferencias' : 'Error - Verificar' }}</p>
+              <p>
+                {{ healthCheck()?.walletReconciled ? 'OK - Sin diferencias' : 'Error - Verificar' }}
+              </p>
             </ion-label>
           </ion-item>
 
           <ion-item>
-            <ion-icon 
-              [name]="healthCheck()?.fgoAdequate ? 'checkmark-circle' : 'warning'" 
+            <ion-icon
+              [name]="healthCheck()?.fgoAdequate ? 'checkmark-circle' : 'warning'"
               [color]="healthCheck()?.fgoAdequate ? 'success' : 'warning'"
-              slot="start">
+              slot="start"
+            >
             </ion-icon>
             <ion-label>
               <h3>Provisión FGO</h3>
@@ -214,16 +227,22 @@
           </ion-item>
 
           <ion-item>
-            <ion-icon 
-              name="trending-up" 
+            <ion-icon
+              name="trending-up"
               [color]="getHealthColor(healthCheck()?.profitability)"
-              slot="start">
+              slot="start"
+            >
             </ion-icon>
             <ion-label>
               <h3>Rentabilidad</h3>
               <p>
-                {{ healthCheck()?.profitability === 'GOOD' ? 'Buena' : 
-                   healthCheck()?.profitability === 'WARNING' ? 'Regular' : 'Crítica' }}
+                {{
+                  healthCheck()?.profitability === 'GOOD'
+                    ? 'Buena'
+                    : healthCheck()?.profitability === 'WARNING'
+                      ? 'Regular'
+                      : 'Crítica'
+                }}
               </p>
             </ion-label>
           </ion-item>
@@ -236,11 +255,10 @@
       <p class="ion-text-center ion-padding">
         <small>
           Sistema contable automatizado según NIIF 15 (Ingresos) y NIIF 37 (Provisiones)
-          <br>
+          <br />
           Actualizado automáticamente en tiempo real
         </small>
       </p>
     </ion-text>
-
   </div>
 </ion-content>

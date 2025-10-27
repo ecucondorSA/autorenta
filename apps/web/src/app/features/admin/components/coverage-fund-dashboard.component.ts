@@ -25,9 +25,7 @@ interface FundStats {
     <div class="max-w-6xl mx-auto p-6">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          📊 Fondo de Cobertura
-        </h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">📊 Fondo de Cobertura</h1>
         <p class="text-gray-600 dark:text-gray-400">
           Administración del fondo de franquicias para incidentes
         </p>
@@ -36,14 +34,18 @@ interface FundStats {
       <!-- Loading State -->
       @if (loading()) {
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+          ></div>
           <p class="text-gray-600 dark:text-gray-400">Cargando datos del fondo...</p>
         </div>
       }
 
       <!-- Error State -->
       @else if (error()) {
-        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+        <div
+          class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6"
+        >
           <h3 class="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">Error</h3>
           <p class="text-red-700 dark:text-red-300">{{ error() }}</p>
           <button
@@ -59,20 +61,18 @@ interface FundStats {
       @else if (fund()) {
         <div class="space-y-6">
           <!-- Main Balance Card -->
-          <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-lg shadow-lg p-8 text-white">
+          <div
+            class="bg-gradient-to-r from-green-600 to-green-700 rounded-lg shadow-lg p-8 text-white"
+          >
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm opacity-90 mb-2">Balance del Fondo</p>
                 <p class="text-5xl font-bold">
                   {{ formatAmount(fund()!.balance_cents) }}
                 </p>
-                <p class="text-sm opacity-75 mt-2">
-                  = {{ fund()!.balance_cents }} centavos
-                </p>
+                <p class="text-sm opacity-75 mt-2">= {{ fund()!.balance_cents }} centavos</p>
               </div>
-              <div class="text-6xl opacity-80">
-                🛡️
-              </div>
+              <div class="text-6xl opacity-80">🛡️</div>
             </div>
 
             <div class="mt-6 pt-6 border-t border-green-500/30">
@@ -151,14 +151,18 @@ interface FundStats {
                 </h2>
               </div>
               <div class="p-6">
-                <pre class="bg-gray-100 dark:bg-gray-900 rounded p-4 text-sm overflow-x-auto">{{ JSON.stringify(fund()!.meta, null, 2) }}</pre>
+                <pre class="bg-gray-100 dark:bg-gray-900 rounded p-4 text-sm overflow-x-auto">{{
+                  JSON.stringify(fund()!.meta, null, 2)
+                }}</pre>
               </div>
             </div>
           }
 
           <!-- Recent Activity -->
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <div
+              class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between"
+            >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 Actividad Reciente
               </h2>
@@ -173,17 +177,17 @@ interface FundStats {
 
             @if (loadingActivity()) {
               <div class="p-8 text-center">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                <div
+                  class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
+                ></div>
               </div>
-            }
 
-            @else if (recentActivity().length === 0) {
+            } @else if (recentActivity().length === 0) {
               <div class="p-8 text-center">
                 <p class="text-gray-500 dark:text-gray-400">No hay actividad reciente</p>
               </div>
-            }
 
-            @else {
+            } @else {
               <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 @for (entry of recentActivity(); track entry.id) {
                   <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
@@ -211,10 +215,13 @@ interface FundStats {
                         </div>
                       </div>
                       <div class="text-right">
-                        <p class="text-lg font-bold"
-                           [class.text-green-600]="entry.kind === 'franchise_fund'"
-                           [class.text-red-600]="entry.kind === 'franchise_user'">
-                          {{ entry.kind === 'franchise_fund' ? '+' : '-' }}{{ formatAmount(entry.amount_cents) }}
+                        <p
+                          class="text-lg font-bold"
+                          [class.text-green-600]="entry.kind === 'franchise_fund'"
+                          [class.text-red-600]="entry.kind === 'franchise_user'"
+                        >
+                          {{ entry.kind === 'franchise_fund' ? '+' : '-'
+                          }}{{ formatAmount(entry.amount_cents) }}
                         </p>
                       </div>
                     </div>
@@ -225,7 +232,9 @@ interface FundStats {
           </div>
 
           <!-- Action Buttons (Admin Only) -->
-          <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+          <div
+            class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6"
+          >
             <h3 class="text-lg font-semibold text-yellow-900 dark:text-yellow-100 mb-4">
               ⚠️ Acciones Administrativas
             </h3>
@@ -321,12 +330,13 @@ export class CoverageFundDashboardComponent implements OnInit {
 
       const entries = data || [];
 
-      const collected = entries.filter(e => e.kind === 'franchise_fund');
-      const disbursed = entries.filter(e => e.kind === 'franchise_user');
+      const collected = entries.filter((e) => e.kind === 'franchise_fund');
+      const disbursed = entries.filter((e) => e.kind === 'franchise_user');
 
-      const avgAmount = collected.length > 0
-        ? Math.round(collected.reduce((sum, e) => sum + e.amount_cents, 0) / collected.length)
-        : 0;
+      const avgAmount =
+        collected.length > 0
+          ? Math.round(collected.reduce((sum, e) => sum + e.amount_cents, 0) / collected.length)
+          : 0;
 
       this.stats.set({
         total_franchises_collected: collected.length,
@@ -361,10 +371,7 @@ export class CoverageFundDashboardComponent implements OnInit {
   }
 
   async refreshAll(): Promise<void> {
-    await Promise.all([
-      this.loadFundData(),
-      this.loadRecentActivity(),
-    ]);
+    await Promise.all([this.loadFundData(), this.loadRecentActivity()]);
   }
 
   formatAmount(cents: number): string {

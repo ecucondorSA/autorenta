@@ -40,8 +40,12 @@ describe('BookingsService', () => {
 
   it('requests a booking via stored procedure', async () => {
     const booking = { id: 'booking-1' };
-    supabase.rpc.withArgs('request_booking', jasmine.any(Object)).and.resolveTo({ data: booking, error: null });
-    supabase.rpc.withArgs('pricing_recalculate', jasmine.any(Object)).and.resolveTo({ data: booking, error: null });
+    supabase.rpc
+      .withArgs('request_booking', jasmine.any(Object))
+      .and.resolveTo({ data: booking, error: null });
+    supabase.rpc
+      .withArgs('pricing_recalculate', jasmine.any(Object))
+      .and.resolveTo({ data: booking, error: null });
 
     const builder: any = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
@@ -65,8 +69,12 @@ describe('BookingsService', () => {
   it('extracts booking id from legacy response shape', async () => {
     const response = { booking_id: 'booking-2', total_amount: 1200 };
     const booking = { id: 'booking-2', total_amount: 1200 };
-    supabase.rpc.withArgs('request_booking', jasmine.any(Object)).and.resolveTo({ data: response, error: null });
-    supabase.rpc.withArgs('pricing_recalculate', jasmine.any(Object)).and.resolveTo({ data: null, error: null });
+    supabase.rpc
+      .withArgs('request_booking', jasmine.any(Object))
+      .and.resolveTo({ data: response, error: null });
+    supabase.rpc
+      .withArgs('pricing_recalculate', jasmine.any(Object))
+      .and.resolveTo({ data: null, error: null });
 
     const builder: any = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);

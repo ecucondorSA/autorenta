@@ -49,7 +49,7 @@ const createResilientLock = (): SupabaseLock => {
 
 /**
  * SupabaseClientService con Connection Pooling habilitado
- * 
+ *
  * MEJORAS IMPLEMENTADAS:
  * 1. Connection Pooling via 'x-supabase-pooling-mode' header
  * 2. Configuración de realtime optimizada
@@ -65,7 +65,8 @@ export class SupabaseClientService {
   constructor() {
     // HARDCODED URL FIX para resolver "Failed to fetch" en producción
     const SUPABASE_URL_HARDCODED = 'https://obxvffplochgeiclibng.supabase.co';
-    const SUPABASE_ANON_KEY_HARDCODED = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU';
+    const SUPABASE_ANON_KEY_HARDCODED =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU';
 
     // Usar valores hardcodeados como fallback si environment no está configurado
     const supabaseUrl = environment.supabaseUrl || SUPABASE_URL_HARDCODED;
@@ -130,7 +131,7 @@ export class SupabaseClientService {
           // Si es 5xx o timeout, reintentar
           if (response.status >= 500 && attempt < maxRetries) {
             console.warn(
-              `⚠️ [SUPABASE CLIENT] Error ${response.status}, reintentando... (${attempt}/${maxRetries})`
+              `⚠️ [SUPABASE CLIENT] Error ${response.status}, reintentando... (${attempt}/${maxRetries})`,
             );
             await this.sleep(retryDelay * attempt);
             continue;
@@ -145,7 +146,7 @@ export class SupabaseClientService {
 
           console.warn(
             `⚠️ [SUPABASE CLIENT] Error de red, reintentando... (${attempt}/${maxRetries})`,
-            error
+            error,
           );
           await this.sleep(retryDelay * attempt);
         }

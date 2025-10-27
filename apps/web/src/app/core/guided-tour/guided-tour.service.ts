@@ -11,15 +11,15 @@ import {
 
 /**
  * Main public API for the Guided Tour system
- * 
+ *
  * Usage:
  * ```typescript
  * // In component
  * private guidedTour = inject(GuidedTourService);
- * 
+ *
  * // Request a tour
  * this.guidedTour.request({ id: TourId.Welcome });
- * 
+ *
  * // Check state
  * const isRunning = this.guidedTour.isRunning();
  * ```

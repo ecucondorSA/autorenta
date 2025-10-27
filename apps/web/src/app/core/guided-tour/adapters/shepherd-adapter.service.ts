@@ -206,10 +206,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
     }
   }
 
-  private handleButtonAction(
-    action: string,
-    customAction?: () => void
-  ): void {
+  private handleButtonAction(action: string, customAction?: () => void): void {
     if (action === 'custom' && customAction) {
       customAction();
       return;

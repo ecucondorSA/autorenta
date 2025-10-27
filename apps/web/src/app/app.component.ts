@@ -1,5 +1,23 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, ViewChild, computed, inject, signal, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  computed,
+  inject,
+  signal,
+  AfterViewInit,
+} from '@angular/core';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterOutlet,
+  RouterLinkActive,
+} from '@angular/router';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
@@ -251,24 +269,24 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     return Array.from(
       this.sidebarPanel.nativeElement.querySelectorAll<HTMLElement>(focusableSelectors),
-    ).filter(element => !element.hasAttribute('disabled') && element.tabIndex !== -1);
+    ).filter((element) => !element.hasAttribute('disabled') && element.tabIndex !== -1);
   }
 
   private initializeWelcomeTour(): void {
     // NEW TOUR SYSTEM: Tours with autoStart: true will start automatically
     // No manual initialization needed! TourOrchestrator handles it.
-    
+
     // Enable debug mode in development
     if (!this.isBrowser) {
       return;
     }
-    
+
     const isDev = !window.location.hostname.includes('autorentar.com');
     if (isDev) {
       this.guidedTour.enableDebug();
       console.log('🧭 Guided Tour System: Debug mode enabled');
     }
-    
+
     // Tours are now managed by TourOrchestrator based on:
     // - autoStart flag in TourDefinition
     // - Guards (isHomePage, hasInventory, etc.)

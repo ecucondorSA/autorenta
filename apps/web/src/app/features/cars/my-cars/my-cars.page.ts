@@ -17,17 +17,15 @@ export class MyCarsPage implements OnInit {
   readonly cars = signal<Car[]>([]);
   readonly loading = signal(false);
 
-  readonly countActive = computed(() =>
-    this.cars().filter(car => car.status === 'active').length
+  readonly countActive = computed(
+    () => this.cars().filter((car) => car.status === 'active').length,
   );
 
-  readonly countDraft = computed(() =>
-    this.cars().filter(car => car.status === 'draft').length
-  );
+  readonly countDraft = computed(() => this.cars().filter((car) => car.status === 'draft').length);
 
   constructor(
     private readonly carsService: CarsService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -49,7 +47,7 @@ export class MyCarsPage implements OnInit {
   async onEditCar(carId: string): Promise<void> {
     // Navigate to publish page with car ID for editing
     await this.router.navigate(['/cars/publish'], {
-      queryParams: { edit: carId }
+      queryParams: { edit: carId },
     });
   }
 
@@ -59,7 +57,7 @@ export class MyCarsPage implements OnInit {
       let hasBookings = false;
       let bookingsCount = 0;
       let activeBookings: any[] = [];
-      
+
       try {
         const result = await this.carsService.hasActiveBookings(carId);
         hasBookings = result.hasActive;
@@ -69,14 +67,14 @@ export class MyCarsPage implements OnInit {
         console.error('Error checking bookings:', checkError);
         // Continuar con el intento de eliminación si falla la verificación
       }
-      
+
       if (hasBookings) {
         const activeCount = activeBookings.length;
         const nextBooking = activeBookings[0];
         const startDate = nextBooking ? new Date(nextBooking.start_date).toLocaleDateString() : '';
-        
+
         let message = `❌ No puedes eliminar este auto\n\n`;
-        
+
         if (activeCount > 0) {
           message += `Tiene ${activeCount} reserva${activeCount > 1 ? 's' : ''} activa${activeCount > 1 ? 's' : ''}.\n`;
           if (startDate) {
@@ -85,23 +83,23 @@ export class MyCarsPage implements OnInit {
         } else {
           message += `Este auto tiene ${bookingsCount} reserva${bookingsCount > 1 ? 's' : ''} en el historial.\n\n`;
         }
-        
+
         message += `Los autos con reservas no pueden eliminarse para mantener el historial.\n`;
         message += `Podés desactivar el auto en su lugar.`;
-        
+
         alert(message);
         return;
       }
 
       // ✅ MEJORADO: Confirmación más clara
-      const car = this.cars().find(c => c.id === carId);
+      const car = this.cars().find((c) => c.id === carId);
       const carName = car ? `${car.brand} ${car.model} ${car.year}` : 'este auto';
-      
+
       const confirmed = confirm(
         `¿Estás seguro de que querés eliminar ${carName}?\n\n` +
-        `Esta acción no se puede deshacer.`
+          `Esta acción no se puede deshacer.`,
       );
-      
+
       if (!confirmed) return;
 
       await this.carsService.deleteCar(carId);
@@ -113,24 +111,24 @@ export class MyCarsPage implements OnInit {
         code: error?.code,
         message: error?.message,
         details: error?.details,
-        hint: error?.hint
+        hint: error?.hint,
       });
-      
+
       // Mensaje específico para foreign key constraint
       if (error?.code === '23503' || error?.message?.includes('foreign key')) {
         alert(
           '❌ No se puede eliminar este auto\n\n' +
-          'Este auto tiene reservas asociadas en el sistema.\n' +
-          'Para mantener el historial, no es posible eliminarlo.\n\n' +
-          'Podés desactivar el auto si no querés que aparezca en las búsquedas.'
+            'Este auto tiene reservas asociadas en el sistema.\n' +
+            'Para mantener el historial, no es posible eliminarlo.\n\n' +
+            'Podés desactivar el auto si no querés que aparezca en las búsquedas.',
         );
       } else {
         // Mostrar mensaje más detallado para debugging
         const errorMsg = error?.message || 'Error desconocido';
         alert(
           '❌ Error al eliminar el auto\n\n' +
-          `Detalles: ${errorMsg}\n\n` +
-          'Por favor intenta nuevamente o contacta soporte.'
+            `Detalles: ${errorMsg}\n\n` +
+            'Por favor intenta nuevamente o contacta soporte.',
         );
       }
     }
@@ -141,44 +139,43 @@ export class MyCarsPage implements OnInit {
    */
   async onToggleAvailability(carId: string, currentStatus: string): Promise<void> {
     try {
-      const car = this.cars().find(c => c.id === carId);
+      const car = this.cars().find((c) => c.id === carId);
       const carName = car ? `${car.brand} ${car.model}` : 'este auto';
-      
+
       // Si está activo, verificar que no tenga reservas pendientes antes de desactivar
       if (currentStatus === 'active') {
         const { hasActive, count } = await this.carsService.hasActiveBookings(carId);
-        
+
         if (hasActive) {
           alert(
             `⚠️ No puedes desactivar ${carName}\n\n` +
-            `Tiene ${count} reserva${count > 1 ? 's' : ''} activa${count > 1 ? 's' : ''}.\n` +
-            `Esperá a que finalicen o cancelalas primero.`
+              `Tiene ${count} reserva${count > 1 ? 's' : ''} activa${count > 1 ? 's' : ''}.\n` +
+              `Esperá a que finalicen o cancelalas primero.`,
           );
           return;
         }
-        
+
         const confirmed = confirm(
           `¿Desactivar ${carName}?\n\n` +
-          `El auto dejará de aparecer en las búsquedas.\n` +
-          `Podés reactivarlo cuando quieras.`
+            `El auto dejará de aparecer en las búsquedas.\n` +
+            `Podés reactivarlo cuando quieras.`,
         );
-        
+
         if (!confirmed) return;
       } else {
         const confirmed = confirm(
-          `¿Activar ${carName}?\n\n` +
-          `El auto volverá a aparecer en las búsquedas.`
+          `¿Activar ${carName}?\n\n` + `El auto volverá a aparecer en las búsquedas.`,
         );
-        
+
         if (!confirmed) return;
       }
 
       // Toggle: active <-> inactive
       const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-      
+
       await this.carsService.updateCarStatus(carId, newStatus);
       await this.loadCars();
-      
+
       const statusText = newStatus === 'active' ? 'activado' : 'desactivado';
       alert(`✅ Auto ${statusText} exitosamente`);
     } catch (error) {

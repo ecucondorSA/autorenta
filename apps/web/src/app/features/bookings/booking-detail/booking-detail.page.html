@@ -23,7 +23,12 @@
       class="inline-flex items-center gap-2 text-sm font-medium text-accent-petrol hover:text-accent-warm transition-base mb-2"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 19l-7-7m0 0l7-7m-7 7h18"
+        />
       </svg>
       Volver a mis reservas
     </button>
@@ -32,222 +37,372 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Left Column: Booking Info -->
       <div class="space-y-4 sm:space-y-6">
+        <!-- Compact Hero Section -->
+        <div
+          class="relative overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 dark:border-gray-700 dark:from-gray-800 dark:to-gray-900"
+        >
+          <div class="flex items-center gap-4 p-4">
+            <!-- Status Badge -->
+            <app-booking-status [booking]="booking()!"></app-booking-status>
 
-    <!-- Compact Hero Section -->
-    <div class="relative overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 dark:border-gray-700 dark:from-gray-800 dark:to-gray-900">
-      <div class="flex items-center gap-4 p-4">
-        <!-- Status Badge -->
-        <app-booking-status [booking]="booking()!"></app-booking-status>
-        
-        <!-- Car Info -->
-        <div class="flex-1 min-w-0">
-          <h1 class="text-lg font-bold text-gray-900 dark:text-white truncate">
-            {{ booking()?.car_title }}
-          </h1>
-          <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
-          </p>
-          <p class="text-xs text-gray-500 dark:text-gray-500" *ngIf="booking()?.car_city">
-            📍 {{ booking()?.car_city }}
-          </p>
+            <!-- Car Info -->
+            <div class="flex-1 min-w-0">
+              <h1 class="text-lg font-bold text-gray-900 dark:text-white truncate">
+                {{ booking()?.car_title }}
+              </h1>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-500" *ngIf="booking()?.car_city">
+                📍 {{ booking()?.car_city }}
+              </p>
+            </div>
+
+            <!-- ID Badge -->
+            <div class="hidden sm:block">
+              <p class="text-xs text-gray-500 font-mono">ID: {{ booking()?.id | slice: 0 : 8 }}</p>
+            </div>
+          </div>
         </div>
 
-        <!-- ID Badge -->
-        <div class="hidden sm:block">
-          <p class="text-xs text-gray-500 font-mono">ID: {{ booking()?.id | slice:0:8 }}</p>
-        </div>
-      </div>
-    </div>
+        <div class="booking-detail-layout">
+          <section class="booking-detail-main">
+            <!-- Compact Dates Card -->
+            <div
+              class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+              id="tour-booking-dates"
+            >
+              <h3 class="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                📅 Fechas de la Reserva
+              </h3>
+              <div class="flex items-center gap-4 text-sm">
+                <div class="flex-1">
+                  <p class="text-xs text-gray-500">Inicio</p>
+                  <p class="font-medium text-gray-900 dark:text-white">
+                    {{ formatDateTime(booking()!.start_at) }}
+                  </p>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs text-gray-500">Fin</p>
+                  <p class="font-medium text-gray-900 dark:text-white">
+                    {{ formatDateTime(booking()!.end_at) }}
+                  </p>
+                </div>
+                <div class="flex-shrink-0" *ngIf="booking()?.days_count">
+                  <p class="text-xs text-gray-500">Duración</p>
+                  <p class="font-semibold text-gray-900 dark:text-white">
+                    {{ booking()?.days_count }}d
+                  </p>
+                </div>
+              </div>
+            </div>
 
-    <div class="booking-detail-layout">
-      <section class="booking-detail-main">
-        <!-- Compact Dates Card -->
-        <div class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800" id="tour-booking-dates">
-          <h3 class="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">📅 Fechas de la Reserva</h3>
-          <div class="flex items-center gap-4 text-sm">
+            <!-- Requirements Card - Solo para reservas confirmadas o en progreso -->
+            <div
+              *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress'"
+              class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-accent-petrol/20"
+            >
+              <div class="flex items-center gap-2 mb-4">
+                <svg
+                  class="w-6 h-6 text-accent-petrol"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <h3 class="h5">Requisitos para el Retiro</h3>
+              </div>
+
+              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
+                Asegurate de cumplir con estos requisitos el día del retiro del vehículo:
+              </p>
+
+              <div class="space-y-3">
+                <!-- Edad mínima -->
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30"
+                >
+                  <svg
+                    class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">
+                      Edad mínima: 21 años
+                    </p>
+                    <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                      Deberás presentar tu DNI o pasaporte para verificar tu edad.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Licencia de conducir -->
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30"
+                >
+                  <svg
+                    class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                    />
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">
+                      Licencia de conducir válida
+                    </p>
+                    <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                      Con antigüedad mínima de 1 año y vigente durante toda la reserva.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Documento de identidad -->
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30"
+                >
+                  <svg
+                    class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                    />
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">
+                      DNI o Pasaporte
+                    </p>
+                    <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                      Original y en vigencia. No se aceptan copias.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Método de pago / Wallet -->
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30"
+                >
+                  <svg
+                    class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">
+                      Depósito de garantía pagado
+                    </p>
+                    <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                      <span *ngIf="booking()?.payment_method === 'wallet'"
+                        >✅ Pagado con Wallet ($250 USD bloqueados)</span
+                      >
+                      <span *ngIf="booking()?.payment_method !== 'wallet'"
+                        >Tarjeta de crédito o efectivo en el momento del retiro.</span
+                      >
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Verificación de identidad -->
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30"
+                >
+                  <svg
+                    class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">
+                      Perfil verificado
+                    </p>
+                    <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                      Verificá tu identidad en tu perfil antes del retiro para agilizar el proceso.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nota importante -->
+              <div class="info-card-petrol p-4 mt-4">
+                <div class="flex items-start gap-2">
+                  <svg
+                    class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <div class="text-sm text-charcoal-medium dark:text-pearl-light">
+                    <p class="font-semibold text-smoke-black dark:text-white-pure mb-1">
+                      Importante
+                    </p>
+                    <p>
+                      El anfitrión puede rechazar la entrega si no cumplís con todos los requisitos.
+                      Asegurate de tener todo listo antes de coordinar el retiro.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ INSURANCE SUMMARY CARD - Removed loading state -->
+
+            <!-- Pricing Breakdown Card -->
+          </section>
+
+          <!-- Removed: app-payment-actions component -->
+        </div>
+
+        <app-review-management [booking]="booking()!"></app-review-management>
+
+        <!-- Bilateral Confirmation Section -->
+        <div *ngIf="showConfirmationSection()" class="space-y-4">
+          <!-- Owner Confirmation Component -->
+          <div *ngIf="isOwner()">
+            <app-owner-confirmation
+              [bookingId]="booking()!.id"
+              [ownerConfirmed]="booking()?.owner_confirmed_delivery ?? false"
+              [renterConfirmed]="booking()?.renter_confirmed_payment ?? false"
+              (confirmed)="handleConfirmationSuccess($event)"
+              (errorOccurred)="handleConfirmationError($event)"
+            ></app-owner-confirmation>
+          </div>
+
+          <!-- Renter Confirmation Component -->
+          <div *ngIf="isRenter()">
+            <app-renter-confirmation
+              [bookingId]="booking()!.id"
+              [ownerConfirmed]="booking()?.owner_confirmed_delivery ?? false"
+              [renterConfirmed]="booking()?.renter_confirmed_payment ?? false"
+              [damageAmount]="booking()?.owner_damage_amount ?? null"
+              [damageDescription]="booking()?.owner_damage_description ?? null"
+              [depositAmount]="(booking()?.deposit_amount_cents ?? 25000) / 100"
+              (confirmed)="handleConfirmationSuccess($event)"
+              (errorOccurred)="handleConfirmationError($event)"
+            ></app-renter-confirmation>
+          </div>
+        </div>
+
+        <!-- ✅ REPORT CLAIM BUTTON -->
+        <div
+          *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress'"
+          class="card-premium p-4 rounded-2xl shadow-soft bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-l-4 border-red-500"
+        >
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <svg
+                class="w-8 h-8 text-red-600 dark:text-red-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
             <div class="flex-1">
-              <p class="text-xs text-gray-500">Inicio</p>
-              <p class="font-medium text-gray-900 dark:text-white">{{ formatDateTime(booking()!.start_at) }}</p>
-            </div>
-            <div class="flex-1">
-              <p class="text-xs text-gray-500">Fin</p>
-              <p class="font-medium text-gray-900 dark:text-white">{{ formatDateTime(booking()!.end_at) }}</p>
-            </div>
-            <div class="flex-shrink-0" *ngIf="booking()?.days_count">
-              <p class="text-xs text-gray-500">Duración</p>
-              <p class="font-semibold text-gray-900 dark:text-white">{{ booking()?.days_count }}d</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Requirements Card - Solo para reservas confirmadas o en progreso -->
-        <div *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress'" class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-accent-petrol/20">
-          <div class="flex items-center gap-2 mb-4">
-            <svg class="w-6 h-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <h3 class="h5">Requisitos para el Retiro</h3>
-          </div>
-
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
-            Asegurate de cumplir con estos requisitos el día del retiro del vehículo:
-          </p>
-
-          <div class="space-y-3">
-            <!-- Edad mínima -->
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-              </svg>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Edad mínima: 21 años</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Deberás presentar tu DNI o pasaporte para verificar tu edad.</p>
-              </div>
-            </div>
-
-            <!-- Licencia de conducir -->
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-              </svg>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Licencia de conducir válida</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Con antigüedad mínima de 1 año y vigente durante toda la reserva.</p>
-              </div>
-            </div>
-
-            <!-- Documento de identidad -->
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/>
-              </svg>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">DNI o Pasaporte</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Original y en vigencia. No se aceptan copias.</p>
-              </div>
-            </div>
-
-            <!-- Método de pago / Wallet -->
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-              </svg>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Depósito de garantía pagado</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
-                  <span *ngIf="booking()?.payment_method === 'wallet'">✅ Pagado con Wallet ($250 USD bloqueados)</span>
-                  <span *ngIf="booking()?.payment_method !== 'wallet'">Tarjeta de crédito o efectivo en el momento del retiro.</span>
-                </p>
-              </div>
-            </div>
-
-            <!-- Verificación de identidad -->
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30">
-              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-              </svg>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-smoke-black dark:text-white-pure">Perfil verificado</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Verificá tu identidad en tu perfil antes del retiro para agilizar el proceso.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Nota importante -->
-          <div class="info-card-petrol p-4 mt-4">
-            <div class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-accent-petrol flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <div class="text-sm text-charcoal-medium dark:text-pearl-light">
-                <p class="font-semibold text-smoke-black dark:text-white-pure mb-1">Importante</p>
-                <p>El anfitrión puede rechazar la entrega si no cumplís con todos los requisitos. Asegurate de tener todo listo antes de coordinar el retiro.</p>
-              </div>
+              <h3 class="text-lg font-semibold text-smoke-black dark:text-white-pure mb-2">
+                ¿Tuviste un accidente o daño?
+              </h3>
+              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
+                Reporta cualquier incidente inmediatamente para activar tu cobertura de seguro.
+              </p>
+              <a
+                [routerLink]="['/bookings', booking()?.id, 'report-claim']"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-base shadow-sm"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                Reportar Siniestro/Daño
+              </a>
             </div>
           </div>
         </div>
+        <!-- End Left Column -->
 
-        <!-- ✅ INSURANCE SUMMARY CARD - Removed loading state -->
-
-        <!-- Pricing Breakdown Card -->
-      </section>
-
-      <!-- Removed: app-payment-actions component -->
+        <!-- Right Column: Chat -->
+        <div
+          *ngIf="
+            (booking()?.status === 'confirmed' ||
+              booking()?.status === 'in_progress' ||
+              booking()?.status === 'pending' ||
+              showConfirmationSection()) &&
+            carOwnerId()
+          "
+          id="tour-booking-chat"
+          class="lg:sticky lg:top-4 lg:self-start"
+        >
+          <h2 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-100">
+            Chat con el anfitrión
+          </h2>
+          <app-booking-chat
+            [bookingId]="booking()!.id"
+            [recipientId]="carOwnerId()!"
+            [recipientName]="carOwnerName()"
+          ></app-booking-chat>
+        </div>
+        <!-- End Right Column -->
+      </div>
+      <!-- End Two Column Grid -->
     </div>
-
-    <app-review-management [booking]="booking()!"></app-review-management>
-
-    <!-- Bilateral Confirmation Section -->
-    <div *ngIf="showConfirmationSection()" class="space-y-4">
-      <!-- Owner Confirmation Component -->
-      <div *ngIf="isOwner()">
-        <app-owner-confirmation
-          [bookingId]="booking()!.id"
-          [ownerConfirmed]="booking()?.owner_confirmed_delivery ?? false"
-          [renterConfirmed]="booking()?.renter_confirmed_payment ?? false"
-          (confirmed)="handleConfirmationSuccess($event)"
-          (errorOccurred)="handleConfirmationError($event)"
-        ></app-owner-confirmation>
-      </div>
-
-      <!-- Renter Confirmation Component -->
-      <div *ngIf="isRenter()">
-        <app-renter-confirmation
-          [bookingId]="booking()!.id"
-          [ownerConfirmed]="booking()?.owner_confirmed_delivery ?? false"
-          [renterConfirmed]="booking()?.renter_confirmed_payment ?? false"
-          [damageAmount]="booking()?.owner_damage_amount ?? null"
-          [damageDescription]="booking()?.owner_damage_description ?? null"
-          [depositAmount]="(booking()?.deposit_amount_cents ?? 25000) / 100"
-          (confirmed)="handleConfirmationSuccess($event)"
-          (errorOccurred)="handleConfirmationError($event)"
-        ></app-renter-confirmation>
-      </div>
-    </div>
-
-    <!-- ✅ REPORT CLAIM BUTTON -->
-    <div 
-      *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress'"
-      class="card-premium p-4 rounded-2xl shadow-soft bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-l-4 border-red-500">
-      <div class="flex items-start gap-4">
-        <div class="flex-shrink-0">
-          <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-          </svg>
-        </div>
-        <div class="flex-1">
-          <h3 class="text-lg font-semibold text-smoke-black dark:text-white-pure mb-2">
-            ¿Tuviste un accidente o daño?
-          </h3>
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
-            Reporta cualquier incidente inmediatamente para activar tu cobertura de seguro.
-          </p>
-          <a
-            [routerLink]="['/bookings', booking()?.id, 'report-claim']"
-            class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-base shadow-sm">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-            Reportar Siniestro/Daño
-          </a>
-        </div>
-      </div>
-      </div>
-      <!-- End Left Column -->
-
-      <!-- Right Column: Chat -->
-      <div *ngIf="(booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'pending' || showConfirmationSection()) && carOwnerId()" 
-           id="tour-booking-chat"
-           class="lg:sticky lg:top-4 lg:self-start">
-        <h2 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-100">Chat con el anfitrión</h2>
-        <app-booking-chat
-          [bookingId]="booking()!.id"
-          [recipientId]="carOwnerId()!"
-          [recipientName]="carOwnerName()"
-        ></app-booking-chat>
-      </div>
-      <!-- End Right Column -->
-    </div>
-    <!-- End Two Column Grid -->
   </div>
 </div>

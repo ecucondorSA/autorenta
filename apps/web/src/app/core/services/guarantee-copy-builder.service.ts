@@ -64,9 +64,7 @@ export class GuaranteeCopyBuilderService {
     return {
       // Sección principal
       title: isHold ? 'Garantía Reembolsable' : 'Crédito de Seguridad',
-      subtitle: isHold
-        ? 'Preautorización en tu tarjeta'
-        : 'Depósito no reembolsable en tu wallet',
+      subtitle: isHold ? 'Preautorización en tu tarjeta' : 'Depósito no reembolsable en tu wallet',
 
       description: this.buildDescription(risk),
 
@@ -79,11 +77,11 @@ export class GuaranteeCopyBuilderService {
       franchiseTable: {
         standardUsd: this.franchiseService.formatUsd(risk.standardFranchiseUsd),
         standardArs: this.franchiseService.formatArs(
-          Math.round(risk.standardFranchiseUsd * risk.fxRate)
+          Math.round(risk.standardFranchiseUsd * risk.fxRate),
         ),
         rolloverUsd: this.franchiseService.formatUsd(risk.rolloverFranchiseUsd),
         rolloverArs: this.franchiseService.formatArs(
-          Math.round(risk.rolloverFranchiseUsd * risk.fxRate)
+          Math.round(risk.rolloverFranchiseUsd * risk.fxRate),
         ),
       },
 
@@ -175,18 +173,18 @@ export class GuaranteeCopyBuilderService {
     if (risk.guaranteeType === 'hold') {
       disclaimers.push(
         'El hold puede reautorizarse cada 6-7 días en alquileres largos (>7 días)',
-        'Si el hold falla, se te solicitará un método de pago alternativo o se cancelará la reserva'
+        'Si el hold falla, se te solicitará un método de pago alternativo o se cancelará la reserva',
       );
     } else {
       disclaimers.push(
         'El Crédito de Seguridad NO es reembolsable, pero queda disponible para futuras reservas',
-        'Si los gastos superan el crédito, debes completar el pago en 72 horas o tu cuenta será bloqueada'
+        'Si los gastos superan el crédito, debes completar el pago en 72 horas o tu cuenta será bloqueada',
       );
     }
 
     if (risk.requiresRevalidation) {
       disclaimers.push(
-        '⚠️ Este cálculo requiere revalidación. La tasa FX ha variado más del 10% o han pasado más de 7 días desde la reserva.'
+        '⚠️ Este cálculo requiere revalidación. La tasa FX ha variado más del 10% o han pasado más de 7 días desde la reserva.',
       );
     }
 
@@ -218,7 +216,7 @@ export class GuaranteeCopyBuilderService {
           answer:
             'Depende del banco. Algunas tarjetas de débito permiten preautorizaciones, pero no todas. ' +
             'Si no funciona, puedes pagar con wallet o parcial (wallet + tarjeta).',
-        }
+        },
       );
     } else {
       faqs.push(
@@ -239,7 +237,7 @@ export class GuaranteeCopyBuilderService {
           answer:
             'Es un crédito de seguridad, no un depósito reembolsable. Está diseñado para cubrir gastos operativos ' +
             'y garantizar que puedas alquilar sin tarjeta de crédito.',
-        }
+        },
       );
     }
 
@@ -257,7 +255,7 @@ export class GuaranteeCopyBuilderService {
         answer:
           'El Fondo de Garantía Operativa (FGO) es un fondo comunitario que ayuda a cubrir daños cuando el locatario ' +
           'no puede pagar su franquicia completa. Tiene límites (USD 800 por evento) y depende de la solvencia del fondo.',
-      }
+      },
     );
 
     return faqs;

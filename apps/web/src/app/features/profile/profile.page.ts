@@ -23,7 +23,15 @@ import { PwaCapabilitiesComponent } from '../../shared/components/pwa-capabiliti
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, UserBadgesComponent, ReviewCardComponent, PwaCapabilitiesComponent, TranslateModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    UserBadgesComponent,
+    ReviewCardComponent,
+    PwaCapabilitiesComponent,
+    TranslateModule,
+  ],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

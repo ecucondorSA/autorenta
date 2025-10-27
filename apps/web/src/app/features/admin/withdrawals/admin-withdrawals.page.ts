@@ -50,14 +50,14 @@ export class AdminWithdrawalsPage implements OnInit {
   readonly selectedWithdrawal = computed(() => this.selectedWithdrawalSignal());
   readonly actionNotes = computed(() => this.actionNotesSignal());
 
-  readonly pendingCount = computed(() =>
-    this.withdrawalsSignal().filter((w) => w.status === 'pending').length
+  readonly pendingCount = computed(
+    () => this.withdrawalsSignal().filter((w) => w.status === 'pending').length,
   );
 
   readonly totalPendingAmount = computed(() =>
     this.withdrawalsSignal()
       .filter((w) => w.status === 'pending')
-      .reduce((sum, w) => sum + w.net_amount, 0)
+      .reduce((sum, w) => sum + w.net_amount, 0),
   );
 
   async ngOnInit(): Promise<void> {
@@ -68,9 +68,7 @@ export class AdminWithdrawalsPage implements OnInit {
     this.loadingSignal.set(true);
     try {
       const status = this.filterStatusSignal();
-      const withdrawals = await this.adminService.listWithdrawalRequests(
-        status || undefined
-      );
+      const withdrawals = await this.adminService.listWithdrawalRequests(status || undefined);
       this.withdrawalsSignal.set(withdrawals);
     } catch (error) {
       console.error('Error al cargar solicitudes de retiro', error);
@@ -107,7 +105,7 @@ export class AdminWithdrawalsPage implements OnInit {
     try {
       await this.adminService.approveWithdrawal(
         withdrawal.id,
-        this.actionNotesSignal() || undefined
+        this.actionNotesSignal() || undefined,
       );
       alert('Retiro aprobado exitosamente');
       this.closeModal();
@@ -119,10 +117,7 @@ export class AdminWithdrawalsPage implements OnInit {
   }
 
   async completeWithdrawal(withdrawal: WithdrawalRequest): Promise<void> {
-    const transactionId = prompt(
-      'Ingrese el ID de transacción bancaria/MercadoPago:',
-      ''
-    );
+    const transactionId = prompt('Ingrese el ID de transacción bancaria/MercadoPago:', '');
     if (!transactionId) return;
 
     try {
@@ -182,7 +177,7 @@ export class AdminWithdrawalsPage implements OnInit {
       ...rows.map((row) =>
         Object.values(row)
           .map((v) => (typeof v === 'string' && v.includes(',') ? `"${v}"` : v))
-          .join(',')
+          .join(','),
       ),
     ].join('\n');
 
@@ -191,10 +186,7 @@ export class AdminWithdrawalsPage implements OnInit {
     const url = URL.createObjectURL(blob);
 
     link.setAttribute('href', url);
-    link.setAttribute(
-      'download',
-      `retiros-${new Date().toISOString().split('T')[0]}.csv`
-    );
+    link.setAttribute('download', `retiros-${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
 
     document.body.appendChild(link);

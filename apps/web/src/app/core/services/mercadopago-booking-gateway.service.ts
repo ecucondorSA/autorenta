@@ -44,10 +44,10 @@ export class MercadoPagoBookingGatewayService {
    */
   createBookingPreference(bookingId: string): Observable<MercadoPagoPreferenceResponse> {
     return from(this._createPreference(bookingId)).pipe(
-      catchError(err => {
+      catchError((err) => {
         console.error('Error creating MercadoPago preference:', err);
         return throwError(() => new Error(this.formatError(err)));
-      })
+      }),
     );
   }
 

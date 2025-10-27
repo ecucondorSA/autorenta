@@ -95,12 +95,10 @@ export function getCarPlaceholderGradient(data: CarPlaceholderData): string {
 
   // Buscar color de marca (case-insensitive)
   const brandKey = Object.keys(BRAND_COLORS).find(
-    (key) => key.toLowerCase() === brand.toLowerCase()
+    (key) => key.toLowerCase() === brand.toLowerCase(),
   );
 
-  const colors = brandKey
-    ? BRAND_COLORS[brandKey]
-    : stringToColor(data.id + brand);
+  const colors = brandKey ? BRAND_COLORS[brandKey] : stringToColor(data.id + brand);
 
   return `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`;
 }
@@ -176,7 +174,7 @@ export function getCarPlaceholderSvg(data: CarPlaceholderData): string {
  */
 export function getCarImageUrl(
   photos: Array<{ url: string }> | undefined,
-  car: CarPlaceholderData
+  car: CarPlaceholderData,
 ): string {
   // Si tiene fotos, retornar la primera
   if (photos && photos.length > 0 && photos[0].url) {

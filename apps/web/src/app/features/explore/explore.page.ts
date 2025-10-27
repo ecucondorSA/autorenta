@@ -54,14 +54,14 @@ import { Car } from '../../core/models';
 export class ExplorePage implements OnInit, AfterViewInit {
   @ViewChild('listModal') listModal!: IonModal;
   @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
-  
+
   cars: Car[] = [];
   filteredCars: Car[] = [];
   loading = true;
   showFilters = false;
   showList = false;
   searchQuery = '';
-  
+
   filters = {
     minPrice: 0,
     maxPrice: 10000,
@@ -129,8 +129,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
   applyFilters() {
     this.filteredCars = this.cars.filter((car) => {
       const priceMatch =
-        car.price_per_day >= this.filters.minPrice &&
-        car.price_per_day <= this.filters.maxPrice;
+        car.price_per_day >= this.filters.minPrice && car.price_per_day <= this.filters.maxPrice;
       const transmissionMatch =
         this.filters.transmission === 'all' || car.transmission === this.filters.transmission;
 
@@ -162,7 +161,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       (car) =>
         car.brand?.toLowerCase().includes(query) ||
         car.model?.toLowerCase().includes(query) ||
-        car.location_city?.toLowerCase().includes(query)
+        car.location_city?.toLowerCase().includes(query),
     );
   }
 

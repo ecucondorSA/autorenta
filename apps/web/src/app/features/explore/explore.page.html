@@ -7,14 +7,14 @@
       [animated]="true"
       class="search-bar-toolbar"
     ></ion-searchbar>
-    
+
     <ion-buttons slot="end">
       <ion-button (click)="toggleFilters()">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  
+
   <!-- Filters Panel (Collapsible) -->
   <app-map-filters
     *ngIf="showFilters"
@@ -24,7 +24,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="explore-content">
-  
   <!-- Map View (Fullscreen) -->
   <div class="map-container">
     <app-cars-map
@@ -36,7 +35,6 @@
 
   <!-- Floating Action Buttons -->
   <div class="fab-container">
-    
     <!-- Center on User Location -->
     <ion-fab vertical="top" horizontal="end" slot="fixed" class="fab-location">
       <ion-fab-button size="small" (click)="centerOnUser()">
@@ -51,9 +49,7 @@
         <span class="fab-label">Ver lista ({{ filteredCars.length }})</span>
       </ion-fab-button>
     </ion-fab>
-    
   </div>
-
 </ion-content>
 
 <!-- Bottom Sheet - List View -->
@@ -76,7 +72,7 @@
         </ion-label>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="list-content">
       <ion-list>
         <app-car-card
@@ -87,14 +83,12 @@
           class="list-car-card"
         ></app-car-card>
       </ion-list>
-      
+
       <!-- Empty State -->
       <div class="empty-state" *ngIf="filteredCars.length === 0 && !loading">
         <ion-icon name="search-outline" size="large"></ion-icon>
         <p>No se encontraron autos con estos filtros</p>
-        <ion-button (click)="resetFilters()">
-          Limpiar filtros
-        </ion-button>
+        <ion-button (click)="resetFilters()"> Limpiar filtros </ion-button>
       </div>
     </ion-content>
   </ng-template>

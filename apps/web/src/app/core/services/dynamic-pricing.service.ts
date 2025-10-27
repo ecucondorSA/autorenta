@@ -120,9 +120,9 @@ export class DynamicPricingService {
       regionId,
       userId,
       rentalStart,
-      rentalHours
+      rentalHours,
     });
-    
+
     const { data, error } = await this.supabase.rpc('calculate_dynamic_price', {
       p_region_id: regionId,
       p_user_id: userId,
@@ -134,7 +134,7 @@ export class DynamicPricingService {
       console.error('❌ [DynamicPricing] RPC Error:', error);
       throw new Error(`Failed to calculate price via RPC: ${error.message}`);
     }
-    
+
     console.log('✅ [DynamicPricing] RPC Success:', data);
     return data as DynamicPricingResponse;
   }
@@ -327,7 +327,10 @@ export class DynamicPricingService {
    * Get quick price for a car (for map markers and search results)
    * Uses current time and 24h rental by default
    */
-  async getQuickPrice(carId: string, regionId: string): Promise<{
+  async getQuickPrice(
+    carId: string,
+    regionId: string,
+  ): Promise<{
     price_per_hour: number;
     price_per_day: number;
     currency: string;
@@ -337,12 +340,14 @@ export class DynamicPricingService {
     surge_icon?: string;
   } | null> {
     console.log('📊 [DynamicPricing] getQuickPrice called', { carId, regionId });
-    
+
     try {
       // Get current user ID (if logged in)
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       const userId = user?.id || '00000000-0000-0000-0000-000000000000'; // Anonymous user
-      
+
       console.log('👤 [DynamicPricing] User ID:', userId);
 
       const now = new Date();
@@ -350,16 +355,16 @@ export class DynamicPricingService {
         regionId,
         userId,
         rentalStart: now.toISOString(),
-        rentalHours: 24
+        rentalHours: 24,
       });
-      
+
       const response = await this.calculatePriceRPC(
         regionId,
         userId,
         now.toISOString(),
-        24 // Default 24 hours for "per day" pricing
+        24, // Default 24 hours for "per day" pricing
       );
-      
+
       console.log('✅ [DynamicPricing] RPC Response:', response);
 
       const result = {
@@ -371,7 +376,7 @@ export class DynamicPricingService {
         surge_active: response.surge_active,
         surge_icon: this.getSurgeBadge(response).icon,
       };
-      
+
       console.log('💰 [DynamicPricing] Returning quick price:', result);
       return result;
     } catch (error) {
@@ -384,13 +389,18 @@ export class DynamicPricingService {
    * Get batch prices for multiple cars (optimized for map view)
    * Returns a map of car_id -> pricing data
    */
-  async getBatchPrices(cars: Array<{ id: string; region_id: string }>): Promise<Map<string, {
-    price_per_hour: number;
-    price_per_day: number;
-    currency: string;
-    price_usd_hour?: number;
-    surge_active: boolean;
-  }>> {
+  async getBatchPrices(cars: Array<{ id: string; region_id: string }>): Promise<
+    Map<
+      string,
+      {
+        price_per_hour: number;
+        price_per_day: number;
+        currency: string;
+        price_usd_hour?: number;
+        surge_active: boolean;
+      }
+    >
+  > {
     const pricesMap = new Map();
 
     // Group cars by region for efficient processing

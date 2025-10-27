@@ -100,7 +100,9 @@ export class WalletLedgerService {
     this.error.set(null);
 
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
 
       if (!user) {
         throw new Error('Usuario no autenticado');
@@ -134,7 +136,9 @@ export class WalletLedgerService {
     this.error.set(null);
 
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
 
       if (!user) {
         throw new Error('Usuario no autenticado');
@@ -245,10 +249,7 @@ export class WalletLedgerService {
       console.log('[WalletLedgerService] Transferencia exitosa, recargando datos...');
 
       // Recargar historial y transferencias
-      await Promise.all([
-        this.loadLedgerHistory(),
-        this.loadTransfers(),
-      ]);
+      await Promise.all([this.loadLedgerHistory(), this.loadTransfers()]);
 
       console.log('[WalletLedgerService] Transferencia completada');
 
@@ -353,7 +354,7 @@ export class WalletLedgerService {
         () => {
           console.log('[WalletLedgerService] New ledger entry detected');
           callback();
-        }
+        },
       )
       .subscribe();
 
@@ -366,7 +367,14 @@ export class WalletLedgerService {
    * Buscar usuario por número de cuenta wallet (WAN)
    * Formato: ARXXXXXXXXXXXXXX (16 caracteres)
    */
-  async searchUserByWalletNumber(query: string): Promise<{ id: string; full_name: string; email?: string; wallet_account_number: string } | null> {
+  async searchUserByWalletNumber(
+    query: string,
+  ): Promise<{
+    id: string;
+    full_name: string;
+    email?: string;
+    wallet_account_number: string;
+  } | null> {
     // Limpiar y formatear query
     const cleanQuery = query.trim().toUpperCase();
 
@@ -375,8 +383,9 @@ export class WalletLedgerService {
       return null;
     }
 
-    const { data, error } = await this.supabase
-      .rpc('search_users_by_wallet_number', { p_query: cleanQuery });
+    const { data, error } = await this.supabase.rpc('search_users_by_wallet_number', {
+      p_query: cleanQuery,
+    });
 
     if (error) {
       console.error('Error searching user by wallet number:', error);
@@ -387,13 +396,20 @@ export class WalletLedgerService {
       return null;
     }
 
-    return data[0] as { id: string; full_name: string; email?: string; wallet_account_number: string };
+    return data[0] as {
+      id: string;
+      full_name: string;
+      email?: string;
+      wallet_account_number: string;
+    };
   }
 
   /**
    * Buscar usuario por email/nombre para transferencia (DEPRECATED - usar searchUserByWalletNumber)
    */
-  async searchUsers(query: string): Promise<Array<{ id: string; full_name: string; email?: string }>> {
+  async searchUsers(
+    query: string,
+  ): Promise<Array<{ id: string; full_name: string; email?: string }>> {
     const { data, error } = await this.supabase
       .from('profiles')
       .select('id, full_name')
@@ -414,7 +430,7 @@ export class WalletLedgerService {
   async getLedgerSummary(
     userId: string,
     startDate?: Date,
-    endDate?: Date
+    endDate?: Date,
   ): Promise<Record<LedgerKind, { count: number; total_cents: number }>> {
     let query = this.supabase
       .from('wallet_ledger')

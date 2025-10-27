@@ -18,10 +18,9 @@ export class MercadoPagoBookingGateway {
 
   async createPreference(bookingId: string): Promise<MercadoPagoPreferenceResponse> {
     const client = this.supabase.getClient();
-    const { data, error } = await client.functions.invoke(
-      'mercadopago-create-booking-preference',
-      { body: { booking_id: bookingId } },
-    );
+    const { data, error } = await client.functions.invoke('mercadopago-create-booking-preference', {
+      body: { booking_id: bookingId },
+    });
 
     if (error) {
       throw new Error(error.message ?? 'No se pudo crear la preferencia de MercadoPago');

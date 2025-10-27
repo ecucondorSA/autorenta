@@ -64,7 +64,10 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   ),
   mercadopagoPublicKey: resolve('NG_APP_MERCADOPAGO_PUBLIC_KEY', defaults.mercadopagoPublicKey),
   mercadopagoClientId: resolve('NG_APP_MERCADOPAGO_CLIENT_ID', defaults.mercadopagoClientId),
-  mercadopagoClientSecret: resolve('NG_APP_MERCADOPAGO_CLIENT_SECRET', defaults.mercadopagoClientSecret),
+  mercadopagoClientSecret: resolve(
+    'NG_APP_MERCADOPAGO_CLIENT_SECRET',
+    defaults.mercadopagoClientSecret,
+  ),
   appUrl: resolve('NG_APP_URL', defaults.appUrl ?? 'http://localhost:4200'),
 });
 

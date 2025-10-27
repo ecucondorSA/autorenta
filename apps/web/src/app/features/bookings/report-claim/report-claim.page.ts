@@ -34,7 +34,12 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
               <div>
                 <h3>⚠️ Importante</h3>
                 <p>Si hubo lesionados o el vehículo no puede circular, llama de inmediato a:</p>
-                <ion-button expand="block" color="light" href="tel:0800-AUTORENTAR" class="emergency-button">
+                <ion-button
+                  expand="block"
+                  color="light"
+                  href="tel:0800-AUTORENTAR"
+                  class="emergency-button"
+                >
                   <ion-icon slot="start" name="call"></ion-icon>
                   0800-AUTORENTAR (24/7)
                 </ion-button>
@@ -55,12 +60,13 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 Tipo de Siniestro *
                 <ion-text color="danger"></ion-text>
               </ion-label>
-              <ion-select 
-                [(ngModel)]="claimData.claim_type" 
-                name="claimType" 
+              <ion-select
+                [(ngModel)]="claimData.claim_type"
+                name="claimType"
                 required
                 interface="action-sheet"
-                placeholder="Selecciona el tipo">
+                placeholder="Selecciona el tipo"
+              >
                 <ion-select-option *ngFor="let type of claimTypes" [value]="type.value">
                   {{ type.label }}
                 </ion-select-option>
@@ -73,12 +79,13 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 Fecha y Hora del Incidente *
                 <ion-text color="danger"></ion-text>
               </ion-label>
-              <ion-datetime 
-                [(ngModel)]="claimData.incident_date" 
+              <ion-datetime
+                [(ngModel)]="claimData.incident_date"
                 name="incidentDate"
                 presentation="date-time"
                 [max]="maxDate"
-                required>
+                required
+              >
               </ion-datetime>
             </ion-item>
 
@@ -88,20 +95,20 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 Ubicación
                 <ion-text color="medium">(opcional)</ion-text>
               </ion-label>
-              <ion-input 
-                [(ngModel)]="claimData.location" 
+              <ion-input
+                [(ngModel)]="claimData.location"
                 name="location"
                 placeholder="Ej: Av. Corrientes 1234, CABA"
-                type="text">
+                type="text"
+              >
               </ion-input>
-              <ion-button 
-                slot="end" 
-                fill="clear" 
+              <ion-button
+                slot="end"
+                fill="clear"
                 (click)="useCurrentLocation()"
-                [disabled]="gettingLocation">
-                <ion-icon 
-                  [name]="gettingLocation ? 'hourglass' : 'location'" 
-                  slot="icon-only">
+                [disabled]="gettingLocation"
+              >
+                <ion-icon [name]="gettingLocation ? 'hourglass' : 'location'" slot="icon-only">
                 </ion-icon>
               </ion-button>
             </ion-item>
@@ -114,14 +121,15 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
               </ion-label>
             </ion-item>
             <ion-item>
-              <ion-textarea 
-                [(ngModel)]="claimData.description" 
+              <ion-textarea
+                [(ngModel)]="claimData.description"
                 name="description"
                 rows="6"
                 placeholder="Describe qué ocurrió, cómo sucedió, daños visibles, otros vehículos involucrados, etc."
                 required
                 counter="true"
-                maxlength="1000">
+                maxlength="1000"
+              >
               </ion-textarea>
             </ion-item>
 
@@ -132,33 +140,36 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 <ion-icon name="information-circle"></ion-icon>
                 Toma fotos de todos los ángulos del vehículo, especialmente los daños visibles.
               </p>
-              
-              <input 
-                type="file" 
-                accept="image/*" 
-                multiple 
+
+              <input
+                type="file"
+                accept="image/*"
+                multiple
                 (change)="onPhotosSelected($event)"
                 #fileInput
-                style="display: none;">
-              
-              <ion-button 
-                expand="block" 
+                style="display: none;"
+              />
+
+              <ion-button
+                expand="block"
                 fill="outline"
                 (click)="fileInput.click()"
-                [disabled]="uploadedPhotos.length >= 10">
+                [disabled]="uploadedPhotos.length >= 10"
+              >
                 <ion-icon slot="start" name="camera"></ion-icon>
                 {{ uploadedPhotos.length > 0 ? 'Agregar más fotos' : 'Tomar/Subir Fotos' }}
                 ({{ uploadedPhotos.length }}/10)
               </ion-button>
-              
+
               <div class="photo-preview" *ngIf="uploadedPhotos.length > 0">
                 <div class="photo-item" *ngFor="let photo of uploadedPhotos; let i = index">
-                  <img [src]="photo" [alt]="'Foto ' + (i+1)">
-                  <ion-button 
-                    fill="clear" 
-                    color="danger" 
+                  <img [src]="photo" [alt]="'Foto ' + (i + 1)" />
+                  <ion-button
+                    fill="clear"
+                    color="danger"
                     class="delete-photo"
-                    (click)="removePhoto(i)">
+                    (click)="removePhoto(i)"
+                  >
                     <ion-icon name="close-circle" slot="icon-only"></ion-icon>
                   </ion-button>
                 </div>
@@ -171,31 +182,30 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 N° Denuncia Policial
                 <ion-text color="medium">(si aplica)</ion-text>
               </ion-label>
-              <ion-input 
-                [(ngModel)]="claimData.police_report_number" 
+              <ion-input
+                [(ngModel)]="claimData.police_report_number"
                 name="policeReport"
                 placeholder="Ej: 12345/2025"
-                type="text">
+                type="text"
+              >
               </ion-input>
             </ion-item>
 
             <!-- Checkbox de confirmación -->
             <ion-item lines="none">
-              <ion-checkbox 
-                [(ngModel)]="confirmDeclaration" 
-                name="confirm"
-                labelPlacement="end">
+              <ion-checkbox [(ngModel)]="confirmDeclaration" name="confirm" labelPlacement="end">
                 Declaro que la información proporcionada es verdadera y completa
               </ion-checkbox>
             </ion-item>
 
             <!-- Botón Submit -->
-            <ion-button 
-              expand="block" 
+            <ion-button
+              expand="block"
               type="submit"
               [disabled]="!claimForm.valid || submitting || !confirmDeclaration"
               color="danger"
-              class="submit-button">
+              class="submit-button"
+            >
               <ion-icon slot="start" [name]="submitting ? 'hourglass' : 'alert-circle'"></ion-icon>
               {{ submitting ? 'Enviando...' : 'Reportar Siniestro' }}
             </ion-button>
@@ -203,8 +213,9 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
             <!-- Información Legal -->
             <ion-note color="medium" class="legal-note">
               <ion-icon name="information-circle"></ion-icon>
-              Al reportar este siniestro, autorizas a la aseguradora a contactarte y verificar la información.
-              La franquicia máxima que podrías pagar es {{ formatCurrency(maxDeductible) }}.
+              Al reportar este siniestro, autorizas a la aseguradora a contactarte y verificar la
+              información. La franquicia máxima que podrías pagar es
+              {{ formatCurrency(maxDeductible) }}.
             </ion-note>
           </ion-card-content>
         </ion-card>
@@ -246,113 +257,115 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
       </form>
     </ion-content>
   `,
-  styles: [`
-    ion-content {
-      --background: var(--ion-color-light);
-    }
+  styles: [
+    `
+      ion-content {
+        --background: var(--ion-color-light);
+      }
 
-    .warning-card {
-      margin: 16px;
-    }
+      .warning-card {
+        margin: 16px;
+      }
 
-    .warning-content {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
+      .warning-content {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
 
-    .warning-content ion-icon {
-      flex-shrink: 0;
-    }
+      .warning-content ion-icon {
+        flex-shrink: 0;
+      }
 
-    .warning-content h3 {
-      margin: 0 0 8px 0;
-      font-size: 1.1em;
-    }
+      .warning-content h3 {
+        margin: 0 0 8px 0;
+        font-size: 1.1em;
+      }
 
-    .warning-content p {
-      margin: 0 0 12px 0;
-    }
+      .warning-content p {
+        margin: 0 0 12px 0;
+      }
 
-    .emergency-button {
-      margin-top: 8px;
-    }
+      .emergency-button {
+        margin-top: 8px;
+      }
 
-    .photos-section {
-      margin: 20px 0;
-      padding: 16px;
-      background: var(--ion-color-light);
-      border-radius: 8px;
-    }
+      .photos-section {
+        margin: 20px 0;
+        padding: 16px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
 
-    .photos-section h3 {
-      margin: 0 0 8px 0;
-      font-size: 1em;
-    }
+      .photos-section h3 {
+        margin: 0 0 8px 0;
+        font-size: 1em;
+      }
 
-    .photos-hint {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin: 8px 0 12px 0;
-      font-size: 0.9em;
-      color: var(--ion-color-medium);
-    }
+      .photos-hint {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin: 8px 0 12px 0;
+        font-size: 0.9em;
+        color: var(--ion-color-medium);
+      }
 
-    .photos-hint ion-icon {
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
+      .photos-hint ion-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
 
-    .photo-preview {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 8px;
-      margin-top: 12px;
-    }
+      .photo-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
 
-    .photo-item {
-      position: relative;
-      aspect-ratio: 1;
-      border-radius: 8px;
-      overflow: hidden;
-      background: var(--ion-color-light-shade);
-    }
+      .photo-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--ion-color-light-shade);
+      }
 
-    .photo-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+      .photo-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
 
-    .delete-photo {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      --padding-start: 4px;
-      --padding-end: 4px;
-    }
+      .delete-photo {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        --padding-start: 4px;
+        --padding-end: 4px;
+      }
 
-    .submit-button {
-      margin-top: 24px;
-    }
+      .submit-button {
+        margin-top: 24px;
+      }
 
-    .legal-note {
-      display: flex;
-      gap: 8px;
-      margin-top: 16px;
-      padding: 12px;
-      background: var(--ion-color-light-shade);
-      border-radius: 8px;
-      font-size: 0.85em;
-      line-height: 1.4;
-    }
+      .legal-note {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 12px;
+        background: var(--ion-color-light-shade);
+        border-radius: 8px;
+        font-size: 0.85em;
+        line-height: 1.4;
+      }
 
-    .legal-note ion-icon {
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-  `]
+      .legal-note ion-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+    `,
+  ],
 })
 export class ReportClaimPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -372,7 +385,7 @@ export class ReportClaimPage implements OnInit {
     description: '',
     incident_date: new Date().toISOString(),
     location: '',
-    police_report_number: ''
+    police_report_number: '',
   };
 
   uploadedPhotos: string[] = [];
@@ -380,7 +393,7 @@ export class ReportClaimPage implements OnInit {
 
   claimTypes = Object.entries(CLAIM_TYPE_LABELS).map(([value, label]) => ({
     value: value as ClaimType,
-    label
+    label,
   }));
 
   ngOnInit() {
@@ -399,7 +412,7 @@ export class ReportClaimPage implements OnInit {
 
     for (let i = 0; i < filesToProcess; i++) {
       const file = files[i];
-      
+
       // Validar tamaño (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         await this.showToast('Imagen muy grande. Máximo 5MB por foto.', 'warning');
@@ -429,10 +442,10 @@ export class ReportClaimPage implements OnInit {
       });
 
       const { latitude, longitude } = position.coords;
-      
+
       // Reverse geocoding simple (en producción usar API real)
       this.claimData.location = `Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}`;
-      
+
       await this.showToast('Ubicación obtenida', 'success');
     } catch (error) {
       console.error('Error getting location:', error);
@@ -449,11 +462,12 @@ export class ReportClaimPage implements OnInit {
     if (this.uploadedPhotos.length === 0) {
       const alert = await this.alertController.create({
         header: 'Fotos Recomendadas',
-        message: '¿Estás seguro de reportar sin fotos? Las fotos ayudan a procesar el siniestro más rápido.',
+        message:
+          '¿Estás seguro de reportar sin fotos? Las fotos ayudan a procesar el siniestro más rápido.',
         buttons: [
           { text: 'Agregar Fotos', role: 'cancel' },
-          { text: 'Continuar Sin Fotos', handler: () => this.proceedWithSubmit() }
-        ]
+          { text: 'Continuar Sin Fotos', handler: () => this.proceedWithSubmit() },
+        ],
       });
       await alert.present();
       return;
@@ -470,7 +484,7 @@ export class ReportClaimPage implements OnInit {
       const claimId = await this.insuranceService.reportClaim({
         booking_id: this.bookingId,
         ...this.claimData,
-        photos: this.uploadedPhotos
+        photos: this.uploadedPhotos,
       });
 
       // Mostrar confirmación
@@ -487,25 +501,24 @@ export class ReportClaimPage implements OnInit {
             text: 'Llamar Ahora',
             handler: () => {
               window.location.href = 'tel:0800-AUTORENTAR';
-            }
+            },
           },
           {
             text: 'OK',
             handler: () => {
               this.router.navigate(['/bookings', this.bookingId]);
-            }
-          }
-        ]
+            },
+          },
+        ],
       });
       await alert.present();
-
     } catch (error: any) {
       console.error('Error reporting claim:', error);
-      
+
       const alert = await this.alertController.create({
         header: '❌ Error',
         message: error.message || 'No se pudo reportar el siniestro. Intenta nuevamente.',
-        buttons: ['OK']
+        buttons: ['OK'],
       });
       await alert.present();
     } finally {
@@ -518,7 +531,7 @@ export class ReportClaimPage implements OnInit {
       message,
       duration: 2000,
       color,
-      position: 'bottom'
+      position: 'bottom',
     });
     await toast.present();
   }
@@ -527,7 +540,7 @@ export class ReportClaimPage implements OnInit {
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency: 'ARS',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(amount);
   }
 }

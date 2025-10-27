@@ -6,10 +6,10 @@ import { MarketplaceOnboardingService } from '../../core/services/marketplace-on
 
 /**
  * Página de callback para OAuth de Mercado Pago
- * 
+ *
  * Mercado Pago redirige aquí después de la autorización:
  * /mp-callback?code=xxx&state=yyy
- * 
+ *
  * Esta página:
  * 1. Obtiene code y state de los query params
  * 2. Llama al servicio para completar el onboarding
@@ -34,7 +34,7 @@ import { MarketplaceOnboardingService } from '../../core/services/marketplace-on
           <ion-icon name="checkmark-circle" color="success"></ion-icon>
           <h2>¡Listo! Cuenta vinculada</h2>
           <p>Ya podés listar tu auto y empezar a recibir pagos automáticamente.</p>
-          
+
           <div class="next-steps">
             <h3>Próximos pasos:</h3>
             <ol>
@@ -64,7 +64,7 @@ import { MarketplaceOnboardingService } from '../../core/services/marketplace-on
           <ion-icon name="close-circle" color="danger"></ion-icon>
           <h2>No se pudo vincular la cuenta</h2>
           <p class="error-message">{{ errorMessage() }}</p>
-          
+
           <ion-card color="warning">
             <ion-card-content>
               <ion-icon name="help-circle"></ion-icon>
@@ -98,183 +98,185 @@ import { MarketplaceOnboardingService } from '../../core/services/marketplace-on
       </div>
     </ion-content>
   `,
-  styles: [`
-    .callback-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 80vh;
-      padding: 2rem;
-    }
-
-    .state-card {
-      max-width: 600px;
-      width: 100%;
-      text-align: center;
-      background: var(--ion-color-light);
-      border-radius: 16px;
-      padding: 3rem 2rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-      ion-spinner {
-        margin-bottom: 2rem;
-        transform: scale(1.5);
+  styles: [
+    `
+      .callback-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh;
+        padding: 2rem;
       }
 
-      ion-icon:not([slot]) {
-        font-size: 80px;
-        margin-bottom: 1.5rem;
-      }
+      .state-card {
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+        background: var(--ion-color-light);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-      h2 {
-        font-size: 1.75rem;
-        font-weight: bold;
-        margin-bottom: 1rem;
-        color: var(--ion-color-dark);
-      }
+        ion-spinner {
+          margin-bottom: 2rem;
+          transform: scale(1.5);
+        }
 
-      p {
-        color: var(--ion-color-medium);
-        line-height: 1.6;
-        margin-bottom: 2rem;
-        font-size: 1rem;
-      }
-
-      &.success {
-        border: 3px solid var(--ion-color-success);
-      }
-
-      &.error {
-        border: 3px solid var(--ion-color-danger);
-
-        .error-message {
-          color: var(--ion-color-danger);
-          font-weight: 500;
-          background: var(--ion-color-danger-tint);
-          padding: 1rem;
-          border-radius: 8px;
+        ion-icon:not([slot]) {
+          font-size: 80px;
           margin-bottom: 1.5rem;
         }
-      }
-    }
 
-    .next-steps {
-      text-align: left;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
+        h2 {
+          font-size: 1.75rem;
+          font-weight: bold;
+          margin-bottom: 1rem;
+          color: var(--ion-color-dark);
+        }
 
-      h3 {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--ion-color-dark);
-      }
-
-      ol {
-        margin: 0;
-        padding-left: 1.5rem;
-
-        li {
-          margin-bottom: 0.75rem;
+        p {
           color: var(--ion-color-medium);
-          line-height: 1.5;
+          line-height: 1.6;
+          margin-bottom: 2rem;
+          font-size: 1rem;
+        }
 
-          &:last-child {
-            margin-bottom: 0;
+        &.success {
+          border: 3px solid var(--ion-color-success);
+        }
+
+        &.error {
+          border: 3px solid var(--ion-color-danger);
+
+          .error-message {
+            color: var(--ion-color-danger);
+            font-weight: 500;
+            background: var(--ion-color-danger-tint);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
           }
         }
       }
-    }
 
-    ion-card {
-      text-align: left;
-      margin-bottom: 1.5rem;
+      .next-steps {
+        text-align: left;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
 
-      ion-card-content {
-        display: flex;
-        gap: 1rem;
-        align-items: flex-start;
-
-        ion-icon {
-          font-size: 32px;
-          flex-shrink: 0;
-          margin-top: 0;
+        h3 {
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin-bottom: 1rem;
+          color: var(--ion-color-dark);
         }
 
-        .help-text {
-          flex: 1;
+        ol {
+          margin: 0;
+          padding-left: 1.5rem;
 
-          strong {
-            display: block;
+          li {
             margin-bottom: 0.75rem;
-            font-size: 0.95rem;
+            color: var(--ion-color-medium);
+            line-height: 1.5;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+
+      ion-card {
+        text-align: left;
+        margin-bottom: 1.5rem;
+
+        ion-card-content {
+          display: flex;
+          gap: 1rem;
+          align-items: flex-start;
+
+          ion-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            margin-top: 0;
           }
 
-          ul {
-            margin: 0;
-            padding-left: 1.25rem;
+          .help-text {
+            flex: 1;
 
-            li {
-              margin-bottom: 0.5rem;
-              font-size: 0.85rem;
-              line-height: 1.4;
+            strong {
+              display: block;
+              margin-bottom: 0.75rem;
+              font-size: 0.95rem;
+            }
 
-              &:last-child {
-                margin-bottom: 0;
+            ul {
+              margin: 0;
+              padding-left: 1.25rem;
+
+              li {
+                margin-bottom: 0.5rem;
+                font-size: 0.85rem;
+                line-height: 1.4;
+
+                &:last-child {
+                  margin-bottom: 0;
+                }
               }
             }
           }
         }
       }
-    }
 
-    ion-button {
-      --border-radius: 12px;
-      margin-bottom: 0.75rem;
+      ion-button {
+        --border-radius: 12px;
+        margin-bottom: 0.75rem;
 
-      &:last-of-type {
-        margin-bottom: 0;
+        &:last-of-type {
+          margin-bottom: 0;
+        }
       }
-    }
 
-    .auto-redirect-note {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 2rem;
-      padding: 1rem;
-      background: rgba(var(--ion-color-primary-rgb), 0.1);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: var(--ion-color-medium);
-
-      ion-icon {
-        font-size: 20px;
-        margin: 0;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .callback-container {
+      .auto-redirect-note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
         padding: 1rem;
-      }
+        background: rgba(var(--ion-color-primary-rgb), 0.1);
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
 
-      .state-card {
-        padding: 2rem 1.5rem;
-
-        h2 {
-          font-size: 1.5rem;
-        }
-
-        ion-icon:not([slot]) {
-          font-size: 64px;
+        ion-icon {
+          font-size: 20px;
+          margin: 0;
         }
       }
-    }
-  `]
+
+      @media (max-width: 576px) {
+        .callback-container {
+          padding: 1rem;
+        }
+
+        .state-card {
+          padding: 2rem 1.5rem;
+
+          h2 {
+            font-size: 1.5rem;
+          }
+
+          ion-icon:not([slot]) {
+            font-size: 64px;
+          }
+        }
+      }
+    `,
+  ],
 })
 export class MpCallbackPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -301,7 +303,9 @@ export class MpCallbackPage implements OnInit {
 
     // Validar parámetros requeridos
     if (!code || !state) {
-      this.handleError('Faltan parámetros de autorización. Por favor, intentá vincular tu cuenta nuevamente.');
+      this.handleError(
+        'Faltan parámetros de autorización. Por favor, intentá vincular tu cuenta nuevamente.',
+      );
       return;
     }
 
@@ -323,13 +327,12 @@ export class MpCallbackPage implements OnInit {
 
       // Iniciar countdown para redirect automático
       this.startCountdown();
-
     } catch (error) {
       console.error('Error en callback:', error);
       this.handleError(
-        error instanceof Error 
-          ? error.message 
-          : 'Ocurrió un error al procesar la autorización. Por favor, intentá nuevamente.'
+        error instanceof Error
+          ? error.message
+          : 'Ocurrió un error al procesar la autorización. Por favor, intentá nuevamente.',
       );
     }
   }
@@ -361,7 +364,7 @@ export class MpCallbackPage implements OnInit {
   retry() {
     // Redirigir a perfil o donde sea que esté el botón de vincular MP
     this.router.navigate(['/profile'], {
-      queryParams: { action: 'link_mp' }
+      queryParams: { action: 'link_mp' },
     });
   }
 

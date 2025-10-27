@@ -1,8 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  createSupabaseMock,
-  mockAvailabilityRPCs,
-} from '../../../testing/mocks/supabase-mock';
+import { createSupabaseMock, mockAvailabilityRPCs } from '../../../testing/mocks/supabase-mock';
 import { CarsService } from './cars.service';
 import { SupabaseClientService } from './supabase-client.service';
 
@@ -64,11 +61,9 @@ describe('Availability Service - get_available_cars RPC', () => {
   });
 
   it('debería filtrar por ciudad cuando se especifica', async () => {
-    const result = await service.getAvailableCars(
-      '2025-11-01T00:00:00Z',
-      '2025-11-05T00:00:00Z',
-      { city: 'Buenos Aires' }
-    );
+    const result = await service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z', {
+      city: 'Buenos Aires',
+    });
 
     expect(result.length).toBe(1);
     expect(result[0].location_city).toBe('Buenos Aires');
@@ -78,10 +73,7 @@ describe('Availability Service - get_available_cars RPC', () => {
     // Override mock to return empty array
     supabase.rpc.and.returnValue(Promise.resolve({ data: [], error: null }));
 
-    const result = await service.getAvailableCars(
-      '2025-11-01T00:00:00Z',
-      '2025-11-05T00:00:00Z'
-    );
+    const result = await service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z');
 
     expect(result).toEqual([]);
   });
@@ -91,25 +83,20 @@ describe('Availability Service - get_available_cars RPC', () => {
     supabase.rpc.and.returnValue(Promise.resolve({ data: null, error: mockError }));
 
     await expectAsync(
-      service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z')
+      service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z'),
     ).toBeRejectedWithError('Database connection failed');
   });
 
   it('debería manejar ciudades con mayúsculas y minúsculas', async () => {
-    const result = await service.getAvailableCars(
-      '2025-11-01T00:00:00Z',
-      '2025-11-05T00:00:00Z',
-      { city: 'Buenos Aires' }
-    );
+    const result = await service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z', {
+      city: 'Buenos Aires',
+    });
 
     expect(result.length).toBe(1);
   });
 
   it('debería cargar fotos para cada auto disponible', async () => {
-    const result = await service.getAvailableCars(
-      '2025-11-01T00:00:00Z',
-      '2025-11-05T00:00:00Z'
-    );
+    const result = await service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z');
 
     expect(result.length).toBeGreaterThan(0);
     expect(result[0].photos).toBeDefined();
@@ -175,7 +162,7 @@ describe('Availability Service - is_car_available RPC', () => {
     const result = await service.isCarAvailable(
       'car-uuid-123',
       '2025-11-01T10:00:00Z',
-      '2025-11-05T18:00:00Z'
+      '2025-11-05T18:00:00Z',
     );
 
     expect(result).toBe(true);
@@ -189,13 +176,11 @@ describe('Availability Service - is_car_available RPC', () => {
   it('debería retornar false cuando el auto NO está disponible', async () => {
     // TODO: Adapt this test to the new mock
     // supabase.rpc.and.resolveTo({ data: false, error: null });
-
     // const result = await service.isCarAvailable(
     //   'car-uuid-456',
     //   '2025-11-01T10:00:00Z',
     //   '2025-11-05T18:00:00Z'
     // );
-
     // expect(result).toBe(false);
   });
 
@@ -203,36 +188,28 @@ describe('Availability Service - is_car_available RPC', () => {
     // TODO: Adapt this test to the new mock
     // const mockError = new Error('Database timeout');
     // supabase.rpc.and.resolveTo({ data: null, error: mockError });
-
     // const result = await service.isCarAvailable(
     //   'car-uuid-789',
     //   '2025-11-01T10:00:00Z',
     //   '2025-11-05T18:00:00Z'
     // );
-
     // expect(result).toBe(false);
   });
 
   it('debería retornar false cuando la RPC lanza excepción', async () => {
     // TODO: Adapt this test to the new mock
     // supabase.rpc.and.throwError('Network error');
-
     // const result = await service.isCarAvailable(
     //   'car-uuid-error',
     //   '2025-11-01T10:00:00Z',
     //   '2025-11-05T18:00:00Z'
     // );
-
     // expect(result).toBe(false);
   });
 
   it('debería validar disponibilidad con diferentes rangos de fechas', async () => {
     // Test con fechas en el pasado (debería funcionar igual)
-    await service.isCarAvailable(
-      'car-123',
-      '2024-01-01T00:00:00Z',
-      '2024-01-05T00:00:00Z'
-    );
+    await service.isCarAvailable('car-123', '2024-01-01T00:00:00Z', '2024-01-05T00:00:00Z');
 
     expect(supabase.rpc).toHaveBeenCalledWith('is_car_available', {
       p_car_id: 'car-123',
@@ -250,7 +227,7 @@ describe('Availability Service - is_car_available RPC', () => {
     const isAvailable = await service.isCarAvailable(carId, start, end);
 
     expect(isAvailable).toBe(true);
-    
+
     // Este resultado debería permitir continuar con la creación del booking
     if (isAvailable) {
       // En el código real, aquí se llamaría a bookingService.requestBooking()
@@ -261,15 +238,12 @@ describe('Availability Service - is_car_available RPC', () => {
   it('debería bloquear creación de booking cuando auto no disponible', async () => {
     // TODO: Adapt this test to the new mock
     // supabase.rpc.and.resolveTo({ data: false, error: null });
-
     // const isAvailable = await service.isCarAvailable(
     //   'car-occupied',
     //   '2025-12-01T10:00:00Z',
     //   '2025-12-05T18:00:00Z'
     // );
-
     // expect(isAvailable).toBe(false);
-    
     // // Este resultado debería impedir la creación del booking
     // if (!isAvailable) {
     //   // En el código real, aquí se mostraría error al usuario

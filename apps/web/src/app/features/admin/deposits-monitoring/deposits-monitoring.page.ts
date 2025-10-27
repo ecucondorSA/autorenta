@@ -75,7 +75,7 @@ export class DepositsMonitoringPage implements OnInit {
 
   constructor(
     private supabase: SupabaseClientService,
-    private router: Router
+    private router: Router,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -107,7 +107,8 @@ export class DepositsMonitoringPage implements OnInit {
   }
 
   private async loadStats(): Promise<void> {
-    const { data, error } = await this.supabase.getClient()
+    const { data, error } = await this.supabase
+      .getClient()
       .from('wallet_transactions')
       .select('status, amount, created_at, completed_at')
       .eq('type', 'deposit');
@@ -134,7 +135,7 @@ export class DepositsMonitoringPage implements OnInit {
 
     // Calculate average confirmation time
     const completedWithTimes = transactions.filter(
-      (t) => t.status === 'completed' && t.created_at && t.completed_at
+      (t) => t.status === 'completed' && t.created_at && t.completed_at,
     );
 
     if (completedWithTimes.length > 0) {
@@ -151,7 +152,8 @@ export class DepositsMonitoringPage implements OnInit {
   }
 
   private async loadPendingDeposits(): Promise<void> {
-    const { data, error } = await this.supabase.getClient()
+    const { data, error } = await this.supabase
+      .getClient()
       .from('wallet_transactions')
       .select('*, profiles!wallet_transactions_user_id_fkey(first_name, last_name)')
       .eq('type', 'deposit')
@@ -166,7 +168,9 @@ export class DepositsMonitoringPage implements OnInit {
       return {
         id: t.id,
         user_id: t.user_id,
-        user_name: profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : undefined,
+        user_name: profile
+          ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
+          : undefined,
         status: t.status,
         amount: t.amount,
         currency: t.currency,
@@ -182,7 +186,8 @@ export class DepositsMonitoringPage implements OnInit {
   }
 
   private async loadRecentDeposits(): Promise<void> {
-    const { data, error } = await this.supabase.getClient()
+    const { data, error } = await this.supabase
+      .getClient()
       .from('wallet_transactions')
       .select('*, profiles!wallet_transactions_user_id_fkey(first_name, last_name)')
       .eq('type', 'deposit')
@@ -200,7 +205,9 @@ export class DepositsMonitoringPage implements OnInit {
       return {
         id: t.id,
         user_id: t.user_id,
-        user_name: profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : undefined,
+        user_name: profile
+          ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
+          : undefined,
         status: t.status,
         amount: t.amount,
         currency: t.currency,
@@ -217,7 +224,8 @@ export class DepositsMonitoringPage implements OnInit {
   }
 
   private async loadFailedDeposits(): Promise<void> {
-    const { data, error } = await this.supabase.getClient()
+    const { data, error } = await this.supabase
+      .getClient()
       .from('wallet_transactions')
       .select('*, profiles!wallet_transactions_user_id_fkey(first_name, last_name)')
       .eq('type', 'deposit')
@@ -232,7 +240,9 @@ export class DepositsMonitoringPage implements OnInit {
       return {
         id: t.id,
         user_id: t.user_id,
-        user_name: profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : undefined,
+        user_name: profile
+          ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
+          : undefined,
         status: t.status,
         amount: t.amount,
         currency: t.currency,
@@ -283,7 +293,9 @@ export class DepositsMonitoringPage implements OnInit {
       try {
         this.loading.set(true);
 
-        const { data: { session } } = await this.supabase.getClient().auth.getSession();
+        const {
+          data: { session },
+        } = await this.supabase.getClient().auth.getSession();
         const accessToken = session?.access_token;
 
         if (!accessToken) {
@@ -297,10 +309,10 @@ export class DepositsMonitoringPage implements OnInit {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${accessToken}`,
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({}),
-          }
+          },
         );
 
         if (!response.ok) {

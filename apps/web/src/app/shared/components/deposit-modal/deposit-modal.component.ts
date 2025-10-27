@@ -69,7 +69,6 @@ export class DepositModalComponent {
    */
   platformRate = signal<number>(0);
 
-
   /**
    * Indica si está cargando la cotización
    */
@@ -154,7 +153,11 @@ export class DepositModalComponent {
   /**
    * Proveedores disponibles
    */
-  readonly availableProviders: Array<{ value: WalletPaymentProvider; label: string; description: string }> = [
+  readonly availableProviders: Array<{
+    value: WalletPaymentProvider;
+    label: string;
+    description: string;
+  }> = [
     {
       value: 'mercadopago',
       label: 'Mercado Pago',
@@ -252,7 +255,9 @@ export class DepositModalComponent {
 
     // Validar monto máximo en ARS
     if (currentArsAmount > this.MAX_DEPOSIT_ARS) {
-      this.formError.set(`El depósito máximo es $${this.MAX_DEPOSIT_ARS.toLocaleString('es-AR')} ARS`);
+      this.formError.set(
+        `El depósito máximo es $${this.MAX_DEPOSIT_ARS.toLocaleString('es-AR')} ARS`,
+      );
       return false;
     }
 
@@ -282,14 +287,18 @@ export class DepositModalComponent {
       // Pasar el monto en USD (convertido desde ARS) al servicio de wallet
       const usdAmount = this.usdAmount();
 
-      console.log(`💰 Iniciando depósito: ${this.arsAmount()} ARS → ${usdAmount} USD (tasa: ${this.platformRate()})`);
+      console.log(
+        `💰 Iniciando depósito: ${this.arsAmount()} ARS → ${usdAmount} USD (tasa: ${this.platformRate()})`,
+      );
 
       const isProtectedCredit = this.depositType() === 'protected';
 
       const result = await this.walletService.initiateDeposit({
         amount: usdAmount, // USD amount (converted from ARS)
         provider: this.provider(),
-        description: this.description() || `Depósito de ${this.arsAmount()} ARS ${isProtectedCredit ? '(Crédito Autorentar)' : '(Retirable)'}`,
+        description:
+          this.description() ||
+          `Depósito de ${this.arsAmount()} ARS ${isProtectedCredit ? '(Crédito Autorentar)' : '(Retirable)'}`,
         allowWithdrawal: !isProtectedCredit, // Invertir: protected=false, withdrawable=true
       });
 
@@ -408,10 +417,15 @@ export class DepositModalComponent {
     return 'Ocurrió un error inesperado al iniciar el depósito. Intenta nuevamente.';
   }
 
-  private extractWalletError(error: unknown): { code: string; message: string; details?: unknown } | null {
+  private extractWalletError(
+    error: unknown,
+  ): { code: string; message: string; details?: unknown } | null {
     if (typeof error === 'object' && error !== null) {
       const maybeWalletError = error as { code?: unknown; message?: unknown; details?: unknown };
-      if (typeof maybeWalletError.code === 'string' && typeof maybeWalletError.message === 'string') {
+      if (
+        typeof maybeWalletError.code === 'string' &&
+        typeof maybeWalletError.message === 'string'
+      ) {
         return {
           code: maybeWalletError.code,
           message: maybeWalletError.message,

@@ -21,21 +21,11 @@ export class ComparePage implements OnInit {
   readonly rows = computed(() => this.compareService.generateComparisonRows());
 
   // Agrupar filas por categoría
-  readonly basicRows = computed(() =>
-    this.rows().filter(r => r.category === 'basic')
-  );
-  readonly specsRows = computed(() =>
-    this.rows().filter(r => r.category === 'specs')
-  );
-  readonly pricingRows = computed(() =>
-    this.rows().filter(r => r.category === 'pricing')
-  );
-  readonly locationRows = computed(() =>
-    this.rows().filter(r => r.category === 'location')
-  );
-  readonly ownerRows = computed(() =>
-    this.rows().filter(r => r.category === 'owner')
-  );
+  readonly basicRows = computed(() => this.rows().filter((r) => r.category === 'basic'));
+  readonly specsRows = computed(() => this.rows().filter((r) => r.category === 'specs'));
+  readonly pricingRows = computed(() => this.rows().filter((r) => r.category === 'pricing'));
+  readonly locationRows = computed(() => this.rows().filter((r) => r.category === 'location'));
+  readonly ownerRows = computed(() => this.rows().filter((r) => r.category === 'owner'));
 
   ngOnInit(): void {
     // Si no hay autos para comparar, redirigir
@@ -68,7 +58,7 @@ export class ComparePage implements OnInit {
 
     // Para precios y kilometraje: menor es mejor
     if (row.label.includes('Precio') || row.label.includes('Kilometraje')) {
-      const numericValues = values.map(v => {
+      const numericValues = values.map((v) => {
         if (typeof v === 'number') return v;
         if (typeof v === 'string') {
           // Extraer números del string
@@ -83,7 +73,7 @@ export class ComparePage implements OnInit {
 
     // Para rating: mayor es mejor
     if (row.label.includes('Rating')) {
-      const numericValues = values.map(v => {
+      const numericValues = values.map((v) => {
         if (typeof v === 'number') return v;
         if (typeof v === 'string') {
           // Extraer rating del formato "⭐ 4.5 (10)"

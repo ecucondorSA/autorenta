@@ -9,10 +9,10 @@ export class TelemetryBridgeService {
 
   trackTourEvent(event: TourEvent): void {
     this.events.push(event);
-    
+
     // Integrate with actual analytics
     this.sendToAnalytics(event);
-    
+
     // Console logging for debugging
     if (this.isDebugMode()) {
       console.log(`[TourTelemetry] ${event.type}:`, event);

@@ -33,10 +33,15 @@ export class BankAccountFormComponent implements OnInit {
 
   readonly selectedAccountTypeInfo = computed(() => {
     const selected = this.selectedType();
-    return this.accountTypes.find(t => t.value === selected);
+    return this.accountTypes.find((t) => t.value === selected);
   });
 
-  readonly accountTypes: { value: BankAccountType; label: string; placeholder: string; hint: string }[] = [
+  readonly accountTypes: {
+    value: BankAccountType;
+    label: string;
+    placeholder: string;
+    hint: string;
+  }[] = [
     {
       value: 'cbu',
       label: 'CBU',
@@ -83,7 +88,7 @@ export class BankAccountFormComponent implements OnInit {
       // Verificar que el usuario tenga los datos necesarios
       if (!profile.full_name || !profile.gov_id_number) {
         this.profileError.set(
-          'Debes completar tu nombre completo y número de documento en tu perfil antes de agregar una cuenta bancaria'
+          'Debes completar tu nombre completo y número de documento en tu perfil antes de agregar una cuenta bancaria',
         );
         return;
       }
@@ -103,10 +108,7 @@ export class BankAccountFormComponent implements OnInit {
 
     if (type === 'cbu' || type === 'cvu') {
       // CBU y CVU: exactamente 22 dígitos
-      accountNumberControl?.setValidators([
-        Validators.required,
-        Validators.pattern(/^\d{22}$/),
-      ]);
+      accountNumberControl?.setValidators([Validators.required, Validators.pattern(/^\d{22}$/)]);
     } else {
       // Alias: 6-20 caracteres alfanuméricos
       accountNumberControl?.setValidators([

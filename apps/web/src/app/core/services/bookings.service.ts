@@ -31,7 +31,7 @@ export class BookingsService {
     try {
       await this.insuranceService.activateCoverage({
         booking_id: bookingId,
-        addon_ids: [] // Sin add-ons por defecto, se agregan en checkout
+        addon_ids: [], // Sin add-ons por defecto, se agregan en checkout
       });
       console.log('✅ Insurance coverage activated for booking:', bookingId);
     } catch (insuranceError) {
@@ -77,7 +77,7 @@ export class BookingsService {
    */
   private async updateAppBadge(bookings: Booking[]): Promise<void> {
     const pendingCount = bookings.filter(
-      b => b.status === 'pending' || b.status === 'confirmed'
+      (b) => b.status === 'pending' || b.status === 'confirmed',
     ).length;
 
     if (pendingCount > 0) {
@@ -241,7 +241,7 @@ export class BookingsService {
   async chargeRentalFromWallet(
     bookingId: string,
     amountCents: number,
-    description?: string
+    description?: string,
   ): Promise<{ ok: boolean; error?: string }> {
     try {
       // Get booking to verify user_id
@@ -298,7 +298,7 @@ export class BookingsService {
   async processRentalPayment(
     bookingId: string,
     amountCents: number,
-    description?: string
+    description?: string,
   ): Promise<{ ok: boolean; error?: string }> {
     try {
       // Get booking to verify car owner
@@ -350,7 +350,7 @@ export class BookingsService {
   async lockSecurityDeposit(
     bookingId: string,
     depositAmountCents: number,
-    description?: string
+    description?: string,
   ): Promise<{ ok: boolean; transaction_id?: string; error?: string }> {
     try {
       const booking = await this.getBookingById(bookingId);
@@ -387,9 +387,7 @@ export class BookingsService {
       const lockResult = await this.walletService.lockFunds({
         booking_id: bookingId,
         amount: depositAmountCents,
-        description:
-          description ||
-          `Garantía bloqueada - Reserva ${bookingId.substring(0, 8)}`,
+        description: description || `Garantía bloqueada - Reserva ${bookingId.substring(0, 8)}`,
       });
 
       if (!lockResult.success) {
@@ -418,7 +416,7 @@ export class BookingsService {
    */
   async releaseSecurityDeposit(
     bookingId: string,
-    description?: string
+    description?: string,
   ): Promise<{ ok: boolean; error?: string }> {
     try {
       const booking = await this.getBookingById(bookingId);
@@ -435,8 +433,7 @@ export class BookingsService {
       const unlockResult = await this.walletService.unlockFunds({
         booking_id: bookingId,
         description:
-          description ||
-          `Garantía liberada - Sin daños - Reserva ${bookingId.substring(0, 8)}`,
+          description || `Garantía liberada - Sin daños - Reserva ${bookingId.substring(0, 8)}`,
       });
 
       if (!unlockResult.success) {
@@ -463,7 +460,7 @@ export class BookingsService {
   async deductFromSecurityDeposit(
     bookingId: string,
     damageAmountCents: number,
-    damageDescription: string
+    damageDescription: string,
   ): Promise<{ ok: boolean; remaining_deposit?: number; error?: string }> {
     try {
       const booking = await this.getBookingById(bookingId);
@@ -640,19 +637,19 @@ export class BookingsService {
   /**
    * ✅ SPRINT 2 FIX: Crear reserva con validación de disponibilidad
    * Este método valida ANTES de crear la reserva
-   * 
+   *
    * @param carId - ID del auto a reservar
    * @param startDate - Fecha inicio (ISO string)
    * @param endDate - Fecha fin (ISO string)
    * @returns Promise con resultado de la operación
-   * 
+   *
    * @example
    * const result = await bookingService.createBookingWithValidation(
    *   'uuid-del-auto',
    *   '2025-11-01T00:00:00Z',
    *   '2025-11-05T00:00:00Z'
    * );
-   * 
+   *
    * if (!result.success) {
    *   alert(result.error); // "Auto no disponible para esas fechas"
    * }
@@ -660,7 +657,7 @@ export class BookingsService {
   async createBookingWithValidation(
     carId: string,
     startDate: string,
-    endDate: string
+    endDate: string,
   ): Promise<{
     success: boolean;
     booking?: Booking;
@@ -670,43 +667,40 @@ export class BookingsService {
       // 1. Validar que las fechas sean correctas
       const start = new Date(startDate);
       const end = new Date(endDate);
-      
+
       if (start >= end) {
         return {
           success: false,
-          error: 'La fecha de inicio debe ser anterior a la fecha de fin'
+          error: 'La fecha de inicio debe ser anterior a la fecha de fin',
         };
       }
 
       if (start < new Date()) {
         return {
           success: false,
-          error: 'La fecha de inicio no puede ser en el pasado'
+          error: 'La fecha de inicio no puede ser en el pasado',
         };
       }
 
       // 2. Verificar disponibilidad usando la RPC function
-      const { data: isAvailable, error: checkError } = await this.supabase.rpc(
-        'is_car_available',
-        {
-          p_car_id: carId,
-          p_start_date: startDate,
-          p_end_date: endDate
-        }
-      );
+      const { data: isAvailable, error: checkError } = await this.supabase.rpc('is_car_available', {
+        p_car_id: carId,
+        p_start_date: startDate,
+        p_end_date: endDate,
+      });
 
       if (checkError) {
         console.error('Error verificando disponibilidad:', checkError);
         return {
           success: false,
-          error: 'Error al verificar disponibilidad del auto'
+          error: 'Error al verificar disponibilidad del auto',
         };
       }
 
       if (!isAvailable) {
         return {
           success: false,
-          error: 'El auto no está disponible para esas fechas. Por favor elige otras fechas.'
+          error: 'El auto no está disponible para esas fechas. Por favor elige otras fechas.',
         };
       }
 
@@ -715,33 +709,32 @@ export class BookingsService {
 
       return {
         success: true,
-        booking: booking
+        booking: booking,
       };
-
     } catch (error: any) {
       console.error('Error en createBookingWithValidation:', error);
       return {
         success: false,
-        error: error.message || 'Error al crear la reserva'
+        error: error.message || 'Error al crear la reserva',
       };
     }
   }
 
   /**
    * ✅ SPRINT 3: Cancelar una reserva
-   * 
+   *
    * Valida que la reserva:
    * - Pertenezca al usuario actual
    * - Esté en estado 'confirmed' o 'pending'
    * - Tenga al menos 24h antes del inicio (opcional, configurable)
-   * 
+   *
    * @param bookingId - ID de la reserva a cancelar
    * @param force - Forzar cancelación sin validar tiempo (admin use)
    * @returns Promise con resultado de la operación
    */
   async cancelBooking(
     bookingId: string,
-    force = false
+    force = false,
   ): Promise<{ success: boolean; error?: string }> {
     try {
       // 1. Obtener la reserva
@@ -749,7 +742,7 @@ export class BookingsService {
       if (!booking) {
         return {
           success: false,
-          error: 'Reserva no encontrada'
+          error: 'Reserva no encontrada',
         };
       }
 
@@ -758,7 +751,7 @@ export class BookingsService {
       if (!validStatuses.includes(booking.status)) {
         return {
           success: false,
-          error: `No se puede cancelar una reserva en estado "${booking.status}"`
+          error: `No se puede cancelar una reserva en estado "${booking.status}"`,
         };
       }
 
@@ -771,7 +764,7 @@ export class BookingsService {
         if (hoursUntilStart < 24) {
           return {
             success: false,
-            error: 'Solo puedes cancelar con al menos 24 horas de anticipación'
+            error: 'Solo puedes cancelar con al menos 24 horas de anticipación',
           };
         }
       }
@@ -779,9 +772,9 @@ export class BookingsService {
       // 4. Actualizar estado a 'cancelled'
       const { error } = await this.supabase
         .from('bookings')
-        .update({ 
+        .update({
           status: 'cancelled',
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', bookingId);
 
@@ -789,7 +782,7 @@ export class BookingsService {
         console.error('Error cancelando reserva:', error);
         return {
           success: false,
-          error: 'Error al cancelar la reserva. Intenta de nuevo.'
+          error: 'Error al cancelar la reserva. Intenta de nuevo.',
         };
       }
 
@@ -799,19 +792,18 @@ export class BookingsService {
       // - Reembolso automático si aplica
 
       return { success: true };
-
     } catch (error: any) {
       console.error('Excepción en cancelBooking:', error);
       return {
         success: false,
-        error: error.message || 'Error inesperado al cancelar'
+        error: error.message || 'Error inesperado al cancelar',
       };
     }
   }
 
   /**
    * ✅ SPRINT 3: Obtener información de contacto del propietario
-   * 
+   *
    * @param ownerId - ID del propietario
    * @returns Promise con datos de contacto (email, teléfono si disponible)
    */
@@ -832,7 +824,7 @@ export class BookingsService {
       if (error || !data) {
         return {
           success: false,
-          error: 'No se pudo obtener información del propietario'
+          error: 'No se pudo obtener información del propietario',
         };
       }
 
@@ -840,13 +832,12 @@ export class BookingsService {
         success: true,
         email: data.email,
         phone: data.phone || undefined,
-        name: data.full_name || undefined
+        name: data.full_name || undefined,
       };
-
     } catch (error: any) {
       return {
         success: false,
-        error: error.message || 'Error al obtener contacto'
+        error: error.message || 'Error al obtener contacto',
       };
     }
   }
@@ -857,23 +848,23 @@ export class BookingsService {
    */
   async activateInsuranceCoverage(
     bookingId: string,
-    addonIds: string[] = []
+    addonIds: string[] = [],
   ): Promise<{ success: boolean; coverage_id?: string; error?: string }> {
     try {
       const coverageId = await this.insuranceService.activateCoverage({
         booking_id: bookingId,
-        addon_ids: addonIds
+        addon_ids: addonIds,
       });
 
       return {
         success: true,
-        coverage_id: coverageId
+        coverage_id: coverageId,
       };
     } catch (error: any) {
       console.error('Error activating insurance coverage:', error);
       return {
         success: false,
-        error: error.message || 'Error al activar cobertura de seguro'
+        error: error.message || 'Error al activar cobertura de seguro',
       };
     }
   }
@@ -910,7 +901,7 @@ export class BookingsService {
   /**
    * ✅ FIX CRÍTICO: Crear booking de forma atómica
    * Soluciona el problema de "reservas fantasma" usando una transacción única
-   * 
+   *
    * @param params - Parámetros completos del booking
    * @returns Promise con resultado de la operación atómica
    */
@@ -946,7 +937,7 @@ export class BookingsService {
       if (!user.data.user?.id) {
         return {
           success: false,
-          error: 'Usuario no autenticado'
+          error: 'Usuario no autenticado',
         };
       }
 
@@ -971,14 +962,14 @@ export class BookingsService {
         p_risk_payment_mode: params.riskSnapshot.paymentMode,
         p_risk_total_usd: params.riskSnapshot.totalUsd,
         p_risk_total_ars: params.riskSnapshot.totalArs,
-        p_risk_exchange_rate: params.riskSnapshot.exchangeRate
+        p_risk_exchange_rate: params.riskSnapshot.exchangeRate,
       });
 
       if (error) {
         console.error('❌ Error en create_booking_atomic:', error);
         return {
           success: false,
-          error: error.message || 'Error al crear la reserva'
+          error: error.message || 'Error al crear la reserva',
         };
       }
 
@@ -988,7 +979,7 @@ export class BookingsService {
       if (!result || !result.success) {
         return {
           success: false,
-          error: result?.error_message || 'Error desconocido al crear la reserva'
+          error: result?.error_message || 'Error desconocido al crear la reserva',
         };
       }
 
@@ -996,7 +987,7 @@ export class BookingsService {
       try {
         await this.insuranceService.activateCoverage({
           booking_id: result.booking_id,
-          addon_ids: [] // Los add-ons se agregan en checkout si es necesario
+          addon_ids: [], // Los add-ons se agregan en checkout si es necesario
         });
         console.log('✅ Cobertura de seguro activada para booking:', result.booking_id);
       } catch (insuranceError) {
@@ -1007,14 +998,13 @@ export class BookingsService {
       return {
         success: true,
         bookingId: result.booking_id,
-        riskSnapshotId: result.risk_snapshot_id
+        riskSnapshotId: result.risk_snapshot_id,
       };
-
     } catch (error: any) {
       console.error('❌ Error en createBookingAtomic:', error);
       return {
         success: false,
-        error: error.message || 'Error inesperado al crear la reserva'
+        error: error.message || 'Error inesperado al crear la reserva',
       };
     }
   }
@@ -1027,9 +1017,7 @@ export class BookingsService {
    * Obtiene las reservas pendientes de aprobación del locador
    */
   async getPendingApprovals(): Promise<any[]> {
-    const { data, error } = await this.supabase
-      .from('owner_pending_approvals')
-      .select('*');
+    const { data, error } = await this.supabase.from('owner_pending_approvals').select('*');
 
     if (error) {
       console.error('Error fetching pending approvals:', error);
@@ -1042,17 +1030,19 @@ export class BookingsService {
   /**
    * Aprueba una reserva pendiente
    */
-  async approveBooking(bookingId: string): Promise<{ success: boolean; error?: string; message?: string }> {
+  async approveBooking(
+    bookingId: string,
+  ): Promise<{ success: boolean; error?: string; message?: string }> {
     try {
       const { data, error } = await this.supabase.rpc('approve_booking', {
-        p_booking_id: bookingId
+        p_booking_id: bookingId,
       });
 
       if (error) {
         console.error('Error approving booking:', error);
         return {
           success: false,
-          error: error.message
+          error: error.message,
         };
       }
 
@@ -1061,26 +1051,25 @@ export class BookingsService {
         if (data.success === false) {
           return {
             success: false,
-            error: data.error || data.message
+            error: data.error || data.message,
           };
         }
-        
+
         return {
           success: true,
-          message: data.message || 'Reserva aprobada exitosamente'
+          message: data.message || 'Reserva aprobada exitosamente',
         };
       }
 
       return {
         success: true,
-        message: 'Reserva aprobada exitosamente'
+        message: 'Reserva aprobada exitosamente',
       };
-
     } catch (error: any) {
       console.error('Exception approving booking:', error);
       return {
         success: false,
-        error: error.message || 'Error inesperado al aprobar reserva'
+        error: error.message || 'Error inesperado al aprobar reserva',
       };
     }
   }
@@ -1089,20 +1078,20 @@ export class BookingsService {
    * Rechaza una reserva pendiente
    */
   async rejectBooking(
-    bookingId: string, 
-    reason: string = 'No especificado'
+    bookingId: string,
+    reason: string = 'No especificado',
   ): Promise<{ success: boolean; error?: string; message?: string }> {
     try {
       const { data, error } = await this.supabase.rpc('reject_booking', {
         p_booking_id: bookingId,
-        p_rejection_reason: reason
+        p_rejection_reason: reason,
       });
 
       if (error) {
         console.error('Error rejecting booking:', error);
         return {
           success: false,
-          error: error.message
+          error: error.message,
         };
       }
 
@@ -1111,26 +1100,25 @@ export class BookingsService {
         if (data.success === false) {
           return {
             success: false,
-            error: data.error || data.message
+            error: data.error || data.message,
           };
         }
-        
+
         return {
           success: true,
-          message: data.message || 'Reserva rechazada exitosamente'
+          message: data.message || 'Reserva rechazada exitosamente',
         };
       }
 
       return {
         success: true,
-        message: 'Reserva rechazada exitosamente'
+        message: 'Reserva rechazada exitosamente',
       };
-
     } catch (error: any) {
       console.error('Exception rejecting booking:', error);
       return {
         success: false,
-        error: error.message || 'Error inesperado al rechazar reserva'
+        error: error.message || 'Error inesperado al rechazar reserva',
       };
     }
   }

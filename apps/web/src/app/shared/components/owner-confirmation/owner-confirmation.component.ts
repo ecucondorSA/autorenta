@@ -90,8 +90,15 @@ export class OwnerConfirmationComponent {
     // Cuando se marca "tiene daños", hacer campos de daño requeridos
     this.form.controls.has_damages.valueChanges.subscribe((hasDamages) => {
       if (hasDamages) {
-        this.form.controls.damage_amount?.setValidators([Validators.required, Validators.min(1), Validators.max(250)]);
-        this.form.controls.damage_description?.setValidators([Validators.required, Validators.minLength(10)]);
+        this.form.controls.damage_amount?.setValidators([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(250),
+        ]);
+        this.form.controls.damage_description?.setValidators([
+          Validators.required,
+          Validators.minLength(10),
+        ]);
       } else {
         this.form.controls.damage_amount?.clearValidators();
         this.form.controls.damage_description?.clearValidators();

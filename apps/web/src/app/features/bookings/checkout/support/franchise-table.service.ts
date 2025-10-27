@@ -46,7 +46,9 @@ export class FranchiseTableService {
     const nightlyRateUsd = nightlyRateCents / 100;
     const estimatedValueUsd = this.estimateCarValueUsd(nightlyRateUsd);
 
-    const match = this.bucketThresholds.find(threshold => estimatedValueUsd <= threshold.maxValue);
+    const match = this.bucketThresholds.find(
+      (threshold) => estimatedValueUsd <= threshold.maxValue,
+    );
     return match?.bucket ?? 'default';
   }
 
@@ -63,10 +65,7 @@ export class FranchiseTableService {
     const standard = this.standardFranchiseUsd[bucket];
     const rollover = standard * 2;
 
-    const walletCredit =
-      estimatedValueUsd <= 20_000
-        ? 300
-        : 500;
+    const walletCredit = estimatedValueUsd <= 20_000 ? 300 : 500;
 
     return {
       bucket,

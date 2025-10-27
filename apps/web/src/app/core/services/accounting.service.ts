@@ -91,10 +91,7 @@ export class AccountingService {
    * Obtener dashboard ejecutivo con KPIs financieros
    */
   async getDashboard(): Promise<AccountingDashboard | null> {
-    const { data, error } = await this.supabase
-      .from('accounting_dashboard')
-      .select('*')
-      .single();
+    const { data, error } = await this.supabase.from('accounting_dashboard').select('*').single();
 
     if (error) {
       console.error('Error fetching accounting dashboard:', error);
@@ -227,14 +224,16 @@ export class AccountingService {
   }): Promise<any[]> {
     let query = this.supabase
       .from('accounting_ledger')
-      .select(`
+      .select(
+        `
         *,
         accounting_accounts (
           code,
           name,
           account_type
         )
-      `)
+      `,
+      )
       .order('entry_date', { ascending: false });
 
     if (filters?.startDate) {
@@ -284,8 +283,7 @@ export class AccountingService {
    * Refrescar balances (materializar vista)
    */
   async refreshBalances(): Promise<boolean> {
-    const { error } = await this.supabase
-      .rpc('refresh_accounting_balances');
+    const { error } = await this.supabase.rpc('refresh_accounting_balances');
 
     if (error) {
       console.error('Error refreshing balances:', error);
@@ -306,16 +304,15 @@ export class AccountingService {
       debit?: number;
       credit?: number;
       description?: string;
-    }>
+    }>,
   ): Promise<string | null> {
-    const { data, error } = await this.supabase
-      .rpc('create_journal_entry', {
-        p_transaction_type: transactionType,
-        p_reference_id: null,
-        p_reference_table: 'manual_entry',
-        p_description: description,
-        p_entries: entries,
-      });
+    const { data, error } = await this.supabase.rpc('create_journal_entry', {
+      p_transaction_type: transactionType,
+      p_reference_id: null,
+      p_reference_table: 'manual_entry',
+      p_description: description,
+      p_entries: entries,
+    });
 
     if (error) {
       console.error('Error creating journal entry:', error);
@@ -337,11 +334,11 @@ export class AccountingService {
     const incomeStatement = await this.getIncomeStatement(period);
 
     const income = incomeStatement
-      .filter(item => item.account_type === 'INCOME')
+      .filter((item) => item.account_type === 'INCOME')
       .reduce((sum, item) => sum + item.amount, 0);
 
     const expenses = incomeStatement
-      .filter(item => item.account_type === 'EXPENSE')
+      .filter((item) => item.account_type === 'EXPENSE')
       .reduce((sum, item) => sum + item.amount, 0);
 
     const profit = income - expenses;
@@ -378,9 +375,9 @@ export class AccountingService {
     }
 
     // Verificar conciliación wallet
-    const walletDiff = reconciliation.find(r => r.source.includes('Diferencia'));
+    const walletDiff = reconciliation.find((r) => r.source.includes('Diferencia'));
     const walletReconciled = walletDiff ? Math.abs(walletDiff.amount) < 0.01 : false;
-    
+
     if (!walletReconciled) {
       alerts.push(`Diferencia en conciliación wallet: $${walletDiff?.amount.toFixed(2)}`);
     }
@@ -388,14 +385,16 @@ export class AccountingService {
     // Verificar FGO adecuado (debe ser al menos 5% del total de pasivos activos)
     const minFGO = dashboard.active_security_deposits * 0.05;
     const fgoAdequate = dashboard.fgo_provision >= minFGO;
-    
+
     if (!fgoAdequate) {
-      alerts.push(`FGO insuficiente: $${dashboard.fgo_provision.toFixed(2)} (mínimo recomendado: $${minFGO.toFixed(2)})`);
+      alerts.push(
+        `FGO insuficiente: $${dashboard.fgo_provision.toFixed(2)} (mínimo recomendado: $${minFGO.toFixed(2)})`,
+      );
     }
 
     // Evaluar rentabilidad
     let profitability: 'GOOD' | 'WARNING' | 'CRITICAL' = 'GOOD';
-    
+
     if (dashboard.monthly_profit < 0) {
       profitability = 'CRITICAL';
       alerts.push('Pérdidas en el mes actual');
@@ -416,7 +415,10 @@ export class AccountingService {
 // Export singleton instance (opcional)
 let accountingServiceInstance: AccountingService | null = null;
 
-export function getAccountingService(supabaseUrl?: string, supabaseKey?: string): AccountingService {
+export function getAccountingService(
+  supabaseUrl?: string,
+  supabaseKey?: string,
+): AccountingService {
   if (!accountingServiceInstance) {
     if (!supabaseUrl || !supabaseKey) {
       throw new Error('Supabase credentials required for first initialization');

@@ -4,7 +4,7 @@ import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * SPRINT 4 - TEST 1: Verificar configuración de Supabase con pooling
- * 
+ *
  * Este test verifica que:
  * 1. La configuración de Supabase está correctamente inicializada
  * 2. Connection pooling está habilitado con 'transaction' mode
@@ -44,7 +44,7 @@ describe('SupabaseClientService - Configuration & Pooling', () => {
       // El servicio debe agregar headers de pooling automáticamente
       const client = service.getClient();
       expect(client).toBeTruthy();
-      
+
       // Verificar que el cliente fue creado con las opciones correctas
       // (implícitamente verificado por el constructor del servicio)
     });
@@ -66,7 +66,7 @@ describe('SupabaseClientService - Configuration & Pooling', () => {
     it('debe tener configurado el header de pooling', () => {
       // Este test verifica que el servicio configure el header correcto
       // El header 'x-supabase-pooling-mode: transaction' debe estar presente
-      
+
       // Verificación indirecta: el servicio tiene el método getConnectionInfo
       // que reporta el modo de pooling
       const info = service.getConnectionInfo();
@@ -118,22 +118,22 @@ describe('SupabaseClientService - Configuration & Pooling', () => {
 
 /**
  * DOCUMENTACIÓN: Configuración de Pooling Recomendada
- * 
+ *
  * Para AutoRenta, usamos TRANSACTION mode porque:
- * 
+ *
  * 1. TRANSACTION MODE (Recomendado para AutoRenta):
  *    - Cada query obtiene una conexión del pool
  *    - Mejor para queries cortos y APIs REST
  *    - Soporta 200+ usuarios concurrentes
  *    - Mejora performance ~70%
  *    - Ideal para: búsquedas, listados, CRUD operations
- * 
+ *
  * 2. SESSION MODE (No recomendado para AutoRenta):
  *    - Mantiene la misma conexión durante toda la sesión
  *    - Mejor para transacciones largas y prepared statements
  *    - Limita a ~60 conexiones concurrentes
  *    - Ideal para: batch processing, data migrations
- * 
+ *
  * CONFIGURACIÓN APLICADA:
  * ```typescript
  * global: {
@@ -142,13 +142,13 @@ describe('SupabaseClientService - Configuration & Pooling', () => {
  *   },
  * }
  * ```
- * 
+ *
  * BENEFICIOS MEDIDOS:
  * - Reducción de errores "too many connections": 95%
  * - Mejora en tiempo de respuesta: 70%
  * - Capacidad de usuarios concurrentes: 60 → 200+
  * - Estabilidad bajo carga: 99.9%
- * 
+ *
  * REFERENCIAS:
  * - https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler
  * - https://supabase.com/docs/guides/platform/performance#connection-pooling

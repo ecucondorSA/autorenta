@@ -37,7 +37,9 @@
 .booking-card {
   position: relative;
   border-top: 4px solid transparent;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .booking-card:hover {

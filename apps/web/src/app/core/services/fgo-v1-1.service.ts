@@ -66,7 +66,7 @@ export class FgoV1_1Service {
         .select('*')
         .eq('country_code', countryCode)
         .eq('bucket', bucket)
-        .single()
+        .single(),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -78,7 +78,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in getParameters:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -87,11 +87,7 @@ export class FgoV1_1Service {
    */
   getAllParameters(): Observable<FgoParameters[]> {
     return from(
-      this.supabaseClient
-        .from('fgo_parameters')
-        .select('*')
-        .order('country_code')
-        .order('bucket')
+      this.supabaseClient.from('fgo_parameters').select('*').order('country_code').order('bucket'),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -103,7 +99,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in getAllParameters:', error);
         return of([]);
-      })
+      }),
     );
   }
 
@@ -123,7 +119,7 @@ export class FgoV1_1Service {
         .from('fgo_parameters')
         .update(updates)
         .eq('country_code', params.countryCode)
-        .eq('bucket', params.bucket)
+        .eq('bucket', params.bucket),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -135,7 +131,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in updateParameters:', error);
         return of(false);
-      })
+      }),
     );
   }
 
@@ -162,23 +158,21 @@ export class FgoV1_1Service {
     };
 
     return from(
-      this.supabaseClient
-        .from('booking_risk_snapshot')
-        .insert(snapshotData)
-        .select()
-        .single()
+      this.supabaseClient.from('booking_risk_snapshot').insert(snapshotData).select().single(),
     ).pipe(
       map((response) => {
         if (response.error) {
           console.error('Error creating risk snapshot:', response.error);
           return null;
         }
-        return response.data ? mapBookingRiskSnapshot(response.data as BookingRiskSnapshotDb) : null;
+        return response.data
+          ? mapBookingRiskSnapshot(response.data as BookingRiskSnapshotDb)
+          : null;
       }),
       catchError((error) => {
         console.error('Error in createRiskSnapshot:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -191,19 +185,21 @@ export class FgoV1_1Service {
         .from('booking_risk_snapshot')
         .select('*')
         .eq('booking_id', bookingId)
-        .maybeSingle()
+        .maybeSingle(),
     ).pipe(
       map((response) => {
         if (response.error) {
           console.error('Error fetching risk snapshot:', response.error);
           return null;
         }
-        return response.data ? mapBookingRiskSnapshot(response.data as BookingRiskSnapshotDb) : null;
+        return response.data
+          ? mapBookingRiskSnapshot(response.data as BookingRiskSnapshotDb)
+          : null;
       }),
       catchError((error) => {
         console.error('Error in getRiskSnapshot:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -227,11 +223,7 @@ export class FgoV1_1Service {
     };
 
     return from(
-      this.supabaseClient
-        .from('booking_inspections')
-        .insert(inspectionData)
-        .select()
-        .single()
+      this.supabaseClient.from('booking_inspections').insert(inspectionData).select().single(),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -243,7 +235,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in createInspection:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -255,7 +247,7 @@ export class FgoV1_1Service {
       this.supabaseClient
         .from('booking_inspections')
         .update({ signed_at: new Date().toISOString() })
-        .eq('id', inspectionId)
+        .eq('id', inspectionId),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -267,7 +259,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in signInspection:', error);
         return of(false);
-      })
+      }),
     );
   }
 
@@ -280,7 +272,7 @@ export class FgoV1_1Service {
         .from('booking_inspections')
         .select('*')
         .eq('booking_id', bookingId)
-        .order('created_at', { ascending: true })
+        .order('created_at', { ascending: true }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -292,21 +284,24 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in getInspections:', error);
         return of([]);
-      })
+      }),
     );
   }
 
   /**
    * Obtiene una inspección específica (por booking y stage)
    */
-  getInspectionByStage(bookingId: string, stage: 'check_in' | 'check_out'): Observable<BookingInspection | null> {
+  getInspectionByStage(
+    bookingId: string,
+    stage: 'check_in' | 'check_out',
+  ): Observable<BookingInspection | null> {
     return from(
       this.supabaseClient
         .from('booking_inspections')
         .select('*')
         .eq('booking_id', bookingId)
         .eq('stage', stage)
-        .single()
+        .single(),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -318,7 +313,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in getInspectionByStage:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -330,12 +325,7 @@ export class FgoV1_1Service {
    * Obtiene el estado extendido del FGO con métricas v1.1
    */
   getStatusV1_1(): Observable<FgoStatusV1_1 | null> {
-    return from(
-      this.supabaseClient
-        .from('v_fgo_status_v1_1')
-        .select('*')
-        .single()
-    ).pipe(
+    return from(this.supabaseClient.from('v_fgo_status_v1_1').select('*').single()).pipe(
       map((response) => {
         if (response.error) {
           console.error('Error fetching FGO status v1.1:', response.error);
@@ -376,7 +366,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in getStatusV1_1:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -386,14 +376,14 @@ export class FgoV1_1Service {
   calculatePem(
     countryCode?: string,
     bucket?: string,
-    windowDays = 90
+    windowDays = 90,
   ): Observable<PemCalculation | null> {
     return from(
       this.supabaseClient.rpc('calculate_pem', {
         p_country_code: countryCode || null,
         p_bucket: bucket || null,
         p_window_days: windowDays,
-      })
+      }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -419,7 +409,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in calculatePem:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -431,7 +421,7 @@ export class FgoV1_1Service {
       this.supabaseClient.rpc('calculate_rc_v1_1', {
         p_country_code: countryCode || null,
         p_bucket: bucket || null,
-      })
+      }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -458,7 +448,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in calculateRcV1_1:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -470,7 +460,7 @@ export class FgoV1_1Service {
       this.supabaseClient.rpc('adjust_alpha_dynamic', {
         p_country_code: countryCode,
         p_bucket: bucket,
-      })
+      }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -495,7 +485,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in adjustAlphaDynamic:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -511,7 +501,7 @@ export class FgoV1_1Service {
       this.supabaseClient.rpc('fgo_assess_eligibility', {
         p_booking_id: params.bookingId,
         p_claim_amount_cents: params.claimAmountCents,
-      })
+      }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -542,7 +532,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in assessEligibility:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -557,7 +547,7 @@ export class FgoV1_1Service {
         p_total_claim_cents: params.totalClaimCents,
         p_description: params.description,
         p_evidence_url: params.evidenceUrl || null,
-      })
+      }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -589,7 +579,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in executeWaterfall:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -601,7 +591,9 @@ export class FgoV1_1Service {
    * Verifica si el usuario actual es admin
    */
   async isAdmin(): Promise<boolean> {
-    const { data: { user } } = await this.supabaseClient.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabaseClient.auth.getUser();
     if (!user) return false;
 
     const { data: profile } = await this.supabaseClient
@@ -617,7 +609,9 @@ export class FgoV1_1Service {
    * Obtiene el ID del usuario actual
    */
   async getCurrentUserId(): Promise<string | null> {
-    const { data: { user } } = await this.supabaseClient.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabaseClient.auth.getUser();
     return user?.id || null;
   }
 
@@ -627,7 +621,7 @@ export class FgoV1_1Service {
         .from('fgo_movements_view') // Assuming a view with this name exists
         .select('*')
         .limit(limit)
-        .range(offset, offset + limit - 1)
+        .range(offset, offset + limit - 1),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -639,14 +633,12 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in getMovements:', error);
         return of([]);
-      })
+      }),
     );
   }
 
   recalculateMetrics(): Observable<{ ok: boolean; error?: string }> {
-    return from(
-      this.supabaseClient.rpc('recalculate_fgo_metrics')
-    ).pipe(
+    return from(this.supabaseClient.rpc('recalculate_fgo_metrics')).pipe(
       map((response) => {
         if (response.error) {
           console.error('Error recalculating metrics:', response.error);
@@ -657,7 +649,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in recalculateMetrics:', error);
         return of({ ok: false, error: error.message });
-      })
+      }),
     );
   }
 
@@ -675,7 +667,7 @@ export class FgoV1_1Service {
         p_amount_cents: params.amountCents,
         p_reason: params.reason,
         p_admin_id: params.adminId,
-      })
+      }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -687,7 +679,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in transferBetweenSubfunds:', error);
         return of({ ok: false, error: error.message });
-      })
+      }),
     );
   }
 
@@ -701,7 +693,7 @@ export class FgoV1_1Service {
         p_booking_id: params.bookingId,
         p_amount_cents: params.amountCents,
         p_description: params.description,
-      })
+      }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -713,7 +705,7 @@ export class FgoV1_1Service {
       catchError((error) => {
         console.error('Error in paySiniestro:', error);
         return of({ ok: false, error: error.message });
-      })
+      }),
     );
   }
 }

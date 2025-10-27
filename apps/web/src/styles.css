@@ -39,18 +39,18 @@
     --accent-warm: #8b7355;
 
     /* ─── Sistema de Espaciados ─── */
-    --spacing-xs: 0.25rem;      /* 4px */
-    --spacing-sm: 0.5rem;       /* 8px */
-    --spacing-md: 0.75rem;      /* 12px */
-    --spacing-base: 1rem;       /* 16px */
-    --spacing-lg: 1.25rem;      /* 20px */
-    --spacing-xl: 1.5rem;       /* 24px */
-    --spacing-2xl: 2rem;        /* 32px */
-    --spacing-3xl: 3rem;        /* 48px */
+    --spacing-xs: 0.25rem; /* 4px */
+    --spacing-sm: 0.5rem; /* 8px */
+    --spacing-md: 0.75rem; /* 12px */
+    --spacing-base: 1rem; /* 16px */
+    --spacing-lg: 1.25rem; /* 20px */
+    --spacing-xl: 1.5rem; /* 24px */
+    --spacing-2xl: 2rem; /* 32px */
+    --spacing-3xl: 3rem; /* 48px */
 
     /* ─── Sistema de Contenedores ─── */
-    --spacing-container: 1rem;   /* Mobile default */
-    --spacing-section: 1.5rem;   /* Mobile default */
+    --spacing-container: 1rem; /* Mobile default */
+    --spacing-section: 1.5rem; /* Mobile default */
 
     /* ─── Sistema de Animaciones ─── */
     --duration-instant: 100ms;
@@ -86,15 +86,15 @@
   /* ─── Responsive Spacing Adjustments ─── */
   @media (min-width: 768px) {
     :root {
-      --spacing-container: 1.5rem;  /* 24px */
-      --spacing-section: 2rem;      /* 32px */
+      --spacing-container: 1.5rem; /* 24px */
+      --spacing-section: 2rem; /* 32px */
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --spacing-container: 2rem;    /* 32px */
-      --spacing-section: 3rem;      /* 48px */
+      --spacing-container: 2rem; /* 32px */
+      --spacing-section: 3rem; /* 48px */
     }
   }
 
@@ -126,9 +126,19 @@
   }
 
   html {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-                 Roboto, 'Helvetica Neue', Arial, sans-serif;
-    font-feature-settings: 'liga' 1, 'kern' 1, 'cv11' 1;
+    font-family:
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      Arial,
+      sans-serif;
+    font-feature-settings:
+      'liga' 1,
+      'kern' 1,
+      'cv11' 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -205,12 +215,18 @@
   }
 
   /* Dark mode headings */
-  .dark h1, .dark .h1,
-  .dark h2, .dark .h2,
-  .dark h3, .dark .h3,
-  .dark h4, .dark .h4,
-  .dark h5, .dark .h5,
-  .dark h6, .dark .h6 {
+  .dark h1,
+  .dark .h1,
+  .dark h2,
+  .dark .h2,
+  .dark h3,
+  .dark .h3,
+  .dark h4,
+  .dark .h4,
+  .dark h5,
+  .dark .h5,
+  .dark h6,
+  .dark .h6 {
     @apply text-ivory-luminous;
   }
 }
@@ -515,36 +531,36 @@
      Transiciones y Animaciones
      ───────────────────────────────────────────────────────────── */
 
-.transition-base {
-  transition: all var(--duration-fast) var(--easing-standard);
-}
-
-.app-main {
-  padding-bottom: calc(var(--spacing-section) + env(safe-area-inset-bottom, 0));
-}
-
-.app-main.full-bleed-safe {
-  padding-left: env(safe-area-inset-left, 0);
-  padding-right: env(safe-area-inset-right, 0);
-}
-
-@media (max-width: 375px) {
-  header.sticky .container-page {
-    padding-left: calc(var(--spacing-container) + env(safe-area-inset-left, 0));
-    padding-right: calc(var(--spacing-container) + env(safe-area-inset-right, 0));
-    gap: 0.75rem;
+  .transition-base {
+    transition: all var(--duration-fast) var(--easing-standard);
   }
 
-  header.sticky .icon-button,
-  header.sticky .btn-accent {
-    min-width: 44px;
-    min-height: 44px;
+  .app-main {
+    padding-bottom: calc(var(--spacing-section) + env(safe-area-inset-bottom, 0));
   }
 
-  header.sticky .group img {
-    height: 2.5rem;
+  .app-main.full-bleed-safe {
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
   }
-}
+
+  @media (max-width: 375px) {
+    header.sticky .container-page {
+      padding-left: calc(var(--spacing-container) + env(safe-area-inset-left, 0));
+      padding-right: calc(var(--spacing-container) + env(safe-area-inset-right, 0));
+      gap: 0.75rem;
+    }
+
+    header.sticky .icon-button,
+    header.sticky .btn-accent {
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    header.sticky .group img {
+      height: 2.5rem;
+    }
+  }
 
   .transition-smooth {
     transition: all var(--duration-normal) var(--easing-standard);
@@ -556,8 +572,9 @@
 
   /* Hover effects */
   .hover-lift {
-    transition: transform var(--duration-fast) var(--easing-standard),
-                box-shadow var(--duration-fast) var(--easing-standard);
+    transition:
+      transform var(--duration-fast) var(--easing-standard),
+      box-shadow var(--duration-fast) var(--easing-standard);
   }
 
   .hover-lift:hover {
@@ -577,7 +594,8 @@
   }
 
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {
@@ -607,7 +625,7 @@
     height: 48px;
     border: 4px solid rgba(217, 214, 208, 0.3);
     border-top-color: #2c4a52;
-    border-right-color: #8B7355;
+    border-right-color: #8b7355;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
