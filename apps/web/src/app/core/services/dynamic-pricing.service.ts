@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { injectSupabase } from './supabase-client.service';
 
 export interface PricingRequest {

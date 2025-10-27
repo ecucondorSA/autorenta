@@ -350,9 +350,6 @@ export class ProfileExpandedPage implements OnInit {
   }
 
   private createOwnerChecklist(): VerificationChecklistItem[] {
-    const verification = this.ownerVerification();
-    const _missingDocs = verification?.missing_docs ?? [];
-
     const vehicleStatus = this.getDocumentStatusForKinds('vehicle_registration');
     const insuranceStatus = this.getDocumentStatusForKinds('vehicle_insurance');
     const govIdStatus = this.getDocumentStatusForKinds(['gov_id_front', 'gov_id_back']);

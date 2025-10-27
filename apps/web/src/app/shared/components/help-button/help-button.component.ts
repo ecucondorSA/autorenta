@@ -2,8 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TourService, TourId } from '../../../core/services/tour.service'; // OLD
-import { GuidedTourService, TourId as NewTourId } from '../../../core/guided-tour'; // NEW
 
 @Component({
   selector: 'app-help-button',

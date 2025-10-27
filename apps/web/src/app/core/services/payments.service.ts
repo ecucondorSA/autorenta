@@ -132,15 +132,15 @@ export class PaymentsService {
   }
 
   // Alias methods for booking-detail page compatibility
-  async createPaymentIntent(bookingId: string, provider: string): Promise<PaymentIntent> {
+  async createPaymentIntent(bookingId: string, _provider: string): Promise<PaymentIntent> {
     return this.createIntent(bookingId);
   }
 
   async simulateWebhook(
     
-    _provider: string,
+    __provider: string,
     intentId: string,
-    status: 'approved' | 'rejected',
+    _status: 'approved' | 'rejected',
   ): Promise<void> {
     return this.markAsPaid(intentId);
   }
