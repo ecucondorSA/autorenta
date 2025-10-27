@@ -15,6 +15,9 @@ interface ImageOptimizeOptions {
 })
 export class CarsService {
   private readonly supabase = injectSupabase();
+  private readonly defaultValuationConfig = {
+    averageRentalDays: 300,
+  };
 
   async createCar(input: Partial<Car>): Promise<Car> {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
@@ -70,6 +73,22 @@ export class CarsService {
 
     if (photoError) throw photoError;
     return photoData as CarPhoto;
+  }
+
+  suggestVehicleValueUsd(
+    pricePerDay: number | null | undefined,
+    options?: { averageRentalDays?: number }
+  ): number {
+    if (!pricePerDay || pricePerDay <= 0) {
+      return 0;
+    }
+
+    const days = options?.averageRentalDays ?? this.defaultValuationConfig.averageRentalDays;
+    return Math.round(pricePerDay * days);
+  }
+
+  getDefaultAverageRentalDays(): number {
+    return this.defaultValuationConfig.averageRentalDays;
   }
 
   private async optimizeImage(file: File, options: ImageOptimizeOptions): Promise<File> {

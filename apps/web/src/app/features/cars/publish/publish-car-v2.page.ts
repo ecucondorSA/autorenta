@@ -20,41 +20,93 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
   imports: [CommonModule, ReactiveFormsModule, TranslateModule, HostSupportInfoPanelComponent],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-graphite-dark py-8 px-4 transition-colors duration-300 text-gray-900 dark:text-pearl-light">
-      <div class="max-w-3xl mx-auto">
-        <!-- Header -->
-        <div class="bg-white dark:bg-anthracite rounded-lg shadow-sm dark:shadow-card p-6 mb-6 transition-colors">
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-luminous mb-2">{{ editMode() ? 'Editar Auto' : 'Publicar Auto' }}</h1>
-          <p class="text-gray-600 dark:text-pearl-light/75">{{ editMode() ? 'Modifica la información de tu vehículo' : 'Completa la información de tu vehículo' }}</p>
+      <div class="max-w-6xl mx-auto">
+        <!-- Hero -->
+        <div class="grid gap-6 mb-8 lg:grid-cols-5">
+          <div class="lg:col-span-3 bg-white dark:bg-anthracite rounded-2xl shadow-soft border border-pearl-gray/70 dark:border-neutral-800/70 p-6 transition-colors">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Publicar Auto</p>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-luminous mt-1">
+                  {{ editMode() ? 'Editar Auto' : 'Completa la información de tu vehículo' }}
+                </h1>
+                <p class="text-sm text-gray-600 dark:text-pearl-light/75 mt-2 max-w-xl">
+                  Ingresá datos del vehículo, condiciones y fotos. Este flujo te guía para que la publicación quede lista para revisión.
+                </p>
+              </div>
+              <div class="hidden sm:flex flex-col text-right">
+                <p class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60">Paso 2 de 2</p>
+                <div class="flex items-center gap-2 mt-2">
+                  <span class="h-2 rounded-full bg-primary-600 dark:bg-accent-petrol w-14"></span>
+                  <span class="h-2 rounded-full bg-primary-100 dark:bg-neutral-700 w-6"></span>
+                </div>
+              </div>
+            </div>
 
-          <!-- Edit mode indicator -->
-          <div *ngIf="editMode()" class="mt-4 bg-amber-50/90 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/50 rounded-lg p-3 flex items-start gap-2">
-            <span class="text-amber-600 dark:text-amber-200 text-lg">✏️</span>
-            <div class="flex-1">
-              <p class="text-sm text-amber-800 dark:text-amber-100 font-medium">Modo edición</p>
-              <p class="text-xs text-amber-600 dark:text-amber-100/80 mt-1">
-                Estás editando un auto existente. Los cambios se guardarán al enviar el formulario.
-              </p>
+            <div class="mt-6 grid gap-4 sm:grid-cols-3">
+              <div class="rounded-xl border border-pearl-gray/70 dark:border-neutral-800/70 p-4">
+                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Fotos listas</p>
+                <p class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">{{ uploadedPhotos().length }}/10</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Necesitás al menos 3</p>
+              </div>
+              <div class="rounded-xl border border-pearl-gray/70 dark:border-neutral-800/70 p-4">
+                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Revisión estimada</p>
+                <p class="text-2xl font-bold text-accent-warm dark:text-accent-warm/90">24-48h</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Te avisamos por mail cada cambio</p>
+              </div>
+              <div class="rounded-xl border border-pearl-gray/70 dark:border-neutral-800/70 p-4">
+                <p class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60">Comisión</p>
+                <p class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">15-25%</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Dependiendo de categoría</p>
+              </div>
+            </div>
+
+            <div *ngIf="editMode()" class="mt-4 bg-amber-50/90 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/50 rounded-lg p-3 flex items-start gap-2">
+              <span class="text-amber-600 dark:text-amber-200 text-lg">✏️</span>
+              <div class="flex-1">
+                <p class="text-sm text-amber-800 dark:text-amber-100 font-medium">Modo edición</p>
+                <p class="text-xs text-amber-600 dark:text-amber-100/80 mt-1">
+                  Estás editando un auto existente. Los cambios se guardan al enviar el formulario.
+                </p>
+              </div>
+            </div>
+            <div *ngIf="autofilledFromLast() && !editMode()" class="mt-4 bg-accent-petrol/10 dark:bg-accent-petrol/15 border border-accent-petrol/30 dark:border-accent-petrol/40 rounded-lg p-3 flex items-start gap-2">
+              <span class="text-accent-petrol dark:text-ivory-luminous text-lg">ℹ️</span>
+              <div class="flex-1">
+                <p class="text-sm text-accent-petrol dark:text-ivory-luminous font-medium">Datos autocompletados</p>
+                <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/80 mt-1">
+                  Usamos tu última publicación para ahorrar tiempo. Revisá marca, modelo y fotos antes de confirmar.
+                </p>
+              </div>
             </div>
           </div>
 
-          <!-- Autofill indicator -->
-          <div *ngIf="autofilledFromLast() && !editMode()" class="mt-4 bg-accent-petrol/10 dark:bg-accent-petrol/15 border border-accent-petrol/30 dark:border-accent-petrol/40 rounded-lg p-3 flex items-start gap-2">
-            <span class="text-accent-petrol dark:text-ivory-luminous text-lg">ℹ️</span>
-            <div class="flex-1">
-              <p class="text-sm text-accent-petrol dark:text-ivory-luminous font-medium">Datos autocompletados</p>
-              <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/80 mt-1">
-                Hemos rellenado algunos campos con los datos de tu última publicación para ahorrar tiempo.
-                Solo modifica marca, modelo, año y fotos para el nuevo auto.
-              </p>
+          <div class="lg:col-span-2 rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-gradient-to-br from-sand-light to-ivory-soft dark:from-slate-deep/40 dark:to-anthracite p-6 shadow-soft">
+            <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-3 flex items-center gap-2">
+              <span>🧭</span> Checklist rápido
+            </h3>
+            <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
+              <li class="flex items-start gap-2"><span class="text-accent-petrol mt-0.5">•</span>Subí al menos 3 fotos con buena iluminación.</li>
+              <li class="flex items-start gap-2"><span class="text-accent-petrol mt-0.5">•</span>Ingresá el valor estimado para calcular seguros y depósitos.</li>
+              <li class="flex items-start gap-2"><span class="text-accent-petrol mt-0.5">•</span>Definí precios, mínimos y depósito según tu disponibilidad.</li>
+              <li class="flex items-start gap-2"><span class="text-accent-petrol mt-0.5">•</span>Completá dirección exacta para habilitar mapa y retiro.</li>
+            </ul>
+            <div class="mt-5 rounded-xl bg-white dark:bg-anthracite border border-pearl-gray/50 dark:border-neutral-800/50 p-4 text-sm">
+              <p class="font-semibold text-smoke-black dark:text-ivory-luminous mb-2">Workflow</p>
+              <ol class="list-decimal list-inside space-y-1 text-charcoal-medium dark:text-pearl-light/70">
+                <li>Información del vehículo</li>
+                <li>Precio y condiciones</li>
+                <li>Ubicación</li>
+                <li>Fotos y revisión final</li>
+              </ol>
             </div>
           </div>
         </div>
 
-        <!-- Host Support Info Panel -->
-        <app-host-support-info-panel></app-host-support-info-panel>
-
-        <!-- Main Form -->
-        <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid gap-6 lg:grid-cols-5">
+          <div class="lg:col-span-3">
+            <!-- Main Form -->
+            <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-6">
 
           <!-- 1. Vehículo -->
           <div class="publish-card bg-white rounded-lg shadow-sm p-6">
@@ -145,9 +197,50 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Price per day -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Precio por día *</label>
-                <input type="number" formControlName="price_per_day" min="1" placeholder="50"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Modo de precios *</label>
+                <div class="grid xs:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    class="w-full rounded-xl border px-4 py-3 text-left transition"
+                    [class.border-primary-600]="isDynamicPricing()"
+                    [class.bg-primary-50]="isDynamicPricing()"
+                    [class.text-primary-700]="isDynamicPricing()"
+                    [class.border-gray-300]="!isDynamicPricing()"
+                    (click)="setPricingStrategy('dynamic')"
+                  >
+                    <p class="text-sm font-semibold flex items-center gap-2">
+                      Precio dinámico
+                      <span class="text-2xs uppercase tracking-wide bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">Recomendado</span>
+                    </p>
+                    <p class="text-xs text-gray-600 mt-1">AutoRenta ajusta el valor según demanda y temporada.</p>
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full rounded-xl border px-4 py-3 text-left transition"
+                    [class.border-primary-600]="!isDynamicPricing()"
+                    [class.bg-primary-50]="!isDynamicPricing()"
+                    [class.text-primary-700]="!isDynamicPricing()"
+                    [class.border-gray-300]="isDynamicPricing()"
+                    (click)="setPricingStrategy('custom')"
+                  >
+                    <p class="text-sm font-semibold">Precio personalizado</p>
+                    <p class="text-xs text-gray-600 mt-1">Definí manualmente el valor diario.</p>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  Precio por día * <span class="text-xs text-gray-500" *ngIf="isDynamicPricing()">(AutoRenta lo ajustará automáticamente)</span>
+                </label>
+                <input type="number"
+                       formControlName="price_per_day"
+                       min="1"
+                       placeholder="50"
+                       [readonly]="isDynamicPricing()"
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol focus:border-transparent disabled:bg-gray-100"
+                >
+                <p class="mt-1 text-xs text-gray-500" *ngIf="!isDynamicPricing()">Puedes actualizar este valor cuando quieras desde tu panel.</p>
               </div>
 
               <!-- Currency -->
@@ -300,7 +393,7 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
           </div>
 
           <!-- 4. Fotos -->
-          <div class="publish-card bg-white rounded-lg shadow-sm p-6">
+          <div class="publish-card bg-white dark:bg-anthracite rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 shadow-sm p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <span class="text-2xl">📸</span>
               Fotos ({{ uploadedPhotos().length }}/10)
@@ -363,6 +456,10 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
               </div>
             </div>
 
+            <div class="mt-3 rounded-xl border border-dashed border-pearl-gray/70 dark:border-neutral-800/70 bg-gray-50/70 dark:bg-neutral-900/60 p-3 text-xs text-charcoal-medium dark:text-pearl-light/70">
+              💡 Tip: combiná exteriores, interiores y tablero. La primera foto debe mostrar el auto completo con buena iluminación.
+            </div>
+
             <div *ngIf="uploadedPhotos().length < 3" class="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
               <p class="text-sm text-yellow-800">
                 ⚠️ Necesitas al menos 3 fotos para publicar. Actualmente tienes {{ uploadedPhotos().length }}.
@@ -370,20 +467,72 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
             </div>
           </div>
 
-          <!-- Submit -->
-          <div class="publish-card bg-white rounded-lg shadow-sm p-6 sticky bottom-0">
-            <div class="flex justify-between items-center">
-              <button type="button" (click)="goBack()" class="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+          <!-- Actions -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-200 dark:border-neutral-800/60">
+            <div class="text-xs text-gray-500 dark:text-pearl-light/60">
+              Al enviar, revisaremos la publicación y te avisaremos si necesitamos más información.
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <button type="button" (click)="goBack()" class="w-full sm:w-auto text-sm font-semibold text-gray-600 dark:text-pearl-light hover:text-gray-900">
                 Cancelar
               </button>
-              <button type="submit" [disabled]="!canSubmit() || isSubmitting()"
-                      class="px-8 py-3 bg-accent-petrol text-white rounded-lg hover:bg-accent-petrol/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition font-semibold">
+              <button
+                type="submit"
+                [disabled]="publishForm.invalid || isSubmitting()"
+                class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg text-white font-semibold bg-primary-600 hover:bg-primary-700 dark:bg-accent-petrol dark:hover:bg-accent-petrol/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg *ngIf="isSubmitting()" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
                 <span *ngIf="!isSubmitting()">{{ editMode() ? 'Guardar cambios' : 'Publicar Auto' }}</span>
                 <span *ngIf="isSubmitting()">{{ editMode() ? 'Guardando...' : 'Publicando...' }}</span>
               </button>
             </div>
           </div>
         </form>
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="lg:col-span-2 space-y-6">
+            <div class="lg:sticky lg:top-6 space-y-6">
+              <app-host-support-info-panel></app-host-support-info-panel>
+
+              <section class="rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-5 shadow-soft">
+                <h3 class="text-base font-semibold text-smoke-black dark:text-ivory-luminous mb-3 flex items-center gap-2">
+                  <span>📚</span> Obligaciones clave
+                </h3>
+                <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
+                  <li class="flex gap-3">
+                    <span class="text-accent-petrol dark:text-accent-petrol/80">🛡️</span>
+                    Seguro vigente que habilite alquiler a terceros.
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="text-accent-petrol dark:text-accent-petrol/80">⚙️</span>
+                    Mantenimiento, VTV y documentación al día.
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="text-accent-petrol dark:text-accent-petrol/80">📄</span>
+                    Cédula, DNI y pólizas listos para verificación.
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="text-accent-petrol dark:text-accent-petrol/80">⏱️</span>
+                    Responder solicitudes dentro de 24 h (si no usás auto-aprobación).
+                  </li>
+                </ul>
+                <a
+                  href="/docs/anfitriones"
+                  class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-700 dark:text-accent-petrol hover:underline"
+                >
+                  Ver guía completa
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h6m0 0v6m0-6L10 16" />
+                  </svg>
+                </a>
+              </section>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   `,
@@ -487,6 +636,14 @@ export class PublishCarV2Page implements OnInit {
     return `${brand.name} ${model.name} ${year}`;
   });
 
+  isDynamicPricing(): boolean {
+    return (this.publishForm?.get('pricing_strategy')?.value ?? 'dynamic') === 'dynamic';
+  }
+
+  setPricingStrategy(mode: 'dynamic' | 'custom'): void {
+    this.publishForm.get('pricing_strategy')?.setValue(mode);
+  }
+
   constructor(
     fb: FormBuilder,
     carsService: CarsService,
@@ -540,7 +697,8 @@ export class PublishCarV2Page implements OnInit {
       
       // TODO: Activar cuando la tabla mp_onboarding_states esté creada
       // Por ahora permitir publicar sin onboarding de MP
-      if (false && !canList) {
+      const requiresOnboarding = false;
+      if (requiresOnboarding && !canList) {
         console.log('⚠️ User needs to onboard to Mercado Pago');
         
         // Mostrar modal de onboarding
@@ -577,6 +735,7 @@ export class PublishCarV2Page implements OnInit {
       fuel: ['', Validators.required],
 
       // Pricing
+      pricing_strategy: ['dynamic'],
       price_per_day: [null, [Validators.required, Validators.min(1)]],
       currency: ['USD', Validators.required],
       value_usd: [null, [Validators.required, Validators.min(5000), Validators.max(500000)]], // ✅ NUEVO: Valor del vehículo
@@ -622,6 +781,7 @@ export class PublishCarV2Page implements OnInit {
           fuel: lastCar.fuel,
           color: lastCar.color,
           currency: lastCar.currency,
+          pricing_strategy: 'custom',
           min_rental_days: lastCar.min_rental_days,
           max_rental_days: lastCar.max_rental_days,
           deposit_required: lastCar.deposit_required,
@@ -657,6 +817,7 @@ export class PublishCarV2Page implements OnInit {
       this.publishForm.patchValue({
         brand_id: car.brand_id,
         model_id: car.model_id,
+        pricing_strategy: 'custom',
         year: car.year,
         color: car.color,
         mileage: car.mileage,
@@ -921,7 +1082,9 @@ export class PublishCarV2Page implements OnInit {
     try {
       this.isSubmitting.set(true);
 
-      const formValue = this.publishForm.value;
+      const rawValue = this.publishForm.getRawValue();
+      const { pricing_strategy, ...formValue } = rawValue as any;
+      const dynamicPricing = (pricing_strategy ?? 'dynamic') === 'dynamic';
 
       // Get brand and model names for backup fields
       const brand = this.brands().find(b => b.id === formValue.brand_id);

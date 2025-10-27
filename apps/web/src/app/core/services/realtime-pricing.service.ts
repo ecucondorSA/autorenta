@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed, effect } from '@angular/core';
-import { injectSupabase } from './supabase-client.service';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * 🔄 REAL-TIME PRICING SERVICE (ECUCONDOR08122023 Pattern)

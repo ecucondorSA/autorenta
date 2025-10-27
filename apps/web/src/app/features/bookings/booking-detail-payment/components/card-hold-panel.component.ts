@@ -76,7 +76,7 @@ import { AuthService } from '../../../../core/services/auth.service';
           <app-mercadopago-card-form
             [amountArs]="riskSnapshot.holdEstimatedArs"
             (cardTokenGenerated)="onCardTokenGenerated($event.cardToken, $event.last4)"
-            (error)="onMercadoPagoError($event)"
+            (cardError)="onMercadoPagoError($event)"
           ></app-mercadopago-card-form>
         }
 

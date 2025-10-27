@@ -22,7 +22,7 @@ type MercadoPagoCardFormData = {
  * Uso:
  * <app-mercadopago-card-form
  *   (cardTokenGenerated)="onCardToken($event)"
- *   (error)="onError($event)">
+ *   (cardError)="onError($event)">
  * </app-mercadopago-card-form>
  */
 @Component({
@@ -152,7 +152,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
   @Input() amountArs = 0;
   // Eventos
   @Output() cardTokenGenerated = new EventEmitter<{ cardToken: string; last4: string }>();
-  @Output() error = new EventEmitter<string>();
+  @Output() cardError = new EventEmitter<string>();
 
   // State
   readonly isSubmitting = signal(false);
@@ -252,7 +252,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
             if (error) {
               console.error('Error mounting form:', error);
               this.errorMessage.set('Error al cargar el formulario');
-              this.error.emit('Error al cargar el formulario');
+              this.cardError.emit('Error al cargar el formulario');
             } else {
               console.log('Form mounted successfully');
             }
@@ -300,7 +300,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
             }
 
             this.errorMessage.set(message || 'Error desconocido con Mercado Pago');
-            this.error.emit(message);
+            this.cardError.emit(message);
           },
           onCardTokenReceived: (error: any, token: any) => {
             this.isSubmitting.set(false);
@@ -346,7 +346,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       }
       
       this.errorMessage.set(message);
-      this.error.emit(message);
+      this.cardError.emit(message);
     }
   }
 
@@ -386,7 +386,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
     }
 
     this.errorMessage.set(message);
-    this.error.emit(message);
+    this.cardError.emit(message);
   }
 
 }

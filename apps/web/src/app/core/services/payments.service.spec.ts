@@ -2,11 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { PaymentsService } from './payments.service';
 import { SupabaseClientService } from './supabase-client.service';
+import { FxService } from './fx.service';
 
 describe('PaymentsService', () => {
   let service: PaymentsService;
   let supabase: any;
   let originalWebhookUrl: string;
+  let fxService: jasmine.SpyObj<FxService>;
 
   beforeEach(() => {
     originalWebhookUrl = environment.paymentsWebhookUrl;
@@ -21,11 +23,14 @@ describe('PaymentsService', () => {
         })
       }
     };
+    fxService = jasmine.createSpyObj<FxService>('FxService', ['getCurrentRateAsync']);
+    fxService.getCurrentRateAsync.and.resolveTo(1000);
 
     TestBed.configureTestingModule({
       providers: [
         PaymentsService,
         { provide: SupabaseClientService, useValue: { getClient: () => supabase } },
+        { provide: FxService, useValue: fxService },
       ],
     });
 
@@ -70,6 +75,7 @@ describe('PaymentsService', () => {
       const intent = await service.createIntent('booking-1');
 
       expect(intent).toEqual({ id: 'intent-1', status: 'pending' } as any);
+      expect(fxService.getCurrentRateAsync).toHaveBeenCalledWith('USD', 'ARS');
     });
 
     it('calls the worker webhook when marking as paid', async () => {

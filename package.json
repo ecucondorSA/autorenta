@@ -32,7 +32,8 @@
     "workflows": "source tools/claude-workflows.sh && workflows_help",
     "sync:types": "tools/sync-types.sh",
     "sync:types:remote": "tools/sync-types.sh --remote",
-    "check:skills": "tools/check-skills.sh"
+    "check:skills": "tools/check-skills.sh",
+    "accounting:export": "node tools/accounting/export-ledger.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",

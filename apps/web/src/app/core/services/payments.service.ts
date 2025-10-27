@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { PaymentIntent } from '../models';
 import { injectSupabase } from './supabase-client.service';
+import { FxService } from './fx.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentsService {
   private readonly supabase = injectSupabase();
+  private readonly fxService = inject(FxService);
 
   async createIntent(bookingId: string): Promise<PaymentIntent> {
     // Obtener datos del booking para el payment intent
@@ -21,10 +23,23 @@ export class PaymentsService {
       throw new Error(`Booking no encontrado: ${bookingId}`);
     }
 
-    // Calcular amounts basados en la moneda del booking
-    const amountUsd = booking.currency === 'USD' ? booking.total_amount : booking.total_amount / 1000; // Estimación si es ARS
-    const amountArs = booking.currency === 'ARS' ? booking.total_amount : booking.total_amount * 1000; // Estimación si es USD
-    const fxRate = booking.currency === 'USD' ? 1000 : 1; // Estimación
+    const currency = (booking.currency ?? 'USD').toUpperCase();
+    const totalAmount = Number(booking.total_amount ?? 0);
+
+    if (!Number.isFinite(totalAmount) || totalAmount <= 0) {
+      throw new Error(`Monto inválido para el booking ${bookingId}`);
+    }
+
+    const fxRate = await this.fxService.getCurrentRateAsync('USD', 'ARS');
+    if (!Number.isFinite(fxRate) || fxRate <= 0) {
+      throw new Error('No se pudo obtener la tasa de cambio vigente');
+    }
+
+    const amountUsdRaw = currency === 'USD' ? totalAmount : totalAmount / fxRate;
+    const amountArsRaw = currency === 'ARS' ? totalAmount : totalAmount * fxRate;
+
+    const amountUsd = Number(amountUsdRaw.toFixed(2));
+    const amountArs = Number(amountArsRaw.toFixed(2));
 
     const { data, error } = await this.supabase
       .from('payment_intents')

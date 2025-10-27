@@ -156,6 +156,35 @@
           <span class="text-xs text-ash-gray dark:text-neutral-400">Precio diario en dólares</span>
         </label>
 
+        <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light md:col-span-2">
+          Valor del vehículo (USD)
+          <div class="flex flex-col gap-2 md:flex-row md:items-center">
+            <input
+              class="flex-1 rounded-lg border border-pearl-gray dark:border-slate-deep bg-white-pure dark:bg-graphite-dark px-3 py-2 text-smoke-black dark:text-ivory-luminous placeholder:text-ash-gray dark:placeholder:text-neutral-500 focus:border-accent-petrol dark:focus:border-accent-petrol/60 focus:outline-none focus:ring-2 focus:ring-accent-petrol/20 dark:focus:ring-accent-petrol/30 transition-colors duration-200"
+              type="number"
+              formControlName="value_usd"
+              min="1000"
+              placeholder="15000"
+            />
+            @if (suggestedVehicleValueUsd(); as suggestion) {
+              <button
+                type="button"
+                (click)="applySuggestedVehicleValue()"
+                class="inline-flex items-center justify-center rounded-lg border border-accent-petrol/40 px-3 py-2 text-xs font-semibold text-accent-petrol transition-colors duration-200 hover:bg-accent-petrol/10"
+              >
+                Usar sugerido
+              </button>
+            }
+          </div>
+          <span class="text-xs text-ash-gray dark:text-neutral-400">
+            @if (suggestedVehicleValueUsd(); as suggestion) {
+              Valor sugerido: {{ suggestion | number: '1.0-0' }} USD (precio diario × {{ valuationAverageDays }} días)
+            } @else {
+              Indicá el valor estimado del vehículo en dólares
+            }
+          </span>
+        </label>
+
         <label class="flex flex-col gap-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light">
           Mínimo de días
           <input

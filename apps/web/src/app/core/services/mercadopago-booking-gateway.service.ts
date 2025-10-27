@@ -104,7 +104,7 @@ export class MercadoPagoBookingGatewayService {
     // o se definen en environment.ts
     // Por ahora, obtenemos del cliente Supabase
     const supabase = this.supabaseService.getClient();
-    // @ts-ignore - Acceso interno al URL
+    // @ts-expect-error - Acceso interno al URL
     return supabase.supabaseUrl || '';
   }
 

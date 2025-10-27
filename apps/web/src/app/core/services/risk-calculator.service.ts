@@ -149,11 +149,12 @@ export class RiskCalculatorService {
         // Tarjeta: solo total (hold se hace aparte)
         return totalBookingCents;
 
-      case 'partial_wallet':
+      case 'partial_wallet': {
         // Parcial: 30% del total + crédito de seguridad (si aplica)
         const partialCents = Math.round(totalBookingCents * 0.3);
         const securityCents = Math.round(guaranteeAmountUsd * 100);
         return partialCents + securityCents;
+      }
 
       default:
         return totalBookingCents;

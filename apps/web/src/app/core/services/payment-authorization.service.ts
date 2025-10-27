@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
-import { SupabaseClientService } from './supabase-client.service';
-import { AuthService } from './auth.service';
+import { environment } from '@environment';
 import {
   PaymentAuthorization,
   AuthorizePaymentResult,
 } from '../models/booking-detail-payment.model';
-import { environment } from '@environment';
+import { SupabaseClientService } from './supabase-client.service';
+import { AuthService } from './auth.service';
 
 /**
  * Servicio para gestionar preautorizaciones de pago con Mercado Pago

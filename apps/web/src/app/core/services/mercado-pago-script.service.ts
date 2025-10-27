@@ -16,7 +16,7 @@ export class MercadoPagoScriptService {
   constructor(
     rendererFactory: RendererFactory2,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: object
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
   }

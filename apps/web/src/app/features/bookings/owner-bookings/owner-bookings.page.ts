@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IonicModule, AlertController, ToastController } from '@ionic/angular';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
 import { formatDateRange } from '../../../shared/utils/date.utils';
@@ -10,7 +11,7 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 @Component({
   standalone: true,
   selector: 'app-owner-bookings-page',
-  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule],
+  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule, IonicModule],
   templateUrl: './owner-bookings.page.html',
   styleUrl: './owner-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,8 +21,15 @@ export class OwnerBookingsPage implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly processingAction = signal<string | null>(null);
+  readonly renterContacts = signal<
+    Record<string, { name?: string; email?: string; phone?: string }>
+  >({});
 
-  constructor(private readonly bookingsService: BookingsService) {}
+  constructor(
+    private readonly bookingsService: BookingsService,
+    private readonly alertController: AlertController,
+    private readonly toastController: ToastController
+  ) {}
 
   ngOnInit(): void {
     void this.loadBookings();
@@ -30,9 +38,11 @@ export class OwnerBookingsPage implements OnInit {
   async loadBookings(): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
+    this.renterContacts.set({});
     try {
       // ✅ NUEVO: Obtener reservas de AUTOS DEL LOCADOR
       const items = await this.bookingsService.getOwnerBookings();
+      await this.loadRenterContacts(items);
       this.bookings.set(items);
     } catch (err) {
       console.error('getOwnerBookings error', err);
@@ -132,56 +142,148 @@ export class OwnerBookingsPage implements OnInit {
   }
 
   async onStartRental(bookingId: string): Promise<void> {
-    if (!confirm('¿Confirmar que el locatario recibió el auto?')) return;
+    const confirmed = await this.presentConfirmation({
+      header: 'Iniciar alquiler',
+      message: 'Confirmá que el locatario recibió el auto.',
+      confirmText: 'Iniciar',
+    });
+    if (!confirmed) return;
     
     this.processingAction.set(bookingId);
     try {
       await this.bookingsService.updateBooking(bookingId, { status: 'in_progress' });
       await this.loadBookings();
-      alert('✅ Alquiler iniciado correctamente');
+      await this.presentToast('Alquiler iniciado correctamente');
     } catch (error) {
       console.error('Error starting rental:', error);
-      alert('❌ Error al iniciar el alquiler');
+      await this.presentToast('Error al iniciar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
     }
   }
 
   async onCompleteRental(bookingId: string): Promise<void> {
-    if (!confirm('¿Confirmar que el locatario devolvió el auto en buen estado?')) return;
+    const confirmed = await this.presentConfirmation({
+      header: 'Finalizar alquiler',
+      message: 'Confirmá que el locatario devolvió el auto en buen estado.',
+      confirmText: 'Finalizar',
+    });
+    if (!confirmed) return;
     
     this.processingAction.set(bookingId);
     try {
       await this.bookingsService.updateBooking(bookingId, { status: 'completed' });
       await this.loadBookings();
-      alert('✅ Alquiler finalizado correctamente');
+      await this.presentToast('Alquiler finalizado correctamente');
     } catch (error) {
       console.error('Error completing rental:', error);
-      alert('❌ Error al finalizar el alquiler');
+      await this.presentToast('Error al finalizar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
     }
   }
 
   async onCancelBooking(bookingId: string): Promise<void> {
-    const shouldCancel = confirm('¿Estás seguro de cancelar esta reserva?');
-    if (!shouldCancel) return;
+    const confirmed = await this.presentConfirmation({
+      header: 'Cancelar reserva',
+      message: 'Esta acción cancelará la reserva actual. ¿Deseás continuar?',
+      confirmText: 'Cancelar reserva',
+      confirmColor: 'danger',
+    });
+    if (!confirmed) return;
     
     this.processingAction.set(bookingId);
     try {
       await this.bookingsService.cancelBooking(bookingId, false);
       await this.loadBookings();
-      alert('✅ Reserva cancelada');
+      await this.presentToast('Reserva cancelada');
     } catch (error) {
       console.error('Error cancelling booking:', error);
-      alert('❌ Error al cancelar la reserva');
+      await this.presentToast('Error al cancelar la reserva', 'danger');
     } finally {
       this.processingAction.set(null);
     }
   }
 
-  getRenterInfo(booking: Booking): string {
-    // TODO: Implementar obtención de info del locatario
-    return booking.renter_id || 'Usuario';
+  renterDisplayName(booking: Booking): string {
+    const contact = this.renterContacts()[booking.id];
+    return contact?.name || contact?.email || booking.renter_id || 'Locatario';
+  }
+
+  renterEmail(booking: Booking): string | null {
+    const contact = this.renterContacts()[booking.id];
+    return contact?.email ?? null;
+  }
+
+  renterPhone(booking: Booking): string | null {
+    const contact = this.renterContacts()[booking.id];
+    return contact?.phone ?? null;
+  }
+
+  private async loadRenterContacts(bookings: Booking[]): Promise<void> {
+    const contacts: Record<string, { name?: string; email?: string; phone?: string }> = {};
+
+    await Promise.all(
+      bookings.map(async (booking) => {
+        if (!booking?.id || !booking?.renter_id) {
+          return;
+        }
+
+        try {
+          const contact = await this.bookingsService.getOwnerContact(booking.renter_id);
+          if (contact.success) {
+            contacts[booking.id] = {
+              name: contact.name,
+              email: contact.email,
+              phone: contact.phone,
+            };
+          } else {
+            console.warn('No se pudo cargar contacto del locatario:', contact.error);
+          }
+        } catch (error) {
+          console.error('Error fetching renter contact info:', error);
+        }
+      })
+    );
+
+    this.renterContacts.set(contacts);
+  }
+
+  private async presentConfirmation(options: {
+    header: string;
+    message: string;
+    confirmText?: string;
+    cancelText?: string;
+    confirmColor?: 'primary' | 'danger';
+  }): Promise<boolean> {
+    const alert = await this.alertController.create({
+      header: options.header,
+      message: options.message,
+      buttons: [
+        {
+          text: options.cancelText ?? 'Volver',
+          role: 'cancel',
+        },
+        {
+          text: options.confirmText ?? 'Confirmar',
+          role: 'confirm',
+          cssClass: options.confirmColor === 'danger' ? 'alert-button-danger' : undefined,
+        },
+      ],
+    });
+
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    return role === 'confirm';
+  }
+
+  private async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success'): Promise<void> {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2500,
+      position: 'top',
+      color,
+    });
+    await toast.present();
   }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
 
 // Models v1.1
 import {
@@ -30,6 +29,7 @@ import {
 
 // Models v1.0 (base)
 import { FgoMovementView } from '../models/fgo.model';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Servicio para gestionar FGO v1.1 (Extensión de FgoService)

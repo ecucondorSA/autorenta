@@ -6,10 +6,10 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { CarsService } from '../core/services/cars.service';
-import { BookingsService } from '../core/services/bookings.service';
-import { WalletService } from '../core/services/wallet.service';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { BookingsService } from '../core/services/bookings.service';
+import { CarsService } from '../core/services/cars.service';
+import { WalletService } from '../core/services/wallet.service';
 
 describe('Sprint 5.1 - E2E Booking Flow', () => {
   let carsService: CarsService;
@@ -94,7 +94,8 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
 
       expect(availableCars).toBeDefined();
       expect(availableCars.length).toBeGreaterThan(0);
-      expect(availableCars[0].location_city).toBe('Buenos Aires');
+      // Case-insensitive comparison for city name
+      expect(availableCars[0].location_city.toLowerCase()).toBe('buenos aires');
       console.log('✅ PASO 1: Búsqueda completada - Encontrados', availableCars.length, 'autos');
 
       // PASO 2: Selección de auto específico
