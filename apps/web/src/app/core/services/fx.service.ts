@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
 import {
   FxSnapshot,
-  FxSnapshotDb,
   CurrencyCode,
   isFxExpired,
   isFxVariationExceeded,
@@ -27,7 +26,7 @@ export class FxService {
    * Usa exchange_rates table (con margen del 20%)
    */
   getFxSnapshot(
-    fromCurrency: CurrencyCode = 'USD',
+    _fromCurrency: CurrencyCode = 'USD',
     toCurrency: CurrencyCode = 'ARS',
   ): Observable<FxSnapshot | null> {
     // Mapear a formato Binance pair
@@ -162,13 +161,13 @@ export class FxService {
   /**
    * Mapea FxSnapshotDb (de DB) a FxSnapshot (para componentes)
    */
-  private mapFxSnapshotFromDb(db: any): FxSnapshot {
-    const timestamp = new Date(db.timestamp || db.created_at);
+  private mapFxSnapshotFromDb(db: Record<string, unknown>): FxSnapshot {
+    const timestamp = new Date(String(db.timestamp || db.created_at));
     const expiresAt = new Date(timestamp);
     expiresAt.setDate(expiresAt.getDate() + 7); // +7 días
 
     return {
-      rate: db.rate,
+      rate: Number(db.rate),
       timestamp,
       fromCurrency: db.from_currency as CurrencyCode,
       toCurrency: db.to_currency as CurrencyCode,
@@ -184,8 +183,8 @@ export class FxService {
    * AHORA USA: ExchangeRateService (Binance)
    */
   async getCurrentRateAsync(
-    fromCurrency: CurrencyCode = 'USD',
-    toCurrency: CurrencyCode = 'ARS',
+    _fromCurrency: CurrencyCode = 'USD',
+    _toCurrency: CurrencyCode = 'ARS',
   ): Promise<number> {
     try {
       // Usar ExchangeRateService que consulta exchange_rates (Binance)

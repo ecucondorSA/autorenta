@@ -12,12 +12,45 @@ import { CommonModule } from '@angular/common';
 import { environment } from '@environment';
 import { MercadoPagoScriptService } from '../../../core/services/mercado-pago-script.service';
 
-type MercadoPagoCardFormData = {
-  token?: string;
-  cardNumber?: string;
-  lastFourDigits?: string;
-  [key: string]: unknown;
-};
+// MercadoPago SDK Types
+interface MercadoPagoSDK {
+  cardForm: (options: CardFormOptions) => CardFormInstance;
+}
+
+interface CardFormInstance {
+  unmount: () => void;
+  createCardToken: () => void;
+}
+
+interface CardFormOptions {
+  amount: string;
+  iframe: boolean;
+  autoMount: boolean;
+  form: {
+    id: string;
+    cardNumber: { id: string; placeholder: string };
+    expirationDate: { id: string; placeholder: string };
+    securityCode: { id: string; placeholder: string };
+    cardholderName: { id: string; placeholder: string };
+    identificationType: { id: string; placeholder: string };
+    identificationNumber: { id: string; placeholder: string };
+    installments: { id: string; placeholder: string };
+    issuer: { id: string; placeholder: string };
+  };
+  callbacks: {
+    onFormMounted: (error: unknown) => void;
+    onSubmit: (event: Event) => void;
+    onFetching: (resource: string) => void;
+    onError: (errors: unknown) => void;
+    onCardTokenReceived: (error: unknown, token: CardToken | null) => void;
+  };
+}
+
+interface CardToken {
+  id: string;
+  last_four_digits?: string;
+  first_six_digits?: string;
+}
 
 /**
  * Componente para capturar datos de tarjeta usando Mercado Pago CardForm
@@ -181,8 +214,8 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-  private cardForm: any;
-  private mp: any;
+  private cardForm: CardFormInstance | null = null;
+  private mp: MercadoPagoSDK | null = null;
   private mpScriptService = inject(MercadoPagoScriptService);
 
   ngOnInit(): void {
@@ -202,13 +235,12 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
   private async initializeMercadoPago(): Promise<void> {
     console.log('Initializing Mercado Pago CardForm...'); // Added log
     try {
-      const windowEnvKey = String(
-        (globalThis as any)?.__env?.NG_APP_MERCADOPAGO_PUBLIC_KEY ?? '',
-      ).trim();
+      const globalEnv = (globalThis as Record<string, unknown>).__env as Record<string, unknown> | undefined;
+      const windowEnvKey = String(globalEnv?.NG_APP_MERCADOPAGO_PUBLIC_KEY ?? '').trim();
+
+      const envRecord = environment as Record<string, unknown>;
       const buildEnvKey = String(
-        (environment as any)?.mercadopagoPublicKey ??
-          (environment as any)?.mercadoPagoPublicKey ??
-          '',
+        envRecord.mercadopagoPublicKey ?? envRecord.mercadoPagoPublicKey ?? '',
       ).trim();
       const runtimeEnvKey = windowEnvKey || buildEnvKey;
 
@@ -223,7 +255,8 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
         runtimeEnvKey ? `${runtimeEnvKey.slice(0, 8)}…` : '(empty)',
       );
 
-      this.mp = await this.mpScriptService.getMercadoPago(runtimeEnvKey);
+      const mpInstance = await this.mpScriptService.getMercadoPago(runtimeEnvKey);
+      this.mp = mpInstance as unknown as MercadoPagoSDK;
 
       // Crear CardForm
       const normalizedAmount = this.amountArs > 0 ? Math.ceil(this.amountArs) : 1;
@@ -270,7 +303,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
           },
         },
         callbacks: {
-          onFormMounted: (error: any) => {
+          onFormMounted: (error: unknown) => {
             console.log('onFormMounted callback triggered. Error:', error); // Added log
             if (error) {
               console.error('Error mounting form:', error);
@@ -298,20 +331,22 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
 
             if (Array.isArray(errors)) {
               // Log each error for debugging
-              errors.forEach((err: any, idx: number) => {
+              errors.forEach((err: unknown, idx: number) => {
+                const errorRecord = err as Record<string, unknown>;
                 console.error(`Error ${idx + 1}:`, {
-                  message: err?.message,
-                  description: err?.description,
-                  cause: err?.cause,
-                  code: err?.code,
-                  field: err?.field,
+                  message: errorRecord?.message,
+                  description: errorRecord?.description,
+                  cause: errorRecord?.cause,
+                  code: errorRecord?.code,
+                  field: errorRecord?.field,
                 });
               });
 
               message = errors
-                .map((err: any) => {
-                  const field = err?.field || '';
-                  const msg = err?.message || err?.description || err?.cause || '';
+                .map((err: unknown) => {
+                  const errorRecord = err as Record<string, unknown>;
+                  const field = String(errorRecord?.field || '');
+                  const msg = String(errorRecord?.message || errorRecord?.description || errorRecord?.cause || '');
                   return field ? `${field}: ${msg}` : msg;
                 })
                 .filter(Boolean)
@@ -325,7 +360,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
             this.errorMessage.set(message || 'Error desconocido con Mercado Pago');
             this.cardError.emit(message);
           },
-          onCardTokenReceived: (error: any, token: any) => {
+          onCardTokenReceived: (error: unknown, token: CardToken | null) => {
             this.isSubmitting.set(false);
             if (error) {
               console.error('Card token error:', error);
@@ -339,7 +374,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
               return;
             }
 
-            const last4 = token?.last_four_digits ?? token?.first_six_digits?.slice(-4) ?? '****';
+            const last4 = token.last_four_digits ?? token.first_six_digits?.slice(-4) ?? '****';
             console.log('Card token received via callback:', token.id);
             this.cardTokenGenerated.emit({
               cardToken: token.id,
@@ -360,7 +395,12 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
         err.forEach((e, i) => {
           console.error(`Error ${i}:`, e);
         });
-        message = err.map((e: any) => e?.message || e?.description || JSON.stringify(e)).join('; ');
+        message = err
+          .map((e: unknown) => {
+            const errorRecord = e as Record<string, unknown>;
+            return String(errorRecord?.message || errorRecord?.description || JSON.stringify(e));
+          })
+          .join('; ');
       } else if (err instanceof Error) {
         message = err.message;
       } else if (typeof err === 'string') {
@@ -384,7 +424,10 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       message = error.trim() || message;
     } else if (Array.isArray(error)) {
       const extracted = error
-        .map((err: any) => err?.message || err?.description || err?.cause || '')
+        .map((err: unknown) => {
+          const errorRecord = err as Record<string, unknown>;
+          return String(errorRecord?.message || errorRecord?.description || errorRecord?.cause || '');
+        })
         .filter(Boolean)
         .join(' | ');
       message = extracted || message;
