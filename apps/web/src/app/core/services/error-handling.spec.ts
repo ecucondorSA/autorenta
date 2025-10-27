@@ -19,7 +19,7 @@ describe('Sprint 5.3 - Error Handling', () => {
 
   beforeEach(() => {
     mockSupabase = jasmine.createSpyObj('SupabaseClient', ['from', 'rpc', 'auth', 'storage']);
-    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']) as any;
+    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']) as unknown;
     (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
       Promise.resolve({
         data: { user: { id: 'user-123', email: 'test@example.com' } },
@@ -61,7 +61,7 @@ describe('Sprint 5.3 - Error Handling', () => {
       try {
         await carsService.listActiveCars({ city: 'Buenos Aires' });
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
         console.log('✅ Error de red manejado:', error);
@@ -86,7 +86,7 @@ describe('Sprint 5.3 - Error Handling', () => {
           '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
         console.log('✅ Error de red en booking manejado');
@@ -112,7 +112,7 @@ describe('Sprint 5.3 - Error Handling', () => {
       try {
         await carsService.getCarById('car-123');
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.code || error.message).toBeTruthy();
         console.log('✅ Timeout de conexión manejado');
@@ -138,7 +138,7 @@ describe('Sprint 5.3 - Error Handling', () => {
       try {
         await carsService.listActiveCars({ city: 'Buenos Aires' });
         fail('Should have thrown an error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         // El mensaje debería ser comprensible para usuarios no técnicos
         expect(error.message || error.code).toBeDefined();
         console.log('✅ Mensaje de error disponible para UI:', error.message || error.code);
@@ -167,7 +167,7 @@ describe('Sprint 5.3 - Error Handling', () => {
       try {
         await carsService.listActiveCars({ city: 'Buenos Aires' });
         fail('Debería haber lanzado un error de timeout');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
         console.log('✅ Timeout de búsqueda manejado');
@@ -193,7 +193,7 @@ describe('Sprint 5.3 - Error Handling', () => {
           '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error de timeout');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
         console.log('✅ Timeout de RPC booking manejado');
@@ -216,7 +216,7 @@ describe('Sprint 5.3 - Error Handling', () => {
       try {
         await bookingsService.getMyBookings();
         fail('Debería haber lanzado un error de timeout');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
         console.log('✅ Timeout de "Mis Reservas" manejado');
@@ -293,7 +293,7 @@ describe('Sprint 5.3 - Error Handling', () => {
           '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message.toLowerCase()).toContain('booking');
         console.log('✅ Respuesta sin ID manejada:', error.message);
@@ -405,7 +405,7 @@ describe('Sprint 5.3 - Error Handling', () => {
       try {
         await carsService.listActiveCars({ city: 'Buenos Aires' });
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.code || error.message).toBeTruthy();
         console.log('✅ Usuario offline detectado');
@@ -431,7 +431,7 @@ describe('Sprint 5.3 - Error Handling', () => {
       try {
         await carsService.listActiveCars({ city: 'Test' });
         fail('Should have thrown an error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         // El mensaje debería indicar problemas de conexión
         expect(error.message || error.code).toBeDefined();
         console.log('✅ Mensaje offline disponible:', error.message || error.code);
@@ -456,7 +456,7 @@ describe('Sprint 5.3 - Error Handling', () => {
           '2025-11-05T18:00:00',
         );
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         // No debería corromper datos locales
         console.log('✅ Booking offline manejado sin corrupción');
@@ -502,7 +502,7 @@ describe('Sprint 5.3 - Error Handling', () => {
           year: 2023,
         });
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toContain('autenticado');
         console.log('✅ Sesión expirada manejada');
@@ -523,7 +523,7 @@ describe('Sprint 5.3 - Error Handling', () => {
           model: 'Test',
         });
         fail('Debería haber lanzado un error');
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toMatch(/autenticado/i);
         console.log('✅ Usuario no autenticado rechazado');

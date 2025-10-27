@@ -44,7 +44,7 @@ describe('PaymentsService', () => {
   describe('Basic functionality', () => {
     it('creates payment intents with default values', async () => {
       // Mock para obtener booking
-      const bookingBuilder: any = {};
+      const bookingBuilder: unknown = {};
       bookingBuilder.select = jasmine.createSpy('select').and.returnValue(bookingBuilder);
       bookingBuilder.eq = jasmine.createSpy('eq').and.returnValue(bookingBuilder);
       bookingBuilder.single = jasmine.createSpy('single').and.resolveTo({
@@ -58,7 +58,7 @@ describe('PaymentsService', () => {
       });
 
       // Mock para insertar payment intent
-      const intentBuilder: any = {};
+      const intentBuilder: unknown = {};
       intentBuilder.select = jasmine.createSpy('select').and.returnValue(intentBuilder);
       intentBuilder.single = jasmine.createSpy('single').and.resolveTo({
         data: { id: 'intent-1', status: 'pending' },
@@ -96,7 +96,7 @@ describe('PaymentsService', () => {
     });
 
     it('returns null when payment intent is missing', async () => {
-      const builder: any = {};
+      const builder: unknown = {};
       builder.select = jasmine.createSpy('select').and.returnValue(builder);
       builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
       builder.single = jasmine.createSpy('single').and.resolveTo({
@@ -205,7 +205,7 @@ describe('PaymentsService', () => {
         if (attemptCount < 3) {
           throw new Error('Network error');
         }
-        return { id: 'intent-123', status: 'pending' } as any;
+        return { id: 'intent-123', status: 'pending' } as unknown;
       });
 
       const markAsPaidSpy = spyOn(service, 'markAsPaid').and.resolveTo();

@@ -33,7 +33,7 @@ describe('RLS Security - Row Level Security Policies', () => {
   let supabase: SupabaseClient;
   const mockUserUuid1 = '11111111-1111-1111-1111-111111111111';
   const mockUserUuid2 = '22222222-2222-2222-2222-222222222222';
-  const mockAdminUuid = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+  const _mockAdminUuid = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
@@ -52,7 +52,7 @@ describe('RLS Security - Row Level Security Policies', () => {
       auth: {
         getUser: jasmine.createSpy('getUser'),
       },
-    } as any;
+    } as unknown;
   });
 
   describe('1. RLS habilitado en tablas críticas', () => {

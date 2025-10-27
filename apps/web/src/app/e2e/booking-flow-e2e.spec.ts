@@ -51,7 +51,7 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
   beforeEach(() => {
     // Mock Supabase client
     mockSupabase = jasmine.createSpyObj('SupabaseClient', ['from', 'rpc', 'auth', 'storage']);
-    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']) as any;
+    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']) as unknown;
     (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
       Promise.resolve({
         data: { user: { id: 'user-123', email: 'test@example.com' } },

@@ -8,7 +8,7 @@ interface TableExportSummary {
   totalRows: number;
   sampleCount: number;
   fields: Array<{ key: string; type: string; preview: string }>;
-  sample: any[];
+  sample: unknown[];
   error?: string;
 }
 
@@ -69,7 +69,7 @@ export class DatabaseExportService {
     let totalRows = 0;
     let sampleCount = 0;
     let fields: Array<{ key: string; type: string; preview: string }> = [];
-    let sample: any[] = [];
+    let sample: unknown[] = [];
     let error: string | undefined;
 
     const { count, error: countError } = await this.supabase

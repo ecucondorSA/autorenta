@@ -64,7 +64,9 @@ describe('Database RPC Functions', () => {
         error: null,
       };
 
-      mockSupabase.rpc.and.returnValue(Promise.resolve(mockCarsData) as any);
+      mockSupabase.rpc.and.returnValue(
+        Promise.resolve(mockCarsData) as ReturnType<typeof mockSupabase.rpc>,
+      );
 
       const result = await mockSupabase.rpc('get_available_cars', {
         p_start_date: '2025-11-01T10:00:00Z',
@@ -323,7 +325,7 @@ describe('Database RPC Functions', () => {
         select: jasmine.createSpy().and.returnValue({
           in: jasmine.createSpy().and.returnValue(Promise.resolve(mockSchemaResponse)),
         }),
-      }) as any;
+      }) as unknown;
 
       // Esta es una verificación conceptual del schema
       const allRPCsExist = requiredRPCs.length === mockSchemaResponse.data.length;

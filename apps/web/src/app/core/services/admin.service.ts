@@ -57,7 +57,7 @@ export class AdminService {
     if (error) throw error;
 
     // Flatten nested data structure
-    return (data ?? []).map((item: Record<string, unknown>) => ({
+    return (data ?? []).map((item: any) => ({
       ...item,
       user_name: item.user?.full_name,
       user_email: item.user?.email?.[0]?.email,

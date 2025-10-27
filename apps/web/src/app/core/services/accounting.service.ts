@@ -3,7 +3,7 @@
  * Integración con sistema contable basado en NIIF 15 y NIIF 37
  */
 
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
 export interface AccountingAccount {
   id: string;

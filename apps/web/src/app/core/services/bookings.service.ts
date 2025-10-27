@@ -133,7 +133,7 @@ export class BookingsService {
               .single();
 
             if (!policyError && policy) {
-              (coverage as Record<string, unknown>).policy = policy;
+              (coverage as Record<string, unknown>)['policy'] = policy;
             } else if (policyError) {
               console.warn('⚠️ No se pudo cargar la póliza de seguro:', policyError.message);
             }

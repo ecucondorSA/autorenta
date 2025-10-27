@@ -189,7 +189,7 @@ describe('Database Indexes', () => {
       // 3. idx_cars_category (category)
       // 4. idx_cars_available (is_available)
 
-      const queryPattern = {
+      const _queryPattern = {
         table: 'cars',
         joins: ['bookings'],
         where: [

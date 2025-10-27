@@ -386,7 +386,7 @@ export function mapFgoMovement(movement: FgoMovement): FgoMovementView {
     userName: movement.user_name,
     bookingId: movement.booking_id,
     carId: movement.car_id,
-    description: movement.meta?.['description'],
+    description: movement.meta?.['description'] as string | undefined,
     metadata: movement.meta || {},
     createdAt: new Date(movement.created_at),
   };

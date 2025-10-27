@@ -60,7 +60,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
           // Simular búsqueda de autos
           await simulateCarSearch(userId);
           return { userId, success: true };
-        } catch (error: any) {
+        } catch (error: unknown) {
           errors.push(error.message);
           return { userId, success: false, error: error.message };
         }
@@ -146,7 +146,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
 
       // Todas deben completarse sin errores
       expect(results.length).toBe(burstSize);
-      expect(results.every((r: any) => !r.error)).toBe(true);
+      expect(results.every((r: unknown) => !r.error)).toBe(true);
 
       // Debe completarse en tiempo razonable (< 3 segundos)
       expect(elapsedTime).toBeLessThan(3000);
@@ -241,7 +241,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       const results = await Promise.all(queries);
 
       // Todas deben completarse sin errores
-      expect(results.every((r: any) => r.success)).toBe(true);
+      expect(results.every((r: unknown) => r.success)).toBe(true);
       expect(results.length).toBe(nearLimitQueries);
     });
 

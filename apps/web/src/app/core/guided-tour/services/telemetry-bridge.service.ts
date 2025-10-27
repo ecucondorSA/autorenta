@@ -88,12 +88,15 @@ export class TelemetryBridgeService {
   private sendToAnalytics(event: TourEvent): void {
     // TODO: Integrate with actual analytics service
     // Example: window.gtag, Mixpanel, Segment, etc.
-    if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
-      (window as Window & { gtag: (...args: unknown[]) => void }).gtag('event', `tour_${event.type}`, {
-        tour_id: event.tourId,
-        step_id: event.stepId,
-        ...event.metadata,
-      });
+    if (typeof window !== 'undefined') {
+      const windowWithGtag = window as Window & { gtag?: (...args: unknown[]) => void };
+      if (windowWithGtag.gtag) {
+        windowWithGtag.gtag('event', `tour_${event.type}`, {
+          tour_id: event.tourId,
+          step_id: event.stepId,
+          ...event.metadata,
+        });
+      }
     }
   }
 

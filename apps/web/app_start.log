@@ -1,8 +1,123 @@
 [33m❯[39m Building...
 [32m✔[39m Building...
-Application bundle generation failed. [25.472 seconds] - 2025-10-27T08:40:19.781Z
+Application bundle generation failed. [79.721 seconds] - 2025-10-27T20:44:01.975Z
 
-[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'avatar_url' comes from an index signature, so it must be accessed with ['avatar_url'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.html:121:34:
+[37m      121 │ ...       *ngIf="userProfile()?.[32mavatar_url[37m; else profilePlaceholder"
+          ╵                                 [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:65:15:
+[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'avatar_url' comes from an index signature, so it must be accessed with ['avatar_url'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.html:122:34:
+[37m      122 │             [src]="userProfile()!.[32mavatar_url[37m"
+          ╵                                   [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:65:15:
+[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'full_name' comes from an index signature, so it must be accessed with ['full_name'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.html:123:34:
+[37m      123 │             [alt]="userProfile()?.[32mfull_name[37m || 'Profile'"
+          ╵                                   [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:65:15:
+[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'avatar_url' comes from an index signature, so it must be accessed with ['avatar_url'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.html:219:36:
+[37m      219 │ ...       *ngIf="userProfile()?.[32mavatar_url[37m; else sidebarPlaceholder"
+          ╵                                 [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:65:15:
+[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'avatar_url' comes from an index signature, so it must be accessed with ['avatar_url'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.html:220:36:
+[37m      220 │               [src]="userProfile()!.[32mavatar_url[37m"
+          ╵                                     [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:65:15:
+[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'full_name' comes from an index signature, so it must be accessed with ['full_name'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.component.html:221:36:
+[37m      221 │               [alt]="userProfile()?.[32mfull_name[37m || 'Profile'"
+          ╵                                     [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:65:15:
+[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'useModalOverlay' comes from an index signature, so it must be accessed with ['useModalOverlay'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:44:31:
+[37m      44 │       useModalOverlay: options.[32museModalOverlay[37m ?? true,
+         ╵                                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'canClickTarget' comes from an index signature, so it must be accessed with ['canClickTarget'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:47:32:
+[37m      47 │         canClickTarget: options.[32mcanClickTarget[37m ?? true,
+         ╵                                 [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2698: Spread types may only be created from object types.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:53:8:
+[37m      53 │         [32m...options.stepOptions[37m,
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'stepOptions' comes from an index signature, so it must be accessed with ['stepOptions'].[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:53:19:
+[37m      53 │         ...options.[32mstepOptions[37m,
+         ╵                    [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type '{ useModalOverlay: {}; defaultStepOptions: any; }' is not assignable to parameter of type 'TourOptions'.
+  Types of property 'useModalOverlay' are incompatible.
+    Type '{}' is not assignable to type 'boolean | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:57:34:
+[37m      57 │     this.tour = new Shepherd.Tour([32mdefaultOptions[37m);
+         ╵                                   [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
     src/testing/helpers/responsive-test-helpers.ts:17:17:
 [37m      17 │     addListener: [32mjasmine[37m.createSpy('addListener'),

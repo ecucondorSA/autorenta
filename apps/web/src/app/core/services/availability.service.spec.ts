@@ -85,7 +85,7 @@ describe('Availability Service - get_available_cars RPC', () => {
     try {
       await service.getAvailableCars('2025-11-01T00:00:00Z', '2025-11-05T00:00:00Z');
       fail('Should have thrown an error');
-    } catch (error: any) {
+    } catch (error: unknown) {
       expect(error).toBeDefined();
       expect(error.message).toBe('Database connection failed');
     }
