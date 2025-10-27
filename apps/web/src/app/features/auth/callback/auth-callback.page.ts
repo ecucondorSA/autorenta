@@ -103,7 +103,7 @@ export class AuthCallbackPage implements OnInit {
     try {
       // Procesar tokens del hash de OAuth
       // Supabase Auth detecta automáticamente tokens en URL fragments (#access_token=...)
-      const { data, error } = await this.auth.handleOAuthCallback();
+      const { error } = await this.auth.handleOAuthCallback();
 
       if (error) {
         throw new Error(error.message);

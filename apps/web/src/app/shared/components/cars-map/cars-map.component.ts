@@ -491,7 +491,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private async loadCarLocations(force = false): Promise<void> {
     try {
       let locations = await this.carLocationsService.fetchActiveLocations(force);
-      const _originalCount = locations.length;
 
       // Ordenar por distancia si tenemos ubicación del usuario
       // NO filtramos por distancia para mostrar TODOS los autos disponibles en Uruguay

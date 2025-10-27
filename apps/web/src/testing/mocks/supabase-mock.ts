@@ -1,5 +1,3 @@
-import { RealtimeChannel } from '@supabase/supabase-js';
-
 /**
  * Mock factory for Supabase client used in tests
  * Provides pre-configured mocks for common RPC calls
@@ -46,7 +44,7 @@ export function createSupabaseMock() {
   };
 
   // Configure from() to return query builder
-  fromSpy.and.callFake((table: string) => createQueryBuilder());
+  fromSpy.and.callFake((_table: string) => createQueryBuilder());
 
   const mock = {
     rpc: rpcSpy,

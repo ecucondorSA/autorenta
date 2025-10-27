@@ -470,7 +470,7 @@ export class TourService {
 
   private waitForElement(selector: string): Promise<void> {
     if (typeof document === 'undefined') return Promise.resolve();
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
       const startedAt = Date.now();
       const tryFind = () => {
         const element = document.querySelector(selector);

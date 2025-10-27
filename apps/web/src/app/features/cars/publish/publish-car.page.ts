@@ -271,7 +271,6 @@ export class PublishCarPage implements OnInit, OnDestroy {
   private async geocodeCurrentAddress(): Promise<void> {
     const street = this.form.get('location_street')?.value;
     const streetNumber = this.form.get('location_street_number')?.value;
-    const _neighborhood = this.form.get('location_neighborhood')?.value;
     const city = this.form.get('location_city')?.value;
     const state = this.form.get('location_state')?.value;
     const country = this.form.get('location_country')?.value;
