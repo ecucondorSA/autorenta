@@ -4,7 +4,6 @@ import {
   OnInit,
   computed,
   signal,
-  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -17,7 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { FxService } from '../../../core/services/fx.service'; // ✅ NUEVO: Para tasas de cambio actuales
-import { Car, Review, CarStats, ReviewSummary } from '../../../core/models';
+import { Car, Review, CarStats } from '../../../core/models';
 import {
   DateRangePickerComponent,
   DateRange,
@@ -426,7 +425,7 @@ export class CarDetailPage implements OnInit {
    * Get vehicle value in USD
    * Usa value_usd de la DB, si no existe calcula desde el precio diario
    */
-  private estimateVehicleValue(car: any): number {
+  private estimateVehicleValue(car: Car): number {
     // PRIORIDAD 1: Usar valor real de la DB si existe
     if (car.value_usd && car.value_usd > 0) {
       return Math.round(car.value_usd);
@@ -486,7 +485,6 @@ export class CarDetailPage implements OnInit {
     const lat = car.location_lat;
     const lng = car.location_lng;
     const carName = `${car.brand} ${car.model}`;
-    const address = car.location_formatted_address || car.location_city || 'Auto para alquilar';
 
     // Detectar sistema operativo y app de mapas preferida
     const userAgent = navigator.userAgent.toLowerCase();
@@ -516,9 +514,9 @@ export class CarDetailPage implements OnInit {
    */
   private showNavigationOptions(
     primary: string,
-    secondary: string,
-    tertiary: string,
-    carName: string,
+    _secondary: string,
+    _tertiary: string,
+    _carName: string,
   ): void {
     // En móvil, intentar abrir directamente la app de mapas nativa
     if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {

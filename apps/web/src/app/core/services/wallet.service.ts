@@ -313,9 +313,9 @@ export class WalletService {
             const errorText = await mpResponse.text();
             console.error('🔍 [WALLET DEBUG] Error response:', errorText);
 
-            let errorData: any = {};
+            let errorData: Record<string, unknown> = {};
             try {
-              errorData = JSON.parse(errorText);
+              errorData = JSON.parse(errorText) as Record<string, unknown>;
             } catch {
               errorData = { rawError: errorText };
             }
@@ -632,7 +632,7 @@ export class WalletService {
       }
 
       // Transformar datos de vista consolidada a formato WalletTransaction
-      const transactions = (data ?? []).map((row: any) => ({
+      const transactions = (data ?? []).map((row: Record<string, unknown>) => ({
         id: row.id,
         user_id: row.user_id,
         type: row.transaction_type,
@@ -866,28 +866,33 @@ export class WalletService {
           (payload) => {
             console.log('🔔 Cambio detectado en wallet_transactions:', payload);
 
-            const oldRecord = payload.old as any;
-            const newRecord = payload.new as any;
+            const oldRecord = payload.old as Record<string, unknown> | undefined;
+            const newRecord = payload.new as Record<string, unknown> | undefined;
+
+            if (!newRecord) {
+              console.warn('🔔 No newRecord en el payload, ignorando evento');
+              return;
+            }
 
             // Convertir a WalletTransaction
             const transaction: WalletTransaction = {
-              id: newRecord.id,
-              user_id: newRecord.user_id,
-              type: newRecord.type,
-              status: newRecord.status,
-              amount: newRecord.amount,
-              currency: newRecord.currency,
-              is_withdrawable: newRecord.is_withdrawable,
-              reference_type: newRecord.reference_type,
-              reference_id: newRecord.reference_id,
-              provider: newRecord.provider,
-              provider_transaction_id: newRecord.provider_transaction_id,
-              provider_metadata: newRecord.provider_metadata,
-              description: newRecord.description,
-              admin_notes: newRecord.admin_notes,
-              created_at: newRecord.created_at,
-              updated_at: newRecord.updated_at,
-              completed_at: newRecord.completed_at,
+              id: newRecord.id as string,
+              user_id: newRecord.user_id as string,
+              type: newRecord.type as WalletTransaction['type'],
+              status: newRecord.status as WalletTransaction['status'],
+              amount: newRecord.amount as number,
+              currency: newRecord.currency as string,
+              is_withdrawable: newRecord.is_withdrawable as boolean,
+              reference_type: newRecord.reference_type as string | null,
+              reference_id: newRecord.reference_id as string | null,
+              provider: newRecord.provider as string | null,
+              provider_transaction_id: newRecord.provider_transaction_id as string | null,
+              provider_metadata: newRecord.provider_metadata as Record<string, unknown> | null,
+              description: newRecord.description as string | null,
+              admin_notes: newRecord.admin_notes as string | null,
+              created_at: newRecord.created_at as string,
+              updated_at: newRecord.updated_at as string,
+              completed_at: newRecord.completed_at as string | null,
             };
 
             // Detectar si es un depósito que pasó de pending a completed
@@ -945,25 +950,31 @@ export class WalletService {
           (payload) => {
             console.log('🔔 Nueva transacción detectada:', payload);
 
-            const newRecord = payload.new as any;
+            const newRecord = payload.new as Record<string, unknown> | undefined;
+
+            if (!newRecord) {
+              console.warn('🔔 No newRecord en el payload, ignorando evento');
+              return;
+            }
+
             const transaction: WalletTransaction = {
-              id: newRecord.id,
-              user_id: newRecord.user_id,
-              type: newRecord.type,
-              status: newRecord.status,
-              amount: newRecord.amount,
-              currency: newRecord.currency,
-              is_withdrawable: newRecord.is_withdrawable,
-              reference_type: newRecord.reference_type,
-              reference_id: newRecord.reference_id,
-              provider: newRecord.provider,
-              provider_transaction_id: newRecord.provider_transaction_id,
-              provider_metadata: newRecord.provider_metadata,
-              description: newRecord.description,
-              admin_notes: newRecord.admin_notes,
-              created_at: newRecord.created_at,
-              updated_at: newRecord.updated_at,
-              completed_at: newRecord.completed_at,
+              id: newRecord.id as string,
+              user_id: newRecord.user_id as string,
+              type: newRecord.type as WalletTransaction['type'],
+              status: newRecord.status as WalletTransaction['status'],
+              amount: newRecord.amount as number,
+              currency: newRecord.currency as string,
+              is_withdrawable: newRecord.is_withdrawable as boolean,
+              reference_type: newRecord.reference_type as string | null,
+              reference_id: newRecord.reference_id as string | null,
+              provider: newRecord.provider as string | null,
+              provider_transaction_id: newRecord.provider_transaction_id as string | null,
+              provider_metadata: newRecord.provider_metadata as Record<string, unknown> | null,
+              description: newRecord.description as string | null,
+              admin_notes: newRecord.admin_notes as string | null,
+              created_at: newRecord.created_at as string,
+              updated_at: newRecord.updated_at as string,
+              completed_at: newRecord.completed_at as string | null,
             };
 
             // Callback para nueva transacción
