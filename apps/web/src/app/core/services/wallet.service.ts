@@ -21,6 +21,34 @@ import type {
 } from '../models/wallet.model';
 import { SupabaseClientService } from './supabase-client.service';
 
+/** Metadata structure stored in wallet_transactions.metadata (JSONB) */
+interface WalletMetadata {
+  is_withdrawable?: boolean;
+  reference_type?: string;
+  reference_id?: string;
+  provider?: string;
+  provider_transaction_id?: string;
+  provider_metadata?: Record<string, unknown>;
+  description?: string;
+  admin_notes?: string;
+  [key: string]: unknown; // Allow additional fields
+}
+
+/** Database row from wallet transactions view */
+interface WalletTransactionRow {
+  id: unknown;
+  user_id: unknown;
+  transaction_type: unknown;
+  status: unknown;
+  amount_cents: unknown;
+  currency: unknown;
+  metadata?: WalletMetadata | null;
+  booking_id?: unknown;
+  transaction_date: unknown;
+  legacy_completed_at?: unknown;
+  [key: string]: unknown;
+}
+
 /**
  * WalletService
  *
@@ -643,27 +671,32 @@ export class WalletService {
       }
 
       // Transformar datos de vista consolidada a formato WalletTransaction
-      const transactions = (data ?? []).map((row: Record<string, unknown>) => ({
+      const transactions = (data ?? []).map((row: WalletTransactionRow) => {
+        const amountCents = typeof row.amount_cents === 'number' ? row.amount_cents : 0;
+        const metadata = row.metadata ?? {};
+
+        return {
         id: row.id,
         user_id: row.user_id,
         type: row.transaction_type,
         status: row.status,
-        amount: row.amount_cents / 100, // Convertir centavos a decimales
+        amount: amountCents / 100, // Convertir centavos a decimales
         currency: row.currency,
-        is_withdrawable: row.metadata?.is_withdrawable ?? false,
-        reference_type: row.metadata?.reference_type,
-        reference_id: row.metadata?.reference_id || row.booking_id,
-        provider: row.metadata?.provider,
-        provider_transaction_id: row.metadata?.provider_transaction_id,
-        provider_metadata: row.metadata?.provider_metadata,
-        description: row.metadata?.description,
-        admin_notes: row.metadata?.admin_notes,
+        is_withdrawable: metadata.is_withdrawable ?? false,
+        reference_type: metadata.reference_type,
+        reference_id: metadata.reference_id || row.booking_id,
+        provider: metadata.provider,
+        provider_transaction_id: metadata.provider_transaction_id,
+        provider_metadata: metadata.provider_metadata,
+        description: metadata.description,
+        admin_notes: metadata.admin_notes,
         created_at: row.transaction_date,
         updated_at: row.transaction_date,
         completed_at:
           row.legacy_completed_at ||
           (row.status === 'completed' ? row.transaction_date : undefined),
-      })) as WalletTransaction[];
+        };
+      }) as WalletTransaction[];
 
       this.transactions.set(transactions);
 
@@ -894,9 +927,9 @@ export class WalletService {
               amount: newRecord.amount as number,
               currency: newRecord.currency as string,
               is_withdrawable: newRecord.is_withdrawable as boolean,
-              reference_type: newRecord.reference_type as string | null,
+              reference_type: newRecord.reference_type as WalletTransaction['reference_type'],
               reference_id: newRecord.reference_id as string | null,
-              provider: newRecord.provider as string | null,
+              provider: newRecord.provider as WalletTransaction['provider'],
               provider_transaction_id: newRecord.provider_transaction_id as string | null,
               provider_metadata: newRecord.provider_metadata as Record<string, unknown> | null,
               description: newRecord.description as string | null,
@@ -976,9 +1009,9 @@ export class WalletService {
               amount: newRecord.amount as number,
               currency: newRecord.currency as string,
               is_withdrawable: newRecord.is_withdrawable as boolean,
-              reference_type: newRecord.reference_type as string | null,
+              reference_type: newRecord.reference_type as WalletTransaction['reference_type'],
               reference_id: newRecord.reference_id as string | null,
-              provider: newRecord.provider as string | null,
+              provider: newRecord.provider as WalletTransaction['provider'],
               provider_transaction_id: newRecord.provider_transaction_id as string | null,
               provider_metadata: newRecord.provider_metadata as Record<string, unknown> | null,
               description: newRecord.description as string | null,
