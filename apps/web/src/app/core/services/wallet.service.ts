@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { environment } from '@environment';
 import type {
   WalletBalance,
   WalletTransaction,
@@ -283,8 +284,13 @@ export class WalletService {
           console.log('🔍 [WALLET DEBUG] Amount:', params.amount);
           console.log('🔍 [WALLET DEBUG] Has accessToken:', !!accessToken);
 
-          // HARDCODED URL - FIX para "Failed to fetch"
-          const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+          const supabaseUrl = environment.supabaseUrl;
+          if (!supabaseUrl) {
+            throw this.createError(
+              'SUPABASE_URL_MISSING',
+              'Supabase URL no configurada. Define NG_APP_SUPABASE_URL antes de iniciar depósitos.',
+            );
+          }
           console.log('🔍 [WALLET DEBUG] Supabase URL:', supabaseUrl);
 
           const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-create-preference`;
@@ -389,8 +395,13 @@ export class WalletService {
         throw this.createError('AUTH_ERROR', 'No hay sesión activa');
       }
 
-      // HARDCODED URL - Misma lógica que initiateDeposit
-      const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+      const supabaseUrl = environment.supabaseUrl;
+      if (!supabaseUrl) {
+        throw this.createError(
+          'SUPABASE_URL_MISSING',
+          'Supabase URL no configurada. Define NG_APP_SUPABASE_URL antes de forzar el polling de pagos.',
+        );
+      }
       const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-poll-pending-payments`;
 
       console.log('📡 Llamando polling function:', edgeFunctionUrl);
@@ -1114,7 +1125,13 @@ export class WalletService {
         return;
       }
 
-      const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+      const supabaseUrl = environment.supabaseUrl;
+      if (!supabaseUrl) {
+        console.warn(
+          '⚠️ Supabase URL no configurada. Omite envío de email de confirmación. Define NG_APP_SUPABASE_URL para habilitarlo.',
+        );
+        return;
+      }
       const edgeFunctionUrl = `${supabaseUrl}/functions/v1/send-deposit-confirmation-email`;
 
       console.log('📧 Enviando email de confirmación...');

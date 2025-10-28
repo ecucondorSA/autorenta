@@ -29,11 +29,6 @@
                 "input": "public"
               },
               {
-                "glob": "**/*.wasm",
-                "input": "node_modules/onnxruntime-web/dist",
-                "output": "/assets/onnxruntime"
-              },
-              {
                 "glob": "**/*.json",
                 "input": "src/assets/i18n",
                 "output": "/assets/i18n"

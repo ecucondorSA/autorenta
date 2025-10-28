@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { BackgroundRemovalService } from './background-removal.service';
 import { StockPhotosService, StockPhoto } from './stock-photos.service';
 import { CloudflareAiService } from './cloudflare-ai.service';
 
@@ -16,14 +15,13 @@ export type GenerationMethod = 'stock-photos' | 'cloudflare-ai';
 /**
  * Servicio para mejorar fotos de autos con IA
  * Soporta 2 métodos:
- * 1. Stock Photos + Background Removal (rápido, fotos reales)
+ * 1. Stock Photos (rápido, fotos reales)
  * 2. Cloudflare AI FLUX.1 (lento, generación desde cero)
  */
 @Injectable({
   providedIn: 'root',
 })
 export class AiPhotoEnhancerService {
-  private readonly backgroundRemoval = inject(BackgroundRemovalService);
   private readonly stockPhotos = inject(StockPhotosService);
   private readonly cloudflareAi = inject(CloudflareAiService);
 
@@ -49,7 +47,7 @@ export class AiPhotoEnhancerService {
   }
 
   /**
-   * Método 1: Stock Photos + Background Removal (RÁPIDO)
+   * Método 1: Stock Photos (RÁPIDO)
    */
   private async generateWithStockPhotos(params: {
     brand: string;
@@ -74,7 +72,7 @@ export class AiPhotoEnhancerService {
 
     console.log(`[AiPhotoEnhancer] Processing ${selectedPhotos.length} photos...`);
 
-    // 3. Descargar y mejorar cada foto
+    // 3. Descargar cada foto
     const enhanced: EnhancedPhoto[] = [];
 
     for (const stockPhoto of selectedPhotos) {
@@ -82,8 +80,8 @@ export class AiPhotoEnhancerService {
         // Descargar foto
         const originalFile = await this.stockPhotos.downloadPhoto(stockPhoto);
 
-        // Remover fondo (opcional - puede ser toggle)
-        const enhancedBlob = await this.backgroundRemoval.removeBackground(originalFile);
+        // Usar foto original sin modificaciones
+        const enhancedBlob = new Blob([originalFile], { type: originalFile.type });
 
         // Crear preview URL
         const preview = URL.createObjectURL(enhancedBlob);
@@ -170,12 +168,13 @@ export class AiPhotoEnhancerService {
   }
 
   /**
-   * Mejora una foto existente removiendo el fondo
+   * Mejora una foto existente (actualmente sin procesamiento adicional)
    */
   async enhanceExistingPhoto(photo: File): Promise<EnhancedPhoto> {
-    console.log('[AiPhotoEnhancer] Enhancing existing photo...');
+    console.log('[AiPhotoEnhancer] Processing existing photo...');
 
-    const enhancedBlob = await this.backgroundRemoval.removeBackground(photo);
+    // Usar foto original sin modificaciones
+    const enhancedBlob = new Blob([photo], { type: photo.type });
     const preview = URL.createObjectURL(enhancedBlob);
 
     return {

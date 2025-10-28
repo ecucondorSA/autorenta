@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { environment } from '@environment';
 
 interface DepositStats {
   total_deposits: number;
@@ -321,7 +322,7 @@ export class DepositsMonitoringPage implements OnInit {
         }
 
         const response = await fetch(
-          'https://obxvffplochgeiclibng.supabase.co/functions/v1/mercadopago-poll-pending-payments',
+          `${environment.supabaseUrl}/functions/v1/mercadopago-poll-pending-payments`,
           {
             method: 'POST',
             headers: {

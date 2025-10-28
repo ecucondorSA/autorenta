@@ -83,20 +83,14 @@ export class SupabaseClientService {
   private readonly client: SupabaseClient;
 
   constructor() {
-    // HARDCODED URL FIX para resolver "Failed to fetch" en producción
-    const SUPABASE_URL_HARDCODED = 'https://obxvffplochgeiclibng.supabase.co';
-    const SUPABASE_ANON_KEY_HARDCODED =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU';
-
-    // Usar valores hardcodeados como fallback si environment no está configurado
-    const supabaseUrl = environment.supabaseUrl || SUPABASE_URL_HARDCODED;
-    const supabaseAnonKey = environment.supabaseAnonKey || SUPABASE_ANON_KEY_HARDCODED;
+    const supabaseUrl = environment.supabaseUrl;
+    const supabaseAnonKey = environment.supabaseAnonKey;
 
     if (!supabaseUrl || !supabaseAnonKey) {
       const message =
         'Supabase no está configurado. Define NG_APP_SUPABASE_URL y NG_APP_SUPABASE_ANON_KEY en tu entorno (por ejemplo, .env.development.local).';
       console.error(message, {
-        supabaseUrl: supabaseUrl,
+        supabaseUrl,
         supabaseAnonKey: supabaseAnonKey ? '***' : '',
       });
       throw new Error(message);

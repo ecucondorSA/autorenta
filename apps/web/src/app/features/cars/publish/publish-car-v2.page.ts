@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { ModalController } from '@ionic/angular/standalone';
+import { ModalController, AlertController } from '@ionic/angular/standalone';
 import { CarsService } from '../../../core/services/cars.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
-import { BackgroundRemovalService } from '../../../core/services/background-removal.service';
 import {
   AiPhotoEnhancerService,
 } from '../../../core/services/ai-photo-enhancer.service';
@@ -902,7 +901,6 @@ export class PublishCarV2Page implements OnInit {
   private readonly fb: FormBuilder;
   private readonly carsService: CarsService;
   private readonly geocodingService: GeocodingService;
-  private readonly bgRemovalService = inject(BackgroundRemovalService);
   private readonly aiPhotoEnhancer = inject(AiPhotoEnhancerService);
   private readonly supabaseClient = inject(SupabaseClientService);
   private readonly router: Router;
@@ -969,10 +967,12 @@ export class PublishCarV2Page implements OnInit {
     this.router = router;
     this.route = route;
     this.modalCtrl = inject(ModalController);
+    this.alertController = inject(AlertController);
     this.marketplaceService = inject(MarketplaceOnboardingService);
   }
 
   private readonly modalCtrl: ModalController;
+  private readonly alertController: AlertController;
   private readonly marketplaceService: MarketplaceOnboardingService;
 
   async ngOnInit(): Promise<void> {
@@ -1009,26 +1009,72 @@ export class PublishCarV2Page implements OnInit {
 
       const canList = await this.marketplaceService.canListCars(user.id);
 
-      // TODO: Activar cuando la tabla mp_onboarding_states esté creada
-      // Por ahora permitir publicar sin onboarding de MP
-      const requiresOnboarding = false;
-      if (requiresOnboarding && !canList) {
+      // ✅ ONBOARDING DE MP RECOMENDADO (2025-10-28)
+      // La tabla mp_onboarding_states ya está creada (migration 004)
+      // El onboarding es SOFT REQUIREMENT: se muestra modal pero se puede skipear
+      const shouldPromptOnboarding = true;
+
+      if (shouldPromptOnboarding && !canList) {
         console.log('⚠️ User needs to onboard to Mercado Pago');
 
-        // Mostrar modal de onboarding
+        // Mostrar modal de onboarding (permite skipear)
         const modal = await this.modalCtrl.create({
           component: MpOnboardingModalComponent,
-          backdropDismiss: false,
+          backdropDismiss: true, // Permite cerrar sin completar
         });
 
         await modal.present();
 
         const { data } = await modal.onWillDismiss();
 
-        // Si el usuario no completa el onboarding, redirigir al listado
-        if (!data?.completed) {
-          console.log('User cancelled MP onboarding, redirecting to cars list');
-          await this.router.navigate(['/cars']);
+        // Si el usuario completa el onboarding, excelente!
+        if (data?.completed) {
+          console.log('✅ MP onboarding completed successfully');
+          // Continuar con publicación
+        } else {
+          // Usuario skipea onboarding - mostrar warning pero permitir continuar
+          console.log('⚠️ User skipped MP onboarding, showing warning');
+
+          const alert = await this.alertController.create({
+            header: '⚠️ Onboarding Pendiente',
+            message: `
+              <p><strong>Podrás publicar tu auto, pero:</strong></p>
+              <ul>
+                <li>❌ No podrás recibir pagos automáticos</li>
+                <li>❌ Los split-payments no funcionarán</li>
+                <li>⚠️ Las reservas quedarán en estado pendiente</li>
+              </ul>
+              <p>Te recomendamos completar el onboarding de Mercado Pago más tarde desde tu perfil.</p>
+            `,
+            buttons: [
+              {
+                text: 'Vincular Ahora',
+                role: 'link',
+                handler: async () => {
+                  // Re-abrir modal de onboarding
+                  const retryModal = await this.modalCtrl.create({
+                    component: MpOnboardingModalComponent,
+                    backdropDismiss: true,
+                  });
+                  await retryModal.present();
+                  const { data: retryData } = await retryModal.onWillDismiss();
+                  if (retryData?.completed) {
+                    console.log('✅ MP onboarding completed on retry');
+                  }
+                },
+              },
+              {
+                text: 'Continuar Sin Vincular',
+                role: 'cancel',
+                handler: () => {
+                  console.log('User chose to continue without MP onboarding');
+                  // Continuar con publicación sin onboarding
+                },
+              },
+            ],
+          });
+
+          await alert.present();
         }
       }
     } catch (error) {
@@ -1219,21 +1265,10 @@ export class PublishCarV2Page implements OnInit {
 
         console.log(`[Upload] Processing ${file.name}...`);
 
-        // 1. Remover fondo con ONNX
-        let processedFile: File;
-        try {
-          console.log(`[Upload] Removing background from ${file.name}...`);
-          const processedBlob = await this.bgRemovalService.removeBackground(file);
-          processedFile = new File([processedBlob], file.name.replace(/\.[^.]+$/, '.png'), {
-            type: 'image/png',
-          });
-          console.log(`✅ [Upload] Background removed from ${file.name}`);
-        } catch (error) {
-          console.warn(`⚠️ Background removal failed for ${file.name}, using original:`, error);
-          processedFile = file; // Fallback: usar imagen original
-        }
+        // Usar imagen original directamente
+        const processedFile = file;
 
-        // 2. Crear preview
+        // Crear preview
         const reader = new FileReader();
         reader.onload = (e) => {
           const preview = e.target?.result as string;

@@ -63,17 +63,16 @@ serve(async (req) => {
 
   try {
     // Verificar variables de entorno
-    let MP_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN') || 'APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571';
-
-    // Limpiar token
-    MP_ACCESS_TOKEN = MP_ACCESS_TOKEN.trim().replace(/[\r\n\t\s]/g, '');
+    const rawToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
 
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!MP_ACCESS_TOKEN || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    if (!rawToken || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       throw new Error('Missing required environment variables');
     }
+
+    const MP_ACCESS_TOKEN = rawToken.trim().replace(/[\r\n\t\s]/g, '');
 
     // Validar método HTTP
     if (req.method !== 'POST') {

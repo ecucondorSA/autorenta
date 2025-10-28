@@ -126,5 +126,11 @@ export const routes: Routes = [
     path: 'terminos',
     loadComponent: () => import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
   },
+  {
+    path: 'messages',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/messages/messages.page').then((m) => m.MessagesPage),
+  },
   { path: '**', redirectTo: '' },
 ];
