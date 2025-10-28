@@ -1473,11 +1473,11 @@ export class PublishCarV2Page implements OnInit {
         console.log('🌍 Geocoding address...');
         try {
           const geocodingResult = await this.geocodingService.geocodeStructuredAddress(
-            formValue.location_street,
-            formValue.location_street_number,
-            formValue.location_city,
-            formValue.location_state,
-            formValue.location_country,
+            formValue.location_street as string,
+            formValue.location_street_number as string,
+            formValue.location_city as string,
+            formValue.location_state as string,
+            formValue.location_country as string,
           );
 
           location_lat = geocodingResult.latitude;
@@ -1489,8 +1489,8 @@ export class PublishCarV2Page implements OnInit {
           // Fallback: Try geocoding just the city
           try {
             const cityResult = await this.geocodingService.getCityCoordinates(
-              formValue.location_city,
-              formValue.location_country,
+              formValue.location_city as string,
+              formValue.location_country as string,
             );
             location_lat = cityResult.latitude;
             location_lng = cityResult.longitude;
@@ -1507,32 +1507,32 @@ export class PublishCarV2Page implements OnInit {
       }
 
       const carData: Partial<Car> = {
-        brand_id: formValue.brand_id,
-        model_id: formValue.model_id,
+        brand_id: formValue.brand_id as string,
+        model_id: formValue.model_id as string,
         brand_text_backup: brand.name, // Campo requerido NOT NULL
         model_text_backup: model.name, // Campo requerido NOT NULL
-        year: formValue.year,
-        color: formValue.color,
-        mileage: formValue.mileage,
-        transmission: formValue.transmission,
-        fuel: formValue.fuel,
-        seats: selectedModel?.seats, // Desde car_models
-        doors: selectedModel?.doors, // Desde car_models
-        price_per_day: formValue.price_per_day,
-        currency: formValue.currency,
-        value_usd: formValue.value_usd, // ✅ NUEVO: Valor del vehículo para cálculos de riesgo
-        min_rental_days: formValue.min_rental_days,
-        max_rental_days: formValue.max_rental_days,
-        deposit_required: formValue.deposit_required,
-        deposit_amount: formValue.deposit_amount,
-        insurance_included: formValue.insurance_included,
-        auto_approval: formValue.auto_approval ?? true, // ✅ NUEVO: Auto-aprobación
-        location_street: formValue.location_street,
-        location_street_number: formValue.location_street_number,
-        location_city: formValue.location_city,
-        location_state: formValue.location_state,
-        location_province: formValue.location_state,
-        location_country: formValue.location_country,
+        year: formValue.year as number,
+        color: formValue.color as string,
+        mileage: formValue.mileage as number,
+        transmission: formValue.transmission as Transmission,
+        fuel: formValue.fuel as FuelType,
+        seats: selectedModel?.seats as number, // Desde car_models
+        doors: selectedModel?.doors as number, // Desde car_models
+        price_per_day: formValue.price_per_day as number,
+        currency: formValue.currency as string,
+        value_usd: formValue.value_usd as number | undefined, // ✅ NUEVO: Valor del vehículo para cálculos de riesgo
+        min_rental_days: formValue.min_rental_days as number | undefined,
+        max_rental_days: formValue.max_rental_days as number | undefined,
+        deposit_required: formValue.deposit_required as boolean | undefined,
+        deposit_amount: formValue.deposit_amount as number | undefined,
+        insurance_included: formValue.insurance_included as boolean | undefined,
+        auto_approval: (formValue.auto_approval as boolean | undefined) ?? true, // ✅ NUEVO: Auto-aprobación
+        location_street: formValue.location_street as string | undefined,
+        location_street_number: formValue.location_street_number as string | undefined,
+        location_city: formValue.location_city as string,
+        location_state: formValue.location_state as string,
+        location_province: formValue.location_state as string,
+        location_country: formValue.location_country as string,
         location_lat, // ✅ NEW: Geocoded coordinates
         location_lng, // ✅ NEW: Geocoded coordinates
         title: this.generatedTitle(),
