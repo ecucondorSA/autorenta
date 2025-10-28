@@ -1,330 +1,750 @@
-[33m❯[39m Building...
-[32m✔[39m Building...
-Application bundle generation failed. [79.721 seconds] - 2025-10-27T20:44:01.975Z
+❯ Building...
+✔ Building...
+Application bundle generation failed. [41.759 seconds] - 2025-10-28T06:10:23.865Z
 
-[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'avatar_url' comes from an index signature, so it must be accessed with ['avatar_url'].[0m [1m[35m[plugin angular-compiler][0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type '(item: Record<string, unknown>) => { user_name: unknown; user_email: string; }' is not assignable to parameter of type '(value: ParserError<"Unable to parse renamed field at `user:profiles!withdrawal_requests_user_id_fkey(full_name, email:auth.users(email)),\n        bank_account:bank_accounts(*)\n      `">, index: number, array: ParserError<...>[]) => { ...; }'.
+  Types of parameters 'item' and 'value' are incompatible.
+    Type 'ParserError<"Unable to parse renamed field at `user:profiles!withdrawal_requests_user_id_fkey(full_name, email:auth.users(email)),\n        bank_account:bank_accounts(*)\n      `">' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type '{ error: true; } & String'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/app/app.component.html:121:34:
-[37m      121 │ ...       *ngIf="userProfile()?.[32mavatar_url[37m; else profilePlaceholder"
-          ╵                                 [32m~~~~~~~~~~[0m
+    src/app/core/services/admin.service.ts:60:28:
+[37m      60 │     return (data ?? []).map([32m(item: Record<string, unknown>) => ({[37m
+         ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-  Error occurs in the template of component AppComponent.
 
-    src/app/app.component.ts:65:15:
-[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
-         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type '(car: CarWithPhotosRaw) => { photos: unknown[]; owner: any; car_photos?: unknown[]; }' is not assignable to parameter of type '(value: Car, index: number, array: Car[]) => { photos: unknown[]; owner: any; car_photos?: unknown[] | undefined; }'.
+  Types of parameters 'car' and 'value' are incompatible.
+    Type 'Car' is not assignable to type 'CarWithPhotosRaw'.
+      Type 'Car' is not assignable to type 'Record<string, unknown>'.
+        Index signature for type 'string' is missing in type 'Car'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/core/services/cars.service.ts:194:31:
+[37m      194 │       return availableCars.map([32m(car: CarWithPhotosRaw) => ({[37m
+          ╵                                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'avatar_url' comes from an index signature, so it must be accessed with ['avatar_url'].[0m [1m[35m[plugin angular-compiler][0m
 
-    src/app/app.component.html:122:34:
-[37m      122 │             [src]="userProfile()!.[32mavatar_url[37m"
-          ╵                                   [32m~~~~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '"postgres_changes"' is not assignable to parameter of type '"system"'.[0m [1m[35m[plugin angular-compiler][0m
 
-  Error occurs in the template of component AppComponent.
+    src/app/core/services/realtime-connection.service.ts:97:8:
+[37m      97 │         [32m'postgres_changes'[37m,
+         ╵         [32m~~~~~~~~~~~~~~~~~~[0m
 
-    src/app/app.component.ts:65:15:
-[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
-         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+  The last overload is declared here.
 
+    node_modules/@supabase/realtime-js/dist/module/RealtimeChannel.d.ts:273:4:
+[37m      273 │     [32mon[37m<T extends {
+          ╵     [32m~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'full_name' comes from an index signature, so it must be accessed with ['full_name'].[0m [1m[35m[plugin angular-compiler][0m
 
-    src/app/app.component.html:123:34:
-[37m      123 │             [alt]="userProfile()?.[32mfull_name[37m || 'Profile'"
-          ╵                                   [32m~~~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-  Error occurs in the template of component AppComponent.
+    src/app/features/admin/accounting-dashboard/accounting-dashboard.component.html:23:13:
+[37m      23 │       *ngIf="[32mhealthCheck()?.alerts?.length > 0[37m"
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-    src/app/app.component.ts:65:15:
-[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
-         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+  Error occurs in the template of component AccountingDashboardComponent.
 
+    src/app/features/admin/accounting-dashboard/accounting-dashboard.component.ts:15:15:
+[37m      15 │   templateUrl: [32m'./accounting-dashboard.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'avatar_url' comes from an index signature, so it must be accessed with ['avatar_url'].[0m [1m[35m[plugin angular-compiler][0m
 
-    src/app/app.component.html:219:36:
-[37m      219 │ ...       *ngIf="userProfile()?.[32mavatar_url[37m; else sidebarPlaceholder"
-          ╵                                 [32m~~~~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.[0m [1m[35m[plugin angular-compiler][0m
 
-  Error occurs in the template of component AppComponent.
+    src/app/features/admin/accounting-dashboard/accounting-dashboard.component.html:24:30:
+[37m      24 │       [color]="getHealthColor([32mhealthCheck()?.profitability[37m)"
+         ╵                               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-    src/app/app.component.ts:65:15:
-[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
-         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+  Error occurs in the template of component AccountingDashboardComponent.
 
+    src/app/features/admin/accounting-dashboard/accounting-dashboard.component.ts:15:15:
+[37m      15 │   templateUrl: [32m'./accounting-dashboard.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'avatar_url' comes from an index signature, so it must be accessed with ['avatar_url'].[0m [1m[35m[plugin angular-compiler][0m
 
-    src/app/app.component.html:220:36:
-[37m      220 │               [src]="userProfile()!.[32mavatar_url[37m"
-          ╵                                     [32m~~~~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.[0m [1m[35m[plugin angular-compiler][0m
 
-  Error occurs in the template of component AppComponent.
+    src/app/features/admin/accounting-dashboard/accounting-dashboard.component.html:232:38:
+[37m      232 │               [color]="getHealthColor([32mhealthCheck()?.profitability[37m)"
+          ╵                                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-    src/app/app.component.ts:65:15:
-[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
-         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+  Error occurs in the template of component AccountingDashboardComponent.
 
+    src/app/features/admin/accounting-dashboard/accounting-dashboard.component.ts:15:15:
+[37m      15 │   templateUrl: [32m'./accounting-dashboard.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'full_name' comes from an index signature, so it must be accessed with ['full_name'].[0m [1m[35m[plugin angular-compiler][0m
 
-    src/app/app.component.html:221:36:
-[37m      221 │               [alt]="userProfile()?.[32mfull_name[37m || 'Profile'"
-          ╵                                     [32m~~~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-  Error occurs in the template of component AppComponent.
+    src/app/features/admin/components/coverage-fund-dashboard.component.ts:215:33:
+[37m      215 │                               {{ [32mentry.meta['description'][37m }}
+          ╵                                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-    src/app/app.component.ts:65:15:
-[37m      65 │   templateUrl: [32m'./app.component.html'[37m,
-         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~[0m
 
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'string' is not assignable to parameter of type 'UnlockFundsParams'.[0m [1m[35m[plugin angular-compiler][0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'useModalOverlay' comes from an index signature, so it must be accessed with ['useModalOverlay'].[0m [1m[35m[plugin angular-compiler][0m
+    src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.ts:1002:45:
+[37m      1002 │         await this.walletService.unlockFunds([32mbookingId[37m);
+           ╵                                              [32m~~~~~~~~~[0m
 
-    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:44:31:
-[37m      44 │       useModalOverlay: options.[32museModalOverlay[37m ?? true,
-         ╵                                [32m~~~~~~~~~~~~~~~[0m
 
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'Record<string, unknown>[]' is not assignable to parameter of type 'PendingApproval[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'PendingApproval': booking_id, car_id, car_name, car_year, and 9 more.[0m [1m[35m[plugin angular-compiler][0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'canClickTarget' comes from an index signature, so it must be accessed with ['canClickTarget'].[0m [1m[35m[plugin angular-compiler][0m
+    src/app/features/bookings/pending-approval/pending-approval.page.ts:68:31:
+[37m      68 │       this.pendingBookings.set([32mbookings[37m);
+         ╵                                [32m~~~~~~~~[0m
 
-    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:47:32:
-[37m      47 │         canClickTarget: options.[32mcanClickTarget[37m ?? true,
-         ╵                                 [32m~~~~~~~~~~~~~~[0m
 
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'Car[]' is not assignable to type 'CarMapLocation[]'.
+  Type 'Car' is missing the following properties from type 'CarMapLocation': carId, pricePerDay, lat, lng, and 2 more.[0m [1m[35m[plugin angular-compiler][0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2698: Spread types may only be created from object types.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/features/cars/list/cars-list.page.html:20:11:
+[37m      20 │           [[32mcars[37m]="cars()"
+         ╵            [32m~~~~[0m
 
-    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:53:8:
-[37m      53 │         [32m...options.stepOptions[37m,
-         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+  Error occurs in the template of component CarsListPage.
 
+    src/app/features/cars/list/cars-list.page.ts:53:15:
+[37m      53 │   templateUrl: [32m'./cars-list.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS4111: Property 'stepOptions' comes from an index signature, so it must be accessed with ['stepOptions'].[0m [1m[35m[plugin angular-compiler][0m
 
-    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:53:19:
-[37m      53 │         ...options.[32mstepOptions[37m,
-         ╵                    [32m~~~~~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'start_date' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/my-cars/my-cars.page.ts:74:61:
+[37m      74 │ ...king ? new Date(nextBooking.[32mstart_date[37m).toLocaleDateString() : '';
+         ╵                                [32m~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type '{ useModalOverlay: {}; defaultStepOptions: any; }' is not assignable to parameter of type 'TourOptions'.
-  Types of property 'useModalOverlay' are incompatible.
-    Type '{}' is not assignable to type 'boolean | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/app/core/guided-tour/adapters/shepherd-adapter.service.ts:57:34:
-[37m      57 │     this.tour = new Shepherd.Tour([32mdefaultOptions[37m);
-         ╵                                   [32m~~~~~~~~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'code' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/my-cars/my-cars.page.ts:111:21:
+[37m      111 │         code: error?.[32mcode[37m,
+          ╵                      [32m~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:17:17:
-[37m      17 │     addListener: [32mjasmine[37m.createSpy('addListener'),
-         ╵                  [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'message' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/my-cars/my-cars.page.ts:112:24:
+[37m      112 │         message: error?.[32mmessage[37m,
+          ╵                         [32m~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:18:20:
-[37m      18 │     removeListener: [32mjasmine[37m.createSpy('removeListener'),
-         ╵                     [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'details' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/my-cars/my-cars.page.ts:113:24:
+[37m      113 │         details: error?.[32mdetails[37m,
+          ╵                         [32m~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:19:22:
-[37m      19 │     addEventListener: [32mjasmine[37m.createSpy('addEventListener'),
-         ╵                       [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'hint' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/my-cars/my-cars.page.ts:114:21:
+[37m      114 │         hint: error?.[32mhint[37m,
+          ╵                      [32m~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:20:25:
-[37m      20 │     removeEventListener: [32mjasmine[37m.createSpy('removeEventListener'),
-         ╵                          [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'code' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/my-cars/my-cars.page.ts:118:17:
+[37m      118 │       if (error?.[32mcode[37m === '23503' || error?.message?.includes('fo...
+          ╵                  [32m~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:21:19:
-[37m      21 │     dispatchEvent: [32mjasmine[37m.createSpy('dispatchEvent').and.returnVa...
-         ╵                    [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'message' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/my-cars/my-cars.page.ts:118:44:
+[37m      118 │ ...r?.code === '23503' || error?.[32mmessage[37m?.includes('foreign key')) {
+          ╵                                  [32m~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:33:13:
-[37m      33 │     observe: [32mjasmine[37m.createSpy('observe'),
-         ╵              [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'message' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/my-cars/my-cars.page.ts:127:32:
+[37m      127 │         const errorMsg = error?.[32mmessage[37m || 'Error desconocido';
+          ╵                                 [32m~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:34:15:
-[37m      34 │     unobserve: [32mjasmine[37m.createSpy('unobserve'),
-         ╵                [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type '"pending"' is not assignable to type 'CarStatus | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/publish/car-publish.page.ts:39:8:
+[37m      39 │         [32mstatus[37m: 'pending',
+         ╵         [32m~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+  The expected type comes from property 'status' which is declared here on type 'Partial<Car>'
 
-    src/testing/helpers/responsive-test-helpers.ts:35:16:
-[37m      35 │     disconnect: [32mjasmine[37m.createSpy('disconnect'),
-         ╵                 [32m~~~~~~~[0m
+    src/app/core/models/index.ts:225:2:
+[37m      225 │   [32mstatus[37m: CarStatus;
+          ╵   [32m~~~~~~[0m
 
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:75:22:
-[37m      75 │   window.matchMedia = [32mjasmine[37m.createSpy('matchMedia').and.callFake...
-         ╵                       [32m~~~~~~~[0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1476:12:
+[37m      1476 │             [32mformValue.location_street[37m,
+           ╵             [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/helpers/responsive-test-helpers.ts:131:26:
-[37m      131 │       window.matchMedia = [32mjasmine[37m.createSpy('matchMedia').and.cal...
-          ╵                           [32m~~~~~~~[0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1492:14:
+[37m      1492 │               [32mformValue.location_city[37m,
+           ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
 
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/mocks/supabase-mock.ts:8:17:
-[37m      8 │   const rpcSpy = [32mjasmine[37m.createSpy('rpc');
-        ╵                  [32m~~~~~~~[0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1510:8:
+[37m      1510 │         [32mbrand_id[37m: formValue.brand_id,
+           ╵         [32m~~~~~~~~[0m
 
+  The expected type comes from property 'brand_id' which is declared here on type 'Partial<Car>'
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/core/models/index.ts:201:2:
+[37m      201 │   [32mbrand_id[37m: string;
+          ╵   [32m~~~~~~~~[0m
 
-    src/testing/mocks/supabase-mock.ts:9:18:
-[37m      9 │   const authSpy = [32mjasmine[37m.createSpyObj('auth', ['getUser']);
-        ╵                   [32m~~~~~~~[0m
 
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1511:8:
+[37m      1511 │         [32mmodel_id[37m: formValue.model_id,
+           ╵         [32m~~~~~~~~[0m
 
-    src/testing/mocks/supabase-mock.ts:10:18:
-[37m      10 │   const fromSpy = [32mjasmine[37m.createSpy('from');
-         ╵                   [32m~~~~~~~[0m
+  The expected type comes from property 'model_id' which is declared here on type 'Partial<Car>'
 
+    src/app/core/models/index.ts:202:2:
+[37m      202 │   [32mmodel_id[37m: string;
+          ╵   [32m~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/mocks/supabase-mock.ts:11:21:
-[37m      11 │   const storageSpy = [32mjasmine[37m.createSpyObj('storage', ['from']);
-         ╵                      [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'number | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/publish/publish-car-v2.page.ts:1514:8:
+[37m      1514 │         [32myear[37m: formValue.year,
+           ╵         [32m~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+  The expected type comes from property 'year' which is declared here on type 'Partial<Car>'
 
-    src/testing/mocks/supabase-mock.ts:18:21:
-[37m      18 │     builder.select = [32mjasmine[37m.createSpy('select').and.returnValue(b...
-         ╵                      [32m~~~~~~~[0m
+    src/app/core/models/index.ts:215:2:
+[37m      215 │   [32myear[37m: number;
+          ╵   [32m~~~~[0m
 
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/mocks/supabase-mock.ts:19:17:
-[37m      19 │     builder.eq = [32mjasmine[37m.createSpy('eq').and.returnValue(builder);
-         ╵                  [32m~~~~~~~[0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1515:8:
+[37m      1515 │         [32mcolor[37m: formValue.color,
+           ╵         [32m~~~~~[0m
 
+  The expected type comes from property 'color' which is declared here on type 'Partial<Car>'
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/core/models/index.ts:223:2:
+[37m      223 │   [32mcolor[37m: string;
+          ╵   [32m~~~~~[0m
 
-    src/testing/mocks/supabase-mock.ts:20:18:
-[37m      20 │     builder.neq = [32mjasmine[37m.createSpy('neq').and.returnValue(builder);
-         ╵                   [32m~~~~~~~[0m
 
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'number | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1516:8:
+[37m      1516 │         [32mmileage[37m: formValue.mileage,
+           ╵         [32m~~~~~~~[0m
 
-    src/testing/mocks/supabase-mock.ts:21:17:
-[37m      21 │     builder.gt = [32mjasmine[37m.createSpy('gt').and.returnValue(builder);
-         ╵                  [32m~~~~~~~[0m
+  The expected type comes from property 'mileage' which is declared here on type 'Partial<Car>'
 
+    src/app/core/models/index.ts:258:2:
+[37m      258 │   [32mmileage[37m: number;
+          ╵   [32m~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/mocks/supabase-mock.ts:22:18:
-[37m      22 │     builder.gte = [32mjasmine[37m.createSpy('gte').and.returnValue(builder);
-         ╵                   [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'Transmission | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/publish/publish-car-v2.page.ts:1517:8:
+[37m      1517 │         [32mtransmission[37m: formValue.transmission,
+           ╵         [32m~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+  The expected type comes from property 'transmission' which is declared here on type 'Partial<Car>'
 
-    src/testing/mocks/supabase-mock.ts:23:17:
-[37m      23 │     builder.lt = [32mjasmine[37m.createSpy('lt').and.returnValue(builder);
-         ╵                  [32m~~~~~~~[0m
+    src/app/core/models/index.ts:218:2:
+[37m      218 │   [32mtransmission[37m: Transmission;
+          ╵   [32m~~~~~~~~~~~~[0m
 
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'FuelType | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/mocks/supabase-mock.ts:24:18:
-[37m      24 │     builder.lte = [32mjasmine[37m.createSpy('lte').and.returnValue(builder);
-         ╵                   [32m~~~~~~~[0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1518:8:
+[37m      1518 │         [32mfuel[37m: formValue.fuel,
+           ╵         [32m~~~~[0m
 
+  The expected type comes from property 'fuel' which is declared here on type 'Partial<Car>'
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/core/models/index.ts:219:2:
+[37m      219 │   [32mfuel[37m: FuelType;
+          ╵   [32m~~~~[0m
 
-    src/testing/mocks/supabase-mock.ts:25:19:
-[37m      25 │     builder.like = [32mjasmine[37m.createSpy('like').and.returnValue(build...
-         ╵                    [32m~~~~~~~[0m
 
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'number | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1521:8:
+[37m      1521 │         [32mprice_per_day[37m: formValue.price_per_day,
+           ╵         [32m~~~~~~~~~~~~~[0m
 
-    src/testing/mocks/supabase-mock.ts:26:20:
-[37m      26 │     builder.ilike = [32mjasmine[37m.createSpy('ilike').and.returnValue(bui...
-         ╵                     [32m~~~~~~~[0m
+  The expected type comes from property 'price_per_day' which is declared here on type 'Partial<Car>'
 
+    src/app/core/models/index.ts:226:2:
+[37m      226 │   [32mprice_per_day[37m: number;
+          ╵   [32m~~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/mocks/supabase-mock.ts:27:17:
-[37m      27 │     builder.in = [32mjasmine[37m.createSpy('in').and.returnValue(builder);
-         ╵                  [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/publish/publish-car-v2.page.ts:1522:8:
+[37m      1522 │         [32mcurrency[37m: formValue.currency,
+           ╵         [32m~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+  The expected type comes from property 'currency' which is declared here on type 'Partial<Car>'
 
-    src/testing/mocks/supabase-mock.ts:28:17:
-[37m      28 │     builder.is = [32mjasmine[37m.createSpy('is').and.returnValue(builder);
-         ╵                  [32m~~~~~~~[0m
+    src/app/core/models/index.ts:227:2:
+[37m      227 │   [32mcurrency[37m: string;
+          ╵   [32m~~~~~~~~[0m
 
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'number | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/mocks/supabase-mock.ts:29:20:
-[37m      29 │     builder.order = [32mjasmine[37m.createSpy('order').and.returnValue(bui...
-         ╵                     [32m~~~~~~~[0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1523:8:
+[37m      1523 │         [32mvalue_usd[37m: formValue.value_usd, // ✅ NUEVO: Valor del ...
+           ╵         [32m~~~~~~~~~[0m
 
+  The expected type comes from property 'value_usd' which is declared here on type 'Partial<Car>'
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/core/models/index.ts:228:2:
+[37m      228 │   [32mvalue_usd[37m?: number; // ✅ NUEVO: Valor real del vehículo en U...
+          ╵   [32m~~~~~~~~~[0m
 
-    src/testing/mocks/supabase-mock.ts:30:20:
-[37m      30 │     builder.limit = [32mjasmine[37m.createSpy('limit').and.returnValue(bui...
-         ╵                     [32m~~~~~~~[0m
 
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'number | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+    src/app/features/cars/publish/publish-car-v2.page.ts:1524:8:
+[37m      1524 │         [32mmin_rental_days[37m: formValue.min_rental_days,
+           ╵         [32m~~~~~~~~~~~~~~~[0m
 
-    src/testing/mocks/supabase-mock.ts:31:20:
-[37m      31 │     builder.range = [32mjasmine[37m.createSpy('range').and.returnValue(bui...
-         ╵                     [32m~~~~~~~[0m
+  The expected type comes from property 'min_rental_days' which is declared here on type 'Partial<Car>'
 
+    src/app/core/models/index.ts:253:2:
+[37m      253 │   [32mmin_rental_days[37m?: number;
+          ╵   [32m~~~~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
 
-    src/testing/mocks/supabase-mock.ts:32:21:
-[37m      32 │     builder.single = [32mjasmine[37m
-         ╵                      [32m~~~~~~~[0m
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'number | undefined'.[0m [1m[35m[plugin angular-compiler][0m
 
+    src/app/features/cars/publish/publish-car-v2.page.ts:1525:8:
+[37m      1525 │         [32mmax_rental_days[37m: formValue.max_rental_days,
+           ╵         [32m~~~~~~~~~~~~~~~[0m
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'jasmine'.[0m [1m[35m[plugin angular-compiler][0m
+  The expected type comes from property 'max_rental_days' which is declared here on type 'Partial<Car>'
 
-    src/testing/mocks/supabase-mock.ts:35:26:
-[37m      35 │     builder.maybeSingle = [32mjasmine[37m
-         ╵                           [32m~~~~~~~[0m
+    src/app/core/models/index.ts:254:2:
+[37m      254 │   [32mmax_rental_days[37m?: number;
+          ╵   [32m~~~~~~~~~~~~~~~[0m
 
-[39m[22m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'boolean | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1526:8:
+[37m      1526 │         [32mdeposit_required[37m: formValue.deposit_required,
+           ╵         [32m~~~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'deposit_required' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:249:2:
+[37m      249 │   [32mdeposit_required[37m?: boolean;
+          ╵   [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'number | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1527:8:
+[37m      1527 │         [32mdeposit_amount[37m: formValue.deposit_amount,
+           ╵         [32m~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'deposit_amount' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:250:2:
+[37m      250 │   [32mdeposit_amount[37m?: number;
+          ╵   [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'boolean | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1528:8:
+[37m      1528 │         [32minsurance_included[37m: formValue.insurance_included,
+           ╵         [32m~~~~~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'insurance_included' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:251:2:
+[37m      251 │   [32minsurance_included[37m?: boolean;
+          ╵   [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type '{}' is not assignable to type 'boolean | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1529:8:
+[37m      1529 │         [32mauto_approval[37m: formValue.auto_approval ?? true, // ✅ N...
+           ╵         [32m~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'auto_approval' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:252:2:
+[37m      252 │   [32mauto_approval[37m?: boolean; // ✅ NUEVO: Auto-aprobación de rese...
+          ╵   [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | null | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1530:8:
+[37m      1530 │         [32mlocation_street[37m: formValue.location_street,
+           ╵         [32m~~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'location_street' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:241:2:
+[37m      241 │   [32mlocation_street[37m?: string | null;
+          ╵   [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | null | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1531:8:
+[37m      1531 │         [32mlocation_street_number[37m: formValue.location_street_number,
+           ╵         [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'location_street_number' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:242:2:
+[37m      242 │   [32mlocation_street_number[37m?: string | null;
+          ╵   [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1532:8:
+[37m      1532 │         [32mlocation_city[37m: formValue.location_city,
+           ╵         [32m~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'location_city' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:233:2:
+[37m      233 │   [32mlocation_city[37m: string;
+          ╵   [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1533:8:
+[37m      1533 │         [32mlocation_state[37m: formValue.location_state,
+           ╵         [32m~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'location_state' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:234:2:
+[37m      234 │   [32mlocation_state[37m: string;
+          ╵   [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1534:8:
+[37m      1534 │         [32mlocation_province[37m: formValue.location_state,
+           ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'location_province' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:235:2:
+[37m      235 │   [32mlocation_province[37m: string;
+          ╵   [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'string | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:1535:8:
+[37m      1535 │         [32mlocation_country[37m: formValue.location_country,
+           ╵         [32m~~~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'location_country' which is declared here on type 'Partial<Car>'
+
+    src/app/core/models/index.ts:236:2:
+[37m      236 │   [32mlocation_country[37m: string;
+          ╵   [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'MapFilters' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type 'MapFilters'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/explore/explore.page.html:21:37:
+[37m      21 │     (filtersChange)="onFiltersChange([32m$event[37m)"
+         ╵                                      [32m~~~~~~[0m
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:30:15:
+[37m      30 │   templateUrl: [32m'./explore.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'Car[]' is not assignable to type 'CarMapLocation[]'.
+  Type 'Car' is missing the following properties from type 'CarMapLocation': carId, pricePerDay, lat, lng, and 2 more.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/explore/explore.page.html:30:7:
+[37m      30 │       [[32mcars[37m]="filteredCars"
+         ╵        [32m~~~~[0m
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:30:15:
+[37m      30 │   templateUrl: [32m'./explore.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2739: Type 'Record<string, unknown>' is missing the following properties from type '{ minPrice: number; maxPrice: number; transmission: "manual" | "automatic" | "all"; }': minPrice, maxPrice, transmission[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/explore/explore.page.ts:125:4:
+[37m      125 │     [32mthis.filters[37m = filters;
+          ╵     [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'unknown' is not assignable to parameter of type 'UserStats | null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/users/public-profile.page.ts:107:25:
+[37m      107 │       this.userStats.set([32mstats[37m);
+          ╵                          [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18046: 'error' is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:263:48:
+[37m      263 │ ...gregar cuenta bancaria: ' + ([32merror[37m.message || 'Error desconoci...
+          ╵                                 [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18046: 'error' is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:285:41:
+[37m      285 │ ...or al solicitar retiro: ' + ([32merror[37m.message || 'Error desconoci...
+          ╵                                 [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18046: 'error' is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:298:43:
+[37m      298 │ ...stService.error('Error: ' + ([32merror[37m.message || 'Error desconoci...
+          ╵                                 [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18046: 'error' is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:311:40:
+[37m      311 │ ...ror al eliminar cuenta: ' + ([32merror[37m.message || 'Error desconoci...
+          ╵                                 [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18046: 'error' is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:324:55:
+[37m      324 │ ...ror('Error al cancelar: ' + ([32merror[37m.message || 'Error desconoci...
+          ╵                                 [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'firstChange' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:217:56:
+[37m      217 │ ...f (changes.selectedCarId && !changes.selectedCarId.[32mfirstChange[37m) {
+          ╵                                                       [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'currentValue' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:218:42:
+[37m      218 │       const carId = changes.selectedCarId.[32mcurrentValue[37m;
+          ╵                                           [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type '{ version: string; supported: IsSupported; setRTLTextPlugin: (url: string, callback?: Callback<{ err: Error | null | undefined; }> | null | undefined, deferred?: boolean | undefined) => void; ... 31 more ...; restoreNow: () => void; }' is not assignable to type 'MapboxGL'.
+  Types of property 'accessToken' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:276:6:
+[37m      276 │       [32mthis.mapboxgl[37m = mapboxModule.default || mapboxModule;
+          ╵       [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2353: Object literal may only specify known properties, and 'maxBounds' does not exist in type 'MapboxMapOptions'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:356:8:
+[37m      356 │         [32mmaxBounds[37m: uruguayBounds,
+          ╵         [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getLayer' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:458:20:
+[37m      458 │       if (this.map?.[32mgetLayer[37m(layerId)) {
+          ╵                     [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'setLayoutProperty' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:459:17:
+[37m      459 │         this.map.[32msetLayoutProperty[37m(layerId, 'visibility', 'none');
+          ╵                  [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2353: Object literal may only specify known properties, and 'price_per_day' does not exist in type '{ amount: number; cached: boolean; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:563:12:
+[37m      563 │             [32mprice_per_day[37m: cached.price,
+          ╵             [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type '{ price_per_hour: number; price_per_day: number; currency: string; price_usd_hour?: number | undefined; surge_active: boolean; }' is not assignable to parameter of type '{ amount: number; cached: boolean; }'.
+  Type '{ price_per_hour: number; price_per_day: number; currency: string; price_usd_hour?: number | undefined; surge_active: boolean; }' is missing the following properties from type '{ amount: number; cached: boolean; }': amount, cached[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:592:28:
+[37m      592 │           prices.set(carId, [32mprice[37m);
+          ╵                             [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'price_per_day' does not exist on type '{ amount: number; cached: boolean; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:604:38:
+[37m      604 │             pricePerDay: dynamicPrice.[32mprice_per_day[37m,
+          ╵                                       [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'price_per_hour' does not exist on type '{ amount: number; cached: boolean; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:605:39:
+[37m      605 │             pricePerHour: dynamicPrice.[32mprice_per_hour[37m,
+          ╵                                        [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'surge_active' does not exist on type '{ amount: number; cached: boolean; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:606:38:
+[37m      606 │             surgeActive: dynamicPrice.[32msurge_active[37m,
+          ╵                                       [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2353: Object literal may only specify known properties, and 'clusterProperties' does not exist in type 'GeoJSONSource'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:676:8:
+[37m      676 │         [32mclusterProperties[37m: {
+          ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getLayer' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:847:20:
+[37m      847 │       if (this.map?.[32mgetLayer[37m(layerId)) {
+          ╵                     [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'removeLayer' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:848:17:
+[37m      848 │         this.map.[32mremoveLayer[37m(layerId);
+          ╵                  [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'on' does not exist on type 'Popup'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:897:23:
+[37m      897 │     this.selectedPopup.[32mon[37m('close', () => {
+          ╵                        [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'LngLatBounds' does not exist on type 'MapboxGL'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:975:37:
+[37m      975 │     const bounds = new this.mapboxgl.[32mLngLatBounds[37m();
+          ╵                                      [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'fitBounds' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:980:13:
+[37m      980 │     this.map.[32mfitBounds[37m(bounds, {
+          ╵              [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2353: Object literal may only specify known properties, and 'duration' does not exist in type 'FlyToOptions'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:1148:6:
+[37m      1148 │       [32mduration[37m: 2000, // 2 segundos de animación
+           ╵       [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2559: Type 'HTMLDivElement' has no properties in common with type 'MarkerOptions'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:1172:47:
+[37m      1172 │     this.userMarker = new this.mapboxgl.Marker([32mel[37m)
+           ╵                                                [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getLayer' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:1205:17:
+[37m      1205 │     if (this.map.[32mgetLayer[37m('car-markers-bg')) {
+           ╵                  [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getLayer' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:1210:17:
+[37m      1210 │     if (this.map.[32mgetLayer[37m('car-prices')) {
+           ╵                  [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getLayer' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:1217:17:
+[37m      1217 │     if (this.map.[32mgetLayer[37m('clusters')) {
+           ╵                  [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getLayer' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:1226:17:
+[37m      1226 │     if (this.map.[32mgetLayer[37m('cluster-count')) {
+           ╵                  [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'removeSource' does not exist on type 'MapboxMap'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:1259:15:
+[37m      1259 │       this.map.[32mremoveSource[37m('cars');
+           ╵                [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2353: Object literal may only specify known properties, and 'duration' does not exist in type 'FlyToOptions'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:1334:6:
+[37m      1334 │       [32mduration[37m: 400, // 400ms = animación rápida y suave
+           ╵       [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2531: Object is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/mercadopago-card-form/mercadopago-card-form.component.ts:319:12:
+[37m      319 │             [32mthis.cardForm[37m.createCardToken();
+          ╵             [32m~~~~~~~~~~~~~[0m
+
+
 Watch mode enabled. Watching for file changes...
