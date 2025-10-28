@@ -335,37 +335,21 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       const containerWidth = containerEl.offsetWidth;
       const parentEl = containerEl.parentElement;
 
-      console.log('=== MAPBOX INIT DEBUG ===');
-      console.log('Container dimensions:', { width: containerWidth, height: containerHeight });
-      const containerStyle = getComputedStyle(containerEl);
-      const parentStyle = parentEl ? getComputedStyle(parentEl) : null;
-
-      console.log('Container computed style:', {
-        width: containerStyle.width,
-        height: containerStyle.height,
-        position: containerStyle.position,
-        display: containerStyle.display,
+      console.log('[CarsMapComponent] Container dimensions:', {
+        width: containerWidth,
+        height: containerHeight
       });
-      console.log('Parent dimensions:', {
-        width: parentEl?.offsetWidth,
-        height: parentEl?.offsetHeight,
-      });
-      console.log(
-        'Parent computed style:',
-        parentStyle
-          ? {
-              width: parentStyle.width,
-              height: parentStyle.height,
-              flex: parentStyle.flex,
-              display: parentStyle.display,
-            }
-          : 'N/A',
-      );
 
       if (containerHeight === 0) {
-        console.warn('[CarsMapComponent] ⚠️ Container height is 0, forcing height...');
-        containerEl.style.height = '100%';
-        containerEl.style.minHeight = '500px';
+        console.error(
+          '[CarsMapComponent] ⚠️ ERROR: Container height is 0!',
+          '\nThis indicates a layout problem in the parent component.',
+          '\nThe parent container must have explicit height (%, vh, or px).',
+          '\nCheck that the parent uses: height: 100% or min-height: XXXpx'
+        );
+        this.error.set('Error de layout: El contenedor del mapa no tiene altura. Verifica el CSS del componente padre.');
+        this.loading.set(false);
+        return;
       }
 
       // Crear mapa centrado en Uruguay por defecto
