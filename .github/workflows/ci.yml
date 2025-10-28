@@ -1,22 +1,43 @@
 name: CI
+
 on:
-  pull_request:
-    branches: [ main ]
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - develop
+      - staging
+  pull_request:
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: apps/web/package-lock.json
-      - run: cd apps/web && npm ci
-      - run: cd apps/web && npm run lint
-      # Tests disabled temporarily due to Karma/ChromeHeadless issues
-      # - run: cd apps/web && npm run test -- --watch=false --browsers=ChromeHeadless
-      - run: cd apps/web && npm run build
+          cache: 'pnpm'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Run unit tests
+        run: pnpm test:quick
+
+      - name: Build
+        run: pnpm build

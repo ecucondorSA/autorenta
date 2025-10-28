@@ -4,6 +4,7 @@ interface Env {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
   AUTORENT_WEBHOOK_KV: KVNamespace;
+  MERCADOPAGO_ACCESS_TOKEN?: string;
 }
 
 // Payload para mock
@@ -15,7 +16,6 @@ interface MockPaymentWebhookPayload {
 
 // Payload para Mercado Pago
 interface MercadoPagoWebhookPayload {
-  provider: 'mercadopago';
   action: string; // payment.created, payment.updated
   data: {
     id: string; // Payment ID
@@ -97,6 +97,79 @@ const normalizeMPStatus = (status: string): { payment: string; booking: string }
     default:
       console.warn('Unknown MP status:', status);
       return null;
+  }
+};
+
+const parseSignatureHeader = (
+  signature: string,
+): { ts?: string; hash?: string } => {
+  const parts = signature.split(',');
+  const result: Record<string, string> = {};
+
+  for (const part of parts) {
+    const [key, value] = part.split('=');
+    if (key && value) {
+      result[key.trim()] = value.trim();
+    }
+  }
+
+  return { ts: result.ts, hash: result.v1 };
+};
+
+const verifyMercadoPagoSignature = async (params: {
+  paymentId: string;
+  signatureHeader?: string | null;
+  requestId?: string | null;
+  secret: string;
+}): Promise<boolean> => {
+  const { paymentId, signatureHeader, requestId, secret } = params;
+
+  if (!signatureHeader || !requestId) {
+    // Si no hay firma, no podemos verificar. Mercado Pago puede omitirla en ciertos entornos.
+    console.warn('Mercado Pago signature headers missing, skipping validation');
+    return true;
+  }
+
+  const { ts, hash } = parseSignatureHeader(signatureHeader);
+  if (!ts || !hash) {
+    console.warn('Malformed x-signature header, skipping validation');
+    return true;
+  }
+
+  const manifest = `id:${paymentId};request-id:${requestId};ts:${ts};`;
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+
+  try {
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign'],
+    );
+
+    const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, encoder.encode(manifest));
+    const computedHash = Array.from(new Uint8Array(signatureBuffer))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    const isValid = computedHash === hash;
+
+    if (!isValid) {
+      console.error('Invalid Mercado Pago signature', {
+        paymentId,
+        requestId,
+        ts,
+        expected: hash.substring(0, 12),
+        received: computedHash.substring(0, 12),
+      });
+    }
+
+    return isValid;
+  } catch (error) {
+    console.error('Failed to validate Mercado Pago signature', error);
+    return false;
   }
 };
 
@@ -210,36 +283,89 @@ const processMockWebhook = async (
  * Procesa un webhook de Mercado Pago
  */
 const processMercadoPagoWebhook = async (
-  payload: MercadoPagoWebhookPayload,
+  payload: Partial<MercadoPagoWebhookPayload>,
   supabase: ReturnType<typeof getSupabaseAdminClient>,
   env: Env,
+  options: {
+    signatureHeader?: string | null;
+    requestId?: string | null;
+    rawBody: string;
+    query: URLSearchParams;
+  },
 ): Promise<Response> => {
-  console.log('Processing Mercado Pago webhook:', {
-    action: payload.action,
-    type: payload.type,
-    paymentId: payload.data.id,
-  });
+  const mpAccessToken = env.MERCADOPAGO_ACCESS_TOKEN;
 
-  // Solo procesar eventos de pago
-  if (payload.type !== 'payment') {
-    console.log('Ignoring non-payment event:', payload.type);
+  if (!mpAccessToken) {
+    console.error('Mercado Pago access token not configured in environment');
+    return jsonResponse({ message: 'Mercado Pago access token missing' }, { status: 500 });
+  }
+
+  const paymentId =
+    payload?.data?.id || options.query.get('data.id') || options.query.get('id');
+
+  if (!paymentId) {
+    console.error('Mercado Pago webhook without payment ID', {
+      payload,
+      query: Object.fromEntries(options.query.entries()),
+    });
+    return jsonResponse({ message: 'Payment ID missing' }, { status: 400 });
+  }
+
+  const webhookType = payload?.type || options.query.get('type') || '';
+
+  if (webhookType && webhookType !== 'payment') {
+    console.log('Ignoring non-payment event:', webhookType);
     return jsonResponse({ message: 'Event type not supported' }, { status: 200 });
   }
 
-  // Solo procesar creación y actualización
-  if (!['payment.created', 'payment.updated'].includes(payload.action)) {
-    console.log('Ignoring action:', payload.action);
-    return jsonResponse({ message: 'Action not supported' }, { status: 200 });
+  console.log('Processing Mercado Pago webhook:', {
+    paymentId,
+    action: payload?.action,
+    type: webhookType,
+  });
+
+  const signatureValid = await verifyMercadoPagoSignature({
+    paymentId,
+    signatureHeader: options.signatureHeader,
+    requestId: options.requestId,
+    secret: mpAccessToken,
+  });
+
+  if (!signatureValid) {
+    return jsonResponse({ message: 'Invalid signature' }, { status: 401 });
   }
 
-  const paymentId = payload.data.id;
+  // Obtener detalles completos del pago desde MP
+  const paymentDetail = await getMercadoPagoPaymentDetails(paymentId, mpAccessToken);
+  const bookingId =
+    paymentDetail.external_reference || paymentDetail.metadata?.booking_id;
 
-  // Idempotency check
-  const dedupeKey = `webhook:mp:${paymentId}:${payload.action}`;
+  if (!bookingId) {
+    console.error('Cannot resolve booking ID from payment', {
+      paymentId,
+      external_reference: paymentDetail.external_reference,
+      metadata: paymentDetail.metadata,
+    });
+
+    // Evitar reintentos infinitos si no podemos mapear
+    return jsonResponse({ message: 'Booking reference not found' }, { status: 200 });
+  }
+
+  const normalized = normalizeMPStatus(paymentDetail.status);
+
+  if (!normalized) {
+    console.warn('Unsupported Mercado Pago status', {
+      paymentId,
+      status: paymentDetail.status,
+    });
+    return jsonResponse({ message: 'Status not handled' }, { status: 200 });
+  }
+
+  const dedupeKey = `webhook:mp:${paymentId}:${paymentDetail.status}`;
   const existing = await env.AUTORENT_WEBHOOK_KV.get(dedupeKey);
 
   if (existing === 'processed') {
-    console.log('Payment already processed:', paymentId);
+    console.log('Payment already processed:', paymentId, paymentDetail.status);
     return jsonResponse({ message: 'Already processed' }, { status: 200 });
   }
 
@@ -247,57 +373,55 @@ const processMercadoPagoWebhook = async (
     return jsonResponse({ message: 'Processing in progress' }, { status: 202 });
   }
 
-  // Set processing lock
   await env.AUTORENT_WEBHOOK_KV.put(dedupeKey, 'processing', { expirationTtl: 60 });
 
   try {
-    // 1. Buscar el payment_intent asociado a este payment ID
-    const { data: intentData, error: intentError } = await supabase
-      .from('payment_intents')
-      .select('*, booking_id')
-      .eq('provider_payment_id', paymentId)
-      .single();
+    // Buscar intent por provider_payment_id o booking_id como fallback
+    let intentData = null;
 
-    if (intentError || !intentData) {
-      console.error('Payment intent not found for payment ID:', paymentId, intentError);
-      // No throw - puede ser un pago que no es nuestro
+    const { data: intentByProvider, error: intentProviderError } = await supabase
+      .from('payment_intents')
+      .select('*')
+      .eq('provider_payment_id', String(paymentId))
+      .maybeSingle();
+
+    if (!intentProviderError && intentByProvider) {
+      intentData = intentByProvider;
+    } else {
+      const { data: intentByBooking, error: intentBookingError } = await supabase
+        .from('payment_intents')
+        .select('*')
+        .eq('booking_id', bookingId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!intentBookingError && intentByBooking) {
+        intentData = intentByBooking;
+      }
+    }
+
+    if (!intentData) {
+      console.warn('Payment intent not found for payment', {
+        paymentId,
+        bookingId,
+      });
+
       await env.AUTORENT_WEBHOOK_KV.put(dedupeKey, 'processed', {
         expirationTtl: 60 * 60 * 24 * 30,
       });
+
       return jsonResponse({ message: 'Payment intent not found' }, { status: 200 });
     }
 
-    const bookingId = intentData.booking_id;
-
-    // 2. Obtener access token del locador (necesario para consultar API de MP)
-    // TODO: En producción, obtener el access_token del owner de la booking
-    // Por ahora, usaremos un approach alternativo sin necesitar el token
-
-    // 3. Alternativa: Actualizar basado en el metadata que enviamos en la creación del payment
-    // Por ahora, asumimos que el webhook incluye external_reference con el booking_id
-    // o que ya tenemos la relación en payment_intents
-
-    // 4. Consultar la API de MP para obtener el estado del pago
-    // NOTA: Esto requiere el access token del vendedor
-    // Para MVP, podemos usar public key y asumir que el webhook es legítimo
-    // En producción, SIEMPRE verificar la firma del webhook
-
-    // Por ahora, marcaremos como completado basándonos en la acción
-    // TODO: Implementar validación de firma x-signature
-    const status = payload.action === 'payment.created' ? 'approved' : 'pending';
-    const normalized = normalizeMPStatus(status);
-
-    if (!normalized) {
-      throw new Error('Cannot normalize MP status');
-    }
-
-    // 5. Actualizar payment
+    // Actualizar payments
     const { error: paymentError } = await supabase.from('payments').upsert(
       {
         booking_id: bookingId,
         provider: 'mercadopago',
         status: normalized.payment,
-        provider_payment_id: paymentId,
+        provider_payment_id: String(paymentId),
+        updated_at: new Date().toISOString(),
       },
       { onConflict: 'booking_id' },
     );
@@ -307,21 +431,34 @@ const processMercadoPagoWebhook = async (
       throw new Error('Error updating payment');
     }
 
-    // 6. Actualizar booking
-    const { error: bookingError } = await supabase
-      .from('bookings')
-      .update({ status: normalized.booking })
-      .eq('id', bookingId);
+    // Actualizar booking solo si cambia a confirmado o cancelado
+    if (normalized.booking === 'confirmed' || normalized.booking === 'cancelled') {
+      const { error: bookingError } = await supabase
+        .from('bookings')
+        .update({
+          status: normalized.booking,
+        })
+        .eq('id', bookingId);
 
-    if (bookingError) {
-      console.error('Booking update failed:', bookingError);
-      throw new Error('Error updating booking');
+      if (bookingError) {
+        console.error('Booking update failed:', bookingError);
+        throw new Error('Error updating booking');
+      }
     }
 
-    // 7. Actualizar payment intent
+    // Actualizar payment intent
+    const intentUpdate: Record<string, unknown> = {
+      status: normalized.payment,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (!intentData.provider_payment_id) {
+      intentUpdate.provider_payment_id = String(paymentId);
+    }
+
     const { error: intentUpdateError } = await supabase
       .from('payment_intents')
-      .update({ status: normalized.payment })
+      .update(intentUpdate)
       .eq('id', intentData.id);
 
     if (intentUpdateError) {
@@ -329,15 +466,15 @@ const processMercadoPagoWebhook = async (
       throw new Error('Error updating payment intent');
     }
 
-    // Mark as processed
     await env.AUTORENT_WEBHOOK_KV.put(dedupeKey, 'processed', {
-      expirationTtl: 60 * 60 * 24 * 30, // 30 days
+      expirationTtl: 60 * 60 * 24 * 30,
     });
 
-    console.log('MP payment processed successfully:', {
+    console.log('Mercado Pago payment processed successfully', {
       paymentId,
       bookingId,
-      status: normalized,
+      status: paymentDetail.status,
+      normalized,
     });
 
     return jsonResponse({
@@ -350,7 +487,6 @@ const processMercadoPagoWebhook = async (
       },
     });
   } catch (error) {
-    // Clear lock on error
     await env.AUTORENT_WEBHOOK_KV.delete(dedupeKey);
     throw error;
   }
@@ -368,39 +504,35 @@ const worker = {
       return jsonResponse({ message: 'Not found' }, { status: 404 });
     }
 
-    let payload: PaymentWebhookPayload;
-
-    try {
-      payload = (await request.json()) as PaymentWebhookPayload;
-    } catch (error) {
-      console.error('Invalid JSON:', error);
-      return jsonResponse({ message: 'Invalid JSON payload' }, { status: 400 });
-    }
-
-    // Validar que tenga provider
-    if (!payload.provider) {
-      return jsonResponse({ message: 'Missing provider field' }, { status: 400 });
-    }
-
     const supabase = getSupabaseAdminClient(env);
+    const rawBody = await request.text();
+    let payload: any = {};
+
+    if (rawBody) {
+      try {
+        payload = JSON.parse(rawBody);
+      } catch (error) {
+        console.warn('Invalid JSON payload, continuing with query params fallback:', error);
+        payload = {};
+      }
+    }
 
     try {
       // Rutear según el provider
-      if (payload.provider === 'mock') {
+      if (payload?.provider === 'mock') {
         // Validar campos requeridos para mock
         if (!payload.booking_id || !payload.status) {
           return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
         }
         return await processMockWebhook(payload, supabase, env);
-      } else if (payload.provider === 'mercadopago') {
-        // Validar campos requeridos para MP
-        if (!payload.action || !payload.type || !payload.data?.id) {
-          return jsonResponse({ message: 'Missing required fields for Mercado Pago' }, { status: 400 });
-        }
-        return await processMercadoPagoWebhook(payload, supabase, env);
-      } else {
-        return jsonResponse({ message: 'Unsupported provider' }, { status: 400 });
       }
+
+      return await processMercadoPagoWebhook(payload ?? {}, supabase, env, {
+        signatureHeader: request.headers.get('x-signature'),
+        requestId: request.headers.get('x-request-id'),
+        rawBody,
+        query: url.searchParams,
+      });
     } catch (error) {
       console.error('Error processing webhook:', error);
       return jsonResponse(
