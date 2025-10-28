@@ -9,6 +9,16 @@ import { formatDateRange } from '../../../shared/utils/date.utils';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { MarketplaceOnboardingService, MarketplaceStatus } from '../../../core/services/marketplace-onboarding.service';
+
+interface CarLead {
+  carId: string;
+  carTitle: string;
+  participantId: string;
+  participantName: string | null;
+  lastMessage: Message;
+  unreadCount: number;
+}
 
 @Component({
   standalone: true,
@@ -18,14 +28,6 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './owner-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-interface CarLead {
-  carId: string;
-  carTitle: string;
-  participantId: string;
-  participantName: string | null;
-  lastMessage: Message;
-  unreadCount: number;
-}
 
 export class OwnerBookingsPage implements OnInit {
   readonly bookings = signal<Booking[]>([]);
@@ -37,6 +39,7 @@ export class OwnerBookingsPage implements OnInit {
   >({});
   readonly carLeads = signal<CarLead[]>([]);
   readonly leadsLoading = signal(false);
+  readonly marketplaceStatus = signal<MarketplaceStatus | null>(null);
 
   private currentUserId: string | null = null;
 
@@ -47,6 +50,7 @@ export class OwnerBookingsPage implements OnInit {
     private readonly messagesService: MessagesService,
     private readonly authService: AuthService,
     private readonly router: Router,
+    private readonly marketplaceService: MarketplaceOnboardingService,
   ) {}
 
   ngOnInit(): void {
@@ -57,9 +61,15 @@ export class OwnerBookingsPage implements OnInit {
     try {
       const session = await this.authService.ensureSession();
       this.currentUserId = session?.user?.id ?? null;
+      if (this.currentUserId) {
+        await this.loadMarketplaceStatus(this.currentUserId);
+      } else {
+        this.marketplaceStatus.set(null);
+      }
     } catch (error) {
       console.warn('[OwnerBookings] No se pudo obtener la sesión del usuario', error);
       this.currentUserId = null;
+      this.marketplaceStatus.set(null);
     } finally {
       await this.loadBookings();
     }
@@ -348,6 +358,16 @@ export class OwnerBookingsPage implements OnInit {
         userName: lead.participantName ?? 'Usuario',
       },
     });
+  }
+
+  private async loadMarketplaceStatus(userId: string): Promise<void> {
+    try {
+      const status = await this.marketplaceService.getMarketplaceStatus(userId);
+      this.marketplaceStatus.set(status);
+    } catch (error) {
+      console.error('[OwnerBookings] Error cargando estado de marketplace:', error);
+      this.marketplaceStatus.set(null);
+    }
   }
 
   private async loadRenterContacts(bookings: Booking[]): Promise<void> {

@@ -94,7 +94,7 @@ export class MessagesService {
 
     if (error) throw error;
 
-    const rows = (data ?? []) as Array<
+    const rows = (data ?? []) as unknown as Array<
       Message & {
         car: { id: string; title?: string | null; owner_id?: string | null };
       }
@@ -278,12 +278,12 @@ export class MessagesService {
           // Presence state is Record<string, unknown[]>
           const typingUsers = Object.values(state)
             .flat()
-            .filter((presence): presence is { typing?: boolean; user_id?: string } => {
+            .filter((presence): presence is { typing?: boolean; user_id?: string; presence_ref: string } => {
               return typeof presence === 'object' && presence !== null && 'typing' in presence;
             })
             .filter((presence) => presence.typing)
             .map((presence) => presence.user_id)
-            .filter(Boolean);
+            .filter((id): id is string => typeof id === 'string');
           callback(typingUsers);
         } catch (error) {
           console.warn('Error getting typing status:', error);

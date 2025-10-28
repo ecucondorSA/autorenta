@@ -403,8 +403,8 @@ export class FgoV1_1Service {
           eventCount: data.event_count as number,
           avgEventCents: data.avg_event_cents as number,
           avgEvent: centsToUsd(data.avg_event_cents as number),
-          totalPaid: centsToUsd(data.total_paid_cents),
-          totalRecovered: centsToUsd(data.total_recovered_cents),
+          totalPaid: centsToUsd(data.total_paid_cents as number),
+          totalRecovered: centsToUsd(data.total_recovered_cents as number),
         } as PemCalculation;
       }),
       catchError((error) => {

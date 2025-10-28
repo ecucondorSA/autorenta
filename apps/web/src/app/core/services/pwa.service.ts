@@ -8,7 +8,7 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-interface NavigatorWithExperimentalAPIs extends Navigator {
+type NavigatorWithExperimentalAPIs = Navigator & {
   standalone?: boolean;
   setAppBadge?: (count: number) => Promise<void>;
   clearAppBadge?: () => Promise<void>;
@@ -18,7 +18,7 @@ interface NavigatorWithExperimentalAPIs extends Navigator {
   wakeLock?: {
     request: (type: 'screen') => Promise<WakeLockSentinel>;
   };
-}
+};
 
 interface ContactInfo {
   name?: string[];
@@ -38,10 +38,10 @@ interface ServiceWorkerRegistrationWithPeriodicSync extends ServiceWorkerRegistr
   };
 }
 
-interface ScreenOrientationWithLock extends ScreenOrientation {
+type ScreenOrientationWithLock = ScreenOrientation & {
   lock?: (orientation: 'portrait' | 'landscape') => Promise<void>;
   unlock?: () => void;
-}
+};
 
 interface WindowWithGtag extends Window {
   gtag?: (command: string, eventName: string, params: Record<string, string>) => void;
