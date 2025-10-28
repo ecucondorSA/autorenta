@@ -864,7 +864,7 @@ export class BookingsService {
       console.error('Error activating insurance coverage:', error);
       return {
         success: false,
-        error: error.message || 'Error al activar cobertura de seguro',
+        error: error instanceof Error ? error.message : 'Error al activar cobertura de seguro',
       };
     }
   }
@@ -969,7 +969,7 @@ export class BookingsService {
         console.error('❌ Error en create_booking_atomic:', error);
         return {
           success: false,
-          error: error.message || 'Error al crear la reserva',
+          error: error instanceof Error ? error.message : 'Error al crear la reserva',
         };
       }
 
@@ -1004,7 +1004,7 @@ export class BookingsService {
       console.error('❌ Error en createBookingAtomic:', error);
       return {
         success: false,
-        error: error.message || 'Error inesperado al crear la reserva',
+        error: error instanceof Error ? error.message : 'Error inesperado al crear la reserva',
       };
     }
   }
@@ -1069,7 +1069,7 @@ export class BookingsService {
       console.error('Exception approving booking:', error);
       return {
         success: false,
-        error: error.message || 'Error inesperado al aprobar reserva',
+        error: error instanceof Error ? error.message : 'Error inesperado al aprobar reserva',
       };
     }
   }
@@ -1118,7 +1118,7 @@ export class BookingsService {
       console.error('Exception rejecting booking:', error);
       return {
         success: false,
-        error: error.message || 'Error inesperado al rechazar reserva',
+        error: error instanceof Error ? error.message : 'Error inesperado al rechazar reserva',
       };
     }
   }
