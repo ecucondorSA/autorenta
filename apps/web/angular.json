@@ -104,6 +104,14 @@
             ],
             "styles": [
               "src/styles.css"
+            ],
+            "codeCoverage": false,
+            "codeCoverageExclude": [
+              "**/*.spec.ts",
+              "**/test-*.ts",
+              "**/mock-*.ts",
+              "**/*.mock.ts",
+              "src/environments/**"
             ]
           }
         },
