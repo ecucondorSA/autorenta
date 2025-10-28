@@ -199,13 +199,28 @@ export class MarketplaceOnboardingService {
 
   /**
    * Verifica si el usuario puede listar autos (tiene MP vinculado)
+   * Usa la nueva RPC function que consulta mp_onboarding_states
    *
    * @param userId ID del usuario
    * @returns true si puede listar
    */
   async canListCars(userId: string): Promise<boolean> {
-    const status = await this.getMarketplaceStatus(userId);
-    return status.isApproved && !!status.collectorId;
+    try {
+      // Usar la nueva RPC function del migration 004
+      const { data, error } = await this.supabase.rpc('can_list_cars', {
+        p_user_id: userId,
+      });
+
+      if (error) {
+        console.error('Error checking if user can list cars:', error);
+        return false;
+      }
+
+      return data === true;
+    } catch (error) {
+      console.error('Error in canListCars:', error);
+      return false;
+    }
   }
 
   /**

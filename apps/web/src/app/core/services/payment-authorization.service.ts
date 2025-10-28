@@ -160,7 +160,12 @@ export class PaymentAuthorizationService {
         }
 
         // 3. Llamar Edge Function para crear preauth en MP
-        const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+        const supabaseUrl = environment.supabaseUrl;
+        if (!supabaseUrl) {
+          throw new Error(
+            'Supabase URL no configurada. Define NG_APP_SUPABASE_URL en tu entorno antes de autorizar pagos.',
+          );
+        }
         const mpResponse = await fetch(`${supabaseUrl}/functions/v1/mp-create-preauth`, {
           method: 'POST',
           headers: {
@@ -283,7 +288,12 @@ export class PaymentAuthorizationService {
         }
 
         // Llamar Edge Function para capturar preauth
-        const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+        const supabaseUrl = environment.supabaseUrl;
+        if (!supabaseUrl) {
+          throw new Error(
+            'Supabase URL no configurada. Define NG_APP_SUPABASE_URL en tu entorno antes de crear preautorizaciones.',
+          );
+        }
         const response = await fetch(`${supabaseUrl}/functions/v1/mp-capture-preauth`, {
           method: 'POST',
           headers: {
@@ -338,7 +348,12 @@ export class PaymentAuthorizationService {
         }
 
         // Llamar Edge Function para cancelar preauth
-        const supabaseUrl = 'https://obxvffplochgeiclibng.supabase.co';
+        const supabaseUrl = environment.supabaseUrl;
+        if (!supabaseUrl) {
+          throw new Error(
+            'Supabase URL no configurada. Define NG_APP_SUPABASE_URL en tu entorno antes de cancelar preautorizaciones.',
+          );
+        }
         const response = await fetch(`${supabaseUrl}/functions/v1/mp-cancel-preauth`, {
           method: 'POST',
           headers: {

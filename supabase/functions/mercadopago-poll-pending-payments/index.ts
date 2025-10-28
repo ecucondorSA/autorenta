@@ -42,14 +42,13 @@ serve(async (req: Request) => {
     // Configuración
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    let MP_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN') ||
-      'APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571';
+    const rawToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
 
-    MP_ACCESS_TOKEN = MP_ACCESS_TOKEN.trim().replace(/[\r\n\t\s]/g, '');
-
-    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !MP_ACCESS_TOKEN) {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !rawToken) {
       throw new Error('Missing required environment variables');
     }
+
+    const MP_ACCESS_TOKEN = rawToken.trim().replace(/[\r\n\t\s]/g, '');
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 

@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
+import { RealtimeConnectionService, ConnectionStatus } from './realtime-connection.service';
+import { OfflineMessagesService } from './offline-messages.service';
 
 export interface Message {
   id: string;
@@ -19,7 +21,26 @@ export interface Message {
 })
 export class MessagesService {
   private readonly supabase = injectSupabase();
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
+  private readonly offlineMessages = inject(OfflineMessagesService);
+
   private realtimeChannel?: RealtimeChannel;
+
+  // Online/offline status
+  readonly isOnline = signal<boolean>(navigator.onLine);
+  readonly isSyncing = signal<boolean>(false);
+
+  constructor() {
+    // Monitor network connectivity
+    window.addEventListener('online', () => {
+      this.isOnline.set(true);
+      this.syncOfflineMessages();
+    });
+
+    window.addEventListener('offline', () => {
+      this.isOnline.set(false);
+    });
+  }
 
   async listByBooking(bookingId: string): Promise<Message[]> {
     const { data, error } = await this.supabase
@@ -58,46 +79,84 @@ export class MessagesService {
     if (authError) throw authError;
     if (!user?.id) throw new Error('Usuario no autenticado');
 
-    const { error } = await this.supabase.from('messages').insert({
-      booking_id: params.bookingId ?? null,
-      car_id: params.carId ?? null,
-      sender_id: user.id,
-      recipient_id: params.recipientId,
-      body: params.body,
-    });
-    if (error) throw error;
+    // Try to send immediately
+    try {
+      const { error } = await this.supabase.from('messages').insert({
+        booking_id: params.bookingId ?? null,
+        car_id: params.carId ?? null,
+        sender_id: user.id,
+        recipient_id: params.recipientId,
+        body: params.body,
+      });
+
+      if (error) throw error;
+
+      console.log('[Messages] Message sent successfully');
+    } catch (error) {
+      console.warn('[Messages] Failed to send, queueing for offline:', error);
+
+      // Queue for retry when connection is restored
+      await this.offlineMessages.queueMessage({
+        bookingId: params.bookingId,
+        carId: params.carId,
+        recipientId: params.recipientId,
+        body: params.body,
+      });
+
+      // Re-throw so UI can show "Sending..." state
+      throw error;
+    }
   }
 
-  subscribeToBooking(bookingId: string, handler: (message: Message) => void): void {
+  subscribeToBooking(
+    bookingId: string,
+    handler: (message: Message) => void,
+    onConnectionChange?: (status: ConnectionStatus) => void
+  ): void {
     this.unsubscribe();
 
-    this.realtimeChannel = this.supabase
-      .channel(`booking-messages-${bookingId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages',
-          filter: `booking_id=eq.${bookingId}`,
-        },
-        (payload: RealtimePostgresChangesPayload<Message>) => {
-          handler(payload.new as Message);
-        },
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'messages',
-          filter: `booking_id=eq.${bookingId}`,
-        },
-        (payload: RealtimePostgresChangesPayload<Message>) => {
-          handler(payload.new as Message);
-        },
-      )
-      .subscribe();
+    // Use resilient connection service with auto-reconnect
+    this.realtimeChannel = this.realtimeConnection.subscribeWithRetry<Message>(
+      `booking-messages-${bookingId}`,
+      {
+        event: '*', // Listen to all events (INSERT, UPDATE)
+        schema: 'public',
+        table: 'messages',
+        filter: `booking_id=eq.${bookingId}`,
+      },
+      (payload) => {
+        console.log('[Messages] Booking message received:', payload.eventType);
+        handler(payload.new as Message);
+      },
+      onConnectionChange
+    );
+  }
+
+  /**
+   * Subscribe to messages by car ID (for pre-booking chats)
+   */
+  subscribeToCar(
+    carId: string,
+    handler: (message: Message) => void,
+    onConnectionChange?: (status: ConnectionStatus) => void
+  ): void {
+    this.unsubscribe();
+
+    // Use resilient connection service with auto-reconnect
+    this.realtimeChannel = this.realtimeConnection.subscribeWithRetry<Message>(
+      `car-messages-${carId}`,
+      {
+        event: '*', // Listen to all events (INSERT, UPDATE)
+        schema: 'public',
+        table: 'messages',
+        filter: `car_id=eq.${carId}`,
+      },
+      (payload) => {
+        console.log('[Messages] Car message received:', payload.eventType);
+        handler(payload.new as Message);
+      },
+      onConnectionChange
+    );
   }
 
   async markAsRead(messageId: string): Promise<void> {
@@ -172,9 +231,73 @@ export class MessagesService {
     return channel;
   }
 
+  /**
+   * Sync offline messages when connection is restored
+   */
+  private async syncOfflineMessages(): Promise<void> {
+    this.isSyncing.set(true);
+    console.log('[Messages] Syncing offline messages...');
+
+    try {
+      const pending = await this.offlineMessages.getMessagesForRetry();
+
+      console.log(`[Messages] Found ${pending.length} pending messages to sync`);
+
+      for (const message of pending) {
+        // Check if we should retry this message (respects exponential backoff)
+        if (!this.offlineMessages.shouldRetry(message)) {
+          console.log(`[Messages] Skipping message ${message.id} (backoff in progress)`);
+          continue;
+        }
+
+        try {
+          const {
+            data: { user },
+          } = await this.supabase.auth.getUser();
+          if (!user?.id) {
+            console.warn('[Messages] User not authenticated, skipping sync');
+            continue;
+          }
+
+          // Attempt to send
+          const { error } = await this.supabase.from('messages').insert({
+            booking_id: message.bookingId ?? null,
+            car_id: message.carId ?? null,
+            sender_id: user.id,
+            recipient_id: message.recipientId,
+            body: message.body,
+          });
+
+          if (error) throw error;
+
+          // Success: remove from queue
+          await this.offlineMessages.removeMessage(message.id);
+          console.log(`✅ [Messages] Synced offline message ${message.id}`);
+        } catch (error) {
+          console.error(`❌ [Messages] Failed to sync message ${message.id}:`, error);
+
+          // Increment retry counter
+          await this.offlineMessages.incrementRetry(message.id);
+
+          // If exceeded max retries, remove
+          if (message.retries + 1 >= 5) {
+            console.warn(`[Messages] Removing message ${message.id} (max retries exceeded)`);
+            await this.offlineMessages.removeMessage(message.id);
+          }
+        }
+      }
+
+      console.log('[Messages] Sync complete');
+    } catch (error) {
+      console.error('[Messages] Error during sync:', error);
+    } finally {
+      this.isSyncing.set(false);
+    }
+  }
+
   unsubscribe(): void {
     if (this.realtimeChannel) {
-      this.supabase.removeChannel(this.realtimeChannel);
+      this.realtimeConnection.unsubscribe(this.realtimeChannel.topic);
       this.realtimeChannel = undefined;
     }
   }
