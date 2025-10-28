@@ -18,6 +18,11 @@ interface NavigatorWithWCO extends Navigator {
   windowControlsOverlay?: WindowControlsOverlay;
 }
 
+interface UserProfile {
+  avatar_url?: string;
+  full_name?: string;
+}
+
 @Component({
   selector: 'app-pwa-titlebar',
   standalone: true,
@@ -34,7 +39,7 @@ export class PwaTitlebarComponent implements OnInit {
   readonly isWCOSupported = signal(false);
   readonly isWCOActive = signal(false);
   readonly titlebarRect = signal<DOMRect | null>(null);
-  readonly userProfile = signal<unknown>(null);
+  readonly userProfile = signal<UserProfile | null>(null);
 
   readonly isAuthenticated = computed(() => !!this.userProfile());
 

@@ -2,7 +2,11 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
-import { AccountingService, AccountingDashboard } from '../../../core/services/accounting.service';
+import {
+  AccountingService,
+  AccountingDashboard,
+  FinancialHealth,
+} from '../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-accounting-dashboard',
@@ -14,7 +18,7 @@ import { AccountingService, AccountingDashboard } from '../../../core/services/a
 export class AccountingDashboardComponent implements OnInit {
   dashboard = signal<AccountingDashboard | null>(null);
   loading = signal(true);
-  healthCheck = signal<unknown>(null);
+  healthCheck = signal<FinancialHealth | null>(null);
 
   constructor(private accountingService: AccountingService) {}
 
