@@ -243,6 +243,15 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    // Detectar cambios en cars y actualizar marcadores
+    if (changes['cars'] && this.map) {
+      const currentCars = changes['cars'].currentValue as CarMapLocation[];
+      if (currentCars && currentCars.length > 0) {
+        console.log('[CarsMapComponent] Cars changed, updating markers:', currentCars.length);
+        void this.updateMarkersWithDynamicPricing(currentCars);
+      }
+    }
+
     // Detectar cambios en selectedCarId y mover el mapa
     if (changes['selectedCarId'] && !changes['selectedCarId'].firstChange) {
       const carId = changes['selectedCarId'].currentValue;
@@ -522,7 +531,16 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   private async loadCarLocations(force = false): Promise<void> {
     try {
-      let locations = await this.carLocationsService.fetchActiveLocations(force);
+      // Priorizar el input cars si está disponible, sino fetch del servicio
+      let locations: CarMapLocation[];
+
+      if (this.cars && this.cars.length > 0) {
+        console.log('[CarsMapComponent] Using cars from input:', this.cars.length);
+        locations = this.cars;
+      } else {
+        console.log('[CarsMapComponent] Fetching locations from service');
+        locations = await this.carLocationsService.fetchActiveLocations(force);
+      }
 
       // Ordenar por distancia si tenemos ubicación del usuario
       // NO filtramos por distancia para mostrar TODOS los autos disponibles en Uruguay
