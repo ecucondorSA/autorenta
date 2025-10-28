@@ -7,6 +7,8 @@ node_modules
 /.output
 /apps/web/.angular/cache
 /apps/web/dist
+/apps/web/out-tsc
+/out-tsc
 
 # Env
 .env
