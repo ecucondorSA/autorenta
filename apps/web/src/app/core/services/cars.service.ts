@@ -170,17 +170,7 @@ export class CarsService {
     const { data, error } = await query;
     if (error) throw error;
 
-    // 🔍 DEBUG: Verificar si region_id está presente
-    if (data && data.length > 0) {
-        count: data.length,
-        sample: {
-          id: data[0].id,
-          title: data[0].title,
-          region_id: data[0].region_id,
-          hasRegionId: !!data[0].region_id,
-        },
-      });
-    }
+    // Data loaded successfully
 
     // ✅ FIX P0.2: Filtrar por disponibilidad si hay fechas
     if (filters.from && filters.to && data) {

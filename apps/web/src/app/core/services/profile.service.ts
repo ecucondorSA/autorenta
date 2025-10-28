@@ -63,12 +63,6 @@ export class ProfileService {
       .single();
 
     if (error) {
-        code: error.code,
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-      });
-
       if (error.code === 'PGRST116') {
         // Profile doesn't exist yet, create one
         return this.createProfile(user.id, user.email ?? '');
@@ -87,9 +81,6 @@ export class ProfileService {
       throw new Error(detailedError);
     }
 
-      id: data?.id,
-      full_name: data?.full_name,
-    });
     return data as UserProfile;
   }
 
@@ -370,9 +361,7 @@ export class ProfileService {
         },
       });
     } catch (verificationError) {
-        '[ProfileService] No se pudo iniciar la verificación automática:',
-        verificationError,
-      );
+      // Silent fail - verification is async and optional
     }
 
     return data as UserDocument;

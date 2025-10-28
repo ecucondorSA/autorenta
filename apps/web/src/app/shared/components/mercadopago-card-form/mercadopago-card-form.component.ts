@@ -374,8 +374,6 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       let message = 'Error al inicializar Mercado Pago';
 
       if (Array.isArray(err)) {
-        err.forEach((e, i) => {
-        });
         message = err
           .map((e: unknown) => {
             const errorRecord = e as Record<string, unknown>;

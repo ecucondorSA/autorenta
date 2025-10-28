@@ -61,9 +61,7 @@ export class VerificationBadgeComponent implements OnInit {
       try {
         await this.verificationService.loadStatuses();
       } catch (error) {
-          '[VerificationBadgeComponent] No se pudo cargar el estado de verificación:',
-          error,
-        );
+        // Silent fail - verification status is optional
       }
     }
   }

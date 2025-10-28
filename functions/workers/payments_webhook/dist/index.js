@@ -352,8 +352,21 @@ const processMercadoPagoWebhook = async (payload, supabase, env, options) => {
 const worker = {
     async fetch(request, env) {
         const url = new URL(request.url);
-        // Solo acepta POST en /webhooks/payments
-        if (request.method !== 'POST' || url.pathname !== '/webhooks/payments') {
+        // Health check endpoint - GET permite verificación
+        if (url.pathname === '/webhooks/payments') {
+            if (request.method === 'GET') {
+                return jsonResponse({
+                    status: 'ok',
+                    message: 'Webhook endpoint is ready',
+                    timestamp: new Date().toISOString(),
+                });
+            }
+            // Solo acepta POST para procesamiento real
+            if (request.method !== 'POST') {
+                return jsonResponse({ message: 'Method not allowed' }, { status: 405 });
+            }
+        }
+        else {
             return jsonResponse({ message: 'Not found' }, { status: 404 });
         }
         const supabase = getSupabaseAdminClient(env);
