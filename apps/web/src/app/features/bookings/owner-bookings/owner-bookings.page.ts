@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { IonicModule, AlertController, ToastController } from '@ionic/angular';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
 import { formatDateRange } from '../../../shared/utils/date.utils';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { MessagesService, Message } from '../../../core/services/messages.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   standalone: true,
@@ -16,6 +18,15 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
   styleUrl: './owner-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+interface CarLead {
+  carId: string;
+  carTitle: string;
+  participantId: string;
+  participantName: string | null;
+  lastMessage: Message;
+  unreadCount: number;
+}
+
 export class OwnerBookingsPage implements OnInit {
   readonly bookings = signal<Booking[]>([]);
   readonly loading = signal(false);
@@ -24,15 +35,34 @@ export class OwnerBookingsPage implements OnInit {
   readonly renterContacts = signal<
     Record<string, { name?: string; email?: string; phone?: string }>
   >({});
+  readonly carLeads = signal<CarLead[]>([]);
+  readonly leadsLoading = signal(false);
+
+  private currentUserId: string | null = null;
 
   constructor(
     private readonly bookingsService: BookingsService,
     private readonly alertController: AlertController,
     private readonly toastController: ToastController,
+    private readonly messagesService: MessagesService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
-    void this.loadBookings();
+    void this.initialize();
+  }
+
+  private async initialize(): Promise<void> {
+    try {
+      const session = await this.authService.ensureSession();
+      this.currentUserId = session?.user?.id ?? null;
+    } catch (error) {
+      console.warn('[OwnerBookings] No se pudo obtener la sesión del usuario', error);
+      this.currentUserId = null;
+    } finally {
+      await this.loadBookings();
+    }
   }
 
   async loadBookings(): Promise<void> {
@@ -44,6 +74,7 @@ export class OwnerBookingsPage implements OnInit {
       const items = await this.bookingsService.getOwnerBookings();
       await this.loadRenterContacts(items);
       this.bookings.set(items);
+      await this.loadCarLeads();
     } catch (err) {
       console.error('getOwnerBookings error', err);
       this.error.set('No pudimos cargar las reservas. Por favor intentá de nuevo más tarde.');
@@ -218,6 +249,105 @@ export class OwnerBookingsPage implements OnInit {
   renterPhone(booking: Booking): string | null {
     const contact = this.renterContacts()[booking.id];
     return contact?.phone ?? null;
+  }
+
+  async loadCarLeads(): Promise<void> {
+    if (!this.currentUserId) {
+      this.carLeads.set([]);
+      return;
+    }
+
+    this.leadsLoading.set(true);
+
+    try {
+      const rows = await this.messagesService.listCarLeadsForOwner(this.currentUserId);
+
+      const threads = new Map<
+        string,
+        {
+          carId: string;
+          carTitle: string;
+          participantId: string;
+          lastMessage: Message;
+          unreadCount: number;
+        }
+      >();
+
+      for (const row of rows) {
+        if (!row.car?.id) {
+          continue;
+        }
+
+        const key = `${row.car.id}:${row.otherUserId}`;
+        const existing = threads.get(key);
+        const isUnread =
+          row.message.recipient_id === this.currentUserId && !row.message.read_at;
+
+        if (!existing) {
+          threads.set(key, {
+            carId: row.car.id,
+            carTitle: row.car.title ?? 'Auto sin título',
+            participantId: row.otherUserId,
+            lastMessage: row.message,
+            unreadCount: isUnread ? 1 : 0,
+          });
+        } else {
+          const existingDate = new Date(existing.lastMessage.created_at).getTime();
+          const currentDate = new Date(row.message.created_at).getTime();
+
+          if (currentDate > existingDate) {
+            existing.lastMessage = row.message;
+          }
+
+          if (isUnread) {
+            existing.unreadCount += 1;
+          }
+        }
+      }
+
+      const leadsOrdered = Array.from(threads.values()).sort((a, b) => {
+        const aDate = new Date(a.lastMessage.created_at).getTime();
+        const bDate = new Date(b.lastMessage.created_at).getTime();
+        return bDate - aDate;
+      });
+
+      const enriched = await Promise.all(
+        leadsOrdered.map(async (lead) => {
+          let participantName: string | null = null;
+
+          try {
+            const contact = await this.bookingsService.getOwnerContact(lead.participantId);
+            if (contact.success) {
+              participantName = contact.name || contact.email || null;
+            }
+          } catch (err) {
+            console.warn('[OwnerBookings] No se pudo obtener datos del contacto', err);
+          }
+
+          return {
+            ...lead,
+            participantName,
+          };
+        }),
+      );
+
+      this.carLeads.set(enriched);
+    } catch (error) {
+      console.error('Error loading car leads:', error);
+    } finally {
+      this.leadsLoading.set(false);
+    }
+  }
+
+  async openCarChat(lead: CarLead): Promise<void> {
+    await this.router.navigate(['/messages'], {
+      queryParams: {
+        carId: lead.carId,
+        userId: lead.participantId,
+        carName: lead.carTitle,
+        userName: lead.participantName ?? 'Usuario',
+      },
+    });
   }
 
   private async loadRenterContacts(bookings: Booking[]): Promise<void> {

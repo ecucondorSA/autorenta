@@ -62,6 +62,69 @@ export class MessagesService {
     return (data ?? []) as Message[];
   }
 
+  async listCarLeadsForOwner(
+    ownerId: string,
+  ): Promise<
+    Array<{
+      message: Message;
+      car: { id: string; title?: string | null };
+      otherUserId: string;
+    }>
+  > {
+    const { data, error } = await this.supabase
+      .from('messages')
+      .select(
+        `
+        id,
+        booking_id,
+        car_id,
+        sender_id,
+        recipient_id,
+        body,
+        created_at,
+        read_at,
+        delivered_at,
+        car:cars!inner(id,title,owner_id)
+      `,
+      )
+      .is('booking_id', null)
+      .not('car_id', 'is', null)
+      .eq('car.owner_id', ownerId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    const rows = (data ?? []) as Array<
+      Message & {
+        car: { id: string; title?: string | null; owner_id?: string | null };
+      }
+    >;
+
+    return rows
+      .map((row) => {
+        const otherId = row.sender_id === ownerId ? row.recipient_id : row.sender_id;
+        if (!otherId) {
+          return null;
+        }
+        return {
+          message: {
+            id: row.id,
+            booking_id: row.booking_id,
+            car_id: row.car_id,
+            sender_id: row.sender_id,
+            recipient_id: row.recipient_id,
+            body: row.body,
+            created_at: row.created_at,
+            read_at: row.read_at,
+            delivered_at: row.delivered_at,
+          } as Message,
+          car: { id: row.car?.id, title: row.car?.title ?? null },
+          otherUserId: otherId,
+        };
+      })
+      .filter((lead): lead is NonNullable<typeof lead> => lead !== null);
+  }
+
   async sendMessage(params: {
     recipientId: string;
     body: string;

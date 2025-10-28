@@ -40,21 +40,23 @@ export class ShepherdAdapterService implements TourRendererAdapter {
 
     this.currentTourId = tourId;
 
+    const stepOptions = options.stepOptions && typeof options.stepOptions === 'object' ? options.stepOptions : {};
+
     const defaultOptions = {
-      useModalOverlay: options.useModalOverlay ?? true,
+      useModalOverlay: typeof options.useModalOverlay === 'boolean' ? options.useModalOverlay : true,
       defaultStepOptions: {
         cancelIcon: { enabled: true },
-        canClickTarget: options.canClickTarget ?? true,
+        canClickTarget: typeof options.canClickTarget === 'boolean' ? options.canClickTarget : true,
         scrollTo: {
           behavior: 'smooth',
           block: 'center',
         },
         classes: 'shepherd-theme-custom',
-        ...options.stepOptions,
+        ...stepOptions,
       },
     };
 
-    this.tour = new Shepherd.Tour(defaultOptions);
+    this.tour = new Shepherd.Tour(defaultOptions as any);
 
     // Setup event listeners
     this.tour.on('show', (event) => {
