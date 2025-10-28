@@ -53,9 +53,7 @@ const createResilientLock = (): SupabaseLock => {
         errorObj?.name === 'NavigatorLockAcquireTimeoutError' ||
         errorObj?.message?.includes('Navigator LockManager')
       ) {
-          `No se pudo obtener el lock de autenticación (${name}). Continuando sin locking.`,
-          error,
-        );
+        // Lock timeout - continue without locking
         return fn();
       }
       throw error;
@@ -80,13 +78,8 @@ export class SupabaseClientService {
     if (!supabaseUrl || !supabaseAnonKey) {
       const message =
         'Supabase no está configurado. Define NG_APP_SUPABASE_URL y NG_APP_SUPABASE_ANON_KEY en tus variables de entorno (por ejemplo, .env.development.local).';
-        supabaseUrl,
-        supabaseAnonKey: supabaseAnonKey ? '***' : '',
-      });
       throw new Error(message);
     }
-
-    // Log para debug en producción
 
     this.client = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {

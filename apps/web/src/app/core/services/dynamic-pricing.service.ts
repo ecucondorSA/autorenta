@@ -116,12 +116,6 @@ export class DynamicPricingService {
     rentalStart: string,
     rentalHours: number,
   ): Promise<DynamicPricingResponse> {
-      regionId,
-      userId,
-      rentalStart,
-      rentalHours,
-    });
-
     const { data, error } = await this.supabase.rpc('calculate_dynamic_price', {
       p_region_id: regionId,
       p_user_id: userId,
@@ -343,12 +337,6 @@ export class DynamicPricingService {
 
 
       const now = new Date();
-        regionId,
-        userId,
-        rentalStart: now.toISOString(),
-        rentalHours: 24,
-      });
-
       const response = await this.calculatePriceRPC(
         regionId,
         userId,

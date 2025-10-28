@@ -232,8 +232,6 @@ export class TourOrchestratorService implements OnDestroy {
           });
 
           if (!element && step.target.required) {
-              `[TourOrchestrator] Required element not found, skipping step: ${step.id}`,
-            );
             this.adapter.next();
             return;
           }
