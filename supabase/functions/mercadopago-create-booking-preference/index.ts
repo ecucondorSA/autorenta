@@ -26,6 +26,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 // Tipos
 interface CreateBookingPreferenceRequest {
   booking_id: string;
+  use_split_payment?: boolean;  // Opcional: indica si el usuario eligió pagar con cuenta MP
 }
 
 const corsHeaders = {
@@ -54,10 +55,15 @@ serve(async (req) => {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     const APP_BASE_URL = Deno.env.get('APP_BASE_URL') || 'http://localhost:4200';
+    const MP_MARKETPLACE_ID = Deno.env.get('MERCADOPAGO_MARKETPLACE_ID');
+    const MP_APPLICATION_ID = Deno.env.get('MERCADOPAGO_APPLICATION_ID');
 
     if (!MP_ACCESS_TOKEN || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       throw new Error('Missing required environment variables');
     }
+
+    // Validar marketplace configurado si se requiere split payment
+    // Nota: Esto se validará después de obtener los datos del booking
 
     // Validar método HTTP
     if (req.method !== 'POST') {
@@ -72,7 +78,7 @@ serve(async (req) => {
 
     // Obtener datos del request
     const body: CreateBookingPreferenceRequest = await req.json();
-    const { booking_id } = body;
+    const { booking_id, use_split_payment = false } = body;
 
     if (!booking_id) {
       return new Response(
@@ -308,30 +314,68 @@ serve(async (req) => {
     // ========================================
     // VERIFICAR MARKETPLACE SPLIT
     // ========================================
-    
+
     const owner = booking.car?.owner;
-    const shouldSplit = owner?.marketplace_approved && owner?.mercadopago_collector_id;
+
+    // Split payments config
+    const ENABLE_SPLIT_PAYMENTS = Deno.env.get('MERCADOPAGO_ENABLE_SPLIT_PAYMENTS') === 'true';
+
+    // Determinar si aplicar split:
+    // 1. Flag global habilitado
+    // 2. Usuario eligió pagar con cuenta MP (use_split_payment)
+    // 3. Owner tiene collector_id configurado
+    const shouldSplit = ENABLE_SPLIT_PAYMENTS &&
+                       use_split_payment &&
+                       owner?.marketplace_approved &&
+                       owner?.mercadopago_collector_id;
     
     let platformFee = 0;
     let ownerAmount = 0;
     
     if (shouldSplit) {
+      // Validar que marketplace esté configurado
+      if (!MP_MARKETPLACE_ID) {
+        console.error('❌ MERCADOPAGO_MARKETPLACE_ID not configured - cannot create split payment');
+        return new Response(
+          JSON.stringify({
+            error: 'MARKETPLACE_NOT_CONFIGURED',
+            code: 'MARKETPLACE_NOT_CONFIGURED',
+            message:
+              'El marketplace de MercadoPago no está configurado. No se pueden procesar pagos divididos.',
+            meta: {
+              booking_id,
+              owner_id: owner?.id ?? booking.car?.owner_id,
+            },
+          }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
       // Calcular split 85/15
       const { data: splitData } = await supabase.rpc('calculate_payment_split', {
         p_total_amount_cents: Math.round(amountARS * 100)
       });
-      
+
       if (splitData) {
         ownerAmount = splitData.owner_amount_cents / 100;
         platformFee = splitData.platform_fee_cents / 100;
-        
-        console.log(`💰 Split Payment:
+
+        console.log(`💰 Split Payment ENABLED:
+          Mode: ACCOUNT_MONEY only (no cards)
           Total: ${amountARS} ARS
           Owner (85%): ${ownerAmount} ARS
           Platform (15%): ${platformFee} ARS
           Collector ID: ${owner.mercadopago_collector_id}
+          Marketplace ID: ${MP_MARKETPLACE_ID}
         `);
       }
+    } else if (use_split_payment && !ENABLE_SPLIT_PAYMENTS) {
+      console.warn('⚠️ User requested split payment but ENABLE_SPLIT_PAYMENTS is false');
+    } else if (!use_split_payment) {
+      console.log('💳 Traditional Payment: All payment methods accepted (cards, cash, etc.)');
     } else {
       console.warn('⚠️ Blocking preference: owner not marketplace approved or missing collector_id', {
         owner_id: owner?.id ?? booking.car?.owner_id,
@@ -391,7 +435,19 @@ serve(async (req) => {
       notification_url: `${SUPABASE_URL}/functions/v1/mercadopago-webhook`,
 
       // Métodos de pago
-      payment_methods: {
+      payment_methods: shouldSplit ? {
+        // Si usa split: SOLO saldo de cuenta MercadoPago
+        excluded_payment_types: [
+          { id: 'credit_card' },
+          { id: 'debit_card' },
+          { id: 'ticket' },        // Efectivo (Rapipago, Pago Fácil)
+          { id: 'bank_transfer' },
+          { id: 'atm' },
+        ],
+        installments: 1,  // Solo 1 cuota con cuenta MP
+        default_installments: 1,
+      } : {
+        // Si NO usa split: todos los métodos de pago
         excluded_payment_methods: [],
         excluded_payment_types: [],
         installments: 12,
@@ -412,6 +468,7 @@ serve(async (req) => {
 
       // MARKETPLACE SPLIT (si aplica)
       ...(shouldSplit && {
+        marketplace: MP_MARKETPLACE_ID || undefined,
         marketplace_fee: platformFee,
         collector_id: owner.mercadopago_collector_id,
       }),

@@ -116,7 +116,7 @@ export class RiskService {
   ): Observable<{ snapshot: RiskSnapshot | null; error?: string }> {
     return from(
       this.supabaseClient
-        .from('booking_risk_snapshots')
+        .from('booking_risk_snapshot')
         .select('*')
         .eq('booking_id', bookingId)
         .single(),

@@ -144,13 +144,25 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     const booking = this.booking();
     if (!booking) return 'Vehículo';
 
-    // Booking no tiene car directamente, solo car_id
-    // Se necesitaría cargar el car por separado
+    // Car is now loaded with booking
+    if (booking.car) {
+      return `${booking.car.brand} ${booking.car.model} ${booking.car.year}`;
+    }
+
     return 'Vehículo';
   }
 
   getCarImage(): string {
-    // Booking no tiene car directamente
+    const booking = this.booking();
+    if (!booking || !booking.car) {
+      return '/assets/images/car-placeholder.png';
+    }
+
+    // Return first image if available
+    if (booking.car.images && booking.car.images.length > 0) {
+      return booking.car.images[0];
+    }
+
     return '/assets/images/car-placeholder.png';
   }
 }
