@@ -301,20 +301,21 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   private async loadMapboxLibrary(): Promise<void> {
     try {
-      // Importar dinámicamente Mapbox GL JS
-      const mapboxModule = await import('mapbox-gl');
-      this.mapboxgl = (mapboxModule.default || mapboxModule) as unknown as MapboxGL;
+      // Importar dinámicamente MapLibre GL JS (ESM replacement for Mapbox GL)
+      const maplibreModule = await import('maplibre-gl');
+      this.mapboxgl = (maplibreModule.default || maplibreModule) as unknown as MapboxGL;
 
       if (!this.mapboxgl) {
-        throw new Error('Mapbox GL JS no se cargó correctamente');
+        throw new Error('MapLibre GL JS no se cargó correctamente');
       }
 
-      // Configurar access token
+      // MapLibre doesn't require access token for open styles
+      // but we can still use Mapbox styles with token if needed
       if (environment.mapboxAccessToken && this.mapboxgl) {
         this.mapboxgl.accessToken = environment.mapboxAccessToken;
       }
     } catch (err) {
-      console.error('[CarsMapComponent] Error loading Mapbox', err);
+      console.error('[CarsMapComponent] Error loading MapLibre GL', err);
       this.error.set('Error al cargar la biblioteca de mapas');
       this.loading.set(false);
     }
