@@ -64,6 +64,61 @@ import { AuthService } from '../../../core/services/auth.service';
           Así recibirás el dinero directamente en tu cuenta al finalizar cada reserva.
         </p>
 
+        <!-- Status Overview -->
+        <ion-card class="status-card" *ngIf="status() && !loading()">
+          <ion-card-content>
+            <div
+              class="status-header"
+              [ngClass]="{
+                'status-header--ready': status()?.isApproved && status()?.hasActiveTokens,
+                'status-header--warn': !status()?.isApproved || !status()?.hasActiveTokens
+              }"
+            >
+              <span class="status-indicator"></span>
+              <div class="status-texts">
+                <p class="status-title">Estado actual</p>
+                <p
+                  class="status-subtitle"
+                  *ngIf="status()?.isApproved && status()?.hasActiveTokens"
+                >
+                  Tu cuenta está lista para recibir pagos con split automático.
+                </p>
+                <p class="status-subtitle" *ngIf="!status()?.isApproved">
+                  Aún no completaste la autorización. Vinculá tu cuenta para habilitar cobros.
+                </p>
+                <p
+                  class="status-subtitle"
+                  *ngIf="status()?.isApproved && !status()?.hasActiveTokens"
+                >
+                  Tus credenciales expiraron. Re-autorizá Mercado Pago para mantener el split activo.
+                </p>
+              </div>
+              <ion-button
+                size="small"
+                fill="clear"
+                color="primary"
+                (click)="refreshStatus()"
+                [disabled]="loading() || processing()"
+              >
+                <ion-icon slot="start" name="refresh"></ion-icon>
+                Actualizar
+              </ion-button>
+            </div>
+
+            <div class="status-meta" *ngIf="status()?.collectorId">
+              <ion-icon name="id-card"></ion-icon>
+              <span>Collector ID: {{ status()?.collectorId }}</span>
+            </div>
+
+            <div class="status-meta" *ngIf="status()?.completedAt">
+              <ion-icon name="time"></ion-icon>
+              <span>
+                Última vinculación: {{ status()?.completedAt | date: 'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
         <!-- Benefits List -->
         <div class="benefits-section">
           <h3 class="section-title">✨ Beneficios</h3>
@@ -157,8 +212,18 @@ import { AuthService } from '../../../core/services/auth.service';
             {{ processing() ? 'Conectando...' : 'Vincular Mercado Pago' }}
           </ion-button>
 
+          <ion-button
+            expand="block"
+            fill="outline"
+            (click)="refreshStatus()"
+            [disabled]="processing() || loading()"
+          >
+            <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+            Ya lo conecté, verificar
+          </ion-button>
+
           <ion-button expand="block" fill="clear" (click)="dismiss()" [disabled]="processing()">
-            Ahora no
+            Lo haré después
           </ion-button>
         </div>
 
@@ -234,6 +299,71 @@ import { AuthService } from '../../../core/services/auth.service';
         line-height: 1.6;
         margin-bottom: 2rem;
         font-size: 1rem;
+      }
+
+      .status-card {
+        margin-bottom: 2rem;
+        border-radius: 18px;
+        box-shadow: 0 18px 40px -28px rgba(27, 57, 72, 0.45);
+      }
+
+      .status-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .status-header--ready .status-indicator {
+        background: var(--ion-color-success);
+        box-shadow: 0 0 0 6px rgba(58, 190, 117, 0.18);
+      }
+
+      .status-header--warn .status-indicator {
+        background: var(--ion-color-warning);
+        box-shadow: 0 0 0 6px rgba(255, 178, 30, 0.25);
+      }
+
+      .status-indicator {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--ion-color-medium);
+        flex-shrink: 0;
+        margin-top: 0.4rem;
+        transition: all 0.3s ease;
+      }
+
+      .status-texts {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+
+      .status-title {
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        font-size: 0.95rem;
+      }
+
+      .status-subtitle {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        line-height: 1.45;
+      }
+
+      .status-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--ion-color-medium);
+        margin-top: 0.75rem;
+      }
+
+      .status-meta ion-icon {
+        font-size: 16px;
+        color: var(--ion-color-primary);
       }
 
       .benefits-section,
@@ -365,6 +495,12 @@ import { AuthService } from '../../../core/services/auth.service';
           --border-radius: 12px;
           font-weight: 600;
         }
+
+        ion-button[fill='outline'] {
+          --border-color: var(--ion-color-primary);
+          --color: var(--ion-color-primary);
+          --background: rgba(44, 74, 82, 0.05);
+        }
       }
 
       .terms {
@@ -439,7 +575,9 @@ export class MpOnboardingModalComponent implements OnInit {
     await this.loadStatus();
   }
 
-  private async loadStatus() {
+  private async loadStatus(autoDismiss = true) {
+    this.loading.set(true);
+    this.error.set(null);
     try {
       const user = await this.authService.getCurrentUser();
       if (!user) {
@@ -452,7 +590,7 @@ export class MpOnboardingModalComponent implements OnInit {
       this.status.set(status);
 
       // Si ya está aprobado, cerrar modal
-      if (status.isApproved) {
+      if (autoDismiss && status.isApproved) {
         await this.dismiss({ completed: true, alreadyLinked: true });
         return;
       }
@@ -462,6 +600,10 @@ export class MpOnboardingModalComponent implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  async refreshStatus() {
+    await this.loadStatus(false);
   }
 
   async startOnboarding() {

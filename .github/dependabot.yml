@@ -1,0 +1,70 @@
+version: 2
+updates:
+  # NPM dependencies - Root
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Argentina/Buenos_Aires"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "ecucondorSA"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      angular:
+        patterns:
+          - "@angular/*"
+          - "@angular-*"
+        update-types:
+          - "minor"
+          - "patch"
+      ionic:
+        patterns:
+          - "@ionic/*"
+          - "ionicons"
+      testing:
+        patterns:
+          - "@playwright/*"
+          - "playwright"
+          - "jasmine*"
+          - "karma*"
+      build-tools:
+        patterns:
+          - "@types/*"
+          - "typescript"
+          - "eslint*"
+          - "prettier*"
+      supabase:
+        patterns:
+          - "@supabase/*"
+  
+  # NPM dependencies - Web App
+  - package-ecosystem: "npm"
+    directory: "/apps/web"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:30"
+      timezone: "America/Argentina/Buenos_Aires"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps-web)"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "1"
+      time: "10:00"
+      timezone: "America/Argentina/Buenos_Aires"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(actions)"
+    labels:
+      - "dependencies"
+      - "github-actions"

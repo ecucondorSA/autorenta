@@ -333,7 +333,30 @@ serve(async (req) => {
         `);
       }
     } else {
-      console.log('⚠️ No split payment - Owner not marketplace approved or missing collector_id');
+      console.warn('⚠️ Blocking preference: owner not marketplace approved or missing collector_id', {
+        owner_id: owner?.id ?? booking.car?.owner_id,
+        marketplace_approved: owner?.marketplace_approved ?? null,
+        collector_id: owner?.mercadopago_collector_id ?? null,
+      });
+
+      return new Response(
+        JSON.stringify({
+          error: 'OWNER_ONBOARDING_REQUIRED',
+          code: 'OWNER_ONBOARDING_REQUIRED',
+          message:
+            'El propietario todavía no completó la vinculación de Mercado Pago. La reserva permanecerá pendiente hasta que se conecte.',
+          meta: {
+            booking_id,
+            owner_id: owner?.id ?? booking.car?.owner_id,
+            marketplace_approved: owner?.marketplace_approved ?? false,
+            collector_id: owner?.mercadopago_collector_id ?? null,
+          },
+        }),
+        {
+          status: 409,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // ========================================
