@@ -27,7 +27,7 @@
   <!-- Map View (Fullscreen) -->
   <div class="map-container">
     <app-cars-map
-      [cars]="filteredCars"
+      [cars]="carMapLocations"
       [selectedCarId]="null"
       (carSelected)="onCarSelected($event)"
     ></app-cars-map>

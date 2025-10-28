@@ -20,7 +20,7 @@
   <div *ngIf="!loading() && dashboard()">
     <!-- Health Check Alerts -->
     <ion-card
-      *ngIf="healthCheck()?.alerts?.length > 0"
+      *ngIf="healthCheck()?.alerts && healthCheck()!.alerts.length > 0"
       [color]="getHealthColor(healthCheck()?.profitability)"
     >
       <ion-card-header>

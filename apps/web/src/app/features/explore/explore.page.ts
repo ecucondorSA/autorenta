@@ -20,7 +20,10 @@ import {
 import { addIcons } from 'ionicons';
 import { optionsOutline, listOutline, locateOutline } from 'ionicons/icons';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
-import { MapFiltersComponent } from '../../shared/components/map-filters/map-filters.component';
+import {
+  MapFiltersComponent,
+  MapFilters,
+} from '../../shared/components/map-filters/map-filters.component';
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
 import { CarsService } from '../../core/services/cars.service';
 import { Car } from '../../core/models';
@@ -58,6 +61,24 @@ export class ExplorePage implements OnInit, AfterViewInit {
   cars: Car[] = [];
   filteredCars: Car[] = [];
   loading = true;
+
+  get carMapLocations() {
+    return this.filteredCars.map(car => ({
+      carId: car.id,
+      title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
+      pricePerDay: car.price_per_day,
+      currency: car.currency || 'ARS',
+      lat: car.location_lat || 0,
+      lng: car.location_lng || 0,
+      updatedAt: car.updated_at || new Date().toISOString(),
+      city: car.location_city,
+      state: car.location_state,
+      country: car.location_country,
+      locationLabel: car.location_city || 'Sin ubicación',
+      photoUrl: (car.photos && car.photos[0]) ? (typeof car.photos[0] === 'string' ? car.photos[0] : car.photos[0].url) : null,
+      description: car.description,
+    }));
+  }
   showFilters = false;
   showList = false;
   searchQuery = '';
@@ -121,7 +142,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     }
   }
 
-  onFiltersChange(filters: Record<string, unknown>) {
+  onFiltersChange(filters: MapFilters) {
     this.filters = filters;
     this.applyFilters();
   }

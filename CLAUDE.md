@@ -174,13 +174,136 @@ wrangler secret put SUPABASE_SERVICE_ROLE_KEY
 
 **Documentation**: See `WALLET_SYSTEM_DOCUMENTATION.md` for complete guide.
 
-### Payment Webhook Worker
+### Payment Architecture (CRITICAL - Updated Oct 2025)
 
-- **Mock Implementation**: Simulates payment provider webhooks
+**AutoRenta uses DIFFERENT payment systems for development vs production:**
+
+#### 🏭 PRODUCTION (Real Money - MercadoPago)
+
+**Primary System**: Supabase Edge Functions
+- **Webhook**: `supabase/functions/mercadopago-webhook/` (✅ DEPLOYED, ACTIVE)
+- **Create Preference**: `supabase/functions/mercadopago-create-preference/` (✅ DEPLOYED)
+- **Booking Preference**: `supabase/functions/mercadopago-create-booking-preference/` (✅ DEPLOYED)
+- **Authentication**: `MERCADOPAGO_ACCESS_TOKEN` stored in Supabase secrets
+- **URL**: `https://[PROJECT].supabase.co/functions/v1/mercadopago-webhook`
+- **SDK**: Official MercadoPago SDK (imported via Deno)
+- **Signature Verification**: ✅ Enabled (validates MP signatures)
+- **Idempotency**: ✅ Handled via transaction_id uniqueness in DB
+
+**Payment Flow (Production)**:
+```
+User → Frontend → Supabase Edge Function (create-preference)
+                ↓
+          MercadoPago Checkout (real payment)
+                ↓
+          MercadoPago sends IPN webhook
+                ↓
+          Supabase Edge Function (mercadopago-webhook)
+                ↓
+          RPC wallet_confirm_deposit() → Credits funds
+                ↓
+          User redirected back to app
+```
+
+**Key Files**:
+- `/home/edu/autorenta/supabase/functions/mercadopago-webhook/index.ts` (webhook handler)
+- `/home/edu/autorenta/supabase/functions/mercadopago-create-preference/index.ts` (wallet deposits)
+- `/home/edu/autorenta/supabase/functions/mercadopago-create-booking-preference/index.ts` (bookings)
+
+#### 🧪 DEVELOPMENT (Mock Testing)
+
+**Secondary System**: Cloudflare Worker (LOCAL ONLY)
+- **Location**: `functions/workers/payments_webhook/`
+- **Status**: ❌ NOT DEPLOYED to Cloudflare (only local dev)
+- **Purpose**: Mock webhooks for rapid testing without MercadoPago
+- **URL**: `http://localhost:8787/webhooks/payments` (wrangler dev)
 - **Endpoint**: `POST /webhooks/payments`
 - **Payload**: `{ provider: 'mock', booking_id: string, status: 'approved' | 'rejected' }`
-- **Logic**: Updates `payments`, `bookings`, and `payment_intents` tables based on webhook status
-- **TODO**: Add KV Namespace for idempotency (commented out in code)
+
+**Mock Flow (Development Only)**:
+```
+Developer → Frontend → payments.service.ts::markAsPaid()
+                     ↓
+               Cloudflare Worker (local)
+                     ↓
+               Supabase DB (mock payment)
+```
+
+**Protection Against Accidental Production Use**:
+```typescript
+// apps/web/src/app/core/services/payments.service.ts:75
+async markAsPaid(intentId: string): Promise<void> {
+  if (environment.production) {
+    throw new Error('markAsPaid() deprecado en producción.
+                     El webhook de MercadoPago actualiza automáticamente.');
+  }
+  // ... mock logic only runs in dev
+}
+```
+
+#### ⚠️ IMPORTANT: Which System is Used?
+
+| Environment | Payment System | Webhook URL | Token Required |
+|-------------|----------------|-------------|----------------|
+| **Production** | MercadoPago Real | Supabase Edge Function | ✅ In Supabase secrets |
+| **Staging** | MercadoPago Sandbox | Supabase Edge Function | ✅ In Supabase secrets |
+| **Development** | Mock (optional) | Cloudflare Worker (local) | ❌ Not needed |
+
+**To verify which system is active**:
+```bash
+# Check deployed Supabase functions
+npx supabase functions list | grep mercadopago
+
+# Check Cloudflare Worker (should NOT exist in production)
+wrangler secret list --name payments_webhook
+```
+
+#### 🔐 Secrets Configuration
+
+**Supabase Secrets (Production)**:
+```bash
+npx supabase secrets set MERCADOPAGO_ACCESS_TOKEN=APP_USR-***
+npx supabase secrets set SUPABASE_URL=https://[project].supabase.co
+npx supabase secrets set SUPABASE_SERVICE_ROLE_KEY=***
+```
+
+**Cloudflare Secrets (Development - Optional)**:
+```bash
+# NOT NEEDED - Mock worker doesn't validate real payments
+# Only configure if you want to test real MP webhooks locally
+wrangler secret put MERCADOPAGO_ACCESS_TOKEN
+wrangler secret put SUPABASE_URL
+wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+```
+
+#### 📊 Payment Types & Non-Withdrawable Cash
+
+**MercadoPago payment_type_id values**:
+- `'ticket'` → Pago Fácil/Rapipago (cash) → **NON-WITHDRAWABLE**
+- `'credit_card'` → Credit card → Withdrawable
+- `'debit_card'` → Debit card → Withdrawable
+- `'account_money'` → MercadoPago balance → Withdrawable
+
+**Cash Deposit Handling** (see `CASH_DEPOSITS_NON_WITHDRAWABLE_FIX.md`):
+- Cash deposits are credited normally to wallet
+- Automatically marked as non-withdrawable
+- Tracked in `user_wallets.non_withdrawable_floor`
+- Users warned in UI before depositing
+- Can use for bookings but cannot withdraw to bank
+
+#### 🧹 Legacy Code Cleanup
+
+**Files to IGNORE (legacy mock system)**:
+- `functions/workers/payments_webhook/` - Cloudflare Worker (not deployed)
+- Methods in `payments.service.ts` with production guards:
+  - `markAsPaid()` - Throws error in production
+  - `triggerMockPayment()` - Throws error in production
+
+**Why keep mock code?**:
+- Enables rapid local development
+- No need to hit MercadoPago sandbox for every test
+- Production guards prevent accidental use
+- Developers can test payment flows offline
 
 ## Code Quality Tools
 

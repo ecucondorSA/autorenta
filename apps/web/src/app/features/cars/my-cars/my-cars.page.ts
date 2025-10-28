@@ -125,7 +125,8 @@ export class MyCarsPage implements OnInit {
         );
       } else {
         // Mostrar mensaje más detallado para debugging
-        const errorMsg = error?.message || 'Error desconocido';
+        const errorObj = error as { message?: string };
+        const errorMsg = errorObj?.message || 'Error desconocido';
         alert(
           '❌ Error al eliminar el auto\n\n' +
             `Detalles: ${errorMsg}\n\n` +

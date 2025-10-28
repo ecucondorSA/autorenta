@@ -210,9 +210,9 @@ interface WalletLedgerEntry {
                           <p class="font-medium text-gray-900 dark:text-white">
                             {{ getKindLabel(entry.kind) }}
                           </p>
-                          @if (entry.meta?.['description']) {
+                          @if (entry.meta && entry.meta['description']) {
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                              {{ entry.meta['description'] }}
+                              {{ entry.meta!['description'] }}
                             </p>
                           }
                           <div class="flex items-center space-x-4 mt-2 text-xs text-gray-500">

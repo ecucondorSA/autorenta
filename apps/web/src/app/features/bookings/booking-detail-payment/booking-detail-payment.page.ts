@@ -999,7 +999,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       console.error('[Wallet] Error en pago:', error);
       // Intentar desbloquear wallet si hubo error
       try {
-        await this.walletService.unlockFunds(bookingId);
+        await this.walletService.unlockFunds({ booking_id: bookingId });
       } catch (unlockError) {
         console.error('[Wallet] Error desbloqueando fondos:', unlockError);
       }

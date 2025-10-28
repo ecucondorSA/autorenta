@@ -17,7 +17,7 @@
     <div class="map-panel">
       <div id="map-container" class="map-wrapper">
         <app-cars-map
-          [cars]="cars()"
+          [cars]="carMapLocations()"
           [selectedCarId]="selectedCarId()"
           (carSelected)="onMapCarSelected($event)"
           (userLocationChange)="onUserLocationChange($event)"

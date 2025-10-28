@@ -4,6 +4,39 @@ import { PaymentIntent } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { FxService } from './fx.service';
 
+/**
+ * PaymentsService
+ *
+ * Handles payment intent creation and status tracking for bookings.
+ *
+ * CRITICAL: Payment Architecture (Updated Oct 2025)
+ * ================================================
+ *
+ * PRODUCTION (Real Money):
+ * - Payments processed via MercadoPago
+ * - Webhooks handled by Supabase Edge Function: mercadopago-webhook
+ * - URL: https://[project].supabase.co/functions/v1/mercadopago-webhook
+ * - Token stored in Supabase secrets: MERCADOPAGO_ACCESS_TOKEN
+ *
+ * DEVELOPMENT (Mock Testing):
+ * - Optional: Cloudflare Worker for local mock webhooks
+ * - URL: http://localhost:8787/webhooks/payments (via wrangler dev)
+ * - Methods: markAsPaid(), triggerMockPayment() (protected by production guards)
+ *
+ * Methods in this service:
+ * - createIntent() - Creates payment intent for booking
+ * - getStatus() - Retrieves payment intent status
+ * - markAsPaid() - [DEV ONLY] Simulates payment completion via mock webhook
+ * - triggerMockPayment() - [DEV ONLY] Triggers mock webhook for booking
+ *
+ * Production Protection:
+ * - Both mock methods throw errors when environment.production = true
+ * - Real payments are processed asynchronously via MP webhook
+ * - No manual payment confirmation needed in production
+ *
+ * See: /home/edu/autorenta/CLAUDE.md (Payment Architecture section)
+ * See: /home/edu/autorenta/functions/workers/payments_webhook/README.md
+ */
 @Injectable({
   providedIn: 'root',
 })

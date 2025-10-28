@@ -12,6 +12,7 @@ import {
 import { MarketplaceOnboardingService } from '../../../core/services/marketplace-onboarding.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
+import { Transmission, FuelType } from '../../../core/types/database.types';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 

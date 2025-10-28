@@ -104,7 +104,7 @@ export class PublicProfilePage implements OnInit {
 
       // Cargar estadísticas
       const stats = await this.profileService.getUserStats(this.userId());
-      this.userStats.set(stats);
+      this.userStats.set(stats as unknown as UserStats | null);
 
       // Cargar autos del usuario (solo activos)
       const cars = await this.carsService.getCarsByOwner(this.userId());
