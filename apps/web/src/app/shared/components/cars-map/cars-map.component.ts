@@ -381,7 +381,8 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v12', // Streets - Azul celeste limpio
+        // MapLibre GL compatible style - OpenStreetMap with clean design
+        style: 'https://demotiles.maplibre.org/style.json',
         center: defaultCenter,
         zoom: defaultZoom,
         maxBounds: uruguayBounds,
