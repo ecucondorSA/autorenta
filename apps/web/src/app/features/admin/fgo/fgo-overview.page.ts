@@ -369,7 +369,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       }
     } catch (error: unknown) {
       console.error('Error transferring:', error);
-      alert(`❌ Error: ${error.message || 'Error desconocido'}`);
+      alert(`❌ Error: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     } finally {
       this.processingTransfer = false;
     }
@@ -438,7 +438,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       }
     } catch (error: unknown) {
       console.error('Error paying siniestro:', error);
-      alert(`❌ Error: ${error.message || 'Error desconocido'}`);
+      alert(`❌ Error: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     } finally {
       this.processingSiniestro = false;
     }

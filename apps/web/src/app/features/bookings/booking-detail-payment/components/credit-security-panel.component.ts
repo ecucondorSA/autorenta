@@ -446,7 +446,7 @@ export class CreditSecurityPanelComponent implements OnInit {
       this.updateLockStatus();
     } catch (error: unknown) {
       console.error('Error fetching balance:', error);
-      this.errorMessage.set(error.message || 'Error al obtener balance');
+      this.errorMessage.set(error instanceof Error ? error.message : 'Error al obtener balance');
       this.lockStatus.set('error');
     } finally {
       this.isCheckingBalance.set(false);
@@ -510,7 +510,7 @@ export class CreditSecurityPanelComponent implements OnInit {
       this.lockChange.emit(lock);
     } catch (error: unknown) {
       console.error('Error locking funds:', error);
-      this.errorMessage.set(error.message || 'Error al bloquear fondos');
+      this.errorMessage.set(error instanceof Error ? error.message : 'Error al bloquear fondos');
       this.lockStatus.set('error');
       this.lockChange.emit(null);
     } finally {
@@ -541,7 +541,7 @@ export class CreditSecurityPanelComponent implements OnInit {
       }
     } catch (error: unknown) {
       console.error('Error loading credit:', error);
-      this.errorMessage.set(error.message || 'Error al cargar crédito');
+      this.errorMessage.set(error instanceof Error ? error.message : 'Error al cargar crédito');
       this.lockStatus.set('error');
     }
   }

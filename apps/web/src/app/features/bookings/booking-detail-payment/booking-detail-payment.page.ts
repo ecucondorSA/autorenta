@@ -400,7 +400,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       console.log('[Detalle & Pago] Booking existente cargado:', bookingId);
     } catch (err: unknown) {
       console.error('Error loading existing booking:', err);
-      this.error.set('Error al cargar el booking: ' + err.message);
+      this.error.set('Error al cargar el booking: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   }
 
@@ -658,7 +658,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       }
     } catch (err: unknown) {
       console.error('Error confirming booking:', err);
-      this.error.set(err.message || 'Error al confirmar reserva');
+      this.error.set(err instanceof Error ? err.message : 'Error al confirmar reserva');
     } finally {
       this.loading.set(false);
     }
@@ -845,7 +845,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       console.error('❌ Excepción en createBooking:', err);
       return {
         ok: false,
-        error: err.message || 'Error desconocido',
+        error: err instanceof Error ? err.message : 'Error desconocido',
       };
     }
   }
@@ -947,7 +947,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       }
     } catch (error: unknown) {
       console.error('[Pago Final] Error:', error);
-      this.error.set(error.message || 'Error al procesar el pago');
+      this.error.set(error instanceof Error ? error.message : 'Error al procesar el pago');
       this.processingFinalPayment.set(false);
       // No redirigir, dejar al usuario en la página para reintentar
     }

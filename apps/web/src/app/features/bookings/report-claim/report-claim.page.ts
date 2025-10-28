@@ -521,7 +521,7 @@ export class ReportClaimPage implements OnInit {
 
       const alert = await this.alertController.create({
         header: '❌ Error',
-        message: error.message || 'No se pudo reportar el siniestro. Intenta nuevamente.',
+        message: error instanceof Error ? error.message : 'No se pudo reportar el siniestro. Intenta nuevamente.',
         buttons: ['OK'],
       });
       await alert.present();

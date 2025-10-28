@@ -59,7 +59,7 @@ export class PaymentsService {
 
     if (error) {
       console.error('Error creating payment intent:', error);
-      throw new Error(`Error al crear payment intent: ${error.message}`);
+      throw new Error(`Error al crear payment intent: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     }
     return data as PaymentIntent;
   }
@@ -193,7 +193,7 @@ export class PaymentsService {
 
       return {
         success: false,
-        error: error.message || 'Error al procesar el pago',
+        error: error instanceof Error ? error.message : 'Error al procesar el pago',
       };
     }
   }

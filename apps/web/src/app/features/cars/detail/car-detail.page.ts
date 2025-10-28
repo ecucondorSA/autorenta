@@ -415,7 +415,7 @@ export class CarDetailPage implements OnInit {
       });
     } catch (err: unknown) {
       console.error('Error creating booking before detail-payment', err);
-      this.bookingError.set(err?.message || 'Error al crear la reserva');
+      this.bookingError.set(err instanceof Error ? err.message : 'Error al crear la reserva');
     } finally {
       this.bookingInProgress.set(false);
     }

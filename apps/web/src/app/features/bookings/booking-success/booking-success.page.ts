@@ -43,7 +43,7 @@ export class BookingSuccessPage implements OnInit {
       this.booking.set(booking);
     } catch (err: unknown) {
       console.error('Error loading booking:', err);
-      this.error.set(err.message || 'Error al cargar la reserva');
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar la reserva');
     } finally {
       this.loading.set(false);
     }
