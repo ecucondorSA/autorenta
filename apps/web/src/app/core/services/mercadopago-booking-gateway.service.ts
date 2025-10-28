@@ -111,9 +111,9 @@ export class MercadoPagoBookingGatewayService {
   /**
    * Formatea errores para mostrar al usuario
    */
-  private formatError(error: any): string {
-    if (error?.message) {
-      return error.message;
+  private formatError(error: unknown): string {
+    if (error && typeof error === 'object' && 'message' in error) {
+      return String(error.message);
     }
 
     if (typeof error === 'string') {

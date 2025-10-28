@@ -201,7 +201,7 @@ export class PaymentsService {
   /**
    * Determina si un error es reintentable
    */
-  private isRetryableError(error: any): boolean {
+  private isRetryableError(error: unknown): boolean {
     const retryableErrors = [
       'Network error',
       'timeout',
@@ -210,7 +210,10 @@ export class PaymentsService {
       'Failed to fetch',
     ];
 
-    const errorMessage = error.message || error.toString();
+    const errorMessage =
+      error && typeof error === 'object' && 'message' in error
+        ? String(error.message)
+        : String(error);
     return retryableErrors.some((msg) => errorMessage.includes(msg));
   }
 

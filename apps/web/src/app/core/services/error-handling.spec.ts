@@ -400,7 +400,7 @@ describe('Sprint 5.3 - Error Handling', () => {
         }),
       );
 
-      mockSupabase.from.and.returnValue(mockQuery as any);
+      mockSupabase.from.and.returnValue(mockQuery);
 
       try {
         await carsService.listActiveCars({ city: 'Buenos Aires' });

@@ -121,7 +121,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     }
   }
 
-  onFiltersChange(filters: any) {
+  onFiltersChange(filters: Record<string, unknown>) {
     this.filters = filters;
     this.applyFilters();
   }

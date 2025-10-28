@@ -205,7 +205,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       if (car) {
         this.carOwnerId.set(car.owner_id);
-        const ownerFullName = (car as any).owner?.full_name || 'el anfitrión';
+        const owner = car.owner as { full_name?: string } | undefined;
+        const ownerFullName = owner?.full_name || 'el anfitrión';
         this.carOwnerName.set(ownerFullName);
       }
     } catch (error) {

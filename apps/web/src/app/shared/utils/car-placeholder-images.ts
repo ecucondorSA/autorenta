@@ -80,6 +80,6 @@ export function getRandomCarPlaceholder(): CarPlaceholderImage {
  * @param car - The car object
  * @returns true if the car has at least one photo
  */
-export function hasCarPhotos(car: { photos?: any[] }): boolean {
+export function hasCarPhotos(car: { photos?: unknown[] }): boolean {
   return !!(car.photos && car.photos.length > 0);
 }

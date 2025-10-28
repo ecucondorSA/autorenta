@@ -1408,9 +1408,9 @@ export class PublishCarV2Page implements OnInit {
     try {
       this.isSubmitting.set(true);
 
-      const rawValue = this.publishForm.getRawValue();
+      const rawValue = this.publishForm.getRawValue() as Record<string, unknown> & { pricing_strategy?: unknown };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { pricing_strategy, ...formValue } = rawValue as any;
+      const { pricing_strategy, ...formValue } = rawValue;
 
       // Get brand and model names for backup fields
       const brand = this.brands().find((b) => b.id === formValue.brand_id);

@@ -189,7 +189,8 @@ export class ReviewManagementComponent implements OnInit {
 
       if (isRenter) {
         revieweeId = car.owner_id;
-        revieweeName = (car as any).owner?.full_name || 'Propietario';
+        const owner = car.owner as { full_name?: string } | undefined;
+        revieweeName = owner?.full_name || 'Propietario';
         reviewType = 'renter_to_owner';
       } else {
         const { data: renter } = await this.bookingsService['supabase']

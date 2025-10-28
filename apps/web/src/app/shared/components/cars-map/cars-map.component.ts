@@ -550,7 +550,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     try {
       const now = Date.now();
-      const prices = new Map<string, any>();
+      const prices = new Map<string, { amount: number; cached: boolean }>();
       const carsNeedingFetch: Array<{ id: string; region_id: string }> = [];
 
       // OPTIMIZACIÓN: Verificar caché primero

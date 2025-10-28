@@ -77,7 +77,7 @@ export class HomePage implements OnInit {
     }
   }
 
-  handleRefresh(event: any) {
+  handleRefresh(event: { target: { complete: () => void } }) {
     this.loadFeaturedCars().then(() => {
       event.target.complete();
     });

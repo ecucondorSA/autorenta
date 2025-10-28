@@ -37,7 +37,7 @@ export class CarPublishPage {
         transmission: this.transmission(),
         seats: this.seats(),
         status: 'pending',
-      } as any);
+      });
       this.message.set('Auto enviado para revisión. ID: ' + car.id);
     } catch (err) {
       console.error(err);

@@ -403,8 +403,9 @@ export class ReportClaimPage implements OnInit {
     }
   }
 
-  async onPhotosSelected(event: any) {
-    const files: FileList = event.target.files;
+  async onPhotosSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
     if (!files || files.length === 0) return;
 
     const remainingSlots = 10 - this.uploadedPhotos.length;
@@ -420,14 +421,17 @@ export class ReportClaimPage implements OnInit {
       }
 
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.uploadedPhotos.push(e.target.result);
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        const result = e.target?.result;
+        if (result) {
+          this.uploadedPhotos.push(result as string);
+        }
       };
       reader.readAsDataURL(file);
     }
 
     // Reset input
-    event.target.value = '';
+    input.value = '';
   }
 
   removePhoto(index: number) {

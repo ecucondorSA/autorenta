@@ -56,7 +56,7 @@ export class MyCarsPage implements OnInit {
       // ✅ NUEVO: Verificar reservas (activas e históricas)
       let hasBookings = false;
       let bookingsCount = 0;
-      let activeBookings: any[] = [];
+      let activeBookings: unknown[] = [];
 
       try {
         const result = await this.carsService.hasActiveBookings(carId);
