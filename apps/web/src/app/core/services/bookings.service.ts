@@ -115,7 +115,27 @@ export class BookingsService {
     const booking = data as Booking;
 
     // my_bookings es una vista sin metadatos de FK, por lo que PostgREST
-    // no puede resolver joins automáticos; cargamos la cobertura y su póliza aparte.
+    // no puede resolver joins automáticos; cargamos car, cobertura y su póliza aparte.
+    
+    // Load car details
+    if (booking?.car_id) {
+      try {
+        const { data: car, error: carError } = await this.supabase
+          .from('cars')
+          .select('id, brand, model, year, license_plate, images')
+          .eq('id', booking.car_id)
+          .single();
+
+        if (!carError && car) {
+          (booking as Booking).car = car;
+        } else if (carError) {
+          console.warn('⚠️ No se pudo cargar datos del auto:', carError.message);
+        }
+      } catch (carException) {
+        console.warn('⚠️ Excepción cargando datos del auto', carException);
+      }
+    }
+    
     if (booking?.insurance_coverage_id) {
       try {
         const { data: coverage, error: coverageError } = await this.supabase
