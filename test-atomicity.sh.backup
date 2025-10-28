@@ -1,12 +1,4 @@
 #!/bin/bash
-# Load environment variables
-if [ -f ".env.local" ]; then
-  source .env.local
-elif [ -f ".env" ]; then
-  source .env
-fi
-
-DB_URL="${DATABASE_URL}"
 
 ###############################################################################
 # Script de Testing: Atomicidad en Creación de Reservas
@@ -25,6 +17,7 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+DB_URL="postgresql://postgres:AutoRenta2025Segura!@db.obxvffplochgeiclibng.supabase.co:5432/postgres"
 
 ###############################################################################
 # Test 1: Verificar que la función RPC existe

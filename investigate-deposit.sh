@@ -16,14 +16,24 @@ echo "Transaction ID: ${TRANSACTION_ID:-NOT PROVIDED}"
 echo "Timestamp: 2025-10-20 14:33 UTC"
 echo ""
 
-# Database connection
-DB_URL="postgresql://postgres.obxvffplochgeiclibng:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+# Load environment variables
+if [ -f ".env.local" ]; then
+  source .env.local
+elif [ -f ".env" ]; then
+  source .env
+else
+  echo "❌ Error: .env.local not found"
+  exit 1
+fi
+
+# Use environment variables
+DB_URL="${DATABASE_URL}"
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "1️⃣  SEARCHING FOR TRANSACTION BY PAYMENT ID"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-PGPASSWORD="ECUCONDOR08122023" psql "$DB_URL" -c "
+psql "$DB_URL" -c "
 SELECT
   id,
   user_id,
@@ -48,7 +58,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "2️⃣  RECENT PENDING DEPOSITS (Last 24 hours)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-PGPASSWORD="ECUCONDOR08122023" psql "$DB_URL" -c "
+psql "$DB_URL" -c "
 SELECT
   id,
   user_id,
@@ -73,7 +83,7 @@ if [ -n "$TRANSACTION_ID" ]; then
   echo "3️⃣  TRANSACTION DETAILS: $TRANSACTION_ID"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-  PGPASSWORD="ECUCONDOR08122023" psql "$DB_URL" -c "
+  psql "$DB_URL" -c "
   SELECT
     id,
     user_id,
@@ -95,14 +105,14 @@ if [ -n "$TRANSACTION_ID" ]; then
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   # Get user_id from transaction
-  USER_ID=$(PGPASSWORD="ECUCONDOR08122023" psql "$DB_URL" -t -c "
+  USER_ID=$(psql "$DB_URL" -t -c "
     SELECT user_id FROM wallet_transactions WHERE id = '$TRANSACTION_ID'::uuid;
   " | xargs)
 
   if [ -n "$USER_ID" ]; then
     echo "User ID: $USER_ID"
 
-    PGPASSWORD="ECUCONDOR08122023" psql "$DB_URL" -c "
+    psql "$DB_URL" -c "
     SELECT
       user_id,
       available_balance,
@@ -116,7 +126,7 @@ if [ -n "$TRANSACTION_ID" ]; then
 
     echo ""
     echo "Using wallet_get_balance function:"
-    PGPASSWORD="ECUCONDOR08122023" psql "$DB_URL" -c "
+    psql "$DB_URL" -c "
     SELECT * FROM wallet_get_balance('$USER_ID'::uuid);
     "
   fi
@@ -127,7 +137,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "5️⃣  MERCADOPAGO API CHECK"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-MP_TOKEN="APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571"
+MP_TOKEN="${MERCADOPAGO_ACCESS_TOKEN}"
 
 echo "Fetching payment $PAYMENT_ID from MercadoPago API..."
 curl -s -X GET \
