@@ -36,7 +36,7 @@ const readEnv = (key: string): string | undefined => {
   // import.meta.env (Angular 17+ builder exposes env vars at build time)
   const metaEnv =
     typeof import.meta !== 'undefined' && (import.meta as unknown as ImportMetaWithEnv).env
-      ? (import.meta as unknown as ImportMetaWithEnv).env[key]
+      ? (import.meta as unknown as ImportMetaWithEnv).env?.[key]
       : undefined;
   if (typeof metaEnv === 'string' && metaEnv.length > 0) {
     return metaEnv;
