@@ -867,14 +867,14 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     // Crear HTML del popup usando el mismo método existente
     const location: CarMapLocation = {
-      carId: props.carId,
-      title: props.title,
-      pricePerDay: props.price,
-      currency: props.currency,
-      photoUrl: props.photoUrl,
-      locationLabel: props.locationLabel,
-      formattedAddress: props.formattedAddress,
-      description: props.description,
+      carId: props.carId as string,
+      title: props.title as string,
+      pricePerDay: props.price as number,
+      currency: props.currency as string,
+      photoUrl: props.photoUrl as string,
+      locationLabel: props.locationLabel as string,
+      formattedAddress: props.formattedAddress as string,
+      description: props.description as string,
       lat: coords[1],
       lng: coords[0],
       updatedAt: new Date().toISOString(),

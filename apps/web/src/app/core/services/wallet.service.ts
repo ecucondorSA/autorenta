@@ -928,15 +928,15 @@ export class WalletService {
               currency: newRecord.currency as string,
               is_withdrawable: newRecord.is_withdrawable as boolean,
               reference_type: newRecord.reference_type as WalletTransaction['reference_type'],
-              reference_id: newRecord.reference_id as string | null,
+              reference_id: (newRecord.reference_id as string | null) ?? undefined,
               provider: newRecord.provider as WalletTransaction['provider'],
-              provider_transaction_id: newRecord.provider_transaction_id as string | null,
-              provider_metadata: newRecord.provider_metadata as Record<string, unknown> | null,
-              description: newRecord.description as string | null,
-              admin_notes: newRecord.admin_notes as string | null,
+              provider_transaction_id: (newRecord.provider_transaction_id as string | null) ?? undefined,
+              provider_metadata: (newRecord.provider_metadata as Record<string, unknown> | null) ?? undefined,
+              description: (newRecord.description as string | null) ?? undefined,
+              admin_notes: (newRecord.admin_notes as string | null) ?? undefined,
               created_at: newRecord.created_at as string,
               updated_at: newRecord.updated_at as string,
-              completed_at: newRecord.completed_at as string | null,
+              completed_at: (newRecord.completed_at as string | null) ?? undefined,
             };
 
             // Detectar si es un depósito que pasó de pending a completed
@@ -1010,15 +1010,15 @@ export class WalletService {
               currency: newRecord.currency as string,
               is_withdrawable: newRecord.is_withdrawable as boolean,
               reference_type: newRecord.reference_type as WalletTransaction['reference_type'],
-              reference_id: newRecord.reference_id as string | null,
+              reference_id: (newRecord.reference_id as string | null) ?? undefined,
               provider: newRecord.provider as WalletTransaction['provider'],
-              provider_transaction_id: newRecord.provider_transaction_id as string | null,
-              provider_metadata: newRecord.provider_metadata as Record<string, unknown> | null,
-              description: newRecord.description as string | null,
-              admin_notes: newRecord.admin_notes as string | null,
+              provider_transaction_id: (newRecord.provider_transaction_id as string | null) ?? undefined,
+              provider_metadata: (newRecord.provider_metadata as Record<string, unknown> | null) ?? undefined,
+              description: (newRecord.description as string | null) ?? undefined,
+              admin_notes: (newRecord.admin_notes as string | null) ?? undefined,
               created_at: newRecord.created_at as string,
               updated_at: newRecord.updated_at as string,
-              completed_at: newRecord.completed_at as string | null,
+              completed_at: (newRecord.completed_at as string | null) ?? undefined,
             };
 
             // Callback para nueva transacción

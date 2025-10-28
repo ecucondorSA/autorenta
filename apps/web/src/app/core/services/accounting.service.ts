@@ -73,6 +73,13 @@ export interface WalletReconciliation {
   amount: number;
 }
 
+export interface FinancialHealth {
+  walletReconciled: boolean;
+  fgoAdequate: boolean;
+  profitability: 'GOOD' | 'WARNING' | 'CRITICAL';
+  alerts: string[];
+}
+
 export interface CommissionReport {
   period: string;
   total_bookings: number;
@@ -355,12 +362,7 @@ export class AccountingService {
   /**
    * Verificar salud financiera
    */
-  async checkFinancialHealth(): Promise<{
-    walletReconciled: boolean;
-    fgoAdequate: boolean;
-    profitability: 'GOOD' | 'WARNING' | 'CRITICAL';
-    alerts: string[];
-  }> {
+  async checkFinancialHealth(): Promise<FinancialHealth> {
     const dashboard = await this.getDashboard();
     const reconciliation = await this.getWalletReconciliation();
     const alerts: string[] = [];

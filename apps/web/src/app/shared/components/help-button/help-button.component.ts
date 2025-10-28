@@ -2,6 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { TourService } from '../../../core/services/tour.service';
+import { GuidedTourService } from '../../../core/guided-tour/guided-tour.service';
+import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.interface';
 
 @Component({
   selector: 'app-help-button',
@@ -126,10 +129,10 @@ export class HelpButtonComponent {
     this.closeMenu();
 
     // NEW TOUR SYSTEM: Use GuidedTourService
-    const tourIdMap: Record<'welcome' | 'renter' | 'owner', NewTourId> = {
-      welcome: NewTourId.Welcome,
-      renter: NewTourId.Renter,
-      owner: NewTourId.Owner,
+    const tourIdMap: Record<'welcome' | 'renter' | 'owner', TourId> = {
+      welcome: TourId.Welcome,
+      renter: TourId.Renter,
+      owner: TourId.Owner,
     };
     const tourId = tourIdMap[tourType];
 
