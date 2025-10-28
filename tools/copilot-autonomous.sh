@@ -17,9 +17,9 @@ ALLOWED_DIRS=(
 )
 
 # Construir argumentos de directorios permitidos
-DIR_ARGS=""
+DIR_ARGS=()
 for dir in "${ALLOWED_DIRS[@]}"; do
-    DIR_ARGS="$DIR_ARGS --add-dir $dir"
+    DIR_ARGS+=(--add-dir "$dir")
 done
 
 # Herramientas específicas a permitir (opcional, si no usas --allow-all-tools)
@@ -35,9 +35,9 @@ ALLOWED_TOOLS=(
 )
 
 # Construir argumentos de herramientas permitidas
-TOOL_ARGS=""
+TOOL_ARGS=()
 for tool in "${ALLOWED_TOOLS[@]}"; do
-    TOOL_ARGS="$TOOL_ARGS --allow-tool '$tool'"
+    TOOL_ARGS+=(--allow-tool "$tool")
 done
 
 # Herramientas a denegar (comandos peligrosos)
@@ -47,9 +47,9 @@ DENIED_TOOLS=(
     "shell(chmod 777 *)"
 )
 
-DENY_ARGS=""
+DENY_ARGS=()
 for tool in "${DENIED_TOOLS[@]}"; do
-    DENY_ARGS="$DENY_ARGS --deny-tool '$tool'"
+    DENY_ARGS+=(--deny-tool "$tool")
 done
 
 # Función principal para ejecutar Copilot en modo autónomo
@@ -69,8 +69,8 @@ run_autonomous_copilot() {
             --model "$model" \
             --stream on \
             --prompt "$prompt" \
-            $DIR_ARGS \
-            $DENY_ARGS
+            "${DIR_ARGS[@]}" \
+            "${DENY_ARGS[@]}"
     else
         # Modo interactivo autónomo
         echo "Iniciando Copilot en modo interactivo autónomo"
@@ -81,8 +81,8 @@ run_autonomous_copilot() {
             --model "$model" \
             --stream on \
             --banner \
-            $DIR_ARGS \
-            $DENY_ARGS
+            "${DIR_ARGS[@]}" \
+            "${DENY_ARGS[@]}"
     fi
 }
 
@@ -97,8 +97,8 @@ continue_autonomous() {
         --allow-all-paths \
         --enable-all-github-mcp-tools \
         --stream on \
-        $DIR_ARGS \
-        $DENY_ARGS
+        "${DIR_ARGS[@]}" \
+        "${DENY_ARGS[@]}"
 }
 
 # Resumir sesión específica en modo autónomo
@@ -115,8 +115,8 @@ resume_autonomous() {
             --allow-all-paths \
             --enable-all-github-mcp-tools \
             --stream on \
-            $DIR_ARGS \
-            $DENY_ARGS
+            "${DIR_ARGS[@]}" \
+            "${DENY_ARGS[@]}"
     else
         echo "Seleccionando sesión anterior para resumir"
         copilot \
@@ -125,8 +125,8 @@ resume_autonomous() {
             --allow-all-paths \
             --enable-all-github-mcp-tools \
             --stream on \
-            $DIR_ARGS \
-            $DENY_ARGS
+            "${DIR_ARGS[@]}" \
+            "${DENY_ARGS[@]}"
     fi
 }
 
