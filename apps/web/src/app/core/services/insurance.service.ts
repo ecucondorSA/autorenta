@@ -45,7 +45,6 @@ export class InsuranceService {
         return (data as InsurancePolicy[]) || [];
       }),
       catchError((err) => {
-        console.error('Error fetching insurance policies:', err);
         return of([]);
       }),
     );
@@ -71,7 +70,6 @@ export class InsuranceService {
         return data as InsurancePolicy;
       }),
       catchError((err) => {
-        console.error('Error fetching platform policy:', err);
         return of(null);
       }),
     );
@@ -270,7 +268,6 @@ export class InsuranceService {
         return (data as InsuranceAddon[]) || [];
       }),
       catchError((err) => {
-        console.error('Error fetching insurance addons:', err);
         return of([]);
       }),
     );
@@ -332,7 +329,6 @@ export class InsuranceService {
         return (data as InsuranceClaim[]) || [];
       }),
       catchError((err) => {
-        console.error('Error fetching claims:', err);
         return of([]);
       }),
     );
@@ -472,7 +468,6 @@ export class InsuranceService {
     });
 
     if (error) {
-      console.error('Error calculating deposit:', error);
       return 500000; // Fallback: $500k
     }
 

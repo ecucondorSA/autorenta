@@ -105,7 +105,6 @@ export class OwnerDashboardPage implements OnInit {
 
       this.earnings.set({ thisMonth, lastMonth, total });
     } catch (err) {
-      console.error('Error loading dashboard:', err);
       this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
     } finally {
       this.loading.set(false);

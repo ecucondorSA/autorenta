@@ -425,7 +425,6 @@ export class InsuranceSummaryCardComponent implements OnInit {
       this.error = false;
       this.summary = await this.insuranceService.getInsuranceSummary(this.bookingId);
     } catch (err) {
-      console.error('Error loading insurance summary:', err);
       this.error = true;
     } finally {
       this.loading = false;
@@ -434,7 +433,6 @@ export class InsuranceSummaryCardComponent implements OnInit {
 
   downloadCertificate() {
     // TODO: Generar PDF del certificado o abrir URL
-    console.log('Downloading certificate for booking:', this.bookingId);
 
     const certificateText = `
 Certificado de Cobertura de Seguro

@@ -53,7 +53,6 @@ describe('SupabaseClientService - Pooling Performance', () => {
       // Con pooling habilitado, debe completarse en menos de 2 segundos
       expect(elapsedTime).toBeLessThan(2000);
 
-      console.log(`✅ ${queryCount} queries completadas en ${elapsedTime}ms`);
     }, 3000); // Timeout de 3 segundos para el test
 
     it('debe manejar queries concurrentes sin errores', async () => {
@@ -83,8 +82,6 @@ describe('SupabaseClientService - Pooling Performance', () => {
       // Al menos 90% de queries deben ser exitosas
       expect(successCount).toBeGreaterThanOrEqual(queryCount * 0.9);
 
-      console.log(`✅ Success: ${successCount}/${queryCount} queries`);
-      console.log(`⚠️ Errors: ${errorCount}/${queryCount} queries`);
     });
 
     it('debe tener mejor performance que sin pooling', async () => {
@@ -116,9 +113,6 @@ describe('SupabaseClientService - Pooling Performance', () => {
       const improvement = ((timeWithoutPooling - timeWithPooling) / timeWithoutPooling) * 100;
       expect(improvement).toBeGreaterThan(30);
 
-      console.log(`⚡ Mejora con pooling: ${improvement.toFixed(1)}%`);
-      console.log(`   Con pooling: ${timeWithPooling}ms`);
-      console.log(`   Sin pooling: ${timeWithoutPooling}ms`);
     });
 
     it('debe mantener baja latencia promedio', async () => {
@@ -147,8 +141,6 @@ describe('SupabaseClientService - Pooling Performance', () => {
       // Latencia máxima no debe exceder 100ms
       expect(maxLatency).toBeLessThan(100);
 
-      console.log(`📊 Latencia promedio: ${avgLatency.toFixed(1)}ms`);
-      console.log(`📊 Latencia máxima: ${maxLatency}ms`);
     });
   });
 
@@ -180,8 +172,6 @@ describe('SupabaseClientService - Pooling Performance', () => {
       // Las queries subsecuentes deben ser más rápidas (reutilización de conexión)
       expect(avgSubsequentTime).toBeLessThan(firstQueryTime);
 
-      console.log(`🔄 Primera query: ${firstQueryTime}ms`);
-      console.log(`🔄 Queries subsecuentes (promedio): ${avgSubsequentTime.toFixed(1)}ms`);
     });
 
     it('debe liberar conexiones después de uso', async () => {
@@ -207,7 +197,6 @@ describe('SupabaseClientService - Pooling Performance', () => {
       // Si NO se liberaran conexiones, tomaría mucho más tiempo
       expect(elapsed).toBeLessThan(100);
 
-      console.log(`🔓 ${poolSize * 2} queries con pool de ${poolSize}: ${elapsed}ms`);
     });
   });
 
@@ -237,8 +226,6 @@ describe('SupabaseClientService - Pooling Performance', () => {
       // El pool debe seguir funcionando después de errores
       expect(successfulQueries.length).toBeGreaterThan(0);
 
-      console.log(`✅ Exitosas: ${successfulQueries.length}`);
-      console.log(`❌ Fallidas: ${failedQueries.length}`);
     });
   });
 });

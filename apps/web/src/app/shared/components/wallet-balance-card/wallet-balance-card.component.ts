@@ -179,19 +179,16 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     await this.walletService.subscribeToWalletChanges(
       // Callback cuando un depósito se confirma
       (transaction) => {
-        console.log('✅ Depósito confirmado en realtime:', transaction);
 
         // Mostrar notificación toast
         this.showDepositConfirmedToast(transaction as unknown as Record<string, unknown>);
 
         // Recargar pending deposits
         this.loadPendingDeposits().catch((err) => {
-          console.error('Error al recargar pending deposits:', err);
         });
       },
       // Callback para cualquier cambio en transacciones
       (transaction) => {
-        console.log('🔔 Transacción actualizada en realtime:', transaction);
       },
     );
 
@@ -215,7 +212,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Desuscribirse de cambios realtime
     this.walletService.unsubscribeFromWalletChanges().catch((err) => {
-      console.error('Error al desuscribirse de cambios realtime:', err);
     });
 
     // Limpiar interval al destruir componente
@@ -243,7 +239,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       this.lastUpdate.set(new Date()); // Guardar timestamp de actualización
     } catch (err) {
       // El error ya está en walletService.error()
-      console.error('Error loading wallet balance:', err);
     } finally {
       this.isLoadingBalance.set(false);
     }
@@ -266,11 +261,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     this.isLoadingBalance.set(true);
 
     try {
-      console.log('🔄 Usuario solicitó actualización manual...');
 
       // 1. Forzar polling de MercadoPago (esto también refresca el balance internamente)
       const pollResult = await this.walletService.forcePollPendingPayments();
-      console.log('✅ Resultado del polling:', pollResult);
 
       // 2. Refrescar balance (por si el polling confirmó algún depósito)
       await this.loadBalance();
@@ -287,7 +280,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
         );
       }
     } catch (err) {
-      console.error('Error al actualizar:', err);
       // El error ya está en walletService.error(), solo recargamos el balance local
       await this.loadBalance();
       await this.loadPendingDeposits();
@@ -303,7 +295,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     try {
       await this.walletService.refreshPendingDepositsCount();
     } catch (err) {
-      console.error('Error loading pending deposits:', err);
     }
   }
 
@@ -342,12 +333,10 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    */
   private startAutoRefresh(): void {
     this.refreshInterval = setInterval(async () => {
-      console.log('🔄 Auto-refreshing wallet balance...');
       await this.loadBalance();
       await this.loadPendingDeposits();
     }, this.refreshIntervalMs) as unknown as number;
 
-    console.log(`✅ Auto-refresh habilitado cada ${this.refreshIntervalMs / 1000}s`);
   }
 
   /**
@@ -357,7 +346,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
       this.refreshInterval = undefined;
-      console.log('⏸️  Auto-refresh deshabilitado');
     }
   }
 
@@ -417,7 +405,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     );
 
     // TODO: Reemplazar con un toast notification component más elegante
-    console.log('✅ Toast mostrado para depósito confirmado:', transaction);
   }
 
   /**
@@ -426,11 +413,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   async copyToClipboard(text: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(text);
-      console.log(`✅ Copiado: ${text}`);
       // TODO: Agregar toast notification en vez de alert
       alert(`✅ Copiado al portapapeles: ${text}`);
     } catch (err) {
-      console.error('Error al copiar al portapapeles:', err);
       alert('❌ Error al copiar. Por favor, copia manualmente.');
     }
   }

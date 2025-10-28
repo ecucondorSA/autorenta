@@ -256,7 +256,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       setTimeout(() => {
         if (this.map) {
           this.map.resize();
-          console.log('[CarsMapComponent] Map resized on change');
         }
       }, 200);
     }
@@ -314,7 +313,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         this.mapboxgl.accessToken = environment.mapboxAccessToken;
       }
     } catch (err) {
-      console.error('[CarsMapComponent] Error loading Mapbox', err);
       this.error.set('Error al cargar la biblioteca de mapas');
       this.loading.set(false);
     }
@@ -335,13 +333,11 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       const containerWidth = containerEl.offsetWidth;
       const parentEl = containerEl.parentElement;
 
-      console.log('[CarsMapComponent] Container dimensions:', {
         width: containerWidth,
         height: containerHeight
       });
 
       if (containerHeight === 0) {
-        console.error(
           '[CarsMapComponent] ⚠️ ERROR: Container height is 0!',
           '\nThis indicates a layout problem in the parent component.',
           '\nThe parent container must have explicit height (%, vh, or px).',
@@ -384,7 +380,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       setTimeout(() => {
         if (this.map) {
           this.map.resize();
-          console.log('[CarsMapComponent] Initial map resize');
         }
       }, 0);
 
@@ -398,7 +393,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         setTimeout(() => {
           if (this.map) {
             this.map.resize();
-            console.log('[CarsMapComponent] Initial map resize complete');
           }
         }, 300);
 
@@ -420,17 +414,14 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
         // Ejecutar solo después de 500ms de inactividad
         this.moveEndDebounceTimeout = setTimeout(() => {
-          console.log('[CarsMapComponent] Map stable, refreshing prices...');
           void this.loadCarLocations(true);
         }, 500);
       });
 
       // Manejo de errores
       this.map.on('error', (e: MapEvent) => {
-        console.error('[CarsMapComponent] Map error', e);
       });
     } catch (err) {
-      console.error('[CarsMapComponent] Error initializing map', err);
       this.error.set('Error al inicializar el mapa');
       this.loading.set(false);
     }
@@ -474,7 +465,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       }
     });
 
-    console.log('[CarsMapComponent] Map layers cleaned up - minimalist mode enabled');
   }
 
   private setupResizeObserver(): void {
@@ -486,7 +476,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     this.resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.target === this.mapContainer.nativeElement && this.map) {
-          console.log('[CarsMapComponent] Container resized, updating map...');
           // Usar requestAnimationFrame para asegurar que el resize se ejecute después del repaint
           requestAnimationFrame(() => {
             if (this.map) {
@@ -499,7 +488,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     // Observar el contenedor del mapa
     this.resizeObserver.observe(this.mapContainer.nativeElement);
-    console.log('[CarsMapComponent] ResizeObserver setup complete');
   }
 
   private async loadCarLocations(force = false): Promise<void> {
@@ -511,8 +499,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       const userLoc = this.userLocation();
       if (userLoc) {
         locations = this.sortLocationsByDistance(locations, userLoc);
-        console.log('[CarsMapComponent] Locations sorted by distance from user');
-        console.log(`[CarsMapComponent] Showing all ${locations.length} active cars on map`);
       }
 
       // Update markers with dynamic pricing
@@ -527,7 +513,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         this.fitMapToBounds(locations);
       }
     } catch (err) {
-      console.error('[CarsMapComponent] Error loading locations', err);
       this.error.set('Error al cargar las ubicaciones de los autos');
       this.loading.set(false);
     }
@@ -557,7 +542,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     // If no cars have regionId, use static pricing
     if (carsWithRegion.length === 0) {
-      console.log('[CarsMapComponent] No cars with region_id, using static pricing');
       this.updateMarkers(locations);
       return;
     }
@@ -596,7 +580,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
       // Si hay autos que necesitan fetch, hacerlo
       if (carsNeedingFetch.length > 0) {
-        console.log(
           `[CarsMapComponent] Fetching prices for ${carsNeedingFetch.length} cars (${prices.size} from cache)`,
         );
 
@@ -616,7 +599,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
           prices.set(carId, price);
         });
       } else {
-        console.log(`[CarsMapComponent] Using cached prices for all ${prices.size} cars`);
       }
 
       // Update locations with dynamic pricing data (cached + fetched)
@@ -636,7 +618,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       // Render markers with updated pricing
       this.updateMarkers(updatedLocations);
     } catch (error) {
-      console.error('[CarsMapComponent] Error fetching dynamic prices:', error);
       // Fallback to static pricing on error
       this.updateMarkers(locations);
     }
@@ -676,13 +657,11 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     // OPTIMIZACIÓN: Si layers ya están creados, solo actualizar data
     if (this.layersCreated && this.map.getSource('cars')) {
-      console.log('[CarsMapComponent] Updating existing source data (no layer recreation)');
       (this.map.getSource('cars') as MapSource).setData(geojsonData);
       return; // No recrear layers
     }
 
     // Primera vez: Crear source y layers
-    console.log('[CarsMapComponent] Creating source and layers for first time');
 
     // Remover layers existentes si existen (solo en caso de reinicialización)
     this.removeCarLayers();
@@ -780,7 +759,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     // Marcar layers como creados (optimization flag)
     this.layersCreated = true;
-    console.log('[CarsMapComponent] Layers created and marked as initialized');
 
     if (isPlatformBrowser(this.platformId)) {
       const isDark = document.documentElement.classList.contains('dark');
@@ -1019,7 +997,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   private setupRealtimeUpdates(): void {
     this.realtimeUnsubscribe = this.carLocationsService.subscribeToRealtime(() => {
-      console.log('[CarsMapComponent] Realtime update received');
       void this.loadCarLocations(true);
     });
   }
@@ -1027,24 +1004,20 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private setupPeriodicRefresh(): void {
     const intervalMs = this.carLocationsService.getRefreshInterval();
     this.refreshInterval = setInterval(() => {
-      console.log('[CarsMapComponent] Periodic refresh');
       void this.loadCarLocations(false);
     }, intervalMs);
   }
 
   private requestUserLocation(): void {
     if (!navigator.geolocation) {
-      console.log('[CarsMapComponent] Geolocation not supported');
       return;
     }
 
-    console.log('[CarsMapComponent] Starting continuous high-accuracy location tracking...');
 
     // Usar watchPosition para obtener actualizaciones continuas
     this.geolocationWatchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude, accuracy } = position.coords;
-        console.log('[CarsMapComponent] Location update:', {
           lat: latitude,
           lng: longitude,
           accuracy: `${Math.round(accuracy)}m`,
@@ -1053,7 +1026,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
         // Solo actualizar si la precisión es razonable (< 100m)
         if (accuracy > 100) {
-          console.warn('[CarsMapComponent] Low accuracy, waiting for better signal...', accuracy);
           return;
         }
 
@@ -1070,7 +1042,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
             lngDiff < this.MIN_LOCATION_CHANGE_THRESHOLD &&
             timeDiff < this.MIN_LOCATION_TIME_THRESHOLD
           ) {
-            console.log('[CarsMapComponent] GPS update ignored (too small or too soon):', {
               latDiff,
               lngDiff,
               timeDiff: `${timeDiff}ms`,
@@ -1081,12 +1052,10 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
         // Actualizar timestamp de última ubicación
         this.lastLocationUpdate = { lat: latitude, lng: longitude, timestamp: Date.now() };
-        console.log('[CarsMapComponent] GPS update accepted, reloading locations...');
 
         // Validar que la ubicación esté dentro de Uruguay
         const isInUruguay = this.isLocationInUruguay(latitude, longitude);
         if (!isInUruguay) {
-          console.warn('[CarsMapComponent] Location outside Uruguay bounds:', {
             latitude,
             longitude,
           });
@@ -1100,7 +1069,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
           this.addUserMarker(latitude, longitude);
 
           // Emitir cambio de ubicación al componente padre
-          console.log('[CarsMapComponent] Emitting userLocationChange:', newLocation);
           this.userLocationChange.emit(newLocation);
 
           // Solo hacer zoom la primera vez
@@ -1114,14 +1082,12 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         void this.loadCarLocations(true);
       },
       (error) => {
-        console.error('[CarsMapComponent] Geolocation error:', {
           code: error.code,
           message: error.message,
           details: this.getGeolocationErrorMessage(error.code),
         });
 
         // Usar Montevideo como ubicación predeterminada
-        console.log('[CarsMapComponent] Using Montevideo as fallback location');
         this.userLocation.set({ lat: -34.9011, lng: -56.1645 });
         this.addUserMarker(-34.9011, -56.1645);
         this.zoomToUserLocation(-34.9011, -56.1645);
@@ -1163,7 +1129,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       return;
     }
 
-    console.log('[CarsMapComponent] Zooming to user location');
 
     // Hacer zoom suave a la ubicación del usuario
     this.map.flyTo({
@@ -1293,14 +1258,12 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     if (this.geolocationWatchId !== null) {
       navigator.geolocation.clearWatch(this.geolocationWatchId);
       this.geolocationWatchId = null;
-      console.log('[CarsMapComponent] Geolocation tracking stopped');
     }
 
     // Limpiar ResizeObserver
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
-      console.log('[CarsMapComponent] ResizeObserver disconnected');
     }
 
     // Limpiar realtime
@@ -1347,7 +1310,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Buscar el auto en currentLocations
     const location = this.currentLocations.find((loc) => loc.carId === carId);
     if (!location) {
-      console.warn(`[CarsMapComponent] No location found for car ID: ${carId}`);
       return;
     }
 
@@ -1362,7 +1324,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Ya NO mostramos popup aquí - la información del auto se muestra en el card seleccionado del sidebar
     // Esto evita duplicación de información y mantiene la UX limpia
 
-    console.log(`[CarsMapComponent] Flying to car ${carId} at [${location.lng}, ${location.lat}]`);
   }
 
   /**

@@ -58,7 +58,7 @@ export class PayoutService {
    */
   getUserPayouts(userId: string): Observable<Payout[]> {
     return from(
-      this.supabase
+      this.supabase.getClient()
         .from('payouts')
         .select('*')
         .eq('user_id', userId)
@@ -66,7 +66,6 @@ export class PayoutService {
     ).pipe(
       map(({ data }) => data as Payout[]),
       catchError(error => {
-        console.error('Error fetching user payouts:', error);
         return throwError(() => new Error('Failed to fetch payouts'));
       })
     );
@@ -77,7 +76,7 @@ export class PayoutService {
    */
   getPayoutStatus(payoutId: string): Observable<Payout> {
     return from(
-      this.supabase
+      this.supabase.getClient()
         .from('payouts')
         .select('*')
         .eq('id', payoutId)
@@ -85,7 +84,6 @@ export class PayoutService {
     ).pipe(
       map(({ data }) => data as Payout),
       catchError(error => {
-        console.error('Error fetching payout:', error);
         return throwError(() => new Error('Failed to fetch payout status'));
       })
     );
@@ -96,7 +94,7 @@ export class PayoutService {
    */
   getDefaultBankAccount(userId: string): Observable<BankAccount | null> {
     return from(
-      this.supabase
+      this.supabase.getClient()
         .from('bank_accounts')
         .select('*')
         .eq('user_id', userId)
@@ -108,7 +106,6 @@ export class PayoutService {
         if (error.code === 'PGRST116') {
           return of(null); // No default account found
         }
-        console.error('Error fetching default bank account:', error);
         return throwError(() => new Error('Failed to fetch bank account'));
       })
     );
@@ -119,7 +116,7 @@ export class PayoutService {
    */
   getUserBankAccounts(userId: string): Observable<BankAccount[]> {
     return from(
-      this.supabase
+      this.supabase.getClient()
         .from('bank_accounts')
         .select('*')
         .eq('user_id', userId)
@@ -127,7 +124,6 @@ export class PayoutService {
     ).pipe(
       map(({ data }) => data as BankAccount[]),
       catchError(error => {
-        console.error('Error fetching bank accounts:', error);
         return throwError(() => new Error('Failed to fetch bank accounts'));
       })
     );
@@ -141,7 +137,7 @@ export class PayoutService {
     account: Omit<BankAccount, 'id' | 'userId' | 'createdAt' | 'status'>
   ): Observable<BankAccount> {
     return from(
-      this.supabase
+      this.supabase.getClient()
         .from('bank_accounts')
         .insert({
           user_id: userId,
@@ -154,7 +150,6 @@ export class PayoutService {
     ).pipe(
       map(({ data }) => data as BankAccount),
       catchError(error => {
-        console.error('Error adding bank account:', error);
         return throwError(() => new Error('Failed to add bank account'));
       })
     );
@@ -168,13 +163,13 @@ export class PayoutService {
     accountId: string
   ): Observable<BankAccount> {
     return from(
-      this.supabase.rpc('set_default_bank_account', {
+      this.supabase.getClient().rpc('set_default_bank_account', {
         user_id: userId,
         account_id: accountId,
       })
     ).pipe(
       switchMap(() =>
-        this.supabase
+        this.supabase.getClient()
           .from('bank_accounts')
           .select('*')
           .eq('id', accountId)
@@ -182,7 +177,6 @@ export class PayoutService {
       ),
       map(({ data }) => data as BankAccount),
       catchError(error => {
-        console.error('Error setting default bank account:', error);
         return throwError(() => new Error('Failed to set default bank account'));
       })
     );
@@ -197,7 +191,6 @@ export class PayoutService {
       filter(payout => payout.status !== 'processing'),
       take(1),
       catchError(error => {
-        console.error('Error monitoring payout:', error);
         return throwError(() => new Error('Failed to monitor payout status'));
       })
     );
@@ -234,7 +227,6 @@ export class PayoutService {
         };
       }),
       catchError(error => {
-        console.error('Error calculating payout stats:', error);
         return throwError(() => new Error('Failed to calculate payout statistics'));
       })
     );
@@ -262,7 +254,6 @@ export class PayoutService {
         });
       }),
       catchError(error => {
-        console.error('Error requesting payout:', error);
         return throwError(() => error);
       })
     );
@@ -288,7 +279,7 @@ export class PayoutService {
     }
 
     // Obtener cuenta bancaria default
-    const { data: bankAccount, error: baError } = await this.supabase
+    const { data: bankAccount, error: baError } = await this.supabase.getClient()
       .from('bank_accounts')
       .select('*')
       .eq('user_id', request.userId)
@@ -304,7 +295,7 @@ export class PayoutService {
     }
 
     // Validar que el usuario tenga suficiente balance
-    const { data: wallet } = await this.supabase
+    const { data: wallet } = await this.supabase.getClient()
       .from('user_wallets')
       .select('available_balance')
       .eq('user_id', request.userId)
@@ -329,7 +320,7 @@ export class PayoutService {
       createdAt: new Date().toISOString(),
     };
 
-    const { error: insertError } = await this.supabase
+    const { error: insertError } = await this.supabase.getClient()
       .from('payouts')
       .insert(payout);
 
@@ -338,7 +329,7 @@ export class PayoutService {
     }
 
     // Descontar del balance del usuario
-    const { error: updateError } = await this.supabase
+    const { error: updateError } = await this.supabase.getClient()
       .from('user_wallets')
       .update({
         available_balance: (wallet as any).available_balance - request.amount,
@@ -347,12 +338,12 @@ export class PayoutService {
 
     if (updateError) {
       // Si falla, revertir
-      await this.supabase.from('payouts').delete().eq('id', payoutId);
+      await this.supabase.getClient().from('payouts').delete().eq('id', payoutId);
       throw new Error(`Failed to update wallet: ${updateError.message}`);
     }
 
     // Crear transacción de auditoría
-    await this.supabase.from('wallet_transactions').insert({
+    await this.supabase.getClient().from('wallet_transactions').insert({
       user_id: request.userId,
       type: 'withdrawal',
       status: 'pending',

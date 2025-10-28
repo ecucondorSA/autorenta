@@ -186,9 +186,7 @@ export class DepositModalComponent {
       const rate = await this.exchangeRateService.getPlatformRate();
       this.platformRate.set(rate);
 
-      console.log(`💱 Cotización cargada: 1 USD = ${rate} ARS`);
     } catch (error) {
-      console.error('Error loading exchange rate:', error);
       // Usar fallback si falla (tasa aproximada)
       this.platformRate.set(1748.01);
     } finally {
@@ -287,7 +285,6 @@ export class DepositModalComponent {
       // Pasar el monto en USD (convertido desde ARS) al servicio de wallet
       const usdAmount = this.usdAmount();
 
-      console.log(
         `💰 Iniciando depósito: ${this.arsAmount()} ARS → ${usdAmount} USD (tasa: ${this.platformRate()})`,
       );
 
@@ -321,7 +318,6 @@ export class DepositModalComponent {
         this.formError.set(result.message || 'Error al iniciar el depósito');
       }
     } catch (error) {
-      console.error('Error initiating deposit:', error);
       const walletError = this.extractWalletError(error);
       this.formError.set(this.getFriendlyErrorMessage(walletError, error));
 

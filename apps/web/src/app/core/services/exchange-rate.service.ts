@@ -58,14 +58,12 @@ export class ExchangeRateService {
 
     // Si el cache es válido (< 60s), retornar valor cacheado
     if (this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS) {
-      console.log(
         `💱 Usando cotización cacheada: 1 USD = ${this.lastRate()!.platform_rate} ARS (age: ${Math.round(cacheAge / 1000)}s)`,
       );
       return this.lastRate()!.platform_rate;
     }
 
     try {
-      console.log(`💱 Consultando base de datos para cotización ${pair}...`);
 
       const { data, error } = await this.supabase
         .from('exchange_rates')
@@ -88,17 +86,14 @@ export class ExchangeRateService {
       this.lastRate.set(data as ExchangeRate);
       this.lastFetch.set(now);
 
-      console.log(
         `✅ Cotización de plataforma (con margen ${data.margin_percent}%): 1 USD = ${data.platform_rate} ARS (Binance: ${data.binance_rate})`,
       );
 
       return data.platform_rate;
     } catch (error) {
-      console.error('❌ Error al obtener cotización de la base de datos:', error);
 
       // Intentar consultar Binance directamente como fallback
       try {
-        console.log('💡 Intentando consultar Binance API directamente...');
 
         const response = await fetch(`${this.BINANCE_API}?symbol=${pair}`);
 
@@ -116,11 +111,9 @@ export class ExchangeRateService {
         // Aplicar margen del 10% manualmente (fallback - debe coincidir con Edge Function)
         const platformRate = binanceRate * 1.1;
 
-        console.log(`✅ Cotización de Binance + 10% margen: 1 USD = ${platformRate} ARS`);
 
         return platformRate;
       } catch (binanceError) {
-        console.error('❌ Error al consultar Binance:', binanceError);
         throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
       }
     }
@@ -199,7 +192,6 @@ export class ExchangeRateService {
   clearCache(): void {
     this.lastRate.set(null);
     this.lastFetch.set(0);
-    console.log('🗑️  Cache de cotización limpiado');
   }
 
   /**

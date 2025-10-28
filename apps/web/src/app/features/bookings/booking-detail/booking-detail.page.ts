@@ -162,7 +162,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       // Load FGO inspections
       await this.loadInspections();
     } catch (err) {
-      console.error('Error loading booking:', err);
       this.error.set('Error al cargar la reserva');
     } finally {
       this.loading.set(false);
@@ -183,9 +182,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       const totalARS = await this.exchangeRateService.convertUsdToArs(totalUSD);
       this.totalInARS.set(totalARS);
 
-      console.log(`💱 Conversión cargada: ${totalUSD} USD = ${totalARS} ARS (rate: ${rate})`);
     } catch (error) {
-      console.error('Error loading exchange rate:', error);
       // No fallar si no se puede obtener la tasa, solo no mostrar conversión
     } finally {
       this.loadingRate.set(false);
@@ -210,7 +207,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         this.carOwnerName.set(ownerFullName);
       }
     } catch (error) {
-      console.error('Error loading car owner:', error);
     }
   }
 
@@ -222,7 +218,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       const inspections = await firstValueFrom(this.fgoService.getInspections(booking.id));
       this.inspections.set(inspections);
     } catch (error) {
-      console.error('Error loading inspections:', error);
       // Non-blocking error, inspections are optional
     }
   }
@@ -313,7 +308,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   // Confirmation handlers
   async handleConfirmationSuccess(result: ConfirmAndReleaseResponse): Promise<void> {
-    console.log('Confirmation result:', result);
 
     // Reload booking to get updated status
     const bookingId = this.booking()?.id;
@@ -331,7 +325,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   }
 
   handleConfirmationError(errorMessage: string): void {
-    console.error('Confirmation error:', errorMessage);
     alert(`❌ Error: ${errorMessage}`);
   }
 }

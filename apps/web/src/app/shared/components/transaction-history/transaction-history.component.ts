@@ -130,7 +130,6 @@ export class TransactionHistoryComponent implements OnInit {
 
       await this.walletService.getTransactions(filters);
     } catch (err) {
-      console.error('Error loading transactions:', err);
     } finally {
       this.isLoading.set(false);
     }

@@ -48,13 +48,11 @@ export class OfflineMessagesService {
       const request = indexedDB.open(this.dbName, this.dbVersion);
 
       request.onerror = () => {
-        console.error('[OfflineMessages] Failed to open IndexedDB:', request.error);
         reject(request.error);
       };
 
       request.onsuccess = () => {
         this.db = request.result;
-        console.log('[OfflineMessages] IndexedDB initialized');
 
         // Update pending count
         this.updatePendingCount();
@@ -73,7 +71,6 @@ export class OfflineMessagesService {
           store.createIndex('by-timestamp', 'timestamp', { unique: false });
           store.createIndex('by-retries', 'retries', { unique: false });
 
-          console.log('[OfflineMessages] Object store created');
         }
       };
     });
@@ -101,13 +98,11 @@ export class OfflineMessagesService {
       const request = store.add(offlineMessage);
 
       request.onsuccess = () => {
-        console.log('[OfflineMessages] Message queued:', offlineMessage.id);
         this.updatePendingCount();
         resolve();
       };
 
       request.onerror = () => {
-        console.error('[OfflineMessages] Failed to queue message:', request.error);
         reject(request.error);
       };
     });
@@ -127,12 +122,10 @@ export class OfflineMessagesService {
 
       request.onsuccess = () => {
         const messages = request.result as OfflineMessage[];
-        console.log(`[OfflineMessages] Retrieved ${messages.length} pending messages`);
         resolve(messages);
       };
 
       request.onerror = () => {
-        console.error('[OfflineMessages] Failed to get pending messages:', request.error);
         reject(request.error);
       };
     });
@@ -151,13 +144,11 @@ export class OfflineMessagesService {
       const request = store.delete(id);
 
       request.onsuccess = () => {
-        console.log('[OfflineMessages] Message removed:', id);
         this.updatePendingCount();
         resolve();
       };
 
       request.onerror = () => {
-        console.error('[OfflineMessages] Failed to remove message:', request.error);
         reject(request.error);
       };
     });
@@ -180,7 +171,6 @@ export class OfflineMessagesService {
         const message = getRequest.result as OfflineMessage | undefined;
 
         if (!message) {
-          console.warn('[OfflineMessages] Message not found for retry increment:', id);
           resolve();
           return;
         }
@@ -193,18 +183,15 @@ export class OfflineMessagesService {
         const putRequest = store.put(message);
 
         putRequest.onsuccess = () => {
-          console.log(`[OfflineMessages] Retry count incremented for ${id}: ${message.retries}`);
           resolve();
         };
 
         putRequest.onerror = () => {
-          console.error('[OfflineMessages] Failed to increment retry:', putRequest.error);
           reject(putRequest.error);
         };
       };
 
       getRequest.onerror = () => {
-        console.error('[OfflineMessages] Failed to get message for retry:', getRequest.error);
         reject(getRequest.error);
       };
     });
@@ -223,13 +210,11 @@ export class OfflineMessagesService {
       const request = store.clear();
 
       request.onsuccess = () => {
-        console.log('[OfflineMessages] All messages cleared');
         this.updatePendingCount();
         resolve();
       };
 
       request.onerror = () => {
-        console.error('[OfflineMessages] Failed to clear messages:', request.error);
         reject(request.error);
       };
     });
@@ -263,7 +248,6 @@ export class OfflineMessagesService {
       await this.removeMessage(msg.id);
     }
 
-    console.log(`[OfflineMessages] Removed ${failed.length} failed messages`);
     return failed.length;
   }
 
@@ -277,7 +261,6 @@ export class OfflineMessagesService {
       const messages = await this.getPendingMessages();
       this.pendingCount.set(messages.length);
     } catch (error) {
-      console.error('[OfflineMessages] Failed to update pending count:', error);
     }
   }
 

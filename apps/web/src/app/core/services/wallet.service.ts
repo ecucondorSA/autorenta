@@ -307,10 +307,6 @@ export class WalletService {
           }
 
           // 🔍 DEBUG: Logging agresivo
-          console.log('🔍 [WALLET DEBUG] Iniciando creación de preferencia MercadoPago');
-          console.log('🔍 [WALLET DEBUG] Transaction ID:', result.transaction_id);
-          console.log('🔍 [WALLET DEBUG] Amount:', params.amount);
-          console.log('🔍 [WALLET DEBUG] Has accessToken:', !!accessToken);
 
           const supabaseUrl = environment.supabaseUrl;
           if (!supabaseUrl) {
@@ -319,17 +315,14 @@ export class WalletService {
               'Supabase URL no configurada. Define NG_APP_SUPABASE_URL antes de iniciar depósitos.',
             );
           }
-          console.log('🔍 [WALLET DEBUG] Supabase URL:', supabaseUrl);
 
           const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-create-preference`;
-          console.log('🔍 [WALLET DEBUG] Edge Function URL:', edgeFunctionUrl);
 
           const requestBody = {
             transaction_id: result.transaction_id,
             amount: params.amount,
             description: params.description || 'Depósito a Wallet - AutoRenta',
           };
-          console.log('🔍 [WALLET DEBUG] Request body:', requestBody);
 
           const mpResponse = await fetch(edgeFunctionUrl, {
             method: 'POST',
@@ -340,12 +333,9 @@ export class WalletService {
             body: JSON.stringify(requestBody),
           });
 
-          console.log('🔍 [WALLET DEBUG] Response status:', mpResponse.status);
-          console.log('🔍 [WALLET DEBUG] Response ok:', mpResponse.ok);
 
           if (!mpResponse.ok) {
             const errorText = await mpResponse.text();
-            console.error('🔍 [WALLET DEBUG] Error response:', errorText);
 
             let errorData: Record<string, unknown> = {};
             try {
@@ -362,7 +352,6 @@ export class WalletService {
           }
 
           const mpData = await mpResponse.json();
-          console.log('🔍 [WALLET DEBUG] MercadoPago response:', mpData);
 
           const initPoint: string | undefined = mpData.init_point || mpData.sandbox_init_point;
 
@@ -373,7 +362,6 @@ export class WalletService {
           }
         } catch (mpError) {
           // Si falla la creación de preference, registrar error pero no fallar la transacción
-          console.error('Error creating MercadoPago preference:', mpError);
           // La transacción ya fue creada en DB, el usuario puede reintentar
           throw this.handleError(mpError, 'Error al procesar con Mercado Pago');
         }
@@ -411,7 +399,6 @@ export class WalletService {
     message: string;
   }> {
     try {
-      console.log('🔄 Forzando polling de pagos pendientes...');
 
       // Obtener access token
       const {
@@ -432,7 +419,6 @@ export class WalletService {
       }
       const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-poll-pending-payments`;
 
-      console.log('📡 Llamando polling function:', edgeFunctionUrl);
 
       const response = await fetch(edgeFunctionUrl, {
         method: 'POST',
@@ -445,18 +431,15 @@ export class WalletService {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ Error en polling:', errorText);
         throw this.createError('POLLING_ERROR', `Error al ejecutar polling (${response.status})`, {
           rawError: errorText,
         });
       }
 
       const result = await response.json();
-      console.log('✅ Resultado del polling:', result);
 
       // Refrescar balance después del polling
       await this.getBalance().catch(() => {
-        console.warn('⚠️ No se pudo refrescar balance después del polling');
       });
 
       return {
@@ -468,7 +451,6 @@ export class WalletService {
             : 'No se encontraron pagos aprobados para confirmar',
       };
     } catch (err) {
-      console.error('❌ Error al forzar polling:', err);
       const walletError = this.handleError(err, 'Error al verificar pagos pendientes');
       throw walletError;
     }
@@ -884,7 +866,6 @@ export class WalletService {
         data: { user },
       } = await this.supabase.getClient().auth.getUser();
       if (!user) {
-        console.warn('⚠️ No hay usuario autenticado para subscribirse a cambios');
         return;
       }
 
@@ -893,7 +874,6 @@ export class WalletService {
         await this.unsubscribeFromWalletChanges();
       }
 
-      console.log('🔔 Iniciando subscripción realtime para wallet...');
 
       // Crear canal de subscripción
       this.realtimeChannel = this.supabase
@@ -908,13 +888,11 @@ export class WalletService {
             filter: `user_id=eq.${user.id}`,
           },
           (payload) => {
-            console.log('🔔 Cambio detectado en wallet_transactions:', payload);
 
             const oldRecord = payload.old as Record<string, unknown> | undefined;
             const newRecord = payload.new as Record<string, unknown> | undefined;
 
             if (!newRecord) {
-              console.warn('🔔 No newRecord en el payload, ignorando evento');
               return;
             }
 
@@ -945,16 +923,13 @@ export class WalletService {
               oldRecord?.status === 'pending' &&
               newRecord.status === 'completed'
             ) {
-              console.log('✅ Depósito confirmado:', transaction);
 
               // Refrescar balance automáticamente
               this.getBalance().catch((err) => {
-                console.error('Error al refrescar balance después de confirmación:', err);
               });
 
               // Enviar email de confirmación
               this.sendDepositConfirmationEmail(transaction).catch((err) => {
-                console.error('Error al enviar email de confirmación:', err);
                 // No fallar si el email falla, es opcional
               });
 
@@ -992,12 +967,10 @@ export class WalletService {
             filter: `user_id=eq.${user.id}`,
           },
           (payload) => {
-            console.log('🔔 Nueva transacción detectada:', payload);
 
             const newRecord = payload.new as Record<string, unknown> | undefined;
 
             if (!newRecord) {
-              console.warn('🔔 No newRecord en el payload, ignorando evento');
               return;
             }
 
@@ -1031,20 +1004,14 @@ export class WalletService {
           },
         )
         .subscribe((status) => {
-          console.log('🔔 Estado de subscripción realtime:', status);
 
           if (status === 'SUBSCRIBED') {
-            console.log('✅ Subscripción realtime activa para wallet');
           } else if (status === 'CHANNEL_ERROR') {
-            console.error('❌ Error en canal de subscripción realtime');
           } else if (status === 'TIMED_OUT') {
-            console.warn('⏱️ Timeout en subscripción realtime');
           } else if (status === 'CLOSED') {
-            console.log('🔒 Canal de subscripción cerrado');
           }
         });
     } catch (err) {
-      console.error('❌ Error al subscribirse a cambios en wallet:', err);
       throw this.handleError(err, 'Error al iniciar subscripción realtime');
     }
   }
@@ -1054,10 +1021,8 @@ export class WalletService {
    */
   async unsubscribeFromWalletChanges(): Promise<void> {
     if (this.realtimeChannel) {
-      console.log('🔕 Cerrando subscripción realtime de wallet...');
       await this.supabase.getClient().removeChannel(this.realtimeChannel);
       this.realtimeChannel = null;
-      console.log('✅ Subscripción realtime cerrada');
     }
   }
 
@@ -1070,7 +1035,6 @@ export class WalletService {
     this.clearError();
     // Cerrar subscripción realtime
     this.unsubscribeFromWalletChanges().catch((err) => {
-      console.error('Error al cerrar subscripción realtime:', err);
     });
   }
 
@@ -1154,20 +1118,17 @@ export class WalletService {
       const accessToken = session.data.session?.access_token;
 
       if (!accessToken) {
-        console.warn('⚠️  No access token, skipping email');
         return;
       }
 
       const supabaseUrl = environment.supabaseUrl;
       if (!supabaseUrl) {
-        console.warn(
           '⚠️ Supabase URL no configurada. Omite envío de email de confirmación. Define NG_APP_SUPABASE_URL para habilitarlo.',
         );
         return;
       }
       const edgeFunctionUrl = `${supabaseUrl}/functions/v1/send-deposit-confirmation-email`;
 
-      console.log('📧 Enviando email de confirmación...');
 
       const response = await fetch(edgeFunctionUrl, {
         method: 'POST',
@@ -1185,14 +1146,11 @@ export class WalletService {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ Error enviando email:', errorText);
         return;
       }
 
       const result = await response.json();
-      console.log('✅ Email enviado:', result);
     } catch (err) {
-      console.error('❌ Error al enviar email de confirmación:', err);
       // No propagar el error, el email es opcional
     }
   }

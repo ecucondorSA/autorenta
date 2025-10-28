@@ -33,9 +33,7 @@ export class BookingsService {
         booking_id: bookingId,
         addon_ids: [], // Sin add-ons por defecto, se agregan en checkout
       });
-      console.log('✅ Insurance coverage activated for booking:', bookingId);
     } catch (insuranceError) {
-      console.error('⚠️ Error activating insurance (non-blocking):', insuranceError);
       // No bloqueamos la reserva si falla el seguro
       // El trigger de BD también lo activará al confirmar
     }
@@ -129,10 +127,8 @@ export class BookingsService {
         if (!carError && car) {
           (booking as Booking).car = car as any; // Partial select, not full Car object
         } else if (carError) {
-          console.warn('⚠️ No se pudo cargar datos del auto:', carError.message);
         }
       } catch (carException) {
-        console.warn('⚠️ Excepción cargando datos del auto', carException);
       }
     }
     
@@ -155,16 +151,13 @@ export class BookingsService {
             if (!policyError && policy) {
               (coverage as Record<string, unknown>)['policy'] = policy;
             } else if (policyError) {
-              console.warn('⚠️ No se pudo cargar la póliza de seguro:', policyError.message);
             }
           }
 
           (booking as Booking).insurance_coverage = coverage;
         } else if (coverageError) {
-          console.warn('⚠️ No se pudo cargar la cobertura de seguro:', coverageError.message);
         }
       } catch (coverageException) {
-        console.warn('⚠️ Excepción cargando cobertura de seguro', coverageException);
       }
     }
 
@@ -218,7 +211,6 @@ export class BookingsService {
           description: `Fondos desbloqueados por cancelación: ${reason ?? 'Cancelled by user'}`,
         });
       } catch (unlockError) {
-        console.error('Error unlocking wallet funds during cancellation:', unlockError);
         // Continue with cancellation even if unlock fails
         // The unlock can be retried manually later
       }
@@ -292,7 +284,6 @@ export class BookingsService {
       });
 
       if (error) {
-        console.error('Error charging rental from wallet:', error);
         return { ok: false, error: error.message };
       }
 
@@ -306,7 +297,6 @@ export class BookingsService {
       return { ok: true };
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error inesperado';
-      console.error('Exception charging rental:', err);
       return { ok: false, error: errorMsg };
     }
   }
@@ -351,14 +341,12 @@ export class BookingsService {
       });
 
       if (error) {
-        console.error('Error processing rental payment:', error);
         return { ok: false, error: error.message };
       }
 
       return { ok: true };
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error inesperado';
-      console.error('Exception processing rental payment:', err);
       return { ok: false, error: errorMsg };
     }
   }
@@ -424,7 +412,6 @@ export class BookingsService {
       };
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error inesperado';
-      console.error('Exception locking security deposit:', err);
       return { ok: false, error: errorMsg };
     }
   }
@@ -466,7 +453,6 @@ export class BookingsService {
       return { ok: true };
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error inesperado';
-      console.error('Exception releasing security deposit:', err);
       return { ok: false, error: errorMsg };
     }
   }
@@ -537,7 +523,6 @@ export class BookingsService {
       });
 
       if (deductError) {
-        console.error('Error deducting from deposit:', deductError);
         return { ok: false, error: deductError.message };
       }
 
@@ -557,7 +542,6 @@ export class BookingsService {
       });
 
       if (paymentError) {
-        console.error('Error paying owner:', paymentError);
         return { ok: false, error: paymentError.message };
       }
 
@@ -587,7 +571,6 @@ export class BookingsService {
       };
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error inesperado';
-      console.error('Exception deducting from security deposit:', err);
       return { ok: false, error: errorMsg };
     }
   }
@@ -708,7 +691,6 @@ export class BookingsService {
       });
 
       if (checkError) {
-        console.error('Error verificando disponibilidad:', checkError);
         return {
           success: false,
           error: 'Error al verificar disponibilidad del auto',
@@ -730,7 +712,6 @@ export class BookingsService {
         booking: booking,
       };
     } catch (error: unknown) {
-      console.error('Error en createBookingWithValidation:', error);
       const errorMessage = error instanceof Error ? error.message : 'Error al crear la reserva';
       return {
         success: false,
@@ -798,7 +779,6 @@ export class BookingsService {
         .eq('id', bookingId);
 
       if (error) {
-        console.error('Error cancelando reserva:', error);
         return {
           success: false,
           error: 'Error al cancelar la reserva. Intenta de nuevo.',
@@ -812,7 +792,6 @@ export class BookingsService {
 
       return { success: true };
     } catch (error: unknown) {
-      console.error('Excepción en cancelBooking:', error);
       const errorMessage = error instanceof Error ? error.message : 'Error inesperado al cancelar';
       return {
         success: false,
@@ -881,7 +860,6 @@ export class BookingsService {
         coverage_id: coverageId,
       };
     } catch (error: unknown) {
-      console.error('Error activating insurance coverage:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Error al activar cobertura de seguro',
@@ -986,7 +964,6 @@ export class BookingsService {
       });
 
       if (error) {
-        console.error('❌ Error en create_booking_atomic:', error);
         return {
           success: false,
           error: error instanceof Error ? error.message : 'Error al crear la reserva',
@@ -1009,9 +986,7 @@ export class BookingsService {
           booking_id: result.booking_id,
           addon_ids: [], // Los add-ons se agregan en checkout si es necesario
         });
-        console.log('✅ Cobertura de seguro activada para booking:', result.booking_id);
       } catch (insuranceError) {
-        console.error('⚠️ Error activando seguro (no bloqueante):', insuranceError);
         // No bloqueamos la reserva si falla el seguro
       }
 
@@ -1021,7 +996,6 @@ export class BookingsService {
         riskSnapshotId: result.risk_snapshot_id,
       };
     } catch (error: unknown) {
-      console.error('❌ Error en createBookingAtomic:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Error inesperado al crear la reserva',
@@ -1040,7 +1014,6 @@ export class BookingsService {
     const { data, error } = await this.supabase.from('owner_pending_approvals').select('*');
 
     if (error) {
-      console.error('Error fetching pending approvals:', error);
       throw error;
     }
 
@@ -1059,7 +1032,6 @@ export class BookingsService {
       });
 
       if (error) {
-        console.error('Error approving booking:', error);
         return {
           success: false,
           error: error.message,
@@ -1086,7 +1058,6 @@ export class BookingsService {
         message: 'Reserva aprobada exitosamente',
       };
     } catch (error: unknown) {
-      console.error('Exception approving booking:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Error inesperado al aprobar reserva',
@@ -1108,7 +1079,6 @@ export class BookingsService {
       });
 
       if (error) {
-        console.error('Error rejecting booking:', error);
         return {
           success: false,
           error: error.message,
@@ -1135,7 +1105,6 @@ export class BookingsService {
         message: 'Reserva rechazada exitosamente',
       };
     } catch (error: unknown) {
-      console.error('Exception rejecting booking:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Error inesperado al rechazar reserva',
@@ -1154,7 +1123,6 @@ export class BookingsService {
       .single();
 
     if (error || !data) {
-      console.warn('Could not check car approval settings, assuming instant booking');
       return false;
     }
 

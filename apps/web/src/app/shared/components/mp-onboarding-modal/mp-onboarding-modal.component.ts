@@ -595,7 +595,6 @@ export class MpOnboardingModalComponent implements OnInit {
         return;
       }
     } catch (err) {
-      console.error('Error loading status:', err);
       this.error.set('Error al cargar estado');
     } finally {
       this.loading.set(false);
@@ -624,7 +623,6 @@ export class MpOnboardingModalComponent implements OnInit {
 
       // El usuario será redirigido de vuelta a /mp-callback
     } catch (err) {
-      console.error('Error starting onboarding:', err);
       this.error.set(
         err instanceof Error
           ? err.message

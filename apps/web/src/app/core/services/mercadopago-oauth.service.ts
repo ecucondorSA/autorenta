@@ -58,13 +58,11 @@ export class MercadoPagoOAuthService {
    */
   async connectMercadoPago(redirectUri?: string): Promise<void> {
     try {
-      console.log('[OAuth] Iniciando conexión con MercadoPago...');
 
       // Usar redirect URI personalizada o default
       const callbackUri =
         redirectUri || window.location.origin + '/auth/mercadopago/callback';
 
-      console.log('[OAuth] Redirect URI:', callbackUri);
 
       const { data, error } = await this.supabase.functions.invoke(
         'mercadopago-oauth-connect',
@@ -76,24 +74,19 @@ export class MercadoPagoOAuthService {
       );
 
       if (error) {
-        console.error('[OAuth Connect Error]', error);
         throw new Error(error.message || 'Error al conectar con MercadoPago');
       }
 
       const response = data as ConnectMercadoPagoResponse;
 
       if (!response?.success || !response.authorization_url) {
-        console.error('[OAuth Connect Failed]', response);
         throw new Error(response?.error || 'No se pudo generar URL de autorización');
       }
 
-      console.log('[OAuth] URL de autorización generada');
-      console.log('[OAuth] Redirigiendo a MercadoPago...');
 
       // Redirigir a MercadoPago para autorización
       window.location.href = response.authorization_url;
     } catch (err: any) {
-      console.error('[OAuth Connect Exception]', err);
       throw new Error(err.message || 'Error inesperado al conectar con MercadoPago');
     }
   }
@@ -107,9 +100,6 @@ export class MercadoPagoOAuthService {
    */
   async handleCallback(code: string, state: string): Promise<boolean> {
     try {
-      console.log('[OAuth Callback] Procesando callback...');
-      console.log('[OAuth Callback] Code:', code ? 'presente' : 'faltante');
-      console.log('[OAuth Callback] State:', state ? 'presente' : 'faltante');
 
       const { data, error } = await this.supabase.functions.invoke(
         'mercadopago-oauth-callback',
@@ -119,25 +109,20 @@ export class MercadoPagoOAuthService {
       );
 
       if (error) {
-        console.error('[OAuth Callback Error]', error);
         throw new Error(error.message || 'Error procesando callback');
       }
 
       const response = data as OAuthCallbackResponse;
 
       if (!response?.success) {
-        console.error('[OAuth Callback Failed]', response);
         throw new Error(
           response?.error || response?.error_description || 'Error en la autorización'
         );
       }
 
-      console.log('[OAuth Callback] ✅ Conexión exitosa');
-      console.log('[OAuth Callback] Collector ID:', response.collector_id);
 
       return true;
     } catch (err: any) {
-      console.error('[OAuth Callback Exception]', err);
       throw err;
     }
   }
@@ -149,29 +134,24 @@ export class MercadoPagoOAuthService {
    */
   async checkConnection(): Promise<MercadoPagoConnectionStatus> {
     try {
-      console.log('[OAuth] Verificando estado de conexión...');
 
       const { data, error } = await this.supabase.rpc('check_mercadopago_connection');
 
       if (error) {
-        console.error('[Check Connection Error]', error);
         return { connected: false };
       }
 
       const status = (data as MercadoPagoConnectionStatus) || { connected: false };
 
-      console.log(
         '[OAuth] Estado:',
         status.connected ? '✅ Conectado' : '❌ No conectado'
       );
 
       if (status.connected && status.collector_id) {
-        console.log('[OAuth] Collector ID:', status.collector_id);
       }
 
       return status;
     } catch (err: any) {
-      console.error('[Check Connection Exception]', err);
       return { connected: false };
     }
   }
@@ -183,27 +163,22 @@ export class MercadoPagoOAuthService {
    */
   async disconnect(): Promise<boolean> {
     try {
-      console.log('[OAuth] Desconectando cuenta de MercadoPago...');
 
       const { data, error } = await this.supabase.rpc('disconnect_mercadopago');
 
       if (error) {
-        console.error('[Disconnect Error]', error);
         throw new Error(error.message || 'Error al desconectar cuenta');
       }
 
       const response = data as { success: boolean; error?: string; warning?: string };
 
       if (!response?.success) {
-        console.error('[Disconnect Failed]', response);
         throw new Error(response?.error || 'No se pudo desconectar la cuenta');
       }
 
-      console.log('[OAuth] ✅ Cuenta desconectada exitosamente');
 
       return true;
     } catch (err: any) {
-      console.error('[Disconnect Exception]', err);
       throw err;
     }
   }
@@ -244,13 +219,11 @@ export class MercadoPagoOAuthService {
         .single();
 
       if (error) {
-        console.error('[Get Profile Error]', error);
         return null;
       }
 
       return data;
     } catch (err: any) {
-      console.error('[Get Profile Exception]', err);
       return null;
     }
   }

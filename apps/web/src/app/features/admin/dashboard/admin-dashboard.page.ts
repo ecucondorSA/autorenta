@@ -42,7 +42,6 @@ export class AdminDashboardPage implements OnInit {
       await this.adminService.approveCar(carId);
       await this.loadData();
     } catch (error) {
-      console.error('Error al aprobar el auto', error);
     }
   }
 
@@ -56,7 +55,6 @@ export class AdminDashboardPage implements OnInit {
       this.pendingCarsSignal.set(cars);
       this.bookingsSignal.set(bookings);
     } catch (error) {
-      console.error('No se pudo cargar el panel admin', error);
       this.pendingCarsSignal.set([]);
       this.bookingsSignal.set([]);
     } finally {

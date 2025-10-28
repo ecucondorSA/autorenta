@@ -174,7 +174,6 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       await this.walletService.refreshPendingDepositsCount();
     } catch (error) {
-      console.error('Error al cargar depósitos pendientes:', error);
     }
   }
 
@@ -205,7 +204,6 @@ export class WalletPage implements AfterViewInit, OnInit {
    * Maneja el evento de depósito exitoso
    */
   handleDepositSuccess(paymentUrl: string): void {
-    console.log('Depósito iniciado exitosamente. Payment URL:', paymentUrl);
     // El modal ya maneja la redirección automática
     // Aquí podríamos agregar tracking o analytics
   }
@@ -232,7 +230,6 @@ export class WalletPage implements AfterViewInit, OnInit {
       const balanceRefresh = this.balanceCard ? this.balanceCard.loadBalance() : Promise.resolve();
       await Promise.all([balanceRefresh, this.walletService.refreshPendingDepositsCount()]);
     } catch (error) {
-      console.error('Error al refrescar wallet:', error);
     }
   }
 
@@ -246,7 +243,6 @@ export class WalletPage implements AfterViewInit, OnInit {
         this.withdrawalService.getWithdrawalRequests(),
       ]);
     } catch (error) {
-      console.error('Error loading withdrawal data:', error);
     }
   }
 
@@ -337,7 +333,6 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       await this.withdrawalService.getWithdrawalRequests();
     } catch (error) {
-      console.error('Error refreshing withdrawals:', error);
     }
   }
 
@@ -379,7 +374,6 @@ export class WalletPage implements AfterViewInit, OnInit {
         this.walletAccountNumber.set(profile.wallet_account_number);
       }
     } catch (error) {
-      console.error('Error loading wallet account number:', error);
     }
   }
 
@@ -406,7 +400,6 @@ export class WalletPage implements AfterViewInit, OnInit {
         this.copied.set(false);
       }, 2000);
     } catch (error) {
-      console.error('Error copying to clipboard:', error);
       this.toastService.error('Error al copiar el número de cuenta');
     }
   }

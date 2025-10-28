@@ -404,7 +404,6 @@ export class TourRegistryService {
           ],
           onAfter: async () => {
             // Track tour completion
-            console.log('✅ GuidedBooking tour completed!');
           },
           analytics: {
             step_name: 'payment_process',

@@ -97,7 +97,6 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           table: 'fgo_movements',
         },
         (payload) => {
-          console.log('FGO movement change detected:', payload);
           // Recargar todos los datos cuando hay un cambio
           this.refreshData();
         },
@@ -110,16 +109,13 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           table: 'fgo_metrics',
         },
         (payload) => {
-          console.log('FGO metrics change detected:', payload);
           // Recargar estado cuando cambian las métricas
           this.loadFgoStatus();
         },
       )
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
-          console.log('✅ Realtime subscription active for FGO');
         } else if (status === 'CHANNEL_ERROR') {
-          console.error('❌ Realtime subscription error');
         }
       });
   }
@@ -138,7 +134,6 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           this.loadingStatus = false;
         },
         error: (error) => {
-          console.error('Error loading FGO status:', error);
           this.loadingStatus = false;
         },
       });
@@ -196,7 +191,6 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           this.loadingMovements = false;
         },
         error: (error: unknown) => {
-          console.error('Error loading movements:', error);
           this.loadingMovements = false;
         },
       });
@@ -221,12 +215,10 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       .subscribe({
         next: (result: { ok: boolean; error?: string } | null) => {
           if (result?.ok) {
-            console.log('Metrics recalculated successfully');
             this.refreshData();
           }
         },
         error: (error: unknown) => {
-          console.error('Error recalculating metrics:', error);
         },
       });
   }
@@ -368,7 +360,6 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
         alert(`❌ Error: ${result?.error || 'Transferencia fallida'}`);
       }
     } catch (error: unknown) {
-      console.error('Error transferring:', error);
       alert(`❌ Error: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     } finally {
       this.processingTransfer = false;
@@ -437,7 +428,6 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
         alert(`❌ Error: ${result?.error || 'Pago fallido'}`);
       }
     } catch (error: unknown) {
-      console.error('Error paying siniestro:', error);
       alert(`❌ Error: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     } finally {
       this.processingSiniestro = false;

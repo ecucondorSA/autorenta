@@ -199,10 +199,8 @@ export class SplashLoaderComponent implements AfterViewInit {
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
-          console.log(`🎬 Splash video autoplay SUCCESS (attempt ${attempt})`);
         })
         .catch((err) => {
-          console.warn(`⚠️ Autoplay attempt ${attempt} failed:`, err.name);
 
           // Attempt 2: Retry after 100ms (video might still be loading)
           if (attempt === 1) {
@@ -217,7 +215,6 @@ export class SplashLoaderComponent implements AfterViewInit {
           }
 
           // Final fallback: Play on first user interaction
-          console.warn('🚫 All autoplay attempts failed. Waiting for user interaction...');
           const playOnInteraction = () => {
             video
               .play()

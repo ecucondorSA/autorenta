@@ -369,7 +369,6 @@ export class VerificationPromptBannerComponent implements OnInit {
       const profile = await this.profileService.getCurrentProfile();
       this.profile.set(profile);
     } catch (error) {
-      console.error('Error loading profile for verification banner:', error);
     }
   }
 

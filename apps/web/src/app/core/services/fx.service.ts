@@ -44,7 +44,6 @@ export class FxService {
     ).pipe(
       map((response) => {
         if (response.error || !response.data) {
-          console.error('Error fetching FX snapshot from exchange_rates:', response.error);
           return null;
         }
 
@@ -63,14 +62,12 @@ export class FxService {
           variationThreshold: 0.1, // ±10%
         };
 
-        console.log(
           `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Binance: ${data.binance_rate}, Margen: ${data.margin_percent}%)`,
         );
 
         return snapshot;
       }),
       catchError((error) => {
-        console.error('Error in getFxSnapshot:', error);
         return of(null);
       }),
     );
@@ -189,17 +186,13 @@ export class FxService {
     try {
       // Usar ExchangeRateService que consulta exchange_rates (Binance)
       const rate = await this.exchangeRateService.getPlatformRate('USDTARS');
-      console.log(`💱 Current rate from Binance: 1 USD = ${rate} ARS`);
       return rate;
     } catch (error) {
-      console.error('Error fetching current rate from ExchangeRateService:', error);
       // Si falla la consulta a la DB, intentar Binance directamente
       try {
         const binanceRate = await this.exchangeRateService.getBinanceRate();
-        console.log(`💱 Fallback to direct Binance: 1 USD = ${binanceRate} ARS`);
         return binanceRate * 1.2; // Aplicar margen del 20%
       } catch (binanceError) {
-        console.error('Error fetching from Binance directly:', binanceError);
         throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
       }
     }

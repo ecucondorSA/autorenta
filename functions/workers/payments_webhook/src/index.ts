@@ -102,7 +102,7 @@ const normalizeMPStatus = (status: string): { payment: string; booking: string }
 
 const parseSignatureHeader = (
   signature: string,
-): { ts?: string; hash?: string } => {
+): { ts?: string | undefined; hash?: string | undefined } => {
   const parts = signature.split(',');
   const result: Record<string, string> = {};
 
@@ -113,13 +113,19 @@ const parseSignatureHeader = (
     }
   }
 
-  return { ts: result.ts, hash: result.v1 };
+  const ts = result.ts;
+  const hash = result.v1;
+  
+  return { 
+    ...(ts ? { ts } : {}), 
+    ...(hash ? { hash } : {})
+  };
 };
 
 const verifyMercadoPagoSignature = async (params: {
   paymentId: string;
-  signatureHeader?: string | null;
-  requestId?: string | null;
+  signatureHeader?: string | null | undefined;
+  requestId?: string | null | undefined;
   secret: string;
 }): Promise<boolean> => {
   const { paymentId, signatureHeader, requestId, secret } = params;
@@ -326,8 +332,8 @@ const processMercadoPagoWebhook = async (
 
   const signatureValid = await verifyMercadoPagoSignature({
     paymentId,
-    signatureHeader: options.signatureHeader,
-    requestId: options.requestId,
+    signatureHeader: options.signatureHeader || undefined,
+    requestId: options.requestId || undefined,
     secret: mpAccessToken,
   });
 

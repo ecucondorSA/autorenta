@@ -70,13 +70,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error fetching FGO parameters:', response.error);
           return null;
         }
         return response.data ? mapFgoParameters(response.data as FgoParametersDb) : null;
       }),
       catchError((error) => {
-        console.error('Error in getParameters:', error);
         return of(null);
       }),
     );
@@ -91,13 +89,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error fetching all parameters:', response.error);
           return [];
         }
         return (response.data || []).map((p) => mapFgoParameters(p as FgoParametersDb));
       }),
       catchError((error) => {
-        console.error('Error in getAllParameters:', error);
         return of([]);
       }),
     );
@@ -123,13 +119,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error updating parameters:', response.error);
           return false;
         }
         return true;
       }),
       catchError((error) => {
-        console.error('Error in updateParameters:', error);
         return of(false);
       }),
     );
@@ -162,7 +156,6 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error creating risk snapshot:', response.error);
           return null;
         }
         return response.data
@@ -170,7 +163,6 @@ export class FgoV1_1Service {
           : null;
       }),
       catchError((error) => {
-        console.error('Error in createRiskSnapshot:', error);
         return of(null);
       }),
     );
@@ -189,7 +181,6 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error fetching risk snapshot:', response.error);
           return null;
         }
         return response.data
@@ -197,7 +188,6 @@ export class FgoV1_1Service {
           : null;
       }),
       catchError((error) => {
-        console.error('Error in getRiskSnapshot:', error);
         return of(null);
       }),
     );
@@ -227,13 +217,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error creating inspection:', response.error);
           return null;
         }
         return response.data ? mapBookingInspection(response.data as BookingInspectionDb) : null;
       }),
       catchError((error) => {
-        console.error('Error in createInspection:', error);
         return of(null);
       }),
     );
@@ -251,13 +239,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error signing inspection:', response.error);
           return false;
         }
         return true;
       }),
       catchError((error) => {
-        console.error('Error in signInspection:', error);
         return of(false);
       }),
     );
@@ -276,13 +262,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error fetching inspections:', response.error);
           return [];
         }
         return (response.data || []).map((i) => mapBookingInspection(i as BookingInspectionDb));
       }),
       catchError((error) => {
-        console.error('Error in getInspections:', error);
         return of([]);
       }),
     );
@@ -305,13 +289,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error fetching inspection by stage:', response.error);
           return null;
         }
         return response.data ? mapBookingInspection(response.data as BookingInspectionDb) : null;
       }),
       catchError((error) => {
-        console.error('Error in getInspectionByStage:', error);
         return of(null);
       }),
     );
@@ -328,7 +310,6 @@ export class FgoV1_1Service {
     return from(this.supabaseClient.from('v_fgo_status_v1_1').select('*').single()).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error fetching FGO status v1.1:', response.error);
           return null;
         }
 
@@ -364,7 +345,6 @@ export class FgoV1_1Service {
         } as FgoStatusV1_1;
       }),
       catchError((error) => {
-        console.error('Error in getStatusV1_1:', error);
         return of(null);
       }),
     );
@@ -387,7 +367,6 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error calculating PEM:', response.error);
           return null;
         }
 
@@ -408,7 +387,6 @@ export class FgoV1_1Service {
         } as PemCalculation;
       }),
       catchError((error) => {
-        console.error('Error in calculatePem:', error);
         return of(null);
       }),
     );
@@ -426,7 +404,6 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error calculating RC v1.1:', response.error);
           return null;
         }
 
@@ -447,7 +424,6 @@ export class FgoV1_1Service {
         } as RcCalculationV1_1;
       }),
       catchError((error) => {
-        console.error('Error in calculateRcV1_1:', error);
         return of(null);
       }),
     );
@@ -465,7 +441,6 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error adjusting alpha:', response.error);
           return null;
         }
 
@@ -484,7 +459,6 @@ export class FgoV1_1Service {
         } as AlphaAdjustment;
       }),
       catchError((error) => {
-        console.error('Error in adjustAlphaDynamic:', error);
         return of(null);
       }),
     );
@@ -506,7 +480,6 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error assessing eligibility:', response.error);
           return null;
         }
 
@@ -531,7 +504,6 @@ export class FgoV1_1Service {
         } as EligibilityResult;
       }),
       catchError((error) => {
-        console.error('Error in assessEligibility:', error);
         return of(null);
       }),
     );
@@ -552,7 +524,6 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error executing waterfall:', response.error);
           return null;
         }
 
@@ -578,7 +549,6 @@ export class FgoV1_1Service {
         } as WaterfallResult;
       }),
       catchError((error) => {
-        console.error('Error in executeWaterfall:', error);
         return of(null);
       }),
     );
@@ -626,13 +596,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error fetching movements:', response.error);
           return [];
         }
         return response.data as FgoMovementView[];
       }),
       catchError((error) => {
-        console.error('Error in getMovements:', error);
         return of([]);
       }),
     );
@@ -642,13 +610,11 @@ export class FgoV1_1Service {
     return from(this.supabaseClient.rpc('recalculate_fgo_metrics')).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error recalculating metrics:', response.error);
           return { ok: false, error: response.error.message };
         }
         return { ok: true };
       }),
       catchError((error) => {
-        console.error('Error in recalculateMetrics:', error);
         return of({ ok: false, error: error.message });
       }),
     );
@@ -672,13 +638,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error transferring funds:', response.error);
           return { ok: false, error: response.error.message };
         }
         return { ok: true, ref: response.data };
       }),
       catchError((error) => {
-        console.error('Error in transferBetweenSubfunds:', error);
         return of({ ok: false, error: error.message });
       }),
     );
@@ -698,13 +662,11 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error paying siniestro:', response.error);
           return { ok: false, error: response.error.message };
         }
         return { ok: true, ref: response.data };
       }),
       catchError((error) => {
-        console.error('Error in paySiniestro:', error);
         return of({ ok: false, error: error.message });
       }),
     );

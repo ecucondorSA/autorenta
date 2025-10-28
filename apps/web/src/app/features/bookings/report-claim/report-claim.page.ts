@@ -452,7 +452,6 @@ export class ReportClaimPage implements OnInit {
 
       await this.showToast('Ubicación obtenida', 'success');
     } catch (error) {
-      console.error('Error getting location:', error);
       await this.showToast('No se pudo obtener la ubicación', 'danger');
     } finally {
       this.gettingLocation = false;
@@ -517,7 +516,6 @@ export class ReportClaimPage implements OnInit {
       });
       await alert.present();
     } catch (error: unknown) {
-      console.error('Error reporting claim:', error);
 
       const alert = await this.alertController.create({
         header: '❌ Error',

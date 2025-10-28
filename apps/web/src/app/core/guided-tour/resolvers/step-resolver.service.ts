@@ -48,7 +48,6 @@ export class StepResolverService {
     // Handle timeout based on strategy
     if (!element && target.required) {
       const errorMsg = `Required element not found: ${target.selector}`;
-      console.warn(`[StepResolver] ${errorMsg}`);
 
       if (onTimeout === 'abort') {
         throw new Error(errorMsg);
@@ -79,7 +78,6 @@ export class StepResolverService {
           resolve(element);
         } else if (Date.now() - startTime >= timeout) {
           observer.disconnect();
-          console.warn(`[StepResolver] Timeout waiting for: ${selector}`);
           resolve(null);
         }
       });
@@ -117,7 +115,6 @@ export class StepResolverService {
         const result = await condition();
         if (result) return true;
       } catch (error) {
-        console.warn('[StepResolver] Condition check failed:', error);
       }
 
       await this.sleep(150);

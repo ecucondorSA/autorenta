@@ -40,7 +40,6 @@ export class CarPublishPage {
       });
       this.message.set('Auto enviado para revisión. ID: ' + car.id);
     } catch (err) {
-      console.error(err);
       this.message.set('No pudimos publicar el auto.');
     } finally {
       this.loading.set(false);

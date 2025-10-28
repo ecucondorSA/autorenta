@@ -172,7 +172,6 @@ export class CarsService {
 
     // 🔍 DEBUG: Verificar si region_id está presente
     if (data && data.length > 0) {
-      console.log('🚗 [CarsService] listActiveCars loaded:', {
         count: data.length,
         sample: {
           id: data[0].id,
@@ -231,7 +230,6 @@ export class CarsService {
       .or(`start_at.lte.${endDate},end_at.gte.${startDate}`);
 
     if (error) {
-      console.error('Error checking availability:', error);
       return cars; // Fallback: mostrar todos si falla
     }
 
@@ -241,7 +239,6 @@ export class CarsService {
       ...(conflicts || []).map((c) => c.car_id),
     ]);
 
-    console.log(`🚗 Filtered ${blockedIds.size} unavailable cars from ${cars.length} total cars`);
 
     // Filtrar autos disponibles
     return cars.filter((car) => !blockedIds.has(car.id));
@@ -459,7 +456,6 @@ export class CarsService {
       });
 
       if (error) {
-        console.error('Error calling get_available_cars RPC:', error);
         throw error;
       }
 
@@ -495,7 +491,6 @@ export class CarsService {
 
       return carsWithPhotos;
     } catch (error) {
-      console.error('Error en getAvailableCars:', error);
       throw error;
     }
   }
@@ -528,13 +523,11 @@ export class CarsService {
       });
 
       if (error) {
-        console.error('Error calling is_car_available RPC:', error);
         return false; // En caso de error, asumir no disponible por seguridad
       }
 
       return data === true;
     } catch (error) {
-      console.error('Error en isCarAvailable:', error);
       return false;
     }
   }
@@ -557,7 +550,6 @@ export class CarsService {
         .eq('car_id', carId);
 
       if (allError) {
-        console.error('Error checking bookings:', allError);
         throw allError;
       }
 
@@ -586,7 +578,6 @@ export class CarsService {
         bookings: [],
       };
     } catch (error) {
-      console.error('Error en hasActiveBookings:', error);
       throw error;
     }
   }

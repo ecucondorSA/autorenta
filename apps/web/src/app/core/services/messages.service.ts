@@ -154,9 +154,7 @@ export class MessagesService {
 
       if (error) throw error;
 
-      console.log('[Messages] Message sent successfully');
     } catch (error) {
-      console.warn('[Messages] Failed to send, queueing for offline:', error);
 
       // Queue for retry when connection is restored
       await this.offlineMessages.queueMessage({
@@ -188,7 +186,6 @@ export class MessagesService {
         filter: `booking_id=eq.${bookingId}`,
       },
       (payload) => {
-        console.log('[Messages] Booking message received:', payload.eventType);
         handler(payload.new as Message);
       },
       onConnectionChange
@@ -215,7 +212,6 @@ export class MessagesService {
         filter: `car_id=eq.${carId}`,
       },
       (payload) => {
-        console.log('[Messages] Car message received:', payload.eventType);
         handler(payload.new as Message);
       },
       onConnectionChange
@@ -258,7 +254,6 @@ export class MessagesService {
         await channel.untrack();
       }
     } catch (error) {
-      console.warn('Error setting typing status:', error);
       // Don't throw - typing is not critical
     }
   }
@@ -286,7 +281,6 @@ export class MessagesService {
             .filter((id): id is string => typeof id === 'string');
           callback(typingUsers);
         } catch (error) {
-          console.warn('Error getting typing status:', error);
         }
       })
       .subscribe();
@@ -299,17 +293,14 @@ export class MessagesService {
    */
   private async syncOfflineMessages(): Promise<void> {
     this.isSyncing.set(true);
-    console.log('[Messages] Syncing offline messages...');
 
     try {
       const pending = await this.offlineMessages.getMessagesForRetry();
 
-      console.log(`[Messages] Found ${pending.length} pending messages to sync`);
 
       for (const message of pending) {
         // Check if we should retry this message (respects exponential backoff)
         if (!this.offlineMessages.shouldRetry(message)) {
-          console.log(`[Messages] Skipping message ${message.id} (backoff in progress)`);
           continue;
         }
 
@@ -318,7 +309,6 @@ export class MessagesService {
             data: { user },
           } = await this.supabase.auth.getUser();
           if (!user?.id) {
-            console.warn('[Messages] User not authenticated, skipping sync');
             continue;
           }
 
@@ -335,24 +325,19 @@ export class MessagesService {
 
           // Success: remove from queue
           await this.offlineMessages.removeMessage(message.id);
-          console.log(`✅ [Messages] Synced offline message ${message.id}`);
         } catch (error) {
-          console.error(`❌ [Messages] Failed to sync message ${message.id}:`, error);
 
           // Increment retry counter
           await this.offlineMessages.incrementRetry(message.id);
 
           // If exceeded max retries, remove
           if (message.retries + 1 >= 5) {
-            console.warn(`[Messages] Removing message ${message.id} (max retries exceeded)`);
             await this.offlineMessages.removeMessage(message.id);
           }
         }
       }
 
-      console.log('[Messages] Sync complete');
     } catch (error) {
-      console.error('[Messages] Error during sync:', error);
     } finally {
       this.isSyncing.set(false);
     }

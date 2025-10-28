@@ -76,7 +76,6 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
   @Input({ required: true })
   set car(value: Car) {
-    console.log('🚗 [CarCard] Setter called:', {
       id: value?.id,
       title: value?.title,
       region_id: value?.region_id,
@@ -87,10 +86,8 @@ export class CarCardComponent implements OnInit, OnDestroy {
     this._car.set(value);
     // Load dynamic price when car changes
     if (value?.region_id) {
-      console.log('✅ [CarCard] Has region_id, loading dynamic price...');
       void this.loadDynamicPrice();
     } else {
-      console.warn('❌ [CarCard] NO region_id - using static price for:', value?.title);
     }
   }
 
@@ -127,18 +124,15 @@ export class CarCardComponent implements OnInit, OnDestroy {
     // Suscribirse a TODO (exchange rates + demand + events)
     this.unsubscribeRealtime = this.realtimePricing.subscribeToAllPricingUpdates({
       onExchangeRateUpdate: () => {
-        console.log('💱 Exchange rate updated, recalculating price for car:', car.id);
         void this.loadDynamicPrice();
       },
       onDemandUpdate: (regionId) => {
         // Solo recalcular si es nuestra región
         if (regionId === car.region_id) {
-          console.log('📈 Demand updated for region:', regionId);
           void this.loadDynamicPrice();
         }
       },
       onEventUpdate: () => {
-        console.log('🎉 Special event updated, recalculating price');
         void this.loadDynamicPrice();
       },
     });
@@ -147,7 +141,6 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private async loadDynamicPrice(): Promise<void> {
     const car = this._car();
 
-    console.log('🔍 [CarCard] Loading dynamic price for:', {
       carId: car?.id,
       carTitle: car?.title,
       regionId: car?.region_id,
@@ -155,7 +148,6 @@ export class CarCardComponent implements OnInit, OnDestroy {
     });
 
     if (!car || !car.region_id) {
-      console.warn('⚠️  [CarCard] Skipping - no car or region_id');
       return;
     }
 
@@ -169,7 +161,6 @@ export class CarCardComponent implements OnInit, OnDestroy {
       } = await this.supabase.auth.getUser();
       const userId = user?.id || '00000000-0000-0000-0000-000000000000';
 
-      console.log('📞 [CarCard] Calling RPC directly...', {
         regionId: car.region_id,
         userId,
       });
@@ -183,16 +174,13 @@ export class CarCardComponent implements OnInit, OnDestroy {
       });
 
       if (error) {
-        console.error('❌ [CarCard] RPC Error:', error);
         throw error;
       }
 
-      console.log('✅ [CarCard] RPC Response:', data);
 
       if (data && data.total_price) {
         const dynamicPricePerDay = data.total_price;
         this.dynamicPrice.set(dynamicPricePerDay);
-        console.log(
           `💰 [CarCard] Dynamic price set: $${dynamicPricePerDay} (was $${car.price_per_day})`,
         );
 
@@ -204,7 +192,6 @@ export class CarCardComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     } catch (error) {
-      console.error('❌ [CarCard] Failed to load dynamic price:', error);
       // Fallback: keep using static price
     } finally {
       this.priceLoading.set(false);

@@ -80,7 +80,6 @@ export class GeocodingService {
         placeName: feature.text,
       };
     } catch (error) {
-      console.error('Geocoding error:', error);
 
       if (error instanceof Error) {
         throw error;
@@ -200,7 +199,6 @@ export class GeocodingService {
 
       return result;
     } catch (error) {
-      console.error('Reverse geocoding error:', error);
 
       if (error instanceof Error) {
         throw error;

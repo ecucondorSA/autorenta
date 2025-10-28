@@ -250,7 +250,6 @@ export class LedgerHistoryComponent implements OnInit, OnDestroy {
       const entries = await this.ledgerService.loadLedgerHistory(this.currentLimit);
       this.canLoadMore.set(entries.length >= this.currentLimit);
     } catch (err) {
-      console.error('Error loading ledger history:', err);
     }
   }
 
@@ -259,7 +258,6 @@ export class LedgerHistoryComponent implements OnInit, OnDestroy {
       const entries = await this.ledgerService.loadLedgerHistory(this.currentLimit);
       this.canLoadMore.set(entries.length >= this.currentLimit);
     } catch (err) {
-      console.error('Error refreshing history:', err);
     }
   }
 

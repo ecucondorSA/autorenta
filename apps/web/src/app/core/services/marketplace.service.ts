@@ -85,7 +85,6 @@ export class MarketplaceService {
       .single();
 
     if (error || !data) {
-      console.error('Error checking MP onboarding:', error);
       return false;
     }
 
@@ -103,7 +102,6 @@ export class MarketplaceService {
       .single();
 
     if (error || !data) {
-      console.error('Error getting collector ID:', error);
       return null;
     }
 
@@ -166,7 +164,6 @@ export class MarketplaceService {
       .single();
 
     if (error || !data) {
-      console.error('Error checking car collector ID:', error);
       return false;
     }
 
@@ -200,7 +197,6 @@ export class MarketplaceService {
       .eq('id', carId);
 
     if (error) {
-      console.error('Error updating car collector ID:', error);
       throw error;
     }
   }

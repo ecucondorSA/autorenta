@@ -205,7 +205,6 @@ export class CheckoutStateService {
         this.paymentMethod.set(booking.payment_method);
       }
     } catch (error) {
-      console.error('Error loading booking', error);
       this.message.set('No pudimos cargar la reserva.');
     } finally {
       this.loading.set(false);
@@ -222,7 +221,6 @@ export class CheckoutStateService {
       const params = await firstValueFrom(this.fgoService.getParameters('AR', bucket));
       this.fgoParams.set(params);
     } catch (error) {
-      console.warn('Unable to load FGO parameters', error);
       this.fgoParams.set(null);
     } finally {
       this.fgoLoading.set(false);
@@ -241,7 +239,6 @@ export class CheckoutStateService {
       const rate = await this.exchangeRates.getPlatformRate();
       this.exchangeRate.set(rate);
     } catch (error) {
-      console.warn('Unable to load FX for checkout', error);
       this.exchangeRate.set(1);
     } finally {
       this.fxLoading.set(false);

@@ -385,10 +385,8 @@ export class CardHoldPanelComponent implements OnInit {
       this.userEmail.set(user?.email || null);
 
       if (!this.userEmail()) {
-        console.error('User email not found');
       }
     } catch (error) {
-      console.error('Error loading user email:', error);
     }
   }
 
@@ -520,7 +518,6 @@ export class CardHoldPanelComponent implements OnInit {
           this.authorizationChange.emit(null);
         },
         error: (error) => {
-          console.error('Error canceling authorization:', error);
           // Continuar de todos modos
           this.currentAuthSignal.set(null);
           this.authorizationStatus.set('idle');

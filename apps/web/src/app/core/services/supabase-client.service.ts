@@ -53,7 +53,6 @@ const createResilientLock = (): SupabaseLock => {
         errorObj?.name === 'NavigatorLockAcquireTimeoutError' ||
         errorObj?.message?.includes('Navigator LockManager')
       ) {
-        console.warn(
           `No se pudo obtener el lock de autenticación (${name}). Continuando sin locking.`,
           error,
         );
@@ -81,7 +80,6 @@ export class SupabaseClientService {
     if (!supabaseUrl || !supabaseAnonKey) {
       const message =
         'Supabase no está configurado. Define NG_APP_SUPABASE_URL y NG_APP_SUPABASE_ANON_KEY en tus variables de entorno (por ejemplo, .env.development.local).';
-      console.error(message, {
         supabaseUrl,
         supabaseAnonKey: supabaseAnonKey ? '***' : '',
       });
@@ -89,8 +87,6 @@ export class SupabaseClientService {
     }
 
     // Log para debug en producción
-    console.log('🔍 [SUPABASE CLIENT] Inicializando con URL:', supabaseUrl);
-    console.log('🔌 [SUPABASE CLIENT] Connection Pooling: Configurado en connection string');
 
     this.client = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
@@ -130,7 +126,6 @@ export class SupabaseClientService {
       const { error } = await this.client.from('profiles').select('id').limit(1);
       return !error;
     } catch (error) {
-      console.error('❌ [SUPABASE CLIENT] Health check failed:', error);
       return false;
     }
   }

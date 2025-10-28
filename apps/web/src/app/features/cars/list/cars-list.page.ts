@@ -506,7 +506,6 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.setupRealtimeSubscription();
       }
     } catch (err) {
-      console.error('loadCars error', err);
     } finally {
       this.loading.set(false);
 

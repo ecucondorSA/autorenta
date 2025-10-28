@@ -68,7 +68,6 @@ export class ReviewsService {
         review_id: data as string,
       };
     } catch (error: unknown) {
-      console.error('Error creating review:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Error desconocido',
@@ -106,7 +105,6 @@ export class ReviewsService {
         car_title: review.car?.title,
       })) as Review[];
     } catch (error) {
-      console.error('Error fetching user reviews:', error);
       return [];
     }
   }
@@ -137,7 +135,6 @@ export class ReviewsService {
         reviewer_avatar: review.reviewer?.avatar_url,
       })) as Review[];
     } catch (error) {
-      console.error('Error fetching car reviews:', error);
       return [];
     }
   }
@@ -156,7 +153,6 @@ export class ReviewsService {
       if (error) throw error;
       return data as UserStats | null;
     } catch (error) {
-      console.error('Error fetching user stats:', error);
       return null;
     }
   }
@@ -175,7 +171,6 @@ export class ReviewsService {
       if (error) throw error;
       return data as CarStats | null;
     } catch (error) {
-      console.error('Error fetching car stats:', error);
       return null;
     }
   }
@@ -199,7 +194,6 @@ export class ReviewsService {
       if (error) throw error;
       return data as boolean;
     } catch (error) {
-      console.error('Error checking review permission:', error);
       return false;
     }
   }
@@ -226,7 +220,6 @@ export class ReviewsService {
       if (error) throw error;
       return data as boolean;
     } catch (error) {
-      console.error('Error flagging review:', error);
       return false;
     }
   }
@@ -311,7 +304,6 @@ export class ReviewsService {
         category_averages: categoryAverages,
       };
     } catch (error) {
-      console.error('Error fetching review summary:', error);
       return {
         total_count: 0,
         average_rating: 0,
@@ -404,7 +396,6 @@ export class ReviewsService {
 
       return pendingReviews;
     } catch (error) {
-      console.error('Error fetching pending reviews:', error);
       return [];
     }
   }
@@ -426,7 +417,6 @@ export class ReviewsService {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('[ReviewsService] Error fetching owner reviews:', error);
       return [];
     }
 
@@ -454,7 +444,6 @@ export class ReviewsService {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('[ReviewsService] Error fetching renter reviews:', error);
       return [];
     }
 

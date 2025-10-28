@@ -53,7 +53,6 @@ const createResilientLock = (): SupabaseLock => {
         errorObj?.name === 'NavigatorLockAcquireTimeoutError' ||
         errorObj?.message?.includes('Navigator LockManager')
       ) {
-        console.warn(
           `No se pudo obtener el lock de autenticación (${name}). Continuando sin locking.`,
           error,
         );
@@ -90,7 +89,6 @@ export class SupabaseClientService {
     if (!supabaseUrl || !supabaseAnonKey) {
       const message =
         'Supabase no está configurado. Define NG_APP_SUPABASE_URL y NG_APP_SUPABASE_ANON_KEY en tu entorno (por ejemplo, .env.development.local).';
-      console.error(message, {
         supabaseUrl,
         supabaseAnonKey: supabaseAnonKey ? '***' : '',
       });
@@ -98,8 +96,6 @@ export class SupabaseClientService {
     }
 
     // Log para debug en producción
-    console.log('🔍 [SUPABASE CLIENT] Inicializando con URL:', supabaseUrl);
-    console.log('🔌 [SUPABASE CLIENT] Connection Pooling: HABILITADO (transaction mode)');
 
     this.client = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
@@ -128,7 +124,6 @@ export class SupabaseClientService {
       },
     });
 
-    console.log('✅ [SUPABASE CLIENT] Inicializado correctamente con pooling');
   }
 
   /**
@@ -145,7 +140,6 @@ export class SupabaseClientService {
 
           // Si es 5xx o timeout, reintentar
           if (response.status >= 500 && attempt < maxRetries) {
-            console.warn(
               `⚠️ [SUPABASE CLIENT] Error ${response.status}, reintentando... (${attempt}/${maxRetries})`,
             );
             await this.sleep(retryDelay * attempt);
@@ -155,11 +149,9 @@ export class SupabaseClientService {
           return response;
         } catch (error) {
           if (attempt === maxRetries) {
-            console.error('❌ [SUPABASE CLIENT] Error después de todos los reintentos:', error);
             throw error;
           }
 
-          console.warn(
             `⚠️ [SUPABASE CLIENT] Error de red, reintentando... (${attempt}/${maxRetries})`,
             error,
           );
@@ -196,7 +188,6 @@ export class SupabaseClientService {
       const { error } = await this.client.from('users').select('id').limit(1);
       return !error;
     } catch (error) {
-      console.error('❌ [SUPABASE CLIENT] Health check failed:', error);
       return false;
     }
   }

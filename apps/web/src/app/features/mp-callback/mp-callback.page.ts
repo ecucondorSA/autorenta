@@ -320,7 +320,6 @@ export class MpCallbackPage implements OnInit, OnDestroy {
       // Completar onboarding
       const collectorId = await this.onboardingService.handleCallback(code, state);
 
-      console.log('✅ Onboarding completado. Collector ID:', collectorId);
 
       // Mostrar success
       this.state.set('success');
@@ -328,7 +327,6 @@ export class MpCallbackPage implements OnInit, OnDestroy {
       // Iniciar countdown para redirect automático
       this.startCountdown();
     } catch (error) {
-      console.error('Error en callback:', error);
       this.handleError(
         error instanceof Error
           ? error.message

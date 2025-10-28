@@ -159,11 +159,9 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
 
       // Handle map errors
       this.map.on('error', (e) => {
-        console.error('Mapbox error:', e);
         this.isLoading.set(false);
       });
     } catch (error) {
-      console.error('Error initializing map:', error);
       this.isLoading.set(false);
     }
   }
@@ -204,7 +202,6 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
       this.currentAddress.set('Ubicación ajustada manualmente');
       newCoordinates.address = 'Ubicación ajustada manualmente';
     } catch (error) {
-      console.warn('Reverse geocoding not implemented:', error);
     }
 
     // Emit the new coordinates

@@ -124,7 +124,6 @@ export class CarLocationsService {
       const normalized = this.normalizePayloadArray(data);
       return normalized.length > 0 ? normalized : null;
     } catch (err) {
-      console.warn('[CarLocationsService] Edge function fallback', err);
       return null;
     }
   }

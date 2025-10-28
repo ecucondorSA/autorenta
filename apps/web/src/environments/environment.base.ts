@@ -12,6 +12,7 @@ interface EnvDefaults {
   mercadopagoClientId?: string;
   mercadopagoClientSecret?: string;
   appUrl?: string;
+  encryptionKey?: string;
 }
 
 // Type-safe interfaces for global environment access
@@ -75,6 +76,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     defaults.mercadopagoClientSecret,
   ),
   appUrl: resolve('NG_APP_URL', defaults.appUrl ?? 'http://localhost:4200'),
+  encryptionKey: resolve('NG_APP_ENCRYPTION_KEY', defaults.encryptionKey),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

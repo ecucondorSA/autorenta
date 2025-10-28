@@ -100,7 +100,6 @@ export class GuidedTourService {
    */
   enableDebug(): void {
     this.telemetry.enableDebug();
-    console.log('[GuidedTour] Debug mode enabled');
   }
 
   /**

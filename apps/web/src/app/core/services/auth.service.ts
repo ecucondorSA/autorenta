@@ -60,7 +60,6 @@ export class AuthService {
       error,
     } = await this.supabase.auth.getSession();
     if (error) {
-      console.error('loadSession error', error);
     }
     this.state.set({ session: session ?? null, loading: false });
   }
@@ -125,20 +124,17 @@ export class AuthService {
       const { data, error } = await this.supabase.auth.getSession();
 
       if (error) {
-        console.error('handleOAuthCallback error:', error);
         return { data: null, error };
       }
 
       if (data.session) {
         // Actualizar el state con la nueva sesión
         this.state.set({ session: data.session, loading: false });
-        console.log('✅ OAuth session established:', data.session.user.email);
       }
 
       return { data: data.session, error: null };
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown OAuth callback error');
-      console.error('handleOAuthCallback exception:', error);
       return { data: null, error };
     }
   }

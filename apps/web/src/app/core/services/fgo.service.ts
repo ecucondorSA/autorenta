@@ -18,7 +18,6 @@ export class FgoService {
       .select('amount_usd, transaction_type');
 
     if (error) {
-      console.error('Error fetching FGO ledger:', error);
       throw error;
     }
 
@@ -49,7 +48,6 @@ export class FgoService {
       .gte('created_at', ninetyDaysAgo.toISOString());
 
     if (error) {
-      console.error('Error fetching FGO payouts:', error);
       throw error;
     }
 
@@ -78,7 +76,6 @@ export class FgoService {
       .gte('created_at', sixtyDaysAgo.toISOString());
 
     if (error) {
-      console.error('Error fetching FGO ledger for RC check:', error);
       throw error;
     }
 
@@ -106,7 +103,6 @@ export class FgoService {
     ]);
 
     if (error) {
-      console.error('Error adding FGO contribution:', error);
       throw error;
     }
   }
@@ -124,7 +120,6 @@ export class FgoService {
     ]);
 
     if (error) {
-      console.error('Error adding FGO payout:', error);
       throw error;
     }
   }
@@ -142,7 +137,6 @@ export class FgoService {
     ]);
 
     if (error) {
-      console.error('Error adding FGO recovery:', error);
       throw error;
     }
   }

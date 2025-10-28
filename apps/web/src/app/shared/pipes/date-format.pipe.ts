@@ -36,7 +36,6 @@ export class DateFormatPipe implements PipeTransform {
     const date = typeof value === 'string' ? new Date(value) : value;
 
     if (isNaN(date.getTime())) {
-      console.warn('[DateFormatPipe] Invalid date:', value);
       return '';
     }
 

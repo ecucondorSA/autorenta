@@ -323,7 +323,6 @@ export class CoverageFundDashboardComponent implements OnInit {
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error al cargar datos del fondo';
       this.error.set(errorMsg);
-      console.error('Error loading fund data:', err);
     } finally {
       this.loading.set(false);
     }
@@ -355,7 +354,6 @@ export class CoverageFundDashboardComponent implements OnInit {
         avg_franchise_amount: avgAmount,
       });
     } catch (err) {
-      console.error('Error loading stats:', err);
     }
   }
 
@@ -374,7 +372,6 @@ export class CoverageFundDashboardComponent implements OnInit {
 
       this.recentActivity.set(data || []);
     } catch (err) {
-      console.error('Error loading recent activity:', err);
     } finally {
       this.loadingActivity.set(false);
     }

@@ -230,12 +230,10 @@ export class ClaimFormComponent implements OnInit {
         throw new Error('No se pudo crear el claim');
       }
 
-      console.log('✅ Claim creado:', claim);
 
       // Cerrar modal y retornar claim
       this.closeModal(claim);
     } catch (error) {
-      console.error('Error creating claim:', error);
       this.error.set(
         error instanceof Error ? error.message : 'Error al crear claim. Intente nuevamente.',
       );
@@ -261,7 +259,6 @@ export class ClaimFormComponent implements OnInit {
    */
   private closeModal(data: unknown): void {
     // TODO: Implementar cierre de modal según framework usado
-    console.log('Modal should close with data:', data);
 
     // Si hay un callback en el window (workaround temporal)
     const windowWithCallback = window as Window & { claimFormCallback?: (data: unknown) => void };

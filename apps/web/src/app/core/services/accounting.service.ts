@@ -101,7 +101,6 @@ export class AccountingService {
     const { data, error } = await this.supabase.from('accounting_dashboard').select('*').single();
 
     if (error) {
-      console.error('Error fetching accounting dashboard:', error);
       return null;
     }
 
@@ -118,7 +117,6 @@ export class AccountingService {
       .order('code');
 
     if (error) {
-      console.error('Error fetching balance sheet:', error);
       return [];
     }
 
@@ -143,7 +141,6 @@ export class AccountingService {
     const { data, error } = await query;
 
     if (error) {
-      console.error('Error fetching income statement:', error);
       return [];
     }
 
@@ -160,7 +157,6 @@ export class AccountingService {
       .eq('status', 'ACTIVE');
 
     if (error) {
-      console.error('Error fetching provisions:', error);
       return [];
     }
 
@@ -176,7 +172,6 @@ export class AccountingService {
       .select('*');
 
     if (error) {
-      console.error('Error fetching wallet reconciliation:', error);
       return [];
     }
 
@@ -194,7 +189,6 @@ export class AccountingService {
       .limit(12); // Últimos 12 meses
 
     if (error) {
-      console.error('Error fetching commissions report:', error);
       return [];
     }
 
@@ -212,7 +206,6 @@ export class AccountingService {
       .order('code');
 
     if (error) {
-      console.error('Error fetching chart of accounts:', error);
       return [];
     }
 
@@ -262,7 +255,6 @@ export class AccountingService {
     const { data, error } = await query;
 
     if (error) {
-      console.error('Error fetching ledger:', error);
       return [];
     }
 
@@ -279,7 +271,6 @@ export class AccountingService {
       .limit(limit);
 
     if (error) {
-      console.error('Error fetching cash flow:', error);
       return [];
     }
 
@@ -293,7 +284,6 @@ export class AccountingService {
     const { error } = await this.supabase.rpc('refresh_accounting_balances');
 
     if (error) {
-      console.error('Error refreshing balances:', error);
       return false;
     }
 
@@ -322,7 +312,6 @@ export class AccountingService {
     });
 
     if (error) {
-      console.error('Error creating journal entry:', error);
       return null;
     }
 

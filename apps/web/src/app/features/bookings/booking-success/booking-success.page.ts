@@ -36,7 +36,6 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
-      console.error('No booking ID provided');
       this.router.navigate(['/']);
       return;
     }
@@ -47,7 +46,6 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     // ✅ Iniciar polling si viene desde MercadoPago
     const fromMercadoPago = this.route.snapshot.queryParamMap.get('from_mp') === 'true';
     if (fromMercadoPago) {
-      console.log('🔄 Usuario viene de MercadoPago, iniciando polling de payment intent...');
       this.startPolling();
     }
   }
@@ -64,7 +62,6 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
       }
       this.booking.set(booking);
     } catch (err: unknown) {
-      console.error('Error loading booking:', err);
       this.error.set(err instanceof Error ? err.message : 'Error al cargar la reserva');
     } finally {
       this.loading.set(false);
@@ -90,14 +87,12 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
 
     this.pollingInterval = window.setInterval(async () => {
       this.pollAttempts++;
-      console.log(`🔍 Polling attempt ${this.pollAttempts}/${this.MAX_POLL_ATTEMPTS}`);
 
       try {
         // Obtener booking actualizado
         const booking = await this.bookingsService.getBookingById(this.bookingId());
 
         if (!booking) {
-          console.error('Booking no encontrado durante polling');
           return;
         }
 
@@ -106,14 +101,12 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
 
         // Verificar estado del booking
         if (booking.status === 'confirmed') {
-          console.log('✅ Pago confirmado por webhook');
           this.paymentStatus.set('completed');
           this.stopPolling();
           return;
         }
 
         if (booking.status === 'cancelled') {
-          console.log('❌ Pago rechazado por webhook');
           this.paymentStatus.set('failed');
           this.stopPolling();
           return;
@@ -121,12 +114,10 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
 
         // Si llegamos al máximo de intentos sin respuesta
         if (this.pollAttempts >= this.MAX_POLL_ATTEMPTS) {
-          console.warn('⏱️ Timeout: Webhook no respondió en 2 minutos');
           this.paymentStatus.set('timeout');
           this.stopPolling();
         }
       } catch (err: unknown) {
-        console.error('Error durante polling:', err);
         // No detener polling por errores de red transitorios
       }
     }, this.POLL_INTERVAL_MS);
@@ -136,7 +127,6 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     if (this.pollingInterval !== null) {
       window.clearInterval(this.pollingInterval);
       this.pollingInterval = null;
-      console.log('🛑 Polling detenido');
     }
   }
 

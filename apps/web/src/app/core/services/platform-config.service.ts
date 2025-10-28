@@ -62,7 +62,6 @@ export class PlatformConfigService {
     const { data, error } = await this.supabase.rpc('config_get_public');
 
     if (error) {
-      console.error('Failed to load platform config:', error);
       return;
     }
 

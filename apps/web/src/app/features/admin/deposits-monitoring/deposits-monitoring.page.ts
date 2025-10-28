@@ -117,7 +117,6 @@ export class DepositsMonitoringPage implements OnInit {
         this.loadFailedDeposits(),
       ]);
     } catch (err) {
-      console.error('Error loading data:', err);
       this.error.set('Error al cargar datos del dashboard');
     } finally {
       this.loading.set(false);
@@ -342,7 +341,6 @@ export class DepositsMonitoringPage implements OnInit {
 
         await this.loadData();
       } catch (err) {
-        console.error('Error:', err);
         alert('Error al ejecutar polling');
       } finally {
         this.loading.set(false);

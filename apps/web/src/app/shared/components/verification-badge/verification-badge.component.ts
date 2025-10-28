@@ -61,7 +61,6 @@ export class VerificationBadgeComponent implements OnInit {
       try {
         await this.verificationService.loadStatuses();
       } catch (error) {
-        console.warn(
           '[VerificationBadgeComponent] No se pudo cargar el estado de verificación:',
           error,
         );
