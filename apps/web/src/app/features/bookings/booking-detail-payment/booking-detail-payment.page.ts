@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, signal, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Subject, firstValueFrom } from 'rxjs';
 
 // Services
 import { FxService } from '../../../core/services/fx.service';
