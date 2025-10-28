@@ -7,7 +7,10 @@ import { WalletService } from '../../../../core/services/wallet.service';
 import { PaymentsService } from '../../../../core/services/payments.service';
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { BookingPaymentMethod } from '../../../../core/models/wallet.model';
-import { MercadoPagoBookingGateway } from '../support/mercadopago-booking.gateway';
+import {
+  MercadoPagoBookingGateway,
+  type MercadoPagoPreferenceResponse,
+} from '../support/mercadopago-booking.gateway';
 import { CheckoutRiskCalculator } from '../support/risk-calculator';
 import { FgoV1_1Service } from '../../../../core/services/fgo-v1-1.service';
 import { Booking } from '../../../../core/models';
@@ -112,7 +115,7 @@ export class CheckoutPaymentService {
 
     this.state.setMessage('Redirigiendo a Mercado Pago...');
 
-    const preference = await this.mpGateway.createPreference(bookingId);
+    const preference = await this.requestPreferenceOrThrow(bookingId);
     this.state.setStatus('redirecting_to_mercadopago');
 
     this.scheduleRiskSnapshot(booking, 'credit_card').catch((err) => {
@@ -172,7 +175,7 @@ export class CheckoutPaymentService {
 
       await this.bookings.recalculatePricing(bookingId);
 
-      const preference = await this.mpGateway.createPreference(bookingId);
+      const preference = await this.requestPreferenceOrThrow(bookingId);
 
       const walletText = this.formatUsd(walletAmount);
       const cardText = this.formatUsd(cardAmount);
@@ -216,6 +219,44 @@ export class CheckoutPaymentService {
         ? error
         : new Error('No pudimos completar el pago mixto. Intentá nuevamente.');
     }
+  }
+
+  private async requestPreferenceOrThrow(
+    bookingId: string,
+  ): Promise<MercadoPagoPreferenceResponse> {
+    try {
+      return await this.mpGateway.createPreference(bookingId);
+    } catch (error) {
+      if (this.isOwnerOnboardingError(error)) {
+        this.handleOwnerOnboardingBlock(error);
+      }
+
+      throw error instanceof Error
+        ? error
+        : new Error('No pudimos iniciar el pago con Mercado Pago.');
+    }
+  }
+
+  private isOwnerOnboardingError(
+    error: unknown,
+  ): error is Error & { code?: string; meta?: unknown } {
+    return (
+      !!error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      (error as { code?: string }).code === 'OWNER_ONBOARDING_REQUIRED'
+    );
+  }
+
+  private handleOwnerOnboardingBlock(
+    error: Error & { code?: string; meta?: unknown },
+  ): never {
+    const message =
+      error.message ||
+      'El propietario todavía no completó la vinculación de Mercado Pago. Tu reserva quedará pendiente y te avisaremos cuando pueda cobrar.';
+    this.state.setStatus('owner_onboarding_blocked');
+    this.state.setMessage(message);
+    throw error;
   }
 
   private async scheduleRiskSnapshot(

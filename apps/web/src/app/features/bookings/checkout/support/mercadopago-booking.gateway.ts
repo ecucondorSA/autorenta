@@ -10,6 +10,14 @@ export interface MercadoPagoPreferenceResponse {
   exchangeRate: number;
 }
 
+type MercadoPagoGatewayError = Error & { code?: string; meta?: unknown };
+type EdgeFunctionErrorPayload = {
+  code?: string;
+  error?: string;
+  message?: string;
+  meta?: unknown;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -23,7 +31,21 @@ export class MercadoPagoBookingGateway {
     });
 
     if (error) {
-      throw new Error(error.message ?? 'No se pudo crear la preferencia de MercadoPago');
+      const parsed = this.parseEdgeError(error);
+
+      if (parsed?.code === 'OWNER_ONBOARDING_REQUIRED') {
+        const onboardingError = new Error(
+          parsed.message ??
+            'El propietario todavía no completó la vinculación de Mercado Pago. Te avisaremos cuando puedas pagar.',
+        ) as MercadoPagoGatewayError;
+        onboardingError.code = parsed.code;
+        onboardingError.meta = parsed.meta;
+        throw onboardingError;
+      }
+
+      throw new Error(
+        parsed?.message ?? error.message ?? 'No se pudo crear la preferencia de Mercado Pago',
+      );
     }
 
     if (!data?.init_point) {
@@ -38,5 +60,43 @@ export class MercadoPagoBookingGateway {
       amountUsd: data.amount_usd,
       exchangeRate: data.exchange_rate,
     };
+  }
+
+  private parseEdgeError(error: { message?: string; [key: string]: unknown }): EdgeFunctionErrorPayload | null {
+    if (!error) {
+      return null;
+    }
+
+    const candidates: Array<unknown> = [
+      error.message,
+      (error as { details?: unknown }).details,
+      (error as { name?: unknown }).name,
+    ];
+
+    let fallbackMessage: string | undefined;
+
+    for (const candidate of candidates) {
+      if (typeof candidate !== 'string') {
+        continue;
+      }
+
+      const trimmed = candidate.trim();
+      if (!trimmed) {
+        continue;
+      }
+
+      try {
+        const parsed = JSON.parse(trimmed) as EdgeFunctionErrorPayload;
+        if (parsed && typeof parsed === 'object') {
+          return parsed;
+        }
+      } catch {
+        if (!fallbackMessage) {
+          fallbackMessage = trimmed;
+        }
+      }
+    }
+
+    return fallbackMessage ? { message: fallbackMessage } : null;
   }
 }

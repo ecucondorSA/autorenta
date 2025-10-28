@@ -1,5 +1,5 @@
-/* MapLibre GL JS CSS - Required for markers and controls (ESM compatible) */
-@import 'maplibre-gl/dist/maplibre-gl.css';
+/* Mapbox GL JS CSS - Required for markers and controls */
+@import 'mapbox-gl/dist/mapbox-gl.css';
 
 /* Shepherd.js Tours CSS */
 @import './styles/shepherd-custom.scss';
