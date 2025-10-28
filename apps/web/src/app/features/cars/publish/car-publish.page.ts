@@ -33,10 +33,10 @@ export class CarPublishPage {
         description: this.description(),
         location_city: this.city(),
         location_state: this.state(),
-        daily_price: this.price(),
+        price_per_day: this.price(),
         transmission: this.transmission(),
         seats: this.seats(),
-        status: 'pending',
+        status: 'draft',
       });
       this.message.set('Auto enviado para revisión. ID: ' + car.id);
     } catch (err) {

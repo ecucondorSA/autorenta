@@ -239,6 +239,45 @@
             </div>
         </div>
       </div>
+
+      <!-- Cash Payment Warning (Mercado Pago Only) -->
+      @if (provider() === 'mercadopago') {
+        <div class="rounded-xl border border-amber-400 dark:border-amber-500 bg-amber-50/90 dark:bg-amber-500/20 p-4 space-y-3">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-amber-600 dark:text-amber-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <div class="flex-1 space-y-2">
+              <h4 class="text-sm font-bold text-amber-900 dark:text-amber-100">
+                ⚠️ Importante: Depósitos en Efectivo (Pago Fácil/Rapipago)
+              </h4>
+              <div class="text-xs text-amber-800 dark:text-amber-200 space-y-2">
+                <p class="font-semibold">
+                  Si depositás usando <strong>efectivo</strong> en Pago Fácil o Rapipago:
+                </p>
+                <ul class="ml-4 space-y-1.5 list-disc">
+                  <li>
+                    <strong>✅ Los fondos se acreditan normalmente</strong> en tu wallet después del pago
+                  </li>
+                  <li>
+                    <strong>✅ Podés usarlos para alquileres</strong> y garantías sin problemas
+                  </li>
+                  <li class="text-red-700 dark:text-red-300 font-semibold">
+                    <strong>❌ NO podrás retirarlos</strong> a tu cuenta bancaria
+                  </li>
+                  <li>
+                    Los fondos quedan como <strong>"crédito permanente"</strong> en la plataforma
+                  </li>
+                </ul>
+                <p class="pt-2 border-t border-amber-300 dark:border-amber-600 italic">
+                  💡 <strong>Recomendación:</strong> Si necesitás recuperar el dinero después, usá tarjeta de crédito/débito en vez de efectivo.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
       @if (fallbackSuggestion() === 'bank_transfer') {
         <div class="rounded-xl border border-amber-300 dark:border-amber-400 bg-amber-50/80 dark:bg-amber-500/15 p-4 space-y-2">
           <div class="flex items-start gap-2">

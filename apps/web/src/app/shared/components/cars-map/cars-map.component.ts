@@ -3,6 +3,7 @@ import {
   OnInit,
   OnDestroy,
   OnChanges,
+  SimpleChanges,
   signal,
   effect,
   inject,
@@ -26,7 +27,7 @@ import { environment } from '../../../../environments/environment';
 
 // Dynamic import types for Mapbox GL
 interface MapboxGL {
-  accessToken: string;
+  accessToken: string | null | undefined;
   Map: new (options: MapboxMapOptions) => MapboxMap;
   Marker: new (options?: MarkerOptions | HTMLElement) => Marker;
   Popup: new (options?: PopupOptions) => Popup;
@@ -45,6 +46,13 @@ interface MapboxMapOptions {
   cooperativeGestures?: boolean;
   trackResize?: boolean;
   maxBounds?: [[number, number], [number, number]];
+  attributionControl?: boolean;
+  minZoom?: number;
+  maxZoom?: number;
+  renderWorldCopies?: boolean;
+  preserveDrawingBuffer?: boolean;
+  refreshExpiredTiles?: boolean;
+  fadeDuration?: number;
 }
 
 interface MapboxMap {
@@ -69,8 +77,10 @@ interface MapboxMap {
 }
 
 interface FitBoundsOptions {
-  padding?: number;
+  padding?: number | { top: number; bottom: number; left: number; right: number };
   duration?: number;
+  maxZoom?: number;
+  minZoom?: number;
 }
 
 interface MapSource {
@@ -232,10 +242,10 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     });
   }
 
-  ngOnChanges(changes: Record<string, unknown>): void {
+  ngOnChanges(changes: SimpleChanges): void {
     // Detectar cambios en selectedCarId y mover el mapa
-    if (changes.selectedCarId && !changes.selectedCarId.firstChange) {
-      const carId = changes.selectedCarId.currentValue;
+    if (changes['selectedCarId'] && !changes['selectedCarId'].firstChange) {
+      const carId = changes['selectedCarId'].currentValue;
       if (carId) {
         this.flyToCarLocation(carId);
       }
@@ -293,7 +303,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     try {
       // Importar dinámicamente Mapbox GL JS
       const mapboxModule = await import('mapbox-gl');
-      this.mapboxgl = mapboxModule.default || mapboxModule;
+      this.mapboxgl = (mapboxModule.default || mapboxModule) as unknown as MapboxGL;
 
       if (!this.mapboxgl) {
         throw new Error('Mapbox GL JS no se cargó correctamente');
@@ -590,7 +600,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         if (cached && now - cached.timestamp < this.PRICING_CACHE_TTL) {
           prices.set(car.id, {
             price_per_day: cached.price,
-            price_per_hour: cached.pricePerHour,
+            price_per_hour: cached.pricePerHour ?? 0,
             surge_active: cached.surgeActive,
             currency: 'ARS',
           });

@@ -191,11 +191,14 @@ export class CarsService {
         filters.to,
         filters.blockedCarIds || [],
       );
-      return availableCars.map((car: CarWithPhotosRaw) => ({
-        ...car,
-        photos: car.car_photos || [],
-        owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
-      })) as Car[];
+      return (availableCars as unknown[]).map((car) => {
+        const typedCar = car as CarWithPhotosRaw;
+        return {
+          ...typedCar,
+          photos: typedCar.car_photos || [],
+          owner: Array.isArray(typedCar.owner) ? typedCar.owner[0] : typedCar.owner,
+        };
+      }) as Car[];
     }
 
     return (data ?? []).map((car: CarWithPhotosRaw) => ({

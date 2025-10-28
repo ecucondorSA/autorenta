@@ -259,8 +259,9 @@ export class WalletPage implements AfterViewInit, OnInit {
       this.toastService.success('Cuenta bancaria agregada exitosamente');
       this.setWithdrawalMode('form');
     } catch (error: unknown) {
+      const errorObj = error as { message?: string };
       this.toastService.error(
-        'Error al agregar cuenta bancaria: ' + (error.message || 'Error desconocido'),
+        'Error al agregar cuenta bancaria: ' + (errorObj.message || 'Error desconocido'),
       );
     }
   }

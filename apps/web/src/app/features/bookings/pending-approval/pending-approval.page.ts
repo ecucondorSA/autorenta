@@ -65,7 +65,7 @@ export class PendingApprovalPage implements OnInit {
     try {
       this.loading.set(true);
       const bookings = await this.bookingsService.getPendingApprovals();
-      this.pendingBookings.set(bookings);
+      this.pendingBookings.set(bookings as unknown as PendingApproval[]);
     } catch (error) {
       console.error('Error loading pending approvals:', error);
       this.toastService.error('Error al cargar reservas pendientes');

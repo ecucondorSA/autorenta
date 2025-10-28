@@ -55,7 +55,7 @@ export class AccountingDashboardComponent implements OnInit {
     }).format(amount);
   }
 
-  getHealthColor(profitability: string): string {
+  getHealthColor(profitability: string | undefined): string {
     switch (profitability) {
       case 'GOOD':
         return 'success';

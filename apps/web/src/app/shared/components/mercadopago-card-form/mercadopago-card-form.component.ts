@@ -316,7 +316,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
           onSubmit: (event: Event) => {
             event.preventDefault();
             this.isSubmitting.set(true);
-            this.cardForm.createCardToken();
+            this.cardForm?.createCardToken();
           },
           onFetching: (resource: string) => {
             console.log('Fetching resource:', resource);
