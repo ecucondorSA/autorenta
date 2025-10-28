@@ -5,7 +5,7 @@
   "compilerOptions": {
     "strict": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": false, // TODO: Fix index signature access and re-enable
+    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
@@ -39,7 +39,7 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "typeCheckHostBindings": true,
-    "strictTemplates": false // TODO: Fix template type errors and re-enable
+    "strictTemplates": true
   },
   "files": [],
   "references": [
