@@ -1,0 +1,535 @@
+
+> build
+> npm run build:web
+
+
+> build:web
+> cd apps/web && npm run build
+
+
+> autorenta-web@0.1.0 prebuild
+> node scripts/generate-env.js
+
+[dotenv@17.2.3] injecting env (8) from .env.development.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (1) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+✅ Generated public/env.js with environment configuration
+Environment variables:
+  - NG_APP_SUPABASE_URL: https://obxvffplochgeiclibng.supabase.co
+  - NG_APP_SUPABASE_ANON_KEY: eyJhbGciOi...
+  - NG_APP_DEFAULT_CURRENCY: ARS
+  - NG_APP_PAYMENTS_WEBHOOK_URL: http://localhost:8787/webhooks/payments
+  - NG_APP_MAPBOX_ACCESS_TOKEN: pk.eyJ1Ijo...
+  - NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: (empty)
+  - NG_APP_MERCADOPAGO_PUBLIC_KEY: APP_USR-a8...
+
+> autorenta-web@0.1.0 build
+> node_modules/.bin/ng build
+
+❯ Building...
+✔ Building...
+Application bundle generation failed. [42.532 seconds] - 2025-10-28T23:03:46.447Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mThe glob pattern import("./**/*.entry.js*") did not match any files[0m [empty-glob]
+
+    node_modules/@stencil/core/internal/client/index.js:169:2:
+[37m      169 │   [32m`./${bundleId}.entry.js${BUILD5.hotModuleReplacement && hmrVers[37m...
+          ╵   [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'forRoot' does not exist on type 'typeof SupabaseClientService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.config.ts:32:26:
+[37m      32 │     SupabaseClientService.[32mforRoot[37m(),
+         ╵                           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'hasCompletedOnboarding' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:22:46:
+[37m      22 │ ...onst hasCompleted = await profileService.[32mhasCompletedOnboarding[37m();
+         ╵                                             [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'hasAcceptedTOS' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:55:45:
+[37m      55 │     const hasAccepted = await profileService.[32mhasAcceptedTOS[37m();
+         ╵                                              [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getMe' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:89:41:
+[37m      89 │     const profile = await profileService.[32mgetMe[37m();
+         ╵                                          [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getMe' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:125:41:
+[37m      125 │     const profile = await profileService.[32mgetMe[37m();
+          ╵                                          [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getMe' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:161:41:
+[37m      161 │     const profile = await profileService.[32mgetMe[37m();
+          ╵                                          [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2420: Class 'TourOrchestratorService' incorrectly implements interface 'OnDestroy'.
+  Property 'ngOnDestroy' is missing in type 'TourOrchestratorService' but required in type 'OnDestroy'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:27:13:
+[37m      27 │ export class [32mTourOrchestratorService[37m implements OnDestroy {
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  'ngOnDestroy' is declared here.
+
+    node_modules/@angular/core/index.d.ts:748:4:
+[37m      748 │     [32mngOnDestroy(): void;[37m
+          ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'loadCompletedTours' does not exist on type 'TourOrchestratorService'. Did you mean 'completeTour'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:52:9:
+[37m      52 │     this.[32mloadCompletedTours[37m();
+         ╵          [32m~~~~~~~~~~~~~~~~~~[0m
+
+  'completeTour' is declared here.
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:114:2:
+[37m      114 │   [32mcompleteTour[37m(): void {
+          ╵   [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'setupRouteListener' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:53:9:
+[37m      53 │     this.[32msetupRouteListener[37m();
+         ╵          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'shouldSkipTour' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:69:23:
+[37m      69 │     if (!force && this.[32mshouldSkipTour[37m(definition)) {
+         ╵                        [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'evaluateGuards' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:74:34:
+[37m      74 │ ...t guardsPass = await this.[32mevaluateGuards[37m(definition.guards || []);
+         ╵                              [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'enqueueTour' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:81:11:
+[37m      81 │       this.[32menqueueTour[37m({
+         ╵            [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'cleanupTour' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:107:9:
+[37m      107 │     this.[32mcleanupTour[37m();
+          ╵          [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'processQueue' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:108:9:
+[37m      108 │     this.[32mprocessQueue[37m();
+          ╵          [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'markTourCompleted' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:118:9:
+[37m      118 │     this.[32mmarkTourCompleted[37m(tourId);
+          ╵          [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'cleanupTour' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:121:9:
+[37m      121 │     this.[32mcleanupTour[37m();
+          ╵          [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'processQueue' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:122:9:
+[37m      122 │     this.[32mprocessQueue[37m();
+          ╵          [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'saveToStorage' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:135:9:
+[37m      135 │     this.[32msaveToStorage[37m(`${tourId}:dismissed-until`, resumeAt.toSt...
+          ╵          [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'cleanupTour' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:141:9:
+[37m      141 │     this.[32mcleanupTour[37m();
+          ╵          [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'clearTourStorage' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:148:9:
+[37m      148 │     this.[32mclearTourStorage[37m(tourId);
+          ╵          [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'shouldSkipTour' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:160:67:
+[37m      160 │ ...y.getAllDefinitions().filter((def) => !this.[32mshouldSkipTour[37m(def));
+          ╵                                                [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mUnexpected ";"[0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:192:24:
+[37m      192 │                         [32m;[37m
+          ╵                         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'cleanupTour' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:208:11:
+[37m      208 │       this.[32mcleanupTour[37m();
+          ╵            [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'resolveResponsiveStep' does not exist on type 'TourOrchestratorService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:218:30:
+[37m      218 │     const resolvedStep = this.[32mresolveResponsiveStep[37m(step);
+          ╵                               [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:235:14:
+[37m      235 │ ...          [32m`[TourOrchestrator] Required element not found, skip[37m...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:236:12:
+[37m      236 │             [32m)[37m;
+          ╵             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7010: 'if', which lacks return-type annotation, implicitly has an 'any' return type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:242:10:
+[37m      242 │           [32mif[37m (element && !this.resolver.isElementInViewport(eleme...
+          ╵           [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'element' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:242:14:
+[37m      242 │           if ([32melement[37m && !this.resolver.isElementInViewport(eleme...
+          ╵               [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:242:22:
+[37m      242 │           if (element [32m&&[37m !this.resolver.isElementInViewport(eleme...
+          ╵                       [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:242:26:
+[37m      242 │           if (element && ![32mthis[37m.resolver.isElementInViewport(eleme...
+          ╵                           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'element'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:242:60:
+[37m      242 │ ...    if (element && !this.resolver.isElementInViewport([32melement[37m)) {
+          ╵                                                          [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:242:68:
+[37m      242 │ ...    if (element && !this.resolver.isElementInViewport(element)[32m)[37m {
+          ╵                                                                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:243:18:
+[37m      243 │             await [32mthis[37m.resolver.scrollToElement(element);
+          ╵                   [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'element'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:243:48:
+[37m      243 │             await this.resolver.scrollToElement([32melement[37m);
+          ╵                                                 [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:245:8:
+[37m      245 │         [32m}[37m
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:248:23:
+[37m      248 │         const tourId = [32mthis[37m.state().activeTourId;
+          ╵                        [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:250:10:
+[37m      250 │           [32mthis[37m.telemetry.trackStepShown(tourId, step.id, {
+          ╵           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'step'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:250:48:
+[37m      250 │           this.telemetry.trackStepShown(tourId, [32mstep[37m.id, {
+          ╵                                                 [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'index'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:251:12:
+[37m      251 │             [32mindex[37m,
+          ╵             [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'totalSteps'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:252:19:
+[37m      252 │             total: [32mtotalSteps[37m,
+          ╵                    [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:257:8:
+[37m      257 │         [32mthis[37m.stateSignal.update((state) => ({
+          ╵         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'state' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:257:33:
+[37m      257 │         this.stateSignal.update(([32mstate[37m) => ({
+          ╵                                  [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'index'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:259:28:
+[37m      259 │           currentStepIndex: [32mindex[37m,
+          ╵                             [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:261:6:
+[37m      261 │       [32m}[37m,
+          ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:261:7:
+[37m      261 │       }[32m,[37m
+          ╵        [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:262:14:
+[37m      262 │       onHide: [32masync () => {[37m
+          ╵               [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'step'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:264:12:
+[37m      264 │         if ([32mstep[37m.onAfter) {
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'step'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:265:16:
+[37m      265 │           await [32mstep[37m.onAfter();
+          ╵                 [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:269:23:
+[37m      269 │         const tourId = [32mthis[37m.state().activeTourId;
+          ╵                        [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:271:10:
+[37m      271 │           [32mthis[37m.telemetry.trackStepCompleted(tourId, step.id);
+          ╵           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'step'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:271:52:
+[37m      271 │           this.telemetry.trackStepCompleted(tourId, [32mstep[37m.id);
+          ╵                                                     [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'onComplete'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:274:6:
+[37m      274 │       [32monComplete[37m: () => {
+          ╵       [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:274:16:
+[37m      274 │       onComplete[32m:[37m () => {
+          ╵                 [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:274:18:
+[37m      274 │       onComplete: [32m() => {[37m
+          ╵                   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:275:8:
+[37m      275 │         [32mthis[37m.completeTour();
+          ╵         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'onCancel'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:277:6:
+[37m      277 │       [32monCancel[37m: () => {
+          ╵       [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:277:14:
+[37m      277 │       onCancel[32m:[37m () => {
+          ╵               [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:277:16:
+[37m      277 │       onCancel: [32m() => {[37m
+          ╵                 [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:278:8:
+[37m      278 │         [32mthis[37m.cancelTour();
+          ╵         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:280:4:
+[37m      280 │     [32m}[37m);
+          ╵     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:280:5:
+[37m      280 │     }[32m)[37m;
+          ╵      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:281:2:
+[37m      281 │   [32m}[37m
+          ╵   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:283:2:
+[37m      283 │   [32mprivate[37m resolveResponsiveStep(step: StepDefinition): StepDefini...
+          ╵   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'resolveResponsiveStep'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:283:10:
+[37m      283 │   private [32mresolveResponsiveStep[37m(step: StepDefinition): StepDefini...
+          ╵           [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'step'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:283:32:
+[37m      283 │   private resolveResponsiveStep([32mstep[37m: StepDefinition): StepDefini...
+          ╵                                 [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:283:36:
+[37m      283 │ ...vate resolveResponsiveStep(step[32m:[37m StepDefinition): StepDefiniti...
+          ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'StepDefinition' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:283:38:
+[37m      283 │ ...ate resolveResponsiveStep(step: [32mStepDefinition[37m): StepDefinition {
+          ╵                                    [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:283:53:
+[37m      283 │ ...ate resolveResponsiveStep(step: StepDefinition)[32m:[37m StepDefinition {
+          ╵                                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guided-tour/services/tour-orchestrator.service.ts:283:55:
+[37m      283 │ ...ate resolveResponsiveStep(step: StepDefinition): [32mStepDefinition[37m {
+          ╵                                                     [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m 

@@ -62,6 +62,7 @@ export class FxService {
           variationThreshold: 0.1, // ±10%
         };
 
+        console.log(
           `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Binance: ${data.binance_rate}, Margen: ${data.margin_percent}%)`,
         );
 

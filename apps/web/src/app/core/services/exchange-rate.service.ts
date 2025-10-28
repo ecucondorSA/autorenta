@@ -58,6 +58,7 @@ export class ExchangeRateService {
 
     // Si el cache es válido (< 60s), retornar valor cacheado
     if (this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS) {
+      console.log(
         `💱 Usando cotización cacheada: 1 USD = ${this.lastRate()!.platform_rate} ARS (age: ${Math.round(cacheAge / 1000)}s)`,
       );
       return this.lastRate()!.platform_rate;
@@ -86,6 +87,7 @@ export class ExchangeRateService {
       this.lastRate.set(data as ExchangeRate);
       this.lastFetch.set(now);
 
+      console.log(
         `✅ Cotización de plataforma (con margen ${data.margin_percent}%): 1 USD = ${data.platform_rate} ARS (Binance: ${data.binance_rate})`,
       );
 

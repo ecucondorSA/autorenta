@@ -225,9 +225,6 @@ export class ProfileService {
       throw new Error(detailedError);
     }
 
-      id: data?.id,
-      full_name: data?.full_name,
-    });
     return data as UserProfile;
   }
 

@@ -28,7 +28,8 @@ export class EncryptionService {
 
   constructor() {
     if (!environment.encryptionKey) {
-        'EncryptionService: ENCRYPTION_KEY not found in environment. Tokens will not be encrypted.'
+      console.warn(
+        'EncryptionService: ENCRYPTION_KEY not found in environment. Tokens will not be encrypted.',
       );
     }
   }
@@ -143,7 +144,7 @@ export class EncryptionService {
     return crypto.subtle.deriveKey(
       {
         name: 'PBKDF2',
-        salt: salt,
+        salt: salt as BufferSource,
         iterations: this.PBKDF2_ITERATIONS,
         hash: 'SHA-256',
       },
