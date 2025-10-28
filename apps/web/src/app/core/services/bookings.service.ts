@@ -834,10 +834,10 @@ export class BookingsService {
         phone: data.phone || undefined,
         name: data.full_name || undefined,
       };
-    } catch (error: unknown) {
+    } catch (error) {
       return {
         success: false,
-        error: error.message || 'Error al obtener contacto',
+        error: error.message,
       };
     }
   }
