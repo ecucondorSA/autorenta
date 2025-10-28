@@ -1,8 +1,8 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { environment } from '@environment';
+import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
 interface DepositStats {
   total_deposits: number;

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { MyBookingsPage } from './my-bookings.page';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
+import { MyBookingsPage } from './my-bookings.page';
 
 describe('MyBookingsPage - Sprint 3', () => {
   let component: MyBookingsPage;

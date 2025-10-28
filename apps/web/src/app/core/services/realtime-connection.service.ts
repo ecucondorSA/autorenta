@@ -88,8 +88,8 @@ export class RealtimeConnectionService {
   ): RealtimeChannel {
     const channel = this.supabase
       .channel(channelName)
-      .on(
-        'postgres_changes' as any,
+      .on<T>(
+        'postgres_changes',
         {
           event: config.event,
           schema: config.schema,

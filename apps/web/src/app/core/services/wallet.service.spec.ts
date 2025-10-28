@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { environment } from '../../../environments/environment';
 import { WalletService } from './wallet.service';
 import { SupabaseClientService } from './supabase-client.service';
-import { environment } from '../../../environments/environment';
 
 describe('WalletService', () => {
   let service: WalletService;

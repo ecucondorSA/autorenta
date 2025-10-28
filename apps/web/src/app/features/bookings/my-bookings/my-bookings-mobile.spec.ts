@@ -9,9 +9,9 @@ import {
   meetsMinimumTouchTarget,
   isElementInViewport,
 } from '../../../../testing/helpers/responsive-test-helpers';
-import { MyBookingsPage } from './my-bookings.page';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
+import { MyBookingsPage } from './my-bookings.page';
 
 /**
  * SPRINT 6 - Tests de Responsive Design y Funcionalidad Móvil
