@@ -503,9 +503,7 @@ Copilot está monitoreando tu trabajo cada 3 segundos via TMUX:
 
 ---
 
-## 📊 PROGRESO - FASE 1
-
-Actualiza este checklist a medida que completes:
+## 📊 PROGRESO - FASE 1 ✅ **COMPLETADA**
 
 - [x] ✅ 1.1: Estructura de directorios creada
 - [x] ✅ 1.1: README.md de secrets
@@ -518,25 +516,117 @@ Actualiza este checklist a medida que completes:
 - [x] ✅ 1.4: GITHUB_SECRETS_SETUP.md
 - [x] ✅ 1.5: TEST_USERS_SETUP.md
 - [x] ✅ 1.6: PRODUCTION_READINESS_BASELINE.md
-- [ ] ⏳ 1.7: Ejecutar scripts de setup (GitHub secrets, test users)
+- [x] ✅ 1.7: GitHub secrets configurados (11 secrets)
+- [x] ✅ 1.8: Test users creados (3 usuarios)
+
+**Completado**: 2025-10-28 11:44 UTC  
+**Impacto**: Seguridad 0% → 50%
 
 ---
 
-## 🚀 FASE 2 (SIGUIENTE - Esperar a que Copilot termine su parte)
+## 🚀 FASE 2 - DOCS TÉCNICAS (EN PROGRESO)
 
-Una vez completes FASE 1, reporta aquí:
-```
-✅ FASE 1 COMPLETA - [timestamp]
-Archivos creados: [número]
-Secrets auditados: [número]
-Runbooks creados: [número]
+✅ **FASE 1 COMPLETA** - 2025-10-28 11:44 UTC
+- Archivos creados: 11 docs (~95 KB)
+- Secrets configurados: 11 GitHub + 3 test users
+- Runbooks creados: 3 operativos
+
+⏳ **FASE 2A EN PROGRESO** - 2025-10-28 12:10 UTC
+- [x] ✅ SPEC_BOOKING_RISK_SNAPSHOT_FIX.md (11 KB)
+- [x] ✅ SPEC_CAR_NAME_DISPLAY_FIX.md (14 KB)
+- [ ] ⏳ SPEC_MP_ONBOARDING_VALIDATION.md
+- [ ] ⏳ SPEC_SPLIT_PAYMENT_AUTOMATION.md
+- [ ] ⏳ SPEC_TEST_ENVIRONMENT_SEPARATION.md
+
+### FASE 2A: Documentación Técnica para Copilot (TU TAREA)
+
+**Objetivo**: Crear especificaciones técnicas detalladas para que Copilot implemente fixes
+
+**Deliverables** (Crear en `docs/technical-specs/`):
+
+1. **`SPEC_BOOKING_RISK_SNAPSHOT_FIX.md`**
+   - Problema actual (tabla singular vs plural)
+   - Schema SQL requerido
+   - Cambios en código TypeScript
+   - Tests de validación
+   - Rollout plan (migración de datos)
+
+2. **`SPEC_CAR_NAME_DISPLAY_FIX.md`**
+   - Función actual vs esperada
+   - Implementación propuesta
+   - Casos edge (car_id inválido, datos faltantes)
+   - Tests unitarios y E2E
+
+3. **`SPEC_MP_ONBOARDING_VALIDATION.md`**
+   - Flujo actual de publicación
+   - Validación requerida
+   - Estados de auto (pending_onboarding, active)
+   - Mensajes al usuario
+   - Schema changes (nueva columna)
+   - Tests
+
+4. **`SPEC_SPLIT_PAYMENT_AUTOMATION.md`**
+   - Arquitectura actual vs propuesta
+   - Webhook resilience (retries, dead letter queue)
+   - Columna payout_status
+   - Cron job para retries
+   - Monitoring y alertas
+   - Tests de integración
+
+5. **`SPEC_TEST_ENVIRONMENT_SEPARATION.md`**
+   - Environment variables structure
+   - Mock de Mercado Pago API
+   - Test data seeding
+   - Playwright config changes
+   - CI/CD pipeline updates
+
+**Formato de cada SPEC**:
+```markdown
+# [Título del Fix]
+
+## Problema Actual
+[Descripción detallada con código actual]
+
+## Solución Propuesta
+[Arquitectura, diagramas si aplica]
+
+## Cambios Requeridos
+
+### Database
+```sql
+-- Scripts DDL/DML
 ```
 
-Luego esperaremos sincronización con Copilot para:
-- Aplicar fixes de secrets en código
-- Implementar validaciones MP onboarding
-- Corregir bugs de checkout
-- Separar test environment
+### Backend/Workers
+```typescript
+// Código propuesto
+```
+
+### Frontend
+```typescript
+// Cambios en UI
+```
+
+## Tests
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] E2E tests
+
+## Rollout Plan
+1. Step 1
+2. Step 2
+...
+
+## Rollback Plan
+[Cómo revertir si algo falla]
+
+## Monitoring
+- Métricas a trackear
+- Alerts a configurar
+```
+
+**Tiempo estimado**: 3-4 horas  
+**Copilot usará estos docs** para implementar fixes sin ambigüedad
 
 ---
 

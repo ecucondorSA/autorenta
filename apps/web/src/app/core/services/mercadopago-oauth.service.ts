@@ -1,0 +1,282 @@
+import { Injectable, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { SupabaseClientService } from './supabase-client.service';
+
+export interface MercadoPagoConnectionStatus {
+  connected: boolean;
+  collector_id?: string;
+  connected_at?: string;
+  account_type?: string;
+  country?: string;
+  token_expired?: boolean;
+  needs_refresh?: boolean;
+}
+
+export interface ConnectMercadoPagoResponse {
+  success: boolean;
+  authorization_url?: string;
+  redirect_uri?: string;
+  state?: string;
+  message?: string;
+  error?: string;
+  details?: string;
+}
+
+export interface OAuthCallbackResponse {
+  success: boolean;
+  message?: string;
+  collector_id?: string;
+  account_info?: {
+    email?: string;
+    name?: string;
+    country?: string;
+    site_id?: string;
+  };
+  live_mode?: boolean;
+  error?: string;
+  error_description?: string;
+}
+
+/**
+ * Servicio para gestionar el flujo de OAuth con MercadoPago
+ *
+ * Permite a los dueños de autos conectar su cuenta de MercadoPago
+ * para recibir pagos directos mediante split payments.
+ */
+@Injectable({
+  providedIn: 'root',
+})
+export class MercadoPagoOAuthService {
+  private supabase = inject(SupabaseClientService).getClient();
+  private router = inject(Router);
+
+  /**
+   * Inicia el flujo de OAuth con MercadoPago
+   *
+   * @param redirectUri - URL personalizada de callback (opcional)
+   * @returns Promise que se resuelve cuando se redirige a MercadoPago
+   */
+  async connectMercadoPago(redirectUri?: string): Promise<void> {
+    try {
+      console.log('[OAuth] Iniciando conexión con MercadoPago...');
+
+      // Usar redirect URI personalizada o default
+      const callbackUri =
+        redirectUri || window.location.origin + '/auth/mercadopago/callback';
+
+      console.log('[OAuth] Redirect URI:', callbackUri);
+
+      const { data, error } = await this.supabase.functions.invoke(
+        'mercadopago-oauth-connect',
+        {
+          body: {
+            redirect_uri: callbackUri,
+          },
+        }
+      );
+
+      if (error) {
+        console.error('[OAuth Connect Error]', error);
+        throw new Error(error.message || 'Error al conectar con MercadoPago');
+      }
+
+      const response = data as ConnectMercadoPagoResponse;
+
+      if (!response?.success || !response.authorization_url) {
+        console.error('[OAuth Connect Failed]', response);
+        throw new Error(response?.error || 'No se pudo generar URL de autorización');
+      }
+
+      console.log('[OAuth] URL de autorización generada');
+      console.log('[OAuth] Redirigiendo a MercadoPago...');
+
+      // Redirigir a MercadoPago para autorización
+      window.location.href = response.authorization_url;
+    } catch (err: any) {
+      console.error('[OAuth Connect Exception]', err);
+      throw new Error(err.message || 'Error inesperado al conectar con MercadoPago');
+    }
+  }
+
+  /**
+   * Procesa el callback de MercadoPago después de la autorización
+   *
+   * @param code - Código de autorización de MercadoPago
+   * @param state - Token de seguridad (CSRF protection)
+   * @returns Promise<boolean> - true si la conexión fue exitosa
+   */
+  async handleCallback(code: string, state: string): Promise<boolean> {
+    try {
+      console.log('[OAuth Callback] Procesando callback...');
+      console.log('[OAuth Callback] Code:', code ? 'presente' : 'faltante');
+      console.log('[OAuth Callback] State:', state ? 'presente' : 'faltante');
+
+      const { data, error } = await this.supabase.functions.invoke(
+        'mercadopago-oauth-callback',
+        {
+          body: { code, state },
+        }
+      );
+
+      if (error) {
+        console.error('[OAuth Callback Error]', error);
+        throw new Error(error.message || 'Error procesando callback');
+      }
+
+      const response = data as OAuthCallbackResponse;
+
+      if (!response?.success) {
+        console.error('[OAuth Callback Failed]', response);
+        throw new Error(
+          response?.error || response?.error_description || 'Error en la autorización'
+        );
+      }
+
+      console.log('[OAuth Callback] ✅ Conexión exitosa');
+      console.log('[OAuth Callback] Collector ID:', response.collector_id);
+
+      return true;
+    } catch (err: any) {
+      console.error('[OAuth Callback Exception]', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Verifica el estado de la conexión con MercadoPago
+   *
+   * @returns Promise<MercadoPagoConnectionStatus>
+   */
+  async checkConnection(): Promise<MercadoPagoConnectionStatus> {
+    try {
+      console.log('[OAuth] Verificando estado de conexión...');
+
+      const { data, error } = await this.supabase.rpc('check_mercadopago_connection');
+
+      if (error) {
+        console.error('[Check Connection Error]', error);
+        return { connected: false };
+      }
+
+      const status = (data as MercadoPagoConnectionStatus) || { connected: false };
+
+      console.log(
+        '[OAuth] Estado:',
+        status.connected ? '✅ Conectado' : '❌ No conectado'
+      );
+
+      if (status.connected && status.collector_id) {
+        console.log('[OAuth] Collector ID:', status.collector_id);
+      }
+
+      return status;
+    } catch (err: any) {
+      console.error('[Check Connection Exception]', err);
+      return { connected: false };
+    }
+  }
+
+  /**
+   * Desconecta la cuenta de MercadoPago del usuario
+   *
+   * @returns Promise<boolean> - true si la desconexión fue exitosa
+   */
+  async disconnect(): Promise<boolean> {
+    try {
+      console.log('[OAuth] Desconectando cuenta de MercadoPago...');
+
+      const { data, error } = await this.supabase.rpc('disconnect_mercadopago');
+
+      if (error) {
+        console.error('[Disconnect Error]', error);
+        throw new Error(error.message || 'Error al desconectar cuenta');
+      }
+
+      const response = data as { success: boolean; error?: string; warning?: string };
+
+      if (!response?.success) {
+        console.error('[Disconnect Failed]', response);
+        throw new Error(response?.error || 'No se pudo desconectar la cuenta');
+      }
+
+      console.log('[OAuth] ✅ Cuenta desconectada exitosamente');
+
+      return true;
+    } catch (err: any) {
+      console.error('[Disconnect Exception]', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Obtiene la información del perfil con datos de MercadoPago
+   *
+   * @returns Promise con los datos del perfil
+   */
+  async getProfile(): Promise<{
+    mercadopago_connected?: boolean;
+    mercadopago_collector_id?: string;
+    mercadopago_connected_at?: string;
+    mercadopago_account_type?: string;
+    mercadopago_country?: string;
+  } | null> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+
+      if (!user) {
+        return null;
+      }
+
+      const { data, error } = await this.supabase
+        .from('profiles')
+        .select(
+          `
+          mercadopago_connected,
+          mercadopago_collector_id,
+          mercadopago_connected_at,
+          mercadopago_account_type,
+          mercadopago_country
+        `
+        )
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error('[Get Profile Error]', error);
+        return null;
+      }
+
+      return data;
+    } catch (err: any) {
+      console.error('[Get Profile Exception]', err);
+      return null;
+    }
+  }
+
+  /**
+   * Verifica si el usuario actual puede publicar autos
+   * (necesita tener MercadoPago conectado para split payments)
+   *
+   * @returns Promise<boolean>
+   */
+  async canPublishCars(): Promise<boolean> {
+    const status = await this.checkConnection();
+    return status.connected;
+  }
+
+  /**
+   * Redirige al usuario a la página de conexión de MercadoPago
+   */
+  navigateToConnect(): void {
+    this.router.navigate(['/profile/mercadopago-connect']);
+  }
+
+  /**
+   * Redirige al usuario a su perfil después de conectar
+   */
+  navigateToProfile(): void {
+    this.router.navigate(['/profile']);
+  }
+}

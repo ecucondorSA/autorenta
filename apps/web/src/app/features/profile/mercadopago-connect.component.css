@@ -1,0 +1,392 @@
+.mercadopago-connect-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 32px 16px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Header */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.btn-back:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+/* Alertas */
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.alert-error {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef5350;
+}
+
+.alert-success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #66bb6a;
+}
+
+/* Card principal */
+.mercadopago-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 48px;
+  text-align: center;
+}
+
+/* Estados conectado y desconectado */
+.connected-state,
+.disconnected-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Íconos de estado */
+.status-icon {
+  margin-bottom: 24px;
+}
+
+.status-icon.success svg circle {
+  fill: rgba(76, 175, 80, 0.2);
+}
+
+.status-icon.success svg path {
+  stroke: #4CAF50;
+}
+
+.status-icon.warning svg circle {
+  fill: rgba(255, 152, 0, 0.2);
+}
+
+.status-icon.warning svg path {
+  stroke: #FF9800;
+}
+
+.status-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px 0;
+}
+
+.status-description {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 32px 0;
+  max-width: 500px;
+}
+
+/* Info de la cuenta */
+.account-info {
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+code.info-value {
+  background: #e3f2fd;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 13px;
+}
+
+/* Token warning */
+.token-warning {
+  background: #fff3e0;
+  border: 1px solid #ffb74d;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  color: #e65100;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Beneficios */
+.benefits-connected {
+  background: #e8f5e9;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  text-align: left;
+  width: 100%;
+  max-width: 500px;
+}
+
+.benefits-connected h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2e7d32;
+  margin: 0 0 16px 0;
+}
+
+.benefits-connected ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefits-connected li {
+  font-size: 14px;
+  color: #1b5e20;
+  margin: 8px 0;
+  padding-left: 8px;
+}
+
+.benefits-list {
+  margin-bottom: 32px;
+  text-align: left;
+  width: 100%;
+  max-width: 600px;
+}
+
+.benefits-list h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 24px 0;
+}
+
+.benefit-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: flex-start;
+}
+
+.benefit-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.benefit-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+}
+
+.benefit-content p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Cómo funciona */
+.how-it-works {
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  text-align: left;
+  width: 100%;
+  max-width: 600px;
+}
+
+.how-it-works h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+.how-it-works ol {
+  margin: 0;
+  padding-left: 24px;
+}
+
+.how-it-works li {
+  font-size: 14px;
+  color: #666;
+  margin: 12px 0;
+  line-height: 1.6;
+}
+
+/* Nota de seguridad */
+.security-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #e3f2fd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 24px;
+  font-size: 13px;
+  color: #01579b;
+  text-align: left;
+}
+
+/* Acciones */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 32px;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #009ee3;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #007bb5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 158, 227, 0.3);
+}
+
+.btn-secondary {
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+/* Spinner */
+.spinner-small {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mercadopago-card {
+    padding: 32px 24px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .status-title {
+    font-size: 22px;
+  }
+
+  .benefit-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .how-it-works,
+  .benefits-list {
+    max-width: 100%;
+  }
+}

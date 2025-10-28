@@ -127,7 +127,7 @@ export class BookingsService {
           .single();
 
         if (!carError && car) {
-          (booking as Booking).car = car;
+          (booking as Booking).car = car as any; // Partial select, not full Car object
         } else if (carError) {
           console.warn('⚠️ No se pudo cargar datos del auto:', carError.message);
         }

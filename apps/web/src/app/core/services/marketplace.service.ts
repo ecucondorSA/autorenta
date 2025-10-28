@@ -147,14 +147,9 @@ export class MarketplaceService {
    * En Angular, estas deben estar en window.env (inyectadas en build time)
    */
   private getEnvVar(key: string): string | undefined {
-    // Primero intentar obtener de window.env (producción)
+    // Obtener de window.env (generado por scripts/generate-env.js)
     if (typeof window !== 'undefined' && (window as any).env) {
       return (window as any).env[key];
-    }
-
-    // Fallback a process.env (desarrollo)
-    if (typeof process !== 'undefined' && process.env) {
-      return process.env[key];
     }
 
     return undefined;
