@@ -91,7 +91,6 @@ export class PaymentsService {
       .single();
 
     if (error) {
-      console.error('Error creating payment intent:', error);
       throw new Error(`Error al crear payment intent: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     }
     return data as PaymentIntent;
@@ -112,7 +111,6 @@ export class PaymentsService {
       );
     }
 
-    console.warn('⚠️ markAsPaid() solo debe usarse en desarrollo');
 
     const workerUrl = environment.paymentsWebhookUrl;
     if (!workerUrl) {
@@ -161,7 +159,6 @@ export class PaymentsService {
       );
     }
 
-    console.warn('⚠️ triggerMockPayment() - Solo para desarrollo/testing');
 
     const workerUrl = environment.paymentsWebhookUrl;
     if (!workerUrl) {
@@ -249,11 +246,9 @@ export class PaymentsService {
 
       throw new Error('El pago no se completó correctamente');
     } catch (error: unknown) {
-      console.error('Error en processPayment:', error);
 
       // Retry logic para errores de red
       if (retryCount < MAX_RETRIES && this.isRetryableError(error)) {
-        console.log(`Reintentando pago (${retryCount + 1}/${MAX_RETRIES})...`);
         await this.delay(1000 * (retryCount + 1)); // Backoff exponencial
         return this.processPayment(bookingId, retryCount + 1);
       }

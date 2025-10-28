@@ -284,7 +284,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     const isDev = !window.location.hostname.includes('autorentar.com');
     if (isDev) {
       this.guidedTour.enableDebug();
-      console.log('🧭 Guided Tour System: Debug mode enabled');
     }
 
     // Tours are now managed by TourOrchestrator based on:
@@ -304,7 +303,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.userProfile.set(profile as Record<string, unknown> | null);
     } catch (error) {
       // Silently fail - avatar will show placeholder
-      console.debug('Could not load user profile for avatar:', error);
     }
   }
 }

@@ -98,7 +98,6 @@ export class BankAccountFormComponent implements OnInit {
         govIdNumber: profile.gov_id_number,
       });
     } catch (error) {
-      console.error('Error loading profile:', error);
       this.profileError.set('Error al cargar tu perfil');
     }
   }

@@ -129,7 +129,6 @@ export class ReviewManagementComponent implements OnInit {
         this.canReview.set(false);
       }
     } catch (error) {
-      console.error('Error checking review status:', error);
     }
   }
 
@@ -158,7 +157,6 @@ export class ReviewManagementComponent implements OnInit {
         alert(`Error al enviar la review: ${result.error}`);
       }
     } catch (error) {
-      console.error('Error submitting review:', error);
       alert('Error al enviar la review. Intentá nuevamente.');
     } finally {
       this.isSubmittingReview.set(false);
@@ -214,7 +212,6 @@ export class ReviewManagementComponent implements OnInit {
         reviewType,
       });
     } catch (error) {
-      console.error('Error loading review data:', error);
     }
   }
 }

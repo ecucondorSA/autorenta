@@ -45,7 +45,6 @@ export class MercadoPagoBookingGatewayService {
   createBookingPreference(bookingId: string): Observable<MercadoPagoPreferenceResponse> {
     return from(this._createPreference(bookingId)).pipe(
       catchError((err) => {
-        console.error('Error creating MercadoPago preference:', err);
         return throwError(() => new Error(this.formatError(err)));
       }),
     );
@@ -150,7 +149,6 @@ export class MercadoPagoBookingGatewayService {
       // La preferencia es válida si el booking no ha sido pagado aún
       return booking.status === 'pending';
     } catch (err) {
-      console.error('Error checking preference validity:', err);
       return false;
     }
   }

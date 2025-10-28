@@ -460,7 +460,6 @@ export class InsuranceSelectorComponent implements OnInit {
       // Emitir costo inicial
       this.totalCostChange.emit(this.totalInsuranceCost);
     } catch (error) {
-      console.error('Error loading insurance data:', error);
     } finally {
       this.loading = false;
     }

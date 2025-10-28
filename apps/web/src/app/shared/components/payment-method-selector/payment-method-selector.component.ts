@@ -149,7 +149,6 @@ export class PaymentMethodSelectorComponent implements OnInit {
     try {
       await this.walletService.getBalance();
     } catch (err) {
-      console.error('Error loading wallet balance:', err);
     } finally {
       this.isLoadingBalance.set(false);
     }

@@ -1138,7 +1138,6 @@ export class PublishCarV2Page implements OnInit {
         await this.promptMarketplaceOnboarding(userId);
       }
     } catch (error) {
-      console.error('Error checking marketplace onboarding:', error);
       this.mpStatusError.set(
         error instanceof Error
           ? error.message
@@ -1157,7 +1156,6 @@ export class PublishCarV2Page implements OnInit {
     const { data, error } = await this.supabaseClient.getClient().auth.getUser();
 
     if (error) {
-      console.error('Error fetching current user:', error);
       return null;
     }
 
@@ -1186,7 +1184,6 @@ export class PublishCarV2Page implements OnInit {
         this.mpReminderDismissed.set(false);
       }
     } catch (error) {
-      console.error('Error refreshing marketplace snapshot:', error);
       this.mpStatusError.set(
         error instanceof Error
           ? error.message
@@ -1200,7 +1197,6 @@ export class PublishCarV2Page implements OnInit {
     const completed = await this.presentOnboardingModal(userId);
 
     if (completed || this.mpReady()) {
-      console.log('✅ Mercado Pago vinculado correctamente');
       return;
     }
 
@@ -1316,7 +1312,6 @@ export class PublishCarV2Page implements OnInit {
       this.brands.set(brandsData as CarBrand[]);
       this.models.set(modelsData as CarModel[]);
     } catch (error) {
-      console.error('Error loading data:', error);
       alert('Error al cargar marcas y modelos. Por favor recarga la página.');
     }
   }
@@ -1347,11 +1342,9 @@ export class PublishCarV2Page implements OnInit {
         });
 
         this.autofilledFromLast.set(true);
-        console.log('✅ Formulario autocompletado desde última publicación');
       }
     } catch {
       // Silently fail - not critical
-      console.log('No previous car found for autofill');
     }
   }
 
@@ -1401,9 +1394,7 @@ export class PublishCarV2Page implements OnInit {
       // Trigger brand change to load models for the selected brand
       this.onBrandChange();
 
-      console.log('✅ Formulario cargado con datos del auto para edición');
     } catch (error) {
-      console.error('Error loading car for editing:', error);
       alert('Error al cargar el auto. Por favor intenta nuevamente.');
       await this.router.navigate(['/cars/my']);
     }
@@ -1451,7 +1442,6 @@ export class PublishCarV2Page implements OnInit {
           continue;
         }
 
-        console.log(`[Upload] Processing ${file.name}...`);
 
         // Usar imagen original directamente
         const processedFile = file;
@@ -1499,7 +1489,6 @@ export class PublishCarV2Page implements OnInit {
     this.isGeneratingAIPhotos.set(true);
 
     try {
-      console.log('[AI Photos] Generating photos for:', brand.name, model.name);
 
       const enhancedPhotos = await this.aiPhotoEnhancer.generateCarPhotos({
         brand: brand.name,
@@ -1510,7 +1499,6 @@ export class PublishCarV2Page implements OnInit {
         method: 'cloudflare-ai', // Usar Cloudflare AI en lugar de stock photos
       });
 
-      console.log(`[AI Photos] ✅ Generated ${enhancedPhotos.length} photos`);
 
       // Agregar las fotos generadas a la lista
       for (const enhancedPhoto of enhancedPhotos) {
@@ -1532,7 +1520,6 @@ export class PublishCarV2Page implements OnInit {
         `✅ Se generaron ${enhancedPhotos.length} fotos con IA. Puedes agregar más o reemplazarlas.`,
       );
     } catch (error) {
-      console.error('[AI Photos] Error:', error);
       alert(
         'No pudimos generar las fotos con IA. Por favor, sube tus propias fotos o intenta de nuevo.',
       );
@@ -1554,17 +1541,14 @@ export class PublishCarV2Page implements OnInit {
           longitude: position.coords.longitude,
         };
         this.manualCoordinates.set(coords);
-        console.log('📍 Ubicación actual capturada:', coords);
 
         // Perform reverse geocoding to auto-fill address fields
         try {
-          console.log('🔄 Reverse geocoding coordinates...');
           const addressResult = await this.geocodingService.reverseGeocode(
             coords.latitude,
             coords.longitude,
           );
 
-          console.log('✅ Reverse geocoding result:', addressResult);
 
           // Auto-fill address fields from reverse geocoding
           this.publishForm.patchValue({
@@ -1576,9 +1560,7 @@ export class PublishCarV2Page implements OnInit {
           });
 
           alert('✅ Ubicación capturada y dirección autocompletada correctamente.');
-          console.log('✅ Formulario autocompletado con dirección desde GPS');
         } catch (reverseGeoError) {
-          console.warn('⚠️ Reverse geocoding failed:', reverseGeoError);
           // Still keep the coordinates even if reverse geocoding fails
           alert(
             'Coordenadas capturadas, pero no se pudo obtener la dirección automáticamente. Por favor ingresa la dirección manualmente.',
@@ -1586,7 +1568,6 @@ export class PublishCarV2Page implements OnInit {
         }
       },
       (error) => {
-        console.error('Error obteniendo ubicación:', error);
 
         let errorMessage = 'No se pudo obtener tu ubicación. ';
 
@@ -1655,10 +1636,8 @@ export class PublishCarV2Page implements OnInit {
       if (manualCoords) {
         location_lat = manualCoords.latitude;
         location_lng = manualCoords.longitude;
-        console.log(`✅ Using manual coordinates: ${location_lat}, ${location_lng}`);
       } else {
         // Geocode if user didn't use the map
-        console.log('🌍 Geocoding address...');
         try {
           const geocodingResult = await this.geocodingService.geocodeStructuredAddress(
             formValue.location_street as string,
@@ -1670,9 +1649,7 @@ export class PublishCarV2Page implements OnInit {
 
           location_lat = geocodingResult.latitude;
           location_lng = geocodingResult.longitude;
-          console.log(`✅ Geocoding success: ${location_lat}, ${location_lng}`);
         } catch (geocodingError) {
-          console.warn('⚠️ Geocoding failed, trying city fallback...', geocodingError);
 
           // Fallback: Try geocoding just the city
           try {
@@ -1682,9 +1659,7 @@ export class PublishCarV2Page implements OnInit {
             );
             location_lat = cityResult.latitude;
             location_lng = cityResult.longitude;
-            console.log(`✅ City fallback success: ${location_lat}, ${location_lng}`);
           } catch (cityError) {
-            console.error('❌ City geocoding also failed:', cityError);
             alert(
               'No se pudieron obtener las coordenadas de la dirección. Por favor verifica la ubicación.',
             );
@@ -1741,11 +1716,9 @@ export class PublishCarV2Page implements OnInit {
       if (this.editMode() && this.editingCarId()) {
         // Update existing car
         resultCar = await this.carsService.updateCar(this.editingCarId()!, carData);
-        console.log('✅ Auto actualizado exitosamente');
       } else {
         // Create new car
         resultCar = await this.carsService.createCar(carData);
-        console.log('✅ Auto creado exitosamente');
       }
 
       // Upload new photos (only if there are any)
@@ -1754,7 +1727,6 @@ export class PublishCarV2Page implements OnInit {
           const photo = this.uploadedPhotos()[i];
           await this.carsService.uploadPhoto(photo.file, resultCar.id, i);
         }
-        console.log(`✅ ${this.uploadedPhotos().length} fotos subidas`);
       }
 
       if (!mpReady) {
@@ -1772,7 +1744,6 @@ export class PublishCarV2Page implements OnInit {
       alert(message);
       await this.router.navigate(['/cars/my']);
     } catch (error) {
-      console.error('Error publishing car:', error);
       alert('Error al publicar el auto. Por favor intenta nuevamente.');
     } finally {
       this.isSubmitting.set(false);

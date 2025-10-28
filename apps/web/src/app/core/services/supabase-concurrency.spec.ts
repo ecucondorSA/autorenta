@@ -45,9 +45,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       const totalErrors = results.reduce((sum, r) => sum + r.errors, 0);
       expect(totalErrors).toBe(0);
 
-      console.log(`✅ ${userCount} usuarios completados en ${elapsedTime}ms`);
-      console.log(`📊 Total queries: ${totalQueries}`);
-      console.log(`❌ Total errores: ${totalErrors}`);
     }, 10000); // Timeout de 10 segundos
 
     it('no debe tener errores de "too many connections"', async () => {
@@ -82,7 +79,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       const successfulSearches = results.filter((r) => r.success);
       expect(successfulSearches.length).toBe(userCount);
 
-      console.log(`✅ Búsquedas exitosas: ${successfulSearches.length}/${userCount}`);
     });
 
     it('debe completar todas las consultas exitosamente', async () => {
@@ -117,8 +113,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       expect(completedQueries).toBe(userCount * 3); // 10 usuarios × 3 queries cada uno
       expect(failedQueries).toBe(0);
 
-      console.log(`✅ Queries completadas: ${completedQueries}`);
-      console.log(`❌ Queries fallidas: ${failedQueries}`);
     });
   });
 
@@ -151,7 +145,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       // Debe completarse en tiempo razonable (< 3 segundos)
       expect(elapsedTime).toBeLessThan(3000);
 
-      console.log(`🚀 Pico de ${burstSize} queries en ${elapsedTime}ms`);
     });
 
     it('debe recuperarse de errores transitorios', async () => {
@@ -187,8 +180,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       const successful = results.filter((r) => r.success);
       expect(successful.length).toBeGreaterThanOrEqual(queryCount * 0.8);
 
-      console.log(`✅ Exitosas: ${successful.length}/${queryCount}`);
-      console.log(`🔄 Reintentos totales: ${retryCount}`);
     });
 
     it('debe distribuir carga uniformemente', async () => {
@@ -218,8 +209,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       const variation = ((maxTime - minTime) / avgTime) * 100;
       expect(variation).toBeLessThan(50);
 
-      console.log(`📊 Tiempos de batch (ms): ${batchTimings.join(', ')}`);
-      console.log(`📊 Variación: ${variation.toFixed(1)}%`);
     });
   });
 
@@ -274,8 +263,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       // Debe haber diferencia medible (queries en cola son más lentas)
       expect(avgQueuedTime).toBeGreaterThan(avgFastTime);
 
-      console.log(`⚡ Primeras 15 queries: ${avgFastTime.toFixed(1)}ms`);
-      console.log(`⏳ Queries en cola: ${avgQueuedTime.toFixed(1)}ms`);
     });
   });
 });

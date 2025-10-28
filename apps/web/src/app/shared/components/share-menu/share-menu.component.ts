@@ -47,7 +47,6 @@ export class ShareMenuComponent {
 
     if (contacts && contacts.length > 0) {
       // Aquí podrías enviar emails o crear mensajes
-      console.log('Compartir con:', contacts);
 
       // Por ahora, mostrar mensaje de éxito
       alert(`Se compartirá con ${contacts.length} contacto(s)`);

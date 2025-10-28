@@ -71,7 +71,6 @@ export class HomePage implements OnInit {
       const cars = await this.carsService.listActiveCars({});
       this.featuredCars = cars.slice(0, 6);
     } catch (error) {
-      console.error('Error loading featured cars:', error);
     } finally {
       this.loading = false;
     }
@@ -84,6 +83,5 @@ export class HomePage implements OnInit {
   }
 
   onSearch() {
-    console.log('Search:', this.searchQuery);
   }
 }

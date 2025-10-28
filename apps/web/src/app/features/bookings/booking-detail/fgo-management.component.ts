@@ -352,7 +352,6 @@ export class FgoManagementComponent implements OnInit {
       const policy = await this.riskMatrixService.getRiskPolicy(carValue);
       this.riskPolicy.set(policy);
     } catch (error) {
-      console.error('Error obteniendo política de riesgo:', error);
     }
   }
 
@@ -372,7 +371,6 @@ export class FgoManagementComponent implements OnInit {
       const inspections = await firstValueFrom(this.fgoService.getInspections(this.booking.id));
       this.inspections.set(inspections);
     } catch (error) {
-      console.error('Error loading FGO data:', error);
     } finally {
       this.fgoLoading.set(false);
     }
@@ -427,7 +425,6 @@ export class FgoManagementComponent implements OnInit {
         alert(`Error al procesar claim: ${result.error}`);
       }
     } catch (error) {
-      console.error('Error processing claim:', error);
       alert('Error al procesar claim');
     } finally {
       this.claimProcessing.set(false);

@@ -58,7 +58,6 @@ export class AiPhotoEnhancerService {
   }): Promise<EnhancedPhoto[]> {
     const count = params.count || 3;
 
-    console.log('[AiPhotoEnhancer] Searching stock photos...');
 
     // 1. Buscar fotos de stock
     const stockPhotos = await this.stockPhotos.searchCarPhotos(params);
@@ -70,7 +69,6 @@ export class AiPhotoEnhancerService {
     // 2. Tomar las mejores N fotos
     const selectedPhotos = stockPhotos.slice(0, count);
 
-    console.log(`[AiPhotoEnhancer] Processing ${selectedPhotos.length} photos...`);
 
     // 3. Descargar cada foto
     const enhanced: EnhancedPhoto[] = [];
@@ -97,12 +95,10 @@ export class AiPhotoEnhancerService {
         // Track download (requerido por Unsplash)
         await this.stockPhotos.trackDownload(stockPhoto.id);
       } catch (error) {
-        console.error('[AiPhotoEnhancer] Failed to process photo:', error);
         // Continuar con las demás fotos
       }
     }
 
-    console.log(`[AiPhotoEnhancer] ✅ Generated ${enhanced.length} stock photos`);
 
     return enhanced;
   }
@@ -125,7 +121,6 @@ export class AiPhotoEnhancerService {
           ? ['3/4-front', 'side']
           : ['3/4-front', 'side', 'interior'];
 
-    console.log(`[AiPhotoEnhancer] Generating ${count} images with Cloudflare AI...`);
 
     const enhanced: EnhancedPhoto[] = [];
 
@@ -157,12 +152,10 @@ export class AiPhotoEnhancerService {
           source: 'cloudflare-ai',
         });
       } catch (error) {
-        console.error('[AiPhotoEnhancer] Failed to generate AI image:', error);
         // Continuar con las demás imágenes
       }
     }
 
-    console.log(`[AiPhotoEnhancer] ✅ Generated ${enhanced.length} AI images`);
 
     return enhanced;
   }
@@ -171,7 +164,6 @@ export class AiPhotoEnhancerService {
    * Mejora una foto existente (actualmente sin procesamiento adicional)
    */
   async enhanceExistingPhoto(photo: File): Promise<EnhancedPhoto> {
-    console.log('[AiPhotoEnhancer] Processing existing photo...');
 
     // Usar foto original sin modificaciones
     const enhancedBlob = new Blob([photo], { type: photo.type });

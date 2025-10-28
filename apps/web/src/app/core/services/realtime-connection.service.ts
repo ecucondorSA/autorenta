@@ -65,7 +65,6 @@ export class RealtimeConnectionService {
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
     onStatusChange?: (status: ConnectionStatus) => void
   ): RealtimeChannel {
-    console.log(`[Realtime] Subscribing to channel: ${channelName}`);
 
     // Remove existing channel if any
     this.unsubscribe(channelName);
@@ -102,7 +101,6 @@ export class RealtimeConnectionService {
           filter: config.filter,
         },
         (payload: RealtimePostgresChangesPayload<T>) => {
-          console.log(`[Realtime] ${channelName} received data:`, payload.eventType);
           handler(payload);
         }
       )
@@ -123,7 +121,6 @@ export class RealtimeConnectionService {
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
     onStatusChange?: (status: ConnectionStatus) => void
   ): void {
-    console.log(`[Realtime] Channel ${channelName} status: ${status}`);
 
     switch (status) {
       case 'SUBSCRIBED':
@@ -143,7 +140,6 @@ export class RealtimeConnectionService {
         break;
 
       default:
-        console.log(`[Realtime] Unknown status: ${status}`);
     }
   }
 
@@ -151,7 +147,6 @@ export class RealtimeConnectionService {
    * Handle successful connection
    */
   private onConnected(channelName: string, onStatusChange?: (status: ConnectionStatus) => void): void {
-    console.log(`✅ [Realtime] Channel ${channelName} connected`);
 
     this.connectionStatus.set('connected');
     onStatusChange?.('connected');
@@ -169,7 +164,6 @@ export class RealtimeConnectionService {
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
     onStatusChange?: (status: ConnectionStatus) => void
   ): void {
-    console.error(`❌ [Realtime] Channel ${channelName} error`);
 
     this.connectionStatus.set('error');
     onStatusChange?.('error');
@@ -186,7 +180,6 @@ export class RealtimeConnectionService {
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
     onStatusChange?: (status: ConnectionStatus) => void
   ): void {
-    console.warn(`⏱️ [Realtime] Channel ${channelName} timed out`);
 
     this.connectionStatus.set('disconnected');
     onStatusChange?.('disconnected');
@@ -198,7 +191,6 @@ export class RealtimeConnectionService {
    * Handle intentional connection close
    */
   private onClosed(channelName: string, onStatusChange?: (status: ConnectionStatus) => void): void {
-    console.log(`🔌 [Realtime] Channel ${channelName} closed`);
 
     this.connectionStatus.set('disconnected');
     onStatusChange?.('disconnected');
@@ -218,7 +210,6 @@ export class RealtimeConnectionService {
     const retryCount = this.retryCounters.get(channelName) ?? 0;
 
     if (retryCount >= this.maxRetries) {
-      console.error(
         `❌ [Realtime] Max retries (${this.maxRetries}) reached for ${channelName}`
       );
       this.connectionStatus.set('error');
@@ -232,7 +223,6 @@ export class RealtimeConnectionService {
       this.maxDelay
     );
 
-    console.log(
       `🔄 [Realtime] Reconnecting ${channelName} in ${delay}ms (attempt ${retryCount + 1}/${this.maxRetries})`
     );
 
@@ -244,7 +234,6 @@ export class RealtimeConnectionService {
 
     // Schedule reconnection
     setTimeout(() => {
-      console.log(`[Realtime] Attempting reconnection for ${channelName}`);
 
       // Remove old channel
       this.unsubscribe(channelName);
@@ -264,7 +253,6 @@ export class RealtimeConnectionService {
     const channel = this.activeChannels.get(channelName);
 
     if (channel) {
-      console.log(`[Realtime] Unsubscribing from ${channelName}`);
 
       this.supabase.removeChannel(channel);
       this.activeChannels.delete(channelName);
@@ -276,7 +264,6 @@ export class RealtimeConnectionService {
    * Unsubscribe from all channels
    */
   unsubscribeAll(): void {
-    console.log(`[Realtime] Unsubscribing from all channels (${this.activeChannels.size})`);
 
     this.activeChannels.forEach((_, channelName) => {
       this.unsubscribe(channelName);

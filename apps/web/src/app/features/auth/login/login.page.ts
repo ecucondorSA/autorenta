@@ -41,7 +41,6 @@ export class LoginPage {
       await this.auth.signIn(email, password);
       await this.router.navigateByUrl('/');
     } catch (err) {
-      console.error(err);
       this.error.set(
         err instanceof Error ? err.message : 'No pudimos iniciar sesión, revisá tus credenciales.',
       );
@@ -61,7 +60,6 @@ export class LoginPage {
       // La redirección a Google ocurre automáticamente
       // El callback manejará el retorno
     } catch (err) {
-      console.error(err);
       this.error.set(
         err instanceof Error ? err.message : 'No pudimos conectar con Google. Intentá nuevamente.',
       );

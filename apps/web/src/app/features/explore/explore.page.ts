@@ -113,7 +113,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
       this.cars = cars;
       this.filteredCars = this.cars;
     } catch (error) {
-      console.error('Error loading cars:', error);
     } finally {
       this.loading = false;
     }
@@ -127,7 +126,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
         lng: position.coords.longitude,
       };
     } catch (error) {
-      console.error('Error getting location:', error);
     }
   }
 
@@ -159,7 +157,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
   }
 
   onCarSelected(carId: string) {
-    console.log('Car selected:', carId);
   }
 
   resetFilters() {
@@ -189,7 +186,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
   centerOnUser() {
     if (this.userLocation) {
       // Trigger map centering via service/event
-      console.log('Center on user:', this.userLocation);
     }
   }
 

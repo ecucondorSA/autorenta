@@ -64,7 +64,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
-        console.log('✅ Error de red manejado:', error);
       }
     });
 
@@ -89,7 +88,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
-        console.log('✅ Error de red en booking manejado');
       }
     });
 
@@ -115,7 +113,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.code || error.message).toBeTruthy();
-        console.log('✅ Timeout de conexión manejado');
       }
     });
 
@@ -141,7 +138,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         // El mensaje debería ser comprensible para usuarios no técnicos
         expect(error.message || error.code).toBeDefined();
-        console.log('✅ Mensaje de error disponible para UI:', error.message || error.code);
       }
     });
   });
@@ -170,7 +166,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
-        console.log('✅ Timeout de búsqueda manejado');
       }
     });
 
@@ -196,7 +191,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
-        console.log('✅ Timeout de RPC booking manejado');
       }
     });
 
@@ -219,7 +213,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message || error.code).toBeTruthy();
-        console.log('✅ Timeout de "Mis Reservas" manejado');
       }
     });
 
@@ -245,7 +238,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch {
         const elapsed = Date.now() - startTime;
         expect(elapsed).toBeLessThan(60000); // Menos de 60 segundos
-        console.log(`✅ Timeout razonable: ${elapsed}ms`);
       }
     });
   });
@@ -268,10 +260,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         const cars = await carsService.listActiveCars({ city: 'Buenos Aires' });
         // Debería manejar gracefully o convertir a array vacío
         expect(Array.isArray(cars) || cars === null).toBe(true);
-        console.log('✅ Formato inválido manejado gracefully');
       } catch (error) {
         // También es aceptable que lance error
-        console.log('✅ Formato inválido detectado y rechazado');
         expect(error).toBeDefined();
       }
     });
@@ -296,7 +286,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message.toLowerCase()).toContain('booking');
-        console.log('✅ Respuesta sin ID manejada:', error.message);
       }
     });
 
@@ -322,7 +311,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       // Debería manejar campos faltantes sin crashear
       expect(car).toBeDefined();
       expect(car?.id).toBe('car-123');
-      console.log('✅ Campos faltantes manejados sin crash');
     });
 
     it('debería manejar valores null en campos críticos', async () => {
@@ -350,7 +338,6 @@ describe('Sprint 5.3 - Error Handling', () => {
 
       expect(cars).toBeDefined();
       expect(Array.isArray(cars)).toBe(true);
-      console.log('✅ Valores null en campos críticos manejados');
     });
 
     it('debería manejar tipos de datos incorrectos', async () => {
@@ -377,9 +364,7 @@ describe('Sprint 5.3 - Error Handling', () => {
         const cars = await carsService.listActiveCars({ city: 'Test' });
         // Debería manejar o sanitizar los tipos incorrectos
         expect(cars).toBeDefined();
-        console.log('✅ Tipos de datos incorrectos manejados');
       } catch (error) {
-        console.log('✅ Tipos incorrectos detectados y rechazados');
         expect(error).toBeDefined();
       }
     });
@@ -408,7 +393,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.code || error.message).toBeTruthy();
-        console.log('✅ Usuario offline detectado');
       }
     });
 
@@ -434,7 +418,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         // El mensaje debería indicar problemas de conexión
         expect(error.message || error.code).toBeDefined();
-        console.log('✅ Mensaje offline disponible:', error.message || error.code);
       }
     });
 
@@ -459,7 +442,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         // No debería corromper datos locales
-        console.log('✅ Booking offline manejado sin corrupción');
       }
     });
 
@@ -481,7 +463,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error) {
         // El error debería prevenir operaciones parciales
         expect(error).toBeDefined();
-        console.log('✅ Operación peligrosa prevenida en modo offline');
       }
     });
   });
@@ -505,7 +486,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toContain('autenticado');
-        console.log('✅ Sesión expirada manejada');
       }
     });
 
@@ -526,7 +506,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toMatch(/autenticado/i);
-        console.log('✅ Usuario no autenticado rechazado');
       }
     });
   });
@@ -575,7 +554,6 @@ describe('Sprint 5.3 - Error Handling', () => {
       const cars = await carsService.listActiveCars({ city: 'Test' });
       expect(cars).toBeDefined();
       expect(cars.length).toBeGreaterThan(0);
-      console.log('✅ Recuperación exitosa después de error');
     });
 
     it('debería mantener estado consistente después de error', async () => {
@@ -627,7 +605,6 @@ describe('Sprint 5.3 - Error Handling', () => {
         );
 
         expect(booking).toBeDefined();
-        console.log('✅ Estado consistente después de error');
       }
     });
   });

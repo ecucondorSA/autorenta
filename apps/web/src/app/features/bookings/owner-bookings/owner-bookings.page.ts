@@ -67,7 +67,6 @@ export class OwnerBookingsPage implements OnInit {
         this.marketplaceStatus.set(null);
       }
     } catch (error) {
-      console.warn('[OwnerBookings] No se pudo obtener la sesión del usuario', error);
       this.currentUserId = null;
       this.marketplaceStatus.set(null);
     } finally {
@@ -86,7 +85,6 @@ export class OwnerBookingsPage implements OnInit {
       this.bookings.set(items);
       await this.loadCarLeads();
     } catch (err) {
-      console.error('getOwnerBookings error', err);
       this.error.set('No pudimos cargar las reservas. Por favor intentá de nuevo más tarde.');
     } finally {
       this.loading.set(false);
@@ -196,7 +194,6 @@ export class OwnerBookingsPage implements OnInit {
       await this.loadBookings();
       await this.presentToast('Alquiler iniciado correctamente');
     } catch (error) {
-      console.error('Error starting rental:', error);
       await this.presentToast('Error al iniciar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -217,7 +214,6 @@ export class OwnerBookingsPage implements OnInit {
       await this.loadBookings();
       await this.presentToast('Alquiler finalizado correctamente');
     } catch (error) {
-      console.error('Error completing rental:', error);
       await this.presentToast('Error al finalizar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -239,7 +235,6 @@ export class OwnerBookingsPage implements OnInit {
       await this.loadBookings();
       await this.presentToast('Reserva cancelada');
     } catch (error) {
-      console.error('Error cancelling booking:', error);
       await this.presentToast('Error al cancelar la reserva', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -331,7 +326,6 @@ export class OwnerBookingsPage implements OnInit {
               participantName = contact.name || contact.email || null;
             }
           } catch (err) {
-            console.warn('[OwnerBookings] No se pudo obtener datos del contacto', err);
           }
 
           return {
@@ -343,7 +337,6 @@ export class OwnerBookingsPage implements OnInit {
 
       this.carLeads.set(enriched);
     } catch (error) {
-      console.error('Error loading car leads:', error);
     } finally {
       this.leadsLoading.set(false);
     }
@@ -365,7 +358,6 @@ export class OwnerBookingsPage implements OnInit {
       const status = await this.marketplaceService.getMarketplaceStatus(userId);
       this.marketplaceStatus.set(status);
     } catch (error) {
-      console.error('[OwnerBookings] Error cargando estado de marketplace:', error);
       this.marketplaceStatus.set(null);
     }
   }
@@ -388,10 +380,8 @@ export class OwnerBookingsPage implements OnInit {
               phone: contact.phone,
             };
           } else {
-            console.warn('No se pudo cargar contacto del locatario:', contact.error);
           }
         } catch (error) {
-          console.error('Error fetching renter contact info:', error);
         }
       }),
     );

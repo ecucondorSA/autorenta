@@ -82,7 +82,6 @@ export class PaymentAuthorizationService {
    */
   private getTestSafeAmount(amountArs: number): number {
     if (!environment.production && amountArs > this.MP_TEST_MAX_AMOUNT_ARS) {
-      console.warn(
         `💡 [TEST MODE] Monto reducido de $${amountArs} ARS a $${this.MP_TEST_MAX_AMOUNT_ARS} ARS para evitar rechazo por alto riesgo en sandbox`,
       );
       return this.MP_TEST_MAX_AMOUNT_ARS;
@@ -119,7 +118,6 @@ export class PaymentAuthorizationService {
     const safeAmountArs = this.getTestSafeAmount(amountArs);
     const safeAmountUsd = safeAmountArs !== amountArs ? safeAmountArs / fxRate : amountUsd;
 
-    console.log('💳 Creating payment authorization...', {
       amountUsd: safeAmountUsd,
       amountArs: safeAmountArs,
       bookingId,
@@ -146,12 +144,10 @@ export class PaymentAuthorizationService {
         );
 
         if (intentError || !intent?.success) {
-          console.error('Error creating payment intent:', intentError);
           throw new Error(intent?.error || 'Error creating payment intent');
         }
 
         const intentId = intent.intent_id;
-        console.log('✅ Payment intent created:', intentId);
 
         // 2. Obtener session token
         const session = await this.authService.ensureSession();
@@ -187,18 +183,14 @@ export class PaymentAuthorizationService {
 
         if (!mpResponse.ok) {
           const errorData = await mpResponse.json();
-          console.error('MP API error:', errorData);
-          console.error('MP API details:', JSON.stringify(errorData.details, null, 2));
           throw new Error(errorData.error || 'Error al autorizar el pago');
         }
 
         const mpData = await mpResponse.json();
-        console.log('✅ Mercado Pago authorization:', mpData);
 
         // Verificar si fue rechazado
         if (mpData.status === 'rejected') {
           const errorMsg = this.getErrorMessage(mpData.status_detail);
-          console.error('❌ Payment rejected:', {
             status_detail: mpData.status_detail,
             mp_payment_id: mpData.mp_payment_id,
           });
@@ -220,7 +212,6 @@ export class PaymentAuthorizationService {
       })(),
     ).pipe(
       catchError((error) => {
-        console.error('❌ Error in authorizePayment:', error);
         return of({
           ok: false,
           error: error.message || 'Error desconocido al autorizar',
@@ -242,7 +233,6 @@ export class PaymentAuthorizationService {
     ).pipe(
       map((response) => {
         if (response.error || !response.data) {
-          console.error('Error fetching authorization:', response.error);
           return null;
         }
 
@@ -263,7 +253,6 @@ export class PaymentAuthorizationService {
         return auth;
       }),
       catchError((error) => {
-        console.error('Error in getAuthorizationStatus:', error);
         return of(null);
       }),
     );
@@ -277,7 +266,6 @@ export class PaymentAuthorizationService {
     authorizedPaymentId: string,
     amountArs?: number,
   ): Observable<{ ok: boolean; error?: string }> {
-    console.log('💰 Capturing preauthorization:', authorizedPaymentId);
 
     return from(
       (async () => {
@@ -308,12 +296,10 @@ export class PaymentAuthorizationService {
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.error('Capture API error:', errorData);
           throw new Error(errorData.error || 'Error al capturar preautorización');
         }
 
         const data = await response.json();
-        console.log('✅ Preauthorization captured:', data);
 
         if (!data.success) {
           throw new Error(data.error || 'Capture failed');
@@ -323,7 +309,6 @@ export class PaymentAuthorizationService {
       })(),
     ).pipe(
       catchError((error) => {
-        console.error('❌ Error in captureAuthorization:', error);
         return of({
           ok: false,
           error: error.message || 'Error desconocido al capturar',
@@ -337,7 +322,6 @@ export class PaymentAuthorizationService {
    * Llama al Edge Function mp-cancel-preauth
    */
   cancelAuthorization(authorizedPaymentId: string): Observable<{ ok: boolean; error?: string }> {
-    console.log('❌ Cancelling preauthorization:', authorizedPaymentId);
 
     return from(
       (async () => {
@@ -367,12 +351,10 @@ export class PaymentAuthorizationService {
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.error('Cancel API error:', errorData);
           throw new Error(errorData.error || 'Error al cancelar preautorización');
         }
 
         const data = await response.json();
-        console.log('✅ Preauthorization cancelled:', data);
 
         if (!data.success) {
           throw new Error(data.error || 'Cancellation failed');
@@ -382,7 +364,6 @@ export class PaymentAuthorizationService {
       })(),
     ).pipe(
       catchError((error) => {
-        console.error('❌ Error in cancelAuthorization:', error);
         return of({
           ok: false,
           error: error.message || 'Error desconocido al cancelar',

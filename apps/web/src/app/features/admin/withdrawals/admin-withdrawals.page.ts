@@ -71,7 +71,6 @@ export class AdminWithdrawalsPage implements OnInit {
       const withdrawals = await this.adminService.listWithdrawalRequests(status || undefined);
       this.withdrawalsSignal.set(withdrawals);
     } catch (error) {
-      console.error('Error al cargar solicitudes de retiro', error);
       this.withdrawalsSignal.set([]);
     } finally {
       this.loadingSignal.set(false);
@@ -111,7 +110,6 @@ export class AdminWithdrawalsPage implements OnInit {
       this.closeModal();
       await this.loadWithdrawals();
     } catch (error) {
-      console.error('Error al aprobar retiro', error);
       alert('Error al aprobar retiro: ' + (error as Error).message);
     }
   }
@@ -130,7 +128,6 @@ export class AdminWithdrawalsPage implements OnInit {
       this.closeModal();
       await this.loadWithdrawals();
     } catch (error) {
-      console.error('Error al completar retiro', error);
       alert('Error al completar retiro: ' + (error as Error).message);
     }
   }
@@ -152,7 +149,6 @@ export class AdminWithdrawalsPage implements OnInit {
       this.closeModal();
       await this.loadWithdrawals();
     } catch (error) {
-      console.error('Error al rechazar retiro', error);
       alert('Error al rechazar retiro: ' + (error as Error).message);
     }
   }

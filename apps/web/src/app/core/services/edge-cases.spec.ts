@@ -86,7 +86,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toContain('fecha');
-        console.log('✅ Fecha pasada rechazada correctamente:', error.message);
       }
     });
 
@@ -111,7 +110,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        console.log('✅ Fecha de fin pasada rechazada');
       }
     });
   });
@@ -142,7 +140,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toContain('posterior');
-        console.log('✅ Fechas invertidas rechazadas correctamente');
       }
     });
 
@@ -166,7 +163,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        console.log('✅ Reserva de 0 días rechazada');
       }
     });
   });
@@ -197,7 +193,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
       } catch (error: unknown) {
         expect(error).toBeDefined();
         expect(error.message).toContain('30 días');
-        console.log('✅ Periodo largo (35 días) validado:', error.message);
       }
     });
 
@@ -236,7 +231,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
       const booking = await bookingsService.requestBooking('car-123', startDateStr, endDateStr);
       expect(booking).toBeDefined();
       expect(booking.id).toBe('booking-30-days');
-      console.log('✅ Reserva de 30 días aceptada');
     });
 
     it('debería calcular correctamente el precio para periodos largos', async () => {
@@ -277,7 +271,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
       );
 
       expect(booking.total_amount).toBe(expectedTotal);
-      console.log('✅ Precio calculado correctamente para 25 días: ARS', booking.total_amount);
     });
   });
 
@@ -308,7 +301,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
         const cars = await carsService.listActiveCars({ city });
         expect(cars).toBeDefined();
         expect(Array.isArray(cars)).toBe(true);
-        console.log(`✅ Ciudad con caracteres especiales procesada: "${city}"`);
       }
     });
 
@@ -338,10 +330,8 @@ describe('Sprint 5.2 - Edge Cases', () => {
           const cars = await carsService.listActiveCars({ city });
           expect(cars).toBeDefined();
           // No debería causar SQL injection ni XSS
-          console.log(`✅ Input malicioso manejado de forma segura: "${city}"`);
         } catch (error) {
           // Es aceptable que falle, pero no debe comprometer seguridad
-          console.log(`✅ Input malicioso rechazado de forma segura: "${city}"`);
         }
       }
     });
@@ -361,7 +351,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
         const cars = await carsService.listActiveCars({ city });
         expect(cars).toBeDefined();
         expect(builder.ilike).toHaveBeenCalledWith('location_city', `%${city}%`);
-        console.log(`✅ Acentos manejados correctamente: "${city}"`);
 
         mockSupabase.from.calls.reset();
       }
@@ -390,7 +379,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
       // Todas las variaciones deberían retornar los mismos resultados
       const allSame = results.every((count) => count === results[0]);
       expect(allSame).toBe(true);
-      console.log('✅ Búsqueda case-insensitive funcionando correctamente');
     });
   });
 
@@ -415,7 +403,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        console.log('✅ Car ID inexistente manejado correctamente');
       }
     });
 
@@ -435,7 +422,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
       const cars = await carsService.listActiveCars({ city: '' });
       expect(cars).toBeDefined();
       expect(Array.isArray(cars)).toBe(true);
-      console.log('✅ Búsqueda con ciudad vacía manejada');
     });
 
     it('debería manejar fechas con zonas horarias diferentes', async () => {
@@ -477,7 +463,6 @@ describe('Sprint 5.2 - Edge Cases', () => {
           endDate.toISOString(),
         );
         expect(booking).toBeDefined();
-        console.log(`✅ Zona horaria manejada: ${date}`);
       }
     });
   });

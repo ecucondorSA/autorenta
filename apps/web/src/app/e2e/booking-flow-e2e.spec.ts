@@ -113,7 +113,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(availableCars.length).toBeGreaterThan(0);
       // Case-insensitive comparison for city name
       expect(availableCars[0].location_city.toLowerCase()).toBe('buenos aires');
-      console.log('✅ PASO 1: Búsqueda completada - Encontrados', availableCars.length, 'autos');
 
       // PASO 2: Selección de auto específico
       const selectedCarId = availableCars[0].id;
@@ -132,7 +131,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(selectedCar).toBeDefined();
       expect(selectedCar?.id).toBe(selectedCarId);
       expect(selectedCar?.price_per_day).toBeGreaterThan(0);
-      console.log('✅ PASO 2: Auto seleccionado -', selectedCar?.brand, selectedCar?.model);
 
       // PASO 3: Crear reserva
       (mockSupabase.rpc as jasmine.Spy).and.returnValues(
@@ -162,7 +160,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(booking.car_id).toBe(selectedCarId);
       expect(booking.status).toBe('pending');
       expect(booking.total_amount).toBeGreaterThan(0);
-      console.log('✅ PASO 3: Reserva creada - ID:', booking.id, 'Total:', booking.total_amount);
 
       // PASO 4: Verificar que la reserva aparece en "Mis Reservas"
       mockQuery.order.and.returnValue(
@@ -177,10 +174,8 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(myBookings).toBeDefined();
       expect(myBookings.length).toBeGreaterThan(0);
       expect(myBookings[0].id).toBe(booking.id);
-      console.log('✅ PASO 4: Reserva visible en Mis Reservas');
 
       // VALIDACIÓN FINAL: Todo el flujo se completó correctamente
-      console.log('🎉 FLUJO E2E COMPLETO EXITOSO');
       expect(true).toBe(true);
     });
 
@@ -261,7 +256,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(booking.start_at).toBeDefined();
       expect(booking.end_at).toBeDefined();
 
-      console.log('✅ Todos los pasos retornan datos válidos y completos');
     });
 
     it('debería validar disponibilidad antes de permitir reserva', async () => {
@@ -300,7 +294,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(cars.length).toBeGreaterThan(0);
       expect(mockSupabase.from).toHaveBeenCalledWith('bookings');
 
-      console.log('✅ Validación de disponibilidad ejecutada antes de mostrar resultados');
     });
   });
 
@@ -345,7 +338,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       const priceAtDetail = carDetail?.price_per_day;
 
       expect(priceAtSearch).toBe(priceAtDetail!);
-      console.log('✅ Precio consistente: ARS', priceAtSearch);
     });
 
     it('debería mantener el car_id correcto a través de todo el flujo', async () => {
@@ -410,7 +402,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(carIdAtSearch).toBe(testCarId);
       expect(carIdAtDetail).toBe(testCarId);
       expect(carIdAtBooking).toBe(testCarId);
-      console.log('✅ car_id consistente en todo el flujo:', testCarId);
     });
   });
 });

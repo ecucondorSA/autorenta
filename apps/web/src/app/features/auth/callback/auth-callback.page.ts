@@ -117,14 +117,12 @@ export class AuthCallbackPage implements OnInit {
 
       // Verificar si el usuario está autenticado
       if (this.auth.isAuthenticated()) {
-        console.log('✅ OAuth login successful, redirecting to home...');
         // Redirigir a la página principal
         await this.router.navigate(['/']);
       } else {
         throw new Error('No se pudo completar la autenticación. Intentá nuevamente.');
       }
     } catch (err) {
-      console.error('OAuth callback error:', err);
       this.error.set(
         err instanceof Error
           ? err.message

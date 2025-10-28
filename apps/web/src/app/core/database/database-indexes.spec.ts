@@ -339,7 +339,6 @@ describe('Database Indexes', () => {
 
       // Este test fallaría si falta un índice
       if (missingIndexes.length > 0) {
-        console.warn('⚠️ Missing critical indexes:', missingIndexes);
       }
 
       // Para este test mock, esperamos que falte uno

@@ -172,7 +172,6 @@ export class WalletLedgerService {
     this.error.set(null);
 
     try {
-      console.log('[WalletLedgerService] Iniciando transferencia:', {
         to_user_id: request.to_user_id,
         amount_cents: request.amount_cents,
         description: request.description,
@@ -181,7 +180,6 @@ export class WalletLedgerService {
       // Generar idempotency key único
       const idempotencyKey = `transfer-${Date.now()}-${Math.random().toString(36).substring(7)}`;
 
-      console.log('[WalletLedgerService] Invocando edge function wallet-transfer...');
 
       const { data, error } = await this.supabase.functions.invoke('wallet-transfer', {
         body: {
@@ -195,23 +193,19 @@ export class WalletLedgerService {
         },
       });
 
-      console.log('[WalletLedgerService] Respuesta de edge function:', { data, error });
 
       if (error) {
-        console.error('[WalletLedgerService] Error en edge function:', error);
 
         // Intentar obtener el body del error para más detalles
         let errorMessage = error.message || 'Error al procesar transferencia';
 
         // Si el error tiene contexto adicional, mostrarlo
         if (error.context) {
-          console.error('[WalletLedgerService] Error context:', error.context);
 
           // Si context es una Response, parsear el body
           if (error.context instanceof Response) {
             try {
               const errorBody = await error.context.json();
-              console.error('[WalletLedgerService] Error body from server:', errorBody);
 
               if (errorBody.error) {
                 errorMessage = errorBody.error;
@@ -220,7 +214,6 @@ export class WalletLedgerService {
                 }
               }
             } catch (parseError) {
-              console.error('[WalletLedgerService] Could not parse error body:', parseError);
             }
           }
           // Si context es un objeto con mensaje de error del servidor
@@ -236,29 +229,24 @@ export class WalletLedgerService {
       }
 
       if (!data) {
-        console.error('[WalletLedgerService] Edge function no retornó datos');
         throw new Error('La transferencia no retornó datos');
       }
 
       // Verificar si la transferencia fue exitosa
       if (!data.ok && data.error) {
-        console.error('[WalletLedgerService] Transferencia rechazada:', data.error);
         throw new Error(data.error);
       }
 
-      console.log('[WalletLedgerService] Transferencia exitosa, recargando datos...');
 
       // Recargar historial y transferencias
       await Promise.all([this.loadLedgerHistory(), this.loadTransfers()]);
 
-      console.log('[WalletLedgerService] Transferencia completada');
 
       return {
         ok: true,
         transfer: data.transfer,
       };
     } catch (err) {
-      console.error('[WalletLedgerService] Error capturado:', err);
       const errorMsg = err instanceof Error ? err.message : 'Error al transferir fondos';
       this.error.set(errorMsg);
       return {
@@ -352,7 +340,6 @@ export class WalletLedgerService {
           filter: `user_id=eq.${userId}`,
         },
         () => {
-          console.log('[WalletLedgerService] New ledger entry detected');
           callback();
         },
       )
@@ -388,7 +375,6 @@ export class WalletLedgerService {
     });
 
     if (error) {
-      console.error('Error searching user by wallet number:', error);
       return null;
     }
 
@@ -417,7 +403,6 @@ export class WalletLedgerService {
       .limit(10);
 
     if (error) {
-      console.error('Error searching users:', error);
       return [];
     }
 
@@ -448,7 +433,6 @@ export class WalletLedgerService {
     const { data, error } = await query;
 
     if (error) {
-      console.error('Error getting ledger summary:', error);
       return {} as Record<LedgerKind, { count: number; total_cents: number }>;
     }
 

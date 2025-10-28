@@ -92,7 +92,6 @@ export class CarDetailPage implements OnInit {
     const hasValidTo = range.to && range.to.trim() !== '';
 
     if (!hasValidFrom || !hasValidTo || !car) {
-      console.log('⚠️ Missing data:', {
         from: range.from,
         to: range.to,
         hasValidFrom,
@@ -108,7 +107,6 @@ export class CarDetailPage implements OnInit {
 
     // Validate price_per_day exists and is a valid number
     if (!pricePerDay || isNaN(pricePerDay) || pricePerDay <= 0) {
-      console.error('❌ Invalid price_per_day:', {
         original: car.price_per_day,
         converted: pricePerDay,
         type: typeof car.price_per_day,
@@ -123,7 +121,6 @@ export class CarDetailPage implements OnInit {
     const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 
     if (diff <= 0) {
-      console.warn('⚠️ Invalid date range:', {
         from: range.from,
         to: range.to,
         diff: diff,
@@ -132,7 +129,6 @@ export class CarDetailPage implements OnInit {
     }
 
     const total = diff * pricePerDay;
-    console.log(`💰 Price calculation: ${diff} days × $${pricePerDay} = $${total}`);
     return total;
   });
 
@@ -207,14 +203,11 @@ export class CarDetailPage implements OnInit {
       next: (snapshot) => {
         if (snapshot && !snapshot.isExpired) {
           this.currentFxRate.set(snapshot.rate);
-          console.log(`💱 Tasa USD/ARS actualizada: ${snapshot.rate}`);
         } else {
-          console.error('⚠️ Tipo de cambio expirado o no disponible');
           this.currentFxRate.set(null);
         }
       },
       error: (err) => {
-        console.error('Error al cargar tasa de cambio:', err);
         this.currentFxRate.set(null);
       },
     });
@@ -227,7 +220,6 @@ export class CarDetailPage implements OnInit {
       this.lockedBalance.set(balance.locked_balance);
     } catch (error) {
       // Ignorar error si el usuario no está autenticado o no tiene wallet
-      console.log('Could not load wallet balance:', error);
     }
   }
 
@@ -244,7 +236,6 @@ export class CarDetailPage implements OnInit {
       if (!car) {
         this.error.set('Auto no disponible');
       } else {
-        console.log('🚗 Auto cargado:', {
           id: car.id,
           title: car.title,
           price_per_day: car.price_per_day,
@@ -283,7 +274,6 @@ export class CarDetailPage implements OnInit {
         await this.loadReviews(carId);
       }
     } catch (err) {
-      console.error(err);
       this.error.set('Error al cargar el auto');
     } finally {
       this.loading.set(false);
@@ -301,14 +291,12 @@ export class CarDetailPage implements OnInit {
       this.reviews.set(reviews);
       this.carStats.set(stats);
     } catch (error) {
-      console.error('Error loading reviews:', error);
     } finally {
       this.reviewsLoading.set(false);
     }
   }
 
   onRangeChange(range: DateRange): void {
-    console.log('📅 Date range changed:', {
       from: range.from,
       to: range.to,
       fromDate: range.from ? new Date(range.from) : null,
@@ -326,7 +314,6 @@ export class CarDetailPage implements OnInit {
     this.walletAmountToUse.set(event.walletAmount);
     this.cardAmountToUse.set(event.cardAmount);
 
-    console.log('Payment method changed in car detail:', event);
   }
 
   nextPhoto(): void {
@@ -414,7 +401,6 @@ export class CarDetailPage implements OnInit {
         },
       });
     } catch (err: unknown) {
-      console.error('Error creating booking before detail-payment', err);
       this.bookingError.set(err instanceof Error ? err.message : 'Error al crear la reserva');
     } finally {
       this.bookingInProgress.set(false);
@@ -432,7 +418,6 @@ export class CarDetailPage implements OnInit {
     }
 
     // PRIORIDAD 2: Calcular desde precio diario
-    console.warn(`Auto ${car.id} sin value_usd, calculando desde precio diario`);
 
     let pricePerDayUsd = car.price_per_day;
 
@@ -440,7 +425,6 @@ export class CarDetailPage implements OnInit {
     if (car.currency === 'ARS') {
       const fxRate = this.currentFxRate();
       if (!fxRate) {
-        console.error('No hay tasa de cambio disponible para calcular valor del vehículo');
         throw new Error('Tipo de cambio no disponible');
       }
       pricePerDayUsd = car.price_per_day / fxRate;
@@ -460,7 +444,6 @@ export class CarDetailPage implements OnInit {
     if (car.currency === 'ARS') {
       const fxRate = this.currentFxRate();
       if (!fxRate) {
-        console.error('No hay tasa de cambio disponible para determinar bucket');
         throw new Error('Tipo de cambio no disponible');
       }
       pricePerDayUsd = car.price_per_day / fxRate;
@@ -560,7 +543,6 @@ export class CarDetailPage implements OnInit {
           window.open(url, '_blank');
         }
       } catch (error) {
-        console.error('Error getting user location:', error);
         // Si falla la geolocalización, usar navegación sin origen
         this.openNavigation();
       }
@@ -599,7 +581,6 @@ export class CarDetailPage implements OnInit {
   async openChatWithOwner(): Promise<void> {
     const car = this.car();
     if (!car?.owner?.id) {
-      console.error('No hay información del propietario');
       return;
     }
 
@@ -613,7 +594,6 @@ export class CarDetailPage implements OnInit {
         },
       });
     } catch (error) {
-      console.error('Error al abrir chat:', error);
     }
   }
 }

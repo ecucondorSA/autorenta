@@ -116,7 +116,6 @@ export class DynamicPricingService {
     rentalStart: string,
     rentalHours: number,
   ): Promise<DynamicPricingResponse> {
-    console.log('🔧 [DynamicPricing] calculatePriceRPC called', {
       regionId,
       userId,
       rentalStart,
@@ -131,11 +130,9 @@ export class DynamicPricingService {
     });
 
     if (error) {
-      console.error('❌ [DynamicPricing] RPC Error:', error);
       throw new Error(`Failed to calculate price via RPC: ${error.message}`);
     }
 
-    console.log('✅ [DynamicPricing] RPC Success:', data);
     return data as DynamicPricingResponse;
   }
 
@@ -159,7 +156,6 @@ export class DynamicPricingService {
       .single();
 
     if (error) {
-      console.error('Failed to fetch demand snapshot:', error);
       return null;
     }
 
@@ -191,7 +187,6 @@ export class DynamicPricingService {
       .gte('end_date', startDate.toISOString());
 
     if (error) {
-      console.error('Failed to fetch special events:', error);
       return [];
     }
 
@@ -221,7 +216,6 @@ export class DynamicPricingService {
       .limit(limit);
 
     if (error) {
-      console.error('Failed to fetch pricing history:', error);
       return [];
     }
 
@@ -339,7 +333,6 @@ export class DynamicPricingService {
     surge_active: boolean;
     surge_icon?: string;
   } | null> {
-    console.log('📊 [DynamicPricing] getQuickPrice called', { carId, regionId });
 
     try {
       // Get current user ID (if logged in)
@@ -348,10 +341,8 @@ export class DynamicPricingService {
       } = await this.supabase.auth.getUser();
       const userId = user?.id || '00000000-0000-0000-0000-000000000000'; // Anonymous user
 
-      console.log('👤 [DynamicPricing] User ID:', userId);
 
       const now = new Date();
-      console.log('📞 [DynamicPricing] Calling calculatePriceRPC...', {
         regionId,
         userId,
         rentalStart: now.toISOString(),
@@ -365,7 +356,6 @@ export class DynamicPricingService {
         24, // Default 24 hours for "per day" pricing
       );
 
-      console.log('✅ [DynamicPricing] RPC Response:', response);
 
       const result = {
         price_per_hour: response.price_per_hour,
@@ -377,10 +367,8 @@ export class DynamicPricingService {
         surge_icon: this.getSurgeBadge(response).icon,
       };
 
-      console.log('💰 [DynamicPricing] Returning quick price:', result);
       return result;
     } catch (error) {
-      console.error(`❌ [DynamicPricing] Failed to get quick price for car ${carId}:`, error);
       return null;
     }
   }

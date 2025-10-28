@@ -111,9 +111,7 @@ export class InspectionUploaderComponent implements OnInit {
         }
       }
 
-      console.log(`✅ ${files.length} fotos subidas exitosamente`);
     } catch (err) {
-      console.error('Error uploading photos:', err);
       this.error.set('Error al subir fotos. Intente nuevamente.');
     } finally {
       this.uploading.set(false);
@@ -149,7 +147,6 @@ export class InspectionUploaderComponent implements OnInit {
         });
 
       if (uploadError) {
-        console.error('Upload error:', uploadError);
         throw uploadError;
       }
 
@@ -163,7 +160,6 @@ export class InspectionUploaderComponent implements OnInit {
         type: 'exterior', // Por defecto exterior, en versión avanzada podría categorizarse
       };
     } catch (error) {
-      console.error('Error uploading photo:', error);
       return null;
     }
   }
@@ -214,7 +210,6 @@ export class InspectionUploaderComponent implements OnInit {
         throw new Error('No se pudo crear la inspección');
       }
 
-      console.log('✅ Inspección creada:', inspection);
 
       // 3. Firmar inspección
       const signed = await firstValueFrom(this.fgoService.signInspection(inspection.id));
@@ -223,12 +218,10 @@ export class InspectionUploaderComponent implements OnInit {
         throw new Error('No se pudo firmar la inspección');
       }
 
-      console.log('✅ Inspección firmada:', signed);
 
       // 4. Cerrar modal y retornar inspección
       this.closeModal(inspection);
     } catch (error) {
-      console.error('Error saving inspection:', error);
       this.error.set(
         error instanceof Error ? error.message : 'Error al guardar inspección. Intente nuevamente.',
       );
@@ -261,7 +254,6 @@ export class InspectionUploaderComponent implements OnInit {
     // this.modalCtrl.dismiss({ inspection: data });
 
     // Por ahora, emitir evento al padre
-    console.log('Modal should close with data:', data);
 
     // Si hay un callback en el window (workaround temporal)
     const win = window as WindowWithInspectionCallback;

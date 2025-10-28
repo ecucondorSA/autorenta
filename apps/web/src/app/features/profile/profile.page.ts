@@ -141,12 +141,10 @@ export class ProfilePage implements OnInit {
     this.error.set(null);
 
     try {
-      console.log('[ProfilePage] Loading profile...');
       const profile = await this.profileService.getCurrentProfile();
       this.profile.set(profile);
 
       if (profile) {
-        console.log('[ProfilePage] Profile loaded, patching form values...');
         this.form.patchValue({
           full_name: profile.full_name,
           role: profile.role,
@@ -164,7 +162,6 @@ export class ProfilePage implements OnInit {
         });
       }
     } catch (err) {
-      console.error('[ProfilePage] Error loading profile:', err);
 
       // Get detailed error message
       let errorMessage = 'No pudimos cargar tu perfil.';
@@ -181,7 +178,6 @@ export class ProfilePage implements OnInit {
         errorMessage = 'Error de permisos: ' + errorMessage;
       }
 
-      console.error('[ProfilePage] Final error message:', errorMessage);
       this.error.set(errorMessage);
     } finally {
       this.loading.set(false);
@@ -237,7 +233,6 @@ export class ProfilePage implements OnInit {
       // Limpiar mensaje después de 3 segundos
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      console.error(err);
       this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu perfil.');
     } finally {
       this.saving.set(false);
@@ -269,7 +264,6 @@ export class ProfilePage implements OnInit {
       this.message.set('Avatar actualizado exitosamente');
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      console.error(err);
       this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
     } finally {
       this.uploadingAvatar.set(false);
@@ -301,7 +295,6 @@ export class ProfilePage implements OnInit {
       this.message.set('Avatar eliminado');
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      console.error(err);
       this.error.set('No pudimos eliminar tu avatar.');
     } finally {
       this.uploadingAvatar.set(false);
@@ -312,7 +305,6 @@ export class ProfilePage implements OnInit {
     try {
       await this.authService.signOut();
     } catch (err) {
-      console.error(err);
       this.error.set('Error al cerrar sesión');
     }
   }
@@ -336,7 +328,6 @@ export class ProfilePage implements OnInit {
       this.reviewsAsOwner.set(reviewsAsOwner);
       this.reviewsAsRenter.set(reviewsAsRenter);
     } catch (error) {
-      console.error('Error loading reviews and stats:', error);
     } finally {
       this.reviewsLoading.set(false);
     }
@@ -366,7 +357,6 @@ export class ProfilePage implements OnInit {
         this.copiedWAN.set(false);
       }, 2000);
     } catch (error) {
-      console.error('Error copying to clipboard:', error);
       this.error.set('Error al copiar el número de cuenta');
     }
   }

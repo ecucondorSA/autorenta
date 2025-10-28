@@ -38,7 +38,6 @@ export class MyCarsPage implements OnInit {
       const cars = await this.carsService.listMyCars();
       this.cars.set(cars);
     } catch (err) {
-      console.error('loadMyCars error', err);
     } finally {
       this.loading.set(false);
     }
@@ -64,7 +63,6 @@ export class MyCarsPage implements OnInit {
         bookingsCount = result.count;
         activeBookings = result.bookings || [];
       } catch (checkError) {
-        console.error('Error checking bookings:', checkError);
         // Continuar con el intento de eliminación si falla la verificación
       }
 
@@ -106,9 +104,7 @@ export class MyCarsPage implements OnInit {
       await this.loadCars();
       alert('✅ Auto eliminado exitosamente');
     } catch (error: unknown) {
-      console.error('Error deleting car:', error);
       const errorObj = error as { code?: string; message?: string; details?: string; hint?: string };
-      console.error('Error details:', {
         code: errorObj?.code,
         message: errorObj?.message,
         details: errorObj?.details,
@@ -181,7 +177,6 @@ export class MyCarsPage implements OnInit {
       const statusText = newStatus === 'active' ? 'activado' : 'desactivado';
       alert(`✅ Auto ${statusText} exitosamente`);
     } catch (error) {
-      console.error('Error toggling availability:', error);
       alert('❌ Error al cambiar disponibilidad. Por favor intenta nuevamente.');
     }
   }

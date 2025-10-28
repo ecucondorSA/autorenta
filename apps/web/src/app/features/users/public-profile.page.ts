@@ -118,7 +118,6 @@ export class PublicProfilePage implements OnInit {
       const renterReviews = await this.reviewsService.getReviewsForRenter(this.userId());
       this.reviewsAsRenter.set(renterReviews);
     } catch (err) {
-      console.error('Error loading user data:', err);
       this.error.set('Error al cargar el perfil del usuario');
     } finally {
       this.loading.set(false);

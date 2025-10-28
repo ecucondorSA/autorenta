@@ -28,7 +28,6 @@ export class VerificationService {
 
       return this.setStatuses((data ?? []) as UserVerificationStatus[]);
     } catch (err) {
-      console.error('[VerificationService] loadStatuses error:', err);
       const message =
         err instanceof Error ? err.message : 'No pudimos obtener el estado de verificación.';
       this.error.set(message);
@@ -54,7 +53,6 @@ export class VerificationService {
       const payload = Array.isArray(data) ? (data as UserVerificationStatus[]) : [];
       return this.setStatuses(payload);
     } catch (err) {
-      console.error('[VerificationService] triggerVerification error:', err);
       const message = err instanceof Error ? err.message : 'No pudimos validar tu documentación.';
       this.error.set(message);
       throw err;

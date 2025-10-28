@@ -172,7 +172,6 @@ export class PublishCarPage implements OnInit, OnDestroy {
       const brands = await this.carsService.getCarBrands();
       this.brands.set(brands);
     } catch (error) {
-      console.error('Error loading brands:', error);
     } finally {
       this.loadingBrands.set(false);
     }
@@ -184,7 +183,6 @@ export class PublishCarPage implements OnInit, OnDestroy {
       const models = await this.carsService.getCarModels(brandId);
       this.models.set(models);
     } catch (error) {
-      console.error('Error loading models:', error);
     } finally {
       this.loadingModels.set(false);
     }
@@ -227,13 +225,11 @@ export class PublishCarPage implements OnInit, OnDestroy {
   async submit(): Promise<void> {
     if (this.form.invalid || this.submitting()) {
       this.form.markAllAsTouched();
-      console.log('Form errors:', this.getFormValidationErrors());
       return;
     }
 
     const session = this.authService.session$();
     if (!session?.user) {
-      console.error('Usuario no autenticado para publicar auto');
       return;
     }
 
@@ -254,7 +250,6 @@ export class PublishCarPage implements OnInit, OnDestroy {
         try {
           await this.carsService.uploadPhoto(files[i], car.id, i);
         } catch (error) {
-          console.error('No se pudo subir una de las fotos', error);
         }
       }
 
@@ -262,7 +257,6 @@ export class PublishCarPage implements OnInit, OnDestroy {
         queryParams: { published: 'true' },
       });
     } catch (error) {
-      console.error('No se pudo publicar el auto', error);
     } finally {
       this.uploadingSignal.set(false);
     }
@@ -276,11 +270,9 @@ export class PublishCarPage implements OnInit, OnDestroy {
     const country = this.form.get('location_country')?.value;
 
     if (!street || !city) {
-      console.warn('[PublishCarPage] Street or city missing, cannot geocode');
       return;
     }
 
-    console.log('[PublishCarPage] Geocoding address...');
     try {
       const result = await this.geocodingService.geocodeStructuredAddress(
         street,
@@ -290,28 +282,24 @@ export class PublishCarPage implements OnInit, OnDestroy {
         country || 'Uruguay',
       );
 
-      console.log('[PublishCarPage] Geocoding successful:', result);
       this.form.patchValue({
         location_lat: result.latitude,
         location_lng: result.longitude,
         location_formatted_address: result.fullAddress,
       });
     } catch (error) {
-      console.warn('[PublishCarPage] Geocoding failed, trying city fallback...', error);
       try {
         // Fallback: Try geocoding just the city
         const cityResult = await this.geocodingService.getCityCoordinates(
           city,
           country || 'Uruguay',
         );
-        console.log('[PublishCarPage] City fallback successful:', cityResult);
         this.form.patchValue({
           location_lat: cityResult.latitude,
           location_lng: cityResult.longitude,
           location_formatted_address: cityResult.fullAddress,
         });
       } catch (cityError) {
-        console.error('[PublishCarPage] City geocoding also failed:', cityError);
         // Si falla todo, usar coordenadas aproximadas de Montevideo por defecto
         this.form.patchValue({
           location_lat: -34.9011,

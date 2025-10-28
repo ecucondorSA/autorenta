@@ -43,7 +43,6 @@ export class RegisterPage {
       this.message.set('Revisá tu email para confirmar la cuenta.');
       setTimeout(() => void this.router.navigate(['/auth/login']), 1500);
     } catch (err) {
-      console.error(err);
       this.error.set(err instanceof Error ? err.message : 'No pudimos registrar el usuario.');
     } finally {
       this.loading.set(false);
@@ -62,7 +61,6 @@ export class RegisterPage {
       // La redirección a Google ocurre automáticamente
       // El callback manejará el retorno y creará el perfil si es necesario
     } catch (err) {
-      console.error(err);
       this.error.set(
         err instanceof Error ? err.message : 'No pudimos conectar con Google. Intentá nuevamente.',
       );

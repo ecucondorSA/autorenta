@@ -15,7 +15,6 @@ export class TelemetryBridgeService {
 
     // Console logging for debugging
     if (this.isDebugMode()) {
-      console.log(`[TourTelemetry] ${event.type}:`, event);
     }
   }
 

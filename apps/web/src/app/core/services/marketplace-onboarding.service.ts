@@ -99,17 +99,14 @@ export class MarketplaceOnboardingService {
       });
 
       if (insertError) {
-        console.error('Error saving onboarding state:', insertError);
         throw new Error('No se pudo iniciar el proceso de vinculación');
       }
 
       // Construir URL de autorización
       const authUrl = this.buildAuthorizationUrl(state);
 
-      console.log('✅ Onboarding iniciado para usuario:', userId);
       return authUrl;
     } catch (error) {
-      console.error('Error in startOnboarding:', error);
       throw error;
     }
   }
@@ -135,10 +132,8 @@ export class MarketplaceOnboardingService {
       // 4. Marcar state como completado
       await this.completeOnboardingState(state);
 
-      console.log('✅ Onboarding completado para collector:', tokenResponse.user_id);
       return tokenResponse.user_id;
     } catch (error) {
-      console.error('Error in handleCallback:', error);
 
       // Guardar error en state
       if (state) {
@@ -171,7 +166,6 @@ export class MarketplaceOnboardingService {
         .single();
 
       if (error) {
-        console.error('Error fetching marketplace status:', error);
         return {
           isApproved: false,
           hasActiveTokens: false,
@@ -189,7 +183,6 @@ export class MarketplaceOnboardingService {
         hasActiveTokens,
       };
     } catch (error) {
-      console.error('Error in getMarketplaceStatus:', error);
       return {
         isApproved: false,
         hasActiveTokens: false,
@@ -212,13 +205,11 @@ export class MarketplaceOnboardingService {
       });
 
       if (error) {
-        console.error('Error checking if user can list cars:', error);
         return false;
       }
 
       return data === true;
     } catch (error) {
-      console.error('Error in canListCars:', error);
       return false;
     }
   }
@@ -248,9 +239,7 @@ export class MarketplaceOnboardingService {
 
       if (error) throw error;
 
-      console.log('✅ Cuenta MP desvinculada para usuario:', userId);
     } catch (error) {
-      console.error('Error unlinking account:', error);
       throw error;
     }
   }
@@ -335,14 +324,12 @@ export class MarketplaceOnboardingService {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('MP token exchange error:', errorData);
         throw new Error(`Error al obtener tokens: ${errorData.message || response.statusText}`);
       }
 
       const tokenData: MpTokenResponse = await response.json();
       return tokenData;
     } catch (error) {
-      console.error('Error exchanging code for token:', error);
       throw new Error('No se pudo completar la autorización con Mercado Pago');
     }
   }
@@ -374,7 +361,6 @@ export class MarketplaceOnboardingService {
       .eq('id', userId);
 
     if (error) {
-      console.error('Error saving marketplace credentials:', error);
       throw new Error('No se pudieron guardar las credenciales');
     }
   }
@@ -392,7 +378,6 @@ export class MarketplaceOnboardingService {
       .eq('state', state);
 
     if (error) {
-      console.error('Error completing onboarding state:', error);
       // No throw, esto no es crítico
     }
   }

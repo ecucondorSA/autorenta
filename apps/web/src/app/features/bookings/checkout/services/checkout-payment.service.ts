@@ -85,7 +85,6 @@ export class CheckoutPaymentService {
       this.state.setMessage('Pago confirmado con wallet. Redirigiendo al detalle de tu reserva.');
 
       this.scheduleRiskSnapshot(booking, 'wallet').catch((err) => {
-        console.warn('Risk snapshot failed (non-blocking)', err);
       });
 
       await this.router.navigate(['/bookings', bookingId]);
@@ -119,7 +118,6 @@ export class CheckoutPaymentService {
     this.state.setStatus('redirecting_to_mercadopago');
 
     this.scheduleRiskSnapshot(booking, 'credit_card').catch((err) => {
-      console.warn('Risk snapshot failed (non-blocking)', err);
     });
 
     return {
@@ -186,7 +184,6 @@ export class CheckoutPaymentService {
       );
 
       this.scheduleRiskSnapshot(booking, 'partial_wallet').catch((err) => {
-        console.warn('Risk snapshot failed (non-blocking)', err);
       });
 
       return {
@@ -196,7 +193,6 @@ export class CheckoutPaymentService {
         bookingId,
       };
     } catch (error) {
-      console.error('Error processing partial wallet payment', error);
 
       if (walletLocked) {
         await this.safeUnlockWallet(bookingId, 'Reversión pago parcial fallido');
@@ -212,7 +208,6 @@ export class CheckoutPaymentService {
           payment_intent_id: booking.payment_intent_id ?? undefined,
         });
       } catch (rollbackError) {
-        console.warn('No se pudo revertir el estado del booking tras fallo parcial', rollbackError);
       }
 
       throw error instanceof Error
@@ -265,13 +260,11 @@ export class CheckoutPaymentService {
   ): Promise<void> {
     const bucket = this.state.getBucket();
     if (!bucket) {
-      console.warn('Sin bucket FGO. Se omite risk snapshot.');
       return;
     }
 
     const franchise = this.state.getFranchiseInfo();
     if (!franchise) {
-      console.warn('Sin franquicia calculada. Se omite risk snapshot.');
       return;
     }
 
@@ -299,7 +292,6 @@ export class CheckoutPaymentService {
       .pipe(
         timeout({ each: 10_000 }),
         catchError((error) => {
-          console.warn('Snapshot error or timeout', error);
           return of(null);
         }),
       );
@@ -314,7 +306,6 @@ export class CheckoutPaymentService {
         description: reason,
       });
     } catch (unlockError) {
-      console.warn('No se pudo revertir el bloqueo de wallet', unlockError);
     }
   }
 

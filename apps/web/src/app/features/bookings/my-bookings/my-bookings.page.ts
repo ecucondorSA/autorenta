@@ -33,7 +33,6 @@ export class MyBookingsPage implements OnInit {
       const items = await this.bookingsService.getMyBookings();
       this.bookings.set(items);
     } catch (err) {
-      console.error('getMyBookings error', err);
       this.error.set('No pudimos cargar tus reservas. Por favor intentá de nuevo más tarde.');
     } finally {
       this.loading.set(false);
@@ -149,7 +148,6 @@ export class MyBookingsPage implements OnInit {
 
   // Actions
   completePay(bookingId: string): void {
-    console.log('Navigating to payment for booking:', bookingId);
     // RouterLink handles navigation
   }
 
@@ -175,7 +173,6 @@ export class MyBookingsPage implements OnInit {
       alert('✅ Reserva cancelada exitosamente');
       await this.loadBookings(); // Recargar lista
     } catch (error) {
-      console.error('Error cancelando reserva:', error);
       alert('❌ Error inesperado al cancelar la reserva');
     } finally {
       this.loading.set(false);
@@ -183,7 +180,6 @@ export class MyBookingsPage implements OnInit {
   }
 
   showInstructions(booking: Booking): void {
-    console.log('Show instructions for:', booking.id);
     const location =
       booking.car_city && booking.car_province
         ? `${booking.car_city}, ${booking.car_province}`
@@ -230,7 +226,6 @@ export class MyBookingsPage implements OnInit {
       const whatsappUrl = `https://wa.me/${contact.phone}?text=${message}`;
       window.open(whatsappUrl, '_blank');
     } catch (error) {
-      console.error('Error obteniendo contacto:', error);
       alert('❌ Error al obtener información de contacto');
     } finally {
       this.loading.set(false);

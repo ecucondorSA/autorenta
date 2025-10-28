@@ -302,7 +302,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         });
         return;
       } catch (e) {
-        console.error('Error parsing stored booking input:', e);
       }
     }
 
@@ -400,9 +399,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Guardar bookingId para UPDATE posterior
       this.existingBookingId = bookingId;
 
-      console.log('[Detalle & Pago] Booking existente cargado:', bookingId);
     } catch (err: unknown) {
-      console.error('Error loading existing booking:', err);
       this.error.set('Error al cargar el booking: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   }
@@ -431,7 +428,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // No sobrescribimos porque bucket y value_usd ya vienen calculados de car-detail.page.ts
       // this.bookingInput.update() - No es necesario, ya tenemos los valores correctos
     } catch (err: unknown) {
-      console.error('Error loading car:', err);
       this.error.set('Error al cargar información del vehículo');
     }
   }
@@ -453,7 +449,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Guardar estado en sessionStorage para recuperación
       this.saveStateToSession();
     } catch (err: unknown) {
-      console.error('Error initializing snapshots:', err);
       this.error.set('Error al inicializar cálculos de reserva');
     }
   }
@@ -470,7 +465,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       }
       this.fxSnapshot.set(snapshot);
     } catch (err: unknown) {
-      console.error('Error loading FX snapshot:', err);
       throw err;
     } finally {
       this.loadingFx.set(false);
@@ -498,7 +492,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       this.riskSnapshot.set(snapshot);
     } catch (err: unknown) {
-      console.error('Error calculating risk snapshot:', err);
       throw err;
     } finally {
       this.loadingRisk.set(false);
@@ -617,7 +610,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * ✅ MEJORA: Ahora muestra mensaje explicativo al usuario
    */
   protected onFallbackToWallet(reason?: string): void {
-    console.log('[Detalle & Pago] Fallback a Wallet activado:', reason);
 
     // Establecer razón del fallback
     this.fallbackReason.set(reason || 'La pre-autorización con tu tarjeta fue rechazada');
@@ -660,7 +652,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         await this.createNewBooking();
       }
     } catch (err: unknown) {
-      console.error('Error confirming booking:', err);
       this.error.set(err instanceof Error ? err.message : 'Error al confirmar reserva');
     } finally {
       this.loading.set(false);
@@ -673,7 +664,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * AHORA: Procesa el pago final en la misma página (flujo consolidado)
    */
   private async updateExistingBooking(bookingId: string): Promise<void> {
-    console.log('[Detalle & Pago] Actualizando booking existente:', bookingId);
 
     // 1. Persistir risk snapshot con booking_id real
     const riskSnapshotResult = await this.persistRiskSnapshot(bookingId);
@@ -697,7 +687,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     if (error) throw error;
 
-    console.log('[Detalle & Pago] Booking actualizado, procesando pago final');
 
     // 3. Limpiar sessionStorage si existe
     sessionStorage.removeItem('booking_detail_input');
@@ -715,7 +704,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * AHORA: Una sola transacción atómica en la base de datos
    */
   private async createNewBooking(): Promise<void> {
-    console.log('[Detalle & Pago] Creando nuevo booking (ATÓMICO)');
 
     const input = this.bookingInput();
     const pricing = this.priceBreakdown();
@@ -754,7 +742,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       throw new Error(result.error || 'Error al crear reserva');
     }
 
-    console.log('✅ Booking creado exitosamente (atómico):', result.bookingId);
 
     // ✅ NUEVO: Guardar booking ID para procesamiento de pago
     this.lastCreatedBookingId.set(result.bookingId);
@@ -808,7 +795,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       );
 
       if (!result.success || !result.booking?.id) {
-        console.error('❌ Error creando reserva:', result.error);
         return {
           ok: false,
           error: result.error || 'Error desconocido al crear reserva',
@@ -831,7 +817,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           updateError instanceof Error
             ? updateError.message
             : 'Error desconocido al actualizar la reserva';
-        console.error('❌ Error actualizando la reserva con detalles de pago:', updateError);
         // Opcional: Considerar cancelar la reserva si la actualización falla
         return {
           ok: false,
@@ -839,13 +824,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         };
       }
 
-      console.log('✅ Reserva creada y actualizada con éxito:', result.booking.id);
       return {
         ok: true,
         bookingId: result.booking!.id,
       };
     } catch (err: unknown) {
-      console.error('❌ Excepción en createBooking:', err);
       return {
         ok: false,
         error: err instanceof Error ? err.message : 'Error desconocido',
@@ -869,7 +852,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       .eq('id', bookingId);
 
     if (error) {
-      console.error('Error updating booking risk snapshot:', error);
       throw new Error('Error al actualizar risk snapshot');
     }
   }
@@ -929,7 +911,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * Consolida la lógica que estaba en checkout.page.ts
    */
   private async processFinalPayment(bookingId: string): Promise<void> {
-    console.log('[Pago Final] Iniciando procesamiento para booking:', bookingId);
     this.processingFinalPayment.set(true);
 
     try {
@@ -940,7 +921,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       }
 
       const method = this.paymentMode();
-      console.log('[Pago Final] Método de pago:', method);
 
       // Procesar según el método
       if (method === 'wallet') {
@@ -949,7 +929,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         await this.processCreditCardPayment(booking);
       }
     } catch (error: unknown) {
-      console.error('[Pago Final] Error:', error);
       this.error.set(error instanceof Error ? error.message : 'Error al procesar el pago');
       this.processingFinalPayment.set(false);
       // No redirigir, dejar al usuario en la página para reintentar
@@ -966,7 +945,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;
 
-    console.log('[Wallet] Procesando pago:', { bookingId, rentalAmount, depositUsd });
 
     try {
       // Bloquear fondos en wallet
@@ -994,17 +972,14 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Recalcular pricing
       await this.bookingsService.recalculatePricing(bookingId);
 
-      console.log('✅ Pago con wallet exitoso');
 
       // Redirigir a página de éxito
       this.router.navigate(['/bookings/success', bookingId]);
     } catch (error: unknown) {
-      console.error('[Wallet] Error en pago:', error);
       // Intentar desbloquear wallet si hubo error
       try {
         await this.walletService.unlockFunds({ booking_id: bookingId });
       } catch (unlockError) {
-        console.error('[Wallet] Error desbloqueando fondos:', unlockError);
       }
       throw error;
     }
@@ -1019,12 +994,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;
 
-    console.log('[Tarjeta] Procesando pago MercadoPago:', bookingId);
 
     try {
       // Crear intención de pago
       const intent = await this.paymentsService.createIntent(bookingId);
-      console.log('[Tarjeta] Intención creada:', intent.status);
 
       // Actualizar booking con método de pago
       await this.bookingsService.updateBooking(bookingId, {
@@ -1039,7 +1012,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Crear preferencia de MercadoPago
       const preference = await this.createPreferenceWithOnboardingGuard(bookingId);
 
-      console.log('✅ Redirigiendo a MercadoPago...');
 
       // Redirigir a MercadoPago
       if (preference.initPoint) {
@@ -1048,7 +1020,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         throw new Error('No se pudo crear preferencia de pago');
       }
     } catch (error: unknown) {
-      console.error('[Tarjeta] Error en pago:', error);
       throw error;
     }
   }

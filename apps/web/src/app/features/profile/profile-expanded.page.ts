@@ -260,7 +260,6 @@ export class ProfileExpandedPage implements OnInit {
       this.profile.set(profile);
       this.populateForms(profile);
     } catch (err) {
-      console.error('Error loading profile:', err);
       this.error.set(err instanceof Error ? err.message : 'No pudimos cargar tu perfil.');
     } finally {
       this.loading.set(false);
@@ -272,7 +271,6 @@ export class ProfileExpandedPage implements OnInit {
       const docs = await this.profileService.getMyDocuments();
       this.documents.set(docs);
     } catch (err) {
-      console.error('Error loading documents:', err);
     }
   }
 
@@ -280,7 +278,6 @@ export class ProfileExpandedPage implements OnInit {
     try {
       await this.verificationService.triggerVerification(role);
     } catch (err) {
-      console.warn('No pudimos actualizar el estado de verificación automáticamente:', err);
     }
   }
 
@@ -514,7 +511,6 @@ export class ProfileExpandedPage implements OnInit {
 
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      console.error(err);
       this.error.set(err instanceof Error ? err.message : 'No pudimos guardar los cambios.');
     } finally {
       this.saving.set(false);
@@ -545,7 +541,6 @@ export class ProfileExpandedPage implements OnInit {
       this.message.set('Avatar actualizado exitosamente');
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      console.error(err);
       this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
     } finally {
       this.uploadingAvatar.set(false);
@@ -596,7 +591,6 @@ export class ProfileExpandedPage implements OnInit {
       this.message.set('Documento subido exitosamente');
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      console.error(err);
       this.error.set(err instanceof Error ? err.message : 'No pudimos subir el documento.');
     } finally {
       this.uploadingDocument.set(false);
@@ -617,7 +611,6 @@ export class ProfileExpandedPage implements OnInit {
       this.message.set('Documento eliminado');
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      console.error(err);
       this.error.set('No pudimos eliminar el documento.');
     }
   }
@@ -714,7 +707,6 @@ export class ProfileExpandedPage implements OnInit {
     try {
       await this.authService.signOut();
     } catch (err) {
-      console.error(err);
       this.error.set('Error al cerrar sesión');
     }
   }

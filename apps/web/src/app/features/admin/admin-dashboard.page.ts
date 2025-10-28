@@ -81,7 +81,6 @@ export class AdminDashboardPage implements OnInit {
         totalPayments: payments,
       });
     } catch (err) {
-      console.error(err);
       this.message.set('No pudimos cargar las estadísticas.');
     } finally {
       this.loading.set(false);
@@ -127,7 +126,6 @@ export class AdminDashboardPage implements OnInit {
       this.message.set(`Auto ${car.title} aprobado.`);
       await this.loadDashboardData();
     } catch (err) {
-      console.error(err);
       this.message.set('Fallo al aprobar el auto.');
     }
   }
@@ -145,7 +143,6 @@ export class AdminDashboardPage implements OnInit {
       this.triggerDownload(blob, filename);
       this.exportMessage.set(`Exportación generada (${filename}).`);
     } catch (err: unknown) {
-      console.error(err);
       this.exportMessage.set(err instanceof Error ? err.message : 'No pudimos exportar la base de datos.');
     } finally {
       this.exporting.set(false);

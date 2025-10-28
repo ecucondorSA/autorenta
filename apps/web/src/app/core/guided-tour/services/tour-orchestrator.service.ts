@@ -62,20 +62,17 @@ export class TourOrchestratorService implements OnDestroy {
     // Get definition
     const definition = this.registry.getDefinition(id);
     if (!definition) {
-      console.error(`[TourOrchestrator] Tour not found: ${id}`);
       return false;
     }
 
     // Check if should skip
     if (!force && this.shouldSkipTour(definition)) {
-      console.log(`[TourOrchestrator] Skipping tour: ${id}`);
       return false;
     }
 
     // Evaluate guards
     const guardsPass = await this.evaluateGuards(definition.guards || []);
     if (!guardsPass && !force) {
-      console.log(`[TourOrchestrator] Guards failed for tour: ${id}`);
       return false;
     }
 
@@ -87,7 +84,6 @@ export class TourOrchestratorService implements OnDestroy {
         priority: definition.priority || TourPriority.Normal,
         timestamp: Date.now(),
       });
-      console.log(`[TourOrchestrator] Tour queued: ${id}`);
       return false;
     }
 
@@ -208,7 +204,6 @@ export class TourOrchestratorService implements OnDestroy {
       // Start the tour
       this.adapter.start();
     } catch (error) {
-      console.error('[TourOrchestrator] Error starting tour:', error);
       this.telemetry.trackTourError(definition.id, error instanceof Error ? error : String(error));
       this.cleanupTour();
     }
@@ -237,7 +232,6 @@ export class TourOrchestratorService implements OnDestroy {
           });
 
           if (!element && step.target.required) {
-            console.warn(
               `[TourOrchestrator] Required element not found, skipping step: ${step.id}`,
             );
             this.adapter.next();
@@ -346,7 +340,6 @@ export class TourOrchestratorService implements OnDestroy {
         const result = await guard.check();
         if (!result) return false;
       } catch (error) {
-        console.error('[TourOrchestrator] Guard evaluation failed:', error);
         return false;
       }
     }

@@ -89,7 +89,6 @@ export class CarsCompareService {
       const validCars = cars.filter((car) => car !== null) as Car[];
       this.comparedCars.set(validCars);
     } catch (error) {
-      console.error('Error loading comparison cars:', error);
       this.comparedCars.set([]);
     }
   }
@@ -243,7 +242,6 @@ export class CarsCompareService {
         sessionStorage.removeItem(STORAGE_KEY);
       }
     } catch (error) {
-      console.error('Error loading comparison from storage:', error);
       sessionStorage.removeItem(STORAGE_KEY);
     }
   }

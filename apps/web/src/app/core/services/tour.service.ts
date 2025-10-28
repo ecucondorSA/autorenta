@@ -114,7 +114,6 @@ export class TourService {
   startWelcomeTour(): void {
     // DEPRECATED: This service is being replaced by GuidedTourService
     // Uncomment the line below to temporarily disable old system
-    console.warn(
       '[OLD TourService] startWelcomeTour() called - This will be removed soon. Use GuidedTourService instead.',
     );
     return; // Disabled - use new GuidedTourService
@@ -126,7 +125,6 @@ export class TourService {
 
   startGuidedBookingTour(): void {
     // DEPRECATED: This service is being replaced by GuidedTourService
-    console.warn(
       '[OLD TourService] startGuidedBookingTour() called - This will be removed soon. Use GuidedTourService instead.',
     );
     return; // Disabled - use new GuidedTourService
@@ -477,7 +475,6 @@ export class TourService {
         if (element) return resolve();
         if (Date.now() - startedAt >= this.WAIT_TIMEOUT_MS) {
           this.trackEvent('tour_element_timeout', { selector });
-          console.warn(`Tour: Timeout waiting for selector: ${selector}. Continuing anyway...`);
           return resolve(); // Changed from reject to resolve to continue tour
         }
         setTimeout(tryFind, this.WAIT_INTERVAL_MS);
@@ -502,7 +499,6 @@ export class TourService {
         }
       })
       .catch((err) => {
-        console.warn(`[Tour] Could not find next element: "${selector}"`, err);
         this.tour?.cancel(); // Cancel tour on error
       })
       .finally(() => {
@@ -514,7 +510,6 @@ export class TourService {
   // #region Analytics
   private trackEvent(eventName: string, properties: Record<string, unknown>): void {
     // TODO: Integrate with your actual analytics service.
-    console.log(`[Analytics] Event: ${eventName}`, properties);
   }
   // #endregion
 }

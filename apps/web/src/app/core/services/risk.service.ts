@@ -96,13 +96,11 @@ export class RiskService {
     ).pipe(
       map((response) => {
         if (response.error) {
-          console.error('Error persisting risk snapshot:', response.error);
           return { ok: false, error: response.error.message };
         }
         return { ok: true, snapshotId: response.data.booking_id };
       }),
       catchError((error) => {
-        console.error('Error in persistRiskSnapshot:', error);
         return of({ ok: false, error: error.message || 'Error desconocido' });
       }),
     );
@@ -144,7 +142,6 @@ export class RiskService {
         return { snapshot };
       }),
       catchError((error) => {
-        console.error('Error in getRiskSnapshotByBookingId:', error);
         return of({ snapshot: null, error: error.message });
       }),
     );

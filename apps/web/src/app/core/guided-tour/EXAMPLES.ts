@@ -25,7 +25,6 @@ export class HelpMenuComponent {
     });
 
     if (!started) {
-      console.log('Tour was not started (already completed or throttled)');
     }
   }
 }
@@ -172,7 +171,6 @@ export class DevToolsComponent {
 
   resetTour() {
     this.guidedTour.reset(TourId.Welcome);
-    console.log('Tour reset! Can be shown again.');
   }
 
   forceTour() {
@@ -185,7 +183,6 @@ export class DevToolsComponent {
 
   enableDebug() {
     this.guidedTour.enableDebug();
-    console.log('Debug mode enabled. Check console for tour events.');
   }
 }
 
@@ -291,14 +288,12 @@ export class AccordionComponent implements OnInit {
           },
           // Hook to expand panel before showing step
           onBefore: async () => {
-            console.log('Expanding panel...');
             this.isPanelExpanded = true;
             // Wait for animation
             await new Promise((resolve) => setTimeout(resolve, 300));
           },
           // Hook to collapse after step
           onAfter: async () => {
-            console.log('Collapsing panel...');
             this.isPanelExpanded = false;
           },
           buttons: [
@@ -384,7 +379,6 @@ export class AnalyticsDemoComponent implements OnInit {
     // You can also access event history:
 
     const history = this.guidedTour.getEventHistory();
-    console.log('Tour events:', history);
 
     // Events automatically sent:
     // - tour_started

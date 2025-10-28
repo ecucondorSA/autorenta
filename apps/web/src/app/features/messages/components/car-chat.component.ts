@@ -396,7 +396,6 @@ export class CarChatComponent implements OnInit, OnDestroy {
       const messages = await this.messagesService.listByCar(this.carId());
       this.messages.set(messages);
     } catch (err) {
-      console.error('Error loading messages:', err);
       this.error.set('No pudimos cargar los mensajes');
     } finally {
       this.loading.set(false);
@@ -433,7 +432,6 @@ export class CarChatComponent implements OnInit, OnDestroy {
 
       // Don't reload - realtime will update
     } catch (err) {
-      console.error('Error sending message:', err);
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
     } finally {
       this.sending.set(false);

@@ -111,7 +111,6 @@ describe('Availability Performance Tests', () => {
     const duration = endTime - startTime;
 
     expect(duration).toBeLessThan(500);
-    console.log(`✅ get_available_cars con 100 registros: ${duration.toFixed(2)}ms`);
   });
 
   it('debería responder en < 500ms con 200 registros simulados', async () => {
@@ -123,7 +122,6 @@ describe('Availability Performance Tests', () => {
     const duration = endTime - startTime;
 
     expect(duration).toBeLessThan(500);
-    console.log(`✅ get_available_cars con 200 registros: ${duration.toFixed(2)}ms`);
   });
 
   it('debería responder en < 100ms para is_car_available', async () => {
@@ -135,7 +133,6 @@ describe('Availability Performance Tests', () => {
     const duration = endTime - startTime;
 
     expect(duration).toBeLessThan(100);
-    console.log(`✅ is_car_available: ${duration.toFixed(2)}ms`);
   });
 
   it('debería mantener performance con filtro por ciudad en 100 registros', async () => {
@@ -150,7 +147,6 @@ describe('Availability Performance Tests', () => {
     const duration = endTime - startTime;
 
     expect(duration).toBeLessThan(500);
-    console.log(`✅ get_available_cars con filtro de ciudad: ${duration.toFixed(2)}ms`);
   });
 
   it('debería manejar múltiples llamadas concurrentes en < 2 segundos', async () => {
@@ -170,7 +166,6 @@ describe('Availability Performance Tests', () => {
     const duration = endTime - startTime;
 
     expect(duration).toBeLessThan(2000);
-    console.log(`✅ 10 llamadas concurrentes: ${duration.toFixed(2)}ms`);
   });
 
   it('debería cargar fotos eficientemente (paralelo, no secuencial)', async () => {

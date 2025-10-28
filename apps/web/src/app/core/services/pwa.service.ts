@@ -72,7 +72,6 @@ export class PwaService {
       // Update installable state
       this.installable.set(true);
 
-      console.log('💡 PWA: App is installable');
     });
 
     // Listen for app installed event
@@ -80,7 +79,6 @@ export class PwaService {
       // Clear the deferredPrompt
       this.deferredPrompt = null;
       this.installable.set(false);
-      console.log('✅ PWA: App installed successfully');
 
       // Track installation (opcional: enviar a analytics)
       this.trackInstallation();
@@ -106,7 +104,6 @@ export class PwaService {
     this.swUpdate.versionUpdates
       .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
       .subscribe((event) => {
-        console.log('🔄 PWA: New version available', event);
         this.updateAvailable.set(true);
       });
 
@@ -124,7 +121,6 @@ export class PwaService {
    */
   async promptInstall(): Promise<boolean> {
     if (!this.deferredPrompt) {
-      console.warn('⚠️ PWA: Install prompt not available');
       return false;
     }
 
@@ -134,7 +130,6 @@ export class PwaService {
     // Wait for the user to respond to the prompt
     const { outcome } = await this.deferredPrompt.userChoice;
 
-    console.log(`👤 PWA: User response to install prompt: ${outcome}`);
 
     // Clear the deferredPrompt
     this.deferredPrompt = null;
@@ -157,7 +152,6 @@ export class PwaService {
       // Reload the page to load the new version
       document.location.reload();
     } catch (error) {
-      console.error('❌ PWA: Error activating update', error);
     }
   }
 
@@ -173,17 +167,14 @@ export class PwaService {
    */
   async share(data: ShareData): Promise<boolean> {
     if (!this.canShare()) {
-      console.warn('⚠️ PWA: Web Share API not supported');
       return false;
     }
 
     try {
       await navigator.share(data);
-      console.log('✅ PWA: Content shared successfully');
       return true;
     } catch (error) {
       if ((error as Error).name !== 'AbortError') {
-        console.error('❌ PWA: Error sharing content', error);
       }
       return false;
     }
@@ -194,12 +185,10 @@ export class PwaService {
    */
   async requestNotificationPermission(): Promise<NotificationPermission> {
     if (!('Notification' in window)) {
-      console.warn('⚠️ PWA: Notifications not supported');
       return 'denied';
     }
 
     const permission = await Notification.requestPermission();
-    console.log(`🔔 PWA: Notification permission: ${permission}`);
     return permission;
   }
 
@@ -208,12 +197,10 @@ export class PwaService {
    */
   async showNotification(title: string, options?: NotificationOptions): Promise<void> {
     if (!('Notification' in window)) {
-      console.warn('⚠️ PWA: Notifications not supported');
       return;
     }
 
     if (Notification.permission !== 'granted') {
-      console.warn('⚠️ PWA: Notification permission not granted');
       return;
     }
 
@@ -270,15 +257,12 @@ export class PwaService {
   async setAppBadge(count: number): Promise<void> {
     const nav = navigator as NavigatorWithExperimentalAPIs;
     if (!nav.setAppBadge) {
-      console.warn('⚠️ PWA: Badging API not supported');
       return;
     }
 
     try {
       await nav.setAppBadge(count);
-      console.log(`✅ PWA: Badge set to ${count}`);
     } catch (error) {
-      console.error('❌ PWA: Error setting badge', error);
     }
   }
 
@@ -293,9 +277,7 @@ export class PwaService {
 
     try {
       await nav.clearAppBadge();
-      console.log('✅ PWA: Badge cleared');
     } catch (error) {
-      console.error('❌ PWA: Error clearing badge', error);
     }
   }
 
@@ -308,7 +290,6 @@ export class PwaService {
   ): Promise<ContactInfo[] | null> {
     const nav = navigator as NavigatorWithExperimentalAPIs;
     if (!nav.contacts) {
-      console.warn('⚠️ PWA: Contact Picker API not supported');
       return null;
     }
 
@@ -316,11 +297,9 @@ export class PwaService {
       const contacts = await nav.contacts.select(properties, {
         multiple,
       });
-      console.log(`✅ PWA: ${contacts.length} contacts selected`);
       return contacts;
     } catch (error) {
       if ((error as Error).name !== 'AbortError') {
-        console.error('❌ PWA: Error picking contacts', error);
       }
       return null;
     }
@@ -332,22 +311,18 @@ export class PwaService {
   async requestWakeLock(): Promise<WakeLockSentinel | null> {
     const nav = navigator as NavigatorWithExperimentalAPIs;
     if (!nav.wakeLock) {
-      console.warn('⚠️ PWA: Wake Lock API not supported');
       return null;
     }
 
     try {
       const wakeLock = await nav.wakeLock.request('screen');
-      console.log('✅ PWA: Wake lock activated');
 
       // Listen for release
       wakeLock.addEventListener('release', () => {
-        console.log('🔓 PWA: Wake lock released');
       });
 
       return wakeLock;
     } catch (error) {
-      console.error('❌ PWA: Error requesting wake lock', error);
       return null;
     }
   }
@@ -357,7 +332,6 @@ export class PwaService {
    */
   async writeToClipboard(data: { text?: string; html?: string; image?: Blob }): Promise<boolean> {
     if (!navigator.clipboard?.write) {
-      console.warn('⚠️ PWA: Advanced Clipboard API not supported');
       return false;
     }
 
@@ -377,10 +351,8 @@ export class PwaService {
       }
 
       await navigator.clipboard.write([new ClipboardItem(items)]);
-      console.log('✅ PWA: Content copied to clipboard');
       return true;
     } catch (error) {
-      console.error('❌ PWA: Error writing to clipboard', error);
       return false;
     }
   }
@@ -391,16 +363,13 @@ export class PwaService {
   async lockOrientation(orientation: 'portrait' | 'landscape'): Promise<boolean> {
     const screenOrientation = screen.orientation as ScreenOrientationWithLock;
     if (!screenOrientation?.lock) {
-      console.warn('⚠️ PWA: Screen Orientation API not supported');
       return false;
     }
 
     try {
       await screenOrientation.lock(orientation);
-      console.log(`✅ PWA: Orientation locked to ${orientation}`);
       return true;
     } catch (error) {
-      console.error('❌ PWA: Error locking orientation', error);
       return false;
     }
   }
@@ -412,7 +381,6 @@ export class PwaService {
     const screenOrientation = screen.orientation as ScreenOrientationWithLock;
     if (screenOrientation?.unlock) {
       screenOrientation.unlock();
-      console.log('🔓 PWA: Orientation unlocked');
     }
   }
 
@@ -429,15 +397,12 @@ export class PwaService {
         (await navigator.serviceWorker.ready) as ServiceWorkerRegistrationWithPeriodicSync;
 
       if (!registration.periodicSync) {
-        console.warn('⚠️ PWA: Periodic Background Sync not supported');
         return false;
       }
 
       await registration.periodicSync.register(tag, { minInterval });
-      console.log(`✅ PWA: Periodic sync registered: ${tag}`);
       return true;
     } catch (error) {
-      console.error('❌ PWA: Error registering periodic sync', error);
       return false;
     }
   }

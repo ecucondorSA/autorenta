@@ -136,7 +136,6 @@ export class CheckoutPaymentService {
 
       // Manejo de errores con rollback
       catchError((err) => {
-        console.error('Error in wallet payment, rolling back:', err);
         return from(this.rollbackTransaction(bookingId, transaction)).pipe(
           switchMap(() =>
             throwError(
@@ -191,7 +190,6 @@ export class CheckoutPaymentService {
 
       // Manejo de errores
       catchError((err) => {
-        console.error('Error in credit card payment, rolling back:', err);
         return from(this.rollbackTransaction(bookingId, transaction)).pipe(
           switchMap(() => throwError(() => new Error(err.message || 'Error al procesar el pago'))),
         );
@@ -269,7 +267,6 @@ export class CheckoutPaymentService {
 
       // Manejo de errores
       catchError((err) => {
-        console.error('Error in partial wallet payment, rolling back:', err);
         return from(this.rollbackTransaction(bookingId, transaction)).pipe(
           switchMap(() => throwError(() => new Error(err.message || 'Error al procesar el pago'))),
         );
@@ -335,7 +332,6 @@ export class CheckoutPaymentService {
     });
 
     if (error) {
-      console.error('Failed to unlock funds during rollback:', error);
     }
   }
 
@@ -346,15 +342,12 @@ export class CheckoutPaymentService {
     bookingId: string,
     transaction: PaymentTransaction,
   ): Promise<void> {
-    console.log('🔄 Rolling back transaction:', transaction);
 
     // Desbloquear fondos si fueron bloqueados
     if (transaction.fundsLocked && transaction.lockedAmountCents > 0) {
       try {
         await this.unlockWalletFunds(bookingId, transaction.lockedAmountCents);
-        console.log('✅ Funds unlocked successfully');
       } catch (err) {
-        console.error('❌ Failed to unlock funds:', err);
       }
     }
 
@@ -362,15 +355,12 @@ export class CheckoutPaymentService {
     if (transaction.bookingUpdated) {
       try {
         await this.bookingsService.updateBooking(bookingId, { status: 'pending' });
-        console.log('✅ Booking reverted to pending');
       } catch (err) {
-        console.error('❌ Failed to revert booking:', err);
       }
     }
 
     // TODO: Marcar intent como 'failed' si fue creado
     if (transaction.intentCreated && transaction.intentId) {
-      console.warn('⚠️ Payment intent created but not cleaned up:', transaction.intentId);
     }
   }
 }

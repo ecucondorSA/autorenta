@@ -124,7 +124,6 @@ export class SettlementService {
         missing,
       };
     } catch (error) {
-      console.error('Error validating inspections:', error);
       return { valid: false, missing: ['check_in', 'check_out'] };
     }
   }
@@ -149,7 +148,6 @@ export class SettlementService {
 
       return [];
     } catch (error) {
-      console.error('Error comparing damages:', error);
       return [];
     }
   }
@@ -206,7 +204,6 @@ export class SettlementService {
       this.currentClaim.set(claim);
       return claim;
     } catch (error) {
-      console.error('Error creating claim:', error);
       this.error.set('Error al crear el claim');
       return null;
     } finally {
@@ -242,7 +239,6 @@ export class SettlementService {
 
       return eligibility;
     } catch (error) {
-      console.error('Error evaluating claim:', error);
       this.error.set('Error al evaluar elegibilidad');
       return null;
     } finally {
@@ -381,7 +377,6 @@ export class SettlementService {
         waterfall: waterfallResult,
       };
     } catch (error) {
-      console.error('Error processing claim:', error);
       this.error.set('Error al procesar claim');
       return {
         ok: false,
@@ -469,7 +464,6 @@ export class SettlementService {
 
       return { eligibility, estimatedBreakdown: breakdown };
     } catch (error) {
-      console.error('Error simulating waterfall:', error);
       return { eligibility: null, estimatedBreakdown: null };
     }
   }

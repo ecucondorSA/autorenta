@@ -301,24 +301,20 @@ export class TransferFundsComponent implements OnInit {
     const user = await this.ledgerService['supabase'].auth.getUser();
     if (user.data.user) {
       this.currentUserId.set(user.data.user.id);
-      console.log('[TransferFundsComponent] Current user ID:', user.data.user.id);
     }
 
     // Load recent transfers
     await this.ledgerService.loadTransfers(5);
 
     // IMPORTANTE: Forzar refresh del balance para evitar mostrar datos cacheados obsoletos
-    console.log('[TransferFundsComponent] Refreshing balance from database...');
 
     try {
       const balance = await this.walletService.getBalance();
-      console.log('[TransferFundsComponent] Balance refreshed from database:', {
         available_ars: balance.available_balance / 100,
         locked_ars: balance.locked_balance / 100,
         total_ars: balance.total_balance / 100,
       });
     } catch (error) {
-      console.error('[TransferFundsComponent] Error loading balance:', error);
       // Si falla, el balance quedará en null/0
     }
   }
@@ -381,7 +377,6 @@ export class TransferFundsComponent implements OnInit {
         this.searchError.set('Número de cuenta no encontrado');
       }
     } catch (err) {
-      console.error('Error searching user:', err);
       this.searchError.set('Error al buscar usuario');
     }
   }
@@ -416,7 +411,6 @@ export class TransferFundsComponent implements OnInit {
     try {
       const amountCents = Math.round(this.amountInput * 100);
 
-      console.log('[TransferFundsComponent] Submitting transfer:', {
         to_user_id: this.selectedRecipient()!.id,
         to_user_name: this.selectedRecipient()!.full_name,
         amount_cents: amountCents,
@@ -449,7 +443,6 @@ export class TransferFundsComponent implements OnInit {
         this.error.set(result.error || 'Error al transferir fondos');
       }
     } catch (err) {
-      console.error('Transfer error:', err);
       this.error.set(err instanceof Error ? err.message : 'Error inesperado');
     } finally {
       this.loading.set(false);
