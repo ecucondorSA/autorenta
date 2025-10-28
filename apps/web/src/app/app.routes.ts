@@ -90,8 +90,20 @@ export const routes: Routes = [
   {
     path: 'profile',
     canMatch: [AuthGuard],
-    loadComponent: () =>
-      import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
+      },
+      {
+        path: 'mercadopago-connect',
+        loadComponent: () =>
+          import('./features/profile/mercadopago-connect.component').then(
+            (m) => m.MercadoPagoConnectComponent
+          ),
+      },
+    ],
   },
   {
     path: 'users/:id',

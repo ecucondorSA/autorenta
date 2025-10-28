@@ -1,0 +1,128 @@
+{
+  "name": "Autorenta - Car Rental Platform",
+  "description": "Angular standalone app with Supabase backend for car rental management",
+  "version": "0.1.0",
+  "ai_assistant": {
+    "autonomous_mode": true,
+    "preferences": {
+      "language": "Spanish",
+      "code_style": "angular-standalone",
+      "testing_framework": "jasmine-karma",
+      "package_manager": "pnpm"
+    }
+  },
+  "project_context": {
+    "architecture": "angular-standalone",
+    "backend": "supabase",
+    "deployment": "cloudflare-pages",
+    "monorepo": true,
+    "database": "PostgreSQL via Supabase"
+  },
+  "patterns": {
+    "services": "inject-pattern",
+    "components": "standalone-lazy",
+    "testing": "jasmine-karma",
+    "routing": "lazy-loaded-routes",
+    "state_management": "signals",
+    "storage": "supabase-storage-rls"
+  },
+  "conventions": {
+    "file_naming": "kebab-case",
+    "component_suffix": ".component.ts",
+    "service_suffix": ".service.ts",
+    "page_suffix": ".page.ts",
+    "model_suffix": ".model.ts"
+  },
+  "workflows": {
+    "development": {
+      "setup": "pnpm run dev",
+      "web": "pnpm run dev:web",
+      "worker": "pnpm run dev:worker"
+    },
+    "testing": {
+      "unit": "pnpm run test",
+      "unit_quick": "pnpm run test:quick",
+      "coverage": "pnpm run test:coverage",
+      "e2e": "pnpm run test:e2e",
+      "e2e_ui": "pnpm run test:e2e:ui"
+    },
+    "build": {
+      "web": "pnpm run build:web",
+      "all": "pnpm run build"
+    },
+    "deployment": {
+      "web": "pnpm run deploy:web",
+      "worker": "pnpm run deploy:worker",
+      "full": "pnpm run deploy"
+    },
+    "ci_cd": {
+      "pipeline": "pnpm run ci",
+      "lint": "pnpm run lint",
+      "lint_fix": "pnpm run lint:fix"
+    },
+    "utilities": {
+      "sync_types": "pnpm run sync:types",
+      "sync_types_remote": "pnpm run sync:types:remote",
+      "check_skills": "pnpm run check:skills"
+    }
+  },
+  "autonomous_tasks": {
+    "pre_commit": [
+      "Run lint check",
+      "Run unit tests",
+      "Check TypeScript types"
+    ],
+    "pre_deploy": [
+      "Run full test suite",
+      "Build all packages",
+      "Sync types from Supabase",
+      "Run CI pipeline"
+    ],
+    "code_review": [
+      "Check Angular patterns compliance",
+      "Verify RLS policies for Supabase",
+      "Check security best practices",
+      "Verify test coverage"
+    ]
+  },
+  "features": [
+    "auth",
+    "cars",
+    "bookings",
+    "payments",
+    "admin"
+  ],
+  "documentation": {
+    "architecture": "CLAUDE.md",
+    "patterns": "PATTERNS.md",
+    "skills": "CLAUDE_SKILLS_GUIDE.md",
+    "workflows": "tools/claude-workflows.sh"
+  },
+  "skills": {
+    "enabled": true,
+    "recommended": [
+      "angular-scaffolder",
+      "supabase-rls-debugger",
+      "typescript-sync",
+      "test-generator",
+      "performance-optimizer",
+      "security-auditor"
+    ]
+  },
+  "auto_background": {
+    "enabled": true,
+    "timeout_ms": 900000
+  },
+  "rules": [
+    "Always use standalone components",
+    "Use inject() pattern for dependency injection",
+    "Implement lazy loading for all routes",
+    "Use Angular Signals for state management",
+    "Follow kebab-case for file naming",
+    "Write tests for all services and components",
+    "Ensure RLS policies are properly configured",
+    "Use TypeScript strict mode",
+    "Follow Angular style guide",
+    "Document complex logic with comments"
+  ]
+}

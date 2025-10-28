@@ -101,6 +101,19 @@ export interface UserProfile {
   can_publish_cars?: boolean;
   can_book_cars?: boolean;
 
+  // MercadoPago OAuth fields
+  mercadopago_collector_id?: string | null;
+  mercadopago_connected?: boolean;
+  mercadopago_connected_at?: string | null;
+  mercadopago_access_token?: string | null;
+  mercadopago_refresh_token?: string | null;
+  mercadopago_access_token_expires_at?: string | null;
+  mercadopago_public_key?: string | null;
+  mercadopago_account_type?: string | null;
+  mercadopago_country?: string | null;
+  mercadopago_site_id?: string | null;
+  mercadopago_oauth_state?: string | null;
+
   // Timestamps
   created_at: string;
   updated_at?: string;
@@ -259,6 +272,7 @@ export interface Car {
   cancel_policy: CancelPolicy;
   photos?: CarPhoto[];
   car_photos?: CarPhoto[];
+  images?: string[]; // Simple array of image URLs (for backward compatibility)
   owner?: CarOwner; // Owner profile information
   created_at: string;
   updated_at: string;
@@ -403,6 +417,9 @@ export interface Booking {
 
   // Relación con cobertura (populated via JOIN)
   insurance_coverage?: Record<string, unknown>; // BookingInsuranceCoverage
+
+  // Relación con car (populated dinamically in some queries)
+  car?: Car;
 }
 
 export interface PaymentIntent {

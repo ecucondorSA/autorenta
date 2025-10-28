@@ -1,0 +1,228 @@
+<div class="mercadopago-connect-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <button class="btn-back" (click)="goToProfile()" type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Volver al Perfil
+      </button>
+      <h1>Conectar MercadoPago</h1>
+      <p class="subtitle">Conecta tu cuenta para recibir pagos directos por tus alquileres</p>
+    </div>
+
+    <!-- Mensajes de estado -->
+    @if (error()) {
+      <div class="alert alert-error">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        {{ error() }}
+      </div>
+    }
+
+    @if (success()) {
+      <div class="alert alert-success">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        {{ success() }}
+      </div>
+    }
+
+    <!-- Card principal -->
+    <div class="mercadopago-card">
+      @if (connectionStatus().connected) {
+        <!-- Estado: Conectado -->
+        <div class="connected-state">
+          <div class="status-icon success">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="30" fill="#4CAF50" opacity="0.2"/>
+              <path d="M20 32l8 8 16-16" stroke="#4CAF50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <h2 class="status-title">Cuenta Conectada</h2>
+          <p class="status-description">
+            Tu cuenta de MercadoPago está vinculada correctamente
+          </p>
+
+          <!-- Info de la cuenta -->
+          <div class="account-info">
+            <div class="info-row">
+              <span class="info-label">Collector ID:</span>
+              <code class="info-value">{{ connectionStatus().collector_id }}</code>
+            </div>
+
+            @if (connectionStatus().account_type) {
+              <div class="info-row">
+                <span class="info-label">Tipo de cuenta:</span>
+                <span class="info-value">
+                  {{ connectionStatus().account_type === 'personal' ? 'Personal' : 'Negocio' }}
+                </span>
+              </div>
+            }
+
+            @if (connectionStatus().country) {
+              <div class="info-row">
+                <span class="info-label">País:</span>
+                <span class="info-value">{{ connectionStatus().country }}</span>
+              </div>
+            }
+
+            @if (connectionStatus().connected_at) {
+              <div class="info-row">
+                <span class="info-label">Conectado desde:</span>
+                <span class="info-value">
+                  {{ connectionStatus().connected_at | date: 'dd/MM/yyyy HH:mm' }}
+                </span>
+              </div>
+            }
+          </div>
+
+          <!-- Token status -->
+          @if (connectionStatus().token_expired) {
+            <div class="token-warning">
+              ⚠️ Tu token de acceso ha expirado. Por favor, vuelve a conectar tu cuenta.
+            </div>
+          }
+
+          <!-- Beneficios -->
+          <div class="benefits-connected">
+            <h3>Beneficios activos:</h3>
+            <ul>
+              <li>✅ Recibe pagos automáticamente en tu cuenta</li>
+              <li>✅ Split instantáneo (90% para ti, 10% comisión)</li>
+              <li>✅ Sin necesidad de transferencias manuales</li>
+              <li>✅ Publica autos sin límite</li>
+            </ul>
+          </div>
+
+          <!-- Acciones -->
+          <div class="actions">
+            <button
+              class="btn btn-primary"
+              (click)="goToPublishCar()"
+              type="button"
+            >
+              Publicar un Auto
+            </button>
+
+            <button
+              class="btn btn-secondary"
+              (click)="disconnect()"
+              [disabled]="disconnecting()"
+              type="button"
+            >
+              @if (disconnecting()) {
+                <span class="spinner-small"></span>
+                Desconectando...
+              } @else {
+                Desconectar Cuenta
+              }
+            </button>
+          </div>
+        </div>
+      } @else {
+        <!-- Estado: No conectado -->
+        <div class="disconnected-state">
+          <div class="status-icon warning">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="30" fill="#FF9800" opacity="0.2"/>
+              <path d="M32 20v16M32 44h.01" stroke="#FF9800" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <h2 class="status-title">Conecta tu Cuenta</h2>
+          <p class="status-description">
+            Para recibir pagos directos por tus alquileres, necesitas vincular tu cuenta de MercadoPago.
+          </p>
+
+          <!-- Beneficios -->
+          <div class="benefits-list">
+            <h3>¿Por qué conectar mi cuenta?</h3>
+            <div class="benefit-item">
+              <div class="benefit-icon">💰</div>
+              <div class="benefit-content">
+                <h4>Recibe pagos automáticamente</h4>
+                <p>El dinero llega directo a tu cuenta de MercadoPago sin intermediarios</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon">⚡</div>
+              <div class="benefit-content">
+                <h4>Split instantáneo</h4>
+                <p>El 90% del pago va directo a tu cuenta, el 10% es la comisión de la plataforma</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon">🔒</div>
+              <div class="benefit-content">
+                <h4>Seguro y confiable</h4>
+                <p>Utilizamos OAuth de MercadoPago, no guardamos tus contraseñas</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon">📊</div>
+              <div class="benefit-content">
+                <h4>Control total</h4>
+                <p>Puedes desconectar tu cuenta en cualquier momento desde tu perfil</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cómo funciona -->
+          <div class="how-it-works">
+            <h3>¿Cómo funciona?</h3>
+            <ol>
+              <li>Haz clic en "Conectar MercadoPago"</li>
+              <li>Serás redirigido a MercadoPago para autorizar la conexión</li>
+              <li>Acepta los permisos solicitados</li>
+              <li>Vuelve a AutoRenta y ¡listo! Ya puedes publicar autos</li>
+            </ol>
+          </div>
+
+          <!-- Botón de conexión -->
+          <div class="actions">
+            <button
+              class="btn btn-primary btn-lg"
+              (click)="connect()"
+              [disabled]="loading()"
+              type="button"
+            >
+              @if (loading()) {
+                <span class="spinner-small"></span>
+                Conectando...
+              } @else {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Conectar MercadoPago
+              }
+            </button>
+
+            <button
+              class="btn btn-secondary"
+              (click)="goToProfile()"
+              type="button"
+            >
+              Volver al Perfil
+            </button>
+          </div>
+
+          <!-- Nota de seguridad -->
+          <div class="security-note">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 0a8 8 0 100 16A8 8 0 008 0zm.93 4.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 4.588zM9 2a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd"/>
+            </svg>
+            AutoRenta nunca te pedirá tu contraseña. La conexión se realiza de forma segura mediante OAuth.
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
