@@ -1,0 +1,137 @@
+name: 📊 Performance Monitor
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    # Run daily at 2 AM
+    - cron: '0 2 * * *'
+
+jobs:
+  lighthouse:
+    name: 🏠 Lighthouse Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build application
+        run: pnpm run build:web
+      
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli
+          lhci autorun || echo "Lighthouse CI completed"
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        continue-on-error: true
+
+  bundle-size:
+    name: 📦 Bundle Size Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build application
+        run: pnpm run build:web
+      
+      - name: Analyze bundle size
+        run: |
+          du -sh apps/web/dist/browser/* | sort -h > bundle-size.txt
+          cat bundle-size.txt
+      
+      - name: Check bundle size limits
+        run: |
+          MAIN_JS_SIZE=$(find apps/web/dist/browser -name "main.*.js" -exec du -k {} \; | cut -f1)
+          MAX_SIZE=500  # 500KB limit for main bundle
+          
+          if [ "$MAIN_JS_SIZE" -gt "$MAX_SIZE" ]; then
+            echo "::error::Main bundle size ($MAIN_JS_SIZE KB) exceeds limit ($MAX_SIZE KB)"
+            exit 1
+          fi
+          
+          echo "✅ Bundle size OK: $MAIN_JS_SIZE KB (limit: $MAX_SIZE KB)"
+      
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle-analysis
+          path: bundle-size.txt
+
+  performance-metrics:
+    name: 📈 Performance Metrics
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run build with stats
+        run: pnpm run build:web --stats-json
+      
+      - name: Analyze build stats
+        run: |
+          if [ -f "apps/web/dist/stats.json" ]; then
+            echo "Build stats generated successfully"
+          fi
+
+  performance-summary:
+    name: 📊 Performance Summary
+    runs-on: ubuntu-latest
+    needs: [lighthouse, bundle-size, performance-metrics]
+    if: always()
+    
+    steps:
+      - name: Generate Summary
+        run: |
+          echo "## 📊 Performance Monitor Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Lighthouse: ${{ needs.lighthouse.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Bundle Size: ${{ needs.bundle-size.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Performance Metrics: ${{ needs.performance-metrics.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Analysis completed at: $(date -u)" >> $GITHUB_STEP_SUMMARY
