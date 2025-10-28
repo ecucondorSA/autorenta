@@ -70,8 +70,8 @@ export class MyCarsPage implements OnInit {
 
       if (hasBookings) {
         const activeCount = activeBookings.length;
-        const nextBooking = activeBookings[0];
-        const startDate = nextBooking ? new Date(nextBooking.start_date).toLocaleDateString() : '';
+        const nextBooking = activeBookings[0] as { start_date?: string } | undefined;
+        const startDate = nextBooking?.start_date ? new Date(nextBooking.start_date).toLocaleDateString() : '';
 
         let message = `❌ No puedes eliminar este auto\n\n`;
 
@@ -107,15 +107,16 @@ export class MyCarsPage implements OnInit {
       alert('✅ Auto eliminado exitosamente');
     } catch (error: unknown) {
       console.error('Error deleting car:', error);
+      const errorObj = error as { code?: string; message?: string; details?: string; hint?: string };
       console.error('Error details:', {
-        code: error?.code,
-        message: error?.message,
-        details: error?.details,
-        hint: error?.hint,
+        code: errorObj?.code,
+        message: errorObj?.message,
+        details: errorObj?.details,
+        hint: errorObj?.hint,
       });
 
       // Mensaje específico para foreign key constraint
-      if (error?.code === '23503' || error?.message?.includes('foreign key')) {
+      if (errorObj?.code === '23503' || errorObj?.message?.includes('foreign key')) {
         alert(
           '❌ No se puede eliminar este auto\n\n' +
             'Este auto tiene reservas asociadas en el sistema.\n' +
