@@ -33,6 +33,61 @@
   <!-- Success State -->
   @else if (booking(); as bkg) {
     <div class="success-container max-w-3xl mx-auto">
+      <!-- ✅ Payment Status Indicator (solo si viene de MercadoPago) -->
+      @if (paymentStatus() !== 'pending' || pollAttempts > 0) {
+        <div class="mb-6">
+          @if (paymentStatus() === 'pending') {
+            <ion-card color="warning">
+              <ion-card-content class="flex items-center">
+                <ion-spinner name="crescent" class="mr-3"></ion-spinner>
+                <div>
+                  <h3 class="font-semibold">Verificando pago...</h3>
+                  <p class="text-sm">Esperando confirmación de MercadoPago</p>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+          @else if (paymentStatus() === 'completed') {
+            <ion-card color="success">
+              <ion-card-content class="flex items-center">
+                <ion-icon name="checkmark-circle" class="text-3xl mr-3"></ion-icon>
+                <div>
+                  <h3 class="font-semibold">¡Pago confirmado!</h3>
+                  <p class="text-sm">MercadoPago procesó tu pago exitosamente</p>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+          @else if (paymentStatus() === 'failed') {
+            <ion-card color="danger">
+              <ion-card-content class="flex items-center">
+                <ion-icon name="close-circle" class="text-3xl mr-3"></ion-icon>
+                <div>
+                  <h3 class="font-semibold">Pago rechazado</h3>
+                  <p class="text-sm">
+                    MercadoPago no pudo procesar tu pago. Por favor intenta nuevamente.
+                  </p>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+          @else if (paymentStatus() === 'timeout') {
+            <ion-card color="warning">
+              <ion-card-content class="flex items-center">
+                <ion-icon name="time-outline" class="text-3xl mr-3"></ion-icon>
+                <div>
+                  <h3 class="font-semibold">Verificación en proceso</h3>
+                  <p class="text-sm">
+                    El pago puede tardar unos minutos en confirmarse. Revisa tu email o consulta
+                    el detalle de la reserva más tarde.
+                  </p>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+        </div>
+      }
+
       <!-- Success Icon -->
       <div class="text-center mb-6">
         <ion-icon

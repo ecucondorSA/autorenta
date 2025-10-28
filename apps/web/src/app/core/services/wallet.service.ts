@@ -942,7 +942,7 @@ export class WalletService {
             // Detectar si es un depósito que pasó de pending a completed
             if (
               transaction.type === 'deposit' &&
-              oldRecord.status === 'pending' &&
+              oldRecord?.status === 'pending' &&
               newRecord.status === 'completed'
             ) {
               console.log('✅ Depósito confirmado:', transaction);

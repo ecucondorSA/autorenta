@@ -47,10 +47,11 @@ const createResilientLock = (): SupabaseLock => {
 
       return await navigatorLocks.request(name, options, async () => fn());
     } catch (error: unknown) {
+      const errorObj = error as { name?: string; message?: string };
       if (
-        error?.name === 'AbortError' ||
-        error?.name === 'NavigatorLockAcquireTimeoutError' ||
-        error?.message?.includes('Navigator LockManager')
+        errorObj?.name === 'AbortError' ||
+        errorObj?.name === 'NavigatorLockAcquireTimeoutError' ||
+        errorObj?.message?.includes('Navigator LockManager')
       ) {
         console.warn(
           `No se pudo obtener el lock de autenticación (${name}). Continuando sin locking.`,

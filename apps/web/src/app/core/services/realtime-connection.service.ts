@@ -14,6 +14,11 @@ export interface ChannelConfig {
   filter?: string;
 }
 
+// Type for database records compatible with Supabase Realtime
+// Supabase Realtime requires this exact constraint
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type DatabaseRecord = { [key: string]: any };
+
 /**
  * Service for resilient Realtime connections with automatic reconnection
  *
@@ -54,7 +59,7 @@ export class RealtimeConnectionService {
    * @param onStatusChange Optional callback for connection status changes
    * @returns RealtimeChannel instance
    */
-  subscribeWithRetry<T>(
+  subscribeWithRetry<T extends DatabaseRecord>(
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
@@ -80,7 +85,7 @@ export class RealtimeConnectionService {
   /**
    * Create a Realtime channel with status monitoring
    */
-  private createChannel<T>(
+  private createChannel<T extends DatabaseRecord>(
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
@@ -111,7 +116,7 @@ export class RealtimeConnectionService {
   /**
    * Handle channel subscription status changes
    */
-  private handleChannelStatus<T>(
+  private handleChannelStatus<T extends DatabaseRecord>(
     channelName: string,
     status: string,
     config: ChannelConfig,
@@ -158,7 +163,7 @@ export class RealtimeConnectionService {
   /**
    * Handle connection error
    */
-  private onError<T>(
+  private onError<T extends DatabaseRecord>(
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
@@ -175,7 +180,7 @@ export class RealtimeConnectionService {
   /**
    * Handle connection timeout
    */
-  private onTimeout<T>(
+  private onTimeout<T extends DatabaseRecord>(
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
@@ -204,7 +209,7 @@ export class RealtimeConnectionService {
   /**
    * Attempt to reconnect with exponential backoff
    */
-  private attemptReconnect<T>(
+  private attemptReconnect<T extends DatabaseRecord>(
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,

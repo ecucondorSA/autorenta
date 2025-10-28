@@ -64,7 +64,23 @@ export class PaymentsService {
     return data as PaymentIntent;
   }
 
+  /**
+   * @deprecated NO usar en producción. Solo para desarrollo/testing.
+   * En producción, el webhook de MercadoPago actualiza automáticamente el payment intent.
+   *
+   * Para testing local:
+   * - Usar triggerMockPayment() en su lugar
+   * - O configurar environment.production = false
+   */
   async markAsPaid(intentId: string): Promise<void> {
+    if (environment.production) {
+      throw new Error(
+        'markAsPaid() deprecado en producción. El webhook de MercadoPago actualiza automáticamente el payment intent.'
+      );
+    }
+
+    console.warn('⚠️ markAsPaid() solo debe usarse en desarrollo');
+
     const workerUrl = environment.paymentsWebhookUrl;
     if (!workerUrl) {
       throw new Error('paymentsWebhookUrl no configurado');
@@ -95,7 +111,25 @@ export class PaymentsService {
     return data as PaymentIntent;
   }
 
+  /**
+   * Simula webhook de pago para testing/desarrollo
+   *
+   * @param bookingId - ID del booking
+   * @param status - Estado del pago simulado
+   *
+   * ⚠️ SOLO PARA DESARROLLO/QA
+   * - En producción, el webhook de MercadoPago actualiza automáticamente
+   * - Para pruebas locales, asegúrate de que environment.production = false
+   */
   async triggerMockPayment(bookingId: string, status: 'approved' | 'rejected'): Promise<void> {
+    if (environment.production) {
+      throw new Error(
+        'triggerMockPayment() solo disponible en desarrollo. En producción usar MercadoPago real.'
+      );
+    }
+
+    console.warn('⚠️ triggerMockPayment() - Solo para desarrollo/testing');
+
     const workerUrl = environment.paymentsWebhookUrl;
     if (!workerUrl) {
       throw new Error('paymentsWebhookUrl no configurado');

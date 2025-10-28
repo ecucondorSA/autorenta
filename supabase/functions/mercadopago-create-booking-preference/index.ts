@@ -359,9 +359,9 @@ serve(async (req) => {
         },
       ],
       back_urls: {
-        success: `${APP_BASE_URL}/bookings/${booking_id}?payment=success`,
-        failure: `${APP_BASE_URL}/bookings/${booking_id}?payment=failure`,
-        pending: `${APP_BASE_URL}/bookings/${booking_id}?payment=pending`,
+        success: `${APP_BASE_URL}/bookings/success/${booking_id}?from_mp=true&payment=success`,
+        failure: `${APP_BASE_URL}/bookings/success/${booking_id}?from_mp=true&payment=failure`,
+        pending: `${APP_BASE_URL}/bookings/success/${booking_id}?from_mp=true&payment=pending`,
       },
       auto_return: 'approved',
       external_reference: booking_id,

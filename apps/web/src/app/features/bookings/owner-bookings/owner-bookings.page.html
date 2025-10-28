@@ -17,7 +17,6 @@
 
   <!-- Content -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Loading State -->
     @if (loading()) {
       <div class="flex flex-col items-center justify-center py-16">
         <svg
@@ -61,6 +60,31 @@
     }
 
     @if (!loading() && !error()) {
+      @if (marketplaceStatus(); as mpStatus) {
+        @if (!mpStatus.isApproved) {
+          <div class="mb-8 rounded-lg border border-amber-300 bg-amber-50 px-4 py-4 text-sm text-amber-800 dark:border-amber-600/60 dark:bg-amber-900/25 dark:text-amber-100">
+            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+              <div class="flex items-start gap-3">
+                <span class="mt-0.5 text-lg">⚠️</span>
+                <div>
+                  <p class="font-semibold">Pagos automáticos pendientes</p>
+                  <p>
+                    Aún no vinculaste Mercado Pago. Las reservas se liquidarán en tu wallet de Autorenta
+                    hasta que completes el onboarding.
+                  </p>
+                </div>
+              </div>
+              <a
+                [routerLink]="['/profile']"
+                [queryParams]="{ section: 'payments' }"
+                class="inline-flex items-center gap-2 rounded-lg border border-amber-400 bg-white px-3 py-2 text-sm font-medium text-amber-800 transition hover:bg-amber-100 dark:border-amber-500/70 dark:bg-transparent dark:text-amber-100 dark:hover:bg-amber-900/40"
+              >
+                Vincular ahora →
+              </a>
+            </div>
+          </div>
+        }
+      }
       <section class="mb-10">
         <div class="flex items-center justify-between mb-4">
           <div>
