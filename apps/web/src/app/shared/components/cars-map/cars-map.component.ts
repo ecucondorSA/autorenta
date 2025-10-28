@@ -28,8 +28,13 @@ import { environment } from '../../../../environments/environment';
 interface MapboxGL {
   accessToken: string;
   Map: new (options: MapboxMapOptions) => MapboxMap;
-  Marker: new (options?: MarkerOptions) => Marker;
+  Marker: new (options?: MarkerOptions | HTMLElement) => Marker;
   Popup: new (options?: PopupOptions) => Popup;
+  LngLatBounds: new () => LngLatBounds;
+}
+
+interface LngLatBounds {
+  extend(lngLat: LngLatLike): LngLatBounds;
 }
 
 interface MapboxMapOptions {
@@ -39,6 +44,7 @@ interface MapboxMapOptions {
   zoom: number;
   cooperativeGestures?: boolean;
   trackResize?: boolean;
+  maxBounds?: [[number, number], [number, number]];
 }
 
 interface MapboxMap {
@@ -49,12 +55,22 @@ interface MapboxMap {
   resize(): void;
   remove(): void;
   flyTo(options: FlyToOptions): void;
+  fitBounds(bounds: LngLatBounds, options?: FitBoundsOptions): void;
   addSource(id: string, source: GeoJSONSource): void;
   getSource(id: string): MapSource;
   addLayer(layer: MapLayer): void;
+  removeLayer(id: string): void;
+  getLayer(id: string): MapLayer | undefined;
+  removeSource(id: string): void;
   setPaintProperty(layerId: string, property: string, value: unknown): void;
+  setLayoutProperty(layerId: string, property: string, value: unknown): void;
   queryRenderedFeatures(point: Point, options?: QueryOptions): MapFeature[];
   getZoom(): number;
+}
+
+interface FitBoundsOptions {
+  padding?: number;
+  duration?: number;
 }
 
 interface MapSource {
@@ -94,6 +110,7 @@ interface Popup {
   addTo(map: MapboxMap): Popup;
   isOpen(): boolean;
   remove(): void;
+  on(event: string, callback: () => void): void;
 }
 
 interface MapFeature {
@@ -117,6 +134,7 @@ interface GeoJSONSource {
   cluster?: boolean;
   clusterMaxZoom?: number;
   clusterRadius?: number;
+  clusterProperties?: Record<string, unknown>;
 }
 
 interface MapLayer {
@@ -133,6 +151,8 @@ interface FlyToOptions {
   zoom?: number;
   speed?: number;
   curve?: number;
+  duration?: number;
+  essential?: boolean;
 }
 
 interface QueryOptions {
@@ -550,7 +570,16 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     try {
       const now = Date.now();
-      const prices = new Map<string, { amount: number; cached: boolean }>();
+      const prices = new Map<
+        string,
+        {
+          price_per_day: number;
+          price_per_hour: number;
+          surge_active: boolean;
+          currency: string;
+          price_usd_hour?: number;
+        }
+      >();
       const carsNeedingFetch: Array<{ id: string; region_id: string }> = [];
 
       // OPTIMIZACIÓN: Verificar caché primero
@@ -563,6 +592,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
             price_per_day: cached.price,
             price_per_hour: cached.pricePerHour,
             surge_active: cached.surgeActive,
+            currency: 'ARS',
           });
         } else {
           // Necesita fetch
