@@ -12,7 +12,10 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
-import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
+import {
+  MercadoPagoBookingGateway,
+  type MercadoPagoPreferenceResponse,
+} from '../checkout/support/mercadopago-booking.gateway';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 
 // Models
@@ -1034,7 +1037,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       await this.bookingsService.recalculatePricing(bookingId);
 
       // Crear preferencia de MercadoPago
-      const preference = await this.mpGateway.createPreference(bookingId);
+      const preference = await this.createPreferenceWithOnboardingGuard(bookingId);
 
       console.log('✅ Redirigiendo a MercadoPago...');
 
@@ -1048,5 +1051,34 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       console.error('[Tarjeta] Error en pago:', error);
       throw error;
     }
+  }
+
+  private async createPreferenceWithOnboardingGuard(
+    bookingId: string,
+  ): Promise<MercadoPagoPreferenceResponse> {
+    try {
+      return await this.mpGateway.createPreference(bookingId);
+    } catch (error) {
+      if (this.isOwnerOnboardingError(error)) {
+        const message =
+          (error as Error).message ||
+          'El propietario todavía no completó la vinculación de Mercado Pago. Tu reserva permanecerá pendiente.';
+        this.error.set(message);
+        this.processingFinalPayment.set(false);
+      }
+
+      throw error instanceof Error
+        ? error
+        : new Error('No pudimos crear la preferencia de Mercado Pago.');
+    }
+  }
+
+  private isOwnerOnboardingError(error: unknown): error is Error & { code?: string } {
+    return (
+      !!error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      (error as { code?: string }).code === 'OWNER_ONBOARDING_REQUIRED'
+    );
   }
 }

@@ -9,10 +9,13 @@ import { GeocodingService } from '../../../core/services/geocoding.service';
 import {
   AiPhotoEnhancerService,
 } from '../../../core/services/ai-photo-enhancer.service';
-import { MarketplaceOnboardingService } from '../../../core/services/marketplace-onboarding.service';
+import {
+  MarketplaceOnboardingService,
+  MarketplaceStatus,
+} from '../../../core/services/marketplace-onboarding.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { Car, CarBrand, CarModel } from '../../../core/models';
-import { Transmission, FuelType } from '../../../core/types/database.types';
+import { Transmission, FuelType, CarStatus } from '../../../core/types/database.types';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 
@@ -119,6 +122,111 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
                   Usamos tu última publicación para ahorrar tiempo. Revisá marca, modelo y fotos
                   antes de confirmar.
                 </p>
+              </div>
+            </div>
+
+            <div
+              *ngIf="mpStatusLoading()"
+              class="mt-4 flex items-center gap-3 rounded-lg border border-pearl-gray/50 bg-white/70 p-3 text-sm text-charcoal-medium dark:border-neutral-700 dark:bg-anthracite/60 dark:text-pearl-light/80"
+            >
+              <span class="inline-flex h-2.5 w-2.5 animate-ping rounded-full bg-accent-petrol"></span>
+              Comprobando el estado de tu cuenta de Mercado Pago...
+            </div>
+
+            <div
+              *ngIf="mpStatusError()"
+              class="mt-4 rounded-xl border border-red-200 bg-red-50/90 p-4 text-sm text-red-800 dark:border-red-500/60 dark:bg-red-500/10 dark:text-red-200"
+            >
+              <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div class="flex items-start gap-2">
+                  <span class="text-lg">⚠️</span>
+                  <div>
+                    <p class="font-semibold">No pudimos verificar Mercado Pago</p>
+                    <p class="text-xs md:text-sm">
+                      {{ mpStatusError() }}. Intentá nuevamente en unos minutos o volvé a vincular tu
+                      cuenta.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="rounded-lg border border-red-300/80 px-4 py-2 text-xs font-semibold text-red-800 transition hover:bg-red-100/80 dark:border-red-400/50 dark:bg-transparent dark:text-red-100 dark:hover:bg-red-500/20"
+                  (click)="openOnboardingModal()"
+                >
+                  Reintentar vinculación
+                </button>
+              </div>
+            </div>
+
+            <div
+              *ngIf="showMpBanner()"
+              class="mt-4 rounded-2xl border border-amber-200/80 bg-amber-50/80 p-5 text-sm text-amber-900 shadow-sm dark:border-amber-400/40 dark:bg-amber-500/15 dark:text-amber-100"
+            >
+              <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div class="flex items-start gap-3">
+                  <span class="text-2xl leading-none">🔒</span>
+                  <div class="space-y-1">
+                    <p class="text-base font-semibold">Conectá Mercado Pago para activar tu auto</p>
+                    <p class="text-xs md:text-sm md:max-w-xl">
+                      Guardaremos la publicación como borrador hasta que completes el onboarding.
+                      Sin esa vinculación las reservas quedan pendientes y el dinero no se distribuye
+                      automáticamente.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    class="rounded-lg bg-accent-petrol px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-accent-petrol/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-petrol"
+                    (click)="openOnboardingModal()"
+                  >
+                    Vincular Mercado Pago
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-lg border border-transparent px-4 py-2 text-sm font-medium text-amber-800/80 transition hover:bg-amber-100/80 dark:text-amber-100/90 dark:hover:bg-amber-500/25"
+                    (click)="dismissOnboardingReminder()"
+                  >
+                    Recordarme luego
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="!mpStatusLoading() && mpReady()"
+              class="mt-4 rounded-2xl border border-emerald-200/80 bg-emerald-50/90 p-5 text-sm text-emerald-900 shadow-sm dark:border-emerald-400/40 dark:bg-emerald-500/20 dark:text-emerald-100"
+            >
+              <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div class="flex items-start gap-3">
+                  <span class="text-2xl leading-none">✅</span>
+                  <div class="space-y-1">
+                    <p class="text-base font-semibold">Mercado Pago vinculado correctamente</p>
+                    <p class="text-xs md:text-sm md:max-w-xl">
+                      Recibirás pagos automáticos con split inmediato en cada reserva confirmada.
+                    </p>
+                    <p
+                      *ngIf="mpStatus()?.collectorId"
+                      class="text-xs text-emerald-800/80 dark:text-emerald-100/80"
+                    >
+                      Collector ID: {{ mpStatus()?.collectorId }}
+                    </p>
+                    <p
+                      *ngIf="mpStatus()?.completedAt"
+                      class="text-xs text-emerald-800/80 dark:text-emerald-100/80"
+                    >
+                      Onboarding completado
+                      {{ mpStatus()?.completedAt | date: 'dd/MM/yyyy HH:mm' }}.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="rounded-lg border border-emerald-300/60 px-4 py-2 text-sm font-medium text-emerald-800 transition hover:bg-emerald-100 dark:border-emerald-400/40 dark:text-emerald-100 dark:hover:bg-emerald-500/25"
+                  (click)="openOnboardingModal()"
+                >
+                  Ver opciones
+                </button>
               </div>
             </div>
           </div>
@@ -924,6 +1032,19 @@ export class PublishCarV2Page implements OnInit {
   // Manual coordinates (simple approach)
   manualCoordinates = signal<{ latitude: number; longitude: number } | null>(null);
 
+  // Mercado Pago onboarding state
+  mpStatus = signal<MarketplaceStatus | null>(null);
+  mpCanList = signal<boolean | null>(null);
+  mpStatusLoading = signal(true);
+  mpReminderDismissed = signal(false);
+  mpStatusError = signal<string | null>(null);
+
+  readonly mpReady = computed(() => this.mpCanList() === true);
+  readonly mpNeedsAttention = computed(() => this.mpCanList() === false);
+  readonly showMpBanner = computed(
+    () => !this.mpStatusLoading() && this.mpNeedsAttention() && !this.mpReminderDismissed(),
+  );
+
   publishForm!: FormGroup;
 
   selectedModelInfo = computed(() => {
@@ -975,6 +1096,8 @@ export class PublishCarV2Page implements OnInit {
   private readonly modalCtrl: ModalController;
   private readonly alertController: AlertController;
   private readonly marketplaceService: MarketplaceOnboardingService;
+  private currentUserId: string | null = null;
+  private hasPromptedOnboarding = false;
 
   async ngOnInit(): Promise<void> {
     this.initForm();
@@ -995,93 +1118,157 @@ export class PublishCarV2Page implements OnInit {
   }
 
   /**
-   * Verifica si el usuario tiene Mercado Pago vinculado.
-   * Si no, muestra el modal de onboarding.
+   * Verifica si el usuario tiene Mercado Pago vinculado y prepara el flujo de onboarding.
    */
   private async checkMarketplaceOnboarding(): Promise<void> {
+    this.mpStatusLoading.set(true);
     try {
-      const {
-        data: { user },
-      } = await this.supabaseClient.getClient().auth.getUser();
-      if (!user) {
-        console.error('No user found');
+      const userId = await this.ensureCurrentUserId();
+
+      if (!userId) {
+        this.mpStatusError.set('Necesitás iniciar sesión nuevamente para continuar con la publicación.');
+        this.mpCanList.set(false);
         return;
       }
 
-      const canList = await this.marketplaceService.canListCars(user.id);
+      await this.refreshMarketplaceSnapshot(userId);
 
-      // ✅ ONBOARDING DE MP RECOMENDADO (2025-10-28)
-      // La tabla mp_onboarding_states ya está creada (migration 004)
-      // El onboarding es SOFT REQUIREMENT: se muestra modal pero se puede skipear
-      const shouldPromptOnboarding = true;
-
-      if (shouldPromptOnboarding && !canList) {
-        console.log('⚠️ User needs to onboard to Mercado Pago');
-
-        // Mostrar modal de onboarding (permite skipear)
-        const modal = await this.modalCtrl.create({
-          component: MpOnboardingModalComponent,
-          backdropDismiss: true, // Permite cerrar sin completar
-        });
-
-        await modal.present();
-
-        const { data } = await modal.onWillDismiss();
-
-        // Si el usuario completa el onboarding, excelente!
-        if (data?.completed) {
-          console.log('✅ MP onboarding completed successfully');
-          // Continuar con publicación
-        } else {
-          // Usuario skipea onboarding - mostrar warning pero permitir continuar
-          console.log('⚠️ User skipped MP onboarding, showing warning');
-
-          const alert = await this.alertController.create({
-            header: '⚠️ Onboarding Pendiente',
-            message: `
-              <p><strong>Podrás publicar tu auto, pero:</strong></p>
-              <ul>
-                <li>❌ No podrás recibir pagos automáticos</li>
-                <li>❌ Los split-payments no funcionarán</li>
-                <li>⚠️ Las reservas quedarán en estado pendiente</li>
-              </ul>
-              <p>Te recomendamos completar el onboarding de Mercado Pago más tarde desde tu perfil.</p>
-            `,
-            buttons: [
-              {
-                text: 'Vincular Ahora',
-                role: 'link',
-                handler: async () => {
-                  // Re-abrir modal de onboarding
-                  const retryModal = await this.modalCtrl.create({
-                    component: MpOnboardingModalComponent,
-                    backdropDismiss: true,
-                  });
-                  await retryModal.present();
-                  const { data: retryData } = await retryModal.onWillDismiss();
-                  if (retryData?.completed) {
-                    console.log('✅ MP onboarding completed on retry');
-                  }
-                },
-              },
-              {
-                text: 'Continuar Sin Vincular',
-                role: 'cancel',
-                handler: () => {
-                  console.log('User chose to continue without MP onboarding');
-                  // Continuar con publicación sin onboarding
-                },
-              },
-            ],
-          });
-
-          await alert.present();
-        }
+      if (this.mpNeedsAttention() && !this.hasPromptedOnboarding) {
+        this.hasPromptedOnboarding = true;
+        await this.promptMarketplaceOnboarding(userId);
       }
     } catch (error) {
       console.error('Error checking marketplace onboarding:', error);
-      // No bloquear la publicación si hay error
+      this.mpStatusError.set(
+        error instanceof Error
+          ? error.message
+          : 'No pudimos verificar el estado de Mercado Pago. Intentá nuevamente.',
+      );
+    } finally {
+      this.mpStatusLoading.set(false);
     }
+  }
+
+  private async ensureCurrentUserId(): Promise<string | null> {
+    if (this.currentUserId) {
+      return this.currentUserId;
+    }
+
+    const { data, error } = await this.supabaseClient.getClient().auth.getUser();
+
+    if (error) {
+      console.error('Error fetching current user:', error);
+      return null;
+    }
+
+    const user = data.user;
+    if (!user) {
+      return null;
+    }
+
+    this.currentUserId = user.id;
+    return user.id;
+  }
+
+  private async refreshMarketplaceSnapshot(userId: string): Promise<void> {
+    try {
+      const [status, canList] = await Promise.all([
+        this.marketplaceService.getMarketplaceStatus(userId),
+        this.marketplaceService.canListCars(userId),
+      ]);
+
+      this.mpStatus.set(status);
+      this.mpCanList.set(Boolean(canList));
+      this.mpStatusError.set(null);
+
+      if (Boolean(canList)) {
+        this.hasPromptedOnboarding = false;
+        this.mpReminderDismissed.set(false);
+      }
+    } catch (error) {
+      console.error('Error refreshing marketplace snapshot:', error);
+      this.mpStatusError.set(
+        error instanceof Error
+          ? error.message
+          : 'No pudimos obtener el estado de tu cuenta de Mercado Pago.',
+      );
+      this.mpCanList.set(false);
+    }
+  }
+
+  private async promptMarketplaceOnboarding(userId: string): Promise<void> {
+    const completed = await this.presentOnboardingModal(userId);
+
+    if (completed || this.mpReady()) {
+      console.log('✅ Mercado Pago vinculado correctamente');
+      return;
+    }
+
+    await this.presentOnboardingWarning();
+  }
+
+  private async presentOnboardingModal(userId: string): Promise<boolean> {
+    const modal = await this.modalCtrl.create({
+      component: MpOnboardingModalComponent,
+      backdropDismiss: true,
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    await this.refreshMarketplaceSnapshot(userId);
+
+    return Boolean(data?.completed || this.mpReady());
+  }
+
+  private async presentOnboardingWarning(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Activá tus cobros con Mercado Pago',
+      message: `
+        <div class="space-y-2 text-left">
+          <p><strong>Guardaremos la publicación como borrador hasta que vincules tu cuenta.</strong></p>
+          <ul class="list-disc list-inside space-y-1 text-sm">
+            <li>Sin split automático el dinero queda retenido en la plataforma.</li>
+            <li>Las reservas se marcan como pendientes hasta completar el onboarding.</li>
+            <li>Podés retomar el proceso desde tu perfil cuando quieras.</li>
+          </ul>
+        </div>
+      `,
+      buttons: [
+        {
+          text: 'Vincular ahora',
+          handler: () => {
+            void this.openOnboardingModal();
+          },
+        },
+        {
+          text: 'Seguir más tarde',
+          role: 'cancel',
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async openOnboardingModal(): Promise<void> {
+    const userId = await this.ensureCurrentUserId();
+    if (!userId) {
+      alert('No pudimos identificar tu cuenta. Volvé a iniciar sesión e intentá nuevamente.');
+      return;
+    }
+
+    this.hasPromptedOnboarding = true;
+    const completed = await this.presentOnboardingModal(userId);
+
+    if (!completed) {
+      this.mpReminderDismissed.set(false);
+    }
+  }
+
+  dismissOnboardingReminder(): void {
+    this.mpReminderDismissed.set(true);
   }
 
   private initForm(): void {
@@ -1507,6 +1694,11 @@ export class PublishCarV2Page implements OnInit {
         }
       }
 
+      const mpReady = this.mpReady();
+      const autoApprovalRequested = (formValue.auto_approval as boolean | undefined) ?? true;
+      const targetStatus: CarStatus = mpReady ? 'active' : 'draft';
+      const finalAutoApproval = mpReady ? autoApprovalRequested : false;
+
       const carData: Partial<Car> = {
         brand_id: formValue.brand_id as string,
         model_id: formValue.model_id as string,
@@ -1527,7 +1719,7 @@ export class PublishCarV2Page implements OnInit {
         deposit_required: formValue.deposit_required as boolean | undefined,
         deposit_amount: formValue.deposit_amount as number | undefined,
         insurance_included: formValue.insurance_included as boolean | undefined,
-        auto_approval: (formValue.auto_approval as boolean | undefined) ?? true, // ✅ NUEVO: Auto-aprobación
+        auto_approval: finalAutoApproval, // ✅ Ajustado: auto-aprobación sólo si Mercado Pago está activo
         location_street: formValue.location_street as string | undefined,
         location_street_number: formValue.location_street_number as string | undefined,
         location_city: formValue.location_city as string,
@@ -1538,7 +1730,7 @@ export class PublishCarV2Page implements OnInit {
         location_lng, // ✅ NEW: Geocoded coordinates
         title: this.generatedTitle(),
         description: `${this.generatedTitle()} disponible para alquiler`,
-        status: 'active', // ✅ Changed from 'draft' to 'active' for immediate visibility
+        status: targetStatus, // ✅ Ahora respeta el estado según vinculación de Mercado Pago
         cancel_policy: 'flex',
         features: {},
       };
@@ -1565,9 +1757,17 @@ export class PublishCarV2Page implements OnInit {
         console.log(`✅ ${this.uploadedPhotos().length} fotos subidas`);
       }
 
-      const message = this.editMode()
-        ? '¡Auto actualizado exitosamente!'
-        : '¡Auto publicado exitosamente! Será revisado por nuestro equipo.';
+      if (!mpReady) {
+        this.mpReminderDismissed.set(false);
+      }
+
+      const message = mpReady
+        ? this.editMode()
+          ? '¡Auto actualizado! Quedó activo y listo para recibir reservas.'
+          : '¡Auto publicado! Revisaremos los datos y tu auto ya puede recibir reservas.'
+        : this.editMode()
+          ? 'Guardamos los cambios. Vinculá Mercado Pago para reactivar tu auto y recibir pagos.'
+          : '¡Guardamos toda la información! Activaremos tu publicación automáticamente cuando vincules Mercado Pago.';
 
       alert(message);
       await this.router.navigate(['/cars/my']);

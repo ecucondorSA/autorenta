@@ -243,15 +243,6 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Detectar cambios en cars y actualizar marcadores
-    if (changes['cars'] && this.map) {
-      const currentCars = changes['cars'].currentValue as CarMapLocation[];
-      if (currentCars && currentCars.length > 0) {
-        console.log('[CarsMapComponent] Cars changed, updating markers:', currentCars.length);
-        void this.updateMarkersWithDynamicPricing(currentCars);
-      }
-    }
-
     // Detectar cambios en selectedCarId y mover el mapa
     if (changes['selectedCarId'] && !changes['selectedCarId'].firstChange) {
       const carId = changes['selectedCarId'].currentValue;
@@ -310,21 +301,20 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   private async loadMapboxLibrary(): Promise<void> {
     try {
-      // Importar dinámicamente MapLibre GL JS (ESM replacement for Mapbox GL)
-      const maplibreModule = await import('maplibre-gl');
-      this.mapboxgl = (maplibreModule.default || maplibreModule) as unknown as MapboxGL;
+      // Importar dinámicamente Mapbox GL JS
+      const mapboxModule = await import('mapbox-gl');
+      this.mapboxgl = (mapboxModule.default || mapboxModule) as unknown as MapboxGL;
 
       if (!this.mapboxgl) {
-        throw new Error('MapLibre GL JS no se cargó correctamente');
+        throw new Error('Mapbox GL JS no se cargó correctamente');
       }
 
-      // MapLibre doesn't require access token for open styles
-      // but we can still use Mapbox styles with token if needed
+      // Configurar access token
       if (environment.mapboxAccessToken && this.mapboxgl) {
         this.mapboxgl.accessToken = environment.mapboxAccessToken;
       }
     } catch (err) {
-      console.error('[CarsMapComponent] Error loading MapLibre GL', err);
+      console.error('[CarsMapComponent] Error loading Mapbox', err);
       this.error.set('Error al cargar la biblioteca de mapas');
       this.loading.set(false);
     }
@@ -390,8 +380,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
-        // MapLibre GL compatible style - OSM Bright with full street labels
-        style: 'https://tiles.openfreemap.org/styles/bright',
+        style: 'mapbox://styles/mapbox/streets-v12', // Streets - Azul celeste limpio
         center: defaultCenter,
         zoom: defaultZoom,
         maxBounds: uruguayBounds,
@@ -531,16 +520,7 @@ export class CarsMapComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   private async loadCarLocations(force = false): Promise<void> {
     try {
-      // Priorizar el input cars si está disponible, sino fetch del servicio
-      let locations: CarMapLocation[];
-
-      if (this.cars && this.cars.length > 0) {
-        console.log('[CarsMapComponent] Using cars from input:', this.cars.length);
-        locations = this.cars;
-      } else {
-        console.log('[CarsMapComponent] Fetching locations from service');
-        locations = await this.carLocationsService.fetchActiveLocations(force);
-      }
+      let locations = await this.carLocationsService.fetchActiveLocations(force);
 
       // Ordenar por distancia si tenemos ubicación del usuario
       // NO filtramos por distancia para mostrar TODOS los autos disponibles en Uruguay

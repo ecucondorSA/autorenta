@@ -1,0 +1,117 @@
+name: Code Coverage
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  coverage:
+    name: Generate Coverage Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run tests with coverage
+        run: pnpm test:coverage
+        continue-on-error: true
+      
+      - name: Generate coverage summary
+        id: coverage
+        run: |
+          cd apps/web
+          if [ -f coverage/coverage-summary.json ]; then
+            COVERAGE=$(node -p "
+              const fs = require('fs');
+              const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json'));
+              const total = coverage.total;
+              Math.round(total.lines.pct);
+            ")
+            echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+            echo "📊 Total Coverage: $COVERAGE%"
+          else
+            echo "coverage=0" >> $GITHUB_OUTPUT
+            echo "⚠️  Coverage file not found"
+          fi
+      
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: apps/web/coverage/
+          retention-days: 30
+      
+      - name: Comment PR with coverage
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const coverage = '${{ steps.coverage.outputs.coverage }}';
+            const body = `## 📊 Code Coverage Report
+            
+            **Total Coverage:** ${coverage}%
+            
+            ${coverage >= 60 ? '✅' : coverage >= 50 ? '⚠️' : '❌'} Target: 60%
+            
+            <details>
+            <summary>View detailed report</summary>
+            
+            Download the coverage artifact to see line-by-line coverage.
+            
+            </details>`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+      
+      - name: Check coverage threshold
+        run: |
+          COVERAGE=${{ steps.coverage.outputs.coverage }}
+          echo "Coverage: $COVERAGE%"
+          
+          if [ "$COVERAGE" -lt 50 ]; then
+            echo "⚠️  Coverage is below 50%. Current: $COVERAGE%"
+            echo "💡 Tip: Add more unit tests to increase coverage"
+            # Don't fail, just warn
+          elif [ "$COVERAGE" -lt 60 ]; then
+            echo "⚠️  Coverage is below target (60%). Current: $COVERAGE%"
+            echo "📈 Getting closer! Keep adding tests."
+          else
+            echo "✅ Coverage meets target! Current: $COVERAGE%"
+          fi
