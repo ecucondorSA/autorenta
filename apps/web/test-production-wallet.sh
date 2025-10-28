@@ -1,4 +1,10 @@
 #!/bin/bash
+# Load environment
+if [ -f ".env.local" ]; then
+  source .env.local
+elif [ -f "../../.env.local" ]; then
+  source ../../.env.local
+fi
 
 echo "🔬 TESTING PRODUCTION WALLET DEPOSIT FLOW"
 echo "=========================================="
@@ -7,7 +13,7 @@ echo ""
 # Production URL
 PROD_URL="https://16b5ac34.autorenta-web.pages.dev"
 SUPABASE_URL="https://obxvffplochgeiclibng.supabase.co"
-ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU"
+ANON_KEY="${SUPABASE_ANON_KEY}"
 
 echo "Step 1: Verify production site is accessible"
 echo "-------------------------------------------"

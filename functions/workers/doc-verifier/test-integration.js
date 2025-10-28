@@ -1,3 +1,5 @@
+require("dotenv").config({ path: "../../../.env.local" });
+
 /**
  * Test de Integración Completa
  *
@@ -12,7 +14,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
 const SUPABASE_URL = 'https://obxvffplochgeiclibng.supabase.co';
-const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODU0NDIyOCwiZXhwIjoyMDQ0MTIwMjI4fQ.WjRLkJMHMZvFBPRPTZdvSx9D06GGI3tTAxb9RGvQ3f8';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const WORKER_URL = 'https://autorent-doc-verifier.marques-eduardo95466020.workers.dev';
 

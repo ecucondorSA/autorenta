@@ -1,12 +1,4 @@
 #!/bin/bash
-# Load environment variables
-if [ -f ".env.local" ]; then
-  source .env.local
-elif [ -f ".env" ]; then
-  source .env
-fi
-
-DB_URL="${DATABASE_URL}"
 
 # ╔══════════════════════════════════════════════════════════════════════╗
 # ║  📊 POST-DEPLOYMENT MONITORING SCRIPT                                ║
@@ -16,6 +8,7 @@ DB_URL="${DATABASE_URL}"
 set -e
 
 PROD_URL="${1:-https://autorenta.pages.dev}"  # Adjust to your Cloudflare Pages URL
+DB_HOST="postgresql://postgres.obxvffplochgeiclibng:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
 
 # Colors
 GREEN='\033[0;32m'

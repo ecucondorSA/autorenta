@@ -1,10 +1,16 @@
 #!/bin/bash
+# Load environment
+if [ -f ".env.local" ]; then
+  source .env.local
+elif [ -f "../../.env.local" ]; then
+  source ../../.env.local
+fi
 
 echo "🔍 [TEST] Probando flujo completo de depósito de wallet"
 echo ""
 
 SUPABASE_URL="https://obxvffplochgeiclibng.supabase.co"
-ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU"
+ANON_KEY="${SUPABASE_ANON_KEY}"
 EMAIL="test-wallet@autorenta.com"
 PASSWORD="TestWallet123!"
 
