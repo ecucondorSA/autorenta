@@ -3,6 +3,21 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 
+// Window Controls Overlay API types
+interface WindowControlsOverlay extends EventTarget {
+  visible: boolean;
+  getTitlebarAreaRect(): DOMRect;
+}
+
+interface WindowControlsOverlayGeometryChangeEvent extends Event {
+  titlebarAreaRect: DOMRect;
+  visible: boolean;
+}
+
+interface NavigatorWithWCO extends Navigator {
+  windowControlsOverlay?: WindowControlsOverlay;
+}
+
 @Component({
   selector: 'app-pwa-titlebar',
   standalone: true,
@@ -27,10 +42,11 @@ export class PwaTitlebarComponent implements OnInit {
     if (!this.isBrowser) return;
 
     // Detectar si Window Controls Overlay está disponible
-    if ('windowControlsOverlay' in navigator) {
+    const nav = navigator as NavigatorWithWCO;
+    if (nav.windowControlsOverlay) {
       this.isWCOSupported.set(true);
 
-      const wco = (navigator as any).windowControlsOverlay;
+      const wco = nav.windowControlsOverlay;
 
       // Verificar si WCO está activo
       if (wco.visible) {
@@ -39,10 +55,11 @@ export class PwaTitlebarComponent implements OnInit {
       }
 
       // Escuchar cambios en WCO
-      wco.addEventListener('geometrychange', (event: any) => {
-        this.isWCOActive.set(event.visible);
-        if (event.visible) {
-          this.updateTitlebarRect(event.titlebarAreaRect);
+      wco.addEventListener('geometrychange', (event: Event) => {
+        const geometryEvent = event as WindowControlsOverlayGeometryChangeEvent;
+        this.isWCOActive.set(geometryEvent.visible);
+        if (geometryEvent.visible) {
+          this.updateTitlebarRect(geometryEvent.titlebarAreaRect);
         }
       });
     }

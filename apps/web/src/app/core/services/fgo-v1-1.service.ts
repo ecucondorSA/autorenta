@@ -391,17 +391,18 @@ export class FgoV1_1Service {
           return null;
         }
 
-        const data = (response.data as any[])?.[0];
+        const results = response.data as Record<string, unknown>[] | null;
+        const data = results?.[0];
         if (!data) return null;
 
         return {
-          countryCode: data.country_code,
-          bucket: data.bucket,
-          pemCents: data.pem_cents,
-          pem: centsToUsd(data.pem_cents),
-          eventCount: data.event_count,
-          avgEventCents: data.avg_event_cents,
-          avgEvent: centsToUsd(data.avg_event_cents),
+          countryCode: data.country_code as string,
+          bucket: data.bucket as string,
+          pemCents: data.pem_cents as number,
+          pem: centsToUsd(data.pem_cents as number),
+          eventCount: data.event_count as number,
+          avgEventCents: data.avg_event_cents as number,
+          avgEvent: centsToUsd(data.avg_event_cents as number),
           totalPaid: centsToUsd(data.total_paid_cents),
           totalRecovered: centsToUsd(data.total_recovered_cents),
         } as PemCalculation;

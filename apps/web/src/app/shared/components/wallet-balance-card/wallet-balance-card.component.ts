@@ -398,9 +398,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   /**
    * Muestra un toast de confirmación cuando un depósito es confirmado vía realtime
    */
-  private showDepositConfirmedToast(transaction: any): void {
+  private showDepositConfirmedToast(transaction: Record<string, unknown>): void {
     const amount = typeof transaction.amount === 'number' ? transaction.amount : 0;
-    const currency = transaction.currency || 'USD';
+    const currency = (transaction.currency as string) || 'USD';
 
     // Format amount
     const formattedAmount = new Intl.NumberFormat('es-AR', {

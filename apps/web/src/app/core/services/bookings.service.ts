@@ -1016,7 +1016,7 @@ export class BookingsService {
   /**
    * Obtiene las reservas pendientes de aprobación del locador
    */
-  async getPendingApprovals(): Promise<any[]> {
+  async getPendingApprovals(): Promise<Record<string, unknown>[]> {
     const { data, error } = await this.supabase.from('owner_pending_approvals').select('*');
 
     if (error) {

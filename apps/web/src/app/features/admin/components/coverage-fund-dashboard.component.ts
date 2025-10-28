@@ -17,6 +17,16 @@ interface FundStats {
   avg_franchise_amount: number;
 }
 
+interface WalletLedgerEntry {
+  id: string;
+  kind: string;
+  amount_cents: number;
+  ref: string;
+  booking_id?: string;
+  ts: string;
+  meta?: Record<string, unknown>;
+}
+
 @Component({
   selector: 'app-coverage-fund-dashboard',
   standalone: true,
@@ -282,7 +292,7 @@ export class CoverageFundDashboardComponent implements OnInit {
   // Data
   readonly fund = signal<CoverageFund | null>(null);
   readonly stats = signal<FundStats | null>(null);
-  readonly recentActivity = signal<any[]>([]);
+  readonly recentActivity = signal<WalletLedgerEntry[]>([]);
 
   // Expose JSON for template
   JSON = JSON;

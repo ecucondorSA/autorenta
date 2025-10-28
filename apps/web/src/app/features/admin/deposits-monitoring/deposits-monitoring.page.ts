@@ -30,6 +30,23 @@ interface DepositTransaction {
   time_to_complete_minutes?: number;
 }
 
+interface DatabaseTransactionRow {
+  id: string;
+  user_id: string;
+  status: string;
+  amount: number;
+  currency: string;
+  provider: string;
+  provider_transaction_id?: string;
+  created_at: string;
+  updated_at: string;
+  completed_at?: string;
+  profiles?: {
+    first_name?: string;
+    last_name?: string;
+  };
+}
+
 @Component({
   selector: 'app-deposits-monitoring',
   standalone: true,
@@ -163,7 +180,7 @@ export class DepositsMonitoringPage implements OnInit {
 
     if (error) throw error;
 
-    const deposits: DepositTransaction[] = (data || []).map((t: any) => {
+    const deposits: DepositTransaction[] = (data as DatabaseTransactionRow[] || []).map((t) => {
       const profile = t.profiles;
       return {
         id: t.id,
@@ -197,7 +214,7 @@ export class DepositsMonitoringPage implements OnInit {
 
     if (error) throw error;
 
-    const deposits: DepositTransaction[] = (data || []).map((t: any) => {
+    const deposits: DepositTransaction[] = (data as DatabaseTransactionRow[] || []).map((t) => {
       const profile = t.profiles;
       const created = new Date(t.created_at).getTime();
       const completed = t.completed_at ? new Date(t.completed_at).getTime() : null;
@@ -235,7 +252,7 @@ export class DepositsMonitoringPage implements OnInit {
 
     if (error) throw error;
 
-    const deposits: DepositTransaction[] = (data || []).map((t: any) => {
+    const deposits: DepositTransaction[] = (data as DatabaseTransactionRow[] || []).map((t) => {
       const profile = t.profiles;
       return {
         id: t.id,

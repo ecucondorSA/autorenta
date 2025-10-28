@@ -322,8 +322,8 @@ export class PublishCarPage implements OnInit, OnDestroy {
     }
   }
 
-  private getFormValidationErrors(): any {
-    const errors: any = {};
+  private getFormValidationErrors(): Record<string, unknown> {
+    const errors: Record<string, unknown> = {};
     Object.keys(this.form.controls).forEach((key) => {
       const control = this.form.get(key);
       if (control?.errors) {

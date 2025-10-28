@@ -57,10 +57,10 @@ export class AdminService {
     if (error) throw error;
 
     // Flatten nested data structure
-    return (data ?? []).map((item: any) => ({
+    return (data ?? []).map((item: Record<string, unknown>) => ({
       ...item,
-      user_name: item.user?.full_name,
-      user_email: item.user?.email?.[0]?.email,
+      user_name: (item.user as Record<string, unknown>)?.full_name,
+      user_email: ((item.user as Record<string, unknown>)?.email as Array<{ email: string }>)?.[0]?.email,
     })) as WithdrawalRequest[];
   }
 

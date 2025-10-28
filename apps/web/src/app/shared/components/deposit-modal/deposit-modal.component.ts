@@ -391,7 +391,8 @@ export class DepositModalComponent {
   ): string {
     if (walletError?.code === 'MERCADOPAGO_ERROR') {
       if (typeof walletError.details === 'object' && walletError.details) {
-        const status = (walletError.details as any).status;
+        const details = walletError.details as Record<string, unknown>;
+        const status = details.status;
         if (status === 503) {
           return 'Mercado Pago está experimentando una interrupción momentánea (503). Reintentá en unos minutos o elegí otro método de pago, como transferencia bancaria.';
         }

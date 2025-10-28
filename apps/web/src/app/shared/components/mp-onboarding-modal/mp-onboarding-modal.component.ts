@@ -492,7 +492,7 @@ export class MpOnboardingModalComponent implements OnInit {
     }
   }
 
-  async dismiss(data?: any) {
+  async dismiss(data?: unknown) {
     await this.modalCtrl.dismiss(data);
   }
 }

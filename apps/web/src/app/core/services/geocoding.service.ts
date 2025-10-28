@@ -19,6 +19,12 @@ export interface ReverseGeocodingResult {
   postalCode?: string;
 }
 
+interface MapboxContextItem {
+  id: string;
+  text: string;
+  short_code?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -177,7 +183,7 @@ export class GeocodingService {
       }
 
       // Parse context array for city, state, country, postal code
-      context.forEach((item: any) => {
+      context.forEach((item: MapboxContextItem) => {
         const id = item.id || '';
 
         if (id.startsWith('place.')) {

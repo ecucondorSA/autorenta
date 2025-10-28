@@ -1,6 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
-import { UserProfile, Role, UserDocument, DocumentKind, NotificationPrefs } from '../models';
+import {
+  UserProfile,
+  Role,
+  UserDocument,
+  DocumentKind,
+  NotificationPrefs,
+  ProfileAudit,
+} from '../models';
 import { SupabaseClientService } from './supabase-client.service';
 
 export interface UpdateProfileData {
@@ -502,7 +509,7 @@ export class ProfileService {
   /**
    * Obtiene el historial de auditoría del perfil del usuario
    */
-  async getProfileAudit(): Promise<any[]> {
+  async getProfileAudit(): Promise<ProfileAudit[]> {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
@@ -522,7 +529,7 @@ export class ProfileService {
       throw error;
     }
 
-    return data ?? [];
+    return (data as ProfileAudit[]) ?? [];
   }
 
   /**

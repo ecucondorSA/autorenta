@@ -362,7 +362,7 @@ export class InsuranceService {
     status: InsuranceClaim['status'],
     notes?: string,
   ): Promise<void> {
-    const updateData: any = { status, updated_at: new Date().toISOString() };
+    const updateData: Record<string, unknown> = { status, updated_at: new Date().toISOString() };
 
     if (notes) {
       updateData.resolution_notes = notes;

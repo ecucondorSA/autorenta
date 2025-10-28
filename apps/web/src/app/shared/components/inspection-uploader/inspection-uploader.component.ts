@@ -6,6 +6,11 @@ import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { InspectionStage, InspectionPhoto } from '../../../core/models/fgo-v1-1.model';
 
+// Window extension for inspection callback
+interface WindowWithInspectionCallback extends Window {
+  inspectionUploaderCallback?: (data: unknown) => void;
+}
+
 /**
  * Componente para subir inspecciones de vehículos (check-in/check-out)
  *
@@ -247,7 +252,7 @@ export class InspectionUploaderComponent implements OnInit {
   /**
    * Cierra el modal (placeholder - implementar según framework de modals usado)
    */
-  private closeModal(data: any): void {
+  private closeModal(data: unknown): void {
     // TODO: Implementar cierre de modal según framework usado
     // Ejemplo con Angular Material Dialog:
     // this.dialogRef.close(data);
@@ -259,8 +264,9 @@ export class InspectionUploaderComponent implements OnInit {
     console.log('Modal should close with data:', data);
 
     // Si hay un callback en el window (workaround temporal)
-    if ((window as any).inspectionUploaderCallback) {
-      (window as any).inspectionUploaderCallback(data);
+    const win = window as WindowWithInspectionCallback;
+    if (win.inspectionUploaderCallback) {
+      win.inspectionUploaderCallback(data);
     }
   }
 }

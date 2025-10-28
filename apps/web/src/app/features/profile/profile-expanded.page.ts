@@ -451,7 +451,7 @@ export class ProfileExpandedPage implements OnInit {
 
     try {
       const activeTab = this.activeTab();
-      let payload: any = {};
+      let payload: Record<string, unknown> = {};
 
       switch (activeTab) {
         case 'general':
