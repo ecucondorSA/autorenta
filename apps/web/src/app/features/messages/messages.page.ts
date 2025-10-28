@@ -2,8 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BookingChatComponent } from '../../shared/components/booking-chat/booking-chat.component';
-import { CarChatComponent } from './components/car-chat.component';
 import { AuthService } from '../../core/services/auth.service';
+import { CarChatComponent } from './components/car-chat.component';
 
 /**
  * Página de mensajes standalone

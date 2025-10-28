@@ -1,5 +1,5 @@
 import { Injectable, signal, inject } from '@angular/core';
-import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 import { RealtimeConnectionService, ConnectionStatus } from './realtime-connection.service';
 import { OfflineMessagesService } from './offline-messages.service';

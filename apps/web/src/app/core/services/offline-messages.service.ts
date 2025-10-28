@@ -169,7 +169,7 @@ export class OfflineMessagesService {
   async incrementRetry(id: string): Promise<void> {
     if (!this.db) await this.init();
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.storeName], 'readwrite');
       const store = transaction.objectStore(this.storeName);
 

@@ -6,10 +6,10 @@
  */
 
 import { TestBed } from '@angular/core/testing';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { BookingsService } from './bookings.service';
 import { CarsService } from './cars.service';
 import { PaymentsService } from './payments.service';
-import { SupabaseClient } from '@supabase/supabase-js';
 
 describe('Sprint 5.3 - Error Handling', () => {
   let bookingsService: BookingsService;
