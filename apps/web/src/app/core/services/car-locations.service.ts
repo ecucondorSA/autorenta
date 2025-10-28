@@ -200,17 +200,28 @@ export class CarLocationsService {
     const currency = String(
       car.currency ?? record.currency ?? environment.defaultCurrency ?? 'USD',
     ).toUpperCase();
-    const regionId = car.region_id ?? record.region_id ?? null;
-    const city = car.location_city ?? record.city ?? record.location_city ?? null;
-    const state = car.location_state ?? record.state ?? record.location_state ?? null;
-    const country = car.location_country ?? record.country ?? record.location_country ?? null;
-    const formattedAddress =
-      car.location_formatted_address ?? record.location_formatted_address ?? null;
+    const regionIdRaw = car.region_id ?? record.region_id ?? null;
+    const regionId = typeof regionIdRaw === 'string' ? regionIdRaw : null;
+
+    const cityRaw = car.location_city ?? record.city ?? record.location_city ?? null;
+    const city = typeof cityRaw === 'string' ? cityRaw : null;
+
+    const stateRaw = car.location_state ?? record.state ?? record.location_state ?? null;
+    const state = typeof stateRaw === 'string' ? stateRaw : null;
+
+    const countryRaw = car.location_country ?? record.country ?? record.location_country ?? null;
+    const country = typeof countryRaw === 'string' ? countryRaw : null;
+
+    const formattedAddressRaw = car.location_formatted_address ?? record.location_formatted_address ?? null;
+    const formattedAddress = typeof formattedAddressRaw === 'string' ? formattedAddressRaw : null;
+
     const updatedAt = String(record.updated_at ?? car.updated_at ?? new Date().toISOString());
-    const photoUrl = car.main_photo_url ?? record.main_photo_url ?? record.photo_url ?? null;
-    const description = this.buildSummary(
-      car.description ?? record.description ?? meta.description ?? '',
-    );
+
+    const photoUrlRaw = car.main_photo_url ?? record.main_photo_url ?? record.photo_url ?? null;
+    const photoUrl = typeof photoUrlRaw === 'string' ? photoUrlRaw : null;
+
+    const descriptionRaw = car.description ?? record.description ?? (typeof meta.description === 'string' ? meta.description : '');
+    const description = this.buildSummary(typeof descriptionRaw === 'string' ? descriptionRaw : '');
 
     return {
       carId,
