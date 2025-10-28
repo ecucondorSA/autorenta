@@ -182,7 +182,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
         console.log('✅ Depósito confirmado en realtime:', transaction);
 
         // Mostrar notificación toast
-        this.showDepositConfirmedToast(transaction);
+        this.showDepositConfirmedToast(transaction as unknown as Record<string, unknown>);
 
         // Recargar pending deposits
         this.loadPendingDeposits().catch((err) => {
