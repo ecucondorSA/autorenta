@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test Mapbox Markers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    
+    .car-marker-photo {
+      width: 70px;
+      cursor: pointer;
+    }
+    
+    .marker-image {
+      width: 70px;
+      height: 55px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 10px 10px 4px 4px;
+      border: 2.5px solid white;
+      background-color: #e5e7eb;
+    }
+    
+    .marker-price {
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 0 0 8px 8px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div id='map'></div>
+  <script>
+    // REEMPLAZAR CON TU TOKEN
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg';
+    
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [-56.1645, -34.9011], // Montevideo
+      zoom: 12
+    });
+    
+    // Test data - UN AUTO DE PRUEBA
+    const testCars = [
+      {
+        carId: 'test-1',
+        lat: -34.9011,
+        lng: -56.1645,
+        pricePerDay: 15000,
+        currency: 'ARS',
+        photoUrl: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=200'
+      },
+      {
+        carId: 'test-2',
+        lat: -34.9111,
+        lng: -56.1745,
+        pricePerDay: 20000,
+        currency: 'ARS',
+        photoUrl: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200'
+      }
+    ];
+    
+    map.on('load', () => {
+      console.log('✅ Mapa cargado');
+      
+      testCars.forEach((car, index) => {
+        console.log(`🚗 Creando marker ${index + 1}:`, car);
+        
+        const el = document.createElement('div');
+        el.className = 'car-marker-photo';
+        el.innerHTML = `
+          <div class="marker-image" style="background-image: url('${car.photoUrl}')"></div>
+          <div class="marker-price">$${car.pricePerDay.toLocaleString()}</div>
+        `;
+        
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat([car.lng, car.lat])
+          .addTo(map);
+        
+        console.log('✅ Marker agregado:', car.carId);
+      });
+      
+      console.log('✅ Todos los markers agregados');
+    });
+  </script>
+</body>
+</html>
