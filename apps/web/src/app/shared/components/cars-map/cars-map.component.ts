@@ -205,16 +205,23 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     console.log('📍 Actualizando markers:', locations.length, 'autos');
     this.carCount.set(locations.length);
 
-    locations.forEach((location) => {
+    locations.forEach((location, index) => {
       if (!location.lat || !location.lng) {
         console.warn('⚠️ Auto sin coordenadas:', location);
         return;
       }
 
-      const el = document.createElement('div');
-      el.className = 'marker';
+      // Create custom photo marker
+      const el = this.createPhotoMarker(location);
+      
+      // Add staggered entrance animation
+      setTimeout(() => {
+        el.classList.add('marker-burst');
+      }, index * 50);
+
       el.addEventListener('click', () => {
         this.carSelected.emit(location.carId);
+        this.animateMarkerBounce(el);
       });
 
       const marker = new this.mapboxgl.Marker(el)
@@ -224,6 +231,37 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       // Keep reference for cleanup using carId as key
       this.carMarkersMap.set(location.carId, marker);
     });
+  }
+
+  private createPhotoMarker(location: CarMapLocation): HTMLElement {
+    const el = document.createElement('div');
+    el.className = 'car-marker-photo';
+    el.setAttribute('data-car-id', location.carId);
+    
+    // Formatear precio
+    const formattedPrice = new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: location.currency || 'ARS',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(location.pricePerDay);
+
+    el.innerHTML = `
+      <div class="marker-image" style="background-image: url('${location.photoUrl || '/assets/images/car-placeholder.jpg'}')">
+        <div class="marker-overlay"></div>
+      </div>
+      <div class="marker-price">${formattedPrice}</div>
+    `;
+    
+    return el;
+  }
+
+  private animateMarkerBounce(element: HTMLElement): void {
+    element.classList.remove('marker-bounce');
+    // Force reflow
+    void element.offsetWidth;
+    element.classList.add('marker-bounce');
+    setTimeout(() => element.classList.remove('marker-bounce'), 600);
   }
 
   private requestUserLocation(): void {
