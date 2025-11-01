@@ -215,11 +215,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       
       console.log('✅ Marker creado para:', location.carId);
       
-      // Add staggered entrance animation
-      setTimeout(() => {
-        el.classList.add('marker-burst');
-      }, index * 50);
-
+      // Add click handler
       el.addEventListener('click', () => {
         this.carSelected.emit(location.carId);
         this.animateMarkerBounce(el);
@@ -240,7 +236,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private createPhotoMarker(location: CarMapLocation): HTMLElement {
     const el = document.createElement('div');
-    el.className = 'car-marker-simple';
+    el.className = 'car-marker';
     el.setAttribute('data-car-id', location.carId);
     
     // Formatear precio
@@ -251,10 +247,11 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       maximumFractionDigits: 0,
     }).format(location.pricePerDay);
 
-    // Marker simple circular con precio
+    // Marker estilo Airbnb con foto y precio
     el.innerHTML = `
-      <div class="marker-circle">
-        <span class="marker-price-simple">${formattedPrice}</span>
+      <div class="car-marker-content">
+        <img class="car-marker-photo" src="${location.photoUrl}" alt="Car" loading="lazy" />
+        <span class="car-marker-price">${formattedPrice}</span>
       </div>
     `;
     
@@ -262,11 +259,11 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private animateMarkerBounce(element: HTMLElement): void {
-    element.classList.remove('marker-bounce');
+    element.classList.remove('bounce');
     // Force reflow
     void element.offsetWidth;
-    element.classList.add('marker-bounce');
-    setTimeout(() => element.classList.remove('marker-bounce'), 600);
+    element.classList.add('bounce');
+    setTimeout(() => element.classList.remove('bounce'), 600);
   }
 
   private requestUserLocation(): void {
