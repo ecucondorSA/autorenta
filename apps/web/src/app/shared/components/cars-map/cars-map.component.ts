@@ -287,7 +287,8 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
           this.userLocation.set({ lat: latitude, lng: longitude });
           this.userLocationChange.emit({ lat: latitude, lng: longitude });
           this.addUserMarker(latitude, longitude);
-          this.zoomToUserLocation(latitude, longitude);
+          // NO hacer zoom automático - dejar que el usuario explore libremente
+          // this.zoomToUserLocation(latitude, longitude);
         },
         (error) => {
           // Geolocation error - NO bloquear el mapa, solo loguear
