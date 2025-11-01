@@ -35,8 +35,9 @@
               type="number"
               [value]="minPrice()"
               (input)="onMinPriceChange($event)"
-              min="10"
-              max="200"
+              min="1000"
+              max="100000"
+              step="1000"
             />
           </div>
           <span class="separator">-</span>
@@ -46,8 +47,9 @@
               type="number"
               [value]="maxPrice()"
               (input)="onMaxPriceChange($event)"
-              min="10"
-              max="200"
+              min="1000"
+              max="100000"
+              step="1000"
             />
           </div>
         </div>
@@ -56,18 +58,18 @@
             type="range"
             [value]="minPrice()"
             (input)="onMinPriceChange($event)"
-            min="10"
-            max="200"
-            step="5"
+            min="1000"
+            max="100000"
+            step="1000"
             class="slider min-slider"
           />
           <input
             type="range"
             [value]="maxPrice()"
             (input)="onMaxPriceChange($event)"
-            min="10"
-            max="200"
-            step="5"
+            min="1000"
+            max="100000"
+            step="1000"
             class="slider max-slider"
           />
         </div>
