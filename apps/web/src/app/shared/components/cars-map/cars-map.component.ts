@@ -284,4 +284,21 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       });
     }
   }
+
+  /**
+   * Public method to fly to a specific location
+   * Used by parent components to center the map
+   */
+  flyToLocation(lat: number, lng: number, zoom: number = 14): void {
+    if (!this.map) {
+      console.warn('⚠️ Map not initialized');
+      return;
+    }
+
+    this.map.flyTo({
+      center: [lng, lat],
+      zoom,
+      essential: true,
+    });
+  }
 }

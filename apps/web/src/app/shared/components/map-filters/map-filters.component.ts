@@ -30,8 +30,8 @@ export class MapFiltersComponent {
   @Output() filtersReset = new EventEmitter<void>();
 
   readonly expanded = signal(false);
-  readonly minPrice = signal(10);
-  readonly maxPrice = signal(200);
+  readonly minPrice = signal(5000); // ARS prices start at ~5000
+  readonly maxPrice = signal(50000); // ARS prices up to ~50000
   readonly transmission = signal<'all' | 'manual' | 'automatic'>('all');
   readonly fuelType = signal<'all' | 'nafta' | 'gasoil' | 'electrico' | 'hibrido'>('all');
   readonly minSeats = signal(2);
@@ -83,8 +83,8 @@ export class MapFiltersComponent {
   }
 
   resetFilters(): void {
-    this.minPrice.set(10);
-    this.maxPrice.set(200);
+    this.minPrice.set(5000);
+    this.maxPrice.set(50000);
     this.transmission.set('all');
     this.fuelType.set('all');
     this.minSeats.set(2);
@@ -95,6 +95,7 @@ export class MapFiltersComponent {
       backup_camera: false,
     });
     this.filtersReset.emit();
+    this.emitFilters(); // Emit filters after reset
   }
 
   private emitFilters(): void {

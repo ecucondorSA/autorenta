@@ -19,6 +19,7 @@
   <app-map-filters
     *ngIf="showFilters"
     (filtersChange)="onFiltersChange($event)"
+    (filtersReset)="onFiltersReset()"
     class="filters-panel"
   ></app-map-filters>
 </ion-header>

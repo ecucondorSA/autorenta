@@ -50,6 +50,7 @@ import { Car } from '../../core/models';
 })
 export class ExplorePage implements OnInit, AfterViewInit {
   @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
+  @ViewChild(CarsMapComponent) carsMap?: CarsMapComponent;
 
   cars: Car[] = [];
   filteredCars: Car[] = [];
@@ -81,10 +82,18 @@ export class ExplorePage implements OnInit, AfterViewInit {
   showFilters = false;
   searchQuery = '';
 
-  filters = {
-    minPrice: 0,
-    maxPrice: 10000,
-    transmission: 'all' as 'all' | 'manual' | 'automatic',
+  filters: MapFilters = {
+    minPrice: 5000,
+    maxPrice: 50000,
+    transmission: 'all',
+    fuelType: 'all',
+    minSeats: 2,
+    features: {
+      ac: false,
+      gps: false,
+      bluetooth: false,
+      backup_camera: false,
+    },
   };
 
   userLocation: { lat: number; lng: number } | null = null;
@@ -137,12 +146,29 @@ export class ExplorePage implements OnInit, AfterViewInit {
 
   applyFilters() {
     this.filteredCars = this.cars.filter((car) => {
+      // Price filter
       const priceMatch =
         car.price_per_day >= this.filters.minPrice && car.price_per_day <= this.filters.maxPrice;
+      
+      // Transmission filter
       const transmissionMatch =
         this.filters.transmission === 'all' || car.transmission === this.filters.transmission;
+      
+      // Fuel type filter
+      const fuelMatch =
+        this.filters.fuelType === 'all' || car.fuel_type === this.filters.fuelType;
+      
+      // Seats filter
+      const seatsMatch = car.seats >= this.filters.minSeats;
+      
+      // Features filter (features are stored in Record<string, boolean>)
+      const featuresMatch =
+        (!this.filters.features.ac || car.features?.['ac']) &&
+        (!this.filters.features.gps || car.features?.['gps']) &&
+        (!this.filters.features.bluetooth || car.features?.['bluetooth']) &&
+        (!this.filters.features.backup_camera || car.features?.['backup_camera']);
 
-      return priceMatch && transmissionMatch;
+      return priceMatch && transmissionMatch && fuelMatch && seatsMatch && featuresMatch;
     });
   }
 
@@ -153,15 +179,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
     if (carElement) {
       carElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
-  }
-
-  resetFilters() {
-    this.filters = {
-      minPrice: 0,
-      maxPrice: 10000,
-      transmission: 'all',
-    };
-    this.applyFilters();
   }
 
   onSearch() {
@@ -180,8 +197,27 @@ export class ExplorePage implements OnInit, AfterViewInit {
   }
 
   centerOnUser() {
-    if (this.userLocation) {
-      // Trigger map centering via service/event
+    if (this.userLocation && this.carsMap) {
+      // Emit event to map component to center on user location
+      this.carsMap.flyToLocation(this.userLocation.lat, this.userLocation.lng);
     }
+  }
+  
+  onFiltersReset() {
+    // Reset filters to initial values
+    this.filters = {
+      minPrice: 5000,
+      maxPrice: 50000,
+      transmission: 'all',
+      fuelType: 'all',
+      minSeats: 2,
+      features: {
+        ac: false,
+        gps: false,
+        bluetooth: false,
+        backup_camera: false,
+      },
+    };
+    this.applyFilters();
   }
 }
