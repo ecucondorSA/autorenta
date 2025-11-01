@@ -332,6 +332,7 @@ export class CheckoutPaymentService {
     });
 
     if (error) {
+      console.error('[CheckoutPaymentService] Error unlocking wallet funds:', error);
     }
   }
 
@@ -346,18 +347,23 @@ export class CheckoutPaymentService {
     if (transaction.fundsLocked && transaction.lockedAmountCents > 0) {
       try {
         await this.unlockWalletFunds(bookingId, transaction.lockedAmountCents);
-      } catch (err) {}
+      } catch (err) {
+        console.error('[CheckoutPaymentService] Rollback: Failed to unlock funds:', err);
+      }
     }
 
     // Revertir booking a 'pending' si fue actualizado
     if (transaction.bookingUpdated) {
       try {
         await this.bookingsService.updateBooking(bookingId, { status: 'pending' });
-      } catch (err) {}
+      } catch (err) {
+        console.error('[CheckoutPaymentService] Rollback: Failed to revert booking status:', err);
+      }
     }
 
     // TODO: Marcar intent como 'failed' si fue creado
     if (transaction.intentCreated && transaction.intentId) {
+      console.warn('[CheckoutPaymentService] TODO: Mark payment intent as failed:', transaction.intentId);
     }
   }
 }

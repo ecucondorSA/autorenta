@@ -522,8 +522,9 @@
       <!-- Cars Grid -->
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <app-car-card
-          *ngFor="let car of cars()"
+          *ngFor="let car of cars(); let i = index"
           [car]="car"
+          [priority]="i === 0"
           [showOwnerActions]="true"
           (edit)="onEditCar($event)"
           (delete)="onDeleteCar($event)"

@@ -353,7 +353,7 @@
   <!-- Main Content Area -->
   <main
     id="main-content"
-    class="app-main w-full"
+    class="app-main w-full pb-20 md:pb-0"
     [class.container-page]="!fullBleedLayout()"
     [class.mx-auto]="!fullBleedLayout()"
     [class.max-w-none]="fullBleedLayout()"
@@ -366,11 +366,17 @@
     <router-outlet></router-outlet>
   </main>
 
-  <!-- Floating Comparison Badge -->
+  <!-- Mobile Bottom Navigation (solo móvil) -->
+  <app-mobile-bottom-nav></app-mobile-bottom-nav>
+
+  <!-- PWA Install Banner -->
+  <app-pwa-install-banner></app-pwa-install-banner>
+
+  <!-- Floating Comparison Badge (ajustado para no chocar con bottom nav) -->
   <a
     *ngIf="compareCountSig() > 0"
     routerLink="/cars/compare"
-    class="fixed bottom-6 right-6 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-accent-petrol text-white shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 animate-fade-in"
+    class="fixed bottom-24 right-6 md:bottom-6 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-accent-petrol text-white shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 animate-fade-in"
     aria-label="Ver comparación de autos"
   >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -384,9 +390,9 @@
     <span class="font-semibold text-sm">Comparando ({{ compareCountSig() }})</span>
   </a>
 
-  <!-- Footer -->
+  <!-- Footer (con padding bottom en móvil para la nav) -->
   <footer
-    class="border-t border-pearl-gray/40 dark:border-white/10 bg-gradient-to-b from-white-pure/98 via-white-pure to-white-pure dark:from-[#12171a] dark:via-[#141b1f] dark:to-[#161d22]"
+    class="border-t border-pearl-gray/40 dark:border-white/10 bg-gradient-to-b from-white-pure/98 via-white-pure to-white-pure dark:from-[#12171a] dark:via-[#141b1f] dark:to-[#161d22] pb-20 md:pb-0"
   >
     <div class="mx-auto max-w-7xl px-container py-section-sm">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
