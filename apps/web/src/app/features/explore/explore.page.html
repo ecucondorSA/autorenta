@@ -75,4 +75,25 @@
       </ion-fab-button>
     </ion-fab>
   </div>
+
+  <!-- Bottom Carousel (Airbnb-style) -->
+  <div class="map-carousel" *ngIf="filteredCars.length > 0">
+    <div class="map-carousel-scroll">
+      <div
+        *ngFor="let car of filteredCars; let i = index"
+        class="map-carousel-card-wrapper"
+        role="listitem"
+        [class.selected]="car.id === selectedCarId"
+      >
+        <app-car-card
+          [car]="car"
+          [priority]="i === 0"
+          [routerLink]="['/cars', car.id]"
+          (click)="onCarSelected(car.id)"
+          class="map-carousel-card"
+          [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto')"
+        ></app-car-card>
+      </div>
+    </div>
+  </div>
 </ion-content>

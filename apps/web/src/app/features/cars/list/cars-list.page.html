@@ -86,7 +86,8 @@
       </div>
     </div>
 
-    <aside class="list-panel">
+    <!-- Panel lateral de lista (solo desktop) -->
+    <aside class="hidden lg:block list-panel">
       <app-pull-to-refresh (onRefresh)="handleRefresh()">
         <div class="list-panel-inner" id="tour-results-panel">
           <header class="list-panel-header">
