@@ -13,155 +13,76 @@
     </div>
   </ng-template>
 
-  <div class="layout-grid">
-    <div class="map-panel">
-      <div id="map-container" class="map-wrapper">
-        <app-cars-map
-          [cars]="carMapLocations()"
-          [selectedCarId]="selectedCarId()"
-          (carSelected)="onMapCarSelected($event)"
-          (userLocationChange)="onUserLocationChange($event)"
-        ></app-cars-map>
+  <!-- Mapa full-width (sin panel lateral) -->
+  <div class="w-full h-screen">
+    <div id="map-container" class="w-full h-full relative">
+      <app-cars-map
+        [cars]="carMapLocations()"
+        [selectedCarId]="selectedCarId()"
+        (carSelected)="onMapCarSelected($event)"
+        (userLocationChange)="onUserLocationChange($event)"
+      ></app-cars-map>
 
-        <div class="pointer-events-none absolute inset-0">
-          <div class="map-controls pointer-events-auto">
-            <div
-              id="filters"
-              data-tour-step="guided-search"
-              class="map-controls__filters filter-section"
-            >
-              <app-map-filters
-                (filtersChange)="onFiltersChange($event)"
-                (filtersReset)="onFiltersReset()"
-              ></app-map-filters>
-            </div>
-            <div class="map-controls__sort">
-              <label class="sr-only" for="sort-by">Ordenar resultados</label>
-              <select
-                id="sort-by"
-                [value]="sortBy()"
-                (change)="onSortChange($any($event.target).value)"
-                class="map-controls__select"
-              >
-                <option value="distance">Más cercanos</option>
-                <option value="price_asc">Precio: menor a mayor</option>
-                <option value="price_desc">Precio: mayor a menor</option>
-                <option value="rating">Mejor valorados</option>
-                <option value="newest">Más nuevos</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Carousel de autos económicos (solo desktop) -->
+      <div class="pointer-events-none absolute inset-0">
+        <div class="map-controls pointer-events-auto">
           <div
-            *ngIf="showEconomyCarousel()"
-            class="hidden md:block map-carousel-container pointer-events-none"
-            role="region"
-            [attr.aria-label]="'Autos cercanos y económicos'"
+            id="filters"
+            data-tour-step="guided-search"
+            class="map-controls__filters filter-section"
           >
-            <div class="map-carousel-heading pointer-events-auto">
-              <span class="map-carousel-heading__pill">
-                Cercanos y económicos
-              </span>
-            </div>
-            <div
-              #unifiedCarousel
-              class="map-carousel pointer-events-auto"
-              data-tour-step="guided-select-car"
-              role="list"
-              (mouseenter)="onCarouselMouseEnter()"
-              (mouseleave)="onCarouselMouseLeave()"
-              (touchstart)="onCarouselMouseEnter()"
-              (touchend)="onCarouselMouseLeave()"
+            <app-map-filters
+              (filtersChange)="onFiltersChange($event)"
+              (filtersReset)="onFiltersReset()"
+            ></app-map-filters>
+          </div>
+          <div class="map-controls__sort">
+            <label class="sr-only" for="sort-by">Ordenar resultados</label>
+            <select
+              id="sort-by"
+              [value]="sortBy()"
+              (change)="onSortChange($any($event.target).value)"
+              class="map-controls__select"
             >
-              <ng-container *ngFor="let car of economyCars(); trackBy: trackByCarId">
-                <ng-container
-                  [ngTemplateOutlet]="carouselCard"
-                  [ngTemplateOutletContext]="{ $implicit: car }"
-                ></ng-container>
-              </ng-container>
-            </div>
+              <option value="distance">Más cercanos</option>
+              <option value="price_asc">Precio: menor a mayor</option>
+              <option value="price_desc">Precio: mayor a menor</option>
+              <option value="rating">Mejor valorados</option>
+              <option value="newest">Más nuevos</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Carousel de autos económicos (solo desktop) -->
+        <div
+          *ngIf="showEconomyCarousel()"
+          class="hidden md:block map-carousel-container pointer-events-none"
+          role="region"
+          [attr.aria-label]="'Autos cercanos y económicos'"
+        >
+          <div class="map-carousel-heading pointer-events-auto">
+            <span class="map-carousel-heading__pill">
+              Cercanos y económicos
+            </span>
+          </div>
+          <div
+            #unifiedCarousel
+            class="map-carousel pointer-events-auto"
+            data-tour-step="guided-select-car"
+            role="list"
+            (mouseenter)="onCarouselMouseEnter()"
+            (mouseleave)="onCarouselMouseLeave()"
+            (touchstart)="onCarouselMouseEnter()"
+            (touchend)="onCarouselMouseLeave()"
+          >
+            <ng-container *ngFor="let car of economyCars(); trackBy: trackByCarId">
+              <ng-container
+                [ngTemplateOutlet]="carouselCard"
+                [ngTemplateOutletContext]="{ $implicit: car }"
+              ></ng-container>
+            </ng-container>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Panel lateral de lista (solo desktop) -->
-    <aside class="hidden lg:block list-panel">
-      <app-pull-to-refresh (onRefresh)="handleRefresh()">
-        <div class="list-panel-inner" id="tour-results-panel">
-          <header class="list-panel-header">
-            <div>
-              <h2 class="list-panel-title">Autos disponibles</h2>
-              <p class="list-panel-subtitle" aria-live="polite" role="status">
-                {{ premiumCars().length }} modelos media/alta gama
-                <span *ngIf="premiumCars().length"> · Ordenados por {{ sortLabel() }}</span>
-              </p>
-            </div>
-            <div class="list-panel-actions">
-              <label class="sr-only" for="sort-by-mobile">Ordenar resultados</label>
-              <select
-                id="sort-by-mobile"
-                class="list-panel-sort"
-                [value]="sortBy()"
-                (change)="onSortChange($any($event.target).value)"
-              >
-                <option value="distance">Más cercanos</option>
-                <option value="price_asc">Precio: menor a mayor</option>
-                <option value="price_desc">Precio: mayor a menor</option>
-                <option value="rating">Mejor valorados</option>
-                <option value="newest">Más nuevos</option>
-              </select>
-            </div>
-          </header>
-
-          <!-- 💀 Skeleton Loaders mientras carga -->
-          <div *ngIf="loading()" class="list-panel-content">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <app-skeleton-loader 
-                *ngFor="let _ of [1,2,3,4,5,6]" 
-                type="card">
-              </app-skeleton-loader>
-            </div>
-          </div>
-          <span class="sr-only">Cargando resultados</span>
-        </div>
-
-        <ng-container *ngIf="!loading()">
-          <div *ngIf="premiumCars().length === 0" class="empty-state">
-            <svg
-              class="empty-icon"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>No encontramos autos de media/alta gama para tu búsqueda.</p>
-            <p class="hint">
-              Ajustá los filtros o probá otra ciudad para ver más opciones premium.
-            </p>
-          </div>
-
-          <div *ngIf="premiumCars().length > 0" class="list-panel-cards">
-            <app-car-card
-              *ngFor="let car of premiumCars(); let i = index; trackBy: trackByCarId"
-              [id]="'car-card-' + car.id"
-              [car]="car"
-              [priority]="i === 0"
-              [selected]="isCarSelected(car.id)"
-              (click)="onCarSelected(car.id)"
-              class="w-full cursor-pointer"
-            ></app-car-card>
-          </div>
-        </ng-container>
-      </app-pull-to-refresh>
-    </aside>
   </div>
 </section>
