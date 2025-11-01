@@ -54,7 +54,6 @@ export class CloudflareAiService {
    * Genera una imagen de un auto usando FLUX.1-schnell
    */
   async generateCarImage(params: CloudflareAIRequest): Promise<Blob> {
-
     try {
       const response = await firstValueFrom(
         this.http.post<CloudflareAIResponse>(this.WORKER_URL, params),
@@ -63,7 +62,6 @@ export class CloudflareAiService {
       if (!response.success || !response.image) {
         throw new Error(response.error || 'Failed to generate image');
       }
-
 
       // Convertir base64 a Blob
       const blob = this.base64ToBlob(response.image, 'image/png');
@@ -95,7 +93,6 @@ export class CloudflareAiService {
     angles?: Array<'front' | 'side' | 'rear' | '3/4-front' | 'interior'>;
   }): Promise<Blob[]> {
     const angles = params.angles || ['3/4-front', 'side', 'interior'];
-
 
     const promises = angles.map((angle) =>
       this.generateCarImage({

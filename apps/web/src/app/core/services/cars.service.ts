@@ -14,7 +14,7 @@ interface ImageOptimizeOptions {
 type CarWithPhotosRaw = Record<string, unknown> & {
   car_photos?: unknown[];
   owner?: unknown | unknown[];
-}
+};
 
 @Injectable({
   providedIn: 'root',
@@ -228,7 +228,6 @@ export class CarsService {
       ...additionalBlockedIds,
       ...(conflicts || []).map((c) => c.car_id),
     ]);
-
 
     // Filtrar autos disponibles
     return cars.filter((car) => !blockedIds.has(car.id));

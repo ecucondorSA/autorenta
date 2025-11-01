@@ -11,11 +11,7 @@ interface NavigatorLockOptions {
 }
 
 interface NavigatorLocks {
-  request<T>(
-    name: string,
-    options: NavigatorLockOptions,
-    callback: () => Promise<T>,
-  ): Promise<T>;
+  request<T>(name: string, options: NavigatorLockOptions, callback: () => Promise<T>): Promise<T>;
 }
 
 interface GlobalWithNavigator {

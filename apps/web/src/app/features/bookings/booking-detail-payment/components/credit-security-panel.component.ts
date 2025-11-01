@@ -440,16 +440,18 @@ export class CreditSecurityPanelComponent implements OnInit {
     this.isCheckingBalance.set(true);
     this.errorMessage.set(null);
 
-    try {
-      const balance = await this.walletService.getBalance();
-      this.currentProtectedCredit.set(balance.protected_credit_balance || 0);
-      this.updateLockStatus();
-    } catch (error: unknown) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'Error al obtener balance');
-      this.lockStatus.set('error');
-    } finally {
-      this.isCheckingBalance.set(false);
-    }
+    this.walletService.getBalance().subscribe({
+      next: (balance) => {
+        this.currentProtectedCredit.set(balance.protected_credit_balance || 0);
+        this.updateLockStatus();
+        this.isCheckingBalance.set(false);
+      },
+      error: (error: unknown) => {
+        this.errorMessage.set(error instanceof Error ? error.message : 'Error al obtener balance');
+        this.lockStatus.set('error');
+        this.isCheckingBalance.set(false);
+      },
+    });
   }
 
   /**
@@ -482,65 +484,73 @@ export class CreditSecurityPanelComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    try {
-      const result = await this.walletService.lockFunds({
-        booking_id: this.bookingId || '',
-        amount: this.riskSnapshot.creditSecurityUsd,
-        description: `Crédito de Seguridad para reserva${this.bookingId ? ` ${this.bookingId}` : ''}`,
+    this.walletService
+      .lockFunds(
+        this.bookingId || '',
+        this.riskSnapshot.creditSecurityUsd,
+        `Crédito de Seguridad para reserva${this.bookingId ? ` ${this.bookingId}` : ''}`,
+      )
+      .subscribe({
+        next: (result) => {
+          if (!result || !result.transaction_id) {
+            throw new Error('Error al bloquear fondos');
+          }
+
+          // Crear WalletLock
+          const lock: WalletLock = {
+            lockId: result.transaction_id,
+            userId: this.userId,
+            amountUsd: this.riskSnapshot.creditSecurityUsd,
+            reason: `Crédito de Seguridad para reserva${this.bookingId ? ` ${this.bookingId}` : ''}`,
+            status: 'locked',
+            isWithdrawable: false,
+            createdAt: new Date(),
+          };
+
+          this.currentLock.set(lock);
+          this.lockStatus.set('locked');
+          this.lockChange.emit(lock);
+          this.isLoading.set(false);
+        },
+        error: (error: unknown) => {
+          this.errorMessage.set(
+            error instanceof Error ? error.message : 'Error al bloquear fondos',
+          );
+          this.lockStatus.set('error');
+          this.lockChange.emit(null);
+          this.isLoading.set(false);
+        },
       });
-
-      if (!result.success || !result.transaction_id) {
-        throw new Error(result.message || 'Error al bloquear fondos');
-      }
-
-      // Crear WalletLock
-      const lock: WalletLock = {
-        lockId: result.transaction_id,
-        userId: this.userId,
-        amountUsd: this.riskSnapshot.creditSecurityUsd,
-        reason: `Crédito de Seguridad para reserva${this.bookingId ? ` ${this.bookingId}` : ''}`,
-        status: 'locked',
-        isWithdrawable: false,
-        createdAt: new Date(),
-      };
-
-      this.currentLock.set(lock);
-      this.lockStatus.set('locked');
-      this.lockChange.emit(lock);
-    } catch (error: unknown) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'Error al bloquear fondos');
-      this.lockStatus.set('error');
-      this.lockChange.emit(null);
-    } finally {
-      this.isLoading.set(false);
-    }
   }
 
   /**
    * Handler: Cargar crédito
    */
-  protected async onLoadCredit(): Promise<void> {
+  protected onLoadCredit(): void {
     const amountNeeded = Math.abs(this.creditDifference());
 
-    try {
-      // Iniciar depósito NO retirable
-      const result = await this.walletService.initiateDeposit({
+    // Iniciar depósito NO retirable
+    this.walletService
+      .initiateDeposit({
         amount: Math.ceil(amountNeeded), // Redondear hacia arriba
         provider: 'mercadopago',
         description: 'Carga de Crédito de Seguridad',
         allowWithdrawal: false, // ← CLAVE: NO retirable
+      })
+      .subscribe({
+        next: (result) => {
+          if (result.success && result.payment_url) {
+            // Redirigir a MercadoPago
+            window.location.href = result.payment_url;
+          } else {
+            throw new Error(result.message || 'Error al iniciar depósito');
+          }
+        },
+        error: (error: unknown) => {
+          this.errorMessage.set(error instanceof Error ? error.message : 'Error al cargar crédito');
+          this.lockStatus.set('error');
+        },
       });
-
-      if (result.success && result.payment_url) {
-        // Redirigir a MercadoPago
-        window.location.href = result.payment_url;
-      } else {
-        throw new Error(result.message || 'Error al iniciar depósito');
-      }
-    } catch (error: unknown) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'Error al cargar crédito');
-      this.lockStatus.set('error');
-    }
   }
 
   /**

@@ -130,8 +130,8 @@ export class ProfilePage implements OnInit {
 
   ngOnInit(): void {
     void this.loadProfile();
-    void this.walletService.getBalance().catch(() => {
-      // Ignorar error si no se puede cargar el balance
+    void this.walletService.getBalance().subscribe({
+      error: () => { /* Ignorar error si no se puede cargar el balance */ }
     });
     void this.loadReviewsAndStats();
   }
@@ -162,7 +162,6 @@ export class ProfilePage implements OnInit {
         });
       }
     } catch (err) {
-
       // Get detailed error message
       let errorMessage = 'No pudimos cargar tu perfil.';
       if (err instanceof Error) {

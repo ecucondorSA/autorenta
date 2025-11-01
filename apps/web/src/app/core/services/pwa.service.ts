@@ -71,7 +71,6 @@ export class PwaService {
       this.deferredPrompt = e as BeforeInstallPromptEvent;
       // Update installable state
       this.installable.set(true);
-
     });
 
     // Listen for app installed event
@@ -130,7 +129,6 @@ export class PwaService {
     // Wait for the user to respond to the prompt
     const { outcome } = await this.deferredPrompt.userChoice;
 
-
     // Clear the deferredPrompt
     this.deferredPrompt = null;
     this.installable.set(false);
@@ -151,8 +149,7 @@ export class PwaService {
       this.updateAvailable.set(false);
       // Reload the page to load the new version
       document.location.reload();
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**
@@ -262,8 +259,7 @@ export class PwaService {
 
     try {
       await nav.setAppBadge(count);
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**
@@ -277,8 +273,7 @@ export class PwaService {
 
     try {
       await nav.clearAppBadge();
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**
@@ -318,8 +313,7 @@ export class PwaService {
       const wakeLock = await nav.wakeLock.request('screen');
 
       // Listen for release
-      wakeLock.addEventListener('release', () => {
-      });
+      wakeLock.addEventListener('release', () => {});
 
       return wakeLock;
     } catch (error) {
@@ -393,8 +387,8 @@ export class PwaService {
     }
 
     try {
-      const registration =
-        (await navigator.serviceWorker.ready) as ServiceWorkerRegistrationWithPeriodicSync;
+      const registration = (await navigator.serviceWorker
+        .ready) as ServiceWorkerRegistrationWithPeriodicSync;
 
       if (!registration.periodicSync) {
         return false;

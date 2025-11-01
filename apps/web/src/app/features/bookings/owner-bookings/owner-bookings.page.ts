@@ -9,7 +9,10 @@ import { formatDateRange } from '../../../shared/utils/date.utils';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { MarketplaceOnboardingService, MarketplaceStatus } from '../../../core/services/marketplace-onboarding.service';
+import {
+  MarketplaceOnboardingService,
+  MarketplaceStatus,
+} from '../../../core/services/marketplace-onboarding.service';
 
 interface CarLead {
   carId: string;
@@ -28,7 +31,6 @@ interface CarLead {
   styleUrl: './owner-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class OwnerBookingsPage implements OnInit {
   readonly bookings = signal<Booking[]>([]);
   readonly loading = signal(false);
@@ -285,8 +287,7 @@ export class OwnerBookingsPage implements OnInit {
 
         const key = `${row.car.id}:${row.otherUserId}`;
         const existing = threads.get(key);
-        const isUnread =
-          row.message.recipient_id === this.currentUserId && !row.message.read_at;
+        const isUnread = row.message.recipient_id === this.currentUserId && !row.message.read_at;
 
         if (!existing) {
           threads.set(key, {
@@ -325,8 +326,7 @@ export class OwnerBookingsPage implements OnInit {
             if (contact.success) {
               participantName = contact.name || contact.email || null;
             }
-          } catch (err) {
-          }
+          } catch (err) {}
 
           return {
             ...lead,
@@ -381,8 +381,7 @@ export class OwnerBookingsPage implements OnInit {
             };
           } else {
           }
-        } catch (error) {
-        }
+        } catch (error) {}
       }),
     );
 

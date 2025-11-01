@@ -191,12 +191,10 @@ interface WalletLedgerEntry {
                   class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
                 ></div>
               </div>
-
             } @else if (recentActivity().length === 0) {
               <div class="p-8 text-center">
                 <p class="text-gray-500 dark:text-gray-400">No hay actividad reciente</p>
               </div>
-
             } @else {
               <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 @for (entry of recentActivity(); track entry.id) {
@@ -353,8 +351,7 @@ export class CoverageFundDashboardComponent implements OnInit {
         total_ledger_entries: entries.length,
         avg_franchise_amount: avgAmount,
       });
-    } catch (err) {
-    }
+    } catch (err) {}
   }
 
   async loadRecentActivity(): Promise<void> {

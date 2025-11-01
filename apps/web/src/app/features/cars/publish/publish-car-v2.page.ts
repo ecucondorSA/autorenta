@@ -6,9 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ModalController, AlertController } from '@ionic/angular/standalone';
 import { CarsService } from '../../../core/services/cars.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
-import {
-  AiPhotoEnhancerService,
-} from '../../../core/services/ai-photo-enhancer.service';
+import { AiPhotoEnhancerService } from '../../../core/services/ai-photo-enhancer.service';
 import {
   MarketplaceOnboardingService,
   MarketplaceStatus,
@@ -129,7 +127,9 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
               *ngIf="mpStatusLoading()"
               class="mt-4 flex items-center gap-3 rounded-lg border border-pearl-gray/50 bg-white/70 p-3 text-sm text-charcoal-medium dark:border-neutral-700 dark:bg-anthracite/60 dark:text-pearl-light/80"
             >
-              <span class="inline-flex h-2.5 w-2.5 animate-ping rounded-full bg-accent-petrol"></span>
+              <span
+                class="inline-flex h-2.5 w-2.5 animate-ping rounded-full bg-accent-petrol"
+              ></span>
               Comprobando el estado de tu cuenta de Mercado Pago...
             </div>
 
@@ -143,8 +143,8 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
                   <div>
                     <p class="font-semibold">No pudimos verificar Mercado Pago</p>
                     <p class="text-xs md:text-sm">
-                      {{ mpStatusError() }}. Intentá nuevamente en unos minutos o volvé a vincular tu
-                      cuenta.
+                      {{ mpStatusError() }}. Intentá nuevamente en unos minutos o volvé a vincular
+                      tu cuenta.
                     </p>
                   </div>
                 </div>
@@ -169,8 +169,8 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
                     <p class="text-base font-semibold">Conectá Mercado Pago para activar tu auto</p>
                     <p class="text-xs md:text-sm md:max-w-xl">
                       Guardaremos la publicación como borrador hasta que completes el onboarding.
-                      Sin esa vinculación las reservas quedan pendientes y el dinero no se distribuye
-                      automáticamente.
+                      Sin esa vinculación las reservas quedan pendientes y el dinero no se
+                      distribuye automáticamente.
                     </p>
                   </div>
                 </div>
@@ -1126,7 +1126,9 @@ export class PublishCarV2Page implements OnInit {
       const userId = await this.ensureCurrentUserId();
 
       if (!userId) {
-        this.mpStatusError.set('Necesitás iniciar sesión nuevamente para continuar con la publicación.');
+        this.mpStatusError.set(
+          'Necesitás iniciar sesión nuevamente para continuar con la publicación.',
+        );
         this.mpCanList.set(false);
         return;
       }
@@ -1393,7 +1395,6 @@ export class PublishCarV2Page implements OnInit {
 
       // Trigger brand change to load models for the selected brand
       this.onBrandChange();
-
     } catch (error) {
       alert('Error al cargar el auto. Por favor intenta nuevamente.');
       await this.router.navigate(['/cars/my']);
@@ -1442,7 +1443,6 @@ export class PublishCarV2Page implements OnInit {
           continue;
         }
 
-
         // Usar imagen original directamente
         const processedFile = file;
 
@@ -1489,7 +1489,6 @@ export class PublishCarV2Page implements OnInit {
     this.isGeneratingAIPhotos.set(true);
 
     try {
-
       const enhancedPhotos = await this.aiPhotoEnhancer.generateCarPhotos({
         brand: brand.name,
         model: model.name,
@@ -1498,7 +1497,6 @@ export class PublishCarV2Page implements OnInit {
         count: 3, // Generar 3 fotos
         method: 'cloudflare-ai', // Usar Cloudflare AI en lugar de stock photos
       });
-
 
       // Agregar las fotos generadas a la lista
       for (const enhancedPhoto of enhancedPhotos) {
@@ -1549,7 +1547,6 @@ export class PublishCarV2Page implements OnInit {
             coords.longitude,
           );
 
-
           // Auto-fill address fields from reverse geocoding
           this.publishForm.patchValue({
             location_street: addressResult.street || '',
@@ -1568,7 +1565,6 @@ export class PublishCarV2Page implements OnInit {
         }
       },
       (error) => {
-
         let errorMessage = 'No se pudo obtener tu ubicación. ';
 
         switch (error.code) {
@@ -1612,7 +1608,9 @@ export class PublishCarV2Page implements OnInit {
     try {
       this.isSubmitting.set(true);
 
-      const rawValue = this.publishForm.getRawValue() as Record<string, unknown> & { pricing_strategy?: unknown };
+      const rawValue = this.publishForm.getRawValue() as Record<string, unknown> & {
+        pricing_strategy?: unknown;
+      };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { pricing_strategy, ...formValue } = rawValue;
 
@@ -1650,7 +1648,6 @@ export class PublishCarV2Page implements OnInit {
           location_lat = geocodingResult.latitude;
           location_lng = geocodingResult.longitude;
         } catch (geocodingError) {
-
           // Fallback: Try geocoding just the city
           try {
             const cityResult = await this.geocodingService.getCityCoordinates(

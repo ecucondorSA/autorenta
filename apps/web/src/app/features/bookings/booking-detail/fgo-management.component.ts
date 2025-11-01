@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import {
-  SettlementService,
-  Claim,
-} from '../../../core/services/settlement.service';
+import { SettlementService, Claim } from '../../../core/services/settlement.service';
 import {
   BookingInspection,
   BookingRiskSnapshot,
@@ -351,8 +348,7 @@ export class FgoManagementComponent implements OnInit {
     try {
       const policy = await this.riskMatrixService.getRiskPolicy(carValue);
       this.riskPolicy.set(policy);
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   private async loadFgoData(): Promise<void> {

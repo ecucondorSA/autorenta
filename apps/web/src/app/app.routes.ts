@@ -100,7 +100,7 @@ export const routes: Routes = [
         path: 'mercadopago-connect',
         loadComponent: () =>
           import('./features/profile/mercadopago-connect.component').then(
-            (m) => m.MercadoPagoConnectComponent
+            (m) => m.MercadoPagoConnectComponent,
           ),
       },
     ],
@@ -141,8 +141,7 @@ export const routes: Routes = [
   {
     path: 'messages',
     canMatch: [AuthGuard],
-    loadComponent: () =>
-      import('./features/messages/messages.page').then((m) => m.MessagesPage),
+    loadComponent: () => import('./features/messages/messages.page').then((m) => m.MessagesPage),
   },
   { path: '**', redirectTo: '' },
 ];

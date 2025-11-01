@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { Booking } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { WalletService } from './wallet.service';
@@ -114,7 +115,7 @@ export class BookingsService {
 
     // my_bookings es una vista sin metadatos de FK, por lo que PostgREST
     // no puede resolver joins automáticos; cargamos car, cobertura y su póliza aparte.
-    
+
     // Load car details
     if (booking?.car_id) {
       try {
@@ -128,10 +129,9 @@ export class BookingsService {
           (booking as Booking).car = car as any; // Partial select, not full Car object
         } else if (carError) {
         }
-      } catch (carException) {
-      }
+      } catch (carException) {}
     }
-    
+
     if (booking?.insurance_coverage_id) {
       try {
         const { data: coverage, error: coverageError } = await this.supabase
@@ -157,8 +157,7 @@ export class BookingsService {
           (booking as Booking).insurance_coverage = coverage;
         } else if (coverageError) {
         }
-      } catch (coverageException) {
-      }
+      } catch (coverageException) {}
     }
 
     return booking;
@@ -206,10 +205,10 @@ export class BookingsService {
     // 2. If wallet funds are locked, unlock them before cancelling
     if (booking.wallet_status === 'locked' && booking.wallet_lock_transaction_id) {
       try {
-        await this.walletService.unlockFunds({
-          booking_id: bookingId,
-          description: `Fondos desbloqueados por cancelación: ${reason ?? 'Cancelled by user'}`,
-        });
+        await this.walletService.unlockFunds(
+          bookingId,
+          `Fondos desbloqueados por cancelación: ${reason ?? 'Cancelled by user'}`,
+        );
       } catch (unlockError) {
         // Continue with cancellation even if unlock fails
         // The unlock can be retried manually later
@@ -390,11 +389,11 @@ export class BookingsService {
       }
 
       // Lock funds using wallet service
-      const lockResult = await this.walletService.lockFunds({
-        booking_id: bookingId,
-        amount: depositAmountCents,
-        description: description || `Garantía bloqueada - Reserva ${bookingId.substring(0, 8)}`,
-      });
+      const lockResult = await firstValueFrom(this.walletService.lockFunds(
+        bookingId,
+        depositAmountCents,
+        description || `Garantía bloqueada - Reserva ${bookingId.substring(0, 8)}`
+      ));
 
       if (!lockResult.success) {
         return { ok: false, error: lockResult.message };
@@ -435,11 +434,10 @@ export class BookingsService {
       }
 
       // Unlock funds
-      const unlockResult = await this.walletService.unlockFunds({
-        booking_id: bookingId,
-        description:
-          description || `Garantía liberada - Sin daños - Reserva ${bookingId.substring(0, 8)}`,
-      });
+      const unlockResult = await firstValueFrom(this.walletService.unlockFunds(
+        bookingId,
+        description || `Garantía liberada - Sin daños - Reserva ${bookingId.substring(0, 8)}`
+      ));
 
       if (!unlockResult.success) {
         return { ok: false, error: unlockResult.message };
@@ -550,10 +548,10 @@ export class BookingsService {
 
       if (remainingDeposit > 0) {
         // Unlock remaining funds
-        await this.walletService.unlockFunds({
-          booking_id: bookingId,
-          description: `Garantía parcialmente liberada - Daños: ${damageAmountCents / 100} - Reserva ${bookingId.substring(0, 8)}`,
-        });
+        await this.walletService.unlockFunds(
+          bookingId,
+          `Garantía parcialmente liberada - Daños: ${damageAmountCents / 100} - Reserva ${bookingId.substring(0, 8)}`,
+        );
 
         await this.updateBooking(bookingId, {
           wallet_status: 'partially_charged',

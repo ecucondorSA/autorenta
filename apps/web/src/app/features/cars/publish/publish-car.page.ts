@@ -249,8 +249,7 @@ export class PublishCarPage implements OnInit, OnDestroy {
       for (let i = 0; i < files.length; i++) {
         try {
           await this.carsService.uploadPhoto(files[i], car.id, i);
-        } catch (error) {
-        }
+        } catch (error) {}
       }
 
       await this.router.navigate(['/cars/mine'], {

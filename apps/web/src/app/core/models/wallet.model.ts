@@ -1,12 +1,23 @@
 /**
  * Wallet System Models
  * Interfaces para el sistema de wallet de AutorentA
+ *
+ * Updated: 2025-11-01
+ * Now imports WalletBalance, WalletTransaction, WalletLedger from Supabase-generated types
  */
 
+// Re-export Supabase generated types
+export type {
+  WalletBalance as WalletBalanceDB,
+  WalletTransaction as WalletTransactionDB,
+  WalletLedger as WalletLedgerDB,
+} from '../types/supabase-types';
+
 /**
- * Balance de wallet del usuario
+ * Balance de wallet del usuario (custom extended type)
  */
 export interface WalletBalance {
+  user_id: string;
   available_balance: number; // Fondos disponibles (Total - Locked)
   transferable_balance: number; // Fondos transferibles in-app (Available - Protected)
   withdrawable_balance: number; // Fondos retirables a banco (Transferable - Hold)
@@ -63,29 +74,6 @@ export type WalletReferenceType =
  * Proveedores de pago soportados
  */
 export type WalletPaymentProvider = 'mercadopago' | 'stripe' | 'bank_transfer' | 'internal';
-
-/**
- * Transacción de wallet
- */
-export interface WalletTransaction {
-  id: string;
-  user_id: string;
-  type: WalletTransactionType;
-  status: WalletTransactionStatus;
-  amount: number;
-  currency: string;
-  is_withdrawable?: boolean;
-  reference_type?: WalletReferenceType;
-  reference_id?: string;
-  provider?: WalletPaymentProvider;
-  provider_transaction_id?: string;
-  provider_metadata?: Record<string, unknown>;
-  description?: string;
-  admin_notes?: string;
-  created_at: string;
-  updated_at: string;
-  completed_at?: string;
-}
 
 /**
  * Respuesta de wallet_lock_funds

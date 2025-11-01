@@ -70,7 +70,6 @@ export class OfflineMessagesService {
           // Create indexes
           store.createIndex('by-timestamp', 'timestamp', { unique: false });
           store.createIndex('by-retries', 'retries', { unique: false });
-
         }
       };
     });
@@ -79,9 +78,7 @@ export class OfflineMessagesService {
   /**
    * Queue a message for later sending
    */
-  async queueMessage(
-    message: Omit<OfflineMessage, 'id' | 'timestamp' | 'retries'>
-  ): Promise<void> {
+  async queueMessage(message: Omit<OfflineMessage, 'id' | 'timestamp' | 'retries'>): Promise<void> {
     if (!this.db) await this.init();
 
     const offlineMessage: OfflineMessage = {
@@ -260,8 +257,7 @@ export class OfflineMessagesService {
     try {
       const messages = await this.getPendingMessages();
       this.pendingCount.set(messages.length);
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**

@@ -58,11 +58,11 @@ export class CheckoutPaymentService {
     const depositUsd = this.state.getDepositUsd();
     const rentalAmount = booking.total_amount;
 
-    const lock = await this.wallet.lockRentalAndDeposit({
-      booking_id: bookingId,
-      rental_amount: rentalAmount,
-      deposit_amount: depositUsd,
-    });
+    const lock = await firstValueFrom(this.wallet.lockRentalAndDeposit(
+      bookingId,
+      rentalAmount,
+      depositUsd,
+    ));
 
     if (!lock.success) {
       throw new Error(lock.message ?? 'No se pudo bloquear la garantía en wallet');
@@ -84,8 +84,7 @@ export class CheckoutPaymentService {
       this.state.setStatus('paid_with_wallet');
       this.state.setMessage('Pago confirmado con wallet. Redirigiendo al detalle de tu reserva.');
 
-      this.scheduleRiskSnapshot(booking, 'wallet').catch((err) => {
-      });
+      this.scheduleRiskSnapshot(booking, 'wallet').catch((err) => {});
 
       await this.router.navigate(['/bookings', bookingId]);
 
@@ -117,8 +116,7 @@ export class CheckoutPaymentService {
     const preference = await this.requestPreferenceOrThrow(bookingId);
     this.state.setStatus('redirecting_to_mercadopago');
 
-    this.scheduleRiskSnapshot(booking, 'credit_card').catch((err) => {
-    });
+    this.scheduleRiskSnapshot(booking, 'credit_card').catch((err) => {});
 
     return {
       kind: 'redirect_to_mercadopago',
@@ -146,11 +144,11 @@ export class CheckoutPaymentService {
     let walletLocked = false;
 
     try {
-      const lockResult = await this.wallet.lockFunds({
-        booking_id: bookingId,
-        amount: walletAmount,
-        description: `Pago parcial Autorentar (${bookingId.slice(0, 8)})`,
-      });
+      const lockResult = await firstValueFrom(this.wallet.lockFunds(
+        bookingId,
+        walletAmount,
+        `Pago parcial Autorentar (${bookingId.slice(0, 8)})`,
+      ));
 
       if (!lockResult.success) {
         throw new Error(lockResult.message ?? 'No se pudo bloquear fondos en tu wallet.');
@@ -183,8 +181,7 @@ export class CheckoutPaymentService {
         `${walletText} bloqueados de tu wallet. Redirigiendo a Mercado Pago para pagar ${cardText}...`,
       );
 
-      this.scheduleRiskSnapshot(booking, 'partial_wallet').catch((err) => {
-      });
+      this.scheduleRiskSnapshot(booking, 'partial_wallet').catch((err) => {});
 
       return {
         kind: 'redirect_to_mercadopago',
@@ -193,7 +190,6 @@ export class CheckoutPaymentService {
         bookingId,
       };
     } catch (error) {
-
       if (walletLocked) {
         await this.safeUnlockWallet(bookingId, 'Reversión pago parcial fallido');
       }
@@ -207,8 +203,7 @@ export class CheckoutPaymentService {
           wallet_lock_transaction_id: booking.wallet_lock_transaction_id ?? undefined,
           payment_intent_id: booking.payment_intent_id ?? undefined,
         });
-      } catch (rollbackError) {
-      }
+      } catch (rollbackError) {}
 
       throw error instanceof Error
         ? error
@@ -243,9 +238,7 @@ export class CheckoutPaymentService {
     );
   }
 
-  private handleOwnerOnboardingBlock(
-    error: Error & { code?: string; meta?: unknown },
-  ): never {
+  private handleOwnerOnboardingBlock(error: Error & { code?: string; meta?: unknown }): never {
     const message =
       error.message ||
       'El propietario todavía no completó la vinculación de Mercado Pago. Tu reserva quedará pendiente y te avisaremos cuando pueda cobrar.';
@@ -301,12 +294,11 @@ export class CheckoutPaymentService {
 
   private async safeUnlockWallet(bookingId: string, reason: string): Promise<void> {
     try {
-      await this.wallet.unlockFunds({
-        booking_id: bookingId,
-        description: reason,
-      });
-    } catch (unlockError) {
-    }
+      await firstValueFrom(this.wallet.unlockFunds(
+        bookingId,
+        reason,
+      ));
+    } catch (unlockError) {}
   }
 
   private formatUsd(amount: number): string {

@@ -46,8 +46,7 @@
                 </div>
               </ion-card-content>
             </ion-card>
-          }
-          @else if (paymentStatus() === 'completed') {
+          } @else if (paymentStatus() === 'completed') {
             <ion-card color="success">
               <ion-card-content class="flex items-center">
                 <ion-icon name="checkmark-circle" class="text-3xl mr-3"></ion-icon>
@@ -57,8 +56,7 @@
                 </div>
               </ion-card-content>
             </ion-card>
-          }
-          @else if (paymentStatus() === 'failed') {
+          } @else if (paymentStatus() === 'failed') {
             <ion-card color="danger">
               <ion-card-content class="flex items-center">
                 <ion-icon name="close-circle" class="text-3xl mr-3"></ion-icon>
@@ -70,16 +68,15 @@
                 </div>
               </ion-card-content>
             </ion-card>
-          }
-          @else if (paymentStatus() === 'timeout') {
+          } @else if (paymentStatus() === 'timeout') {
             <ion-card color="warning">
               <ion-card-content class="flex items-center">
                 <ion-icon name="time-outline" class="text-3xl mr-3"></ion-icon>
                 <div>
                   <h3 class="font-semibold">Verificación en proceso</h3>
                   <p class="text-sm">
-                    El pago puede tardar unos minutos en confirmarse. Revisa tu email o consulta
-                    el detalle de la reserva más tarde.
+                    El pago puede tardar unos minutos en confirmarse. Revisa tu email o consulta el
+                    detalle de la reserva más tarde.
                   </p>
                 </div>
               </ion-card-content>

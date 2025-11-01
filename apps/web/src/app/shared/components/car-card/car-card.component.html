@@ -269,19 +269,24 @@
         <!-- Botones normales (comparar + ver detalle) -->
         <ng-template #normalActions>
           <!-- Botón de comparación -->
-          <button
-            (click)="onCompareToggle($event)"
-            [disabled]="compareDisabled && !isComparing"
-            [class.btn-disabled]="compareDisabled && !isComparing"
-            class="flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 transition-base focus-ring flex items-center justify-center gap-2 min-h-[44px]"
-            [class.border-accent-petrol]="!isComparing"
-            [class.text-accent-petrol]="!isComparing"
-            [class.hover:bg-accent-petrol/10]="!isComparing && !compareDisabled"
-            [class.bg-accent-petrol]="isComparing"
-            [class.text-white]="isComparing"
-            [class.border-accent-petrol]="isComparing"
-            [title]="isComparing ? 'Quitar de comparación' : (compareDisabled ? 'Máximo 3 autos' : 'Agregar a comparación')"
-          >
+                                                            <button
+                                                              (click)="onCompareToggle($event)"
+                                                              [disabled]="compareDisabled && !isComparing"
+                                                              [class.btn-disabled]="compareDisabled && !isComparing"
+                                                              class="flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 transition-base focus-ring flex items-center justify-center gap-2 min-h-[44px]"
+                                                              [class.border-accent-petrol]="!isComparing"
+                                                              [class.text-accent-petrol]="!isComparing"
+                                                              [class.hover:bg-accent-petrol/10]="!isComparing && !compareDisabled"
+                                                              [class.bg-accent-petrol]="isComparing"
+                                                              [class.text-white]="isComparing"
+                                                              [class.border-accent-petrol]="isComparing"
+                                                              [title]="isComparing ? 'Quitar de comparación' : (compareDisabled ? 'Máximo 3 autos' : 'Agregar a comparación')">
+                                                  
+                                        
+                              
+                    
+          
+
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path *ngIf="!isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               <path *ngIf="isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />

@@ -62,7 +62,9 @@ export class AdminService {
       return {
         ...typedItem,
         user_name: (typedItem.user as Record<string, unknown>)?.full_name,
-        user_email: ((typedItem.user as Record<string, unknown>)?.email as Array<{ email: string }>)?.[0]?.email,
+        user_email: (
+          (typedItem.user as Record<string, unknown>)?.email as Array<{ email: string }>
+        )?.[0]?.email,
       };
     }) as WithdrawalRequest[];
   }

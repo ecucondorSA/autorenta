@@ -97,7 +97,7 @@
 }
 
 .status-icon.success svg path {
-  stroke: #4CAF50;
+  stroke: #4caf50;
 }
 
 .status-icon.warning svg circle {
@@ -105,7 +105,7 @@
 }
 
 .status-icon.warning svg path {
-  stroke: #FF9800;
+  stroke: #ff9800;
 }
 
 .status-title {

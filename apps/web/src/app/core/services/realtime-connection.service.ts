@@ -1,8 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import type {
-  RealtimeChannel,
-  RealtimePostgresChangesPayload,
-} from '@supabase/supabase-js';
+import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
 export type ConnectionStatus = 'connected' | 'connecting' | 'disconnected' | 'error';
@@ -63,9 +60,8 @@ export class RealtimeConnectionService {
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
-    onStatusChange?: (status: ConnectionStatus) => void
+    onStatusChange?: (status: ConnectionStatus) => void,
   ): RealtimeChannel {
-
     // Remove existing channel if any
     this.unsubscribe(channelName);
 
@@ -88,7 +84,7 @@ export class RealtimeConnectionService {
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
-    onStatusChange?: (status: ConnectionStatus) => void
+    onStatusChange?: (status: ConnectionStatus) => void,
   ): RealtimeChannel {
     const channel = this.supabase
       .channel(channelName)
@@ -102,7 +98,7 @@ export class RealtimeConnectionService {
         },
         (payload: RealtimePostgresChangesPayload<T>) => {
           handler(payload);
-        }
+        },
       )
       .subscribe((status) => {
         this.handleChannelStatus(channelName, status, config, handler, onStatusChange);
@@ -119,9 +115,8 @@ export class RealtimeConnectionService {
     status: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
-    onStatusChange?: (status: ConnectionStatus) => void
+    onStatusChange?: (status: ConnectionStatus) => void,
   ): void {
-
     switch (status) {
       case 'SUBSCRIBED':
         this.onConnected(channelName, onStatusChange);
@@ -146,8 +141,10 @@ export class RealtimeConnectionService {
   /**
    * Handle successful connection
    */
-  private onConnected(channelName: string, onStatusChange?: (status: ConnectionStatus) => void): void {
-
+  private onConnected(
+    channelName: string,
+    onStatusChange?: (status: ConnectionStatus) => void,
+  ): void {
     this.connectionStatus.set('connected');
     onStatusChange?.('connected');
 
@@ -162,9 +159,8 @@ export class RealtimeConnectionService {
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
-    onStatusChange?: (status: ConnectionStatus) => void
+    onStatusChange?: (status: ConnectionStatus) => void,
   ): void {
-
     this.connectionStatus.set('error');
     onStatusChange?.('error');
 
@@ -178,9 +174,8 @@ export class RealtimeConnectionService {
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
-    onStatusChange?: (status: ConnectionStatus) => void
+    onStatusChange?: (status: ConnectionStatus) => void,
   ): void {
-
     this.connectionStatus.set('disconnected');
     onStatusChange?.('disconnected');
 
@@ -191,7 +186,6 @@ export class RealtimeConnectionService {
    * Handle intentional connection close
    */
   private onClosed(channelName: string, onStatusChange?: (status: ConnectionStatus) => void): void {
-
     this.connectionStatus.set('disconnected');
     onStatusChange?.('disconnected');
 
@@ -205,25 +199,22 @@ export class RealtimeConnectionService {
     channelName: string,
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
-    onStatusChange?: (status: ConnectionStatus) => void
+    onStatusChange?: (status: ConnectionStatus) => void,
   ): void {
     const retryCount = this.retryCounters.get(channelName) ?? 0;
 
     if (retryCount >= this.maxRetries) {
-        `❌ [Realtime] Max retries (${this.maxRetries}) reached for ${channelName}`
-      );
+      console.log(`❌ [Realtime] Max retries (${this.maxRetries}) reached for ${channelName}`);
       this.connectionStatus.set('error');
       onStatusChange?.('error');
       return;
     }
 
     // Calculate delay with exponential backoff
-    const delay = Math.min(
-      this.baseDelay * Math.pow(2, retryCount),
-      this.maxDelay
-    );
+    const delay = Math.min(this.baseDelay * Math.pow(2, retryCount), this.maxDelay);
 
-      `🔄 [Realtime] Reconnecting ${channelName} in ${delay}ms (attempt ${retryCount + 1}/${this.maxRetries})`
+    console.log(
+      `🔄 [Realtime] Reconnecting ${channelName} in ${delay}ms (attempt ${retryCount + 1}/${this.maxRetries})`,
     );
 
     this.connectionStatus.set('connecting');
@@ -234,7 +225,6 @@ export class RealtimeConnectionService {
 
     // Schedule reconnection
     setTimeout(() => {
-
       // Remove old channel
       this.unsubscribe(channelName);
 
@@ -253,7 +243,6 @@ export class RealtimeConnectionService {
     const channel = this.activeChannels.get(channelName);
 
     if (channel) {
-
       this.supabase.removeChannel(channel);
       this.activeChannels.delete(channelName);
       this.retryCounters.delete(channelName);
@@ -264,7 +253,6 @@ export class RealtimeConnectionService {
    * Unsubscribe from all channels
    */
   unsubscribeAll(): void {
-
     this.activeChannels.forEach((_, channelName) => {
       this.unsubscribe(channelName);
     });

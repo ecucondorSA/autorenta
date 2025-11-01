@@ -77,21 +77,28 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly dateRange = signal<DateRange>({ from: null, to: null });
   readonly loading = signal(false);
   readonly cars = signal<Car[]>([]);
-  readonly carMapLocations = computed(() => this.cars().map(car => ({
-    carId: car.id,
-    title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
-    pricePerDay: car.price_per_day,
-    currency: car.currency || 'ARS',
-    lat: car.location_lat || 0,
-    lng: car.location_lng || 0,
-    updatedAt: car.updated_at || new Date().toISOString(),
-    city: car.location_city,
-    state: car.location_state,
-    country: car.location_country,
-    locationLabel: car.location_city || 'Sin ubicación',
-    photoUrl: (car.photos && car.photos[0]) ? (typeof car.photos[0] === 'string' ? car.photos[0] : car.photos[0].url) : null,
-    description: car.description,
-  })));
+  readonly carMapLocations = computed(() =>
+    this.cars().map((car) => ({
+      carId: car.id,
+      title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
+      pricePerDay: car.price_per_day,
+      currency: car.currency || 'ARS',
+      lat: car.location_lat || 0,
+      lng: car.location_lng || 0,
+      updatedAt: car.updated_at || new Date().toISOString(),
+      city: car.location_city,
+      state: car.location_state,
+      country: car.location_country,
+      locationLabel: car.location_city || 'Sin ubicación',
+      photoUrl:
+        car.photos && car.photos[0]
+          ? typeof car.photos[0] === 'string'
+            ? car.photos[0]
+            : car.photos[0].url
+          : null,
+      description: car.description,
+    })),
+  );
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
   readonly hasFilters = computed(() => !!this.city() || !!this.dateRange().from);
   readonly selectedCarId = signal<string | null>(null);

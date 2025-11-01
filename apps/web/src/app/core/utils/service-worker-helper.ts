@@ -7,7 +7,6 @@
  * This should be called when we detect issues with cached API calls
  */
 export async function forceServiceWorkerUpdate(): Promise<void> {
-
   if (!('serviceWorker' in navigator)) {
     return;
   }
@@ -36,8 +35,7 @@ export async function forceServiceWorkerUpdate(): Promise<void> {
 
     // 5. Reload the page to get fresh content
     window.location.reload();
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 /**

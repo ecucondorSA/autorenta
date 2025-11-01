@@ -218,8 +218,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
             this.refreshData();
           }
         },
-        error: (error: unknown) => {
-        },
+        error: (error: unknown) => {},
       });
   }
 

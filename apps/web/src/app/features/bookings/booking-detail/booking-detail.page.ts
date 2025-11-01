@@ -181,7 +181,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       const totalUSD = booking.breakdown.total_cents / 100; // Convertir centavos a dólares
       const totalARS = await this.exchangeRateService.convertUsdToArs(totalUSD);
       this.totalInARS.set(totalARS);
-
     } catch (error) {
       // No fallar si no se puede obtener la tasa, solo no mostrar conversión
     } finally {
@@ -206,8 +205,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         const ownerFullName = owner?.full_name || 'el anfitrión';
         this.carOwnerName.set(ownerFullName);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   private async loadInspections(): Promise<void> {
@@ -308,7 +306,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   // Confirmation handlers
   async handleConfirmationSuccess(result: ConfirmAndReleaseResponse): Promise<void> {
-
     // Reload booking to get updated status
     const bookingId = this.booking()?.id;
     if (bookingId) {

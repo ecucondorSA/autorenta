@@ -91,8 +91,7 @@ export class RealtimePricingService {
 
   constructor() {
     // Effect para log de debug (opcional)
-    effect(() => {
-    });
+    effect(() => {});
   }
 
   /**
@@ -100,7 +99,6 @@ export class RealtimePricingService {
    * Se actualiza cada vez que la Edge Function actualiza exchange_rates
    */
   subscribeToExchangeRates(onChange?: () => void): () => void {
-
     this.exchangeRatesChannel = this.supabase
       .channel('exchange_rates_changes')
       .on(
@@ -112,7 +110,6 @@ export class RealtimePricingService {
           filter: 'is_active=eq.true', // Solo tasas activas
         },
         (payload: RealtimePostgresChangesPayload<ExchangeRateUpdate>) => {
-
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
             this.latestExchangeRate.set(payload.new as ExchangeRateUpdate);
             onChange?.();
@@ -139,7 +136,6 @@ export class RealtimePricingService {
    * Se actualiza cada 15 minutos por cron job
    */
   subscribeToDemandSnapshots(onChange?: (regionId: string) => void): () => void {
-
     this.demandChannel = this.supabase
       .channel('demand_snapshots_changes')
       .on(
@@ -150,7 +146,6 @@ export class RealtimePricingService {
           table: 'pricing_demand_snapshots',
         },
         (payload: RealtimePostgresChangesPayload<DemandSnapshot>) => {
-
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
             const snapshot = payload.new as DemandSnapshot;
 
@@ -165,8 +160,7 @@ export class RealtimePricingService {
           }
         },
       )
-      .subscribe((status) => {
-      });
+      .subscribe((status) => {});
 
     // Cargar snapshots iniciales
     void this.loadInitialDemandSnapshots();
@@ -181,7 +175,6 @@ export class RealtimePricingService {
    * 🔴 Suscribirse a eventos especiales (conciertos, feriados, etc)
    */
   subscribeToSpecialEvents(onChange?: () => void): () => void {
-
     this.eventsChannel = this.supabase
       .channel('special_events_changes')
       .on(
@@ -193,14 +186,12 @@ export class RealtimePricingService {
           filter: 'active=eq.true',
         },
         (payload: RealtimePostgresChangesPayload<SpecialEvent>) => {
-
           // Recargar todos los eventos activos
           void this.loadActiveEvents();
           onChange?.();
         },
       )
-      .subscribe((status) => {
-      });
+      .subscribe((status) => {});
 
     // Cargar eventos iniciales
     void this.loadActiveEvents();
@@ -272,8 +263,7 @@ export class RealtimePricingService {
       if (data) {
         this.latestExchangeRate.set(data as ExchangeRateUpdate);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   private async loadInitialDemandSnapshots(): Promise<void> {
@@ -296,8 +286,7 @@ export class RealtimePricingService {
 
         this.demandByRegion.set(snapshotsByRegion);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   private async loadActiveEvents(): Promise<void> {
@@ -315,8 +304,7 @@ export class RealtimePricingService {
       if (data) {
         this.activeEvents.set(data as SpecialEvent[]);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**

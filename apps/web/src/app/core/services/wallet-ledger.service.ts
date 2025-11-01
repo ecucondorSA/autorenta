@@ -1,9 +1,9 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { SupabaseClient } from '@supabase/supabase-js';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { from } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { injectSupabase } from './supabase-client.service';
-
-// ============================================================================
-// INTERFACES - Wallet Ledger System
-// ============================================================================
 
 export type LedgerKind =
   | 'deposit'
@@ -25,13 +25,12 @@ export interface LedgerEntry {
   user_id: string;
   kind: LedgerKind;
   amount_cents: number;
-  balance_change_cents: number; // Positivo o negativo
+  balance_change_cents: number;
   ref: string;
   meta: Record<string, unknown>;
   booking_id?: string | null;
   transaction_id?: string | null;
   created_at: string;
-  // Join fields
   car_id?: string;
   booking_status?: string;
 }
@@ -70,43 +69,29 @@ export interface TransferResponse {
   error?: string;
 }
 
-// ============================================================================
-// SERVICIO - Wallet Ledger
-// ============================================================================
-
 @Injectable({
   providedIn: 'root',
 })
 export class WalletLedgerService {
-  private readonly supabase = injectSupabase();
+  private readonly supabase: SupabaseClient = injectSupabase();
 
-  // Estado reactivo
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
-  // Cache de historial
   private readonly ledgerHistoryCache = signal<LedgerEntry[]>([]);
   readonly ledgerHistory = computed(() => this.ledgerHistoryCache());
 
-  // Cache de transferencias
   private readonly transfersCache = signal<WalletTransfer[]>([]);
   readonly transfers = computed(() => this.transfersCache());
 
-  /**
-   * Obtener historial de ledger del usuario actual
-   */
-  async loadLedgerHistory(limit = 50): Promise<LedgerEntry[]> {
+  async loadLedgerHistory(limit = 50): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
-
     try {
       const {
         data: { user },
       } = await this.supabase.auth.getUser();
-
-      if (!user) {
-        throw new Error('Usuario no autenticado');
-      }
+      if (!user) throw new Error('Usuario no autenticado');
 
       const { data, error } = await this.supabase
         .from('v_user_ledger_history')
@@ -116,33 +101,22 @@ export class WalletLedgerService {
         .limit(limit);
 
       if (error) throw error;
-
       this.ledgerHistoryCache.set(data as LedgerEntry[]);
-      return data as LedgerEntry[];
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Error al cargar historial';
-      this.error.set(errorMsg);
-      throw err;
+      this.handleError(err, 'Error al cargar historial');
     } finally {
       this.loading.set(false);
     }
   }
 
-  /**
-   * Obtener transferencias del usuario (enviadas y recibidas)
-   */
-  async loadTransfers(limit = 20): Promise<WalletTransfer[]> {
+  async loadTransfers(limit = 20): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
-
     try {
       const {
         data: { user },
       } = await this.supabase.auth.getUser();
-
-      if (!user) {
-        throw new Error('Usuario no autenticado');
-      }
+      if (!user) throw new Error('Usuario no autenticado');
 
       const { data, error } = await this.supabase
         .from('v_wallet_transfers_summary')
@@ -152,156 +126,72 @@ export class WalletLedgerService {
         .limit(limit);
 
       if (error) throw error;
-
       this.transfersCache.set(data as WalletTransfer[]);
-      return data as WalletTransfer[];
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Error al cargar transferencias';
-      this.error.set(errorMsg);
-      throw err;
+      this.handleError(err, 'Error al cargar transferencias');
     } finally {
       this.loading.set(false);
     }
   }
 
-  /**
-   * Realizar transferencia P2P
-   */
   async transferFunds(request: TransferRequest): Promise<TransferResponse> {
     this.loading.set(true);
     this.error.set(null);
-
     try {
-        to_user_id: request.to_user_id,
-        amount_cents: request.amount_cents,
-        description: request.description,
-      });
-
-      // Generar idempotency key único
       const idempotencyKey = `transfer-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-
-
       const { data, error } = await this.supabase.functions.invoke('wallet-transfer', {
-        body: {
-          to_user_id: request.to_user_id,
-          amount_cents: request.amount_cents,
-          description: request.description,
-          meta: request.meta,
-        },
-        headers: {
-          'Idempotency-Key': idempotencyKey,
-        },
+        body: request,
+        headers: { 'Idempotency-Key': idempotencyKey },
       });
 
+      if (error) throw error;
+      if (!data.ok) throw new Error(data.error);
 
-      if (error) {
+      await this.loadLedgerHistory();
+      await this.loadTransfers();
 
-        // Intentar obtener el body del error para más detalles
-        let errorMessage = error.message || 'Error al procesar transferencia';
-
-        // Si el error tiene contexto adicional, mostrarlo
-        if (error.context) {
-
-          // Si context es una Response, parsear el body
-          if (error.context instanceof Response) {
-            try {
-              const errorBody = await error.context.json();
-
-              if (errorBody.error) {
-                errorMessage = errorBody.error;
-                if (errorBody.message) {
-                  errorMessage = errorBody.message;
-                }
-              }
-            } catch (parseError) {
-            }
-          }
-          // Si context es un objeto con mensaje de error del servidor
-          else if (typeof error.context === 'object' && error.context.error) {
-            errorMessage = error.context.error;
-            if (error.context.message) {
-              errorMessage += ': ' + error.context.message;
-            }
-          }
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      if (!data) {
-        throw new Error('La transferencia no retornó datos');
-      }
-
-      // Verificar si la transferencia fue exitosa
-      if (!data.ok && data.error) {
-        throw new Error(data.error);
-      }
-
-
-      // Recargar historial y transferencias
-      await Promise.all([this.loadLedgerHistory(), this.loadTransfers()]);
-
-
-      return {
-        ok: true,
-        transfer: data.transfer,
-      };
+      return { ok: true, transfer: data.transfer };
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Error al transferir fondos';
-      this.error.set(errorMsg);
-      return {
-        ok: false,
-        error: errorMsg,
-      };
+      this.handleError(err, 'Error al transferir fondos');
+      return { ok: false, error: err instanceof Error ? err.message : 'Error desconocido' };
     } finally {
       this.loading.set(false);
     }
   }
 
-  /**
-   * Formatear monto en centavos a string con moneda
-   */
+  async searchUserByWalletNumber(query: string): Promise<any | null> {
+    const cleanQuery = query.trim().toUpperCase();
+    if (!cleanQuery.startsWith('AR') || cleanQuery.length !== 16) return null;
+
+    const { data, error } = await this.supabase.rpc('search_users_by_wallet_number', {
+      p_query: cleanQuery,
+    });
+
+    if (error) return null;
+    return data?.[0] || null;
+  }
+
   formatAmount(cents: number, currency = 'ARS'): string {
-    const amount = cents / 100;
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(amount);
+    }).format(cents / 100);
   }
 
-  /**
-   * Obtener icono según tipo de movimiento
-   */
-  getKindIcon(kind: LedgerKind): string {
-    const icons: Record<LedgerKind, string> = {
-      deposit: '💰',
-      transfer_out: '📤',
-      transfer_in: '📥',
-      rental_charge: '🚗',
-      rental_payment: '💵',
-      refund: '↩️',
-      franchise_user: '🛡️',
-      franchise_fund: '🏦',
-      withdrawal: '🏧',
-      adjustment: '⚙️',
-      bonus: '🎁',
-      fee: '💳',
-    };
-    return icons[kind] || '📄';
+  private handleError(err: any, defaultMessage: string): void {
+    const errorMessage = err instanceof Error ? err.message : defaultMessage;
+    this.error.set(errorMessage);
   }
 
-  /**
-   * Obtener etiqueta legible según tipo de movimiento
-   */
   getKindLabel(kind: LedgerKind): string {
     const labels: Record<LedgerKind, string> = {
       deposit: 'Depósito',
       transfer_out: 'Transferencia enviada',
       transfer_in: 'Transferencia recibida',
-      rental_charge: 'Cargo por alquiler',
-      rental_payment: 'Pago recibido',
+      rental_charge: 'Cargo de alquiler',
+      rental_payment: 'Pago de alquiler',
       refund: 'Reembolso',
       franchise_user: 'Franquicia (usuario)',
       franchise_fund: 'Franquicia (fondo)',
@@ -313,140 +203,39 @@ export class WalletLedgerService {
     return labels[kind] || kind;
   }
 
-  /**
-   * Obtener color según tipo de movimiento
-   */
+  getKindIcon(kind: LedgerKind): string {
+    const icons: Record<LedgerKind, string> = {
+      deposit: 'M12 4v16m8-8H4',
+      transfer_out: 'M15 12H9m6 0l-3-3m3 3l-3 3',
+      transfer_in: 'M9 12h6m-6 0l3-3m-3 3l3 3',
+      rental_charge: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z',
+      rental_payment: 'M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6',
+      refund: 'M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6',
+      franchise_user: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
+      franchise_fund: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
+      withdrawal: 'M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z',
+      adjustment: 'M10 20l4-16m4 4l-4 4-4-4 4-4',
+      bonus: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+      fee: 'M9 14l6-6m-6 0l6 6',
+    };
+    return icons[kind] || 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
+  }
+
   getKindColor(kind: LedgerKind): string {
-    // Movimientos positivos (entran fondos)
-    if (['deposit', 'transfer_in', 'refund', 'rental_payment', 'bonus'].includes(kind)) {
-      return 'text-green-600 dark:text-green-400';
-    }
-    // Movimientos negativos (salen fondos)
-    return 'text-red-600 dark:text-red-400';
-  }
-
-  /**
-   * Suscribirse a cambios en tiempo real del ledger
-   */
-  subscribeToLedgerChanges(userId: string, callback: () => void) {
-    const channel = this.supabase
-      .channel(`ledger-${userId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'wallet_ledger',
-          filter: `user_id=eq.${userId}`,
-        },
-        () => {
-          callback();
-        },
-      )
-      .subscribe();
-
-    return () => {
-      void this.supabase.removeChannel(channel);
+    const colors: Record<LedgerKind, string> = {
+      deposit: 'bg-success-100 text-success-900',
+      transfer_out: 'bg-error-100 text-error-900',
+      transfer_in: 'bg-success-100 text-success-900',
+      rental_charge: 'bg-error-100 text-error-900',
+      rental_payment: 'bg-success-100 text-success-900',
+      refund: 'bg-info-100 text-info-900',
+      franchise_user: 'bg-warning-100 text-warning-900',
+      franchise_fund: 'bg-warning-100 text-warning-900',
+      withdrawal: 'bg-info-100 text-info-900',
+      adjustment: 'bg-gray-100 text-gray-900',
+      bonus: 'bg-success-100 text-success-900',
+      fee: 'bg-gray-100 text-gray-900',
     };
-  }
-
-  /**
-   * Buscar usuario por número de cuenta wallet (WAN)
-   * Formato: ARXXXXXXXXXXXXXX (16 caracteres)
-   */
-  async searchUserByWalletNumber(
-    query: string,
-  ): Promise<{
-    id: string;
-    full_name: string;
-    email?: string;
-    wallet_account_number: string;
-  } | null> {
-    // Limpiar y formatear query
-    const cleanQuery = query.trim().toUpperCase();
-
-    // Validar formato básico (AR + 14 dígitos)
-    if (!cleanQuery.startsWith('AR') || cleanQuery.length !== 16) {
-      return null;
-    }
-
-    const { data, error } = await this.supabase.rpc('search_users_by_wallet_number', {
-      p_query: cleanQuery,
-    });
-
-    if (error) {
-      return null;
-    }
-
-    if (!data || data.length === 0) {
-      return null;
-    }
-
-    return data[0] as {
-      id: string;
-      full_name: string;
-      email?: string;
-      wallet_account_number: string;
-    };
-  }
-
-  /**
-   * Buscar usuario por email/nombre para transferencia (DEPRECATED - usar searchUserByWalletNumber)
-   */
-  async searchUsers(
-    query: string,
-  ): Promise<Array<{ id: string; full_name: string; email?: string }>> {
-    const { data, error } = await this.supabase
-      .from('profiles')
-      .select('id, full_name')
-      .or(`full_name.ilike.%${query}%`)
-      .limit(10);
-
-    if (error) {
-      return [];
-    }
-
-    return data || [];
-  }
-
-  /**
-   * Obtener resumen de movimientos por tipo
-   */
-  async getLedgerSummary(
-    userId: string,
-    startDate?: Date,
-    endDate?: Date,
-  ): Promise<Record<LedgerKind, { count: number; total_cents: number }>> {
-    let query = this.supabase
-      .from('wallet_ledger')
-      .select('kind, amount_cents')
-      .eq('user_id', userId);
-
-    if (startDate) {
-      query = query.gte('ts', startDate.toISOString());
-    }
-
-    if (endDate) {
-      query = query.lte('ts', endDate.toISOString());
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-      return {} as Record<LedgerKind, { count: number; total_cents: number }>;
-    }
-
-    // Agrupar por kind
-    const summary: Record<string, { count: number; total_cents: number }> = {};
-
-    data?.forEach((entry: { kind: LedgerKind; amount_cents: number }) => {
-      if (!summary[entry.kind]) {
-        summary[entry.kind] = { count: 0, total_cents: 0 };
-      }
-      summary[entry.kind].count++;
-      summary[entry.kind].total_cents += entry.amount_cents;
-    });
-
-    return summary as Record<LedgerKind, { count: number; total_cents: number }>;
+    return colors[kind] || 'bg-gray-100 text-gray-900';
   }
 }

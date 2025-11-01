@@ -44,7 +44,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       // No debe haber errores de conexión
       const totalErrors = results.reduce((sum, r) => sum + r.errors, 0);
       expect(totalErrors).toBe(0);
-
     }, 10000); // Timeout de 10 segundos
 
     it('no debe tener errores de "too many connections"', async () => {
@@ -78,7 +77,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       // Todas las búsquedas deben ser exitosas
       const successfulSearches = results.filter((r) => r.success);
       expect(successfulSearches.length).toBe(userCount);
-
     });
 
     it('debe completar todas las consultas exitosamente', async () => {
@@ -112,7 +110,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       // Todas las consultas deben completarse exitosamente
       expect(completedQueries).toBe(userCount * 3); // 10 usuarios × 3 queries cada uno
       expect(failedQueries).toBe(0);
-
     });
   });
 
@@ -144,7 +141,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
 
       // Debe completarse en tiempo razonable (< 3 segundos)
       expect(elapsedTime).toBeLessThan(3000);
-
     });
 
     it('debe recuperarse de errores transitorios', async () => {
@@ -179,7 +175,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       // La mayoría debe ser exitosa después de reintentos
       const successful = results.filter((r) => r.success);
       expect(successful.length).toBeGreaterThanOrEqual(queryCount * 0.8);
-
     });
 
     it('debe distribuir carga uniformemente', async () => {
@@ -208,7 +203,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       // La variación no debe ser mayor al 50%
       const variation = ((maxTime - minTime) / avgTime) * 100;
       expect(variation).toBeLessThan(50);
-
     });
   });
 
@@ -262,7 +256,6 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
 
       // Debe haber diferencia medible (queries en cola son más lentas)
       expect(avgQueuedTime).toBeGreaterThan(avgFastTime);
-
     });
   });
 });

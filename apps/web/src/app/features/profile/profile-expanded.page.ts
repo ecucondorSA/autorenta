@@ -21,8 +21,10 @@ import {
   KycStatus,
   VerificationStatus,
 } from '../../core/models';
-import { VerificationService } from '../../core/services/verification.service';
 import { MetaService } from '../../core/services/meta.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs/operators';
+import { from } from 'rxjs';
 
 type TabId =
   | 'general'
@@ -33,23 +35,6 @@ type TabId =
   | 'preferences'
   | 'security';
 
-interface Tab {
-  id: TabId;
-  label: string;
-  icon: string;
-}
-
-interface VerificationChecklistItem {
-  id: string;
-  label: string;
-  description?: string;
-  statusType: 'document' | 'verification';
-  status: KycStatus | VerificationStatus;
-  completed: boolean;
-  missingKey?: string;
-  notes?: string | null;
-}
-
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
@@ -58,103 +43,183 @@ interface VerificationChecklistItem {
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileExpandedPage implements OnInit {
+export class ProfileExpandedPage {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
-  private readonly verificationService = inject(VerificationService);
   private readonly metaService = inject(MetaService);
 
-  // State signals
-  readonly profile = signal<UserProfile | null>(null);
-  readonly documents = signal<UserDocument[]>([]);
+  // Core signals
+  readonly profile = toSignal(
+    from(this.profileService.getMe()).pipe(
+      tap((profile) => {
+        if (profile) this.populateForms(profile);
+      })
+    ),
+    { initialValue: null }
+  );
+  
+  readonly documents = toSignal(
+    from(this.profileService.getMyDocuments()), 
+    { initialValue: [] as UserDocument[] }
+  );
+  
   readonly loading = signal(false);
   readonly saving = signal(false);
-  readonly uploadingAvatar = signal(false);
-  readonly uploadingDocument = signal(false);
   readonly message = signal<string | null>(null);
   readonly error = signal<string | null>(null);
   readonly activeTab = signal<TabId>('general');
 
-  readonly verificationStatuses = this.verificationService.statuses;
-  readonly verificationLoading = this.verificationService.loading;
-  readonly verificationError = this.verificationService.error;
+  // Profile computed values
+  readonly avatarUrl = computed(() => this.profile()?.avatar_url ?? null);
+  readonly uploadingAvatar = signal(false);
+  readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
+  
+  readonly canPublishCars = computed(() => {
+    const role = this.profile()?.role;
+    return role === 'owner' || role === 'both';
+  });
+  
+  readonly canBookCars = computed(() => {
+    const role = this.profile()?.role;
+    return role === 'renter' || role === 'both';
+  });
 
-  readonly driverVerification = computed(
-    () => this.verificationStatuses().find((status) => status.role === 'driver') ?? null,
-  );
+  // Verification status
+  readonly driverLicenseStatus = computed((): KycStatus => {
+    const docs = this.documents();
+    const driverDoc = docs.find(d => d.kind === 'driver_license');
+    return (driverDoc?.status as KycStatus) ?? 'not_started';
+  });
+  
+  readonly vehicleRegistrationStatus = computed((): KycStatus => {
+    const docs = this.documents();
+    const vehicleDoc = docs.find(d => d.kind === 'vehicle_registration');
+    return (vehicleDoc?.status as KycStatus) ?? 'not_started';
+  });
+  
+  readonly kycStatus = computed((): KycStatus => {
+    const dl = this.driverLicenseStatus();
+    const vr = this.vehicleRegistrationStatus();
+    
+    if (dl === 'rejected' || vr === 'rejected') return 'rejected';
+    if (dl === 'pending' || vr === 'pending') return 'pending';
+    if (dl === 'verified' && vr === 'verified') return 'verified';
+    return 'not_started';
+  });
 
-  readonly ownerVerification = computed(
-    () => this.verificationStatuses().find((status) => status.role === 'owner') ?? null,
-  );
-
-  readonly overallVerificationStatus = computed<VerificationStatus>(() => {
-    const statuses = this.verificationStatuses();
-    if (!statuses.length) {
-      return 'PENDIENTE';
-    }
-    if (statuses.some((status) => status.status === 'RECHAZADO')) {
-      return 'RECHAZADO';
-    }
-    if (statuses.every((status) => status.status === 'VERIFICADO')) {
+  readonly overallVerificationStatus = computed((): VerificationStatus => {
+    const profile = this.profile();
+    if (!profile) return 'PENDIENTE';
+    
+    const emailVerified = profile.is_email_verified ?? false;
+    const phoneVerified = profile.is_phone_verified ?? false;
+    const kycVerified = this.kycStatus() === 'verified';
+    
+    if (emailVerified && phoneVerified && kycVerified) {
       return 'VERIFICADO';
+    }
+    if (this.kycStatus() === 'rejected') {
+      return 'RECHAZADO';
     }
     return 'PENDIENTE';
   });
 
-  readonly driverChecklist = computed(() => this.createDriverChecklist());
-  readonly ownerChecklist = computed(() => this.createOwnerChecklist());
+  readonly verificationError = signal<string | null>(null);
+  readonly verificationLoading = signal(false);
 
-  readonly profileRole = computed(() => this.profile()?.role ?? 'renter');
-  readonly showDriverFlow = computed(() => ['renter', 'both'].includes(this.profileRole()));
-  readonly showOwnerFlow = computed(() => ['owner', 'both'].includes(this.profileRole()));
+  readonly showDriverFlow = computed(() => {
+    const role = this.profile()?.role;
+    return role === 'renter' || role === 'both';
+  });
+  
+  readonly showOwnerFlow = computed(() => {
+    const role = this.profile()?.role;
+    return role === 'owner' || role === 'both';
+  });
 
-  // Computed
-  readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
-  readonly avatarUrl = computed(() => this.profile()?.avatar_url ?? '');
-  readonly canPublishCars = computed(() => this.profile()?.can_publish_cars ?? false);
-  readonly canBookCars = computed(() => this.profile()?.can_book_cars ?? false);
-  readonly kycStatus = computed(() => this.profile()?.kyc ?? 'not_started');
-  readonly onboardingComplete = computed(() => this.profile()?.onboarding === 'complete');
+  readonly driverVerification = computed(() => {
+    const kycStatus = this.driverLicenseStatus();
+    let verificationStatus: VerificationStatus = 'PENDIENTE';
+    
+    if (kycStatus === 'verified') verificationStatus = 'VERIFICADO';
+    else if (kycStatus === 'rejected') verificationStatus = 'RECHAZADO';
+    
+    return {
+      status: verificationStatus,
+      progress: kycStatus === 'verified' ? 100 : 50,
+    };
+  });
+  
+  readonly ownerVerification = computed(() => {
+    const kycStatus = this.vehicleRegistrationStatus();
+    let verificationStatus: VerificationStatus = 'PENDIENTE';
+    
+    if (kycStatus === 'verified') verificationStatus = 'VERIFICADO';
+    else if (kycStatus === 'rejected') verificationStatus = 'RECHAZADO';
+    
+    return {
+      status: verificationStatus,
+      progress: kycStatus === 'verified' ? 100 : 50,
+    };
+  });
+
+  readonly driverChecklist = computed(() => [
+    {
+      id: 'email',
+      label: 'Email verificado',
+      completed: this.profile()?.is_email_verified ?? false,
+      description: null,
+      missingKey: null,
+      notes: null,
+    },
+    {
+      id: 'phone',
+      label: 'Teléfono verificado',
+      completed: this.profile()?.is_phone_verified ?? false,
+      description: null,
+      missingKey: null,
+      notes: null,
+    },
+    {
+      id: 'driver_license',
+      label: 'Licencia de conducir',
+      completed: this.driverLicenseStatus() === 'verified',
+      description: null,
+      missingKey: null,
+      notes: null,
+    },
+  ]);
+  
+  readonly ownerChecklist = computed(() => [
+    {
+      id: 'email',
+      label: 'Email verificado',
+      completed: this.profile()?.is_email_verified ?? false,
+      description: null,
+      missingKey: null,
+      notes: null,
+    },
+    {
+      id: 'vehicle',
+      label: 'Registro de vehículo',
+      completed: this.vehicleRegistrationStatus() === 'verified',
+      description: null,
+      missingKey: null,
+      notes: null,
+    },
+  ]);
+
   readonly tosAccepted = computed(() => !!this.profile()?.tos_accepted_at);
 
-  // Document verification status
-  readonly driverLicenseStatus = computed(() => {
-    const docs = this.documents();
-    const license = docs.find((d) => d.kind === 'driver_license');
-    return license?.status ?? 'not_started';
-  });
-
-  readonly vehicleRegistrationStatus = computed(() => {
-    const docs = this.documents();
-    const registration = docs.find((d) => d.kind === 'vehicle_registration');
-    return registration?.status ?? 'not_started';
-  });
-
-  // Tabs
-  readonly tabs: Tab[] = [
-    { id: 'general', label: 'General', icon: 'user' },
-    { id: 'contact', label: 'Contacto', icon: 'phone' },
-    { id: 'address', label: 'Dirección', icon: 'map-pin' },
-    { id: 'verification', label: 'Verificación', icon: 'shield-check' },
-    { id: 'notifications', label: 'Notificaciones', icon: 'bell' },
-    { id: 'preferences', label: 'Preferencias', icon: 'settings' },
-    { id: 'security', label: 'Seguridad', icon: 'lock' },
-  ];
-
   // Forms
-  readonly generalForm = this.fb.nonNullable.group({
-    full_name: ['', [Validators.required, Validators.minLength(3)]],
-    role: ['renter' as Role, Validators.required],
-  });
-
-  readonly contactForm = this.fb.nonNullable.group({
+  readonly contactForm = this.fb.group({
     phone: [''],
     whatsapp: [''],
   });
 
-  readonly addressForm = this.fb.nonNullable.group({
+  readonly addressForm = this.fb.group({
     address_line1: [''],
     address_line2: [''],
     city: [''],
@@ -163,273 +228,186 @@ export class ProfileExpandedPage implements OnInit {
     country: [''],
   });
 
-  readonly verificationForm = this.fb.nonNullable.group({
-    gov_id_type: ['DNI'],
-    gov_id_number: [''],
-    driver_license_number: [''],
-    driver_license_country: ['AR'],
-    driver_license_expiry: [''],
-  });
-
-  readonly preferencesForm = this.fb.nonNullable.group({
-    timezone: ['America/Buenos_Aires'],
-    locale: ['es-AR'],
-    currency: ['ARS'],
-    marketing_opt_in: [false],
-  });
-
-  readonly notificationsForm = this.fb.nonNullable.group({
+  readonly notificationsForm = this.fb.group({
     email_bookings: [true],
-    email_promotions: [false],
+    email_promotions: [true],
     push_bookings: [true],
-    push_promotions: [false],
-    whatsapp_bookings: [true],
+    push_promotions: [true],
+    whatsapp_bookings: [false],
     whatsapp_promotions: [false],
   });
 
-  readonly securityForm = this.fb.nonNullable.group({
-    tos_accepted: [false],
+  readonly preferencesForm = this.fb.group({
+    timezone: ['America/Buenos_Aires'],
+    locale: ['es-AR'],
+    currency: ['ARS'],
+    marketing_opt_in: [true],
   });
 
-  readonly roles: { value: Role; label: string; description: string }[] = [
-    { value: 'renter', label: 'Locatario', description: 'Solo quiero reservar autos' },
-    { value: 'owner', label: 'Locador', description: 'Solo quiero publicar mis autos' },
-    { value: 'both', label: 'Ambos', description: 'Quiero reservar y publicar autos' },
+  readonly securityForm = this.fb.group({
+    tos_accepted: [{ value: false, disabled: true }],
+  });
+
+  readonly tabs = [
+    { id: 'general' as TabId, label: 'General' },
+    { id: 'contact' as TabId, label: 'Contacto' },
+    { id: 'address' as TabId, label: 'Dirección' },
+    { id: 'verification' as TabId, label: 'Verificación' },
+    { id: 'notifications' as TabId, label: 'Notificaciones' },
+    { id: 'preferences' as TabId, label: 'Preferencias' },
+    { id: 'security' as TabId, label: 'Seguridad' },
   ];
 
-  // NOTA: Ahora la IA extrae automáticamente todos los datos necesarios
-  // de un solo documento por rol, simplificando drásticamente el proceso.
-  readonly documentKinds = computed<{ value: DocumentKind; label: string }[]>(() => {
-    const role = this.profileRole();
+  readonly roles = [
+    { value: 'renter' as Role, label: 'Locatario', description: 'Quiero alquilar autos' },
+    { value: 'owner' as Role, label: 'Locador', description: 'Quiero publicar mis autos' },
+    { value: 'both' as Role, label: 'Ambos', description: 'Quiero alquilar y publicar' },
+  ];
 
-    const kinds: { value: DocumentKind; label: string }[] = [];
-
-    // CONDUCTOR/LOCATARIO: Solo licencia
-    if (role === 'renter' || role === 'both') {
-      kinds.push({
-        value: 'driver_license',
-        label: 'Licencia de conducir (frente y dorso en una sola foto)',
-      });
-    }
-
-    // PROPIETARIO: Solo cédula del vehículo
-    if (role === 'owner' || role === 'both') {
-      kinds.push({
-        value: 'vehicle_registration',
-        label: 'Cédula del vehículo (digital PDF o foto)',
-      });
-    }
-
-    return kinds;
+  readonly generalForm = this.fb.nonNullable.group({
+    full_name: ['', [Validators.required, Validators.minLength(3)]],
+    role: ['renter' as Role, Validators.required],
   });
 
-  ngOnInit(): void {
-    // Update SEO meta tags (private page - noindex)
-    this.metaService.updateProfileMeta();
-
-    // Handle query param ?tab=verification
-    const tabParam = this.route.snapshot.queryParamMap.get('tab');
-    if (tabParam && this.isValidTab(tabParam)) {
-      this.activeTab.set(tabParam as TabId);
-    }
-
-    void this.loadProfile();
-    void this.loadDocuments();
-    void this.refreshVerificationStatuses();
-  }
-
-  private isValidTab(tab: string): boolean {
-    const validTabs: TabId[] = [
-      'general',
-      'contact',
-      'address',
-      'verification',
-      'notifications',
-      'preferences',
-      'security',
-    ];
-    return validTabs.includes(tab as TabId);
-  }
-
-  async loadProfile(): Promise<void> {
-    this.loading.set(true);
-    this.error.set(null);
-
-    try {
-      const profile = await this.profileService.getMe();
-      this.profile.set(profile);
-      this.populateForms(profile);
-    } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'No pudimos cargar tu perfil.');
-    } finally {
-      this.loading.set(false);
-    }
-  }
-
-  async loadDocuments(): Promise<void> {
-    try {
-      const docs = await this.profileService.getMyDocuments();
-      this.documents.set(docs);
-    } catch (err) {
-    }
-  }
-
-  async refreshVerificationStatuses(role?: 'driver' | 'owner'): Promise<void> {
-    try {
-      await this.verificationService.triggerVerification(role);
-    } catch (err) {
-    }
-  }
-
-  private getDocumentStatusForKinds(kinds: DocumentKind | DocumentKind[]): {
-    status: KycStatus;
-    completed: boolean;
-    notes?: string | null;
-  } {
-    const docKinds = Array.isArray(kinds) ? kinds : [kinds];
-    const docs = this.documents().filter((doc) => docKinds.includes(doc.kind));
-
-    if (docs.length === 0) {
-      return { status: 'not_started', completed: false };
-    }
-
-    if (docs.some((doc) => doc.status === 'rejected')) {
-      const rejectedDoc = docs.find((doc) => doc.status === 'rejected');
-      return {
-        status: 'rejected',
-        completed: false,
-        notes: rejectedDoc?.notes ?? null,
-      };
-    }
-
-    if (docs.some((doc) => doc.status === 'pending')) {
-      const pendingDoc = docs.find((doc) => doc.status === 'pending');
-      return {
-        status: 'pending',
-        completed: false,
-        notes: pendingDoc?.notes ?? null,
-      };
-    }
-
-    if (docs.every((doc) => doc.status === 'verified')) {
-      return {
-        status: 'verified',
-        completed: true,
-        notes: docs[0]?.notes ?? null,
-      };
-    }
-
-    // Fallback: return first doc status
-    const doc = docs[0]!;
-    return {
-      status: doc.status,
-      completed: doc.status === 'verified',
-      notes: doc.notes ?? null,
+  // Helper methods
+  getKycStatusClass(status: KycStatus): string {
+    const map: Record<KycStatus, string> = {
+      'not_started': 'bg-gray-100 text-gray-800',
+      'pending': 'bg-yellow-100 text-yellow-800',
+      'verified': 'bg-green-100 text-green-800',
+      'rejected': 'bg-red-100 text-red-800',
     };
+    return map[status] || map['not_started'];
   }
 
-  private createDriverChecklist(): VerificationChecklistItem[] {
-    const licenseStatus = this.getDocumentStatusForKinds('driver_license');
-
-    return [
-      {
-        id: 'driver_license_upload',
-        label: 'Licencia de conducir (OBLIGATORIO)',
-        description:
-          'Foto clara del frente. IA extrae automáticamente: nombre, vencimiento, categoría.',
-        statusType: 'document',
-        status: licenseStatus.status,
-        completed: licenseStatus.completed,
-        missingKey: 'licencia',
-        notes: licenseStatus.notes ?? null,
-      },
-    ];
+  getKycStatusLabel(status: KycStatus): string {
+    const map: Record<KycStatus, string> = {
+      'not_started': 'No iniciado',
+      'pending': 'Pendiente',
+      'verified': 'Verificado',
+      'rejected': 'Rechazado',
+    };
+    return map[status] || 'No iniciado';
   }
 
-  private createOwnerChecklist(): VerificationChecklistItem[] {
-    const vehicleStatus = this.getDocumentStatusForKinds('vehicle_registration');
-    const insuranceStatus = this.getDocumentStatusForKinds('vehicle_insurance');
-    const govIdStatus = this.getDocumentStatusForKinds(['gov_id_front', 'gov_id_back']);
-
-    return [
-      {
-        id: 'owner_vehicle_doc',
-        label: 'Cédula del vehículo (digital O física)',
-        description:
-          'PDF digital desde Mi Argentina O foto de cédula verde/azul. IA extrae: patente, titular, vigencia.',
-        statusType: 'document',
-        status: vehicleStatus.status,
-        completed: vehicleStatus.completed,
-        missingKey: 'cedula_auto',
-        notes: vehicleStatus.notes ?? null,
-      },
-      {
-        id: 'owner_gov_id',
-        label: 'DNI / Pasaporte',
-        description: 'Frente y dorso. IA verifica coincidencia con titular de la cédula.',
-        statusType: 'document',
-        status: govIdStatus.status,
-        completed: govIdStatus.completed,
-        missingKey: 'dni',
-        notes: govIdStatus.notes ?? null,
-      },
-      {
-        id: 'owner_insurance',
-        label: 'Seguro / Carta Verde (opcional)',
-        description: 'Recomendado. Si permitís viajes al exterior, Carta Verde es obligatoria.',
-        statusType: 'document',
-        status: insuranceStatus.status,
-        completed: insuranceStatus.completed,
-        notes: insuranceStatus.notes ?? null,
-      },
-    ];
+  getVerificationStatusClass(status: VerificationStatus): string {
+    const map: Record<VerificationStatus, string> = {
+      'VERIFICADO': 'bg-green-100 text-green-800',
+      'PENDIENTE': 'bg-yellow-100 text-yellow-800',
+      'RECHAZADO': 'bg-red-100 text-red-800',
+    };
+    return map[status];
   }
 
-  populateForms(profile: UserProfile): void {
+  getVerificationStatusIcon(status: VerificationStatus): string {
+    const map: Record<VerificationStatus, string> = {
+      'VERIFICADO': 'check-circle',
+      'PENDIENTE': 'clock',
+      'RECHAZADO': 'x-circle',
+    };
+    return map[status];
+  }
+
+  getVerificationStatusLabel(status: VerificationStatus): string {
+    return status;
+  }
+
+  getStepIcon(step: { completed: boolean }): string {
+    return step.completed ? 'check-circle' : 'circle';
+  }
+
+  getStepStatusClass(step: { completed: boolean }): string {
+    return step.completed ? 'text-green-600' : 'text-gray-400';
+  }
+
+  getStepStatusLabel(step: { completed: boolean }): string {
+    return step.completed ? 'Completado' : 'Pendiente';
+  }
+
+  getMissingDocumentLabel(key: string): string {
+    const labels: Record<string, string> = {
+      'email': 'Email',
+      'phone': 'Teléfono',
+      'driver_license': 'Licencia de conducir',
+      'vehicle': 'Registro de vehículo',
+    };
+    return labels[key] || key;
+  }
+
+  async refreshVerificationStatuses(flow: 'driver' | 'owner'): Promise<void> {
+    this.verificationLoading.set(true);
+    try {
+      await this.profileService.getMyDocuments();
+      this.message.set('Estado de verificación actualizado');
+    } catch (err) {
+      this.verificationError.set('Error al actualizar estado');
+    } finally {
+      this.verificationLoading.set(false);
+    }
+  }
+
+  constructor() {
+    // Subscribe to route query params for tab navigation
+    this.route.queryParamMap.subscribe((params) => {
+      const tab = params.get('tab');
+      if (this.isValidTab(tab)) {
+        this.activeTab.set(tab as TabId);
+      }
+    });
+
+    this.metaService.updateProfileMeta();
+  }
+
+  private isValidTab(tab: string | null): boolean {
+    if (!tab) return false;
+    return ['general', 'contact', 'address', 'verification', 'notifications', 'preferences', 'security'].includes(tab);
+  }
+
+  private populateForms(profile: UserProfile): void {
+    // Populate general form
     this.generalForm.patchValue({
-      full_name: profile.full_name,
-      role: profile.role,
+      full_name: profile.full_name || '',
+      role: profile.role || 'renter',
     });
 
+    // Populate contact form
     this.contactForm.patchValue({
-      phone: profile.phone ?? '',
-      whatsapp: profile.whatsapp ?? '',
+      phone: profile.phone || '',
+      whatsapp: profile.whatsapp || '',
     });
 
+    // Populate address form
     this.addressForm.patchValue({
-      address_line1: profile.address_line1 ?? '',
-      address_line2: profile.address_line2 ?? '',
-      city: profile.city ?? '',
-      state: profile.state ?? '',
-      postal_code: profile.postal_code ?? '',
-      country: profile.country ?? '',
+      address_line1: profile.address_line1 || '',
+      address_line2: profile.address_line2 || '',
+      city: profile.city || '',
+      state: profile.state || '',
+      postal_code: profile.postal_code || '',
+      country: profile.country || '',
     });
 
-    this.verificationForm.patchValue({
-      gov_id_type: profile.gov_id_type ?? 'DNI',
-      gov_id_number: profile.gov_id_number ?? '',
-      driver_license_number: profile.driver_license_number ?? '',
-      driver_license_country: profile.driver_license_country ?? 'AR',
-      driver_license_expiry: profile.driver_license_expiry ?? '',
-    });
+    // Populate notifications form
+    const prefs = profile.notif_prefs;
+    if (prefs) {
+      this.notificationsForm.patchValue({
+        email_bookings: prefs.email?.bookings ?? true,
+        email_promotions: prefs.email?.promotions ?? true,
+        push_bookings: prefs.push?.bookings ?? true,
+        push_promotions: prefs.push?.promotions ?? true,
+        whatsapp_bookings: prefs.whatsapp?.bookings ?? false,
+        whatsapp_promotions: prefs.whatsapp?.promotions ?? false,
+      });
+    }
 
+    // Populate preferences form
     this.preferencesForm.patchValue({
-      timezone: profile.timezone,
-      locale: profile.locale,
-      currency: profile.currency,
-      marketing_opt_in: profile.marketing_opt_in,
+      timezone: profile.timezone || 'America/Buenos_Aires',
+      locale: profile.locale || 'es-AR',
+      currency: profile.currency || 'ARS',
+      marketing_opt_in: profile.marketing_opt_in ?? true,
     });
 
-    const notifPrefs = profile.notif_prefs;
-    this.notificationsForm.patchValue({
-      email_bookings: notifPrefs.email.bookings,
-      email_promotions: notifPrefs.email.promotions,
-      push_bookings: notifPrefs.push.bookings,
-      push_promotions: notifPrefs.push.promotions,
-      whatsapp_bookings: notifPrefs.whatsapp.bookings,
-      whatsapp_promotions: notifPrefs.whatsapp.promotions,
-    });
-
+    // Populate security form
     this.securityForm.patchValue({
       tos_accepted: !!profile.tos_accepted_at,
     });
@@ -437,45 +415,28 @@ export class ProfileExpandedPage implements OnInit {
 
   setActiveTab(tabId: TabId): void {
     this.activeTab.set(tabId);
-    this.message.set(null);
-    this.error.set(null);
   }
 
   async saveCurrentTab(): Promise<void> {
     this.saving.set(true);
     this.error.set(null);
     this.message.set(null);
-
+    
     try {
-      const activeTab = this.activeTab();
-      let payload: Record<string, unknown> = {};
+      const tab = this.activeTab();
+      let payload: any = {};
 
-      switch (activeTab) {
+      switch (tab) {
         case 'general':
-          if (this.generalForm.invalid) {
-            this.generalForm.markAllAsTouched();
-            return;
-          }
           payload = this.generalForm.getRawValue();
           break;
-
         case 'contact':
           payload = this.contactForm.getRawValue();
           break;
-
         case 'address':
           payload = this.addressForm.getRawValue();
           break;
-
-        case 'verification':
-          payload = this.verificationForm.getRawValue();
-          break;
-
-        case 'preferences':
-          payload = this.preferencesForm.getRawValue();
-          break;
-
-        case 'notifications': {
+        case 'notifications':
           const notifValues = this.notificationsForm.getRawValue();
           payload = {
             notif_prefs: {
@@ -491,25 +452,17 @@ export class ProfileExpandedPage implements OnInit {
                 bookings: notifValues.whatsapp_bookings,
                 promotions: notifValues.whatsapp_promotions,
               },
-            } as NotificationPrefs,
+            },
           };
           break;
-        }
-
-        case 'security': {
-          const tosValue = this.securityForm.value.tos_accepted;
-          if (tosValue && !this.tosAccepted()) {
-            payload = { tos_accepted_at: true };
-          }
+        case 'preferences':
+          payload = this.preferencesForm.getRawValue();
           break;
-        }
       }
 
-      const updatedProfile = await this.profileService.updateProfileSafe(payload);
-      this.profile.set(updatedProfile);
+      await this.profileService.safeUpdateProfile(payload);
+      await this.profileService.getMe();
       this.message.set('Cambios guardados exitosamente');
-
-      setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'No pudimos guardar los cambios.');
     } finally {
@@ -518,189 +471,23 @@ export class ProfileExpandedPage implements OnInit {
   }
 
   async onAvatarChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
 
     this.uploadingAvatar.set(true);
-    this.error.set(null);
-
+    this.loading.set(true);
+    
     try {
       const newAvatarUrl = await this.profileService.uploadAvatar(file);
-      await this.profileService.setAvatar(newAvatarUrl);
-
-      const currentProfile = this.profile();
-      if (currentProfile) {
-        this.profile.set({
-          ...currentProfile,
-          avatar_url: newAvatarUrl,
-        });
-      }
-
+      await this.profileService.safeUpdateProfile({ avatar_url: newAvatarUrl });
+      await this.profileService.getMe();
       this.message.set('Avatar actualizado exitosamente');
-      setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
     } finally {
+      this.loading.set(false);
       this.uploadingAvatar.set(false);
-      input.value = '';
     }
-  }
-
-  async onDocumentUpload(event: Event, kind: DocumentKind): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
-    if (!file) return;
-
-    // Client-side validation BEFORE upload
-    const allowedTypes =
-      kind === 'vehicle_registration'
-        ? ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
-        : ['image/jpeg', 'image/jpg', 'image/png'];
-
-    const maxSizeMB = 5;
-    const maxSizeBytes = maxSizeMB * 1024 * 1024;
-
-    // Validate file type
-    if (!allowedTypes.includes(file.type)) {
-      const allowedFormats = allowedTypes
-        .map((type) => type.split('/')[1].toUpperCase())
-        .join(', ');
-      this.error.set(`Formato no permitido. Solo se aceptan: ${allowedFormats}`);
-      input.value = '';
-      return;
-    }
-
-    // Validate file size
-    if (file.size > maxSizeBytes) {
-      this.error.set(`El archivo supera el tamaño máximo de ${maxSizeMB}MB`);
-      input.value = '';
-      return;
-    }
-
-    this.uploadingDocument.set(true);
-    this.error.set(null);
-
-    try {
-      await this.profileService.uploadDocument(file, kind);
-      await this.loadDocuments();
-      await this.refreshVerificationStatuses();
-
-      this.message.set('Documento subido exitosamente');
-      setTimeout(() => this.message.set(null), 3000);
-    } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'No pudimos subir el documento.');
-    } finally {
-      this.uploadingDocument.set(false);
-      input.value = '';
-    }
-  }
-
-  async deleteDocument(documentId: string): Promise<void> {
-    if (!confirm('¿Estás seguro de eliminar este documento?')) {
-      return;
-    }
-
-    try {
-      await this.profileService.deleteDocument(documentId);
-      await this.loadDocuments();
-      await this.refreshVerificationStatuses();
-
-      this.message.set('Documento eliminado');
-      setTimeout(() => this.message.set(null), 3000);
-    } catch (err) {
-      this.error.set('No pudimos eliminar el documento.');
-    }
-  }
-
-  getDocumentLabel(kind: DocumentKind): string {
-    return this.documentKinds().find((dk) => dk.value === kind)?.label ?? kind;
-  }
-
-  getKycStatusLabel(status: string): string {
-    const labels: Record<string, string> = {
-      not_started: 'No iniciado',
-      pending: 'Pendiente de revisión',
-      verified: 'Verificado',
-      rejected: 'Rechazado',
-    };
-    return labels[status] ?? status;
-  }
-
-  getKycStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      not_started: 'bg-ash-gray text-white-pure',
-      pending: 'bg-accent-warm text-white-pure',
-      verified: 'bg-green-600 text-white-pure',
-      rejected: 'bg-red-600 text-white-pure',
-    };
-    return classes[status] ?? 'bg-pearl-gray text-smoke-black';
-  }
-
-  getVerificationStatusLabel(status: VerificationStatus | string): string {
-    const normalized = (status as VerificationStatus) ?? 'PENDIENTE';
-    const labels: Record<VerificationStatus, string> = {
-      VERIFICADO: 'Verificado',
-      PENDIENTE: 'Pendiente',
-      RECHAZADO: 'Rechazado',
-    };
-    return labels[normalized] ?? labels.PENDIENTE;
-  }
-
-  getVerificationStatusClass(status: VerificationStatus | string): string {
-    const normalized = (status as VerificationStatus) ?? 'PENDIENTE';
-    const classes: Record<VerificationStatus, string> = {
-      VERIFICADO: 'bg-green-100 text-green-800 border border-green-200',
-      PENDIENTE: 'bg-yellow-100 text-yellow-800 border border-yellow-200',
-      RECHAZADO: 'bg-red-100 text-red-800 border border-red-200',
-    };
-    return classes[normalized] ?? classes.PENDIENTE;
-  }
-
-  getVerificationStatusIcon(status: VerificationStatus | string): string {
-    const normalized = (status as VerificationStatus) ?? 'PENDIENTE';
-    const icons: Record<VerificationStatus, string> = {
-      VERIFICADO: '🟢',
-      PENDIENTE: '🔶',
-      RECHAZADO: '🔴',
-    };
-    return icons[normalized] ?? icons.PENDIENTE;
-  }
-
-  getMissingDocumentLabel(code: string): string {
-    const labels: Record<string, string> = {
-      licencia: 'Licencia de conducir',
-      cedula_auto: 'Documento del vehículo',
-      dni: 'Documento personal',
-    };
-    return labels[code] ?? code;
-  }
-
-  isVerificationStep(step: VerificationChecklistItem): boolean {
-    return step.statusType === 'verification';
-  }
-
-  getStepStatusLabel(step: VerificationChecklistItem): string {
-    if (step.statusType === 'verification') {
-      return this.getVerificationStatusLabel(step.status as VerificationStatus);
-    }
-    return this.getKycStatusLabel(step.status as string);
-  }
-
-  getStepStatusClass(step: VerificationChecklistItem): string {
-    if (step.statusType === 'verification') {
-      return this.getVerificationStatusClass(step.status as VerificationStatus);
-    }
-    return this.getKycStatusClass(step.status as string);
-  }
-
-  getStepIcon(step: VerificationChecklistItem): string {
-    if (step.statusType === 'verification') {
-      return this.getVerificationStatusIcon(step.status as VerificationStatus);
-    }
-    return step.completed ? '✅' : '📄';
   }
 
   async signOut(): Promise<void> {
@@ -709,32 +496,5 @@ export class ProfileExpandedPage implements OnInit {
     } catch (err) {
       this.error.set('Error al cerrar sesión');
     }
-  }
-
-  /**
-   * Detecta si el usuario está en un dispositivo móvil
-   * Se usa para determinar si mostrar el atributo capture="environment"
-   * Usa detección más confiable basada en touch events
-   */
-  isMobileDevice(): boolean {
-    if (typeof window === 'undefined') {
-      return false;
-    }
-    // Detección más confiable: verificar soporte táctil
-    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  }
-
-  /**
-   * Determina si se debe usar el atributo capture para abrir la cámara
-   * Solo si estamos en móvil Y en HTTPS (requerido por navegadores)
-   */
-  shouldUseCapture(): boolean {
-    if (typeof window === 'undefined') {
-      return false;
-    }
-    return (
-      this.isMobileDevice() &&
-      (window.location.protocol === 'https:' || window.location.hostname === 'localhost')
-    );
   }
 }

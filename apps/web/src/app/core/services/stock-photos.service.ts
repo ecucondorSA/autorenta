@@ -93,7 +93,6 @@ export class StockPhotosService {
         height: photo.height,
       }));
     } catch (error) {
-
       // Fallback: buscar fotos genéricas de autos
       return this.getFallbackPhotos(params.brand);
     }

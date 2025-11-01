@@ -1,13 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { switchMap, catchError, map } from 'rxjs/operators';
+import { of, combineLatest } from 'rxjs';
+
+// Services
 import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { ReviewsService } from '../../../core/services/reviews.service';
@@ -15,8 +14,13 @@ import { WalletService } from '../../../core/services/wallet.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
-import { FxService } from '../../../core/services/fx.service'; // ✅ NUEVO: Para tasas de cambio actuales
+import { FxService } from '../../../core/services/fx.service';
+
+// Models
 import { Car, Review, CarStats } from '../../../core/models';
+import { BookingPaymentMethod } from '../../../core/models/wallet.model';
+
+// Components
 import {
   DateRangePickerComponent,
   DateRange,
@@ -26,7 +30,14 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
 import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
 import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
 import { DynamicPriceDisplayComponent } from '../../../shared/components/dynamic-price-display/dynamic-price-display.component';
-import { BookingPaymentMethod } from '../../../core/models/wallet.model';
+
+interface CarDetailState {
+  car: Car | null;
+  reviews: Review[];
+  stats: CarStats | null;
+  loading: boolean;
+  error: string | null;
+}
 
 @Component({
   standalone: true,
@@ -37,324 +48,142 @@ import { BookingPaymentMethod } from '../../../core/models/wallet.model';
     DateRangePickerComponent,
     MoneyPipe,
     ReviewCardComponent,
-    PaymentMethodSelectorComponent,
     ShareMenuComponent,
-    DynamicPriceDisplayComponent,
     TranslateModule,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarDetailPage implements OnInit {
-  readonly car = signal<Car | null>(null);
-  readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
+export class CarDetailPage {
+  private readonly route = inject(ActivatedRoute);
+  public readonly router = inject(Router);
+  private readonly carsService = inject(CarsService);
+  private readonly reviewsService = inject(ReviewsService);
+  private readonly bookingsService = inject(BookingsService);
+  private readonly walletService = inject(WalletService);
+  private readonly metaService = inject(MetaService);
+  private readonly fxService = inject(FxService);
+  readonly authService = inject(AuthService);
+  readonly pricingService = inject(DynamicPricingService);
+
   readonly dateRange = signal<DateRange>({ from: null, to: null });
   readonly bookingInProgress = signal(false);
   readonly bookingError = signal<string | null>(null);
   readonly selectedPaymentMethod = signal<BookingPaymentMethod>('credit_card');
-  readonly walletAmountToUse = signal<number>(0);
-  readonly cardAmountToUse = signal<number>(0);
   readonly currentPhotoIndex = signal(0);
-  readonly currentFxRate = signal<number | null>(null); // Tasa de cambio USD/ARS actual (se carga desde DB)
 
-  // Reviews-related signals
-  readonly reviews = signal<Review[]>([]);
-  readonly carStats = signal<CarStats | null>(null);
-  readonly reviewsLoading = signal(false);
+  private readonly carId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
 
-  readonly firstPhoto = computed(() => {
-    const car = this.car();
-    return car?.photos?.[0] ?? null;
+  private readonly carData$ = this.carId$.pipe(
+    switchMap((id) => {
+      if (!id) {
+        return of({
+          car: null,
+          reviews: [],
+          stats: null,
+          loading: false,
+          error: 'Auto no encontrado',
+        });
+      }
+      return combineLatest([
+        this.carsService.getCarById(id),
+        this.reviewsService.getReviewsForCar(id),
+        this.reviewsService.getCarStats(id),
+      ]).pipe(
+        map(([car, reviews, stats]) => {
+          if (car) {
+            this.updateMetaTags(car, stats);
+          }
+          return { car, reviews, stats, loading: false, error: car ? null : 'Auto no disponible' };
+        }),
+        catchError(() =>
+          of({
+            car: null,
+            reviews: [],
+            stats: null,
+            loading: false,
+            error: 'Error al cargar el auto',
+          }),
+        ),
+      );
+    }),
+  );
+
+  private readonly state = toSignal(this.carData$, {
+    initialValue: {
+      car: null,
+      reviews: [],
+      stats: null,
+      loading: true,
+      error: null,
+    } as CarDetailState,
   });
 
-  readonly allPhotos = computed(() => {
-    const car = this.car();
-    return car?.photos ?? car?.car_photos ?? [];
+  readonly car = computed(() => this.state().car);
+  readonly reviews = computed(() => this.state().reviews);
+  readonly carStats = computed(() => this.state().stats);
+  readonly loading = computed(() => this.state().loading);
+  readonly error = computed(() => this.state().error);
+
+  readonly walletBalance = toSignal(this.walletService.getBalance(), {
+    initialValue: null,
   });
+  readonly currentFxRate = toSignal(
+    this.fxService.getFxSnapshot('USD', 'ARS').pipe(map((s) => s?.rate ?? null)),
+  );
 
-  readonly currentPhoto = computed(() => {
-    const photos = this.allPhotos();
-    const index = this.currentPhotoIndex();
-    return photos[index] ?? null;
-  });
-
-  readonly hasMultiplePhotos = computed(() => {
-    return this.allPhotos().length > 1;
-  });
-
-  readonly totalPrice = computed(() => {
-    const range = this.dateRange();
-    const car = this.car();
-
-    // Check if we have valid dates (not null and not empty strings)
-    const hasValidFrom = range.from && range.from.trim() !== '';
-    const hasValidTo = range.to && range.to.trim() !== '';
-
-    if (!hasValidFrom || !hasValidTo || !car) {
-        from: range.from,
-        to: range.to,
-        hasValidFrom,
-        hasValidTo,
-        hasCar: !!car,
-      });
-      return null;
-    }
-
-    // Convert price_per_day to number if it's a string
-    const pricePerDay =
-      typeof car.price_per_day === 'string' ? parseFloat(car.price_per_day) : car.price_per_day;
-
-    // Validate price_per_day exists and is a valid number
-    if (!pricePerDay || isNaN(pricePerDay) || pricePerDay <= 0) {
-        original: car.price_per_day,
-        converted: pricePerDay,
-        type: typeof car.price_per_day,
-        carId: car.id,
-      });
-      return null;
-    }
-
-    // TypeScript knows that range.from and range.to are strings here
-    const start = new Date(range.from!);
-    const end = new Date(range.to!);
-    const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diff <= 0) {
-        from: range.from,
-        to: range.to,
-        diff: diff,
-      });
-      return null;
-    }
-
-    const total = diff * pricePerDay;
-    return total;
-  });
-
-  readonly canBook = computed(() => {
-    const range = this.dateRange();
-    const car = this.car();
-    const total = this.totalPrice();
-    return !!(range.from && range.to && car && total);
-  });
+  readonly allPhotos = computed(() => this.car()?.photos ?? this.car()?.car_photos ?? []);
+  readonly currentPhoto = computed(() => this.allPhotos()[this.currentPhotoIndex()]);
+  readonly hasMultiplePhotos = computed(() => this.allPhotos().length > 1);
 
   readonly daysCount = computed(() => {
-    const range = this.dateRange();
-    if (!range.from || !range.to) return 0;
-    const start = new Date(range.from);
-    const end = new Date(range.to);
-    const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    const { from, to } = this.dateRange();
+    if (!from || !to) return 0;
+    const diff = Math.ceil(
+      (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24),
+    );
     return diff > 0 ? diff : 0;
   });
 
-  readonly totalWithDeposit = computed(() => {
-    const total = this.totalPrice();
+  readonly totalPrice = computed(() => {
     const car = this.car();
-    if (!total) return null;
-    const deposit = car?.deposit_required && car?.deposit_amount ? car.deposit_amount : 0;
-    return total + deposit;
-  });
-
-  // Wallet state
-  readonly availableBalance = signal<number>(0);
-  readonly lockedBalance = signal<number>(0);
-
-  // Dynamic pricing computed values
-  readonly useDynamicPricing = computed(() => {
-    const car = this.car();
-    return car?.region_id != null;
-  });
-
-  readonly rentalStartDate = computed(() => {
-    const range = this.dateRange();
-    return range.from ? new Date(range.from) : new Date();
-  });
-
-  readonly rentalHours = computed(() => {
     const days = this.daysCount();
-    return days > 0 ? days * 24 : 24; // Default 24 hours if no dates selected
+    if (!car || days <= 0) return null;
+    const pricePerDay =
+      typeof car.price_per_day === 'string' ? parseFloat(car.price_per_day) : car.price_per_day;
+    return isNaN(pricePerDay) ? null : days * pricePerDay;
   });
 
-  constructor(
-    private readonly carsService: CarsService,
-    private readonly bookingsService: BookingsService,
-    private readonly reviewsService: ReviewsService,
-    private readonly walletService: WalletService,
-    private readonly metaService: MetaService,
-    readonly authService: AuthService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    readonly pricingService: DynamicPricingService,
-    private readonly fxService: FxService, // ✅ NUEVO: Para tasas de cambio actuales
-  ) {}
-
-  ngOnInit(): void {
-    void this.loadCar();
-    void this.loadWalletBalance();
-    void this.loadCurrentFxRate(); // ✅ NUEVO: Cargar tasa de cambio actual
-  }
-
-  /**
-   * Carga la tasa de cambio actual desde la base de datos
-   */
-  async loadCurrentFxRate(): Promise<void> {
-    this.fxService.getFxSnapshot('USD', 'ARS').subscribe({
-      next: (snapshot) => {
-        if (snapshot && !snapshot.isExpired) {
-          this.currentFxRate.set(snapshot.rate);
-        } else {
-          this.currentFxRate.set(null);
-        }
-      },
-      error: (err) => {
-        this.currentFxRate.set(null);
-      },
-    });
-  }
-
-  async loadWalletBalance(): Promise<void> {
-    try {
-      const balance = await this.walletService.getBalance();
-      this.availableBalance.set(balance.available_balance);
-      this.lockedBalance.set(balance.locked_balance);
-    } catch (error) {
-      // Ignorar error si el usuario no está autenticado o no tiene wallet
-    }
-  }
-
-  async loadCar(): Promise<void> {
-    this.loading.set(true);
-    const carId = this.route.snapshot.paramMap.get('id');
-    if (!carId) {
-      this.error.set('Auto no encontrado');
-      this.loading.set(false);
-      return;
-    }
-    try {
-      const car = await this.carsService.getCarById(carId);
-      if (!car) {
-        this.error.set('Auto no disponible');
-      } else {
-          id: car.id,
-          title: car.title,
-          price_per_day: car.price_per_day,
-          currency: car.currency,
-          priceType: typeof car.price_per_day,
-        });
-        this.car.set(car);
-
-        // Update SEO meta tags
-        const mainPhoto = (car.photos?.[0] ?? car.car_photos?.[0])?.url;
-        this.metaService.updateCarDetailMeta({
-          title: car.title,
-          description:
-            car.description ||
-            `${car.brand} ${car.model} ${car.year} - Alquiler de auto en ${car.location_city}`,
-          main_photo_url: mainPhoto,
-          price_per_day: car.price_per_day,
-          currency: car.currency || 'ARS',
-          id: car.id,
-        });
-
-        // Add structured data for search engines
-        const stats = await this.reviewsService.getCarStats(carId);
-        this.metaService.addCarProductData({
-          title: car.title,
-          description: car.description || `${car.brand} ${car.model} ${car.year}`,
-          main_photo_url: mainPhoto,
-          price_per_day: car.price_per_day,
-          currency: car.currency || 'ARS',
-          id: car.id,
-          rating_avg: stats?.rating_avg || undefined,
-          rating_count: stats?.reviews_count || 0,
-        });
-
-        // Load reviews for this car
-        await this.loadReviews(carId);
-      }
-    } catch (err) {
-      this.error.set('Error al cargar el auto');
-    } finally {
-      this.loading.set(false);
-    }
-  }
-
-  async loadReviews(carId: string): Promise<void> {
-    this.reviewsLoading.set(true);
-    try {
-      const [reviews, stats] = await Promise.all([
-        this.reviewsService.getReviewsForCar(carId),
-        this.reviewsService.getCarStats(carId),
-      ]);
-
-      this.reviews.set(reviews);
-      this.carStats.set(stats);
-    } catch (error) {
-    } finally {
-      this.reviewsLoading.set(false);
-    }
-  }
-
-  onRangeChange(range: DateRange): void {
-      from: range.from,
-      to: range.to,
-      fromDate: range.from ? new Date(range.from) : null,
-      toDate: range.to ? new Date(range.to) : null,
-    });
-    this.dateRange.set(range);
-  }
-
-  onPaymentMethodChange(event: {
-    method: BookingPaymentMethod;
-    walletAmount: number;
-    cardAmount: number;
-  }): void {
-    this.selectedPaymentMethod.set(event.method);
-    this.walletAmountToUse.set(event.walletAmount);
-    this.cardAmountToUse.set(event.cardAmount);
-
-  }
+  readonly canBook = computed(() => !!this.totalPrice());
 
   nextPhoto(): void {
-    const photos = this.allPhotos();
-    if (photos.length > 1) {
-      const currentIndex = this.currentPhotoIndex();
-      const nextIndex = (currentIndex + 1) % photos.length;
-      this.currentPhotoIndex.set(nextIndex);
-    }
+    this.currentPhotoIndex.update((index) => (index + 1) % this.allPhotos().length);
   }
 
   previousPhoto(): void {
-    const photos = this.allPhotos();
-    if (photos.length > 1) {
-      const currentIndex = this.currentPhotoIndex();
-      const previousIndex = currentIndex === 0 ? photos.length - 1 : currentIndex - 1;
-      this.currentPhotoIndex.set(previousIndex);
-    }
+    this.currentPhotoIndex.update(
+      (index) => (index - 1 + this.allPhotos().length) % this.allPhotos().length,
+    );
   }
 
   goToPhoto(index: number): void {
     this.currentPhotoIndex.set(index);
   }
 
-  navigateToLogin(): void {
-    void this.router.navigate(['/auth/login']);
+  onRangeChange(range: DateRange): void {
+    this.dateRange.set(range);
   }
 
   async onBookClick(): Promise<void> {
     const car = this.car();
-    const range = this.dateRange();
-
-    if (!car || !range.from || !range.to) {
+    const { from, to } = this.dateRange();
+    if (!car || !from || !to) {
       this.bookingError.set('Por favor seleccioná las fechas de alquiler');
       return;
     }
 
-    // Check if user is authenticated
-    const isAuth = await this.authService.isAuthenticated();
-    if (!isAuth) {
-      this.bookingError.set('Necesitás iniciar sesión para reservar');
+    if (!(await this.authService.isAuthenticated())) {
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
 
@@ -362,238 +191,47 @@ export class CarDetailPage implements OnInit {
     this.bookingError.set(null);
 
     try {
-      const startIso = new Date(range.from).toISOString();
-      const endIso = new Date(range.to).toISOString();
-
       const result = await this.bookingsService.createBookingWithValidation(
         car.id,
-        startIso,
-        endIso,
+        new Date(from).toISOString(),
+        new Date(to).toISOString(),
       );
-
       if (!result.success || !result.booking) {
-        const message =
-          result.error ||
-          'No pudimos crear la reserva. Por favor verificá la disponibilidad e intentá nuevamente.';
-        this.bookingError.set(message);
+        this.bookingError.set(result.error || 'No pudimos crear la reserva.');
         return;
       }
-
-      const vehicleValueUsd = this.estimateVehicleValue(car);
-      const bucket = this.determineVehicleBucket(car);
-
-      // Persist booking input for fallback flows (detalle & pago leerá bookingId)
-      sessionStorage.setItem(
-        'booking_detail_input',
-        JSON.stringify({
-          carId: car.id,
-          startDate: startIso,
-          endDate: endIso,
-          bucket,
-          vehicleValueUsd,
-          country: 'AR',
-        }),
-      );
-
-      await this.router.navigate(['/bookings/detail-payment'], {
-        queryParams: {
-          bookingId: result.booking.id,
-        },
+      this.router.navigate(['/bookings/detail-payment'], {
+        queryParams: { bookingId: result.booking.id },
       });
-    } catch (err: unknown) {
+    } catch (err) {
       this.bookingError.set(err instanceof Error ? err.message : 'Error al crear la reserva');
     } finally {
       this.bookingInProgress.set(false);
     }
   }
 
-  /**
-   * Get vehicle value in USD
-   * Usa value_usd de la DB, si no existe calcula desde el precio diario
-   */
-  private estimateVehicleValue(car: Car): number {
-    // PRIORIDAD 1: Usar valor real de la DB si existe
-    if (car.value_usd && car.value_usd > 0) {
-      return Math.round(car.value_usd);
-    }
-
-    // PRIORIDAD 2: Calcular desde precio diario
-
-    let pricePerDayUsd = car.price_per_day;
-
-    // Si el precio está en ARS, convertir a USD usando tasa actual
-    if (car.currency === 'ARS') {
-      const fxRate = this.currentFxRate();
-      if (!fxRate) {
-        throw new Error('Tipo de cambio no disponible');
-      }
-      pricePerDayUsd = car.price_per_day / fxRate;
-    }
-
-    // Estimación: precio diario * 300 ≈ valor del vehículo
-    return Math.round(pricePerDayUsd * 300);
-  }
-
-  /**
-   * Determine vehicle bucket based on price per day (in USD)
-   */
-  private determineVehicleBucket(car: Car): 'economy' | 'standard' | 'premium' | 'luxury' {
-    let pricePerDayUsd = car.price_per_day;
-
-    // Si el precio está en ARS, convertir a USD
-    if (car.currency === 'ARS') {
-      const fxRate = this.currentFxRate();
-      if (!fxRate) {
-        throw new Error('Tipo de cambio no disponible');
-      }
-      pricePerDayUsd = car.price_per_day / fxRate;
-    }
-
-    if (pricePerDayUsd <= 30) return 'economy';
-    if (pricePerDayUsd <= 60) return 'standard';
-    if (pricePerDayUsd <= 100) return 'premium';
-    return 'luxury';
-  }
-
-  /**
-   * Abre la navegación al auto en Google Maps/Waze/Apple Maps
-   */
-  openNavigation(): void {
-    const car = this.car();
-    if (!car?.location_lat || !car?.location_lng) {
-      alert('Ubicación del auto no disponible');
-      return;
-    }
-
-    const lat = car.location_lat;
-    const lng = car.location_lng;
-    const carName = `${car.brand} ${car.model}`;
-
-    // Detectar sistema operativo y app de mapas preferida
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isIOS = /iphone|ipad|ipod/.test(userAgent);
-    const isAndroid = /android/.test(userAgent);
-
-    // Construcción de URLs para diferentes apps de navegación
-    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=&travelmode=driving`;
-    const appleMapsUrl = `http://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`;
-    const wazeUrl = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes&z=15`;
-
-    // Mostrar opciones de navegación
-    if (isIOS) {
-      // iOS: Preferir Apple Maps pero dar opciones
-      this.showNavigationOptions(appleMapsUrl, googleMapsUrl, wazeUrl, carName);
-    } else if (isAndroid) {
-      // Android: Preferir Google Maps pero dar opciones
-      this.showNavigationOptions(googleMapsUrl, wazeUrl, appleMapsUrl, carName);
-    } else {
-      // Desktop: Abrir Google Maps en nueva pestaña
-      window.open(googleMapsUrl, '_blank');
-    }
-  }
-
-  /**
-   * Muestra opciones de navegación para el usuario
-   */
-  private showNavigationOptions(
-    primary: string,
-    _secondary: string,
-    _tertiary: string,
-    _carName: string,
-  ): void {
-    // En móvil, intentar abrir directamente la app de mapas nativa
-    if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
-      window.location.href = primary;
-    } else {
-      window.open(primary, '_blank');
-    }
-  }
-
-  /**
-   * Obtiene la ubicación actual del usuario y calcula la ruta
-   */
-  async getDirectionsFromCurrentLocation(): Promise<void> {
-    const car = this.car();
-    if (!car?.location_lat || !car?.location_lng) {
-      alert('Ubicación del auto no disponible');
-      return;
-    }
-
-    if ('geolocation' in navigator) {
-      try {
-        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0,
-          });
-        });
-
-        const userLat = position.coords.latitude;
-        const userLng = position.coords.longitude;
-        const carLat = car.location_lat;
-        const carLng = car.location_lng;
-
-        // Abrir Google Maps con la ruta desde ubicación actual
-        const url = `https://www.google.com/maps/dir/${userLat},${userLng}/${carLat},${carLng}/@${(userLat + carLat) / 2},${(userLng + carLng) / 2},13z/data=!3m1!4b1!4m2!4m1!3e0`;
-
-        if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
-          window.location.href = url;
-        } else {
-          window.open(url, '_blank');
-        }
-      } catch (error) {
-        // Si falla la geolocalización, usar navegación sin origen
-        this.openNavigation();
-      }
-    } else {
-      alert('Tu dispositivo no soporta geolocalización');
-      this.openNavigation();
-    }
-  }
-
-  /**
-   * Calcula la distancia aproximada entre el usuario y el auto
-   */
-  calculateDistance(userLat: number, userLng: number, carLat: number, carLng: number): number {
-    // Fórmula de Haversine para calcular distancia entre dos puntos
-    const R = 6371; // Radio de la Tierra en km
-    const dLat = this.deg2rad(carLat - userLat);
-    const dLng = this.deg2rad(carLng - userLng);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(userLat)) *
-        Math.cos(this.deg2rad(carLat)) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distancia en km
-    return Math.round(distance * 10) / 10; // Redondear a 1 decimal
-  }
-
-  private deg2rad(deg: number): number {
-    return deg * (Math.PI / 180);
-  }
-
-  /**
-   * Abre el chat con el propietario del auto
-   */
-  async openChatWithOwner(): Promise<void> {
-    const car = this.car();
-    if (!car?.owner?.id) {
-      return;
-    }
-
-    try {
-      // Navegar a la página de mensajes con el propietario
-      await this.router.navigate(['/messages'], {
-        queryParams: {
-          userId: car.owner.id,
-          carId: car.id,
-          carName: car.title,
-        },
-      });
-    } catch (error) {
-    }
+  private updateMetaTags(car: Car, stats: CarStats | null): void {
+    const mainPhoto = (car.photos?.[0] ?? car.car_photos?.[0])?.url;
+    const description =
+      car.description ||
+      `${car.brand} ${car.model} ${car.year} - Alquiler de auto en ${car.location_city}`;
+    this.metaService.updateCarDetailMeta({
+      title: car.title,
+      description,
+      main_photo_url: mainPhoto,
+      price_per_day: car.price_per_day,
+      currency: car.currency || 'ARS',
+      id: car.id,
+    });
+    this.metaService.addCarProductData({
+      title: car.title,
+      description,
+      main_photo_url: mainPhoto,
+      price_per_day: car.price_per_day,
+      currency: car.currency || 'ARS',
+      id: car.id,
+      rating_avg: stats?.rating_avg,
+      rating_count: stats?.reviews_count || 0,
+    });
   }
 }

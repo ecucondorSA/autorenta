@@ -55,7 +55,7 @@ export class MercadoPagoConnectComponent implements OnInit {
     if (
       !confirm(
         '¿Estás seguro de que deseas desconectar tu cuenta de MercadoPago?\n\n' +
-          'Nota: No podrás recibir pagos directos hasta que vuelvas a conectarla.'
+          'Nota: No podrás recibir pagos directos hasta que vuelvas a conectarla.',
       )
     ) {
       return;

@@ -26,6 +26,7 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'mercadopago/callback',
     // Callback de OAuth de MercadoPago (sin guard, permite acceso durante OAuth)
-    loadComponent: () => import('./mercadopago-callback.page').then((m) => m.MercadoPagoCallbackPage),
+    loadComponent: () =>
+      import('./mercadopago-callback.page').then((m) => m.MercadoPagoCallbackPage),
   },
 ];

@@ -16,7 +16,7 @@ export interface UpdateProfileData {
   avatar_url?: string;
   phone?: string;
   whatsapp?: string;
-  dni?: string; // Backward compatibility
+  dni?: string;
   gov_id_type?: string;
   gov_id_number?: string;
   driver_license_number?: string;
@@ -33,7 +33,7 @@ export interface UpdateProfileData {
   currency?: string;
   marketing_opt_in?: boolean;
   notif_prefs?: NotificationPrefs;
-  tos_accepted_at?: boolean; // Si es true, se marca como aceptado con now()
+  tos_accepted_at?: boolean;
 }
 
 @Injectable({
@@ -42,19 +42,14 @@ export interface UpdateProfileData {
 export class ProfileService {
   private readonly supabase = inject(SupabaseClientService).getClient();
 
-  /**
-   * Obtiene el perfil del usuario actual
-   */
   async getCurrentProfile(): Promise<UserProfile | null> {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
 
     if (!user) {
-      const errMsg = 'Usuario no autenticado - getUser() retornó null';
-      throw new Error(errMsg);
+      throw new Error('Usuario no autenticado - getUser() retornó null');
     }
-
 
     const { data, error } = await this.supabase
       .from('profiles')
@@ -64,29 +59,21 @@ export class ProfileService {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        // Profile doesn't exist yet, create one
         return this.createProfile(user.id, user.email ?? '');
       }
 
-      // Check if it's a RLS policy violation (code 42501)
       if (error.code === '42501') {
-        const rrlsError =
-          `RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. ` +
-          `Error: ${error.message}`;
-        throw new Error(rrlsError);
+        throw new Error(
+          `RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. Error: ${error.message}`,
+        );
       }
 
-      // Re-throw with more context
-      const detailedError = `Error cargando perfil (${error.code}): ${error.message}`;
-      throw new Error(detailedError);
+      throw new Error(`Error cargando perfil (${error.code}): ${error.message}`);
     }
 
     return data as UserProfile;
   }
 
-  /**
-   * Obtiene un perfil por ID
-   */
   async getProfileById(userId: string): Promise<UserProfile | null> {
     const { data, error } = await this.supabase
       .from('profiles')
@@ -102,9 +89,6 @@ export class ProfileService {
     return data as UserProfile;
   }
 
-  /**
-   * Actualiza el perfil del usuario actual
-   */
   async updateProfile(updates: UpdateProfileData): Promise<UserProfile> {
     const {
       data: { user },
@@ -114,9 +98,17 @@ export class ProfileService {
       throw new Error('Usuario no autenticado');
     }
 
+    const payload: Record<string, unknown> = { ...updates };
+
+    if (updates.tos_accepted_at === true) {
+      payload.tos_accepted_at = new Date().toISOString();
+    } else {
+      delete payload.tos_accepted_at;
+    }
+
     const { data, error } = await this.supabase
       .from('profiles')
-      .update(updates)
+      .update(payload)
       .eq('id', user.id)
       .select()
       .single();
@@ -128,9 +120,6 @@ export class ProfileService {
     return data as UserProfile;
   }
 
-  /**
-   * Sube un avatar y actualiza el perfil
-   */
   async uploadAvatar(file: File): Promise<string> {
     const {
       data: { user },
@@ -140,45 +129,39 @@ export class ProfileService {
       throw new Error('Usuario no autenticado');
     }
 
-    // Validar tipo de archivo
-    if (!file.type.startsWith('image/')) {
-      throw new Error('El archivo debe ser una imagen');
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('Formato no permitido. Use JPG, PNG o WEBP');
     }
 
-    // Validar tamaño (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
       throw new Error('La imagen no debe superar 2MB');
     }
 
     const extension = file.name.split('.').pop() ?? 'jpg';
-    const filePath = `${user.id}/${uuidv4()}.${extension}`;
+    const filename = `${uuidv4()}.${extension}`;
+    const filePath = `${user.id}/${filename}`;
 
-    // Subir archivo
     const { error: uploadError } = await this.supabase.storage
       .from('avatars')
       .upload(filePath, file, {
         cacheControl: '3600',
-        upsert: true,
+        upsert: false,
       });
 
     if (uploadError) {
       throw uploadError;
     }
 
-    // Obtener URL pública
     const {
       data: { publicUrl },
     } = this.supabase.storage.from('avatars').getPublicUrl(filePath);
 
-    // Actualizar perfil con nueva URL
     await this.updateProfile({ avatar_url: publicUrl });
 
     return publicUrl;
   }
 
-  /**
-   * Elimina el avatar del usuario
-   */
   async deleteAvatar(): Promise<void> {
     const profile = await this.getCurrentProfile();
 
@@ -186,31 +169,23 @@ export class ProfileService {
       return;
     }
 
-    // Extraer path del storage de la URL
     const url = new URL(profile.avatar_url);
     const pathParts = url.pathname.split('/avatars/');
     if (pathParts.length > 1) {
       const storagePath = pathParts[1];
-
-      // Eliminar del storage
       await this.supabase.storage.from('avatars').remove([storagePath]);
     }
 
-    // Actualizar perfil
     await this.updateProfile({ avatar_url: '' });
   }
 
-  /**
-   * Crea un perfil inicial (llamado automáticamente si no existe)
-   */
   private async createProfile(userId: string, email: string): Promise<UserProfile> {
     const newProfile: Partial<UserProfile> = {
       id: userId,
-      full_name: email.split('@')[0], // Nombre inicial basado en email
-      role: 'renter', // Rol por defecto (renter = locatario)
-      country: 'AR', // País por defecto Argentina
+      full_name: email.split('@')[0],
+      role: 'renter',
+      country: 'AR',
     };
-
 
     const { data, error } = await this.supabase
       .from('profiles')
@@ -219,42 +194,29 @@ export class ProfileService {
       .single();
 
     if (error) {
-      const detailedError =
-        `Error creando perfil (${error.code}): ${error.message}. ` +
-        `Details: ${error.details}. Hint: ${error.hint}`;
-      throw new Error(detailedError);
+      throw new Error(
+        `Error creando perfil (${error.code}): ${error.message}. Details: ${error.details}. Hint: ${error.hint}`,
+      );
     }
 
+    console.log('✅ Perfil creado:', {
       id: data?.id,
       full_name: data?.full_name,
     });
+
     return data as UserProfile;
   }
 
-  /**
-   * Verifica si el usuario puede publicar autos (es owner o both)
-   */
   async canPublishCars(): Promise<boolean> {
     const profile = await this.getCurrentProfile();
     return profile?.role === 'owner' || profile?.role === 'both';
   }
 
-  /**
-   * Verifica si el usuario puede reservar autos (es renter o both)
-   */
   async canBookCars(): Promise<boolean> {
     const profile = await this.getCurrentProfile();
     return profile?.role === 'renter' || profile?.role === 'both';
   }
 
-  // ========================================
-  // MÉTODOS EXPANDIDOS - PERFIL COMPLETO
-  // ========================================
-
-  /**
-   * Obtiene el perfil enriquecido del usuario actual (vista me_profile)
-   * Incluye permisos derivados (can_publish_cars, can_book_cars)
-   */
   async getMe(): Promise<UserProfile> {
     const { data, error } = await this.supabase.from('me_profile').select('*').single();
 
@@ -265,13 +227,9 @@ export class ProfileService {
     return data as UserProfile;
   }
 
-  /**
-   * Actualiza el perfil usando la función segura (RPC)
-   * Solo permite actualizar campos whitelisted
-   */
-  async updateProfileSafe(payload: Partial<UpdateProfileData>): Promise<UserProfile> {
-    const { data, error } = await this.supabase.rpc('update_profile_safe', {
-      _payload: payload,
+  async safeUpdateProfile(updates: UpdateProfileData): Promise<UserProfile> {
+    const { data, error } = await this.supabase.rpc('update_my_profile', {
+      payload: updates,
     });
 
     if (error) {
@@ -281,22 +239,6 @@ export class ProfileService {
     return data as UserProfile;
   }
 
-  /**
-   * Actualiza solo la URL del avatar usando RPC dedicado
-   */
-  async setAvatar(publicUrl: string): Promise<void> {
-    const { error } = await this.supabase.rpc('set_avatar', {
-      _public_url: publicUrl,
-    });
-
-    if (error) {
-      throw error;
-    }
-  }
-
-  /**
-   * Sube un documento de verificación al storage privado
-   */
   async uploadDocument(file: File, kind: DocumentKind): Promise<UserDocument> {
     const {
       data: { user },
@@ -306,13 +248,11 @@ export class ProfileService {
       throw new Error('Usuario no autenticado');
     }
 
-    // Validar tipo de archivo
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) {
       throw new Error('Formato no permitido. Use JPG, PNG o PDF');
     }
 
-    // Validar tamaño (max 5MB para documentos)
     if (file.size > 5 * 1024 * 1024) {
       throw new Error('El archivo no debe superar 5MB');
     }
@@ -321,7 +261,6 @@ export class ProfileService {
     const filename = `${uuidv4()}-${kind}.${extension}`;
     const filePath = `${user.id}/${filename}`;
 
-    // Subir a storage privado
     const { error: uploadError } = await this.supabase.storage
       .from('documents')
       .upload(filePath, file, {
@@ -333,7 +272,6 @@ export class ProfileService {
       throw uploadError;
     }
 
-    // Crear registro en user_documents
     const { data, error: insertError } = await this.supabase
       .from('user_documents')
       .insert({
@@ -346,12 +284,10 @@ export class ProfileService {
       .single();
 
     if (insertError) {
-      // Limpiar archivo si falla el insert
       await this.supabase.storage.from('documents').remove([filePath]);
       throw insertError;
     }
 
-    // Disparar verificación automatizada (no bloquear si falla)
     try {
       await this.supabase.functions.invoke('verify-user-docs', {
         body: {
@@ -361,15 +297,12 @@ export class ProfileService {
         },
       });
     } catch (verificationError) {
-      // Silent fail - verification is async and optional
+      console.warn('Document verification failed (non-blocking):', verificationError);
     }
 
     return data as UserDocument;
   }
 
-  /**
-   * Obtiene todos los documentos del usuario actual
-   */
   async getMyDocuments(): Promise<UserDocument[]> {
     const {
       data: { user },
@@ -392,9 +325,6 @@ export class ProfileService {
     return (data as UserDocument[]) ?? [];
   }
 
-  /**
-   * Obtiene un documento específico del usuario
-   */
   async getDocument(documentId: string): Promise<UserDocument | null> {
     const { data, error } = await this.supabase
       .from('user_documents')
@@ -410,9 +340,6 @@ export class ProfileService {
     return data as UserDocument;
   }
 
-  /**
-   * Elimina un documento (archivo y registro)
-   */
   async deleteDocument(documentId: string): Promise<void> {
     const document = await this.getDocument(documentId);
 
@@ -420,10 +347,8 @@ export class ProfileService {
       throw new Error('Documento no encontrado');
     }
 
-    // Eliminar archivo del storage
     await this.supabase.storage.from('documents').remove([document.storage_path]);
 
-    // Eliminar registro de la base de datos
     const { error } = await this.supabase.from('user_documents').delete().eq('id', documentId);
 
     if (error) {
@@ -431,13 +356,10 @@ export class ProfileService {
     }
   }
 
-  /**
-   * Obtiene la URL firmada de un documento privado (válida por 1 hora)
-   */
   async getDocumentSignedUrl(storagePath: string): Promise<string> {
     const { data, error } = await this.supabase.storage
       .from('documents')
-      .createSignedUrl(storagePath, 3600); // 1 hora
+      .createSignedUrl(storagePath, 3600);
 
     if (error) {
       throw error;
@@ -446,25 +368,16 @@ export class ProfileService {
     return data.signedUrl;
   }
 
-  /**
-   * Verifica si el usuario completó el onboarding
-   */
   async hasCompletedOnboarding(): Promise<boolean> {
     const profile = await this.getMe();
     return profile.onboarding === 'complete';
   }
 
-  /**
-   * Verifica si el usuario aceptó los términos y condiciones
-   */
   async hasAcceptedTOS(): Promise<boolean> {
     const profile = await this.getMe();
     return profile.tos_accepted_at !== null;
   }
 
-  /**
-   * Marca el onboarding como completo
-   */
   async completeOnboarding(): Promise<void> {
     const {
       data: { user },
@@ -484,10 +397,26 @@ export class ProfileService {
     }
   }
 
-  /**
-   * Obtiene el historial de auditoría del perfil del usuario
-   */
-  async getProfileAudit(): Promise<ProfileAudit[]> {
+  async acceptTOS(): Promise<void> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    const { error } = await this.supabase
+      .from('profiles')
+      .update({ tos_accepted_at: new Date().toISOString() })
+      .eq('id', user.id);
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async getAuditLog(): Promise<ProfileAudit[]> {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
@@ -497,11 +426,11 @@ export class ProfileService {
     }
 
     const { data, error } = await this.supabase
-      .from('profile_audit')
+      .from('profile_audit_log')
       .select('*')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
-      .limit(20);
+      .limit(50);
 
     if (error) {
       throw error;
@@ -510,67 +439,37 @@ export class ProfileService {
     return (data as ProfileAudit[]) ?? [];
   }
 
-  /**
-   * Obtiene el perfil público de un usuario (solo datos visibles públicamente)
-   */
-  async getPublicProfile(userId: string): Promise<Partial<UserProfile> | null> {
-    const { data, error } = await this.supabase
-      .from('profiles')
-      .select(
-        `
-        id,
-        full_name,
-        avatar_url,
-        role,
-        is_email_verified,
-        is_phone_verified,
-        is_driver_verified,
-        kyc,
-        created_at
-      `,
-      )
-      .eq('id', userId)
-      .single();
+  async requestDataExport(): Promise<void> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
 
-    if (error) {
-      if (error.code === 'PGRST116') return null;
-      throw error;
+    if (!user) {
+      throw new Error('Usuario no autenticado');
     }
 
-    return data as Partial<UserProfile>;
+    await this.supabase.functions.invoke('export-user-data', {
+      body: { user_id: user.id },
+    });
   }
 
-  /**
-   * Obtiene las estadísticas públicas de un usuario
-   */
-  async getUserStats(userId: string): Promise<unknown> {
-    const { data, error } = await this.supabase.rpc('get_user_public_stats', {
-      target_user_id: userId,
+  async requestAccountDeletion(reason?: string): Promise<void> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    const { error } = await this.supabase.from('account_deletion_requests').insert({
+      user_id: user.id,
+      reason: reason ?? 'User requested deletion',
+      status: 'pending',
     });
 
     if (error) {
-      // Retornar stats vacías si falla
-      return {
-        owner_rating_avg: null,
-        owner_reviews_count: 0,
-        owner_trips_count: 0,
-        renter_rating_avg: null,
-        renter_reviews_count: 0,
-        renter_trips_count: 0,
-        total_cars: 0,
-      };
+      throw error;
     }
-
-    return (
-      data || {
-        owner_rating_avg: null,
-        owner_reviews_count: 0,
-        owner_trips_count: 0,
-        renter_rating_avg: null,
-        renter_reviews_count: 0,
-        renter_trips_count: 0,
-        total_cars: 0,
-      }
-    );
   }
 }

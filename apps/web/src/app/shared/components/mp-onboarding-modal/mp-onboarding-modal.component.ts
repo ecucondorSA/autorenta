@@ -71,7 +71,7 @@ import { AuthService } from '../../../core/services/auth.service';
               class="status-header"
               [ngClass]="{
                 'status-header--ready': status()?.isApproved && status()?.hasActiveTokens,
-                'status-header--warn': !status()?.isApproved || !status()?.hasActiveTokens
+                'status-header--warn': !status()?.isApproved || !status()?.hasActiveTokens,
               }"
             >
               <span class="status-indicator"></span>
@@ -90,7 +90,8 @@ import { AuthService } from '../../../core/services/auth.service';
                   class="status-subtitle"
                   *ngIf="status()?.isApproved && !status()?.hasActiveTokens"
                 >
-                  Tus credenciales expiraron. Re-autorizá Mercado Pago para mantener el split activo.
+                  Tus credenciales expiraron. Re-autorizá Mercado Pago para mantener el split
+                  activo.
                 </p>
               </div>
               <ion-button

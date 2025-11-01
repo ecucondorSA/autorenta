@@ -110,7 +110,6 @@ export class InspectionUploaderComponent implements OnInit {
           this.photos.update((p) => [...p, photo]);
         }
       }
-
     } catch (err) {
       this.error.set('Error al subir fotos. Intente nuevamente.');
     } finally {
@@ -210,14 +209,12 @@ export class InspectionUploaderComponent implements OnInit {
         throw new Error('No se pudo crear la inspección');
       }
 
-
       // 3. Firmar inspección
       const signed = await firstValueFrom(this.fgoService.signInspection(inspection.id));
 
       if (!signed) {
         throw new Error('No se pudo firmar la inspección');
       }
-
 
       // 4. Cerrar modal y retornar inspección
       this.closeModal(inspection);

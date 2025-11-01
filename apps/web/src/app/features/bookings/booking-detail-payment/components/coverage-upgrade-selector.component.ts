@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  CoverageUpgrade,
-} from '../../../../core/models/booking-detail-payment.model';
+import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.model';
 
 @Component({
   selector: 'app-coverage-upgrade-selector',

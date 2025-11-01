@@ -167,7 +167,7 @@ export class LoggerService {
   private sendToSentry(
     level: 'debug' | 'info' | 'warning' | 'error' | 'fatal',
     message: string,
-    data?: unknown
+    data?: unknown,
   ): void {
     // This is a placeholder for Sentry integration
     // In production, initialize Sentry in main.ts:
@@ -179,7 +179,6 @@ export class LoggerService {
     // });
     //
     // Then uncomment below:
-
     /*
     if (typeof Sentry !== 'undefined') {
       const captureContext: Sentry.CaptureContext = {

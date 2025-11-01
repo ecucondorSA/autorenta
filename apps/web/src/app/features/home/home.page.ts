@@ -82,6 +82,5 @@ export class HomePage implements OnInit {
     });
   }
 
-  onSearch() {
-  }
+  onSearch() {}
 }

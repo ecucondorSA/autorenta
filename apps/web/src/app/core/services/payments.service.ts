@@ -91,7 +91,9 @@ export class PaymentsService {
       .single();
 
     if (error) {
-      throw new Error(`Error al crear payment intent: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+      throw new Error(
+        `Error al crear payment intent: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+      );
     }
     return data as PaymentIntent;
   }
@@ -107,10 +109,9 @@ export class PaymentsService {
   async markAsPaid(intentId: string): Promise<void> {
     if (environment.production) {
       throw new Error(
-        'markAsPaid() deprecado en producción. El webhook de MercadoPago actualiza automáticamente el payment intent.'
+        'markAsPaid() deprecado en producción. El webhook de MercadoPago actualiza automáticamente el payment intent.',
       );
     }
-
 
     const workerUrl = environment.paymentsWebhookUrl;
     if (!workerUrl) {
@@ -155,10 +156,9 @@ export class PaymentsService {
   async triggerMockPayment(bookingId: string, status: 'approved' | 'rejected'): Promise<void> {
     if (environment.production) {
       throw new Error(
-        'triggerMockPayment() solo disponible en desarrollo. En producción usar MercadoPago real.'
+        'triggerMockPayment() solo disponible en desarrollo. En producción usar MercadoPago real.',
       );
     }
-
 
     const workerUrl = environment.paymentsWebhookUrl;
     if (!workerUrl) {
@@ -201,7 +201,6 @@ export class PaymentsService {
   }
 
   async simulateWebhook(
-    
     __provider: string,
     intentId: string,
     _status: 'approved' | 'rejected',
@@ -246,7 +245,6 @@ export class PaymentsService {
 
       throw new Error('El pago no se completó correctamente');
     } catch (error: unknown) {
-
       // Retry logic para errores de red
       if (retryCount < MAX_RETRIES && this.isRetryableError(error)) {
         await this.delay(1000 * (retryCount + 1)); // Backoff exponencial

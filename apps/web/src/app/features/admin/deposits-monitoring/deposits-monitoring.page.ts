@@ -180,7 +180,7 @@ export class DepositsMonitoringPage implements OnInit {
 
     if (error) throw error;
 
-    const deposits: DepositTransaction[] = (data as DatabaseTransactionRow[] || []).map((t) => {
+    const deposits: DepositTransaction[] = ((data as DatabaseTransactionRow[]) || []).map((t) => {
       const profile = t.profiles;
       return {
         id: t.id,
@@ -214,7 +214,7 @@ export class DepositsMonitoringPage implements OnInit {
 
     if (error) throw error;
 
-    const deposits: DepositTransaction[] = (data as DatabaseTransactionRow[] || []).map((t) => {
+    const deposits: DepositTransaction[] = ((data as DatabaseTransactionRow[]) || []).map((t) => {
       const profile = t.profiles;
       const created = new Date(t.created_at).getTime();
       const completed = t.completed_at ? new Date(t.completed_at).getTime() : null;
@@ -252,7 +252,7 @@ export class DepositsMonitoringPage implements OnInit {
 
     if (error) throw error;
 
-    const deposits: DepositTransaction[] = (data as DatabaseTransactionRow[] || []).map((t) => {
+    const deposits: DepositTransaction[] = ((data as DatabaseTransactionRow[]) || []).map((t) => {
       const profile = t.profiles;
       return {
         id: t.id,

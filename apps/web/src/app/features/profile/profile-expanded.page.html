@@ -287,11 +287,16 @@
           <div>
             <label class="block text-sm font-semibold text-smoke-black mb-2">Rol en Autorent</label>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <label *ngFor="let roleOption of roles" class="relative flex cursor-pointer rounded-lg border p-4 transition-all"
-                [class.border-accent-petrol]="generalForm.value.role === roleOption.value"
-                [class.bg-accent-petrol/5]="generalForm.value.role === roleOption.value"
-                [class.border-pearl-gray]="generalForm.value.role !== roleOption.value"
-              >
+                                                                                    <label *ngFor="let roleOption of roles" class="relative flex cursor-pointer rounded-lg border p-4 transition-all"
+                                                                                      [class.border-accent-petrol]="generalForm.value.role === roleOption.value"
+                                                                                      [class.bg-accent-petrol/5]="generalForm.value.role === roleOption.value"
+                                                                                      [class.border-pearl-gray]="generalForm.value.role !== roleOption.value">
+                                                                      
+                                                        
+                                          
+                            
+              
+
                 <input
                   type="radio"
                   formControlName="role"
@@ -447,10 +452,10 @@
                 <span>🚗 Conductor</span>
                 <span
                   class="px-2 py-1 rounded-full text-xs font-semibold"
-                  [class]="getVerificationStatusClass(driverVerification()?.status ?? 'PENDIENTE')"
+                  [class]="getVerificationStatusClass(driverVerification().status)"
                 >
-                  {{ getVerificationStatusIcon(driverVerification()?.status ?? 'PENDIENTE') }}
-                  {{ getVerificationStatusLabel(driverVerification()?.status ?? 'PENDIENTE') }}
+                  {{ getVerificationStatusIcon(driverVerification().status) }}
+                  {{ getVerificationStatusLabel(driverVerification().status) }}
                 </span>
               </h4>
             </div>
@@ -497,10 +502,10 @@
                 <span>🚘 Locador / Dueño</span>
                 <span
                   class="px-2 py-1 rounded-full text-xs font-semibold"
-                  [class]="getVerificationStatusClass(ownerVerification()?.status ?? 'PENDIENTE')"
+                  [class]="getVerificationStatusClass(ownerVerification().status)"
                 >
-                  {{ getVerificationStatusIcon(ownerVerification()?.status ?? 'PENDIENTE') }}
-                  {{ getVerificationStatusLabel(ownerVerification()?.status ?? 'PENDIENTE') }}
+                  {{ getVerificationStatusIcon(ownerVerification().status) }}
+                  {{ getVerificationStatusLabel(ownerVerification().status) }}
                 </span>
               </h4>
             </div>

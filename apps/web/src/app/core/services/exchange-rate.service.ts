@@ -42,29 +42,24 @@ export class ExchangeRateService {
   private readonly BINANCE_API = 'https://api.binance.com/api/v3/ticker/price';
   private readonly CACHE_TTL_MS = 60000; // 60 segundos
 
-  // Cache de la última cotización
   private lastRate = signal<ExchangeRate | null>(null);
   private lastFetch = signal<number>(0);
 
   /**
    * Obtiene la tasa de cambio platform_rate (incluye margen del 20%) desde la base de datos
-   *
-   * @param pair - Par de monedas (ej: 'USDTARS')
-   * @returns Tasa de cambio de la plataforma (cuántos ARS equivalen a 1 USD)
    */
   async getPlatformRate(pair = 'USDTARS'): Promise<number> {
     const now = Date.now();
     const cacheAge = now - this.lastFetch();
 
-    // Si el cache es válido (< 60s), retornar valor cacheado
     if (this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS) {
+      console.log(
         `💱 Usando cotización cacheada: 1 USD = ${this.lastRate()!.platform_rate} ARS (age: ${Math.round(cacheAge / 1000)}s)`,
       );
       return this.lastRate()!.platform_rate;
     }
 
     try {
-
       const { data, error } = await this.supabase
         .from('exchange_rates')
         .select('*')
@@ -82,19 +77,18 @@ export class ExchangeRateService {
         throw new Error(`No exchange rate found for pair: ${pair}`);
       }
 
-      // Actualizar cache
       this.lastRate.set(data as ExchangeRate);
       this.lastFetch.set(now);
 
+      console.log(
         `✅ Cotización de plataforma (con margen ${data.margin_percent}%): 1 USD = ${data.platform_rate} ARS (Binance: ${data.binance_rate})`,
       );
 
       return data.platform_rate;
     } catch (error) {
+      console.error('Error obteniendo tasa de DB:', error);
 
-      // Intentar consultar Binance directamente como fallback
       try {
-
         const response = await fetch(`${this.BINANCE_API}?symbol=${pair}`);
 
         if (!response.ok) {
@@ -108,12 +102,13 @@ export class ExchangeRateService {
           throw new Error(`Invalid rate from Binance: ${binanceData.price}`);
         }
 
-        // Aplicar margen del 10% manualmente (fallback - debe coincidir con Edge Function)
         const platformRate = binanceRate * 1.1;
 
+        console.log(`⚠️ Fallback a Binance: 1 USD = ${platformRate} ARS`);
 
         return platformRate;
       } catch (binanceError) {
+        console.error('Error obteniendo tasa de Binance:', binanceError);
         throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
       }
     }
@@ -121,8 +116,6 @@ export class ExchangeRateService {
 
   /**
    * Obtiene solo la tasa de Binance (sin margen)
-   *
-   * @returns Tasa de Binance pura (sin comisión de plataforma)
    */
   async getBinanceRate(): Promise<number> {
     const rate = this.lastRate();
@@ -130,38 +123,32 @@ export class ExchangeRateService {
       return rate.binance_rate;
     }
 
-    // Si no hay cache, obtener platform rate primero (que actualiza el cache)
     await this.getPlatformRate();
+    const updatedRate = this.lastRate();
+
+    if (updatedRate) {
+      return updatedRate.binance_rate;
+    }
 
     throw new Error('No se pudo obtener tasa de Binance');
   }
 
   /**
    * Convierte pesos argentinos a dólares estadounidenses
-   * Usa la tasa de plataforma (incluye margen del 20%)
-   *
-   * @param ars - Monto en pesos argentinos
-   * @returns Monto equivalente en USD (redondeado a 2 decimales)
    */
   async convertArsToUsd(ars: number): Promise<number> {
     const rate = await this.getPlatformRate();
     const usd = ars / rate;
-
-    return Math.round(usd * 100) / 100; // Redondear a 2 decimales
+    return Math.round(usd * 100) / 100;
   }
 
   /**
    * Convierte dólares estadounidenses a pesos argentinos
-   * Usa la tasa de plataforma (incluye margen del 20%)
-   *
-   * @param usd - Monto en dólares estadounidenses
-   * @returns Monto equivalente en ARS (redondeado a 2 decimales)
    */
   async convertUsdToArs(usd: number): Promise<number> {
     const rate = await this.getPlatformRate();
     const ars = usd * rate;
-
-    return Math.round(ars * 100) / 100; // Redondear a 2 decimales
+    return Math.round(ars * 100) / 100;
   }
 
   /**
@@ -187,7 +174,7 @@ export class ExchangeRateService {
   }
 
   /**
-   * Limpia el cache de la tasa (fuerza un nuevo fetch en la próxima consulta)
+   * Limpia el cache de la tasa
    */
   clearCache(): void {
     this.lastRate.set(null);

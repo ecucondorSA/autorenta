@@ -1,51 +1,1880 @@
 ❯ Building...
 ✔ Building...
-Initial chunk files | Names                       |  Raw size
-main.js             | main                        | 287.88 kB | 
-styles.css          | styles                      | 209.99 kB | 
-chunk-O5YQH5TW.js   | -                           |  15.90 kB | 
-chunk-ARLYHNPO.js   | -                           |  15.57 kB | 
-chunk-6XX4CJ32.js   | -                           |  14.49 kB | 
-chunk-TH3TWID6.js   | -                           |  13.13 kB | 
-chunk-KGJE4NAG.js   | -                           |  12.04 kB | 
-chunk-3TIPDS2D.js   | -                           |   6.86 kB | 
-chunk-44IRLAMC.js   | -                           |   6.49 kB | 
-chunk-KGPNCGGD.js   | -                           |   5.88 kB | 
-chunk-WBMUNDHD.js   | -                           |   2.75 kB | 
-chunk-PMBUQTKH.js   | -                           |   2.12 kB | 
-chunk-XWLXMCJQ.js   | -                           |   2.07 kB | 
-chunk-YWX7VNVA.js   | -                           | 551 bytes | 
-polyfills.js        | polyfills                   |  95 bytes | 
+Application bundle generation failed. [19.995 seconds] - 2025-11-01T09:46:26.623Z
 
-                    | Initial total               | 595.83 kB
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PaymentMethodSelectorComponent is not used within the template of CarDetailPage[0m [1m[35m[plugin angular-compiler][0m
 
-Lazy chunk files    | Names                       |  Raw size
-chunk-P2HGOI6V.js   | wallet-page                 | 419.28 kB | 
-chunk-6JY4DEHT.js   | booking-detail-payment-page | 337.01 kB | 
-chunk-KOTB3X3Q.js   | publish-car-v2-page         | 261.73 kB | 
-chunk-23SYAFR2.js   | car-detail-page             | 254.78 kB | 
-chunk-4OKK7246.js   | booking-detail-page         | 216.10 kB | 
-chunk-BJJTN2U7.js   | cars-list-page              | 209.81 kB | 
-chunk-PGP5IBEF.js   | profile-expanded-page       | 130.97 kB | 
-chunk-7I2BQZFH.js   | fgo-overview-page           |  85.97 kB | 
-chunk-3QO3S7IP.js   | -                           |  63.55 kB | 
-chunk-B3QU5E3L.js   | owner-bookings-page         |  62.22 kB | 
-chunk-JPXNSTWT.js   | admin-withdrawals-page      |  59.58 kB | 
-chunk-RDOZJ4WJ.js   | pending-approval-page       |  56.81 kB | 
-chunk-QWH2Z5JA.js   | my-cars-page                |  55.36 kB | 
-chunk-I7KEAWTT.js   | messages-page               |  54.58 kB | 
-chunk-YDAUHO2H.js   | public-profile-page         |  53.64 kB | 
-...and 34 more lazy chunks files. Use "--verbose" to show all the files.
+    src/app/features/cars/detail/car-detail.page.ts:54:4:
+[37m      54 │     [32mPaymentMethodSelectorComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-Application bundle generation complete. [50.140 seconds] - 2025-10-28T09:01:42.486Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DynamicPriceDisplayComponent is not used within the template of CarDetailPage[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.ts:56:4:
+[37m      56 │     [32mDynamicPriceDisplayComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: EscapeKeyDirective is not used within the template of DepositModalComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/deposit-modal/deposit-modal.component.ts:14:59:
+[37m      14 │ ...sModule, FocusTrapDirective, [32mEscapeKeyDirective[37m, TranslateModule],
+         ╵                                 [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'unlockFunds' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/bookings.service.ts:209:33:
+[37m      209 │         await this.walletService.[32munlockFunds[37m({
+          ╵                                  [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'lockFunds' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/bookings.service.ts:393:50:
+[37m      393 │       const lockResult = await this.walletService.[32mlockFunds[37m({
+          ╵                                                   [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'unlockFunds' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/bookings.service.ts:438:52:
+[37m      438 │       const unlockResult = await this.walletService.[32munlockFunds[37m({
+          ╵                                                     [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'unlockFunds' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/bookings.service.ts:553:33:
+[37m      553 │         await this.walletService.[32munlockFunds[37m({
+          ╵                                  [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2769: No overload matches this call.
+  Overload 1 of 2, '(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier | ... 3 more ... | AesDerivedKeyParams, extractable: boolean, keyUsages: Iterable<...>): Promise<...>', gave the following error.
+    Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BufferSource'.
+      Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+        Types of property 'buffer' are incompatible.
+          Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+            Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+              Types of property '[Symbol.toStringTag]' are incompatible.
+                Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+  Overload 2 of 2, '(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier | ... 3 more ... | AesDerivedKeyParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<...>', gave the following error.
+    Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BufferSource'.
+      Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+        Types of property 'buffer' are incompatible.
+          Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+            Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+              Types of property '[Symbol.toStringTag]' are incompatible.
+                Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/encryption.service.ts:129:8:
+[37m      129 │         [32msalt[37m,
+          ╵         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/mercadopago-oauth.service.ts:146:8:
+[37m      146 │         [32m'[OAuth] Estado:'[37m,
+          ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/mercadopago-oauth.service.ts:148:6:
+[37m      148 │       [32m)[37m;
+          ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'Observable<{ authorizedPaymentId: any; amountArs: any; amountUsd: any; currency: string; expiresAt: Date; status: "pending" | "authorized" | "expired" | "failed"; paymentMethodId: any; cardLast4: any; createdAt: Date; } | null>' is not assignable to type 'Observable<PaymentAuthorization | null>'.
+  Type '{ authorizedPaymentId: any; amountArs: any; amountUsd: any; currency: string; expiresAt: Date; status: "pending" | "authorized" | "expired" | "failed"; paymentMethodId: any; cardLast4: any; createdAt: Date; } | null' is not assignable to type 'PaymentAuthorization | null'.
+    Type '{ authorizedPaymentId: any; amountArs: any; amountUsd: any; currency: string; expiresAt: Date; status: "pending" | "authorized" | "expired" | "failed"; paymentMethodId: any; cardLast4: any; createdAt: Date; }' is not assignable to type 'PaymentAuthorization'.
+      Types of property 'currency' are incompatible.
+        Type 'string' is not assignable to type 'CurrencyCode'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:92:4:
+[37m      92 │     [32mreturn[37m from(this.supabase.from('payment_intents').select('*')....
+         ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/realtime-connection.service.ts:214:6:
+[37m      214 │       [32m)[37m;
+          ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/realtime-connection.service.ts:227:4:
+[37m      227 │     [32m)[37m;
+          ╵     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/wallet.service.ts:91:93:
+[37m      91 │ ...erence(result.transaction_id, params.amount, [32mparams.description[37m));
+         ╵                                                 [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2344: Type '"wallet_balances"' does not satisfy the constraint '"profiles" | "car_locations" | "cars" | "payment_intents" | "bookings" | "payment_splits" | "payments" | "wallet_transactions" | "wallet_ledger" | "bank_accounts" | "booking_contracts" | ... 65 more ... | "withdrawal_requests"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/types/supabase-types.ts:37:35:
+[37m      37 │ export type WalletBalance = Tables<[32m'wallet_balances'[37m>;
+         ╵                                    [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2344: Type '"payment_authorizations"' does not satisfy the constraint '"profiles" | "car_locations" | "cars" | "payment_intents" | "bookings" | "payment_splits" | "payments" | "wallet_transactions" | "wallet_ledger" | "bank_accounts" | "booking_contracts" | ... 65 more ... | "withdrawal_requests"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/types/supabase-types.ts:43:42:
+[37m      43 │ export type PaymentAuthorization = Tables<[32m'payment_authorizations'[37m>;
+         ╵                                           [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'lockRentalAndDeposit' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.ts:951:44:
+[37m      951 │       const lock = await this.walletService.[32mlockRentalAndDeposit[37m({
+          ╵                                             [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'unlockFunds' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.ts:981:33:
+[37m      981 │ ... await this.walletService.[32munlockFunds[37m({ booking_id: bookingId });
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'userEmail$' does not exist on type 'AuthService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/components/card-hold-panel.component.ts:29:49:
+[37m      29 │ ...l = toSignal(this.authService.[32muserEmail$[37m, { initialValue: null });
+         ╵                                  [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type '{}' is not assignable to type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/components/card-hold-panel.component.ts:63:6:
+[37m      63 │       [32mpayerEmail[37m: this.userEmail()!,
+         ╵       [32m~~~~~~~~~~[0m
+
+  The expected type comes from property 'payerEmail' which is declared here on type '{ userId: string; amountUsd: number; amountArs: number; fxRate: number; cardToken: string; payerEmail: string; description?: string | undefined; bookingId?: string | undefined; }'
+
+    src/app/core/services/payment-authorization.service.ts:42:4:
+[37m      42 │     [32mpayerEmail[37m: string;
+         ╵     [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'protected_credit_balance' does not exist on type 'Observable<WalletBalance>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/components/credit-security-panel.component.ts:445:46:
+[37m      445 │ ...urrentProtectedCredit.set(balance.[32mprotected_credit_balance[37m || 0);
+          ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'lockFunds' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/components/credit-security-panel.component.ts:486:46:
+[37m      486 │       const result = await this.walletService.[32mlockFunds[37m({
+          ╵                                               [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'success' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/components/credit-security-panel.component.ts:534:17:
+[37m      534 │       if (result.[32msuccess[37m && result.payment_url) {
+          ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'payment_url' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/components/credit-security-panel.component.ts:534:35:
+[37m      534 │       if (result.success && result.[32mpayment_url[37m) {
+          ╵                                    [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'payment_url' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/components/credit-security-panel.component.ts:536:38:
+[37m      536 │         window.location.href = result.[32mpayment_url[37m;
+          ╵                                       [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'message' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/booking-detail-payment/components/credit-security-panel.component.ts:538:31:
+[37m      538 │         throw new Error(result.[32mmessage[37m || 'Error al iniciar depó...
+          ╵                                [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'lockRentalAndDeposit' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/checkout/services/checkout-payment.service.ts:61:35:
+[37m      61 │     const lock = await this.wallet.[32mlockRentalAndDeposit[37m({
+         ╵                                    [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'lockFunds' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/checkout/services/checkout-payment.service.ts:149:43:
+[37m      149 │       const lockResult = await this.wallet.[32mlockFunds[37m({
+          ╵                                            [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'unlockFunds' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/bookings/checkout/services/checkout-payment.service.ts:304:24:
+[37m      304 │       await this.wallet.[32munlockFunds[37m({
+          ╵                         [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2341: Property 'router' is private and only accessible within class 'CarDetailPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.html:376:103:
+[37m      376 │ ...[queryParams]="{ returnUrl: [32mrouter[37m.url }" class="btn-primary w...
+          ╵                                [32m~~~~~~[0m
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:59:15:
+[37m      59 │   templateUrl: [32m'./car-detail.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2769: No overload matches this call.
+  The last overload gave the following error.
+    Type '{ available_balance: number; locked_balance: number; }' is missing the following properties from type 'WalletBalance': transferable_balance, withdrawable_balance, protected_credit_balance, total_balance, currency[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/detail/car-detail.page.ts:113:71:
+[37m      113 │ ...tService.getBalance(), { [32minitialValue[37m: { available_balance: 0,...
+          ╵                             [32m~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'initialValue' which is declared here on type 'NoInfer<ToSignalOptions<WalletBalance>> & { initialValue: WalletBalance; requireSync?: false | undefined; }'
+
+    ../../node_modules/.pnpm/@angular+core@20.3.7_@angular+compiler@20.3.7_rxjs@7.8.2_zone.js@0.15.1/node_modules/@angular/core/rxjs-interop/index.d.ts:99:4:
+[37m      99 │     [32minitialValue[37m?: unknown;
+         ╵     [32m~~~~~~~~~~~~[0m
+
+  The last overload is declared here.
+
+    ../../node_modules/.pnpm/@angular+core@20.3.7_@angular+compiler@20.3.7_rxjs@7.8.2_zone.js@0.15.1/node_modules/@angular/core/rxjs-interop/index.d.ts:144:17:
+[37m      144 │ declare function [32mtoSignal[37m<T, const U extends T>(source: Observabl...
+          ╵                  [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.html:39:37:
+[37m      39 │     <div *ngIf="!loading() && cars().[32mlength[37m === 0" class="space-y-8">
+         ╵                                      [32m~~~~~~[0m
+
+  Error occurs in the template of component MyCarsPage.
+
+    src/app/features/cars/my-cars/my-cars.page.ts:15:15:
+[37m      15 │   templateUrl: [32m'./my-cars.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.html:444:37:
+[37m      444 │     <div *ngIf="!loading() && cars().[32mlength[37m > 0" class="space-y-6">
+          ╵                                      [32m~~~~~~[0m
+
+  Error occurs in the template of component MyCarsPage.
+
+    src/app/features/cars/my-cars/my-cars.page.ts:15:15:
+[37m      15 │   templateUrl: [32m'./my-cars.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.html:451:71:
+[37m      451 │ ...ass="text-3xl font-bold text-smoke-black">{{ cars().[32mlength[37m }}</p>
+          ╵                                                        [32m~~~~~~[0m
+
+  Error occurs in the template of component MyCarsPage.
+
+    src/app/features/cars/my-cars/my-cars.page.ts:15:15:
+[37m      15 │   templateUrl: [32m'./my-cars.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'unknown' is not assignable to type 'NgIterable<any> | null | undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.html:525:26:
+[37m      525 │           *ngFor="let car [32mof[37m cars()"
+          ╵                           [32m~~[0m
+
+  Error occurs in the template of component MyCarsPage.
+
+    src/app/features/cars/my-cars/my-cars.page.ts:15:15:
+[37m      15 │   templateUrl: [32m'./my-cars.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'Promise<Car[]>' is not assignable to parameter of type 'Observable<unknown> | Subscribable<unknown>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:22:27:
+[37m      22 │ ... cars = toSignal([32mthis.carsService.listMyCars()[37m, { initialValue:...
+         ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  The last overload is declared here.
+
+    ../../node_modules/.pnpm/@angular+core@20.3.7_@angular+compiler@20.3.7_rxjs@7.8.2_zone.js@0.15.1/node_modules/@angular/core/rxjs-interop/index.d.ts:144:17:
+[37m      144 │ declare function [32mtoSignal[37m<T, const U extends T>(source: Observabl...
+          ╵                  [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:25:40:
+[37m      25 │ ...ntActive = computed(() => [32mthis.cars()[37m.filter(car => car.status ...
+         ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'car' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:25:59:
+[37m      25 │ ...uted(() => this.cars().filter([32mcar[37m => car.status === 'active').l...
+         ╵                                  [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:26:39:
+[37m      26 │ ...untDraft = computed(() => [32mthis.cars()[37m.filter(car => car.status ...
+         ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'car' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:26:58:
+[37m      26 │ ...uted(() => this.cars().filter([32mcar[37m => car.status === 'draft').le...
+         ╵                                  [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'set' does not exist on type 'Signal<unknown>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:41:16:
+[37m      41 │       this.cars.[32mset[37m(this.cars().filter(car => car.id !== carId));
+         ╵                 [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:41:20:
+[37m      41 │       this.cars.set([32mthis.cars()[37m.filter(car => car.id !== carId));
+         ╵                     [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'car' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:41:39:
+[37m      41 │       this.cars.set(this.cars().filter([32mcar[37m => car.id !== carId));
+         ╵                                        [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'update' does not exist on type 'Signal<unknown>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:54:16:
+[37m      54 │       this.cars.[32mupdate[37m(cars =>
+         ╵                 [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'cars' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:54:23:
+[37m      54 │       this.cars.update([32mcars[37m =>
+         ╵                        [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'car' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cars/my-cars/my-cars.page.ts:55:17:
+[37m      55 │         cars.map([32mcar[37m => (car.id === carId ? { ...car, status: newS...
+         ╵                  [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'avatarUrl' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:46:21:
+[37m      46 │               [src]="[32mavatarUrl[37m() || '/assets/avatar-placeholder.png'"
+         ╵                      [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'uploadingAvatar' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:53:34:
+[37m      53 │               [class.opacity-50]="[32muploadingAvatar[37m()"
+         ╵                                   [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'uploadingAvatar' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:60:28:
+[37m      60 │                 [disabled]="[32muploadingAvatar[37m()"
+         ╵                             [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'full_name' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:70:77:
+[37m      70 │ ...l font-bold text-smoke-black mb-1">{{ profile()?.[32mfull_name[37m }}</h2>
+         ╵                                                     [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'userEmail' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:71:58:
+[37m      71 │ ...<p class="text-sm text-charcoal-medium mb-3">{{ [32muserEmail[37m() }}</p>
+         ╵                                                    [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'role' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:75:26:
+[37m      75 │             {{ profile()?.[32mrole[37m === 'renter' ? 'Locatario' : profil...
+         ╵                           [32m~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'role' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:75:71:
+[37m      75 │ ...r' ? 'Locatario' : profile()?.[32mrole[37m === 'owner' ? 'Locador' : 'A...
+         ╵                                  [32m~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'canPublishCars' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:80:25:
+[37m      80 │             <span *ngIf="[32mcanPublishCars[37m()" class="flex items-cente...
+         ╵                          [32m~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'canBookCars' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:86:25:
+[37m      86 │             <span *ngIf="[32mcanBookCars[37m()" class="flex items-center g...
+         ╵                          [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_email_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:149:42:
+[37m      149 │ ...an [class]="profile()?.[32mis_email_verified[37m ? 'text-success-600 d...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_email_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:150:32:
+[37m      150 │ ...         {{ profile()?.[32mis_email_verified[37m ? '✓ Verificado' : ...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_phone_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:155:42:
+[37m      155 │ ...an [class]="profile()?.[32mis_phone_verified[37m ? 'text-success-600 d...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_phone_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:156:32:
+[37m      156 │ ...         {{ profile()?.[32mis_phone_verified[37m ? '✓ Verificado' : ...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_driver_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:161:42:
+[37m      161 │ ...n [class]="profile()?.[32mis_driver_verified[37m ? 'text-success-600 d...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_driver_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:162:32:
+[37m      162 │ ...        {{ profile()?.[32mis_driver_verified[37m ? '✓ Verificado' : ...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKycStatusClass' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:169:31:
+[37m      169 │ ...        <span [class]="[32mgetKycStatusClass[37m(driverLicenseStatus()...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'driverLicenseStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:169:49:
+[37m      169 │ ... [class]="getKycStatusClass([32mdriverLicenseStatus[37m()) + ' text-xs'">
+          ╵                                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKycStatusLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:170:21:
+[37m      170 │                   {{ [32mgetKycStatusLabel[37m(driverLicenseStatus()) }}
+          ╵                      [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'driverLicenseStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:170:39:
+[37m      170 │                   {{ getKycStatusLabel([32mdriverLicenseStatus[37m()) }}
+          ╵                                        [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKycStatusClass' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:177:31:
+[37m      177 │ ...        <span [class]="[32mgetKycStatusClass[37m(vehicleRegistrationSt...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'vehicleRegistrationStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:177:49:
+[37m      177 │ ...s]="getKycStatusClass([32mvehicleRegistrationStatus[37m()) + ' text-xs'">
+          ╵                          [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKycStatusLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:178:21:
+[37m      178 │                   {{ [32mgetKycStatusLabel[37m(vehicleRegistrationStatus(...
+          ╵                      [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'vehicleRegistrationStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:178:39:
+[37m      178 │ ...             {{ getKycStatusLabel([32mvehicleRegistrationStatus[37m()) }}
+          ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKycStatusClass' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:185:112:
+[37m      185 │ ...3 py-1 text-xs font-semibold ' + [32mgetKycStatusClass[37m(kycStatus())">
+          ╵                                     [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'kycStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:185:130:
+[37m      185 │ ...3 py-1 text-xs font-semibold ' + getKycStatusClass([32mkycStatus[37m())">
+          ╵                                                       [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKycStatusLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:189:19:
+[37m      189 │                 {{ [32mgetKycStatusLabel[37m(kycStatus()) }}
+          ╵                    [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'kycStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:189:37:
+[37m      189 │                 {{ getKycStatusLabel([32mkycStatus[37m()) }}
+          ╵                                      [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'tabs' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:255:29:
+[37m      255 │           *ngFor="let tab of [32mtabs[37m"
+          ╵                              [32m~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'roles' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:290:47:
+[37m      290 │ ...el *ngFor="let roleOption of [32mroles[37m" class="relative flex curso...
+          ╵                                 [32m~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'contactForm' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:314:27:
+[37m      314 │         <form [formGroup]="[32mcontactForm[37m" class="space-y-4">
+          ╵                            [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'addressForm' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:341:27:
+[37m      341 │         <form [formGroup]="[32maddressForm[37m" class="space-y-4">
+          ╵                            [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'overallVerificationStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:418:19:
+[37m      418 │                 {{ [32moverallVerificationStatus[37m() === 'VERIFICADO'
+          ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusClass' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:425:23:
+[37m      425 │ ...         [class]="[32mgetVerificationStatusClass[37m(overallVerificati...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'overallVerificationStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:425:50:
+[37m      425 │ ...[class]="getVerificationStatusClass([32moverallVerificationStatus[37m())"
+          ╵                                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusIcon' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:427:23:
+[37m      427 │ ...          <span>{{ [32mgetVerificationStatusIcon[37m(overallVerificati...
+          ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'overallVerificationStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:427:49:
+[37m      427 │ ... getVerificationStatusIcon([32moverallVerificationStatus[37m()) }}</span>
+          ╵                               [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:428:23:
+[37m      428 │ ...         <span>{{ [32mgetVerificationStatusLabel[37m(overallVerificati...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'overallVerificationStatus' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:428:50:
+[37m      428 │ ...getVerificationStatusLabel([32moverallVerificationStatus[37m()) }}</span>
+          ╵                               [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'verificationError' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:432:22:
+[37m      432 │           <div *ngIf="[32mverificationError[37m()" class="rounded-lg bord...
+          ╵                       [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'verificationError' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:433:15:
+[37m      433 │             {{ [32mverificationError[37m() }}
+          ╵                [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'verificationLoading' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:436:22:
+[37m      436 │           <div *ngIf="[32mverificationLoading[37m()" class="flex items-ce...
+          ╵                       [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'showDriverFlow' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:443:20:
+[37m      443 │         <div *ngIf="[32mshowDriverFlow[37m()" class="mb-6 rounded-lg bord...
+          ╵                     [32m~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusClass' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:450:27:
+[37m      450 │ ...         [class]="[32mgetVerificationStatusClass[37m(driverVerificatio...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'driverVerification' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:450:54:
+[37m      450 │ ...rificationStatusClass([32mdriverVerification[37m()?.status ?? 'PENDIEN...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusIcon' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:452:21:
+[37m      452 │                   {{ [32mgetVerificationStatusIcon[37m(driverVerification...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'driverVerification' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:452:47:
+[37m      452 │ ...erificationStatusIcon([32mdriverVerification[37m()?.status ?? 'PENDIEN...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:453:21:
+[37m      453 │                   {{ [32mgetVerificationStatusLabel[37m(driverVerificatio...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'driverVerification' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:453:48:
+[37m      453 │ ...rificationStatusLabel([32mdriverVerification[37m()?.status ?? 'PENDIEN...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'refreshVerificationStatuses' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:460:23:
+[37m      460 │               (click)="[32mrefreshVerificationStatuses[37m('driver')"
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'verificationLoading' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:461:26:
+[37m      461 │               [disabled]="[32mverificationLoading[37m()"
+          ╵                           [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'driverChecklist' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:468:36:
+[37m      468 │ ...<li *ngFor="let step of [32mdriverChecklist[37m()" class="flex items-s...
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getStepIcon' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:470:19:
+[37m      470 │                 {{ [32mgetStepIcon[37m(step) }}
+          ╵                    [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getStepStatusClass' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:477:29:
+[37m      477 │                     [class]="[32mgetStepStatusClass[37m(step)"
+          ╵                              [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getStepStatusLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:479:23:
+[37m      479 │                     {{ [32mgetStepStatusLabel[37m(step) }}
+          ╵                        [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getMissingDocumentLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:484:28:
+[37m      484 │ ...            Falta: {{ [32mgetMissingDocumentLabel[37m(step.missingKey) }}
+          ╵                          [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'showOwnerFlow' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:493:20:
+[37m      493 │         <div *ngIf="[32mshowOwnerFlow[37m()" class="mb-6 rounded-lg borde...
+          ╵                     [32m~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusClass' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:500:27:
+[37m      500 │ ...         [class]="[32mgetVerificationStatusClass[37m(ownerVerification...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'ownerVerification' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:500:54:
+[37m      500 │ ...erificationStatusClass([32mownerVerification[37m()?.status ?? 'PENDIEN...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusIcon' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:502:21:
+[37m      502 │                   {{ [32mgetVerificationStatusIcon[37m(ownerVerification(...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'ownerVerification' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:502:47:
+[37m      502 │ ...VerificationStatusIcon([32mownerVerification[37m()?.status ?? 'PENDIEN...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getVerificationStatusLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:503:21:
+[37m      503 │                   {{ [32mgetVerificationStatusLabel[37m(ownerVerification...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'ownerVerification' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:503:48:
+[37m      503 │ ...erificationStatusLabel([32mownerVerification[37m()?.status ?? 'PENDIEN...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'refreshVerificationStatuses' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:510:23:
+[37m      510 │               (click)="[32mrefreshVerificationStatuses[37m('owner')"
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'verificationLoading' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:511:26:
+[37m      511 │               [disabled]="[32mverificationLoading[37m()"
+          ╵                           [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'ownerChecklist' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:518:36:
+[37m      518 │ ...<li *ngFor="let step of [32mownerChecklist[37m()" class="flex items-st...
+          ╵                            [32m~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getStepIcon' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:520:19:
+[37m      520 │                 {{ [32mgetStepIcon[37m(step) }}
+          ╵                    [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getStepStatusClass' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:527:29:
+[37m      527 │                     [class]="[32mgetStepStatusClass[37m(step)"
+          ╵                              [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getStepStatusLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:529:23:
+[37m      529 │                     {{ [32mgetStepStatusLabel[37m(step) }}
+          ╵                        [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getMissingDocumentLabel' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:534:28:
+[37m      534 │ ...            Falta: {{ [32mgetMissingDocumentLabel[37m(step.missingKey) }}
+          ╵                          [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'notificationsForm' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:545:27:
+[37m      545 │         <form [formGroup]="[32mnotificationsForm[37m" class="space-y-6">
+          ╵                            [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'preferencesForm' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:593:27:
+[37m      593 │         <form [formGroup]="[32mpreferencesForm[37m" class="space-y-4">
+          ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'securityForm' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:634:27:
+[37m      634 │         <form [formGroup]="[32msecurityForm[37m" class="space-y-4">
+          ╵                            [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_email_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:640:42:
+[37m      640 │ ...an [class]="profile()?.[32mis_email_verified[37m ? 'text-success-600 f...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_email_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:641:32:
+[37m      641 │                   {{ profile()?.[32mis_email_verified[37m ? 'Sí' : 'No' }}
+          ╵                                 [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_phone_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:646:42:
+[37m      646 │ ...an [class]="profile()?.[32mis_phone_verified[37m ? 'text-success-600 f...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_phone_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:647:32:
+[37m      647 │                   {{ profile()?.[32mis_phone_verified[37m ? 'Sí' : 'No' }}
+          ╵                                 [32m~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_driver_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:652:42:
+[37m      652 │ ...n [class]="profile()?.[32mis_driver_verified[37m ? 'text-success-600 f...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'is_driver_verified' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:653:32:
+[37m      653 │                   {{ profile()?.[32mis_driver_verified[37m ? 'Sí' : 'No' }}
+          ╵                                 [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'tosAccepted' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:664:28:
+[37m      664 │                 [disabled]="[32mtosAccepted[37m()"
+          ╵                             [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'tosAccepted' does not exist on type 'ProfileExpandedPage'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:674:26:
+[37m      674 │                 <p *ngIf="[32mtosAccepted[37m()" class="mt-1 text-xs text...
+          ╵                           [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'tos_accepted_at' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.html:675:44:
+[37m      675 │ ...     Aceptado el {{ profile()?.[32mtos_accepted_at[37m | date:'medium' }}
+          ╵                                   [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProfileExpandedPage.
+
+    src/app/features/profile/profile-expanded.page.ts:21:15:
+[37m      21 │   templateUrl: [32m'./profile-expanded.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'pipe' does not exist on type 'Promise<UserProfile>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.ts:33:58:
+[37m      33 │ ...l(this.profileService.getMe().[32mpipe[37m(tap(profile => this.populate...
+         ╵                                  [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'unknown' is not assignable to parameter of type 'UserProfile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.ts:33:97:
+[37m      33 │ ...ervice.getMe().pipe(tap(profile => this.populateForms([32mprofile[37m))));
+         ╵                                                          [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'Promise<UserDocument[]>' is not assignable to parameter of type 'Observable<unknown> | Subscribable<unknown>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.ts:34:32:
+[37m      34 │ ...ts = toSignal([32mthis.profileService.getMyDocuments()[37m, { initialVa...
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  The last overload is declared here.
+
+    ../../node_modules/.pnpm/@angular+core@20.3.7_@angular+compiler@20.3.7_rxjs@7.8.2_zone.js@0.15.1/node_modules/@angular/core/rxjs-interop/index.d.ts:144:17:
+[37m      144 │ declare function [32mtoSignal[37m<T, const U extends T>(source: Observabl...
+          ╵                  [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'updateProfileSafe' does not exist on type 'ProfileService'. Did you mean 'updateProfile'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.ts:75:55:
+[37m      75 │ ...tedProfile = await this.profileService.[32mupdateProfileSafe[37m(payload);
+         ╵                                           [32m~~~~~~~~~~~~~~~~~[0m
+
+  'updateProfile' is declared here.
+
+    src/app/core/services/profile.service.ts:92:8:
+[37m      92 │   async [32mupdateProfile[37m(updates: UpdateProfileData): Promise<UserPro...
+         ╵         [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'subscribe' does not exist on type 'Promise<UserProfile>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.ts:76:34:
+[37m      76 │       this.profileService.getMe().[32msubscribe[37m(); // Refresh profile
+         ╵                                   [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'setAvatar' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.ts:92:32:
+[37m      92 │       await this.profileService.[32msetAvatar[37m(newAvatarUrl);
+         ╵                                 [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'subscribe' does not exist on type 'Promise<UserProfile>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile-expanded.page.ts:93:34:
+[37m      93 │       this.profileService.getMe().[32msubscribe[37m(); // Refresh profile
+         ╵                                   [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'withdrawableBalance' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile.page.ts:75:52:
+[37m      75 │ ...only withdrawableBalance = this.walletService.[32mwithdrawableBalance[37m;
+         ╵                                                  [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'nonWithdrawableBalance' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile.page.ts:76:55:
+[37m      76 │ ...rotectedCreditBalance = this.walletService.[32mnonWithdrawableBalance[37m;
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'catch' does not exist on type 'Observable<WalletBalance>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/profile/profile.page.ts:133:41:
+[37m      133 │     void this.walletService.getBalance().[32mcatch[37m(() => {
+          ╵                                          [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getPublicProfile' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/users/public-profile.page.ts:44:33:
+[37m      44 │       return this.profileService.[32mgetPublicProfile[37m(userId).pipe(
+         ╵                                  [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getUserStats' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/users/public-profile.page.ts:47:37:
+[37m      47 │           return this.profileService.[32mgetUserStats[37m(userId).pipe(
+         ╵                                      [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'pipe' does not exist on type 'Promise<Car[]>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/users/public-profile.page.ts:49:61:
+[37m      49 │               return this.carsService.getCarsByOwner(userId).[32mpipe[37m(
+         ╵                                                              [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'pipe' does not exist on type 'Promise<Review[]>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/users/public-profile.page.ts:51:72:
+[37m      51 │ ...       return this.reviewsService.getReviewsForOwner(userId).[32mpipe[37m(
+         ╵                                                                 [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'pipe' does not exist on type 'Promise<Review[]>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/users/public-profile.page.ts:53:77:
+[37m      53 │ ...      return this.reviewsService.getReviewsForRenter(userId).[32mpipe[37m(
+         ╵                                                                 [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'sum' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/users/public-profile.page.ts:92:31:
+[37m      92 │     const total = cars.reduce(([32msum[37m, car) => sum + (car.price_per_d...
+         ╵                                [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'car' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/users/public-profile.page.ts:92:36:
+[37m      92 │ ...nst total = cars.reduce((sum, [32mcar[37m) => sum + (car.price_per_day ...
+         ╵                                  [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKindIcon' does not exist on type 'WalletLedgerService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/components/ledger-history.component.html:63:31:
+[37m      63 │               {{ ledgerService.[32mgetKindIcon[37m(entry.kind) }}
+         ╵                                [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component LedgerHistoryComponent.
+
+    src/app/features/wallet/components/ledger-history.component.ts:11:15:
+[37m      11 │   templateUrl: [32m'./ledger-history.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKindLabel' does not exist on type 'WalletLedgerService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/components/ledger-history.component.html:67:33:
+[37m      67 │                 {{ ledgerService.[32mgetKindLabel[37m(entry.kind) }}
+         ╵                                  [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component LedgerHistoryComponent.
+
+    src/app/features/wallet/components/ledger-history.component.ts:11:15:
+[37m      11 │   templateUrl: [32m'./ledger-history.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getKindColor' does not exist on type 'WalletLedgerService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/components/ledger-history.component.html:87:66:
+[37m      87 │ ...-lg font-bold" [ngClass]="ledgerService.[32mgetKindColor[37m(entry.kind)">
+         ╵                                            [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component LedgerHistoryComponent.
+
+    src/app/features/wallet/components/ledger-history.component.ts:11:15:
+[37m      11 │   templateUrl: [32m'./ledger-history.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'getLedgerHistory' does not exist on type 'WalletLedgerService'. Did you mean 'ledgerHistory'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/components/ledger-history.component.ts:19:55:
+[37m      19 │ ...gnal(this.ledgerService.[32mgetLedgerHistory[37m(), { initialValue: [] });
+         ╵                            [32m~~~~~~~~~~~~~~~~[0m
+
+  'ledgerHistory' is declared here.
+
+    src/app/core/services/wallet-ledger.service.ts:82:11:
+[37m      82 │   readonly [32mledgerHistory[37m = computed(() => this.ledgerHistoryCache());
+         ╵            [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18046: 'history' is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/components/ledger-history.component.ts:27:11:
+[37m      27 │     return [32mhistory[37m.filter(entry => entry.kind === kind);
+         ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'entry' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/components/ledger-history.component.ts:27:26:
+[37m      27 │     return history.filter([32mentry[37m => entry.kind === kind);
+         ╵                           [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'then' does not exist on type 'Observable<WalletBalance>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/components/transfer-funds.component.ts:44:36:
+[37m      44 │     this.walletService.getBalance().[32mthen[37m(balance => {
+         ╵                                     [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'balance' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/components/transfer-funds.component.ts:44:41:
+[37m      44 │     this.walletService.getBalance().then([32mbalance[37m => {
+         ╵                                          [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'transferableBalance' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:122:52:
+[37m      122 │ ...nly transferableBalance = this.walletService.[32mtransferableBalance[37m;
+          ╵                                                 [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'withdrawableBalance' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:127:52:
+[37m      127 │ ...nly withdrawableBalance = this.walletService.[32mwithdrawableBalance[37m;
+          ╵                                                 [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'protectedCreditBalance' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:132:55:
+[37m      132 │ ...otectedCreditBalance = this.walletService.[32mprotectedCreditBalance[37m;
+          ╵                                              [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'pendingDepositsCount' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:137:53:
+[37m      137 │ ...y pendingDepositsCount = this.walletService.[32mpendingDepositsCount[37m;
+          ╵                                                [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'refreshPendingDepositsCount' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:175:31:
+[37m      175 │       await this.walletService.[32mrefreshPendingDepositsCount[37m();
+          ╵                                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'refreshPendingDepositsCount' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/wallet/wallet.page.ts:231:60:
+[37m      231 │ ...lanceRefresh, this.walletService.[32mrefreshPendingDepositsCount[37m()]);
+          ╵                                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2531: Object is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/cars-map/cars-map.component.ts:98:6:
+[37m      98 │       [32mthis.map[37m.on('load', () => {
+         ╵       [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'success' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/deposit-modal/deposit-modal.component.ts:139:17:
+[37m      139 │       if (result.[32msuccess[37m && result.payment_url) {
+          ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'payment_url' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/deposit-modal/deposit-modal.component.ts:139:35:
+[37m      139 │       if (result.success && result.[32mpayment_url[37m) {
+          ╵                                    [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'payment_url' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/deposit-modal/deposit-modal.component.ts:140:35:
+[37m      140 │         this.paymentUrl.set(result.[32mpayment_url[37m);
+          ╵                                    [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'payment_url' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/deposit-modal/deposit-modal.component.ts:141:40:
+[37m      141 │         this.depositSuccess.emit(result.[32mpayment_url[37m);
+          ╵                                         [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'payment_url' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/deposit-modal/deposit-modal.component.ts:142:36:
+[37m      142 │         this.openMercadoPago(result.[32mpayment_url[37m);
+          ╵                                     [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'message' does not exist on type 'Observable<any>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/deposit-modal/deposit-modal.component.ts:144:34:
+[37m      144 │ ...  this.formError.set(result.[32mmessage[37m || 'Error al iniciar el de...
+          ╵                                [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18046: 'error' is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/deposit-modal/deposit-modal.component.ts:148:10:
+[37m      148 │       if ([32merror[37m.code === 'MERCADOPAGO_ERROR') {
+          ╵           [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'message' does not exist on type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/transaction-history/transaction-history.component.html:115:77:
+[37m      115 │ ...m text-red-700 dark:text-red-300 mt-1">{{ error()?.[32mmessage[37m }}</p>
+          ╵                                                       [32m~~~~~~~[0m
+
+  Error occurs in the template of component TransactionHistoryComponent.
+
+    src/app/shared/components/transaction-history/transaction-history.component.ts:34:15:
+[37m      34 │   templateUrl: [32m'./transaction-history.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2554: Expected 0 arguments, but got 1.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/transaction-history/transaction-history.component.ts:131:47:
+[37m      131 │       await this.walletService.getTransactions([32mfilters[37m);
+          ╵                                                [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'message' does not exist on type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.html:127:81:
+[37m      127 │ ...xt-error-700 dark:text-error-100 mt-1">{{ error()?.[32mmessage[37m }}</p>
+          ╵                                                       [32m~~~~~~~[0m
+
+  Error occurs in the template of component WalletBalanceCardComponent.
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:40:15:
+[37m      40 │   templateUrl: [32m'./wallet-balance-card.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'withdrawableBalance' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:88:52:
+[37m      88 │ ...only withdrawableBalance = this.walletService.[32mwithdrawableBalance[37m;
+         ╵                                                  [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'nonWithdrawableBalance' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:93:55:
+[37m      93 │ ...onWithdrawableBalance = this.walletService.[32mnonWithdrawableBalance[37m;
+         ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'pendingDepositsCount' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:118:48:
+[37m      118 │ ...adonly pendingDeposits = this.walletService.[32mpendingDepositsCount[37m;
+          ╵                                                [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'subscribeToWalletChanges' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:179:29:
+[37m      179 │     await this.walletService.[32msubscribeToWalletChanges[37m(
+          ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'transaction' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:181:7:
+[37m      181 │       ([32mtransaction[37m) => {
+          ╵        [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'transaction' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:191:7:
+[37m      191 │       ([32mtransaction[37m) => {
+          ╵        [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'pendingDepositsCount' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:202:44:
+[37m      202 │         const newCount = this.walletService.[32mpendingDepositsCount[37m();
+          ╵                                             [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'unsubscribeFromWalletChanges' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:214:23:
+[37m      214 │ ...his.walletService.[32munsubscribeFromWalletChanges[37m().catch((err) => {
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'err' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:214:61:
+[37m      214 │ ...his.walletService.unsubscribeFromWalletChanges().catch(([32merr[37m) => {
+          ╵                                                            [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'forcePollPendingPayments' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:266:50:
+[37m      266 │ ...pollResult = await this.walletService.[32mforcePollPendingPayments[37m();
+          ╵                                          [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'refreshPendingDepositsCount' does not exist on type 'WalletService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts:296:31:
+[37m      296 │       await this.walletService.[32mrefreshPendingDepositsCount[37m();
+          ╵                                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
 
 Watch mode enabled. Watching for file changes...
-NOTE: Raw file sizes do not reflect development server per-request transformations.
-  ➜  Local:   http://localhost:4200/
-❯ Changes detected. Rebuilding...
-6:02:22 [vite] Internal server error: ENOENT: no such file or directory, open '/home/edu/autorenta/apps/web/node_modules/vite/dist/client/client.mjs'
-      at async open (node:internal/fs/promises:641:25)
-      at async readFile (node:internal/fs/promises:1245:14)
-      at async loadViteClientCode (/home/edu/autorenta/apps/web/node_modules/@angular/build/src/tools/vite/plugins/angular-memory-plugin.js:100:30)
-      at async EnvironmentPluginContainer.load (file:///home/edu/autorenta/apps/web/node_modules/vite/dist/node/chunks/config.js:30881:19)
-      at async loadAndTransform (file:///home/edu/autorenta/apps/web/node_modules/vite/dist/node/chunks/config.js:26015:21)

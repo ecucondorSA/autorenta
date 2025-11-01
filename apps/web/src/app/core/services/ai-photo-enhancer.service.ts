@@ -58,7 +58,6 @@ export class AiPhotoEnhancerService {
   }): Promise<EnhancedPhoto[]> {
     const count = params.count || 3;
 
-
     // 1. Buscar fotos de stock
     const stockPhotos = await this.stockPhotos.searchCarPhotos(params);
 
@@ -68,7 +67,6 @@ export class AiPhotoEnhancerService {
 
     // 2. Tomar las mejores N fotos
     const selectedPhotos = stockPhotos.slice(0, count);
-
 
     // 3. Descargar cada foto
     const enhanced: EnhancedPhoto[] = [];
@@ -99,7 +97,6 @@ export class AiPhotoEnhancerService {
       }
     }
 
-
     return enhanced;
   }
 
@@ -120,7 +117,6 @@ export class AiPhotoEnhancerService {
         : count === 2
           ? ['3/4-front', 'side']
           : ['3/4-front', 'side', 'interior'];
-
 
     const enhanced: EnhancedPhoto[] = [];
 
@@ -156,7 +152,6 @@ export class AiPhotoEnhancerService {
       }
     }
 
-
     return enhanced;
   }
 
@@ -164,7 +159,6 @@ export class AiPhotoEnhancerService {
    * Mejora una foto existente (actualmente sin procesamiento adicional)
    */
   async enhanceExistingPhoto(photo: File): Promise<EnhancedPhoto> {
-
     // Usar foto original sin modificaciones
     const enhancedBlob = new Blob([photo], { type: photo.type });
     const preview = URL.createObjectURL(enhancedBlob);
