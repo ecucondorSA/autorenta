@@ -87,19 +87,21 @@
   }
 }
 
-// Bottom Carousel (like cars-list page)
+// Bottom Carousel (Airbnb-style)
 .map-carousel {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 5;
-  padding: 16px 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  pointer-events: auto;
-  height: 200px; // Altura fija del carrusel
+  padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+  background: transparent;
+  pointer-events: none; // Allow map interaction
+  
+  // Mobile: más compacto
+  @media (max-width: 767px) {
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  }
 }
 
 .map-carousel-scroll {
@@ -109,12 +111,19 @@
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  padding: 0 16px 16px 16px;
+  padding: 0 16px 8px 16px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  pointer-events: auto; // Cards are clickable
 
   &::-webkit-scrollbar {
     display: none;
+  }
+  
+  // Mobile: menos padding
+  @media (max-width: 767px) {
+    padding: 0 12px 8px 12px;
+    gap: 10px;
   }
 }
 
@@ -122,32 +131,76 @@
   scroll-snap-align: center;
   scroll-snap-stop: always;
   flex-shrink: 0;
-  width: 280px;
+  width: 300px;
+  max-width: 85vw;
   pointer-events: auto;
 
   app-car-card {
     display: block;
-    height: 100%;
+    height: 140px; // Más compacto estilo Airbnb
     background: white;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-
+    
+    // Efecto hover/active más sutil
     &:hover,
     &:focus {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transform: scale(1.02);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.12);
     }
 
     &:active {
-      transform: translateY(-2px);
+      transform: scale(0.98);
+    }
+  }
+  
+  // Mobile: Card más pequeña
+  @media (max-width: 767px) {
+    width: 280px;
+    
+    app-car-card {
+      height: 130px;
+      border-radius: 14px;
     }
   }
 }
 
-// Dark Mode
+// Mobile: Floating Search (Airbnb-style)
+.mobile-search {
+  --background: transparent;
+  --box-shadow: none;
+  --border-radius: 9999px;
+  padding: 0;
+  height: 48px;
+  
+  ::ng-deep {
+    .searchbar-input-container {
+      height: 48px;
+    }
+    
+    .searchbar-input {
+      padding-inline-start: 16px !important;
+      padding-inline-end: 16px !important;
+      font-size: 15px;
+    }
+  }
+}
+
+// Safe area for notched devices
+.top-safe-top {
+  top: max(12px, env(safe-area-inset-top));
+}
+
+// Selected card highlight
+.map-carousel-card-wrapper.selected {
+  app-car-card {
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4), 0 2px 8px rgba(79, 70, 229, 0.2);
+    border: 2px solid #4f46e5;
+  }
+}
 @media (prefers-color-scheme: dark) {
   .search-bar-toolbar {
     --background: rgba(31, 41, 55, 0.95);

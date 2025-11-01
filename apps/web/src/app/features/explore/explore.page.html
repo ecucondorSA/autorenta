@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="md:block hidden">
   <ion-toolbar color="primary">
     <ion-searchbar
       [(ngModel)]="searchQuery"
@@ -24,6 +24,38 @@
   ></app-map-filters>
 </ion-header>
 
+<!-- Mobile: Floating Search & Filters -->
+<div class="md:hidden block absolute top-safe-top left-0 right-0 z-20 p-3">
+  <div class="flex gap-2">
+    <!-- Search Bar -->
+    <div class="flex-1 bg-white rounded-full shadow-lg">
+      <ion-searchbar
+        [(ngModel)]="searchQuery"
+        (ionChange)="onSearch()"
+        placeholder="¿A dónde vas?"
+        [animated]="true"
+        class="mobile-search"
+      ></ion-searchbar>
+    </div>
+    
+    <!-- Filters Button -->
+    <button
+      (click)="toggleFilters()"
+      class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center"
+    >
+      <ion-icon name="options-outline" class="text-2xl"></ion-icon>
+    </button>
+  </div>
+  
+  <!-- Mobile Filters Panel -->
+  <app-map-filters
+    *ngIf="showFilters"
+    (filtersChange)="onFiltersChange($event)"
+    (filtersReset)="onFiltersReset()"
+    class="mt-2 rounded-2xl overflow-hidden shadow-xl"
+  ></app-map-filters>
+</div>
+
 <ion-content [fullscreen]="true" class="explore-content">
   <!-- Map View (Fullscreen) -->
   <div class="map-container">
@@ -36,7 +68,7 @@
 
   <!-- Floating Action Buttons -->
   <div class="fab-container">
-    <!-- Center on User Location -->
+    <!-- Center on User Location (visible en todas las pantallas) -->
     <ion-fab vertical="top" horizontal="end" slot="fixed" class="fab-location">
       <ion-fab-button size="small" (click)="centerOnUser()">
         <ion-icon name="locate-outline"></ion-icon>
@@ -44,20 +76,21 @@
     </ion-fab>
   </div>
 
-  <!-- Bottom Carousel -->
+  <!-- Bottom Carousel (Airbnb-style) -->
   <div class="map-carousel" *ngIf="filteredCars.length > 0">
     <div class="map-carousel-scroll">
       <div
         *ngFor="let car of filteredCars; let i = index"
         class="map-carousel-card-wrapper"
         role="listitem"
+        [class.selected]="car.id === selectedCarId"
       >
         <app-car-card
           [car]="car"
           [priority]="i === 0"
           [routerLink]="['/cars', car.id]"
           (click)="onCarSelected(car.id)"
-          class="map-carousel-card--dynamic"
+          class="map-carousel-card"
           [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto')"
         ></app-car-card>
       </div>
