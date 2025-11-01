@@ -289,10 +289,14 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
           this.addUserMarker(latitude, longitude);
           this.zoomToUserLocation(latitude, longitude);
         },
-        () => {
-          this.error.set('No se pudo obtener la ubicación del usuario');
+        (error) => {
+          // Geolocation error - NO bloquear el mapa, solo loguear
+          console.warn('⚠️ No se pudo obtener ubicación del usuario:', error.message);
+          // No seteamos this.error para que el mapa siga funcionando
         },
       );
+    } else {
+      console.warn('⚠️ Geolocalización no disponible en este navegador');
     }
   }
 
