@@ -35,6 +35,7 @@ export class BookingsService {
         addon_ids: [], // Sin add-ons por defecto, se agregan en checkout
       });
     } catch (insuranceError) {
+      console.error('[BookingsService] Insurance activation failed:', insuranceError);
       // No bloqueamos la reserva si falla el seguro
       // El trigger de BD también lo activará al confirmar
     }
@@ -128,8 +129,11 @@ export class BookingsService {
         if (!carError && car) {
           (booking as Booking).car = car as any; // Partial select, not full Car object
         } else if (carError) {
+          console.error('[BookingsService] Car query error:', carError);
         }
-      } catch (carException) {}
+      } catch (carException) {
+        console.error('[BookingsService] Error loading car details:', carException);
+      }
     }
 
     if (booking?.insurance_coverage_id) {
@@ -151,13 +155,17 @@ export class BookingsService {
             if (!policyError && policy) {
               (coverage as Record<string, unknown>)['policy'] = policy;
             } else if (policyError) {
+              console.error('[BookingsService] Policy query error:', policyError);
             }
           }
 
           (booking as Booking).insurance_coverage = coverage;
         } else if (coverageError) {
+          console.error('[BookingsService] Coverage query error:', coverageError);
         }
-      } catch (coverageException) {}
+      } catch (coverageException) {
+        console.error('[BookingsService] Error loading coverage:', coverageException);
+      }
     }
 
     return booking;
