@@ -218,6 +218,7 @@ export class BookingsService {
           `Fondos desbloqueados por cancelación: ${reason ?? 'Cancelled by user'}`,
         );
       } catch (unlockError) {
+        console.error('[BookingsService] Failed to unlock funds:', unlockError);
         // Continue with cancellation even if unlock fails
         // The unlock can be retried manually later
       }

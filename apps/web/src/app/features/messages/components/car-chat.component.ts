@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationSoundService } from '../../../core/services/notification-sound.service';
 
 /**
  * Componente de chat para consultas sobre un auto (sin reserva todavía)
@@ -301,6 +302,7 @@ export class CarChatComponent implements OnInit, OnDestroy {
   // Services
   private readonly messagesService = inject(MessagesService);
   readonly authService = inject(AuthService);
+  private readonly notificationSound = inject(NotificationSoundService);
 
   // State
   readonly messages = signal<Message[]>([]);
@@ -355,6 +357,8 @@ export class CarChatComponent implements OnInit, OnDestroy {
 
       if (message.sender_id !== this.currentUserId()) {
         this.showNotification(`Nuevo mensaje de ${this.recipientName()}`);
+        // Play notification sound
+        this.notificationSound.playNotificationSound().catch(() => {});
       }
     });
 
