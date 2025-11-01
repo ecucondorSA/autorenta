@@ -250,7 +250,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private createPhotoMarker(location: CarMapLocation): HTMLElement {
     const el = document.createElement('div');
-    el.className = 'car-marker-photo';
+    el.className = 'car-marker-simple';
     el.setAttribute('data-car-id', location.carId);
     
     // Formatear precio
@@ -261,11 +261,11 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       maximumFractionDigits: 0,
     }).format(location.pricePerDay);
 
+    // Marker simple circular con precio
     el.innerHTML = `
-      <div class="marker-image" style="background-image: url('${location.photoUrl || '/assets/images/car-placeholder.jpg'}')">
-        <div class="marker-overlay"></div>
+      <div class="marker-circle">
+        <span class="marker-price-simple">${formattedPrice}</span>
       </div>
-      <div class="marker-price">${formattedPrice}</div>
     `;
     
     return el;
