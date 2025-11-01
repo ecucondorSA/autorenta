@@ -52,19 +52,16 @@
             </div>
           </div>
 
-          <!-- Carousel Unificado Responsive -->
+          <!-- Carousel de autos económicos (solo desktop) -->
           <div
             *ngIf="showEconomyCarousel()"
-            class="map-carousel-container pointer-events-none"
+            class="hidden md:block map-carousel-container pointer-events-none"
             role="region"
-            [attr.aria-label]="
-              isMobile() ? 'Autos sugeridos cerca tuyo' : 'Autos cercanos y económicos'
-            "
+            [attr.aria-label]="'Autos cercanos y económicos'"
           >
             <div class="map-carousel-heading pointer-events-auto">
               <span class="map-carousel-heading__pill">
-                <span class="hidden lg:inline">Cercanos y económicos</span>
-                <span class="lg:hidden">Sugeridos cerca tuyo</span>
+                Cercanos y económicos
               </span>
             </div>
             <div
