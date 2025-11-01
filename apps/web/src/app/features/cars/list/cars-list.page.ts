@@ -57,8 +57,6 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     MapFiltersComponent, 
     CarCardComponent, 
     TranslateModule,
-    SkeletonLoaderComponent,
-    PullToRefreshComponent
   ],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],
