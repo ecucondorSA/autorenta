@@ -1,0 +1,93 @@
+name: Validate Contracts
+
+on:
+  pull_request:
+    paths:
+      - 'functions/contracts/**'
+      - 'tests/**'
+      - 'supabase/**'
+      - 'database/**'
+
+jobs:
+  validate-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - run: npm ci
+      - name: Run contract validation tests
+        run: npx vitest run functions/contracts/wallet-transfer.validation.test.ts functions/contracts/wallet-transfer.property.test.ts functions/contracts/chat-message.validation.test.ts functions/contracts/chat-message.property.test.ts apps/web/src/app/core/services/messages.repo.spec.ts apps/web/src/app/core/services/pricing.service.spec.ts apps/web/src/app/core/services/availability.service.spec.ts functions/contracts/booking.validation.test.ts functions/workers/payments_webhook/__tests__/ledger.idempotency.spec.ts
+      - name: Coverage
+        run: npx vitest run --coverage --coverage.reporter=lcov
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  test-types:
+    runs-on: ubuntu-latest
+    needs: validate-contracts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - name: Check for DB type drift
+        run: npm run types:db:check
+
+  test-pgtap:
+    runs-on: ubuntu-latest
+    needs: validate-contracts
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: autorent
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install psql client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Apply migrations
+        run: |
+          psql "postgres://postgres:postgres@localhost:5432/autorent" -f supabase/migrations/20251016_create_core_tables.sql
+          # agrega aquí el resto de migraciones si las hay
+      # Si tu imagen tiene pgtap, habilítalo. Si no, cambia a imagen con pgtap.
+      # - run: psql "postgres://postgres:postgres@localhost:5432/autorent" -c "CREATE EXTENSION pgtap;"
+      - name: Run pgTAP tests
+        run: psql "postgres://postgres:postgres@localhost:5432/autorent" -f database/tests/accounting_integrity.spec.sql -f database/tests/renter_flow.spec.sql
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    needs: validate-contracts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - name: Run Playwright tests (E2E only)
+        run: npx playwright test tests/e2e/renter.flow.spec.ts tests/e2e/renter.visual.spec.ts tests/e2e/chat.offline-queue.spec.ts
+        env:
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

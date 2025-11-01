@@ -1,0 +1,311 @@
+/* ═══════════════════════════════════════════════════════════════
+   🎨 MOBILE BOTTOM NAVIGATION - AUTORENT DARK MODE
+   ═══════════════════════════════════════════════════════════════ */
+
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: block;
+  
+  /* Solo visible en móvil */
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Container Principal
+   ───────────────────────────────────────────────────────────── */
+
+.nav-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  
+  background: linear-gradient(
+    180deg,
+    rgba(33, 38, 40, 0.98) 0%,
+    rgba(33, 38, 40, 1) 10%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  
+  box-shadow: 
+    0 -4px 16px rgba(0, 0, 0, 0.4),
+    0 -1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Nav Items
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  
+  padding: 6px 4px;
+  
+  text-decoration: none;
+  cursor: pointer;
+  
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  position: relative;
+  
+  /* Tap target mínimo iOS */
+  min-height: 44px;
+  
+  /* Prevenir selección de texto */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  /* ✅ GPU Acceleration para animaciones suaves */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.nav-item:active {
+  transform: scale(0.95) translateZ(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Icono Wrapper
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Iconos SVG
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__icon {
+  width: 22px;
+  height: 22px;
+  color: #9ca3af; /* gray-400 - inactivo */
+  transition: all 0.25s ease;
+  stroke-width: 1.5;
+  
+  /* ✅ GPU Acceleration */
+  will-change: transform, filter;
+  transform: translateZ(0);
+}
+
+.nav-item__icon--active {
+  color: #7aa2aa; /* accent-petrol claro */
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px rgba(122, 162, 170, 0.4));
+  transform: translateZ(0) scale(1.05);
+}
+
+/* Hover en items no activos */
+.nav-item:not(.nav-item--active):hover .nav-item__icon {
+  color: #d1d5db; /* gray-300 */
+  transform: scale(1.1) translateZ(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Labels de texto
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__label {
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  
+  color: #9ca3af; /* gray-400 - inactivo */
+  transition: all 0.25s ease;
+  
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  max-width: 100%;
+}
+
+.nav-item__label--active {
+  color: #f7f5ee; /* ivory-soft */
+  font-weight: 600;
+}
+
+.nav-item:not(.nav-item--active):hover .nav-item__label {
+  color: #d1d5db; /* gray-300 */
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Indicador de activo (línea superior)
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__indicator {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  width: 24px;
+  height: 3px;
+  
+  background: linear-gradient(
+    90deg,
+    rgba(122, 162, 170, 0.6),
+    rgba(122, 162, 170, 1),
+    rgba(122, 162, 170, 0.6)
+  );
+  
+  border-radius: 0 0 3px 3px;
+  
+  box-shadow: 0 2px 8px rgba(122, 162, 170, 0.5);
+  
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Badge de notificaciones
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  
+  border-radius: 8px;
+  border: 2px solid #212628;
+  
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+  
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 2px 12px rgba(239, 68, 68, 0.8);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Shadow superior para transición suave
+   ───────────────────────────────────────────────────────────── */
+
+.nav-shadow {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  right: 0;
+  height: 20px;
+  
+  background: linear-gradient(
+    180deg,
+    rgba(26, 26, 26, 0) 0%,
+    rgba(26, 26, 26, 0.4) 100%
+  );
+  
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Estados especiales del item activo
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item--active {
+  background: rgba(122, 162, 170, 0.08);
+  border-radius: 12px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Responsive - Ajustes para pantallas muy pequeñas
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 360px) {
+  .nav-item__icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .nav-item__label {
+    font-size: 8px;
+  }
+  
+  .nav-item {
+    padding: 4px 2px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Animación de entrada inicial
+   ───────────────────────────────────────────────────────────── */
+
+.mobile-bottom-nav {
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Soporte para notch/safe area en iPhone
+   ───────────────────────────────────────────────────────────── */
+
+@supports (padding: max(0px)) {
+  .nav-container {
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+}
