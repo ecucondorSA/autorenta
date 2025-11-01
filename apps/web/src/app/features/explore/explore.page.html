@@ -62,13 +62,14 @@
     <app-cars-map
       [cars]="carMapLocations"
       [selectedCarId]="selectedCarId"
-      (carSelected)="onCarSelected($event)"
+      (carSelected)="onMapCarSelected($event)"
+      (userLocationChange)="onUserLocationChange($event)"
     ></app-cars-map>
   </div>
 
   <!-- Floating Action Buttons -->
   <div class="fab-container">
-    <!-- Center on User Location (visible en todas las pantallas) -->
+    <!-- Center on User Location -->
     <ion-fab vertical="top" horizontal="end" slot="fixed" class="fab-location">
       <ion-fab-button size="small" (click)="centerOnUser()">
         <ion-icon name="locate-outline"></ion-icon>
@@ -77,19 +78,26 @@
   </div>
 
   <!-- Bottom Carousel (Airbnb-style) -->
-  <div class="map-carousel" *ngIf="filteredCars.length > 0">
+  <div 
+    #carouselContainer
+    class="map-carousel" 
+    *ngIf="filteredCars.length > 0"
+    (mouseenter)="onCarouselHover(true)"
+    (mouseleave)="onCarouselHover(false)"
+  >
     <div class="map-carousel-scroll">
       <div
         *ngFor="let car of filteredCars; let i = index"
         class="map-carousel-card-wrapper"
         role="listitem"
+        [attr.data-car-id]="car.id"
         [class.selected]="car.id === selectedCarId"
       >
         <app-car-card
           [car]="car"
           [priority]="i === 0"
-          [routerLink]="['/cars', car.id]"
-          (click)="onCarSelected(car.id)"
+          [selected]="car.id === selectedCarId"
+          (click)="onCarouselCardSelected(car.id)"
           class="map-carousel-card"
           [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto')"
         ></app-car-card>
