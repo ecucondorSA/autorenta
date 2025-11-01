@@ -12,6 +12,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { CarsService } from '../../../core/services/cars.service';
@@ -67,6 +68,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   @ViewChild('unifiedCarousel', { read: ElementRef }) unifiedCarousel?: ElementRef<HTMLDivElement>;
   @ViewChild(PullToRefreshComponent) pullToRefresh!: PullToRefreshComponent;
 
+  private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
   private readonly metaService = inject(MetaService);
@@ -701,18 +703,33 @@ export class CarsListPage implements OnInit, OnDestroy {
   }
 
   onCarSelected(carId: string): void {
+    const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
+    
+    // Si es el mismo auto (doble click), navegar al detalle
+    if (previousCarId === carId) {
+      this.router.navigate(['/cars/detail', carId]);
+      return;
+    }
+    
+    // Primera selección: fly to location en el mapa
     if (this.carsMapComponent) {
       this.carsMapComponent.flyToCarLocation(carId);
     }
   }
 
   onMapCarSelected(carId: string): void {
+    const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
-    if (this.carsMapComponent) {
-      this.carsMapComponent.flyToCarLocation(carId);
+    
+    // Si es el mismo auto, navegar al detalle
+    if (previousCarId === carId) {
+      this.router.navigate(['/cars/detail', carId]);
+      return;
     }
-    this.scrollToCarCard(carId);
+    
+    // Primera selección: scroll + highlight
+    this.scrollToCarInCarousel(carId);
   }
 
   isCarSelected(carId: string): boolean {
@@ -800,6 +817,37 @@ export class CarsListPage implements OnInit, OnDestroy {
     if (card) {
       card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  private scrollToCarInCarousel(carId: string): void {
+    if (!this.isBrowser || !this.unifiedCarousel) {
+      return;
+    }
+
+    const carousel = this.unifiedCarousel.nativeElement;
+    const card = carousel.querySelector(`[data-car-id="${carId}"]`) as HTMLElement;
+    
+    if (!card) {
+      console.warn('⚠️ Car card not found in carousel:', carId);
+      return;
+    }
+
+    // Scroll horizontal suave al card
+    const cardLeft = card.offsetLeft;
+    const cardWidth = card.offsetWidth;
+    const carouselWidth = carousel.offsetWidth;
+    const scrollPosition = cardLeft - (carouselWidth / 2) + (cardWidth / 2);
+
+    carousel.scrollTo({
+      left: Math.max(0, scrollPosition),
+      behavior: 'smooth'
+    });
+
+    // Highlight temporal
+    card.classList.add('pulse-highlight');
+    setTimeout(() => {
+      card.classList.remove('pulse-highlight');
+    }, 1500);
   }
 
   private isValidSort(

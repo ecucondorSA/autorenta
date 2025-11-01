@@ -1,7 +1,7 @@
 <section class="cars-map-page bg-ivory-soft dark:bg-graphite-dark transition-colors duration-300">
   <!-- ✅ FIXED: Uso de app-car-card para precios dinámicos consistentes -->
   <ng-template #carouselCard let-car>
-    <div class="map-carousel-card-wrapper" role="listitem">
+    <div class="map-carousel-card-wrapper" role="listitem" [attr.data-car-id]="car.id">
       <app-car-card
         [car]="car"
         [selected]="isCarSelected(car.id)"
