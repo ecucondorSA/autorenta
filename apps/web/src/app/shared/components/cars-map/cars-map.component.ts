@@ -203,9 +203,18 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.carMarkersMap.clear();
 
     console.log('📍 Actualizando markers:', locations.length, 'autos');
+    console.log('📍 Locations data:', locations);
     this.carCount.set(locations.length);
 
     locations.forEach((location, index) => {
+      console.log(`🚗 Procesando auto ${index + 1}:`, {
+        carId: location.carId,
+        lat: location.lat,
+        lng: location.lng,
+        photoUrl: location.photoUrl,
+        price: location.pricePerDay
+      });
+
       if (!location.lat || !location.lng) {
         console.warn('⚠️ Auto sin coordenadas:', location);
         return;
@@ -213,6 +222,8 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
       // Create custom photo marker
       const el = this.createPhotoMarker(location);
+      
+      console.log('✅ Marker creado para:', location.carId);
       
       // Add staggered entrance animation
       setTimeout(() => {
@@ -228,9 +239,13 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         .setLngLat([location.lng, location.lat] as LngLatLike)
         .addTo(this.map);
       
+      console.log('✅ Marker agregado al mapa:', location.carId);
+      
       // Keep reference for cleanup using carId as key
       this.carMarkersMap.set(location.carId, marker);
     });
+    
+    console.log('📍 Total markers en mapa:', this.carMarkersMap.size);
   }
 
   private createPhotoMarker(location: CarMapLocation): HTMLElement {
