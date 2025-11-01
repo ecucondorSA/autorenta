@@ -1,6 +1,9 @@
 /* Mapbox GL JS CSS - Required for markers and controls */
 @import 'mapbox-gl/dist/mapbox-gl.css';
 
+/* 🗺️ Autorent Custom Map Theme - Dark Minimal + Brand Accent */
+@import './styles/map-theme.css';
+
 /* Shepherd.js Tours CSS */
 @import './styles/shepherd-custom.scss';
 
