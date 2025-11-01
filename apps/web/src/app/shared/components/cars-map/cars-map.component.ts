@@ -77,6 +77,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   private selectedPopup: MapboxPopup | null = null;
   private mapboxgl: any = null;
   private carMarkersMap: Map<string, MapboxMarker> = new Map();
+  private lastCarsJson: string = ''; // Para evitar updates redundantes
 
   constructor() {
     effect(() => {
@@ -88,7 +89,15 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['cars'] && this.map) {
-      this.updateMarkers(this.cars);
+      // Solo actualizar si realmente cambió el contenido
+      const currentJson = JSON.stringify(this.cars);
+      if (currentJson !== this.lastCarsJson) {
+        console.log('🔄 Cars changed, updating markers');
+        this.lastCarsJson = currentJson;
+        this.updateMarkers(this.cars);
+      } else {
+        console.log('⏭️ Cars unchanged, skipping update');
+      }
     }
   }
 
@@ -198,14 +207,23 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       return;
     }
 
-    // Clean up existing markers before creating new ones
-    this.carMarkersMap.forEach(marker => marker.remove());
-    this.carMarkersMap.clear();
-
     console.log('📍 Actualizando markers:', locations.length, 'autos');
     console.log('📍 Locations data:', locations);
     this.carCount.set(locations.length);
 
+    // Crear Set de IDs actuales para comparar
+    const currentCarIds = new Set(locations.map(loc => loc.carId));
+    
+    // Eliminar markers que ya no existen
+    this.carMarkersMap.forEach((marker, carId) => {
+      if (!currentCarIds.has(carId)) {
+        console.log('🗑️ Eliminando marker:', carId);
+        marker.remove();
+        this.carMarkersMap.delete(carId);
+      }
+    });
+
+    // Agregar o actualizar markers
     locations.forEach((location, index) => {
       console.log(`🚗 Procesando auto ${index + 1}:`, {
         carId: location.carId,
@@ -217,6 +235,12 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
       if (!location.lat || !location.lng) {
         console.warn('⚠️ Auto sin coordenadas:', location);
+        return;
+      }
+
+      // Si el marker ya existe, no recrearlo
+      if (this.carMarkersMap.has(location.carId)) {
+        console.log('✓ Marker ya existe:', location.carId);
         return;
       }
 
