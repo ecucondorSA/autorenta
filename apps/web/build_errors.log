@@ -1,0 +1,3542 @@
+ WARN  Unsupported engine: wanted: {"node":">=20.0.0 <=22.0.0"} (current: {"node":"v22.20.0","pnpm":"9.0.0"})
+
+> autorenta-web@0.1.0 prebuild /home/edu/autorenta/apps/web
+> node scripts/generate-env.js
+
+[dotenv@17.2.3] injecting env (0) from .env.development.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+✅ Generated public/env.js with environment configuration
+Environment variables:
+  - NG_APP_SUPABASE_URL: (empty)
+  - NG_APP_SUPABASE_ANON_KEY: (empty)
+  - NG_APP_DEFAULT_CURRENCY: ARS
+  - NG_APP_PAYMENTS_WEBHOOK_URL: (empty)
+  - NG_APP_MAPBOX_ACCESS_TOKEN: (empty)
+  - NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: (empty)
+  - NG_APP_MERCADOPAGO_PUBLIC_KEY: (empty)
+
+> autorenta-web@0.1.0 build /home/edu/autorenta/apps/web
+> node_modules/.bin/ng build
+
+❯ Building...
+✔ Building...
+Application bundle generation failed. [19.467 seconds] - 2025-11-01T08:33:03.123Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mThe glob pattern import("./**/*.entry.js*") did not match any files[0m [empty-glob]
+
+    ../../node_modules/.pnpm/@stencil+core@4.38.0/node_modules/@stencil/core/internal/client/index.js:169:2:
+[37m      169 │   [32m`./${bundleId}.entry.js${BUILD5.hotModuleReplacement && hmrVers[37m...
+          ╵   [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'hasCompletedOnboarding' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:22:46:
+[37m      22 │ ...onst hasCompleted = await profileService.[32mhasCompletedOnboarding[37m();
+         ╵                                             [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'hasAcceptedTOS' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:55:45:
+[37m      55 │     const hasAccepted = await profileService.[32mhasAcceptedTOS[37m();
+         ╵                                              [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getMe' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:89:41:
+[37m      89 │     const profile = await profileService.[32mgetMe[37m();
+         ╵                                          [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getMe' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:125:41:
+[37m      125 │     const profile = await profileService.[32mgetMe[37m();
+          ╵                                          [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getMe' does not exist on type 'ProfileService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/guards/onboarding.guard.ts:161:41:
+[37m      161 │     const profile = await profileService.[32mgetMe[37m();
+          ╵                                          [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/encryption.service.ts:32:6:
+[37m      32 │       [32m)[37m;
+         ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2769: No overload matches this call.
+  Overload 1 of 2, '(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier | ... 3 more ... | AesDerivedKeyParams, extractable: boolean, keyUsages: Iterable<...>): Promise<...>', gave the following error.
+    Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BufferSource'.
+      Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+        Types of property 'buffer' are incompatible.
+          Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+            Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+              Types of property '[Symbol.toStringTag]' are incompatible.
+                Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+  Overload 2 of 2, '(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier | ... 3 more ... | AesDerivedKeyParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<...>', gave the following error.
+    Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BufferSource'.
+      Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+        Types of property 'buffer' are incompatible.
+          Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+            Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+              Types of property '[Symbol.toStringTag]' are incompatible.
+                Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/encryption.service.ts:146:8:
+[37m      146 │         [32msalt[37m: salt,
+          ╵         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mUnexpected ";"[0m
+
+    src/app/core/services/exchange-rate.service.ts:55:12:
+[37m      55 │             [32m;[37m
+         ╵             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/exchange-rate.service.ts:61:8:
+[37m      61 │         [32m`💱 Usando cotización cacheada: 1 USD = ${this.lastRate[37m...
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/exchange-rate.service.ts:62:6:
+[37m      62 │       [32m)[37m;
+         ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/exchange-rate.service.ts:89:8:
+[37m      89 │         [32m`✅ Cotización de plataforma (con margen ${data.margin_p[37m...
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/exchange-rate.service.ts:90:6:
+[37m      90 │       [32m)[37m;
+         ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'Observable<null | undefined>' is not assignable to type 'Observable<FxSnapshot | null>'.
+  Type 'null | undefined' is not assignable to type 'FxSnapshot | null'.
+    Type 'undefined' is not assignable to type 'FxSnapshot | null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:35:4:
+[37m      35 │     [32mreturn[37m from(
+         ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7030: Not all code paths return a value.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:45:10:
+[37m      45 │       map([32m(response) => {[37m
+         ╵           [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mUnexpected ";"[0m
+
+    src/app/core/services/fx.service.ts:47:12:
+[37m      47 │             [32m;[37m
+         ╵             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:65:10:
+[37m      65 │           [32m`💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} AR[37m...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:66:8:
+[37m      66 │         [32m)[37m;
+         ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ')' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:66:9:
+[37m      66 │         )[32m;[37m
+         ╵          [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'snapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:68:15:
+[37m      68 │         return [32msnapshot[37m;
+         ╵                [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1068: Unexpected token. A constructor, method, accessor, or property was expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:69:7:
+[37m      69 │       }[32m)[37m,
+         ╵        [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1068: Unexpected token. A constructor, method, accessor, or property was expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:69:8:
+[37m      69 │       })[32m,[37m
+         ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7010: 'catchError', which lacks return-type annotation, implicitly has an 'any' return type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:70:6:
+[37m      70 │       [32mcatchError[37m((error) => {
+         ╵       [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1138: Parameter declaration expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:70:17:
+[37m      70 │       catchError([32m([37merror) => {
+         ╵                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:70:18:
+[37m      70 │       catchError(([32merror[37m) => {
+         ╵                   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:72:7:
+[37m      72 │       }[32m)[37m,
+         ╵        [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:72:8:
+[37m      72 │       })[32m,[37m
+         ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:73:4:
+[37m      73 │     [32m)[37m;
+         ╵     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:74:2:
+[37m      74 │   [32m}[37m
+         ╵   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'needsRevalidation'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:2:
+[37m      79 │   [32mneedsRevalidation[37m(fxSnapshot: FxSnapshot): { needs: boolean; rea...
+         ╵   [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'fxSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:20:
+[37m      79 │   needsRevalidation([32mfxSnapshot[37m: FxSnapshot): { needs: boolean; rea...
+         ╵                     [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:30:
+[37m      79 │   needsRevalidation(fxSnapshot[32m:[37m FxSnapshot): { needs: boolean; rea...
+         ╵                               [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'FxSnapshot' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:32:
+[37m      79 │ ...dsRevalidation(fxSnapshot: [32mFxSnapshot[37m): { needs: boolean; reaso...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:43:
+[37m      79 │ ...idation(fxSnapshot: FxSnapshot)[32m:[37m { needs: boolean; reason?: str...
+         ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:54:
+[37m      79 │ ...ion(fxSnapshot: FxSnapshot): { needs: [32mboolean[37m; reason?: string } {
+         ╵                                          [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'reason'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:63:
+[37m      79 │ ...ion(fxSnapshot: FxSnapshot): { needs: boolean; [32mreason[37m?: string } {
+         ╵                                                   [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:70:
+[37m      79 │ ...ion(fxSnapshot: FxSnapshot): { needs: boolean; reason?[32m:[37m string } {
+         ╵                                                          [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:79:72:
+[37m      79 │ ...ion(fxSnapshot: FxSnapshot): { needs: boolean; reason?: [32mstring[37m } {
+         ╵                                                            [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'fxSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:81:20:
+[37m      81 │     if (isFxExpired([32mfxSnapshot[37m)) {
+         ╵                     [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'revalidateFxSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:98:2:
+[37m      98 │   [32mrevalidateFxSnapshot[37m(oldSnapshot: FxSnapshot): Observable<{
+         ╵   [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'oldSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:98:23:
+[37m      98 │   revalidateFxSnapshot([32moldSnapshot[37m: FxSnapshot): Observable<{
+         ╵                        [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:98:34:
+[37m      98 │   revalidateFxSnapshot(oldSnapshot[32m:[37m FxSnapshot): Observable<{
+         ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'FxSnapshot' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:98:36:
+[37m      98 │   revalidateFxSnapshot(oldSnapshot: [32mFxSnapshot[37m): Observable<{
+         ╵                                     [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:98:47:
+[37m      98 │   revalidateFxSnapshot(oldSnapshot: FxSnapshot)[32m:[37m Observable<{
+         ╵                                                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '<' cannot be applied to types 'typeof Observable' and '{ needsUpdate: any; newSnapshot: any; reason: any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:98:49:
+[37m      98 │   revalidateFxSnapshot(oldSnapshot: FxSnapshot): [32mObservable<{[37m
+         ╵                                                  [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ return: any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:98:49:
+[37m      98 │   revalidateFxSnapshot(oldSnapshot: FxSnapshot): [32mObservable<{[37m
+         ╵                                                  [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:99:17:
+[37m      99 │     needsUpdate: [32mboolean[37m;
+         ╵                  [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:99:24:
+[37m      99 │     needsUpdate: boolean[32m;[37m
+         ╵                         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'FxSnapshot' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:100:18:
+[37m      100 │     newSnapshot?: [32mFxSnapshot[37m;
+          ╵                   [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:100:28:
+[37m      100 │     newSnapshot?: FxSnapshot[32m;[37m
+          ╵                             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:101:13:
+[37m      101 │     reason?: [32mstring[37m;
+          ╵              [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:101:19:
+[37m      101 │     reason?: string[32m;[37m
+          ╵                    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:103:11:
+[37m      103 │     return [32mthis[37m.getFxSnapshot(oldSnapshot.fromCurrency, oldSnapsh...
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:103:11:
+[37m      103 │     return [32mthis[37m.getFxSnapshot(oldSnapshot.fromCurrency, oldSnapsh...
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'oldSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:103:30:
+[37m      103 │ ...return this.getFxSnapshot([32moldSnapshot[37m.fromCurrency, oldSnapsho...
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'oldSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:103:56:
+[37m      103 │ ...xSnapshot(oldSnapshot.fromCurrency, [32moldSnapshot[37m.toCurrency).pipe(
+          ╵                                        [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'oldSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:114:10:
+[37m      114 │           [32moldSnapshot[37m.rate,
+          ╵           [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'rate' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:115:22:
+[37m      115 │           newSnapshot.[32mrate[37m,
+          ╵                       [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'oldSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:116:10:
+[37m      116 │           [32moldSnapshot[37m.variationThreshold,
+          ╵           [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'oldSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:123:50:
+[37m      123 │ ...tasa ha variado más del $[32m{oldSnapsho[37mt.variationThreshold * 10...
+          ╵                             [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'oldSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:128:24:
+[37m      128 │         if (isFxExpired([32moldSnapshot[37m)) {
+          ╵                         [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:141:5:
+[37m      141 │     )[32m;[37m
+          ╵      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'convert'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:2:
+[37m      147 │   [32mconvert[37m(amount: number, fxSnapshot: FxSnapshot): number {
+          ╵   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'amount'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:10:
+[37m      147 │   convert([32mamount[37m: number, fxSnapshot: FxSnapshot): number {
+          ╵           [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:16:
+[37m      147 │   convert(amount[32m:[37m number, fxSnapshot: FxSnapshot): number {
+          ╵                 [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'number' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:18:
+[37m      147 │   convert(amount: [32mnumber[37m, fxSnapshot: FxSnapshot): number {
+          ╵                   [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'fxSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:26:
+[37m      147 │   convert(amount: number, [32mfxSnapshot[37m: FxSnapshot): number {
+          ╵                           [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:36:
+[37m      147 │   convert(amount: number, fxSnapshot[32m:[37m FxSnapshot): number {
+          ╵                                     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'FxSnapshot' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:38:
+[37m      147 │   convert(amount: number, fxSnapshot: [32mFxSnapshot[37m): number {
+          ╵                                       [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:49:
+[37m      147 │   convert(amount: number, fxSnapshot: FxSnapshot)[32m:[37m number {
+          ╵                                                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:51:
+[37m      147 │   convert(amount: number, fxSnapshot: FxSnapshot): [32mnumber[37m {
+          ╵                                                    [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'number' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:147:51:
+[37m      147 │   convert(amount: number, fxSnapshot: FxSnapshot): [32mnumber[37m {
+          ╵                                                    [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'convertReverse'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:2:
+[37m      154 │   [32mconvertReverse[37m(amount: number, fxSnapshot: FxSnapshot): number {
+          ╵   [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'amount'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:17:
+[37m      154 │   convertReverse([32mamount[37m: number, fxSnapshot: FxSnapshot): number {
+          ╵                  [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:23:
+[37m      154 │   convertReverse(amount[32m:[37m number, fxSnapshot: FxSnapshot): number {
+          ╵                        [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'number' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:25:
+[37m      154 │   convertReverse(amount: [32mnumber[37m, fxSnapshot: FxSnapshot): number {
+          ╵                          [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'fxSnapshot'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:33:
+[37m      154 │   convertReverse(amount: number, [32mfxSnapshot[37m: FxSnapshot): number {
+          ╵                                  [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:43:
+[37m      154 │   convertReverse(amount: number, fxSnapshot[32m:[37m FxSnapshot): number {
+          ╵                                            [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'FxSnapshot' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:45:
+[37m      154 │   convertReverse(amount: number, fxSnapshot: [32mFxSnapshot[37m): number {
+          ╵                                              [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:56:
+[37m      154 │   convertReverse(amount: number, fxSnapshot: FxSnapshot)[32m:[37m number {
+          ╵                                                         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:58:
+[37m      154 │   convertReverse(amount: number, fxSnapshot: FxSnapshot): [32mnumber[37m {
+          ╵                                                           [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'number' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:154:58:
+[37m      154 │   convertReverse(amount: number, fxSnapshot: FxSnapshot): [32mnumber[37m {
+          ╵                                                           [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:161:2:
+[37m      161 │   [32mprivate[37m mapFxSnapshotFromDb(db: Record<string, unknown>): FxSna...
+          ╵   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'mapFxSnapshotFromDb'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:161:10:
+[37m      161 │   private [32mmapFxSnapshotFromDb[37m(db: Record<string, unknown>): FxSna...
+          ╵           [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'db'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:161:30:
+[37m      161 │   private mapFxSnapshotFromDb([32mdb[37m: Record<string, unknown>): FxSna...
+          ╵                               [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:161:32:
+[37m      161 │   private mapFxSnapshotFromDb(db[32m:[37m Record<string, unknown>): FxSna...
+          ╵                                 [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'Record' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:161:34:
+[37m      161 │ ...ate mapFxSnapshotFromDb(db: [32mRecord[37m<string, unknown>): FxSnapsh...
+          ╵                                [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:161:58:
+[37m      161 │ ...te mapFxSnapshotFromDb(db: Record<string, unknown>)[32m:[37m FxSnapshot {
+          ╵                                                       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:161:60:
+[37m      161 │ ...te mapFxSnapshotFromDb(db: Record<string, unknown>): [32mFxSnapshot[37m {
+          ╵                                                         [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'FxSnapshot' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:161:60:
+[37m      161 │ ...te mapFxSnapshotFromDb(db: Record<string, unknown>): [32mFxSnapshot[37m {
+          ╵                                                         [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'db'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:162:38:
+[37m      162 │ ...onst timestamp = new Date(String([32mdb[37m.timestamp || db.created_at));
+          ╵                                     [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'db'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:162:54:
+[37m      162 │ ...onst timestamp = new Date(String(db.timestamp || [32mdb[37m.created_at));
+          ╵                                                     [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:182:2:
+[37m      182 │   [32masync[37m getCurrentRateAsync(
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:182:2:
+[37m      182 │   [32masync[37m getCurrentRateAsync(
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'getCurrentRateAsync'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:182:8:
+[37m      182 │   async [32mgetCurrentRateAsync[37m(
+          ╵         [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name '_fromCurrency'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:183:4:
+[37m      183 │     [32m_fromCurrency[37m: CurrencyCode = 'USD',
+          ╵     [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:183:17:
+[37m      183 │     _fromCurrency[32m:[37m CurrencyCode = 'USD',
+          ╵                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'CurrencyCode' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:183:19:
+[37m      183 │     _fromCurrency: [32mCurrencyCode[37m = 'USD',
+          ╵                    [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name '_toCurrency'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:184:4:
+[37m      184 │     [32m_toCurrency[37m: CurrencyCode = 'ARS',
+          ╵     [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:184:15:
+[37m      184 │     _toCurrency[32m:[37m CurrencyCode = 'ARS',
+          ╵                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'CurrencyCode' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:184:17:
+[37m      184 │     _toCurrency: [32mCurrencyCode[37m = 'ARS',
+          ╵                  [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:185:3:
+[37m      185 │   )[32m:[37m Promise<number> {
+          ╵    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ try: { const: any; return: any; }; catch(error: any): any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:185:5:
+[37m      185 │   ): [32mPromise<number> {[37m
+          ╵      [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'number' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:185:13:
+[37m      185 │   ): Promise<[32mnumber[37m> {
+          ╵              [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:186:8:
+[37m      186 │     try [32m{[37m
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:188:12:
+[37m      188 │       const [32mrate[37m = await this.exchangeRateService.getPlatformRate...
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'rate'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:188:12:
+[37m      188 │       const [32mrate[37m = await this.exchangeRateService.getPlatformRate...
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:188:25:
+[37m      188 │       const rate = await [32mthis[37m.exchangeRateService.getPlatformRate...
+          ╵                          [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:188:76:
+[37m      188 │ ...rate = await this.exchangeRateService.getPlatformRate('USDTARS')[32m;[37m
+          ╵                                                                    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:189:13:
+[37m      189 │       return [32mrate[37m;
+          ╵              [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'rate'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:189:13:
+[37m      189 │       return [32mrate[37m;
+          ╵              [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:189:17:
+[37m      189 │       return rate[32m;[37m
+          ╵                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:190:6:
+[37m      190 │     } [32mcatch[37m (error) {
+          ╵       [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7023: 'catch' implicitly has return type 'any' because it does not have a return type annotation and is referenced directly or indirectly in one of its return expressions.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:190:6:
+[37m      190 │     } [32mcatch[37m (error) {
+          ╵       [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:190:13:
+[37m      190 │     } catch ([32merror[37m) {
+          ╵              [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7022: 'binanceRate' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:193:14:
+[37m      193 │         const [32mbinanceRate[37m = await this.exchangeRateService.getBin...
+          ╵               [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'exchangeRateService' does not exist on type '{ try: { const: any; return: any; }; catch(error: any): any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:193:39:
+[37m      193 │ ...st binanceRate = await this.[32mexchangeRateService[37m.getBinanceRate();
+          ╵                                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/fx.service.ts:200:0:
+[37m      200 │ [32m}[37m
+          ╵ [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/mercado-pago-script.service.ts:83:8:
+[37m      83 │         [32m'Detailed error object in getMercadoPago:'[37m,
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/mercado-pago-script.service.ts:85:6:
+[37m      85 │       [32m)[37m;
+         ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/mercadopago-oauth.service.ts:146:8:
+[37m      146 │         [32m'[OAuth] Estado:'[37m,
+          ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/mercadopago-oauth.service.ts:148:6:
+[37m      148 │       [32m)[37m;
+          ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mUnexpected ";"[0m
+
+    src/app/core/services/payment-authorization.service.ts:62:12:
+[37m      62 │             [32m;[37m
+         ╵             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:85:8:
+[37m      85 │         [32m`💡 [TEST MODE] Monto reducido de $${amountArs} ARS a $$[37m...
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:86:6:
+[37m      86 │       [32m)[37m;
+         ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2355: A function whose declared type is neither 'undefined', 'void', nor 'any' must return a value.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:105:6:
+[37m      105 │   }): [32mObservable<AuthorizePaymentResult>[37m {
+          ╵       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:121:17:
+[37m      121 │       amountUsd: [32msafeAmountUsd[37m,
+          ╵                  [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:122:15:
+[37m      122 │       amountArs[32m:[37m safeAmountArs,
+          ╵                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:122:17:
+[37m      122 │       amountArs: [32msafeAmountArs[37m,
+          ╵                  [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:122:17:
+[37m      122 │       amountArs: [32msafeAmountArs,[37m
+          ╵                  [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:124:6:
+[37m      124 │       [32m...[37m(safeAmountArs !== amountArs && {
+          ╵       [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:124:9:
+[37m      124 │       ...[32m(safeAmountArs !== amountArs && {[37m
+          ╵          [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:128:4:
+[37m      128 │     [32m}[37m);
+          ╵     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1068: Unexpected token. A constructor, method, accessor, or property was expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:128:5:
+[37m      128 │     }[32m)[37m;
+          ╵      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1068: Unexpected token. A constructor, method, accessor, or property was expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:130:4:
+[37m      130 │     [32mreturn[37m from(
+          ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:195:25:
+[37m      195 │             mp_payment_id[32m:[37m mpData.mp_payment_id,
+          ╵                          [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:196:10:
+[37m      196 │           [32m}[37m);
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:196:11:
+[37m      196 │           }[32m)[37m;
+          ╵            [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ')' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:196:12:
+[37m      196 │           })[32m;[37m
+          ╵             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'errorMsg'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:197:26:
+[37m      197 │           throw new Error([32merrorMsg[37m);
+          ╵                           [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:198:8:
+[37m      198 │         [32m}[37m
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'mpData'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:200:13:
+[37m      200 │         if (![32mmpData[37m.success) {
+          ╵              [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'mpData'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:201:26:
+[37m      201 │           throw new Error([32mmpData[37m.error || 'Authorization failed');
+          ╵                           [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'intentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:207:31:
+[37m      207 │           authorizedPaymentId: [32mintentId[37m,
+          ╵                                [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'mpData'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:208:21:
+[37m      208 │           expiresAt: [32mmpData[37m.expires_at ? new Date(mpData.expires_...
+          ╵                      [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'mpData'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:208:50:
+[37m      208 │ ...sAt: mpData.expires_at ? new Date([32mmpData[37m.expires_at) : undefined,
+          ╵                                      [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:212:6:
+[37m      212 │       [32m}[37m)(),
+          ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:212:7:
+[37m      212 │       }[32m)[37m(),
+          ╵        [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2695: Left side of comma operator is unused and has no side effects.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:212:8:
+[37m      212 │       })[32m()[37m,
+          ╵         [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:212:9:
+[37m      212 │       })([32m)[37m,
+          ╵          [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:213:4:
+[37m      213 │     [32m)[37m.pipe(
+          ╵     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:213:5:
+[37m      213 │     )[32m.[37mpipe(
+          ╵      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'pipe'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:213:6:
+[37m      213 │     ).[32mpipe[37m(
+          ╵       [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:221:2:
+[37m      221 │   [32m}[37m
+          ╵   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'getAuthorizationStatus'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:226:2:
+[37m      226 │   [32mgetAuthorizationStatus[37m(authorizedPaymentId: string): Observable...
+          ╵   [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'authorizedPaymentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:226:25:
+[37m      226 │   getAuthorizationStatus([32mauthorizedPaymentId[37m: string): Observable...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:226:44:
+[37m      226 │ ...ationStatus(authorizedPaymentId[32m:[37m string): Observable<PaymentAu...
+          ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:226:46:
+[37m      226 │ ...Status(authorizedPaymentId: [32mstring[37m): Observable<PaymentAuthori...
+          ╵                                [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:226:53:
+[37m      226 │ ...us(authorizedPaymentId: string)[32m:[37m Observable<PaymentAuthorizati...
+          ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2447: The '|' operator is not allowed for boolean types. Consider using '||' instead.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:226:55:
+[37m      226 │ ...izedPaymentId: string): [32mObservable<PaymentAuthorization | null> {[37m
+          ╵                            [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'PaymentAuthorization' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:226:66:
+[37m      226 │ ...izedPaymentId: string): Observable<[32mPaymentAuthorization[37m | null> {
+          ╵                                       [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18050: The value 'null' cannot be used here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:226:89:
+[37m      226 │ ...izedPaymentId: string): Observable<PaymentAuthorization | [32mnull[37m> {
+          ╵                                                              [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:227:11:
+[37m      227 │     return [32mfrom[37m(
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:228:6:
+[37m      228 │       [32mthis[37m.supabaseClient
+          ╵       [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'authorizedPaymentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:231:18:
+[37m      231 │         .eq('id', [32mauthorizedPaymentId[37m)
+          ╵                   [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:247:18:
+[37m      247 │           status: [32mthis[37m.mapStatus(data.status),
+          ╵                   [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:258:5:
+[37m      258 │     )[32m;[37m
+          ╵      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'captureAuthorization'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:265:2:
+[37m      265 │   [32mcaptureAuthorization[37m(
+          ╵   [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'authorizedPaymentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:266:4:
+[37m      266 │     [32mauthorizedPaymentId[37m: string,
+          ╵     [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:266:23:
+[37m      266 │     authorizedPaymentId[32m:[37m string,
+          ╵                        [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:266:25:
+[37m      266 │     authorizedPaymentId: [32mstring[37m,
+          ╵                          [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'amountArs'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:267:4:
+[37m      267 │     [32mamountArs[37m?: number,
+          ╵     [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:267:14:
+[37m      267 │     amountArs?[32m:[37m number,
+          ╵               [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'number' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:267:16:
+[37m      267 │     amountArs?: [32mnumber[37m,
+          ╵                 [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:268:3:
+[37m      268 │   )[32m:[37m Observable<{ ok: boolean; error?: string }> {
+          ╵    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '<' cannot be applied to types 'typeof Observable' and '{ ok: any; error: any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:268:5:
+[37m      268 │   ): [32mObservable<{ ok: boolean; error?: string }[37m> {
+          ╵      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ return: Observable<{ ok: boolean; } | { ok: boolean; error: any; }>; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:268:5:
+[37m      268 │   ): [32mObservable<{ ok: boolean; error?: string }> {[37m
+          ╵      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:268:22:
+[37m      268 │   ): Observable<{ ok: [32mboolean[37m; error?: string }> {
+          ╵                       [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:268:29:
+[37m      268 │   ): Observable<{ ok: boolean[32m;[37m error?: string }> {
+          ╵                              [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:268:39:
+[37m      268 │   ): Observable<{ ok: boolean; error?: [32mstring[37m }> {
+          ╵                                        [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:270:11:
+[37m      270 │     return [32mfrom[37m(
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:273:30:
+[37m      273 │         const session = await [32mthis[37m.authService.ensureSession();
+          ╵                               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'authorizedPaymentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:292:23:
+[37m      292 │             intent_id: [32mauthorizedPaymentId[37m,
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'amountArs'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:293:16:
+[37m      293 │             ...([32mamountArs[37m ? { amount_ars: amountArs } : {}),
+          ╵                 [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'amountArs'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:293:42:
+[37m      293 │             ...(amountArs ? { amount_ars: [32mamountArs[37m } : {}),
+          ╵                                           [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:317:5:
+[37m      317 │     )[32m;[37m
+          ╵      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'cancelAuthorization'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:2:
+[37m      324 │   [32mcancelAuthorization[37m(authorizedPaymentId: string): Observable<{ ...
+          ╵   [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'authorizedPaymentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:22:
+[37m      324 │   cancelAuthorization([32mauthorizedPaymentId[37m: string): Observable<{ ...
+          ╵                       [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:41:
+[37m      324 │ ...thorization(authorizedPaymentId[32m:[37m string): Observable<{ ok: boo...
+          ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:43:
+[37m      324 │ ...zation(authorizedPaymentId: [32mstring[37m): Observable<{ ok: boolean;...
+          ╵                                [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:50:
+[37m      324 │ ...on(authorizedPaymentId: string)[32m:[37m Observable<{ ok: boolean; err...
+          ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '<' cannot be applied to types 'typeof Observable' and '{ ok: any; error: any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:52:
+[37m      324 │ ...PaymentId: string): [32mObservable<{ ok: boolean; error?: string }[37m> {
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ return: Observable<{ ok: boolean; } | { ok: boolean; error: any; }>; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:52:
+[37m      324 │ ...PaymentId: string): [32mObservable<{ ok: boolean; error?: string }> {[37m
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:69:
+[37m      324 │ ...PaymentId: string): Observable<{ ok: [32mboolean[37m; error?: string }> {
+          ╵                                         [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:76:
+[37m      324 │ ...PaymentId: string): Observable<{ ok: boolean[32m;[37m error?: string }> {
+          ╵                                                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:324:86:
+[37m      324 │ ...PaymentId: string): Observable<{ ok: boolean; error?: [32mstring[37m }> {
+          ╵                                                          [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:326:11:
+[37m      326 │     return [32mfrom[37m(
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:329:30:
+[37m      329 │         const session = await [32mthis[37m.authService.ensureSession();
+          ╵                               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'authorizedPaymentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:348:23:
+[37m      348 │             intent_id: [32mauthorizedPaymentId[37m,
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:372:5:
+[37m      372 │     )[32m;[37m
+          ╵      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'isAuthorizationExpired'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:378:2:
+[37m      378 │   [32misAuthorizationExpired[37m(authorization: PaymentAuthorization): bo...
+          ╵   [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'authorization'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:378:25:
+[37m      378 │   isAuthorizationExpired([32mauthorization[37m: PaymentAuthorization): bo...
+          ╵                          [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:378:38:
+[37m      378 │ ...horizationExpired(authorization[32m:[37m PaymentAuthorization): boolean {
+          ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'PaymentAuthorization' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:378:40:
+[37m      378 │ ...horizationExpired(authorization: [32mPaymentAuthorization[37m): boolean {
+          ╵                                     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:378:61:
+[37m      378 │ ...horizationExpired(authorization: PaymentAuthorization)[32m:[37m boolean {
+          ╵                                                          [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:378:63:
+[37m      378 │ ...horizationExpired(authorization: PaymentAuthorization): [32mboolean[37m {
+          ╵                                                            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:378:63:
+[37m      378 │ ...horizationExpired(authorization: PaymentAuthorization): [32mboolean[37m {
+          ╵                                                            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'authorization'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:379:9:
+[37m      379 │     if (![32mauthorization[37m.expiresAt) return false;
+          ╵          [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:2:
+[37m      386 │   [32mprivate[37m mapStatus(dbStatus: string): 'pending' | 'authorized' |...
+          ╵   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'mapStatus'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:10:
+[37m      386 │   private [32mmapStatus[37m(dbStatus: string): 'pending' | 'authorized' |...
+          ╵           [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'dbStatus'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:20:
+[37m      386 │   private mapStatus([32mdbStatus[37m: string): 'pending' | 'authorized' |...
+          ╵                     [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:28:
+[37m      386 │   private mapStatus(dbStatus[32m:[37m string): 'pending' | 'authorized' |...
+          ╵                             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:30:
+[37m      386 │   private mapStatus(dbStatus: [32mstring[37m): 'pending' | 'authorized' |...
+          ╵                               [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:37:
+[37m      386 │ ...ate mapStatus(dbStatus: string)[32m:[37m 'pending' | 'authorized' | 'e...
+          ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:39:
+[37m      386 │ ...pStatus(dbStatus: string): [32m'pending'[37m | 'authorized' | 'expired...
+          ╵                               [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:51:
+[37m      386 │ ...tatus: string): 'pending' | [32m'authorized'[37m | 'expired' | 'failed' {
+          ╵                                [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:66:
+[37m      386 │ ...tatus: string): 'pending' | 'authorized' | [32m'expired'[37m | 'failed' {
+          ╵                                               [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:78:
+[37m      386 │ ...tatus: string): 'pending' | 'authorized' | 'expired' | [32m'failed'[37m {
+          ╵                                                           [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:386:87:
+[37m      386 │ ...tatus: string): 'pending' | 'authorized' | 'expired' | 'failed' [32m{[37m
+          ╵                                                                    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'dbStatus'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:387:12:
+[37m      387 │     switch ([32mdbStatus[37m) {
+          ╵             [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payment-authorization.service.ts:401:0:
+[37m      401 │ [32m}[37m
+          ╵ [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getCurrentRateAsync' does not exist on type 'FxService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/payments.service.ts:66:40:
+[37m      66 │ ...t fxRate = await this.fxService.[32mgetCurrentRateAsync[37m('USD', 'ARS');
+         ╵                                    [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mUnexpected ";"[0m
+
+    src/app/core/services/profile.service.ts:175:8:
+[37m      175 │         [32m;[37m
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2355: A function whose declared type is neither 'undefined', 'void', nor 'any' must return a value.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:206:62:
+[37m      206 │ ...ateProfile(userId: string, email: string): [32mPromise<UserProfile>[37m {
+          ╵                                               [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'full_name'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:229:6:
+[37m      229 │       [32mfull_name[37m: data?.full_name,
+          ╵       [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:229:15:
+[37m      229 │       full_name[32m:[37m data?.full_name,
+          ╵                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:230:4:
+[37m      230 │     [32m}[37m);
+          ╵     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1068: Unexpected token. A constructor, method, accessor, or property was expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:230:5:
+[37m      230 │     }[32m)[37m;
+          ╵      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1068: Unexpected token. A constructor, method, accessor, or property was expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:231:4:
+[37m      231 │     [32mreturn[37m data as UserProfile;
+          ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:232:2:
+[37m      232 │   [32m}[37m
+          ╵   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:237:2:
+[37m      237 │   [32masync[37m canPublishCars(): Promise<boolean> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:237:2:
+[37m      237 │   [32masync[37m canPublishCars(): Promise<boolean> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'canPublishCars'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:237:8:
+[37m      237 │   async [32mcanPublishCars[37m(): Promise<boolean> {
+          ╵         [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:237:24:
+[37m      237 │   async canPublishCars()[32m:[37m Promise<boolean> {
+          ╵                         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; return: boolean; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:237:26:
+[37m      237 │   async canPublishCars(): [32mPromise<boolean> {[37m
+          ╵                           [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:237:34:
+[37m      237 │   async canPublishCars(): Promise<[32mboolean[37m> {
+          ╵                                   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:238:10:
+[37m      238 │     const [32mprofile[37m = await this.getCurrentProfile();
+          ╵           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:238:10:
+[37m      238 │     const [32mprofile[37m = await this.getCurrentProfile();
+          ╵           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:238:26:
+[37m      238 │     const profile = await [32mthis[37m.getCurrentProfile();
+          ╵                           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:238:50:
+[37m      238 │     const profile = await this.getCurrentProfile()[32m;[37m
+          ╵                                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:239:11:
+[37m      239 │     return [32mprofile[37m?.role === 'owner' || profile?.role === 'both';
+          ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:239:11:
+[37m      239 │     return [32mprofile[37m?.role === 'owner' || profile?.role === 'both';
+          ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:239:40:
+[37m      239 │     return profile?.role === 'owner' || [32mprofile[37m?.role === 'both';
+          ╵                                         [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:239:64:
+[37m      239 │     return profile?.role === 'owner' || profile?.role === 'both'[32m;[37m
+          ╵                                                                 [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:245:2:
+[37m      245 │   [32masync[37m canBookCars(): Promise<boolean> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:245:2:
+[37m      245 │   [32masync[37m canBookCars(): Promise<boolean> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'canBookCars'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:245:8:
+[37m      245 │   async [32mcanBookCars[37m(): Promise<boolean> {
+          ╵         [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:245:21:
+[37m      245 │   async canBookCars()[32m:[37m Promise<boolean> {
+          ╵                      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; return: boolean; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:245:23:
+[37m      245 │   async canBookCars(): [32mPromise<boolean> {[37m
+          ╵                        [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:245:31:
+[37m      245 │   async canBookCars(): Promise<[32mboolean[37m> {
+          ╵                                [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:246:10:
+[37m      246 │     const [32mprofile[37m = await this.getCurrentProfile();
+          ╵           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:246:10:
+[37m      246 │     const [32mprofile[37m = await this.getCurrentProfile();
+          ╵           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:246:26:
+[37m      246 │     const profile = await [32mthis[37m.getCurrentProfile();
+          ╵                           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:246:50:
+[37m      246 │     const profile = await this.getCurrentProfile()[32m;[37m
+          ╵                                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:247:11:
+[37m      247 │     return [32mprofile[37m?.role === 'renter' || profile?.role === 'both';
+          ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:247:11:
+[37m      247 │     return [32mprofile[37m?.role === 'renter' || profile?.role === 'both';
+          ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:247:41:
+[37m      247 │     return profile?.role === 'renter' || [32mprofile[37m?.role === 'both';
+          ╵                                          [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:247:65:
+[37m      247 │     return profile?.role === 'renter' || profile?.role === 'both'[32m;[37m
+          ╵                                                                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:258:2:
+[37m      258 │   [32masync[37m getMe(): Promise<UserProfile> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:258:2:
+[37m      258 │   [32masync[37m getMe(): Promise<UserProfile> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'getMe'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:258:8:
+[37m      258 │   async [32mgetMe[37m(): Promise<UserProfile> {
+          ╵         [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:258:15:
+[37m      258 │   async getMe()[32m:[37m Promise<UserProfile> {
+          ╵                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; if(error: any): never; return: UserProfile; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:258:17:
+[37m      258 │   async getMe(): [32mPromise<UserProfile> {[37m
+          ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'UserProfile' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:258:25:
+[37m      258 │   async getMe(): Promise<[32mUserProfile[37m> {
+          ╵                          [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:259:10:
+[37m      259 │     const [32m{[37m data, error } = await this.supabase.from('me_profile'...
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2448: Block-scoped variable 'data' used before its declaration.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:259:12:
+[37m      259 │     const { [32mdata[37m, error } = await this.supabase.from('me_profile'...
+          ╵             [32m~~~~[0m
+
+  'data' is declared here.
+
+    src/app/core/services/profile.service.ts:337:12:
+[37m      337 │     const { [32mdata[37m, error: insertError } = await this.supabase
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2588: Cannot assign to 'data' because it is a constant.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:259:12:
+[37m      259 │     const { [32mdata[37m, error } = await this.supabase.from('me_profile'...
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'error'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:259:18:
+[37m      259 │     const { data, [32merror[37m } = await this.supabase.from('me_profile'...
+          ╵                   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:259:34:
+[37m      259 │ ...onst { data, error } = await [32mthis[37m.supabase.from('me_profile')....
+          ╵                                 [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:259:87:
+[37m      259 │ ... } = await this.supabase.from('me_profile').select('*').single()[32m;[37m
+          ╵                                                                    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:261:8:
+[37m      261 │     if ([32merror[37m) {
+          ╵         [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:265:4:
+[37m      265 │     [32mreturn[37m data as UserProfile;
+          ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:265:11:
+[37m      265 │     return [32mdata[37m as UserProfile;
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2448: Block-scoped variable 'data' used before its declaration.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:265:11:
+[37m      265 │     return [32mdata[37m as UserProfile;
+          ╵            [32m~~~~[0m
+
+  'data' is declared here.
+
+    src/app/core/services/profile.service.ts:337:12:
+[37m      337 │     const { [32mdata[37m, error: insertError } = await this.supabase
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:265:30:
+[37m      265 │     return data as UserProfile[32m;[37m
+          ╵                               [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:2:
+[37m      272 │   [32masync[37m updateProfileSafe(payload: Partial<UpdateProfileData>): P...
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:2:
+[37m      272 │   [32masync[37m updateProfileSafe(payload: Partial<UpdateProfileData>): P...
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'updateProfileSafe'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:8:
+[37m      272 │   async [32mupdateProfileSafe[37m(payload: Partial<UpdateProfileData>): P...
+          ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'payload'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:26:
+[37m      272 │   async updateProfileSafe([32mpayload[37m: Partial<UpdateProfileData>): P...
+          ╵                           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:33:
+[37m      272 │   async updateProfileSafe(payload[32m:[37m Partial<UpdateProfileData>): P...
+          ╵                                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'Partial' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:35:
+[37m      272 │ ... updateProfileSafe(payload: [32mPartial[37m<UpdateProfileData>): Promi...
+          ╵                                [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:62:
+[37m      272 │ ...Safe(payload: Partial<UpdateProfileData>)[32m:[37m Promise<UserProfile> {
+          ╵                                             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; if(error: any): never; return: UserProfile; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:64:
+[37m      272 │ ...Safe(payload: Partial<UpdateProfileData>): [32mPromise<UserProfile> {[37m
+          ╵                                               [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'UserProfile' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:272:72:
+[37m      272 │ ...Safe(payload: Partial<UpdateProfileData>): Promise<[32mUserProfile[37m> {
+          ╵                                                       [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:273:10:
+[37m      273 │     const [32m{[37m data, error } = await this.supabase.rpc('update_profi...
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2448: Block-scoped variable 'data' used before its declaration.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:273:12:
+[37m      273 │     const { [32mdata[37m, error } = await this.supabase.rpc('update_profi...
+          ╵             [32m~~~~[0m
+
+  'data' is declared here.
+
+    src/app/core/services/profile.service.ts:337:12:
+[37m      337 │     const { [32mdata[37m, error: insertError } = await this.supabase
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2588: Cannot assign to 'data' because it is a constant.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:273:12:
+[37m      273 │     const { [32mdata[37m, error } = await this.supabase.rpc('update_profi...
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'error'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:273:18:
+[37m      273 │     const { data, [32merror[37m } = await this.supabase.rpc('update_profi...
+          ╵                   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:273:34:
+[37m      273 │ ...onst { data, error } = await [32mthis[37m.supabase.rpc('update_profile...
+          ╵                                 [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'payload'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:274:16:
+[37m      274 │       _payload: [32mpayload[37m,
+          ╵                 [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:275:6:
+[37m      275 │     })[32m;[37m
+          ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:277:8:
+[37m      277 │     if ([32merror[37m) {
+          ╵         [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:281:4:
+[37m      281 │     [32mreturn[37m data as UserProfile;
+          ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:281:11:
+[37m      281 │     return [32mdata[37m as UserProfile;
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2448: Block-scoped variable 'data' used before its declaration.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:281:11:
+[37m      281 │     return [32mdata[37m as UserProfile;
+          ╵            [32m~~~~[0m
+
+  'data' is declared here.
+
+    src/app/core/services/profile.service.ts:337:12:
+[37m      337 │     const { [32mdata[37m, error: insertError } = await this.supabase
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:281:30:
+[37m      281 │     return data as UserProfile[32m;[37m
+          ╵                               [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:2:
+[37m      287 │   [32masync[37m setAvatar(publicUrl: string): Promise<void> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:2:
+[37m      287 │   [32masync[37m setAvatar(publicUrl: string): Promise<void> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'setAvatar'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:8:
+[37m      287 │   async [32msetAvatar[37m(publicUrl: string): Promise<void> {
+          ╵         [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'publicUrl'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:18:
+[37m      287 │   async setAvatar([32mpublicUrl[37m: string): Promise<void> {
+          ╵                   [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:27:
+[37m      287 │   async setAvatar(publicUrl[32m:[37m string): Promise<void> {
+          ╵                            [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:29:
+[37m      287 │   async setAvatar(publicUrl: [32mstring[37m): Promise<void> {
+          ╵                              [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:36:
+[37m      287 │   async setAvatar(publicUrl: string)[32m:[37m Promise<void> {
+          ╵                                     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; if(error: any): never; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:38:
+[37m      287 │   async setAvatar(publicUrl: string): [32mPromise<void> {[37m
+          ╵                                       [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:46:
+[37m      287 │   async setAvatar(publicUrl: string): Promise<[32mvoid[37m> {
+          ╵                                               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:287:50:
+[37m      287 │   async setAvatar(publicUrl: string): Promise<void[32m>[37m {
+          ╵                                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:288:10:
+[37m      288 │     const [32m{[37m error } = await this.supabase.rpc('set_avatar', {
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'error'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:288:12:
+[37m      288 │     const { [32merror[37m } = await this.supabase.rpc('set_avatar', {
+          ╵             [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:288:28:
+[37m      288 │     const { error } = await [32mthis[37m.supabase.rpc('set_avatar', {
+          ╵                             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'publicUrl'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:289:19:
+[37m      289 │       _public_url: [32mpublicUrl[37m,
+          ╵                    [32m~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:290:6:
+[37m      290 │     })[32m;[37m
+          ╵       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:292:8:
+[37m      292 │     if ([32merror[37m) {
+          ╵         [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:2:
+[37m      300 │   [32masync[37m uploadDocument(file: File, kind: DocumentKind): Promise<U...
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:2:
+[37m      300 │   [32masync[37m uploadDocument(file: File, kind: DocumentKind): Promise<U...
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'uploadDocument'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:8:
+[37m      300 │   async [32muploadDocument[37m(file: File, kind: DocumentKind): Promise<U...
+          ╵         [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'file'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:23:
+[37m      300 │   async uploadDocument([32mfile[37m: File, kind: DocumentKind): Promise<U...
+          ╵                        [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:27:
+[37m      300 │   async uploadDocument(file[32m:[37m File, kind: DocumentKind): Promise<U...
+          ╵                            [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'kind'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:35:
+[37m      300 │ ...c uploadDocument(file: File, [32mkind[37m: DocumentKind): Promise<User...
+          ╵                                 [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:39:
+[37m      300 │ ...uploadDocument(file: File, kind[32m:[37m DocumentKind): Promise<UserDo...
+          ╵                                   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'DocumentKind' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:41:
+[37m      300 │ ...Document(file: File, kind: [32mDocumentKind[37m): Promise<UserDocument> {
+          ╵                               [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:54:
+[37m      300 │ ...Document(file: File, kind: DocumentKind)[32m:[37m Promise<UserDocument> {
+          ╵                                            [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: string[]; if(: any, user: any): never; if(: any, allowedTypes: any): any; "": any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:56:
+[37m      300 │ ...Document(file: File, kind: DocumentKind): [32mPromise<UserDocument> {[37m
+          ╵                                              [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'UserDocument' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:300:64:
+[37m      300 │ ...Document(file: File, kind: DocumentKind): Promise<[32mUserDocument[37m> {
+          ╵                                                      [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:301:10:
+[37m      301 │     const [32m{[37m
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'user'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:302:14:
+[37m      302 │       data: { [32muser[37m },
+          ╵               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:303:14:
+[37m      303 │     } = await [32mthis[37m.supabase.auth.getUser();
+          ╵               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:303:42:
+[37m      303 │     } = await this.supabase.auth.getUser()[32m;[37m
+          ╵                                           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1003: Identifier expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:305:8:
+[37m      305 │     if ([32m![37muser) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter '(Missing)' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:305:8:
+[37m      305 │     if ([32m[37m!user) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'user' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:305:9:
+[37m      305 │     if (![32muser[37m) {
+          ╵          [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:310:4:
+[37m      310 │     [32mconst[37m allowedTypes = ['image/jpeg', 'image/jpg', 'image/png',...
+          ╵     [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:310:10:
+[37m      310 │     const [32mallowedTypes[37m = ['image/jpeg', 'image/jpg', 'image/png',...
+          ╵           [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'allowedTypes'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:310:10:
+[37m      310 │     const [32mallowedTypes[37m = ['image/jpeg', 'image/jpg', 'image/png',...
+          ╵           [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:310:84:
+[37m      310 │ ...es = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'][32m;[37m
+          ╵                                                                    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1003: Identifier expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:311:8:
+[37m      311 │     if ([32m![37mallowedTypes.includes(file.type)) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter '(Missing)' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:311:8:
+[37m      311 │     if ([32m[37m!allowedTypes.includes(file.type)) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'allowedTypes' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:311:9:
+[37m      311 │     if (![32mallowedTypes[37m.includes(file.type)) {
+          ╵          [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:311:21:
+[37m      311 │     if (!allowedTypes[32m.[37mincludes(file.type)) {
+          ╵                      [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'file'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:311:31:
+[37m      311 │     if (!allowedTypes.includes([32mfile[37m.type)) {
+          ╵                                [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:311:41:
+[37m      311 │     if (!allowedTypes.includes(file.type)[32m)[37m {
+          ╵                                          [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1136: Property assignment expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:311:43:
+[37m      311 │     if (!allowedTypes.includes(file.type)) [32m{[37m
+          ╵                                            [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'file'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:316:8:
+[37m      316 │     if ([32mfile[37m.size > 5 * 1024 * 1024) {
+          ╵         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'file'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:320:22:
+[37m      320 │     const extension = [32mfile[37m.name.split('.').pop() ?? 'jpg';
+          ╵                       [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'kind'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:321:36:
+[37m      321 │     const filename = `${uuidv4()}-${[32mkind[37m}.${extension}`;
+          ╵                                     [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'user'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:322:24:
+[37m      322 │     const filePath = `${[32muser[37m.id}/${filename}`;
+          ╵                         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:325:41:
+[37m      325 │     const { error: uploadError } = await [32mthis[37m.supabase.storage
+          ╵                                          [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'file'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:327:24:
+[37m      327 │       .upload(filePath, [32mfile[37m, {
+          ╵                         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:337:47:
+[37m      337 │     const { data, error: insertError } = await [32mthis[37m.supabase
+          ╵                                                [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'user'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:340:17:
+[37m      340 │         user_id: [32muser[37m.id,
+          ╵                  [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'kind'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:341:8:
+[37m      341 │         [32mkind[37m,
+          ╵         [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:350:12:
+[37m      350 │       await [32mthis[37m.supabase.storage.from('documents').remove([fileP...
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:356:12:
+[37m      356 │       await [32mthis[37m.supabase.functions.invoke('verify-user-docs', {
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'kind'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:359:10:
+[37m      359 │           [32mkind[37m,
+          ╵           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:368:2:
+[37m      368 │   [32m}[37m
+          ╵   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:373:2:
+[37m      373 │   [32masync[37m getMyDocuments(): Promise<UserDocument[]> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:373:2:
+[37m      373 │   [32masync[37m getMyDocuments(): Promise<UserDocument[]> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'getMyDocuments'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:373:8:
+[37m      373 │   async [32mgetMyDocuments[37m(): Promise<UserDocument[]> {
+          ╵         [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:373:24:
+[37m      373 │   async getMyDocuments()[32m:[37m Promise<UserDocument[]> {
+          ╵                         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; if(: any, user: any): never; if(error: any): never; return(data: any, as: any, UserDocument: any, []: Iterable<any, void, undefined>): any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:373:26:
+[37m      373 │   async getMyDocuments(): [32mPromise<UserDocument[]> {[37m
+          ╵                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2869: Right operand of ?? is unreachable because the left operand is never nullish.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:373:26:
+[37m      373 │   async getMyDocuments(): [32mPromise<UserDocument[]> {[37m
+          ╵                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'UserDocument' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:373:34:
+[37m      373 │   async getMyDocuments(): Promise<[32mUserDocument[37m[]> {
+          ╵                                   [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1011: An element access expression should take an argument.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:373:47:
+[37m      373 │   async getMyDocuments(): Promise<UserDocument[[32m[37m]> {
+          ╵                                                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:374:10:
+[37m      374 │     const [32m{[37m
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'user'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:375:14:
+[37m      375 │       data: { [32muser[37m },
+          ╵               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:376:14:
+[37m      376 │     } = await [32mthis[37m.supabase.auth.getUser();
+          ╵               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:376:42:
+[37m      376 │     } = await this.supabase.auth.getUser()[32m;[37m
+          ╵                                           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1003: Identifier expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:378:8:
+[37m      378 │     if ([32m![37muser) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter '(Missing)' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:378:8:
+[37m      378 │     if ([32m[37m!user) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'user' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:378:9:
+[37m      378 │     if (![32muser[37m) {
+          ╵          [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:382:4:
+[37m      382 │     [32mconst[37m { data, error } = await this.supabase
+          ╵     [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:382:10:
+[37m      382 │     const [32m{[37m data, error } = await this.supabase
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2588: Cannot assign to 'data' because it is a constant.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:382:12:
+[37m      382 │     const { [32mdata[37m, error } = await this.supabase
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'error'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:382:18:
+[37m      382 │     const { data, [32merror[37m } = await this.supabase
+          ╵                   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:382:34:
+[37m      382 │     const { data, error } = await [32mthis[37m.supabase
+          ╵                                   [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'user'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:385:21:
+[37m      385 │       .eq('user_id', [32muser[37m.id)
+          ╵                      [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:386:48:
+[37m      386 │       .order('created_at', { ascending: false })[32m;[37m
+          ╵                                                 [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:388:8:
+[37m      388 │     if ([32merror[37m) {
+          ╵         [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:392:4:
+[37m      392 │     [32mreturn[37m (data as UserDocument[]) ?? [];
+          ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'data' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:392:12:
+[37m      392 │     return ([32mdata[37m as UserDocument[]) ?? [];
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:392:17:
+[37m      392 │     return (data [32mas[37m UserDocument[]) ?? [];
+          ╵                  [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'as' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:392:17:
+[37m      392 │     return (data [32mas[37m UserDocument[]) ?? [];
+          ╵                  [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:392:20:
+[37m      392 │     return (data as [32mUserDocument[37m[]) ?? [];
+          ╵                     [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'UserDocument' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:392:20:
+[37m      392 │     return (data as [32mUserDocument[37m[]) ?? [];
+          ╵                     [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:392:32:
+[37m      392 │     return (data as UserDocument[32m[[37m]) ?? [];
+          ╵                                 [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: '{' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:392:36:
+[37m      392 │     return (data as UserDocument[]) [32m??[37m [];
+          ╵                                     [32m~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1128: Declaration or statement expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:393:2:
+[37m      393 │   [32m}[37m
+          ╵   [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:2:
+[37m      398 │   [32masync[37m getDocument(documentId: string): Promise<UserDocument | n...
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:2:
+[37m      398 │   [32masync[37m getDocument(documentId: string): Promise<UserDocument | n...
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'getDocument'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:8:
+[37m      398 │   async [32mgetDocument[37m(documentId: string): Promise<UserDocument | n...
+          ╵         [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'documentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:20:
+[37m      398 │   async getDocument([32mdocumentId[37m: string): Promise<UserDocument | n...
+          ╵                     [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:30:
+[37m      398 │   async getDocument(documentId[32m:[37m string): Promise<UserDocument | n...
+          ╵                               [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:32:
+[37m      398 │ ...ync getDocument(documentId: [32mstring[37m): Promise<UserDocument | nu...
+          ╵                                [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:39:
+[37m      398 │ ...c getDocument(documentId: string)[32m:[37m Promise<UserDocument | null> {
+          ╵                                     [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2447: The '|' operator is not allowed for boolean types. Consider using '||' instead.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:41:
+[37m      398 │ ...c getDocument(documentId: string): [32mPromise<UserDocument | null> {[37m
+          ╵                                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'UserDocument' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:49:
+[37m      398 │ ...c getDocument(documentId: string): Promise<[32mUserDocument[37m | null> {
+          ╵                                               [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18050: The value 'null' cannot be used here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:398:64:
+[37m      398 │ ...c getDocument(documentId: string): Promise<UserDocument | [32mnull[37m> {
+          ╵                                                              [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:399:10:
+[37m      399 │     const [32m{[37m data, error } = await this.supabase
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2588: Cannot assign to 'data' because it is a constant.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:399:12:
+[37m      399 │     const { [32mdata[37m, error } = await this.supabase
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'error'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:399:18:
+[37m      399 │     const { data, [32merror[37m } = await this.supabase
+          ╵                   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:399:34:
+[37m      399 │     const { data, error } = await [32mthis[37m.supabase
+          ╵                                   [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'documentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:402:16:
+[37m      402 │       .eq('id', [32mdocumentId[37m)
+          ╵                 [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:403:15:
+[37m      403 │       .single()[32m;[37m
+          ╵                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:405:8:
+[37m      405 │     if ([32merror[37m) {
+          ╵         [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:410:4:
+[37m      410 │     [32mreturn[37m data as UserDocument;
+          ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:410:11:
+[37m      410 │     return [32mdata[37m as UserDocument;
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:410:31:
+[37m      410 │     return data as UserDocument[32m;[37m
+          ╵                                [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:2:
+[37m      416 │   [32masync[37m deleteDocument(documentId: string): Promise<void> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:2:
+[37m      416 │   [32masync[37m deleteDocument(documentId: string): Promise<void> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'deleteDocument'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:8:
+[37m      416 │   async [32mdeleteDocument[37m(documentId: string): Promise<void> {
+          ╵         [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'documentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:23:
+[37m      416 │   async deleteDocument([32mdocumentId[37m: string): Promise<void> {
+          ╵                        [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:33:
+[37m      416 │   async deleteDocument(documentId[32m:[37m string): Promise<void> {
+          ╵                                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:35:
+[37m      416 │   async deleteDocument(documentId: [32mstring[37m): Promise<void> {
+          ╵                                    [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:42:
+[37m      416 │   async deleteDocument(documentId: string)[32m:[37m Promise<void> {
+          ╵                                           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; if(: any, document: any): never; if(error: any): never; await: any; this: any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:44:
+[37m      416 │   async deleteDocument(documentId: string): [32mPromise<void> {[37m
+          ╵                                             [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:52:
+[37m      416 │   async deleteDocument(documentId: string): Promise<[32mvoid[37m> {
+          ╵                                                     [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:416:56:
+[37m      416 │   async deleteDocument(documentId: string): Promise<void[32m>[37m {
+          ╵                                                         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:417:10:
+[37m      417 │     const [32mdocument[37m = await this.getDocument(documentId);
+          ╵           [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:417:27:
+[37m      417 │     const document = await [32mthis[37m.getDocument(documentId);
+          ╵                            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'documentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:417:44:
+[37m      417 │     const document = await this.getDocument([32mdocumentId[37m);
+          ╵                                             [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:417:55:
+[37m      417 │     const document = await this.getDocument(documentId)[32m;[37m
+          ╵                                                        [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1003: Identifier expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:419:8:
+[37m      419 │     if ([32m![37mdocument) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter '(Missing)' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:419:8:
+[37m      419 │     if ([32m[37m!document) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'document' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:419:9:
+[37m      419 │     if (![32mdocument[37m) {
+          ╵          [32m~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:424:4:
+[37m      424 │     [32mawait[37m this.supabase.storage.from('documents').remove([documen...
+          ╵     [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'await'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:424:4:
+[37m      424 │     [32mawait[37m this.supabase.storage.from('documents').remove([documen...
+          ╵     [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:424:10:
+[37m      424 │     await [32mthis[37m.supabase.storage.from('documents').remove([documen...
+          ╵           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:424:14:
+[37m      424 │     await this[32m.[37msupabase.storage.from('documents').remove([documen...
+          ╵               [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'storage_path' does not exist on type 'Document'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:424:67:
+[37m      424 │ ...pabase.storage.from('documents').remove([document.[32mstorage_path[37m]);
+          ╵                                                      [32m~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:424:81:
+[37m      424 │ ...pabase.storage.from('documents').remove([document.storage_path])[32m;[37m
+          ╵                                                                    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:427:10:
+[37m      427 │     const [32m{[37m error } = await this.supabase.from('user_documents')....
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'error'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:427:12:
+[37m      427 │     const { [32merror[37m } = await this.supabase.from('user_documents')....
+          ╵             [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:427:28:
+[37m      427 │     const { error } = await [32mthis[37m.supabase.from('user_documents')....
+          ╵                             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'documentId'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:427:83:
+[37m      427 │ ...is.supabase.from('user_documents').delete().eq('id', [32mdocumentId[37m);
+          ╵                                                         [32m~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:427:94:
+[37m      427 │ ...is.supabase.from('user_documents').delete().eq('id', documentId)[32m;[37m
+          ╵                                                                    [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:429:8:
+[37m      429 │     if ([32merror[37m) {
+          ╵         [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:2:
+[37m      437 │   [32masync[37m getDocumentSignedUrl(storagePath: string): Promise<string> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:2:
+[37m      437 │   [32masync[37m getDocumentSignedUrl(storagePath: string): Promise<string> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'getDocumentSignedUrl'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:8:
+[37m      437 │   async [32mgetDocumentSignedUrl[37m(storagePath: string): Promise<string> {
+          ╵         [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'storagePath'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:29:
+[37m      437 │   async getDocumentSignedUrl([32mstoragePath[37m: string): Promise<string> {
+          ╵                              [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:40:
+[37m      437 │   async getDocumentSignedUrl(storagePath[32m:[37m string): Promise<string> {
+          ╵                                         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:42:
+[37m      437 │   async getDocumentSignedUrl(storagePath: [32mstring[37m): Promise<string> {
+          ╵                                           [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:49:
+[37m      437 │   async getDocumentSignedUrl(storagePath: string)[32m:[37m Promise<string> {
+          ╵                                                  [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; if(error: any): never; return: any; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:51:
+[37m      437 │   async getDocumentSignedUrl(storagePath: string): [32mPromise<string> {[37m
+          ╵                                                    [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'string' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:437:59:
+[37m      437 │   async getDocumentSignedUrl(storagePath: string): Promise<[32mstring[37m> {
+          ╵                                                            [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:438:10:
+[37m      438 │     const [32m{[37m data, error } = await this.supabase.storage
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2588: Cannot assign to 'data' because it is a constant.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:438:12:
+[37m      438 │     const { [32mdata[37m, error } = await this.supabase.storage
+          ╵             [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'error'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:438:18:
+[37m      438 │     const { data, [32merror[37m } = await this.supabase.storage
+          ╵                   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:438:34:
+[37m      438 │     const { data, error } = await [32mthis[37m.supabase.storage
+          ╵                                   [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'storagePath'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:440:23:
+[37m      440 │       .createSignedUrl([32mstoragePath[37m, 3600); // 1 hora
+          ╵                        [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:440:41:
+[37m      440 │       .createSignedUrl(storagePath, 3600)[32m;[37m // 1 hora
+          ╵                                          [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'error' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:442:8:
+[37m      442 │     if ([32merror[37m) {
+          ╵         [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:446:4:
+[37m      446 │     [32mreturn[37m data.signedUrl;
+          ╵     [32m~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:446:11:
+[37m      446 │     return [32mdata[37m.signedUrl;
+          ╵            [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:446:25:
+[37m      446 │     return data.signedUrl[32m;[37m
+          ╵                          [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:452:2:
+[37m      452 │   [32masync[37m hasCompletedOnboarding(): Promise<boolean> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:452:2:
+[37m      452 │   [32masync[37m hasCompletedOnboarding(): Promise<boolean> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'hasCompletedOnboarding'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:452:8:
+[37m      452 │   async [32mhasCompletedOnboarding[37m(): Promise<boolean> {
+          ╵         [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:452:32:
+[37m      452 │   async hasCompletedOnboarding()[32m:[37m Promise<boolean> {
+          ╵                                 [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; return: boolean; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:452:34:
+[37m      452 │   async hasCompletedOnboarding(): [32mPromise<boolean> {[37m
+          ╵                                   [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:452:42:
+[37m      452 │   async hasCompletedOnboarding(): Promise<[32mboolean[37m> {
+          ╵                                           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:453:10:
+[37m      453 │     const [32mprofile[37m = await this.getMe();
+          ╵           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:453:10:
+[37m      453 │     const [32mprofile[37m = await this.getMe();
+          ╵           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:453:26:
+[37m      453 │     const profile = await [32mthis[37m.getMe();
+          ╵                           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:453:38:
+[37m      453 │     const profile = await this.getMe()[32m;[37m
+          ╵                                       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:454:11:
+[37m      454 │     return [32mprofile[37m.onboarding === 'complete';
+          ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:454:11:
+[37m      454 │     return [32mprofile[37m.onboarding === 'complete';
+          ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:454:44:
+[37m      454 │     return profile.onboarding === 'complete'[32m;[37m
+          ╵                                             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:460:2:
+[37m      460 │   [32masync[37m hasAcceptedTOS(): Promise<boolean> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:460:2:
+[37m      460 │   [32masync[37m hasAcceptedTOS(): Promise<boolean> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'hasAcceptedTOS'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:460:8:
+[37m      460 │   async [32mhasAcceptedTOS[37m(): Promise<boolean> {
+          ╵         [32m~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:460:24:
+[37m      460 │   async hasAcceptedTOS()[32m:[37m Promise<boolean> {
+          ╵                         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; return: boolean; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:460:26:
+[37m      460 │   async hasAcceptedTOS(): [32mPromise<boolean> {[37m
+          ╵                           [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2693: 'boolean' only refers to a type, but is being used as a value here.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:460:34:
+[37m      460 │   async hasAcceptedTOS(): Promise<[32mboolean[37m> {
+          ╵                                   [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:461:10:
+[37m      461 │     const [32mprofile[37m = await this.getMe();
+          ╵           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:461:10:
+[37m      461 │     const [32mprofile[37m = await this.getMe();
+          ╵           [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:461:26:
+[37m      461 │     const profile = await [32mthis[37m.getMe();
+          ╵                           [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:461:38:
+[37m      461 │     const profile = await this.getMe()[32m;[37m
+          ╵                                       [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:462:11:
+[37m      462 │     return [32mprofile[37m.tos_accepted_at !== null;
+          ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'profile'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:462:11:
+[37m      462 │     return [32mprofile[37m.tos_accepted_at !== null;
+          ╵            [32m~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:462:43:
+[37m      462 │     return profile.tos_accepted_at !== null[32m;[37m
+          ╵                                            [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1434: Unexpected keyword or identifier.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:468:2:
+[37m      468 │   [32masync[37m completeOnboarding(): Promise<void> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'async'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:468:2:
+[37m      468 │   [32masync[37m completeOnboarding(): Promise<void> {
+          ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 'completeOnboarding'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:468:8:
+[37m      468 │   async [32mcompleteOnboarding[37m(): Promise<void> {
+          ╵         [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ';' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:468:28:
+[37m      468 │   async completeOnboarding()[32m:[37m Promise<void> {
+          ╵                             [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2365: Operator '>' cannot be applied to types 'boolean' and '{ const: any; if(: any, user: any): never; if(error: any): never; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:468:30:
+[37m      468 │   async completeOnboarding(): [32mPromise<void> {[37m
+          ╵                               [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:468:38:
+[37m      468 │   async completeOnboarding(): Promise<[32mvoid[37m> {
+          ╵                                       [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1109: Expression expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:468:42:
+[37m      468 │   async completeOnboarding(): Promise<void[32m>[37m {
+          ╵                                           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:469:10:
+[37m      469 │     const [32m{[37m
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'user'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:470:14:
+[37m      470 │       data: { [32muser[37m },
+          ╵               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:471:14:
+[37m      471 │     } = await [32mthis[37m.supabase.auth.getUser();
+          ╵               [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:471:42:
+[37m      471 │     } = await this.supabase.auth.getUser()[32m;[37m
+          ╵                                           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1003: Identifier expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:473:8:
+[37m      473 │     if ([32m![37muser) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter '(Missing)' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:473:8:
+[37m      473 │     if ([32m[37m!user) {
+          ╵         [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'user' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:473:9:
+[37m      473 │     if (![32muser[37m) {
+          ╵          [32m~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ',' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:477:4:
+[37m      477 │     [32mconst[37m { error } = await this.supabase
+          ╵     [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS1005: ':' expected.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:477:10:
+[37m      477 │     const [32m{[37m error } = await this.supabase
+          ╵           [32m^[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18004: No value exists in scope for the shorthand property 'error'. Either declare one or provide an initializer.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/profile.service.ts:477:12:
+[37m      477 │    

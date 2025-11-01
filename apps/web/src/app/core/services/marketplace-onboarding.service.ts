@@ -134,7 +134,6 @@ export class MarketplaceOnboardingService {
 
       return tokenResponse.user_id;
     } catch (error) {
-
       // Guardar error en state
       if (state) {
         await this.supabase
@@ -238,7 +237,6 @@ export class MarketplaceOnboardingService {
         .eq('id', userId);
 
       if (error) throw error;
-
     } catch (error) {
       throw error;
     }

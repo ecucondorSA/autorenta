@@ -36,10 +36,7 @@ describe('WalletService', () => {
     };
 
     TestBed.configureTestingModule({
-      providers: [
-        WalletService,
-        { provide: SupabaseClientService, useValue: supabaseServiceMock },
-      ],
+      providers: [WalletService, { provide: SupabaseClientService, useValue: supabaseServiceMock }],
     });
 
     service = TestBed.inject(WalletService);
@@ -67,18 +64,16 @@ describe('WalletService', () => {
         error: null,
       });
 
-    const fetchSpy = jasmine
-      .createSpy('fetch')
-      .and.callFake(() =>
-        Promise.resolve({
-          ok: true,
-          status: 200,
-          json: async () => ({
-            init_point: 'https://mercadopago.test/init',
-            sandbox_init_point: 'https://mercadopago.test/sandbox',
-          }),
-        } as any),
-      );
+    const fetchSpy = jasmine.createSpy('fetch').and.callFake(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          init_point: 'https://mercadopago.test/init',
+          sandbox_init_point: 'https://mercadopago.test/sandbox',
+        }),
+      } as any),
+    );
     globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
     spyOn(service, 'getBalance').and.resolveTo({
@@ -113,19 +108,17 @@ describe('WalletService', () => {
   });
 
   it('fuerza el polling de pagos pendientes', async () => {
-    const fetchSpy = jasmine
-      .createSpy('fetch')
-      .and.callFake(() =>
-        Promise.resolve({
-          ok: true,
-          status: 200,
-          json: async () => ({
-            success: true,
-            confirmed: 1,
-            message: 'Processed',
-          }),
-        } as any),
-      );
+    const fetchSpy = jasmine.createSpy('fetch').and.callFake(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          success: true,
+          confirmed: 1,
+          message: 'Processed',
+        }),
+      } as any),
+    );
     globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
     const result = await service.forcePollPendingPayments();

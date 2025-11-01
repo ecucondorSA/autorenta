@@ -21,9 +21,7 @@ interface QueryBuilder {
   range: jasmine.Spy;
   single: jasmine.Spy;
   maybeSingle: jasmine.Spy;
-  then: <T>(
-    resolve: (value: SupabaseResponse<T[]>) => void,
-  ) => Promise<SupabaseResponse<T[]>>;
+  then: <T>(resolve: (value: SupabaseResponse<T[]>) => void) => Promise<SupabaseResponse<T[]>>;
 }
 
 /**

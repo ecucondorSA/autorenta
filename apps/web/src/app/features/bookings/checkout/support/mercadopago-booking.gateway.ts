@@ -62,7 +62,10 @@ export class MercadoPagoBookingGateway {
     };
   }
 
-  private parseEdgeError(error: { message?: string; [key: string]: unknown }): EdgeFunctionErrorPayload | null {
+  private parseEdgeError(error: {
+    message?: string;
+    [key: string]: unknown;
+  }): EdgeFunctionErrorPayload | null {
     if (!error) {
       return null;
     }

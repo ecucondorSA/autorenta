@@ -40,8 +40,13 @@ import { CarChatComponent } from './components/car-chat.component';
             <div>
               <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Mensajes</h1>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                @if (bookingId()) { Conversación sobre reserva } @else if (carId()) { Consulta sobre
-                auto } @else { Chat }
+                @if (bookingId()) {
+                  Conversación sobre reserva
+                } @else if (carId()) {
+                  Consulta sobre auto
+                } @else {
+                  Chat
+                }
               </p>
             </div>
           </div>
@@ -51,52 +56,52 @@ import { CarChatComponent } from './components/car-chat.component';
       <!-- Content -->
       <div class="mx-auto max-w-4xl p-4">
         @if (loading()) {
-        <div class="flex h-96 items-center justify-center">
-          <div class="text-center">
-            <div
-              class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
-            ></div>
-            <p class="text-gray-600 dark:text-gray-400">Cargando chat...</p>
+          <div class="flex h-96 items-center justify-center">
+            <div class="text-center">
+              <div
+                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
+              ></div>
+              <p class="text-gray-600 dark:text-gray-400">Cargando chat...</p>
+            </div>
           </div>
-        </div>
         } @else if (error()) {
-        <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-          <p class="text-sm text-red-800 dark:text-red-200">{{ error() }}</p>
-          <button
-            (click)="goBack()"
-            class="mt-2 text-sm text-red-600 underline hover:text-red-800 dark:text-red-400"
-            type="button"
-          >
-            Volver
-          </button>
-        </div>
+          <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
+            <p class="text-sm text-red-800 dark:text-red-200">{{ error() }}</p>
+            <button
+              (click)="goBack()"
+              class="mt-2 text-sm text-red-600 underline hover:text-red-800 dark:text-red-400"
+              type="button"
+            >
+              Volver
+            </button>
+          </div>
         } @else if (bookingId() && recipientId() && recipientName()) {
-        <!-- Booking chat -->
-        <app-booking-chat
-          [bookingId]="bookingId()!"
-          [recipientId]="recipientId()!"
-          [recipientName]="recipientName()!"
-        />
+          <!-- Booking chat -->
+          <app-booking-chat
+            [bookingId]="bookingId()!"
+            [recipientId]="recipientId()!"
+            [recipientName]="recipientName()!"
+          />
         } @else if (carId() && recipientId() && recipientName()) {
-        <!-- Car chat (pre-booking) -->
-        <app-car-chat
-          [carId]="carId()!"
-          [recipientId]="recipientId()!"
-          [recipientName]="recipientName()!"
-        />
+          <!-- Car chat (pre-booking) -->
+          <app-car-chat
+            [carId]="carId()!"
+            [recipientId]="recipientId()!"
+            [recipientName]="recipientName()!"
+          />
         } @else {
-        <div class="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
-          <p class="text-sm text-yellow-800 dark:text-yellow-200">
-            ⚠️ Faltan parámetros para iniciar el chat
-          </p>
-          <button
-            (click)="goBack()"
-            class="mt-2 text-sm text-yellow-600 underline hover:text-yellow-800 dark:text-yellow-400"
-            type="button"
-          >
-            Volver
-          </button>
-        </div>
+          <div class="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
+            <p class="text-sm text-yellow-800 dark:text-yellow-200">
+              ⚠️ Faltan parámetros para iniciar el chat
+            </p>
+            <button
+              (click)="goBack()"
+              class="mt-2 text-sm text-yellow-600 underline hover:text-yellow-800 dark:text-yellow-400"
+              type="button"
+            >
+              Volver
+            </button>
+          </div>
         }
       </div>
     </div>

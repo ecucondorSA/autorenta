@@ -1,0 +1,6 @@
+ WARN  Unsupported engine: wanted: {"node":">=20.0.0 <=22.0.0"} (current: {"node":"v22.20.0","pnpm":"9.0.0"})
+
+> autorenta-web@0.1.0 start /home/edu/autorenta/apps/web
+> node tools/start-with-env.mjs > app_start.log 2>&1
+
+ ELIFECYCLE  Command failed.

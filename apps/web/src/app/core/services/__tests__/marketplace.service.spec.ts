@@ -208,7 +208,7 @@ describe('MarketplaceService', () => {
       (window as any).env = {};
 
       await expectAsync(service.getMarketplaceConfig()).toBeRejectedWithError(
-        /Marketplace no configurado/
+        /Marketplace no configurado/,
       );
     });
   });

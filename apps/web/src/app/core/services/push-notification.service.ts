@@ -32,8 +32,7 @@ export class PushNotificationService {
       if (subscription) {
         await this.saveTokenToDatabase(subscription);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**
@@ -72,7 +71,6 @@ export class PushNotificationService {
     const user = await this.authService.getCurrentUser();
     if (!user) return;
 
-
     const { error } = await this.supabase.from('push_tokens').upsert(
       {
         user_id: user.id,
@@ -84,7 +82,6 @@ export class PushNotificationService {
     if (error) {
       throw error;
     }
-
   }
 
   /**

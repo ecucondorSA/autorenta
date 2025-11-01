@@ -131,17 +131,21 @@
                 <p class="text-base font-mono font-bold text-accent-petrol dark:text-ivory-luminous text-center mb-2">
                   {{ profile()?.wallet_account_number }}
                 </p>
-                <button
-                  type="button"
-                  (click)="copyWalletAccountNumber()"
-                  [disabled]="copiedWAN()"
-                  class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-base"
-                  [class.bg-success-100]="copiedWAN()"
-                  [class.text-success-700]="copiedWAN()"
-                  [class.bg-accent-petrol]="!copiedWAN()"
-                  [class.text-white]="!copiedWAN()"
-                  [class.hover\\:bg-accent-petrol\\/90]="!copiedWAN()"
-                >
+                                                                                                <button
+                                                                                                  type="button"
+                                                                                                  (click)="copyWalletAccountNumber()"
+                                                                                                  [disabled]="copiedWAN()"
+                                                                                                  class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-base"
+                                                                                                  [class.bg-success-100]="copiedWAN()"
+                                                                                                  [class.text-success-700]="copiedWAN()"
+                                                                                                  [class.bg-accent-petrol]="!copiedWAN()"
+                                                                                                  [class.text-white]="!copiedWAN()"
+                                                                                                  [class.hover\:bg-accent-petrol\/90]="!copiedWAN()">
+                                                                                
+                                                                
+                                                
+                                
+                
                   @if (copiedWAN()) {
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>

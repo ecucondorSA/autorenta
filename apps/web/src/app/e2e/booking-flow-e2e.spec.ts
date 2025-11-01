@@ -255,7 +255,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
       expect(booking.total_amount).toBeDefined();
       expect(booking.start_at).toBeDefined();
       expect(booking.end_at).toBeDefined();
-
     });
 
     it('debería validar disponibilidad antes de permitir reserva', async () => {
@@ -293,7 +292,6 @@ describe('Sprint 5.1 - E2E Booking Flow', () => {
 
       expect(cars.length).toBeGreaterThan(0);
       expect(mockSupabase.from).toHaveBeenCalledWith('bookings');
-
     });
   });
 

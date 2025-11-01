@@ -63,7 +63,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
   loading = true;
 
   get carMapLocations() {
-    return this.filteredCars.map(car => ({
+    return this.filteredCars.map((car) => ({
       carId: car.id,
       title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
       pricePerDay: car.price_per_day,
@@ -75,7 +75,12 @@ export class ExplorePage implements OnInit, AfterViewInit {
       state: car.location_state,
       country: car.location_country,
       locationLabel: car.location_city || 'Sin ubicación',
-      photoUrl: (car.photos && car.photos[0]) ? (typeof car.photos[0] === 'string' ? car.photos[0] : car.photos[0].url) : null,
+      photoUrl:
+        car.photos && car.photos[0]
+          ? typeof car.photos[0] === 'string'
+            ? car.photos[0]
+            : car.photos[0].url
+          : null,
       description: car.description,
     }));
   }
@@ -125,8 +130,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   toggleFilters() {
@@ -156,8 +160,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     });
   }
 
-  onCarSelected(carId: string) {
-  }
+  onCarSelected(carId: string) {}
 
   resetFilters() {
     this.filters = {

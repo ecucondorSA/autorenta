@@ -516,10 +516,12 @@ export class ReportClaimPage implements OnInit {
       });
       await alert.present();
     } catch (error: unknown) {
-
       const alert = await this.alertController.create({
         header: '❌ Error',
-        message: error instanceof Error ? error.message : 'No se pudo reportar el siniestro. Intenta nuevamente.',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'No se pudo reportar el siniestro. Intenta nuevamente.',
         buttons: ['OK'],
       });
       await alert.present();

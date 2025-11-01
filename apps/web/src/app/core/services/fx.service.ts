@@ -12,7 +12,7 @@ import { ExchangeRateService } from './exchange-rate.service';
 /**
  * Servicio para gestionar tipos de cambio (FX)
  * Maneja snapshots, validación de expiración y revalidación
- * AHORA USA: ExchangeRateService (Binance con margen del 20%)
+ * USA: ExchangeRateService (Binance con margen del 20%)
  */
 @Injectable({
   providedIn: 'root',
@@ -29,8 +29,7 @@ export class FxService {
     _fromCurrency: CurrencyCode = 'USD',
     toCurrency: CurrencyCode = 'ARS',
   ): Observable<FxSnapshot | null> {
-    // Mapear a formato Binance pair
-    const pair = `USDT${toCurrency}`; // USDTARS
+    const pair = `USDT${toCurrency}`;
 
     return from(
       this.supabaseClient
@@ -50,24 +49,26 @@ export class FxService {
         const data = response.data;
         const timestamp = new Date(data.last_updated);
         const expiresAt = new Date(timestamp);
-        expiresAt.setDate(expiresAt.getDate() + 7); // +7 días
+        expiresAt.setDate(expiresAt.getDate() + 7);
 
         const snapshot: FxSnapshot = {
-          rate: data.platform_rate, // ✅ Usa platform_rate (Binance + margen)
+          rate: data.platform_rate,
           timestamp,
           fromCurrency: 'USD',
           toCurrency: toCurrency as CurrencyCode,
           expiresAt,
           isExpired: new Date() > expiresAt,
-          variationThreshold: 0.1, // ±10%
+          variationThreshold: 0.1,
         };
 
+        console.log(
           `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Binance: ${data.binance_rate}, Margen: ${data.margin_percent}%)`,
         );
 
         return snapshot;
       }),
       catchError((error) => {
+        console.error('Error obteniendo FX snapshot:', error);
         return of(null);
       }),
     );
@@ -77,7 +78,6 @@ export class FxService {
    * Valida si un FX snapshot necesita revalidación
    */
   needsRevalidation(fxSnapshot: FxSnapshot): { needs: boolean; reason?: string } {
-    // 1. Verificar expiración temporal (>7 días)
     if (isFxExpired(fxSnapshot)) {
       return {
         needs: true,
@@ -85,9 +85,6 @@ export class FxService {
       };
     }
 
-    // 2. Verificar variación excesiva
-    // Para esto necesitamos obtener la tasa actual y comparar
-    // Por ahora solo verificamos expiración
     return { needs: false };
   }
 
@@ -109,7 +106,6 @@ export class FxService {
           };
         }
 
-        // Verificar variación
         const variationExceeded = isFxVariationExceeded(
           oldSnapshot.rate,
           newSnapshot.rate,
@@ -124,7 +120,6 @@ export class FxService {
           };
         }
 
-        // Verificar expiración
         if (isFxExpired(oldSnapshot)) {
           return {
             needsUpdate: true,
@@ -161,7 +156,7 @@ export class FxService {
   private mapFxSnapshotFromDb(db: Record<string, unknown>): FxSnapshot {
     const timestamp = new Date(String(db.timestamp || db.created_at));
     const expiresAt = new Date(timestamp);
-    expiresAt.setDate(expiresAt.getDate() + 7); // +7 días
+    expiresAt.setDate(expiresAt.getDate() + 7);
 
     return {
       rate: Number(db.rate),
@@ -170,29 +165,29 @@ export class FxService {
       toCurrency: db.to_currency as CurrencyCode,
       expiresAt,
       isExpired: new Date() > expiresAt,
-      variationThreshold: 0.1, // ±10%
+      variationThreshold: 0.1,
     };
   }
 
   /**
-   * Obtiene la tasa actual de forma síncrona (para cálculos rápidos)
-   * NOTA: Esta es una función de emergencia, preferir getFxSnapshot()
-   * AHORA USA: ExchangeRateService (Binance)
+   * Obtiene la tasa actual de forma asíncrona
+   * USA: ExchangeRateService (Binance)
    */
   async getCurrentRateAsync(
     _fromCurrency: CurrencyCode = 'USD',
     _toCurrency: CurrencyCode = 'ARS',
   ): Promise<number> {
     try {
-      // Usar ExchangeRateService que consulta exchange_rates (Binance)
       const rate = await this.exchangeRateService.getPlatformRate('USDTARS');
       return rate;
     } catch (error) {
-      // Si falla la consulta a la DB, intentar Binance directamente
+      console.error('Error obteniendo tasa desde exchange_rates:', error);
+
       try {
         const binanceRate = await this.exchangeRateService.getBinanceRate();
-        return binanceRate * 1.2; // Aplicar margen del 20%
+        return binanceRate * 1.2;
       } catch (binanceError) {
+        console.error('Error obteniendo tasa de Binance:', binanceError);
         throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
       }
     }

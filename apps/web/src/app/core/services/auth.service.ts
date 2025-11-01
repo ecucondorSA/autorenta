@@ -22,6 +22,7 @@ export class AuthService {
   readonly session$ = computed(() => this.state().session);
   readonly isAuthenticated = computed(() => !!this.state().session);
   readonly loading = computed(() => this.state().loading);
+  readonly userEmail = computed(() => this.state().session?.user?.email);
 
   constructor() {
     void this.ensureSession();

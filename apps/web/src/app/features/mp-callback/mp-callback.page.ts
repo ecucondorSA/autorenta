@@ -320,7 +320,6 @@ export class MpCallbackPage implements OnInit, OnDestroy {
       // Completar onboarding
       const collectorId = await this.onboardingService.handleCallback(code, state);
 
-
       // Mostrar success
       this.state.set('success');
 

@@ -244,8 +244,7 @@ export class PlatformConfigService {
   /**
    * Parse config value based on data type
    */
-  private parseConfigValue(value: unknown, 
-    _dataType: string): unknown {
+  private parseConfigValue(value: unknown, _dataType: string): unknown {
     if (typeof value === 'string') {
       try {
         const parsed = JSON.parse(value);

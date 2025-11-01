@@ -327,14 +327,12 @@ export class DynamicPricingService {
     surge_active: boolean;
     surge_icon?: string;
   } | null> {
-
     try {
       // Get current user ID (if logged in)
       const {
         data: { user },
       } = await this.supabase.auth.getUser();
       const userId = user?.id || '00000000-0000-0000-0000-000000000000'; // Anonymous user
-
 
       const now = new Date();
       const response = await this.calculatePriceRPC(
@@ -343,7 +341,6 @@ export class DynamicPricingService {
         now.toISOString(),
         24, // Default 24 hours for "per day" pricing
       );
-
 
       const result = {
         price_per_hour: response.price_per_hour,

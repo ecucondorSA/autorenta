@@ -342,21 +342,18 @@ export class CheckoutPaymentService {
     bookingId: string,
     transaction: PaymentTransaction,
   ): Promise<void> {
-
     // Desbloquear fondos si fueron bloqueados
     if (transaction.fundsLocked && transaction.lockedAmountCents > 0) {
       try {
         await this.unlockWalletFunds(bookingId, transaction.lockedAmountCents);
-      } catch (err) {
-      }
+      } catch (err) {}
     }
 
     // Revertir booking a 'pending' si fue actualizado
     if (transaction.bookingUpdated) {
       try {
         await this.bookingsService.updateBooking(bookingId, { status: 'pending' });
-      } catch (err) {
-      }
+      } catch (err) {}
     }
 
     // TODO: Marcar intent como 'failed' si fue creado

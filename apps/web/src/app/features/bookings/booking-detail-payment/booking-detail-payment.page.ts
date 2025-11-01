@@ -301,8 +301,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           endDate: new Date(parsed.endDate),
         });
         return;
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
     // Si no, desde query params
@@ -398,9 +397,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // Guardar bookingId para UPDATE posterior
       this.existingBookingId = bookingId;
-
     } catch (err: unknown) {
-      this.error.set('Error al cargar el booking: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+      this.error.set(
+        'Error al cargar el booking: ' + (err instanceof Error ? err.message : 'Error desconocido'),
+      );
     }
   }
 
@@ -610,7 +610,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * ✅ MEJORA: Ahora muestra mensaje explicativo al usuario
    */
   protected onFallbackToWallet(reason?: string): void {
-
     // Establecer razón del fallback
     this.fallbackReason.set(reason || 'La pre-autorización con tu tarjeta fue rechazada');
 
@@ -664,7 +663,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * AHORA: Procesa el pago final en la misma página (flujo consolidado)
    */
   private async updateExistingBooking(bookingId: string): Promise<void> {
-
     // 1. Persistir risk snapshot con booking_id real
     const riskSnapshotResult = await this.persistRiskSnapshot(bookingId);
     if (!riskSnapshotResult.ok || !riskSnapshotResult.snapshotId) {
@@ -687,7 +685,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     if (error) throw error;
 
-
     // 3. Limpiar sessionStorage si existe
     sessionStorage.removeItem('booking_detail_input');
 
@@ -704,7 +701,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * AHORA: Una sola transacción atómica en la base de datos
    */
   private async createNewBooking(): Promise<void> {
-
     const input = this.bookingInput();
     const pricing = this.priceBreakdown();
     const risk = this.riskSnapshot();
@@ -741,7 +737,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     if (!result.success || !result.bookingId) {
       throw new Error(result.error || 'Error al crear reserva');
     }
-
 
     // ✅ NUEVO: Guardar booking ID para procesamiento de pago
     this.lastCreatedBookingId.set(result.bookingId);
@@ -945,14 +940,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;
 
-
     try {
       // Bloquear fondos en wallet
-      const lock = await this.walletService.lockRentalAndDeposit({
-        booking_id: bookingId,
-        rental_amount: rentalAmount,
-        deposit_amount: depositUsd,
-      });
+      const lock = await firstValueFrom(
+        this.walletService.lockRentalAndDeposit(bookingId, rentalAmount, depositUsd),
+      );
 
       if (!lock.success) {
         throw new Error(lock.message ?? 'No se pudo bloquear fondos en wallet');
@@ -972,15 +964,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Recalcular pricing
       await this.bookingsService.recalculatePricing(bookingId);
 
-
       // Redirigir a página de éxito
       this.router.navigate(['/bookings/success', bookingId]);
     } catch (error: unknown) {
       // Intentar desbloquear wallet si hubo error
       try {
-        await this.walletService.unlockFunds({ booking_id: bookingId });
-      } catch (unlockError) {
-      }
+        await firstValueFrom(this.walletService.unlockFunds(bookingId));
+      } catch (unlockError) {}
       throw error;
     }
   }
@@ -993,7 +983,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const bookingId = booking.id;
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;
-
 
     try {
       // Crear intención de pago
@@ -1011,7 +1000,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // Crear preferencia de MercadoPago
       const preference = await this.createPreferenceWithOnboardingGuard(bookingId);
-
 
       // Redirigir a MercadoPago
       if (preference.initPoint) {

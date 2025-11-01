@@ -211,7 +211,8 @@ export class CarLocationsService {
     const countryRaw = car.location_country ?? record.country ?? record.location_country ?? null;
     const country = typeof countryRaw === 'string' ? countryRaw : null;
 
-    const formattedAddressRaw = car.location_formatted_address ?? record.location_formatted_address ?? null;
+    const formattedAddressRaw =
+      car.location_formatted_address ?? record.location_formatted_address ?? null;
     const formattedAddress = typeof formattedAddressRaw === 'string' ? formattedAddressRaw : null;
 
     const updatedAt = String(record.updated_at ?? car.updated_at ?? new Date().toISOString());
@@ -219,7 +220,10 @@ export class CarLocationsService {
     const photoUrlRaw = car.main_photo_url ?? record.main_photo_url ?? record.photo_url ?? null;
     const photoUrl = typeof photoUrlRaw === 'string' ? photoUrlRaw : null;
 
-    const descriptionRaw = car.description ?? record.description ?? (typeof meta.description === 'string' ? meta.description : '');
+    const descriptionRaw =
+      car.description ??
+      record.description ??
+      (typeof meta.description === 'string' ? meta.description : '');
     const description = this.buildSummary(typeof descriptionRaw === 'string' ? descriptionRaw : '');
 
     return {

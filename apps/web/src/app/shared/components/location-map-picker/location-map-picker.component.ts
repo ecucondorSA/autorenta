@@ -201,8 +201,7 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
       // In a full implementation, you could call a reverse geocoding service
       this.currentAddress.set('Ubicación ajustada manualmente');
       newCoordinates.address = 'Ubicación ajustada manualmente';
-    } catch (error) {
-    }
+    } catch (error) {}
 
     // Emit the new coordinates
     this.locationChange.emit(newCoordinates);

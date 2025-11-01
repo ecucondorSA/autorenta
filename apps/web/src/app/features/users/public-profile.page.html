@@ -135,15 +135,20 @@
     <!-- Tabs Navigation -->
     <div class="mb-6 border-b border-pearl-gray dark:border-slate-deep/70 transition-colors">
       <nav class="-mb-px flex gap-6 overflow-x-auto" aria-label="Tabs">
-        <button
-          (click)="setActiveTab('cars')"
-          [class.text-accent-petrol]="activeTab() === 'cars'"
-          [class.border-accent-petrol]="activeTab() === 'cars'"
-          [class.text-charcoal-medium]="activeTab() !== 'cars'"
-          [class.dark:text-pearl-light/70]="activeTab() !== 'cars'"
-          [class.border-transparent]="activeTab() !== 'cars'"
-          class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"
-        >
+                                                <button
+                                                  (click)="setActiveTab('cars')"
+                                                  [class.text-accent-petrol]="activeTab() === 'cars'"
+                                                  [class.border-accent-petrol]="activeTab() === 'cars'"
+                                                  [class.text-charcoal-medium]="activeTab() !== 'cars'"
+                                                  [class.dark:text-pearl-light/70]="activeTab() !== 'cars'"
+                                                  [class.border-transparent]="activeTab() !== 'cars'"
+                                                  class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous">
+                                        
+                                
+                        
+                
+        
+
           {{ 'publicProfile.tabs.cars' | translate }} ({{ userCars().length }})
         </button>
         <button

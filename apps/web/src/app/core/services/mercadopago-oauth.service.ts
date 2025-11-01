@@ -58,20 +58,14 @@ export class MercadoPagoOAuthService {
    */
   async connectMercadoPago(redirectUri?: string): Promise<void> {
     try {
-
       // Usar redirect URI personalizada o default
-      const callbackUri =
-        redirectUri || window.location.origin + '/auth/mercadopago/callback';
+      const callbackUri = redirectUri || window.location.origin + '/auth/mercadopago/callback';
 
-
-      const { data, error } = await this.supabase.functions.invoke(
-        'mercadopago-oauth-connect',
-        {
-          body: {
-            redirect_uri: callbackUri,
-          },
-        }
-      );
+      const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-connect', {
+        body: {
+          redirect_uri: callbackUri,
+        },
+      });
 
       if (error) {
         throw new Error(error.message || 'Error al conectar con MercadoPago');
@@ -82,7 +76,6 @@ export class MercadoPagoOAuthService {
       if (!response?.success || !response.authorization_url) {
         throw new Error(response?.error || 'No se pudo generar URL de autorización');
       }
-
 
       // Redirigir a MercadoPago para autorización
       window.location.href = response.authorization_url;
@@ -100,13 +93,9 @@ export class MercadoPagoOAuthService {
    */
   async handleCallback(code: string, state: string): Promise<boolean> {
     try {
-
-      const { data, error } = await this.supabase.functions.invoke(
-        'mercadopago-oauth-callback',
-        {
-          body: { code, state },
-        }
-      );
+      const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-callback', {
+        body: { code, state },
+      });
 
       if (error) {
         throw new Error(error.message || 'Error procesando callback');
@@ -116,10 +105,9 @@ export class MercadoPagoOAuthService {
 
       if (!response?.success) {
         throw new Error(
-          response?.error || response?.error_description || 'Error en la autorización'
+          response?.error || response?.error_description || 'Error en la autorización',
         );
       }
-
 
       return true;
     } catch (err: any) {
@@ -134,7 +122,6 @@ export class MercadoPagoOAuthService {
    */
   async checkConnection(): Promise<MercadoPagoConnectionStatus> {
     try {
-
       const { data, error } = await this.supabase.rpc('check_mercadopago_connection');
 
       if (error) {
@@ -143,9 +130,7 @@ export class MercadoPagoOAuthService {
 
       const status = (data as MercadoPagoConnectionStatus) || { connected: false };
 
-        '[OAuth] Estado:',
-        status.connected ? '✅ Conectado' : '❌ No conectado'
-      );
+      console.log('[OAuth] Estado:', status.connected ? '✅ Conectado' : '❌ No conectado');
 
       if (status.connected && status.collector_id) {
       }
@@ -163,7 +148,6 @@ export class MercadoPagoOAuthService {
    */
   async disconnect(): Promise<boolean> {
     try {
-
       const { data, error } = await this.supabase.rpc('disconnect_mercadopago');
 
       if (error) {
@@ -175,7 +159,6 @@ export class MercadoPagoOAuthService {
       if (!response?.success) {
         throw new Error(response?.error || 'No se pudo desconectar la cuenta');
       }
-
 
       return true;
     } catch (err: any) {
@@ -213,7 +196,7 @@ export class MercadoPagoOAuthService {
           mercadopago_connected_at,
           mercadopago_account_type,
           mercadopago_country
-        `
+        `,
         )
         .eq('id', user.id)
         .single();

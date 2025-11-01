@@ -1,103 +1,28 @@
-/* DepositModalComponent Styles */
-
-/* Modal aparecer con animación */
 :host {
   display: block;
-  animation: fadeIn 0.2s ease-in-out;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.input-premium {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
 }
 
-/* Animación del contenido del modal */
-:host > div > div {
-  animation: slideUp 0.3s ease-out;
+.btn-primary {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #3f51b5;
+  color: #fff;
+  cursor: pointer;
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Estilos para inputs con error */
-input.error {
-  border-color: #ef4444;
-  background-color: #fef2f2;
-}
-
-:host-context(.dark) input.error {
-  border-color: #fca5a5;
-  background-color: rgba(239, 68, 68, 0.08);
-}
-
-input.error:focus {
-  ring-color: #ef4444;
-}
-
-/* Mejora visual para radio buttons */
-input[type='radio']:checked {
-  background-color: #2c4a52;
-  border-color: #2c4a52;
-}
-
-/* Hover state para provider options */
-.provider-option:hover {
-  transform: translateX(2px);
-  transition: transform 0.2s ease;
-}
-
-/* Asegurar que el modal esté encima de todo */
-:host {
-  z-index: 9999;
-}
-
-/* Scrollbar personalizada para contenido largo */
-:host > div > div {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
-}
-
-:host > div > div::-webkit-scrollbar {
-  width: 6px;
-}
-
-:host > div > div::-webkit-scrollbar-track {
-  background: #f7fafc;
-}
-
-:host > div > div::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 3px;
-}
-
-:host > div > div::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
-}
-
-:host-context(.dark) > div > div {
-  scrollbar-color: #4b5563 #1e1e1e;
-}
-
-:host-context(.dark) > div > div::-webkit-scrollbar-track {
-  background: #1e1e1e;
-}
-
-:host-context(.dark) > div > div::-webkit-scrollbar-thumb {
-  background: #4b5563;
-}
-
-:host-context(.dark) > div > div::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+.btn-secondary {
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
 }

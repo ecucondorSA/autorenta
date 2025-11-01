@@ -182,7 +182,10 @@ export class PaymentActionsComponent {
       // Reloading should be handled by the parent component
       window.location.reload();
     } catch (err) {
-      alert('Error al cancelar la reserva: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+      alert(
+        'Error al cancelar la reserva: ' +
+          (err instanceof Error ? err.message : 'Error desconocido'),
+      );
     }
   }
 

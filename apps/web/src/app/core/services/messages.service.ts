@@ -62,9 +62,7 @@ export class MessagesService {
     return (data ?? []) as Message[];
   }
 
-  async listCarLeadsForOwner(
-    ownerId: string,
-  ): Promise<
+  async listCarLeadsForOwner(ownerId: string): Promise<
     Array<{
       message: Message;
       car: { id: string; title?: string | null };
@@ -153,9 +151,7 @@ export class MessagesService {
       });
 
       if (error) throw error;
-
     } catch (error) {
-
       // Queue for retry when connection is restored
       await this.offlineMessages.queueMessage({
         bookingId: params.bookingId,
@@ -172,7 +168,7 @@ export class MessagesService {
   subscribeToBooking(
     bookingId: string,
     handler: (message: Message) => void,
-    onConnectionChange?: (status: ConnectionStatus) => void
+    onConnectionChange?: (status: ConnectionStatus) => void,
   ): void {
     this.unsubscribe();
 
@@ -188,7 +184,7 @@ export class MessagesService {
       (payload) => {
         handler(payload.new as Message);
       },
-      onConnectionChange
+      onConnectionChange,
     );
   }
 
@@ -198,7 +194,7 @@ export class MessagesService {
   subscribeToCar(
     carId: string,
     handler: (message: Message) => void,
-    onConnectionChange?: (status: ConnectionStatus) => void
+    onConnectionChange?: (status: ConnectionStatus) => void,
   ): void {
     this.unsubscribe();
 
@@ -214,7 +210,7 @@ export class MessagesService {
       (payload) => {
         handler(payload.new as Message);
       },
-      onConnectionChange
+      onConnectionChange,
     );
   }
 
@@ -273,15 +269,18 @@ export class MessagesService {
           // Presence state is Record<string, unknown[]>
           const typingUsers = Object.values(state)
             .flat()
-            .filter((presence): presence is { typing?: boolean; user_id?: string; presence_ref: string } => {
-              return typeof presence === 'object' && presence !== null && 'typing' in presence;
-            })
+            .filter(
+              (
+                presence,
+              ): presence is { typing?: boolean; user_id?: string; presence_ref: string } => {
+                return typeof presence === 'object' && presence !== null && 'typing' in presence;
+              },
+            )
             .filter((presence) => presence.typing)
             .map((presence) => presence.user_id)
             .filter((id): id is string => typeof id === 'string');
           callback(typingUsers);
-        } catch (error) {
-        }
+        } catch (error) {}
       })
       .subscribe();
 
@@ -296,7 +295,6 @@ export class MessagesService {
 
     try {
       const pending = await this.offlineMessages.getMessagesForRetry();
-
 
       for (const message of pending) {
         // Check if we should retry this message (respects exponential backoff)
@@ -326,7 +324,6 @@ export class MessagesService {
           // Success: remove from queue
           await this.offlineMessages.removeMessage(message.id);
         } catch (error) {
-
           // Increment retry counter
           await this.offlineMessages.incrementRetry(message.id);
 
@@ -336,7 +333,6 @@ export class MessagesService {
           }
         }
       }
-
     } catch (error) {
     } finally {
       this.isSyncing.set(false);

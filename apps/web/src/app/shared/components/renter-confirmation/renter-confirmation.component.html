@@ -189,6 +189,10 @@
 
   <!-- Mensaje de resultado -->
   <div *ngIf="message()" class="mt-4 p-4 rounded-lg" [class.bg-green-50]="confirmationResult()?.success" [class.dark:bg-green-900/20]="confirmationResult()?.success" [class.bg-red-50]="!confirmationResult()?.success" [class.dark:bg-red-900/20]="!confirmationResult()?.success">
+
+
+
+
     <p class="text-sm" [class.text-green-800]="confirmationResult()?.success" [class.dark:text-green-300]="confirmationResult()?.success" [class.text-red-800]="!confirmationResult()?.success" [class.dark:text-red-300]="!confirmationResult()?.success">
       {{ message() }}
     </p>

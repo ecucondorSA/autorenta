@@ -204,9 +204,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
           <!-- Typing indicator -->
           <div *ngIf="recipientTyping()" class="flex justify-start px-4 py-2">
-            <div
-              class="rounded-lg rounded-tl-none bg-white px-4 py-3 shadow-sm dark:bg-[#202C33]"
-            >
+            <div class="rounded-lg rounded-tl-none bg-white px-4 py-3 shadow-sm dark:bg-[#202C33]">
               <div class="flex items-center gap-1">
                 <div
                   class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
@@ -382,9 +380,11 @@ export class CarChatComponent implements OnInit, OnDestroy {
     }
     // Stop typing on unmount (non-blocking)
     if (this.currentUserId()) {
-      this.messagesService.setTyping(`car-${this.carId()}`, this.currentUserId()!, false).catch(() => {
-        // Ignore errors during cleanup
-      });
+      this.messagesService
+        .setTyping(`car-${this.carId()}`, this.currentUserId()!, false)
+        .catch(() => {
+          // Ignore errors during cleanup
+        });
     }
   }
 
@@ -415,9 +415,11 @@ export class CarChatComponent implements OnInit, OnDestroy {
 
     // Stop typing (no await - don't block send)
     if (this.currentUserId()) {
-      this.messagesService.setTyping(`car-${this.carId()}`, this.currentUserId()!, false).catch(() => {
-        // Ignore typing errors
-      });
+      this.messagesService
+        .setTyping(`car-${this.carId()}`, this.currentUserId()!, false)
+        .catch(() => {
+          // Ignore typing errors
+        });
     }
 
     try {
@@ -459,9 +461,11 @@ export class CarChatComponent implements OnInit, OnDestroy {
     // Stop typing after 3 seconds of inactivity
     this.typingTimeout = setTimeout(() => {
       if (this.currentUserId()) {
-        this.messagesService.setTyping(`car-${this.carId()}`, this.currentUserId()!, false).catch(() => {
-          // Ignore errors
-        });
+        this.messagesService
+          .setTyping(`car-${this.carId()}`, this.currentUserId()!, false)
+          .catch(() => {
+            // Ignore errors
+          });
       }
     }, 3000);
   }

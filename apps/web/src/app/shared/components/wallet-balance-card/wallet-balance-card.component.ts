@@ -179,17 +179,14 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     await this.walletService.subscribeToWalletChanges(
       // Callback cuando un depósito se confirma
       (transaction) => {
-
         // Mostrar notificación toast
         this.showDepositConfirmedToast(transaction as unknown as Record<string, unknown>);
 
         // Recargar pending deposits
-        this.loadPendingDeposits().catch((err) => {
-        });
+        this.loadPendingDeposits().catch((err) => {});
       },
       // Callback para cualquier cambio en transacciones
-      (transaction) => {
-      },
+      (transaction) => {},
     );
 
     // Iniciar auto-refresh si está habilitado
@@ -211,8 +208,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Desuscribirse de cambios realtime
-    this.walletService.unsubscribeFromWalletChanges().catch((err) => {
-    });
+    this.walletService.unsubscribeFromWalletChanges().catch((err) => {});
 
     // Limpiar interval al destruir componente
     if (this.refreshInterval) {
@@ -261,7 +257,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     this.isLoadingBalance.set(true);
 
     try {
-
       // 1. Forzar polling de MercadoPago (esto también refresca el balance internamente)
       const pollResult = await this.walletService.forcePollPendingPayments();
 
@@ -294,8 +289,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   async loadPendingDeposits(): Promise<void> {
     try {
       await this.walletService.refreshPendingDepositsCount();
-    } catch (err) {
-    }
+    } catch (err) {}
   }
 
   /**
@@ -336,7 +330,6 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       await this.loadBalance();
       await this.loadPendingDeposits();
     }, this.refreshIntervalMs) as unknown as number;
-
   }
 
   /**

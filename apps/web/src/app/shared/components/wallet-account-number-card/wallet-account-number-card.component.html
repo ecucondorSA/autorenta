@@ -13,19 +13,22 @@
   </div>
 
   <div class="flex gap-2">
-    <button
-      type="button"
-      (click)="copyWAN.emit()"
-      [disabled]="copied"
-      class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-base border-2"
-      [class.bg-success-50]="copied"
-      [class.border-success-500]="copied"
-      [class.text-success-700]="copied"
-      [class.bg-accent-petrol]="!copied"
-      [class.border-accent-petrol]="!copied"
-      [class.text-white]="!copied"
-      [class.hover:bg-accent-petrol/90]="!copied"
-    >
+                <button
+                  type="button"
+                  (click)="copyWAN.emit()"
+                  [disabled]="copied"
+                  class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-base border-2"
+                  [class.bg-success-50]="copied"
+                  [class.border-success-500]="copied"
+                  [class.text-success-700]="copied"
+                  [class.bg-accent-petrol]="!copied"
+                  [class.border-accent-petrol]="!copied"
+                  [class.text-white]="!copied"
+                  [class.hover:bg-accent-petrol/90]="!copied">
+            
+        
+    
+
       <ng-container *ngIf="copied; else notCopied">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>

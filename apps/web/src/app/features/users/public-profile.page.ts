@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,6 +7,9 @@ import { CarsService } from '../../core/services/cars.service';
 import { ReviewsService } from '../../core/services/reviews.service';
 import type { UserProfile, Car, Review } from '../../core/models';
 import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { switchMap, map, catchError } from 'rxjs/operators';
+import { of, from } from 'rxjs';
 
 interface UserStats {
   owner_rating_avg: number | null;
@@ -25,103 +28,93 @@ interface UserStats {
   imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './public-profile.page.html',
 })
-export class PublicProfilePage implements OnInit {
-  userId = signal<string>('');
-  profile = signal<Partial<UserProfile> | null>(null);
-  userStats = signal<UserStats | null>(null);
-  userCars = signal<Car[]>([]);
-  reviewsAsOwner = signal<Review[]>([]);
-  reviewsAsRenter = signal<Review[]>([]);
+export class PublicProfilePage {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly profileService = inject(ProfileService);
+  private readonly carsService = inject(CarsService);
+  private readonly reviewsService = inject(ReviewsService);
 
-  loading = signal<boolean>(true);
-  error = signal<string>('');
+  private readonly userId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
+  readonly userId = toSignal(this.userId$, { initialValue: null });
+
+  readonly data$ = this.userId$.pipe(
+    switchMap((userId) => {
+      if (!userId)
+        return of({ profile: null, stats: null, cars: [], ownerReviews: [], renterReviews: [] });
+      return from(this.profileService.getProfileById(userId)).pipe(
+        switchMap((profile) => {
+          if (!profile)
+            return of({
+              profile: null,
+              stats: null,
+              cars: [],
+              ownerReviews: [],
+              renterReviews: [],
+            });
+          return from(this.reviewsService.getUserStats(userId)).pipe(
+            switchMap((stats) => {
+              return from(this.carsService.getCarsByOwner(userId)).pipe(
+                switchMap((cars) => {
+                  return from(this.reviewsService.getReviewsForOwner(userId)).pipe(
+                    switchMap((ownerReviews) => {
+                      return from(this.reviewsService
+                        .getReviewsForRenter(userId))
+                        .pipe(
+                          map((renterReviews) => ({
+                            profile,
+                            stats,
+                            cars,
+                            ownerReviews,
+                            renterReviews,
+                          })),
+                        );
+                    }),
+                  );
+                }),
+              );
+            }),
+          );
+        }),
+      );
+    }),
+    catchError(() =>
+      of({ profile: null, stats: null, cars: [], ownerReviews: [], renterReviews: [] }),
+    ),
+  );
+
+  readonly data = toSignal(this.data$, {
+    initialValue: { profile: null, stats: null, cars: [], ownerReviews: [], renterReviews: [] },
+  });
+
+  readonly profile = computed(() => this.data().profile);
+  readonly userStats = computed(() => this.data().stats);
+  readonly userCars = computed(() => this.data().cars);
+  readonly reviewsAsOwner = computed(() => this.data().ownerReviews);
+  readonly reviewsAsRenter = computed(() => this.data().renterReviews);
+
+  readonly loading = signal(true);
+  readonly error = signal<string>('');
 
   activeTab = signal<'cars' | 'reviews-owner' | 'reviews-renter'>('cars');
 
-  // Computed properties
   hasOwnerReviews = computed(() => this.reviewsAsOwner().length > 0);
   hasRenterReviews = computed(() => this.reviewsAsRenter().length > 0);
   hasCars = computed(() => this.userCars().length > 0);
 
-  displayedCars = computed(() => {
-    const cars = this.userCars();
-    return cars.slice(0, 6); // Mostrar máximo 6 autos
-  });
-
-  displayedReviewsOwner = computed(() => {
-    const reviews = this.reviewsAsOwner();
-    return reviews.slice(0, 3); // Mostrar últimas 3 reviews
-  });
-
-  displayedReviewsRenter = computed(() => {
-    const reviews = this.reviewsAsRenter();
-    return reviews.slice(0, 3); // Mostrar últimas 3 reviews
-  });
+  displayedCars = computed(() => this.userCars().slice(0, 6));
+  displayedReviewsOwner = computed(() => this.reviewsAsOwner().slice(0, 3));
+  displayedReviewsRenter = computed(() => this.reviewsAsRenter().slice(0, 3));
 
   averageCarPrice = computed(() => {
     const cars = this.userCars();
     if (cars.length === 0) return 0;
-    const total = cars.reduce((sum, car) => sum + (car.price_per_day || 0), 0);
+    const total = cars.reduce((sum: number, car: Car) => sum + (car.price_per_day || 0), 0);
     return Math.round(total / cars.length);
   });
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private profileService: ProfileService,
-    private carsService: CarsService,
-    private reviewsService: ReviewsService,
-  ) {}
-
-  async ngOnInit(): Promise<void> {
-    const userId = this.route.snapshot.paramMap.get('id');
-
-    if (!userId) {
-      this.error.set('Usuario no encontrado');
-      this.loading.set(false);
-      return;
-    }
-
-    this.userId.set(userId);
-    await this.loadUserData();
-  }
-
-  async loadUserData(): Promise<void> {
-    try {
-      this.loading.set(true);
-      this.error.set('');
-
-      // Cargar perfil público
-      const profile = await this.profileService.getPublicProfile(this.userId());
-
-      if (!profile) {
-        this.error.set('Usuario no encontrado');
-        this.loading.set(false);
-        return;
-      }
-
-      this.profile.set(profile);
-
-      // Cargar estadísticas
-      const stats = await this.profileService.getUserStats(this.userId());
-      this.userStats.set(stats as unknown as UserStats | null);
-
-      // Cargar autos del usuario (solo activos)
-      const cars = await this.carsService.getCarsByOwner(this.userId());
-      this.userCars.set(cars.filter((car) => car.status === 'active'));
-
-      // Cargar reviews como owner
-      const ownerReviews = await this.reviewsService.getReviewsForOwner(this.userId());
-      this.reviewsAsOwner.set(ownerReviews);
-
-      // Cargar reviews como renter
-      const renterReviews = await this.reviewsService.getReviewsForRenter(this.userId());
-      this.reviewsAsRenter.set(renterReviews);
-    } catch (err) {
-      this.error.set('Error al cargar el perfil del usuario');
-    } finally {
-      this.loading.set(false);
-    }
+  constructor() {
+    this.data$.subscribe(() => this.loading.set(false));
   }
 
   setActiveTab(tab: 'cars' | 'reviews-owner' | 'reviews-renter'): void {
@@ -162,17 +155,9 @@ export class PublicProfilePage implements OnInit {
     const stars: string[] = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push('full');
-    }
-    if (hasHalfStar) {
-      stars.push('half');
-    }
-    while (stars.length < 5) {
-      stars.push('empty');
-    }
-
+    for (let i = 0; i < fullStars; i++) stars.push('full');
+    if (hasHalfStar) stars.push('half');
+    while (stars.length < 5) stars.push('empty');
     return stars;
   }
 

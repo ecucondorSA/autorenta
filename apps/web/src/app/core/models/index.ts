@@ -1,4 +1,3 @@
-// Import database types
 import type {
   UserRole,
   CarStatus,
@@ -10,8 +9,31 @@ import type {
   PaymentProvider,
 } from '../types/database.types';
 
+// Re-export Supabase types for use throughout the app
+export type {
+  Profile,
+  Car as CarDB,
+  Booking as BookingDB,
+  WalletBalance,
+  WalletTransaction as WalletTransactionDB,
+  WalletLedger,
+  Payment as PaymentDB,
+  PaymentAuthorization,
+  BankAccount as BankAccountDB,
+  Review as ReviewDB,
+} from '../types/supabase-types';
+
 // Re-export for backward compatibility
 export type Role = UserRole;
+export type {
+  CarStatus,
+  FuelType,
+  Transmission,
+  CancelPolicy,
+  BookingStatus,
+  PaymentStatus,
+  PaymentProvider,
+};
 
 // Export FGO models
 export * from './fgo.model';

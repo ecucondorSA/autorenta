@@ -80,7 +80,6 @@ export class GeocodingService {
         placeName: feature.text,
       };
     } catch (error) {
-
       if (error instanceof Error) {
         throw error;
       }
@@ -199,7 +198,6 @@ export class GeocodingService {
 
       return result;
     } catch (error) {
-
       if (error instanceof Error) {
         throw error;
       }

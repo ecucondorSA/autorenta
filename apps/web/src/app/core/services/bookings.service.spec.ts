@@ -66,12 +66,10 @@ describe('BookingsService', () => {
     const bookingId = 'booking-123';
     const fakeBooking = { id: bookingId, status: 'pending' } as any;
 
-    rpcHandlers['is_car_available'] = () =>
-      Promise.resolve({ data: true, error: null });
+    rpcHandlers['is_car_available'] = () => Promise.resolve({ data: true, error: null });
     rpcHandlers['request_booking'] = () =>
       Promise.resolve({ data: { booking_id: bookingId }, error: null });
-    rpcHandlers['pricing_recalculate'] = () =>
-      Promise.resolve({ data: null, error: null });
+    rpcHandlers['pricing_recalculate'] = () => Promise.resolve({ data: null, error: null });
 
     spyOn(service, 'getBookingById').and.resolveTo(fakeBooking);
 
@@ -84,8 +82,7 @@ describe('BookingsService', () => {
   });
 
   it('retorna error cuando el auto no está disponible', async () => {
-    rpcHandlers['is_car_available'] = () =>
-      Promise.resolve({ data: false, error: null });
+    rpcHandlers['is_car_available'] = () => Promise.resolve({ data: false, error: null });
 
     const result = await service.createBookingWithValidation('car-2', futureStart, futureEnd);
 

@@ -18,7 +18,10 @@
   class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-soft dark:bg-graphite-dark transition-opacity duration-500"
 >
   <!-- Header -->
-  <header id="main-header" class="sticky top-0 z-sticky border-b border-pearl-gray/30 backdrop-blur-md bg-white-pure/95 dark:bg-anthracite/95">
+  <header
+    id="main-header"
+    class="sticky top-0 z-sticky border-b border-pearl-gray/30 backdrop-blur-md bg-white-pure/95 dark:bg-anthracite/95"
+  >
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-sand-light dark:bg-slate-deep"
       href="#main-content"
@@ -36,13 +39,28 @@
         [attr.aria-expanded]="sidebarOpen()"
         #menuButton
       >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
         </svg>
       </button>
 
       <!-- Logo -->
-      <a routerLink="/" data-tour-step="welcome-hero" class="group flex items-center gap-3 hover:opacity-100 transition-base">
+      <a
+        routerLink="/"
+        data-tour-step="welcome-hero"
+        class="group flex items-center gap-3 hover:opacity-100 transition-base"
+      >
         <img
           ngSrc="/assets/images/autorentar-logo.png"
           alt="Autorentar"
@@ -52,17 +70,27 @@
           class="h-12 md:h-14 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-[1.04]"
         />
         <span class="flex flex-col leading-tight">
-          <span class="text-[1.05rem] font-semibold text-smoke-black dark:text-pearl-light group-hover:text-accent-petrol">
+          <span
+            class="text-[1.05rem] font-semibold text-smoke-black dark:text-pearl-light group-hover:text-accent-petrol"
+          >
             AutoRentar
           </span>
-          <span class="text-[0.68rem] uppercase tracking-[0.22em] text-ash-gray dark:text-pearl-light/65">
+          <span
+            class="text-[0.68rem] uppercase tracking-[0.22em] text-ash-gray dark:text-pearl-light/65"
+          >
             Car Sharing
           </span>
         </span>
       </a>
 
       <!-- Desktop Navigation -->
-      <nav id="main-nav" data-tour-step="welcome-nav" class="hidden lg:flex items-center gap-3 xl:gap-4 ml-8" role="navigation" aria-label="Principal">
+      <nav
+        id="main-nav"
+        data-tour-step="welcome-nav"
+        class="hidden lg:flex items-center gap-3 xl:gap-4 ml-8"
+        role="navigation"
+        aria-label="Principal"
+      >
         <a
           routerLink="/cars"
           routerLinkActive="nav-link-active"
@@ -70,35 +98,86 @@
           class="nav-link nav-link-primary"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35m1.35-4.65a6 6 0 1 1-12 0 6 6 0 0 1 12 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m21 21-4.35-4.35m1.35-4.65a6 6 0 1 1-12 0 6 6 0 0 1 12 0z"
+            />
           </svg>
           <span>{{ 'nav.cars' | translate }}</span>
         </a>
-        <a *ngIf="isAuthenticatedSig()" routerLink="/cars/publish" routerLinkActive="nav-link-active" class="nav-link">
+        <a
+          *ngIf="isAuthenticatedSig()"
+          routerLink="/cars/publish"
+          routerLinkActive="nav-link-active"
+          class="nav-link"
+        >
           {{ 'nav.publish' | translate }}
         </a>
-        <a *ngIf="isAuthenticatedSig()" routerLink="/bookings" routerLinkActive="nav-link-active" class="nav-link">
+        <a
+          *ngIf="isAuthenticatedSig()"
+          routerLink="/bookings"
+          routerLinkActive="nav-link-active"
+          class="nav-link"
+        >
           {{ 'nav.bookings' | translate }}
         </a>
-        <a *ngIf="isAuthenticatedSig()" routerLink="/wallet" routerLinkActive="nav-link-active" class="nav-link">
+        <a
+          *ngIf="isAuthenticatedSig()"
+          routerLink="/wallet"
+          routerLinkActive="nav-link-active"
+          class="nav-link"
+        >
           {{ 'nav.wallet' | translate }}
         </a>
       </nav>
 
       <!-- Actions -->
       <div class="ml-auto flex items-center gap-3 lg:gap-4">
-        <app-verification-badge *ngIf="isAuthenticatedSig()" class="hidden lg:inline-flex"></app-verification-badge>
+        <app-verification-badge
+          *ngIf="isAuthenticatedSig()"
+          class="hidden lg:inline-flex"
+        ></app-verification-badge>
         <!-- Language Selector -->
         <app-language-selector></app-language-selector>
         <!-- Help Button -->
         <app-help-button></app-help-button>
         <!-- Theme Toggle -->
-        <button (click)="toggleDarkMode()" class="icon-button h-10 w-10 lg:h-11 lg:w-11" [attr.aria-label]="'common.changeTheme' | translate">
-          <svg *ngIf="!darkMode()" class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        <button
+          (click)="toggleDarkMode()"
+          class="icon-button h-10 w-10 lg:h-11 lg:w-11"
+          [attr.aria-label]="'common.changeTheme' | translate"
+        >
+          <svg
+            *ngIf="!darkMode()"
+            class="w-5 h-5 lg:w-6 lg:h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
           </svg>
-          <svg *ngIf="darkMode()" class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          <svg
+            *ngIf="darkMode()"
+            class="w-5 h-5 lg:w-6 lg:h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
           </svg>
         </button>
 
@@ -125,8 +204,19 @@
             loading="lazy"
           />
           <ng-template #profilePlaceholder>
-            <svg class="w-5 h-5 text-charcoal-medium dark:text-pearl-light" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            <svg
+              class="w-5 h-5 text-charcoal-medium dark:text-pearl-light"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
             </svg>
           </ng-template>
         </a>
@@ -167,14 +257,32 @@
     <div class="p-6">
       <div class="flex items-center justify-between mb-8">
         <span class="h5">{{ 'nav.menu' | translate }}</span>
-        <button (click)="closeSidebar()" class="icon-button" [attr.aria-label]="'nav.closeMenu' | translate">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <button
+          (click)="closeSidebar()"
+          class="icon-button"
+          [attr.aria-label]="'nav.closeMenu' | translate"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
 
-      <app-verification-badge *ngIf="isAuthenticatedSig()" class="mb-6 block lg:hidden"></app-verification-badge>
+      <app-verification-badge
+        *ngIf="isAuthenticatedSig()"
+        class="mb-6 block lg:hidden"
+      ></app-verification-badge>
 
       <nav class="space-y-2" role="navigation" aria-label="Móvil">
         <a
@@ -214,7 +322,9 @@
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
         >
-          <div class="relative h-8 w-8 flex-shrink-0 rounded-full overflow-hidden bg-sand-light dark:bg-slate-deep/70">
+          <div
+            class="relative h-8 w-8 flex-shrink-0 rounded-full overflow-hidden bg-sand-light dark:bg-slate-deep/70"
+          >
             <img
               *ngIf="userProfile()?.avatar_url; else sidebarPlaceholder"
               [src]="userProfile()!.avatar_url"
@@ -223,8 +333,14 @@
               loading="lazy"
             />
             <ng-template #sidebarPlaceholder>
-              <svg class="h-full w-full p-1.5 text-charcoal-medium dark:text-pearl-light" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+              <svg
+                class="h-full w-full p-1.5 text-charcoal-medium dark:text-pearl-light"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
+                />
               </svg>
             </ng-template>
           </div>
@@ -258,13 +374,20 @@
     aria-label="Ver comparación de autos"
   >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+      />
     </svg>
     <span class="font-semibold text-sm">Comparando ({{ compareCountSig() }})</span>
   </a>
 
   <!-- Footer -->
-  <footer class="border-t border-pearl-gray/40 dark:border-white/10 bg-gradient-to-b from-white-pure/98 via-white-pure to-white-pure dark:from-[#12171a] dark:via-[#141b1f] dark:to-[#161d22]">
+  <footer
+    class="border-t border-pearl-gray/40 dark:border-white/10 bg-gradient-to-b from-white-pure/98 via-white-pure to-white-pure dark:from-[#12171a] dark:via-[#141b1f] dark:to-[#161d22]"
+  >
     <div class="mx-auto max-w-7xl px-container py-section-sm">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
         <!-- Brand -->
@@ -279,19 +402,26 @@
             />
           </div>
           <p class="text-sm text-charcoal-medium dark:text-pearl-light/80 leading-relaxed max-w-xs">
-            Alquiler de autos premium en Uruguay. Conectamos personas y experiencias con vehículos de anfitriones verificados.
+            Alquiler de autos premium en Uruguay. Conectamos personas y experiencias con vehículos
+            de anfitriones verificados.
           </p>
         </div>
 
         <!-- Links -->
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Explorar</h4>
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+            Explorar
+          </h4>
           <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
             <li>
-              <a routerLink="/cars" class="hover:text-accent-petrol transition-base">Buscar autos</a>
+              <a routerLink="/cars" class="hover:text-accent-petrol transition-base"
+                >Buscar autos</a
+              >
             </li>
             <li>
-              <a routerLink="/cars/publish" class="hover:text-accent-petrol transition-base">Publicar auto</a>
+              <a routerLink="/cars/publish" class="hover:text-accent-petrol transition-base"
+                >Publicar auto</a
+              >
             </li>
             <li>
               <a routerLink="/wallet" class="hover:text-accent-petrol transition-base">Wallet</a>
@@ -300,33 +430,65 @@
         </div>
 
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Legal</h4>
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+            Legal
+          </h4>
           <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
             <li>
-              <a href="#" class="hover:text-accent-petrol transition-base">Términos y condiciones</a>
+              <a href="#" class="hover:text-accent-petrol transition-base"
+                >Términos y condiciones</a
+              >
             </li>
             <li>
-              <a href="#" class="hover:text-accent-petrol transition-base">Política de privacidad</a>
+              <a href="#" class="hover:text-accent-petrol transition-base"
+                >Política de privacidad</a
+              >
             </li>
           </ul>
         </div>
 
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Contacto</h4>
+          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+            Contacto
+          </h4>
           <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
             <li>
-              <a href="mailto:autorentardev@gmail.com" class="inline-flex items-center gap-2 hover:text-accent-petrol transition-base">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true">
+              <a
+                href="mailto:autorentardev&#64;gmail.com"
+                class="inline-flex items-center gap-2 hover:text-accent-petrol transition-base"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 5h18M5 7h14v12H5z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 9l7 5 7-5" />
                 </svg>
-                autorentardev@gmail.com
+                autorentardev&#64;gmail.com
               </a>
             </li>
             <li>
-              <a href="tel:+59899123456" class="inline-flex items-center gap-2 hover:text-accent-petrol transition-base">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 5.75C3 4.782 3.782 4 4.75 4h2.083a1.5 1.5 0 0 1 1.457 1.125l.7 2.804a1.5 1.5 0 0 1-.387 1.47l-1.13 1.13a11.94 11.94 0 0 0 4.326 4.326l1.13-1.13a1.5 1.5 0 0 1 1.47-.387l2.804.7A1.5 1.5 0 0 1 19.25 18H20.5c.966 0 1.75.784 1.75 1.75v2.083A1.5 1.5 0 0 1 20.75 23 16.75 16.75 0 0 1 3 5.75Z" />
+              <a
+                href="tel:+59899123456"
+                class="inline-flex items-center gap-2 hover:text-accent-petrol transition-base"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 5.75C3 4.782 3.782 4 4.75 4h2.083a1.5 1.5 0 0 1 1.457 1.125l.7 2.804a1.5 1.5 0 0 1-.387 1.47l-1.13 1.13a11.94 11.94 0 0 0 4.326 4.326l1.13-1.13a1.5 1.5 0 0 1 1.47-.387l2.804.7A1.5 1.5 0 0 1 19.25 18H20.5c.966 0 1.75.784 1.75 1.75v2.083A1.5 1.5 0 0 1 20.75 23 16.75 16.75 0 0 1 3 5.75Z"
+                  />
                 </svg>
                 +598 99 123 456
               </a>
@@ -334,14 +496,25 @@
           </ul>
 
           <div class="mt-5">
-            <h5 class="text-xs font-semibold uppercase tracking-[0.2em] text-ash-gray dark:text-pearl-light/60 mb-3">Síguenos</h5>
+            <h5
+              class="text-xs font-semibold uppercase tracking-[0.2em] text-ash-gray dark:text-pearl-light/60 mb-3"
+            >
+              Síguenos
+            </h5>
             <div class="flex items-center gap-3">
               <a
                 href="#"
                 aria-label="Instagram"
                 class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-pearl-gray/50 bg-white/80 text-accent-petrol shadow-sm transition transform hover:scale-105 dark:border-white/15 dark:bg-white/5 dark:text-pearl-light"
               >
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  aria-hidden="true"
+                >
                   <rect x="3" y="3" width="18" height="18" rx="4" />
                   <circle cx="12" cy="12" r="3.5" />
                   <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none" />
@@ -352,8 +525,19 @@
                 aria-label="WhatsApp"
                 class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-pearl-gray/50 bg-white/80 text-accent-petrol shadow-sm transition transform hover:scale-105 dark:border-white/15 dark:bg-white/5 dark:text-pearl-light"
               >
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.5 20 4 21.5l1.5-5.5a7.5 7.5 0 1 1 2.7 2.7L5.5 20Zm5.8-6.4c1.1 1.9 2.7 3 3.6 3.3.6.2 1.1.2 1.4-.1.2-.2.5-.6.6-.9.1-.3.1-.5 0-.7-.1-.2-.5-.4-.9-.6s-.7-.3-.9-.1-.5.8-.7.9c-.2.1-.4.1-.7 0-.3-.2-1-.5-1.5-1-1-.8-1.7-1.9-1.9-2.3-.2-.3-.1-.5 0-.7.1-.2.3-.3.5-.5.2-.2.3-.3.4-.5.1-.2.1-.4 0-.6-.1-.2-.7-1.7-.9-2.2-.2-.6-.4-.6-.6-.6h-.6c-.2 0-.5.1-.7.3a2.4 2.4 0 0 0-.8 1.8c0 .6.1 1.2.4 1.8a9 9 0 0 0 1.6 2.4Z" />
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5.5 20 4 21.5l1.5-5.5a7.5 7.5 0 1 1 2.7 2.7L5.5 20Zm5.8-6.4c1.1 1.9 2.7 3 3.6 3.3.6.2 1.1.2 1.4-.1.2-.2.5-.6.6-.9.1-.3.1-.5 0-.7-.1-.2-.5-.4-.9-.6s-.7-.3-.9-.1-.5.8-.7.9c-.2.1-.4.1-.7 0-.3-.2-1-.5-1.5-1-1-.8-1.7-1.9-1.9-2.3-.2-.3-.1-.5 0-.7.1-.2.3-.3.5-.5.2-.2.3-.3.4-.5.1-.2.1-.4 0-.6-.1-.2-.7-1.7-.9-2.2-.2-.6-.4-.6-.6-.6h-.6c-.2 0-.5.1-.7.3a2.4 2.4 0 0 0-.8 1.8c0 .6.1 1.2.4 1.8a9 9 0 0 0 1.6 2.4Z"
+                  />
                 </svg>
               </a>
             </div>

@@ -54,9 +54,7 @@ export class MarketplaceService {
 
     // Validar porcentaje de comisión
     if (isNaN(platformFeePercentage) || platformFeePercentage <= 0 || platformFeePercentage > 100) {
-      warnings.push(
-        `Porcentaje de comisión inválido: ${platformFeeStr}. Usando 10% por defecto.`
-      );
+      warnings.push(`Porcentaje de comisión inválido: ${platformFeeStr}. Usando 10% por defecto.`);
     }
 
     const config: MarketplaceConfig = {
@@ -111,7 +109,10 @@ export class MarketplaceService {
   /**
    * Calcula los montos del split payment
    */
-  calculateSplitAmounts(totalAmount: number, feePercentage?: number): {
+  calculateSplitAmounts(
+    totalAmount: number,
+    feePercentage?: number,
+  ): {
     total: number;
     platformFee: number;
     ownerAmount: number;

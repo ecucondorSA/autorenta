@@ -4,6 +4,8 @@ import Shepherd from 'shepherd.js';
 import type { Tour } from 'shepherd.js';
 import { Subscription, filter } from 'rxjs';
 
+// DEPRECATED: This service is being replaced by GuidedTourService
+
 // #region Enums and Interfaces
 export enum TourId {
   Welcome = 'welcome',
@@ -112,39 +114,11 @@ export class TourService {
   }
 
   startWelcomeTour(): void {
-    // DEPRECATED: This service is being replaced by GuidedTourService
-    // Uncomment the line below to temporarily disable old system
-      '[OLD TourService] startWelcomeTour() called - This will be removed soon. Use GuidedTourService instead.',
-    );
-    return; // Disabled - use new GuidedTourService
-
-    // if (this.shouldSkipTour(TourId.Welcome)) return;
-    // const steps = this.getWelcomeTourSteps();
-    // this.buildTour(TourId.Welcome, steps);
+    return;
   }
 
   startGuidedBookingTour(): void {
-    // DEPRECATED: This service is being replaced by GuidedTourService
-      '[OLD TourService] startGuidedBookingTour() called - This will be removed soon. Use GuidedTourService instead.',
-    );
-    return; // Disabled - use new GuidedTourService
-
-    // if (this.shouldSkipTour(TourId.GuidedBooking)) return;
-    // if (this.activeTourId && this.activeTourId !== TourId.GuidedBooking) {
-    //   this.tour?.cancel();
-    // }
-
-    // this.tour = this.createTour(TourId.GuidedBooking, !this.isMobile());
-    // this.guidedRouteStepsShown.clear();
-    // this.ensureRouterListener();
-
-    // this._addGuidedBookingSearchSteps();
-    // this._addGuidedBookingDetailSteps();
-    // this._addGuidedBookingBookingSteps();
-    // this._addGuidedBookingCompletionStep();
-
-    // this.tour?.start();
-    // this.showGuidedBookingStepForUrl(this.router.url);
+    return;
   }
 
   startRenterTour(): void {
@@ -337,22 +311,12 @@ export class TourService {
         canClickTarget: true,
         scrollTo: { behavior: 'smooth', block: 'center' },
         classes: 'shepherd-theme-custom',
-        when: {
-          show: () => {
-            this.trackEvent('tour_step_viewed', {
-              tour_id: tourId,
-              step_id: tour.getCurrentStep()?.id,
-            });
-          },
-        },
       },
     });
     tour.on('cancel', () => {
-      this.trackEvent('tour_cancelled', { tour_id: tourId, step_id: tour.getCurrentStep()?.id });
       this.handleTourFinished(tourId);
     });
     tour.on('complete', () => {
-      this.trackEvent('tour_completed', { tour_id: tourId });
       this.handleTourFinished(tourId);
     });
     return tour;
@@ -409,7 +373,6 @@ export class TourService {
       localStorage.setItem(`${this.STORAGE_PREFIX}${tourId}:dismissed-until`, String(resumeAt));
       localStorage.setItem(`${this.STORAGE_PREFIX}${tourId}:dismissed`, 'true');
     }
-    this.trackEvent('tour_dismissed_temporarily', { tour_id: tourId });
     this.tour?.cancel();
   }
 
@@ -474,7 +437,6 @@ export class TourService {
         const element = document.querySelector(selector);
         if (element) return resolve();
         if (Date.now() - startedAt >= this.WAIT_TIMEOUT_MS) {
-          this.trackEvent('tour_element_timeout', { selector });
           return resolve(); // Changed from reject to resolve to continue tour
         }
         setTimeout(tryFind, this.WAIT_INTERVAL_MS);

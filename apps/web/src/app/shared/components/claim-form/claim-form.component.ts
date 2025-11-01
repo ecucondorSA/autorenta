@@ -230,7 +230,6 @@ export class ClaimFormComponent implements OnInit {
         throw new Error('No se pudo crear el claim');
       }
 
-
       // Cerrar modal y retornar claim
       this.closeModal(claim);
     } catch (error) {

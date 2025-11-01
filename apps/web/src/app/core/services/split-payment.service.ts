@@ -62,15 +62,12 @@ export class SplitPaymentService {
    */
   getBookingSplits(bookingId: string): Observable<PaymentSplit[]> {
     return from(
-      this.supabase.getClient()
-        .from('payment_splits')
-        .select('*')
-        .eq('booking_id', bookingId)
+      this.supabase.getClient().from('payment_splits').select('*').eq('booking_id', bookingId),
     ).pipe(
       map(({ data }) => data as PaymentSplit[]),
-      catchError(error => {
+      catchError((error) => {
         return throwError(() => new Error('Failed to fetch payment splits'));
-      })
+      }),
     );
   }
 
@@ -79,16 +76,17 @@ export class SplitPaymentService {
    */
   getUserSplits(userId: string): Observable<PaymentSplit[]> {
     return from(
-      this.supabase.getClient()
+      this.supabase
+        .getClient()
         .from('payment_splits')
         .select('*')
         .eq('collector_id', userId)
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }),
     ).pipe(
       map(({ data }) => data as PaymentSplit[]),
-      catchError(error => {
+      catchError((error) => {
         return throwError(() => new Error('Failed to fetch user payment splits'));
-      })
+      }),
     );
   }
 
@@ -103,9 +101,9 @@ export class SplitPaymentService {
     averagePayoutAmount: number;
   }> {
     return this.getUserSplits(userId).pipe(
-      map(splits => {
-        const completed = splits.filter(s => s.status === 'completed');
-        const pending = splits.filter(s => s.status === 'pending' || s.status === 'processing');
+      map((splits) => {
+        const completed = splits.filter((s) => s.status === 'completed');
+        const pending = splits.filter((s) => s.status === 'pending' || s.status === 'processing');
 
         return {
           totalEarnings: splits.reduce((sum, s) => sum + (s.netAmount || 0), 0),
@@ -118,21 +116,19 @@ export class SplitPaymentService {
               : 0,
         };
       }),
-      catchError(error => {
+      catchError((error) => {
         return throwError(() => new Error('Failed to calculate payment statistics'));
-      })
+      }),
     );
   }
 
   /**
    * Mark a split payment as completed (after successful payout)
    */
-  completeSplit(
-    splitId: string,
-    payoutId: string
-  ): Observable<PaymentSplit> {
+  completeSplit(splitId: string, payoutId: string): Observable<PaymentSplit> {
     return from(
-      this.supabase.getClient()
+      this.supabase
+        .getClient()
         .from('payment_splits')
         .update({
           status: 'completed',
@@ -141,25 +137,23 @@ export class SplitPaymentService {
         })
         .eq('id', splitId)
         .select()
-        .single()
+        .single(),
     ).pipe(
       map(({ data }) => data as PaymentSplit),
-      switchMap(split => this.createWalletTransaction(split)),
-      catchError(error => {
+      switchMap((split) => this.createWalletTransaction(split)),
+      catchError((error) => {
         return throwError(() => new Error('Failed to complete payment split'));
-      })
+      }),
     );
   }
 
   /**
    * Mark a split payment as failed
    */
-  failSplit(
-    splitId: string,
-    failureReason: string
-  ): Observable<PaymentSplit> {
+  failSplit(splitId: string, failureReason: string): Observable<PaymentSplit> {
     return from(
-      this.supabase.getClient()
+      this.supabase
+        .getClient()
         .from('payment_splits')
         .update({
           status: 'failed',
@@ -167,12 +161,12 @@ export class SplitPaymentService {
         })
         .eq('id', splitId)
         .select()
-        .single()
+        .single(),
     ).pipe(
       map(({ data }) => data as PaymentSplit),
-      catchError(error => {
+      catchError((error) => {
         return throwError(() => new Error('Failed to mark payment split as failed'));
-      })
+      }),
     );
   }
 
@@ -190,18 +184,20 @@ export class SplitPaymentService {
   }> {
     return from(
       Promise.all([
-        this.supabase.getClient()
+        this.supabase
+          .getClient()
           .from('payments')
           .select('*')
           .eq('id', paymentId)
           .single()
           .then((res: any) => res.data),
-        this.supabase.getClient()
+        this.supabase
+          .getClient()
           .from('payment_splits')
           .select('*')
           .eq('payment_id', paymentId)
           .then((res: any) => res.data),
-      ])
+      ]),
     ).pipe(
       map(([payment, splits]) => {
         const splitsList = splits as PaymentSplit[];
@@ -215,9 +211,9 @@ export class SplitPaymentService {
           },
         };
       }),
-      catchError(error => {
+      catchError((error) => {
         return throwError(() => new Error('Failed to fetch payment breakdown'));
-      })
+      }),
     );
   }
 
@@ -225,7 +221,7 @@ export class SplitPaymentService {
    * Private method: Validate and process payment
    */
   private async validateAndProcessPayment(
-    request: SplitPaymentRequest
+    request: SplitPaymentRequest,
   ): Promise<SplitPaymentResponse> {
     const errors: string[] = [];
 
@@ -253,7 +249,7 @@ export class SplitPaymentService {
     }
 
     // Validación 3: Verificar que no haya collectors duplicados
-    const uniqueCollectors = new Set(request.collectors.map(c => c.userId));
+    const uniqueCollectors = new Set(request.collectors.map((c) => c.userId));
     if (uniqueCollectors.size !== request.collectors.length) {
       return {
         success: false,
@@ -275,7 +271,7 @@ export class SplitPaymentService {
       // Validación 4: Verificar monto mínimo
       if (collectorAmount < this.MIN_SPLIT_AMOUNT) {
         errors.push(
-          `Collector ${collector.userId}: amount ${collectorAmount} is below minimum of ${this.MIN_SPLIT_AMOUNT}`
+          `Collector ${collector.userId}: amount ${collectorAmount} is below minimum of ${this.MIN_SPLIT_AMOUNT}`,
         );
         continue;
       }
@@ -310,7 +306,8 @@ export class SplitPaymentService {
 
     // Insertar splits en la base de datos
     try {
-      const { error: insertError } = await this.supabase.getClient()
+      const { error: insertError } = await this.supabase
+        .getClient()
         .from('payment_splits')
         .insert(splits);
 
@@ -350,7 +347,8 @@ export class SplitPaymentService {
   private async createWalletTransaction(split: PaymentSplit): Promise<PaymentSplit> {
     try {
       // Crear transacción de billetera
-      const { error: txError } = await this.supabase.getClient()
+      const { error: txError } = await this.supabase
+        .getClient()
         .from('wallet_transactions')
         .insert({
           user_id: split.collectorId,
@@ -369,7 +367,8 @@ export class SplitPaymentService {
       }
 
       // Crear entrada en wallet_ledger para auditoría
-      await this.supabase.getClient()
+      await this.supabase
+        .getClient()
         .from('wallet_ledger')
         .insert({
           user_id: split.collectorId,
