@@ -4,6 +4,12 @@
 /* Shepherd.js Tours CSS */
 @import './styles/shepherd-custom.scss';
 
+/* 📱 Mobile Optimizations - Professional mobile experience */
+@import './styles/mobile-optimizations.css';
+
+/* 🐛 Mobile Overflow Debug & Fixes */
+@import './styles/mobile-overflow-debug.css';
+
 /* 🎨 Fuente Inter - Premium UI Typography
    Nota: durante builds offline omitimos la importación remota de Google Fonts.
    Si se requiere nuevamente, restaura la línea con la URL oficial. */

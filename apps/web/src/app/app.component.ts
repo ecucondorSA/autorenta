@@ -40,6 +40,8 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
+import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
+import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
 
 @Component({
   selector: 'app-root',
@@ -61,6 +63,8 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     LanguageSelectorComponent,
     HelpButtonComponent,
     ToastComponent,
+    MobileBottomNavComponent,
+    PwaInstallBannerComponent,
   ],
   templateUrl: './app.component.html',
   styles: [

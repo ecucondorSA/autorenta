@@ -65,7 +65,7 @@
 }
 
 .fab-list {
-  bottom: 80px; // Above tab bar
+  bottom: 220px; // Above carousel
 
   ion-fab-button {
     --background: #4f46e5;
@@ -87,67 +87,63 @@
   }
 }
 
-// List Modal (Bottom Sheet)
-.list-modal {
-  --height: auto;
-  --border-radius: 16px 16px 0 0;
-  --box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.15);
+// Bottom Carousel (like cars-list page)
+.map-carousel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  padding: 16px 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: auto;
+  height: 200px; // Altura fija del carrusel
+}
 
-  ion-header {
-    ion-toolbar {
-      --background: white;
-      padding: 8px 16px;
+.map-carousel-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 16px 16px 16px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 
-      ion-label {
-        font-size: 18px;
-        color: #111827;
-      }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.map-carousel-card-wrapper {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  flex-shrink: 0;
+  width: 280px;
+  pointer-events: auto;
+
+  app-car-card {
+    display: block;
+    height: 100%;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     }
-  }
-}
 
-.list-content {
-  --background: #f9fafb;
-  padding: 16px;
-
-  ion-list {
-    background: transparent;
-    padding: 0;
-  }
-}
-
-.list-car-card {
-  margin-bottom: 16px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
-// Empty State
-.empty-state {
-  text-align: center;
-  padding: 48px 16px;
-
-  ion-icon {
-    font-size: 64px;
-    color: #9ca3af;
-    margin-bottom: 16px;
-  }
-
-  p {
-    color: #6b7280;
-    margin-bottom: 24px;
-  }
-
-  ion-button {
-    --background: #4f46e5;
+    &:active {
+      transform: translateY(-2px);
+    }
   }
 }
 
@@ -166,30 +162,14 @@
     --color: #818cf8;
   }
 
-  .list-modal {
-    ion-header ion-toolbar {
-      --background: #1f2937;
-
-      ion-label {
-        color: #f9fafb;
-      }
-    }
+  .map-carousel {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
   }
 
-  .list-content {
-    --background: #111827;
-  }
-}
-
-// Responsive
-@media (max-width: 768px) {
-  .fab-list {
-    bottom: 90px; // More space on mobile
-
-    ion-fab-button {
-      .fab-label {
-        display: none; // Hide label on very small screens
-      }
+  .map-carousel-card-wrapper {
+    app-car-card {
+      background: #1f2937;
     }
   }
 }
+

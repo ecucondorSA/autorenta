@@ -33,7 +33,9 @@
     "sync:types": "tools/sync-types.sh",
     "sync:types:remote": "tools/sync-types.sh --remote",
     "check:skills": "tools/check-skills.sh",
-    "accounting:export": "node tools/accounting/export-ledger.mjs"
+    "accounting:export": "node tools/accounting/export-ledger.mjs",
+    "types:db:gen": "supabase gen types typescript --project-id obxvffplochgeiclibng > supabase.types.generated.ts",
+    "types:db:check": "npm run types:db:gen && git diff --exit-code supabase.types.generated.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
@@ -41,6 +43,7 @@
     "@playwright/test": "^1.56.1",
     "@supabase/supabase-js": "^2.76.0",
     "@types/uuid": "^10.0.0",
+    "fast-check": "^4.3.0",
     "playwright": "^1.56.1",
     "puppeteer": "^24.25.0",
     "uuid": "^13.0.0"
@@ -97,6 +100,9 @@
     }
   },
   "dependencies": {
-    "shepherd.js": "^14.5.1"
+    "@supabase/storage-js": "^2.78.0",
+    "mapbox-gl": "^3.16.0",
+    "shepherd.js": "^14.5.1",
+    "zod": "^4.1.12"
   }
 }

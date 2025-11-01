@@ -141,7 +141,16 @@ export const routes: Routes = [
   {
     path: 'messages',
     canMatch: [AuthGuard],
-    loadComponent: () => import('./features/messages/messages.page').then((m) => m.MessagesPage),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/messages/inbox.page').then((m) => m.InboxPage),
+      },
+      {
+        path: 'chat',
+        loadComponent: () => import('./features/messages/messages.page').then((m) => m.MessagesPage),
+      },
+    ],
   },
   { path: '**', redirectTo: '' },
 ];

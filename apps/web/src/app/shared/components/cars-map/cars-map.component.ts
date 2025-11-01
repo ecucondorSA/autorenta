@@ -75,46 +75,83 @@ export class CarsMapComponent implements OnChanges, AfterViewInit {
 
   private async loadMapboxLibrary(): Promise<void> {
     try {
-      this.mapboxgl = await import('mapbox-gl');
-      this.mapboxgl.accessToken = environment.mapboxAccessToken;
+      const mapboxModule = await import('mapbox-gl');
+      this.mapboxgl = mapboxModule.default || mapboxModule;
+      
+      // Set the access token on the mapboxgl object
+      if (this.mapboxgl && environment.mapboxAccessToken) {
+        (this.mapboxgl as any).accessToken = environment.mapboxAccessToken;
+        console.log('✅ Mapbox GL cargado, token asignado:', environment.mapboxAccessToken?.substring(0, 20) + '...');
+      } else {
+        console.error('❌ Token no disponible:', environment.mapboxAccessToken);
+        this.error.set('Token de Mapbox no configurado');
+      }
     } catch (err) {
+      console.error('❌ Error cargando Mapbox:', err);
       this.error.set('Error al cargar la biblioteca de mapas');
     }
   }
 
   private async initializeMap(): Promise<void> {
     if (!this.mapboxgl || !this.mapContainer) {
+      console.error('❌ Mapbox o container no disponible');
+      return;
+    }
+
+    if (!environment.mapboxAccessToken) {
+      console.error('❌ Token de Mapbox no encontrado en environment');
+      this.error.set('Token de Mapbox no configurado');
+      this.loading.set(false);
       return;
     }
 
     try {
+      console.log('🗺️ Inicializando mapa con token:', environment.mapboxAccessToken.substring(0, 20) + '...');
+      
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
         style: 'mapbox://styles/mapbox/streets-v12',
         center: [-56.1645, -34.9011],
         zoom: 12,
+        accessToken: environment.mapboxAccessToken, // Token también en el constructor
       });
 
       if (this.map) {
         this.map.on('load', () => {
+          console.log('✅ Mapa cargado correctamente');
           this.loading.set(false);
           this.updateMarkers(this.cars);
           this.requestUserLocation();
         });
+
+        this.map.on('error', (e: any) => {
+          console.error('❌ Error en el mapa:', e);
+          this.error.set('Error al cargar el mapa: ' + (e.error?.message || 'Error desconocido'));
+          this.loading.set(false);
+        });
       }
-    } catch (err) {
-      this.error.set('Error al inicializar el mapa');
+    } catch (err: any) {
+      console.error('❌ Error inicializando mapa:', err);
+      this.error.set('Error al inicializar el mapa: ' + err.message);
+      this.loading.set(false);
     }
   }
 
   private updateMarkers(locations: CarMapLocation[]): void {
     if (!this.map || !this.mapboxgl) {
+      console.warn('⚠️ Mapa no disponible para actualizar markers');
       return;
     }
 
+    console.log('📍 Actualizando markers:', locations.length, 'autos');
     this.carCount.set(locations.length);
 
     locations.forEach((location) => {
+      if (!location.lat || !location.lng) {
+        console.warn('⚠️ Auto sin coordenadas:', location);
+        return;
+      }
+
       const el = document.createElement('div');
       el.className = 'marker';
       el.addEventListener('click', () => {

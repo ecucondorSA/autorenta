@@ -269,13 +269,23 @@
   "suites": [],
   "errors": [
     {
-      "message": "Error: Timed out waiting 120000ms from config.webServer.",
-      "stack": "Error: Timed out waiting 120000ms from config.webServer."
+      "message": "Error: supabaseUrl is required.",
+      "stack": "Error: supabaseUrl is required.\n    at validateSupabaseUrl (/home/edu/autorenta/node_modules/@supabase/supabase-js/src/lib/helpers.ts:86:11)\n    at SupabaseClient (/home/edu/autorenta/node_modules/@supabase/supabase-js/src/SupabaseClient.ts:110:40)\n    at createClient (/home/edu/autorenta/node_modules/@supabase/supabase-js/src/index.ts:46:10)\n    at Object.<anonymous> (/home/edu/autorenta/tests/fixtures/auth.setup.ts:16:30)",
+      "location": {
+        "file": "/home/edu/autorenta/tests/fixtures/auth.setup.ts",
+        "column": 30,
+        "line": 16
+      },
+      "snippet": "\u001b[90m   at \u001b[39mfixtures/auth.setup.ts:16\n\n\u001b[0m \u001b[90m 14 |\u001b[39m \u001b[36mconst\u001b[39m supabaseAnonKey \u001b[33m=\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mNG_APP_SUPABASE_ANON_KEY\u001b[39m \u001b[33m||\u001b[39m \u001b[32m''\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 15 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 16 |\u001b[39m \u001b[36mconst\u001b[39m supabase \u001b[33m=\u001b[39m createClient(supabaseUrl\u001b[33m,\u001b[39m supabaseAnonKey)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 17 |\u001b[39m\n \u001b[90m 18 |\u001b[39m \u001b[90m// Test user credentials (from seed data)\u001b[39m\n \u001b[90m 19 |\u001b[39m \u001b[36mconst\u001b[39m testUsers \u001b[33m=\u001b[39m {\u001b[0m"
+    },
+    {
+      "message": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.",
+      "stack": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments."
     }
   ],
   "stats": {
-    "startTime": "2025-10-27T20:42:34.158Z",
-    "duration": 120243.466,
+    "startTime": "2025-11-01T12:07:13.035Z",
+    "duration": 25307.719,
     "expected": 0,
     "skipped": 0,
     "unexpected": 0,

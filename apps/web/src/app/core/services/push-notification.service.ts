@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { SwPush } from '@angular/service-worker';
 import { SupabaseClientService } from './supabase-client.service';
 import { AuthService } from './auth.service';
 
@@ -8,9 +9,32 @@ import { AuthService } from './auth.service';
 export class PushNotificationService {
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly authService = inject(AuthService);
+  private readonly swPush = inject(SwPush);
 
   // VAPID public key - should be stored in environment variables
-  private readonly VAPID_PUBLIC_KEY = '';
+  // Generar en: https://web-push-codelab.glitch.me/
+  private readonly VAPID_PUBLIC_KEY = 'BEl62iUYgUivxIkv69yViEuiBIa-Ib37J8-gSpN1fPQ';
+
+  /**
+   * Verifica si push notifications están disponibles
+   */
+  get isEnabled(): boolean {
+    return this.swPush.isEnabled;
+  }
+
+  /**
+   * Observable de clicks en notificaciones
+   */
+  get notificationClicks$() {
+    return this.swPush.notificationClicks;
+  }
+
+  /**
+   * Observable de mensajes recibidos
+   */
+  get messages$() {
+    return this.swPush.messages;
+  }
 
   /**
    * Initializes the push notification subscription process.

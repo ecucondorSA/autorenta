@@ -27,6 +27,8 @@ import {
   MapFilters,
 } from '../../../shared/components/map-filters/map-filters.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
+import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
 
 // Interface para auto con distancia
 export interface CarWithDistance extends Car {
@@ -49,7 +51,15 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
 @Component({
   standalone: true,
   selector: 'app-cars-list-page',
-  imports: [CommonModule, CarsMapComponent, MapFiltersComponent, CarCardComponent, TranslateModule],
+  imports: [
+    CommonModule, 
+    CarsMapComponent, 
+    MapFiltersComponent, 
+    CarCardComponent, 
+    TranslateModule,
+    SkeletonLoaderComponent,
+    PullToRefreshComponent
+  ],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,6 +67,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
 export class CarsListPage implements OnInit, OnDestroy {
   @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
   @ViewChild('unifiedCarousel', { read: ElementRef }) unifiedCarousel?: ElementRef<HTMLDivElement>;
+  @ViewChild(PullToRefreshComponent) pullToRefresh!: PullToRefreshComponent;
 
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
@@ -526,6 +537,26 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.autoScrollKickoffTimeout = setTimeout(() => this.startCarouselAutoScroll(), 1000);
       } else {
         this.stopCarouselAutoScroll();
+      }
+    }
+  }
+
+  /**
+   * 🔄 Handle pull-to-refresh
+   * Método para actualizar la lista de autos
+   */
+  async handleRefresh(): Promise<void> {
+    try {
+      await this.loadCars();
+      
+      // Completar el refresh
+      if (this.pullToRefresh) {
+        this.pullToRefresh.completeRefresh();
+      }
+    } catch (error) {
+      console.error('Error al refrescar:', error);
+      if (this.pullToRefresh) {
+        this.pullToRefresh.completeRefresh();
       }
     }
   }
