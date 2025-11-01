@@ -230,8 +230,11 @@ export class PaymentsService {
         throw new Error('No se pudo crear el payment intent');
       }
 
-      // 2. Marcar como pagado (simula webhook)
-      await this.markAsPaid(intent.id);
+      // 2. En desarrollo, simular webhook para marcar como pagado.
+      //    En producción, el webhook de MercadoPago lo hace automáticamente.
+      if (!environment.production) {
+        await this.markAsPaid(intent.id);
+      }
 
       // 3. Verificar estado
       const status = await this.getStatus(intent.id);

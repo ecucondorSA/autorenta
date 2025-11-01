@@ -128,9 +128,9 @@ export class RiskService {
         const snapshot: RiskSnapshot = {
           deductibleUsd: data.deductible_usd,
           rolloverDeductibleUsd: data.rollover_deductible_usd,
-          holdEstimatedArs: data.estimated_hold_amount_ars || 0,
-          holdEstimatedUsd: (data.estimated_hold_amount_ars || 0) / data.fx_snapshot,
-          creditSecurityUsd: data.estimated_credit_security_usd || 0,
+          holdEstimatedArs: data.estimated_hold_amount || 0,
+          holdEstimatedUsd: (data.estimated_hold_amount || 0) / data.fx_snapshot,
+          creditSecurityUsd: data.estimated_deposit || 0,
           bucket: data.bucket as BucketType,
           vehicleValueUsd: data.meta?.vehicle_value_usd || 0,
           country: data.country_code,

@@ -1,0 +1,12 @@
+# Cloudflare Pages - _redirects
+# https://developers.cloudflare.com/pages/platform/redirects
+
+# Redirect all requests to index.html for Angular routing
+/*    /index.html   200
+
+# API redirects (opcional - si usas Cloudflare Workers)
+# /api/*  https://your-api.com/:splat  200
+
+# Redirect old URLs (ejemplos)
+# /old-path  /new-path  301
+# /blog/*    /news/:splat  301

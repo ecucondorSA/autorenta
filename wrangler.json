@@ -1,0 +1,24 @@
+{
+  "$schema": "https://developers.cloudflare.com/pages/platform/build-configuration",
+  "version": 1,
+  "build": {
+    "command": "npm run build",
+    "cwd": "apps/web",
+    "destination": "dist/web/browser",
+    "environment_variables": {
+      "NODE_VERSION": "20",
+      "NPM_VERSION": "10"
+    }
+  },
+  "routes": [
+    {
+      "version": 1,
+      "include": ["/*"],
+      "exclude": ["/assets/*", "/*.js", "/*.css"]
+    }
+  ],
+  "deployment": {
+    "environment": "production",
+    "compatibility_date": "2025-11-01"
+  }
+}

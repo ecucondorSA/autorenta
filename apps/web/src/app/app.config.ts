@@ -53,7 +53,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'es-AR' },
     importProvidersFrom(TranslateModule.forRoot()),
     provideTranslateHttpLoader({
-      prefix: '/assets/i18n/',
+      prefix: './assets/i18n/',
       suffix: '.json',
     }),
     // ✅ Performance Monitoring (solo en desarrollo)

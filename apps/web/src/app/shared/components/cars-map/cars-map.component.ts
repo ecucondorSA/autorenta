@@ -1,6 +1,7 @@
 import {
   Component,
   OnChanges,
+  OnDestroy,
   SimpleChanges,
   signal,
   effect,
@@ -20,7 +21,31 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { CarLocationsService, CarMapLocation } from '../../../core/services/car-locations.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { environment } from '../../../../environments/environment';
-import { LngLatLike, Map, Marker, Popup } from 'mapbox-gl';
+
+// Type-only imports to avoid static bundling
+// Mapbox GL is loaded dynamically to prevent Vite bundling issues
+type LngLatLike = [number, number] | { lng: number; lat: number };
+type MapboxMap = any;
+type MapboxMarker = any;
+type MapboxPopup = any;
+
+/**
+ * CarsMapComponent - Displays cars on an interactive map using Mapbox GL
+ * 
+ * IMPORTANT: Mapbox Token Configuration
+ * =====================================
+ * This component requires a Mapbox access token to function properly.
+ * 
+ * Development:
+ * - Add to .env.local: NG_APP_MAPBOX_ACCESS_TOKEN=pk.ey...
+ * 
+ * Production:
+ * - Set environment variable: NG_APP_MAPBOX_ACCESS_TOKEN=pk.ey...
+ * - Or configure in your deployment platform (Cloudflare Pages, Vercel, etc.)
+ * 
+ * Without a valid token, the map will display an error message instructing
+ * the administrator to configure it.
+ */
 
 @Component({
   standalone: true,
@@ -30,7 +55,7 @@ import { LngLatLike, Map, Marker, Popup } from 'mapbox-gl';
   styleUrls: ['./cars-map.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarsMapComponent implements OnChanges, AfterViewInit {
+export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
 
   @Input() cars: CarMapLocation[] = [];
@@ -47,10 +72,11 @@ export class CarsMapComponent implements OnChanges, AfterViewInit {
   readonly carCount = signal(0);
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
 
-  private map: Map | null = null;
-  private userMarker: Marker | null = null;
-  private selectedPopup: Popup | null = null;
+  private map: MapboxMap | null = null;
+  private userMarker: MapboxMarker | null = null;
+  private selectedPopup: MapboxPopup | null = null;
   private mapboxgl: any = null;
+  private carMarkersMap: Map<string, MapboxMarker> = new Map();
 
   constructor() {
     effect(() => {
@@ -73,18 +99,47 @@ export class CarsMapComponent implements OnChanges, AfterViewInit {
     }
   }
 
+  ngOnDestroy(): void {
+    // Clean up all car markers
+    this.carMarkersMap.forEach(marker => marker.remove());
+    this.carMarkersMap.clear();
+    
+    // Clean up user marker
+    this.userMarker?.remove();
+    this.userMarker = null;
+    
+    // Clean up popup
+    this.selectedPopup?.remove();
+    this.selectedPopup = null;
+    
+    // Clean up map
+    this.map?.remove();
+    this.map = null;
+  }
+
   private async loadMapboxLibrary(): Promise<void> {
     try {
-      const mapboxModule = await import('mapbox-gl');
-      this.mapboxgl = mapboxModule.default || mapboxModule;
+      // Use stable path and grab default export
+      const mapboxModule = await import('mapbox-gl/dist/mapbox-gl.js');
+      this.mapboxgl = mapboxModule.default;
+      
+      // Try to load CSP-compatible version if needed
+      try {
+        // @ts-ignore - CSP version is optional
+        await import('mapbox-gl/dist/mapbox-gl-csp.js');
+      } catch {
+        // CSP version not needed or not available
+      }
       
       // Set the access token on the mapboxgl object
       if (this.mapboxgl && environment.mapboxAccessToken) {
-        (this.mapboxgl as any).accessToken = environment.mapboxAccessToken;
+        this.mapboxgl.accessToken = environment.mapboxAccessToken;
         console.log('✅ Mapbox GL cargado, token asignado:', environment.mapboxAccessToken?.substring(0, 20) + '...');
       } else {
-        console.error('❌ Token no disponible:', environment.mapboxAccessToken);
-        this.error.set('Token de Mapbox no configurado');
+        console.error('❌ Token de Mapbox no configurado. Configure NG_APP_MAPBOX_ACCESS_TOKEN en las variables de entorno.');
+        this.error.set(
+          'El mapa requiere configuración. Por favor, contacte al administrador para configurar el token de Mapbox (NG_APP_MAPBOX_ACCESS_TOKEN).'
+        );
       }
     } catch (err) {
       console.error('❌ Error cargando Mapbox:', err);
@@ -143,6 +198,10 @@ export class CarsMapComponent implements OnChanges, AfterViewInit {
       return;
     }
 
+    // Clean up existing markers before creating new ones
+    this.carMarkersMap.forEach(marker => marker.remove());
+    this.carMarkersMap.clear();
+
     console.log('📍 Actualizando markers:', locations.length, 'autos');
     this.carCount.set(locations.length);
 
@@ -158,9 +217,12 @@ export class CarsMapComponent implements OnChanges, AfterViewInit {
         this.carSelected.emit(location.carId);
       });
 
-      new this.mapboxgl.Marker(el)
+      const marker = new this.mapboxgl.Marker(el)
         .setLngLat([location.lng, location.lat] as LngLatLike)
-        .addTo(this.map as Map);
+        .addTo(this.map);
+      
+      // Keep reference for cleanup using carId as key
+      this.carMarkersMap.set(location.carId, marker);
     });
   }
 
@@ -195,7 +257,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit {
 
     this.userMarker = new this.mapboxgl.Marker(el)
       .setLngLat([lng, lat] as LngLatLike)
-      .addTo(this.map as Map);
+      .addTo(this.map);
   }
 
   private zoomToUserLocation(lat: number, lng: number): void {

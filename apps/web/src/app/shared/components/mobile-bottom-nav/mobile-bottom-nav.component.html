@@ -1,0 +1,60 @@
+<!-- 
+  🎨 Mobile Bottom Navigation - Modo Oscuro
+  Diseñado para Autorent con 7 items de navegación
+-->
+
+<nav class="mobile-bottom-nav" role="navigation" aria-label="Navegación principal móvil">
+  <div class="nav-container">
+    <a
+      *ngFor="let item of navItems; trackBy: trackByRoute"
+      [routerLink]="item.route"
+      (click)="navigateWithHaptic($event, item.route)"
+      class="nav-item"
+      [class.nav-item--active]="isActive(item.route)"
+      [attr.aria-label]="item.label"
+      [attr.aria-current]="isActive(item.route) ? 'page' : null"
+    >
+      <!-- Icono SVG -->
+      <div class="nav-item__icon-wrapper">
+        <svg
+          class="nav-item__icon"
+          [class.nav-item__icon--active]="isActive(item.route)"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            [attr.d]="getIcon(item.icon)"
+          ></path>
+        </svg>
+
+        <!-- Badge de notificaciones -->
+        <span *ngIf="item.badgeSignal && item.badgeSignal() > 0" class="nav-item__badge" [attr.aria-label]="item.badgeSignal() + ' notificaciones'">
+          {{ item.badgeSignal() > 99 ? '99+' : item.badgeSignal() }}
+        </span>
+      </div>
+
+      <!-- Label -->
+      <span
+        class="nav-item__label"
+        [class.nav-item__label--active]="isActive(item.route)"
+      >
+        {{ item.label }}
+      </span>
+
+      <!-- Indicador activo -->
+      <div
+        *ngIf="isActive(item.route)"
+        class="nav-item__indicator"
+        aria-hidden="true"
+      ></div>
+    </a>
+  </div>
+
+  <!-- Shadow/Blur overlay superior -->
+  <div class="nav-shadow" aria-hidden="true"></div>
+</nav>

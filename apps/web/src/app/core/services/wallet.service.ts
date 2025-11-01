@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import { RealtimeChannel, SupabaseClient, PostgrestSingleResponse } from '@supabase/supabase-js';
 import { environment } from '@environment';
 import type {
   WalletBalance,
@@ -11,7 +11,7 @@ import type {
 } from '../models/wallet.model';
 import { SupabaseClientService } from './supabase-client.service';
 import { from, Observable, throwError } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -97,10 +97,10 @@ export class WalletService {
         p_allow_withdrawal: params.allowWithdrawal ?? false,
       }),
     ).pipe(
-      switchMap(({ data, error }) => {
-        if (error) throw error;
-        if (!data) throw new Error('No se pudo iniciar el depósito');
-        const result = data[0];
+      switchMap((response: PostgrestSingleResponse<any>) => {
+        if (response.error) throw response.error;
+        if (!response.data) throw new Error('No se pudo iniciar el depósito');
+        const result = response.data[0];
         if (!result.success) throw new Error(result.message);
         if (params.provider === 'mercadopago') {
           return from(
@@ -161,7 +161,6 @@ export class WalletService {
     amount: number,
     description?: string,
   ): Observable<WalletLockFundsResponse> {
-    this.loading.set(true);
     return from(
       this.supabase.rpc('wallet_lock_funds', {
         p_booking_id: bookingId,
@@ -169,18 +168,18 @@ export class WalletService {
         p_description: description ?? 'Bloqueo de fondos',
       }),
     ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
+      tap((response: PostgrestSingleResponse<WalletLockFundsResponse[]>) => {
+        if (response.error) throw response.error;
+        // Side effect: refresh balance after locking funds
         this.getBalance().subscribe();
-        return data[0];
+      }),
+      map((response: PostgrestSingleResponse<WalletLockFundsResponse[]>) => {
+        if (!response.data) throw new Error('No data returned');
+        return response.data[0];
       }),
       catchError((err) => {
         this.handleError(err, 'Error al bloquear fondos');
         return throwError(() => err);
-      }),
-      map((result) => {
-        this.loading.set(false);
-        return result;
       }),
     );
   }
@@ -189,25 +188,24 @@ export class WalletService {
    * Unlock funds from a booking
    */
   unlockFunds(bookingId: string, description?: string): Observable<WalletUnlockFundsResponse> {
-    this.loading.set(true);
     return from(
       this.supabase.rpc('wallet_unlock_funds', {
         p_booking_id: bookingId,
         p_description: description ?? 'Desbloqueo de fondos',
       }),
     ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
+      tap((response: PostgrestSingleResponse<WalletUnlockFundsResponse[]>) => {
+        if (response.error) throw response.error;
+        // Side effect: refresh balance after unlocking funds
         this.getBalance().subscribe();
-        return data[0];
+      }),
+      map((response: PostgrestSingleResponse<WalletUnlockFundsResponse[]>) => {
+        if (!response.data) throw new Error('No data returned');
+        return response.data[0];
       }),
       catchError((err) => {
         this.handleError(err, 'Error al desbloquear fondos');
         return throwError(() => err);
-      }),
-      map((result) => {
-        this.loading.set(false);
-        return result;
       }),
     );
   }
@@ -220,7 +218,6 @@ export class WalletService {
     rentalAmount: number,
     depositAmount: number = 250,
   ): Observable<WalletLockRentalAndDepositResponse> {
-    this.loading.set(true);
     return from(
       this.supabase.rpc('wallet_lock_rental_and_deposit', {
         p_booking_id: bookingId,
@@ -228,18 +225,18 @@ export class WalletService {
         p_deposit_amount: depositAmount,
       }),
     ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
+      tap((response: PostgrestSingleResponse<WalletLockRentalAndDepositResponse[]>) => {
+        if (response.error) throw response.error;
+        // Side effect: refresh balance after locking funds
         this.getBalance().subscribe();
-        return data[0];
+      }),
+      map((response: PostgrestSingleResponse<WalletLockRentalAndDepositResponse[]>) => {
+        if (!response.data) throw new Error('No data returned');
+        return response.data[0];
       }),
       catchError((err) => {
         this.handleError(err, 'Error al bloquear alquiler y depósito');
         return throwError(() => err);
-      }),
-      map((result) => {
-        this.loading.set(false);
-        return result;
       }),
     );
   }

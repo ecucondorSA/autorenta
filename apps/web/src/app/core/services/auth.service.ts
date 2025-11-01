@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
@@ -12,11 +12,12 @@ interface AuthState {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private readonly supabase = injectSupabase();
   private readonly router = inject(Router);
   private readonly state = signal<AuthState>({ session: null, loading: true });
   private restoreSessionPromise: Promise<void> | null = null;
+  private authSubscription: { data: { subscription: { unsubscribe: () => void } } } | null = null;
 
   readonly sessionSignal = computed(() => this.state().session);
   readonly session$ = computed(() => this.state().session);
@@ -27,6 +28,10 @@ export class AuthService {
   constructor() {
     void this.ensureSession();
     this.listenToAuthChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription?.data.subscription.unsubscribe();
   }
 
   async ensureSession(): Promise<Session | null> {
@@ -61,12 +66,13 @@ export class AuthService {
       error,
     } = await this.supabase.auth.getSession();
     if (error) {
+      console.error('[AuthService] Failed to load session:', error);
     }
     this.state.set({ session: session ?? null, loading: false });
   }
 
   private listenToAuthChanges(): void {
-    this.supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+    this.authSubscription = this.supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       this.state.set({ session: session ?? null, loading: false });
     });
   }

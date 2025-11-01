@@ -24,11 +24,38 @@ AutoRenta es una plataforma de alquiler de autos para Argentina construida con A
 
 Para más detalles, ver [MERCADOPAGO_SETUP.md](./MERCADOPAGO_SETUP.md)
 
+## 🗺️ Integración con Mapbox
+
+El componente de mapa interactivo utiliza Mapbox GL para mostrar la ubicación de los autos disponibles.
+
+### Configuración del Token
+
+**Desarrollo:**
+```bash
+# .env.development.local
+NG_APP_MAPBOX_ACCESS_TOKEN=pk.eyJ1IjoiWU9VUl9VU0VSTkFNRSIsImEiOiJjbGV2ZXJ0b2tlbiJ9...
+```
+
+**Producción (Cloudflare Pages):**
+```bash
+# Variables de entorno en Cloudflare Pages dashboard
+NG_APP_MAPBOX_ACCESS_TOKEN=pk.eyJ1IjoiWU9VUl9VU0VSTkFNRSIsImEiOiJjbGV2ZXJ0b2tlbiJ9...
+```
+
+**Obtener un token:**
+1. Crear cuenta en [mapbox.com](https://www.mapbox.com/)
+2. Ir a Account → Access tokens
+3. Crear un nuevo token con scope `styles:read` y `fonts:read`
+4. Copiar el token y configurarlo en las variables de entorno
+
+⚠️ **Sin un token válido, el mapa mostrará un mensaje de error al usuario.**
+
 ## 🛠️ Tecnologías
 
 - **Frontend:** Angular 17 (Standalone Components)
 - **Backend:** Supabase (PostgreSQL + Edge Functions)
 - **Pagos:** MercadoPago (Argentina)
+- **Maps:** Mapbox GL JS
 - **Styling:** Tailwind CSS
 - **Deployment:** Cloudflare Pages
 
