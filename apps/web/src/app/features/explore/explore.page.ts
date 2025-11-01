@@ -12,13 +12,10 @@ import {
   IonIcon,
   IonFab,
   IonFabButton,
-  IonModal,
-  IonList,
-  IonLabel,
   IonSearchbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { optionsOutline, listOutline, locateOutline } from 'ionicons/icons';
+import { optionsOutline, locateOutline } from 'ionicons/icons';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 import {
   MapFiltersComponent,
@@ -45,9 +42,6 @@ import { Car } from '../../core/models';
     IonIcon,
     IonFab,
     IonFabButton,
-    IonModal,
-    IonList,
-    IonLabel,
     IonSearchbar,
     CarsMapComponent,
     MapFiltersComponent,
@@ -55,12 +49,12 @@ import { Car } from '../../core/models';
   ],
 })
 export class ExplorePage implements OnInit, AfterViewInit {
-  @ViewChild('listModal') listModal!: IonModal;
   @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
 
   cars: Car[] = [];
   filteredCars: Car[] = [];
   loading = true;
+  selectedCarId: string | null = null;
 
   get carMapLocations() {
     return this.filteredCars.map((car) => ({
@@ -85,7 +79,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
     }));
   }
   showFilters = false;
-  showList = false;
   searchQuery = '';
 
   filters = {
@@ -97,7 +90,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
   userLocation: { lat: number; lng: number } | null = null;
 
   constructor(private carsService: CarsService) {
-    addIcons({ optionsOutline, listOutline, locateOutline });
+    addIcons({ optionsOutline, locateOutline });
   }
 
   ngOnInit() {
@@ -137,13 +130,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
     this.showFilters = !this.showFilters;
   }
 
-  async toggleList() {
-    this.showList = !this.showList;
-    if (this.showList) {
-      await this.listModal.present();
-    }
-  }
-
   onFiltersChange(filters: MapFilters) {
     this.filters = filters;
     this.applyFilters();
@@ -160,7 +146,14 @@ export class ExplorePage implements OnInit, AfterViewInit {
     });
   }
 
-  onCarSelected(carId: string) {}
+  onCarSelected(carId: string) {
+    this.selectedCarId = carId;
+    // Scroll to the selected car in carousel
+    const carElement = document.querySelector(`[aria-label*="${carId}"]`);
+    if (carElement) {
+      carElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
 
   resetFilters() {
     this.filters = {
@@ -190,9 +183,5 @@ export class ExplorePage implements OnInit, AfterViewInit {
     if (this.userLocation) {
       // Trigger map centering via service/event
     }
-  }
-
-  onModalDismiss() {
-    this.showList = false;
   }
 }

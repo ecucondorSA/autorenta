@@ -84,7 +84,9 @@ export class CheckoutPaymentService {
       this.state.setStatus('paid_with_wallet');
       this.state.setMessage('Pago confirmado con wallet. Redirigiendo al detalle de tu reserva.');
 
-      this.scheduleRiskSnapshot(booking, 'wallet').catch((err) => {});
+      this.scheduleRiskSnapshot(booking, 'wallet').catch((err) => {
+        console.error('[CheckoutPaymentService] Failed to schedule risk snapshot (wallet):', err);
+      });
 
       await this.router.navigate(['/bookings', bookingId]);
 
@@ -116,7 +118,9 @@ export class CheckoutPaymentService {
     const preference = await this.requestPreferenceOrThrow(bookingId);
     this.state.setStatus('redirecting_to_mercadopago');
 
-    this.scheduleRiskSnapshot(booking, 'credit_card').catch((err) => {});
+    this.scheduleRiskSnapshot(booking, 'credit_card').catch((err) => {
+      console.error('[CheckoutPaymentService] Failed to schedule risk snapshot (credit_card):', err);
+    });
 
     return {
       kind: 'redirect_to_mercadopago',

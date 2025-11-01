@@ -28,7 +28,7 @@
   <div class="map-container">
     <app-cars-map
       [cars]="carMapLocations"
-      [selectedCarId]="null"
+      [selectedCarId]="selectedCarId"
       (carSelected)="onCarSelected($event)"
     ></app-cars-map>
   </div>
@@ -41,55 +41,25 @@
         <ion-icon name="locate-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
+  </div>
 
-    <!-- Show List View -->
-    <ion-fab vertical="bottom" horizontal="center" slot="fixed" class="fab-list">
-      <ion-fab-button (click)="toggleList()">
-        <ion-icon name="list-outline"></ion-icon>
-        <span class="fab-label">Ver lista ({{ filteredCars.length }})</span>
-      </ion-fab-button>
-    </ion-fab>
+  <!-- Bottom Carousel -->
+  <div class="map-carousel" *ngIf="filteredCars.length > 0">
+    <div class="map-carousel-scroll">
+      <div
+        *ngFor="let car of filteredCars; let i = index"
+        class="map-carousel-card-wrapper"
+        role="listitem"
+      >
+        <app-car-card
+          [car]="car"
+          [priority]="i === 0"
+          [routerLink]="['/cars', car.id]"
+          (click)="onCarSelected(car.id)"
+          class="map-carousel-card--dynamic"
+          [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto')"
+        ></app-car-card>
+      </div>
+    </div>
   </div>
 </ion-content>
-
-<!-- Bottom Sheet - List View -->
-<ion-modal
-  #listModal
-  [isOpen]="showList"
-  [initialBreakpoint]="0.5"
-  [breakpoints]="[0, 0.5, 0.75, 1]"
-  (ionModalDidDismiss)="onModalDismiss()"
-  class="list-modal"
->
-  <ng-template>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-button (click)="listModal.dismiss()">Cerrar</ion-button>
-        </ion-buttons>
-        <ion-label>
-          <strong>{{ filteredCars.length }} autos encontrados</strong>
-        </ion-label>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content class="list-content">
-      <ion-list>
-        <app-car-card
-          *ngFor="let car of filteredCars"
-          [car]="car"
-          [routerLink]="['/cars', car.id]"
-          (click)="listModal.dismiss()"
-          class="list-car-card"
-        ></app-car-card>
-      </ion-list>
-
-      <!-- Empty State -->
-      <div class="empty-state" *ngIf="filteredCars.length === 0 && !loading">
-        <ion-icon name="search-outline" size="large"></ion-icon>
-        <p>No se encontraron autos con estos filtros</p>
-        <ion-button (click)="resetFilters()"> Limpiar filtros </ion-button>
-      </div>
-    </ion-content>
-  </ng-template>
-</ion-modal>

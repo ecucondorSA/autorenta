@@ -42,6 +42,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly _isComparing = signal<boolean>(false);
   private readonly _compareDisabled = signal<boolean>(false);
   private readonly _showOwnerActions = signal<boolean>(false);
+  private readonly _priority = signal<boolean>(false);
 
   @Output() compareToggle = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();
@@ -129,6 +130,15 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
   get compareDisabled(): boolean {
     return this._compareDisabled();
+  }
+
+  @Input()
+  set priority(value: boolean) {
+    this._priority.set(value);
+  }
+
+  get priority(): boolean {
+    return this._priority();
   }
 
   readonly firstPhoto = computed(() => this._car()?.photos?.[0] ?? null);
