@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Geolocation } from '@capacitor/geolocation';
 import {
@@ -32,7 +32,6 @@ import { Car } from '../../core/models';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     FormsModule,
     IonContent,
     IonHeader,
@@ -50,6 +49,7 @@ import { Car } from '../../core/models';
 })
 export class ExplorePage implements OnInit, AfterViewInit {
   @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
+  @ViewChild('carouselContainer') carouselContainer?: ElementRef<HTMLDivElement>;
   @ViewChild(CarsMapComponent) carsMap?: CarsMapComponent;
 
   cars: Car[] = [];
@@ -97,8 +97,12 @@ export class ExplorePage implements OnInit, AfterViewInit {
   };
 
   userLocation: { lat: number; lng: number } | null = null;
+  private carouselHovered = false;
 
-  constructor(private carsService: CarsService) {
+  constructor(
+    private carsService: CarsService,
+    private router: Router
+  ) {
     addIcons({ optionsOutline, locateOutline });
   }
 
@@ -161,7 +165,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       // Seats filter
       const seatsMatch = car.seats >= this.filters.minSeats;
       
-      // Features filter (features are stored in Record<string, boolean>)
+      // Features filter
       const featuresMatch =
         (!this.filters.features.ac || car.features?.['ac']) &&
         (!this.filters.features.gps || car.features?.['gps']) &&
@@ -172,13 +176,86 @@ export class ExplorePage implements OnInit, AfterViewInit {
     });
   }
 
+  // 🎯 Click en marker del mapa
+  onMapCarSelected(carId: string) {
+    const previousCarId = this.selectedCarId;
+    this.selectedCarId = carId;
+    
+    // Si es el mismo auto (doble click), navegar al detalle
+    if (previousCarId === carId) {
+      this.router.navigate(['/cars/detail', carId]);
+      return;
+    }
+    
+    // Primera selección: scroll + highlight en carousel
+    this.scrollToCarInCarousel(carId);
+  }
+
+  // 🎯 Click en card del carousel
+  onCarouselCardSelected(carId: string) {
+    const previousCarId = this.selectedCarId;
+    this.selectedCarId = carId;
+    
+    // Si es el mismo auto (doble click), navegar al detalle
+    if (previousCarId === carId) {
+      this.router.navigate(['/cars/detail', carId]);
+      return;
+    }
+    
+    // Primera selección: fly-to en mapa
+    if (this.carsMap) {
+      this.carsMap.flyToCarLocation(carId);
+    }
+  }
+
+  // Deprecated - usar onMapCarSelected o onCarouselCardSelected
   onCarSelected(carId: string) {
     this.selectedCarId = carId;
-    // Scroll to the selected car in carousel
-    const carElement = document.querySelector(`[aria-label*="${carId}"]`);
-    if (carElement) {
-      carElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  onCarouselHover(isHovered: boolean) {
+    this.carouselHovered = isHovered;
+  }
+
+  onUserLocationChange(location: { lat: number; lng: number }) {
+    this.userLocation = location;
+  }
+
+  private scrollToCarInCarousel(carId: string) {
+    if (!this.carouselContainer) {
+      return;
     }
+
+    const carousel = this.carouselContainer.nativeElement;
+    const scrollContainer = carousel.querySelector('.map-carousel-scroll') as HTMLElement;
+    
+    if (!scrollContainer) {
+      return;
+    }
+
+    const card = scrollContainer.querySelector(`[data-car-id="${carId}"]`) as HTMLElement;
+    
+    if (!card) {
+      console.warn('⚠️ Car card not found in carousel:', carId);
+      return;
+    }
+
+    // Scroll horizontal suave al card
+    const cardLeft = card.offsetLeft;
+    const cardWidth = card.offsetWidth;
+    const scrollWidth = scrollContainer.offsetWidth;
+    const scrollPosition = cardLeft - (scrollWidth / 2) + (cardWidth / 2);
+
+    scrollContainer.scrollTo({
+      left: Math.max(0, scrollPosition),
+      behavior: 'smooth'
+    });
+
+    // Highlight temporal
+    card.classList.add('pulse-highlight');
+    setTimeout(() => {
+      card.classList.remove('pulse-highlight');
+    }, 1500);
   }
 
   onSearch() {
@@ -197,8 +274,17 @@ export class ExplorePage implements OnInit, AfterViewInit {
   }
 
   centerOnUser() {
-    if (this.userLocation && this.carsMap) {
-      // Emit event to map component to center on user location
+    if (!this.userLocation) {
+      // Intentar obtener la ubicación nuevamente
+      this.getUserLocation().then(() => {
+        if (this.userLocation && this.carsMap) {
+          this.carsMap.flyToLocation(this.userLocation.lat, this.userLocation.lng);
+        }
+      });
+      return;
+    }
+    
+    if (this.carsMap) {
       this.carsMap.flyToLocation(this.userLocation.lat, this.userLocation.lng);
     }
   }
