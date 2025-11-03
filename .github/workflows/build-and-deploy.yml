@@ -98,7 +98,7 @@ jobs:
     steps:
       - name: Test homepage
         run: |
-          status=$(curl -o /dev/null -s -w "%{http_code}" https://autorenta.com)
+          status=$(curl -o /dev/null -s -w "%{http_code}" https://autorenta-web.pages.dev)
           if [ "$status" != "200" ]; then
             echo "::error::Homepage returned $status"
             exit 1
@@ -107,7 +107,7 @@ jobs:
       
       - name: Test login page
         run: |
-          status=$(curl -o /dev/null -s -w "%{http_code}" https://autorenta.com/auth/login)
+          status=$(curl -o /dev/null -s -w "%{http_code}" https://autorenta-web.pages.dev/auth/login)
           if [ "$status" != "200" ]; then
             echo "::error::Login page returned $status"
             exit 1
@@ -116,7 +116,7 @@ jobs:
       
       - name: Test cars page
         run: |
-          status=$(curl -o /dev/null -s -w "%{http_code}" https://autorenta.com/cars)
+          status=$(curl -o /dev/null -s -w "%{http_code}" https://autorenta-web.pages.dev/cars)
           if [ "$status" != "200" ]; then
             echo "::error::Cars page returned $status"
             exit 1
@@ -125,7 +125,7 @@ jobs:
       
       - name: Test PWA manifest
         run: |
-          status=$(curl -o /dev/null -s -w "%{http_code}" https://autorenta.com/manifest.json)
+          status=$(curl -o /dev/null -s -w "%{http_code}" https://autorenta-web.pages.dev/manifest.json)
           if [ "$status" != "200" ]; then
             echo "::error::Manifest returned $status"
             exit 1
