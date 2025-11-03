@@ -84,6 +84,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   private carouselAutoScrollInterval?: ReturnType<typeof setInterval>;
   private autoScrollKickoffTimeout?: ReturnType<typeof setTimeout>;
   private carouselAutoScrollTimeout?: ReturnType<typeof setTimeout>;
+  private carouselAutoScrollResumeTimeout?: ReturnType<typeof setTimeout>;
 
   readonly city = signal<string | null>(null);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -676,6 +677,11 @@ export class CarsListPage implements OnInit, OnDestroy {
       clearInterval(this.carouselAutoScrollInterval);
       this.carouselAutoScrollInterval = undefined;
     }
+    // Limpiar también el timeout de reanudación si existe
+    if (this.carouselAutoScrollResumeTimeout) {
+      clearTimeout(this.carouselAutoScrollResumeTimeout);
+      this.carouselAutoScrollResumeTimeout = undefined;
+    }
   }
 
   /**
@@ -709,6 +715,13 @@ export class CarsListPage implements OnInit, OnDestroy {
    * Reanudar auto-scroll cuando el usuario deja de interactuar
    */
   onCarouselMouseLeave(): void {
+    // Si hay un timeout de reanudación programado, cancelarlo
+    // porque el usuario está interactuando activamente
+    if (this.carouselAutoScrollResumeTimeout) {
+      clearTimeout(this.carouselAutoScrollResumeTimeout);
+      this.carouselAutoScrollResumeTimeout = undefined;
+    }
+    // Reanudar inmediatamente
     this.startCarouselAutoScroll();
   }
 
@@ -729,6 +742,17 @@ export class CarsListPage implements OnInit, OnDestroy {
     const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
     
+    // Pausar auto-scroll del carousel por 8 segundos
+    this.stopCarouselAutoScroll();
+    
+    // Programar reanudación después de 8 segundos
+    this.carouselAutoScrollResumeTimeout = setTimeout(() => {
+      if (this.recommendedCars().length >= 3) {
+        this.startCarouselAutoScroll();
+      }
+      this.carouselAutoScrollResumeTimeout = undefined;
+    }, 8000);
+    
     // Si es el mismo auto (doble click), navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
@@ -744,6 +768,17 @@ export class CarsListPage implements OnInit, OnDestroy {
   onMapCarSelected(carId: string): void {
     const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
+    
+    // Pausar auto-scroll del carousel por 8 segundos
+    this.stopCarouselAutoScroll();
+    
+    // Programar reanudación después de 8 segundos
+    this.carouselAutoScrollResumeTimeout = setTimeout(() => {
+      if (this.recommendedCars().length >= 3) {
+        this.startCarouselAutoScroll();
+      }
+      this.carouselAutoScrollResumeTimeout = undefined;
+    }, 8000);
     
     // Si es el mismo auto, navegar al detalle
     if (previousCarId === carId) {
