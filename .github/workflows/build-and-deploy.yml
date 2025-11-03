@@ -78,6 +78,10 @@ jobs:
         with:
           node-version: '18'
       
+      - name: Install worker dependencies
+        workingDirectory: functions/workers/payments_webhook
+        run: npm install
+      
       - name: Deploy worker
         uses: cloudflare/wrangler-action@v3
         with:
