@@ -132,11 +132,20 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
 
   getCarName(): string {
     const booking = this.booking();
-    if (!booking) return 'Vehículo';
+    if (!booking) {
+      console.warn('[BookingSuccess] Booking not loaded yet');
+      return 'Vehículo';
+    }
 
     // Car is now loaded with booking
-    if (booking.car) {
+    if (booking.car && booking.car.brand && booking.car.model && booking.car.year) {
       return `${booking.car.brand} ${booking.car.model} ${booking.car.year}`;
+    }
+
+    // Fallback: mostrar car_id si existe
+    if (booking.car_id) {
+      console.warn('[BookingSuccess] Car data not loaded for booking:', booking.id, 'car_id:', booking.car_id);
+      return `Vehículo (${booking.car_id.slice(0, 8)}...)`;
     }
 
     return 'Vehículo';
