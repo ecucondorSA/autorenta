@@ -2,6 +2,106 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Preferencias de Documentación
+
+**IMPORTANTE**: NO crear archivos .md para cada acción o cambio rutinario.
+- SOLO crear archivos .md cuando cambie la arquitectura de la plataforma
+- Cursor es la documentación viva - no necesita archivos .md para tareas rutinarias
+- Excepciones: cambios arquitectónicos importantes, decisiones de diseño significativas, runbooks operativos críticos
+
+## Autenticación Persistente
+
+**Setup inicial (una vez)**:
+```bash
+./tools/setup-auth.sh    # Configura login persistente para GitHub, Supabase, Cloudflare
+./tools/check-auth.sh    # Verifica estado de autenticación
+```
+
+**Herramientas configuradas**:
+- `gh` (GitHub CLI) - Credenciales en `~/.config/gh/`
+- `supabase` CLI - Token en `~/.supabase/access-token`
+- `wrangler` (Cloudflare) - Token en `~/.wrangler/config/default.toml`
+
+Después del setup inicial, no será necesario autenticarse nuevamente a menos que expire el token.
+
+## Acceso y Configuración Actual (Auditoría 2025-11-03)
+
+### GitHub
+- **Repositorio**: `ecucondorSA/autorenta`
+- **URL**: https://github.com/ecucondorSA/autorenta
+- **Branch principal**: `main`
+- **Último push**: 2025-11-01T23:26:15Z
+- **Público**: No (privado)
+- **Workflows activos**: 14 workflows (Build and Deploy, CI, Security Scan, E2E Tests, etc.)
+- **Secrets configurados** (13):
+  - CF_ACCOUNT_ID, CF_PAGES_PROJECT
+  - DATABASE_URL, DB_PASSWORD
+  - MAPBOX_ACCESS_TOKEN
+  - MERCADOPAGO_* (ACCESS_TOKEN, CLIENT_SECRET, PROD_ACCESS_TOKEN, PROD_PUBLIC_KEY, TEST_ACCESS_TOKEN)
+  - SUPABASE_* (ANON_KEY, SERVICE_ROLE_KEY, URL)
+- **Estado deployments**: Últimos 5 builds fallaron (necesitan corrección)
+- **Secrets Cloudflare configurados**:
+  - `CF_ACCOUNT_ID` ✅ (ya existe)
+  - `CF_API_TOKEN` ✅ (configurado 2025-11-03, válido hasta 2026-06-30)
+- **Workflow usa**: `CF_API_TOKEN || CLOUDFLARE_API_TOKEN` (fallback configurado)
+- **Usuario autenticado**: ecucondorSA
+
+### Supabase
+- **Proyecto**: autarenta
+- **Reference ID**: obxvffplochgeiclibng
+- **URL**: https://obxvffplochgeiclibng.supabase.co
+- **Región**: us-east-2
+- **Creado**: 2025-10-15 18:33:52 UTC
+- **Secrets configurados** (15):
+  - APP_BASE_URL
+  - DOC_VERIFIER_URL
+  - MAPBOX_ACCESS_TOKEN
+  - MERCADOPAGO_ACCESS_TOKEN
+  - MERCADOPAGO_APPLICATION_ID
+  - MERCADOPAGO_CLIENT_SECRET
+  - MERCADOPAGO_MARKETPLACE_ID
+  - MERCADOPAGO_OAUTH_REDIRECT_URI
+  - MERCADOPAGO_OAUTH_REDIRECT_URI_DEV
+  - MERCADOPAGO_PUBLIC_KEY
+  - PLATFORM_MARGIN_PERCENT
+  - SUPABASE_ANON_KEY
+  - SUPABASE_DB_URL
+  - SUPABASE_SERVICE_ROLE_KEY
+  - SUPABASE_URL
+- **Edge Functions activas** (20):
+  - mercadopago-webhook (v40, actualizado 2025-10-28)
+  - mercadopago-create-preference (v51)
+  - mercadopago-create-booking-preference (v19, actualizado 2025-10-28)
+  - mercadopago-oauth-connect (v5, actualizado 2025-11-02)
+  - mercadopago-oauth-callback (v3)
+  - wallet-transfer, wallet-reconciliation
+  - update-exchange-rates, sync-binance-rates
+  - calculate-dynamic-price
+  - verify-user-docs
+  - Y 10 más...
+
+### Cloudflare
+- **Account ID**: `5b448192fe4b369642b68ad8f53a7603`
+- **Email**: marques.eduardo95466020@gmail.com
+- **Account Name**: Marques.eduardo95466020@gmail.com's Account
+- **Permisos**: account:read, workers:write, pages:write, workers_kv:write, etc. (todos los necesarios)
+- **Workers configurados**:
+  - `autorenta-payments-webhook` (functions/workers/payments_webhook)
+    - KV Namespace: AUTORENT_WEBHOOK_KV (id: a2a12698413f4f288023a9c595e19ae6)
+  - `autorent-ai-car-generator` (functions/workers/ai-car-generator)
+    - AI binding habilitado
+  - `mercadopago-oauth-redirect` (functions/workers/mercadopago-oauth-redirect)
+  - `doc-verifier` (functions/workers/doc-verifier)
+- **Cloudflare Pages**: Proyectos existentes:
+  - `autorenta-web` (modificado hace 20 horas) - URL: autorenta-web.pages.dev
+  - `autorentar-app`, `autorentar`, `autorenta` (proyectos antiguos)
+- **Dominio configurado**: 
+  - Workflow usa: `autorenta.com` 
+  - Environment.ts: `autorentar.com` (inconsistencia a corregir)
+- **Deployments**: Últimos builds en GitHub Actions fallaron
+
+**Nota**: Esta información se actualiza cuando se ejecuta `./tools/check-auth.sh` o se hacen cambios significativos.
+
 ## Project Overview
 
 AutorentA is a car rental marketplace MVP for Argentina built with Angular 17 (standalone components), Supabase, and Cloudflare Workers/Pages. The project consists of a web application and a payment webhook worker.

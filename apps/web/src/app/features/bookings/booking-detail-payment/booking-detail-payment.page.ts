@@ -740,6 +740,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     // ✅ NUEVO: Guardar booking ID para procesamiento de pago
     this.lastCreatedBookingId.set(result.bookingId);
+    
+    // ✅ Guardar booking ID en sessionStorage para redirect de MercadoPago
+    sessionStorage.setItem('pending_booking_id', result.bookingId);
 
     // Limpiar sessionStorage
     sessionStorage.removeItem('booking_detail_input');

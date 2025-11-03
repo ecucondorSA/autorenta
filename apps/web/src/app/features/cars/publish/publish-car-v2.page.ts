@@ -1605,6 +1605,12 @@ export class PublishCarV2Page implements OnInit {
   async onSubmit(): Promise<void> {
     if (!this.canSubmit() || this.isSubmitting()) return;
 
+    if (!this.mpReady()) {
+      await this.presentOnboardingWarning();
+      this.isSubmitting.set(false);
+      return;
+    }
+
     try {
       this.isSubmitting.set(true);
 
@@ -1668,6 +1674,7 @@ export class PublishCarV2Page implements OnInit {
 
       const mpReady = this.mpReady();
       const autoApprovalRequested = (formValue.auto_approval as boolean | undefined) ?? true;
+      // Si no tiene onboarding MP completado, usar 'draft' (requiere completar onboarding antes de activar)
       const targetStatus: CarStatus = mpReady ? 'active' : 'draft';
       const finalAutoApproval = mpReady ? autoApprovalRequested : false;
 
