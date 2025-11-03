@@ -1,0 +1,195 @@
+<!-- Loading State -->
+<div *ngIf="loading()" class="dashboard-loading">
+  <div class="loading-spinner"></div>
+  <p>Cargando tu dashboard...</p>
+</div>
+
+<!-- Dashboard Content -->
+<div *ngIf="!loading()" class="personalized-dashboard">
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <div class="welcome-content">
+      <h1 class="welcome-title">{{ welcomeMessage() }}</h1>
+      <p class="welcome-subtitle">
+        <span *ngIf="userRole() === 'owner'">Gestiona tus autos y maximiza tus ganancias</span>
+        <span *ngIf="userRole() === 'renter'">Encuentra el auto perfecto para tus necesidades</span>
+        <span *ngIf="userRole() === 'both'">Administra tus autos y encuentra lo que necesitas</span>
+      </p>
+    </div>
+    <div class="welcome-actions">
+      <button
+        class="action-button primary"
+        (click)="navigateTo(userRole() === 'owner' || userRole() === 'both' ? '/cars/publish' : '/cars')"
+      >
+        {{ userRole() === 'owner' || userRole() === 'both' ? 'Publicar Auto' : 'Buscar Auto' }}
+      </button>
+      <button
+        class="action-button secondary"
+        (click)="refreshDashboard()"
+      >
+        <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <!-- Wallet Balance -->
+    <div class="stat-card wallet">
+      <div class="stat-icon">💰</div>
+      <div class="stat-content">
+        <div class="stat-value">${{ stats().walletBalance.toLocaleString() }}</div>
+        <div class="stat-label">Saldo Wallet</div>
+      </div>
+      <button class="stat-action" (click)="navigateTo('/wallet')">
+        Ver detalles →
+      </button>
+    </div>
+
+    <!-- Notifications -->
+    <div class="stat-card notifications" [class.has-unread]="stats().unreadNotifications > 0">
+      <div class="stat-icon">🔔</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats().unreadNotifications }}</div>
+        <div class="stat-label">Notificaciones</div>
+      </div>
+      <button class="stat-action" (click)="navigateTo('/notifications')">
+        Ver todas →
+      </button>
+    </div>
+
+    <!-- Role-specific stats -->
+    <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card cars">
+      <div class="stat-icon">🚗</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats().availableCars }}</div>
+        <div class="stat-label">Autos Activos</div>
+      </div>
+      <button class="stat-action" (click)="navigateTo('/cars/my')">
+        Gestionar →
+      </button>
+    </div>
+
+    <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card earnings">
+      <div class="stat-icon">📈</div>
+      <div class="stat-content">
+        <div class="stat-value">${{ stats().totalEarnings.toLocaleString() }}</div>
+        <div class="stat-label">Ganancias Totales</div>
+      </div>
+      <button class="stat-action" (click)="navigateTo('/admin')">
+        Ver reporte →
+      </button>
+    </div>
+
+    <div *ngIf="userRole() === 'renter' || userRole() === 'both'" class="stat-card bookings">
+      <div class="stat-icon">📅</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats().activeBookings }}</div>
+        <div class="stat-label">Reservas Activas</div>
+      </div>
+      <button class="stat-action" (click)="navigateTo('/bookings')">
+        Ver todas →
+      </button>
+    </div>
+
+    <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card pending">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats().pendingBookings }}</div>
+        <div class="stat-label">Reservas Pendientes</div>
+      </div>
+      <button class="stat-action" (click)="navigateTo('/bookings/owner')">
+        Revisar →
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h2>Acciones Rápidas</h2>
+    <div class="actions-grid">
+      <div
+        *ngFor="let action of quickActions()"
+        class="action-card"
+        [class]="action.color"
+        (click)="navigateTo(action.route)"
+      >
+        <div class="action-icon">{{ action.icon }}</div>
+        <div class="action-content">
+          <h3>{{ action.title }}</h3>
+          <p>{{ action.description }}</p>
+        </div>
+        <div class="action-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="recent-activity">
+    <!-- Recent Cars (for owners) -->
+    <div *ngIf="(userRole() === 'owner' || userRole() === 'both') && recentCars().length > 0" class="activity-section">
+      <div class="section-header">
+        <h2>Mis Autos Recientes</h2>
+        <button class="view-all" (click)="navigateTo('/cars/my')">Ver todos →</button>
+      </div>
+      <div class="cars-grid">
+        <div
+          *ngFor="let car of recentCars()"
+          class="car-card"
+          (click)="navigateTo('/cars/' + car.id)"
+        >
+          <img [src]="getCarPhotoUrl(car)" [alt]="car.title" />
+          <div class="car-info">
+            <h3>{{ car.title }}</h3>
+            <p>{{ car.location_city }}</p>
+            <span class="car-status" [class]="car.status">
+              {{ car.status === 'active' ? 'Activo' : car.status === 'suspended' ? 'Suspendido' : car.status === 'maintenance' ? 'Mantenimiento' : 'Borrador' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Bookings (for renters) -->
+    <div *ngIf="(userRole() === 'renter' || userRole() === 'both') && recentBookings().length > 0" class="activity-section">
+      <div class="section-header">
+        <h2>Mis Reservas Recientes</h2>
+        <button class="view-all" (click)="navigateTo('/bookings')">Ver todas →</button>
+      </div>
+      <div class="bookings-grid">
+        <div
+          *ngFor="let booking of recentBookings()"
+          class="booking-card"
+          (click)="navigateTo('/bookings/' + booking.id)"
+        >
+          <div class="booking-info">
+            <h3>{{ booking.car_title }}</h3>
+            <p>{{ booking.start_at | date:'dd/MM/yyyy' }} - {{ booking.end_at | date:'dd/MM/yyyy' }}</p>
+            <span class="booking-status" [class]="booking.status">
+              {{ booking.status === 'confirmed' ? 'Confirmada' : booking.status === 'pending' ? 'Pendiente' : booking.status }}
+            </span>
+          </div>
+          <div class="booking-price">
+            ${{ booking.total_amount_cents / 100 | number:'1.0-0' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty states -->
+    <div *ngIf="recentCars().length === 0 && recentBookings().length === 0" class="empty-state">
+      <div class="empty-icon">📊</div>
+      <h3>No hay actividad reciente</h3>
+      <p>¡Comienza publicando un auto o haciendo una reserva!</p>
+      <button
+        class="cta-button"
+        (click)="navigateTo(userRole() === 'owner' || userRole() === 'both' ? '/cars/publish' : '/cars')"
+      >
+        {{ userRole() === 'owner' || userRole() === 'both' ? 'Publicar mi primer auto' : 'Buscar mi primer auto' }}
+      </button>
+    </div>
+  </div>
+</div>

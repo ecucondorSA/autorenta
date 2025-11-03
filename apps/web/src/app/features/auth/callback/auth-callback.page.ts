@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ProfileService } from '../../../core/services/profile.service';
 
 /**
  * AuthCallbackPage
@@ -96,6 +97,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class AuthCallbackPage implements OnInit {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly profileService = inject(ProfileService);
 
   readonly error = signal<string | null>(null);
 
@@ -117,8 +119,22 @@ export class AuthCallbackPage implements OnInit {
 
       // Verificar si el usuario está autenticado
       if (this.auth.isAuthenticated()) {
-        // Redirigir a la página principal
-        await this.router.navigate(['/']);
+        // Verificar si necesita completar onboarding
+        try {
+          const hasCompletedOnboarding = await this.profileService.hasCompletedOnboarding();
+
+          if (!hasCompletedOnboarding) {
+            // Usuario nuevo - ir al onboarding
+            await this.router.navigate(['/onboarding']);
+          } else {
+            // Usuario existente - ir a la página principal
+            await this.router.navigate(['/']);
+          }
+        } catch (onboardingError) {
+          // Si hay error verificando onboarding, ir a página principal (fail-open)
+          console.warn('Error verificando onboarding:', onboardingError);
+          await this.router.navigate(['/']);
+        }
       } else {
         throw new Error('No se pudo completar la autenticación. Intentá nuevamente.');
       }

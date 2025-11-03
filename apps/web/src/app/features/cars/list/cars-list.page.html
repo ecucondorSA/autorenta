@@ -1,14 +1,14 @@
 <section class="cars-map-page bg-ivory-soft dark:bg-graphite-dark transition-colors duration-300">
   <!-- ✅ FIXED: Uso de app-car-card para precios dinámicos consistentes -->
-  <ng-template #carouselCard let-car>
-    <div class="map-carousel-card-wrapper" role="listitem" [attr.data-car-id]="car.id">
+  <ng-template #carouselCard let-car let-isTopRated="isTopRated">
+    <div class="map-carousel-card-wrapper" role="listitem" [attr.data-car-id]="car.id" [class.top-rated]="isTopRated">
       <app-car-card
         [car]="car"
         [selected]="isCarSelected(car.id)"
         [distance]="car.distanceText"
         (click)="onCarSelected(car.id)"
         class="map-carousel-card--dynamic"
-        [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto económico')"
+        [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto recomendado')"
       ></app-car-card>
     </div>
   </ng-template>
@@ -43,25 +43,31 @@
               (change)="onSortChange($any($event.target).value)"
               class="map-controls__select"
             >
-              <option value="distance">Más cercanos</option>
+              <option value="distance" [disabled]="!userLocation()">Más cercanos</option>
               <option value="price_asc">Precio: menor a mayor</option>
               <option value="price_desc">Precio: mayor a menor</option>
               <option value="rating">Mejor valorados</option>
               <option value="newest">Más nuevos</option>
             </select>
           </div>
+          <!-- Badge de resultados filtrados -->
+          <div *ngIf="hasActiveFilters()" class="ml-auto hidden md:flex items-center gap-2 bg-white/90 rounded-full px-3 py-1 text-sm font-semibold border border-black/10 shadow-sm">
+            {{ filteredCount() }} de {{ totalCount() }}
+            <button (click)="onFiltersReset()" class="underline decoration-dotted">Limpiar</button>
+          </div>
         </div>
 
-        <!-- Carousel de autos económicos (solo desktop) -->
+        <!-- Carousel de autos recomendados (solo desktop) -->
         <div
-          *ngIf="showEconomyCarousel()"
+          *ngIf="showRecommendedCarousel()"
           class="hidden md:block map-carousel-container pointer-events-none"
           role="region"
-          [attr.aria-label]="'Autos cercanos y económicos'"
+          [attr.aria-label]="'Autos mejor evaluados y recomendados'"
         >
           <div class="map-carousel-heading pointer-events-auto">
-            <span class="map-carousel-heading__pill">
-              Cercanos y económicos
+            <span class="map-carousel-heading__pill recommended">
+              ⭐ Mejor evaluados
+              <span class="pill-subtitle">Rating + Cercanía</span>
             </span>
           </div>
           <div
@@ -74,12 +80,20 @@
             (touchstart)="onCarouselMouseEnter()"
             (touchend)="onCarouselMouseLeave()"
           >
-            <ng-container *ngFor="let car of economyCars(); trackBy: trackByCarId">
+            <!-- Skeletons mientras carga -->
+            <ng-container *ngIf="loading(); else recommendedList">
+              <div *ngFor="let i of [1,2,3,4]" class="map-carousel-card" aria-hidden="true">
+                <app-skeleton-loader type="card"></app-skeleton-loader>
+              </div>
+            </ng-container>
+            <ng-template #recommendedList>
+            <ng-container *ngFor="let car of recommendedCars(); trackBy: trackByCarId">
               <ng-container
                 [ngTemplateOutlet]="carouselCard"
-                [ngTemplateOutletContext]="{ $implicit: car }"
+                [ngTemplateOutletContext]="{ $implicit: car, isTopRated: isTopRated(car) }"
               ></ng-container>
             </ng-container>
+            </ng-template>
           </div>
         </div>
       </div>

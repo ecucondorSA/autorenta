@@ -120,6 +120,19 @@
   color: #ffffff;
 }
 
+/* Selected marker explicit class */
+.car-marker--selected .car-marker-content {
+  background: #2c4a52;
+  border-color: #2c4a52;
+  transform: scale(1.15);
+  box-shadow: 0 0 0 4px rgba(44, 74, 82, 0.3), 0 8px 24px rgba(44, 74, 82, 0.4);
+  color: #fff;
+}
+
+.car-marker--selected .car-marker-price {
+  color: #ffffff;
+}
+
 /* Bounce animation on load */
 @keyframes markerBounce {
   0%, 100% { transform: translateY(0); }
@@ -128,6 +141,56 @@
 
 .car-marker.bounce {
   animation: markerBounce 0.6s ease;
+}
+
+/* Distance markers (nearby cars) */
+.car-marker.nearby .car-marker-content {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: #10b981;
+  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.3);
+}
+
+.car-marker.nearby:hover .car-marker-content {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+}
+
+.car-marker-distance {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.1px;
+}
+
+.car-marker.nearby .car-marker-price {
+  color: #ffffff;
+}
+
+/* Visual hierarchy - different marker sizes based on distance */
+.car-marker.nearby {
+  z-index: 50 !important;
+}
+
+.car-marker:not(.nearby) {
+  z-index: 10 !important;
+}
+
+.car-marker.nearby .car-marker-photo {
+  width: 36px;
+  height: 36px;
+}
+
+.car-marker:not(.nearby) .car-marker-photo {
+  width: 30px;
+  height: 30px;
+}
+
+/* Enhanced active states */
+.car-marker.active.nearby .car-marker-content {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  border-color: #dc2626;
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3), 0 8px 24px rgba(220, 38, 38, 0.4);
 }
 
 /* User location marker */
@@ -168,4 +231,54 @@
 
 .user-location-marker {
   animation: pulse 2s infinite;
+}
+
+/* Surge badge for demand-based pricing */
+.surge-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ffb400;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #1a1a1a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Popup styles */
+.car-popup .mapboxgl-popup-content {
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.car-popup-content {
+  display: flex;
+  gap: 12px;
+  min-width: 220px;
+  align-items: center;
+}
+
+.car-popup-image {
+  width: 88px;
+  height: 66px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.car-popup-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.car-popup-price {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c4a52;
 }

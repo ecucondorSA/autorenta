@@ -22,6 +22,7 @@ import {
 import { addIcons } from 'ionicons';
 import { searchOutline, locationOutline, calendarOutline, trendingUp } from 'ionicons/icons';
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
+import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
 import { CarsService } from '../../core/services/cars.service';
 import { Car } from '../../core/models';
 
@@ -50,6 +51,7 @@ import { Car } from '../../core/models';
     IonRefresher,
     IonRefresherContent,
     CarCardComponent,
+    SkeletonLoaderComponent,
   ],
 })
 export class HomePage implements OnInit {

@@ -1,4 +1,6 @@
 import { Component, Output, EventEmitter, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -41,6 +43,19 @@ export class MapFiltersComponent {
     bluetooth: false,
     backup_camera: false,
   });
+
+  private readonly filtersSubject = new Subject<MapFilters>();
+
+  constructor() {
+    this.filtersSubject
+      .pipe(
+        debounceTime(300),
+        map((f) => JSON.stringify(f)),
+        distinctUntilChanged(),
+        map((s) => JSON.parse(s) as MapFilters),
+      )
+      .subscribe((filters) => this.filtersChange.emit(filters));
+  }
 
   toggleExpanded(): void {
     this.expanded.update((v) => !v);
@@ -99,13 +114,14 @@ export class MapFiltersComponent {
   }
 
   private emitFilters(): void {
-    this.filtersChange.emit({
+    const value: MapFilters = {
       minPrice: this.minPrice(),
       maxPrice: this.maxPrice(),
       transmission: this.transmission(),
       fuelType: this.fuelType(),
       minSeats: this.minSeats(),
       features: this.features(),
-    });
+    };
+    this.filtersSubject.next(value);
   }
 }

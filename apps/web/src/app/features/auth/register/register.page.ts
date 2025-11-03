@@ -40,8 +40,8 @@ export class RegisterPage {
     try {
       const { email, password, fullName } = this.form.getRawValue();
       await this.auth.signUp(email, password, fullName);
-      this.message.set('Revisá tu email para confirmar la cuenta.');
-      setTimeout(() => void this.router.navigate(['/auth/login']), 1500);
+      this.message.set('¡Cuenta creada exitosamente! Vamos a configurarte.');
+      setTimeout(() => void this.router.navigate(['/onboarding']), 1500);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'No pudimos registrar el usuario.');
     } finally {

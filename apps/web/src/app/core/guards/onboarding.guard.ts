@@ -22,10 +22,8 @@ export const onboardingGuard: CanMatchFn = async () => {
     const hasCompleted = await profileService.hasCompletedOnboarding();
 
     if (!hasCompleted) {
-      // Redirigir a perfil con parámetro de onboarding
-      return router.createUrlTree(['/profile'], {
-        queryParams: { onboarding: 'required' },
-      });
+      // Redirigir a onboarding inteligente
+      return router.createUrlTree(['/onboarding']);
     }
 
     return true;
