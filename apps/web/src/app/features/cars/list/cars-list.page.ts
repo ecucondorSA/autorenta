@@ -53,10 +53,11 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
   standalone: true,
   selector: 'app-cars-list-page',
   imports: [
-    CommonModule, 
-    CarsMapComponent, 
-    MapFiltersComponent, 
-    CarCardComponent, 
+    CommonModule,
+    CarsMapComponent,
+    MapFiltersComponent,
+    CarCardComponent,
+    SkeletonLoaderComponent,
     TranslateModule,
   ],
   templateUrl: './cars-list.page.html',
@@ -125,6 +126,18 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('rating');
   readonly sortLabel = computed(() => this.getSortLabel(this.sortBy()));
 
+  // Contadores para badge de resultados
+  readonly filteredCount = computed(() => this.filteredCarsWithDistance().length);
+  readonly totalCount = computed(() => this.cars().length);
+  readonly hasActiveFilters = computed(() => {
+    const f = this.mapFilters();
+    if (!f) return false;
+    if (f.minPrice > 5000 || f.maxPrice < 50000) return true;
+    if (f.transmission !== 'all' || f.fuelType !== 'all') return true;
+    if (f.minSeats > 2) return true;
+    return Object.values(f.features).some((v) => v === true);
+  });
+
   private readonly persistSortEffect = effect(() => {
     if (!this.isBrowser || !this.sortInitialized) {
       return;
@@ -138,16 +151,16 @@ export class CarsListPage implements OnInit, OnDestroy {
       return;
     }
     const premiumCount = this.premiumCars().length;
-    const economyCount = this.economyCars().length;
+    const recommendedCount = this.recommendedCars().length;
     const sort = this.sortBy();
-    const key = `${premiumCount}:${economyCount}:${sort}`;
+    const key = `${premiumCount}:${recommendedCount}:${sort}`;
     if (key === this.analyticsLastKey) {
       return;
     }
     this.analyticsLastKey = key;
     this.trackAnalytics('inventory_segments_updated', {
       premiumCount,
-      economyCount,
+      recommendedCount,
       sort,
     });
   });
@@ -377,85 +390,95 @@ export class CarsListPage implements OnInit, OnDestroy {
     return sorted;
   });
 
-  readonly economyCars = computed<CarWithDistance[]>(() => {
-    const segmentation = this.premiumSegmentation();
+  readonly recommendedCars = computed<CarWithDistance[]>(() => {
     const cars = this.filteredCarsWithDistance();
-
     if (!cars.length) {
       return [];
     }
 
-    const premiumSet = segmentation
-      ? new Set(
-          cars
-            .filter((car) => (segmentation.scores.get(car.id) ?? 0) >= segmentation.threshold)
-            .map((car) => car.id),
-        )
-      : new Set<string>();
+    // Filtrar solo autos activos con al menos una reseña (o rating_avg > 0)
+    const eligibleCars = cars.filter(car =>
+      car.status === 'active' &&
+      (car.rating_avg > 0 || car.rating_count > 0)
+    );
 
-    let list = cars.filter((car) => {
-      const withinRadius = car.distance === undefined || car.distance <= this.economyRadiusKm;
-      if (!withinRadius) {
-        return false;
-      }
-
-      if (!segmentation) {
-        return true;
-      }
-
-      const score = segmentation.scores.get(car.id) ?? 0;
-      return score < segmentation.threshold;
-    });
-
-    if (!list.length) {
-      const nonPremium = cars.filter((car) => !premiumSet.has(car.id));
-      const source = nonPremium.length ? nonPremium : cars;
-
-      list = source
-        .slice()
+    if (!eligibleCars.length) {
+      // Si no hay autos con reseñas, mostrar todos los activos
+      return cars
+        .filter(car => car.status === 'active')
         .sort((a, b) => {
-          const priceDiff = a.price_per_day - b.price_per_day;
-          if (priceDiff !== 0) {
-            return priceDiff;
+          // Primero por distancia (si hay ubicación del usuario)
+          const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
+          const distanceB = b.distance ?? Number.POSITIVE_INFINITY;
+
+          if (distanceA !== distanceB) {
+            return distanceA - distanceB;
           }
-          const distA = a.distance ?? Number.POSITIVE_INFINITY;
-          const distB = b.distance ?? Number.POSITIVE_INFINITY;
-          return distA - distB;
+
+          // Luego por precio (más barato primero)
+          if (a.price_per_day !== b.price_per_day) {
+            return a.price_per_day - b.price_per_day;
+          }
+
+          // Finalmente por nombre
+          return (a.title || '').localeCompare(b.title || '');
         })
-        .slice(0, 12);
+        .slice(0, 15);
     }
 
-    return list
+    // Ordenar por rating primero, luego distancia
+    return eligibleCars
       .sort((a, b) => {
+        // Primero: Rating promedio (mayor mejor)
+        const ratingA = a.rating_avg || 0;
+        const ratingB = b.rating_avg || 0;
+
+        if (ratingA !== ratingB) {
+          return ratingB - ratingA; // Mayor rating primero
+        }
+
+        // Segundo: Cantidad de reseñas (más reseñas = más confiable)
+        const reviewsA = a.rating_count || 0;
+        const reviewsB = b.rating_count || 0;
+
+        if (reviewsA !== reviewsB) {
+          return reviewsB - reviewsA; // Más reseñas primero
+        }
+
+        // Tercero: Distancia (más cerca mejor, si hay ubicación)
         const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
         const distanceB = b.distance ?? Number.POSITIVE_INFINITY;
 
         if (distanceA !== distanceB) {
           return distanceA - distanceB;
         }
+
+        // Cuarto: Precio (más barato primero)
         if (a.price_per_day !== b.price_per_day) {
           return a.price_per_day - b.price_per_day;
         }
+
+        // Finalmente: Nombre alfabético
         return (a.title || '').localeCompare(b.title || '');
       })
-      .slice(0, 12);
+      .slice(0, 15);
   });
 
-  readonly showEconomyCarousel = computed(() => {
-    const economy = this.economyCars();
-    if (!economy.length) {
+  readonly showRecommendedCarousel = computed(() => {
+    const recommended = this.recommendedCars();
+    if (!recommended.length) {
       return false;
     }
 
-    const premiumSet = new Set(this.premiumCars().map((car) => car.id));
-
-    if (premiumSet.size === 0) {
-      const allCount = this.filteredCarsWithDistance().length;
-      return economy.length < allCount;
-    }
-
-    return economy.some((car) => !premiumSet.has(car.id));
+    // Mostrar siempre si hay autos recomendados
+    // Esto asegura que el carousel aparezca cuando haya autos con reseñas
+    return recommended.length >= 3; // Mostrar mínimo 3 autos
   });
+
+  // Helper para determinar si un auto es "Top Rated"
+  isTopRated(car: CarWithDistance): boolean {
+    return (car.rating_avg || 0) >= 4.5 && (car.rating_count || 0) >= 5;
+  }
 
   // Comparación
   readonly compareCount = this.compareService.count;
@@ -533,7 +556,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.autoScrollKickoffTimeout = undefined;
       }
 
-      if (this.economyCars().length >= 3) {
+      if (this.recommendedCars().length >= 3) {
         this.autoScrollKickoffTimeout = setTimeout(() => this.startCarouselAutoScroll(), 1000);
       } else {
         this.stopCarouselAutoScroll();

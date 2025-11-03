@@ -1307,6 +1307,41 @@
   font-size: 1.25rem !important;
 }
 
+/* Skeletons del carrusel */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeleton-card {
+  min-width: 240px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(217, 214, 208, 0.6);
+}
+
+.skeleton-image {
+  width: 100px;
+  height: 72px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #e5e3df 0%, #f0eee9 50%, #e5e3df 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 1.6s infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e5e3df 0%, #f0eee9 50%, #e5e3df 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 1.6s infinite;
+  margin: 6px 0;
+}
+
 /* 🎯 Pulse highlight animation for selected car */
 @keyframes pulseHighlight {
   0%, 100% {

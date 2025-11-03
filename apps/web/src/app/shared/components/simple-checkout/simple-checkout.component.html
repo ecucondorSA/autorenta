@@ -1,0 +1,275 @@
+<!-- Header con progreso -->
+<div class="checkout-header">
+  <div class="progress-container">
+    <div class="progress-steps">
+      <div
+        *ngFor="let step of steps; let i = index"
+        class="progress-step"
+        [class.active]="i === currentStep()"
+        [class.completed]="step.completed"
+      >
+        <div class="step-number">{{ i + 1 }}</div>
+        <div class="step-title">{{ step.title }}</div>
+      </div>
+    </div>
+  </div>
+  <button class="close-button" (click)="cancel()" [disabled]="loading()">
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+</div>
+
+<!-- Content -->
+<div class="checkout-content">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-state">
+    <div class="spinner"></div>
+    <h3>Procesando tu reserva...</h3>
+    <p>Esto tomará solo unos segundos</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error() && !loading()" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <h3>Error</h3>
+    <p>{{ error() }}</p>
+    <button class="retry-button" (click)="error.set(null)">Intentar nuevamente</button>
+  </div>
+
+  <!-- Step Content -->
+  <div *ngIf="!loading() && !error()" class="step-content">
+    <!-- Step 1: Fechas -->
+    <div *ngIf="currentStep() === 0" class="step-dates">
+      <div class="step-header">
+        <h2>¿Cuándo necesitas el auto?</h2>
+        <p>Selecciona las fechas de recogida y devolución</p>
+      </div>
+
+      <div class="car-preview">
+        <img [src]="getCarPhotoUrl()" [alt]="car.title" />
+        <div class="car-info">
+          <h3>{{ car.title }}</h3>
+          <p>{{ car.location_city }}, {{ car.location_state }}</p>
+          <p class="price">{{ car.price_per_day | currency:'ARS':'symbol':'1.0-0' }}/día</p>
+        </div>
+      </div>
+
+      <div class="date-selection">
+        <div class="date-field">
+          <label>Fecha de recogida</label>
+          <input
+            type="date"
+            [value]="startDate()"
+            (input)="startDate.set($any($event.target).value)"
+            [min]="getMinDate()"
+            [max]="getMaxDate()"
+          />
+        </div>
+
+        <div class="date-field">
+          <label>Fecha de devolución</label>
+          <input
+            type="date"
+            [value]="endDate()"
+            (input)="endDate.set($any($event.target).value)"
+            [min]="startDate() || getMinDate()"
+            [max]="getMaxDate()"
+          />
+        </div>
+      </div>
+
+      <div *ngIf="totalDays() > 0" class="booking-summary">
+        <h4>Resumen de tu reserva</h4>
+        <div class="summary-item">
+          <span>Duración</span>
+          <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
+        </div>
+        <div class="summary-item">
+          <span>Precio por día</span>
+          <span>{{ car.price_per_day | currency:'ARS':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="summary-total">
+          <span>Total alquiler</span>
+          <span>{{ totalPrice() | currency:'ARS':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Review -->
+    <div *ngIf="currentStep() === 1" class="step-review">
+      <div class="step-header">
+        <h2>Confirma tu reserva</h2>
+        <p>Revisa los detalles antes de continuar</p>
+      </div>
+
+      <div class="booking-details">
+        <div class="detail-section">
+          <h3>Auto</h3>
+          <div class="car-summary">
+            <img [src]="getCarPhotoUrl()" [alt]="car.title" />
+            <div>
+              <h4>{{ car.title }}</h4>
+              <p>{{ car.location_city }}, {{ car.location_state }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Fechas</h3>
+          <div class="date-summary">
+            <div class="date-item">
+              <span>Recogida</span>
+              <span>{{ startDate() | date:'EEEE dd/MM/yyyy' }}</span>
+            </div>
+            <div class="date-item">
+              <span>Devolución</span>
+              <span>{{ endDate() | date:'EEEE dd/MM/yyyy' }}</span>
+            </div>
+            <div class="date-item total">
+              <span>Total</span>
+              <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Costos</h3>
+          <div class="cost-breakdown">
+            <div class="cost-item">
+              <span>Alquiler ({{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }})</span>
+              <span>{{ totalPrice() | currency:'ARS':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="cost-item">
+              <span>Depósito de garantía</span>
+              <span>{{ depositAmount() | currency:'USD':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="cost-total">
+              <span>Total a pagar</span>
+              <span>{{ finalTotal() | currency:'ARS':'symbol':'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Payment -->
+    <div *ngIf="currentStep() === 2" class="step-payment">
+      <div class="step-header">
+        <h2>Elige tu método de pago</h2>
+        <p>Tu reserva está protegida y segura</p>
+      </div>
+
+      <div class="payment-methods">
+        <!-- Wallet Payment -->
+        <div
+          class="payment-method"
+          [class.selected]="paymentMethod() === 'wallet'"
+          [class.disabled]="finalTotal() > walletBalance()"
+          (click)="paymentMethod.set('wallet')"
+        >
+          <div class="payment-icon">💰</div>
+          <div class="payment-info">
+            <h4>Wallet AutoRenta</h4>
+            <p>Saldo disponible: {{ walletBalance() | currency:'ARS':'symbol':'1.0-0' }}</p>
+            <p class="payment-description">Pago instantáneo y sin comisiones</p>
+          </div>
+          <div class="payment-radio">
+            <div class="radio" [class.checked]="paymentMethod() === 'wallet'"></div>
+          </div>
+        </div>
+
+        <!-- Card Payment -->
+        <div
+          class="payment-method"
+          [class.selected]="paymentMethod() === 'card'"
+          (click)="paymentMethod.set('card')"
+        >
+          <div class="payment-icon">💳</div>
+          <div class="payment-info">
+            <h4>Tarjeta de Crédito/Débito</h4>
+            <p>A través de MercadoPago</p>
+            <p class="payment-description">Aceptamos todas las tarjetas</p>
+          </div>
+          <div class="payment-radio">
+            <div class="radio" [class.checked]="paymentMethod() === 'card'"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-notice">
+        <div class="notice-icon">🔒</div>
+        <div class="notice-text">
+          <h4>Pago Seguro</h4>
+          <p>Tus datos están protegidos. El depósito se devuelve al finalizar el alquiler.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Confirmation -->
+    <div *ngIf="currentStep() === 3" class="step-confirmation">
+      <div class="step-header">
+        <h2>¡Ya casi está!</h2>
+        <p>Confirma tu reserva para completar el proceso</p>
+      </div>
+
+      <div class="confirmation-summary">
+        <div class="summary-card">
+          <h3>Resumen Final</h3>
+
+          <div class="confirmation-item">
+            <span>Auto</span>
+            <span>{{ car.title }}</span>
+          </div>
+
+          <div class="confirmation-item">
+            <span>Período</span>
+            <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
+          </div>
+
+          <div class="confirmation-item">
+            <span>Método de pago</span>
+            <span>{{ paymentMethod() === 'wallet' ? 'Wallet' : 'Tarjeta' }}</span>
+          </div>
+
+          <div class="confirmation-total">
+            <span>Total</span>
+            <span>{{ finalTotal() | currency:'ARS':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="terms-checkbox">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">
+            Acepto los <a href="/terminos" target="_blank">términos y condiciones</a>
+            y las <a href="/politicas" target="_blank">políticas de alquiler</a>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer con navegación -->
+<div *ngIf="!loading() && !error()" class="checkout-footer">
+  <button
+    class="nav-button secondary"
+    (click)="previousStep()"
+    [disabled]="currentStep() === 0"
+  >
+    ← Anterior
+  </button>
+
+  <button
+    class="nav-button primary"
+    (click)="nextStep()"
+    [disabled]="!validateCurrentStep()"
+  >
+    <span *ngIf="currentStep() < steps.length - 1">
+      Continuar
+    </span>
+    <span *ngIf="currentStep() >= steps.length - 1">
+      Confirmar Reserva
+    </span>
+  </button>
+</div>
