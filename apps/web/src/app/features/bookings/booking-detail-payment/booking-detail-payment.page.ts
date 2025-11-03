@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, signal, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, firstValueFrom } from 'rxjs';
 
@@ -67,6 +68,7 @@ import { TermsAndConsentsComponent } from './components/terms-and-consents.compo
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     BookingSummaryCardComponent,
     RiskPolicyTableComponent,
     PaymentModeToggleComponent,
@@ -157,6 +159,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly loadingFx = signal(false);
   readonly loadingRisk = signal(false);
   readonly loadingPricing = signal(false);
+
+  // Control de conversión optimizada
+  readonly conversionMode = signal<'standard' | 'optimized'>('optimized'); // Por defecto optimizado
   readonly error = signal<string | null>(null);
   readonly validationErrors = signal<ValidationError[]>([]);
 
@@ -1043,4 +1048,65 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       (error as { code?: string }).code === 'OWNER_ONBOARDING_REQUIRED'
     );
   }
+
+  // ============================================
+  // CONVERSIÓN OPTIMIZADA
+  // ============================================
+
+  /**
+   * Controla si mostrar vista optimizada para mejor conversión
+   */
+  readonly showOptimizedView = computed(() => this.conversionMode() === 'optimized');
+
+  /**
+   * Cambia entre vista estándar y optimizada
+   */
+  toggleConversionMode(): void {
+    this.conversionMode.update(mode => mode === 'optimized' ? 'standard' : 'optimized');
+  }
+
+  /**
+   * Obtiene URL de foto del auto (para vista optimizada)
+   */
+  getCarPhotoUrl(): string {
+    const car = this.car();
+    if (!car) return '/assets/placeholder-car.jpg';
+
+    const photos = car.photos || (car as any).car_photos;
+    if (photos && photos.length > 0 && photos[0].url) {
+      return photos[0].url;
+    }
+
+    // Placeholder si no hay fotos
+    return '/assets/placeholder-car.jpg';
+  }
+
+  /**
+   * Calcula total simplificado (sin breakdown detallado)
+   */
+  readonly simplifiedTotal = computed(() => {
+    const breakdown = this.priceBreakdown();
+    if (!breakdown) return 0;
+
+    return breakdown.totalArs;
+  });
+
+  /**
+   * Mensaje de confianza para conversión
+   */
+  readonly trustMessage = computed(() => {
+    const car = this.car();
+    const rating = car?.rating_avg || 0;
+    const reviews = car?.rating_count || 0;
+
+    if (rating >= 4.5 && reviews >= 10) {
+      return '⭐ Auto muy bien evaluado por otros usuarios';
+    } else if (rating >= 4.0) {
+      return '👍 Auto bien evaluado';
+    } else if (reviews >= 5) {
+      return '✅ Auto con evaluaciones verificadas';
+    } else {
+      return '🔒 Reserva protegida con franquicia';
+    }
+  });
 }
