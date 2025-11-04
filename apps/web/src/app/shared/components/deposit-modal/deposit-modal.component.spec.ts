@@ -34,6 +34,9 @@ describe('DepositModalComponent', () => {
     fixture = TestBed.createComponent(DepositModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    // Wait for async operations (exchange rate load and effect)
+    await fixture.whenStable();
   });
 
   it('should create', () => {
@@ -61,29 +64,49 @@ describe('DepositModalComponent', () => {
   });
 
   describe('API Interaction', () => {
-    it('should call initiateDeposit on submit and emit success on success', () => {
+    it('should call initiateDeposit on submit and emit success on success', async () => {
       spyOn(component.depositSuccess, 'emit');
       component.arsAmount.set(5000);
+
+      // Wait for effect to update usdAmount
+      await fixture.whenStable();
+      fixture.detectChanges();
+
       component.onSubmit();
 
       expect(mockWalletService.initiateDeposit).toHaveBeenCalled();
       expect(component.depositSuccess.emit).toHaveBeenCalledWith('http://success.com');
     });
 
-    it('should set formError on initiateDeposit failure', () => {
+    it('should set formError on initiateDeposit failure', async () => {
       mockWalletService.initiateDeposit.and.returnValue(of({ success: false, message: 'Error message' }));
 
       component.arsAmount.set(5000);
+
+      // Wait for effect to update usdAmount
+      await fixture.whenStable();
+      fixture.detectChanges();
+
       component.onSubmit();
 
       expect(component.formError()).toBe('Error message');
     });
 
-    it('should handle MERCADOPAGO_ERROR and suggest bank transfer', () => {
-      mockWalletService.initiateDeposit.and.returnValue(throwError({ code: 'MERCADOPAGO_ERROR' }));
+    it('should handle MERCADOPAGO_ERROR and suggest bank transfer', async () => {
+      mockWalletService.initiateDeposit.and.returnValue(
+        throwError(() => ({ code: 'MERCADOPAGO_ERROR' }))
+      );
 
       component.arsAmount.set(5000);
+
+      // Wait for effect to update usdAmount
+      await fixture.whenStable();
+      fixture.detectChanges();
+
       component.onSubmit();
+
+      // Wait a microtask for observable to complete
+      await Promise.resolve();
 
       expect(component.formError()).toContain('No pudimos iniciar el pago con Mercado Pago');
       expect(component.provider()).toBe('bank_transfer');

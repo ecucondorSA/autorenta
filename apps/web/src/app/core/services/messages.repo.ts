@@ -10,7 +10,9 @@ const queueOffline = (data: any) => {
 
 export async function insertMessage(supabase: SupabaseClient, input: any) {
   try {
-    const clean = ChatMessageInsertSchema.parse(input);
+    // Strip full_name before validation (UI might send it but DB doesn't need it)
+    const { full_name, ...rest } = input;
+    const clean = ChatMessageInsertSchema.parse(rest);
     const { data, error } = await supabase.from('messages').insert(clean).select('*').single();
     if (error) {
       // 400 por esquema/columna => colar offline y reintentar luego
