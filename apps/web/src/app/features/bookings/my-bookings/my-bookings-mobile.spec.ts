@@ -321,7 +321,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería usar wa.me en móvil en lugar de web.whatsapp.com', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -337,7 +337,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería funcionar correctamente en iOS (iPhone)', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -358,7 +358,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería funcionar correctamente en Android', async () => {
       // Arrange
       setMobileUserAgent('Android');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -394,7 +394,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería incluir el mensaje con información del booking en el link', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -411,7 +411,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería formatear correctamente el número de teléfono con código de país', async () => {
       // Arrange
       setMobileUserAgent('Android');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -468,7 +468,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería prevenir múltiples clics en botón de WhatsApp', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act - llamar dos veces rápidamente
       const promise1 = component.openChat(mockBooking);
