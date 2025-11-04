@@ -6,20 +6,30 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { BookingsService } from './bookings.service';
 import { CarsService } from './cars.service';
 import { PaymentsService } from './payments.service';
+
+function normalizeError(error: unknown): { message?: string; code?: string } {
+  if (error instanceof Error) {
+    return { message: error.message };
+  }
+  if (error && typeof error === 'object') {
+    const typed = error as { message?: string; code?: string };
+    return { message: typed.message, code: typed.code };
+  }
+  return { message: String(error) };
+}
 
 describe('Sprint 5.3 - Error Handling', () => {
   let bookingsService: BookingsService;
   let carsService: CarsService;
   let paymentsService: PaymentsService;
-  let mockSupabase: jasmine.SpyObj<SupabaseClient>;
+  let mockSupabase: any;
 
   beforeEach(() => {
     mockSupabase = jasmine.createSpyObj('SupabaseClient', ['from', 'rpc', 'auth', 'storage']);
-    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']) as unknown;
+    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']);
     (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
       Promise.resolve({
         data: { user: { id: 'user-123', email: 'test@example.com' } },
@@ -63,7 +73,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message || error.code).toBeTruthy();
+        const normalized = normalizeError(error);
+        expect(normalized.message || normalized.code).toBeTruthy();
       }
     });
 
@@ -87,7 +98,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message || error.code).toBeTruthy();
+        const normalized = normalizeError(error);
+        expect(normalized.message || normalized.code).toBeTruthy();
       }
     });
 
@@ -112,7 +124,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.code || error.message).toBeTruthy();
+        const normalized = normalizeError(error);
+        expect(normalized.code || normalized.message).toBeTruthy();
       }
     });
 
@@ -137,7 +150,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Should have thrown an error');
       } catch (error: unknown) {
         // El mensaje debería ser comprensible para usuarios no técnicos
-        expect(error.message || error.code).toBeDefined();
+        const normalized = normalizeError(error);
+        expect(normalized.message || normalized.code).toBeDefined();
       }
     });
   });
@@ -165,7 +179,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error de timeout');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message || error.code).toBeTruthy();
+        const normalized = normalizeError(error);
+        expect(normalized.message || normalized.code).toBeTruthy();
       }
     });
 
@@ -190,7 +205,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error de timeout');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message || error.code).toBeTruthy();
+        const normalized = normalizeError(error);
+        expect(normalized.message || normalized.code).toBeTruthy();
       }
     });
 
@@ -212,7 +228,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error de timeout');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message || error.code).toBeTruthy();
+        const normalized = normalizeError(error);
+        expect(normalized.message || normalized.code).toBeTruthy();
       }
     });
 
@@ -285,7 +302,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message.toLowerCase()).toContain('booking');
+        const normalized = normalizeError(error);
+        expect((normalized.message || '').toLowerCase()).toContain('booking');
       }
     });
 
@@ -392,7 +410,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.code || error.message).toBeTruthy();
+        const normalized = normalizeError(error);
+        expect(normalized.code || normalized.message).toBeTruthy();
       }
     });
 
@@ -417,7 +436,8 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Should have thrown an error');
       } catch (error: unknown) {
         // El mensaje debería indicar problemas de conexión
-        expect(error.message || error.code).toBeDefined();
+        const normalized = normalizeError(error);
+        expect(normalized.message || normalized.code).toBeDefined();
       }
     });
 
@@ -485,7 +505,7 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message).toContain('autenticado');
+        expect((error as Error).message).toContain('autenticado');
       }
     });
 
@@ -505,7 +525,7 @@ describe('Sprint 5.3 - Error Handling', () => {
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message).toMatch(/autenticado/i);
+        expect((error as Error).message).toMatch(/autenticado/i);
       }
     });
   });

@@ -6,9 +6,9 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { BookingsService } from './bookings.service';
 import { CarsService } from './cars.service';
+import { VALID_UUID, randomUuid } from '../../../test-helpers/factories';
 
 type CarsQueryOptions = { data?: unknown[]; error?: any; reject?: boolean };
 
@@ -37,14 +37,14 @@ function createCarsQueryMock(options: CarsQueryOptions = {}) {
 describe('Sprint 5.2 - Edge Cases', () => {
   let bookingsService: BookingsService;
   let carsService: CarsService;
-  let mockSupabase: jasmine.SpyObj<SupabaseClient>;
+  let mockSupabase: any;
 
   beforeEach(() => {
     mockSupabase = jasmine.createSpyObj('SupabaseClient', ['from', 'rpc', 'auth', 'storage']);
-    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']) as unknown;
+    mockSupabase.auth = jasmine.createSpyObj('Auth', ['getUser']);
     (mockSupabase.auth.getUser as jasmine.Spy).and.returnValue(
       Promise.resolve({
-        data: { user: { id: 'user-123', email: 'test@example.com' } },
+        data: { user: { id: VALID_UUID, email: 'test@example.com' } },
         error: null,
       }),
     );
@@ -81,11 +81,11 @@ describe('Sprint 5.2 - Edge Cases', () => {
       );
 
       try {
-        await bookingsService.requestBooking('car-123', pastDateStr, futureDateStr);
+        await bookingsService.requestBooking(randomUuid(), pastDateStr, futureDateStr);
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message).toContain('fecha');
+        expect((error as Error).message).toContain('fecha');
       }
     });
 
@@ -106,7 +106,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       );
 
       try {
-        await bookingsService.requestBooking('car-123', today, yesterdayStr);
+        await bookingsService.requestBooking(randomUuid(), today, yesterdayStr);
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
@@ -135,11 +135,11 @@ describe('Sprint 5.2 - Edge Cases', () => {
       );
 
       try {
-        await bookingsService.requestBooking('car-123', startDate, endDate);
+        await bookingsService.requestBooking(randomUuid(), startDate, endDate);
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message).toContain('posterior');
+        expect((error as Error).message).toContain('posterior');
       }
     });
 
@@ -159,7 +159,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       );
 
       try {
-        await bookingsService.requestBooking('car-123', sameDateStr, sameDateStr);
+        await bookingsService.requestBooking(randomUuid(), sameDateStr, sameDateStr);
         fail('Debería haber lanzado un error');
       } catch (error: unknown) {
         expect(error).toBeDefined();
@@ -188,11 +188,11 @@ describe('Sprint 5.2 - Edge Cases', () => {
       );
 
       try {
-        await bookingsService.requestBooking('car-123', startDateStr, endDateStr);
+        await bookingsService.requestBooking(randomUuid(), startDateStr, endDateStr);
         fail('Debería haber lanzado un error o advertencia');
       } catch (error: unknown) {
         expect(error).toBeDefined();
-        expect(error.message).toContain('30 días');
+        expect((error as Error).message).toContain('30 días');
       }
     });
 
@@ -217,7 +217,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
         Promise.resolve({
           data: {
             id: 'booking-30-days',
-            car_id: 'car-123',
+            car_id: randomUuid(),
             start_at: startDateStr,
             end_at: endDateStr,
             status: 'pending',
@@ -228,7 +228,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
 
       mockSupabase.from.and.returnValue(mockQuery as any);
 
-      const booking = await bookingsService.requestBooking('car-123', startDateStr, endDateStr);
+      const booking = await bookingsService.requestBooking(randomUuid(), startDateStr, endDateStr);
       expect(booking).toBeDefined();
       expect(booking.id).toBe('booking-30-days');
     });
@@ -254,7 +254,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
         Promise.resolve({
           data: {
             id: 'booking-long',
-            car_id: 'car-123',
+            car_id: randomUuid(),
             total_price: expectedTotal,
             status: 'pending',
           },
@@ -265,7 +265,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
       mockSupabase.from.and.returnValue(mockQuery as any);
 
       const booking = await bookingsService.requestBooking(
-        'car-123',
+        randomUuid(),
         startDate.toISOString(),
         endDate.toISOString(),
       );
@@ -458,7 +458,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
         endDate.setDate(endDate.getDate() + 5);
 
         const booking = await bookingsService.requestBooking(
-          'car-123',
+          randomUuid(),
           date,
           endDate.toISOString(),
         );

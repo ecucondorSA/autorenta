@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 import { PaymentsService } from './payments.service';
 import { SupabaseClientService } from './supabase-client.service';
 import { FxService } from './fx.service';
+import type { PaymentIntent } from '../models';
 
 describe('PaymentsService', () => {
   let service: PaymentsService;
@@ -44,7 +45,7 @@ describe('PaymentsService', () => {
   describe('Basic functionality', () => {
     it('creates payment intents with default values', async () => {
       // Mock para obtener booking
-      const bookingBuilder: unknown = {};
+      const bookingBuilder: Record<string, any> = {};
       bookingBuilder.select = jasmine.createSpy('select').and.returnValue(bookingBuilder);
       bookingBuilder.eq = jasmine.createSpy('eq').and.returnValue(bookingBuilder);
       bookingBuilder.single = jasmine.createSpy('single').and.resolveTo({
@@ -58,7 +59,7 @@ describe('PaymentsService', () => {
       });
 
       // Mock para insertar payment intent
-      const intentBuilder: unknown = {};
+      const intentBuilder: Record<string, any> = {};
       intentBuilder.select = jasmine.createSpy('select').and.returnValue(intentBuilder);
       intentBuilder.single = jasmine.createSpy('single').and.resolveTo({
         data: { id: 'intent-1', status: 'pending' },
@@ -96,7 +97,7 @@ describe('PaymentsService', () => {
     });
 
     it('returns null when payment intent is missing', async () => {
-      const builder: unknown = {};
+      const builder: Record<string, any> = {};
       builder.select = jasmine.createSpy('select').and.returnValue(builder);
       builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
       builder.single = jasmine.createSpy('single').and.resolveTo({
@@ -205,7 +206,7 @@ describe('PaymentsService', () => {
         if (attemptCount < 3) {
           throw new Error('Network error');
         }
-        return { id: 'intent-123', status: 'pending' } as unknown;
+        return { id: 'intent-123', status: 'pending' } as PaymentIntent;
       });
 
       const markAsPaidSpy = spyOn(service, 'markAsPaid').and.resolveTo();
@@ -215,7 +216,7 @@ describe('PaymentsService', () => {
       } as any);
 
       // Mock del delay para acelerar el test
-      spyOn<unknown>(service, 'delay').and.resolveTo();
+      spyOn<any>(service as any, 'delay').and.resolveTo();
 
       const result = await service.processPayment('booking-1');
 
@@ -234,7 +235,7 @@ describe('PaymentsService', () => {
       });
 
       // Mock del delay para acelerar el test
-      spyOn<unknown>(service, 'delay').and.resolveTo();
+      spyOn<any>(service as any, 'delay').and.resolveTo();
 
       const result = await service.processPayment('booking-1');
 
@@ -248,7 +249,7 @@ describe('PaymentsService', () => {
       const delays: number[] = [];
 
       // Mock del delay para capturar los valores
-      const delaySpy = spyOn<unknown>(service, 'delay').and.callFake(async (ms: number) => {
+      const delaySpy = spyOn<any>(service as any, 'delay').and.callFake(async (ms: number) => {
         delays.push(ms);
         return Promise.resolve();
       });
@@ -302,7 +303,7 @@ describe('PaymentsService', () => {
       });
 
       // Mock del delay (no debería llamarse)
-      const delaySpy = spyOn<unknown>(service, 'delay').and.resolveTo();
+      const delaySpy = spyOn<any>(service as any, 'delay').and.resolveTo();
 
       const result = await service.processPayment('booking-1');
 
@@ -318,7 +319,7 @@ describe('PaymentsService', () => {
       const errorSpy = spyOn(console, 'error');
 
       spyOn(service, 'createIntent').and.rejectWith(new Error('Network error'));
-      spyOn<unknown>(service, 'delay').and.resolveTo();
+      spyOn<any>(service as any, 'delay').and.resolveTo();
 
       await service.processPayment('booking-1');
 
