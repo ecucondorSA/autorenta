@@ -2,7 +2,8 @@
 
 **Branch:** `claude/implement-bonus-malus-system-011CUptjUMXc425pp3ngq3s3`
 **Date Started:** 2025-11-05
-**Status:** Phase 1 & 2 Complete ✅
+**Date Updated:** 2025-11-05
+**Status:** Phases 1, 2, 3, 5 Complete ✅ (60% done)
 
 ---
 
@@ -204,15 +205,157 @@ Functions created:
 
 ---
 
+### **Phase 3: Telemetry System** (Week 2-3) ✅
+
+**Migration:** `20251105_create_telemetry_rpcs.sql`
+
+Functions created:
+
+1. **`record_telemetry(booking_id, telemetry_data)`**
+   - Registers trip telemetry data
+   - Extracts metrics from JSON payload
+   - Calculates trip score automatically
+   - Updates driver's average score (last 3 months)
+
+2. **`calculate_trip_score(total_km, hard_brakes, speed_violations, night_hours, risk_zones)`**
+   - Score algorithm: Base 100 points
+   - Penalties: -2 per hard brake, -3 per speed violation
+   - -1 per night driving hour, -5 per risk zone
+   - Normalized per 100km for fair comparison
+
+3. **`get_driver_telemetry_average(user_id, months)`**
+   - Returns average score over N months
+   - Total trips, km, events
+   - Period start/end dates
+
+4. **`get_telemetry_history(user_id, limit)`**
+   - Returns trip history with scores
+   - Includes car details
+   - Ordered by date (newest first)
+
+5. **`get_telemetry_insights(user_id)`**
+   - Analyzes driving patterns
+   - Identifies main issues
+   - Provides personalized recommendations
+   - Shows score trend (improving/stable/declining)
+
+6. **`recalculate_all_driver_scores()`**
+   - Monthly job function
+   - Recalculates average scores for all drivers
+   - Uses last 3 months of data
+
+**Frontend Service:** `TelemetryService` (Angular)
+
+Features:
+- Real-time data collection with signals
+- Session management (start/stop)
+- Event recording:
+  - Hard brakes (accelerometer)
+  - Speed violations
+  - Night driving tracking
+  - Risk zone visits
+  - GPS coordinates
+- Helpers:
+  - Speed calculation from GPS
+  - Night time detection
+  - Distance calculation (Haversine formula)
+- API integration with backend RPCs
+
+---
+
+### **Phase 5: Frontend Services** (Week 4-5) ✅
+
+Created 3 comprehensive Angular services:
+
+#### **1. DriverProfileService**
+
+**Features:**
+- Load/initialize driver profile
+- Get class benefits and multipliers
+- Calculate claim impact
+- Progress tracking to next class
+- UI helpers (badges, colors, messages)
+
+**Computed Signals:**
+- `driverClass`, `driverScore`
+- `feeMultiplier`, `guaranteeMultiplier`
+- `hasDiscount`, `hasSurcharge`
+- `feeDiscountPct`, `guaranteeDiscountPct`
+
+**Key Methods:**
+- `loadProfile()` - Fetches complete profile
+- `initializeProfile()` - Creates profile for new users
+- `getClassBenefits(class)` - Returns benefits info
+- `getAllClassBenefits()` - Gets all 11 classes
+- `calculateClaimImpact(severity, withFault)` - Simulates class change
+- `getClassBadge()` - Returns badge for UI (icon, color, label)
+
+#### **2. ProtectionCreditService**
+
+**Features:**
+- Load CP balance and expiration
+- Check renewal eligibility
+- Calculate claim coverage (waterfall logic)
+- Payment breakdown calculator
+- Renewal progress tracking
+
+**Computed Signals:**
+- `balanceUsd`, `balanceCents`
+- `expiresAt`, `isExpired`, `daysUntilExpiry`
+- `hasBalance`, `isNearExpiry`
+
+**Key Methods:**
+- `loadBalance()` - Fetches CP balance
+- `checkRenewalEligibility()` - Checks if eligible for free renewal
+- `calculateCoverage(claimAmount)` - Shows CP coverage for claim
+- `calculatePaymentBreakdown(total, wallet)` - Waterfall breakdown
+- `getRenewalProgress()` - Progress toward free renewal (10 bookings)
+- `getUsagePercentage()` - % of CP used
+
+#### **3. BonusProtectorService**
+
+**Features:**
+- Load protector options (levels 1-3)
+- Purchase protector from wallet
+- Calculate potential savings
+- Simulate claim impact with/without protection
+- Recommended level based on driver class
+
+**Computed Signals:**
+- `options`, `activeProtector`
+- `hasActiveProtector`, `protectionLevel`
+- `isNearExpiry`, `isExpired`
+
+**Key Methods:**
+- `loadOptions()` - Gets 3 available levels
+- `loadActiveProtector()` - Gets user's active protector
+- `purchaseProtector(level)` - Buys protector from wallet
+- `getRecommendedLevel(driverClass)` - Recommends level
+- `getProtectionCapacity(level)` - Shows coverage details
+- `calculatePotentialSavings(level, class, fee, guarantee)` - ROI calculation
+- `simulateClaimImpact(class, severity)` - Shows with/without comparison
+
+All services use:
+- Signal-based state management
+- Computed signals for derived values
+- Proper error handling
+- Type-safe interfaces
+- Helper methods for UI display
+
+---
+
 ## 📊 Implementation Statistics
 
 | Metric | Count |
 |--------|-------|
-| **Migration Files** | 6 |
+| **Migration Files** | 7 |
 | **Database Tables** | 5 new, 2 modified |
-| **RPC Functions** | 18 |
-| **Lines of SQL** | ~2,452 |
+| **RPC Functions** | 25 (18 + 7 telemetry) |
+| **Frontend Services** | 4 (Telemetry, DriverProfile, ProtectionCredit, BonusProtector) |
+| **Lines of SQL** | ~3,500 |
+| **Lines of TypeScript** | ~2,100 |
 | **Pricing Classes** | 11 (0-10) |
+| **Telemetry Metrics** | 5 (hard_brakes, speed_violations, night_hours, risk_zones, distance) |
 
 ---
 
@@ -229,23 +372,12 @@ All RPC functions implement:
 
 ## 📋 Pending Phases
 
-### **Phase 3: Telematics System** (Week 2-3)
-- Frontend integration for GPS tracking
-- Accelerometer data collection
-- Speed violation detection
-- Night driving tracking
-- Risk zone identification
-
-### **Phase 4: Integration with Existing Systems** (Week 3-4)
+### **Phase 4: Integration with Existing Systems** (Week 3-4) - NEXT
 - Modify `RiskCalculatorService` to use class multipliers
 - Update `BookingService` to call pricing RPCs
 - Extend `WalletService` to handle CP separately
-
-### **Phase 5: Frontend Services** (Week 4-5)
-- `DriverProfileService` - Manage driver profile
-- `ProtectionCreditService` - Handle CP operations
-- `BonusProtectorService` - Protector purchases
-- `TelemetryService` - Telematics data collection
+- Integration with pricing preview
+- Booking flow updates
 
 ### **Phase 6: Frontend UI Components** (Week 5-6)
 - `DriverProfileCard` - Show class, score, benefits
@@ -355,4 +487,7 @@ For questions or issues:
 ---
 
 **Last Updated:** 2025-11-05
-**Commit:** `c60e1e7` - feat(bonus-malus): implement Phase 1 & 2
+**Commits:**
+- `c60e1e7` - feat(bonus-malus): implement Phase 1 & 2 - database schema and core RPCs
+- `62bdcf0` - docs: add bonus-malus implementation progress tracking
+- `b551f29` - feat(bonus-malus): implement Phase 3 & 5 - telemetry and frontend services
