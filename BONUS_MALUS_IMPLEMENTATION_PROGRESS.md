@@ -3,7 +3,7 @@
 **Branch:** `claude/implement-bonus-malus-system-011CUptjUMXc425pp3ngq3s3`
 **Date Started:** 2025-11-05
 **Date Updated:** 2025-11-05
-**Status:** Phases 1, 2, 3, 5 Complete ✅ (60% done)
+**Status:** Phases 1, 2, 3, 5, 6 Complete ✅ (75% done)
 
 ---
 
@@ -344,6 +344,196 @@ All services use:
 
 ---
 
+### **Phase 6: Frontend UI Components** (Week 5-6) ✅
+
+Created 4 standalone Angular components for the bonus-malus system:
+
+#### **1. DriverProfileCard**
+
+**Location:** `apps/web/src/app/shared/components/driver-profile-card/`
+
+**Features:**
+- Displays current driver class (0-10) with visual badge
+- Shows driver score (0-100) with progress bar
+- Lists benefits (discounts) or surcharges for fee and guarantee
+- Displays claim history (total, with fault, years without claims)
+- Shows progress toward next better class
+- Conditional rendering (loading, error, no profile states)
+
+**Key UI Elements:**
+- Class badge with color coding:
+  - 🏆 Excelente (0-2): Success color
+  - ⭐ Bueno (3-4): Primary color
+  - ➖ Base (5): Secondary color
+  - ⚠️ Riesgo (6-7): Warning color
+  - 🔴 Alto Riesgo (8-10): Danger color
+- Score progress bar with color based on score range
+- Benefit items with trending icons
+- "View Details" button (opens ClassBenefitsModal)
+
+**Computed Signals:**
+- `profile`, `driverClass`, `driverScore`
+- `hasDiscount`, `hasSurcharge`
+- `feeDiscountPct`, `guaranteeDiscountPct`
+- `classDescription`, `classBadge`
+- `progress` (to next class)
+- `scoreColor`, `scoreBarColor`, `scoreMessage`
+
+#### **2. ProtectionCreditCard**
+
+**Location:** `apps/web/src/app/shared/components/protection-credit-card/`
+
+**Features:**
+- Shows CP balance in USD with status badge
+- Displays expiration date and days remaining
+- Usage bar showing % of CP consumed
+- Renewal progress tracking (toward 10 bookings)
+- Informational messages based on status
+- "Learn More" button (opens explanation modal)
+
+**Key UI Elements:**
+- Balance display with gradient background
+- Usage progress bar (color changes at 50% and 75%)
+- Expiration info with calendar and time icons
+- Renewal progress section with eligibility check
+- Warning cards for expired CP
+- Info cards with educational content
+
+**States:**
+- ✅ Active: Balance > 0, not expired
+- ⚠️ Near Expiry: < 30 days remaining
+- ❌ Expired: Days remaining < 0
+- ➖ No CP: Balance = 0
+
+**Computed Signals:**
+- `balance`, `balanceUsd`, `balanceCents`
+- `hasBalance`, `isExpired`, `isNearExpiry`
+- `daysUntilExpiry`, `statusBadgeColor`, `statusIcon`
+- `formattedBalance`, `formattedExpiry`, `daysRemainingText`
+- `usagePercentage`, `infoMessage`
+- `renewalProgress` (loaded separately via async)
+
+#### **3. BonusProtectorPurchase**
+
+**Location:** `apps/web/src/app/shared/components/bonus-protector-purchase/`
+
+**Features:**
+- Lists 3 protector levels with prices ($15/$25/$40)
+- Shows recommended level based on driver class
+- Displays protection capacity per level (leve/moderado/grave)
+- Calculates potential savings (ROI analysis)
+- Claim impact simulator (with/without protector)
+- Purchase flow with validations
+- "How it Works" educational section
+
+**Protector Levels:**
+- **Level 1** ($15): 1 leve claim
+- **Level 2** ($25): 2 leve or 1 moderado
+- **Level 3** ($40): 3 leve, 2 moderado, or 1 grave
+
+**Key UI Elements:**
+- Option cards with hover effects
+- Recommendation banner (based on driver class)
+- Active protector display (if exists)
+- Capacity grid with icons
+- Savings calculator (annual estimate)
+- Simulation section with controls
+- Comparison view (without vs with protector)
+- Info card with usage guidelines
+
+**Computed Signals:**
+- `options`, `hasActiveProtector`, `protectionLevel`
+- `isExpired`, `statusBadgeColor`, `infoMessage`
+- `driverClass`, `recommendedLevel`
+- `canPurchase`, `showSavings`
+- `simulateWithout`, `simulateWith`
+
+**Validations:**
+- Only 1 protector active at a time
+- Must have sufficient wallet balance
+- Expired protector can be renewed
+
+#### **4. ClassBenefitsModal**
+
+**Location:** `apps/web/src/app/shared/components/class-benefits-modal/`
+
+**Features:**
+- Educational modal explaining bonus-malus system
+- Complete table of all 11 classes (0-10)
+- Benefits breakdown (fee and guarantee multipliers)
+- "How it Works" section (bonus and malus rules)
+- Practical examples with calculations
+- Tips for improving class
+- Dismissible modal interface
+
+**Content Sections:**
+
+1. **Introduction:**
+   - What is bonus-malus?
+   - How it affects pricing
+   - Class range explanation (0-10)
+
+2. **How it Works:**
+   - 🟢 Improving class: -1 per year without fault claims
+   - 🔴 Worsening class: +1/+2/+3 based on claim severity
+
+3. **Benefits Table:**
+   - All 11 classes with descriptions
+   - Fee and guarantee multipliers
+   - Discount/surcharge percentages
+   - Current class highlighted
+
+4. **Practical Examples:**
+   - Example 1: Class 0 (excellent) - Shows $265 savings
+   - Example 2: Class 10 (high risk) - Shows $820 additional cost
+   - Real calculations with $100 fee / $1000 guarantee base
+
+5. **Tips Section:**
+   - Drive safely
+   - Buy Bonus Protector
+   - Be patient (1 year = -1 class)
+   - Monitor telemetry score
+
+**Key UI Elements:**
+- Header with close button
+- Scrollable content
+- Info/warning cards with color coding
+- Responsive table (scrollable on mobile)
+- Row highlighting for current class
+- Example calculations with visual breakdown
+- Icon-based tips list
+
+**Computed Signals:**
+- `loading`
+- `allBenefits` (all 11 classes loaded from service)
+- `currentClass`
+
+**Usage:**
+```typescript
+const modal = await modalController.create({
+  component: ClassBenefitsModalComponent,
+});
+await modal.present();
+```
+
+---
+
+**Component Characteristics:**
+
+All 4 components share:
+- ✅ Standalone components (no NgModule)
+- ✅ Inline templates and styles
+- ✅ Signal-based state management
+- ✅ Computed signals for reactivity
+- ✅ Integration with services (DriverProfile, ProtectionCredit, BonusProtector)
+- ✅ Ionic components (cards, badges, progress bars, lists)
+- ✅ Responsive design
+- ✅ Loading/error/empty state handling
+- ✅ Accessibility (semantic HTML, ARIA labels)
+- ✅ Type safety (TypeScript interfaces)
+
+---
+
 ## 📊 Implementation Statistics
 
 | Metric | Count |
@@ -352,8 +542,10 @@ All services use:
 | **Database Tables** | 5 new, 2 modified |
 | **RPC Functions** | 25 (18 + 7 telemetry) |
 | **Frontend Services** | 4 (Telemetry, DriverProfile, ProtectionCredit, BonusProtector) |
+| **UI Components** | 4 (DriverProfileCard, ProtectionCreditCard, BonusProtectorPurchase, ClassBenefitsModal) |
 | **Lines of SQL** | ~3,500 |
-| **Lines of TypeScript** | ~2,100 |
+| **Lines of TypeScript (Services)** | ~2,100 |
+| **Lines of TypeScript (Components)** | ~2,400 |
 | **Pricing Classes** | 11 (0-10) |
 | **Telemetry Metrics** | 5 (hard_brakes, speed_violations, night_hours, risk_zones, distance) |
 
@@ -372,20 +564,7 @@ All RPC functions implement:
 
 ## 📋 Pending Phases
 
-### **Phase 4: Integration with Existing Systems** (Week 3-4) - NEXT
-- Modify `RiskCalculatorService` to use class multipliers
-- Update `BookingService` to call pricing RPCs
-- Extend `WalletService` to handle CP separately
-- Integration with pricing preview
-- Booking flow updates
-
-### **Phase 6: Frontend UI Components** (Week 5-6)
-- `DriverProfileCard` - Show class, score, benefits
-- `ProtectionCreditCard` - Display CP balance
-- `ClassBenefitsModal` - Explain class system
-- `BonusProtectorPurchase` - Buy protector add-on
-
-### **Phase 7: Accounting Integration** (Week 6-7)
+### **Phase 7: Accounting Integration** (Week 6-7) - NEXT
 - Add accounting entries for CP issuance
 - Add accounting entries for CP consumption
 - Add accounting entries for CP breakage
@@ -491,3 +670,5 @@ For questions or issues:
 - `c60e1e7` - feat(bonus-malus): implement Phase 1 & 2 - database schema and core RPCs
 - `62bdcf0` - docs: add bonus-malus implementation progress tracking
 - `b551f29` - feat(bonus-malus): implement Phase 3 & 5 - telemetry and frontend services
+- `3f14027` - feat(bonus-malus): Phase 4 - Integration with RiskCalculator and Wallet services
+- `8c2540d` - feat(bonus-malus): Phase 6 - UI Components (4 standalone components)
