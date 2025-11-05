@@ -3,7 +3,7 @@ name: Update Exchange Rates
 on:
   schedule:
     # Ejecutar cada 15 minutos
-    # GitHub Actions consulta Binance directamente (no bloqueado geográficamente)
+    # Llama Edge Function con x-region header para evitar geo-blocking de Binance
     - cron: '*/15 * * * *'
   workflow_dispatch: # Permitir ejecución manual
 
@@ -11,44 +11,55 @@ jobs:
   update-rates:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch rates from Binance and update database
+      - name: Call Edge Function with region configuration
         env:
           SUPABASE_URL: https://obxvffplochgeiclibng.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           set -e
 
-          echo "📊 Fetching exchange rates from Binance..."
+          echo "📊 Calling Edge Function sync-binance-rates..."
+          echo "🌍 Testing working regions to bypass Binance geo-blocking..."
 
-          # Fetch USDTARS rate
-          USDTARS_RESPONSE=$(curl -s "https://api.binance.com/api/v3/ticker/price?symbol=USDTARS")
-          USDTARS_RATE=$(echo $USDTARS_RESPONSE | jq -r '.price')
+          # Regiones verificadas que funcionan (sa-east-1 más cercana a Argentina/Brasil)
+          # Testeado 2025-11-05: sa-east-1 ✅, eu-central-1 ✅, ap-southeast-1 ✅
+          # Bloqueadas: us-west-2 ❌
+          REGIONS=("sa-east-1" "eu-central-1" "ap-southeast-1" "eu-west-1" "ap-south-1")
+          SUCCESS=false
 
-          # Fetch USDTBRL rate
-          USDTBRL_RESPONSE=$(curl -s "https://api.binance.com/api/v3/ticker/price?symbol=USDTBRL")
-          USDTBRL_RATE=$(echo $USDTBRL_RESPONSE | jq -r '.price')
+          for REGION in "${REGIONS[@]}"; do
+            echo ""
+            echo "🔄 Trying region: $REGION"
 
-          echo "✅ USDTARS: $USDTARS_RATE"
-          echo "✅ USDTBRL: $USDTBRL_RATE"
+            RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+              "${SUPABASE_URL}/functions/v1/sync-binance-rates" \
+              -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+              -H "Content-Type: application/json" \
+              -H "x-region: ${REGION}")
 
-          # Update USDTARS in database
-          echo "💾 Updating USDTARS in database..."
-          curl -s -X POST "${SUPABASE_URL}/rest/v1/rpc/upsert_exchange_rate" \
-            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Content-Type: application/json" \
-            -H "Prefer: return=representation" \
-            -d "{\"p_pair\":\"USDTARS\",\"p_binance_rate\":${USDTARS_RATE},\"p_margin_percent\":10.0,\"p_source\":\"binance\"}"
+            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+            BODY=$(echo "$RESPONSE" | head -n-1)
 
-          # Update USDTBRL in database
-          echo "💾 Updating USDTBRL in database..."
-          curl -s -X POST "${SUPABASE_URL}/rest/v1/rpc/upsert_exchange_rate" \
-            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Content-Type: application/json" \
-            -H "Prefer: return=representation" \
-            -d "{\"p_pair\":\"USDTBRL\",\"p_binance_rate\":${USDTBRL_RATE},\"p_margin_percent\":10.0,\"p_source\":\"binance\"}"
+            echo "📡 HTTP Status: $HTTP_CODE"
+            echo "📦 Response: $BODY"
 
+            # Verificar si fue exitoso (200 y no contiene error 451)
+            if [ "$HTTP_CODE" = "200" ] && ! echo "$BODY" | grep -q "451"; then
+              echo "✅ Success with region: $REGION"
+              SUCCESS=true
+              break
+            else
+              echo "❌ Failed with region: $REGION"
+            fi
+          done
+
+          if [ "$SUCCESS" = false ]; then
+            echo ""
+            echo "❌ All regions failed. Binance might be blocking all Supabase regions."
+            exit 1
+          fi
+
+          echo ""
           echo "✅ Exchange rates updated successfully at $(date)"
 
       - name: Verify update
