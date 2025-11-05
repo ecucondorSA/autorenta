@@ -1,5 +1,11 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
+import {
+  onboardingGuard,
+  verifiedDriverGuard,
+  verifiedEmailGuard,
+  kycGuard,
+} from './core/guards/onboarding.guard';
 
 export const routes: Routes = [
   {
@@ -31,7 +37,7 @@ export const routes: Routes = [
       },
       {
         path: 'publish',
-        canMatch: [AuthGuard],
+        canMatch: [AuthGuard, onboardingGuard, verifiedDriverGuard],
         loadComponent: () =>
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },
@@ -50,7 +56,7 @@ export const routes: Routes = [
   },
   {
     path: 'bookings',
-    canMatch: [AuthGuard],
+    canMatch: [AuthGuard, verifiedEmailGuard],
     loadChildren: () =>
       import('./features/bookings/bookings.routes').then((m) => m.BOOKINGS_ROUTES),
   },
@@ -67,6 +73,7 @@ export const routes: Routes = [
       },
       {
         path: 'withdrawals',
+        canMatch: [kycGuard],
         loadComponent: () =>
           import('./features/admin/withdrawals/admin-withdrawals.page').then(
             (m) => m.AdminWithdrawalsPage,
