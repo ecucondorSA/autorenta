@@ -32,9 +32,35 @@
   <!-- Error State -->
   <div *ngIf="error() && !loading()" class="error-state">
     <div class="error-icon">⚠️</div>
-    <h3>Error</h3>
-    <p>{{ error() }}</p>
-    <button class="retry-button" (click)="error.set(null)">Intentar nuevamente</button>
+    <h3>No disponible</h3>
+    <p class="error-message">{{ error() }}</p>
+    
+    <!-- Opción de Waitlist cuando hay conflicto de constraint -->
+    <div *ngIf="canWaitlist()" class="waitlist-option">
+      <div class="waitlist-info">
+        <div class="waitlist-icon">📋</div>
+        <div class="waitlist-text">
+          <h4>¿Quieres que te notifiquemos cuando esté disponible?</h4>
+          <p>El auto está ocupado en esas fechas, pero puedes agregarte a la lista de espera. Te notificaremos automáticamente cuando otro usuario cancele o expire su reserva (generalmente en 30 minutos).</p>
+        </div>
+      </div>
+      <button 
+        class="waitlist-button" 
+        (click)="addToWaitlist()"
+        [disabled]="addingToWaitlist()"
+      >
+        <span *ngIf="!addingToWaitlist()">
+          <span class="button-icon">🔔</span>
+          Agregar a lista de espera
+        </span>
+        <span *ngIf="addingToWaitlist()">
+          <span class="button-spinner"></span>
+          Agregando...
+        </span>
+      </button>
+    </div>
+    
+    <button class="retry-button" (click)="error.set(null); canWaitlist.set(false)">Intentar nuevamente</button>
   </div>
 
   <!-- Step Content -->

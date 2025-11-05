@@ -1,0 +1,76 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="dismiss()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Seleccioná las fechas</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismiss()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <!-- Loading overlay -->
+      <div
+        *ngIf="isCheckingAvailability()"
+        class="absolute inset-0 bg-white/80 z-50 flex items-center justify-center"
+      >
+        <div class="flex flex-col items-center gap-3">
+          <svg class="animate-spin h-8 w-8 text-accent-petrol" fill="none" viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <span class="text-sm text-charcoal-medium">Verificando disponibilidad...</span>
+        </div>
+      </div>
+
+      <!-- Calendario -->
+      <ion-datetime
+        presentation="date"
+        [multiple]="true"
+        [value]="initialValue"
+        [isDateEnabled]="isDateEnabled"
+        (ionChange)="onDateChange($event)"
+        [showDefaultButtons]="false"
+        [highlightedDates]="selectedRange()"
+        class="w-full"
+      >
+      </ion-datetime>
+
+      <!-- Instrucciones -->
+      <div class="mt-4 px-2">
+        <p class="text-xs text-charcoal-medium mb-2">
+          💡 <strong>Instrucciones:</strong>
+        </p>
+        <ul class="text-xs text-charcoal-medium space-y-1 list-disc list-inside">
+          <li>Seleccioná la fecha de inicio</li>
+          <li>Luego seleccioná la fecha de fin</li>
+          <li>Las fechas en gris están bloqueadas o no disponibles</li>
+        </ul>
+      </div>
+
+      <!-- Leyenda -->
+      <div class="mt-4 px-2 flex flex-wrap gap-3 text-xs">
+        <div class="flex items-center gap-1.5">
+          <div class="w-3 h-3 rounded-full bg-accent-petrol"></div>
+          <span class="text-charcoal-medium">Disponible</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <div class="w-3 h-3 rounded-full bg-gray-300"></div>
+          <span class="text-charcoal-medium">Bloqueado</span>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

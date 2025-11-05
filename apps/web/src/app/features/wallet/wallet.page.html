@@ -51,13 +51,32 @@
               }
             </div>
             <div class="flex flex-wrap gap-3">
+              <!-- Primary CTA - Contextual based on protected credit status -->
               <button
                 type="button"
                 (click)="openDepositModal()"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition shadow-soft"
+                [title]="primaryDepositCTATooltip()"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition shadow-soft"
+                [ngClass]="primaryDepositCTAClass()"
               >
-                <span>Depositar fondos</span>
+                <svg
+                  *ngIf="protectedCreditStatus() !== 'active'"
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                <span>{{ primaryDepositCTAText() }}</span>
               </button>
+
+              <!-- Secondary CTAs -->
               <button
                 type="button"
                 (click)="setActiveTab('transactions')"
@@ -110,6 +129,395 @@
         </div>
       </div>
     </section>
+
+    <!-- Onboarding Banner (Only for new users with pending protected credit) -->
+    @if (protectedCreditStatus() === 'pending' && !onboardingBannerDismissed()) {
+      <section
+        class="rounded-2xl border-2 border-accent-petrol/30 dark:border-accent-petrol/40 bg-gradient-to-br from-accent-petrol/5 to-accent-warm/5 dark:from-accent-petrol/10 dark:to-accent-warm/10 p-6 md:p-8 shadow-soft relative overflow-hidden"
+      >
+        <!-- Dismiss Button -->
+        <button
+          type="button"
+          (click)="dismissOnboardingBanner()"
+          class="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/50 dark:hover:bg-slate-deep/50 transition"
+          aria-label="Cerrar banner"
+        >
+          <svg
+            class="w-5 h-5 text-charcoal-medium dark:text-pearl-light"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
+        <!-- Content -->
+        <div class="grid gap-6 lg:grid-cols-3 items-center pr-8">
+          <div class="lg:col-span-2 space-y-4">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-accent-petrol/20 text-accent-petrol dark:bg-accent-petrol/30 dark:text-accent-petrol"
+                >
+                  ✨ Nuevo
+                </span>
+              </div>
+              <h2 class="text-2xl md:text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+                Configura tu crédito protegido para reservar sin tarjeta
+              </h2>
+              <p class="text-base text-charcoal-medium dark:text-pearl-light/80 mt-2">
+                Deposita <strong>USD 300 una sola vez</strong> y reserva vehículos sin necesidad de
+                tarjeta de crédito internacional.
+              </p>
+            </div>
+
+            <!-- Benefits List -->
+            <div class="grid gap-3 sm:grid-cols-3">
+              <div class="flex items-start gap-2">
+                <svg
+                  class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">
+                    No necesitas tarjeta
+                  </p>
+                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                    Ideal sin tarjeta internacional
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2">
+                <svg
+                  class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">
+                    Úsalo en cada reserva
+                  </p>
+                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                    Se reutiliza automáticamente
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2">
+                <svg
+                  class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">
+                    Se libera después
+                  </p>
+                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                    Vuelve disponible tras el viaje
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="lg:col-span-1 flex flex-col gap-3">
+            <button
+              type="button"
+              (click)="openDepositModalForProtectedCredit()"
+              class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-accent-petrol text-white font-bold hover:bg-accent-petrol/90 transition shadow-soft"
+            >
+              <span>Configurar crédito protegido</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </button>
+            <p class="text-xs text-center text-charcoal-medium dark:text-pearl-light/60">
+              Configura en 5 minutos
+            </p>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- Expandable Benefits Section (only for users without active protected credit) -->
+    @if (protectedCreditStatus() !== 'active') {
+      <section
+        class="rounded-2xl border border-accent-petrol/20 dark:border-accent-petrol/30 bg-white dark:bg-anthracite shadow-soft overflow-hidden"
+      >
+        <!-- Collapsible Header -->
+        <button
+          type="button"
+          (click)="toggleBenefitsSection()"
+          class="w-full px-6 py-4 flex items-center justify-between hover:bg-accent-petrol/5 dark:hover:bg-accent-petrol/10 transition-colors"
+        >
+          <div class="flex items-center gap-3">
+            <svg
+              class="w-6 h-6 text-accent-petrol"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+              />
+            </svg>
+            <div class="text-left">
+              <h3 class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">
+                ¿Por qué usar Crédito Autorentar?
+              </h3>
+              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                Conoce los beneficios y casos de uso
+              </p>
+            </div>
+          </div>
+          <svg
+            class="w-5 h-5 text-charcoal-medium dark:text-pearl-light transition-transform"
+            [class.rotate-180]="benefitsSectionExpanded()"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Expandable Content -->
+        @if (benefitsSectionExpanded()) {
+          <div class="px-6 pb-6 pt-2 space-y-6 border-t border-pearl-gray/30 dark:border-neutral-700">
+            <!-- Benefits Grid -->
+            <div>
+              <h4 class="text-sm font-bold text-smoke-black dark:text-ivory-luminous mb-3">
+                Beneficios principales
+              </h4>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <div class="flex items-start gap-3 p-3 rounded-lg bg-success-50 dark:bg-success-500/10">
+                  <svg
+                    class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-semibold text-success-800 dark:text-success-200">
+                      No necesitas tarjeta internacional
+                    </p>
+                    <p class="text-xs text-success-700 dark:text-success-300 mt-1">
+                      Ideal para usuarios sin tarjeta habilitada para compras internacionales
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3 p-3 rounded-lg bg-primary-50 dark:bg-primary-500/10">
+                  <svg
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-semibold text-primary-800 dark:text-primary-200">
+                      Configúralo una vez, úsalo siempre
+                    </p>
+                    <p class="text-xs text-primary-700 dark:text-primary-300 mt-1">
+                      Se usa automáticamente en cada reserva sin necesidad de volver a configurar
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3 p-3 rounded-lg bg-accent-petrol/10 dark:bg-accent-petrol/20">
+                  <svg
+                    class="w-5 h-5 text-accent-petrol dark:text-accent-petrol flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-semibold text-accent-petrol dark:text-accent-petrol">
+                      Se libera inmediatamente
+                    </p>
+                    <p class="text-xs text-accent-petrol/80 dark:text-accent-petrol/70 mt-1">
+                      Después de cada viaje completado, el crédito vuelve a estar disponible
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3 p-3 rounded-lg bg-warning-50 dark:bg-warning-500/10">
+                  <svg
+                    class="w-5 h-5 text-warning-600 dark:text-warning-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-semibold text-warning-800 dark:text-warning-200">
+                      Reservas más rápidas
+                    </p>
+                    <p class="text-xs text-warning-700 dark:text-warning-300 mt-1">
+                      Evitas el proceso de verificación de tarjeta en cada reserva
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Use Cases -->
+            <div>
+              <h4 class="text-sm font-bold text-smoke-black dark:text-ivory-luminous mb-3">
+                Casos de uso ideales
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                  <svg
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                  <span>
+                    <strong>Viajeros del exterior:</strong> Si tu tarjeta no está habilitada para
+                    compras internacionales
+                  </span>
+                </li>
+                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                  <svg
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                  <span>
+                    <strong>Usuarios frecuentes:</strong> Si rentas vehículos regularmente y quieres
+                    simplificar el proceso
+                  </span>
+                </li>
+                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                  <svg
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                  <span>
+                    <strong>Preferencia por no usar tarjeta:</strong> Si prefieres no ingresar datos
+                    de tarjeta en cada reserva
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- CTA -->
+            <div class="pt-2">
+              <button
+                type="button"
+                (click)="openDepositModalForProtectedCredit()"
+                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white font-bold hover:bg-accent-petrol/90 transition shadow-soft"
+              >
+                <span>Configurar crédito protegido ahora</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
+      </section>
+    }
 
     <!-- Protection + Quick Info -->
     <section class="grid gap-6 lg:grid-cols-3">

@@ -131,6 +131,21 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return false;
   });
 
+  // Computed properties para acciones de check-in/check-out
+  readonly canPerformCheckIn = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isRenter()) return false;
+    const validStatus = booking.status === 'confirmed' || booking.status === 'in_progress';
+    return validStatus && !this.hasCheckIn();
+  });
+
+  readonly canPerformCheckOut = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isRenter()) return false;
+    const validStatus = booking.status === 'in_progress';
+    return validStatus && this.hasCheckIn() && !this.hasCheckOut();
+  });
+
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
     if (!bookingId) {

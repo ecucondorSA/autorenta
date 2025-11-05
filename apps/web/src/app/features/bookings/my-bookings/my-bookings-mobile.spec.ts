@@ -35,10 +35,12 @@ import { MyBookingsPage } from './my-bookings.page';
  * - Espaciado entre targets: 8px mínimo
  */
 
-// TEMPORARY SKIP: Responsive tests cause "full page reload" error in Karma
-// Root cause: responsive-test-helpers.ts dispatches window resize event which Karma detects as page reload
-// TODO: Refactor to use isolated test environment (iframe or shadow DOM) - Issue #XXX
-xdescribe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
+/**
+ * ✅ FIXED (2025-11-04): Responsive tests re-enabled after refactoring helper
+ * Solution: Removed window.dispatchEvent(new Event('resize')) from responsive-test-helpers.ts
+ * Now using manual dimension updates + ResizeObserver callbacks without global window events
+ */
+describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
   let component: MyBookingsPage;
   let fixture: ComponentFixture<MyBookingsPage>;
   let bookingsService: jasmine.SpyObj<BookingsService>;

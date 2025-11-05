@@ -39,6 +39,14 @@ test.describe('Homepage & Navigation - Visitor', () => {
   });
 
   test('should navigate to login when clicking login button', async ({ page }) => {
+    // Wait for page to be fully loaded
+    await page.waitForLoadState('networkidle');
+
+    // Wait for splash loader to disappear
+    const splashLoader = page.locator('app-splash-loader');
+    await expect(splashLoader).toBeHidden({ timeout: 10000 });
+
+    // Now safe to click
     const loginButton = page.getByRole('link', { name: /ingresar|iniciar sesión/i }).first();
     await loginButton.click();
 

@@ -17,7 +17,7 @@
         />
       </svg>
       <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
-        Preautorización (Hold)
+        Garantía con Tarjeta
       </h3>
     </div>
     <span
@@ -39,7 +39,7 @@
     class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-deep/80 dark:via-slate-deep/60 dark:to-slate-deep/50 border border-blue-100 dark:border-neutral-700 rounded-lg p-4 mb-4 transition-colors duration-300"
   >
     <p class="text-sm text-gray-700 dark:text-pearl-light/80 mb-2">Monto a autorizar</p>
-    <div class="flex items-baseline justify-between">
+    <div class="flex items-baseline justify-between mb-3">
       <div>
         <p class="text-3xl font-bold text-blue-900 dark:text-info-200">
           {{ riskSnapshot.holdEstimatedArs | number: '1.2-2' }} ARS
@@ -55,13 +55,18 @@
         </p>
       </div>
     </div>
+    <div class="flex items-center gap-2">
+      <app-reembolsability-badge
+        type="reembolsable"
+        customTooltip="Se libera automáticamente al devolver el auto sin daños. Si hay daños, solo capturamos lo necesario (hasta tu franquicia)."
+      ></app-reembolsability-badge>
+    </div>
   </div>
 
   <div class="mb-4 p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300">
     <p class="text-sm text-gray-700 dark:text-pearl-light/80">
-      <strong>¿Qué es esto?</strong> Autorizamos un monto temporal en tu tarjeta (hold). No se cobra
-      inmediatamente. Si todo está OK al devolver el auto, <strong>se libera completamente</strong>.
-      Si hay consumos o daños, capturamos solo lo necesario (hasta tu franquicia).
+      <strong>¿Qué es esto?</strong> Bloqueo temporal en tu tarjeta (no se cobra).
+      Se libera automáticamente al devolver el auto. Si hay daños, solo capturamos lo necesario (hasta tu franquicia).
     </p>
   </div>
 

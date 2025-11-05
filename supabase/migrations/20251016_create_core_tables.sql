@@ -546,11 +546,13 @@ BEGIN
     RAISE EXCEPTION 'No podés reservar tu propio auto';
   END IF;
 
-  -- Validar disponibilidad (no overlap con bookings confirmadas o en progreso)
+  -- ✅ FIX: Validar disponibilidad incluyendo 'pending' para coincidir con constraint bookings_no_overlap
+  -- El constraint bookings_no_overlap previene overlaps de bookings con status: pending, confirmed, in_progress
+  -- Por lo tanto, la validación debe incluir también 'pending' para evitar race conditions
   IF EXISTS (
     SELECT 1 FROM public.bookings
     WHERE car_id = p_car_id
-    AND status IN ('confirmed', 'in_progress')
+    AND status IN ('pending', 'confirmed', 'in_progress')
     AND (start_at, end_at) OVERLAPS (p_start, p_end)
   ) THEN
     RAISE EXCEPTION 'Auto no disponible en esas fechas';

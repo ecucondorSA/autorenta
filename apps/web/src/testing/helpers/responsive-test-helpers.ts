@@ -62,8 +62,11 @@ export function mockResizeObserver() {
  * Setup responsive test environment
  * Configures window.matchMedia and ResizeObserver mocks
  *
+ * IMPORTANT: Uses iframe isolation to prevent Karma browser disconnect
+ * caused by window.dispatchEvent(new Event('resize'))
+ *
  * @param viewport - Viewport configuration
- * @returns Cleanup function
+ * @returns Test environment with cleanup function
  */
 export interface ViewportConfig {
   width: number;
@@ -71,32 +74,55 @@ export interface ViewportConfig {
   devicePixelRatio?: number;
 }
 
-export function setupResponsiveEnvironment(viewport: ViewportConfig) {
+export interface ResponsiveTestEnvironment {
+  /** Cleanup function to restore original state */
+  cleanup: () => void;
+  /** Mocked ResizeObserver instance */
+  resizeObserver: any;
+  /** Trigger resize without affecting Karma */
+  triggerResize: (newWidth: number, newHeight: number) => void;
+  /** Get current viewport dimensions */
+  getViewport: () => { width: number; height: number };
+}
+
+export function setupResponsiveEnvironment(viewport: ViewportConfig): ResponsiveTestEnvironment {
   const { width, height, devicePixelRatio = 1 } = viewport;
 
   // Store original functions
   const originalMatchMedia = window.matchMedia;
   const windowWithRO = window as unknown as WindowWithResizeObserver;
   const originalResizeObserver = windowWithRO.ResizeObserver;
+  const originalInnerWidth = window.innerWidth;
+  const originalInnerHeight = window.innerHeight;
+  const originalDevicePixelRatio = window.devicePixelRatio;
+
+  // Track current dimensions (mutable state for triggerResize)
+  let currentWidth = width;
+  let currentHeight = height;
+
+  // Helper to create matchMedia mock for a specific width
+  const createMatchMediaMock = (viewportWidth: number) => {
+    return jasmine.createSpy('matchMedia').and.callFake((query: string) => {
+      // Parse common media queries
+      const maxWidthMatch = query.match(/max-width:\s*(\d+)px/);
+      const minWidthMatch = query.match(/min-width:\s*(\d+)px/);
+
+      let matches = false;
+
+      if (maxWidthMatch) {
+        const maxWidth = parseInt(maxWidthMatch[1], 10);
+        matches = viewportWidth <= maxWidth;
+      } else if (minWidthMatch) {
+        const minWidth = parseInt(minWidthMatch[1], 10);
+        matches = viewportWidth >= minWidth;
+      }
+
+      return mockMatchMedia(query, matches);
+    });
+  };
 
   // Mock matchMedia based on viewport
-  window.matchMedia = jasmine.createSpy('matchMedia').and.callFake((query: string) => {
-    // Parse common media queries
-    const maxWidthMatch = query.match(/max-width:\s*(\d+)px/);
-    const minWidthMatch = query.match(/min-width:\s*(\d+)px/);
-
-    let matches = false;
-
-    if (maxWidthMatch) {
-      const maxWidth = parseInt(maxWidthMatch[1], 10);
-      matches = width <= maxWidth;
-    } else if (minWidthMatch) {
-      const minWidth = parseInt(minWidthMatch[1], 10);
-      matches = width >= minWidth;
-    }
-
-    return mockMatchMedia(query, matches);
-  });
+  window.matchMedia = createMatchMediaMock(width);
 
   // Mock ResizeObserver
   const { ResizeObserverMock, mockObserver } = mockResizeObserver();
@@ -126,33 +152,88 @@ export function setupResponsiveEnvironment(viewport: ViewportConfig) {
     cleanup: () => {
       window.matchMedia = originalMatchMedia;
       windowWithRO.ResizeObserver = originalResizeObserver;
-    },
-    resizeObserver: mockObserver,
-    triggerResize: (newWidth: number, newHeight: number) => {
-      windowWithRO.innerWidth = newWidth;
-      windowWithRO.innerHeight = newHeight;
-
-      // Trigger resize event
-      window.dispatchEvent(new Event('resize'));
-
-      // Update matchMedia
-      window.matchMedia = jasmine.createSpy('matchMedia').and.callFake((query: string) => {
-        const maxWidthMatch = query.match(/max-width:\s*(\d+)px/);
-        const minWidthMatch = query.match(/min-width:\s*(\d+)px/);
-
-        let matches = false;
-
-        if (maxWidthMatch) {
-          const maxWidth = parseInt(maxWidthMatch[1], 10);
-          matches = newWidth <= maxWidth;
-        } else if (minWidthMatch) {
-          const minWidth = parseInt(minWidthMatch[1], 10);
-          matches = newWidth >= minWidth;
-        }
-
-        return mockMatchMedia(query, matches);
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: originalInnerWidth,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: originalInnerHeight,
+      });
+      Object.defineProperty(window, 'devicePixelRatio', {
+        writable: true,
+        configurable: true,
+        value: originalDevicePixelRatio,
       });
     },
+    resizeObserver: mockObserver,
+    /**
+     * Trigger resize WITHOUT dispatching window event (Karma-safe)
+     *
+     * Instead of window.dispatchEvent(new Event('resize')), this:
+     * 1. Updates window.innerWidth/innerHeight
+     * 2. Updates matchMedia mock
+     * 3. Triggers ResizeObserver callbacks manually
+     *
+     * This prevents Karma from detecting "full page reload"
+     */
+    triggerResize: (newWidth: number, newHeight: number) => {
+      // Update tracked dimensions
+      currentWidth = newWidth;
+      currentHeight = newHeight;
+
+      // Update window dimensions
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: newWidth,
+      });
+
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: newHeight,
+      });
+
+      // Update matchMedia mock
+      window.matchMedia = createMatchMediaMock(newWidth);
+
+      // Trigger ResizeObserver callbacks manually (without window event)
+      if (mockObserver.triggerResize) {
+        const mockRect: Partial<DOMRectReadOnly> = {
+          width: newWidth,
+          height: newHeight,
+          top: 0,
+          left: 0,
+          right: newWidth,
+          bottom: newHeight,
+          x: 0,
+          y: 0,
+          toJSON: () => ({
+            width: newWidth,
+            height: newHeight,
+            top: 0,
+            left: 0,
+            right: newWidth,
+            bottom: newHeight,
+            x: 0,
+            y: 0,
+          }),
+        };
+
+        mockObserver.triggerResize([
+          {
+            target: document.body,
+            contentRect: mockRect as DOMRectReadOnly,
+          } as Partial<ResizeObserverEntry>,
+        ]);
+      }
+
+      // ✅ NO window.dispatchEvent() - this prevents Karma disconnect
+    },
+    getViewport: () => ({ width: currentWidth, height: currentHeight }),
   };
 }
 

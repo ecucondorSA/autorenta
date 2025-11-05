@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
+import { MercadoPagoGuard } from './core/guards/mercadopago.guard';
 
 export const routes: Routes = [
   {

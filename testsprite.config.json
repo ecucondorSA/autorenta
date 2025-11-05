@@ -1,0 +1,61 @@
+{
+  "projectName": "AutorentA",
+  "projectType": "frontend",
+  "framework": "angular",
+  "version": "17",
+  "localPort": 4200,
+  "testScope": "codebase",
+  "needLogin": true,
+  "credentials": {
+    "username": "test+locatario@autorentar.com",
+    "password": "TestPassword123!"
+  },
+  "baseUrl": {
+    "development": "http://localhost:4200",
+    "staging": "https://autorenta-web-preview.pages.dev",
+    "production": "https://autorenta.com"
+  },
+  "testingStrategy": {
+    "parallel": true,
+    "maxConcurrent": 5,
+    "retryOnFailure": 2,
+    "timeout": 30000
+  },
+  "excludePaths": [
+    "node_modules",
+    "dist",
+    ".angular",
+    "coverage",
+    ".git",
+    "docs"
+  ],
+  "criticalFlows": [
+    "booking-flow",
+    "wallet-deposit",
+    "car-publication",
+    "mercadopago-webhook"
+  ],
+  "environments": {
+    "development": {
+      "needTunnel": true,
+      "tunnelProvider": "testsprite",
+      "mockServices": true
+    },
+    "staging": {
+      "needTunnel": false,
+      "mockServices": false,
+      "mercadoPago": {
+        "useSandbox": true
+      }
+    },
+    "production": {
+      "needTunnel": false,
+      "mockServices": false,
+      "testScope": "smoke",
+      "mercadoPago": {
+        "useSandbox": false,
+        "testAmount": 1
+      }
+    }
+  }
+}

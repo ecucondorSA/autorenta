@@ -1,6 +1,77 @@
 <div class="grid gap-2.5">
-  <label class="text-sm font-semibold text-smoke-black">{{ label }}</label>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+  <div class="flex items-center justify-between">
+    <label class="text-sm font-semibold text-smoke-black">{{ label }}</label>
+
+    <!-- Botón para abrir calendario visual -->
+    <button
+      type="button"
+      (click)="openCalendarModal()"
+      class="text-xs font-medium text-accent-petrol hover:text-accent-petrol-dark flex items-center gap-1 transition-colors"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      Ver calendario
+    </button>
+  </div>
+
+  <!-- Quick date presets with pricing -->
+  <div class="flex flex-wrap gap-2 mb-1">
+    <button
+      *ngFor="let preset of presets"
+      type="button"
+      (click)="applyPreset(preset)"
+      class="relative px-3 py-2 text-xs font-medium rounded-lg border transition-all duration-200 hover:scale-105 active:scale-95 flex flex-col items-start gap-1"
+      [class.bg-accent-petrol]="false"
+      [class.text-white]="false"
+      [class.border-accent-petrol]="false"
+      [class.bg-white]="true"
+      [class.text-charcoal-medium]="true"
+      [class.border-pearl-gray]="true"
+      [class.hover:border-accent-petrol]="true"
+      [class.hover:text-accent-petrol]="true"
+    >
+      <!-- Badge de descuento si aplica -->
+      <span
+        *ngIf="getPresetDiscount(preset) > 0"
+        class="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+      >
+        -{{ getPresetDiscount(preset) }}%
+      </span>
+
+      <!-- Preset label -->
+      <div class="flex items-center gap-1">
+        <span>{{ preset.icon }}</span>
+        <span class="font-semibold">{{ preset.label }}</span>
+      </div>
+
+      <!-- Precio con descuento -->
+      <div *ngIf="showPrices && dailyPrice" class="flex items-center gap-1.5">
+        <!-- Precio tachado si hay descuento -->
+        <span
+          *ngIf="getPresetDiscount(preset) > 0"
+          class="text-[10px] line-through text-charcoal-light"
+        >
+          ${{ getPresetPrice(preset) | number: '1.0-0' }}
+        </span>
+
+        <!-- Precio final -->
+        <span class="text-xs font-bold text-accent-petrol">
+          ${{ getDiscountedPrice(preset) | number: '1.0-0' }}
+        </span>
+      </div>
+
+      <!-- Mensaje de ahorro -->
+      <span
+        *ngIf="getPresetDiscount(preset) > 0 && getSavingsAmount(preset)"
+        class="text-[9px] text-green-600 font-medium"
+      >
+        Ahorrás ${{ getSavingsAmount(preset) | number: '1.0-0' }}
+      </span>
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" [class.animate-shake]="availabilityError()">
     <!-- Fecha inicio -->
     <div class="relative">
       <svg
@@ -47,4 +118,53 @@
       />
     </div>
   </div>
+
+  <!-- Availability feedback -->
+  <div *ngIf="from() && to()" class="mt-2">
+    <!-- Loading state -->
+    <div
+      *ngIf="isCheckingAvailability()"
+      class="flex items-center gap-2 text-xs text-charcoal-medium"
+    >
+      <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span>Verificando disponibilidad...</span>
+    </div>
+
+    <!-- Available -->
+    <div
+      *ngIf="!isCheckingAvailability() && isAvailable() === true"
+      class="flex items-center gap-2 text-xs text-green-600 font-medium"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <span>¡Disponible para estas fechas!</span>
+    </div>
+
+    <!-- Not available -->
+    <div
+      *ngIf="!isCheckingAvailability() && isAvailable() === false"
+      class="flex items-center gap-2 text-xs text-red-600 font-medium"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+      <span>No disponible para estas fechas. Probá otras fechas.</span>
+    </div>
+  </div>
+
+  <!-- Modal de calendario inline -->
+  <app-inline-calendar-modal
+    [isOpen]="isCalendarModalOpen()"
+    [initialFrom]="from()"
+    [initialTo]="to()"
+    [carId]="carId"
+    [availabilityChecker]="availabilityChecker"
+    [blockedDates]="blockedDates"
+    (isOpenChange)="isCalendarModalOpen.set($event)"
+    (rangeSelected)="onCalendarRangeSelected($event)"
+  ></app-inline-calendar-modal>
 </div>

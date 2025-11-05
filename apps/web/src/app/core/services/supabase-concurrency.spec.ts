@@ -1,6 +1,25 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from './supabase-client.service';
 
+interface SessionResult {
+  userId: number;
+  success: boolean;
+  completedQueries: number;
+  errors: number;
+  error?: string;
+}
+
+function normalizeError(error: unknown): { message?: string } {
+  if (error instanceof Error) {
+    return { message: error.message };
+  }
+  if (error && typeof error === 'object') {
+    const typed = error as { message?: string };
+    return { message: typed.message };
+  }
+  return { message: String(error) };
+}
+
 /**
  * SPRINT 4 - TEST 3: Concurrencia de Múltiples Usuarios
  *
@@ -31,7 +50,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       });
 
       const startTime = Date.now();
-      const results = await Promise.all(userSessions);
+      const results = (await Promise.all(userSessions)) as SessionResult[];
       const elapsedTime = Date.now() - startTime;
 
       // Todas las sesiones deben completarse exitosamente
@@ -57,12 +76,20 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
           await simulateCarSearch(userId);
           return { userId, success: true };
         } catch (error: unknown) {
-          errors.push(error.message);
-          return { userId, success: false, error: error.message };
+          const normalized = normalizeError(error);
+          const message = normalized.message ?? 'Unknown error';
+          errors.push(message);
+          return {
+            userId,
+            success: false,
+            error: message,
+            completedQueries: 0,
+            errors: 1,
+          };
         }
       });
 
-      const results = await Promise.all(users);
+      const results = (await Promise.all(users)) as SessionResult[];
 
       // No debe haber errores de "too many connections"
       const connectionErrors = errors.filter(
@@ -132,12 +159,12 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
       });
 
       const startTime = Date.now();
-      const results = await Promise.all(queries);
+      const results = (await Promise.all(queries)) as Array<{ error: unknown }>;
       const elapsedTime = Date.now() - startTime;
 
       // Todas deben completarse sin errores
       expect(results.length).toBe(burstSize);
-      expect(results.every((r: unknown) => !r.error)).toBe(true);
+      expect(results.every((r) => !r.error)).toBe(true);
 
       // Debe completarse en tiempo razonable (< 3 segundos)
       expect(elapsedTime).toBeLessThan(3000);
@@ -170,7 +197,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
         return { success: false, attempts };
       });
 
-      const results = await Promise.all(queries);
+      const results = (await Promise.all(queries)) as Array<{ success: boolean }>;
 
       // La mayoría debe ser exitosa después de reintentos
       const successful = results.filter((r) => r.success);
@@ -221,10 +248,10 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
         });
       });
 
-      const results = await Promise.all(queries);
+      const results = (await Promise.all(queries)) as Array<{ success: boolean }>;
 
       // Todas deben completarse sin errores
-      expect(results.every((r: unknown) => r.success)).toBe(true);
+      expect(results.every((r) => r.success)).toBe(true);
       expect(results.length).toBe(nearLimitQueries);
     });
 
@@ -265,15 +292,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
 /**
  * Simula una sesión completa de usuario con múltiples queries
  */
-async function simulateUserSession(
-  userId: number,
-  queryCount: number,
-): Promise<{
-  userId: number;
-  success: boolean;
-  completedQueries: number;
-  errors: number;
-}> {
+async function simulateUserSession(userId: number, queryCount: number): Promise<SessionResult> {
   let completedQueries = 0;
   let errors = 0;
 
@@ -291,7 +310,7 @@ async function simulateUserSession(
       }
 
       completedQueries++;
-    } catch (error) {
+    } catch (error: unknown) {
       errors++;
     }
   }

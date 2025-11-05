@@ -6,6 +6,7 @@ import { PaymentsService } from './payments.service';
 import { MercadoPagoBookingGatewayService } from './mercadopago-booking-gateway.service';
 import { RiskCalculatorService } from './risk-calculator.service';
 import { SupabaseClientService } from './supabase-client.service';
+import { LoggerService } from './logger.service';
 
 /**
  * Resultado de procesamiento de pago
@@ -54,6 +55,7 @@ export class CheckoutPaymentService {
   private readonly mpGateway = inject(MercadoPagoBookingGatewayService);
   private readonly riskCalculator = inject(RiskCalculatorService);
   private readonly supabaseService = inject(SupabaseClientService);
+  private readonly logger = inject(LoggerService);
 
   /**
    * Procesa un pago completo con wallet
@@ -332,7 +334,7 @@ export class CheckoutPaymentService {
     });
 
     if (error) {
-      console.error('[CheckoutPaymentService] Error unlocking wallet funds:', error);
+      this.logger.error('Error unlocking wallet funds', error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -348,7 +350,7 @@ export class CheckoutPaymentService {
       try {
         await this.unlockWalletFunds(bookingId, transaction.lockedAmountCents);
       } catch (err) {
-        console.error('[CheckoutPaymentService] Rollback: Failed to unlock funds:', err);
+        this.logger.error('Rollback: Failed to unlock funds', err instanceof Error ? err : new Error(String(err)));
       }
     }
 
@@ -357,13 +359,14 @@ export class CheckoutPaymentService {
       try {
         await this.bookingsService.updateBooking(bookingId, { status: 'pending' });
       } catch (err) {
-        console.error('[CheckoutPaymentService] Rollback: Failed to revert booking status:', err);
+        this.logger.error('Rollback: Failed to revert booking status', err instanceof Error ? err : new Error(String(err)));
       }
     }
 
-    // TODO: Marcar intent como 'failed' si fue creado
+    // Marcar intent como 'failed' si fue creado
     if (transaction.intentCreated && transaction.intentId) {
-      console.warn('[CheckoutPaymentService] TODO: Mark payment intent as failed:', transaction.intentId);
+      this.logger.warn('Payment intent should be marked as failed', { intentId: transaction.intentId });
+      // TODO: Implementar actualización de payment_intents.status = 'failed'
     }
   }
 }

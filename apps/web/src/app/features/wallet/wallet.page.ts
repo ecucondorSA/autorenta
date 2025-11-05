@@ -6,6 +6,7 @@ import {
   computed,
   inject,
   OnInit,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -23,6 +24,7 @@ import { WalletService } from '../../core/services/wallet.service';
 import { MetaService } from '../../core/services/meta.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { ToastService } from '../../core/services/toast.service';
+import { AnalyticsService } from '../../core/services/analytics.service';
 
 /**
  * WalletPage
@@ -91,10 +93,26 @@ export class WalletPage implements AfterViewInit, OnInit {
    */
   loading = computed(() => this.withdrawalService.loading());
 
+  /**
+   * Control de visibilidad del banner de onboarding
+   */
+  readonly onboardingBannerDismissed = signal(false);
+
+  /**
+   * Controla si ya se trackeó la vista del banner
+   */
+  private bannerViewTracked = false;
+
+  /**
+   * Control de expansión de la sección de beneficios
+   */
+  readonly benefitsSectionExpanded = signal(false);
+
   private readonly walletService = inject(WalletService);
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
   private readonly toastService = inject(ToastService);
+  private readonly analyticsService = inject(AnalyticsService);
 
   /**
    * Wallet Account Number del usuario actual
@@ -158,12 +176,79 @@ export class WalletPage implements AfterViewInit, OnInit {
     return Math.min(progress, 100);
   });
 
+  /**
+   * Texto dinámico para el CTA principal de depósito
+   */
+  readonly primaryDepositCTAText = computed(() => {
+    const status = this.protectedCreditStatus();
+    const balance = this.protectedCreditBalance();
+
+    if (status === 'pending') {
+      return 'Configurar crédito protegido';
+    } else if (status === 'partial') {
+      const remaining = (this.protectedCreditTarget - balance) / 100;
+      return `Completar crédito (faltan USD ${remaining.toFixed(0)})`;
+    } else {
+      return 'Depositar fondos';
+    }
+  });
+
+  /**
+   * Tooltip/descripción para el CTA principal
+   */
+  readonly primaryDepositCTATooltip = computed(() => {
+    const status = this.protectedCreditStatus();
+
+    if (status === 'pending') {
+      return 'Deposita USD 300 para reservar sin tarjeta';
+    } else if (status === 'partial') {
+      return 'Completa tu crédito protegido para reservar sin tarjeta';
+    } else {
+      return 'Agregar fondos a tu wallet';
+    }
+  });
+
+  /**
+   * Clase CSS para el CTA principal (cambia color según urgencia)
+   */
+  readonly primaryDepositCTAClass = computed(() => {
+    const status = this.protectedCreditStatus();
+
+    if (status === 'pending') {
+      return 'bg-accent-petrol text-white hover:bg-accent-petrol/90';
+    } else if (status === 'partial') {
+      return 'bg-warning-600 text-white hover:bg-warning-700';
+    } else {
+      return 'bg-primary-600 text-white hover:bg-primary-700';
+    }
+  });
+
   constructor(
     private withdrawalService: WithdrawalService,
     private metaService: MetaService,
   ) {
     // Update SEO meta tags (private page)
     this.metaService.updateWalletMeta();
+
+    // Track wallet page view
+    this.analyticsService.trackEvent('wallet_page_viewed', {
+      protected_credit_balance: this.protectedCreditBalance(),
+      protected_credit_progress: this.protectedCreditProgress(),
+    });
+
+    // Track onboarding banner view (only once per session)
+    effect(() => {
+      if (
+        this.protectedCreditStatus() === 'pending' &&
+        !this.onboardingBannerDismissed() &&
+        !this.bannerViewTracked
+      ) {
+        this.analyticsService.trackEvent('wallet_onboarding_banner_viewed', {
+          protected_credit_balance: this.protectedCreditBalance(),
+        });
+        this.bannerViewTracked = true;
+      }
+    });
 
     // Cargar datos al iniciar
     this.loadWithdrawalData();
@@ -197,6 +282,50 @@ export class WalletPage implements AfterViewInit, OnInit {
    */
   closeDepositModal(): void {
     this.showDepositModal.set(false);
+  }
+
+  /**
+   * Abre el modal de depósito específicamente para crédito protegido
+   */
+  openDepositModalForProtectedCredit(): void {
+    // Track analytics event
+    this.analyticsService.trackEvent('wallet_onboarding_cta_clicked', {
+      protected_credit_balance: this.protectedCreditBalance(),
+      protected_credit_progress: this.protectedCreditProgress(),
+    });
+
+    // Open deposit modal
+    // TODO: When deposit modal is enhanced, pre-select "protected credit" type
+    this.openDepositModal();
+  }
+
+  /**
+   * Dismiss the onboarding banner
+   */
+  dismissOnboardingBanner(): void {
+    this.onboardingBannerDismissed.set(true);
+
+    // Track dismissal
+    this.analyticsService.trackEvent('wallet_onboarding_banner_viewed', {
+      protected_credit_balance: this.protectedCreditBalance(),
+      action: 'dismissed',
+    });
+  }
+
+  /**
+   * Toggle benefits section expansion
+   */
+  toggleBenefitsSection(): void {
+    const newState = !this.benefitsSectionExpanded();
+    this.benefitsSectionExpanded.set(newState);
+
+    // Track expansion
+    if (newState) {
+      this.analyticsService.trackEvent('wallet_benefits_section_expanded', {
+        protected_credit_status: this.protectedCreditStatus(),
+        protected_credit_balance: this.protectedCreditBalance(),
+      });
+    }
   }
 
   /**

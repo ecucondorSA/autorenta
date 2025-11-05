@@ -212,9 +212,85 @@ serve(async (req) => {
     const { data: authUser } = await supabase.auth.admin.getUserById(transaction.user_id);
     const { data: profile } = await supabase
       .from('profiles')
-      .select('full_name, email, phone')
+      .select('full_name, email, phone, dni, gov_id_number, gov_id_type, mercadopago_customer_id')
       .eq('id', transaction.user_id)
       .single();
+
+    // ========================================
+    // CUSTOMERS API: Crear u obtener customer
+    // Mejora calidad de integración +5-10 puntos
+    // ========================================
+    let customerId: string | null = profile?.mercadopago_customer_id || null;
+    
+    if (!customerId) {
+      // Crear customer si no existe
+      const fullName = profile?.full_name || authUser?.user?.user_metadata?.full_name || 'Usuario AutoRenta';
+      const nameParts = fullName.trim().split(' ');
+      const firstName = nameParts[0] || 'Usuario';
+      const lastName = nameParts.slice(1).join(' ') || 'AutoRenta';
+
+      // Formatear phone
+      let phoneFormatted: { area_code: string; number: string } | undefined;
+      if (profile?.phone) {
+        const phoneCleaned = profile.phone.replace(/[^0-9]/g, '');
+        const phoneWithoutCountry = phoneCleaned.startsWith('54') 
+          ? phoneCleaned.substring(2) 
+          : phoneCleaned;
+        const areaCode = phoneWithoutCountry.substring(0, 2) || '11';
+        const number = phoneWithoutCountry.substring(2) || '';
+        if (number.length >= 8) {
+          phoneFormatted = { area_code: areaCode, number: number };
+        }
+      }
+
+      // Obtener DNI
+      const dniNumber = profile?.gov_id_number || profile?.dni;
+      const dniType = profile?.gov_id_type || 'DNI';
+      let identification: { type: string; number: string } | undefined;
+      if (dniNumber) {
+        const dniCleaned = dniNumber.replace(/[^0-9]/g, '');
+        if (dniCleaned.length >= 7) {
+          identification = { type: dniType.toUpperCase(), number: dniCleaned };
+        }
+      }
+
+      // Crear customer en MercadoPago
+      const customerData: any = {
+        email: authUser?.user?.email || profile?.email || `${transaction.user_id}@autorenta.com`,
+        first_name: firstName,
+        last_name: lastName,
+        ...(phoneFormatted && { phone: phoneFormatted }),
+        ...(identification && { identification }),
+      };
+
+      try {
+        const customerResponse = await fetch('https://api.mercadopago.com/v1/customers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+          },
+          body: JSON.stringify(customerData),
+        });
+
+        if (customerResponse.ok) {
+          const customer = await customerResponse.json();
+          customerId = customer.id.toString();
+          
+          // Guardar customer_id en profile
+          await supabase
+            .from('profiles')
+            .update({ mercadopago_customer_id: customerId })
+            .eq('id', transaction.user_id);
+          
+          console.log('✅ Customer creado en MercadoPago:', customerId);
+        } else {
+          console.warn('⚠️ No se pudo crear customer, continuando sin customer_id');
+        }
+      } catch (error) {
+        console.warn('⚠️ Error creando customer, continuando sin customer_id:', error);
+      }
+    }
 
     // ========================================
     // DIVIDIR NOMBRE EN FIRST_NAME Y LAST_NAME
@@ -284,11 +360,50 @@ serve(async (req) => {
     // ========================================
     // PAYER INFO MEJORADO
     // +10 puntos: first_name, last_name
+    // +5 puntos: phone
+    // +10 puntos: identification (DNI)
     // ========================================
+    
+    // Formatear phone para MercadoPago (Argentina: +54)
+    let phoneFormatted: { area_code: string; number: string } | undefined;
+    if (profile?.phone) {
+      const phoneCleaned = profile.phone.replace(/[^0-9]/g, '');
+      // Si empieza con 54 (código de Argentina), removerlo
+      const phoneWithoutCountry = phoneCleaned.startsWith('54') 
+        ? phoneCleaned.substring(2) 
+        : phoneCleaned;
+      // Área code: primeros 2-3 dígitos (ej: 11 para Buenos Aires, 341 para Rosario)
+      const areaCode = phoneWithoutCountry.substring(0, 2) || '11';
+      const number = phoneWithoutCountry.substring(2) || '';
+      if (number.length >= 8) {
+        phoneFormatted = {
+          area_code: areaCode,
+          number: number,
+        };
+      }
+    }
+
+    // Obtener DNI (preferir gov_id_number, fallback a dni)
+    const dniNumber = profile?.gov_id_number || profile?.dni;
+    const dniType = profile?.gov_id_type || 'DNI';
+    let identification: { type: string; number: string } | undefined;
+    if (dniNumber) {
+      const dniCleaned = dniNumber.replace(/[^0-9]/g, '');
+      if (dniCleaned.length >= 7) {
+        identification = {
+          type: dniType.toUpperCase(),
+          number: dniCleaned,
+        };
+      }
+    }
+
     preferenceData.payer = {
       email: authUser?.user?.email || profile?.email || `${transaction.user_id}@autorenta.com`,
       first_name: firstName,  // +5 puntos
       last_name: lastName,    // +5 puntos
+      ...(phoneFormatted && { phone: phoneFormatted }),  // +5 puntos
+      ...(identification && { identification }),  // +10 puntos
+      ...(customerId && { id: customerId }),  // +5-10 puntos (Customers API)
     };
 
     console.log('Preference data:', JSON.stringify(preferenceData, null, 2));

@@ -209,10 +209,10 @@ describe('SupabaseClientService - Pooling Performance', () => {
         });
       });
 
-      const results = await Promise.all(queries);
+      const results = await Promise.all(queries) as Array<{ error: unknown }>;
 
-      const successfulQueries = results.filter((r: unknown) => !r.error);
-      const failedQueries = results.filter((r: unknown) => r.error);
+      const successfulQueries = results.filter((r) => !r.error);
+      const failedQueries = results.filter((r) => r.error);
 
       // La mayoría debe ser exitosa
       expect(successfulQueries.length).toBeGreaterThan(failedQueries.length);

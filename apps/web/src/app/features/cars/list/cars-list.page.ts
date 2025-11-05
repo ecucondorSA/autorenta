@@ -19,6 +19,7 @@ import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { TourService } from '../../../core/services/tour.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { Car } from '../../../core/models';
 import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
@@ -74,6 +75,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly compareService = inject(CarsCompareService);
   private readonly metaService = inject(MetaService);
   private readonly tourService = inject(TourService);
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -548,6 +550,11 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.setupRealtimeSubscription();
       }
     } catch (err) {
+      this.logger.error('Error loading cars', err);
+      // Mostrar mensaje al usuario en caso de error crítico
+      if (err instanceof Error) {
+        console.error('Error al cargar autos:', err.message);
+      }
     } finally {
       this.loading.set(false);
 
@@ -578,7 +585,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.pullToRefresh.completeRefresh();
       }
     } catch (error) {
-      console.error('Error al refrescar:', error);
+      this.logger.error('Error al refrescar autos', error);
       if (this.pullToRefresh) {
         this.pullToRefresh.completeRefresh();
       }
@@ -611,20 +618,34 @@ export class CarsListPage implements OnInit, OnDestroy {
   private async showNewCarToast(): Promise<void> {
     if (typeof window === 'undefined') return;
 
-    // Show simple notification banner
+    // Show simple notification banner (usando createElement para evitar XSS)
     const banner = document.createElement('div');
     banner.className =
       'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
-    banner.innerHTML = `
-      <span>¡Nuevos vehículos disponibles!</span>
-      <button class="underline font-medium" onclick="this.parentElement.dispatchEvent(new CustomEvent('refresh'))">Ver ahora</button>
-      <button class="ml-2" onclick="this.parentElement.remove()">✕</button>
-    `;
 
-    banner.addEventListener('refresh', () => {
+    // Crear elementos de forma segura (sin innerHTML)
+    const messageSpan = document.createElement('span');
+    messageSpan.textContent = '¡Nuevos vehículos disponibles!';
+
+    const refreshButton = document.createElement('button');
+    refreshButton.className = 'underline font-medium';
+    refreshButton.textContent = 'Ver ahora';
+    refreshButton.addEventListener('click', () => {
       void this.loadCars();
       banner.remove();
     });
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'ml-2';
+    closeButton.textContent = '✕';
+    closeButton.setAttribute('aria-label', 'Cerrar');
+    closeButton.addEventListener('click', () => {
+      banner.remove();
+    });
+
+    banner.appendChild(messageSpan);
+    banner.appendChild(refreshButton);
+    banner.appendChild(closeButton);
 
     document.body.appendChild(banner);
 
@@ -886,7 +907,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     const card = carousel.querySelector(`[data-car-id="${carId}"]`) as HTMLElement;
     
     if (!card) {
-      console.warn('⚠️ Car card not found in carousel:', carId);
+      this.logger.warn('Car card not found in carousel', { carId });
       return;
     }
 

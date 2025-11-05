@@ -60,10 +60,8 @@ export class ProfileExpandedPage {
     { initialValue: null }
   );
   
-  readonly documents = toSignal(
-    from(this.profileService.getMyDocuments()), 
-    { initialValue: [] as UserDocument[] }
-  );
+  private readonly documentsSubject = signal<UserDocument[]>([]);
+  readonly documents = this.documentsSubject.asReadonly();
   
   readonly loading = signal(false);
   readonly saving = signal(false);
@@ -128,6 +126,7 @@ export class ProfileExpandedPage {
 
   readonly verificationError = signal<string | null>(null);
   readonly verificationLoading = signal(false);
+  readonly uploadingDocument = signal<string | null>(null); // Track which document is being uploaded
 
   readonly showDriverFlow = computed(() => {
     const role = this.profile()?.role;
@@ -337,13 +336,39 @@ export class ProfileExpandedPage {
   async refreshVerificationStatuses(flow: 'driver' | 'owner'): Promise<void> {
     this.verificationLoading.set(true);
     try {
-      await this.profileService.getMyDocuments();
+      await this.loadDocuments();
       this.message.set('Estado de verificación actualizado');
     } catch (err) {
       this.verificationError.set('Error al actualizar estado');
     } finally {
       this.verificationLoading.set(false);
     }
+  }
+
+  async onDocumentUpload(event: Event, kind: DocumentKind): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    this.uploadingDocument.set(kind);
+    this.error.set(null);
+    this.message.set(null);
+
+    try {
+      await this.profileService.uploadDocument(file, kind);
+      // Refresh documents list
+      await this.loadDocuments();
+      this.message.set('Documento subido exitosamente. La verificación puede tardar unos minutos.');
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'Error al subir el documento');
+    } finally {
+      this.uploadingDocument.set(null);
+      // Reset file input
+      (event.target as HTMLInputElement).value = '';
+    }
+  }
+
+  isUploadingDocument(kind: string): boolean {
+    return this.uploadingDocument() === kind;
   }
 
   constructor() {
@@ -356,6 +381,18 @@ export class ProfileExpandedPage {
     });
 
     this.metaService.updateProfileMeta();
+    
+    // Load documents on init
+    this.loadDocuments();
+  }
+
+  private async loadDocuments(): Promise<void> {
+    try {
+      const docs = await this.profileService.getMyDocuments();
+      this.documentsSubject.set(docs);
+    } catch (err) {
+      console.error('Error loading documents:', err);
+    }
   }
 
   private isValidTab(tab: string | null): boolean {

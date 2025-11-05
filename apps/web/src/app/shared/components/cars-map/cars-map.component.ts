@@ -16,14 +16,17 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CarLocationsService, CarMapLocation } from '../../../core/services/car-locations.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
+import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { environment } from '../../../../environments/environment';
-import mapboxgl from 'mapbox-gl';
 
-// Type aliases for Mapbox
+// Type imports (these don't increase bundle size)
+import type mapboxgl from 'mapbox-gl';
+
 type LngLatLike = [number, number] | { lng: number; lat: number };
 
 /**
@@ -61,8 +64,10 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output() userLocationChange = new EventEmitter<{ lat: number; lng: number }>();
 
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly router = inject(Router);
   private readonly carLocationsService = inject(CarLocationsService);
   private readonly pricingService = inject(DynamicPricingService);
+  private readonly supabase = injectSupabase();
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -73,13 +78,15 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   private userMarker: mapboxgl.Marker | null = null;
   private selectedPopup: mapboxgl.Popup | null = null;
   private carMarkersMap: Map<string, mapboxgl.Marker> = new Map();
+  private mapboxgl: typeof mapboxgl | null = null;
   private lastCarsJson: string = ''; // Para evitar updates redundantes
 
   // Clustering & pricing cache
   private clusteringEnabled = false;
   private readonly CLUSTER_THRESHOLD = 30; // activar clustering a partir de 30 autos
-  private pricingCache: Map<string, { price: number; timestamp: number }> = new Map();
+  private pricingCache: Map<string, { price: number; timestamp: number; currency: string }> = new Map();
   private readonly PRICING_CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+  private loadingPrices = false; // Flag to prevent concurrent batch loads
 
   // Distance calculation
   private readonly EARTH_RADIUS_KM = 6371;
@@ -145,10 +152,15 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
 
     try {
-      console.log('🗺️ Inicializando mapa con import estático...');
-      
+      console.log('🗺️ Inicializando mapa con lazy loading...');
+
+      // Lazy load Mapbox GL (only imported at runtime, not in initial bundle)
+      const mapboxModule = await import('mapbox-gl');
+      const mapboxgl = mapboxModule.default;
+      this.mapboxgl = mapboxgl;
+
       mapboxgl.accessToken = environment.mapboxAccessToken;
-      
+
       // Argentina bounds to prevent showing too much ocean
       const argentinaBounds: mapboxgl.LngLatBoundsLike = [
         [-73.5, -55.0], // Southwest (Tierra del Fuego west)
@@ -173,6 +185,14 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         this.updateMarkers(this.cars);
         this.requestUserLocation();
         this.addGeolocateButton();
+
+        // Load dynamic prices for initial viewport
+        this.loadDynamicPricesForViewport();
+      });
+
+      // Load dynamic prices when user moves/zooms the map
+      this.map.on('moveend', () => {
+        this.loadDynamicPricesForViewport();
       });
 
       this.map.on('error', (e: any) => {
@@ -257,11 +277,37 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       });
 
       const map = this.map;
-      if (!map) return;
-      const marker = new mapboxgl.Marker(el)
+      if (!map || !this.mapboxgl) return;
+      const popup = this.buildPopup(location);
+      const marker = new this.mapboxgl.Marker(el)
         .setLngLat([location.lng, location.lat] as LngLatLike)
-        .setPopup(this.buildPopup(location))
+        .setPopup(popup)
         .addTo(map);
+      
+      // Make popup image clickable to navigate to car detail
+      popup.on('open', () => {
+        const popupElement = popup.getElement();
+        if (popupElement) {
+          const popupImage = popupElement.querySelector('.car-popup-image') as HTMLElement;
+          if (popupImage) {
+            popupImage.style.cursor = 'pointer';
+            const handleImageClick = () => {
+              if (this.map) {
+                this.map.flyTo({
+                  center: [location.lng, location.lat],
+                  zoom: 16,
+                  duration: 1000,
+                  essential: true,
+                });
+              }
+              setTimeout(() => {
+                this.router.navigate(['/cars', location.carId]);
+              }, 2000);
+            };
+            popupImage.addEventListener('click', handleImageClick);
+          }
+        }
+      });
       
       console.log('✅ Marker agregado al mapa:', location.carId);
       
@@ -375,7 +421,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         const f = e.features[0];
         const coords = f.geometry.coordinates.slice();
         const props = f.properties;
-        const popup = this.buildPopup({
+        const carLocation: CarMapLocation = {
           carId: props.carId,
           title: props.title,
           pricePerDay: Number(props.price),
@@ -386,8 +432,34 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
           locationLabel: '',
           photoUrl: props.photoUrl,
           description: '',
-        } as any);
+        } as any;
+        const popup = this.buildPopup(carLocation);
         popup.setLngLat(coords).addTo(map);
+        
+        // Make popup image clickable to navigate to car detail
+        popup.on('open', () => {
+          const popupElement = popup.getElement();
+          if (popupElement) {
+            const popupImage = popupElement.querySelector('.car-popup-image') as HTMLElement;
+            if (popupImage) {
+              popupImage.style.cursor = 'pointer';
+              const handleImageClick = () => {
+                if (this.map) {
+                  this.map.flyTo({
+                    center: [carLocation.lng, carLocation.lat],
+                    zoom: 16,
+                    duration: 1000,
+                    essential: true,
+                  });
+                }
+                setTimeout(() => {
+                  this.router.navigate(['/cars', carLocation.carId]);
+                }, 2000);
+              };
+              popupImage.addEventListener('click', handleImageClick);
+            }
+          }
+        });
       });
     }
   }
@@ -402,28 +474,230 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     if (map.getSource('cars')) map.removeSource('cars');
   }
 
+  /**
+   * Get cars visible in current map viewport
+   */
+  private getVisibleCars(): CarMapLocation[] {
+    if (!this.map) return [];
+
+    const bounds = this.map.getBounds();
+    if (!bounds) return [];
+
+    return this.cars.filter((car) => {
+      return (
+        car.lng >= bounds.getWest() &&
+        car.lng <= bounds.getEast() &&
+        car.lat >= bounds.getSouth() &&
+        car.lat <= bounds.getNorth()
+      );
+    });
+  }
+
+  /**
+   * Load dynamic prices for cars in current viewport (batch optimization)
+   */
+  private async loadDynamicPricesForViewport(): Promise<void> {
+    if (this.loadingPrices) return; // Prevent concurrent loads
+
+    try {
+      this.loadingPrices = true;
+
+      const visibleCars = this.getVisibleCars();
+      console.log('💰 [Pricing] Visible cars in viewport:', visibleCars.length);
+      if (visibleCars.length === 0) return;
+
+      // Group by region and filter out cars that need price updates
+      const regionMap = new Map<string, CarMapLocation[]>();
+      const carsNeedingPrices: CarMapLocation[] = [];
+
+      for (const car of visibleCars) {
+        // ✅ FIX: Solo considerar precios en caché si realmente existen (no usar estáticos)
+        const cached = this.pricingCache.get(car.carId);
+        const isCacheValid = cached && Date.now() - cached.timestamp < this.PRICING_CACHE_TTL;
+        
+        // Si no hay precio dinámico en caché, agregarlo a la lista de carros que necesitan precios
+        if (!isCacheValid && car.regionId) {
+          carsNeedingPrices.push(car);
+
+          if (!regionMap.has(car.regionId)) {
+            regionMap.set(car.regionId, []);
+          }
+          regionMap.get(car.regionId)!.push(car);
+        }
+      }
+
+      console.log('💰 [Pricing] Cars needing prices:', carsNeedingPrices.length);
+      console.log('💰 [Pricing] Sample car regionIds:', carsNeedingPrices.slice(0, 3).map(c => ({ carId: c.carId, regionId: c.regionId })));
+
+      if (carsNeedingPrices.length === 0) {
+        console.log('💰 [Pricing] All prices are cached with dynamic prices');
+        return; // All prices are cached and are dynamic
+      }
+
+      // Get unique region IDs
+      const regionIds = Array.from(regionMap.keys());
+      console.log('💰 [Pricing] Fetching prices for regions:', regionIds);
+
+      // Get user ID for pricing calculation
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      const userId = user?.id || '00000000-0000-0000-0000-000000000000';
+
+      // Call batch pricing RPC
+      console.log('💰 [Pricing] Calling batch RPC...');
+      const pricesMap = await this.pricingService.calculateBatchPricesRPC(
+        regionIds,
+        userId,
+        new Date().toISOString(),
+        24 // 24 hours for daily price
+      );
+      console.log('💰 [Pricing] Received prices for regions:', pricesMap.size);
+
+      // Update cache and markers
+      let updatedCount = 0;
+      for (const car of carsNeedingPrices) {
+        if (car.regionId) {
+          const pricingResult = pricesMap.get(car.regionId);
+
+          if (pricingResult) {
+            console.log(`💰 [Pricing] Updating car ${car.carId} with dynamic price: ${pricingResult.total_price} ${pricingResult.currency}`);
+
+            // Update cache
+            this.pricingCache.set(car.carId, {
+              price: pricingResult.total_price,
+              timestamp: Date.now(),
+              currency: pricingResult.currency,
+            });
+
+            // Update marker if it exists
+            this.updateMarkerPrice(car.carId, pricingResult.total_price, pricingResult.currency);
+            updatedCount++;
+          } else {
+            console.warn(`💰 [Pricing] No price found for region ${car.regionId}`);
+          }
+        }
+      }
+      console.log(`💰 [Pricing] Updated ${updatedCount} markers with dynamic prices`);
+    } catch (error) {
+      // Silent fallback - markers will show static prices
+      console.error('❌ [Pricing] Failed to load dynamic prices:', error);
+    } finally {
+      this.loadingPrices = false;
+    }
+  }
+
+  /**
+   * Update a specific marker's displayed price
+   */
+  private updateMarkerPrice(carId: string, price: number, currency: string): void {
+    const marker = this.carMarkersMap.get(carId);
+    if (!marker) {
+      console.warn(`💰 [Pricing] Marker not found for car ${carId}`);
+      return;
+    }
+
+    const markerElement = marker.getElement();
+    const priceSpan = markerElement?.querySelector('.car-marker-price');
+
+    if (priceSpan) {
+      const formattedPrice = new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: currency || 'ARS',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price);
+
+      console.log(`💰 [Pricing] Updating marker ${carId}: ${priceSpan.textContent} → ${formattedPrice}`);
+      priceSpan.textContent = formattedPrice;
+    } else {
+      console.warn(`💰 [Pricing] Price span not found for car ${carId} (may be showing distance instead)`);
+    }
+
+    // ✅ FIX: Also update the popup price if it's open
+    const popup = marker.getPopup();
+    if (popup && popup.isOpen()) {
+      const popupElement = popup.getElement();
+      if (popupElement) {
+        const popupPriceElement = popupElement.querySelector('.car-popup-price');
+        if (popupPriceElement) {
+          const formattedPrice = new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: currency || 'ARS',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          }).format(price);
+          
+          popupPriceElement.textContent = `${formattedPrice}/día`;
+          console.log(`💰 [Pricing] Updated popup price for car ${carId}`);
+        }
+      }
+    }
+
+    // ✅ FIX: Update popup content for next time it opens
+    // Find the location data to rebuild popup
+    const location = this.cars.find(loc => loc.carId === carId);
+    if (location) {
+      // Create updated location with dynamic price
+      const updatedLocation = { ...location, pricePerDay: price };
+      const newPopup = this.buildPopup(updatedLocation);
+      marker.setPopup(newPopup);
+    }
+  }
+
+  /**
+   * Get cached dynamic price only (no static fallback)
+   * Returns null if no dynamic price is available
+   */
+  private getCachedDynamicPrice(carId: string): {
+    price: number;
+    currency: string;
+  } | null {
+    const cached = this.pricingCache.get(carId);
+
+    if (cached && Date.now() - cached.timestamp < this.PRICING_CACHE_TTL) {
+      return { price: cached.price, currency: cached.currency };
+    }
+
+    return null; // ✅ NO mostrar precio estático, solo esperar precio dinámico
+  }
+
   private buildPopup(location: CarMapLocation): mapboxgl.Popup {
-    const formattedPrice = new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: location.currency || 'ARS',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(location.pricePerDay);
+    // ✅ FIX: Solo mostrar precio dinámico, no precio estático
+    const cachedPrice = this.getCachedDynamicPrice(location.carId);
+    
+    let formattedPrice: string;
+    if (cachedPrice) {
+      formattedPrice = new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: cachedPrice.currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(cachedPrice.price);
+    } else {
+      // Mostrar indicador de carga si no hay precio dinámico
+      formattedPrice = 'Cargando...';
+    }
 
     const html = `
       <div class="car-popup-content">
-        <img class="car-popup-image" src="${location.photoUrl || ''}" alt="${
+        <div class="car-popup-image-wrapper">
+          <img class="car-popup-image" src="${location.photoUrl || ''}" alt="${
       location.title
-    }" />
+    }" onerror="this.style.display='none'; this.parentElement.style.background='#e5e7eb';" />
+        </div>
         <div class="car-popup-info">
-          <h4>${location.title}</h4>
+          <h4 class="car-popup-title">${location.title}</h4>
           <p class="car-popup-price">${formattedPrice}/día</p>
           ${location.locationLabel ? `<p>${location.locationLabel}</p>` : ''}
         </div>
       </div>
     `;
 
-    return new mapboxgl.Popup({ closeButton: false, className: 'car-popup' }).setHTML(html);
+    if (!this.mapboxgl) {
+      throw new Error('Mapbox not loaded');
+    }
+    return new this.mapboxgl.Popup({ closeButton: false, className: 'car-popup' }).setHTML(html);
   }
 
   private addGeolocateButton(): void {
@@ -463,25 +737,37 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     // Determinar si mostrar distancia o precio
     const distanceText = this.getDistanceText(location.lat, location.lng);
-    const showDistance = distanceText && parseFloat(distanceText.replace(/[^\d.]/g, '')) <= 10; // Mostrar distancia si <= 10km
+    const showDistanceIfNearby = distanceText && parseFloat(distanceText.replace(/[^\d.]/g, '')) <= 10; // Mostrar distancia si <= 10km
 
     let displayText: string;
     let displayClass: string;
 
-    if (showDistance && distanceText) {
+    // ✅ FIX: Prioridad: 1) Precio dinámico, 2) Distancia si está cerca, 3) Distancia si no hay precio
+    const cachedPrice = this.getCachedDynamicPrice(location.carId);
+    
+    if (cachedPrice) {
+      // Mostrar precio dinámico si está disponible
+      const formattedPrice = new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: cachedPrice.currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(cachedPrice.price);
+      displayText = formattedPrice;
+      displayClass = 'car-marker-price';
+    } else if (showDistanceIfNearby && distanceText) {
+      // Si está cerca y no hay precio dinámico, mostrar distancia
       displayText = distanceText;
       displayClass = 'car-marker-distance';
       el.classList.add('nearby');
+    } else if (distanceText) {
+      // Si no hay precio dinámico pero hay distancia, mostrar distancia
+      displayText = distanceText;
+      displayClass = 'car-marker-distance';
     } else {
-      // Formatear precio
-      const formattedPrice = new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: location.currency || 'ARS',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(location.pricePerDay);
-      displayText = formattedPrice;
-      displayClass = 'car-marker-price';
+      // Fallback: mostrar "..." solo si no hay ni precio ni distancia
+      displayText = '...';
+      displayClass = 'car-marker-price car-marker-loading';
     }
 
     // Marker estilo Airbnb con foto y distancia/precio
@@ -529,7 +815,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private addUserMarker(lat: number, lng: number): void {
-    if (!this.map) {
+    if (!this.map || !this.mapboxgl) {
       return;
     }
 
@@ -542,7 +828,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     const map = this.map;
     if (!map) return;
-    this.userMarker = new mapboxgl.Marker(el)
+    this.userMarker = new this.mapboxgl.Marker(el)
       .setLngLat([lng, lat] as LngLatLike)
       .addTo(map);
   }

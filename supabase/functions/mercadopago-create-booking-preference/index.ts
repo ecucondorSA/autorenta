@@ -301,8 +301,93 @@ serve(async (req) => {
     const { data: authUser } = await supabase.auth.admin.getUserById(booking.renter_id);
     const { data: profile } = await supabase
       .from('profiles')
-      .select('full_name, email, phone')
+      .select('full_name, email, phone, dni, gov_id_number, gov_id_type, mercadopago_customer_id')
       .eq('id', booking.renter_id)
+      .single();
+
+    // ========================================
+    // CUSTOMERS API: Crear u obtener customer
+    // Mejora calidad de integración +5-10 puntos
+    // ========================================
+    let customerId: string | null = profile?.mercadopago_customer_id || null;
+    
+    if (!customerId) {
+      // Crear customer si no existe (mismo código que en create-preference)
+      const fullName = profile?.full_name || authUser?.user?.user_metadata?.full_name || 'Usuario AutoRenta';
+      const nameParts = fullName.trim().split(' ');
+      const firstName = nameParts[0] || 'Usuario';
+      const lastName = nameParts.slice(1).join(' ') || 'AutoRenta';
+
+      // Formatear phone
+      let phoneFormatted: { area_code: string; number: string } | undefined;
+      if (profile?.phone) {
+        const phoneCleaned = profile.phone.replace(/[^0-9]/g, '');
+        const phoneWithoutCountry = phoneCleaned.startsWith('54') 
+          ? phoneCleaned.substring(2) 
+          : phoneCleaned;
+        const areaCode = phoneWithoutCountry.substring(0, 2) || '11';
+        const number = phoneWithoutCountry.substring(2) || '';
+        if (number.length >= 8) {
+          phoneFormatted = { area_code: areaCode, number: number };
+        }
+      }
+
+      // Obtener DNI
+      const dniNumber = profile?.gov_id_number || profile?.dni;
+      const dniType = profile?.gov_id_type || 'DNI';
+      let identification: { type: string; number: string } | undefined;
+      if (dniNumber) {
+        const dniCleaned = dniNumber.replace(/[^0-9]/g, '');
+        if (dniCleaned.length >= 7) {
+          identification = { type: dniType.toUpperCase(), number: dniCleaned };
+        }
+      }
+
+      // Crear customer en MercadoPago
+      const customerData: any = {
+        email: authUser?.user?.email || profile?.email || `${booking.renter_id}@autorenta.com`,
+        first_name: firstName,
+        last_name: lastName,
+        ...(phoneFormatted && { phone: phoneFormatted }),
+        ...(identification && { identification }),
+      };
+
+      try {
+        const customerResponse = await fetch('https://api.mercadopago.com/v1/customers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+          },
+          body: JSON.stringify(customerData),
+        });
+
+        if (customerResponse.ok) {
+          const customer = await customerResponse.json();
+          customerId = customer.id.toString();
+          
+          // Guardar customer_id en profile
+          await supabase
+            .from('profiles')
+            .update({ mercadopago_customer_id: customerId })
+            .eq('id', booking.renter_id);
+          
+          console.log('✅ Customer creado en MercadoPago:', customerId);
+        } else {
+          console.warn('⚠️ No se pudo crear customer, continuando sin customer_id');
+        }
+      } catch (error) {
+        console.warn('⚠️ Error creando customer, continuando sin customer_id:', error);
+      }
+    }
+
+    // Obtener primera foto del auto para picture_url
+    const { data: carPhoto } = await supabase
+      .from('car_photos')
+      .select('url')
+      .eq('car_id', booking.car_id)
+      .order('position', { ascending: true })
+      .limit(1)
       .single();
 
     // Dividir nombre en first_name y last_name
@@ -423,6 +508,7 @@ serve(async (req) => {
           quantity: 1,
           unit_price: amountARS,
           currency_id: 'ARS',
+          ...(carPhoto?.url && { picture_url: carPhoto.url }),  // +3 puntos de calidad
         },
       ],
       back_urls: {
@@ -460,11 +546,49 @@ serve(async (req) => {
       expiration_date_from: new Date().toISOString(),
       expiration_date_to: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 horas
 
-      payer: {
-        email: authUser?.user?.email || profile?.email || `${booking.renter_id}@autorenta.com`,
-        first_name: firstName,
-        last_name: lastName,
-      },
+      payer: (() => {
+        // Formatear phone para MercadoPago (Argentina: +54)
+        let phoneFormatted: { area_code: string; number: string } | undefined;
+        if (profile?.phone) {
+          const phoneCleaned = profile.phone.replace(/[^0-9]/g, '');
+          // Si empieza con 54 (código de Argentina), removerlo
+          const phoneWithoutCountry = phoneCleaned.startsWith('54') 
+            ? phoneCleaned.substring(2) 
+            : phoneCleaned;
+          // Área code: primeros 2-3 dígitos (ej: 11 para Buenos Aires, 341 para Rosario)
+          const areaCode = phoneWithoutCountry.substring(0, 2) || '11';
+          const number = phoneWithoutCountry.substring(2) || '';
+          if (number.length >= 8) {
+            phoneFormatted = {
+              area_code: areaCode,
+              number: number,
+            };
+          }
+        }
+
+        // Obtener DNI (preferir gov_id_number, fallback a dni)
+        const dniNumber = profile?.gov_id_number || profile?.dni;
+        const dniType = profile?.gov_id_type || 'DNI';
+        let identification: { type: string; number: string } | undefined;
+        if (dniNumber) {
+          const dniCleaned = dniNumber.replace(/[^0-9]/g, '');
+          if (dniCleaned.length >= 7) {
+            identification = {
+              type: dniType.toUpperCase(),
+              number: dniCleaned,
+            };
+          }
+        }
+
+        return {
+          email: authUser?.user?.email || profile?.email || `${booking.renter_id}@autorenta.com`,
+          first_name: firstName,
+          last_name: lastName,
+          ...(phoneFormatted && { phone: phoneFormatted }),  // +5 puntos de calidad
+          ...(identification && { identification }),  // +10 puntos de calidad
+          ...(customerId && { id: customerId }),  // +5-10 puntos (Customers API)
+        };
+      })(),
 
       // MARKETPLACE SPLIT (si aplica)
       ...(shouldSplit && {
