@@ -185,7 +185,7 @@ Para que el login con Google funcione, necesitás configurar OAuth en Supabase:
    - Nombre: "AutoRenta Web"
    - Origenes autorizados de JavaScript:
      - `http://localhost:4200` (desarrollo)
-     - `https://autorenta.com` (producción)
+     - `https://autorentar.com` (producción)
      - `https://tu-dominio.pages.dev` (Cloudflare Pages)
    - URIs de redirección autorizadas:
      - `https://obxvffplochgeiclibng.supabase.co/auth/v1/callback`
@@ -211,11 +211,11 @@ Para que el login con Google funcione, necesitás configurar OAuth en Supabase:
 
 En **Authentication > URL Configuration**:
 
-- **Site URL**: `https://autorenta.com` (o tu dominio de producción)
+- **Site URL**: `https://autorentar.com` (o tu dominio de producción)
 - **Redirect URLs**:
   ```
   http://localhost:4200/auth/callback
-  https://autorenta.com/auth/callback
+  https://autorentar.com/auth/callback
   https://tu-dominio.pages.dev/auth/callback
   ```
 

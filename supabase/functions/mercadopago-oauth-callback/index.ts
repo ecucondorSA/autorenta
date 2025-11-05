@@ -213,7 +213,7 @@ serve(async (req) => {
     const MP_CLIENT_ID = Deno.env.get('MERCADOPAGO_APPLICATION_ID')!;
     const MP_CLIENT_SECRET = Deno.env.get('MERCADOPAGO_CLIENT_SECRET')!;
     const REDIRECT_URI = Deno.env.get('MERCADOPAGO_OAUTH_REDIRECT_URI') ||
-      'https://autorenta.com.ar/auth/mercadopago/callback';
+      'https://autorentar.com.ar/auth/mercadopago/callback';
 
     if (!MP_CLIENT_SECRET) {
       console.error('[Config Error] MERCADOPAGO_CLIENT_SECRET not set');

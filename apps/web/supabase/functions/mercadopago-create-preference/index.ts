@@ -91,9 +91,9 @@ serve(async (req) => {
         },
       ],
       back_urls: {
-        success: `${req.headers.get('origin') || 'https://autorenta.com'}/wallet?status=success`,
-        failure: `${req.headers.get('origin') || 'https://autorenta.com'}/wallet?status=failure`,
-        pending: `${req.headers.get('origin') || 'https://autorenta.com'}/wallet?status=pending`,
+        success: `${req.headers.get('origin') || 'https://autorentar.com'}/wallet?status=success`,
+        failure: `${req.headers.get('origin') || 'https://autorentar.com'}/wallet?status=failure`,
+        pending: `${req.headers.get('origin') || 'https://autorentar.com'}/wallet?status=pending`,
       },
       auto_return: 'approved',
       external_reference: transaction_id,

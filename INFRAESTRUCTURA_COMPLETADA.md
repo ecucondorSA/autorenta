@@ -179,8 +179,8 @@ wrangler secret list
 ### Health check falla
 ```bash
 # Debug manual
-curl -v https://autorenta.com
-curl -v https://autorenta.com/manifest.json
+curl -v https://autorentar.com
+curl -v https://autorentar.com/manifest.json
 
 # Ver logs
 tail -f logs/health-check-*.log

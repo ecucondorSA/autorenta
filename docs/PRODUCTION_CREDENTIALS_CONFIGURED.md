@@ -120,7 +120,7 @@ En la misma página del dashboard:
 
 **Producción:**
 ```
-https://autorenta.com.ar/auth/mercadopago/callback
+https://autorentar.com.ar/auth/mercadopago/callback
 ```
 
 **Desarrollo (opcional):**
@@ -168,7 +168,7 @@ https://auth.mercadopago.com.ar/authorization?
   client_id=5481180656166782&
   response_type=code&
   platform_id=mp&
-  redirect_uri=https://autorenta.com.ar/auth/mercadopago/callback&
+  redirect_uri=https://autorentar.com.ar/auth/mercadopago/callback&
   state=RANDOM_TOKEN
 ```
 
@@ -185,7 +185,7 @@ POST https://api.mercadopago.com/oauth/token
   "client_secret": "igIjYgarnXFG3lz0BFat5h3haAeur7Qb",
   "grant_type": "authorization_code",
   "code": "TG-xxxxx",
-  "redirect_uri": "https://autorenta.com.ar/auth/mercadopago/callback"
+  "redirect_uri": "https://autorentar.com.ar/auth/mercadopago/callback"
 }
 ```
 

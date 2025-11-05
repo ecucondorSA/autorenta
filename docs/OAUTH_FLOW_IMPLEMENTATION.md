@@ -59,7 +59,7 @@ El OAuth Flow permite que los **dueños de autos** (locadores) vinculen su cuent
 │           2. LLAMAR A EDGE FUNCTION: oauth-connect              │
 │  POST /functions/v1/mercadopago-oauth-connect                  │
 │  Headers: Authorization: Bearer <USER_JWT>                      │
-│  Body: { redirect_uri: "https://autorenta.com.ar/callback" }   │
+│  Body: { redirect_uri: "https://autorentar.com.ar/callback" }   │
 │                                                                 │
 │  Response:                                                      │
 │  {                                                              │
@@ -82,7 +82,7 @@ El OAuth Flow permite que los **dueños de autos** (locadores) vinculen su cuent
 ┌─────────────────────────────────────────────────────────────────┐
 │         4. MERCADOPAGO REDIRIGE DE VUELTA A AUTORENTAR          │
 │  Redirect a:                                                    │
-│  https://autorenta.com.ar/auth/mercadopago/callback?           │
+│  https://autorentar.com.ar/auth/mercadopago/callback?           │
 │    code=TG-xxxxxxxxxx&                                          │
 │    state=eyJ1c2VyX2lkIjoi...                                    │
 └────────────────────────┬────────────────────────────────────────┘
@@ -191,8 +191,8 @@ Body (opcional):
 ```json
 {
   "success": true,
-  "authorization_url": "https://auth.mercadopago.com.ar/authorization?client_id=5481180656166782&response_type=code&platform_id=mp&redirect_uri=https://autorenta.com.ar/auth/mercadopago/callback&state=eyJ1c2VyX2lkIjoi...",
-  "redirect_uri": "https://autorenta.com.ar/auth/mercadopago/callback",
+  "authorization_url": "https://auth.mercadopago.com.ar/authorization?client_id=5481180656166782&response_type=code&platform_id=mp&redirect_uri=https://autorentar.com.ar/auth/mercadopago/callback&state=eyJ1c2VyX2lkIjoi...",
+  "redirect_uri": "https://autorentar.com.ar/auth/mercadopago/callback",
   "state": "eyJ1c2VyX2lkIjoi...",
   "message": "Redirige al usuario a authorization_url para conectar MercadoPago"
 }
@@ -257,7 +257,7 @@ Body:
      "client_id": "5481180656166782",
      "client_secret": "igIjYgarnXFG3lz0BFat5h3haAeur7Qb",
      "code": "TG-xxxxx",
-     "redirect_uri": "https://autorenta.com.ar/callback"
+     "redirect_uri": "https://autorentar.com.ar/callback"
    }
    ```
 5. Obtiene info del usuario:

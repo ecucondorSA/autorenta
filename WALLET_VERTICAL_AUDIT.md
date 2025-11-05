@@ -390,7 +390,7 @@ PGPASSWORD='ECUCONDOR08122023' psql \
 MERCADOPAGO_ACCESS_TOKEN=APP-12345... (⚠️ FALTANTE)
 SUPABASE_URL=https://obxvffplochgeiclibng.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGc... (⚠️ VERIFICAR)
-APP_BASE_URL=http://localhost:4200 o https://autorenta.com
+APP_BASE_URL=http://localhost:4200 o https://autorentar.com
 ```
 
 **🚨 ACCIONES REQUERIDAS:**
@@ -529,7 +529,7 @@ supabase secrets set MERCADOPAGO_ACCESS_TOKEN=<obtener de MP>
 supabase secrets set APP_BASE_URL=http://localhost:4200
 
 # Para producción:
-supabase secrets set --env production APP_BASE_URL=https://autorenta.com
+supabase secrets set --env production APP_BASE_URL=https://autorentar.com
 ```
 
 ---
@@ -649,7 +649,7 @@ supabase secrets set APP_BASE_URL="http://localhost:4200"
 
 # Para producción (ejecutar separado):
 # supabase secrets set --env production MERCADOPAGO_ACCESS_TOKEN="APP-PROD-XXXX"
-# supabase secrets set --env production APP_BASE_URL="https://autorenta.com"
+# supabase secrets set --env production APP_BASE_URL="https://autorentar.com"
 ```
 
 **Paso 3: Deploy functions**

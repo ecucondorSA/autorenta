@@ -55,7 +55,7 @@ Una vez desplegado, verificar:
 
 ## 🌐 URLs
 
-- **Producción:** https://autorenta.com (o tu dominio)
+- **Producción:** https://autorentar.com (o tu dominio)
 - **Staging:** https://staging.autorenta.com
 
 ## 📝 Notas

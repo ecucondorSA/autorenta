@@ -169,4 +169,4 @@ jobs:
           echo "- Smoke Tests: ${{ needs.smoke-tests.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Deployed at: $(date -u)" >> $GITHUB_STEP_SUMMARY
-          echo "URL: https://autorenta.com" >> $GITHUB_STEP_SUMMARY
+          echo "URL: https://autorentar.com" >> $GITHUB_STEP_SUMMARY

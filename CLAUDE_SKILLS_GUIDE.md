@@ -383,7 +383,7 @@ private async initMap() {
 // File: functions/workers/payments_webhook/src/index.ts
 const allowedOrigins = [
   'https://autorenta.pages.dev',
-  'https://autorenta.com'
+  'https://autorentar.com'
 ];
 ```
 ```

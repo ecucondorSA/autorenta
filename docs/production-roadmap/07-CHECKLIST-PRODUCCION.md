@@ -539,7 +539,7 @@ npm audit --audit-level=high
 
 # 5. Performance check
 echo "5️⃣  Performance check..."
-lighthouse https://autorenta.com.ar --output json
+lighthouse https://autorentar.com.ar --output json
 
 # 6. DNS propagation
 echo "6️⃣  DNS check..."

@@ -329,7 +329,7 @@ npm run build
 # Deploy to hosting (Vercel/Netlify/etc)
 
 # 2. Smoke test
-curl https://autorenta.com/api/health
+curl https://autorentar.com/api/health
 ```
 
 ### Step 4: Verification

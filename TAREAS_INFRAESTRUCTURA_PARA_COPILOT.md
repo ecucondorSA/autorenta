@@ -703,7 +703,7 @@ Crear scripts de automatización de infraestructura para AutoRenta:
    - Validar que package.json está actualizado
    - npm run build (con validación)
    - Usar wrangler para deploy a Pages
-   - Verificar que se puede acceder a https://autorenta.com
+   - Verificar que se puede acceder a https://autorentar.com
    - Run 5 smoke tests
    - Si error, rollback automático a versión anterior
    - Reportar resultado en Slack (si env var SLACK_WEBHOOK existe)
@@ -737,7 +737,7 @@ Crear scripts de automatización de infraestructura para AutoRenta:
 
 5. tools/monitor-health.sh
    - Check health de endpoints:
-     * https://autorenta.com (HTTP 200)
+     * https://autorentar.com (HTTP 200)
      * Supabase database (query simple)
      * Worker webhook (OPTIONS request)
    - Verificar pagos pendientes >2h

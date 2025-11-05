@@ -352,7 +352,7 @@ jobs:
       - name: Smoke tests
         run: |
           # Verificar que producción responde
-          curl -f https://autorenta.com.ar || exit 1
+          curl -f https://autorentar.com.ar || exit 1
       - name: Notify success
         run: |
           curl -X POST ${{ secrets.SLACK_WEBHOOK }} \

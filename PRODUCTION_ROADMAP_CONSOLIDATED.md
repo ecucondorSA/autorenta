@@ -246,7 +246,7 @@ Deno.cron('Retry failed payouts', '*/15 * * * *', async () => {
 // playwright.config.ts
 use: {
   baseURL: process.env.TEST_ENV === 'prod' 
-    ? 'https://autorenta.com'
+    ? 'https://autorentar.com'
     : 'http://localhost:4200',
 }
 

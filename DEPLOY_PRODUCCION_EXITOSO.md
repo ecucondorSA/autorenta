@@ -227,7 +227,7 @@ CNAME   www               autorenta.pages.dev
 **3. Esperar propagación:** ~5 minutos
 
 **4. Resultado:**
-- https://autorenta.com → Tu app
+- https://autorentar.com → Tu app
 - https://www.autorenta.com → Tu app
 - SSL automático ✅
 
