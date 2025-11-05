@@ -294,6 +294,104 @@
               </div>
             </div>
 
+            <!-- Check-in/Check-out Actions Card (for renters) -->
+            <div
+              *ngIf="isRenter() && (canPerformCheckIn() || canPerformCheckOut())"
+              class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-accent-petrol/20"
+            >
+              <h3 class="h5 mb-4">Acciones del Alquiler</h3>
+              
+              <!-- Check-in Button -->
+              <div
+                *ngIf="canPerformCheckIn()"
+                class="mb-4 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"
+              >
+                <div class="flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                      <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Check-in del Vehículo</h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                      Realizá la inspección inicial del vehículo antes de iniciar el alquiler. Necesitarás tomar fotos, registrar el odómetro y el nivel de combustible.
+                    </p>
+                    <a
+                      [routerLink]="['/bookings', booking()?.id, 'check-in']"
+                      class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-sm"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      Iniciar Check-in
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Check-out Button -->
+              <div
+                *ngIf="canPerformCheckOut()"
+                class="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+              >
+                <div class="flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+                      <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Check-out del Vehículo</h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                      Realizá la inspección final del vehículo al devolver el auto. Compará el estado con el check-in y reportá cualquier daño.
+                    </p>
+                    <a
+                      [routerLink]="['/bookings', booking()?.id, 'check-out']"
+                      class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors shadow-sm"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                      </svg>
+                      Iniciar Check-out
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Check-in/Check-out Status (if completed) -->
+            <div
+              *ngIf="isRenter() && (hasCheckIn() || hasCheckOut())"
+              class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft"
+            >
+              <h3 class="h5 mb-4">Estado de Inspecciones</h3>
+              <div class="space-y-3">
+                <div
+                  *ngIf="hasCheckIn()"
+                  class="flex items-center gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-900/20"
+                >
+                  <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <span class="text-sm font-medium text-green-800 dark:text-green-200">Check-in completado</span>
+                </div>
+                <div
+                  *ngIf="hasCheckOut()"
+                  class="flex items-center gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-900/20"
+                >
+                  <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <span class="text-sm font-medium text-green-800 dark:text-green-200">Check-out completado</span>
+                </div>
+              </div>
+            </div>
+
             <!-- ✅ INSURANCE SUMMARY CARD - Removed loading state -->
 
             <!-- Pricing Breakdown Card -->
@@ -379,26 +477,72 @@
         </div>
         <!-- End Left Column -->
 
-        <!-- Right Column: Chat -->
+        <!-- Right Column: Chat or Payment Reminder -->
         <div
-          *ngIf="
-            (booking()?.status === 'confirmed' ||
-              booking()?.status === 'in_progress' ||
-              booking()?.status === 'pending' ||
-              showConfirmationSection()) &&
-            carOwnerId()
-          "
+          *ngIf="carOwnerId()"
           id="tour-booking-chat"
           class="lg:sticky lg:top-4 lg:self-start"
         >
-          <h2 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-100">
-            Chat con el anfitrión
-          </h2>
-          <app-booking-chat
-            [bookingId]="booking()!.id"
-            [recipientId]="carOwnerId()!"
-            [recipientName]="carOwnerName()"
-          ></app-booking-chat>
+          <!-- ✅ Show chat for confirmed/active bookings -->
+          <div *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'pending' || showConfirmationSection()">
+            <h2 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-100">
+              Chat con el anfitrión
+            </h2>
+            <app-booking-chat
+              [bookingId]="booking()!.id"
+              [recipientId]="carOwnerId()!"
+              [recipientName]="carOwnerName()"
+            ></app-booking-chat>
+          </div>
+
+          <!-- ✅ Show payment reminder for pending payment -->
+          <div *ngIf="booking()?.status === 'pending_payment'" class="space-y-4">
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-xl p-6">
+              <div class="flex items-start gap-3">
+                <svg class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div>
+                  <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                    Reserva pendiente de pago
+                  </h3>
+                  <p class="text-sm text-blue-700 dark:text-blue-300 mb-4">
+                    Para poder chatear con el anfitrión, primero debés completar el pago de tu reserva.
+                  </p>
+                  <a
+                    [routerLink]="['/bookings', booking()?.id, 'payment']"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    Completar pago
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ Section for Pending Payment -->
+            <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+              <h4 class="font-medium text-gray-900 dark:text-gray-100 mb-3">
+                Preguntas frecuentes
+              </h4>
+              <div class="space-y-3 text-sm">
+                <div>
+                  <p class="font-medium text-gray-800 dark:text-gray-200">¿Cuánto tiempo tengo para pagar?</p>
+                  <p class="text-gray-600 dark:text-gray-400">Tenés 24 horas para completar el pago antes de que expire la reserva.</p>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-800 dark:text-gray-200">¿Puedo hacer preguntas al anfitrión?</p>
+                  <p class="text-gray-600 dark:text-gray-400">Sí, pero primero completá el pago para activar el chat.</p>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-800 dark:text-gray-200">¿Qué métodos de pago aceptan?</p>
+                  <p class="text-gray-600 dark:text-gray-400">Tarjeta de crédito/débito o saldo en tu wallet AutoRenta.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- End Right Column -->
       </div>

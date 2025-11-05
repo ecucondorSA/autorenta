@@ -13,6 +13,8 @@ interface EnvDefaults {
   mercadopagoClientSecret?: string;
   appUrl?: string;
   encryptionKey?: string;
+  googleAnalyticsMeasurementId?: string;
+  enableAnalytics?: boolean;
 }
 
 // Type-safe interfaces for global environment access
@@ -77,6 +79,11 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   ),
   appUrl: resolve('NG_APP_URL', defaults.appUrl ?? 'http://localhost:4200'),
   encryptionKey: resolve('NG_APP_ENCRYPTION_KEY', defaults.encryptionKey),
+  googleAnalyticsMeasurementId: resolve(
+    'NG_APP_GA4_MEASUREMENT_ID',
+    defaults.googleAnalyticsMeasurementId,
+  ),
+  enableAnalytics: defaults.enableAnalytics ?? defaults.production ?? false,
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

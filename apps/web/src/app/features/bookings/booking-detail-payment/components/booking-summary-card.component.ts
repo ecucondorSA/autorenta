@@ -1,8 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 import {
   PriceBreakdown,
   FxSnapshot,
+  RiskSnapshot,
+  PaymentMode,
   BookingDates,
   formatArs,
   formatUsd,
@@ -15,7 +18,7 @@ import {
 @Component({
   selector: 'app-booking-summary-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReembolsabilityBadgeComponent],
   template: `
     <div
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow-lg p-6 sticky top-4 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
@@ -154,6 +157,69 @@ import {
         </div>
       </div>
 
+      <!-- ✅ NUEVA SECCIÓN: Garantía -->
+      <div *ngIf="riskSnapshot && fxSnapshot" class="mb-4">
+        <div
+          class="bg-gray-50 dark:bg-slate-deep/40 border border-gray-200 dark:border-neutral-700 rounded-lg p-4 transition-colors duration-300"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700 dark:text-pearl-light/80">
+              Garantía {{ paymentMode === 'card' ? '(Hold)' : '(Crédito)' }}
+            </span>
+            <svg
+              class="w-4 h-4 text-gray-400 dark:text-pearl-light/60 cursor-help"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              [attr.title]="
+                paymentMode === 'card'
+                  ? 'Bloqueo temporal en tarjeta. Se libera al devolver el auto.'
+                  : 'Crédito bloqueado en wallet. Queda disponible para futuras reservas.'
+              "
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-xs text-gray-600 dark:text-pearl-light/70">Monto</span>
+            <div class="text-right">
+              <p class="text-lg font-bold text-gray-900 dark:text-ivory-luminous">
+                {{ formatArs(guaranteeAmountArs()) }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-pearl-light/60">
+                ≈ {{ formatUsd(guaranteeAmountUsd()) }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <app-reembolsability-badge
+              *ngIf="paymentMode === 'card'"
+              type="reembolsable"
+              customTooltip="Se libera automáticamente al devolver el auto sin daños"
+            ></app-reembolsability-badge>
+            <app-reembolsability-badge
+              *ngIf="paymentMode === 'wallet'"
+              type="no-reembolsable"
+              customTooltip="Queda bloqueado en tu wallet (no puedes retirarlo)"
+            ></app-reembolsability-badge>
+            <app-reembolsability-badge
+              *ngIf="paymentMode === 'wallet'"
+              type="reutilizable"
+              customTooltip="Disponible para futuras reservas si no se usa"
+            ></app-reembolsability-badge>
+          </div>
+
+          <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-2">
+            {{ paymentMode === 'card' ? 'Se bloquea en tu tarjeta' : 'Se bloquea de tu saldo wallet' }}
+          </p>
+        </div>
+      </div>
+
       <!-- Total in ARS and USD -->
       <div *ngIf="priceBreakdown && fxSnapshot" class="space-y-3">
         <!-- FX Rate Info -->
@@ -190,7 +256,7 @@ import {
         >
           <div class="flex justify-between items-baseline">
             <span class="text-sm font-medium text-gray-700 dark:text-pearl-light/80"
-              >Total a pagar</span
+              >Total del alquiler</span
             >
             <div class="text-right">
               <p class="text-2xl font-bold text-primary-900 dark:text-accent-petrol">
@@ -253,6 +319,23 @@ export class BookingSummaryCardComponent {
   @Input() dates: BookingDates | null = null;
   @Input() priceBreakdown: PriceBreakdown | null = null;
   @Input() fxSnapshot: FxSnapshot | null = null;
+  @Input() riskSnapshot: RiskSnapshot | null = null;
+  @Input() paymentMode: PaymentMode = 'card';
+
+  // Computed values for guarantee
+  protected guaranteeAmountArs = computed(() => {
+    if (!this.riskSnapshot || !this.fxSnapshot) return 0;
+    return this.paymentMode === 'card'
+      ? this.riskSnapshot.holdEstimatedArs
+      : this.riskSnapshot.creditSecurityUsd * this.fxSnapshot.rate;
+  });
+
+  protected guaranteeAmountUsd = computed(() => {
+    if (!this.riskSnapshot) return 0;
+    return this.paymentMode === 'card'
+      ? this.riskSnapshot.holdEstimatedUsd
+      : this.riskSnapshot.creditSecurityUsd;
+  });
 
   // Expose formatters to template
   formatUsd = formatUsd;

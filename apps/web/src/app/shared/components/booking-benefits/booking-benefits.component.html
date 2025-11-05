@@ -1,0 +1,93 @@
+<!-- Compact Mode (for sidebar) -->
+<div *ngIf="compact" class="space-y-2">
+  <div
+    *ngFor="let benefit of benefits"
+    class="flex items-start gap-2 text-sm"
+    [class.font-semibold]="benefit.highlight"
+  >
+    <svg
+      class="h-5 w-5 flex-shrink-0 mt-0.5"
+      [class.text-green-600]="benefit.highlight"
+      [class.text-accent-petrol]="!benefit.highlight"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        [attr.d]="getIconPath(benefit.icon)"
+      />
+    </svg>
+    <div>
+      <p class="text-smoke-black" [class.text-green-800]="benefit.highlight">
+        {{ benefit.title }}
+      </p>
+      <p class="text-xs text-charcoal-medium mt-0.5">{{ benefit.description }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Full Mode (for standalone display) -->
+<div *ngIf="!compact" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div
+    *ngFor="let benefit of benefits"
+    class="relative p-4 rounded-xl border transition-all duration-200 hover:shadow-md"
+    [class.bg-green-50]="benefit.highlight"
+    [class.border-green-200]="benefit.highlight"
+    [class.bg-white]="!benefit.highlight"
+    [class.border-pearl-gray]="!benefit.highlight"
+  >
+    <!-- Highlight Badge -->
+    <div
+      *ngIf="benefit.highlight"
+      class="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-full"
+    >
+      ⭐ DESTACADO
+    </div>
+
+    <div class="flex items-start gap-3">
+      <!-- Icon -->
+      <div
+        class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
+        [class.bg-green-100]="benefit.highlight"
+        [class.bg-accent-petrol/10]="!benefit.highlight"
+      >
+        <svg
+          class="h-6 w-6"
+          [class.text-green-600]="benefit.highlight"
+          [class.text-accent-petrol]="!benefit.highlight"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            [attr.d]="getIconPath(benefit.icon)"
+          />
+        </svg>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1">
+        <h4
+          class="text-sm font-bold mb-1"
+          [class.text-green-900]="benefit.highlight"
+          [class.text-smoke-black]="!benefit.highlight"
+        >
+          {{ benefit.title }}
+        </h4>
+        <p
+          class="text-xs"
+          [class.text-green-700]="benefit.highlight"
+          [class.text-charcoal-medium]="!benefit.highlight"
+        >
+          {{ benefit.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

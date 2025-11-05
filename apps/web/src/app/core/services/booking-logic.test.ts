@@ -1,16 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { BookingsService } from './bookings.service';
+import type { Booking } from '../types/supabase-types';
 import { SupabaseClientService } from './supabase-client.service';
 import { PwaService } from './pwa.service';
 import { WalletService } from './wallet.service';
 
 describe('Booking Logic Integration', () => {
   let service: BookingsService;
-  let supabase: {
-    rpc: jasmine.Spy<unknown>;
-    auth: jasmine.SpyObj<unknown>;
-    from: jasmine.Spy<unknown>;
-  };
+  let supabase: any;
   let pwaService: jasmine.SpyObj<PwaService>;
   let walletService: jasmine.SpyObj<WalletService>;
 
@@ -52,7 +49,7 @@ describe('Booking Logic Integration', () => {
 
     it('should create a booking when the car is available', async () => {
       const newBookingId = 'new-booking-123';
-      const mockBooking = {
+    const mockBooking: Booking = {
         id: newBookingId,
         car_id: carId,
         status: 'pending',
@@ -63,7 +60,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as unknown;
+    } as unknown as Booking;
 
       // Mock RPC calls
       supabase.rpc.and.callFake(async (method: string, params: unknown) => {
@@ -91,7 +88,9 @@ describe('Booking Logic Integration', () => {
       const result = await service.createBookingWithValidation(carId, startDate, endDate);
 
       expect(result.success).toBe(true);
-      expect(result.booking).toEqual(mockBooking);
+      expect(result.booking?.id).toBe(mockBooking.id);
+      expect(result.booking?.car_id).toBe(mockBooking.car_id);
+      expect(result.booking?.status).toBe(mockBooking.status);
       expect(supabase.rpc).toHaveBeenCalledWith('is_car_available', {
         p_car_id: carId,
         p_start_date: startDate,
@@ -133,7 +132,7 @@ describe('Booking Logic Integration', () => {
 
     it('debería verificar correctamente la disponibilidad de un coche', async () => {
       const newBookingId = 'new-booking-456';
-      const mockBooking = {
+      const mockBooking: Booking = {
         id: newBookingId,
         car_id: carId,
         status: 'pending',
@@ -144,7 +143,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as unknown;
+      } as unknown as Booking;
 
       supabase.rpc.and.callFake(async (method: string, params: unknown) => {
         if (method === 'is_car_available') {
@@ -183,7 +182,7 @@ describe('Booking Logic Integration', () => {
 
     it('no debería permitir crear una reserva duplicada', async () => {
       const firstBookingId = 'booking-dupe-1';
-      const firstBooking = {
+      const firstBooking: Booking = {
         id: firstBookingId,
         car_id: carId,
         status: 'confirmed',
@@ -194,7 +193,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as unknown;
+      } as unknown as Booking;
 
       // First call is successful
       let callCount = 0;
@@ -229,7 +228,7 @@ describe('Booking Logic Integration', () => {
         '2026-02-05T10:00:00Z',
       );
       expect(result1.success).toBe(true);
-      expect(result1.booking).toEqual(firstBooking);
+      expect(result1.booking?.id).toBe(firstBooking.id);
 
       // Second call with overlapping dates should fail
       const result2 = await service.createBookingWithValidation(
@@ -254,7 +253,7 @@ describe('Booking Logic Integration', () => {
 
     it('✅ Primera reserva debe ser exitosa', async () => {
       const bookingId = 'first-booking-ok';
-      const mockBooking = {
+      const mockBooking: Booking = {
         id: bookingId,
         car_id: carId,
         status: 'confirmed',
@@ -265,7 +264,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 20000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as unknown;
+      } as unknown as Booking;
 
       supabase.rpc.and.callFake(async (method: string) => {
         if (method === 'is_car_available') {

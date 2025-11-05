@@ -1,0 +1,86 @@
+[
+  {
+    "booking_id": "8e902c02-ffc4-4754-a7f8-db9d9099925b",
+    "renter_wallet_delta": -260000,
+    "owner_wallet_delta": 176000,
+    "platform_fee": 24000,
+    "currency": "ARS",
+    "events": [
+      {
+        "kind": "HOLD_DEPOSIT",
+        "amount": 60000,
+        "currency": "ARS",
+        "at": "2025-11-07T10:00:00.000Z"
+      },
+      {
+        "kind": "FEE_PLATFORM",
+        "amount": 24000,
+        "currency": "ARS",
+        "at": "2025-11-07T10:00:00.000Z"
+      },
+      {
+        "kind": "PAYMENT_CAPTURED",
+        "amount": 200000,
+        "currency": "ARS",
+        "at": "2025-11-07T10:00:00.000Z",
+        "notes": "Captura simulada para escenario e2e."
+      }
+    ]
+  },
+  {
+    "booking_id": "1f1b25c0-8080-4979-9c12-de9f91465d98",
+    "renter_wallet_delta": -195000,
+    "owner_wallet_delta": 132000,
+    "platform_fee": 18000,
+    "currency": "ARS",
+    "events": [
+      {
+        "kind": "HOLD_DEPOSIT",
+        "amount": 45000,
+        "currency": "ARS",
+        "at": "2025-11-14T10:00:00.000Z"
+      },
+      {
+        "kind": "FEE_PLATFORM",
+        "amount": 18000,
+        "currency": "ARS",
+        "at": "2025-11-14T10:00:00.000Z"
+      },
+      {
+        "kind": "PAYMENT_CAPTURED",
+        "amount": 150000,
+        "currency": "ARS",
+        "at": "2025-11-14T10:00:00.000Z",
+        "notes": "Captura simulada para escenario e2e."
+      }
+    ]
+  },
+  {
+    "booking_id": "23ee28b0-3309-4d37-8e85-675ed6def47b",
+    "renter_wallet_delta": -325000,
+    "owner_wallet_delta": 220000,
+    "platform_fee": 30000,
+    "currency": "ARS",
+    "events": [
+      {
+        "kind": "HOLD_DEPOSIT",
+        "amount": 75000,
+        "currency": "ARS",
+        "at": "2025-11-21T10:00:00.000Z"
+      },
+      {
+        "kind": "FEE_PLATFORM",
+        "amount": 30000,
+        "currency": "ARS",
+        "at": "2025-11-21T10:00:00.000Z"
+      },
+      {
+        "kind": "PAYMENT_CAPTURED",
+        "amount": 250000,
+        "currency": "ARS",
+        "at": "2025-11-21T10:00:00.000Z",
+        "notes": "Captura simulada para escenario e2e."
+      }
+    ]
+  }
+]

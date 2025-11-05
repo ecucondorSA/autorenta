@@ -21,6 +21,10 @@
   # Content Security Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://obxvffplochgeiclibng.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com wss://*.supabase.co; frame-src 'self' https://www.mercadopago.com https://www.mercadopago.com.ar https://sdk.mercadopago.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://www.mercadopago.com;
 
+  # HTTP Strict Transport Security (HSTS)
+  # Fuerza HTTPS por 1 año, incluye subdominios
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
 # Cache headers para assets estáticos
 /assets/*
   Cache-Control: public, max-age=31536000, immutable

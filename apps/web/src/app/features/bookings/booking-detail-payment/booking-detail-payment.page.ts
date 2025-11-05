@@ -36,7 +36,7 @@ import {
   CreateBookingResult,
   ValidationError,
   calculateTotalDays,
-  getCoverageUpgradeCost,
+  getCoverageUpgradeCost as calculateCoverageUpgradeCost,
   validateConsents,
   validatePaymentAuthorization,
   formatUsd,
@@ -48,6 +48,9 @@ import type { Car, Booking } from '../../../core/models';
 import { BookingSummaryCardComponent } from './components/booking-summary-card.component';
 import { RiskPolicyTableComponent } from './components/risk-policy-table.component';
 import { PaymentModeToggleComponent } from './components/payment-mode-toggle.component';
+import { PaymentSummaryPanelComponent } from './components/payment-summary-panel.component';
+import { PaymentMethodComparisonModalComponent } from './components/payment-method-comparison-modal.component';
+import { PaymentModeAlertComponent } from './components/payment-mode-alert.component';
 import { CoverageUpgradeSelectorComponent } from './components/coverage-upgrade-selector.component';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 import { CreditSecurityPanelComponent } from './components/credit-security-panel.component';
@@ -72,6 +75,9 @@ import { TermsAndConsentsComponent } from './components/terms-and-consents.compo
     BookingSummaryCardComponent,
     RiskPolicyTableComponent,
     PaymentModeToggleComponent,
+    PaymentSummaryPanelComponent,
+    PaymentMethodComparisonModalComponent,
+    PaymentModeAlertComponent,
     CoverageUpgradeSelectorComponent,
     CardHoldPanelComponent,
     CreditSecurityPanelComponent,
@@ -168,6 +174,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   // ✅ NUEVO: Estado de fallback a wallet
   readonly showFallbackMessage = signal(false);
   readonly fallbackReason = signal<string>('');
+
+  // ✅ NUEVO: Modal de comparación de métodos
+  readonly showComparisonModal = signal(false);
 
   // ✅ NUEVO: Signals para procesamiento de pago final
   readonly processingFinalPayment = signal(false);
@@ -537,7 +546,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       const insuranceFeeUsd = 0;
 
       // Coverage upgrade cost
-      const coverageUpgradeUsd = getCoverageUpgradeCost(this.coverageUpgrade(), subtotalUsd);
+      const coverageUpgradeUsd = calculateCoverageUpgradeCost(this.coverageUpgrade(), subtotalUsd);
 
       // Total USD
       const totalUsd =
@@ -587,6 +596,43 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   protected onCoverageUpgradeChange(upgrade: CoverageUpgrade): void {
     this.coverageUpgrade.set(upgrade);
     // El effect se encarga de recalcular risk + pricing
+  }
+
+  /**
+   * Handler: Comparar métodos de pago
+   */
+  protected onCompareMethodsClick(): void {
+    this.showComparisonModal.set(true);
+  }
+
+  /**
+   * Handler: Cerrar modal de comparación
+   */
+  protected onCloseComparisonModal(): void {
+    this.showComparisonModal.set(false);
+  }
+
+  /**
+   * Retorna el costo del upgrade de cobertura en ARS
+   * Se basa en el breakdown actual; fallback: calcula con helper en USD
+   */
+  getCoverageUpgradeCost(): number {
+    const breakdown = this.priceBreakdown();
+    if (!breakdown) {
+      return 0;
+    }
+
+    const coverageUsd =
+      breakdown.coverageUpgradeUsd ??
+      calculateCoverageUpgradeCost(this.coverageUpgrade(), breakdown.subtotalUsd);
+
+    const fx = this.fxSnapshot();
+    if (!fx) {
+      return Math.round(coverageUsd);
+    }
+
+    const coverageArs = this.fxService.convert(coverageUsd, fx);
+    return Math.round(coverageArs);
   }
 
   /**

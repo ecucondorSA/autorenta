@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output, inject, signal, effect } from '@angular/core';
+import { Component, EventEmitter, Output, inject, signal, effect, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
 import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
+import { AnalyticsService } from '../../../core/services/analytics.service';
 import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
 import { FocusTrapDirective } from '../../directives/focus-trap.directive';
 import { EscapeKeyDirective } from '../../directives/escape-key.directive';
@@ -15,9 +16,10 @@ import { EscapeKeyDirective } from '../../directives/escape-key.directive';
   templateUrl: './deposit-modal.component.html',
   styleUrls: ['./deposit-modal.component.css'],
 })
-export class DepositModalComponent {
+export class DepositModalComponent implements OnInit {
   private readonly walletService = inject(WalletService);
   private readonly exchangeRateService = inject(ExchangeRateService);
+  private readonly analyticsService = inject(AnalyticsService);
 
   readonly bankTransferDetails = {
     accountName: 'Autorentar Operaciones SRL',
@@ -33,6 +35,25 @@ export class DepositModalComponent {
   platformRate = signal<number>(0);
   loadingRate = signal(false);
 
+  @Input() preSelectedDepositType?: 'protected_credit' | 'withdrawable';
+
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() depositSuccess = new EventEmitter<string>();
+
+  provider = signal<WalletPaymentProvider>('mercadopago');
+  description = signal<string>('');
+  depositType = signal<'protected_credit' | 'withdrawable'>('withdrawable');
+
+  isProcessing = signal(false);
+  formError = signal<string | null>(null);
+  paymentUrl = signal<string | null>(null);
+  fallbackSuggestion = signal<'none' | 'bank_transfer'>('none');
+  lastSubmitTime = signal<number>(0); // For double-click prevention
+
+  readonly MIN_DEPOSIT_ARS = 100;
+  readonly MAX_DEPOSIT_ARS = 1000000;
+  readonly MIN_DEPOSIT_USD = 10; // Minimum $10 USD deposit
+
   constructor() {
     effect(() => {
       const ars = this.arsAmount();
@@ -43,20 +64,17 @@ export class DepositModalComponent {
     this.loadExchangeRate();
   }
 
-  @Output() closeModal = new EventEmitter<void>();
-  @Output() depositSuccess = new EventEmitter<string>();
+  ngOnInit(): void {
+    // Pre-select deposit type if provided
+    if (this.preSelectedDepositType) {
+      this.depositType.set(this.preSelectedDepositType);
+    }
 
-  provider = signal<WalletPaymentProvider>('mercadopago');
-  description = signal<string>('');
-  depositType = signal<'protected' | 'withdrawable'>('withdrawable');
-
-  isProcessing = signal(false);
-  formError = signal<string | null>(null);
-  paymentUrl = signal<string | null>(null);
-  fallbackSuggestion = signal<'none' | 'bank_transfer'>('none');
-
-  readonly MIN_DEPOSIT_ARS = 100;
-  readonly MAX_DEPOSIT_ARS = 1000000;
+    // Track modal opened
+    this.analyticsService.trackEvent('wallet_deposit_modal_opened', {
+      deposit_type: this.depositType(),
+    });
+  }
 
   readonly availableProviders: Array<{
     value: WalletPaymentProvider;
@@ -114,33 +132,68 @@ export class DepositModalComponent {
   validateForm(): boolean {
     this.formError.set(null);
     const currentArsAmount = this.arsAmount();
+    const currentUsdAmount = this.usdAmount();
+
+    // Validate ARS amount
     if (isNaN(currentArsAmount) || currentArsAmount <= 0) {
-      this.formError.set('Por favor ingresa un monto válido en pesos argentinos');
+      this.formError.set('Por favor ingresa un monto válido en pesos argentinos.');
       return false;
     }
     if (currentArsAmount < this.MIN_DEPOSIT_ARS) {
-      this.formError.set(`El depósito mínimo es $${this.MIN_DEPOSIT_ARS} ARS`);
+      this.formError.set(
+        `El depósito mínimo es $${this.MIN_DEPOSIT_ARS} ARS (aproximadamente USD ${Math.round(this.MIN_DEPOSIT_ARS / this.platformRate())}). Por favor ingresa un monto mayor.`,
+      );
       return false;
     }
     if (currentArsAmount > this.MAX_DEPOSIT_ARS) {
       this.formError.set(
-        `El depósito máximo es $${this.MAX_DEPOSIT_ARS.toLocaleString('es-AR')} ARS`,
+        `El depósito máximo es $${this.MAX_DEPOSIT_ARS.toLocaleString('es-AR')} ARS. Si necesitas depositar más, contacta a soporte.`,
       );
       return false;
     }
-    if (isNaN(this.usdAmount()) || this.usdAmount() <= 0) {
-      this.formError.set('Error al calcular la conversión a USD. Reintenta en unos segundos.');
+
+    // Validate USD conversion
+    if (isNaN(currentUsdAmount) || currentUsdAmount <= 0) {
+      this.formError.set(
+        'Error al calcular la conversión a USD. Verifica tu conexión y reintenta en unos segundos.',
+      );
       return false;
     }
+
+    // Validate minimum USD amount
+    if (currentUsdAmount < this.MIN_DEPOSIT_USD) {
+      const minArsForUsd = Math.ceil(this.MIN_DEPOSIT_USD * this.platformRate());
+      this.formError.set(
+        `El depósito mínimo es USD ${this.MIN_DEPOSIT_USD}. Necesitas depositar al menos $${minArsForUsd.toLocaleString('es-AR')} ARS.`,
+      );
+      return false;
+    }
+
     return true;
   }
 
   onSubmit(): void {
     if (!this.validateForm()) return;
 
+    // Double-click prevention: Prevent submissions within 2 seconds
+    const now = Date.now();
+    if (now - this.lastSubmitTime() < 2000) {
+      this.formError.set('Por favor espera un momento antes de reintentar.');
+      return;
+    }
+    this.lastSubmitTime.set(now);
+
     this.isProcessing.set(true);
     this.formError.set(null);
     this.fallbackSuggestion.set('none');
+
+    // Track deposit initiation
+    const provider = this.provider();
+    this.analyticsService.trackEvent('wallet_deposit_initiated', {
+      deposit_amount: this.usdAmount(),
+      deposit_type: this.depositType(),
+      deposit_provider: provider !== 'internal' ? provider : undefined,
+    });
 
     this.walletService
       .initiateDeposit({
@@ -152,15 +205,42 @@ export class DepositModalComponent {
       .subscribe({
         next: (result) => {
           if (result.success && result.payment_url) {
+            // Track successful initiation
+            const provider = this.provider();
+            this.analyticsService.trackEvent('wallet_deposit_completed', {
+              deposit_amount: this.usdAmount(),
+              deposit_type: this.depositType(),
+              deposit_provider: provider !== 'internal' ? provider : undefined,
+            });
+
             this.paymentUrl.set(result.payment_url);
             this.depositSuccess.emit(result.payment_url);
             this.openMercadoPago(result.payment_url);
           } else {
+            // Track failed initiation
+            const provider = this.provider();
+            this.analyticsService.trackEvent('wallet_deposit_failed', {
+              deposit_amount: this.usdAmount(),
+              deposit_type: this.depositType(),
+              deposit_provider: provider !== 'internal' ? provider : undefined,
+              error_message: result.message || 'Unknown error',
+            });
+
             this.formError.set(result.message || 'Error al iniciar el depósito');
           }
           this.isProcessing.set(false);
         },
         error: (error) => {
+          // Track deposit failure
+          const provider = this.provider();
+          this.analyticsService.trackEvent('wallet_deposit_failed', {
+            deposit_amount: this.usdAmount(),
+            deposit_type: this.depositType(),
+            deposit_provider: provider !== 'internal' ? provider : undefined,
+            error_message: this.getFriendlyErrorMessage(error),
+            failure_reason: (error as any).code || 'UNKNOWN_ERROR',
+          });
+
           this.formError.set(this.getFriendlyErrorMessage(error));
           if ((error as any).code === 'MERCADOPAGO_ERROR') {
             this.provider.set('bank_transfer');

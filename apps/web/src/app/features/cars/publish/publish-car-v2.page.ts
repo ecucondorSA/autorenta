@@ -1223,16 +1223,12 @@ export class PublishCarV2Page implements OnInit {
   private async presentOnboardingWarning(): Promise<void> {
     const alert = await this.alertController.create({
       header: 'Activá tus cobros con Mercado Pago',
-      message: `
-        <div class="space-y-2 text-left">
-          <p><strong>Guardaremos la publicación como borrador hasta que vincules tu cuenta.</strong></p>
-          <ul class="list-disc list-inside space-y-1 text-sm">
-            <li>Sin split automático el dinero queda retenido en la plataforma.</li>
-            <li>Las reservas se marcan como pendientes hasta completar el onboarding.</li>
-            <li>Podés retomar el proceso desde tu perfil cuando quieras.</li>
-          </ul>
-        </div>
-      `,
+      message: `<p><strong>Guardaremos la publicación como borrador hasta que vincules tu cuenta.</strong></p>
+<ul>
+<li>Sin split automático el dinero queda retenido en la plataforma.</li>
+<li>Las reservas se marcan como pendientes hasta completar el onboarding.</li>
+<li>Podés retomar el proceso desde tu perfil cuando quieras.</li>
+</ul>`,
       buttons: [
         {
           text: 'Vincular ahora',

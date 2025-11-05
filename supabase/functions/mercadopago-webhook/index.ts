@@ -55,6 +55,74 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// IPs autorizadas de MercadoPago (rangos CIDR)
+// Fuente: https://www.mercadopago.com.ar/developers/es/docs/your-integrations/notifications/ipn
+const MERCADOPAGO_IP_RANGES = [
+  // Rango 1: 209.225.49.0/24
+  { start: ipToNumber('209.225.49.0'), end: ipToNumber('209.225.49.255') },
+  // Rango 2: 216.33.197.0/24
+  { start: ipToNumber('216.33.197.0'), end: ipToNumber('216.33.197.255') },
+  // Rango 3: 216.33.196.0/24
+  { start: ipToNumber('216.33.196.0'), end: ipToNumber('216.33.196.255') },
+];
+
+// Rate limiting: Map<IP, {count: number, resetAt: number}>
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+// Configuración de rate limiting
+const RATE_LIMIT_MAX_REQUESTS = 100; // Máximo 100 requests
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // Por minuto
+
+/**
+ * Convierte una IP a número para comparación
+ */
+function ipToNumber(ip: string): number {
+  const parts = ip.split('.').map(Number);
+  return parts[0] * 256 ** 3 + parts[1] * 256 ** 2 + parts[2] * 256 + parts[3];
+}
+
+/**
+ * Verifica si una IP está en los rangos permitidos de MercadoPago
+ */
+function isMercadoPagoIP(clientIP: string): boolean {
+  // Si no hay IP en headers (proxy), permitir (HMAC validará)
+  if (!clientIP) {
+    return true; // Dejar que HMAC valide
+  }
+
+  // Extraer IP del header (puede venir como "IP, IP, IP" desde proxy)
+  const ip = clientIP.split(',')[0].trim();
+  const ipNum = ipToNumber(ip);
+
+  // Verificar si está en algún rango
+  return MERCADOPAGO_IP_RANGES.some(range => ipNum >= range.start && ipNum <= range.end);
+}
+
+/**
+ * Verifica rate limiting por IP
+ */
+function checkRateLimit(clientIP: string): { allowed: boolean; remaining: number; resetAt: number } {
+  const now = Date.now();
+  const key = clientIP || 'unknown';
+
+  const limit = rateLimitMap.get(key);
+
+  if (!limit || now > limit.resetAt) {
+    // Reset o primera request
+    rateLimitMap.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1, resetAt: now + RATE_LIMIT_WINDOW_MS };
+  }
+
+  if (limit.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return { allowed: false, remaining: 0, resetAt: limit.resetAt };
+  }
+
+  // Incrementar contador
+  limit.count++;
+  rateLimitMap.set(key, limit);
+  return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - limit.count, resetAt: limit.resetAt };
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -86,12 +154,87 @@ serve(async (req) => {
     }
 
     // ========================================
+    // VALIDACIÓN DE IP DE MERCADOPAGO
+    // Verificar que el request viene de IPs autorizadas
+    // ========================================
+    const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '';
+    const isAuthorizedIP = isMercadoPagoIP(clientIP);
+
+    // En producción, rechazar IPs no autorizadas
+    // (en desarrollo, permitir si HMAC es válido)
+    const isProduction = Deno.env.get('ENVIRONMENT') === 'production' || !Deno.env.get('ENVIRONMENT');
+    
+    if (!isAuthorizedIP && isProduction) {
+      console.warn('⚠️ Unauthorized IP attempt:', {
+        ip: clientIP,
+        userAgent: req.headers.get('user-agent'),
+      });
+      
+      return new Response(
+        JSON.stringify({
+          error: 'Unauthorized IP address',
+          code: 'IP_NOT_ALLOWED',
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // ========================================
+    // RATE LIMITING
+    // Prevenir DDoS limitando requests por IP
+    // ========================================
+    const rateLimit = checkRateLimit(clientIP);
+    
+    if (!rateLimit.allowed) {
+      console.warn('⚠️ Rate limit exceeded:', {
+        ip: clientIP,
+        resetAt: new Date(rateLimit.resetAt).toISOString(),
+      });
+
+      return new Response(
+        JSON.stringify({
+          error: 'Rate limit exceeded',
+          code: 'RATE_LIMIT_EXCEEDED',
+          retry_after: Math.ceil((rateLimit.resetAt - Date.now()) / 1000),
+        }),
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+            'X-RateLimit-Limit': String(RATE_LIMIT_MAX_REQUESTS),
+            'X-RateLimit-Remaining': String(rateLimit.remaining),
+            'X-RateLimit-Reset': String(rateLimit.resetAt),
+            'Retry-After': String(Math.ceil((rateLimit.resetAt - Date.now()) / 1000)),
+          },
+        }
+      );
+    }
+
+    // Agregar headers de rate limit a todas las respuestas
+    const rateLimitHeaders = {
+      'X-RateLimit-Limit': String(RATE_LIMIT_MAX_REQUESTS),
+      'X-RateLimit-Remaining': String(rateLimit.remaining),
+      'X-RateLimit-Reset': String(rateLimit.resetAt),
+    };
+
+    // ========================================
     // VALIDACIÓN DE FIRMA HMAC (CRÍTICA)
     // Verificar que el webhook proviene realmente de MercadoPago
     // ========================================
 
     const xSignature = req.headers.get('x-signature');
     const xRequestId = req.headers.get('x-request-id');
+    
+    console.log('Webhook validation:', {
+      ip: clientIP,
+      isAuthorizedIP,
+      hasSignature: !!xSignature,
+      rateLimitRemaining: rateLimit.remaining,
+    });
 
     // Obtener query params para validación
     const url = new URL(req.url);
@@ -187,7 +330,7 @@ serve(async (req) => {
               }),
               {
                 status: 403,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
               }
             );
           } else {
@@ -212,7 +355,7 @@ serve(async (req) => {
         JSON.stringify({ success: true, message: 'Webhook type ignored' }),
         {
           status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -293,23 +436,26 @@ serve(async (req) => {
 
       // Retornar 200 OK para evitar reintentos infinitos
       // El polling backup confirmará el pago de todas formas
-      return new Response(
-        JSON.stringify({
-          success: true,
-          message: 'Error fetching payment, will be processed by polling',
-          payment_id: paymentId,
-          error_details: apiError instanceof Error ? apiError.message : 'Unknown error',
-        }),
-        {
-          status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'Error fetching payment, will be processed by polling',
+            payment_id: paymentId,
+            error_details: apiError instanceof Error ? apiError.message : 'Unknown error',
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+          }
+        );
     }
 
     // ========================================
     // MANEJAR PREAUTORIZACIONES (AUTHORIZED STATUS)
     // ========================================
+
+    // Crear cliente de Supabase (necesario para todas las operaciones)
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
     // Check if this is a preauthorization (status: authorized)
     if (paymentData.status === 'authorized') {
@@ -333,7 +479,7 @@ serve(async (req) => {
           }),
           {
             status: 200,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
           }
         );
       }
@@ -366,7 +512,7 @@ serve(async (req) => {
         }),
         {
           status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -481,7 +627,7 @@ serve(async (req) => {
           }),
           {
             status: 200,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
           }
         );
       }
@@ -502,7 +648,7 @@ serve(async (req) => {
         }),
         {
           status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -514,9 +660,6 @@ serve(async (req) => {
       console.error('Missing external_reference in payment data');
       throw new Error('Missing external_reference');
     }
-
-    // Crear cliente de Supabase
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
     // ========================================
     // DETERMINAR TIPO DE PAGO: BOOKING O WALLET DEPOSIT
@@ -540,7 +683,7 @@ serve(async (req) => {
           JSON.stringify({ success: true, message: 'Booking already processed' }),
           {
             status: 200,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
           }
         );
       }
@@ -732,19 +875,19 @@ serve(async (req) => {
 
       console.log('✅ Booking payment confirmed successfully:', reference_id);
 
-      return new Response(
-        JSON.stringify({
-          success: true,
-          message: 'Booking payment processed successfully',
-          booking_id: reference_id,
-          payment_id: paymentData.id,
-          marketplace_split: isMarketplaceSplit,
-        }),
-        {
-          status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'Booking payment processed successfully',
+            booking_id: reference_id,
+            payment_id: paymentData.id,
+            marketplace_split: isMarketplaceSplit,
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+          }
+        );
     }
 
     // Si no es un booking, verificar si es un wallet deposit
@@ -769,7 +912,7 @@ serve(async (req) => {
         JSON.stringify({ success: true, message: 'Transaction already completed' }),
         {
           status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -782,7 +925,7 @@ serve(async (req) => {
       'wallet_confirm_deposit_admin',
       {
         p_user_id: transaction.user_id,
-        p_transaction_id: transaction_id,
+        p_transaction_id: transaction.id,
         p_provider_transaction_id: paymentData.id?.toString() || '',
         p_provider_metadata: {
           id: paymentData.id,
@@ -827,7 +970,7 @@ serve(async (req) => {
         p_ref: refKey,
         p_provider: 'mercadopago',
         p_meta: {
-          transaction_id: transaction_id,
+          transaction_id: transaction.id,
           payment_id: paymentData.id,
           payment_method: paymentData.payment_method_id,
           payment_type: paymentData.payment_type_id,
@@ -854,12 +997,12 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         message: 'Payment processed successfully',
-        transaction_id,
+        transaction_id: transaction.id,
         payment_id: paymentData.id,
       }),
       {
         status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
       }
     );
   } catch (error) {

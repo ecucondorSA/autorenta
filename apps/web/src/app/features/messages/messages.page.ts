@@ -1,8 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { BookingChatComponent } from '../../shared/components/booking-chat/booking-chat.component';
 import { AuthService } from '../../core/services/auth.service';
+import { BookingsService } from '../../core/services/bookings.service';
+import { Booking } from '../../core/models';
 import { CarChatComponent } from './components/car-chat.component';
 
 /**
@@ -14,7 +16,7 @@ import { CarChatComponent } from './components/car-chat.component';
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [CommonModule, BookingChatComponent, CarChatComponent],
+  imports: [CommonModule, RouterLink, BookingChatComponent, CarChatComponent],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <!-- Header -->
@@ -55,6 +57,48 @@ import { CarChatComponent } from './components/car-chat.component';
 
       <!-- Content -->
       <div class="mx-auto max-w-4xl p-4">
+        <!-- Booking Context Card -->
+        @if (hasBookingContext() && bookingContext()) {
+          <div class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
+                  Reserva: {{ bookingContext()!.carTitle }}
+                </h3>
+                @if (bookingContext()!.dates) {
+                  <p class="text-xs text-blue-700 dark:text-blue-300 mb-2">
+                    📅 {{ bookingContext()!.dates }}
+                  </p>
+                }
+                <div class="flex items-center gap-2">
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                    [class.bg-blue-100]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
+                    [class.text-blue-800]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
+                    [class.bg-yellow-100]="bookingContext()!.status === 'pending'"
+                    [class.text-yellow-800]="bookingContext()!.status === 'pending'"
+                    [class.bg-green-100]="bookingContext()!.status === 'completed'"
+                    [class.text-green-800]="bookingContext()!.status === 'completed'"
+                  >
+                    {{ bookingContext()!.statusLabel }}
+                  </span>
+                  <a
+                    [routerLink]="['/bookings', bookingId()]"
+                    class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
+                  >
+                    Ver detalle
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
         @if (loading()) {
           <div class="flex h-96 items-center justify-center">
             <div class="text-center">
@@ -111,6 +155,7 @@ export class MessagesPage implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly authService = inject(AuthService);
+  private readonly bookingsService = inject(BookingsService);
 
   // Query params
   readonly bookingId = signal<string | null>(null);
@@ -118,9 +163,30 @@ export class MessagesPage implements OnInit {
   readonly recipientId = signal<string | null>(null);
   readonly recipientName = signal<string | null>(null);
 
+  // Booking context (when bookingId is available)
+  readonly booking = signal<Booking | null>(null);
+  readonly loadingBooking = signal(false);
+
   // State
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+
+  // Computed
+  readonly bookingContext = computed(() => {
+    const booking = this.booking();
+    if (!booking) return null;
+
+    return {
+      carTitle: booking.car_title || `${booking.car_brand} ${booking.car_model}`,
+      dates: booking.start_at && booking.end_at
+        ? `${new Date(booking.start_at).toLocaleDateString('es-AR')} - ${new Date(booking.end_at).toLocaleDateString('es-AR')}`
+        : null,
+      status: booking.status,
+      statusLabel: this.getStatusLabel(booking.status),
+    };
+  });
+
+  readonly hasBookingContext = computed(() => this.booking() !== null);
 
   async ngOnInit(): Promise<void> {
     // Verificar autenticación
@@ -137,7 +203,7 @@ export class MessagesPage implements OnInit {
     }
 
     // Leer query params
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(async (params) => {
       this.bookingId.set(params['bookingId'] ?? null);
       this.carId.set(params['carId'] ?? null);
       this.recipientId.set(params['userId'] ?? null);
@@ -153,7 +219,65 @@ export class MessagesPage implements OnInit {
         this.error.set('Falta información del destinatario');
       }
 
+      // Cargar información del booking si está disponible
+      if (this.bookingId()) {
+        await this.loadBookingContext(this.bookingId()!);
+      }
+
       this.loading.set(false);
+    });
+  }
+
+  /**
+   * Carga información del booking para mostrar contexto
+   */
+  private async loadBookingContext(bookingId: string): Promise<void> {
+    this.loadingBooking.set(true);
+    try {
+      const booking = await this.bookingsService.getBookingById(bookingId);
+      if (booking) {
+        this.booking.set(booking);
+      }
+    } catch (err) {
+      // No fallar si no se puede cargar el booking, solo no mostrar contexto
+      console.error('Error loading booking context:', err);
+    } finally {
+      this.loadingBooking.set(false);
+    }
+  }
+
+  /**
+   * Obtiene la etiqueta del estado del booking
+   */
+  private getStatusLabel(status: string): string {
+    switch (status) {
+      case 'pending':
+        return 'Pendiente de pago';
+      case 'confirmed':
+        return 'Confirmada';
+      case 'in_progress':
+        return 'En curso';
+      case 'completed':
+        return 'Finalizada';
+      case 'cancelled':
+        return 'Cancelada';
+      case 'expired':
+        return 'Vencida';
+      default:
+        return status;
+    }
+  }
+
+  /**
+   * Formatea fecha
+   */
+  formatDateTime(dateStr: string): string {
+    return new Date(dateStr).toLocaleString('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   }
 

@@ -5,11 +5,28 @@
         class="card-premium car-gallery rounded-2xl border border-pearl-gray bg-white-pure p-4 sm:p-6 shadow-soft"
       >
         <div class="relative mb-4">
+          <!-- Blur placeholder mientras carga -->
+          <div
+            *ngIf="currentPhoto() && !imageLoaded()"
+            class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent-warm/10 to-accent-petrol/10 rounded-xl"
+          >
+            <svg class="animate-spin h-12 w-12 text-accent-petrol" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+
           <img
             *ngIf="currentPhoto(); else placeholderPremium"
             [src]="currentPhoto()!.url"
             [alt]="car()?.title ?? ''"
-            class="h-80 w-full rounded-xl object-cover shadow-medium"
+            [loading]="currentPhotoIndex() === 0 ? 'eager' : 'lazy'"
+            [attr.fetchpriority]="currentPhotoIndex() === 0 ? 'high' : 'auto'"
+            decoding="async"
+            (load)="onImageLoad()"
+            [class.opacity-0]="!imageLoaded()"
+            [class.opacity-100]="imageLoaded()"
+            class="h-80 w-full rounded-xl object-cover shadow-medium transition-opacity duration-300"
           />
           <ng-template #placeholderPremium>
             <div
@@ -326,105 +343,89 @@
         id="reviews"
         class="card-premium reviews-section rounded-2xl border border-pearl-gray bg-white-pure p-4 sm:p-6 shadow-soft"
       >
-        <div class="mb-4 sm:mb-6">
-          <h2 class="h3 mb-2">⭐ Calificaciones y Reseñas</h2>
-
-          <div
-            *ngIf="carStats() as stats"
-            class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-sand-light rounded-xl"
-          >
-            <div class="text-center">
-              <div class="text-3xl font-bold text-accent-petrol">
-                {{ stats.rating_avg | number: '1.1-1' }}
-              </div>
-              <div class="text-xs text-ash-gray">Calificación</div>
+        <!-- Estadísticas del auto (mantener si hay carStats) -->
+        <div
+          *ngIf="carStats() as stats"
+          class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-sand-light rounded-xl"
+        >
+          <div class="text-center">
+            <div class="text-3xl font-bold text-accent-petrol">
+              {{ stats.rating_avg | number: '1.1-1' }}
             </div>
-            <div class="text-center">
-              <div class="text-3xl font-bold text-smoke-black">{{ stats.reviews_count }}</div>
-              <div class="text-xs text-ash-gray">Reseñas</div>
-            </div>
-            <div class="text-center">
-              <div class="text-3xl font-bold text-smoke-black">{{ stats.completed_bookings }}</div>
-              <div class="text-xs text-ash-gray">Viajes</div>
-            </div>
-            <div class="text-center">
-              <div class="text-3xl font-bold text-accent-petrol">
-                {{ (1 - stats.cancellation_rate) * 100 | number: '1.0-0' }}%
-              </div>
-              <div class="text-xs text-ash-gray">Éxito</div>
-            </div>
+            <div class="text-xs text-ash-gray">Calificación</div>
           </div>
-
-          <div
-            *ngIf="carStats() && carStats()!.reviews_count > 0"
-            class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6"
-          >
-            <div
-              class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
-            >
-              <span class="text-sm text-charcoal-medium">🧼 Limpieza</span>
-              <span class="font-semibold text-smoke-black">{{
-                carStats()!.rating_cleanliness_avg | number: '1.1-1'
-              }}</span>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-smoke-black">{{ stats.reviews_count }}</div>
+            <div class="text-xs text-ash-gray">Reseñas</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-smoke-black">{{ stats.completed_bookings }}</div>
+            <div class="text-xs text-ash-gray">Viajes</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-accent-petrol">
+              {{ (1 - stats.cancellation_rate) * 100 | number: '1.0-0' }}%
             </div>
-            <div
-              class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
-            >
-              <span class="text-sm text-charcoal-medium">💬 Comunicación</span>
-              <span class="font-semibold text-smoke-black">{{
-                carStats()!.rating_communication_avg | number: '1.1-1'
-              }}</span>
-            </div>
-            <div
-              class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
-            >
-              <span class="text-sm text-charcoal-medium">✓ Precisión</span>
-              <span class="font-semibold text-smoke-black">{{
-                carStats()!.rating_accuracy_avg | number: '1.1-1'
-              }}</span>
-            </div>
-            <div
-              class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
-            >
-              <span class="text-sm text-charcoal-medium">📍 Ubicación</span>
-              <span class="font-semibold text-smoke-black">{{
-                carStats()!.rating_location_avg | number: '1.1-1'
-              }}</span>
-            </div>
-            <div
-              class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
-            >
-              <span class="text-sm text-charcoal-medium">🔑 Check-in</span>
-              <span class="font-semibold text-smoke-black">{{
-                carStats()!.rating_checkin_avg | number: '1.1-1'
-              }}</span>
-            </div>
-            <div
-              class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
-            >
-              <span class="text-sm text-charcoal-medium">💰 Valor</span>
-              <span class="font-semibold text-smoke-black">{{
-                carStats()!.rating_value_avg | number: '1.1-1'
-              }}</span>
-            </div>
+            <div class="text-xs text-ash-gray">Éxito</div>
           </div>
         </div>
 
-        <div *ngIf="loading()" class="text-center py-8">
-          <p class="text-ash-gray">Cargando reseñas...</p>
+        <div
+          *ngIf="carStats() && carStats()!.reviews_count > 0"
+          class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6"
+        >
+          <div
+            class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
+          >
+            <span class="text-sm text-charcoal-medium">🧼 Limpieza</span>
+            <span class="font-semibold text-smoke-black">{{
+              carStats()!.rating_cleanliness_avg | number: '1.1-1'
+            }}</span>
+          </div>
+          <div
+            class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
+          >
+            <span class="text-sm text-charcoal-medium">💬 Comunicación</span>
+            <span class="font-semibold text-smoke-black">{{
+              carStats()!.rating_communication_avg | number: '1.1-1'
+            }}</span>
+          </div>
+          <div
+            class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
+          >
+            <span class="text-sm text-charcoal-medium">✓ Precisión</span>
+            <span class="font-semibold text-smoke-black">{{
+              carStats()!.rating_accuracy_avg | number: '1.1-1'
+            }}</span>
+          </div>
+          <div
+            class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
+          >
+            <span class="text-sm text-charcoal-medium">📍 Ubicación</span>
+            <span class="font-semibold text-smoke-black">{{
+              carStats()!.rating_location_avg | number: '1.1-1'
+            }}</span>
+          </div>
+          <div
+            class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
+          >
+            <span class="text-sm text-charcoal-medium">🔑 Check-in</span>
+            <span class="font-semibold text-smoke-black">{{
+              carStats()!.rating_checkin_avg | number: '1.1-1'
+            }}</span>
+          </div>
+          <div
+            class="flex items-center justify-between p-3 bg-white-pure rounded-lg border border-pearl-gray"
+          >
+            <span class="text-sm text-charcoal-medium">💰 Valor</span>
+            <span class="font-semibold text-smoke-black">{{
+              carStats()!.rating_value_avg | number: '1.1-1'
+            }}</span>
+          </div>
         </div>
 
-        <div *ngIf="!loading() && reviews().length === 0" class="text-center py-8">
-          <p class="text-ash-gray">Este auto aún no tiene reseñas. ¡Sé el primero en reservarlo!</p>
-        </div>
-
-        <div *ngIf="!loading() && reviews().length > 0" class="space-y-4">
-          <app-review-card
-            *ngFor="let review of reviews()"
-            [review]="review"
-            [showCarTitle]="false"
-          ></app-review-card>
-        </div>
+        <!-- Nuevo componente de reviews -->
+        <app-car-reviews-section *ngIf="car()?.id" [carId]="car()!.id" />
       </div>
 
       <a
@@ -512,19 +513,194 @@
       </div>
 
       <div
-        class="card-premium lg:sticky lg:top-24 rounded-2xl border border-pearl-gray bg-white-pure p-4 sm:p-6 shadow-elevated"
+        class="card-premium lg:sticky lg:top-24 rounded-2xl border-2 border-pearl-gray bg-gradient-to-br from-white-pure via-accent-petrol/5 to-accent-warm/5 p-4 sm:p-6 shadow-elevated hover:shadow-xl transition-all duration-300"
+        [class.border-accent-petrol/20]="expressMode()"
       >
+        <!-- Banner de modo express -->
+        <app-urgent-rental-banner
+          *ngIf="expressMode()"
+          [carId]="car()?.id ?? ''"
+          [regionId]="car()?.region_id ?? ''"
+          [expressMode]="expressMode"
+        ></app-urgent-rental-banner>
+
+        <!-- Toggle Modo Express -->
+        <div class="mb-4 flex items-center justify-between">
+          <button
+            type="button"
+            (click)="toggleExpressMode()"
+            [class.bg-accent-petrol]="expressMode()"
+            [class.text-white]="expressMode()"
+            [class.bg-pearl-gray/20]="!expressMode()"
+            [class.text-charcoal-medium]="!expressMode()"
+            class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
+            </svg>
+            <span class="font-semibold text-sm">
+              {{ expressMode() ? 'Modo Express Activado' : 'Alquiler Urgente' }}
+            </span>
+          </button>
+        </div>
+
         <div class="mb-6">
-          <p class="text-3xl font-bold text-smoke-black">
-            {{ car()?.price_per_day | money }}
-          </p>
-          <p class="text-sm text-charcoal-medium">por día</p>
+          <!-- Precio por hora (modo express) -->
+          <div *ngIf="expressMode(); else dailyPrice">
+            <div *ngIf="calculatedHourlyRate() && !hourlyRateLoading(); else hourlyLoading">
+              <div class="flex items-center gap-3">
+                <div class="text-4xl font-black text-accent-petrol tracking-tight">
+                  $ {{ calculatedHourlyRate() | number:'1.0-0' }}
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-lg font-semibold text-smoke-black">por hora</span>
+                  <span class="text-sm text-charcoal-medium">
+                    (75% del precio diario)
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ng-template #hourlyLoading>
+              <div class="flex items-center gap-3">
+                <div class="text-4xl font-black text-accent-petrol tracking-tight animate-pulse">
+                  ...
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-lg font-semibold text-smoke-black">por hora</span>
+                  <span class="text-sm text-charcoal-medium animate-pulse">
+                    Cargando precio...
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+            <div class="mt-2 px-3 py-2 bg-accent-petrol/10 rounded-lg">
+              <p class="text-xs text-charcoal-medium">
+                ⏱️ Mínimo 5 horas · Disponibilidad inmediata
+              </p>
+            </div>
+          </div>
+
+          <!-- Precio por día (modo normal) -->
+          <ng-template #dailyPrice>
+            <p class="text-3xl font-bold text-smoke-black">
+              {{ displayPrice() | money }}
+            </p>
+            <p class="text-sm text-charcoal-medium">por día</p>
+            <!-- ✅ FIX: Mostrar indicador si está cargando precio dinámico -->
+            <p *ngIf="priceLoading()" class="text-xs text-charcoal-medium animate-pulse">
+              Actualizando precio...
+            </p>
+          </ng-template>
+        </div>
+
+        <!-- Social Proof Indicators -->
+        <div class="mb-6">
+          <app-social-proof-indicators
+            [car]="car()"
+            [showViewers]="true"
+            [showBookings]="true"
+            [showAvailability]="true"
+          ></app-social-proof-indicators>
+        </div>
+
+        <!-- Owner Info with Superhost Badge -->
+        <div *ngIf="car()?.owner" class="mb-6 p-4 rounded-xl bg-sand-light border border-pearl-gray">
+          <div class="flex items-center gap-3">
+            <!-- Owner Avatar -->
+            <div class="relative flex-shrink-0">
+              <img
+                *ngIf="car()?.owner?.avatar_url; else defaultAvatar"
+                [src]="car()?.owner?.avatar_url"
+                [alt]="car()?.owner?.full_name"
+                class="w-14 h-14 rounded-full object-cover border-2 border-accent-petrol"
+              />
+              <ng-template #defaultAvatar>
+                <div class="w-14 h-14 rounded-full bg-accent-petrol text-white flex items-center justify-center text-xl font-bold border-2 border-accent-petrol">
+                  {{ car()?.owner?.full_name?.charAt(0)?.toUpperCase() ?? 'U' }}
+                </div>
+              </ng-template>
+
+              <!-- Verified Badge -->
+              <div *ngIf="car()?.owner?.is_email_verified" class="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1">
+                <svg class="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Owner Details -->
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-sm font-semibold text-smoke-black">{{ car()?.owner?.full_name }}</h3>
+
+                <!-- Superhost Badge -->
+                <span
+                  *ngIf="isSuperhost()"
+                  class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] font-bold"
+                >
+                  <svg class="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  SUPERHOST
+                </span>
+              </div>
+
+              <!-- Owner Rating -->
+              <div class="flex items-center gap-2 text-xs">
+                <div class="flex items-center gap-1">
+                  <svg class="h-3.5 w-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span class="font-bold text-smoke-black">{{ car()?.owner?.rating_avg | number: '1.1-1' }}</span>
+                </div>
+                <span class="text-charcoal-medium">({{ car()?.owner?.rating_count }} reseñas)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Best 5-Star Review Extract -->
+        <div *ngIf="bestFiveStarReview() as review" class="mb-6 p-4 rounded-xl bg-green-50 border border-green-200">
+          <div class="flex items-start gap-2 mb-2">
+            <svg class="h-5 w-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <div>
+              <div class="flex gap-0.5 mb-1">
+                <svg *ngFor="let star of [1,2,3,4,5]" class="h-3.5 w-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
+              <p class="text-sm text-green-900 line-clamp-3">
+                "{{ review.comment_public }}"
+              </p>
+              <p class="text-xs text-green-700 mt-2 font-medium">— {{ review.reviewer_name }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Benefits -->
+        <div class="mb-6">
+          <h3 class="text-sm font-bold text-smoke-black mb-3">¿Por qué reservar con AutoRenta?</h3>
+          <app-booking-benefits [car]="car()" [compact]="true"></app-booking-benefits>
         </div>
 
         <div class="mb-6" id="tour-date-picker">
           <app-date-range-picker
-            label="Fechas de alquiler"
+            [label]="expressMode() ? 'Duración de alquiler' : 'Fechas de alquiler'"
             (rangeChange)="onRangeChange($event)"
+            [initialFrom]="dateRange().from"
+            [initialTo]="dateRange().to"
+            [dailyPrice]="displayPrice()"
+            [showPrices]="!expressMode()"
+            [carId]="car()?.id ?? null"
+            [availabilityChecker]="!expressMode() ? checkAvailability : null"
+            [blockedDates]="blockedDates()"
           ></app-date-range-picker>
 
           <div
@@ -551,9 +727,14 @@
                   <span class="font-medium">{{ dateRange().from | date: 'dd/MM/yyyy' }}</span>
                   <span class="mx-2">→</span>
                   <span class="font-medium">{{ dateRange().to | date: 'dd/MM/yyyy' }}</span>
-                  <span class="ml-2 text-accent-petrol font-semibold"
-                    >({{ daysCount() }} días)</span
-                  >
+                  <span class="ml-2 text-accent-petrol font-semibold">
+                    <ng-container *ngIf="expressMode()">
+                      ({{ hoursCount() }} {{ hoursCount() === 1 ? 'hora' : 'horas' }})
+                    </ng-container>
+                    <ng-container *ngIf="!expressMode()">
+                      ({{ daysCount() }} días)
+                    </ng-container>
+                  </span>
                 </p>
               </div>
             </div>
@@ -590,9 +771,14 @@
             <h3 class="mb-3 text-sm font-semibold text-smoke-black">Resumen de Precios</h3>
             <div class="space-y-2 text-sm">
               <div class="flex justify-between">
-                <span class="text-charcoal-medium"
-                  >{{ car()?.price_per_day | money }} x {{ daysCount() }} días</span
-                >
+                <span class="text-charcoal-medium">
+                  <ng-container *ngIf="expressMode() && calculatedHourlyRate()">
+                    {{ calculatedHourlyRate() | money }} x {{ hoursCount() }} {{ hoursCount() === 1 ? 'hora' : 'horas' }}
+                  </ng-container>
+                  <ng-container *ngIf="!expressMode()">
+                    {{ displayPrice() | money }} x {{ daysCount() }} días
+                  </ng-container>
+                </span>
                 <span class="font-semibold text-smoke-black">{{ total | money }}</span>
               </div>
               <div
@@ -689,45 +875,115 @@
           </div>
         </div>
 
-        <button
-          id="book-now"
-          *ngIf="authService.isAuthenticated()"
-          (click)="onBookClick()"
-          [disabled]="!canBook() || bookingInProgress()"
-          [class.opacity-50]="!canBook() || bookingInProgress()"
-          [class.cursor-not-allowed]="!canBook() || bookingInProgress()"
-          class="btn-primary w-full py-3 text-base font-semibold disabled:hover:bg-smoke-black"
-        >
-          <span *ngIf="!bookingInProgress()" class="flex items-center justify-center gap-2">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            Solicitar reserva
-          </span>
-          <span *ngIf="bookingInProgress()" class="flex items-center justify-center gap-2">
-            <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
+        <!-- Confirmación Instantánea Badge (si auto_approval está activado) -->
+        <div *ngIf="car()?.auto_approval && canBook()" class="mb-3 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-green-50 border border-green-200">
+          <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+          <span class="text-sm font-semibold text-green-800">Confirmación Instantánea</span>
+        </div>
+
+        <!-- CTA Button with optimizations -->
+        <div class="relative group">
+          <!-- Tooltip -->
+          <div
+            *ngIf="canBook()"
+            class="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-smoke-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-10"
+          >
+            ⚡ Reserva confirmada en 2 minutos
+          </div>
+
+          <button
+            id="book-now"
+            *ngIf="authService.isAuthenticated()"
+            (click)="onBookClick()"
+            [disabled]="!canBook() || bookingInProgress()"
+            [class.cursor-not-allowed]="!canBook() || bookingInProgress()"
+            [class.bg-gradient-to-r]="expressMode()"
+            [class.from-accent-petrol]="expressMode()"
+            [class.to-accent-warm]="expressMode()"
+            [class.hover:from-accent-petrol/90]="expressMode()"
+            [class.hover:to-accent-warm/90]="expressMode()"
+            [class.text-white]="expressMode()"
+            [class.shadow-lg]="expressMode()"
+            [class.hover:shadow-xl]="expressMode()"
+            [class.transform]="expressMode()"
+            [class.hover:scale-105]="expressMode()"
+            [class.animate-pulse]="canBook() && !bookingInProgress()"
+            class="w-full py-4 text-base font-bold transition-all duration-300"
+            [class.btn-primary]="!expressMode() && canBook()"
+            [class.bg-charcoal-medium]="!canBook() && !expressMode()"
+            [class.hover:bg-charcoal-medium]="!canBook() && !expressMode()"
+          >
+            <span *ngIf="!bookingInProgress()" class="flex items-center justify-center gap-2">
+              <svg
+                *ngIf="canBook()"
+                class="h-5 w-5"
+                fill="none"
                 stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Procesando...
-          </span>
-        </button>
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <svg
+                *ngIf="!canBook()"
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+
+              <!-- Express Mode -->
+              <ng-container *ngIf="expressMode()">
+                🚗 ALQUILAR AHORA
+                <span *ngIf="urgentAvailability()?.eta" class="text-xs opacity-90">
+                  ({{ urgentAvailability()!.eta }} min)
+                </span>
+              </ng-container>
+
+              <!-- Normal Mode - Can Book -->
+              <ng-container *ngIf="!expressMode() && canBook()">
+                Solicitar Reserva
+              </ng-container>
+
+              <!-- Normal Mode - Cannot Book (no dates selected) -->
+              <ng-container *ngIf="!expressMode() && !canBook()">
+                VER DISPONIBILIDAD Y PRECIO
+              </ng-container>
+            </span>
+
+            <span *ngIf="bookingInProgress()" class="flex items-center justify-center gap-2">
+              <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Procesando...
+            </span>
+          </button>
+        </div>
 
         <a
           *ngIf="!authService.isAuthenticated()"
@@ -784,3 +1040,25 @@
 <ng-template #errorTpl>
   <p class="text-center text-sm text-red-600">{{ error() ?? 'No pudimos cargar el auto.' }}</p>
 </ng-template>
+
+<!-- Sticky CTA Mobile (only visible on mobile when authenticated) -->
+<app-sticky-cta-mobile
+  *ngIf="authService.isAuthenticated() && car()"
+  [pricePerDay]="displayPrice()"
+  [totalPrice]="totalPrice()"
+  [daysCount]="daysCount()"
+  [ctaText]="canBook() ? 'Solicitar Reserva' : 'Seleccionar Fechas'"
+  [disabled]="!canBook() || bookingInProgress()"
+  [loading]="bookingInProgress()"
+  [expressMode]="expressMode()"
+  (ctaClick)="onBookClick()"
+></app-sticky-cta-mobile>
+
+<!-- WhatsApp FAB - Contactar al propietario -->
+<!-- TODO: Activar cuando el modelo CarOwner incluya phone/whatsapp -->
+<!-- <app-whatsapp-fab
+  *ngIf="car()"
+  [car]="car()"
+  [ownerPhone]="null"
+  [ownerName]="car()?.owner?.full_name ?? null"
+></app-whatsapp-fab> -->

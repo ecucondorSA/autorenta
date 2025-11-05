@@ -2,8 +2,8 @@ name: Update Exchange Rates
 
 on:
   schedule:
-    # Ejecutar cada 15 minutos
-    - cron: '*/15 * * * *'
+    # Ejecutar cada 30 minutos (redundancia con cron job de PostgreSQL)
+    - cron: '*/30 * * * *'
   workflow_dispatch: # Permitir ejecución manual
 
 jobs:

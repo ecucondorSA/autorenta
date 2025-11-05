@@ -1,2 +1,60 @@
-<testsuites id="" name="" tests="0" failures="0" skipped="0" errors="0" time="25.307719000000002">
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="23.540038">
+<testsuite name="e2e/wallet-deposit-flow.spec.ts" timestamp="2025-11-05T00:25:49.297Z" hostname="chromium:e2e" tests="1" failures="1" skipped="0" time="17.286" errors="0">
+<testcase name="Wallet Deposit Flow › should display wallet balance on page load" classname="e2e/wallet-deposit-flow.spec.ts" time="17.286">
+<failure message="wallet-deposit-flow.spec.ts:262:7 should display wallet balance on page load" type="FAILURE">
+<![CDATA[  [chromium:e2e] › e2e/wallet-deposit-flow.spec.ts:262:7 › Wallet Deposit Flow › should display wallet balance on page load 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-testid="wallet-balance"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('[data-testid="wallet-balance"]')
+
+
+      263 |     // Verify balance element is visible
+      264 |     const balanceElement = page.locator('[data-testid="wallet-balance"]');
+    > 265 |     await expect(balanceElement).toBeVisible({ timeout: 5000 });
+          |                                  ^
+      266 |
+      267 |     // Verify balance has currency format ($X,XXX)
+      268 |     const balanceText = await balanceElement.textContent();
+        at /home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts:265:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/test-failed-1.png]]
+
+[[ATTACHMENT|artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/video.webm]]
+
+[[ATTACHMENT|artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/error-context.md]]
+
+[[ATTACHMENT|artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
 </testsuites>

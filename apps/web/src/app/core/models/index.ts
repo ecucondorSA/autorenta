@@ -441,7 +441,7 @@ export interface Booking {
   insurance_coverage?: Record<string, unknown>; // BookingInsuranceCoverage
 
   // Relación con car (populated dinamically in some queries)
-  car?: Car;
+  car?: Partial<Car>;
 }
 
 export interface PaymentIntent {

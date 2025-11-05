@@ -21,7 +21,7 @@ import {
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
     >
       <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
-        Garantías y Responsabilidades
+        Detalles de protección
       </h3>
 
       <div class="overflow-x-auto">
@@ -32,19 +32,19 @@ import {
                 scope="col"
                 class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-pearl-light/60 uppercase tracking-wider"
               >
-                Concepto
+                Tipo de protección
               </th>
               <th
                 scope="col"
                 class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-pearl-light/60 uppercase tracking-wider"
               >
-                Monto (USD)
+                Límite (USD)
               </th>
               <th
                 scope="col"
                 class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-pearl-light/60 uppercase tracking-wider"
               >
-                Monto (ARS)
+                Límite (ARS)
               </th>
             </tr>
           </thead>
@@ -71,14 +71,14 @@ import {
                   <div>
                     <p class="font-medium text-smoke-black dark:text-ivory-luminous">
                       {{
-                        paymentMode === 'card' ? 'Preautorización (Hold)' : 'Crédito de Seguridad'
+                        paymentMode === 'card' ? 'Protección con tarjeta' : 'Protección con wallet'
                       }}
                     </p>
                     <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
                       {{
                         paymentMode === 'card'
-                          ? 'Reembolsable si todo está OK'
-                          : 'NO reembolsable; queda en wallet no retirable'
+                          ? 'Se libera automáticamente si no hay problemas'
+                          : 'Queda bloqueado hasta que termines el alquiler'
                       }}
                     </p>
                   </div>
@@ -121,10 +121,10 @@ import {
                   </svg>
                   <div>
                     <p class="font-medium text-smoke-black dark:text-ivory-luminous">
-                      Franquicia Daño/Robo
+                      Cobertura por daños o robo
                     </p>
                     <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
-                      Tu responsabilidad máxima por daños o robo
+                      Lo máximo que podrías pagar si hay daños o robo del vehículo
                     </p>
                   </div>
                 </div>
@@ -160,11 +160,11 @@ import {
                   </svg>
                   <div>
                     <p class="font-medium text-smoke-black dark:text-ivory-luminous">
-                      Franquicia por Vuelco
-                      <span class="text-red-600 dark:text-error-300">(2×)</span>
+                      Cobertura por vuelco
+                      <span class="text-red-600 dark:text-error-300">(límite mayor)</span>
                     </p>
                     <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
-                      Doble responsabilidad en caso de vuelco del vehículo
+                      Límite más alto si el auto se da vuelta (situaciones más graves)
                     </p>
                   </div>
                 </div>
@@ -184,33 +184,31 @@ import {
         </table>
       </div>
 
-      <!-- Ejemplo de Cálculo -->
+      <!-- Cómo funciona la protección -->
       <div
         class="mt-4 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg p-4 transition-colors duration-300"
       >
-        <h4 class="text-sm font-semibold text-blue-900 dark:text-info-100 mb-2">
-          💡 Ejemplo de cálculo
+        <h4 class="text-sm font-semibold text-blue-900 dark:text-info-100 mb-2 flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Cómo funciona
         </h4>
-        <div class="text-xs text-blue-800 dark:text-info-200 space-y-1">
-          <p *ngIf="paymentMode === 'card'">
-            • Si hay un daño de <strong>{{ formatArs(100000) }}</strong
-            >, capturamos <strong>{{ formatArs(100000) }}</strong> del hold.
-          </p>
-          <p *ngIf="paymentMode === 'card'">
-            • Si hay un daño de
-            <strong>{{ formatArs(riskSnapshot.deductibleUsd * fxSnapshot.rate * 1.5) }}</strong>
-            (mayor a tu franquicia), capturamos solo
-            <strong>{{ formatArs(riskSnapshot.deductibleUsd * fxSnapshot.rate) }}</strong> (tu
-            franquicia máxima).
-          </p>
-          <p *ngIf="paymentMode === 'wallet'">
-            • Si hay un daño de <strong>{{ formatUsd(100) }}</strong
-            >, se debita <strong>{{ formatUsd(100) }}</strong> de tu Crédito de Seguridad.
-          </p>
-          <p *ngIf="paymentMode === 'wallet'">
-            • Si el daño excede el crédito, se aplicará waterfall: Crédito → Top-up → FGO (hasta
-            {{ formatUsd(800) }}) → Recupero.
-          </p>
+        <div class="text-xs text-blue-800 dark:text-info-200 space-y-2">
+          <div *ngIf="paymentMode === 'card'" class="bg-white/50 dark:bg-gray-800/30 rounded p-3">
+            <p class="font-medium mb-1">Con tarjeta:</p>
+            <p>• Si hay un daño menor, solo se cobra lo necesario (hasta el límite de protección).</p>
+            <p>• Si no hay problemas, se libera todo automáticamente al devolver el auto.</p>
+          </div>
+          <div *ngIf="paymentMode === 'wallet'" class="bg-white/50 dark:bg-gray-800/30 rounded p-3">
+            <p class="font-medium mb-1">Con wallet:</p>
+            <p>• Solo se usa tu saldo bloqueado si hay gastos o daños.</p>
+            <p>• Si hay problemas grandes, te ayudamos a resolverlo.</p>
+          </div>
+          <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/60 rounded p-3">
+            <p class="font-medium text-green-800 dark:text-green-200 mb-1">¿Qué está cubierto?</p>
+            <p class="text-green-700 dark:text-green-300">Daños al vehículo, robo, combustible faltante, multas y peajes.</p>
+          </div>
         </div>
       </div>
     </div>

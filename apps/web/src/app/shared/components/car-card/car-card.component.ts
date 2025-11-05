@@ -19,6 +19,7 @@ import { MoneyPipe } from '../../pipes/money.pipe';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { RealtimePricingService } from '../../../core/services/realtime-pricing.service';
+import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 
 @Component({
@@ -32,7 +33,10 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly pricingService = inject(DynamicPricingService);
   private readonly realtimePricing = inject(RealtimePricingService);
+  private readonly urgentRentalService = inject(UrgentRentalService);
   private readonly supabase = injectSupabase();
+
+  protected readonly Math = Math;
 
   private unsubscribeRealtime?: () => void;
 
@@ -43,6 +47,10 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly _compareDisabled = signal<boolean>(false);
   private readonly _showOwnerActions = signal<boolean>(false);
   private readonly _priority = signal<boolean>(false);
+  private readonly _urgentMode = signal<boolean>(false);
+
+  readonly hourlyPrice = signal<number | null>(null);
+  readonly urgentAvailability = signal<{ available: boolean; distance?: number; eta?: number } | null>(null);
 
   @Output() compareToggle = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();
@@ -141,6 +149,18 @@ export class CarCardComponent implements OnInit, OnDestroy {
     return this._priority();
   }
 
+  @Input()
+  set urgentMode(value: boolean) {
+    this._urgentMode.set(value);
+    if (value && this.car) {
+      void this.loadUrgentModeData();
+    }
+  }
+
+  get urgentMode(): boolean {
+    return this._urgentMode();
+  }
+
   readonly firstPhoto = computed(() => this._car()?.photos?.[0] ?? null);
 
   readonly displayImage = computed(() => {
@@ -189,6 +209,9 @@ export class CarCardComponent implements OnInit, OnDestroy {
     if (this.car?.region_id) {
       void this.loadDynamicPrice();
       this.subscribeToRealtimePricing();
+    }
+    if (this._urgentMode()) {
+      void this.loadUrgentModeData();
     }
   }
 
@@ -306,5 +329,32 @@ export class CarCardComponent implements OnInit, OnDestroy {
       id: this.car.id,
       status: this.car.status,
     });
+  }
+
+  formatDistance(km: number): string {
+    return this.urgentRentalService.formatDistance(km);
+  }
+
+  private async loadUrgentModeData(): Promise<void> {
+    const car = this._car();
+    if (!car || !car.region_id) return;
+
+    try {
+      // Cargar precio por hora
+      const quote = await this.urgentRentalService.getUrgentQuote(car.id, car.region_id, 1);
+      this.hourlyPrice.set(quote.hourlyRate);
+
+      // Verificar disponibilidad inmediata
+      const availability = await this.urgentRentalService.checkImmediateAvailability(car.id);
+      this.urgentAvailability.set({
+        available: availability.available,
+        distance: availability.distance,
+        eta: availability.eta,
+      });
+
+      this.cdr.markForCheck();
+    } catch (error) {
+      console.error('Error loading urgent mode data:', error);
+    }
   }
 }

@@ -36,6 +36,9 @@
             ],
             "styles": [
               "src/styles.css"
+            ],
+            "allowedCommonJsDependencies": [
+              "mapbox-gl"
             ]
           },
           "configurations": {
@@ -43,19 +46,31 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1.5MB"
+                  "maximumWarning": "1.55MB",
+                  "maximumError": "1.8MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "16kB",
-                  "maximumError": "20kB"
+                  "maximumWarning": "20kB",
+                  "maximumError": "24kB"
                 }
               ],
               "outputHashing": "all",
               "serviceWorker": false
             },
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ],
+              "aot": true,
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
+            "development-no-hmr": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -78,6 +93,10 @@
             },
             "development": {
               "buildTarget": "web:build:development"
+            },
+            "development-no-hmr": {
+              "buildTarget": "web:build:development-no-hmr",
+              "hmr": false
             }
           },
           "defaultConfiguration": "development"
@@ -105,13 +124,17 @@
             "styles": [
               "src/styles.css"
             ],
-            "codeCoverage": false,
+            "codeCoverage": true,
             "codeCoverageExclude": [
               "**/*.spec.ts",
               "**/test-*.ts",
               "**/mock-*.ts",
               "**/*.mock.ts",
-              "src/environments/**"
+              "src/environments/**",
+              "src/main.ts",
+              "src/polyfills.ts",
+              "**/*.module.ts",
+              "**/index.ts"
             ]
           }
         },

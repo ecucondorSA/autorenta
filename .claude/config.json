@@ -14,6 +14,14 @@
       "url": "https://bindings.mcp.cloudflare.com/mcp",
       "transport": "streamble-http",
       "description": "Manage Workers bindings (R2, KV, D1, AI, etc.)"
+    },
+    "mercadopago-mcp-server-prod": {
+      "url": "https://mcp.mercadopago.com/mcp",
+      "transport": "streamble-http",
+      "headers": {
+        "Authorization": "Bearer APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571"
+      },
+      "description": "MercadoPago MCP Server - Integraciones con IA, documentación y optimización de pagos"
     }
   }
 }

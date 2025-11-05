@@ -834,6 +834,34 @@ if (file.size > 2 * 1024 * 1024) {
 
 ## Debugging Resources
 
+### Operational Runbooks
+
+**Documentación operativa crítica** (actualizada 2025-11-03):
+
+- **[Runbook: Troubleshooting](./docs/runbooks/troubleshooting.md)**: Guía completa de solución de problemas
+  - Síntomas comunes y diagnóstico rápido
+  - Problemas por categoría (Auth, Payment, Database, Frontend, etc.)
+  - Herramientas de diagnóstico y escalación
+
+- **[Guía de Deployment](./docs/deployment-guide.md)**: Procedimientos de deployment
+  - Pre-deployment checklist
+  - Deployment automático (GitHub Actions)
+  - Deployment manual
+  - Post-deployment verification
+  - Rollback procedures
+
+- **[Disaster Recovery Plan](./docs/disaster-recovery-plan.md)**: Plan de recuperación ante desastres
+  - Escenarios de desastre (DB loss, security breach, infrastructure failure)
+  - Procedimientos de recuperación por escenario
+  - Backup strategy
+  - RTO/RPO objetivos
+
+- **[Runbook: Split Payment Failure](./docs/runbooks/split-payment-failure.md)**: Problemas con pagos divididos
+- **[Runbook: Database Backup & Restore](./docs/runbooks/database-backup-restore.md)**: Backup y restauración
+- **[Runbook: Secret Rotation](./docs/runbooks/secret-rotation.md)**: Rotación de secrets
+
+**Ver índice completo**: [docs/README.md](./docs/README.md)
+
 ### Audit Documents
 
 - **`PHOTO_UPLOAD_AUDIT.md`**: Complete analysis of avatar upload RLS issue

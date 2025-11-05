@@ -34,6 +34,7 @@ export class ReviewFormComponent implements OnInit {
 
   reviewForm!: FormGroup;
   isSubmitting = false;
+  hoverRatings: Record<string, number> = {};
 
   ratingCategories: RatingCategory[] = [
     {
@@ -152,5 +153,17 @@ export class ReviewFormComponent implements OnInit {
 
   get isRenterToOwner(): boolean {
     return this.reviewType === 'renter_to_owner';
+  }
+
+  onStarHover(category: string, rating: number): void {
+    this.hoverRatings[category] = rating;
+  }
+
+  onStarLeave(category: string): void {
+    delete this.hoverRatings[category];
+  }
+
+  getHoverRating(category: string): number {
+    return this.hoverRatings[category] || 0;
   }
 }

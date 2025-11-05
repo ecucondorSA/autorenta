@@ -9,6 +9,7 @@
     "test": "cd apps/web && npm run test",
     "test:quick": "cd apps/web && npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage=false",
     "test:coverage": "cd apps/web && npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage=true",
+    "test:coverage:report": "cd apps/web && bash scripts/generate-coverage-report.sh",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
@@ -35,7 +36,10 @@
     "check:skills": "tools/check-skills.sh",
     "accounting:export": "node tools/accounting/export-ledger.mjs",
     "types:db:gen": "supabase gen types typescript --project-id obxvffplochgeiclibng > supabase.types.generated.ts",
-    "types:db:check": "npm run types:db:gen && git diff --exit-code supabase.types.generated.ts"
+    "types:db:check": "npm run types:db:gen && git diff --exit-code supabase.types.generated.ts",
+    "monitoring:setup": "./tools/monitoring-setup.sh",
+    "monitoring:health": "./tools/monitor-health.sh",
+    "monitoring:deploy": "supabase functions deploy monitoring-health-check && supabase functions deploy monitoring-alerts && supabase functions deploy monitoring-metrics"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
