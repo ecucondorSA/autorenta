@@ -2,20 +2,61 @@ name: Update Exchange Rates
 
 on:
   schedule:
-    # Ejecutar cada 30 minutos (redundancia con cron job de PostgreSQL)
-    - cron: '*/30 * * * *'
+    # Ejecutar cada 15 minutos
+    # GitHub Actions consulta Binance directamente (no bloqueado geográficamente)
+    - cron: '*/15 * * * *'
   workflow_dispatch: # Permitir ejecución manual
 
 jobs:
   update-rates:
     runs-on: ubuntu-latest
     steps:
-      - name: Update Exchange Rates
+      - name: Fetch rates from Binance and update database
+        env:
+          SUPABASE_URL: https://obxvffplochgeiclibng.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          curl -X POST \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-            -H "Content-Type: application/json" \
-            https://obxvffplochgeiclibng.supabase.co/functions/v1/sync-binance-rates
+          set -e
 
-      - name: Log completion
-        run: echo "Exchange rates updated at $(date)"
+          echo "📊 Fetching exchange rates from Binance..."
+
+          # Fetch USDTARS rate
+          USDTARS_RESPONSE=$(curl -s "https://api.binance.com/api/v3/ticker/price?symbol=USDTARS")
+          USDTARS_RATE=$(echo $USDTARS_RESPONSE | jq -r '.price')
+
+          # Fetch USDTBRL rate
+          USDTBRL_RESPONSE=$(curl -s "https://api.binance.com/api/v3/ticker/price?symbol=USDTBRL")
+          USDTBRL_RATE=$(echo $USDTBRL_RESPONSE | jq -r '.price')
+
+          echo "✅ USDTARS: $USDTARS_RATE"
+          echo "✅ USDTBRL: $USDTBRL_RATE"
+
+          # Update USDTARS in database
+          echo "💾 Updating USDTARS in database..."
+          curl -s -X POST "${SUPABASE_URL}/rest/v1/rpc/upsert_exchange_rate" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation" \
+            -d "{\"p_pair\":\"USDTARS\",\"p_binance_rate\":${USDTARS_RATE},\"p_margin_percent\":10.0,\"p_source\":\"binance\"}"
+
+          # Update USDTBRL in database
+          echo "💾 Updating USDTBRL in database..."
+          curl -s -X POST "${SUPABASE_URL}/rest/v1/rpc/upsert_exchange_rate" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation" \
+            -d "{\"p_pair\":\"USDTBRL\",\"p_binance_rate\":${USDTBRL_RATE},\"p_margin_percent\":10.0,\"p_source\":\"binance\"}"
+
+          echo "✅ Exchange rates updated successfully at $(date)"
+
+      - name: Verify update
+        env:
+          SUPABASE_URL: https://obxvffplochgeiclibng.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "🔍 Verifying database update..."
+          curl -s "${SUPABASE_URL}/rest/v1/exchange_rates?is_active=eq.true&select=pair,platform_rate,last_updated" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" | jq .

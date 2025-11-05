@@ -50,7 +50,7 @@ import {
             class="w-4 h-4 text-gray-400 dark:text-pearl-light/60 cursor-help"
             fill="currentColor"
             viewBox="0 0 20 20"
-            attr.title="Incluye: tarifa diaria, aporte FGO, cargo de servicio y mejora de cobertura"
+            title="Incluye: tarifa diaria, aporte FGO, cargo de servicio y mejora de cobertura"
           >
             <path
               fill-rule="evenodd"
@@ -156,7 +156,7 @@ import {
             class="w-4 h-4 text-gray-400 dark:text-pearl-light/60 cursor-help flex-shrink-0 ml-2"
             fill="currentColor"
             viewBox="0 0 20 20"
-            attr.title="Este total es solo informativo. El alquiler se cobra inmediatamente y la garantía se bloquea por separado."
+            title="Este total es solo informativo. El alquiler se cobra inmediatamente y la garantía se bloquea por separado."
           >
             <path
               fill-rule="evenodd"

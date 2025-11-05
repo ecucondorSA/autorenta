@@ -35,27 +35,27 @@
 
         <!-- Protected Credit Option -->
         <div
-          (click)="depositType.set('protected')"
+          (click)="depositType.set('protected_credit')"
           class="p-4 rounded-xl border-2 cursor-pointer transition-all"
-          [class.border-accent-petrol]="depositType() === 'protected'"
-          [class.bg-accent-petrol/5]="depositType() === 'protected'"
-          [class.border-gray-200]="depositType() !== 'protected'"
-          [class.bg-white]="depositType() !== 'protected'"
-          [class.dark:border-accent-petrol/50]="depositType() === 'protected'"
-          [class.dark:bg-accent-petrol/10]="depositType() === 'protected'"
-          [class.dark:border-gray-600]="depositType() !== 'protected'"
-          [class.dark:bg-gray-700]="depositType() !== 'protected'"
+          [class.border-accent-petrol]="depositType() === 'protected_credit'"
+          [class.bg-accent-petrol/5]="depositType() === 'protected_credit'"
+          [class.border-gray-200]="depositType() !== 'protected_credit'"
+          [class.bg-white]="depositType() !== 'protected_credit'"
+          [class.dark:border-accent-petrol/50]="depositType() === 'protected_credit'"
+          [class.dark:bg-accent-petrol/10]="depositType() === 'protected_credit'"
+          [class.dark:border-gray-600]="depositType() !== 'protected_credit'"
+          [class.dark:bg-gray-700]="depositType() !== 'protected_credit'"
         >
           <div class="flex items-start gap-3">
             <div
               class="flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all"
-              [class.border-accent-petrol]="depositType() === 'protected'"
-              [class.bg-accent-petrol]="depositType() === 'protected'"
-              [class.border-gray-300]="depositType() !== 'protected'"
-              [class.dark:border-gray-500]="depositType() !== 'protected'"
+              [class.border-accent-petrol]="depositType() === 'protected_credit'"
+              [class.bg-accent-petrol]="depositType() === 'protected_credit'"
+              [class.border-gray-300]="depositType() !== 'protected_credit'"
+              [class.dark:border-gray-500]="depositType() !== 'protected_credit'"
             >
               <div
-                *ngIf="depositType() === 'protected'"
+                *ngIf="depositType() === 'protected_credit'"
                 class="w-2.5 h-2.5 rounded-full bg-white"
               ></div>
             </div>
@@ -63,15 +63,15 @@
               <div class="flex items-center gap-2">
                 <p
                   class="text-base font-bold"
-                  [class.text-accent-petrol]="depositType() === 'protected'"
-                  [class.text-gray-900]="depositType() !== 'protected'"
-                  [class.dark:text-accent-petrol]="depositType() === 'protected'"
-                  [class.dark:text-white]="depositType() !== 'protected'"
+                  [class.text-accent-petrol]="depositType() === 'protected_credit'"
+                  [class.text-gray-900]="depositType() !== 'protected_credit'"
+                  [class.dark:text-accent-petrol]="depositType() === 'protected_credit'"
+                  [class.dark:text-white]="depositType() !== 'protected_credit'"
                 >
                   Crédito Autorentar (No retirable)
                 </p>
                 <span
-                  *ngIf="depositType() === 'protected'"
+                  *ngIf="depositType() === 'protected_credit'"
                   class="px-2 py-0.5 text-xs font-semibold rounded-full bg-accent-petrol text-white"
                 >
                   Seleccionado

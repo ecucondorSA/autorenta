@@ -58,7 +58,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
     it('debería mostrar el monto del hold en ARS', () => {
       // Assert
       const alert = fixture.nativeElement;
-      expect(alert.textContent).toContain('$300.000');
+      expect(alert.textContent).toContain('$ 300.000'); // Intl format adds space
       expect(alert.textContent).toContain('en tu tarjeta');
     });
 
@@ -109,7 +109,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       // Assert
       const alert = fixture.nativeElement;
       // 300 USD * 1000 rate = 300,000 ARS
-      expect(alert.textContent).toContain('$300.000');
+      expect(alert.textContent).toContain('$ 300.000'); // Intl format adds space
       expect(alert.textContent).toContain('de tu wallet');
     });
 
@@ -196,7 +196,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       fixture.detectChanges();
 
       // Assert
-      expect(fixture.nativeElement.textContent).toContain('$350.000');
+      expect(fixture.nativeElement.textContent).toContain('$ 350.000'); // Intl format adds space
     });
 
     it('debería calcular crédito wallet en ARS desde USD usando fxSnapshot', () => {
@@ -216,7 +216,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
 
       // Assert
       // 400 USD * 1000 rate = 400,000 ARS
-      expect(fixture.nativeElement.textContent).toContain('$400.000');
+      expect(fixture.nativeElement.textContent).toContain('$ 400.000'); // Intl format adds space
     });
   });
 
@@ -233,7 +233,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       fixture.detectChanges();
 
       // Assert - 300 USD * 5000 = 1,500,000 ARS
-      expect(fixture.nativeElement.textContent).toContain('$1.500.000');
+      expect(fixture.nativeElement.textContent).toContain('$ 1.500.000'); // Intl format adds space
     });
 
     it('debería manejar montos decimales correctamente', () => {
@@ -249,7 +249,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
 
       // Assert - Formato ARS con separador de miles
       const text = fixture.nativeElement.textContent;
-      expect(text).toContain('$325.750');
+      expect(text).toContain('$ 325.750'); // Intl format adds space
     });
   });
 });

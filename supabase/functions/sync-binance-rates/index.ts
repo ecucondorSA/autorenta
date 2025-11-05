@@ -71,7 +71,7 @@ serve(async (req) => {
           console.warn(`Could not fetch volatility for ${pair}:`, volatilityError);
         }
 
-        // Update database with 20% margin
+        // Update database with platform margin (10%)
         const { data: updateResult, error: updateError } = await supabase.rpc(
           'upsert_exchange_rate',
           {
