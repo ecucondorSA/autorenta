@@ -1,5 +1,4 @@
-
-import { ChatMessageInsertSchema } from '../../../../../../functions/contracts/chat-message.schemas';
+import { ChatMessageInsertSchema } from '../schemas/chat-message.schemas';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 
