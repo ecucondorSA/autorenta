@@ -26,7 +26,6 @@ import { AuthService } from './core/services/auth.service';
 import { ProfileService } from './core/services/profile.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { PwaService } from './core/services/pwa.service';
-import { TourService } from './core/services/tour.service';
 import { GuidedTourService } from './core/guided-tour';
 import { LocaleManagerService } from './core/services/locale-manager.service';
 import { PushNotificationService } from './core/services/push-notification.service';
@@ -79,8 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   private readonly profileService = inject(ProfileService);
   private readonly compareService = inject(CarsCompareService);
   private readonly pwaService = inject(PwaService);
-  private readonly tourService = inject(TourService); // OLD - Keeping for compatibility
-  private readonly guidedTour = inject(GuidedTourService); // NEW
+  private readonly guidedTour = inject(GuidedTourService);
   private readonly localeManager = inject(LocaleManagerService);
   private readonly pushNotificationService = inject(PushNotificationService);
   private readonly router = inject(Router);
