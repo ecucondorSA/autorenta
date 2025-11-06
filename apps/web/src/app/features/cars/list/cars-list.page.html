@@ -30,6 +30,14 @@
             data-tour-step="guided-search"
             class="map-controls__filters filter-section"
           >
+            <app-date-range-picker
+              label="Fechas de alquiler"
+              [initialFrom]="dateRange().from"
+              [initialTo]="dateRange().to"
+              [showPrices]="false"
+              (rangeChange)="onRangeChange($event)"
+              class="mb-3"
+            ></app-date-range-picker>
             <app-map-filters
               (filtersChange)="onFiltersChange($event)"
               (filtersReset)="onFiltersReset()"

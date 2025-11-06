@@ -24,7 +24,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
 import { Car } from '../../../core/models';
-import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRange, DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import {
   MapFiltersComponent,
@@ -59,6 +59,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     CommonModule,
     CarsMapComponent,
     MapFiltersComponent,
+    DateRangePickerComponent,
     CarCardComponent,
     SkeletonLoaderComponent,
     TranslateModule,
@@ -782,6 +783,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   onRangeChange(range: DateRange): void {
     this.dateRange.set(range);
+    void this.loadCars();
   }
 
   onCarSelected(carId: string): void {
