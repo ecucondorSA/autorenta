@@ -47,14 +47,28 @@ export class WalletService {
   readonly pendingDepositsCount = signal(0);
 
   constructor() {
-    this.getBalance().subscribe();
-    this.getTransactions().subscribe();
+    // Only fetch balance and transactions if user is authenticated
+    this.supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        this.getBalance().subscribe();
+        this.getTransactions().subscribe();
+      }
+    });
   }
 
   getBalance(): Observable<WalletBalance> {
     this.loading.set(true);
     this.error.set(null);
-    return from(this.supabase.rpc('wallet_get_balance')).pipe(
+
+    // Check authentication before making RPC call
+    return from(this.supabase.auth.getSession()).pipe(
+      switchMap(({ data: { session } }) => {
+        if (!session?.user) {
+          this.loading.set(false);
+          return throwError(() => new Error('Usuario no autenticado'));
+        }
+        return from(this.supabase.rpc('wallet_get_balance'));
+      }),
       map(({ data, error }) => {
         if (error) throw error;
         if (!data) throw new Error('No se pudo obtener el balance');
@@ -76,12 +90,21 @@ export class WalletService {
   getTransactions(filters?: WalletTransactionFilters): Observable<WalletTransaction[]> {
     this.loading.set(true);
     this.error.set(null);
-    return from(
-      this.supabase
-        .from('v_wallet_history')
-        .select('*')
-        .order('transaction_date', { ascending: false }),
-    ).pipe(
+
+    // Check authentication before querying transactions
+    return from(this.supabase.auth.getSession()).pipe(
+      switchMap(({ data: { session } }) => {
+        if (!session?.user) {
+          this.loading.set(false);
+          return throwError(() => new Error('Usuario no autenticado'));
+        }
+        return from(
+          this.supabase
+            .from('v_wallet_history')
+            .select('*')
+            .order('transaction_date', { ascending: false }),
+        );
+      }),
       map(({ data, error }) => {
         if (error) throw error;
         const transactions = (data ?? []) as WalletTransaction[];
