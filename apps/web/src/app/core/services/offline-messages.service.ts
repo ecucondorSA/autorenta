@@ -257,7 +257,7 @@ export class OfflineMessagesService {
     try {
       const messages = await this.getPendingMessages();
       this.pendingCount.set(messages.length);
-    } catch (error) {}
+    } catch (error) { /* Silenced */ }
   }
 
   /**
