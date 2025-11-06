@@ -1,0 +1,242 @@
+<div class="confirmation-container">
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-state">
+    <div class="spinner"></div>
+    <p class="loading-text">Verificando el pago...</p>
+  </div>
+
+  <!-- Success State -->
+  <div *ngIf="!isLoading() && isSuccess()" class="confirmation-content success-state">
+
+    <!-- Success Icon with Animation -->
+    <div class="status-icon-wrapper success">
+      <div class="checkmark-circle">
+        <svg class="checkmark" viewBox="0 0 52 52">
+          <circle class="checkmark-circle-bg" cx="26" cy="26" r="25" fill="none"/>
+          <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <h1 class="status-title success">{{ confirmationMessage() }}</h1>
+    <p class="status-subtitle">
+      Tu reserva ha sido confirmada exitosamente.
+      Recibirás un correo con los detalles.
+    </p>
+
+    <!-- Payment Details Card -->
+    <div class="details-card">
+      <h2 class="card-title">Detalles del Pago</h2>
+
+      <div class="detail-row">
+        <span class="detail-label">Proveedor</span>
+        <span class="detail-value">{{ providerDisplayName() }}</span>
+      </div>
+
+      <div class="detail-row" *ngIf="paymentReferenceId()">
+        <span class="detail-label">ID de Referencia</span>
+        <span class="detail-value code">{{ paymentReferenceId() }}</span>
+      </div>
+
+      <div class="detail-row" *ngIf="booking()">
+        <span class="detail-label">Monto Total</span>
+        <span class="detail-value amount">
+          {{ formatCurrency(booking().total_price, booking().currency || 'ARS') }}
+        </span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Fecha</span>
+        <span class="detail-value">{{ formatDate(confirmedAt()) }}</span>
+      </div>
+    </div>
+
+    <!-- Booking Summary Card -->
+    <div class="details-card" *ngIf="booking()">
+      <h2 class="card-title">Resumen de la Reserva</h2>
+
+      <div class="detail-row">
+        <span class="detail-label">ID de Reserva</span>
+        <span class="detail-value code">{{ booking().id }}</span>
+      </div>
+
+      <div class="detail-row" *ngIf="booking().car">
+        <span class="detail-label">Vehículo</span>
+        <span class="detail-value">{{ booking().car.brand }} {{ booking().car.model }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Desde</span>
+        <span class="detail-value">{{ booking().start_date | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Hasta</span>
+        <span class="detail-value">{{ booking().end_date | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Estado</span>
+        <span class="status-badge confirmed">Confirmada</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn-primary" (click)="viewBookingDetails()">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        </svg>
+        Ver Detalles de la Reserva
+      </button>
+
+      <button class="btn-secondary" (click)="downloadReceipt()">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Descargar Recibo
+      </button>
+
+      <button class="btn-link" (click)="goToMyBookings()">
+        Ver Todas mis Reservas
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Pending State -->
+  <div *ngIf="!isLoading() && isPending()" class="confirmation-content pending-state">
+
+    <!-- Pending Icon -->
+    <div class="status-icon-wrapper pending">
+      <svg class="pending-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    </div>
+
+    <!-- Pending Message -->
+    <h1 class="status-title pending">{{ confirmationMessage() }}</h1>
+    <p class="status-subtitle">
+      Tu pago está siendo procesado. Esto puede tomar unos minutos.
+      Te notificaremos cuando se confirme.
+    </p>
+
+    <!-- Payment Details Card -->
+    <div class="details-card">
+      <h2 class="card-title">Información del Pago</h2>
+
+      <div class="detail-row">
+        <span class="detail-label">Proveedor</span>
+        <span class="detail-value">{{ providerDisplayName() }}</span>
+      </div>
+
+      <div class="detail-row" *ngIf="paymentReferenceId()">
+        <span class="detail-label">ID de Referencia</span>
+        <span class="detail-value code">{{ paymentReferenceId() }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Estado</span>
+        <span class="status-badge pending">Pendiente</span>
+      </div>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="info-banner pending">
+      <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div class="info-text">
+        <p class="font-medium">¿Qué sigue?</p>
+        <ul class="info-list">
+          <li>Verificaremos tu pago con {{ providerDisplayName() }}</li>
+          <li>Recibirás un email cuando se confirme</li>
+          <li>Puedes cerrar esta página</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn-secondary" (click)="retry()">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Actualizar Estado
+      </button>
+
+      <button class="btn-link" (click)="goToHome()">
+        Volver al Inicio
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading() && isError()" class="confirmation-content error-state">
+
+    <!-- Error Icon -->
+    <div class="status-icon-wrapper error">
+      <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    </div>
+
+    <!-- Error Message -->
+    <h1 class="status-title error">{{ confirmationMessage() }}</h1>
+    <p class="status-subtitle">
+      {{ errorMessage() || 'Hubo un problema al procesar tu pago. Por favor intenta nuevamente.' }}
+    </p>
+
+    <!-- Error Details Card -->
+    <div class="details-card error">
+      <h2 class="card-title">¿Qué puedes hacer?</h2>
+
+      <ul class="error-actions-list">
+        <li>Verifica tu método de pago</li>
+        <li>Asegúrate de tener fondos suficientes</li>
+        <li>Intenta con otro proveedor de pago</li>
+        <li>Contacta a soporte si el problema persiste</li>
+      </ul>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn-primary" (click)="router.navigate(['/bookings', bookingId(), 'checkout'])">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Reintentar Pago
+      </button>
+
+      <button class="btn-secondary" (click)="goToHome()">
+        Volver al Inicio
+      </button>
+
+      <button class="btn-link" (click)="retry()">
+        Actualizar Estado
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Help Section (Always visible except on loading) -->
+  <div *ngIf="!isLoading()" class="help-section">
+    <p class="help-text">
+      ¿Necesitas ayuda?
+      <a href="mailto:soporte@autorentar.com" class="help-link">Contacta a Soporte</a>
+    </p>
+  </div>
+
+</div>

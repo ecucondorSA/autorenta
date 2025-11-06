@@ -9,4 +9,31 @@ export const environment = buildEnvironment({
   mapboxAccessToken: 'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg',
   googleAnalyticsMeasurementId: '', // Configurar via NG_APP_GA4_MEASUREMENT_ID
   enableAnalytics: true,
+  docVerifierUrl: 'https://doc-verifier.autorentar.workers.dev',
+  // PayPal Production Credentials
+  // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
+  // NG_APP_PAYPAL_CLIENT_ID - Client ID de PayPal Production
+  paypalClientId: '', // Se configura via NG_APP_PAYPAL_CLIENT_ID
+  paypalClientSecret: '', // No se usa en frontend
+  distanceConfig: {
+    // Umbrales de tiers (km)
+    localThresholdKm: 20,
+    regionalThresholdKm: 100,
+
+    // Multiplicadores de garantía por distancia
+    guaranteeMultipliers: {
+      local: 1.0,       // Sin recargo para autos cercanos
+      regional: 1.15,   // +15% para distancia media
+      longDistance: 1.3 // +30% para larga distancia
+    },
+
+    // Configuración de delivery/entrega
+    deliveryFeePerKm: 0.5,        // ARS por km
+    minDistanceForDeliveryFee: 5, // km - no cobrar delivery si es < 5km
+    maxDeliveryDistance: 50,      // km - distancia máxima para entrega
+
+    // Radio de búsqueda por defecto
+    defaultSearchRadiusKm: 50,
+    maxSearchRadiusKm: 100
+  }
 });

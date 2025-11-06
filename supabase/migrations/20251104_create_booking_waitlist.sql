@@ -427,3 +427,5 @@ COMMIT;
 -- 3. Configurar cron job para cleanup_expired_waitlist()
 -- ================================================================
 
+
+

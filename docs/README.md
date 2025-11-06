@@ -1,6 +1,6 @@
 # 📚 Documentación AutoRenta
 
-**Última actualización**: 2025-11-04
+**Última actualización**: 2025-11-05
 
 ## Índice
 
@@ -33,6 +33,8 @@
 
 ### 🧪 Testing y QA
 
+- **[Plan de Testing de la Plataforma](./testing/TESTING_PLAN.md)** - Plan completo de testing (Unit, Integration, E2E)
+- **[Resumen Ejecutivo - Testing](./testing/TESTING_PLAN_SUMMARY.md)** - Resumen ejecutivo del plan de testing
 - **[TestSprite MCP Integration](./implementation/TESTSPRITE_MCP_INTEGRATION_SPEC.md)** - Integración de testing automatizado con IA
 - **[PRD Template](./templates/testsprite-prd-template.md)** - Template para Product Requirements Documents
 - **[E2E Tests README](../tests/e2e/README.md)** - Guía de tests E2E automatizados

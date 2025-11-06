@@ -111,6 +111,7 @@ export interface CalculateRiskSnapshotParams {
   country: CountryCode;
   fxRate: number;
   coverageUpgrade?: CoverageUpgrade;
+  distanceKm?: number; // ✅ NEW: Distance for distance-based guarantees
 }
 
 /**
@@ -163,6 +164,11 @@ export interface PriceBreakdown {
 
   // Upgrades
   coverageUpgradeUsd: number; // Costo del upgrade de cobertura
+
+  // ✅ NEW: Distance-based pricing
+  deliveryFeeUsd?: number; // Fee de entrega/delivery
+  distanceKm?: number; // Distancia al auto
+  distanceTier?: 'local' | 'regional' | 'long_distance'; // Tier de distancia
 
   // Total
   totalUsd: number;

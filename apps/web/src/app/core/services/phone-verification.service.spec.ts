@@ -66,7 +66,9 @@ describe('PhoneVerificationService', () => {
         isVerified: false,
         phone: null,
         verifiedAt: null,
+        canResend: true,
         cooldownSeconds: 0,
+        otpSent: false,
       });
     });
 
@@ -89,7 +91,9 @@ describe('PhoneVerificationService', () => {
         isVerified: true,
         phone: '+5491112345678',
         verifiedAt,
+        canResend: true,
         cooldownSeconds: 0,
+        otpSent: false,
       });
     });
   });
@@ -103,7 +107,7 @@ describe('PhoneVerificationService', () => {
         options: { channel: 'sms' },
       });
       expect(result).toBe(true);
-      expect(service.otpSent()).toBe(true);
+      expect(service.status().otpSent).toBe(true);
     });
 
     it('should format phone number correctly', async () => {

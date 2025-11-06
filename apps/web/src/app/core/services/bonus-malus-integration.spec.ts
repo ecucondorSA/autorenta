@@ -516,5 +516,6 @@ describe('Bonus-Malus Integration Tests', () => {
  *    npm run test -- bonus-malus-integration.spec.ts
  *
  * 3. Or add to package.json:
- *    "test:integration": "ng test --include=**/*.integration.spec.ts"
+ *    "test:integration": "ng test --include=PATTERN"
+ *    where PATTERN is the glob for integration spec files
  */

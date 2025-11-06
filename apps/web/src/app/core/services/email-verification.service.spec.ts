@@ -57,6 +57,7 @@ describe('EmailVerificationService', () => {
         isVerified: false,
         email: 'test@example.com',
         verifiedAt: null,
+        canResend: true,
         cooldownSeconds: 0,
       });
     });
@@ -76,6 +77,7 @@ describe('EmailVerificationService', () => {
         isVerified: true,
         email: 'test@example.com',
         verifiedAt,
+        canResend: true,
         cooldownSeconds: 0,
       });
     });

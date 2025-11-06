@@ -55,32 +55,36 @@
 /* Logo */
 .prompt-icon {
   flex-shrink: 0;
-  width: 56px;
-  height: 56px;
+  width: 72px; /* Aumentado de 56px */
+  height: 72px; /* Aumentado de 56px */
   background: white;
   border: 2px solid #2c4a52;
-  border-radius: 50%; /* Cambiado a círculo completo */
+  border-radius: 50%; /* Círculo completo */
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(44, 74, 82, 0.25);
-  padding: 8px;
+  padding: 4px; /* Reducido de 8px para que el logo sea más grande */
   overflow: hidden; /* Asegura que el logo se recorte al círculo */
 }
 
 .prompt-logo {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Cambiado de contain a cover para llenar el círculo */
+  object-fit: cover; /* Llena el círculo */
   display: block;
-  border-radius: 50%; /* Asegura que el logo también sea circular */
+  border-radius: 50%; /* Logo circular */
+  /* Eliminar fondo verde si existe */
+  background: white;
+  /* Filtro para mejorar contraste si el logo tiene fondo verde */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 @media (max-width: 480px) {
   .prompt-icon {
-    width: 48px;
-    height: 48px;
-    padding: 6px;
+    width: 64px; /* Aumentado de 48px */
+    height: 64px; /* Aumentado de 48px */
+    padding: 3px; /* Reducido para logo más grande */
   }
 }
 

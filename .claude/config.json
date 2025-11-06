@@ -22,6 +22,11 @@
         "Authorization": "Bearer APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571"
       },
       "description": "MercadoPago MCP Server - Integraciones con IA, documentación y optimización de pagos"
+    },
+    "supabase": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=obxvffplochgeiclibng",
+      "transport": "streamble-http",
+      "description": "Supabase MCP Server - Database queries, schema management, TypeScript generation, and project operations for AutoRenta verification system"
     }
   }
 }
