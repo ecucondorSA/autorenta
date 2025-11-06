@@ -22,3 +22,4 @@ node_modules
 !.vscode/extensions.json
 # ONNX models (too large for GitHub)
 apps/web/src/assets/models/*.onnx
+test-results/
