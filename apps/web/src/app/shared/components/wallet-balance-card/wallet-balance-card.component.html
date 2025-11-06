@@ -141,7 +141,7 @@
       <p class="text-sm text-charcoal-medium dark:text-pearl-light/90 font-medium mb-1">
         Balance Total
       </p>
-      <p class="text-4xl font-bold text-smoke-black dark:text-ivory-luminous">
+      <p class="text-4xl font-bold text-smoke-black dark:text-ivory-luminous" data-testid="wallet-balance">
         {{ formatCurrency(totalBalance()) }}
       </p>
     </div>
@@ -186,7 +186,7 @@
           </div>
 
           @if (nonWithdrawableBalance() > 0) {
-            <div class="flex items-start justify-between text-xs text-info-700 dark:text-info-100">
+            <div class="flex items-start justify-between text-xs text-info-700 dark:text-info-100" data-testid="non-withdrawable-balance">
               <span class="flex items-center gap-1">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
