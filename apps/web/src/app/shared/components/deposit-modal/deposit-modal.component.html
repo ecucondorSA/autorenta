@@ -6,6 +6,7 @@
     class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md m-4"
     appFocusTrap
     (escape)="onClose()"
+    data-testid="deposit-modal"
   >
     <div
       class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center"
@@ -183,10 +184,12 @@
         >
         <input
           type="number"
+          name="amount"
           [ngModel]="arsAmount()"
           (ngModelChange)="updateArsAmount($event)"
           class="input-premium w-full mt-1"
           placeholder="0.00"
+          data-testid="deposit-amount-input"
         />
         <div *ngIf="loadingRate()" class="text-sm text-gray-500 dark:text-gray-400 mt-1">
           Cargando cotización...
