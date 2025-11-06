@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
-import { SupabaseClientService } from './supabase-client.service';
 import { environment } from '../../../environments/environment';
+import { SupabaseClientService } from './supabase-client.service';
 
 export interface SplitPaymentCollector {
   userId: string;

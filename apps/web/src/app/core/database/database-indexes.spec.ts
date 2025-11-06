@@ -339,6 +339,7 @@ describe('Database Indexes', () => {
 
       // Este test fallaría si falta un índice
       if (missingIndexes.length > 0) {
+        // Expected to have missing indexes in mock test
       }
 
       // Para este test mock, esperamos que falte uno

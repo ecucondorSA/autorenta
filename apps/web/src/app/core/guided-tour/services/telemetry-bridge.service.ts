@@ -15,6 +15,7 @@ export class TelemetryBridgeService {
 
     // Console logging for debugging
     if (this.isDebugMode()) {
+      // Debug mode logging could be added here
     }
   }
 

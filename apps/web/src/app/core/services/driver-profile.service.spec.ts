@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { of, throwError } from 'rxjs';
 import { DriverProfileService, DriverProfile, ClassBenefits, ClassUpdateResult } from './driver-profile.service';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
-import { of, throwError } from 'rxjs';
 
 describe('DriverProfileService', () => {
   let service: DriverProfileService;

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { MarketplaceService } from '../marketplace.service';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { MarketplaceService } from '../marketplace.service';
 
 describe('MarketplaceService', () => {
   let service: MarketplaceService;
