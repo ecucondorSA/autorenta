@@ -68,8 +68,17 @@ export class DriverProfileService {
   readonly classDescription = computed(() => this.profile()?.class_description ?? 'Conductor base (sin historial)');
 
   constructor() {
-    // Auto-load profile on service init
-    this.getProfile().subscribe();
+    // Auto-load profile on service init only if user is authenticated
+    // Check authentication first to avoid errors
+    this.supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        this.getProfile().subscribe({
+          error: () => {
+            // Silently handle errors - user may not have profile yet
+          }
+        });
+      }
+    });
   }
 
   /**
@@ -83,7 +92,13 @@ export class DriverProfileService {
       this.supabase.rpc('get_driver_profile', userId ? { p_user_id: userId } : {})
     ).pipe(
       map(({ data, error }) => {
-        if (error) throw error;
+        if (error) {
+          // Handle authentication errors gracefully
+          if (error.code === 'P0001' || error.message?.includes('User not authenticated')) {
+            throw new Error('NOT_AUTHENTICATED');
+          }
+          throw error;
+        }
         if (!data || data.length === 0) {
           // No profile yet, initialize one
           throw new Error('NO_PROFILE');
@@ -93,6 +108,11 @@ export class DriverProfileService {
         return profile;
       }),
       catchError((err) => {
+        if (err.message === 'NOT_AUTHENTICATED') {
+          // Silently handle - user is not logged in
+          this.loading.set(false);
+          return throwError(() => err);
+        }
         if (err.message === 'NO_PROFILE') {
           // Initialize profile and retry
           return this.initializeProfile(userId).pipe(
