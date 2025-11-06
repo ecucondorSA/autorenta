@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { injectSupabase } from './supabase-client.service';
 import type {
   UserBonusMalus,
   BonusMalusCalculation,
   BonusMalusDisplay,
   BonusMalusType,
 } from '../models';
+import { injectSupabase } from './supabase-client.service';
 
 @Injectable({
   providedIn: 'root',

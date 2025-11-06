@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { PwaService } from '../../../core/services/pwa.service';
 import { filter } from 'rxjs';
+import { PwaService } from '../../../core/services/pwa.service';
 
 @Component({
   selector: 'app-pwa-install-prompt',

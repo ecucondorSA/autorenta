@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
+import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
+import type { PaymentPreferenceResponse } from '../interfaces/payment-gateway.interface';
 import { PayPalBookingGatewayService } from './paypal-booking-gateway.service';
 import { SupabaseClientService } from './supabase-client.service';
-import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
-import { firstValueFrom } from 'rxjs';
-import type { PaymentPreferenceResponse } from '../interfaces/payment-gateway.interface';
 
 describe('PayPalBookingGatewayService', () => {
   let service: PayPalBookingGatewayService;

@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
+import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
 import { PayPalWalletGatewayService } from './paypal-wallet-gateway.service';
 import { SupabaseClientService } from './supabase-client.service';
-import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
-import { firstValueFrom } from 'rxjs';
 
 describe('PayPalWalletGatewayService', () => {
   let service: PayPalWalletGatewayService;

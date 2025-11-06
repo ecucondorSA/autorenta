@@ -1,12 +1,12 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DepositModalComponent } from './deposit-modal.component';
-import { WalletService } from '../../../core/services/wallet.service';
-import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import { of, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
+import { WalletService } from '../../../core/services/wallet.service';
+import { DepositModalComponent } from './deposit-modal.component';
 
 describe('DepositModalComponent', () => {
   let component: DepositModalComponent;

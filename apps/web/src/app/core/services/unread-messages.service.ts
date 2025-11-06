@@ -1,7 +1,7 @@
 import { Injectable, signal, inject, computed, effect, Injector, DestroyRef } from '@angular/core';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
-import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface UnreadConversation {
   conversationId: string; // booking_id or car_id

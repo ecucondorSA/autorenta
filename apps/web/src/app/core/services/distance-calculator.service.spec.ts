@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { DistanceCalculatorService, DistanceRiskTier } from './distance-calculator.service';
 import { environment } from '../../../environments/environment';
+import { DistanceCalculatorService, DistanceRiskTier } from './distance-calculator.service';
 
 describe('DistanceCalculatorService', () => {
   let service: DistanceCalculatorService;

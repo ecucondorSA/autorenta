@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
 import { environment } from '../../../environments/environment';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Face Verification Result from Cloudflare Worker

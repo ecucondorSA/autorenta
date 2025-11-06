@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModalController } from '@ionic/angular/standalone';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { from } from 'rxjs';
 import { CarsService } from '../../../core/services/cars.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Car, CarStatus } from '../../../core/models';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { from } from 'rxjs';
 
 @Component({
   standalone: true,

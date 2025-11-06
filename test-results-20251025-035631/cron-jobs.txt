@@ -1,8 +1,0 @@
-               jobname               |   schedule   | active 
--------------------------------------+--------------+--------
- expire-pending-deposits             | 0 * * * *    | t
- poll-pending-payments-every-3min    | */3 * * * *  | t
- sync-binance-rates-every-15-min     | */15 * * * * | t
- update-demand-snapshots-every-15min | */15 * * * * | t
-(4 rows)
-
