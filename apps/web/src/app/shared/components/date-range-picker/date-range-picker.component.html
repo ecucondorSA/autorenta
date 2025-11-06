@@ -89,6 +89,7 @@
       </svg>
       <input
         type="date"
+        data-testid="rental-date-from"
         class="input-premium pl-11 pr-4"
         [value]="from() ?? ''"
         (change)="onFromChange($any($event.target).value)"
@@ -112,6 +113,7 @@
       </svg>
       <input
         type="date"
+        data-testid="rental-date-to"
         class="input-premium pl-11 pr-4"
         [value]="to() ?? ''"
         (change)="onToChange($any($event.target).value)"
