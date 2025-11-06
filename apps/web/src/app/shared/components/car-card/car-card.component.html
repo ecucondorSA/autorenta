@@ -22,10 +22,9 @@
       *ngIf="displayImage()"
       [ngSrc]="displayImage()!.url"
       [alt]="displayImage()!.alt"
-      width="400"
-      height="300"
+      fill
       [priority]="priority"
-      class="absolute inset-0 w-full h-full object-cover transition-slow group-hover:scale-105"
+      class="object-cover transition-slow group-hover:scale-105"
     />
 
     <!-- Fallback premium cuando no hay foto -->
