@@ -18,7 +18,6 @@ import { RealtimeChannel } from '@supabase/supabase-js';
 import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { MetaService } from '../../../core/services/meta.service';
-import { TourService } from '../../../core/services/tour.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
@@ -77,7 +76,6 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
   private readonly metaService = inject(MetaService);
-  private readonly tourService = inject(TourService);
   private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
@@ -563,12 +561,9 @@ export class CarsListPage implements OnInit, OnDestroy {
       // Collapse search form on mobile after search
       this.searchExpanded.set(false);
 
-      // Notificar que el inventario está listo y esperar a que el DOM se actualice
+      // Notificar que el inventario está listo
       if (this.isBrowser && !this.inventoryReady()) {
         this.inventoryReady.set(true);
-        setTimeout(() => {
-          this.tourService.startGuidedBookingTour();
-        }, 500);
       }
 
       // Setup real-time subscription on first load
