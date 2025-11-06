@@ -1,0 +1,206 @@
+```mermaid
+sequenceDiagram
+    participant User
+    participant CarDetailPage
+    participant BookingsService
+    participant WalletService
+    participant InsuranceService
+    participant DriverProfileService
+    participant RiskService
+    participant PaymentsService
+    participant CarsService
+    participant DB as Supabase DB
+    participant RPC as request_booking RPC
+
+    User->>CarDetailPage: Click "Reservar" button
+    CarDetailPage->>CarDetailPage: Verify authentication
+    alt Not authenticated
+        CarDetailPage->>User: Redirect to /auth/login
+    end
+
+    CarDetailPage->>BookingsService: createBookingWithValidation(carId, startDate, endDate)
+
+    Note over BookingsService: ORCHESTRATION LAYER<br/>7 dependencies
+
+    %% Step 1: Driver Profile Validation
+    BookingsService->>DriverProfileService: getDriverProfile(userId)
+    DriverProfileService->>DB: SELECT * FROM driver_profiles
+    DB-->>DriverProfileService: Profile data
+    DriverProfileService-->>BookingsService: Driver profile
+
+    alt Driver profile incomplete
+        BookingsService-->>CarDetailPage: Error: Complete driver profile first
+        CarDetailPage->>User: Show error + redirect to /profile/driver
+    end
+
+    %% Step 2: Car Availability Check
+    BookingsService->>CarsService: getCarById(carId)
+    CarsService->>DB: SELECT * FROM cars
+    DB-->>CarsService: Car data
+    CarsService-->>BookingsService: Car details
+
+    alt Car not available
+        BookingsService-->>CarDetailPage: Error: Car not available
+        CarDetailPage->>User: Show error message
+    end
+
+    %% Step 3: Calculate Risk Score
+    BookingsService->>RiskService: calculateRiskScore(userId, carId)
+    RiskService->>DriverProfileService: getDriverProfile(userId)
+    DriverProfileService-->>RiskService: Driver profile
+    RiskService->>RiskService: Calculate base risk (age, experience, etc.)
+    RiskService-->>BookingsService: Risk score + bonus-malus multiplier
+
+    %% Step 4: Calculate Insurance Coverage
+    BookingsService->>InsuranceService: calculateCoverage(carId, riskScore, duration)
+    InsuranceService->>InsuranceService: Calculate premium based on risk
+    InsuranceService-->>BookingsService: Insurance details (premium, franchise, FGO eligibility)
+
+    %% Step 5: Calculate Total Price
+    BookingsService->>BookingsService: Calculate rental days
+    BookingsService->>BookingsService: basePrice = car.daily_rate * days
+    BookingsService->>BookingsService: totalPrice = basePrice + insurance.premium
+    BookingsService->>BookingsService: securityDeposit = insurance.franchise
+
+    %% Step 6: Wallet Validation
+    BookingsService->>WalletService: getBalance(userId)
+    WalletService->>DB: SELECT * FROM user_wallets
+    DB-->>WalletService: Wallet data
+    WalletService-->>BookingsService: Balance + locked_funds
+
+    alt Insufficient balance
+        BookingsService-->>CarDetailPage: Error: Insufficient funds (need deposit for security)
+        CarDetailPage->>User: Show error + "Depositar" button
+    end
+
+    %% Step 7: Create Booking via RPC
+    BookingsService->>RPC: request_booking(payload)
+
+    Note over RPC: RPC VALIDATION<br/>- Check car availability again<br/>- Validate dates<br/>- Lock funds via wallet_lock_funds()<br/>- Create booking record<br/>- Create insurance coverage<br/>- Create payment intent
+
+    RPC->>DB: BEGIN TRANSACTION
+    RPC->>DB: SELECT * FROM cars FOR UPDATE
+
+    alt Car already booked for dates
+        RPC-->>BookingsService: Error: Car unavailable
+        BookingsService-->>CarDetailPage: Error
+        CarDetailPage->>User: Show error
+    end
+
+    RPC->>DB: CALL wallet_lock_funds(userId, securityDeposit)
+    DB-->>RPC: Funds locked
+
+    RPC->>DB: INSERT INTO bookings
+    RPC->>DB: INSERT INTO booking_insurance_coverage
+    RPC->>DB: INSERT INTO payment_intents (status: pending)
+    RPC->>DB: COMMIT TRANSACTION
+
+    RPC-->>BookingsService: Booking created (booking_id, payment_intent_id)
+
+    %% Step 8: Create Payment Preference (if needed)
+    alt Payment mode: Credit Card or Partial
+        BookingsService->>PaymentsService: createBookingPreference(bookingId, amount)
+        PaymentsService->>PaymentsService: Call Edge Function: mercadopago-create-booking-preference
+        PaymentsService-->>BookingsService: Preference (init_point URL)
+    end
+
+    BookingsService-->>CarDetailPage: Booking created successfully
+    CarDetailPage->>CarDetailPage: Track analytics: booking_completed
+    CarDetailPage->>User: Navigate to /bookings/detail-payment/:bookingId
+
+    alt Payment mode: Wallet Complete
+        User->>User: Booking confirmed immediately
+    else Payment mode: Credit Card
+        User->>User: Redirected to MercadoPago checkout
+    else Payment mode: Partial (30/70)
+        User->>User: Redirected to MercadoPago for 70% card payment
+    end
+```
+
+**Diagram: Booking Creation Flow**
+
+**Purpose**: Complete sequence diagram of the booking creation process from UI click to database commit.
+
+**Entry Point**: `CarDetailPage.onBookClick()` (apps/web/src/app/features/cars/detail/car-detail.page.ts:527-614)
+
+**Key Flow Steps**:
+
+1. **Authentication Check** (Layer 1 - UI)
+   - Verify user is logged in
+   - Redirect to login if needed
+
+2. **Driver Profile Validation** (Layer 2 - Service)
+   - Check if driver profile exists and is complete
+   - Required fields: license_number, date_of_birth, years_driving
+
+3. **Car Availability Check** (Layer 2 - Service)
+   - Verify car exists and is active
+   - Check if car is available for selected dates
+
+4. **Risk Calculation** (Layer 2 - Service)
+   - Calculate driver risk score based on profile
+   - Apply bonus-malus multiplier
+   - Determine insurance eligibility
+
+5. **Insurance Coverage Calculation** (Layer 2 - Service)
+   - Calculate premium based on risk score
+   - Determine franchise (security deposit)
+   - Check FGO eligibility (4-gate validation)
+
+6. **Price Calculation** (Layer 2 - Service)
+   - Base price = car.daily_rate × rental_days
+   - Total price = base_price + insurance_premium
+   - Security deposit = insurance_franchise
+
+7. **Wallet Validation** (Layer 2 - Service)
+   - Check if user has sufficient balance
+   - Available = balance - locked_funds
+   - Required = security_deposit (minimum)
+
+8. **Booking Creation via RPC** (Layer 3 - Database)
+   - RPC: `request_booking()`
+   - Transaction:
+     - Lock car for dates (SELECT FOR UPDATE)
+     - Lock funds in wallet
+     - Create booking record
+     - Create insurance coverage
+     - Create payment intent
+
+9. **Payment Preference Creation** (Layer 4 - External)
+   - If payment mode is Credit Card or Partial:
+     - Call Edge Function `mercadopago-create-booking-preference`
+     - Get MercadoPago checkout URL (init_point)
+
+10. **Navigation** (Layer 1 - UI)
+    - Redirect to `/bookings/detail-payment/:bookingId`
+    - User completes payment (if needed)
+
+**Database Operations**:
+- **Tables**: bookings, booking_insurance_coverage, payment_intents, user_wallets
+- **RPC**: `request_booking()`, `wallet_lock_funds()`
+- **Transaction**: Atomic booking + insurance + payment creation
+
+**Success Paths**:
+1. **Wallet Complete**: Booking confirmed immediately (funds locked)
+2. **Credit Card**: User redirected to MercadoPago → Webhook confirms → Booking confirmed
+3. **Partial (30/70)**: 30% wallet locked + 70% MercadoPago → Webhook confirms → Booking confirmed
+
+**Error Paths**:
+- Driver profile incomplete → Redirect to /profile/driver
+- Car unavailable → Show error + suggest other cars
+- Insufficient wallet balance → Show error + "Depositar" button
+- RPC validation failure → Rollback transaction + show error
+
+**Services Involved (7 dependencies)**:
+1. AuthService
+2. CarsService
+3. WalletService
+4. InsuranceService
+5. DriverProfileService
+6. RiskService
+7. PaymentsService
+
+**Related Documentation**:
+- `docs/flows/FLOW_BOOKING_CREATION.md` - Detailed flow analysis
+- `docs/architecture/DEPENDENCY_GRAPH.md` - BookingsService (7 deps)
+- `docs/guides/SAFE_CHANGE_CHECKLIST.md` - Checklist 3 (6+ deps)

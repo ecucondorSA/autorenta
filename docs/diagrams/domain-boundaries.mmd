@@ -1,0 +1,677 @@
+```mermaid
+graph TB
+    %% Define 7 Business Domains
+    subgraph Auth[AUTH DOMAIN]
+        direction TB
+        A1[AuthService<br/>0 deps]
+        A2[ProfileService<br/>1 dep]
+        A3[VerificationService<br/>1 dep]
+        A4[Database:<br/>profiles, auth.users]
+        A5[Storage:<br/>avatars, documents]
+    end
+
+    subgraph Car[CAR DOMAIN]
+        direction TB
+        C1[CarsService<br/>2 deps]
+        C2[GeocodingService<br/>1 dep]
+        C3[Database:<br/>cars, car_photos, car_features]
+        C4[Storage:<br/>car-images]
+        C5[External:<br/>Mapbox Geocoding API]
+    end
+
+    subgraph Booking[BOOKING DOMAIN ⚠️]
+        direction TB
+        B1[BookingsService<br/>7 deps<br/>🔴 CRITICAL]
+        B2[Database:<br/>bookings, booking_insurance_coverage]
+        B3[Tables Accessed:<br/>cars, user_wallets, driver_profiles]
+    end
+
+    subgraph Payment[PAYMENT DOMAIN]
+        direction TB
+        P1[CheckoutPaymentService<br/>6 deps<br/>🔴 CRITICAL]
+        P2[PaymentsService<br/>2 deps]
+        P3[Database:<br/>payment_intents, payments]
+        P4[External:<br/>MercadoPago API]
+        P5[Edge Function:<br/>mercadopago-create-booking-preference]
+    end
+
+    subgraph Wallet[WALLET DOMAIN]
+        direction TB
+        W1[WalletService<br/>2 deps]
+        W2[FxService<br/>1 dep]
+        W3[Database:<br/>user_wallets, wallet_transactions]
+        W4[RPCs:<br/>wallet_lock_funds, wallet_unlock_funds<br/>wallet_initiate_deposit, wallet_confirm_deposit]
+        W5[Edge Function:<br/>mercadopago-create-preference]
+        W6[External:<br/>MercadoPago, Binance API]
+    end
+
+    subgraph Insurance[INSURANCE DOMAIN]
+        direction TB
+        I1[InsuranceService<br/>3 deps]
+        I2[SettlementService<br/>4 deps]
+        I3[FgoV1_1Service<br/>1 dep]
+        I4[Database:<br/>booking_insurance_coverage<br/>insurance_claims, settlements<br/>fgo_fund]
+        I5[RPCs:<br/>submit_claim, process_settlement<br/>calculate_4_step_waterfall]
+    end
+
+    subgraph Risk[RISK DOMAIN]
+        direction TB
+        R1[RiskService<br/>2 deps]
+        R2[RiskMatrixService<br/>0 deps]
+        R3[DriverProfileService<br/>1 dep]
+        R4[Database:<br/>driver_profiles, risk_matrix<br/>bonus_malus_history]
+        R5[RPCs:<br/>calculate_risk_score<br/>apply_bonus_malus]
+    end
+
+    %% Domain Dependencies (Arrows show "depends on")
+    Car -->|Depends on<br/>Auth| Auth
+    Booking -->|Depends on<br/>Auth, Car, Wallet,<br/>Insurance, Risk, Payment| Auth
+    Booking -->|Depends on<br/>Car availability| Car
+    Booking -->|Depends on<br/>Lock security deposit| Wallet
+    Booking -->|Depends on<br/>Calculate coverage| Insurance
+    Booking -->|Depends on<br/>Risk score| Risk
+    Booking -->|Depends on<br/>Payment intents| Payment
+
+    Payment -->|Depends on<br/>Auth| Auth
+    Payment -->|Depends on<br/>Booking validation| Booking
+    Payment -->|Depends on<br/>Wallet operations| Wallet
+    Payment -->|Depends on<br/>Risk scoring| Risk
+
+    Wallet -->|Depends on<br/>Auth| Auth
+
+    Insurance -->|Depends on<br/>Auth| Auth
+    Insurance -->|Depends on<br/>Booking details| Booking
+    Insurance -->|Depends on<br/>Risk score| Risk
+
+    Risk -->|Depends on<br/>Auth| Auth
+    Risk -->|Depends on<br/>Car details| Car
+
+    %% Styling
+    classDef authStyle fill:#e7f5ff,stroke:#1971c2,stroke-width:2px
+    classDef carStyle fill:#d3f9d8,stroke:#2f9e44,stroke-width:2px
+    classDef bookingStyle fill:#ffe3e3,stroke:#c92a2a,stroke-width:3px
+    classDef paymentStyle fill:#fff3bf,stroke:#f59f00,stroke-width:2px
+    classDef walletStyle fill:#d0ebff,stroke:#1c7ed6,stroke-width:2px
+    classDef insuranceStyle fill:#ffec99,stroke:#f08c00,stroke-width:2px
+    classDef riskStyle fill:#ffe8cc,stroke:#e8590c,stroke-width:2px
+
+    class A1,A2,A3,A4,A5 authStyle
+    class C1,C2,C3,C4,C5 carStyle
+    class B1,B2,B3 bookingStyle
+    class P1,P2,P3,P4,P5 paymentStyle
+    class W1,W2,W3,W4,W5,W6 walletStyle
+    class I1,I2,I3,I4,I5 insuranceStyle
+    class R1,R2,R3,R4,R5 riskStyle
+
+    %% Legend
+    subgraph Legend[LEGEND]
+        direction LR
+        L1[🔵 Auth - Foundation<br/>0 external deps]:::authStyle
+        L2[🟢 Car - Low Coupling<br/>Depends on: Auth]:::carStyle
+        L3[🔴 Booking - High Coupling<br/>Depends on: 6 domains]:::bookingStyle
+        L4[🟡 Payment - Medium-High<br/>Depends on: 4 domains]:::paymentStyle
+        L5[🔵 Wallet - Low Coupling<br/>Depends on: Auth]:::walletStyle
+        L6[🟠 Insurance - Medium<br/>Depends on: 3 domains]:::insuranceStyle
+        L7[🟠 Risk - Low Coupling<br/>Depends on: 2 domains]:::riskStyle
+    end
+```
+
+---
+
+**Diagram: Domain Boundaries and Cross-Domain Dependencies**
+
+**Purpose**: Visualizes the 7 business domains of AutoRenta and their dependency relationships.
+
+---
+
+## Domain Overview
+
+### 1. AUTH DOMAIN (Foundation - 0 External Dependencies)
+
+**Purpose**: User authentication, profiles, and verification
+
+**Services**:
+- `AuthService` (0 deps) - Login, register, password reset
+- `ProfileService` (1 dep: Auth) - User profile management
+- `VerificationService` (1 dep: Auth) - Document verification
+
+**Database Tables**:
+- `auth.users` - Supabase Auth users
+- `profiles` - Extended user profile (role, avatar, phone)
+
+**Storage Buckets**:
+- `avatars` - User profile photos (public)
+- `documents` - Verification documents (private)
+
+**Dependencies**:
+- **Depends on**: NONE (foundation layer)
+- **Depended on by**: ALL other domains
+
+**Key Characteristics**:
+- ✅ NO circular dependencies
+- ✅ Foundation layer (all domains depend on this)
+- ✅ Lowest coupling (0 external deps)
+- ✅ Stable (rarely changes)
+
+---
+
+### 2. CAR DOMAIN (Low Coupling)
+
+**Purpose**: Vehicle listing, photo management, geocoding
+
+**Services**:
+- `CarsService` (2 deps: Auth, Geocoding)
+- `GeocodingService` (1 dep: Auth)
+
+**Database Tables**:
+- `cars` - Vehicle listings (status, daily_rate, location)
+- `car_photos` - Car images with sort order
+- `car_features` - Junction table (car ↔ features)
+
+**Storage Buckets**:
+- `car-images` - Car photos (public, WebP optimized)
+
+**External APIs**:
+- Mapbox Geocoding API (address → lat/lng)
+
+**Dependencies**:
+- **Depends on**: Auth
+- **Depended on by**: Booking, Risk
+
+**Key Characteristics**:
+- ✅ Low coupling (2 deps)
+- ✅ Independent domain (can be modified safely)
+- ✅ Clear boundaries (only car-related logic)
+
+---
+
+### 3. BOOKING DOMAIN ⚠️ (High Coupling - CRITICAL)
+
+**Purpose**: Rental booking creation and management
+
+**Services**:
+- `BookingsService` (7 deps: Auth, Car, Wallet, Insurance, DriverProfile, Risk, Payments) - 🔴 **CRITICAL COUPLING**
+
+**Database Tables**:
+- `bookings` - Rental bookings (status, dates, prices)
+- `booking_insurance_coverage` - Insurance linked to booking
+
+**Tables Accessed** (cross-domain):
+- `cars` (Car domain)
+- `user_wallets` (Wallet domain)
+- `driver_profiles` (Risk domain)
+
+**Dependencies**:
+- **Depends on**: Auth, Car, Wallet, Insurance, Risk, Payment (6 domains!)
+- **Depended on by**: Payment, Insurance
+
+**Key Characteristics**:
+- 🔴 **HIGHEST COUPLING** (depends on 6 out of 7 domains)
+- ⚠️ **ORCHESTRATION SERVICE** (coordinates multiple domains)
+- ⚠️ **HIGH CHANGE IMPACT** (changes affect multiple domains)
+- ⚠️ **REFACTORING PRIORITY** (extract repository, consider domain events)
+
+**Why High Coupling?**
+Booking is an orchestrator that coordinates:
+1. **Auth** - User authentication
+2. **Car** - Car availability validation
+3. **Wallet** - Lock security deposit
+4. **Insurance** - Calculate coverage and premium
+5. **Risk** - Calculate risk score and bonus-malus
+6. **Payment** - Create payment intent
+
+**Recommended Refactoring**:
+- Extract `BookingsRepository` (data access layer)
+- Consider domain events for cross-domain communication
+- Break down into smaller, focused services
+
+---
+
+### 4. PAYMENT DOMAIN (Medium-High Coupling)
+
+**Purpose**: Payment processing, MercadoPago integration, checkout
+
+**Services**:
+- `CheckoutPaymentService` (6 deps) - 🔴 **CRITICAL COUPLING**
+- `PaymentsService` (2 deps)
+
+**Database Tables**:
+- `payment_intents` - Payment requests (provider, status, amount)
+- `payments` - Completed payment records
+
+**External APIs**:
+- MercadoPago API (preferences, payments, webhooks)
+
+**Edge Functions**:
+- `mercadopago-create-booking-preference` - Create checkout preference
+- `mercadopago-webhook` - Process IPN notifications
+
+**Dependencies**:
+- **Depends on**: Auth, Booking, Wallet, Risk
+- **Depended on by**: Booking
+
+**Key Characteristics**:
+- 🔴 **HIGH COUPLING** (6 deps in CheckoutPaymentService)
+- ⚠️ **EXTERNAL DEPENDENCY** (MercadoPago API)
+- ⚠️ **CRITICAL FLOW** (payment failures affect bookings)
+- ✅ **IDEMPOTENT** (webhook handles duplicate notifications)
+
+**Payment Modes**:
+1. 100% Wallet - Instant confirmation
+2. 100% Credit Card - MercadoPago checkout → webhook
+3. Partial (30/70) - Wallet lock + card payment → webhook
+
+---
+
+### 5. WALLET DOMAIN (Low Coupling)
+
+**Purpose**: User wallet management, deposits, withdrawals, fund locking
+
+**Services**:
+- `WalletService` (2 deps: Auth, Fx)
+- `FxService` (1 dep: Auth) - Exchange rate conversion
+
+**Database Tables**:
+- `user_wallets` - User balance, locked funds, non-withdrawable floor
+- `wallet_transactions` - All wallet operations (deposits, withdrawals, locks)
+
+**RPCs**:
+- `wallet_lock_funds()` - Lock funds for booking
+- `wallet_unlock_funds()` - Unlock funds after booking
+- `wallet_initiate_deposit()` - Create pending deposit transaction
+- `wallet_confirm_deposit()` - Confirm deposit after payment
+
+**Edge Functions**:
+- `mercadopago-create-preference` - Create deposit checkout
+
+**External APIs**:
+- MercadoPago API (deposits)
+- Binance API (exchange rates)
+
+**Dependencies**:
+- **Depends on**: Auth
+- **Depended on by**: Booking, Payment
+
+**Key Characteristics**:
+- ✅ **LOW COUPLING** (2 deps)
+- ✅ **ISOLATED DOMAIN** (can be modified independently)
+- ✅ **CRITICAL FEATURE** (non-withdrawable cash deposits)
+- ✅ **TRANSACTIONAL** (RPC functions ensure consistency)
+
+**Non-Withdrawable Cash Logic**:
+- Cash deposits (`payment_type_id = 'ticket'`) → Marked as non-withdrawable
+- Tracked in `user_wallets.non_withdrawable_floor`
+- Prevents money laundering via cash → wallet → bank withdrawal
+
+---
+
+### 6. INSURANCE DOMAIN (Medium Coupling)
+
+**Purpose**: Insurance coverage, claims, settlements, FGO (Fondo de Garantía)
+
+**Services**:
+- `InsuranceService` (3 deps: Auth, Risk, FgoV1_1)
+- `SettlementService` (4 deps: Auth, FgoV1_1, Wallet, Payments)
+- `FgoV1_1Service` (1 dep: Auth) - FGO fund management
+
+**Database Tables**:
+- `booking_insurance_coverage` - Insurance linked to bookings
+- `insurance_claims` - Damage claims submitted by owners
+- `settlements` - Settlement processing (4-step waterfall)
+- `fgo_fund` - Fondo de Garantía balance and transactions
+
+**RPCs**:
+- `submit_claim()` - Create claim with validation
+- `process_settlement()` - Process 4-step waterfall payment
+- `calculate_4_step_waterfall()` - Calculate payment sources
+
+**Dependencies**:
+- **Depends on**: Auth, Booking, Risk
+- **Depended on by**: Booking
+
+**Key Characteristics**:
+- 🟡 **MEDIUM COUPLING** (3-4 deps)
+- ⚠️ **COMPLEX LOGIC** (4-gate eligibility, 4-step waterfall)
+- ⚠️ **CRITICAL FLOW** (claim → settlement → payment)
+- ✅ **WELL-DEFINED** (clear domain boundaries)
+
+**4-Gate Eligibility**:
+1. RC valid and up-to-date
+2. Monthly cap not exceeded (100,000 ARS/month)
+3. User limit not exceeded (3 claims/lifetime)
+4. Event cap not exceeded (50,000 ARS/claim)
+
+**4-Step Waterfall**:
+1. Hold Capture (credit card hold from renter)
+2. Wallet Debit (security deposit)
+3. Extra Charge (up to franchise amount)
+4. FGO Coverage (from guarantee fund)
+5. Uncovered (remaining amount owner must absorb)
+
+---
+
+### 7. RISK DOMAIN (Low Coupling)
+
+**Purpose**: Driver risk profiling, bonus-malus system, risk scoring
+
+**Services**:
+- `RiskService` (2 deps: Auth, RiskMatrix)
+- `RiskMatrixService` (0 deps) - Risk matrix calculations
+- `DriverProfileService` (1 dep: Auth)
+
+**Database Tables**:
+- `driver_profiles` - Driver license, age, experience
+- `risk_matrix` - Risk parameters (age, experience → multiplier)
+- `bonus_malus_history` - Bonus-malus events (accidents, claims)
+
+**RPCs**:
+- `calculate_risk_score()` - Calculate base risk score
+- `apply_bonus_malus()` - Apply bonus-malus multiplier
+
+**Dependencies**:
+- **Depends on**: Auth, Car
+- **Depended on by**: Booking, Insurance, Payment
+
+**Key Characteristics**:
+- ✅ **LOW COUPLING** (2 deps)
+- ✅ **INDEPENDENT LOGIC** (can be modified safely)
+- ✅ **PURE CALCULATION** (stateless risk scoring)
+- ✅ **WELL-TESTED** (bonus-malus system has 80%+ coverage)
+
+**Bonus-Malus System**:
+- Malus events: Accidents, claims → Increase insurance premium (10-30%)
+- Bonus events: Claims-free years → Decrease premium (5-20%)
+- History tracked per driver profile
+
+---
+
+## Dependency Matrix
+
+| Domain | Auth | Car | Booking | Payment | Wallet | Insurance | Risk |
+|--------|------|-----|---------|---------|--------|-----------|------|
+| **Auth** | - | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Car** | ✅ | - | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Booking** | ✅ | ✅ | - | ⚠️ | ⚠️ | ⚠️ | ⚠️ |
+| **Payment** | ✅ | ❌ | ✅ | - | ✅ | ❌ | ✅ |
+| **Wallet** | ✅ | ❌ | ❌ | ❌ | - | ❌ | ❌ |
+| **Insurance** | ✅ | ❌ | ✅ | ❌ | ❌ | - | ✅ |
+| **Risk** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | - |
+
+**Legend**:
+- ✅ = Direct dependency (Service A injects Service B)
+- ⚠️ = Bidirectional dependency (Service A ↔ Service B)
+- ❌ = No dependency
+
+---
+
+## Key Insights
+
+### 1. Foundation Layer: Auth
+
+**All domains depend on Auth**, making it the foundation of the entire system.
+
+**Implication**: Changes to AuthService affect ALL 6 other domains.
+
+**Recommendation**: Keep AuthService stable, well-tested, and avoid breaking changes.
+
+---
+
+### 2. High Coupling: Booking Domain
+
+**Booking depends on 6 out of 7 domains**, making it the most coupled service.
+
+**Why?**
+Booking orchestrates:
+- User authentication (Auth)
+- Car availability (Car)
+- Wallet locking (Wallet)
+- Insurance coverage (Insurance)
+- Risk scoring (Risk)
+- Payment creation (Payment)
+
+**Implication**: Changes to Booking have **WIDE BLAST RADIUS**.
+
+**Recommendation**:
+- Follow **Checklist 3** (6+ deps) in `SAFE_CHANGE_CHECKLIST.md`
+- Extract `BookingsRepository` to separate data access
+- Consider **domain events** for cross-domain communication
+- Prioritize for refactoring
+
+---
+
+### 3. Isolated Domains: Wallet, Car
+
+**Wallet and Car** have **low coupling** (1-2 deps), making them safe to modify.
+
+**Implication**: Changes to Wallet or Car have **MINIMAL IMPACT**.
+
+**Recommendation**: These domains are good candidates for new features or refactoring practice.
+
+---
+
+### 4. No Circular Dependencies ✅
+
+**Verified**: No circular dependencies exist in the codebase.
+
+**How Verified**: Manual dependency chain tracing during analysis.
+
+**Implication**: Clean dependency tree, no risk of infinite loops or deadlocks.
+
+---
+
+### 5. Bidirectional Dependencies ⚠️
+
+**Booking ↔ Payment**: Booking creates payment intents, Payment confirms bookings.
+
+**Implication**: Changes to either service can affect the other.
+
+**Recommendation**: Consider breaking bidirectional dependency via:
+- Domain events (Payment publishes "payment confirmed" event → Booking listens)
+- Mediator pattern (BookingPaymentOrchestrator coordinates both)
+
+---
+
+## Change Impact Scenarios
+
+### Scenario 1: Modify AuthService
+
+**Affected Domains**: ALL (6 domains)
+
+**Risk Level**: 🔴 CRITICAL
+
+**Checklist**: Follow **Checklist 3** (6+ deps)
+
+**Testing Strategy**:
+- Run ALL domain tests (auth, car, booking, payment, wallet, insurance, risk)
+- Full E2E test suite
+- Manual smoke testing of all features
+
+---
+
+### Scenario 2: Modify WalletService
+
+**Affected Domains**: Booking, Payment
+
+**Risk Level**: 🟡 MEDIUM
+
+**Checklist**: Follow **Checklist 2** (2-3 deps)
+
+**Testing Strategy**:
+- Run wallet tests
+- Run booking creation tests (wallet locking)
+- Run payment checkout tests (wallet mode)
+
+---
+
+### Scenario 3: Modify BookingsService
+
+**Affected Domains**: Payment, Insurance (direct), Auth, Car, Wallet, Risk (indirect)
+
+**Risk Level**: 🔴 CRITICAL
+
+**Checklist**: Follow **Checklist 3** (6+ deps)
+
+**Testing Strategy**:
+- Run booking tests
+- Run payment checkout tests
+- Run insurance claim tests
+- Test all booking flows end-to-end
+
+---
+
+### Scenario 4: Modify RiskService
+
+**Affected Domains**: Booking, Insurance, Payment
+
+**Risk Level**: 🟡 MEDIUM
+
+**Checklist**: Follow **Checklist 2** (2-3 deps)
+
+**Testing Strategy**:
+- Run risk calculation tests
+- Run booking creation tests (risk scoring)
+- Run insurance coverage tests (premium calculation)
+
+---
+
+## Refactoring Recommendations
+
+### Priority 1: Extract BookingsRepository
+
+**Current State**: BookingsService mixes business logic + data access (7 deps)
+
+**Proposed**:
+```typescript
+// NEW: BookingsRepository (data access only, 1 dep: Supabase)
+export class BookingsRepository {
+  async createBooking(payload: CreateBookingPayload): Promise<Booking> {
+    const { data, error } = await this.supabase.rpc('request_booking', {...});
+    return this.mapToBooking(data);
+  }
+}
+
+// REFACTORED: BookingsService (business logic only)
+export class BookingsService {
+  constructor(
+    private bookingsRepo: BookingsRepository,
+    private walletService: WalletService,
+    private insuranceService: InsuranceService,
+    // ... other dependencies
+  ) {}
+
+  async createBookingWithValidation(carId, start, end) {
+    // Business logic
+    const riskScore = await this.riskService.calculateRiskScore(...);
+    const coverage = await this.insuranceService.calculateCoverage(...);
+    const totalPrice = this.calculateTotalPrice(car, coverage, days);
+
+    // Delegate data access to repository
+    return this.bookingsRepo.createBooking({...});
+  }
+}
+```
+
+**Benefits**:
+- ✅ Separation of concerns (business logic ≠ data access)
+- ✅ Easier testing (mock repository instead of Supabase)
+- ✅ Follows Repository pattern (Layer 3 in LAYER_SEPARATION.md)
+
+---
+
+### Priority 2: Domain Events for Cross-Domain Communication
+
+**Current State**: Bidirectional dependency (Booking ↔ Payment)
+
+**Proposed**:
+```typescript
+// Payment publishes event
+eventBus.publish('payment.confirmed', { bookingId, paymentId });
+
+// Booking listens to event
+eventBus.subscribe('payment.confirmed', async (event) => {
+  await this.confirmBooking(event.bookingId);
+});
+```
+
+**Benefits**:
+- ✅ Decouples domains (Payment doesn't need to know about Booking)
+- ✅ Easier to extend (new listeners can subscribe)
+- ✅ Follows event-driven architecture
+
+---
+
+### Priority 3: Extract CheckoutPaymentOrchestrator
+
+**Current State**: CheckoutPaymentService has 6 deps (high coupling)
+
+**Proposed**: Extract orchestration logic into dedicated orchestrator
+
+**Benefits**:
+- ✅ Clearer responsibility (orchestrator coordinates, services execute)
+- ✅ Easier to test (mock orchestrated services)
+
+---
+
+## Related Documentation
+
+- **Dependency Graph**: `docs/architecture/DEPENDENCY_GRAPH.md` - Service-level analysis
+- **Domain Boundaries**: `docs/architecture/DOMAIN_BOUNDARIES.md` - Detailed domain mapping
+- **Domain Matrix**: `docs/architecture/DOMAIN_DEPENDENCY_MATRIX.md` - Cross-domain dependencies
+- **Safe Change Checklist**: `docs/guides/SAFE_CHANGE_CHECKLIST.md` - Checklists by risk level
+- **Layer Separation**: `docs/architecture/LAYER_SEPARATION.md` - Architectural layers
+
+---
+
+## Usage
+
+**Before modifying a service**:
+1. Identify which domain it belongs to (Auth, Car, Booking, etc.)
+2. Check domain dependencies in this diagram
+3. Assess change impact (how many domains affected?)
+4. Follow appropriate checklist from SAFE_CHANGE_CHECKLIST.md
+
+**Example**:
+```bash
+# I want to modify WalletService
+# 1. Domain: Wallet
+# 2. Dependencies: Auth (1 dep)
+# 3. Depended on by: Booking, Payment (2 domains affected)
+# 4. Risk level: 🟡 MEDIUM
+# 5. Checklist: Follow Checklist 2 (2-3 deps)
+```
+
+---
+
+## Testing Strategy by Domain
+
+| Domain | Test Priority | Test Coverage Target | Critical Tests |
+|--------|--------------|----------------------|----------------|
+| Auth | CRITICAL | 90%+ | Login, register, password reset, RLS |
+| Car | HIGH | 80%+ | Create car, upload photos, geocoding |
+| Booking | CRITICAL | 95%+ | Create booking, validate dates, lock funds |
+| Payment | CRITICAL | 90%+ | 3 payment modes, webhook processing |
+| Wallet | CRITICAL | 90%+ | Deposit, lock/unlock funds, non-withdrawable |
+| Insurance | HIGH | 85%+ | Calculate coverage, 4-gate eligibility |
+| Risk | HIGH | 85%+ | Risk scoring, bonus-malus calculation |
+
+---
+
+## Deployment Order
+
+When deploying changes to multiple domains:
+
+**Safe Order** (respects dependencies):
+1. **Auth** (foundation, no deps)
+2. **Car, Wallet, Risk** (low coupling, depend only on Auth)
+3. **Insurance, Payment** (medium coupling, depend on Auth + 1-2 domains)
+4. **Booking** (high coupling, depends on ALL other domains)
+
+**Why?**
+- Deploy foundation first (Auth)
+- Deploy low-coupling domains next (Car, Wallet, Risk)
+- Deploy dependent domains last (Booking)
+- Ensures dependencies are available when needed
+
+---
+
+**Visualization**: View this diagram at https://mermaid.live/ or in GitHub (auto-renders Mermaid).

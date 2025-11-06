@@ -1,0 +1,610 @@
+```mermaid
+sequenceDiagram
+    participant User
+    participant WalletPage
+    participant WalletService
+    participant DB as Supabase DB
+    participant RPC1 as wallet_initiate_deposit
+    participant EdgeFunc as mercadopago-create-preference
+    participant MP as MercadoPago
+    participant Webhook as mercadopago-webhook
+    participant RPC2 as wallet_confirm_deposit
+
+    %% STEP 1: User Initiates Deposit
+    User->>WalletPage: Click "Depositar"
+    WalletPage->>WalletPage: Show deposit amount input
+    User->>WalletPage: Enter amount (e.g., 10000 ARS)
+
+    alt Amount < 100 ARS
+        WalletPage->>User: Error: Minimum 100 ARS
+    end
+
+    alt Amount > 1000000 ARS
+        WalletPage->>User: Error: Maximum 1,000,000 ARS
+    end
+
+    WalletPage->>WalletService: initiateDeposit(amount)
+
+    %% STEP 2: Create Pending Transaction
+    WalletService->>RPC1: wallet_initiate_deposit(user_id, amount, currency='ARS')
+
+    Note over RPC1: RPC CREATES PENDING TRANSACTION<br/>- Generate transaction_id (UUID)<br/>- Status: pending<br/>- Type: deposit<br/>- is_withdrawable: true (default)
+
+    RPC1->>DB: INSERT INTO wallet_transactions
+    DB-->>RPC1: transaction_id
+    RPC1-->>WalletService: transaction_id
+
+    %% STEP 3: Create MercadoPago Preference
+    WalletService->>EdgeFunc: POST /mercadopago-create-preference
+    Note over WalletService,EdgeFunc: Payload:<br/>{ transaction_id, amount, currency: 'ARS' }
+
+    EdgeFunc->>EdgeFunc: Validate amount > 0
+    EdgeFunc->>EdgeFunc: Verify currency = 'ARS' (required by MP Argentina)
+
+    EdgeFunc->>MP: Create Preference via SDK
+    Note over EdgeFunc,MP: MercadoPago SDK Request:<br/>- title: "Depósito de billetera"<br/>- quantity: 1<br/>- unit_price: amount<br/>- currency_id: 'ARS'<br/>- external_reference: transaction_id<br/>- notification_url: webhook URL<br/>- payment_methods: all (card, cash, etc.)
+
+    MP-->>EdgeFunc: Preference created
+    Note over MP,EdgeFunc: Response:<br/>- id: preference_id<br/>- init_point: checkout URL<br/>- sandbox_init_point: (if sandbox)
+
+    EdgeFunc->>DB: UPDATE wallet_transactions<br/>SET provider_reference = preference_id
+    EdgeFunc-->>WalletService: { init_point, preference_id }
+
+    WalletService-->>WalletPage: Checkout URL
+    WalletPage->>User: Redirect to MercadoPago checkout
+
+    %% STEP 4: User Completes Payment on MercadoPago
+    User->>MP: Complete payment
+
+    alt Payment Method: Credit/Debit Card
+        MP->>MP: Process card payment
+        Note over MP: payment_type_id: 'credit_card'<br/>or 'debit_card'<br/>✅ WITHDRAWABLE
+    else Payment Method: Cash (Pago Fácil / Rapipago)
+        MP->>MP: Generate barcode for cash payment
+        Note over MP: payment_type_id: 'ticket'<br/>⚠️ NON-WITHDRAWABLE
+        User->>User: Pay at physical location
+    end
+
+    MP->>MP: Payment approved
+
+    %% STEP 5: MercadoPago sends IPN Webhook
+    MP->>Webhook: POST /mercadopago-webhook
+    Note over MP,Webhook: IPN Notification:<br/>- action: payment.updated<br/>- data.id: payment_id
+
+    %% STEP 6: Webhook Processes Payment
+    Webhook->>Webhook: Verify HMAC signature
+    alt Invalid signature
+        Webhook->>MP: 401 Unauthorized
+    end
+
+    Webhook->>MP: GET /v1/payments/:payment_id
+    MP-->>Webhook: Payment details
+    Note over Webhook: Payment Data:<br/>- status: 'approved'<br/>- payment_type_id: 'ticket' or 'credit_card'<br/>- transaction_amount: amount<br/>- external_reference: transaction_id
+
+    Webhook->>Webhook: Extract payment_type_id
+    Webhook->>Webhook: is_withdrawable = (payment_type_id != 'ticket')
+
+    %% STEP 7: Confirm Deposit via RPC
+    Webhook->>RPC2: wallet_confirm_deposit(transaction_id, payment_id, is_withdrawable)
+
+    Note over RPC2: RPC CONFIRMS DEPOSIT<br/>1. Find transaction by ID<br/>2. Verify status = 'pending'<br/>3. Update transaction status = 'completed'<br/>4. Credit user_wallets.balance<br/>5. If cash (NOT withdrawable):<br/>   Increment non_withdrawable_floor
+
+    RPC2->>DB: BEGIN TRANSACTION
+
+    RPC2->>DB: SELECT * FROM wallet_transactions<br/>WHERE id = transaction_id<br/>FOR UPDATE
+    DB-->>RPC2: Transaction record
+
+    alt Transaction already completed
+        RPC2-->>Webhook: Error: Already processed (idempotency)
+        Webhook->>MP: 200 OK (already handled)
+    end
+
+    RPC2->>DB: UPDATE wallet_transactions<br/>SET status = 'completed'<br/>provider_id = payment_id<br/>is_withdrawable = is_withdrawable
+
+    RPC2->>DB: SELECT * FROM user_wallets<br/>WHERE user_id = user_id<br/>FOR UPDATE
+    DB-->>RPC2: Wallet record
+
+    alt Wallet doesn't exist
+        RPC2->>DB: INSERT INTO user_wallets<br/>(user_id, balance, locked_funds, non_withdrawable_floor)
+    end
+
+    RPC2->>DB: UPDATE user_wallets<br/>SET balance = balance + amount
+
+    alt Payment Type: Cash (ticket)
+        Note over RPC2: NON-WITHDRAWABLE CASH<br/>Increment floor to prevent withdrawal
+        RPC2->>DB: UPDATE user_wallets<br/>SET non_withdrawable_floor = non_withdrawable_floor + amount
+    end
+
+    RPC2->>DB: COMMIT TRANSACTION
+
+    RPC2-->>Webhook: Deposit confirmed
+    Webhook->>MP: 200 OK
+
+    %% STEP 8: User Redirected Back
+    MP->>User: Redirect to success_url
+    User->>WalletPage: Return to /wallet
+    WalletPage->>WalletService: getBalance()
+    WalletService->>DB: SELECT * FROM user_wallets
+    DB-->>WalletService: Updated balance
+    WalletService-->>WalletPage: Balance + non_withdrawable_floor
+    WalletPage->>User: Show updated balance
+
+    alt Payment Type: Cash
+        WalletPage->>User: ⚠️ Show warning: "Fondos no retirables"
+    end
+
+    %% Visual Styling
+    rect rgb(255, 243, 191)
+        Note over User,WalletPage: FRONTEND LAYER
+    end
+
+    rect rgb(231, 245, 255)
+        Note over WalletService,EdgeFunc: SERVICE + EDGE FUNCTION LAYER
+    end
+
+    rect rgb(255, 235, 235)
+        Note over RPC1,RPC2: DATABASE LAYER (RPC Functions)
+    end
+
+    rect rgb(240, 240, 240)
+        Note over MP,Webhook: EXTERNAL INTEGRATION LAYER
+    end
+```
+
+**Diagram: Wallet Deposit Flow with MercadoPago Integration**
+
+**Purpose**: Complete sequence of wallet deposit from user click to balance update, including cash deposit handling.
+
+**Entry Point**: `WalletPage.onDepositClick()` (apps/web/src/app/features/wallet/wallet.page.ts)
+
+**Key Services**:
+- `WalletService` (2 dependencies - 🟡 MEDIUM coupling)
+- `FxService` (1 dependency - 🟢 LOW coupling)
+
+---
+
+## Flow Breakdown
+
+### STEP 1: User Initiates Deposit (Frontend)
+
+**Validations**:
+- Minimum: 100 ARS
+- Maximum: 1,000,000 ARS (per transaction)
+- Currency: Always ARS (MercadoPago Argentina requirement)
+
+**Code Reference**: `apps/web/src/app/features/wallet/wallet.page.ts:245-297`
+
+---
+
+### STEP 2: Create Pending Transaction (Database)
+
+**RPC**: `wallet_initiate_deposit(p_user_id UUID, p_amount NUMERIC, p_currency TEXT)`
+
+**Database Operations**:
+```sql
+INSERT INTO wallet_transactions (
+  id,                    -- UUID v4
+  user_id,
+  type,                  -- 'deposit'
+  amount,
+  currency,
+  status,                -- 'pending'
+  is_withdrawable,       -- TRUE (default, will change if cash)
+  created_at
+) VALUES (
+  gen_random_uuid(),
+  p_user_id,
+  'deposit',
+  p_amount,
+  p_currency,
+  'pending',
+  TRUE,
+  now()
+) RETURNING id;
+```
+
+**Returns**: `transaction_id` (UUID)
+
+**Code Reference**: `supabase/migrations/20241014_wallet_system.sql:wallet_initiate_deposit()`
+
+---
+
+### STEP 3: Create MercadoPago Preference (Edge Function)
+
+**Edge Function**: `mercadopago-create-preference`
+
+**Request**:
+```typescript
+POST /mercadopago-create-preference
+{
+  "transaction_id": "uuid",
+  "amount": 10000,
+  "currency": "ARS"
+}
+```
+
+**MercadoPago SDK Call**:
+```typescript
+const preference = await mercadopago.preferences.create({
+  items: [{
+    title: 'Depósito de billetera - AutoRenta',
+    quantity: 1,
+    unit_price: amount,
+    currency_id: 'ARS'  // MUST be ARS for Argentina
+  }],
+  external_reference: transaction_id,
+  notification_url: `${SUPABASE_URL}/functions/v1/mercadopago-webhook`,
+  back_urls: {
+    success: `${APP_URL}/wallet?deposit=success`,
+    failure: `${APP_URL}/wallet?deposit=failure`,
+    pending: `${APP_URL}/wallet?deposit=pending`
+  },
+  auto_return: 'approved',  // Auto-redirect on success
+  payment_methods: {
+    excluded_payment_types: [],  // Allow all (card + cash)
+    installments: 12  // Max installments for cards
+  }
+});
+```
+
+**Response**:
+```typescript
+{
+  "id": "preference_id",
+  "init_point": "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=...",
+  "sandbox_init_point": "..." // If sandbox environment
+}
+```
+
+**Code Reference**: `supabase/functions/mercadopago-create-preference/index.ts`
+
+---
+
+### STEP 4: User Completes Payment on MercadoPago
+
+**Payment Methods Available**:
+
+| Method | payment_type_id | Withdrawable? | Notes |
+|--------|-----------------|---------------|-------|
+| Credit Card | `credit_card` | ✅ Yes | Instant processing |
+| Debit Card | `debit_card` | ✅ Yes | Instant processing |
+| MercadoPago Account | `account_money` | ✅ Yes | Instant processing |
+| Pago Fácil | `ticket` | ❌ NO | Cash payment, 24-72h delay |
+| Rapipago | `ticket` | ❌ NO | Cash payment, 24-72h delay |
+
+**Critical Logic**: Cash deposits (`payment_type_id = 'ticket'`) are marked as **non-withdrawable** to prevent money laundering.
+
+---
+
+### STEP 5: MercadoPago Sends IPN Webhook
+
+**IPN Notification**:
+```json
+POST /mercadopago-webhook
+{
+  "action": "payment.updated",
+  "api_version": "v1",
+  "data": {
+    "id": "12345678"  // MercadoPago payment_id
+  },
+  "date_created": "2025-10-18T10:30:00.000-04:00",
+  "id": 123456789,
+  "live_mode": true,
+  "type": "payment",
+  "user_id": "987654321"
+}
+```
+
+**Headers**:
+- `x-signature`: HMAC signature for verification
+- `x-request-id`: Unique request ID for idempotency
+
+**Code Reference**: `supabase/functions/mercadopago-webhook/index.ts`
+
+---
+
+### STEP 6: Webhook Processes Payment
+
+**Security Validations**:
+1. ✅ **HMAC Signature Verification**
+2. ✅ **IP Whitelisting** (MercadoPago IPs only)
+3. ✅ **Idempotency Check** (prevent duplicate processing)
+
+**Fetch Payment Details**:
+```typescript
+GET https://api.mercadopago.com/v1/payments/:payment_id
+Authorization: Bearer ACCESS_TOKEN
+
+Response:
+{
+  "id": 12345678,
+  "status": "approved",
+  "status_detail": "accredited",
+  "payment_type_id": "ticket",  // ⚠️ CASH = NON-WITHDRAWABLE
+  "transaction_amount": 10000,
+  "currency_id": "ARS",
+  "external_reference": "transaction_id",
+  "payer": { ... },
+  "date_approved": "2025-10-18T10:30:00.000-04:00"
+}
+```
+
+**Extract Withdrawability**:
+```typescript
+const payment_type_id = payment.payment_type_id;
+const is_withdrawable = (payment_type_id !== 'ticket');
+```
+
+---
+
+### STEP 7: Confirm Deposit via RPC
+
+**RPC**: `wallet_confirm_deposit(p_transaction_id UUID, p_provider_id TEXT, p_is_withdrawable BOOLEAN)`
+
+**Logic**:
+
+```sql
+BEGIN;
+
+-- 1. Find and lock transaction
+SELECT * FROM wallet_transactions
+WHERE id = p_transaction_id
+FOR UPDATE;
+
+-- 2. Verify not already completed (idempotency)
+IF v_transaction.status = 'completed' THEN
+  RAISE EXCEPTION 'Transaction already completed';
+END IF;
+
+-- 3. Update transaction
+UPDATE wallet_transactions
+SET
+  status = 'completed',
+  provider_id = p_provider_id,
+  is_withdrawable = p_is_withdrawable,
+  completed_at = now()
+WHERE id = p_transaction_id;
+
+-- 4. Credit wallet balance
+UPDATE user_wallets
+SET balance = balance + v_transaction.amount
+WHERE user_id = v_transaction.user_id;
+
+-- 5. If cash deposit, increment non-withdrawable floor
+IF NOT p_is_withdrawable THEN
+  UPDATE user_wallets
+  SET non_withdrawable_floor = non_withdrawable_floor + v_transaction.amount
+  WHERE user_id = v_transaction.user_id;
+END IF;
+
+COMMIT;
+```
+
+**Database State After**:
+- `wallet_transactions.status` = `'completed'`
+- `user_wallets.balance` += amount
+- `user_wallets.non_withdrawable_floor` += amount (if cash)
+
+**Code Reference**: `supabase/migrations/20241014_wallet_system.sql:wallet_confirm_deposit()`
+
+---
+
+### STEP 8: User Redirected Back
+
+**Success URL**: `https://autorenta.com/wallet?deposit=success`
+
+**Frontend Actions**:
+1. Detect `?deposit=success` query param
+2. Call `WalletService.getBalance()`
+3. Display updated balance
+4. If cash deposit → Show warning: "⚠️ Fondos depositados en efectivo no son retirables"
+
+**UI Indicators**:
+```typescript
+// In WalletPage
+balance: 50000 ARS
+non_withdrawable: 10000 ARS (if cash deposit)
+withdrawable: 40000 ARS
+locked: 0 ARS
+available: 40000 ARS  // withdrawable - locked
+```
+
+---
+
+## Non-Withdrawable Cash Logic
+
+**Why?** Prevent money laundering via cash deposits → immediate bank withdrawal.
+
+**Implementation**:
+
+1. **Detect Cash Payment**:
+```typescript
+// In mercadopago-webhook Edge Function
+const payment_type_id = payment.payment_type_id;
+const is_withdrawable = (payment_type_id !== 'ticket');
+```
+
+2. **Track Non-Withdrawable Floor**:
+```sql
+-- user_wallets table
+non_withdrawable_floor NUMERIC DEFAULT 0  -- Total cash deposits
+```
+
+3. **Enforce on Withdrawal**:
+```sql
+-- In wallet_request_withdrawal RPC
+withdrawable_amount := balance - non_withdrawable_floor - locked_funds;
+IF p_amount > withdrawable_amount THEN
+  RAISE EXCEPTION 'Cannot withdraw cash deposits';
+END IF;
+```
+
+**User Experience**:
+- Deposit 10000 ARS via Pago Fácil (cash) → Balance: 10000, Non-withdrawable: 10000
+- Can use for bookings: ✅ YES
+- Can withdraw to bank: ❌ NO
+- Deposit 5000 ARS via credit card → Balance: 15000, Non-withdrawable: 10000
+- Can withdraw: 5000 ARS max (15000 - 10000)
+
+**Documentation**: See `CASH_DEPOSITS_NON_WITHDRAWABLE_FIX.md` for complete analysis.
+
+---
+
+## Error Scenarios
+
+### 1. Duplicate Webhook (Idempotency)
+
+**Scenario**: MercadoPago sends same IPN twice
+
+**Handling**:
+```sql
+-- In wallet_confirm_deposit RPC
+IF v_transaction.status = 'completed' THEN
+  RAISE EXCEPTION 'Transaction already completed';
+END IF;
+```
+
+**Response**: 200 OK (idempotent, no error to MP)
+
+---
+
+### 2. Invalid Signature
+
+**Scenario**: Malicious webhook attempt
+
+**Handling**:
+```typescript
+// In mercadopago-webhook Edge Function
+const isValid = verifyMercadoPagoSignature(signature, requestId, body);
+if (!isValid) {
+  return new Response('Invalid signature', { status: 401 });
+}
+```
+
+**Response**: 401 Unauthorized
+
+---
+
+### 3. Payment Rejected
+
+**Scenario**: Card declined or cash payment expired
+
+**Handling**:
+```typescript
+if (payment.status !== 'approved') {
+  await supabase
+    .from('wallet_transactions')
+    .update({ status: 'failed', error_message: payment.status_detail })
+    .eq('id', transaction_id);
+}
+```
+
+**User Experience**: Redirect to failure URL with error message
+
+---
+
+### 4. Amount Mismatch
+
+**Scenario**: User paid different amount than requested
+
+**Handling**:
+```typescript
+const expectedAmount = transaction.amount;
+const paidAmount = payment.transaction_amount;
+
+if (paidAmount !== expectedAmount) {
+  // Log discrepancy
+  console.error(`Amount mismatch: expected ${expectedAmount}, got ${paidAmount}`);
+  // Credit actual paid amount (be generous)
+  await confirmDeposit(transaction_id, payment.id, paidAmount);
+}
+```
+
+---
+
+## Database Schema
+
+### wallet_transactions Table
+
+```sql
+CREATE TABLE wallet_transactions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,  -- 'deposit' | 'withdrawal' | 'payment' | 'refund' | 'lock' | 'unlock'
+  amount NUMERIC(12,2) NOT NULL,
+  currency TEXT NOT NULL DEFAULT 'ARS',
+  status TEXT NOT NULL,  -- 'pending' | 'completed' | 'failed' | 'refunded'
+  provider TEXT,  -- 'mercadopago' | 'manual' | 'system'
+  provider_id TEXT,  -- MercadoPago payment_id
+  provider_reference TEXT,  -- MercadoPago preference_id
+  is_withdrawable BOOLEAN DEFAULT TRUE,  -- FALSE for cash deposits
+  created_at TIMESTAMPTZ DEFAULT now(),
+  completed_at TIMESTAMPTZ
+);
+```
+
+### user_wallets Table
+
+```sql
+CREATE TABLE user_wallets (
+  user_id UUID PRIMARY KEY REFERENCES profiles(id) ON DELETE CASCADE,
+  balance NUMERIC(12,2) DEFAULT 0,  -- Total balance
+  locked_funds NUMERIC(12,2) DEFAULT 0,  -- Funds locked for bookings
+  non_withdrawable_floor NUMERIC(12,2) DEFAULT 0,  -- Cash deposits
+  currency TEXT DEFAULT 'ARS',
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+---
+
+## Related Documentation
+
+- **Flow Document**: `docs/flows/FLOW_WALLET_DEPOSIT.md` (605 lines)
+- **Cash Deposits Fix**: `CASH_DEPOSITS_NON_WITHDRAWABLE_FIX.md`
+- **Dependency Graph**: `docs/architecture/DEPENDENCY_GRAPH.md` (WalletService: 2 deps)
+- **Safe Change Checklist**: `docs/guides/SAFE_CHANGE_CHECKLIST.md` (Checklist 2: 2-3 deps)
+- **Edge Function**: `supabase/functions/mercadopago-create-preference/index.ts`
+- **Webhook Handler**: `supabase/functions/mercadopago-webhook/index.ts`
+- **RPC Functions**: `supabase/migrations/20241014_wallet_system.sql`
+
+---
+
+## Testing
+
+**Local Testing**:
+```bash
+# 1. Start Supabase locally
+npx supabase start
+
+# 2. Serve Edge Functions
+npx supabase functions serve mercadopago-create-preference
+npx supabase functions serve mercadopago-webhook
+
+# 3. Test preference creation
+curl -X POST http://localhost:54321/functions/v1/mercadopago-create-preference \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transaction_id": "test-uuid",
+    "amount": 10000,
+    "currency": "ARS"
+  }'
+
+# 4. Mock webhook (simulate MercadoPago)
+curl -X POST http://localhost:54321/functions/v1/mercadopago-webhook \
+  -H "Content-Type: application/json" \
+  -H "x-signature: ts=1234567890,v1=mock" \
+  -H "x-request-id: test-request" \
+  -d '{
+    "action": "payment.updated",
+    "data": { "id": "12345678" }
+  }'
+```
+
+**Production Testing**:
+- Use MercadoPago sandbox mode
+- Test all payment methods (card, cash)
+- Verify webhook signature validation
+- Test idempotency (send duplicate webhooks)
+- Verify non-withdrawable floor for cash deposits

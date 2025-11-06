@@ -1,0 +1,274 @@
+```mermaid
+flowchart TD
+    Start([User on Booking Detail Payment Page])
+    Start --> SelectMode{Select Payment Mode}
+
+    %% MODE 1: Wallet Complete (100% wallet)
+    SelectMode -->|100% Wallet| CheckBalance1[Check Wallet Balance]
+    CheckBalance1 --> HasBalance1{Balance >= Total?}
+    HasBalance1 -->|No| ShowError1[Show Error:<br/>Insufficient Balance]
+    ShowError1 --> RedirectDeposit1[Offer 'Depositar' Button]
+    HasBalance1 -->|Yes| LockWallet[Lock Full Amount<br/>wallet_lock_funds]
+    LockWallet --> ConfirmBooking1[Confirm Booking<br/>Status: confirmed]
+    ConfirmBooking1 --> Success1([✅ Booking Confirmed<br/>Navigate to /bookings])
+
+    %% MODE 2: Credit Card (100% card)
+    SelectMode -->|100% Card| CreatePreference2[Create MercadoPago Preference<br/>Edge Function: mercadopago-create-booking-preference]
+    CreatePreference2 --> GetInitPoint2[Get init_point URL]
+    GetInitPoint2 --> Redirect2[Redirect to MercadoPago Checkout]
+    Redirect2 --> UserPays2[User Completes Payment<br/>on MercadoPago]
+    UserPays2 --> MPWebhook2[MercadoPago sends IPN<br/>to Edge Function: mercadopago-webhook]
+    MPWebhook2 --> VerifySignature2{Verify HMAC Signature}
+    VerifySignature2 -->|Invalid| Reject2[Reject Webhook<br/>Log Security Alert]
+    VerifySignature2 -->|Valid| CheckStatus2{Payment Approved?}
+    CheckStatus2 -->|Rejected/Pending| UpdateIntent2[Update Payment Intent<br/>Status: failed/pending]
+    CheckStatus2 -->|Approved| ConfirmBooking2[Confirm Booking<br/>Update payment_intents<br/>Update booking status]
+    ConfirmBooking2 --> Success2([✅ Booking Confirmed<br/>User Redirected Back])
+
+    %% MODE 3: Partial (30% wallet + 70% card)
+    SelectMode -->|30% Wallet + 70% Card| CheckBalance3[Check Wallet Balance]
+    CheckBalance3 --> HasBalance3{Balance >= 30%?}
+    HasBalance3 -->|No| ShowError3[Show Error:<br/>Need at least 30% in wallet]
+    ShowError3 --> RedirectDeposit3[Offer 'Depositar' Button]
+    HasBalance3 -->|Yes| LockPartial[Lock 30% in Wallet<br/>wallet_lock_funds partial_amount]
+    LockPartial --> CreatePreference3[Create MP Preference for 70%<br/>Edge Function: mercadopago-create-booking-preference]
+    CreatePreference3 --> GetInitPoint3[Get init_point URL]
+    GetInitPoint3 --> Redirect3[Redirect to MercadoPago<br/>for 70% payment]
+    Redirect3 --> UserPays3[User Completes 70% Payment]
+    UserPays3 --> MPWebhook3[MercadoPago sends IPN<br/>to Edge Function]
+    MPWebhook3 --> VerifySignature3{Verify HMAC Signature}
+    VerifySignature3 -->|Invalid| Reject3[Reject Webhook<br/>Unlock wallet funds]
+    VerifySignature3 -->|Valid| CheckStatus3{Payment Approved?}
+    CheckStatus3 -->|Rejected| Rollback3[Rollback:<br/>Unlock 30% wallet funds<br/>Update payment_intents]
+    CheckStatus3 -->|Approved| ConfirmBooking3[Confirm Booking<br/>Both payments recorded<br/>Status: confirmed]
+    ConfirmBooking3 --> Success3([✅ Booking Confirmed<br/>30% wallet + 70% card])
+
+    %% Security & Error Handling
+    subgraph Security[Security Validations in Webhook]
+        S1[1. Verify HMAC Signature<br/>x-signature + x-request-id]
+        S2[2. Verify IP Whitelist<br/>MercadoPago IPs only]
+        S3[3. Check Idempotency<br/>payment_id uniqueness]
+        S4[4. Validate Amount<br/>Match expected amount]
+        S1 --> S2 --> S3 --> S4
+    end
+
+    %% Payment Intent States
+    subgraph PaymentStates[Payment Intent States]
+        PS1[pending - Created, awaiting payment]
+        PS2[processing - Payment received, verifying]
+        PS3[completed - Payment confirmed]
+        PS4[failed - Payment rejected]
+        PS5[refunded - Payment refunded]
+    end
+
+    style SelectMode fill:#ffd43b,stroke:#fab005,stroke-width:3px
+    style ConfirmBooking1 fill:#51cf66,stroke:#2f9e44,stroke-width:2px
+    style ConfirmBooking2 fill:#51cf66,stroke:#2f9e44,stroke-width:2px
+    style ConfirmBooking3 fill:#51cf66,stroke:#2f9e44,stroke-width:2px
+    style Reject2 fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px
+    style Reject3 fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px
+    style ShowError1 fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px
+    style ShowError3 fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px
+    style Security fill:#e7f5ff,stroke:#339af0,stroke-width:2px
+    style PaymentStates fill:#fff3bf,stroke:#fcc419,stroke-width:2px
+```
+
+**Diagram: Payment Checkout Flow**
+
+**Purpose**: Visualizes the 3 payment modes for booking checkout with security validations.
+
+**Entry Point**: `BookingDetailPaymentPage` (apps/web/src/app/features/bookings/detail-payment/booking-detail-payment.page.ts)
+
+**Orchestrator**: `CheckoutPaymentService` (6 dependencies - ⚠️ CRITICAL coupling)
+
+**Payment Modes**:
+
+### MODE 1: 100% Wallet (Instant Confirmation)
+
+**Flow**:
+1. User selects "Pagar con Billetera"
+2. Check wallet balance >= total booking amount
+3. If insufficient → Show error + "Depositar" button
+4. If sufficient → Lock full amount via `wallet_lock_funds()`
+5. Update booking status to `confirmed`
+6. ✅ Booking confirmed instantly (no external payment)
+
+**Database Operations**:
+- RPC: `wallet_lock_funds(user_id, booking_id, total_amount)`
+- Update: `bookings.status = 'confirmed'`
+- Update: `payment_intents.status = 'completed'`
+
+**Pros**: Instant, no fees, no external dependencies
+**Cons**: Requires sufficient wallet balance
+
+---
+
+### MODE 2: 100% Credit Card
+
+**Flow**:
+1. User selects "Pagar con Tarjeta"
+2. Frontend calls `CheckoutPaymentService.createBookingPreference()`
+3. Service calls Edge Function `mercadopago-create-booking-preference`
+4. Edge Function creates MercadoPago preference → Returns `init_point` (checkout URL)
+5. User redirected to MercadoPago checkout page
+6. User completes payment on MercadoPago
+7. MercadoPago sends IPN webhook to Edge Function `mercadopago-webhook`
+8. Webhook verifies HMAC signature + IP validation
+9. If payment approved → Confirm booking
+10. User redirected back to app → ✅ Booking confirmed
+
+**Security Validations** (in webhook):
+- ✅ HMAC signature verification (`x-signature` + `x-request-id`)
+- ✅ IP whitelist (MercadoPago IPs only)
+- ✅ Idempotency check (prevent duplicate processing)
+- ✅ Amount validation (match expected amount)
+
+**Database Operations**:
+- Insert: `payment_intents` (provider: mercadopago, status: pending)
+- Update: `payment_intents.status = 'completed'`
+- Update: `bookings.status = 'confirmed'`
+
+**Pros**: No wallet balance needed
+**Cons**: MercadoPago fees (~3-5%), webhook dependency, async confirmation
+
+---
+
+### MODE 3: Partial Payment (30% Wallet + 70% Card)
+
+**Flow**:
+1. User selects "Pagar Mixto (30% billetera + 70% tarjeta)"
+2. Check wallet balance >= 30% of total
+3. If insufficient → Show error + "Depositar" button
+4. If sufficient → Lock 30% via `wallet_lock_funds(partial_amount)`
+5. Create MercadoPago preference for 70%
+6. User redirected to MercadoPago for 70% payment
+7. User completes card payment
+8. MercadoPago sends IPN webhook
+9. Webhook verifies signature + validates 70% payment
+10. If approved → Confirm booking (both payments recorded)
+11. If rejected → **ROLLBACK**: Unlock 30% wallet funds
+12. User redirected back → ✅ Booking confirmed (if payment approved)
+
+**Rollback Logic** (if card payment fails):
+```typescript
+// In webhook handler
+if (payment.status !== 'approved') {
+  // Unlock the 30% wallet funds
+  await supabase.rpc('wallet_unlock_funds', {
+    p_booking_id: booking_id
+  });
+  // Update payment intent
+  await supabase.from('payment_intents').update({
+    status: 'failed',
+    error_message: 'Card payment rejected'
+  });
+}
+```
+
+**Database Operations**:
+- RPC: `wallet_lock_funds(user_id, booking_id, 30% amount)`
+- Insert: `payment_intents` (provider: mercadopago, amount: 70%)
+- Update: `payment_intents.status = 'completed'`
+- Update: `bookings.status = 'confirmed'`
+- **Rollback**: `wallet_unlock_funds()` if card payment fails
+
+**Pros**: Flexibility, uses both wallet and card
+**Cons**: Most complex flow, requires coordination of 2 payment sources
+
+---
+
+**Security Features**:
+
+1. **HMAC Signature Validation**:
+```typescript
+// In mercadopago-webhook Edge Function
+const signature = req.headers.get('x-signature');
+const requestId = req.headers.get('x-request-id');
+const isValid = verifyMercadoPagoSignature(signature, requestId, body);
+if (!isValid) {
+  return new Response('Invalid signature', { status: 401 });
+}
+```
+
+2. **IP Whitelisting**:
+```typescript
+const allowedIPs = [
+  '209.225.49.0/24',  // MercadoPago IPs
+  '200.10.65.0/24'
+];
+const clientIP = req.headers.get('cf-connecting-ip');
+if (!isAllowedIP(clientIP)) {
+  return new Response('Forbidden', { status: 403 });
+}
+```
+
+3. **Idempotency**:
+```typescript
+// Check if payment_id already processed
+const { data: existing } = await supabase
+  .from('payment_intents')
+  .select('*')
+  .eq('provider_id', payment.id)
+  .single();
+
+if (existing && existing.status === 'completed') {
+  return new Response('Already processed', { status: 200 });
+}
+```
+
+---
+
+**Payment Intent States**:
+
+| State | Description | Next Actions |
+|-------|-------------|--------------|
+| `pending` | Created, awaiting payment | User completes payment on MP |
+| `processing` | Payment received, verifying | Webhook validates signature |
+| `completed` | Payment confirmed | Booking confirmed |
+| `failed` | Payment rejected | Rollback, show error to user |
+| `refunded` | Payment refunded | Unlock funds, cancel booking |
+
+---
+
+**Error Handling**:
+
+1. **Insufficient Wallet Balance**:
+   - Show error: "Saldo insuficiente. Necesitas depositar X ARS."
+   - Offer "Depositar" button → Redirect to `/wallet/deposit`
+
+2. **Invalid Webhook Signature**:
+   - Reject webhook with 401 Unauthorized
+   - Log security alert
+   - Do NOT process payment
+
+3. **Card Payment Rejected** (Mode 3):
+   - Rollback: Unlock 30% wallet funds
+   - Update payment_intents.status = 'failed'
+   - Notify user: "Pago con tarjeta rechazado. Fondos de billetera desbloqueados."
+
+4. **Webhook Timeout/Failure**:
+   - MercadoPago retries webhook (exponential backoff)
+   - Idempotency check prevents duplicate processing
+   - If persistent failure: Manual reconciliation needed
+
+---
+
+**Related Documentation**:
+- `docs/flows/FLOW_PAYMENT_CHECKOUT.md` - Detailed payment flow analysis
+- `docs/architecture/DEPENDENCY_GRAPH.md` - CheckoutPaymentService (6 deps)
+- `docs/guides/SAFE_CHANGE_CHECKLIST.md` - Checklist 3 (6+ deps)
+- `supabase/functions/mercadopago-webhook/index.ts` - Webhook implementation
+- `supabase/functions/mercadopago-create-booking-preference/index.ts` - Preference creation
+
+**Testing**:
+```bash
+# Test webhook locally
+curl -X POST http://localhost:54321/functions/v1/mercadopago-webhook \
+  -H "Content-Type: application/json" \
+  -H "x-signature: ts=1234567890,v1=abc123" \
+  -H "x-request-id: test-request-id" \
+  -d '{
+    "action": "payment.updated",
+    "data": { "id": "12345678" }
+  }'
+```

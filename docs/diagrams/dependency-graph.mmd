@@ -1,0 +1,135 @@
+```mermaid
+graph TD
+    %% High-Coupling Services (Orchestration Layer - 6+ deps)
+    BookingsService[BookingsService<br/>🔴 7 deps<br/>CRITICAL]:::critical
+    CheckoutPaymentService[CheckoutPaymentService<br/>🔴 6 deps<br/>CRITICAL]:::critical
+
+    %% Domain Services (4-5 deps)
+    %% None in current codebase
+
+    %% Core Services (2-3 deps)
+    SettlementService[SettlementService<br/>🟡 4 deps]:::medium
+    InsuranceService[InsuranceService<br/>🟡 3 deps]:::medium
+    WalletService[WalletService<br/>🟡 2 deps]:::medium
+    RiskService[RiskService<br/>🟡 2 deps]:::medium
+    PaymentsService[PaymentsService<br/>🟡 2 deps]:::medium
+    CarsService[CarsService<br/>🟡 2 deps]:::medium
+
+    %% Foundation Services (0-1 deps)
+    AuthService[AuthService<br/>🟢 0 deps]:::low
+    ProfileService[ProfileService<br/>🟢 1 dep]:::low
+    DriverProfileService[DriverProfileService<br/>🟢 1 dep]:::low
+    FgoV1_1Service[FgoV1_1Service<br/>🟢 1 dep]:::low
+    RiskMatrixService[RiskMatrixService<br/>🟢 0 deps]:::low
+    FxService[FxService<br/>🟢 1 dep]:::low
+    GeocodingService[GeocodingService<br/>🟢 1 dep]:::low
+    VerificationService[VerificationService<br/>🟢 1 dep]:::low
+
+    %% BookingsService Dependencies (7 total)
+    BookingsService --> AuthService
+    BookingsService --> CarsService
+    BookingsService --> WalletService
+    BookingsService --> InsuranceService
+    BookingsService --> DriverProfileService
+    BookingsService --> RiskService
+    BookingsService --> PaymentsService
+
+    %% CheckoutPaymentService Dependencies (6 total)
+    CheckoutPaymentService --> AuthService
+    CheckoutPaymentService --> PaymentsService
+    CheckoutPaymentService --> WalletService
+    CheckoutPaymentService --> BookingsService
+    CheckoutPaymentService --> InsuranceService
+    CheckoutPaymentService --> RiskService
+
+    %% SettlementService Dependencies (4 total)
+    SettlementService --> AuthService
+    SettlementService --> FgoV1_1Service
+    SettlementService --> WalletService
+    SettlementService --> PaymentsService
+
+    %% InsuranceService Dependencies (3 total)
+    InsuranceService --> AuthService
+    InsuranceService --> RiskService
+    InsuranceService --> FgoV1_1Service
+
+    %% WalletService Dependencies (2 total)
+    WalletService --> AuthService
+    WalletService --> FxService
+
+    %% RiskService Dependencies (2 total)
+    RiskService --> AuthService
+    RiskService --> RiskMatrixService
+
+    %% PaymentsService Dependencies (2 total)
+    PaymentsService --> AuthService
+    PaymentsService --> WalletService
+
+    %% CarsService Dependencies (2 total)
+    CarsService --> AuthService
+    CarsService --> GeocodingService
+
+    %% Foundation Service Dependencies
+    ProfileService --> AuthService
+    DriverProfileService --> AuthService
+    FgoV1_1Service --> AuthService
+    FxService --> AuthService
+    GeocodingService --> AuthService
+    VerificationService --> AuthService
+
+    %% Styling
+    classDef critical fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px,color:#fff
+    classDef medium fill:#ffd43b,stroke:#fab005,stroke-width:2px,color:#000
+    classDef low fill:#51cf66,stroke:#2f9e44,stroke-width:1px,color:#000
+
+    %% Legend
+    subgraph Legend
+        L1[🔴 CRITICAL<br/>6+ dependencies]:::critical
+        L2[🟡 MEDIUM<br/>2-5 dependencies]:::medium
+        L3[🟢 LOW<br/>0-1 dependencies]:::low
+    end
+```
+
+**Diagram: Service Dependency Graph**
+
+**Purpose**: Visualizes the complete dependency graph of Angular services, highlighting high-coupling orchestration services.
+
+**Key Insights**:
+
+1. **Top 2 High-Coupling Services**:
+   - `BookingsService`: 7 dependencies (⚠️ CRITICAL)
+   - `CheckoutPaymentService`: 6 dependencies (⚠️ CRITICAL)
+
+2. **Service Tiers**:
+   - **Foundation (0-1 deps)**: 54 services - AuthService, ProfileService, etc.
+   - **Core (2-3 deps)**: 20 services - WalletService, InsuranceService, etc.
+   - **Domain (4-5 deps)**: 1 service - SettlementService
+   - **Orchestration (6+ deps)**: 2 services - BookingsService, CheckoutPaymentService
+
+3. **Central Hub**: `AuthService` is depended upon by almost all other services (foundation layer)
+
+4. **Refactoring Priority**:
+   - **Immediate**: Extract repository from BookingsService and CheckoutPaymentService
+   - **Future**: Consider domain event pattern for cross-domain communication
+
+**How to Read**:
+- 🔴 Red nodes = Critical coupling (6+ deps) - Changes have wide blast radius
+- 🟡 Yellow nodes = Medium coupling (2-5 deps) - Changes affect multiple services
+- 🟢 Green nodes = Low coupling (0-1 deps) - Changes have minimal impact
+- Arrows show dependency direction (A → B means "A depends on B")
+
+**Usage**:
+```bash
+# View in GitHub (auto-renders Mermaid)
+# Or paste into https://mermaid.live/
+
+# Before modifying a service, check its position in this graph:
+# - Foundation service (green)? Safe to modify
+# - Core service (yellow)? Check dependents
+# - Orchestration service (red)? Follow CRITICAL checklist
+```
+
+**Related Documentation**:
+- `docs/architecture/DEPENDENCY_GRAPH.md` - Detailed service analysis
+- `docs/guides/SAFE_CHANGE_CHECKLIST.md` - Checklists by risk level
+- `docs/architecture/DOMAIN_DEPENDENCY_MATRIX.md` - Cross-domain impact
