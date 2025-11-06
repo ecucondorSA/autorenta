@@ -1,0 +1,260 @@
+{
+  "config": {
+    "configFile": "/home/edu/autorenta/e2e/playwright.config.ts",
+    "rootDir": "/home/edu/autorenta/e2e/specs",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/edu/autorenta/e2e/artifacts/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/home/edu/autorenta/e2e/artifacts/html"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/edu/autorenta/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "chromium-desktop",
+        "name": "chromium-desktop",
+        "testDir": "/home/edu/autorenta/e2e/specs",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/edu/autorenta/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "/home/edu/autorenta/e2e/specs",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 2,
+    "webServer": {
+      "command": "bash -lc \"cd apps/web && node scripts/generate-env.js && pnpm exec ng serve --configuration development --port 4300 --host 127.0.0.1\"",
+      "cwd": "/home/edu/autorenta",
+      "url": "http://localhost:4300",
+      "reuseExistingServer": true,
+      "timeout": 240000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "01-browse-and-filter.spec.ts",
+      "file": "01-browse-and-filter.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Browse and filter catalog",
+          "file": "01-browse-and-filter.spec.ts",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "01-browse-and-filter: filters by transmission and preserves state",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 55751,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-car-id]').first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-car-id]').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-car-id]').first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-car-id]').first()\u001b[22m\n\n    at /home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts:25:36",
+                        "location": {
+                          "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                          "column": 36,
+                          "line": 25
+                        },
+                        "snippet": "  23 |\n  24 |     const carCards = page.locator('[data-car-id]');\n> 25 |     await expect(carCards.first()).toBeVisible({ timeout: 15000 });\n     |                                    ^\n  26 |\n  27 |     const initialCount = await carCards.count();\n  28 |     logStep('initial-catalog-loaded', { count: initialCount });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                            "column": 36,
+                            "line": 25
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-car-id]').first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-car-id]').first()\u001b[22m\n\n\n  23 |\n  24 |     const carCards = page.locator('[data-car-id]');\n> 25 |     await expect(carCards.first()).toBeVisible({ timeout: 15000 });\n     |                                    ^\n  26 |\n  27 |     const initialCount = await carCards.count();\n  28 |     logStep('initial-catalog-loaded', { count: initialCount });\n    at /home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts:25:36"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-04T04:36:07.875Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-0b7cb-mission-and-preserves-state-chromium-desktop/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-0b7cb-mission-and-preserves-state-chromium-desktop/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-0b7cb-mission-and-preserves-state-chromium-desktop/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                        "column": 36,
+                        "line": 25
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f48b4054009129a59d70-5787d556225d016dc50e",
+              "file": "01-browse-and-filter.spec.ts",
+              "line": 11,
+              "column": 7
+            },
+            {
+              "title": "01-browse-and-filter: filters by transmission and preserves state",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 50182,
+                      "error": {
+                        "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /Filtros/i }) resolved to 2 elements:\n    1) <button class=\"filters-toggle\" _ngcontent-ng-c841643642=\"\">…</button> aka getByRole('button', { name: 'Filtros', exact: true })\n    2) <button class=\"reset-btn\" _ngcontent-ng-c841643642=\"\">Limpiar filtros</button> aka getByRole('button', { name: 'Limpiar filtros' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /Filtros/i })\u001b[22m\n",
+                        "stack": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /Filtros/i }) resolved to 2 elements:\n    1) <button class=\"filters-toggle\" _ngcontent-ng-c841643642=\"\">…</button> aka getByRole('button', { name: 'Filtros', exact: true })\n    2) <button class=\"reset-btn\" _ngcontent-ng-c841643642=\"\">Limpiar filtros</button> aka getByRole('button', { name: 'Limpiar filtros' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /Filtros/i })\u001b[22m\n\n    at /home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts:32:58",
+                        "location": {
+                          "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                          "column": 58,
+                          "line": 32
+                        },
+                        "snippet": "  30 |\n  31 |     logStep('open-filters');\n> 32 |     await page.getByRole('button', { name: /Filtros/i }).click();\n     |                                                          ^\n  33 |\n  34 |     logStep('apply-automatic-transmission');\n  35 |     await page.getByRole('button', { name: /Automática/i }).click();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                            "column": 58,
+                            "line": 32
+                          },
+                          "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /Filtros/i }) resolved to 2 elements:\n    1) <button class=\"filters-toggle\" _ngcontent-ng-c841643642=\"\">…</button> aka getByRole('button', { name: 'Filtros', exact: true })\n    2) <button class=\"reset-btn\" _ngcontent-ng-c841643642=\"\">Limpiar filtros</button> aka getByRole('button', { name: 'Limpiar filtros' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /Filtros/i })\u001b[22m\n\n\n  30 |\n  31 |     logStep('open-filters');\n> 32 |     await page.getByRole('button', { name: /Filtros/i }).click();\n     |                                                          ^\n  33 |\n  34 |     logStep('apply-automatic-transmission');\n  35 |     await page.getByRole('button', { name: /Automática/i }).click();\n    at /home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts:32:58"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-04T04:36:11.583Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-0b7cb-mission-and-preserves-state-mobile-chrome/video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-0b7cb-mission-and-preserves-state-mobile-chrome/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                        "column": 58,
+                        "line": 32
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f48b4054009129a59d70-7b363269d8d7f07eb1cd",
+              "file": "01-browse-and-filter.spec.ts",
+              "line": 11,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-11-04T04:33:55.439Z",
+    "duration": 193496.029,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

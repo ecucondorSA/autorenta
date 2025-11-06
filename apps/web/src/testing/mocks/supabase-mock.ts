@@ -127,15 +127,17 @@ export function mockAvailabilityRPCs(supabaseMock: ReturnType<typeof createSupab
 
       // Filter by city (case-insensitive) - RPC doesn't filter by city
       // The service filters after getting results
-      if (params?.p_city) {
-        filtered = filtered.filter(
-          (car) => car.location?.city?.toLowerCase() === params.p_city.toLowerCase(),
-        );
+      const cityRaw = params?.['p_city'];
+      const cityFilter = typeof cityRaw === 'string' ? cityRaw.toLowerCase() : undefined;
+      if (cityFilter) {
+        filtered = filtered.filter((car) => car.location?.city?.toLowerCase() === cityFilter);
       }
 
       // Apply pagination
-      const limit = params?.p_limit || 100;
-      const offset = params?.p_offset || 0;
+      const limitRaw = params?.['p_limit'];
+      const offsetRaw = params?.['p_offset'];
+      const limit = typeof limitRaw === 'number' ? limitRaw : 100;
+      const offset = typeof offsetRaw === 'number' ? offsetRaw : 0;
       filtered = filtered.slice(offset, offset + limit);
 
       return Promise.resolve({ data: filtered, error: null });
@@ -160,21 +162,21 @@ export function mockBookingRPCs(supabaseMock: ReturnType<typeof createSupabaseMo
   supabaseMock.rpc.and.callFake((functionName: string, params?: RPCParams) => {
     if (functionName === 'request_booking' || functionName === 'create_booking_with_payment') {
       // Validate UUID format
-      const carId = params?.p_car_id || params?.car_id;
-      if (carId && !isValidUUID(carId)) {
+      const carIdRaw = params?.['p_car_id'] ?? params?.['car_id'];
+      if (carIdRaw && typeof carIdRaw === 'string' && !isValidUUID(carIdRaw)) {
         return Promise.resolve({
           data: null,
-          error: { message: `invalid input syntax for type uuid: "${carId}"`, code: '22P02' },
+          error: { message: `invalid input syntax for type uuid: "${carIdRaw}"`, code: '22P02' },
         });
       }
 
       // Validate dates
-      const startDate = params?.p_start || params?.start_at;
-      const endDate = params?.p_end || params?.end_at;
+      const startRaw = params?.['p_start'] ?? params?.['start_at'];
+      const endRaw = params?.['p_end'] ?? params?.['end_at'];
 
-      if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+      if (typeof startRaw === 'string' && typeof endRaw === 'string') {
+        const start = new Date(startRaw);
+        const end = new Date(endRaw);
         const now = new Date();
 
         // Check if start is in the past
@@ -295,10 +297,10 @@ export function mockAllRPCs(supabaseMock: ReturnType<typeof createSupabaseMock>)
       ];
 
       let filtered = [...allCars];
-      if (params?.p_city) {
-        filtered = filtered.filter(
-          (car) => car.location_city.toLowerCase() === params.p_city.toLowerCase(),
-        );
+      const cityRaw = params?.['p_city'];
+      const cityFilter = typeof cityRaw === 'string' ? cityRaw.toLowerCase() : undefined;
+      if (cityFilter) {
+        filtered = filtered.filter((car) => car.location_city.toLowerCase() === cityFilter);
       }
 
       return Promise.resolve({ data: filtered, error: null });
@@ -310,20 +312,20 @@ export function mockAllRPCs(supabaseMock: ReturnType<typeof createSupabaseMock>)
 
     // Booking RPCs
     if (functionName === 'request_booking' || functionName === 'create_booking_with_payment') {
-      const carId = params?.p_car_id || params?.car_id;
-      if (carId && !isValidUUID(carId)) {
+      const carIdRaw = params?.['p_car_id'] ?? params?.['car_id'];
+      if (carIdRaw && typeof carIdRaw === 'string' && !isValidUUID(carIdRaw)) {
         return Promise.resolve({
           data: null,
-          error: { message: `invalid input syntax for type uuid: "${carId}"`, code: '22P02' },
+          error: { message: `invalid input syntax for type uuid: "${carIdRaw}"`, code: '22P02' },
         });
       }
 
-      const startDate = params?.p_start || params?.start_at;
-      const endDate = params?.p_end || params?.end_at;
+      const startRaw = params?.['p_start'] ?? params?.['start_at'];
+      const endRaw = params?.['p_end'] ?? params?.['end_at'];
 
-      if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+      if (typeof startRaw === 'string' && typeof endRaw === 'string') {
+        const start = new Date(startRaw);
+        const end = new Date(endRaw);
         const now = new Date();
 
         if (start < now) {

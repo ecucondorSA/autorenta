@@ -1,0 +1,307 @@
+# .cursorrules - Configuración Multi-Agente para AutoRenta
+
+## Rol de Cursor en el Sistema Multi-Agente
+
+Cursor es el **Agente de Desarrollo Iterativo** en AutoRenta. Te enfocas en:
+- Implementación rápida de features según planes de arquitectura
+- Edición inline y refactoring local (1-3 archivos)
+- Debugging visual en tiempo real
+- Autocompletado inteligente con contexto del proyecto
+
+## Delegación a Claude Code CLI
+
+**IMPORTANTE**: Delega estas tareas al agente Claude Code (`claude` en terminal):
+
+### ❌ NO hagas en Cursor (usa `claude` CLI):
+- Análisis de arquitectura vertical (RLS, auth, storage)
+- Refactoring de múltiples archivos (5+ archivos)
+- Deployment y CI/CD automation
+- Generación de documentación técnica extensa
+- Auditorías de seguridad y performance
+- Setup de infraestructura (Supabase, Cloudflare)
+- Vertical stack debugging (UI → Service → DB → RLS)
+
+### ✅ SÍ hagas en Cursor (tu especialización):
+- Implementación de componentes Angular standalone
+- Servicios y modelos según arquitectura existente
+- Edición inline con Cmd+K / Ctrl+K
+- Debugging de errores de compilación
+- Autocompletado y refactoring local
+- Tests unitarios específicos
+- Fixes rápidos de TypeScript/linting
+
+## Arquitectura AutoRenta
+
+### Stack Tecnológico
+- **Frontend**: Angular 17 (standalone components) + Tailwind CSS
+- **Backend**: Supabase (Auth, Database, Storage, Edge Functions)
+- **Hosting**: Cloudflare Pages (web) + Workers (webhooks)
+- **Payments**: MercadoPago (producción) via Supabase Edge Functions
+- **Maps**: Mapbox GL JS
+
+### Patterns de Código
+
+#### 1. Componentes Angular (Standalone)
+```typescript
+// ✅ SIEMPRE usa standalone components
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-feature',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './feature.component.html',
+  styleUrls: ['./feature.component.css']
+})
+export class FeatureComponent {}
+```
+
+#### 2. Servicios (Injectable)
+```typescript
+// ✅ Usa signals para estado reactivo (preferido sobre BehaviorSubject)
+import { Injectable, signal, computed } from '@angular/core';
+import { SupabaseClientService } from './supabase-client.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FeatureService {
+  private readonly supabase = inject(SupabaseClientService).getClient();
+  private dataSignal = signal<Data[]>([]);
+
+  readonly data = this.dataSignal.asReadonly();
+  readonly count = computed(() => this.data().length);
+}
+```
+
+#### 3. Lazy Loading
+```typescript
+// ✅ Features se cargan lazy con loadComponent
+export const routes: Routes = [
+  {
+    path: 'feature',
+    loadComponent: () => import('./features/feature/feature.page').then(m => m.FeaturePage)
+  }
+];
+```
+
+#### 4. Supabase Storage Paths
+```typescript
+// ✅ CORRECTO - Path SIN bucket prefix
+const filePath = `${userId}/${filename}`;
+await supabase.storage.from('avatars').upload(filePath, file);
+
+// ❌ INCORRECTO - NO incluyas bucket name
+const filePath = `avatars/${userId}/${filename}`; // ❌ FALLA RLS!
+```
+
+#### 5. Manejo de Errores
+```typescript
+// ✅ Siempre maneja errores de Supabase explícitamente
+const { data, error } = await supabase.from('table').select();
+if (error) {
+  console.error('Error detail:', error);
+  throw new Error(`Failed to fetch: ${error.message}`);
+}
+return data;
+```
+
+### Estructura de Directorios
+
+```
+apps/web/src/app/
+├── core/                    # Servicios core, guards, interceptors
+│   ├── guards/              # AuthGuard (CanMatchFn)
+│   ├── interceptors/        # supabaseAuthInterceptor (JWT)
+│   ├── models/              # Interfaces TypeScript
+│   └── services/            # Business logic
+├── features/                # Features lazy-loaded
+│   ├── auth/                # Login, register, reset
+│   ├── cars/                # List, detail, publish
+│   ├── bookings/            # Booking management
+│   └── admin/               # Admin dashboard
+└── shared/                  # Componentes compartidos
+    ├── components/          # car-card, date-picker, etc
+    ├── pipes/
+    └── utils/
+```
+
+### Reglas de Naming
+
+- **Componentes**: `{feature}-{type}.component.ts` (ej: `car-card.component.ts`)
+- **Páginas**: `{feature}.page.ts` (ej: `cars-list.page.ts`)
+- **Servicios**: `{domain}.service.ts` (ej: `bookings.service.ts`)
+- **Guards**: `{purpose}.guard.ts` (ej: `auth.guard.ts`)
+- **Modelos**: `{entity}.model.ts` (ej: `car.model.ts`)
+
+### TypeScript Strict Mode
+
+```typescript
+// ✅ Siempre tipado estricto
+// - No usar 'any' sin justificación
+// - Preferir interfaces sobre types
+// - Usar tipos de retorno explícitos en funciones públicas
+
+interface Car {
+  id: string;
+  brand: string;
+  model: string;
+  year: number;
+  price_per_day: number;
+}
+
+async getCar(id: string): Promise<Car> {
+  // Implementation
+}
+```
+
+### Autenticación y Permisos
+
+```typescript
+// User roles (profiles.user_role)
+type UserRole = 'locador' | 'locatario' | 'ambos';
+
+// Admin check
+const isAdmin = profile.is_admin === true;
+
+// Protected routes
+{
+  path: 'publish',
+  canMatch: [AuthGuard], // Verifica isAuthenticated()
+  loadComponent: () => import('./publish.page')
+}
+```
+
+## Workflows con Claude Code
+
+### Cuándo Llamar a Claude Code
+
+**Escribe en terminal `claude` cuando necesites:**
+
+1. **Planificación de Features**
+   ```bash
+   $ claude
+   > "Diseña sistema de reviews para autos con schema, RLS, y services"
+   ```
+
+2. **Debugging Complejo**
+   ```bash
+   $ claude
+   > "Analiza por qué falla el upload de avatares con RLS policy error"
+   ```
+
+3. **Refactoring Global**
+   ```bash
+   $ claude
+   > "Refactoriza todos los servicios para usar signals"
+   ```
+
+4. **CI/CD**
+   ```bash
+   $ claude
+   > "Ejecuta npm run ci y despliega a staging si todo pasa"
+   ```
+
+### Tu Flujo de Trabajo Ideal
+
+```
+1. Claude Code: Planea arquitectura y genera TODO list
+2. Cursor (TÚ): Implementas código según plan
+3. Claude Code: Valida con CI y despliega
+```
+
+## Comandos Útiles
+
+```bash
+# Desarrollo
+npm run dev                 # Inicia web + worker
+npm run start               # Solo Angular (localhost:4200)
+
+# Testing
+npm run test:quick          # Tests sin coverage
+npm run lint:fix            # Auto-fix linting
+
+# CI/CD (mejor con Claude Code)
+npm run ci                  # Lint + test + build
+npm run deploy              # Deploy completo
+
+# Worker (mejor con Claude Code)
+npm run worker:dev          # Wrangler dev
+npm run worker:deploy       # Deploy a Cloudflare
+```
+
+## Recursos del Proyecto
+
+- **CLAUDE.md**: Documentación completa del proyecto
+- **MULTI_AGENT_WORKFLOW.md**: Workflows multi-agente
+- **database.types.ts**: Tipos de Supabase
+- **tools/claude-workflows.sh**: Scripts de automatización
+
+## Estilo de Código
+
+### Formato (Prettier)
+- Single quotes: `'string'`
+- Print width: 100
+- No semicolons opcionales
+- Trailing commas: ES5
+
+### ESLint
+- Import order: alfabético, agrupado por tipo
+- Return types explícitos en funciones públicas
+- No `console.log` en producción (usa `console.error` para errores)
+
+### Tailwind CSS
+```html
+<!-- ✅ Usa utility classes, evita CSS custom -->
+<div class="flex items-center gap-4 rounded-lg bg-white p-4 shadow-md">
+  <img class="h-16 w-16 rounded-full object-cover" [src]="car.imageUrl" />
+  <div class="flex-1">
+    <h3 class="text-lg font-semibold">{{ car.brand }} {{ car.model }}</h3>
+  </div>
+</div>
+```
+
+## Seguridad
+
+### ⚠️ NUNCA hagas:
+- Commitear secrets o tokens (usa `.env.development.local`)
+- Deshabilitar RLS en tablas de Supabase
+- Usar `SUPABASE_SERVICE_ROLE_KEY` en frontend
+- Inyección SQL directa (siempre usa Supabase SDK)
+- Deshabilitar CSP o CORS sin justificación
+
+### ✅ SIEMPRE:
+- Valida input del usuario (archivos, formularios)
+- Usa RLS policies para proteger datos
+- Sanitiza URLs y paths antes de storage
+- Verifica autenticación en routes protegidas
+- Limita tamaño de uploads (2MB para imágenes)
+
+## Payment System (CRÍTICO)
+
+**Producción**: MercadoPago via Supabase Edge Functions
+- Webhook: `supabase/functions/mercadopago-webhook/`
+- NO usar Cloudflare Worker mock en producción
+
+**Desarrollo**: Mock webhook opcional (Cloudflare Worker local)
+- Solo para testing rápido sin MercadoPago
+- Protegido por guards de `environment.production`
+
+## Contexto Multi-Agente
+
+Eres parte de un sistema de 2 agentes:
+- **Cursor (TÚ)**: Desarrollo iterativo rápido
+- **Claude Code CLI**: Arquitectura y automatización
+
+Trabaja en colaboración:
+1. Lee `CLAUDE.md` para entender arquitectura
+2. Implementa según planes de Claude Code
+3. Delega tareas complejas de vuelta a Claude Code
+4. Mantén consistencia con patterns existentes
+
+---
+
+**Última actualización**: 2025-11-03
+**Versión**: 1.0.0
+**Proyecto**: AutoRenta - Plataforma de alquiler de autos (Argentina)

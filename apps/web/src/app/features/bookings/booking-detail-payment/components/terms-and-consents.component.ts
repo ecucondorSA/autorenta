@@ -12,64 +12,89 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
     >
       <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
-        Términos y Consentimientos
+        Confirmación y autorizaciones
       </h3>
 
       <div class="space-y-4">
         <!-- Terms & Conditions -->
-        <label class="flex items-start space-x-3 cursor-pointer">
-          <input
-            type="checkbox"
-            [(ngModel)]="consents.termsAccepted"
-            (ngModelChange)="onConsentsChange()"
-            class="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 dark:focus:ring-accent-petrol/60 border-gray-300 dark:border-neutral-600 rounded bg-white dark:bg-slate-deep/60 transition-colors"
-          />
-          <span class="text-sm text-gray-700 dark:text-pearl-light/80">
-            Acepto los
-            <a
-              href="/terminos-y-condiciones"
-              target="_blank"
-              class="text-primary-600 hover:text-primary-700 dark:text-accent-petrol dark:hover:text-accent-petrol/80 underline"
-            >
-              Términos y Condiciones
-            </a>
-            y la
-            <a
-              href="/politica-privacidad"
-              target="_blank"
-              class="text-primary-600 hover:text-primary-700 dark:text-accent-petrol dark:hover:text-accent-petrol/80 underline"
-            >
-              Política de Privacidad
-            </a>
-            <span class="text-red-500">*</span>
-          </span>
-        </label>
+        <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-lg">
+          <label class="flex items-start space-x-3 cursor-pointer">
+            <input
+              type="checkbox"
+              [(ngModel)]="consents.termsAccepted"
+              (ngModelChange)="onConsentsChange()"
+              class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 border-blue-300 dark:border-blue-600 rounded bg-white dark:bg-slate-deep/60 transition-colors"
+            />
+            <div class="flex-1">
+              <span class="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1 block">
+                Acepto los términos del servicio
+              </span>
+              <span class="text-sm text-blue-700 dark:text-blue-300">
+                He leído y acepto los
+                <a
+                  href="/terminos-y-condiciones"
+                  target="_blank"
+                  class="font-medium underline hover:text-blue-800 dark:hover:text-blue-100"
+                >
+                  Términos y Condiciones
+                </a>
+                y la
+                <a
+                  href="/politica-privacidad"
+                  target="_blank"
+                  class="font-medium underline hover:text-blue-800 dark:hover:text-blue-100"
+                >
+                  Política de Privacidad
+                </a>
+                <span class="text-red-500">*</span>
+              </span>
+            </div>
+          </label>
+        </div>
 
         <!-- Card on File (only for card mode) -->
-        <label *ngIf="paymentMode === 'card'" class="flex items-start space-x-3 cursor-pointer">
-          <input
-            type="checkbox"
-            [(ngModel)]="consents.cardOnFileAccepted"
-            (ngModelChange)="onConsentsChange()"
-            class="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 dark:focus:ring-accent-petrol/60 border-gray-300 dark:border-neutral-600 rounded bg-white dark:bg-slate-deep/60 transition-colors"
-          />
-          <span class="text-sm text-gray-700 dark:text-pearl-light/80">
-            Autorizo guardar mi tarjeta para cargos diferidos (multas, peajes, daños) según lo
-            establecido en los Términos y Condiciones
-            <span class="text-red-500">*</span>
-          </span>
-        </label>
+        <div *ngIf="paymentMode === 'card'" class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/60 rounded-lg">
+          <label class="flex items-start space-x-3 cursor-pointer">
+            <input
+              type="checkbox"
+              [(ngModel)]="consents.cardOnFileAccepted"
+              (ngModelChange)="onConsentsChange()"
+              class="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 dark:focus:ring-green-400 border-green-300 dark:border-green-600 rounded bg-white dark:bg-slate-deep/60 transition-colors"
+            />
+            <div class="flex-1">
+              <span class="text-sm font-medium text-green-800 dark:text-green-200 mb-1 block">
+                Autorizo guardar mi tarjeta de forma segura
+              </span>
+              <span class="text-sm text-green-700 dark:text-green-300">
+                Permito que AutoRenta guarde mi tarjeta para futuros cargos por multas, peajes o daños según nuestros términos
+                <span class="text-red-500">*</span>
+              </span>
+            </div>
+          </label>
+        </div>
       </div>
 
-      <!-- Legal Info -->
+      <!-- Security Notice -->
       <div
-        class="mt-4 p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300"
+        class="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/60 rounded-lg"
       >
-        <p class="text-xs text-gray-600 dark:text-pearl-light/70">
-          <strong>Importante:</strong> Al confirmar esta reserva, estás aceptando las condiciones de
-          uso, franquicias y responsabilidades detalladas arriba. Los campos marcados con
-          <span class="text-red-500">*</span> son obligatorios.
-        </p>
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-green-800 dark:text-green-200 mb-1">
+              Tus datos están protegidos
+            </p>
+            <p class="text-sm text-green-700 dark:text-green-300">
+              @if (paymentMode === 'card') {
+                MercadoPago protege tu información de pago. Solo cobramos según nuestros términos acordados.
+              } @else {
+                Tu saldo en wallet está protegido y solo se usa según las reglas establecidas.
+              }
+            </p>
+          </div>
+        </div>
       </div>
 
       <!-- Validation Errors -->

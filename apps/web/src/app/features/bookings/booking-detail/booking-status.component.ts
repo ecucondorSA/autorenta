@@ -47,6 +47,7 @@ export class BookingStatusComponent {
     }
     switch (status) {
       case 'pending':
+      case 'pending_payment':
         return 'bg-yellow-100 text-yellow-800';
       case 'confirmed':
         return 'bg-green-100 text-green-800';
@@ -69,6 +70,7 @@ export class BookingStatusComponent {
     }
     switch (status) {
       case 'pending':
+      case 'pending_payment':
         return 'Pendiente de pago';
       case 'confirmed':
         return 'Confirmada';
@@ -95,6 +97,7 @@ export class BookingStatusComponent {
     const status = this.booking?.status;
     switch (status) {
       case 'pending':
+      case 'pending_payment':
         return '⏳';
       case 'confirmed':
         return '✅';

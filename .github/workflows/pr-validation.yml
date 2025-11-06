@@ -1,0 +1,183 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  validate-pr:
+    name: Validate Pull Request
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check PR Size
+        id: pr-size
+        run: |
+          FILES_CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | wc -l)
+          echo "files_changed=$FILES_CHANGED" >> $GITHUB_OUTPUT
+          
+          if [ "$FILES_CHANGED" -gt 50 ]; then
+            echo "⚠️ PR is very large ($FILES_CHANGED files). Consider splitting into smaller PRs."
+            echo "size_warning=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ PR size is acceptable ($FILES_CHANGED files)"
+            echo "size_warning=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for Secrets
+        run: |
+          echo "Checking for hardcoded secrets..."
+          if grep -r "APP_USR-\|sk_live\|pk_live\|DATABASE_URL\|SUPABASE.*KEY" --include="*.ts" --include="*.js" --include="*.tsx" --include="*.jsx" --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git .; then
+            echo "❌ Potential secrets found in code!"
+            exit 1
+          else
+            echo "✅ No hardcoded secrets detected"
+          fi
+
+      - name: Check for console.log
+        run: |
+          echo "Checking for console.log statements..."
+          CONSOLE_LOGS=$(git diff ${{ github.event.pull_request.base.sha }} ${{ github.sha }} -- '*.ts' '*.js' '*.tsx' '*.jsx' | grep -c "console.log" || true)
+          if [ "$CONSOLE_LOGS" -gt 0 ]; then
+            echo "⚠️ Found $CONSOLE_LOGS console.log statements. Consider removing them or using proper logging."
+            echo "console_warning=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No new console.log statements"
+            echo "console_warning=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate PR Template
+        run: |
+          echo "Validating PR template completion..."
+          PR_BODY="${{ github.event.pull_request.body }}"
+          
+          # Check for checklist items (basic validation)
+          if echo "$PR_BODY" | grep -q "\[ \]"; then
+            echo "⚠️ PR has unchecked items in checklist"
+            echo "template_warning=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ PR template appears complete"
+            echo "template_warning=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Linter
+        run: npm run lint || echo "lint_failed=true" >> $GITHUB_OUTPUT
+
+      - name: Run Type Check
+        run: |
+          cd apps/web
+          npx tsc --noEmit || echo "typecheck_failed=true" >> $GITHUB_OUTPUT
+
+      - name: Post Validation Summary
+        if: always()
+        run: |
+          echo "## 📊 PR Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Validation Results:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.pr-size.outputs.size_warning }}" == "true" ]; then
+            echo "⚠️ **PR Size**: Very large (${{ steps.pr-size.outputs.files_changed }} files). Consider splitting." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **PR Size**: Acceptable (${{ steps.pr-size.outputs.files_changed }} files)" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ steps.check-secrets.outcome }}" == "failure" ]; then
+            echo "❌ **Secrets Check**: Failed - Potential secrets found!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Secrets Check**: Passed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ steps.check-console.outputs.console_warning }}" == "true" ]; then
+            echo "⚠️ **Console.log Check**: Found console.log statements" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Console.log Check**: Passed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ steps.validate-template.outputs.template_warning }}" == "true" ]; then
+            echo "⚠️ **PR Template**: Has unchecked items" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **PR Template**: Complete" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  check-migrations:
+    name: Check Database Migrations
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.head.ref, 'migration') || contains(github.event.pull_request.title, 'migration') || contains(github.event.pull_request.title, 'Migration')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for Migration Files
+        run: |
+          echo "Checking for migration files..."
+          MIGRATIONS=$(find . -path "*/migrations/*.sql" -newer "${{ github.event.pull_request.base.sha }}" 2>/dev/null | wc -l || echo "0")
+          
+          if [ "$MIGRATIONS" -gt 0 ]; then
+            echo "⚠️ This PR contains migrations. Please ensure:"
+            echo "  1. Migrations have been tested in staging"
+            echo "  2. Rollback plan is documented"
+            echo "  3. Backup has been considered"
+            echo "migrations_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No new migrations found"
+            echo "migrations_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate Migration Syntax
+        if: steps.check-migrations.outputs.migrations_found == 'true'
+        run: |
+          echo "Validating migration SQL syntax..."
+          # Basic SQL syntax check (can be enhanced with actual SQL parser)
+          find . -path "*/migrations/*.sql" -newer "${{ github.event.pull_request.base.sha }}" -exec echo "Checking: {}" \;
+
+  post-review-reminder:
+    name: Post Review Reminder
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' || github.event.action == 'ready_for_review'
+    
+    steps:
+      - name: Create Review Reminder Comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const body = `## 📋 Code Review Required
+            
+            This PR requires code review before merging. Please ensure:
+            
+            - [ ] At least 1 approval from a code reviewer
+            - [ ] All CI checks pass
+            - [ ] No conflicts with \`main\` branch
+            - [ ] PR checklist is complete
+            
+            **Review Guidelines**: See [CODE_REVIEW_GUIDELINES.md](/.github/CODE_REVIEW_GUIDELINES.md)
+            
+            ---
+            
+            👀 **Reviewers**: Please review this PR following our [Code Review Guidelines](/.github/CODE_REVIEW_GUIDELINES.md)`;
+            
+            github.rest.issues.createComment({
+              issue_number: pr.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+

@@ -15,11 +15,11 @@ console.log('🚀 Creando usuario de test en Supabase...\n');
 try {
   // Crear usuario con Admin API
   const { data, error } = await supabase.auth.admin.createUser({
-    email: 'test-renter@autorenta.com',
-    password: 'TestPassword123!',
+    email: 'renter.test@autorenta.com',
+    password: 'TestRenter123!',
     email_confirm: true,
     user_metadata: {
-      role: 'renter',
+      role: 'locatario',
       created_for: 'e2e-testing'
     }
   });
@@ -34,8 +34,8 @@ try {
       const supabaseClient = createClient(SUPABASE_URL, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU');
       
       const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({
-        email: 'test-renter@autorenta.com',
-        password: 'TestPassword123!'
+        email: 'renter.test@autorenta.com',
+        password: 'TestRenter123!'
       });
       
       if (loginData?.user) {
@@ -52,8 +52,8 @@ try {
 
   console.log('✅ Usuario de test creado exitosamente!\n');
   console.log('📧 Credenciales:');
-  console.log(`   Email: test-renter@autorenta.com`);
-  console.log(`   Password: TestPassword123!`);
+  console.log(`   Email: renter.test@autorenta.com`);
+  console.log(`   Password: TestRenter123!`);
   console.log(`   User ID: ${data.user.id}`);
   console.log(`   Email confirmado: ${data.user.email_confirmed_at ? 'Sí' : 'No'}\n`);
   
@@ -63,8 +63,8 @@ try {
   const supabaseClient = createClient(SUPABASE_URL, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU');
   
   const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({
-    email: 'test-renter@autorenta.com',
-    password: 'TestPassword123!'
+    email: 'renter.test@autorenta.com',
+    password: 'TestRenter123!'
   });
   
   if (loginError) {

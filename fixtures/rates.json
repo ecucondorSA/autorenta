@@ -1,0 +1,37 @@
+[
+  {
+    "car_id": "01be717e-5a0c-413c-b4f1-d23e5091bc77",
+    "currency": "ARS",
+    "base_rate": 45000,
+    "security_deposit": 67500,
+    "commission_rate": 0.12
+  },
+  {
+    "car_id": "5b128cfa-7a19-474c-84d1-603903e36137",
+    "currency": "ARS",
+    "base_rate": 50000,
+    "security_deposit": 75000,
+    "commission_rate": 0.13
+  },
+  {
+    "car_id": "739b7182-5c64-4c52-bfbf-d63f5741fb8b",
+    "currency": "ARS",
+    "base_rate": 55000,
+    "security_deposit": 82500,
+    "commission_rate": 0.13999999999999999
+  },
+  {
+    "car_id": "9bf57784-d071-4f3d-9afe-7b6b759d99d7",
+    "currency": "ARS",
+    "base_rate": 60000,
+    "security_deposit": 90000,
+    "commission_rate": 0.15
+  },
+  {
+    "car_id": "112c6862-542a-44d5-9f2b-0a63f76141ef",
+    "currency": "ARS",
+    "base_rate": 65000,
+    "security_deposit": 97500,
+    "commission_rate": 0.16
+  }
+]

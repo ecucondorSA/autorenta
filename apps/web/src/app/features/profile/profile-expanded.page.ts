@@ -25,6 +25,13 @@ import { MetaService } from '../../core/services/meta.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs/operators';
 import { from } from 'rxjs';
+import { VerificationStateService } from '../../core/services/verification-state.service';
+import { VerificationNotificationsService } from '../../core/services/verification-notifications.service';
+import { VerificationProgressComponent } from '../../shared/components/verification-progress/verification-progress.component';
+import { EmailVerificationComponent } from '../../shared/components/email-verification/email-verification.component';
+import { PhoneVerificationComponent } from '../../shared/components/phone-verification/phone-verification.component';
+import { SelfieCaptureComponent } from '../../shared/components/selfie-capture/selfie-capture.component';
+import { NotificationToastComponent } from '../../shared/components/notification-toast/notification-toast.component';
 
 type TabId =
   | 'general'
@@ -38,7 +45,17 @@ type TabId =
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    TranslateModule,
+    VerificationProgressComponent,
+    EmailVerificationComponent,
+    PhoneVerificationComponent,
+    SelfieCaptureComponent,
+    NotificationToastComponent,
+  ],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,6 +66,8 @@ export class ProfileExpandedPage {
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
   private readonly metaService = inject(MetaService);
+  private readonly verificationStateService = inject(VerificationStateService);
+  private readonly verificationNotificationsService = inject(VerificationNotificationsService);
 
   // Core signals
   readonly profile = toSignal(
@@ -60,10 +79,8 @@ export class ProfileExpandedPage {
     { initialValue: null }
   );
   
-  readonly documents = toSignal(
-    from(this.profileService.getMyDocuments()), 
-    { initialValue: [] as UserDocument[] }
-  );
+  private readonly documentsSubject = signal<UserDocument[]>([]);
+  readonly documents = this.documentsSubject.asReadonly();
   
   readonly loading = signal(false);
   readonly saving = signal(false);
@@ -128,6 +145,7 @@ export class ProfileExpandedPage {
 
   readonly verificationError = signal<string | null>(null);
   readonly verificationLoading = signal(false);
+  readonly uploadingDocument = signal<string | null>(null); // Track which document is being uploaded
 
   readonly showDriverFlow = computed(() => {
     const role = this.profile()?.role;
@@ -337,13 +355,39 @@ export class ProfileExpandedPage {
   async refreshVerificationStatuses(flow: 'driver' | 'owner'): Promise<void> {
     this.verificationLoading.set(true);
     try {
-      await this.profileService.getMyDocuments();
+      await this.loadDocuments();
       this.message.set('Estado de verificación actualizado');
     } catch (err) {
       this.verificationError.set('Error al actualizar estado');
     } finally {
       this.verificationLoading.set(false);
     }
+  }
+
+  async onDocumentUpload(event: Event, kind: DocumentKind): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    this.uploadingDocument.set(kind);
+    this.error.set(null);
+    this.message.set(null);
+
+    try {
+      await this.profileService.uploadDocument(file, kind);
+      // Refresh documents list
+      await this.loadDocuments();
+      this.message.set('Documento subido exitosamente. La verificación puede tardar unos minutos.');
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'Error al subir el documento');
+    } finally {
+      this.uploadingDocument.set(null);
+      // Reset file input
+      (event.target as HTMLInputElement).value = '';
+    }
+  }
+
+  isUploadingDocument(kind: string): boolean {
+    return this.uploadingDocument() === kind;
   }
 
   constructor() {
@@ -356,6 +400,31 @@ export class ProfileExpandedPage {
     });
 
     this.metaService.updateProfileMeta();
+
+    // Load documents on init
+    this.loadDocuments();
+
+    // Initialize verification state and notifications
+    this.initializeVerificationServices();
+  }
+
+  private async initializeVerificationServices(): Promise<void> {
+    try {
+      await this.verificationStateService.initialize();
+      this.verificationNotificationsService.initialize();
+      console.log('[ProfileExpanded] Verification services initialized');
+    } catch (error) {
+      console.error('[ProfileExpanded] Error initializing verification services:', error);
+    }
+  }
+
+  private async loadDocuments(): Promise<void> {
+    try {
+      const docs = await this.profileService.getMyDocuments();
+      this.documentsSubject.set(docs);
+    } catch (err) {
+      console.error('Error loading documents:', err);
+    }
   }
 
   private isValidTab(tab: string | null): boolean {

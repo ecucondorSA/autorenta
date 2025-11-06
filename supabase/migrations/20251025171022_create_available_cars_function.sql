@@ -59,12 +59,13 @@ BEGIN
   WHERE 
     -- Solo autos activos
     c.status = 'active'
-    -- Sin reservas confirmadas que se solapen con las fechas solicitadas
+    -- ✅ FIX: Incluir 'pending' para coincidir con constraint bookings_no_overlap
+    -- Sin reservas (pending, confirmed, in_progress) que se solapen con las fechas solicitadas
     AND NOT EXISTS (
       SELECT 1 
       FROM bookings b2
       WHERE b2.car_id = c.id
-        AND b2.status IN ('confirmed', 'in_progress')
+        AND b2.status IN ('pending', 'confirmed', 'in_progress')
         AND (b2.start_at, b2.end_at) OVERLAPS (p_start_date, p_end_date)
     )
   GROUP BY c.id
@@ -121,11 +122,14 @@ LANGUAGE sql
 STABLE
 SECURITY DEFINER
 AS $$
+  -- ✅ FIX: Incluir 'pending' para coincidir con constraint bookings_no_overlap
+  -- El constraint previene overlaps de bookings con status: pending, confirmed, in_progress
+  -- Por lo tanto, la validación debe incluir también 'pending'
   SELECT NOT EXISTS (
     SELECT 1
     FROM bookings
     WHERE car_id = p_car_id
-      AND status IN ('confirmed', 'in_progress')
+      AND status IN ('pending', 'confirmed', 'in_progress')
       AND (start_at, end_at) OVERLAPS (p_start_date, p_end_date)
   );
 $$;

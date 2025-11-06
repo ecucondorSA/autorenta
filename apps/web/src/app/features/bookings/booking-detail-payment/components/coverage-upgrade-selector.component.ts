@@ -11,7 +11,7 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
     >
       <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
-        Upgrade de Cobertura
+        Elegí tu nivel de protección
       </h3>
 
       <div class="space-y-3">
@@ -35,14 +35,14 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           <div class="flex-1">
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-smoke-black dark:text-ivory-luminous"
-                >Estándar (incluida)</span
+                >Protección estándar</span
               >
-              <span class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous"
-                >Sin cargo</span
+              <span class="text-sm font-semibold text-green-600 dark:text-green-400"
+                >Incluido</span
               >
             </div>
             <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
-              Franquicia normal según valor del vehículo
+              Protección básica incluida con tu reserva
             </p>
           </div>
           <div *ngIf="selectedUpgrade === 'standard'" class="ml-3">
@@ -80,14 +80,14 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           <div class="flex-1">
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-smoke-black dark:text-ivory-luminous"
-                >Seguro Premium (-50%)</span
+                >Cobertura Premium</span
               >
               <span class="text-sm font-semibold text-primary-600 dark:text-accent-petrol"
                 >+10%</span
               >
             </div>
             <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
-              Reduce tu franquicia a la mitad
+              Reduce a la mitad lo máximo que podrías pagar por daños
             </p>
           </div>
           <div *ngIf="selectedUpgrade === 'premium50'" class="ml-3">
@@ -125,14 +125,14 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           <div class="flex-1">
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-smoke-black dark:text-ivory-luminous"
-                >Franquicia Cero</span
+                >Máxima protección</span
               >
               <span class="text-sm font-semibold text-primary-600 dark:text-accent-petrol"
                 >+20%</span
               >
             </div>
             <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
-              Sin responsabilidad en daños (franquicia = 0)
+              Cero responsabilidad por daños (nosotros nos encargamos)
             </p>
           </div>
           <div *ngIf="selectedUpgrade === 'zero'" class="ml-3">
@@ -154,10 +154,14 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
       <div
         class="mt-4 p-3 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
       >
-        <p class="text-xs text-blue-800 dark:text-info-200">
-          💡 El upgrade se aplica automáticamente a la franquicia estándar y por vuelco. El costo se
-          suma al total de la reserva.
-        </p>
+        <div class="flex items-start gap-2">
+          <svg class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-xs text-blue-800 dark:text-info-200">
+            El costo adicional se suma automáticamente al precio total de tu reserva.
+          </p>
+        </div>
       </div>
     </div>
   `,

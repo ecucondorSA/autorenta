@@ -9,4 +9,9 @@ export const environment = buildEnvironment({
   mapboxAccessToken: 'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg',
   paymentsWebhookUrl: 'http://localhost:8787/webhooks/payments',
   appUrl: 'http://localhost:4200',
+  // PayPal Sandbox Credentials
+  // TODO: Reemplazar con tus credenciales de PayPal Sandbox
+  // Obtener en: https://developer.paypal.com/dashboard/applications/sandbox
+  paypalClientId: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+  paypalClientSecret: '', // No se necesita en frontend (solo para backend)
 });

@@ -13,6 +13,9 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
+import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
+import { LocationService } from '../../../core/services/location.service';
+import { RiskCalculatorService } from '../../../core/services/risk-calculator.service';
 import {
   MercadoPagoBookingGateway,
   type MercadoPagoPreferenceResponse,
@@ -36,7 +39,7 @@ import {
   CreateBookingResult,
   ValidationError,
   calculateTotalDays,
-  getCoverageUpgradeCost,
+  getCoverageUpgradeCost as calculateCoverageUpgradeCost,
   validateConsents,
   validatePaymentAuthorization,
   formatUsd,
@@ -48,6 +51,9 @@ import type { Car, Booking } from '../../../core/models';
 import { BookingSummaryCardComponent } from './components/booking-summary-card.component';
 import { RiskPolicyTableComponent } from './components/risk-policy-table.component';
 import { PaymentModeToggleComponent } from './components/payment-mode-toggle.component';
+import { PaymentSummaryPanelComponent } from './components/payment-summary-panel.component';
+import { PaymentMethodComparisonModalComponent } from './components/payment-method-comparison-modal.component';
+import { PaymentModeAlertComponent } from './components/payment-mode-alert.component';
 import { CoverageUpgradeSelectorComponent } from './components/coverage-upgrade-selector.component';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 import { CreditSecurityPanelComponent } from './components/credit-security-panel.component';
@@ -72,6 +78,9 @@ import { TermsAndConsentsComponent } from './components/terms-and-consents.compo
     BookingSummaryCardComponent,
     RiskPolicyTableComponent,
     PaymentModeToggleComponent,
+    PaymentSummaryPanelComponent,
+    PaymentMethodComparisonModalComponent,
+    PaymentModeAlertComponent,
     CoverageUpgradeSelectorComponent,
     CardHoldPanelComponent,
     CreditSecurityPanelComponent,
@@ -98,6 +107,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private paymentsService = inject(PaymentsService);
   private mpGateway = inject(MercadoPagoBookingGateway);
   private fgoService = inject(FgoV1_1Service);
+
+  // ✅ NEW: Distance-based pricing services
+  private distanceCalculator = inject(DistanceCalculatorService);
+  private locationService = inject(LocationService);
+  private riskCalculatorService = inject(RiskCalculatorService);
 
   // Booking ID for update operations
   private existingBookingId: string | null = null;
@@ -169,12 +183,21 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly showFallbackMessage = signal(false);
   readonly fallbackReason = signal<string>('');
 
+  // ✅ NUEVO: Modal de comparación de métodos
+  readonly showComparisonModal = signal(false);
+
   // ✅ NUEVO: Signals para procesamiento de pago final
   readonly processingFinalPayment = signal(false);
   readonly lastCreatedBookingId = signal<string | null>(null);
 
   // User
   readonly userId = signal<string | null>(null);
+
+  // ✅ NEW: Distance-based pricing signals
+  readonly userLocation = signal<{ lat: number; lng: number } | undefined>(undefined);
+  readonly distanceKm = signal<number | undefined>(undefined);
+  readonly deliveryFeeCents = signal<number>(0);
+  readonly distanceTier = signal<'local' | 'regional' | 'long_distance' | undefined>(undefined);
 
   // ==================== COMPUTED SIGNALS ====================
 
@@ -245,11 +268,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         return;
       }
 
-      const newRisk = this.riskService.recalculateWithUpgrade(currentRisk, upgrade);
-      this.riskSnapshot.set(newRisk);
-
-      // Recalcular pricing también
-      this.calculatePricing();
+      this.riskService.recalculateWithUpgrade(currentRisk, upgrade).then(newRisk => {
+        this.riskSnapshot.set(newRisk);
+        // Recalcular pricing también
+        this.calculatePricing();
+      });
     });
   }
 
@@ -270,8 +293,67 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     // 3. Cargar información del auto
     await this.loadCarInfo();
 
-    // 4. Inicializar snapshots
+    // 4. Inicializar snapshots (no espera distancia)
     await this.initializeSnapshots();
+
+    // 5. ✅ OPTIMIZED: Initialize user location in background (non-blocking)
+    // This allows the page to load immediately while location is being fetched
+    this.initializeUserLocationAndDistanceInBackground();
+  }
+
+  /**
+   * Initialize user location and calculate distance to car (NON-BLOCKING)
+   * Runs in background without blocking page initialization.
+   * When distance is available, recalculates pricing automatically.
+   */
+  private initializeUserLocationAndDistanceInBackground(): void {
+    // Don't await this - let it run in background
+    (async () => {
+      try {
+        const car = this.car();
+        if (!car) return;
+
+        // Get user location (can take 5-30 seconds)
+        const locationData = await this.locationService.getUserLocation();
+        if (locationData) {
+          this.userLocation.set({ lat: locationData.lat, lng: locationData.lng });
+
+          // Calculate distance if car has location
+          if (car.location_lat && car.location_lng) {
+            const distance = this.distanceCalculator.calculateDistance(
+              locationData.lat,
+              locationData.lng,
+              car.location_lat,
+              car.location_lng
+            );
+
+            this.distanceKm.set(distance);
+
+            // Calculate tier and delivery fee
+            const tier = this.distanceCalculator.getDistanceTier(distance);
+            this.distanceTier.set(tier);
+
+            const deliveryFee = this.distanceCalculator.calculateDeliveryFee(distance);
+            this.deliveryFeeCents.set(deliveryFee);
+
+            // ✅ IMPORTANT: Recalculate pricing now that we have distance
+            await this.calculateRiskSnapshot();
+            this.calculatePricing();
+          }
+        } else {
+          // Set to undefined if no location data
+          this.userLocation.set(undefined);
+          this.distanceKm.set(undefined);
+          this.distanceTier.set(undefined);
+        }
+      } catch (error) {
+        // Silently fail - distance is optional
+        console.warn('Could not calculate distance:', error);
+        this.userLocation.set(undefined);
+        this.distanceKm.set(undefined);
+        this.distanceTier.set(undefined);
+      }
+    })();
   }
 
   ngOnDestroy(): void {
@@ -478,6 +560,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   /**
    * Calcula el risk snapshot
+   * ✅ NEW: Pasa distanceKm para aplicar lógica MAYOR en garantías
    */
   private async calculateRiskSnapshot(): Promise<void> {
     const input = this.bookingInput();
@@ -487,12 +570,16 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     this.loadingRisk.set(true);
     try {
-      const snapshot = this.riskService.calculateRiskSnapshot({
+      // ✅ NEW: Get distance for distance-based guarantee calculation
+      const distanceKm = this.distanceKm();
+
+      const snapshot = await this.riskService.calculateRiskSnapshot({
         vehicleValueUsd: input.vehicleValueUsd,
         bucket: input.bucket,
         country: input.country,
         fxRate: fx.rate,
         coverageUpgrade: this.coverageUpgrade(),
+        distanceKm, // ✅ NEW: Pass distance to apply MAYOR logic
       });
 
       this.riskSnapshot.set(snapshot);
@@ -537,11 +624,15 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       const insuranceFeeUsd = 0;
 
       // Coverage upgrade cost
-      const coverageUpgradeUsd = getCoverageUpgradeCost(this.coverageUpgrade(), subtotalUsd);
+      const coverageUpgradeUsd = calculateCoverageUpgradeCost(this.coverageUpgrade(), subtotalUsd);
+
+      // ✅ NEW: Delivery fee based on distance
+      const deliveryFeeCents = this.deliveryFeeCents();
+      const deliveryFeeUsd = deliveryFeeCents > 0 ? this.fxService.convertReverse(deliveryFeeCents / 100, fx) : 0;
 
       // Total USD
       const totalUsd =
-        subtotalUsd + fgoContributionUsd + platformFeeUsd + insuranceFeeUsd + coverageUpgradeUsd;
+        subtotalUsd + fgoContributionUsd + platformFeeUsd + insuranceFeeUsd + coverageUpgradeUsd + deliveryFeeUsd;
 
       // Total ARS
       const totalArs = this.fxService.convert(totalUsd, fx);
@@ -554,6 +645,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         platformFeeUsd,
         insuranceFeeUsd,
         coverageUpgradeUsd,
+        deliveryFeeUsd: deliveryFeeUsd > 0 ? deliveryFeeUsd : undefined,
+        distanceKm: this.distanceKm(),
+        distanceTier: this.distanceTier(),
         totalUsd,
         totalArs,
         fxRate: fx.rate,
@@ -587,6 +681,43 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   protected onCoverageUpgradeChange(upgrade: CoverageUpgrade): void {
     this.coverageUpgrade.set(upgrade);
     // El effect se encarga de recalcular risk + pricing
+  }
+
+  /**
+   * Handler: Comparar métodos de pago
+   */
+  protected onCompareMethodsClick(): void {
+    this.showComparisonModal.set(true);
+  }
+
+  /**
+   * Handler: Cerrar modal de comparación
+   */
+  protected onCloseComparisonModal(): void {
+    this.showComparisonModal.set(false);
+  }
+
+  /**
+   * Retorna el costo del upgrade de cobertura en ARS
+   * Se basa en el breakdown actual; fallback: calcula con helper en USD
+   */
+  getCoverageUpgradeCost(): number {
+    const breakdown = this.priceBreakdown();
+    if (!breakdown) {
+      return 0;
+    }
+
+    const coverageUsd =
+      breakdown.coverageUpgradeUsd ??
+      calculateCoverageUpgradeCost(this.coverageUpgrade(), breakdown.subtotalUsd);
+
+    const fx = this.fxSnapshot();
+    if (!fx) {
+      return Math.round(coverageUsd);
+    }
+
+    const coverageArs = this.fxService.convert(coverageUsd, fx);
+    return Math.round(coverageArs);
   }
 
   /**

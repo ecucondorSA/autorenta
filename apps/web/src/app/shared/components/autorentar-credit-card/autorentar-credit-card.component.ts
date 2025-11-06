@@ -1,0 +1,79 @@
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { AutorentarCreditService } from '../../../core/services/autorentar-credit.service';
+
+@Component({
+  selector: 'app-autorentar-credit-card',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './autorentar-credit-card.component.html',
+  styleUrls: ['./autorentar-credit-card.component.css'],
+})
+export class AutorentarCreditCardComponent {
+  private readonly creditService = inject(AutorentarCreditService);
+
+  @Input() showRenewalInfo: boolean = true;
+  @Input() compact: boolean = false;
+  @Output() checkRenewal = new EventEmitter<void>();
+
+  readonly creditInfo = this.creditService.creditInfo;
+  readonly loading = this.creditService.loading;
+  readonly error = this.creditService.error;
+
+  readonly balance = this.creditService.balance;
+  readonly balanceCents = this.creditService.balanceCents;
+  readonly expiresAt = this.creditService.expiresAt;
+  readonly daysUntilExpiration = this.creditService.daysUntilExpiration;
+  readonly isExpired = this.creditService.isExpired;
+  readonly isRenewable = this.creditService.isRenewable;
+
+  getExpirationColor(): string {
+    const days = this.daysUntilExpiration();
+    if (days === null) return 'text-gray-600';
+    if (this.isExpired()) return 'text-red-600';
+    if (days <= 30) return 'text-orange-600';
+    if (days <= 90) return 'text-yellow-600';
+    return 'text-green-600';
+  }
+
+  getExpirationLabel(): string {
+    const days = this.daysUntilExpiration();
+    if (days === null) return 'Sin crédito activo';
+    if (this.isExpired()) return 'Expirado';
+    if (days === 0) return 'Expira hoy';
+    if (days === 1) return 'Expira mañana';
+    if (days <= 7) return `Expira en ${days} días`;
+    if (days <= 30) return `Expira en ${Math.ceil(days / 7)} semanas`;
+    const months = Math.ceil(days / 30);
+    return `Expira en ${months} ${months === 1 ? 'mes' : 'meses'}`;
+  }
+
+  getBalanceColor(): string {
+    const balance = this.balance();
+    if (balance <= 0) return 'text-red-600';
+    if (balance < 100) return 'text-orange-600';
+    if (balance < 200) return 'text-yellow-600';
+    return 'text-green-600';
+  }
+
+  formatBalance(): string {
+    return this.creditService.formatBalance();
+  }
+
+  formatExpirationDate(): string | null {
+    return this.creditService.formatExpirationDate();
+  }
+
+  onCheckRenewal(): void {
+    this.checkRenewal.emit();
+  }
+
+  refresh(): void {
+    this.creditService.refresh();
+  }
+
+  hasCredit(): boolean {
+    return this.balance() > 0 && !this.isExpired();
+  }
+}

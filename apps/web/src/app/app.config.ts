@@ -15,6 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
+import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { SupabaseClientService } from './core/services/supabase-client.service';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
 
@@ -40,7 +41,7 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled'
       })
     ),
-    provideHttpClient(withInterceptors([SupabaseAuthInterceptor])),
+    provideHttpClient(withInterceptors([SupabaseAuthInterceptor, httpErrorInterceptor])),
     provideAnimationsAsync(),
     provideIonicAngular({
       mode: 'md',

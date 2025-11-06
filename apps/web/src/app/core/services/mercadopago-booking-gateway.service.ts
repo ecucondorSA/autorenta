@@ -2,19 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SupabaseClientService } from './supabase-client.service';
+import { PaymentPreferenceResponse, PaymentGateway } from '../interfaces/payment-gateway.interface';
 
 /**
  * Respuesta de creación de preferencia de MercadoPago
  */
-export interface MercadoPagoPreferenceResponse {
-  success: boolean;
-  preference_id: string;
-  init_point: string;
-  sandbox_init_point?: string;
+export interface MercadoPagoPreferenceResponse extends PaymentPreferenceResponse {
   amount_ars: number;
   amount_usd: number;
   exchange_rate: number;
-  error?: string;
 }
 
 /**
@@ -33,17 +29,19 @@ export interface MercadoPagoPreferenceResponse {
 @Injectable({
   providedIn: 'root',
 })
-export class MercadoPagoBookingGatewayService {
+export class MercadoPagoBookingGatewayService implements PaymentGateway {
+  readonly provider = 'mercadopago' as const;
   private readonly supabaseService = inject(SupabaseClientService);
 
   /**
    * Crea una preferencia de pago en MercadoPago para un booking
    *
    * @param bookingId - ID del booking
+   * @param useSplitPayment - Whether to use marketplace split payments (optional)
    * @returns Observable con la respuesta de MercadoPago
    */
-  createBookingPreference(bookingId: string): Observable<MercadoPagoPreferenceResponse> {
-    return from(this._createPreference(bookingId)).pipe(
+  createBookingPreference(bookingId: string, useSplitPayment?: boolean): Observable<MercadoPagoPreferenceResponse> {
+    return from(this._createPreference(bookingId, useSplitPayment)).pipe(
       catchError((err) => {
         return throwError(() => new Error(this.formatError(err)));
       }),
@@ -53,7 +51,7 @@ export class MercadoPagoBookingGatewayService {
   /**
    * Implementación interna usando async/await
    */
-  private async _createPreference(bookingId: string): Promise<MercadoPagoPreferenceResponse> {
+  private async _createPreference(bookingId: string, _useSplitPayment?: boolean): Promise<MercadoPagoPreferenceResponse> {
     const supabase = this.supabaseService.getClient();
 
     // Obtener token de autenticación

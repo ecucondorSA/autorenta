@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env.test
+dotenv.config({ path: '.env.test' });
 
 /**
  * Playwright Configuration for AutoRenta E2E Tests
@@ -92,6 +96,17 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
       },
       testMatch: '**/auth/**/*.spec.ts',
+    },
+
+    // E2E tests (uses storageState if available, manual login as fallback)
+    {
+      name: 'chromium:e2e',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Usar storageState si existe, si no existe el test hará login manual
+        storageState: 'tests/.auth/renter.json',
+      },
+      testMatch: '**/e2e/**/*.spec.ts',
     },
 
     // Wallet UI tests (no auth required - basic UI validation)

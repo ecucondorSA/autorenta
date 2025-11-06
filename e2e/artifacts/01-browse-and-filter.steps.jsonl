@@ -1,0 +1,14 @@
+{"timestamp":"2025-11-04T03:40:22.198Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-04T03:40:22.206Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-04T03:40:22.220Z","step":"navigate-to-cars-list"}
+{"timestamp":"2025-11-04T03:40:22.225Z","step":"navigate-to-cars-list"}
+{"timestamp":"2025-11-04T03:40:32.549Z","step":"initial-catalog-loaded","details":{"count":20}}
+{"timestamp":"2025-11-04T03:40:32.550Z","step":"open-filters"}
+{"timestamp":"2025-11-04T03:40:33.027Z","step":"initial-catalog-loaded","details":{"count":20}}
+{"timestamp":"2025-11-04T03:40:33.040Z","step":"open-filters"}
+{"timestamp":"2025-11-04T04:36:09.882Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-04T04:36:10.061Z","step":"navigate-to-cars-list"}
+{"timestamp":"2025-11-04T04:36:13.153Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-04T04:36:13.341Z","step":"navigate-to-cars-list"}
+{"timestamp":"2025-11-04T04:36:35.212Z","step":"initial-catalog-loaded","details":{"count":20}}
+{"timestamp":"2025-11-04T04:36:35.244Z","step":"open-filters"}

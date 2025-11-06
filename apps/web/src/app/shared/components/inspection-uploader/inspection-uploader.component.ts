@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
-import { InspectionStage, InspectionPhoto } from '../../../core/models/fgo-v1-1.model';
+import { InspectionStage, InspectionPhoto, BookingInspection } from '../../../core/models/fgo-v1-1.model';
 
 // Window extension for inspection callback
 interface WindowWithInspectionCallback extends Window {
@@ -38,6 +38,8 @@ interface WindowWithInspectionCallback extends Window {
 export class InspectionUploaderComponent implements OnInit {
   @Input() bookingId!: string;
   @Input() stage!: InspectionStage;
+  @Output() inspectionCompleted = new EventEmitter<BookingInspection>();
+  @Output() inspectionCancelled = new EventEmitter<void>();
 
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly supabaseService = inject(SupabaseClientService);
@@ -216,8 +218,14 @@ export class InspectionUploaderComponent implements OnInit {
         throw new Error('No se pudo firmar la inspección');
       }
 
-      // 4. Cerrar modal y retornar inspección
-      this.closeModal(inspection);
+      // 4. Emitir evento de completado
+      this.inspectionCompleted.emit(inspection);
+
+      // 5. También mantener compatibilidad con callback window (legacy)
+      const win = window as WindowWithInspectionCallback;
+      if (win.inspectionUploaderCallback) {
+        win.inspectionUploaderCallback(inspection);
+      }
     } catch (error) {
       this.error.set(
         error instanceof Error ? error.message : 'Error al guardar inspección. Intente nuevamente.',
@@ -236,26 +244,12 @@ export class InspectionUploaderComponent implements OnInit {
         return;
       }
     }
-    this.closeModal(null);
-  }
-
-  /**
-   * Cierra el modal (placeholder - implementar según framework de modals usado)
-   */
-  private closeModal(data: unknown): void {
-    // TODO: Implementar cierre de modal según framework usado
-    // Ejemplo con Angular Material Dialog:
-    // this.dialogRef.close(data);
-
-    // Ejemplo con Ionic:
-    // this.modalCtrl.dismiss({ inspection: data });
-
-    // Por ahora, emitir evento al padre
-
-    // Si hay un callback en el window (workaround temporal)
+    this.inspectionCancelled.emit();
+    
+    // También mantener compatibilidad con callback window (legacy)
     const win = window as WindowWithInspectionCallback;
     if (win.inspectionUploaderCallback) {
-      win.inspectionUploaderCallback(data);
+      win.inspectionUploaderCallback(null);
     }
   }
 }

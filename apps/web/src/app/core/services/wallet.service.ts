@@ -8,8 +8,11 @@ import type {
   WalletLockFundsResponse,
   WalletUnlockFundsResponse,
   WalletLockRentalAndDepositResponse,
+  WalletTransactionFilters,
+  WalletInitiateDepositResponse,
 } from '../models/wallet.model';
 import { SupabaseClientService } from './supabase-client.service';
+import { LoggerService } from './logger.service';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
@@ -18,6 +21,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 })
 export class WalletService {
   private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly logger = inject(LoggerService);
 
   readonly balance = signal<WalletBalance | null>(null);
   readonly transactions = signal<WalletTransaction[]>([]);
@@ -28,9 +32,18 @@ export class WalletService {
   readonly lockedBalance = computed(() => this.balance()?.locked_balance ?? 0);
   readonly totalBalance = computed(() => this.balance()?.total_balance ?? 0);
   readonly withdrawableBalance = computed(() => this.balance()?.withdrawable_balance ?? 0);
-  readonly nonWithdrawableBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
-  readonly protectedCreditBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
   readonly transferableBalance = computed(() => this.balance()?.transferable_balance ?? 0);
+
+  // Nuevo sistema de créditos separados (Bonus-Malus Migration 20251106)
+  readonly autorentarCreditBalance = computed(() => this.balance()?.autorentar_credit_balance ?? 0);
+  readonly cashDepositBalance = computed(() => this.balance()?.cash_deposit_balance ?? 0);
+
+  // DEPRECATED: Backward compatibility
+  /** @deprecated Use autorentarCreditBalance and cashDepositBalance instead */
+  readonly protectedCreditBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
+  /** @deprecated Use autorentarCreditBalance and cashDepositBalance instead */
+  readonly nonWithdrawableBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
+
   readonly pendingDepositsCount = signal(0);
 
   constructor() {
@@ -60,7 +73,7 @@ export class WalletService {
     );
   }
 
-  getTransactions(filters?: any): Observable<WalletTransaction[]> {
+  getTransactions(filters?: WalletTransactionFilters): Observable<WalletTransaction[]> {
     this.loading.set(true);
     this.error.set(null);
     return from(
@@ -86,7 +99,7 @@ export class WalletService {
     );
   }
 
-  initiateDeposit(params: InitiateDepositParams): Observable<any> {
+  initiateDeposit(params: InitiateDepositParams): Observable<WalletInitiateDepositResponse> {
     this.loading.set(true);
     this.error.set(null);
     return from(
@@ -97,7 +110,7 @@ export class WalletService {
         p_allow_withdrawal: params.allowWithdrawal ?? false,
       }),
     ).pipe(
-      switchMap((response: PostgrestSingleResponse<any>) => {
+      switchMap((response: PostgrestSingleResponse<WalletInitiateDepositResponse[]>) => {
         if (response.error) throw response.error;
         if (!response.data) throw new Error('No se pudo iniciar el depósito');
         const result = response.data[0];
@@ -108,7 +121,7 @@ export class WalletService {
               result.transaction_id,
               params.amount,
               params.description ?? 'Depósito a wallet',
-            ),
+            ).then(() => result),
           );
         }
         return from(Promise.resolve(result));
@@ -124,29 +137,39 @@ export class WalletService {
     );
   }
 
-  private createMercadoPagoPreference(
+  private async createMercadoPagoPreference(
     transactionId: string,
     amount: number,
     description: string,
-  ): Promise<any> {
-    return this.supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) throw new Error('No autenticado');
-      return this.supabase.functions.invoke('mercadopago-create-preference', {
-        body: {
-          transaction_id: transactionId,
-          amount,
-          description: description || 'Depósito a Wallet - AutoRenta',
-        },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
+  ): Promise<void> {
+    const {
+      data: { session },
+    } = await this.supabase.auth.getSession();
+    if (!session) {
+      throw new Error('No autenticado');
+    }
+
+    const response = await this.supabase.functions.invoke('mercadopago-create-preference', {
+      body: {
+        transaction_id: transactionId,
+        amount,
+        description: description || 'Depósito a Wallet - AutoRenta',
+      },
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
     });
+
+    const { error } = response as { error: { message?: string } | null };
+    if (error) {
+      throw new Error(error.message ?? 'No se pudo crear la preferencia de pago');
+    }
   }
 
-  private handleError(err: any, defaultMessage: string): void {
-    const errorMessage = err.message || defaultMessage;
+  private handleError(err: unknown, defaultMessage: string): void {
+    const errorMessage = err instanceof Error ? err.message : defaultMessage;
     this.error.set({ message: errorMessage });
+    this.logger.error(defaultMessage, err instanceof Error ? err : new Error(String(err)));
   }
 
   // ============================================================================
@@ -289,15 +312,19 @@ export class WalletService {
   /**
    * Force poll pending payments from MercadoPago
    */
-  async forcePollPendingPayments(): Promise<any> {
+  async forcePollPendingPayments(): Promise<{ success: boolean; confirmed: number; message: string }> {
     this.loading.set(true);
     try {
       const { data, error } = await this.supabase.rpc('wallet_poll_pending_payments');
       if (error) throw error;
       this.getBalance().subscribe();
       this.getTransactions().subscribe();
-      return data;
-    } catch (err: any) {
+      return (data ?? { success: false, confirmed: 0, message: 'No data returned' }) as {
+        success: boolean;
+        confirmed: number;
+        message: string;
+      };
+    } catch (err: unknown) {
       this.handleError(err, 'Error al consultar pagos pendientes');
       throw err;
     } finally {
@@ -318,8 +345,8 @@ export class WalletService {
 
       if (error) throw error;
       this.pendingDepositsCount.set(data?.length ?? 0);
-    } catch (err: any) {
-      console.error('Error al obtener depósitos pendientes:', err);
+    } catch (err: unknown) {
+      this.logger.error('Error al obtener depósitos pendientes', err instanceof Error ? err : new Error(String(err)));
     }
   }
 }

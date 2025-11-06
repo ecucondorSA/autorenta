@@ -11,6 +11,9 @@ import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
 import { WalletService } from '../../../core/services/wallet.service';
 import { NotificationsService } from '../../../core/services/notifications/notifications.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { WaitlistService } from '../../../core/services/waitlist.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 // Models
 import type { Car } from '../../../core/models';
@@ -42,11 +45,16 @@ export class SimpleCheckoutComponent {
   private readonly paymentsService = inject(PaymentsService);
   private readonly walletService = inject(WalletService);
   private readonly notificationsService = inject(NotificationsService);
+  private readonly errorHandler = inject(ErrorHandlerService);
+  private readonly waitlistService = inject(WaitlistService);
+  private readonly toastService = inject(ToastService);
 
   // Estado del checkout
   readonly currentStep = signal(0);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly canWaitlist = signal(false); // Indica si se puede agregar a waitlist
+  readonly addingToWaitlist = signal(false); // Loading state para waitlist
 
   // Fechas
   readonly startDate = signal<string>('');
@@ -148,6 +156,12 @@ export class SimpleCheckoutComponent {
           this.error.set('La fecha de fin debe ser posterior a la fecha de inicio');
           return false;
         }
+        if (start < new Date()) {
+          this.error.set('La fecha de inicio no puede ser en el pasado');
+          return false;
+        }
+        // Validar disponibilidad del auto (async, pero bloqueamos el paso hasta que se valide)
+        void this.validateAvailability();
         break;
 
       case 2: // Pago
@@ -162,37 +176,114 @@ export class SimpleCheckoutComponent {
     return true;
   }
 
-  private async processBooking() {
-    this.loading.set(true);
-    this.error.set(null);
+  private async validateAvailability(): Promise<void> {
+    if (!this.startDate() || !this.endDate()) return;
 
     try {
-      // 1. Crear la reserva
-      const booking = await this.bookingsService.requestBooking(
+      const isAvailable = await this.carsService.isCarAvailable(
         this.car.id,
         this.startDate(),
         this.endDate()
       );
 
-      // 2. Procesar pago
+      if (!isAvailable) {
+        this.error.set('El auto no está disponible para esas fechas. Por favor elige otras fechas.');
+      }
+    } catch (error) {
+      // Si falla la validación, permitir continuar pero mostrar warning
+      console.warn('No se pudo verificar disponibilidad:', error);
+    }
+  }
+
+  private async processBooking() {
+    this.loading.set(true);
+    this.error.set(null);
+    this.canWaitlist.set(false); // Reset waitlist flag
+
+    try {
+      // ✅ FIX: Intentar crear el booking directamente
+      // Esto permite que el error de constraint se capture y active canWaitlist
+      // La validación de disponibilidad se hace dentro de createBookingWithValidation
+      const bookingResult = await this.bookingsService.createBookingWithValidation(
+        this.car.id,
+        this.startDate(),
+        this.endDate()
+      );
+
+      if (!bookingResult.success) {
+        const errorMsg = bookingResult.error || 'Error al crear la reserva';
+        const shouldShowWaitlist = bookingResult.canWaitlist ?? false;
+        
+        // Log para debugging
+        console.log('Booking failed:', {
+          error: errorMsg,
+          canWaitlist: shouldShowWaitlist,
+          bookingResult,
+        });
+        
+        this.error.set(errorMsg);
+        this.canWaitlist.set(shouldShowWaitlist); // Mostrar opción de waitlist si está disponible
+        this.loading.set(false);
+        return;
+      }
+
+      const booking = bookingResult.booking!;
+
+      // 3. Procesar pago
       if (this.paymentMethod() === 'wallet') {
         await this.processWalletPayment(booking.id);
       } else {
         await this.processCardPayment(booking.id);
       }
 
-      // 3. Notificar al usuario
+      // 4. Notificar al usuario
       await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
 
-      // 4. Emitir evento y redirigir
+      // 5. Emitir evento y redirigir
       this.bookingCreated.emit(booking);
       this.router.navigate(['/bookings/success', booking.id]);
 
-    } catch (error: any) {
-      console.error('Error creating booking:', error);
-      this.error.set(error.message || 'Error al procesar la reserva. Inténtalo nuevamente.');
+    } catch (error: unknown) {
+      // Use ErrorHandlerService for consistent error handling
+      this.errorHandler.handleBookingError(error, 'Processing booking', true);
+      this.error.set(
+        error instanceof Error ? error.message : 'Error al procesar la reserva. Inténtalo nuevamente.'
+      );
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  /**
+   * Agrega el usuario a la lista de espera cuando el auto no está disponible
+   */
+  async addToWaitlist(): Promise<void> {
+    this.addingToWaitlist.set(true);
+    try {
+      const result = await this.waitlistService.addToWaitlist(
+        this.car.id,
+        this.startDate(),
+        this.endDate()
+      );
+
+      if (result.success) {
+        // Mostrar mensaje de éxito
+        this.error.set(null);
+        this.canWaitlist.set(false);
+        
+        // Mostrar toast de éxito
+        this.toastService.success(
+          '✅ Te agregamos a la lista de espera. Te notificaremos cuando el auto esté disponible.',
+          5000
+        );
+      } else {
+        this.error.set(result.error || 'Error al agregar a la lista de espera');
+      }
+    } catch (error: unknown) {
+      this.errorHandler.handleError(error, 'Adding to waitlist', true);
+      this.error.set('Error al agregar a la lista de espera. Inténtalo nuevamente.');
+    } finally {
+      this.addingToWaitlist.set(false);
     }
   }
 

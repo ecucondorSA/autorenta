@@ -19,7 +19,10 @@ import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { TourService } from '../../../core/services/tour.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
+import { LocationService } from '../../../core/services/location.service';
 import { Car } from '../../../core/models';
 import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
@@ -74,9 +77,12 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly compareService = inject(CarsCompareService);
   private readonly metaService = inject(MetaService);
   private readonly tourService = inject(TourService);
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly distanceCalculator = inject(DistanceCalculatorService);
+  private readonly locationService = inject(LocationService);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
   private sortInitialized = false;
   private analyticsLastKey: string | null = null;
@@ -503,7 +509,28 @@ export class CarsListPage implements OnInit, OnDestroy {
       city: this.city() || undefined,
     });
 
+    // Initialize user location for distance-based pricing
+    void this.initializeUserLocation();
+
     void this.loadCars();
+  }
+
+  /**
+   * Initialize user location from profile or GPS
+   */
+  private async initializeUserLocation(): Promise<void> {
+    try {
+      const locationData = await this.locationService.getUserLocation();
+      if (locationData) {
+        this.userLocation.set({
+          lat: locationData.lat,
+          lng: locationData.lng,
+        });
+      }
+    } catch (error) {
+      // Silently fail - user location is optional
+      console.warn('Could not get user location:', error);
+    }
   }
 
   onUserLocationChange(location: { lat: number; lng: number }): void {
@@ -548,6 +575,11 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.setupRealtimeSubscription();
       }
     } catch (err) {
+      this.logger.error('Error loading cars', err);
+      // Mostrar mensaje al usuario en caso de error crítico
+      if (err instanceof Error) {
+        console.error('Error al cargar autos:', err.message);
+      }
     } finally {
       this.loading.set(false);
 
@@ -578,7 +610,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.pullToRefresh.completeRefresh();
       }
     } catch (error) {
-      console.error('Error al refrescar:', error);
+      this.logger.error('Error al refrescar autos', error);
       if (this.pullToRefresh) {
         this.pullToRefresh.completeRefresh();
       }
@@ -611,20 +643,34 @@ export class CarsListPage implements OnInit, OnDestroy {
   private async showNewCarToast(): Promise<void> {
     if (typeof window === 'undefined') return;
 
-    // Show simple notification banner
+    // Show simple notification banner (usando createElement para evitar XSS)
     const banner = document.createElement('div');
     banner.className =
       'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
-    banner.innerHTML = `
-      <span>¡Nuevos vehículos disponibles!</span>
-      <button class="underline font-medium" onclick="this.parentElement.dispatchEvent(new CustomEvent('refresh'))">Ver ahora</button>
-      <button class="ml-2" onclick="this.parentElement.remove()">✕</button>
-    `;
 
-    banner.addEventListener('refresh', () => {
+    // Crear elementos de forma segura (sin innerHTML)
+    const messageSpan = document.createElement('span');
+    messageSpan.textContent = '¡Nuevos vehículos disponibles!';
+
+    const refreshButton = document.createElement('button');
+    refreshButton.className = 'underline font-medium';
+    refreshButton.textContent = 'Ver ahora';
+    refreshButton.addEventListener('click', () => {
       void this.loadCars();
       banner.remove();
     });
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'ml-2';
+    closeButton.textContent = '✕';
+    closeButton.setAttribute('aria-label', 'Cerrar');
+    closeButton.addEventListener('click', () => {
+      banner.remove();
+    });
+
+    banner.appendChild(messageSpan);
+    banner.appendChild(refreshButton);
+    banner.appendChild(closeButton);
 
     document.body.appendChild(banner);
 
@@ -811,23 +857,9 @@ export class CarsListPage implements OnInit, OnDestroy {
     }
   }
 
-  // Cálculo de distancia usando Haversine Formula
+  // Cálculo de distancia usando DistanceCalculatorService
   private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-    const R = 6371; // Radio de la Tierra en km
-    const dLat = this.deg2rad(lat2 - lat1);
-    const dLon = this.deg2rad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(lat1)) *
-        Math.cos(this.deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
-
-  private deg2rad(deg: number): number {
-    return deg * (Math.PI / 180);
+    return this.distanceCalculator.calculateDistance(lat1, lon1, lat2, lon2);
   }
 
   // Filtros y ordenamiento
@@ -886,7 +918,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     const card = carousel.querySelector(`[data-car-id="${carId}"]`) as HTMLElement;
     
     if (!card) {
-      console.warn('⚠️ Car card not found in carousel:', carId);
+      this.logger.warn('Car card not found in carousel', { carId });
       return;
     }
 

@@ -115,12 +115,11 @@ import { TranslateModule } from '@ngx-translate/core';
         poster="/assets/images/splash-background-poster.jpg"
       >
         <source
-          src="/assets/videos/splash-background-mobile.mp4"
+          src="/assets/videos/volvo-c-recharge-splash.mp4"
           type="video/mp4"
           media="(max-aspect-ratio: 3/4)"
         />
-        <source src="/assets/videos/splash-background.webm" type="video/webm" />
-        <source src="/assets/videos/splash-background.mp4" type="video/mp4" />
+        <source src="/assets/videos/volvo-c-recharge-splash.mp4" type="video/mp4" />
       </video>
 
       <!-- Dark Overlay -->

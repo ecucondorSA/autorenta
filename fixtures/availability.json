@@ -1,0 +1,55 @@
+{
+  "generated_at": "2025-11-04T12:00:00.000Z",
+  "windows": [
+    {
+      "car_id": "01be717e-5a0c-413c-b4f1-d23e5091bc77",
+      "available_from": "2025-11-05T12:00:00.000Z",
+      "available_to": "2025-12-04T12:00:00.000Z"
+    },
+    {
+      "car_id": "5b128cfa-7a19-474c-84d1-603903e36137",
+      "available_from": "2025-11-06T12:00:00.000Z",
+      "available_to": "2025-12-05T12:00:00.000Z"
+    },
+    {
+      "car_id": "739b7182-5c64-4c52-bfbf-d63f5741fb8b",
+      "available_from": "2025-11-07T12:00:00.000Z",
+      "available_to": "2025-12-06T12:00:00.000Z"
+    },
+    {
+      "car_id": "9bf57784-d071-4f3d-9afe-7b6b759d99d7",
+      "available_from": "2025-11-08T12:00:00.000Z",
+      "available_to": "2025-12-07T12:00:00.000Z"
+    },
+    {
+      "car_id": "112c6862-542a-44d5-9f2b-0a63f76141ef",
+      "available_from": "2025-11-09T12:00:00.000Z",
+      "available_to": "2025-12-08T12:00:00.000Z"
+    },
+    {
+      "car_id": "332b51c4-fcab-4d8f-9f0a-094a45ec5312",
+      "available_from": "2025-11-10T12:00:00.000Z",
+      "available_to": "2025-12-09T12:00:00.000Z"
+    },
+    {
+      "car_id": "60bcd9ce-2c7b-4bac-9cb9-011403595655",
+      "available_from": "2025-11-11T12:00:00.000Z",
+      "available_to": "2025-12-10T12:00:00.000Z"
+    },
+    {
+      "car_id": "bbc489b5-6204-41f3-94d8-d683e7bf0d17",
+      "available_from": "2025-11-12T12:00:00.000Z",
+      "available_to": "2025-12-11T12:00:00.000Z"
+    },
+    {
+      "car_id": "f72209ec-abe7-4749-9e8a-92b80c82bb2e",
+      "available_from": "2025-11-13T12:00:00.000Z",
+      "available_to": "2025-12-12T12:00:00.000Z"
+    },
+    {
+      "car_id": "37db588a-07ff-495b-b83e-0d35da537c6a",
+      "available_from": "2025-11-14T12:00:00.000Z",
+      "available_to": "2025-12-13T12:00:00.000Z"
+    }
+  ]
+}

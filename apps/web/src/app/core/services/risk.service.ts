@@ -11,22 +11,26 @@ import {
   calculateCreditSecurityUsd,
 } from '../models/booking-detail-payment.model';
 import { SupabaseClientService } from './supabase-client.service';
+import { RiskCalculatorService } from './risk-calculator.service';
 
 /**
  * Servicio para cálculo de riesgos y garantías
  * Calcula franquicias, holds y créditos de seguridad según reglas AR
+ * ✅ NEW: Usa RiskCalculatorService para aplicar lógica de distancia
  */
 @Injectable({
   providedIn: 'root',
 })
 export class RiskService {
   private supabaseClient = inject(SupabaseClientService).getClient();
+  private riskCalculator = inject(RiskCalculatorService);
 
   /**
    * Calcula el risk snapshot completo para una reserva
+   * ✅ NEW: Usa RiskCalculatorService para aplicar lógica de distancia con criterio MAYOR
    */
-  calculateRiskSnapshot(params: CalculateRiskSnapshotParams): RiskSnapshot {
-    const { vehicleValueUsd, bucket, country, fxRate, coverageUpgrade = 'standard' } = params;
+  async calculateRiskSnapshot(params: CalculateRiskSnapshotParams): Promise<RiskSnapshot> {
+    const { vehicleValueUsd, bucket, country, fxRate, coverageUpgrade = 'standard', distanceKm } = params;
 
     // 1. Calcular franquicia base según valor del vehículo
     const baseDeductible = calculateDeductibleUsd(vehicleValueUsd);
@@ -37,13 +41,31 @@ export class RiskService {
     // 3. Franquicia por vuelco = 1.5× franquicia estándar
     const rolloverDeductibleUsd = deductibleUsd * 1.5;
 
-    // 4. Hold estimado en ARS (modalidad con tarjeta)
-    const holdEstimatedArs = calculateHoldEstimatedArs(rolloverDeductibleUsd, fxRate, bucket);
+    // ✅ NEW: Usar RiskCalculatorService para calcular garantías con distancia
+    // Calculamos para ambas modalidades (con y sin tarjeta)
 
-    const holdEstimatedUsd = holdEstimatedArs / fxRate;
+    // Modalidad CON tarjeta (hold)
+    const riskCalcWithCard = await this.riskCalculator.calculateRisk(
+      vehicleValueUsd,
+      fxRate,
+      true, // hasCard=true
+      distanceKm,
+    );
 
-    // 5. Crédito de Seguridad (modalidad sin tarjeta)
-    const creditSecurityUsd = calculateCreditSecurityUsd(vehicleValueUsd);
+    // Modalidad SIN tarjeta (crédito de seguridad)
+    const riskCalcWithoutCard = await this.riskCalculator.calculateRisk(
+      vehicleValueUsd,
+      fxRate,
+      false, // hasCard=false
+      distanceKm,
+    );
+
+    // 4. Hold estimado en ARS con distancia aplicada (usa guaranteeAmountArs que incluye criterio MAYOR)
+    const holdEstimatedArs = riskCalcWithCard.guaranteeAmountArs;
+    const holdEstimatedUsd = riskCalcWithCard.guaranteeAmountUsd;
+
+    // 5. Crédito de Seguridad (modalidad sin tarjeta) con distancia aplicada
+    const creditSecurityUsd = riskCalcWithoutCard.guaranteeAmountUsd;
 
     return {
       deductibleUsd,
@@ -150,7 +172,7 @@ export class RiskService {
   /**
    * Recalcula el risk snapshot cuando cambia el upgrade de cobertura
    */
-  recalculateWithUpgrade(currentSnapshot: RiskSnapshot, newUpgrade: CoverageUpgrade): RiskSnapshot {
+  recalculateWithUpgrade(currentSnapshot: RiskSnapshot, newUpgrade: CoverageUpgrade): Promise<RiskSnapshot> {
     return this.calculateRiskSnapshot({
       vehicleValueUsd: currentSnapshot.vehicleValueUsd,
       bucket: currentSnapshot.bucket,
@@ -163,7 +185,7 @@ export class RiskService {
   /**
    * Recalcula el risk snapshot cuando cambia el FX rate
    */
-  recalculateWithNewFxRate(currentSnapshot: RiskSnapshot, newFxRate: number): RiskSnapshot {
+  recalculateWithNewFxRate(currentSnapshot: RiskSnapshot, newFxRate: number): Promise<RiskSnapshot> {
     return this.calculateRiskSnapshot({
       vehicleValueUsd: currentSnapshot.vehicleValueUsd,
       bucket: currentSnapshot.bucket,

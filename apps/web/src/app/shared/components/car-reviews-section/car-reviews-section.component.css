@@ -1,0 +1,28 @@
+/* Component styles using Tailwind CSS utilities */
+/* Additional custom styles can be added here if needed */
+
+.car-reviews-section {
+  /* Container styles */
+}
+
+/* Animation for slide-in effect on reviews */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.reviews-list > * {
+  animation: slide-in-left 0.3s ease-out;
+}
+
+
+
+
+
+

@@ -1,0 +1,573 @@
+.confirmation-container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==================== LOADING STATE ==================== */
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+}
+
+.spinner {
+  width: 64px;
+  height: 64px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* ==================== CONFIRMATION CONTENT ==================== */
+
+.confirmation-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* ==================== STATUS ICONS ==================== */
+
+.status-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Success Checkmark Animation */
+.checkmark-circle {
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+
+.checkmark {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 3;
+  stroke: #10b981;
+  stroke-miterlimit: 10;
+}
+
+.checkmark-circle-bg {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 3;
+  stroke-miterlimit: 10;
+  stroke: #10b981;
+  fill: #d1fae5;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke: #10b981;
+  stroke-width: 3;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Pending Icon */
+.pending-icon {
+  width: 120px;
+  height: 120px;
+  color: #f59e0b;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Error Icon */
+.error-icon {
+  width: 120px;
+  height: 120px;
+  color: #ef4444;
+}
+
+/* ==================== STATUS TITLES ==================== */
+
+.status-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  animation: fadeInUp 0.6s ease;
+}
+
+.status-title.success {
+  color: #10b981;
+}
+
+.status-title.pending {
+  color: #f59e0b;
+}
+
+.status-title.error {
+  color: #ef4444;
+}
+
+.status-subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.6;
+  max-width: 480px;
+  animation: fadeInUp 0.6s ease 0.1s backwards;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== DETAILS CARDS ==================== */
+
+.details-card {
+  width: 100%;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.6s ease 0.2s backwards;
+}
+
+.details-card.error {
+  border-color: #fecaca;
+  background-color: #fef2f2;
+}
+
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Detail Rows */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: #111827;
+  font-weight: 600;
+  text-align: right;
+}
+
+.detail-value.code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.813rem;
+  background-color: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.detail-value.amount {
+  font-size: 1.125rem;
+  color: #10b981;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.status-badge.confirmed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* ==================== INFO BANNER ==================== */
+
+.info-banner {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  animation: fadeInUp 0.6s ease 0.3s backwards;
+}
+
+.info-banner.pending {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.info-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #f59e0b;
+}
+
+.info-text {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #78350f;
+}
+
+.info-text .font-medium {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.info-list {
+  margin: 0.5rem 0 0 1.25rem;
+  padding: 0;
+  list-style-type: disc;
+  line-height: 1.6;
+}
+
+.info-list li {
+  margin-bottom: 0.25rem;
+}
+
+/* Error Actions List */
+.error-actions-list {
+  margin: 0;
+  padding: 0 0 0 1.25rem;
+  list-style-type: disc;
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.error-actions-list li {
+  margin-bottom: 0.5rem;
+}
+
+/* ==================== ACTION BUTTONS ==================== */
+
+.action-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  animation: fadeInUp 0.6s ease 0.4s backwards;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-link {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #374151;
+  border: 2px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-link {
+  background-color: transparent;
+  color: #3b82f6;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.btn-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ==================== HELP SECTION ==================== */
+
+.help-section {
+  width: 100%;
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  animation: fadeIn 1s ease 0.5s backwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.help-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.help-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.help-link:hover {
+  text-decoration: underline;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+@media (max-width: 640px) {
+  .confirmation-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .status-title {
+    font-size: 1.5rem;
+  }
+
+  .status-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .checkmark-circle,
+  .checkmark,
+  .pending-icon,
+  .error-icon {
+    width: 96px;
+    height: 96px;
+  }
+
+  .details-card {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .detail-row {
+    padding: 0.5rem 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .detail-value {
+    text-align: left;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ==================== DARK MODE SUPPORT ==================== */
+
+@media (prefers-color-scheme: dark) {
+  .confirmation-container {
+    background-color: #111827;
+  }
+
+  .loading-text,
+  .status-subtitle {
+    color: #9ca3af;
+  }
+
+  .details-card {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .card-title {
+    color: #f9fafb;
+    border-bottom-color: #374151;
+  }
+
+  .detail-row {
+    border-bottom-color: #374151;
+  }
+
+  .detail-label {
+    color: #9ca3af;
+  }
+
+  .detail-value {
+    color: #f9fafb;
+  }
+
+  .detail-value.code {
+    background-color: #374151;
+  }
+
+  .btn-secondary {
+    background-color: #374151;
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+
+  .btn-secondary:hover {
+    background-color: #4b5563;
+    border-color: #6b7280;
+  }
+
+  .help-section {
+    border-top-color: #374151;
+  }
+
+  .help-text {
+    color: #9ca3af;
+  }
+
+  .info-banner.pending {
+    background-color: #78350f;
+    border-color: #92400e;
+  }
+
+  .info-text {
+    color: #fef3c7;
+  }
+
+  .details-card.error {
+    background-color: #7f1d1d;
+    border-color: #991b1b;
+  }
+
+  .error-actions-list {
+    color: #fecaca;
+  }
+}
+
+/* ==================== PRINT STYLES ==================== */
+
+@media print {
+  .action-buttons,
+  .help-section {
+    display: none;
+  }
+
+  .details-card {
+    page-break-inside: avoid;
+  }
+}

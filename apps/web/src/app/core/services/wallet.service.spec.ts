@@ -2,13 +2,29 @@ import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { WalletService } from './wallet.service';
 import { SupabaseClientService } from './supabase-client.service';
+import { firstValueFrom } from 'rxjs';
+import type { WalletBalance } from '../models/wallet.model';
+import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
+import { VALID_UUID } from '../../../test-helpers/factories';
 
 describe('WalletService', () => {
   let service: WalletService;
-  let supabaseClient: any;
+  let supabaseMock: any;
   let rpcHandlers: Record<string, () => Promise<{ data: unknown; error: unknown }>>;
   let originalSupabaseUrl: string;
   const originalFetch = globalThis.fetch;
+  const defaultBalance: WalletBalance = {
+    user_id: VALID_UUID,
+    available_balance: 0,
+    locked_balance: 0,
+    protected_credit_balance: 0,
+    autorentar_credit_balance: 0,
+    cash_deposit_balance: 0,
+    total_balance: 0,
+    transferable_balance: 0,
+    withdrawable_balance: 0,
+    currency: 'USD',
+  };
 
   beforeEach(() => {
     originalSupabaseUrl = environment.supabaseUrl;
@@ -16,23 +32,23 @@ describe('WalletService', () => {
 
     rpcHandlers = {};
 
-    supabaseClient = {
-      rpc: jasmine.createSpy('rpc').and.callFake((fn: string) => {
-        const handler = rpcHandlers[fn];
-        if (handler) {
-          return handler();
-        }
-        return Promise.resolve({ data: null, error: null });
-      }),
-      auth: {
-        getSession: jasmine.createSpy('getSession').and.resolveTo({
-          data: { session: { access_token: 'token-123' } },
-        }),
-      },
-    };
+    supabaseMock = makeSupabaseMock();
+    supabaseMock.rpc.and.callFake((fn: string) => {
+      if (fn === 'wallet_get_balance') {
+        return Promise.resolve({
+          data: [defaultBalance],
+          error: null,
+        });
+      }
+      const handler = rpcHandlers[fn];
+      if (handler) {
+        return handler();
+      }
+      return Promise.resolve({ data: null, error: null });
+    });
 
     const supabaseServiceMock = {
-      getClient: () => supabaseClient,
+      getClient: () => supabaseMock,
     };
 
     TestBed.configureTestingModule({
@@ -59,79 +75,42 @@ describe('WalletService', () => {
             success: true,
             transaction_id: 'tx-1',
             message: 'pending',
+            payment_url: 'https://mercadopago.test/init',
           },
         ],
         error: null,
       });
 
-    const fetchSpy = jasmine.createSpy('fetch').and.callFake(() =>
-      Promise.resolve({
-        ok: true,
-        status: 200,
-        json: async () => ({
-          init_point: 'https://mercadopago.test/init',
-          sandbox_init_point: 'https://mercadopago.test/sandbox',
-        }),
-      } as any),
-    );
-    globalThis.fetch = fetchSpy as unknown as typeof fetch;
-
-    spyOn(service, 'getBalance').and.resolveTo({
-      available_balance: 0,
-      locked_balance: 0,
-      protected_credit_balance: 0,
-      total_balance: 0,
-      transferable_balance: 0,
-      withdrawable_balance: 0,
-      currency: 'USD',
-      updated_at: new Date().toISOString(),
-    });
-
-    const result = await service.initiateDeposit({
+    const result = await firstValueFrom(service.initiateDeposit({
       amount: 100,
       provider: 'mercadopago',
       description: 'Test deposit',
-    });
+    }));
 
     expect(result.success).toBeTrue();
     expect(result.transaction_id).toBe('tx-1');
     expect(result.payment_url).toContain('https://mercadopago.test');
-    expect(fetchSpy).toHaveBeenCalledWith(
-      'https://example-project.supabase.co/functions/v1/mercadopago-create-preference',
+    expect(supabaseMock.functions.invoke).toHaveBeenCalledWith(
+      'mercadopago-create-preference',
       jasmine.objectContaining({
-        method: 'POST',
-        headers: jasmine.objectContaining({
-          Authorization: 'Bearer token-123',
+        body: jasmine.objectContaining({
+          transaction_id: 'tx-1',
+          amount: 100,
         }),
       }),
     );
   });
 
   it('fuerza el polling de pagos pendientes', async () => {
-    const fetchSpy = jasmine.createSpy('fetch').and.callFake(() =>
+    rpcHandlers['wallet_poll_pending_payments'] = () =>
       Promise.resolve({
-        ok: true,
-        status: 200,
-        json: async () => ({
-          success: true,
-          confirmed: 1,
-          message: 'Processed',
-        }),
-      } as any),
-    );
-    globalThis.fetch = fetchSpy as unknown as typeof fetch;
+        data: { success: true, confirmed: 1, message: 'Processed' },
+        error: null,
+      });
 
     const result = await service.forcePollPendingPayments();
 
     expect(result.success).toBeTrue();
-    expect(fetchSpy).toHaveBeenCalledWith(
-      'https://example-project.supabase.co/functions/v1/mercadopago-poll-pending-payments',
-      jasmine.objectContaining({
-        method: 'POST',
-        headers: jasmine.objectContaining({
-          Authorization: 'Bearer token-123',
-        }),
-      }),
-    );
+    expect(supabaseMock.rpc).toHaveBeenCalledWith('wallet_poll_pending_payments');
   });
 });

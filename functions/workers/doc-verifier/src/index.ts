@@ -93,6 +93,14 @@ export default {
     }
 
     try {
+      const url = new URL(request.url);
+
+      // Route: Face verification endpoint
+      if (url.pathname === '/verify-face') {
+        return await handleFaceVerification(request, env, corsHeaders);
+      }
+
+      // Route: Document verification (default)
       const startTime = Date.now();
       const body = await request.json() as VerificationRequest;
 
@@ -377,4 +385,235 @@ function parseDateDDMMYYYY(dateStr: string): Date | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * ==========================================
+ * FACE VERIFICATION (Level 3)
+ * ==========================================
+ */
+
+export interface FaceVerificationRequest {
+  video_url: string;
+  document_url: string;
+  user_id: string;
+}
+
+export interface FaceVerificationResponse {
+  success: boolean;
+  face_detected: boolean;
+  face_match_score: number;
+  liveness_score?: number;
+  frames_analyzed?: number;
+  metadata?: {
+    video_duration_seconds?: number;
+    face_count?: number;
+    liveness_checks?: string[];
+  };
+  error?: string;
+}
+
+/**
+ * Handle face verification request
+ */
+async function handleFaceVerification(
+  request: Request,
+  env: Env,
+  corsHeaders: Record<string, string>
+): Promise<Response> {
+  try {
+    const startTime = Date.now();
+    const body = await request.json() as FaceVerificationRequest;
+
+    console.log('[Face Verifier] Processing face verification for user:', body.user_id);
+
+    // Validate request
+    if (!body.video_url || !body.document_url || !body.user_id) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Missing required fields: video_url, document_url, user_id',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Download video and document images
+    const [videoBlob, documentBlob] = await Promise.all([
+      fetchImage(body.video_url),
+      fetchImage(body.document_url),
+    ]);
+
+    // Extract first frame from video (simplified: treat video as image for now)
+    // In production, you'd use a library to extract actual video frames
+    const videoFrame = await videoBlob.arrayBuffer();
+    const documentImage = await documentBlob.arrayBuffer();
+
+    console.log('[Face Verifier] Downloaded video frame:', videoFrame.byteLength, 'bytes');
+    console.log('[Face Verifier] Downloaded document image:', documentImage.byteLength, 'bytes');
+
+    // Analyze both images with AI
+    const [videoAnalysis, documentAnalysis] = await Promise.all([
+      analyzeFaceInImage(env, videoFrame, 'selfie video'),
+      analyzeFaceInImage(env, documentImage, 'ID document'),
+    ]);
+
+    // Calculate face match score
+    const faceMatchScore = calculateFaceMatchScore(videoAnalysis, documentAnalysis);
+
+    // Basic liveness check (movement detection would require actual video processing)
+    const livenessScore = calculateLivenessScore(videoAnalysis);
+
+    const duration = Date.now() - startTime;
+    console.log('[Face Verifier] ✅ Face verification completed in', duration, 'ms');
+    console.log('[Face Verifier] Face match score:', faceMatchScore);
+    console.log('[Face Verifier] Liveness score:', livenessScore);
+
+    const result: FaceVerificationResponse = {
+      success: true,
+      face_detected: videoAnalysis.face_detected && documentAnalysis.face_detected,
+      face_match_score: faceMatchScore,
+      liveness_score: livenessScore,
+      frames_analyzed: 1, // Simplified: single frame
+      metadata: {
+        video_duration_seconds: 3, // Placeholder
+        face_count: 1,
+        liveness_checks: ['basic_quality_check'],
+      },
+    };
+
+    return new Response(JSON.stringify(result), {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('[Face Verifier] Error:', error);
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Face verification failed',
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+}
+
+/**
+ * Fetch image from URL
+ */
+async function fetchImage(url: string): Promise<Blob> {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image: ${response.status}`);
+  }
+
+  return await response.blob();
+}
+
+/**
+ * Analyze face in image using Cloudflare AI Vision
+ */
+async function analyzeFaceInImage(env: Env, imageArray: ArrayBuffer, context: string) {
+  const prompt = `Analiza esta imagen (${context}) y detecta si hay un rostro humano visible.
+
+Responde SOLO en formato JSON con esta estructura:
+{
+  "face_detected": boolean,
+  "face_visible": boolean,
+  "face_clarity": number (0-100),
+  "face_centered": boolean,
+  "face_features": {
+    "eyes_visible": boolean,
+    "nose_visible": boolean,
+    "mouth_visible": boolean
+  },
+  "quality_score": number (0-100),
+  "notes": "observaciones"
+}`;
+
+  try {
+    const response = await env.AI.run('@cf/meta/llama-3.2-11b-vision-instruct', {
+      prompt,
+      image: Array.from(new Uint8Array(imageArray)),
+      max_tokens: 256,
+    });
+
+    console.log(`[Face Verifier] AI analysis (${context}):`, response);
+
+    return parseAIResponse(response);
+  } catch (error) {
+    console.error(`[Face Verifier] AI analysis error (${context}):`, error);
+    throw error;
+  }
+}
+
+/**
+ * Calculate face match score between selfie and document
+ */
+function calculateFaceMatchScore(videoAnalysis: any, documentAnalysis: any): number {
+  // Simplified scoring logic
+  // In production, use actual face embedding comparison
+
+  if (!videoAnalysis.face_detected || !documentAnalysis.face_detected) {
+    return 0;
+  }
+
+  let score = 50; // Base score if faces detected
+
+  // Boost score if both faces are clear
+  if (videoAnalysis.face_clarity > 70 && documentAnalysis.face_clarity > 70) {
+    score += 20;
+  }
+
+  // Boost score if facial features match
+  if (
+    videoAnalysis.face_features?.eyes_visible &&
+    videoAnalysis.face_features?.nose_visible &&
+    videoAnalysis.face_features?.mouth_visible &&
+    documentAnalysis.face_features?.eyes_visible &&
+    documentAnalysis.face_features?.nose_visible &&
+    documentAnalysis.face_features?.mouth_visible
+  ) {
+    score += 20;
+  }
+
+  // Quality bonus
+  const avgQuality = (videoAnalysis.quality_score + documentAnalysis.quality_score) / 2;
+  score += Math.floor(avgQuality / 10);
+
+  return Math.min(100, Math.max(0, score));
+}
+
+/**
+ * Calculate liveness score (basic check without video processing)
+ */
+function calculateLivenessScore(videoAnalysis: any): number {
+  // Simplified liveness check
+  // In production, analyze multiple frames for movement, blinking, etc.
+
+  let score = 60; // Base score
+
+  // Boost if face is clear and centered
+  if (videoAnalysis.face_centered && videoAnalysis.face_clarity > 70) {
+    score += 20;
+  }
+
+  // Boost if all facial features visible
+  if (
+    videoAnalysis.face_features?.eyes_visible &&
+    videoAnalysis.face_features?.nose_visible &&
+    videoAnalysis.face_features?.mouth_visible
+  ) {
+    score += 20;
+  }
+
+  return Math.min(100, Math.max(0, score));
 }

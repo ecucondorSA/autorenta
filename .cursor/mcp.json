@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "cloudflare-docs": {
+      "url": "https://docs.mcp.cloudflare.com/mcp",
+      "transport": "streamble-http",
+      "description": "Quick reference for Cloudflare documentation"
+    },
+    "cloudflare-bindings": {
+      "url": "https://bindings.mcp.cloudflare.com/mcp",
+      "transport": "streamble-http",
+      "description": "Manage Workers bindings (R2, KV, D1, AI, etc.)"
+    }
+  }
+}

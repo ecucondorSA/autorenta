@@ -33,6 +33,16 @@ export const BOOKINGS_ROUTES: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: ':id/check-in',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./check-in/check-in.page').then((m) => m.CheckInPage),
+  },
+  {
+    path: ':id/check-out',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./check-out/check-out.page').then((m) => m.CheckOutPage),
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),

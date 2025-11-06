@@ -56,7 +56,8 @@ describe('Availability Performance Tests', () => {
       const builder = supabase.createQueryBuilder();
 
       // Override then() to return cars data
-      (builder as any).then = (resolve: unknown) => {
+      type SupabaseResolve = (payload: { data: any[]; error: null }) => void;
+      (builder as any).then = (resolve: SupabaseResolve) => {
         if (table === 'cars') {
           resolve({ data: mockCars, error: null });
         } else {

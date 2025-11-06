@@ -230,6 +230,12 @@ serve(async (req) => {
     console.error('[verify-user-docs] error persisting results:', error);
   });
 
+  // After Level 2 verification, check if we should process Level 3 (face verification)
+  // Run asynchronously to not block the response
+  evaluateLevel3FaceVerification(adminClient, userId).catch((error) => {
+    console.error('[verify-user-docs] Level 3 evaluation error:', error);
+  });
+
   return new Response(JSON.stringify(results, null, 2), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
@@ -407,4 +413,119 @@ function evaluateOwner(
       ai: aiResult ?? null,
     },
   };
+}
+
+/**
+ * Evaluate Level 3 face verification
+ * Called separately after Level 2 (documents) is complete
+ */
+async function evaluateLevel3FaceVerification(
+  adminClient: ReturnType<typeof createClient>,
+  userId: string,
+): Promise<void> {
+  // Get identity level data
+  const { data: levelData, error: levelError } = await adminClient
+    .from('user_identity_levels')
+    .select('*')
+    .eq('user_id', userId)
+    .single();
+
+  if (levelError || !levelData) {
+    console.log('[verify-user-docs] No identity level data for Level 3 check');
+    return;
+  }
+
+  // Only proceed if Level 2 is complete and selfie exists but not verified
+  if (levelData.current_level < 2) {
+    console.log('[verify-user-docs] User not at Level 2, skipping Level 3 verification');
+    return;
+  }
+
+  if (!levelData.selfie_url) {
+    console.log('[verify-user-docs] No selfie uploaded, skipping Level 3 verification');
+    return;
+  }
+
+  if (levelData.selfie_verified_at && levelData.face_match_score >= 70) {
+    console.log('[verify-user-docs] Level 3 already verified');
+    return;
+  }
+
+  // Get document URL for face matching
+  const documentUrl = levelData.document_front_url || levelData.driver_license_url;
+  if (!documentUrl) {
+    console.error('[verify-user-docs] No document photo available for face matching');
+    return;
+  }
+
+  try {
+    console.log('[verify-user-docs] Calling face verification for user:', userId);
+
+    // Call Cloudflare Worker for face verification
+    const faceVerifyUrl = DOC_VERIFIER_URL
+      ? DOC_VERIFIER_URL.replace(/\/$/, '') + '/verify-face'
+      : null;
+
+    if (!faceVerifyUrl) {
+      console.log('[verify-user-docs] DOC_VERIFIER_URL not configured, skipping face verification');
+      return;
+    }
+
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (DOC_VERIFIER_TOKEN) {
+      headers.Authorization = `Bearer ${DOC_VERIFIER_TOKEN}`;
+    }
+
+    const response = await fetch(faceVerifyUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        video_url: levelData.selfie_url,
+        document_url: documentUrl,
+        user_id: userId,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[verify-user-docs] Face verification error:', errorText);
+      return;
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      console.error('[verify-user-docs] Face verification failed:', result.error);
+      return;
+    }
+
+    console.log('[verify-user-docs] Face verification result:', {
+      face_match_score: result.face_match_score,
+      liveness_score: result.liveness_score,
+    });
+
+    // Update user_identity_levels with results
+    const updates: Record<string, unknown> = {
+      face_match_score: result.face_match_score,
+      liveness_score: result.liveness_score || null,
+      updated_at: new Date().toISOString(),
+    };
+
+    // Mark as verified if score is good (>= 70%)
+    if (result.face_match_score >= 70) {
+      updates.selfie_verified_at = new Date().toISOString();
+      console.log('[verify-user-docs] ✅ Level 3 face verification PASSED');
+    } else {
+      console.log('[verify-user-docs] ❌ Level 3 face verification score too low:', result.face_match_score);
+    }
+
+    await adminClient
+      .from('user_identity_levels')
+      .update(updates)
+      .eq('user_id', userId);
+
+    console.log('[verify-user-docs] Level 3 verification results saved');
+  } catch (error) {
+    console.error('[verify-user-docs] Error in Level 3 face verification:', error);
+  }
 }

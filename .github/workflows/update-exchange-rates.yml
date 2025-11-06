@@ -3,6 +3,7 @@ name: Update Exchange Rates
 on:
   schedule:
     # Ejecutar cada 15 minutos
+    # Llama Edge Function con x-region header para evitar geo-blocking de Binance
     - cron: '*/15 * * * *'
   workflow_dispatch: # Permitir ejecución manual
 
@@ -10,12 +11,63 @@ jobs:
   update-rates:
     runs-on: ubuntu-latest
     steps:
-      - name: Update Exchange Rates
+      - name: Call Edge Function with region configuration
+        env:
+          SUPABASE_URL: https://obxvffplochgeiclibng.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          curl -X POST \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-            -H "Content-Type: application/json" \
-            https://obxvffplochgeiclibng.supabase.co/functions/v1/sync-binance-rates
+          set -e
 
-      - name: Log completion
-        run: echo "Exchange rates updated at $(date)"
+          echo "📊 Calling Edge Function sync-binance-rates..."
+          echo "🌍 Testing working regions to bypass Binance geo-blocking..."
+
+          # Regiones verificadas que funcionan (sa-east-1 más cercana a Argentina/Brasil)
+          # Testeado 2025-11-05: sa-east-1 ✅, eu-central-1 ✅, ap-southeast-1 ✅
+          # Bloqueadas: us-west-2 ❌
+          REGIONS=("sa-east-1" "eu-central-1" "ap-southeast-1" "eu-west-1" "ap-south-1")
+          SUCCESS=false
+
+          for REGION in "${REGIONS[@]}"; do
+            echo ""
+            echo "🔄 Trying region: $REGION"
+
+            RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+              "${SUPABASE_URL}/functions/v1/sync-binance-rates" \
+              -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+              -H "Content-Type: application/json" \
+              -H "x-region: ${REGION}")
+
+            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+            BODY=$(echo "$RESPONSE" | head -n-1)
+
+            echo "📡 HTTP Status: $HTTP_CODE"
+            echo "📦 Response: $BODY"
+
+            # Verificar si fue exitoso (200 y no contiene error 451)
+            if [ "$HTTP_CODE" = "200" ] && ! echo "$BODY" | grep -q "451"; then
+              echo "✅ Success with region: $REGION"
+              SUCCESS=true
+              break
+            else
+              echo "❌ Failed with region: $REGION"
+            fi
+          done
+
+          if [ "$SUCCESS" = false ]; then
+            echo ""
+            echo "❌ All regions failed. Binance might be blocking all Supabase regions."
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ Exchange rates updated successfully at $(date)"
+
+      - name: Verify update
+        env:
+          SUPABASE_URL: https://obxvffplochgeiclibng.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "🔍 Verifying database update..."
+          curl -s "${SUPABASE_URL}/rest/v1/exchange_rates?is_active=eq.true&select=pair,platform_rate,last_updated" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" | jq .

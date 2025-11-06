@@ -43,10 +43,6 @@ type ScreenOrientationWithLock = ScreenOrientation & {
   unlock?: () => void;
 };
 
-interface WindowWithGtag extends Window {
-  gtag?: (command: string, eventName: string, params: Record<string, string>) => void;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -220,9 +216,8 @@ export class PwaService {
    */
   private trackInstallation(): void {
     // Opcional: enviar evento a Google Analytics, Mixpanel, etc.
-    const windowWithGtag = window as WindowWithGtag;
-    if (windowWithGtag.gtag) {
-      windowWithGtag.gtag('event', 'pwa_install', {
+    if (window.gtag) {
+      window.gtag('event', 'pwa_install', {
         event_category: 'engagement',
         event_label: 'PWA Installation',
       });

@@ -1,0 +1,38 @@
+<div class="paypal-button-wrapper">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p class="loading-text">Procesando pago con PayPal...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-state">
+    <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <p class="error-text">{{ error }}</p>
+    <button
+      class="retry-button"
+      (click)="loadPayPalSDK()"
+      type="button"
+    >
+      Reintentar
+    </button>
+  </div>
+
+  <!-- PayPal Button Container -->
+  <div
+    id="paypal-button-container"
+    class="paypal-button-container"
+    [class.disabled]="disabled || isLoading"
+    [class.hidden]="error && !isLoading"
+  ></div>
+
+  <!-- Info Text -->
+  <div *ngIf="!error && !isLoading" class="info-text">
+    <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <p>Pago seguro procesado por PayPal</p>
+  </div>
+</div>

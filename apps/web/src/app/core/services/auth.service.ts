@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { injectSupabase } from './supabase-client.service';
+import { LoggerService } from './logger.service';
 
 interface AuthState {
   session: Session | null;
@@ -15,6 +16,7 @@ interface AuthState {
 export class AuthService implements OnDestroy {
   private readonly supabase = injectSupabase();
   private readonly router = inject(Router);
+  private readonly logger = inject(LoggerService);
   private readonly state = signal<AuthState>({ session: null, loading: true });
   private restoreSessionPromise: Promise<void> | null = null;
   private authSubscription: { data: { subscription: { unsubscribe: () => void } } } | null = null;
@@ -66,7 +68,7 @@ export class AuthService implements OnDestroy {
       error,
     } = await this.supabase.auth.getSession();
     if (error) {
-      console.error('[AuthService] Failed to load session:', error);
+      this.logger.error('Failed to load session', error instanceof Error ? error : new Error(String(error)));
     }
     this.state.set({ session: session ?? null, loading: false });
   }

@@ -1,7 +1,8 @@
 #!/bin/bash
 # ============================================================================
-# Health Monitoring Script
+# Health Monitoring Script (Enhanced)
 # Checks endpoints, database, workers, and alerts on issues
+# Now integrates with Supabase monitoring system
 # ============================================================================
 
 set -euo pipefail
@@ -9,11 +10,17 @@ set -euo pipefail
 # Configuration
 PRODUCTION_URL="${PRODUCTION_URL:-https://autorenta.com}"
 SUPABASE_URL="${SUPABASE_URL:-https://obxvffplochgeiclibng.supabase.co}"
+SUPABASE_SERVICE_ROLE_KEY="${SUPABASE_SERVICE_ROLE_KEY:-}"
 WORKER_URL="${WORKER_URL:-}"
 LOG_FILE="logs/health-check-$(date +%Y%m%d_%H%M%S).log"
 SLACK_WEBHOOK="${SLACK_WEBHOOK:-}"
 ERROR_THRESHOLD=5
 PENDING_PAYMENT_THRESHOLD=120  # 2 hours in minutes
+
+# Use Supabase monitoring endpoint if available
+USE_SUPABASE_MONITORING="${USE_SUPABASE_MONITORING:-true}"
+MONITORING_HEALTH_CHECK_URL="${SUPABASE_URL}/functions/v1/monitoring-health-check"
+MONITORING_METRICS_URL="${SUPABASE_URL}/functions/v1/monitoring-metrics"
 
 # Colors
 RED='\033[0;31m'
@@ -102,6 +109,33 @@ else
     success "Error rate is acceptable: $failed_checks/$total_checks"
 fi
 
+# Check 6: Use Supabase monitoring system (if available)
+if [ "$USE_SUPABASE_MONITORING" = "true" ] && [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+    log "Check 6/6: Fetching metrics from monitoring system..."
+    
+    # Get summary from monitoring system
+    response=$(curl -sf -X GET "${MONITORING_METRICS_URL}?action=summary" \
+        -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+        -H "Content-Type: application/json" 2>/dev/null || echo "")
+    
+    if [ -n "$response" ]; then
+        # Parse JSON response (basic parsing)
+        healthy_count=$(echo "$response" | grep -o '"healthy":[0-9]*' | grep -o '[0-9]*' || echo "0")
+        down_count=$(echo "$response" | grep -o '"down":[0-9]*' | grep -o '[0-9]*' || echo "0")
+        
+        if [ "$down_count" -gt 0 ]; then
+            error "Monitoring system reports $down_count service(s) down"
+            warn "Run: curl -X GET '${MONITORING_METRICS_URL}?action=summary' -H 'Authorization: Bearer KEY' for details"
+        else
+            success "Monitoring system reports all services healthy"
+        fi
+    else
+        warn "Could not fetch metrics from monitoring system (may not be configured)"
+    fi
+else
+    warn "Check 6/6: Supabase monitoring not configured, skipping"
+fi
+
 # Summary
 log ""
 log "=========================================="
@@ -110,8 +144,23 @@ log "=========================================="
 log "Time: $(date +'%Y-%m-%d %H:%M:%S')"
 log "Total checks: $total_checks"
 log "Failed checks: $failed_checks"
-log "Success rate: $(( (total_checks - failed_checks) * 100 / total_checks ))%"
+log "Success rate: $(( total_checks > 0 ? (total_checks - failed_checks) * 100 / total_checks : 0 ))%"
 log "=========================================="
+
+# Get active alerts from monitoring system
+if [ "$USE_SUPABASE_MONITORING" = "true" ] && [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+    alerts_response=$(curl -sf -X GET "${MONITORING_METRICS_URL}?action=active_alerts" \
+        -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" 2>/dev/null || echo "")
+    
+    if [ -n "$alerts_response" ]; then
+        alerts_count=$(echo "$alerts_response" | grep -o '"count":[0-9]*' | grep -o '[0-9]*' || echo "0")
+        if [ "$alerts_count" -gt 0 ]; then
+            log ""
+            warn "Active alerts: $alerts_count"
+            log "View details: ${MONITORING_METRICS_URL}?action=active_alerts"
+        fi
+    fi
+fi
 
 # Exit code
 if [ $failed_checks -eq 0 ]; then

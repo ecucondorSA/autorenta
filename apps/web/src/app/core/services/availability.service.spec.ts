@@ -1,5 +1,3 @@
-import { describe, it, expect } from 'vitest';
-
 // Mock implementation for isAvailable for testing purposes
 const isAvailable = (existingBookings: { start: string; end: string }[], newBooking: { start: string; end: string }): boolean => {
   const newStart = new Date(newBooking.start).getTime();

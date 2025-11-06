@@ -25,6 +25,7 @@ export interface PricingDetails {
 }
 
 export interface DynamicPricingResponse {
+  region_id?: string; // Included in batch responses
   price_per_hour: number;
   total_price: number;
   currency: string;
@@ -128,6 +129,44 @@ export class DynamicPricingService {
     }
 
     return data as DynamicPricingResponse;
+  }
+
+  /**
+   * Calculate prices for multiple regions in a single RPC call (batch optimization)
+   * Returns a map of region_id -> pricing data for efficient lookup
+   */
+  async calculateBatchPricesRPC(
+    regionIds: string[],
+    userId: string,
+    rentalStart: string,
+    rentalHours: number,
+  ): Promise<Map<string, DynamicPricingResponse>> {
+    if (regionIds.length === 0) {
+      return new Map();
+    }
+
+    const { data, error } = await this.supabase.rpc('calculate_batch_dynamic_prices', {
+      p_region_ids: regionIds,
+      p_user_id: userId,
+      p_rental_start: rentalStart,
+      p_rental_hours: rentalHours,
+    });
+
+    if (error) {
+      throw new Error(`Failed to calculate batch prices via RPC: ${error.message}`);
+    }
+
+    // Convert array response to Map for O(1) lookups
+    const pricesMap = new Map<string, DynamicPricingResponse>();
+    const results = data as DynamicPricingResponse[];
+
+    for (const result of results) {
+      if (result.region_id) {
+        pricesMap.set(result.region_id, result);
+      }
+    }
+
+    return pricesMap;
   }
 
   /**
