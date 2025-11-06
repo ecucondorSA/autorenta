@@ -213,7 +213,7 @@
         </div>
       </a>
 
-      <a routerLink="/cars/my" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
+      <a *ngIf="canPublishCars()" routerLink="/cars/my" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
         <div class="flex items-center gap-4">
           <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-accent-warm/10 flex items-center justify-center group-hover:bg-accent-warm group-hover:scale-110 transition-all">
             <svg class="h-7 w-7 text-accent-warm group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -230,7 +230,24 @@
         </div>
       </a>
 
-      <a routerLink="/bookings" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
+      <a *ngIf="canPublishCars()" routerLink="/bookings/owner" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
+        <div class="flex items-center gap-4">
+          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-500 group-hover:scale-110 transition-all">
+            <svg class="h-7 w-7 text-blue-600 group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-blue-600 transition-colors">Reservas de mis autos</h3>
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Gestiona las reservas de tus autos</p>
+          </div>
+          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
+
+      <a *ngIf="canBookCars()" routerLink="/bookings" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
         <div class="flex items-center gap-4">
           <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-purple-100 flex items-center justify-center group-hover:bg-purple-500 group-hover:scale-110 transition-all">
             <svg class="h-7 w-7 text-purple-600 group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
