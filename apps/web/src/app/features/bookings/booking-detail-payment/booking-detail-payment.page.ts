@@ -305,55 +305,60 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * Initialize user location and calculate distance to car (NON-BLOCKING)
    * Runs in background without blocking page initialization.
    * When distance is available, recalculates pricing automatically.
+   *
+   * ✅ FIX: Uses setTimeout to defer geolocation request until after page renders
    */
   private initializeUserLocationAndDistanceInBackground(): void {
-    // Don't await this - let it run in background
-    (async () => {
-      try {
-        const car = this.car();
-        if (!car) return;
+    // ✅ FIX: Defer geolocation request by 1 second to allow page to render first
+    // This prevents the geolocation permission prompt from blocking initial page load
+    setTimeout(() => {
+      (async () => {
+        try {
+          const car = this.car();
+          if (!car) return;
 
-        // Get user location (can take 5-30 seconds)
-        const locationData = await this.locationService.getUserLocation();
-        if (locationData) {
-          this.userLocation.set({ lat: locationData.lat, lng: locationData.lng });
+          // Get user location (can take 5-30 seconds)
+          const locationData = await this.locationService.getUserLocation();
+          if (locationData) {
+            this.userLocation.set({ lat: locationData.lat, lng: locationData.lng });
 
-          // Calculate distance if car has location
-          if (car.location_lat && car.location_lng) {
-            const distance = this.distanceCalculator.calculateDistance(
-              locationData.lat,
-              locationData.lng,
-              car.location_lat,
-              car.location_lng
-            );
+            // Calculate distance if car has location
+            if (car.location_lat && car.location_lng) {
+              const distance = this.distanceCalculator.calculateDistance(
+                locationData.lat,
+                locationData.lng,
+                car.location_lat,
+                car.location_lng
+              );
 
-            this.distanceKm.set(distance);
+              this.distanceKm.set(distance);
 
-            // Calculate tier and delivery fee
-            const tier = this.distanceCalculator.getDistanceTier(distance);
-            this.distanceTier.set(tier);
+              // Calculate tier and delivery fee
+              const tier = this.distanceCalculator.getDistanceTier(distance);
+              this.distanceTier.set(tier);
 
-            const deliveryFee = this.distanceCalculator.calculateDeliveryFee(distance);
-            this.deliveryFeeCents.set(deliveryFee);
+              const deliveryFee = this.distanceCalculator.calculateDeliveryFee(distance);
+              this.deliveryFeeCents.set(deliveryFee);
 
-            // ✅ IMPORTANT: Recalculate pricing now that we have distance
-            await this.calculateRiskSnapshot();
-            this.calculatePricing();
+              // ✅ IMPORTANT: Recalculate pricing now that we have distance
+              await this.calculateRiskSnapshot();
+              this.calculatePricing();
+            }
+          } else {
+            // Set to undefined if no location data
+            this.userLocation.set(undefined);
+            this.distanceKm.set(undefined);
+            this.distanceTier.set(undefined);
           }
-        } else {
-          // Set to undefined if no location data
+        } catch (error) {
+          // Silently fail - distance is optional
+          console.warn('Could not calculate distance:', error);
           this.userLocation.set(undefined);
           this.distanceKm.set(undefined);
           this.distanceTier.set(undefined);
         }
-      } catch (error) {
-        // Silently fail - distance is optional
-        console.warn('Could not calculate distance:', error);
-        this.userLocation.set(undefined);
-        this.distanceKm.set(undefined);
-        this.distanceTier.set(undefined);
-      }
-    })();
+      })();
+    }, 1000); // Defer by 1 second to allow page to render first
   }
 
   ngOnDestroy(): void {

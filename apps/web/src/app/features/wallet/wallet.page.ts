@@ -125,6 +125,11 @@ export class WalletPage implements AfterViewInit, OnInit {
   readonly copied = signal(false);
 
   /**
+   * Error from wallet service (if any)
+   */
+  readonly walletError = computed(() => this.walletService.error());
+
+  /**
    * Target de crédito protegido (USD 300 = 30000 centavos)
    */
   readonly protectedCreditTarget = 30000;
