@@ -10,7 +10,7 @@ import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
 import { WalletService } from '../../../core/services/wallet.service';
-import { NotificationsService } from '../../../core/services/notifications/notifications.service';
+import { NotificationsService } from '../../../core/services/user-notifications.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { WaitlistService } from '../../../core/services/waitlist.service';
 import { ToastService } from '../../../core/services/toast.service';

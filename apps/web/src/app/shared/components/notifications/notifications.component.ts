@@ -1,7 +1,7 @@
 import { Component, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { NotificationsService, NotificationItem } from '../../../core/services/notifications/notifications.service';
+import { NotificationsService, NotificationItem } from '../../../core/services/user-notifications.service';
 
 @Component({
   standalone: true,
