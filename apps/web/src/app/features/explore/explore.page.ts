@@ -124,8 +124,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       const cars = await this.carsService.listActiveCars({});
       this.cars = cars;
       this.filteredCars = this.cars;
-    } catch (error) {
-    } finally {
+    } catch (error) { /* Silenced */ } finally {
       this.loading = false;
     }
   }
@@ -137,7 +136,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-    } catch (error) {}
+    } catch (error) { /* Silenced */ }
   }
 
   toggleFilters() {

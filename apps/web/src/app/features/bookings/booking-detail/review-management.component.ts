@@ -128,7 +128,7 @@ export class ReviewManagementComponent implements OnInit {
         this.existingReview.set(review as Review);
         this.canReview.set(false);
       }
-    } catch (error) {}
+    } catch (error) { /* Silenced */ }
   }
 
   handleShowReviewForm(): void {
@@ -210,6 +210,6 @@ export class ReviewManagementComponent implements OnInit {
         carTitle: car.title || 'Vehículo',
         reviewType,
       });
-    } catch (error) {}
+    } catch (error) { /* Silenced */ }
   }
 }

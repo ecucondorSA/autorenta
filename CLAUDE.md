@@ -1,6 +1,22 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guía principal para Claude Code trabajando en AutoRenta.
+
+> **Nota**: Esta guía ha sido modularizada. Para información detallada, consulta los archivos específicos:
+> - [CLAUDE_ARCHITECTURE.md](./CLAUDE_ARCHITECTURE.md) - Arquitectura técnica (Angular, Supabase, Database)
+> - [CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md) - Comandos, CI/CD y deployment
+> - [CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md) - Supabase Storage, buckets y RLS
+> - [CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md) - Sistema de pagos MercadoPago y Wallet
+> - [CLAUDE_MCP.md](./CLAUDE_MCP.md) - Model Context Protocol integration
+
+## Project Overview
+
+AutoRenta es un marketplace de renta de autos MVP para Argentina construido con:
+- **Frontend**: Angular 17 (standalone components) + Tailwind CSS
+- **Backend**: Supabase (PostgreSQL + Edge Functions)
+- **Hosting**: Cloudflare Pages
+- **Workers**: Cloudflare Workers para webhooks y workers especializados
+- **Payments**: MercadoPago (producción) + Mock (desarrollo)
 
 ## Preferencias de Documentación
 
@@ -9,882 +25,224 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Cursor es la documentación viva - no necesita archivos .md para tareas rutinarias
 - Excepciones: cambios arquitectónicos importantes, decisiones de diseño significativas, runbooks operativos críticos
 
-## Autenticación Persistente
+## Quick Start
 
-**Setup inicial (una vez)**:
+### Setup Inicial (una vez)
+
 ```bash
-./tools/setup-auth.sh    # Configura login persistente para GitHub, Supabase, Cloudflare
-./tools/check-auth.sh    # Verifica estado de autenticación
+# 1. Configurar autenticación CLI
+./tools/setup-auth.sh    # GitHub, Supabase, Cloudflare
+
+# 2. Instalar dependencias
+npm run install
+
+# 3. Verificar configuración
+npm run check:auth
+npm run status
 ```
 
-**Herramientas configuradas**:
+### Desarrollo Diario
+
+```bash
+# Iniciar entorno de desarrollo
+npm run dev              # Angular + Payment webhook
+
+# URLs locales:
+# - Web: http://localhost:4200
+# - Worker: http://localhost:8787
+```
+
+### Comandos Principales
+
+```bash
+npm run dev              # Desarrollo
+npm run test:quick       # Tests rápidos
+npm run ci               # Pipeline completo (lint + test + build)
+npm run deploy           # Deploy a producción
+npm run status           # Estado del proyecto
+```
+
+**Ver todos los comandos**: [CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md)
+
+## Authentication & Configuration
+
+### Herramientas Configuradas
+
+Después del setup inicial (`./tools/setup-auth.sh`):
 - `gh` (GitHub CLI) - Credenciales en `~/.config/gh/`
 - `supabase` CLI - Token en `~/.supabase/access-token`
 - `wrangler` (Cloudflare) - Token en `~/.wrangler/config/default.toml`
 
-Después del setup inicial, no será necesario autenticarse nuevamente a menos que expire el token.
+### Acceso y Configuración Actual (Auditoría 2025-11-03)
 
-## Acceso y Configuración Actual (Auditoría 2025-11-03)
-
-### GitHub
-- **Repositorio**: `ecucondorSA/autorenta`
-- **URL**: https://github.com/ecucondorSA/autorenta
+#### GitHub
+- **Repositorio**: `ecucondorSA/autorenta` (privado)
 - **Branch principal**: `main`
-- **Último push**: 2025-11-01T23:26:15Z
-- **Público**: No (privado)
 - **Workflows activos**: 14 workflows (Build and Deploy, CI, Security Scan, E2E Tests, etc.)
-- **Secrets configurados** (13):
-  - CF_ACCOUNT_ID, CF_PAGES_PROJECT
-  - DATABASE_URL, DB_PASSWORD
-  - MAPBOX_ACCESS_TOKEN
-  - MERCADOPAGO_* (ACCESS_TOKEN, CLIENT_SECRET, PROD_ACCESS_TOKEN, PROD_PUBLIC_KEY, TEST_ACCESS_TOKEN)
-  - SUPABASE_* (ANON_KEY, SERVICE_ROLE_KEY, URL)
-- **Estado deployments**: Últimos 5 builds fallaron (necesitan corrección)
-- **Secrets Cloudflare configurados**:
-  - `CF_ACCOUNT_ID` ✅ (ya existe)
-  - `CF_API_TOKEN` ✅ (configurado 2025-11-03, válido hasta 2026-06-30)
-- **Workflow usa**: `CF_API_TOKEN || CLOUDFLARE_API_TOKEN` (fallback configurado)
-- **Usuario autenticado**: ecucondorSA
+- **Secrets configurados**: 13 secrets (CF_*, SUPABASE_*, MERCADOPAGO_*, etc.)
 
-### Supabase
+#### Supabase
 - **Proyecto**: autarenta
 - **Reference ID**: obxvffplochgeiclibng
 - **URL**: https://obxvffplochgeiclibng.supabase.co
 - **Región**: us-east-2
-- **Creado**: 2025-10-15 18:33:52 UTC
-- **Secrets configurados** (15):
-  - APP_BASE_URL
-  - DOC_VERIFIER_URL
-  - MAPBOX_ACCESS_TOKEN
-  - MERCADOPAGO_ACCESS_TOKEN
-  - MERCADOPAGO_APPLICATION_ID
-  - MERCADOPAGO_CLIENT_SECRET
-  - MERCADOPAGO_MARKETPLACE_ID
-  - MERCADOPAGO_OAUTH_REDIRECT_URI
-  - MERCADOPAGO_OAUTH_REDIRECT_URI_DEV
-  - MERCADOPAGO_PUBLIC_KEY
-  - PLATFORM_MARGIN_PERCENT
-  - SUPABASE_ANON_KEY
-  - SUPABASE_DB_URL
-  - SUPABASE_SERVICE_ROLE_KEY
-  - SUPABASE_URL
-- **Edge Functions activas** (20):
-  - mercadopago-webhook (v40, actualizado 2025-10-28)
-  - mercadopago-create-preference (v51)
-  - mercadopago-create-booking-preference (v19, actualizado 2025-10-28)
-  - mercadopago-oauth-connect (v5, actualizado 2025-11-02)
-  - mercadopago-oauth-callback (v3)
-  - wallet-transfer, wallet-reconciliation
-  - update-exchange-rates, sync-binance-rates
-  - calculate-dynamic-price
-  - verify-user-docs
-  - Y 10 más...
+- **Edge Functions activas**: 20 functions (mercadopago-webhook, create-preference, wallet-*, etc.)
 
-### Cloudflare
+#### Cloudflare
 - **Account ID**: `5b448192fe4b369642b68ad8f53a7603`
-- **Email**: marques.eduardo95466020@gmail.com
-- **Account Name**: Marques.eduardo95466020@gmail.com's Account
-- **Permisos**: account:read, workers:write, pages:write, workers_kv:write, etc. (todos los necesarios)
-- **Workers configurados**:
-  - `autorenta-payments-webhook` (functions/workers/payments_webhook)
-    - KV Namespace: AUTORENT_WEBHOOK_KV (id: a2a12698413f4f288023a9c595e19ae6)
-  - `autorent-ai-car-generator` (functions/workers/ai-car-generator)
-    - AI binding habilitado
-  - `mercadopago-oauth-redirect` (functions/workers/mercadopago-oauth-redirect)
-  - `doc-verifier` (functions/workers/doc-verifier)
-- **Cloudflare Pages**: Proyectos existentes:
-  - `autorenta-web` (modificado hace 20 horas) - URL: autorenta-web.pages.dev
-  - `autorentar-app`, `autorentar`, `autorenta` (proyectos antiguos)
-- **Dominio configurado**: 
-  - Workflow usa: `autorenta.com` 
-  - Environment.ts: `autorentar.com` (inconsistencia a corregir)
-- **Deployments**: Últimos builds en GitHub Actions fallaron
+- **Workers configurados**: payments_webhook, ai-car-generator, doc-verifier, mercadopago-oauth-redirect
+- **Pages Project**: `autorenta-web` (autorenta-web.pages.dev)
 
-**Nota**: Esta información se actualiza cuando se ejecuta `./tools/check-auth.sh` o se hacen cambios significativos.
-
-## Project Overview
-
-AutorentA is a car rental marketplace MVP for Argentina built with Angular 17 (standalone components), Supabase, and Cloudflare Workers/Pages. The project consists of a web application and a payment webhook worker.
+**Actualizar esta info**: Ejecuta `./tools/check-auth.sh`
 
 ## Repository Structure
 
 ```
 autorenta/
-  apps/
-    web/                         # Angular 17 standalone app with Tailwind
-      src/app/
-        core/                    # Core services, guards, interceptors, models
-          guards/                # AuthGuard for route protection
-          interceptors/          # supabaseAuthInterceptor for JWT handling
-          models/                # TypeScript interfaces (User, Car, Booking, Payment)
-          services/              # Business logic services
-            supabase-client.service.ts  # Centralized Supabase client
-            auth.service.ts      # Authentication operations
-            cars.service.ts      # Car CRUD operations
-            bookings.service.ts  # Booking management
-            payments.service.ts  # Payment intent handling
-            admin.service.ts     # Admin operations
-        features/                # Feature modules (lazy-loaded)
-          auth/                  # Login, register, reset-password pages
-          cars/                  # List, detail, publish, my-cars pages
-          bookings/              # Booking management pages
-          admin/                 # Admin dashboard
-        shared/                  # Shared components, pipes, utils
-          components/            # car-card, city-select, date-range-picker, upload-image
-          pipes/
-          utils/
-  functions/
-    workers/
-      payments_webhook/          # Cloudflare Worker for payment webhooks
-        src/index.ts             # Mock payment webhook handler
+  apps/web/                      # Angular 17 app
+    src/app/
+      core/                      # Services, guards, interceptors
+      features/                  # Feature modules (lazy-loaded)
+      shared/                    # Shared components
+  functions/workers/             # Cloudflare Workers
+    payments_webhook/            # Mock payment webhook (dev only)
+    ai-car-generator/            # AI car generator
+    doc-verifier/                # Document verifier
+  supabase/
+    functions/                   # Edge Functions (Deno)
+    migrations/                  # SQL migrations
+  database/                      # SQL setup scripts
+  docs/                          # Documentation
+    runbooks/                    # Operational runbooks
+    guides/                      # Feature guides
+  tools/                         # CLI tools y scripts
 ```
 
-## Common Commands
+**Estructura detallada**: [CLAUDE_ARCHITECTURE.md](./CLAUDE_ARCHITECTURE.md)
 
-### Consolidated Script Runner (✨ NEW - Nov 2025)
+## Architecture Overview
 
-**All commands have been consolidated into a single, unified CLI interface:**
+### Frontend (Angular 17)
+- **Standalone Components** - No NgModules
+- **Lazy Loading** - Features cargados bajo demanda
+- **Route Guards** - AuthGuard para rutas protegidas
+- **HTTP Interceptor** - JWT automático en requests
+- **Signals & RxJS** - State management reactivo
 
+### Backend (Supabase)
+- **PostgreSQL** - Base de datos con RLS
+- **Edge Functions** - Lógica serverless (Deno)
+- **Storage** - Imágenes y documentos
+- **Auth** - Sistema de autenticación integrado
+
+### Payment System
+- **Producción**: MercadoPago (Supabase Edge Functions)
+- **Desarrollo**: Mock webhooks (Cloudflare Worker local)
+
+**Detalles completos**: [CLAUDE_ARCHITECTURE.md](./CLAUDE_ARCHITECTURE.md)
+
+## Key Features & Systems
+
+### 1. Authentication & Authorization
+- Login/Register con Supabase Auth
+- Role-based access: `locador`, `locatario`, `ambos`, `admin`
+- RLS policies en todas las tablas
+
+### 2. Car Listings
+- CRUD de autos con fotos (hasta 10 por auto)
+- Estados: draft, pending, active, suspended
+- Verificación de locador requerida para publicar
+
+### 3. Booking System
+- Solicitud de booking con validación de disponibilidad
+- Estados: pending, approved, active, completed, cancelled
+- Lock de fondos en wallet durante booking
+
+### 4. Payment & Wallet System
+- Depósitos vía MercadoPago (tarjeta, débito, efectivo)
+- Wallet interno con balance y locked_balance
+- Efectivo marcado como non-withdrawable
+- Split payments a locador (85%) y plataforma (15%)
+
+**Sistema de pagos completo**: [CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md)
+
+### 5. Storage System
+- Buckets: `avatars`, `car-images`, `documents`
+- RLS policies para acceso seguro
+- Path convention: `{user_id}/{resource_id}/{filename}`
+- **CRITICAL**: NO incluir nombre de bucket en path
+
+**Guía de Storage**: [CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md)
+
+## Common Commands Reference
+
+### Development
 ```bash
-# Two ways to run commands:
-./tools/run.sh [command]   # Direct execution
-npm run [command]          # Via package.json shortcuts
+npm run dev              # Full dev environment
+npm run dev:web          # Solo web app
+npm run dev:worker       # Solo payment webhook
 ```
 
-**🚀 Quick Start Commands:**
+### Testing
 ```bash
-npm run dev                # Start full dev environment (web + worker)
-npm run test:quick         # Run quick tests (no coverage)
-npm run ci                 # Full CI/CD pipeline (lint + test + build)
-npm run deploy             # Deploy to production (with confirmation)
-npm run status             # Show project status
-```
-
-**📋 All Available Commands:**
-
-```bash
-# DEVELOPMENT
-npm run dev              # Start web + worker in background
-npm run dev:web          # Start web app only
-npm run dev:worker       # Start payment webhook only
-npm run dev:stop         # Stop all dev servers
-
-# TESTING
-npm run test             # Run all tests
+npm run test             # All tests
 npm run test:quick       # Quick tests (no coverage)
-npm run test:coverage    # Tests with coverage report
-npm run test:e2e         # E2E tests with Playwright
-npm run test:e2e:ui      # E2E tests in UI mode
-
-# BUILDING
-npm run build            # Build all (parallel)
-npm run build:web        # Build web app only
-npm run build:worker     # Build worker only
-
-# DEPLOYMENT
-npm run deploy           # Full deployment (requires confirmation)
-npm run deploy:web       # Deploy web to Cloudflare Pages
-npm run deploy:worker    # Deploy payment webhook
-
-# CI/CD
-npm run ci               # Full pipeline (lint + test + build)
-npm run lint             # Run ESLint
-npm run lint:fix         # Auto-fix lint issues + format
-npm run format           # Format code with Prettier
-
-# UTILITIES
-npm run install          # Install all dependencies (parallel)
-npm run clean            # Clean build artifacts
-npm run sync:types       # Sync database types from Supabase
-npm run status           # Show project status (git, builds, servers)
-
-# SETUP (one-time)
-npm run setup:auth       # Setup CLI auth (GitHub, Supabase, Cloudflare)
-npm run setup:prod       # Setup production environment
-
-# MONITORING
-npm run monitor:health   # Check system health
-npm run monitor:wallet   # Monitor wallet deposits
-npm run check:auth       # Check authentication status
+npm run test:e2e         # Playwright E2E tests
 ```
 
-**💡 Benefits of Consolidated Scripts:**
-- ✅ Single source of truth (`tools/run.sh`)
-- ✅ Consistent command structure across all operations
-- ✅ Better error handling and logging
-- ✅ Parallel execution for independent tasks
-- ✅ Auto-background support for long-running commands
-- ✅ Categorized help with `./tools/run.sh help`
-
-**🔧 For detailed help:**
+### Building & Deployment
 ```bash
-./tools/run.sh help      # Show all commands with descriptions
-npm run status           # Quick project health check
+npm run build            # Build all
+npm run ci               # Full CI pipeline
+npm run deploy           # Deploy to production
 ```
 
-### Project-Specific Commands
-
-**Note:** Most operations should use the consolidated runner (`./tools/run.sh` or `npm run`).
-The commands below are for direct subproject operations when needed.
-
-**Angular Web App** (from `apps/web/`):
+### Utilities
 ```bash
-npm run start              # Dev server (prefer: npm run dev:web from root)
-npm run test               # Karma/Jasmine tests (prefer: npm run test from root)
-npm run lint               # ESLint (prefer: npm run lint from root)
-npm run format             # Prettier (prefer: npm run format from root)
+npm run status           # Project health check
+npm run lint:fix         # Fix lint + format
+npm run sync:types       # Sync DB types from Supabase
 ```
 
-**Payments Webhook Worker** (from `functions/workers/payments_webhook/`):
-```bash
-npm run dev                # Wrangler dev (prefer: npm run dev:worker from root)
-npm run build              # TypeScript build (prefer: npm run build:worker from root)
-```
-
-**Worker secrets** (one-time setup):
-```bash
-wrangler secret put SUPABASE_URL
-wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-wrangler secret put MERCADOPAGO_ACCESS_TOKEN
-```
-
-## Architecture Patterns
-
-### Angular Architecture
-
-- **Standalone Components**: All components are standalone, no NgModules
-- **Lazy Loading**: Features are lazy-loaded via route configuration (`loadComponent`, `loadChildren`)
-- **Route Guards**: `AuthGuard` (CanMatchFn) protects authenticated routes (`/cars/publish`, `/bookings`, `/admin`)
-- **HTTP Interceptor**: `supabaseAuthInterceptor` attaches JWT tokens to outgoing HTTP requests
-- **Dependency Injection**: `injectSupabase()` provides direct access to Supabase client
-
-### State Management
-
-- **Supabase Client**: Centralized in `SupabaseClientService` with session persistence and auto-refresh
-- **Services**: Business logic encapsulated in dedicated services (Auth, Cars, Bookings, Payments, Admin)
-- **No state library**: Uses RxJS observables and Angular signals for reactivity
-
-### Authentication Flow
-
-1. User logs in via `AuthService.login()` → Supabase Auth
-2. Session persisted automatically by Supabase client
-3. `AuthGuard` checks `AuthService.isAuthenticated()` on protected routes
-4. `supabaseAuthInterceptor` adds JWT to API requests
-
-### User Roles
-
-- **locador**: Car owner (can publish cars)
-- **locatario**: Renter (can book cars)
-- **ambos**: Both owner and renter
-- **Admin**: `is_admin` flag in profile (access to `/admin`)
-
-### Supabase Integration
-
-**Tables:**
-- `profiles`: User profile with role and admin flag
-- `cars`: Car listings with status (draft, pending, active, suspended)
-- `car_photos`: Car images stored in Supabase Storage
-- `bookings`: Rental bookings with status tracking
-- `payments`: Payment records linked to bookings
-- `payment_intents`: Payment provider intents
-
-**RPC Functions:**
-- `request_booking`: Creates booking with validation
-- `wallet_initiate_deposit`: Creates pending deposit transaction
-- `wallet_confirm_deposit`: Confirms deposit and credits funds (called by webhook)
-- `wallet_get_balance`: Returns user's wallet balance
-- `wallet_lock_funds`: Locks funds for booking
-- `wallet_unlock_funds`: Unlocks funds after booking
-
-### Wallet System
-
-**Tables:**
-- `user_wallets`: User balance and locked funds (one row per user)
-- `wallet_transactions`: All wallet operations (deposits, withdrawals, payments, locks, unlocks)
-
-**Edge Functions:**
-- `mercadopago-create-preference`: Creates MercadoPago payment preference for deposits
-- `mercadopago-webhook`: Processes IPN notifications from MercadoPago
-
-**Flow**:
-1. User clicks "Depositar" → Frontend calls `wallet_initiate_deposit()`
-2. RPC creates pending transaction → Returns transaction_id
-3. Frontend calls Edge Function `mercadopago-create-preference` with transaction_id
-4. Edge Function creates preference → Returns init_point (checkout URL)
-5. User redirected to MercadoPago → Completes payment
-6. MercadoPago sends IPN → Calls Edge Function `mercadopago-webhook`
-7. Webhook verifies payment → Calls `wallet_confirm_deposit()`
-8. RPC updates transaction status → Credits funds to user wallet
-9. User redirected back → Balance updated
-
-**Key Implementation Details:**
-- ✅ Currency: Always ARS (required by MercadoPago Argentina)
-- ✅ Idempotency: Webhook handles duplicate notifications safely
-- ✅ Token cleaning: Access token is trimmed and sanitized
-- ✅ No auto_return: Doesn't work with localhost HTTP
-- ✅ Logging: Extensive debug logs for troubleshooting
-- ✅ Hardcoded fallback: Token has fallback for local development
-- ✅ RLS: All operations protected by Row Level Security
-
-**Documentation**: See `WALLET_SYSTEM_DOCUMENTATION.md` for complete guide.
-
-### Payment Architecture (CRITICAL - Updated Oct 2025)
-
-**AutoRenta uses DIFFERENT payment systems for development vs production:**
-
-#### 🏭 PRODUCTION (Real Money - MercadoPago)
-
-**Primary System**: Supabase Edge Functions
-- **Webhook**: `supabase/functions/mercadopago-webhook/` (✅ DEPLOYED, ACTIVE)
-- **Create Preference**: `supabase/functions/mercadopago-create-preference/` (✅ DEPLOYED)
-- **Booking Preference**: `supabase/functions/mercadopago-create-booking-preference/` (✅ DEPLOYED)
-- **Authentication**: `MERCADOPAGO_ACCESS_TOKEN` stored in Supabase secrets
-- **URL**: `https://[PROJECT].supabase.co/functions/v1/mercadopago-webhook`
-- **SDK**: Official MercadoPago SDK (imported via Deno)
-- **Signature Verification**: ✅ Enabled (validates MP signatures)
-- **Idempotency**: ✅ Handled via transaction_id uniqueness in DB
-
-**Payment Flow (Production)**:
-```
-User → Frontend → Supabase Edge Function (create-preference)
-                ↓
-          MercadoPago Checkout (real payment)
-                ↓
-          MercadoPago sends IPN webhook
-                ↓
-          Supabase Edge Function (mercadopago-webhook)
-                ↓
-          RPC wallet_confirm_deposit() → Credits funds
-                ↓
-          User redirected back to app
-```
-
-**Key Files**:
-- `/home/edu/autorenta/supabase/functions/mercadopago-webhook/index.ts` (webhook handler)
-- `/home/edu/autorenta/supabase/functions/mercadopago-create-preference/index.ts` (wallet deposits)
-- `/home/edu/autorenta/supabase/functions/mercadopago-create-booking-preference/index.ts` (bookings)
-
-#### 🧪 DEVELOPMENT (Mock Testing)
-
-**Secondary System**: Cloudflare Worker (LOCAL ONLY)
-- **Location**: `functions/workers/payments_webhook/`
-- **Status**: ❌ NOT DEPLOYED to Cloudflare (only local dev)
-- **Purpose**: Mock webhooks for rapid testing without MercadoPago
-- **URL**: `http://localhost:8787/webhooks/payments` (wrangler dev)
-- **Endpoint**: `POST /webhooks/payments`
-- **Payload**: `{ provider: 'mock', booking_id: string, status: 'approved' | 'rejected' }`
-
-**Mock Flow (Development Only)**:
-```
-Developer → Frontend → payments.service.ts::markAsPaid()
-                     ↓
-               Cloudflare Worker (local)
-                     ↓
-               Supabase DB (mock payment)
-```
-
-**Protection Against Accidental Production Use**:
-```typescript
-// apps/web/src/app/core/services/payments.service.ts:75
-async markAsPaid(intentId: string): Promise<void> {
-  if (environment.production) {
-    throw new Error('markAsPaid() deprecado en producción.
-                     El webhook de MercadoPago actualiza automáticamente.');
-  }
-  // ... mock logic only runs in dev
-}
-```
-
-#### ⚠️ IMPORTANT: Which System is Used?
-
-| Environment | Payment System | Webhook URL | Token Required |
-|-------------|----------------|-------------|----------------|
-| **Production** | MercadoPago Real | Supabase Edge Function | ✅ In Supabase secrets |
-| **Staging** | MercadoPago Sandbox | Supabase Edge Function | ✅ In Supabase secrets |
-| **Development** | Mock (optional) | Cloudflare Worker (local) | ❌ Not needed |
-
-**To verify which system is active**:
-```bash
-# Check deployed Supabase functions
-npx supabase functions list | grep mercadopago
-
-# Check Cloudflare Worker (should NOT exist in production)
-wrangler secret list --name payments_webhook
-```
-
-#### 🔐 Secrets Configuration
-
-**Supabase Secrets (Production)**:
-```bash
-npx supabase secrets set MERCADOPAGO_ACCESS_TOKEN=APP_USR-***
-npx supabase secrets set SUPABASE_URL=https://[project].supabase.co
-npx supabase secrets set SUPABASE_SERVICE_ROLE_KEY=***
-```
-
-**Cloudflare Secrets (Development - Optional)**:
-```bash
-# NOT NEEDED - Mock worker doesn't validate real payments
-# Only configure if you want to test real MP webhooks locally
-wrangler secret put MERCADOPAGO_ACCESS_TOKEN
-wrangler secret put SUPABASE_URL
-wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-```
-
-#### 📊 Payment Types & Non-Withdrawable Cash
-
-**MercadoPago payment_type_id values**:
-- `'ticket'` → Pago Fácil/Rapipago (cash) → **NON-WITHDRAWABLE**
-- `'credit_card'` → Credit card → Withdrawable
-- `'debit_card'` → Debit card → Withdrawable
-- `'account_money'` → MercadoPago balance → Withdrawable
-
-**Cash Deposit Handling** (see `CASH_DEPOSITS_NON_WITHDRAWABLE_FIX.md`):
-- Cash deposits are credited normally to wallet
-- Automatically marked as non-withdrawable
-- Tracked in `user_wallets.non_withdrawable_floor`
-- Users warned in UI before depositing
-- Can use for bookings but cannot withdraw to bank
-
-#### 🧹 Legacy Code Cleanup
-
-**Files to IGNORE (legacy mock system)**:
-- `functions/workers/payments_webhook/` - Cloudflare Worker (not deployed)
-- Methods in `payments.service.ts` with production guards:
-  - `markAsPaid()` - Throws error in production
-  - `triggerMockPayment()` - Throws error in production
-
-**Why keep mock code?**:
-- Enables rapid local development
-- No need to hit MercadoPago sandbox for every test
-- Production guards prevent accidental use
-- Developers can test payment flows offline
-
-## Code Quality Tools
-
-### ESLint Configuration (Flat Config)
-
-- **Angular ESLint**: Rules for components and templates
-- **TypeScript ESLint**: Strict type checking
-- **Import Plugin**: Enforces import order (alphabetized, grouped by type)
-- **Explicit return types**: Required on all functions
-- **Unused variables**: Errors except args prefixed with `_`
-
-### Prettier
-
-- **Print width**: 100
-- **Single quotes**: Enabled
-- **Angular HTML**: Custom parser for templates
-- **Plugin**: `prettier-plugin-organize-imports` for auto-import sorting
-
-### Husky + lint-staged
-
-- **Pre-commit**: Runs Prettier and ESLint on staged files
-- **Setup**: `npm run prepare` installs Husky hooks
-
-## Environment Variables
-
-**Angular (`.env.development.local`):**
-```bash
-NG_APP_SUPABASE_URL=            # Supabase project URL
-NG_APP_SUPABASE_ANON_KEY=       # Supabase anon/public key
-NG_APP_DEFAULT_CURRENCY=ARS
-NG_APP_PAYMENTS_WEBHOOK_URL=http://localhost:8787/webhooks/payments
-```
-
-**Cloudflare Worker (via `wrangler secret`):**
-```bash
-SUPABASE_URL=                   # Supabase project URL
-SUPABASE_SERVICE_ROLE_KEY=      # Supabase service role key (admin)
-```
-
-## Key Design Decisions
-
-1. **Standalone Components**: Simplifies architecture, aligns with Angular's modern direction
-2. **Flat ESLint Config**: Uses new flat config format (eslint.config.mjs)
-3. **Mock Payment Provider**: Simplifies MVP development, ready for Mercado Pago integration
-4. **Role-based Access**: Single user table with role field instead of separate tables
-5. **Cloudflare Pages**: Static hosting with edge performance
-6. **Cloudflare Workers**: Serverless webhook handling without backend server
-
-## Future Enhancements (from README)
-
-1. Add KV Namespace to Worker for webhook idempotency
-2. Replace mock payment with Mercado Pago integration
-3. Add unit/E2E tests per module
-4. Implement Supabase Realtime for booking notifications
-5. Add identity verification for car owners
+**Todos los comandos**: [CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md)
 
 ## Development Workflow
 
-1. **Start local dev**:
-   ```bash
-   cd apps/web && npm run start
-   cd ../../functions/workers/payments_webhook && npm run dev
-   ```
+### 1. Trabajar en Feature
 
-2. **Before committing**: Husky runs Prettier + ESLint automatically
+```bash
+# 1. Crear branch
+git checkout -b feature/nueva-funcionalidad
 
-3. **Testing booking flow**:
-   - Select car on `/cars` page
-   - Login/register via `/auth/login`
-   - Request booking (creates payment intent)
-   - Simulate webhook via `POST http://localhost:8787/webhooks/payments`
+# 2. Iniciar dev
+npm run dev
 
-4. **Deploy**:
-   - **Web**: `cd apps/web && npm run deploy:pages` (or via Cloudflare Pages dashboard)
-   - **Worker**: `cd functions/workers/payments_webhook && npm run deploy`
+# 3. Hacer cambios...
+# (Husky ejecuta lint + format en pre-commit)
 
----
-
-## Supabase Storage Architecture
-
-### Storage Buckets
-
-The application uses Supabase Storage with the following buckets:
-
-| Bucket | Purpose | Public | Path Pattern |
-|--------|---------|--------|--------------|
-| `avatars` | User profile photos | ✅ Yes | `{user_id}/{filename}` |
-| `car-images` | Car listing photos | ✅ Yes | `{user_id}/{car_id}/{filename}` |
-| `documents` | Verification docs | ❌ No | `{user_id}/{document_type}/{filename}` |
-
-### Storage Path Conventions
-
-**CRITICAL**: Storage paths must NOT include the bucket name as a prefix.
-
-```typescript
-// ✅ CORRECT - Path without bucket prefix
-const filePath = `${userId}/${filename}`;
-await supabase.storage.from('avatars').upload(filePath, file);
-
-// ❌ INCORRECT - Including bucket name in path
-const filePath = `avatars/${userId}/${filename}`;
-await supabase.storage.from('avatars').upload(filePath, file);
+# 4. Tests
+npm run test:quick
 ```
 
-**Why?** RLS policies validate that the first folder in the path matches `auth.uid()`:
-```sql
-(storage.foldername(name))[1] = auth.uid()::text
+### 2. Antes de PR
+
+```bash
+# Run full CI pipeline
+npm run ci
+
+# Si todo pasa:
+git push origin feature/nueva-funcionalidad
+
+# Crear PR en GitHub
 ```
 
-If you include the bucket prefix, the policy check fails:
-- With `avatars/user-id/file.jpg`: `foldername()[1]` = `'avatars'` ❌
-- With `user-id/file.jpg`: `foldername()[1]` = `user-id` ✅
+### 3. Deployment (después de merge a main)
 
-### RLS Policies for Storage
-
-**Avatar Uploads** (`storage.objects` table):
-```sql
--- Users can upload to their own folder
-CREATE POLICY "Users can upload own avatar"
-ON storage.objects FOR INSERT
-WITH CHECK (
-  bucket_id = 'avatars' AND
-  (storage.foldername(name))[1] = auth.uid()::text
-);
-
--- Users can update their own files
-CREATE POLICY "Users can update own avatar"
-ON storage.objects FOR UPDATE
-USING (
-  bucket_id = 'avatars' AND
-  (storage.foldername(name))[1] = auth.uid()::text
-);
-
--- Users can delete their own files
-CREATE POLICY "Users can delete own avatar"
-ON storage.objects FOR DELETE
-USING (
-  bucket_id = 'avatars' AND
-  (storage.foldername(name))[1] = auth.uid()::text
-);
-
--- Anyone can view (public bucket)
-CREATE POLICY "Anyone can view avatars"
-ON storage.objects FOR SELECT
-USING (bucket_id = 'avatars');
+```bash
+# Automático vía GitHub Actions
+# O manual:
+npm run deploy
 ```
-
-### Storage Service Patterns
-
-**ProfileService Example** (`profile.service.ts`):
-```typescript
-async uploadAvatar(file: File): Promise<string> {
-  const { data: { user } } = await this.supabase.auth.getUser();
-  if (!user) throw new Error('Usuario no autenticado');
-
-  // Validations
-  if (!file.type.startsWith('image/')) {
-    throw new Error('El archivo debe ser una imagen');
-  }
-  if (file.size > 2 * 1024 * 1024) {
-    throw new Error('La imagen no debe superar 2MB');
-  }
-
-  const extension = file.name.split('.').pop() ?? 'jpg';
-  const filePath = `${user.id}/${uuidv4()}.${extension}`; // ✅ No bucket prefix
-
-  // Upload
-  const { error } = await this.supabase.storage
-    .from('avatars')
-    .upload(filePath, file, {
-      cacheControl: '3600',
-      upsert: true,
-    });
-
-  if (error) throw error;
-
-  // Get public URL
-  const { data: { publicUrl } } = this.supabase.storage
-    .from('avatars')
-    .getPublicUrl(filePath);
-
-  // Update profile
-  await this.updateProfile({ avatar_url: publicUrl });
-
-  return publicUrl;
-}
-```
-
-**CarsService Example** (`cars.service.ts`):
-```typescript
-async uploadPhoto(file: File, carId: string, position = 0): Promise<CarPhoto> {
-  const userId = (await this.supabase.auth.getUser()).data.user?.id;
-  if (!userId) throw new Error('Usuario no autenticado');
-
-  const extension = file.name.split('.').pop() ?? 'jpg';
-  const filePath = `${userId}/${carId}/${uuidv4()}.${extension}`; // ✅ No bucket prefix
-
-  const { error } = await this.supabase.storage
-    .from('car-images')
-    .upload(filePath, file, {
-      cacheControl: '3600',
-      upsert: false,
-    });
-
-  if (error) throw error;
-
-  const { data } = this.supabase.storage
-    .from('car-images')
-    .getPublicUrl(filePath);
-
-  // Save to database
-  const { data: photoData, error: photoError } = await this.supabase
-    .from('car_photos')
-    .insert({
-      id: uuidv4(),
-      car_id: carId,
-      stored_path: filePath,
-      url: data.publicUrl,
-      position,
-      sort_order: position,
-    })
-    .select()
-    .single();
-
-  if (photoError) throw photoError;
-  return photoData as CarPhoto;
-}
-```
-
-### Deleting Files from Storage
-
-When deleting files, extract the path from the public URL:
-
-```typescript
-async deleteAvatar(): Promise<void> {
-  const profile = await this.getCurrentProfile();
-  if (!profile?.avatar_url) return;
-
-  // Extract storage path from public URL
-  const url = new URL(profile.avatar_url);
-  const pathParts = url.pathname.split('/avatars/');
-
-  if (pathParts.length > 1) {
-    const storagePath = pathParts[1]; // ✅ Without bucket prefix
-    await this.supabase.storage.from('avatars').remove([storagePath]);
-  }
-
-  // Update profile
-  await this.updateProfile({ avatar_url: '' });
-}
-```
-
----
-
-## Vertical Stack Debugging Workflow
-
-When debugging complex issues that span multiple layers of the application, use the **Vertical Stack Debugging** approach.
-
-### When to Use
-
-- RLS policy violations
-- Storage upload failures
-- Authentication issues
-- Data flow problems across layers
-- Integration bugs between frontend and backend
-
-### Process
-
-1. **Create Audit Branch**
-   ```bash
-   git checkout -b audit/feature-name
-   ```
-
-2. **Map the Full Stack**
-   Trace the feature through all layers:
-   ```
-   UI Component → Service → SDK → Storage/DB → RLS → Schema
-   ```
-
-3. **Document Findings**
-   Create a detailed audit document (e.g., `PHOTO_UPLOAD_AUDIT.md`):
-   - Database schema analysis
-   - RLS policies
-   - Service layer code
-   - Component integration
-   - Root cause identification
-   - Fix implementation plan
-
-4. **Implement and Test**
-   - Apply fixes to all affected layers
-   - Verify RLS policies
-   - Test end-to-end flow
-   - Document solution
-
-5. **Merge and Clean Up**
-   ```bash
-   git checkout main
-   git merge audit/feature-name --no-ff
-   git branch -d audit/feature-name
-   ```
-
-### Layer-by-Layer Analysis Template
-
-```
-┌─────────────────────────────────────────┐
-│  LAYER 1: UI (Angular Component)        │
-│  Status: ✅ / ❌                         │
-│  Files: profile.page.ts:137             │
-│  Notes: Event handler working           │
-└─────────────────────────────────────────┘
-              ↓↑
-┌─────────────────────────────────────────┐
-│  LAYER 2: Service Layer                 │
-│  Status: ✅ / ❌                         │
-│  Files: profile.service.ts:97           │
-│  Notes: Check path construction         │
-└─────────────────────────────────────────┘
-              ↓↑
-┌─────────────────────────────────────────┐
-│  LAYER 3: Supabase SDK                  │
-│  Status: ✅ / ❌                         │
-│  Files: N/A (external)                  │
-│  Notes: Verify API usage                │
-└─────────────────────────────────────────┘
-              ↓↑
-┌─────────────────────────────────────────┐
-│  LAYER 4: Storage/Database              │
-│  Status: ✅ / ❌                         │
-│  Files: setup-profiles.sql:69           │
-│  Notes: Bucket configuration            │
-└─────────────────────────────────────────┘
-              ↓↑
-┌─────────────────────────────────────────┐
-│  LAYER 5: RLS Policies                  │
-│  Status: ✅ / ❌ ← ERROR HERE            │
-│  Files: setup-profiles.sql:76           │
-│  Notes: Policy validation failing       │
-└─────────────────────────────────────────┘
-              ↓↑
-┌─────────────────────────────────────────┐
-│  LAYER 6: Database Schema               │
-│  Status: ✅ / ❌                         │
-│  Files: setup-profiles.sql:4            │
-│  Notes: Column definitions              │
-└─────────────────────────────────────────┘
-```
-
-### Example: Avatar Upload Bug (2025-10-16)
-
-**Problem**: `new row violates row-level security policy`
-
-**Analysis**:
-- ✅ Component: Event handler working
-- ✅ Service: File validation passing
-- ❌ **Storage Path**: Including bucket prefix `avatars/`
-- ❌ **RLS Policy**: Expecting first folder to be `user_id`
-
-**Root Cause**: Path mismatch between service and RLS expectations
-
-**Fix**: Remove bucket prefix from file path in `ProfileService.uploadAvatar()`
-
-**Documentation**: See `PHOTO_UPLOAD_AUDIT.md` for complete analysis
-
----
-
-## Common Pitfalls
-
-### 1. Storage Path Errors
-
-**Problem**: Including bucket name in storage path
-```typescript
-// ❌ WRONG
-const filePath = `avatars/${userId}/${filename}`;
-```
-
-**Solution**: Omit bucket name
-```typescript
-// ✅ CORRECT
-const filePath = `${userId}/${filename}`;
-```
-
-**Why**: RLS policies check `(storage.foldername(name))[1] = auth.uid()::text`
-
-### 2. RLS Policy Violations
-
-**Problem**: `new row violates row-level security policy`
-
-**Debug Steps**:
-1. Check if user is authenticated: `await supabase.auth.getUser()`
-2. Verify path structure matches policy expectations
-3. Test policy in Supabase SQL editor with your user's UUID
-4. Compare with working examples (e.g., `CarsService.uploadPhoto()`)
-
-### 3. TypeScript Type Mismatches
-
-**Problem**: Database types don't match code
-
-**Solution**: Keep `database.types.ts` in sync with database schema
-```typescript
-// Regenerate types after schema changes
-// Use Supabase CLI or manual updates
-```
-
-### 4. Avatar URL Extraction
-
-**Problem**: Incorrect path extraction when deleting files
-
-```typescript
-// ❌ WRONG - Includes bucket prefix again
-const storagePath = `avatars/${pathParts[1]}`;
-
-// ✅ CORRECT - Direct path
-const storagePath = pathParts[1];
-```
-
-### 5. File Size Limits
-
-**Problem**: Files too large for Supabase Storage
-
-**Solution**: Validate before upload
-```typescript
-if (file.size > 2 * 1024 * 1024) {
-  throw new Error('File must be under 2MB');
-}
-```
-
----
 
 ## Debugging Resources
 
@@ -893,296 +251,171 @@ if (file.size > 2 * 1024 * 1024) {
 **Documentación operativa crítica** (actualizada 2025-11-03):
 
 - **[Runbook: Troubleshooting](./docs/runbooks/troubleshooting.md)**: Guía completa de solución de problemas
-  - Síntomas comunes y diagnóstico rápido
-  - Problemas por categoría (Auth, Payment, Database, Frontend, etc.)
-  - Herramientas de diagnóstico y escalación
-
 - **[Guía de Deployment](./docs/deployment-guide.md)**: Procedimientos de deployment
-  - Pre-deployment checklist
-  - Deployment automático (GitHub Actions)
-  - Deployment manual
-  - Post-deployment verification
-  - Rollback procedures
-
 - **[Disaster Recovery Plan](./docs/disaster-recovery-plan.md)**: Plan de recuperación ante desastres
-  - Escenarios de desastre (DB loss, security breach, infrastructure failure)
-  - Procedimientos de recuperación por escenario
-  - Backup strategy
-  - RTO/RPO objetivos
-
 - **[Runbook: Split Payment Failure](./docs/runbooks/split-payment-failure.md)**: Problemas con pagos divididos
 - **[Runbook: Database Backup & Restore](./docs/runbooks/database-backup-restore.md)**: Backup y restauración
 - **[Runbook: Secret Rotation](./docs/runbooks/secret-rotation.md)**: Rotación de secrets
 
 **Ver índice completo**: [docs/README.md](./docs/README.md)
 
-### Audit Documents
+### Vertical Stack Debugging
 
-- **`PHOTO_UPLOAD_AUDIT.md`**: Complete analysis of avatar upload RLS issue
-  - Database schema review
-  - Storage architecture
-  - RLS policy validation
-  - Root cause analysis
-  - Fix implementation
+Para bugs complejos que abarcan múltiples capas (UI → Service → DB → RLS):
 
-### Reference Files
+1. Crear audit branch: `git checkout -b audit/feature-name`
+2. Mapear full stack: `UI → Service → SDK → Storage/DB → RLS → Schema`
+3. Documentar hallazgos en archivo audit (ej. `PHOTO_UPLOAD_AUDIT.md`)
+4. Implementar y testear fixes
+5. Merge con `--no-ff`
 
-- **Database Setup**: `apps/web/database/setup-profiles.sql`
-- **Storage Policies**: Lines 69-109 in setup-profiles.sql
-- **TypeScript Types**: `apps/web/src/app/core/types/database.types.ts`
-- **Storage Constants**: Lines 201-205 in database.types.ts
+**Guía completa**: [CLAUDE_ARCHITECTURE.md#vertical-stack-debugging](./CLAUDE_ARCHITECTURE.md#vertical-stack-debugging-workflow)
 
-### Testing RLS Policies
+## Common Pitfalls
 
-Use Supabase SQL Editor with your session:
+### 1. Storage Path Errors
 
-```sql
--- Test as authenticated user
+```typescript
+// ❌ WRONG - Incluye bucket name
+const filePath = `avatars/${userId}/${filename}`;
+
+// ✅ CORRECT - Sin bucket name
+const filePath = `${userId}/${filename}`;
+```
+
+**Por qué**: RLS policies verifican `(storage.foldername(name))[1] = auth.uid()::text`
+
+### 2. Payment System Confusion
+
+- **Producción**: Usa Supabase Edge Functions (MercadoPago real)
+- **Desarrollo**: Usa Cloudflare Worker (mock webhooks)
+- **NEVER** llamar `payments.service.ts::markAsPaid()` en producción
+
+**Detalles**: [CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md)
+
+### 3. RLS Policy Violations
+
+```bash
+# Debug con SQL Editor de Supabase
 SET LOCAL "request.jwt.claims" = '{"sub": "your-user-uuid"}';
-
--- Test storage policy
 SELECT (storage.foldername('user-uuid/file.jpg'))[1] = 'user-uuid';
--- Should return: true
-
-SELECT (storage.foldername('avatars/user-uuid/file.jpg'))[1] = 'user-uuid';
--- Should return: false (this is the bug!)
 ```
+
+### 4. TypeScript Type Mismatches
+
+```bash
+# Sincronizar tipos después de cambios en DB
+npm run sync:types
+```
+
+## Environment Variables
+
+### Angular (`.env.development.local`)
+
+```bash
+NG_APP_SUPABASE_URL=https://obxvffplochgeiclibng.supabase.co
+NG_APP_SUPABASE_ANON_KEY=<your-anon-key>
+NG_APP_DEFAULT_CURRENCY=ARS
+NG_APP_PAYMENTS_WEBHOOK_URL=http://localhost:8787/webhooks/payments
+```
+
+### Cloudflare Worker (via `wrangler secret`)
+
+```bash
+SUPABASE_URL=<supabase-url>
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+MERCADOPAGO_ACCESS_TOKEN=<access-token>
+```
+
+**Ver configuración completa de secrets**: [CLAUDE_WORKFLOWS.md#secrets-configuration](./CLAUDE_WORKFLOWS.md#secrets-configuration)
+
+## Code Quality
+
+### ESLint + Prettier
+
+- **Pre-commit hooks**: Husky ejecuta automáticamente
+- **Manual**: `npm run lint:fix`
+- **Config**: `eslint.config.mjs` (flat config)
+
+### Testing
+
+- **Unit Tests**: Karma + Jasmine (Angular)
+- **E2E Tests**: Playwright
+- **Coverage Goal**: 80%+ por módulo
+
+### Git Workflow
+
+- **Main branch**: Protegido, requiere PR + review
+- **Feature branches**: `feature/nombre-descriptivo`
+- **Audit branches**: `audit/feature-name` (para debugging complejo)
+
+## Model Context Protocol (MCP)
+
+AutoRenta usa servidores MCP de Cloudflare para workflows mejorados:
+
+### Active Servers (Free Tier)
+- **cloudflare-builds**: Deploy y manage builds
+- **cloudflare-docs**: Documentación rápida
+- **cloudflare-bindings**: Manage KV/R2/D1
+
+### Recommended (Paid)
+- **cloudflare-observability**: Logs y debugging (CRÍTICO para webhooks)
+- **cloudflare-audit-logs**: Compliance y security
+- **cloudflare-graphql**: Analytics y performance
+
+**Configuración**: `.claude/config.json`
+**Guía completa**: [CLAUDE_MCP.md](./CLAUDE_MCP.md)
+
+## Additional Resources
+
+### Documentation by Topic
+
+| Topic | File | Description |
+|-------|------|-------------|
+| **Arquitectura** | [CLAUDE_ARCHITECTURE.md](./CLAUDE_ARCHITECTURE.md) | Angular, Supabase, Database, Debugging |
+| **Workflows** | [CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md) | Comandos, CI/CD, Deployment |
+| **Storage** | [CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md) | Buckets, RLS, Path conventions |
+| **Payments** | [CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md) | MercadoPago, Wallet, Webhooks |
+| **MCP** | [CLAUDE_MCP.md](./CLAUDE_MCP.md) | Model Context Protocol |
+| **Deployment** | [docs/deployment-guide.md](./docs/deployment-guide.md) | Deployment procedures |
+| **Troubleshooting** | [docs/runbooks/troubleshooting.md](./docs/runbooks/troubleshooting.md) | Problem solving |
+
+### Feature Guides
+
+- **Wallet System**: `WALLET_SYSTEM_DOCUMENTATION.md`
+- **Cash Deposits**: `CASH_DEPOSITS_NON_WITHDRAWABLE_FIX.md`
+- **MercadoPago Features**: `docs/guides/features/MERCADOPAGO_*.md`
+- **Testing Plan**: `docs/testing/TESTING_PLAN.md`
+
+### Skills & Optimization
+
+- **Claude Skills Guide**: `CLAUDE_SKILLS_GUIDE.md` (preparación para Skills)
+- **Code Improvements**: `CLAUDE_CODE_IMPROVEMENTS.md` (análisis de mejoras)
+- **Workflows Script**: `tools/claude-workflows.sh` (workflows automatizados)
+
+## Getting Help
+
+```bash
+# Ver ayuda de comandos
+./tools/run.sh help
+npm run status
+
+# Check autenticación
+npm run check:auth
+
+# Ver estado del proyecto
+npm run status
+
+# Troubleshooting
+cat docs/runbooks/troubleshooting.md
+```
+
+## Last Updated
+
+- **Date**: 2025-11-06
+- **Version**: v1.0 (modularizado)
+- **Changelog**: Dividido en archivos específicos para mejor performance de Claude Code
 
 ---
 
-## Claude Code Optimization (Oct 2025)
-
-### Auto-Background Commands
-
-AutoRenta aprovecha las nuevas funcionalidades de **auto-background** de Claude Code para ejecutar comandos largos sin timeouts.
-
-**Comandos que se benefician**:
-- `npm run build` - 30-90s (antes: timeout a 120s)
-- `npm run deploy:pages` - 60-180s (antes: fallos frecuentes)
-- `npm run test` - 40-120s
-- `npm install` - 60-300s (dependiendo de red)
-
-**Configuración**:
-```bash
-# Timeout configurado en BASH_DEFAULT_TIMEOUT_MS
-export BASH_DEFAULT_TIMEOUT_MS=900000  # 15 minutos
-```
-
-### Workflows Automatizados
-
-El proyecto incluye workflows automatizados en `tools/claude-workflows.sh`:
-
-**Funciones Principales**:
-
-```bash
-# Cargar workflows
-source tools/claude-workflows.sh
-
-# O usar shortcuts de npm
-npm run workflows          # Ver ayuda completa
-
-# CI/CD Pipeline
-npm run ci                 # lint + test + build en paralelo
-# - Lint y tests corren simultáneamente
-# - Build ejecuta después de validaciones
-# - Todo aprovecha auto-background
-
-# Desarrollo
-npm run dev                # Inicia web + worker en background
-# - Angular dev server: http://localhost:4200
-# - Payment worker: http://localhost:8787
-
-# Deploy
-npm run deploy             # Deploy completo con confirmación
-# - Valida que ci_pipeline haya pasado
-# - Deploys web y worker en secuencia
-```
-
-**Ventajas**:
-- ⏱️ 40-60% reducción en tiempo de desarrollo
-- 🚫 0 timeouts en builds y deploys
-- ⚡ Ejecución paralela de tareas independientes
-- 📊 Mejor visibilidad de progreso
-
-### Claude Skills (Preparación)
-
-El proyecto está preparado para aprovechar **Claude Skills** cuando estén disponibles:
-
-**Documentación**:
-- `CLAUDE_SKILLS_GUIDE.md` - Guía completa de uso
-- `CLAUDE.md` - Patterns de arquitectura (este archivo)
-- `CLAUDE_CODE_IMPROVEMENTS.md` - Análisis de mejoras
-
-**Skills Recomendados**:
-1. **Angular Scaffolder** - Genera features siguiendo patterns de AutoRenta
-2. **Supabase RLS Debugger** - Analiza vertical stack de políticas de seguridad
-3. **TypeScript Sync** - Sincroniza database.types.ts con schema
-4. **Test Generator** - Genera tests unitarios con 80%+ coverage
-5. **Performance Optimizer** - Analiza bundle size y Web Vitals
-6. **Security Auditor** - Valida RLS policies y configuraciones
-
-**Preparación para Skills**:
-- ✅ CLAUDE.md documentado con patterns claros
-- ✅ Arquitectura standalone bien definida
-- ✅ Storage conventions documentadas
-- ✅ Debugging workflows establecidos
-- 🔄 TODO: Crear PATTERNS.md con templates de código
-
-### Recursos Claude Code
-
-**Documentos Clave**:
-- `/autorenta/CLAUDE.md` - Guía principal del proyecto
-- `/autorenta/CLAUDE_SKILLS_GUIDE.md` - Uso de Skills
-- `/autorenta/CLAUDE_CODE_IMPROVEMENTS.md` - Análisis de mejoras
-- `/autorenta/tools/claude-workflows.sh` - Scripts automatizados
-
-**Comandos Útiles**:
-```bash
-# Workflows
-npm run workflows          # Ver ayuda
-npm run ci                 # Pipeline completo
-npm run dev                # Entorno de desarrollo
-npm run deploy             # Deploy a producción
-
-# Status
-source tools/claude-workflows.sh && status  # Ver estado del proyecto
-
-# Linting
-npm run lint:fix           # Auto-fix de issues
-```
-
----
-
-## Model Context Protocol (MCP) Integration
-
-### Configured MCP Servers
-
-AutoRenta uses Cloudflare's official MCP servers for enhanced development and deployment workflows. Configuration is located in `.claude/config.json`.
-
-**Active Servers (Free Tier)**:
-
-| Server | URL | Purpose | Use Cases |
-|--------|-----|---------|-----------|
-| **cloudflare-builds** | `https://builds.mcp.cloudflare.com/mcp` | Deploy and manage Pages/Workers builds | Deploy automation, build status, rollbacks |
-| **cloudflare-docs** | `https://docs.mcp.cloudflare.com/mcp` | Quick Cloudflare documentation reference | API lookups, configuration help |
-| **cloudflare-bindings** | `https://bindings.mcp.cloudflare.com/mcp` | Manage Workers bindings (R2, KV, D1, AI) | Future: KV for webhook idempotency |
-
-**Recommended (Paid Plan)**:
-
-| Server | URL | Purpose | Value for AutoRenta |
-|--------|-----|---------|---------------------|
-| **cloudflare-observability** | `https://observability.mcp.cloudflare.com/mcp` | Logs and analytics debugging | **CRITICAL**: Payment webhook debugging |
-| **cloudflare-audit-logs** | `https://auditlogs.mcp.cloudflare.com/mcp` | Security and compliance auditing | Track deployments, API changes |
-| **cloudflare-graphql** | `https://graphql.mcp.cloudflare.com/mcp` | Analytics data access | Performance metrics, Web Vitals |
-
-### Authentication
-
-MCP servers use OAuth authentication with your Cloudflare account:
-
-1. Claude Code will prompt for authentication when accessing MCP servers
-2. Use the same Cloudflare account that hosts AutoRenta Pages and Workers
-3. Grant requested permissions (read-only for free tier servers)
-
-### Common MCP Workflows
-
-**Deployment Management** (cloudflare-builds):
-```
-"Show me the latest deployment of autorenta-web on Pages"
-"Deploy my web app to Cloudflare Pages"
-"What's the status of my last 5 deployments?"
-"Rollback Pages deployment to the previous version"
-```
-
-**Documentation Lookup** (cloudflare-docs):
-```
-"How do I configure custom domains in Cloudflare Pages?"
-"What are the limits for Cloudflare Workers free tier?"
-"Show me examples of KV namespace usage for idempotency"
-"How do I set up environment variables in Workers?"
-```
-
-**Bindings Management** (cloudflare-bindings):
-```
-"List all KV namespaces in my account"
-"Create a new KV namespace for webhook idempotency"
-"Show me the bindings configured for my payment webhook worker"
-```
-
-**Debugging Payment Webhook** (cloudflare-observability - Paid):
-```
-"Show me the last 10 invocations of payments_webhook with errors"
-"What's the average execution time of my payment webhook today?"
-"Find all webhook calls that resulted in 500 errors in the last hour"
-"Get logs for invocation with error at 2025-10-18 15:30 UTC"
-```
-
-**Security Auditing** (cloudflare-audit-logs - Paid):
-```
-"Show me all API key creations in the last 7 days"
-"List all configuration changes to my Workers this week"
-"Who deployed to production yesterday?"
-"Audit trail for payment webhook configuration changes"
-```
-
-### MCP Server Configuration
-
-The MCP configuration file is located at `.claude/config.json`:
-
-```json
-{
-  "mcpServers": {
-    "cloudflare-builds": {
-      "url": "https://builds.mcp.cloudflare.com/mcp",
-      "transport": "streamble-http",
-      "description": "Deploy and manage Cloudflare Pages and Workers builds"
-    },
-    "cloudflare-docs": {
-      "url": "https://docs.mcp.cloudflare.com/mcp",
-      "transport": "streamble-http",
-      "description": "Quick reference for Cloudflare documentation"
-    },
-    "cloudflare-bindings": {
-      "url": "https://bindings.mcp.cloudflare.com/mcp",
-      "transport": "streamble-http",
-      "description": "Manage Workers bindings (R2, KV, D1, AI, etc.)"
-    }
-  }
-}
-```
-
-To add paid servers when available:
-
-```bash
-# Edit .claude/config.json and add:
-"cloudflare-observability": {
-  "url": "https://observability.mcp.cloudflare.com/mcp",
-  "transport": "streamble-http",
-  "description": "Logs and analytics debugging for Workers"
-}
-```
-
-### Why Cloudflare MCP vs Others
-
-AutoRenta chose Cloudflare MCP servers over alternatives (e.g., Vercel) because:
-
-- ✅ **100% Infrastructure Alignment**: Already using Cloudflare Pages + Workers
-- ✅ **15 Official Servers**: vs 0 official Vercel servers
-- ✅ **Observability**: Critical for payment webhook debugging
-- ✅ **Maturity**: 3k+ stars, 311 commits, actively maintained
-- ✅ **Native Integration**: Built for Cloudflare services used by AutoRenta
-
-### Future MCP Usage
-
-When upgrading to a paid Cloudflare Workers plan:
-
-1. **Enable Observability Server** - Essential for production webhook debugging
-2. **Setup Audit Logs** - Compliance and security tracking
-3. **Configure GraphQL Analytics** - Performance monitoring and Web Vitals
-4. **Add Browser Rendering** - E2E testing and screenshot generation
-
-### Resources
-
-- **GitHub**: [cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare)
-- **Documentation**: [Cloudflare MCP Docs](https://developers.cloudflare.com/agents/model-context-protocol/)
-- **All Servers**: 15 servers available, 3 configured for free tier
-- **Last Updated**: October 2025
+**Nota**: Este archivo es ahora ~8k caracteres (vs 41k original), mejorando significativamente el performance de Claude Code. Para información detallada, consulta los archivos modulares correspondientes.

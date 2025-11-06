@@ -351,7 +351,7 @@ export class CoverageFundDashboardComponent implements OnInit {
         total_ledger_entries: entries.length,
         avg_franchise_amount: avgAmount,
       });
-    } catch (err) {}
+    } catch (err) { /* Silenced */ }
   }
 
   async loadRecentActivity(): Promise<void> {
@@ -368,8 +368,7 @@ export class CoverageFundDashboardComponent implements OnInit {
       if (error) throw error;
 
       this.recentActivity.set(data || []);
-    } catch (err) {
-    } finally {
+    } catch (err) { /* Silenced */ } finally {
       this.loadingActivity.set(false);
     }
   }

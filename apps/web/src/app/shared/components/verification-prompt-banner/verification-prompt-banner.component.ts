@@ -368,7 +368,7 @@ export class VerificationPromptBannerComponent implements OnInit {
     try {
       const profile = await this.profileService.getCurrentProfile();
       this.profile.set(profile);
-    } catch (error) {}
+    } catch (error) { /* Silenced */ }
   }
 
   /**
