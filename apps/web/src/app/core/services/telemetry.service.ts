@@ -1,42 +1,42 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { from, Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { SupabaseClientService } from './supabase-client.service';
-import { LoggerService } from './logger.service';
+import { Injectable, computed, signal, inject } from '@angular/core';
+import { injectSupabase } from './supabase-client.service';
+import { AuthService } from './auth.service';
+
+/**
+ * TelemetryService
+ *
+ * Servicio para recolección y gestión de datos telemáticos de conducción.
+ *
+ * FUNCIONALIDADES:
+ * - Recolectar datos de sensores (GPS, acelerómetro)
+ * - Detectar eventos de conducción (frenadas bruscas, excesos de velocidad)
+ * - Calcular score de conducción (0-100)
+ * - Enviar datos al backend para análisis
+ * - Obtener historial y estadísticas
+ *
+ * MÉTRICAS MONITOREADAS:
+ * - Frenadas bruscas (hard_brakes)
+ * - Excesos de velocidad (speed_violations)
+ * - Conducción nocturna (night_driving_hours)
+ * - Zonas de riesgo visitadas (risk_zones_visited)
+ */
 
 export interface TelemetryData {
+  booking_id: string;
   total_km: number;
   hard_brakes: number;
   speed_violations: number;
   night_driving_hours: number;
   risk_zones_visited: number;
-  [key: string]: any; // Allow additional custom fields
+  raw_data?: {
+    gps_coordinates?: Array<{ lat: number; lng: number; timestamp: number }>;
+    speed_readings?: Array<{ speed: number; timestamp: number }>;
+    acceleration_events?: Array<{ force: number; timestamp: number }>;
+  };
 }
 
-export interface RecordTelemetryResult {
-  success: boolean;
-  message: string;
+export interface TelemetryHistory {
   telemetry_id: string;
-  driver_score: number;
-}
-
-export interface TelemetrySummary {
-  total_trips: number;
-  total_km: number;
-  avg_driver_score: number;
-  current_driver_score: number;
-  hard_brakes_total: number;
-  speed_violations_total: number;
-  night_driving_hours_total: number;
-  risk_zones_visited_total: number;
-  best_score: number;
-  worst_score: number;
-  score_trend: 'improving' | 'declining' | 'stable' | 'insufficient_data';
-}
-
-export interface TelemetryHistoryEntry {
-  id: string;
   booking_id: string;
   trip_date: string;
   total_km: number;
@@ -45,205 +45,381 @@ export interface TelemetryHistoryEntry {
   speed_violations: number;
   night_driving_hours: number;
   risk_zones_visited: number;
+  car_title: string;
+  car_brand: string;
+  car_model: string;
+}
+
+export interface TelemetryAverage {
+  avg_score: number;
+  total_trips: number;
+  total_km: number;
+  total_hard_brakes: number;
+  total_speed_violations: number;
+  total_night_hours: number;
+  total_risk_zones: number;
+  period_start: string;
+  period_end: string;
+}
+
+export interface TelemetryInsights {
+  current_score: number;
+  score_trend: string;
+  main_issue: string;
+  recommendation: string;
+  trips_analyzed: number;
+}
+
+interface TelemetryState {
+  isCollecting: boolean;
+  currentBookingId: string | null;
+  sessionData: Partial<TelemetryData>;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class TelemetryService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
-  private readonly logger = inject(LoggerService);
+  private readonly supabase = injectSupabase();
+  private readonly authService = inject(AuthService);
 
-  readonly summary = signal<TelemetrySummary | null>(null);
-  readonly history = signal<TelemetryHistoryEntry[]>([]);
-  readonly loading = signal(false);
-  readonly error = signal<{ message: string } | null>(null);
+  private readonly state = signal<TelemetryState>({
+    isCollecting: false,
+    currentBookingId: null,
+    sessionData: {},
+  });
 
-  // Computed signals for easy access
-  readonly currentDriverScore = computed(() => this.summary()?.current_driver_score ?? 50);
-  readonly avgDriverScore = computed(() => this.summary()?.avg_driver_score ?? 50);
-  readonly totalTrips = computed(() => this.summary()?.total_trips ?? 0);
-  readonly totalKm = computed(() => this.summary()?.total_km ?? 0);
-  readonly scoreTrend = computed(() => this.summary()?.score_trend ?? 'insufficient_data');
-  readonly isImproving = computed(() => this.scoreTrend() === 'improving');
-  readonly isDeclining = computed(() => this.scoreTrend() === 'declining');
+  // Computed signals
+  readonly isCollecting = computed(() => this.state().isCollecting);
+  readonly currentBookingId = computed(() => this.state().currentBookingId);
+  readonly sessionData = computed(() => this.state().sessionData);
 
-  constructor() {
-    // Auto-load telemetry summary on service init
-    this.getSummary().subscribe();
+  /**
+   * Inicia la recolección de datos telemáticos para un booking
+   */
+  startCollection(bookingId: string): void {
+    if (this.state().isCollecting) {
+      console.warn('[TelemetryService] Ya hay una sesión de recolección activa');
+      return;
+    }
+
+    this.state.set({
+      isCollecting: true,
+      currentBookingId: bookingId,
+      sessionData: {
+        booking_id: bookingId,
+        total_km: 0,
+        hard_brakes: 0,
+        speed_violations: 0,
+        night_driving_hours: 0,
+        risk_zones_visited: 0,
+        raw_data: {
+          gps_coordinates: [],
+          speed_readings: [],
+          acceleration_events: [],
+        },
+      },
+    });
+
+    console.log('[TelemetryService] Recolección iniciada para booking:', bookingId);
   }
 
   /**
-   * Record telemetry data from a trip
+   * Detiene la recolección y envía los datos al backend
    */
-  recordTelemetry(params: {
-    userId: string;
-    bookingId: string;
-    telemetryData: TelemetryData;
-  }): Observable<RecordTelemetryResult> {
-    this.loading.set(true);
-    this.error.set(null);
+  async stopCollection(): Promise<string | null> {
+    if (!this.state().isCollecting) {
+      console.warn('[TelemetryService] No hay sesión de recolección activa');
+      return null;
+    }
 
-    return from(
-      this.supabase.rpc('record_telemetry', {
-        p_user_id: params.userId,
-        p_booking_id: params.bookingId,
-        p_telemetry_data: params.telemetryData,
-      })
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        const result = data[0] as RecordTelemetryResult;
+    const sessionData = this.state().sessionData;
+    const bookingId = this.state().currentBookingId;
 
-        // Refresh summary after recording
-        this.getSummary().subscribe();
+    if (!bookingId) {
+      throw new Error('No hay booking ID activo');
+    }
 
-        return result;
-      }),
-      catchError((err) => {
-        this.handleError(err, 'Error al registrar telemetría');
-        return throwError(() => err);
-      }),
-      tap(() => this.loading.set(false))
-    );
-  }
+    try {
+      // Enviar datos al backend
+      const telemetryId = await this.recordTelemetry(sessionData as TelemetryData);
 
-  /**
-   * Get telemetry summary (last N months)
-   */
-  getSummary(userId?: string, monthsBack: number = 3): Observable<TelemetrySummary> {
-    this.loading.set(true);
-    this.error.set(null);
+      // Resetear estado
+      this.state.set({
+        isCollecting: false,
+        currentBookingId: null,
+        sessionData: {},
+      });
 
-    return from(
-      this.supabase.rpc('get_user_telemetry_summary', {
-        p_user_id: userId ?? null,
-        p_months_back: monthsBack,
-      })
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        if (!data || data.length === 0) {
-          // No telemetry data yet, return default
-          const defaultSummary: TelemetrySummary = {
-            total_trips: 0,
-            total_km: 0,
-            avg_driver_score: 50,
-            current_driver_score: 50,
-            hard_brakes_total: 0,
-            speed_violations_total: 0,
-            night_driving_hours_total: 0,
-            risk_zones_visited_total: 0,
-            best_score: 0,
-            worst_score: 0,
-            score_trend: 'insufficient_data',
-          };
-          this.summary.set(defaultSummary);
-          return defaultSummary;
-        }
-        const summary = data[0] as TelemetrySummary;
-        this.summary.set(summary);
-        return summary;
-      }),
-      catchError((err) => {
-        this.handleError(err, 'Error al obtener resumen de telemetría');
-        return throwError(() => err);
-      }),
-      tap(() => this.loading.set(false))
-    );
-  }
-
-  /**
-   * Get detailed telemetry history for charts
-   */
-  getHistory(userId?: string, limit: number = 10): Observable<TelemetryHistoryEntry[]> {
-    this.loading.set(true);
-    this.error.set(null);
-
-    return from(
-      this.supabase.rpc('get_user_telemetry_history', {
-        p_user_id: userId ?? null,
-        p_limit: limit,
-      })
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        const history = (data || []) as TelemetryHistoryEntry[];
-        this.history.set(history);
-        return history;
-      }),
-      catchError((err) => {
-        this.handleError(err, 'Error al obtener historial de telemetría');
-        return throwError(() => err);
-      }),
-      tap(() => this.loading.set(false))
-    );
-  }
-
-  /**
-   * Refresh telemetry data (summary + history)
-   */
-  refresh(monthsBack: number = 3, historyLimit: number = 10): void {
-    this.getSummary(undefined, monthsBack).subscribe();
-    this.getHistory(undefined, historyLimit).subscribe();
-  }
-
-  /**
-   * Format driver score for display with color coding
-   */
-  formatScore(score: number): { value: number; label: string; color: string } {
-    if (score >= 90) {
-      return { value: score, label: 'Excelente', color: 'green' };
-    } else if (score >= 75) {
-      return { value: score, label: 'Bueno', color: 'blue' };
-    } else if (score >= 60) {
-      return { value: score, label: 'Regular', color: 'yellow' };
-    } else if (score >= 40) {
-      return { value: score, label: 'Bajo', color: 'orange' };
-    } else {
-      return { value: score, label: 'Muy Bajo', color: 'red' };
+      console.log('[TelemetryService] Datos enviados exitosamente:', telemetryId);
+      return telemetryId;
+    } catch (error) {
+      console.error('[TelemetryService] Error al enviar datos:', error);
+      throw error;
     }
   }
 
   /**
-   * Get trend icon/label for UI
+   * Registra un evento de frenada brusca
    */
-  getTrendDisplay(): { icon: string; label: string; color: string } {
-    const trend = this.scoreTrend();
-    switch (trend) {
-      case 'improving':
-        return { icon: '↗', label: 'Mejorando', color: 'green' };
-      case 'declining':
-        return { icon: '↘', label: 'Bajando', color: 'red' };
-      case 'stable':
-        return { icon: '→', label: 'Estable', color: 'blue' };
-      default:
-        return { icon: '?', label: 'Sin datos', color: 'gray' };
+  recordHardBrake(force: number): void {
+    if (!this.state().isCollecting) return;
+
+    const current = this.state().sessionData;
+    this.state.update((state) => ({
+      ...state,
+      sessionData: {
+        ...current,
+        hard_brakes: (current.hard_brakes || 0) + 1,
+        raw_data: {
+          ...current.raw_data,
+          acceleration_events: [
+            ...(current.raw_data?.acceleration_events || []),
+            { force, timestamp: Date.now() },
+          ],
+        },
+      },
+    }));
+
+    console.log('[TelemetryService] Frenada brusca registrada:', force);
+  }
+
+  /**
+   * Registra un exceso de velocidad
+   */
+  recordSpeedViolation(speed: number, speedLimit: number): void {
+    if (!this.state().isCollecting) return;
+
+    const current = this.state().sessionData;
+    this.state.update((state) => ({
+      ...state,
+      sessionData: {
+        ...current,
+        speed_violations: (current.speed_violations || 0) + 1,
+      },
+    }));
+
+    console.log('[TelemetryService] Exceso de velocidad:', speed, '/', speedLimit);
+  }
+
+  /**
+   * Actualiza la distancia total recorrida
+   */
+  updateDistance(km: number): void {
+    if (!this.state().isCollecting) return;
+
+    const current = this.state().sessionData;
+    this.state.update((state) => ({
+      ...state,
+      sessionData: {
+        ...current,
+        total_km: km,
+      },
+    }));
+  }
+
+  /**
+   * Incrementa horas de conducción nocturna
+   */
+  addNightDrivingHours(hours: number): void {
+    if (!this.state().isCollecting) return;
+
+    const current = this.state().sessionData;
+    this.state.update((state) => ({
+      ...state,
+      sessionData: {
+        ...current,
+        night_driving_hours: (current.night_driving_hours || 0) + hours,
+      },
+    }));
+  }
+
+  /**
+   * Registra visita a zona de riesgo
+   */
+  recordRiskZoneVisit(): void {
+    if (!this.state().isCollecting) return;
+
+    const current = this.state().sessionData;
+    this.state.update((state) => ({
+      ...state,
+      sessionData: {
+        ...current,
+        risk_zones_visited: (current.risk_zones_visited || 0) + 1,
+      },
+    }));
+
+    console.log('[TelemetryService] Zona de riesgo visitada');
+  }
+
+  /**
+   * Registra coordenadas GPS
+   */
+  recordGPSCoordinates(lat: number, lng: number): void {
+    if (!this.state().isCollecting) return;
+
+    const current = this.state().sessionData;
+    this.state.update((state) => ({
+      ...state,
+      sessionData: {
+        ...current,
+        raw_data: {
+          ...current.raw_data,
+          gps_coordinates: [
+            ...(current.raw_data?.gps_coordinates || []),
+            { lat, lng, timestamp: Date.now() },
+          ],
+        },
+      },
+    }));
+  }
+
+  /**
+   * Envía datos telemáticos al backend
+   */
+  private async recordTelemetry(data: TelemetryData): Promise<string> {
+    const { data: result, error } = await this.supabase.rpc('record_telemetry', {
+      p_booking_id: data.booking_id,
+      p_telemetry_data: {
+        total_km: data.total_km,
+        hard_brakes: data.hard_brakes,
+        speed_violations: data.speed_violations,
+        night_driving_hours: data.night_driving_hours,
+        risk_zones_visited: data.risk_zones_visited,
+        raw_data: data.raw_data,
+      },
+    });
+
+    if (error) {
+      throw new Error(`Error al registrar telemetría: ${error.message}`);
     }
+
+    return result;
   }
 
   /**
-   * Calculate hard brakes per 100km for display
+   * Obtiene el historial de telemetría del usuario
    */
-  getHardBrakesRate(): number {
-    const summary = this.summary();
-    if (!summary || summary.total_km === 0) return 0;
-    return Math.round((summary.hard_brakes_total / summary.total_km) * 100 * 10) / 10;
+  async getHistory(limit = 10): Promise<TelemetryHistory[]> {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    const { data, error } = await this.supabase.rpc('get_telemetry_history', {
+      p_user_id: user.id,
+      p_limit: limit,
+    });
+
+    if (error) {
+      throw new Error(`Error al obtener historial: ${error.message}`);
+    }
+
+    return data || [];
   }
 
   /**
-   * Calculate speed violations per 100km for display
+   * Obtiene estadísticas promedio de telemetría
    */
-  getSpeedViolationsRate(): number {
-    const summary = this.summary();
-    if (!summary || summary.total_km === 0) return 0;
-    return Math.round((summary.speed_violations_total / summary.total_km) * 100 * 10) / 10;
+  async getAverage(months = 3): Promise<TelemetryAverage | null> {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    const { data, error } = await this.supabase.rpc('get_driver_telemetry_average', {
+      p_user_id: user.id,
+      p_months: months,
+    });
+
+    if (error) {
+      throw new Error(`Error al obtener promedio: ${error.message}`);
+    }
+
+    return data?.[0] || null;
   }
 
-  private handleError(error: any, defaultMessage: string): void {
-    const message = error?.message || defaultMessage;
-    this.error.set({ message });
-    this.loading.set(false);
-    this.logger.error(defaultMessage, error);
+  /**
+   * Obtiene insights y recomendaciones
+   */
+  async getInsights(): Promise<TelemetryInsights | null> {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    const { data, error } = await this.supabase.rpc('get_telemetry_insights', {
+      p_user_id: user.id,
+    });
+
+    if (error) {
+      throw new Error(`Error al obtener insights: ${error.message}`);
+    }
+
+    return data?.[0] || null;
+  }
+
+  /**
+   * Calcula el score de un viaje específico
+   */
+  async getTripScore(bookingId: string): Promise<number> {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    const { data, error } = await this.supabase.rpc('calculate_telemetry_score', {
+      p_user_id: user.id,
+      p_booking_id: bookingId,
+    });
+
+    if (error) {
+      throw new Error(`Error al calcular score: ${error.message}`);
+    }
+
+    return data;
+  }
+
+  /**
+   * Helper: Detecta si es hora nocturna (22:00 - 06:00)
+   */
+  isNightTime(): boolean {
+    const hour = new Date().getHours();
+    return hour >= 22 || hour < 6;
+  }
+
+  /**
+   * Helper: Calcula velocidad a partir de coordenadas GPS
+   */
+  calculateSpeed(
+    prevLat: number,
+    prevLng: number,
+    currLat: number,
+    currLng: number,
+    timeElapsed: number
+  ): number {
+    // Fórmula de Haversine para distancia entre coordenadas
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = this.toRad(currLat - prevLat);
+    const dLon = this.toRad(currLng - prevLng);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.toRad(prevLat)) *
+        Math.cos(this.toRad(currLat)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distancia en km
+
+    // Velocidad en km/h
+    const speed = (distance / timeElapsed) * 3600;
+
+    return speed;
+  }
+
+  private toRad(degrees: number): number {
+    return degrees * (Math.PI / 180);
   }
 }
