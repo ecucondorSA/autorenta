@@ -23,3 +23,4 @@ node_modules
 # ONNX models (too large for GitHub)
 apps/web/src/assets/models/*.onnx
 test-results/
+*.log
