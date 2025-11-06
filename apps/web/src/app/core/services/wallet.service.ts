@@ -47,8 +47,19 @@ export class WalletService {
   readonly pendingDepositsCount = signal(0);
 
   constructor() {
-    this.getBalance().subscribe();
-    this.getTransactions().subscribe();
+    // ✅ FIX: Handle errors gracefully to prevent silent failures on page load
+    this.getBalance().subscribe({
+      error: (err) => {
+        // Log error but don't block page - wallet page will show error state
+        console.warn('Failed to load wallet balance on init:', err);
+      }
+    });
+    this.getTransactions().subscribe({
+      error: (err) => {
+        // Log error but don't block page - wallet page will show error state
+        console.warn('Failed to load wallet transactions on init:', err);
+      }
+    });
   }
 
   getBalance(): Observable<WalletBalance> {
