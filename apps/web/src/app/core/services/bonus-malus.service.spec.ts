@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { BonusMalusService } from './bonus-malus.service';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { UserBonusMalus, BonusMalusCalculation } from '../models';
+import { BonusMalusService } from './bonus-malus.service';
 
 describe('BonusMalusService', () => {
   let service: BonusMalusService;

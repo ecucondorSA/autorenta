@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { BookingCheckoutPage } from './booking-checkout.page';
 import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway.factory';
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
+import { BookingCheckoutPage } from './booking-checkout.page';
 
 describe('BookingCheckoutPage', () => {
   let component: BookingCheckoutPage;

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, OnDestroy } from '@angular/core';
 import { ToastService } from './toast.service';
 import { VerificationStateService } from './verification-state.service';
 
@@ -11,7 +11,7 @@ import { VerificationStateService } from './verification-state.service';
 @Injectable({
   providedIn: 'root',
 })
-export class VerificationNotificationsService {
+export class VerificationNotificationsService implements OnDestroy {
   private readonly toast = inject(ToastService);
   private readonly verificationStateService = inject(VerificationStateService);
 

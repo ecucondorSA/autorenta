@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { BookingsService } from './bookings.service';
 import type { Booking } from '../types/supabase-types';
+import { BookingsService } from './bookings.service';
 import { SupabaseClientService } from './supabase-client.service';
 import { PwaService } from './pwa.service';
 import { WalletService } from './wallet.service';

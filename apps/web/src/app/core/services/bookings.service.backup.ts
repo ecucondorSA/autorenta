@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../models';
+import { environment } from '../../../environments/environment';
 import { injectSupabase } from './supabase-client.service';
 import { ErrorHandlerService } from './error-handler.service';
 import { LoggerService } from './logger.service';
@@ -8,7 +9,6 @@ import { WalletService } from './wallet.service';
 import { PwaService } from './pwa.service';
 import { InsuranceService } from './insurance.service';
 import { DriverProfileService } from './driver-profile.service';
-import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

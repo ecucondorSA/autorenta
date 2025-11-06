@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MercadopagoCardFormComponent } from '../../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
-import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 import {
   RiskSnapshot,
   FxSnapshot,
@@ -11,7 +11,7 @@ import {
 } from '../../../../core/models/booking-detail-payment.model';
 import { PaymentAuthorizationService } from '../../../../core/services/payment-authorization.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 
 @Component({
   selector: 'app-card-hold-panel',

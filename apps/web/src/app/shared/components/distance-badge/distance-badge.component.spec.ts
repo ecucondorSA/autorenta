@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DistanceBadgeComponent } from './distance-badge.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { DistanceBadgeComponent } from './distance-badge.component';
 
 describe('DistanceBadgeComponent', () => {
   let component: DistanceBadgeComponent;

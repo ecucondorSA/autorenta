@@ -171,8 +171,7 @@ export class PublishCarPage implements OnInit, OnDestroy {
     try {
       const brands = await this.carsService.getCarBrands();
       this.brands.set(brands);
-    } catch (error) {
-    } finally {
+    } catch (error) { /* Silenced */ } finally {
       this.loadingBrands.set(false);
     }
   }
@@ -182,8 +181,7 @@ export class PublishCarPage implements OnInit, OnDestroy {
     try {
       const models = await this.carsService.getCarModels(brandId);
       this.models.set(models);
-    } catch (error) {
-    } finally {
+    } catch (error) { /* Silenced */ } finally {
       this.loadingModels.set(false);
     }
   }
@@ -249,14 +247,13 @@ export class PublishCarPage implements OnInit, OnDestroy {
       for (let i = 0; i < files.length; i++) {
         try {
           await this.carsService.uploadPhoto(files[i], car.id, i);
-        } catch (error) {}
+        } catch (error) { /* Silenced */ }
       }
 
       await this.router.navigate(['/cars/mine'], {
         queryParams: { published: 'true' },
       });
-    } catch (error) {
-    } finally {
+    } catch (error) { /* Silenced */ } finally {
       this.uploadingSignal.set(false);
     }
   }

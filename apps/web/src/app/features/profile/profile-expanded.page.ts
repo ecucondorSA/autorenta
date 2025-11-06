@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs/operators';
+import { from } from 'rxjs';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import {
@@ -22,9 +25,6 @@ import {
   VerificationStatus,
 } from '../../core/models';
 import { MetaService } from '../../core/services/meta.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { tap } from 'rxjs/operators';
-import { from } from 'rxjs';
 import { VerificationStateService } from '../../core/services/verification-state.service';
 import { VerificationNotificationsService } from '../../core/services/verification-notifications.service';
 import { VerificationProgressComponent } from '../../shared/components/verification-progress/verification-progress.component';

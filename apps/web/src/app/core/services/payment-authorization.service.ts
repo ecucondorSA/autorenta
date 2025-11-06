@@ -2,12 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { environment } from '@environment';
+import { SupabaseClient } from '@supabase/supabase-js';
 import {
   PaymentAuthorization,
   AuthorizePaymentResult,
   CurrencyCode,
 } from '../models/booking-detail-payment.model';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { AuthService } from './auth.service';
 import { injectSupabase } from './supabase-client.service';
 

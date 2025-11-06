@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { environment } from '../../../environments/environment';
-import { WalletService } from './wallet.service';
-import { SupabaseClientService } from './supabase-client.service';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import type { WalletBalance } from '../models/wallet.model';
 import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
 import { VALID_UUID } from '../../../test-helpers/factories';
+import { SupabaseClientService } from './supabase-client.service';
+import { WalletService } from './wallet.service';
 
 describe('WalletService', () => {
   let service: WalletService;

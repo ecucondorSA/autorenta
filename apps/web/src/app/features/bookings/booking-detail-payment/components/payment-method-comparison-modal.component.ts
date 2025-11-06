@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 import {
   PriceBreakdown,
   RiskSnapshot,
@@ -8,6 +7,7 @@ import {
   formatArs,
   formatUsd,
 } from '../../../../core/models/booking-detail-payment.model';
+import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 
 @Component({
   selector: 'app-payment-method-comparison-modal',

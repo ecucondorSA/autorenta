@@ -35,6 +35,10 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createChildLogger } from '../_shared/logger.ts';
+
+// Logger con contexto fijo
+const log = createChildLogger('MercadoPagoWebhook');
 
 // Tipos de Mercado Pago
 interface MPWebhookPayload {
@@ -258,7 +262,13 @@ serve(async (req) => {
       );
     }
 
-    console.log('MercadoPago Webhook received:', JSON.stringify(webhookPayload, null, 2));
+    // ✅ SECURITY: Log sin exponer datos sensibles completos
+    log.info('MercadoPago Webhook received', {
+      type: webhookPayload.type,
+      action: webhookPayload.action,
+      paymentId: webhookPayload.data?.id,
+      live_mode: webhookPayload.live_mode,
+    });
 
     // ========================================
     // VALIDAR FIRMA HMAC (si está presente)
@@ -429,10 +439,19 @@ serve(async (req) => {
         );
       }
 
-      console.log('Payment Data from REST API:', JSON.stringify(paymentData, null, 2));
+      // ✅ SECURITY: Log sin exponer datos sensibles completos
+      log.info('Payment Data from REST API', {
+        id: paymentData.id,
+        status: paymentData.status,
+        status_detail: paymentData.status_detail,
+        transaction_amount: paymentData.transaction_amount,
+        currency_id: paymentData.currency_id,
+        payment_method_id: paymentData.payment_method_id,
+        operation_type: paymentData.operation_type,
+      });
 
     } catch (apiError) {
-      console.error('MercadoPago API error:', apiError);
+      log.error('MercadoPago API error', apiError);
 
       // Retornar 200 OK para evitar reintentos infinitos
       // El polling backup confirmará el pago de todas formas

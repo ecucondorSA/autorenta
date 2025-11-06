@@ -1,7 +1,0 @@
-WARNING: Functions using fallback import map: mercadopago-webhook
-Please use recommended per function dependency declaration  https://supabase.com/docs/guides/functions/import-maps
-WARNING: Docker is not running
-Uploading asset (mercadopago-webhook): supabase/functions/import_map.json
-Uploading asset (mercadopago-webhook): supabase/functions/mercadopago-webhook/index.ts
-Deployed Functions on project obxvffplochgeiclibng: mercadopago-webhook
-You can inspect your deployment in the Dashboard: https://supabase.com/dashboard/project/obxvffplochgeiclibng/functions

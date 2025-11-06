@@ -393,7 +393,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           endDate: new Date(parsed.endDate),
         });
         return;
-      } catch (e) {}
+      } catch (e) { /* Silenced */ }
     }
 
     // Si no, desde query params
@@ -1141,7 +1141,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Intentar desbloquear wallet si hubo error
       try {
         await firstValueFrom(this.walletService.unlockFunds(bookingId));
-      } catch (unlockError) {}
+      } catch (unlockError) { /* Silenced */ }
       throw error;
     }
   }

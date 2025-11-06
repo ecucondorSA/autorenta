@@ -19,13 +19,13 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import type mapboxgl from 'mapbox-gl';
 import { CarLocationsService, CarMapLocation } from '../../../core/services/car-locations.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { environment } from '../../../../environments/environment';
 
 // Type imports (these don't increase bundle size)
-import type mapboxgl from 'mapbox-gl';
 
 type LngLatLike = [number, number] | { lng: number; lat: number };
 

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PaymentModeAlertComponent } from './payment-mode-alert.component';
 import { RiskSnapshot, FxSnapshot } from '../../../../core/models/booking-detail-payment.model';
+import { PaymentModeAlertComponent } from './payment-mode-alert.component';
 
 describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
   let component: PaymentModeAlertComponent;
