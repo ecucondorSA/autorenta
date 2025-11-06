@@ -2,7 +2,14 @@
 
 Este directorio contiene archivos .md que fueron movidos desde el root para organizar la documentación.
 
-**Fecha de organización**: 2025-11-03
+**Fecha de organización**: 2025-11-06 (Consolidación Agresiva)
+
+## Última Consolidación (2025-11-06)
+
+✅ **Root**: Reducido de 52 → 7 archivos esenciales
+✅ **apps/web**: Reducido de 29 → 1 archivo (README.md)
+✅ **Archivados**: 61 archivos movidos a `sessions/2025-11/`
+✅ **Eliminados**: 3 archivos redundantes (*_OLD*.md)
 
 ## Estructura
 
@@ -10,6 +17,7 @@ Este directorio contiene archivos .md que fueron movidos desde el root para orga
 docs/
 ├── archived/
 │   ├── sessions/          # Resúmenes de sesiones de trabajo
+│   │   └── 2025-11/       # ⭐ Consolidación agresiva Nov 2025 (61 archivos)
 │   ├── sprints/           # Resúmenes de sprints
 │   ├── summaries/         # Resúmenes ejecutivos y generales
 │   └── old/               # Archivos antiguos o sin categoría clara
@@ -61,7 +69,39 @@ mv docs/archived/sessions/SESSION_XXX.md ./
 
 ---
 
-**Última actualización**: 2025-11-03
+**Última actualización**: 2025-11-06
+
+## Archivos Consolidados (2025-11-06)
+
+Los siguientes 61 archivos fueron movidos desde root y apps/web a `docs/archived/sessions/2025-11/`:
+
+**Desde root (45 archivos)**:
+- ANALISIS_PRS_*.md
+- BONUS_MALUS_*.md (7 archivos)
+- DEPLOYMENT_*.md, DEPLOY_*.md
+- MONITORING_*.md, TESTING_*.md
+- SESSION_*.md, IMPLEMENTATION_*.md
+- Y 30+ archivos más de sesiones/implementaciones temporales
+
+**Desde apps/web (13 archivos archivados)**:
+- ANALISIS_COMPLETO_FINAL.md, AUDIT_REPORT.md
+- ERROR_ANALYSIS_UPDATED.md, ERROR_RANKING_REPORT.md
+- FIX_WALLET_COMPREHENSIVE.md, WALLET_DEBUG_LAB.md
+- PRODUCTION_DEPLOY_SUCCESS.md
+- Y 6+ archivos más de reportes temporales
+
+**Desde apps/web (11 archivos movidos a guides)**:
+- DESIGN_SYSTEM_GUIDE.md → docs/guides/setup/
+- MERCADOPAGO_SETUP.md → docs/guides/setup/
+- PWA_GUIDE.md → docs/guides/setup/
+- SHEPHERD_*.md → docs/guides/setup/
+- WALLET_SYSTEM_DOCUMENTATION_web.md → docs/archived/sessions/2025-11/ (duplicado)
+- Y 6+ archivos más de guías
+
+**Eliminados (3 archivos redundantes)**:
+- docs/reports/analysis/ANALISIS_E2E_LOCADOR_OLD.md
+- docs/reports/analysis/ANALISIS_E2E_LOCADOR_OLD2.md
+- docs/implementation/features/IMPLEMENTATION_SUMMARY_OLD.md
 
 
 
