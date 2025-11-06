@@ -284,7 +284,7 @@ export class PaymentOrchestrationService {
         // await this.processSplitPayment(booking_id);
       } else if (status === 'rejected' || status === 'failed') {
         await this.bookingsService.updateBooking(booking_id, {
-          status: 'payment_failed',
+          status: 'cancelled',
         });
 
         // Unlock wallet funds if they were locked

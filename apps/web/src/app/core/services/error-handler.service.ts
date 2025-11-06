@@ -215,16 +215,17 @@ export class ErrorHandlerService {
    * @private
    */
   private showToast(message: string, severity: 'error' | 'warning' | 'critical'): void {
+    const title = severity === 'critical' ? 'Error Crítico' : severity === 'error' ? 'Error' : 'Advertencia';
     switch (severity) {
       case 'critical':
       case 'error':
-        this.toast.error(message);
+        this.toast.error(title, message);
         break;
       case 'warning':
-        this.toast.warning(message);
+        this.toast.warning(title, message);
         break;
       default:
-        this.toast.error(message);
+        this.toast.error(title, message);
     }
   }
 }

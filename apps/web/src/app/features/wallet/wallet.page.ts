@@ -388,6 +388,7 @@ export class WalletPage implements AfterViewInit, OnInit {
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
       this.toastService.error(
+        'Error',
         'Error al agregar cuenta bancaria: ' + (errorObj.message || 'Error desconocido'),
       );
     }
@@ -406,11 +407,12 @@ export class WalletPage implements AfterViewInit, OnInit {
         // Recargar historial
         await this.withdrawalService.getWithdrawalRequests();
       } else {
-        this.toastService.error('Error: ' + result.message);
+        this.toastService.error('Error', 'Error: ' + result.message);
       }
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
       this.toastService.error(
+        'Error',
         'Error al solicitar retiro: ' + (errorObj.message || 'Error desconocido'),
       );
     }
@@ -425,7 +427,7 @@ export class WalletPage implements AfterViewInit, OnInit {
       this.toastService.success('Cuenta establecida como predeterminada');
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
-      this.toastService.error('Error: ' + (errorObj.message || 'Error desconocido'));
+      this.toastService.error('Error', 'Error: ' + (errorObj.message || 'Error desconocido'));
     }
   }
 
@@ -439,6 +441,7 @@ export class WalletPage implements AfterViewInit, OnInit {
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
       this.toastService.error(
+        'Error',
         'Error al eliminar cuenta: ' + (errorObj.message || 'Error desconocido'),
       );
     }
@@ -453,7 +456,7 @@ export class WalletPage implements AfterViewInit, OnInit {
       this.toastService.success('Solicitud de retiro cancelada');
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
-      this.toastService.error('Error al cancelar: ' + (errorObj.message || 'Error desconocido'));
+      this.toastService.error('Error', 'Error al cancelar: ' + (errorObj.message || 'Error desconocido'));
     }
   }
 
@@ -529,7 +532,7 @@ export class WalletPage implements AfterViewInit, OnInit {
         this.copied.set(false);
       }, 2000);
     } catch (error) {
-      this.toastService.error('Error al copiar el número de cuenta');
+      this.toastService.error('Error', 'Error al copiar el número de cuenta');
     }
   }
 }
