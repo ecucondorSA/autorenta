@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+:host-context(.dark) .publish-card {
+  background-color: #1f2426;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f7f5ee;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+:host-context(.dark) label,
+:host-context(.dark) .text-gray-600,
+:host-context(.dark) .text-gray-700,
+:host-context(.dark) .text-gray-900 {
+  color: #f7f5ee;
+}
+
+:host-context(.dark) .text-gray-500 {
+  color: rgba(247, 245, 238, 0.7);
+}
+
+:host-context(.dark) input,
+:host-context(.dark) select,
+:host-context(.dark) textarea {
+  background-color: #1a1f21;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f7f5ee;
+}
+
+:host-context(.dark) input:focus,
+:host-context(.dark) select:focus,
+:host-context(.dark) textarea:focus {
+  border-color: rgba(122, 162, 170, 0.65);
+  box-shadow: 0 0 0 2px rgba(44, 74, 82, 0.35);
+}
+
+:host-context(.dark) input::placeholder,
+:host-context(.dark) textarea::placeholder {
+  color: rgba(247, 245, 238, 0.4);
+}
+
+:host-context(.dark) .bg-gray-100 {
+  background-color: rgba(36, 42, 46, 0.9);
+}
