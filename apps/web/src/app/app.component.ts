@@ -41,7 +41,6 @@ import { LanguageSelectorComponent } from './shared/components/language-selector
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
-import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
 
 @Component({
   selector: 'app-root',
@@ -64,7 +63,6 @@ import { PwaInstallBannerComponent } from './shared/components/pwa-install-banne
     HelpButtonComponent,
     ToastComponent,
     MobileBottomNavComponent,
-    PwaInstallBannerComponent,
   ],
   templateUrl: './app.component.html',
   styles: [

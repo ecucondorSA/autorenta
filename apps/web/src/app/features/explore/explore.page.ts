@@ -63,6 +63,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
       pricePerDay: car.price_per_day,
       currency: car.currency || 'ARS',
+      regionId: car.region_id,
       lat: car.location_lat || 0,
       lng: car.location_lng || 0,
       updatedAt: car.updated_at || new Date().toISOString(),

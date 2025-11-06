@@ -26,7 +26,157 @@
       </button>
     </div>
 
-    <div class="p-6">
+    <div class="p-6 space-y-6">
+      <!-- Deposit Type Selector -->
+      <div class="space-y-3">
+        <label class="block text-sm font-semibold text-gray-900 dark:text-white">
+          ¿Qué tipo de depósito deseas realizar?
+        </label>
+
+        <!-- Protected Credit Option -->
+        <div
+          (click)="depositType.set('protected_credit')"
+          class="p-4 rounded-xl border-2 cursor-pointer transition-all"
+          [class.border-accent-petrol]="depositType() === 'protected_credit'"
+          [class.bg-accent-petrol/5]="depositType() === 'protected_credit'"
+          [class.border-gray-200]="depositType() !== 'protected_credit'"
+          [class.bg-white]="depositType() !== 'protected_credit'"
+          [class.dark:border-accent-petrol/50]="depositType() === 'protected_credit'"
+          [class.dark:bg-accent-petrol/10]="depositType() === 'protected_credit'"
+          [class.dark:border-gray-600]="depositType() !== 'protected_credit'"
+          [class.dark:bg-gray-700]="depositType() !== 'protected_credit'"
+        >
+          <div class="flex items-start gap-3">
+            <div
+              class="flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all"
+              [class.border-accent-petrol]="depositType() === 'protected_credit'"
+              [class.bg-accent-petrol]="depositType() === 'protected_credit'"
+              [class.border-gray-300]="depositType() !== 'protected_credit'"
+              [class.dark:border-gray-500]="depositType() !== 'protected_credit'"
+            >
+              <div
+                *ngIf="depositType() === 'protected_credit'"
+                class="w-2.5 h-2.5 rounded-full bg-white"
+              ></div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <p
+                  class="text-base font-bold"
+                  [class.text-accent-petrol]="depositType() === 'protected_credit'"
+                  [class.text-gray-900]="depositType() !== 'protected_credit'"
+                  [class.dark:text-accent-petrol]="depositType() === 'protected_credit'"
+                  [class.dark:text-white]="depositType() !== 'protected_credit'"
+                >
+                  Crédito Autorentar (No retirable)
+                </p>
+                <span
+                  *ngIf="depositType() === 'protected_credit'"
+                  class="px-2 py-0.5 text-xs font-semibold rounded-full bg-accent-petrol text-white"
+                >
+                  Seleccionado
+                </span>
+              </div>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                Para reservar sin tarjeta. Este monto queda protegido y se reutiliza automáticamente
+                en cada reserva.
+              </p>
+              <ul class="mt-2 space-y-1">
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Se usa automáticamente para garantías de reservas
+                </li>
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Se libera después de cada viaje completado
+                </li>
+                <li class="flex items-center gap-2 text-xs text-warning-600 dark:text-warning-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  No se puede retirar a cuenta bancaria
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Withdrawable Funds Option -->
+        <div
+          (click)="depositType.set('withdrawable')"
+          class="p-4 rounded-xl border-2 cursor-pointer transition-all"
+          [class.border-primary-500]="depositType() === 'withdrawable'"
+          [class.bg-primary-50]="depositType() === 'withdrawable'"
+          [class.border-gray-200]="depositType() !== 'withdrawable'"
+          [class.bg-white]="depositType() !== 'withdrawable'"
+          [class.dark:border-primary-400]="depositType() === 'withdrawable'"
+          [class.dark:bg-primary-500/10]="depositType() === 'withdrawable'"
+          [class.dark:border-gray-600]="depositType() !== 'withdrawable'"
+          [class.dark:bg-gray-700]="depositType() !== 'withdrawable'"
+        >
+          <div class="flex items-start gap-3">
+            <div
+              class="flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all"
+              [class.border-primary-500]="depositType() === 'withdrawable'"
+              [class.bg-primary-500]="depositType() === 'withdrawable'"
+              [class.border-gray-300]="depositType() !== 'withdrawable'"
+              [class.dark:border-gray-500]="depositType() !== 'withdrawable'"
+            >
+              <div
+                *ngIf="depositType() === 'withdrawable'"
+                class="w-2.5 h-2.5 rounded-full bg-white"
+              ></div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <p
+                  class="text-base font-bold"
+                  [class.text-primary-700]="depositType() === 'withdrawable'"
+                  [class.text-gray-900]="depositType() !== 'withdrawable'"
+                  [class.dark:text-primary-400]="depositType() === 'withdrawable'"
+                  [class.dark:text-white]="depositType() !== 'withdrawable'"
+                >
+                  Fondos Retirables
+                </p>
+                <span
+                  *ngIf="depositType() === 'withdrawable'"
+                  class="px-2 py-0.5 text-xs font-semibold rounded-full bg-primary-600 text-white"
+                >
+                  Seleccionado
+                </span>
+              </div>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                Para pagar alquileres o retirar a tu cuenta bancaria. Máxima flexibilidad.
+              </p>
+              <ul class="mt-2 space-y-1">
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Puedes usarlo para pagar alquileres
+                </li>
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Se puede retirar a tu cuenta bancaria en cualquier momento
+                </li>
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  También se puede transferir a otros usuarios
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >Monto en ARS</label

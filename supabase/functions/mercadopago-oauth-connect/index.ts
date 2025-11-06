@@ -114,7 +114,7 @@ serve(async (req) => {
 
     // Redirect URIs permitidos
     const PRODUCTION_REDIRECT = Deno.env.get('MERCADOPAGO_OAUTH_REDIRECT_URI') ||
-      'https://autorenta.com.ar/auth/mercadopago/callback';
+      'https://autorentar.com/auth/mercadopago/callback';
     const DEV_REDIRECT = Deno.env.get('MERCADOPAGO_OAUTH_REDIRECT_URI_DEV') ||
       'http://localhost:4200/auth/mercadopago/callback';
 

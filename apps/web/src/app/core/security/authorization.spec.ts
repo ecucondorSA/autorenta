@@ -136,8 +136,8 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         await bookingsService.cancelBooking(mockBookingFromOtherUser.id);
         fail('Debería haber lanzado error de autorización');
       } catch (error: unknown) {
-        expect(error.code).toBe('UNAUTHORIZED');
-        expect(error.message).toContain('No autorizado');
+        expect((error as any).code).toBe('UNAUTHORIZED');
+        expect((error as Error).message).toContain('No autorizado');
       }
     });
 
@@ -195,8 +195,8 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         await bookingsService.cancelBooking(mockBooking.id);
         fail('Debería bloquear cancelación < 24h');
       } catch (error: unknown) {
-        expect(error.code).toBe('CANCELLATION_BLOCKED');
-        expect(error.message).toContain('24 horas');
+        expect((error as any).code).toBe('CANCELLATION_BLOCKED');
+        expect((error as Error).message).toContain('24 horas');
       }
     });
   });
@@ -240,8 +240,8 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         await adminService.listRecentBookings();
         fail('Usuario normal no debería acceder a todas las bookings');
       } catch (error: unknown) {
-        expect(error.code).toBe('FORBIDDEN');
-        expect(error.message).toContain('administradores');
+        expect((error as any).code).toBe('FORBIDDEN');
+        expect((error as Error).message).toContain('administradores');
       }
     });
 
@@ -286,7 +286,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         await adminService.listRecentBookings();
         fail('Usuario sin is_admin no debería acceder');
       } catch (error: unknown) {
-        expect(error.code).toBe('FORBIDDEN');
+        expect((error as any).code).toBe('FORBIDDEN');
       }
     });
   });
@@ -349,8 +349,8 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         });
         fail('Debería haber lanzado error de autorización');
       } catch (error: unknown) {
-        expect(error.code).toBe('UNAUTHORIZED');
-        expect(error.message).toContain('dueño del auto');
+        expect((error as any).code).toBe('UNAUTHORIZED');
+        expect((error as Error).message).toContain('dueño del auto');
       }
     });
 
@@ -367,7 +367,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
       // Mock: Servicio valida ownership
       (carsService.updateCar as jasmine.Spy).and.callFake(
-        async (carId: string, updates: unknown) => {
+        async (carId: string, updates: Partial<typeof car>) => {
           const user = await authService.getCurrentUser();
           if (!user || user.id !== car.owner_id) {
             throw { code: 'UNAUTHORIZED', message: 'No autorizado' };
@@ -396,7 +396,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
 
       // Mock: Admin puede modificar estado de cualquier auto
       (carsService.updateCar as jasmine.Spy).and.callFake(
-        async (carId: string, updates: unknown) => {
+        async (carId: string, updates: Partial<typeof mockCar>) => {
           const user = await authService.getCurrentUser();
           const isAdmin = user && (user as any).is_admin;
           if (isAdmin) {
@@ -480,7 +480,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         await bookingsService.cancelBooking('any-booking-id');
         fail('Debería bloquear acciones sin autenticación');
       } catch (error: unknown) {
-        expect(error.code).toBe('UNAUTHENTICATED');
+        expect((error as any).code).toBe('UNAUTHENTICATED');
       }
     });
 
@@ -498,7 +498,7 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
         await authService.getCurrentUser();
         fail('Debería rechazar token expirado');
       } catch (error: unknown) {
-        expect(error.code).toBe('TOKEN_EXPIRED');
+        expect((error as any).code).toBe('TOKEN_EXPIRED');
       }
     });
 

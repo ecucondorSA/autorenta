@@ -216,6 +216,9 @@ module.exports = {
 
         // Bounce (sutil)
         'bounce-subtle': 'bounceSubtle 1s ease-in-out infinite',
+
+        // Shake (error feedback)
+        'shake': 'shake 0.5s ease-in-out',
       },
 
       keyframes: {
@@ -281,6 +284,13 @@ module.exports = {
             transform: 'translateY(-5%)',
             animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)',
           },
+        },
+
+        // Shake (error feedback)
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-10px)' },
+          '20%, 40%, 60%, 80%': { transform: 'translateX(10px)' },
         },
       },
 

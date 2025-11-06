@@ -1,5 +1,3 @@
-
-import { describe, it, expect } from 'vitest';
 // Assuming pricing.service.ts exists in the same directory or a known path
 // You might need to adjust the import path based on your actual project structure
 // For now, let's assume a simple mock or direct implementation for computeQuote
@@ -53,7 +51,12 @@ describe('pricing', () => {
       coupon_pct: 0         // sin cupón
     });
     expect(quote.total_cents).toBeGreaterThan(0);
-    expect(quote.breakdown.tax_cents).toBe(Math.round(quote.subtotal_cents * 0.21));
+
+    // Tax is calculated on (subtotal + service_fee), not just subtotal
+    const subtotal = quote.subtotal_cents;
+    const serviceFee = quote.service_fee_cents;
+    const expectedTax = Math.round((subtotal + serviceFee) * 0.21);
+    expect(quote.breakdown.tax_cents).toBe(expectedTax);
   });
 
   it('aplica cupón y respeta mínimos', () => {

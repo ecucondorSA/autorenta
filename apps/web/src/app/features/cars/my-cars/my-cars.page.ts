@@ -2,9 +2,12 @@ import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@a
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { ModalController } from '@ionic/angular/standalone';
 import { CarsService } from '../../../core/services/cars.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Car, CarStatus } from '../../../core/models';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
+import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { from } from 'rxjs';
 
@@ -17,6 +20,8 @@ import { from } from 'rxjs';
 })
 export class MyCarsPage {
   private readonly carsService = inject(CarsService);
+  private readonly authService = inject(AuthService);
+  private readonly modalCtrl = inject(ModalController);
   private readonly router = inject(Router);
 
   readonly cars = signal<Car[]>([]);
@@ -69,5 +74,28 @@ export class MyCarsPage {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  async openOnboardingModal(): Promise<void> {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      alert('No pudimos identificar tu cuenta. Volvé a iniciar sesión e intentá nuevamente.');
+      return;
+    }
+
+    const modal = await this.modalCtrl.create({
+      component: MpOnboardingModalComponent,
+      backdropDismiss: true,
+    });
+
+    await modal.present();
+    await modal.onWillDismiss();
+
+    // Recargar lista de autos para actualizar estados
+    this.loading.set(true);
+    this.carsService.listMyCars().then(cars => {
+      this.cars.set(cars);
+      this.loading.set(false);
+    });
   }
 }

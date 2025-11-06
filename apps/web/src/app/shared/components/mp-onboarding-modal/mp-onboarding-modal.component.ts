@@ -8,9 +8,9 @@ import {
 import { AuthService } from '../../../core/services/auth.service';
 
 /**
- * Modal para onboarding de Mercado Pago Marketplace
+ * Modal para onboarding de plataformas de pago
  *
- * Permite a los propietarios vincular su cuenta de Mercado Pago
+ * Permite a los propietarios vincular sus cuentas de Mercado Pago y PayPal
  * para recibir pagos automáticamente vía split payments.
  *
  * Uso:
@@ -32,7 +32,7 @@ import { AuthService } from '../../../core/services/auth.service';
   template: `
     <ion-header>
       <ion-toolbar color="primary">
-        <ion-title>Vinculá tu Mercado Pago</ion-title>
+        <ion-title>Conectar pagos</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="dismiss()" [disabled]="loading()">
             <ion-icon name="close" slot="icon-only"></ion-icon>
@@ -45,195 +45,128 @@ import { AuthService } from '../../../core/services/auth.service';
       <!-- Loading State -->
       <div *ngIf="loading()" class="loading-container">
         <ion-spinner name="crescent"></ion-spinner>
-        <p>Preparando vinculación...</p>
+        <p>Preparando conexión...</p>
       </div>
 
       <!-- Main Content -->
       <div *ngIf="!loading()" class="onboarding-content">
-        <!-- Header Icon -->
-        <div class="header-icon">
-          <ion-icon name="wallet" color="primary"></ion-icon>
+        <!-- Payment Methods Logos -->
+        <div class="payment-logos-section">
+          <div class="payment-logos">
+            <!-- Mercado Pago -->
+            <div class="payment-logo-item">
+              <svg width="60" height="60" viewBox="0 0 80 80" fill="none">
+                <rect width="80" height="80" rx="16" fill="#00B4E5"/>
+                <path d="M20 20h40v40H20z" fill="white"/>
+                <path d="M32 32h16v4H32v-4zm0 8h16v4H32v-4zm0 8h12v4H32v-4z" fill="#00B4E5"/>
+              </svg>
+              <span class="logo-label">Mercado Pago</span>
+            </div>
+
+            <!-- PayPal -->
+            <div class="payment-logo-item">
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <rect width="60" height="60" rx="12" fill="#0070BA"/>
+                <path d="M8.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H14v7.5H8.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z" fill="white"/>
+                <path d="M35.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H41v7.5h-5.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z" fill="white"/>
+              </svg>
+              <span class="logo-label">PayPal</span>
+            </div>
+          </div>
+
+          <p class="logos-subtitle">Pagos seguros y confiables</p>
         </div>
 
-        <!-- Title -->
-        <h2 class="modal-title">Recibí pagos automáticamente</h2>
+        <!-- Main Message -->
+        <div class="hero-section">
+          <h1 class="hero-title">¡Conectá tus pagos y empezá a ganar!</h1>
+          <p class="hero-subtitle">
+            Recibí el dinero de tus alquileres directamente en Mercado Pago o PayPal. Miles de anfitriones ya lo hicieron.
+          </p>
+        </div>
 
-        <!-- Description -->
-        <p class="description">
-          Para listar tu auto y recibir alquileres, necesitás vincular tu cuenta de Mercado Pago.
-          Así recibirás el dinero directamente en tu cuenta al finalizar cada reserva.
-        </p>
-
-        <!-- Status Overview -->
-        <ion-card class="status-card" *ngIf="status() && !loading()">
-          <ion-card-content>
-            <div
-              class="status-header"
-              [ngClass]="{
-                'status-header--ready': status()?.isApproved && status()?.hasActiveTokens,
-                'status-header--warn': !status()?.isApproved || !status()?.hasActiveTokens,
-              }"
-            >
-              <span class="status-indicator"></span>
-              <div class="status-texts">
-                <p class="status-title">Estado actual</p>
-                <p
-                  class="status-subtitle"
-                  *ngIf="status()?.isApproved && status()?.hasActiveTokens"
-                >
-                  Tu cuenta está lista para recibir pagos con split automático.
-                </p>
-                <p class="status-subtitle" *ngIf="!status()?.isApproved">
-                  Aún no completaste la autorización. Vinculá tu cuenta para habilitar cobros.
-                </p>
-                <p
-                  class="status-subtitle"
-                  *ngIf="status()?.isApproved && !status()?.hasActiveTokens"
-                >
-                  Tus credenciales expiraron. Re-autorizá Mercado Pago para mantener el split
-                  activo.
-                </p>
-              </div>
-              <ion-button
-                size="small"
-                fill="clear"
-                color="primary"
-                (click)="refreshStatus()"
-                [disabled]="loading() || processing()"
-              >
-                <ion-icon slot="start" name="refresh"></ion-icon>
-                Actualizar
-              </ion-button>
-            </div>
-
-            <div class="status-meta" *ngIf="status()?.collectorId">
-              <ion-icon name="id-card"></ion-icon>
-              <span>Collector ID: {{ status()?.collectorId }}</span>
-            </div>
-
-            <div class="status-meta" *ngIf="status()?.completedAt">
-              <ion-icon name="time"></ion-icon>
-              <span>
-                Última vinculación: {{ status()?.completedAt | date: 'dd/MM/yyyy HH:mm' }}
-              </span>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- Benefits List -->
-        <div class="benefits-section">
-          <h3 class="section-title">✨ Beneficios</h3>
-
-          <div class="benefit-item">
-            <ion-icon name="flash" color="success"></ion-icon>
-            <div class="benefit-text">
-              <strong>Pagos instantáneos</strong>
-              <span>Recibís el dinero automáticamente cuando termina el alquiler</span>
-            </div>
-          </div>
-
-          <div class="benefit-item">
-            <ion-icon name="shield-checkmark" color="success"></ion-icon>
-            <div class="benefit-text">
-              <strong>Seguro y protegido</strong>
-              <span>Mercado Pago garantiza la protección de todas las transacciones</span>
-            </div>
-          </div>
-
-          <div class="benefit-item">
+        <!-- Key Benefit -->
+        <div class="benefit-highlight">
+          <div class="benefit-icon">
             <ion-icon name="cash" color="success"></ion-icon>
-            <div class="benefit-text">
-              <strong>Transparente</strong>
-              <span>Ves exactamente cuánto vas a recibir antes de cada alquiler</span>
-            </div>
           </div>
+          <div class="benefit-content">
+            <h3 class="benefit-title">Dinero directo a tu cuenta</h3>
+            <p class="benefit-description">
+              Cuando alguien alquila tu auto, el pago llega automáticamente a tu Mercado Pago.
+            </p>
+          </div>
+        </div>
 
-          <div class="benefit-item">
-            <ion-icon name="trending-up" color="success"></ion-icon>
-            <div class="benefit-text">
-              <strong>Sin comisiones ocultas</strong>
-              <span>Autorentar retiene solo 15% + fees de Mercado Pago</span>
+        <!-- Trust Indicators -->
+        <div class="trust-section">
+          <div class="trust-item">
+            <ion-icon name="shield-checkmark" color="success"></ion-icon>
+            <span>100% Seguro</span>
+          </div>
+          <div class="trust-item">
+            <ion-icon name="time" color="primary"></ion-icon>
+            <span>Toma 30 segundos</span>
+          </div>
+          <div class="trust-item">
+            <ion-icon name="refresh-circle" color="primary"></ion-icon>
+            <span>Podés desconectar cuando quieras</span>
+          </div>
+        </div>
+
+        <!-- Social Proof -->
+        <div class="social-proof">
+          <div class="social-proof-content">
+            <div class="social-proof-icon">
+              <ion-icon name="people" color="primary"></ion-icon>
+            </div>
+            <div class="social-proof-text">
+              <p><strong>+2,000 anfitriones</strong> ya conectaron su cuenta</p>
             </div>
           </div>
         </div>
 
-        <!-- How it Works -->
-        <div class="how-it-works">
-          <h3 class="section-title">📋 ¿Cómo funciona?</h3>
-
-          <div class="step-item">
-            <div class="step-number">1</div>
-            <div class="step-content">
-              <strong>Vinculás tu cuenta</strong>
-              <span>Autorizás a Autorentar para procesar pagos</span>
-            </div>
-          </div>
-
-          <div class="step-item">
-            <div class="step-number">2</div>
-            <div class="step-content">
-              <strong>Listás tu auto</strong>
-              <span>Publicás tu vehículo con precio y disponibilidad</span>
-            </div>
-          </div>
-
-          <div class="step-item">
-            <div class="step-number">3</div>
-            <div class="step-content">
-              <strong>Recibís pagos automáticamente</strong>
-              <span>Cuando alguien alquila, el dinero llega a tu cuenta MP</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Warning Box -->
-        <ion-card class="warning-box" color="warning">
-          <ion-card-content>
-            <ion-icon name="information-circle" slot="start"></ion-icon>
-            <div class="warning-text">
-              <strong>Necesitás tener una cuenta de Mercado Pago</strong>
-              <p>
-                Si no tenés, podés crearla gratis en
-                <a href="https://www.mercadopago.com.ar" target="_blank">mercadopago.com.ar</a>
-              </p>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
+        <!-- Primary CTA -->
+        <div class="cta-section">
           <ion-button
             expand="block"
             size="large"
+            class="primary-cta"
             (click)="startOnboarding()"
             [disabled]="processing()"
           >
             <ion-icon slot="start" name="logo-mercadopago" *ngIf="!processing()"></ion-icon>
             <ion-spinner name="crescent" slot="start" *ngIf="processing()"></ion-spinner>
-            {{ processing() ? 'Conectando...' : 'Vincular Mercado Pago' }}
+            <span class="cta-text">{{ processing() ? 'Conectando...' : 'Conectar pagos' }}</span>
           </ion-button>
 
+          <p class="cta-disclaimer">
+            Te redirigiremos a Mercado Pago o PayPal para autorizar la conexión de forma segura.
+          </p>
+        </div>
+
+        <!-- Secondary Actions -->
+        <div class="secondary-actions">
           <ion-button
             expand="block"
-            fill="outline"
+            fill="clear"
+            size="small"
             (click)="refreshStatus()"
             [disabled]="processing() || loading()"
+            class="secondary-btn"
           >
             <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
-            Ya lo conecté, verificar
-          </ion-button>
-
-          <ion-button expand="block" fill="clear" (click)="dismiss()" [disabled]="processing()">
-            Lo haré después
+            Ya conecté mi cuenta
           </ion-button>
         </div>
 
-        <!-- Terms -->
-        <ion-note color="medium" class="terms">
-          Al vincular tu cuenta, autorizás a Autorentar a procesar pagos en tu nombre. Podés
-          desvincular tu cuenta en cualquier momento desde tu perfil.
-          <a href="/terms" target="_blank">Ver términos completos</a>
-        </ion-note>
+        <!-- Minimal Terms -->
+        <div class="terms-section">
+          <p class="terms-text">
+            Autorizás a AutoRenta a procesar pagos en tu nombre.
+            <a href="/terms" target="_blank" class="terms-link">Ver términos</a>
+          </p>
+        </div>
       </div>
 
       <!-- Error State -->
@@ -273,246 +206,209 @@ import { AuthService } from '../../../core/services/auth.service';
       }
 
       .onboarding-content {
-        max-width: 600px;
+        max-width: 400px;
         margin: 0 auto;
+        text-align: center;
       }
 
-      .header-icon {
-        text-align: center;
-        margin-bottom: 1.5rem;
-
-        ion-icon {
-          font-size: 80px;
-        }
-      }
-
-      .modal-title {
-        font-size: 1.75rem;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 1rem;
-        color: var(--ion-color-dark);
-      }
-
-      .description {
-        text-align: center;
-        color: var(--ion-color-medium);
-        line-height: 1.6;
+      .payment-logos-section {
         margin-bottom: 2rem;
-        font-size: 1rem;
       }
 
-      .status-card {
-        margin-bottom: 2rem;
-        border-radius: 18px;
-        box-shadow: 0 18px 40px -28px rgba(27, 57, 72, 0.45);
-      }
-
-      .status-header {
+      .payment-logos {
         display: flex;
-        align-items: flex-start;
-        gap: 1rem;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 1rem;
       }
 
-      .status-header--ready .status-indicator {
-        background: var(--ion-color-success);
-        box-shadow: 0 0 0 6px rgba(58, 190, 117, 0.18);
-      }
-
-      .status-header--warn .status-indicator {
-        background: var(--ion-color-warning);
-        box-shadow: 0 0 0 6px rgba(255, 178, 30, 0.25);
-      }
-
-      .status-indicator {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        background: var(--ion-color-medium);
-        flex-shrink: 0;
-        margin-top: 0.4rem;
-        transition: all 0.3s ease;
-      }
-
-      .status-texts {
-        flex: 1;
+      .payment-logo-item {
         display: flex;
         flex-direction: column;
-        gap: 0.35rem;
-      }
-
-      .status-title {
-        font-weight: 600;
-        color: var(--ion-color-dark);
-        font-size: 0.95rem;
-      }
-
-      .status-subtitle {
-        font-size: 0.85rem;
-        color: var(--ion-color-medium);
-        line-height: 1.45;
-      }
-
-      .status-meta {
-        display: flex;
         align-items: center;
         gap: 0.5rem;
+      }
+
+      .logo-label {
         font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--ion-color-dark);
+        text-align: center;
+      }
+
+      .logos-subtitle {
+        font-size: 0.85rem;
         color: var(--ion-color-medium);
-        margin-top: 0.75rem;
+        text-align: center;
+        margin: 0;
+        font-weight: 400;
       }
 
-      .status-meta ion-icon {
-        font-size: 16px;
-        color: var(--ion-color-primary);
+      .hero-section {
+        margin-bottom: 2.5rem;
       }
 
-      .benefits-section,
-      .how-it-works {
+      .hero-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--ion-color-dark);
+        margin-bottom: 1rem;
+        line-height: 1.3;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+        color: var(--ion-color-medium);
+        line-height: 1.5;
+      }
+
+      .benefit-highlight {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border: 1px solid #0ea5e9;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+        text-align: left;
+      }
+
+      .benefit-icon {
+        flex-shrink: 0;
+
+        ion-icon {
+          font-size: 32px;
+          color: var(--ion-color-success);
+        }
+      }
+
+      .benefit-content {
+        flex: 1;
+      }
+
+      .benefit-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .benefit-description {
+        font-size: 0.9rem;
+        color: var(--ion-color-medium);
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      .trust-section {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        gap: 0.5rem;
+      }
+
+      .trust-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+
+        ion-icon {
+          font-size: 24px;
+          margin-bottom: 0.25rem;
+        }
+
+        span {
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          text-align: center;
+          line-height: 1.3;
+          font-weight: 500;
+        }
+      }
+
+      .social-proof {
+        margin-bottom: 2.5rem;
+      }
+
+      .social-proof-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        background: rgba(59, 130, 246, 0.05);
+        border: 1px solid rgba(59, 130, 246, 0.1);
+        border-radius: 8px;
+        padding: 0.75rem;
+      }
+
+      .social-proof-icon {
+        ion-icon {
+          font-size: 20px;
+          color: var(--ion-color-primary);
+        }
+      }
+
+      .social-proof-text {
+        p {
+          margin: 0;
+          font-size: 0.85rem;
+          color: var(--ion-color-primary);
+          font-weight: 500;
+        }
+      }
+
+      .cta-section {
         margin-bottom: 2rem;
       }
 
-      .section-title {
-        font-size: 1.1rem;
+      .primary-cta {
+        --border-radius: 12px;
+        --background: linear-gradient(135deg, #00B4E5 0%, #0099CC 100%);
+        --background-activated: linear-gradient(135deg, #0099CC 0%, #0088B8 100%);
+        --color: white;
         font-weight: 600;
+        font-size: 1.1rem;
+        min-height: 56px;
+        box-shadow: 0 4px 14px rgba(0, 180, 229, 0.3);
         margin-bottom: 1rem;
-        color: var(--ion-color-dark);
-      }
 
-      .benefit-item {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 1.25rem;
-        align-items: flex-start;
-
-        ion-icon {
-          font-size: 28px;
-          flex-shrink: 0;
-          margin-top: 2px;
-        }
-
-        .benefit-text {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-
-          strong {
-            color: var(--ion-color-dark);
-            font-size: 0.95rem;
-          }
-
-          span {
-            color: var(--ion-color-medium);
-            font-size: 0.85rem;
-            line-height: 1.4;
-          }
-        }
-      }
-
-      .step-item {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 1.25rem;
-        align-items: flex-start;
-
-        .step-number {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background: var(--ion-color-primary);
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 0.9rem;
-          flex-shrink: 0;
-        }
-
-        .step-content {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-          padding-top: 2px;
-
-          strong {
-            color: var(--ion-color-dark);
-            font-size: 0.95rem;
-          }
-
-          span {
-            color: var(--ion-color-medium);
-            font-size: 0.85rem;
-          }
-        }
-      }
-
-      .warning-box {
-        margin: 1.5rem 0;
-
-        ion-card-content {
-          display: flex;
-          gap: 0.75rem;
-          align-items: flex-start;
-
-          ion-icon {
-            font-size: 24px;
-            flex-shrink: 0;
-            margin-top: 2px;
-          }
-
-          .warning-text {
-            flex: 1;
-
-            strong {
-              display: block;
-              margin-bottom: 0.5rem;
-              font-size: 0.9rem;
-            }
-
-            p {
-              margin: 0;
-              font-size: 0.85rem;
-              line-height: 1.4;
-
-              a {
-                color: var(--ion-color-primary);
-                text-decoration: underline;
-              }
-            }
-          }
-        }
-      }
-
-      .action-buttons {
-        margin: 2rem 0 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-
-        ion-button[expand='block'] {
-          --border-radius: 12px;
+        .cta-text {
           font-weight: 600;
         }
-
-        ion-button[fill='outline'] {
-          --border-color: var(--ion-color-primary);
-          --color: var(--ion-color-primary);
-          --background: rgba(44, 74, 82, 0.05);
-        }
       }
 
-      .terms {
-        display: block;
+      .cta-disclaimer {
+        font-size: 0.8rem;
+        color: var(--ion-color-medium);
         text-align: center;
-        font-size: 0.75rem;
-        line-height: 1.5;
-        margin-top: 1rem;
-        padding: 0 1rem;
+        margin: 0;
+        line-height: 1.4;
+      }
 
-        a {
+      .secondary-actions {
+        margin-bottom: 2rem;
+      }
+
+      .secondary-btn {
+        --color: var(--ion-color-primary);
+        font-size: 0.9rem;
+      }
+
+      .terms-section {
+        text-align: center;
+      }
+
+      .terms-text {
+        font-size: 0.8rem;
+        color: var(--ion-color-medium);
+        line-height: 1.4;
+        margin: 0;
+
+        .terms-link {
           color: var(--ion-color-primary);
           text-decoration: underline;
         }
@@ -546,17 +442,43 @@ import { AuthService } from '../../../core/services/auth.service';
         }
       }
 
-      @media (max-width: 576px) {
-        .modal-title {
-          font-size: 1.5rem;
+      @media (max-width: 480px) {
+        .onboarding-content {
+          max-width: 100%;
         }
 
-        .header-icon ion-icon {
-          font-size: 64px;
+        .payment-logos {
+          flex-direction: column;
+          gap: 1.5rem;
         }
 
-        .benefit-item ion-icon {
-          font-size: 24px;
+        .hero-title {
+          font-size: 1.3rem;
+        }
+
+        .benefit-highlight {
+          padding: 1rem;
+        }
+
+        .trust-section {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .trust-item {
+          flex-direction: row;
+          justify-content: center;
+          gap: 0.5rem;
+
+          ion-icon {
+            font-size: 20px;
+            margin-bottom: 0;
+          }
+
+          span {
+            text-align: left;
+            font-size: 0.8rem;
+          }
         }
       }
     `,

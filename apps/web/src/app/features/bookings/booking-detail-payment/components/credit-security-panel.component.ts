@@ -13,9 +13,12 @@ import { CommonModule } from '@angular/common';
 import {
   RiskSnapshot,
   WalletLock,
+  FxSnapshot,
   formatUsd,
+  formatArs,
 } from '../../../../core/models/booking-detail-payment.model';
 import { WalletService } from '../../../../core/services/wallet.service';
+import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 
 /**
  * Panel para gestionar Crédito de Seguridad (wallet no retirable)
@@ -24,7 +27,7 @@ import { WalletService } from '../../../../core/services/wallet.service';
 @Component({
   selector: 'app-credit-security-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReembolsabilityBadgeComponent],
   template: `
     <div
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
@@ -46,7 +49,7 @@ import { WalletService } from '../../../../core/services/wallet.service';
             />
           </svg>
           <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
-            Crédito de Seguridad
+            Garantía con Wallet
           </h3>
         </div>
         @if (lockStatus() === 'locked') {
@@ -70,47 +73,47 @@ import { WalletService } from '../../../../core/services/wallet.service';
         class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/10 rounded-lg p-4 mb-4 transition-colors duration-300"
       >
         <p class="text-sm text-gray-700 dark:text-pearl-light/70 mb-2">
-          Crédito de Seguridad requerido
+          Garantía con Wallet requerida
         </p>
-        <div class="flex items-baseline justify-between">
-          <p class="text-3xl font-bold text-purple-900 dark:text-purple-200">
-            {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
-          </p>
+        <div class="flex items-baseline justify-between mb-3">
+          <div>
+            <p class="text-3xl font-bold text-purple-900 dark:text-purple-200">
+              {{ formatArs(creditSecurityArs()) }}
+            </p>
+            <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
+              ≈ {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
+            </p>
+          </div>
           <div class="text-right">
             <p class="text-xs text-gray-600 dark:text-pearl-light/60">
               {{ riskSnapshot.vehicleValueUsd <= 20000 ? 'Autos ≤ $20k' : 'Autos > $20k' }}
             </p>
+            <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-1">
+              TC: {{ fxSnapshot.rate | number:'1.2-2' }} ARS/USD
+            </p>
           </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <app-reembolsability-badge
+            type="no-reembolsable"
+            customTooltip="Este monto queda bloqueado en tu wallet (no puedes retirarlo a tu banco)."
+          ></app-reembolsability-badge>
+          <app-reembolsability-badge
+            type="reutilizable"
+            customTooltip="Si no se usa para daños, queda disponible como saldo para futuras reservas en AutoRenta."
+          ></app-reembolsability-badge>
         </div>
       </div>
 
       <!-- Explanation -->
       <div
-        class="mb-4 p-3 bg-yellow-50 border border-yellow-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg transition-colors duration-300"
+        class="mb-4 p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300"
       >
-        <div class="flex space-x-2">
-          <svg
-            class="w-5 h-5 text-yellow-600 dark:text-warning-200 flex-shrink-0 mt-0.5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-yellow-900 dark:text-warning-50">
-              ⚠️ NO reembolsable
-            </p>
-            <p class="text-xs text-yellow-700 dark:text-warning-200 mt-1">
-              Este crédito <strong>NO es reembolsable</strong> y queda como saldo
-              <strong>no retirable</strong> en tu wallet. Se usa primero para gastos/daños. Si no se
-              usa, queda disponible para futuras reservas.
-            </p>
-          </div>
-        </div>
+        <p class="text-sm text-gray-700 dark:text-pearl-light/80">
+          <strong>¿Cómo funciona?</strong> Este monto queda como saldo de garantía en tu wallet
+          (no puedes retirarlo a tu banco, pero puedes usarlo en futuras reservas). Si hay daños, se
+          descuenta automáticamente. Si no hay daños, el saldo queda disponible para tu próxima reserva.
+        </p>
       </div>
 
       <!-- Current Balance & Status -->
@@ -382,6 +385,7 @@ import { WalletService } from '../../../../core/services/wallet.service';
 })
 export class CreditSecurityPanelComponent implements OnInit {
   @Input({ required: true }) riskSnapshot!: RiskSnapshot;
+  @Input({ required: true }) fxSnapshot!: FxSnapshot;
   @Input() userId = '';
   @Input() bookingId?: string;
   @Input() currentLockInput: WalletLock | null = null;
@@ -406,7 +410,12 @@ export class CreditSecurityPanelComponent implements OnInit {
     return this.currentProtectedCredit() - this.riskSnapshot.creditSecurityUsd;
   });
 
+  protected creditSecurityArs = computed(() => {
+    return this.riskSnapshot.creditSecurityUsd * this.fxSnapshot.rate;
+  });
+
   formatUsd = formatUsd;
+  formatArs = formatArs;
   Math = Math;
 
   constructor() {

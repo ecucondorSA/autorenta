@@ -1,16 +1,123 @@
-<div class="install-prompt" *ngIf="visible()" [@slideUp]>
+<div 
+  class="install-prompt" 
+  *ngIf="visible()" 
+  [@slideUp]
+  role="dialog"
+  aria-labelledby="pwa-install-title"
+  aria-describedby="pwa-install-description"
+  aria-modal="true"
+>
   <div class="prompt-content">
-    <!-- Icon -->
+    <!-- Logo -->
     <div class="prompt-icon">
-      <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-      </svg>
+      <img
+        src="/assets/images/autorentar-logo.png"
+        alt="Autorentar Logo"
+        class="prompt-logo"
+        loading="eager"
+      />
     </div>
 
     <!-- Content -->
     <div class="prompt-text">
-      <h3 class="prompt-title">Instalar Autorentar</h3>
-      <p class="prompt-description">Acceso rápido desde tu pantalla de inicio. Funciona offline.</p>
+      <div class="prompt-title-wrapper">
+        <h3 class="prompt-title" id="pwa-install-title">Instalar Autorentar</h3>
+        <span class="badge-free">✨ Gratis</span>
+      </div>
+      <p class="prompt-description" id="pwa-install-description">
+        {{ getContextualMessage() }}
+      </p>
+      
+      <!-- Security Badges -->
+      <div class="security-badges" *ngIf="showSecurityBadges()">
+        <span class="badge-secure">
+          <svg class="badge-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          HTTPS Seguro
+        </span>
+        <span class="badge-verified">
+          <svg class="badge-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Verificado
+        </span>
+      </div>
+
+      <!-- Benefits List -->
+      <ul class="prompt-benefits" *ngIf="showBenefits()">
+        <li>
+          <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <span>Reserva sin conexión a internet</span>
+        </li>
+        <li>
+          <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span>Notificaciones de tus reservas</span>
+        </li>
+        <li>
+          <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span>Acceso más rápido</span>
+        </li>
+      </ul>
+
+      <!-- Security Info (Expandable) -->
+      <div class="security-info" *ngIf="showSecurityInfo()">
+        <button 
+          type="button"
+          class="security-info-toggle"
+          (click)="toggleSecurityInfo()"
+          [attr.aria-expanded]="securityInfoExpanded()"
+          aria-label="Información de seguridad"
+        >
+          <span>¿Es seguro instalar?</span>
+          <svg 
+            class="toggle-icon" 
+            [class.expanded]="securityInfoExpanded()"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div class="security-info-content" *ngIf="securityInfoExpanded()">
+          <p class="security-info-text">
+            <strong>Autorentar es una PWA (Progressive Web App)</strong> segura. No es una aplicación descargada de una tienda, sino una versión optimizada de nuestro sitio web que puedes instalar directamente en tu dispositivo.
+          </p>
+          <ul class="security-info-list">
+            <li>
+              <svg class="security-check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Protegido con HTTPS y certificado SSL válido</span>
+            </li>
+            <li>
+              <svg class="security-check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>No requiere permisos especiales ni acceso a datos personales</span>
+            </li>
+            <li>
+              <svg class="security-check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Puedes desinstalarla en cualquier momento desde tu dispositivo</span>
+            </li>
+            <li>
+              <svg class="security-check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>No almacena información sensible en tu dispositivo</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <!-- Actions -->
@@ -24,7 +131,7 @@
         }
       </button>
       <button class="btn-dismiss" (click)="dismiss()" [disabled]="installing()" type="button">
-        Ahora no
+        Más tarde
       </button>
     </div>
   </div>
@@ -34,7 +141,7 @@
     class="btn-close"
     (click)="dismiss()"
     [disabled]="installing()"
-    aria-label="Cerrar"
+    aria-label="Cerrar prompt de instalación"
     type="button"
   >
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

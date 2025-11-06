@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import type {
   Review,
   CreateReviewParams,
@@ -30,6 +30,40 @@ interface ReviewWithReviewer {
 })
 export class ReviewsService {
   private readonly supabase = injectSupabase();
+
+  // Signals privados para estado reactivo
+  private readonly reviewsSignal = signal<Review[]>([]);
+  private readonly carStatsSignal = signal<CarStats | null>(null);
+  private readonly userStatsSignal = signal<UserStats | null>(null);
+  private readonly loadingSignal = signal<boolean>(false);
+  private readonly errorSignal = signal<string | null>(null);
+
+  // Exponer signals como readonly
+  readonly reviews = this.reviewsSignal.asReadonly();
+  readonly carStats = this.carStatsSignal.asReadonly();
+  readonly userStats = this.userStatsSignal.asReadonly();
+  readonly loading = this.loadingSignal.asReadonly();
+  readonly error = this.errorSignal.asReadonly();
+
+  // Computed values
+  readonly reviewsCount = computed(() => this.reviews().length);
+  readonly averageRating = computed(() => {
+    const reviews = this.reviews();
+    if (reviews.length === 0) return 0;
+    const total = reviews.reduce((sum, r) => {
+      const avg =
+        (r.rating_cleanliness +
+          r.rating_communication +
+          r.rating_accuracy +
+          r.rating_location +
+          r.rating_checkin +
+          r.rating_value) /
+        6;
+      return sum + avg;
+    }, 0);
+    return Number((total / reviews.length).toFixed(1));
+  });
+  readonly hasReviews = computed(() => this.reviews().length > 0);
 
   /**
    * Create a new review using the v2 system with category ratings
@@ -110,9 +144,12 @@ export class ReviewsService {
   }
 
   /**
-   * Get reviews for a specific car
+   * Load reviews for a specific car (updates signals)
    */
-  async getReviewsForCar(carId: string): Promise<Review[]> {
+  async loadReviewsForCar(carId: string): Promise<void> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
     try {
       const { data, error } = await this.supabase
         .from('reviews')
@@ -129,20 +166,38 @@ export class ReviewsService {
 
       if (error) throw error;
 
-      return (data || []).map((review) => ({
+      const reviews = (data || []).map((review) => ({
         ...review,
         reviewer_name: review.reviewer?.full_name,
         reviewer_avatar: review.reviewer?.avatar_url,
       })) as Review[];
-    } catch (error) {
-      return [];
+
+      this.reviewsSignal.set(reviews);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al cargar reviews';
+      this.errorSignal.set(errorMessage);
+      this.reviewsSignal.set([]);
+    } finally {
+      this.loadingSignal.set(false);
     }
   }
 
   /**
-   * Get user statistics (ratings, badges, etc.)
+   * Get reviews for a specific car (backward compatibility - returns Promise)
+   * @deprecated Use loadReviewsForCar() and subscribe to reviews signal instead
    */
-  async getUserStats(userId: string): Promise<UserStats | null> {
+  async getReviewsForCar(carId: string): Promise<Review[]> {
+    await this.loadReviewsForCar(carId);
+    return this.reviews();
+  }
+
+  /**
+   * Load user statistics (updates signals)
+   */
+  async loadUserStats(userId: string): Promise<void> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
     try {
       const { data, error } = await this.supabase
         .from('user_stats')
@@ -151,16 +206,32 @@ export class ReviewsService {
         .maybeSingle();
 
       if (error) throw error;
-      return data as UserStats | null;
-    } catch (error) {
-      return null;
+      this.userStatsSignal.set(data as UserStats | null);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al cargar estadísticas';
+      this.errorSignal.set(errorMessage);
+      this.userStatsSignal.set(null);
+    } finally {
+      this.loadingSignal.set(false);
     }
   }
 
   /**
-   * Get car statistics (ratings, booking counts, etc.)
+   * Get user statistics (backward compatibility - returns Promise)
+   * @deprecated Use loadUserStats() and subscribe to userStats signal instead
    */
-  async getCarStats(carId: string): Promise<CarStats | null> {
+  async getUserStats(userId: string): Promise<UserStats | null> {
+    await this.loadUserStats(userId);
+    return this.userStats();
+  }
+
+  /**
+   * Load car statistics (updates signals)
+   */
+  async loadCarStats(carId: string): Promise<void> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
     try {
       const { data, error } = await this.supabase
         .from('car_stats')
@@ -169,10 +240,23 @@ export class ReviewsService {
         .maybeSingle();
 
       if (error) throw error;
-      return data as CarStats | null;
-    } catch (error) {
-      return null;
+      this.carStatsSignal.set(data as CarStats | null);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al cargar estadísticas';
+      this.errorSignal.set(errorMessage);
+      this.carStatsSignal.set(null);
+    } finally {
+      this.loadingSignal.set(false);
     }
+  }
+
+  /**
+   * Get car statistics (backward compatibility - returns Promise)
+   * @deprecated Use loadCarStats() and subscribe to carStats signal instead
+   */
+  async getCarStats(carId: string): Promise<CarStats | null> {
+    await this.loadCarStats(carId);
+    return this.carStats();
   }
 
   /**

@@ -11,7 +11,8 @@
 @import './styles/mobile-optimizations.css';
 
 /* 🐛 Mobile Overflow Debug & Fixes */
-@import './styles/mobile-overflow-debug.css';
+/* Comentado - archivo de debug removido */
+/* @import './styles/mobile-overflow-debug.css'; */
 
 /* 🎨 Fuente Inter - Premium UI Typography
    Nota: durante builds offline omitimos la importación remota de Google Fonts.

@@ -1,0 +1,158 @@
+.paypal-button-wrapper {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* PayPal Button Container */
+.paypal-button-container {
+  min-height: 45px;
+  transition: opacity 0.3s ease;
+}
+
+.paypal-button-container.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.paypal-button-container.hidden {
+  display: none;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 100px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #0070ba; /* PayPal blue */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #666;
+  text-align: center;
+}
+
+/* Error State */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.error-icon {
+  width: 48px;
+  height: 48px;
+  color: #ef4444;
+  margin-bottom: 0.75rem;
+}
+
+.error-text {
+  color: #991b1b;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.retry-button {
+  padding: 0.5rem 1.5rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.retry-button:hover {
+  background-color: #dc2626;
+}
+
+.retry-button:active {
+  transform: scale(0.98);
+}
+
+/* Info Text */
+.info-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.info-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.375rem;
+  flex-shrink: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .paypal-button-wrapper {
+    max-width: 100%;
+  }
+
+  .loading-state {
+    padding: 1.5rem 1rem;
+    min-height: 80px;
+  }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+  }
+
+  .error-state {
+    padding: 1rem;
+  }
+
+  .error-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .info-text {
+    font-size: 0.688rem;
+  }
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+  .loading-text {
+    color: #9ca3af;
+  }
+
+  .info-text {
+    color: #9ca3af;
+  }
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -6,6 +6,8 @@ import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
 import { formatDateRange } from '../../../shared/utils/date.utils';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+
+type BookingStatusFilter = 'all' | 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
 
 @Component({
   standalone: true,
@@ -19,6 +21,42 @@ export class MyBookingsPage implements OnInit {
   readonly bookings = signal<Booking[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly statusFilter = signal<BookingStatusFilter>('all');
+
+  // Array tipado de filtros disponibles
+  readonly statusFilters: readonly BookingStatusFilter[] = [
+    'all',
+    'pending',
+    'confirmed',
+    'in_progress',
+    'completed',
+    'cancelled',
+  ] as const;
+
+  // Computed: Filtered bookings based on selected status
+  readonly filteredBookings = computed(() => {
+    const allBookings = this.bookings();
+    const filter = this.statusFilter();
+
+    if (filter === 'all') {
+      return allBookings;
+    }
+
+    return allBookings.filter((booking) => booking.status === filter);
+  });
+
+  // Computed: Count of bookings per status
+  readonly statusCounts = computed(() => {
+    const bookings = this.bookings();
+    return {
+      all: bookings.length,
+      pending: bookings.filter((b) => b.status === 'pending').length,
+      confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+      in_progress: bookings.filter((b) => b.status === 'in_progress').length,
+      completed: bookings.filter((b) => b.status === 'completed').length,
+      cancelled: bookings.filter((b) => b.status === 'cancelled' || b.status === 'expired').length,
+    };
+  });
 
   constructor(private readonly bookingsService: BookingsService) {}
 
@@ -247,6 +285,35 @@ export class MyBookingsPage implements OnInit {
       window.open(mapsUrl, '_blank');
     } else {
       alert('🗺️ Ubicación no disponible para esta reserva.');
+    }
+  }
+
+  /**
+   * Cambia el filtro de estado
+   */
+  setStatusFilter(filter: BookingStatusFilter): void {
+    this.statusFilter.set(filter);
+  }
+
+  /**
+   * Obtiene la etiqueta del filtro
+   */
+  getFilterLabel(filter: BookingStatusFilter): string {
+    switch (filter) {
+      case 'all':
+        return 'Todas';
+      case 'pending':
+        return 'Pendientes';
+      case 'confirmed':
+        return 'Confirmadas';
+      case 'in_progress':
+        return 'En curso';
+      case 'completed':
+        return 'Finalizadas';
+      case 'cancelled':
+        return 'Canceladas';
+      default:
+        return filter;
     }
   }
 }

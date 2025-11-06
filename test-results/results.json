@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 1
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -46,7 +48,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "setup:visitor",
         "name": "setup:visitor",
         "testDir": "/home/edu/autorenta/tests",
@@ -60,7 +64,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "setup:renter",
         "name": "setup:renter",
         "testDir": "/home/edu/autorenta/tests",
@@ -74,7 +80,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "setup:owner",
         "name": "setup:owner",
         "testDir": "/home/edu/autorenta/tests",
@@ -88,7 +96,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "setup:admin",
         "name": "setup:admin",
         "testDir": "/home/edu/autorenta/tests",
@@ -102,7 +112,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium:auth",
         "name": "chromium:auth",
         "testDir": "/home/edu/autorenta/tests",
@@ -116,7 +128,25 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium:e2e",
+        "name": "chromium:e2e",
+        "testDir": "/home/edu/autorenta/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/e2e/**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/home/edu/autorenta/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium:wallet-ui",
         "name": "chromium:wallet-ui",
         "testDir": "/home/edu/autorenta/tests",
@@ -130,7 +160,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium:wallet",
         "name": "chromium:wallet",
         "testDir": "/home/edu/autorenta/tests",
@@ -144,7 +176,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium:visitor",
         "name": "chromium:visitor",
         "testDir": "/home/edu/autorenta/tests",
@@ -158,7 +192,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium:renter",
         "name": "chromium:renter",
         "testDir": "/home/edu/autorenta/tests",
@@ -172,7 +208,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium:owner",
         "name": "chromium:owner",
         "testDir": "/home/edu/autorenta/tests",
@@ -186,7 +224,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium:admin",
         "name": "chromium:admin",
         "testDir": "/home/edu/autorenta/tests",
@@ -200,7 +240,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "mobile-safari:renter",
         "name": "mobile-safari:renter",
         "testDir": "/home/edu/autorenta/tests",
@@ -214,7 +256,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "mobile-chrome:owner",
         "name": "mobile-chrome:owner",
         "testDir": "/home/edu/autorenta/tests",
@@ -228,7 +272,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium:dark-mode",
         "name": "chromium:dark-mode",
         "testDir": "/home/edu/autorenta/tests",
@@ -242,7 +288,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "webkit:visual",
         "name": "webkit:visual",
         "testDir": "/home/edu/autorenta/tests",
@@ -266,29 +314,111 @@
       "cwd": "./apps/web"
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: supabaseUrl is required.",
-      "stack": "Error: supabaseUrl is required.\n    at validateSupabaseUrl (/home/edu/autorenta/node_modules/@supabase/supabase-js/src/lib/helpers.ts:86:11)\n    at SupabaseClient (/home/edu/autorenta/node_modules/@supabase/supabase-js/src/SupabaseClient.ts:110:40)\n    at createClient (/home/edu/autorenta/node_modules/@supabase/supabase-js/src/index.ts:46:10)\n    at Object.<anonymous> (/home/edu/autorenta/tests/fixtures/auth.setup.ts:16:30)",
-      "location": {
-        "file": "/home/edu/autorenta/tests/fixtures/auth.setup.ts",
-        "column": 30,
-        "line": 16
-      },
-      "snippet": "\u001b[90m   at \u001b[39mfixtures/auth.setup.ts:16\n\n\u001b[0m \u001b[90m 14 |\u001b[39m \u001b[36mconst\u001b[39m supabaseAnonKey \u001b[33m=\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mNG_APP_SUPABASE_ANON_KEY\u001b[39m \u001b[33m||\u001b[39m \u001b[32m''\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 15 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 16 |\u001b[39m \u001b[36mconst\u001b[39m supabase \u001b[33m=\u001b[39m createClient(supabaseUrl\u001b[33m,\u001b[39m supabaseAnonKey)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 17 |\u001b[39m\n \u001b[90m 18 |\u001b[39m \u001b[90m// Test user credentials (from seed data)\u001b[39m\n \u001b[90m 19 |\u001b[39m \u001b[36mconst\u001b[39m testUsers \u001b[33m=\u001b[39m {\u001b[0m"
-    },
-    {
-      "message": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.",
-      "stack": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments."
+      "title": "e2e/wallet-deposit-flow.spec.ts",
+      "file": "e2e/wallet-deposit-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Wallet Deposit Flow",
+          "file": "e2e/wallet-deposit-flow.spec.ts",
+          "line": 33,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display wallet balance on page load",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17286,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"wallet-balance\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wallet-balance\"]')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"wallet-balance\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wallet-balance\"]')\u001b[22m\n\n    at /home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts:265:34",
+                        "location": {
+                          "file": "/home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts",
+                          "column": 34,
+                          "line": 265
+                        },
+                        "snippet": "  263 |     // Verify balance element is visible\n  264 |     const balanceElement = page.locator('[data-testid=\"wallet-balance\"]');\n> 265 |     await expect(balanceElement).toBeVisible({ timeout: 5000 });\n      |                                  ^\n  266 |\n  267 |     // Verify balance has currency format ($X,XXX)\n  268 |     const balanceText = await balanceElement.textContent();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts",
+                            "column": 34,
+                            "line": 265
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"wallet-balance\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wallet-balance\"]')\u001b[22m\n\n\n  263 |     // Verify balance element is visible\n  264 |     const balanceElement = page.locator('[data-testid=\"wallet-balance\"]');\n> 265 |     await expect(balanceElement).toBeVisible({ timeout: 5000 });\n      |                                  ^\n  266 |\n  267 |     // Verify balance has currency format ($X,XXX)\n  268 |     const balanceText = await balanceElement.textContent();\n    at /home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts:265:34"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-05T00:25:52.083Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts",
+                        "column": 34,
+                        "line": 265
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2b7cf7666064fed5ba41-288e1018c00a900093b5",
+              "file": "e2e/wallet-deposit-flow.spec.ts",
+              "line": 262,
+              "column": 7
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-11-01T12:07:13.035Z",
-    "duration": 25307.719,
+    "startTime": "2025-11-05T00:25:48.252Z",
+    "duration": 23540.038,
     "expected": 0,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 1,
     "flaky": 0
   }
 }

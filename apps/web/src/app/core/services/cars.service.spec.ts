@@ -1,23 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { CarsService } from './cars.service';
 import { SupabaseClientService } from './supabase-client.service';
+import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
+import { VALID_UUID } from '../../../test-helpers/factories';
 
 describe('CarsService', () => {
   let service: CarsService;
-  let supabase: {
-    auth: jasmine.SpyObj<unknown>;
-    from: jasmine.Spy<unknown>;
-    storage: { from: jasmine.Spy<unknown> };
-  };
+  let supabase: any;
 
   beforeEach(() => {
-    supabase = {
-      auth: jasmine.createSpyObj('auth', ['getUser']),
-      from: jasmine.createSpy('from'),
-      storage: {
-        from: jasmine.createSpy('storage.from'),
-      },
-    };
+    supabase = makeSupabaseMock();
 
     TestBed.configureTestingModule({
       providers: [
@@ -33,12 +25,12 @@ describe('CarsService', () => {
   });
 
   it('creates a car for the authenticated owner', async () => {
-    supabase.auth.getUser.and.resolveTo({ data: { user: { id: 'user-1' } }, error: null });
-    const insertedCar = { id: 'car-1', owner_id: 'user-1', car_photos: [] };
+    supabase.auth.getUser.and.resolveTo({ data: { user: { id: VALID_UUID } }, error: null });
+    const insertedCar = { id: VALID_UUID, owner_id: VALID_UUID, car_photos: [] };
     const single = jasmine.createSpy('single').and.resolveTo({ data: insertedCar, error: null });
     const select = jasmine.createSpy('select').and.returnValue({ single });
     const insert = jasmine.createSpy('insert').and.callFake((payload: Record<string, unknown>) => {
-      expect(payload).toEqual(jasmine.objectContaining({ owner_id: 'user-1', brand: 'Fiat' }));
+      expect(payload).toEqual(jasmine.objectContaining({ owner_id: VALID_UUID, brand: 'Fiat' }));
       return { select };
     });
     supabase.from.and.callFake((table: string) => {
@@ -50,13 +42,13 @@ describe('CarsService', () => {
 
     expect(insert).toHaveBeenCalledWith(jasmine.objectContaining({ brand: 'Fiat' }));
     expect(result).toEqual(
-      jasmine.objectContaining({ id: 'car-1', owner_id: 'user-1', photos: [] }),
+      jasmine.objectContaining({ id: VALID_UUID, owner_id: VALID_UUID, photos: [] }),
     );
   });
 
   it('filters active cars by city when provided', async () => {
-    const rows = [{ id: 'car-1', car_photos: [] }];
-    const builder: unknown = {};
+    const rows = [{ id: VALID_UUID, car_photos: [] }];
+    const builder: Record<string, any> = {};
     builder.select = jasmine.createSpy('select').and.returnValue(builder);
     builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
     builder.order = jasmine.createSpy('order').and.returnValue(builder);
@@ -68,15 +60,20 @@ describe('CarsService', () => {
 
     const result = await service.listActiveCars({ city: 'Buenos Aires' } as any);
 
-    expect(builder.select).toHaveBeenCalledWith('*, car_photos(*)');
+    const selectArg = (builder.select as jasmine.Spy).calls.argsFor(0)[0];
+    expect(selectArg.replace(/\s+/g, ' ')).toContain('car_photos(*)');
     expect(builder.eq).toHaveBeenCalledWith('status', 'active');
     expect(builder.ilike).toHaveBeenCalledWith('location_city', '%Buenos Aires%');
     // Result should have photos array
-    expect(result).toEqual([jasmine.objectContaining({ id: 'car-1', photos: [] })]);
+    expect(result).toEqual([jasmine.objectContaining({ id: VALID_UUID, photos: [] })]);
   });
 
   it('uploads a photo and returns metadata', async () => {
-    supabase.auth.getUser.and.resolveTo({ data: { user: { id: 'user-1' } }, error: null });
+    supabase.auth.getUser.and.resolveTo({ data: { user: { id: VALID_UUID } }, error: null });
+
+    // Mock optimizeImage to return file directly (no canvas processing in tests)
+    spyOn(service as any, 'optimizeImage').and.callFake((file: File) => Promise.resolve(file));
+
     const uploadedPaths: string[] = [];
     const upload = jasmine.createSpy('upload').and.callFake((path: string, ...args: unknown[]) => {
       uploadedPaths.push(path);
@@ -94,7 +91,7 @@ describe('CarsService', () => {
       Promise.resolve({
         data: {
           id: 'photo-1',
-          car_id: 'car-123',
+          car_id: VALID_UUID,
           stored_path: uploadedPaths[0],
           url: 'https://cdn.example/car.jpg',
           position: 0,
@@ -108,12 +105,12 @@ describe('CarsService', () => {
     supabase.from.withArgs('car_photos').and.returnValue({ insert });
 
     const file = new File(['binary'], 'front.png');
-    const result = await service.uploadPhoto(file, 'car-123');
+    const result = await service.uploadPhoto(file, VALID_UUID);
     const storedPath = uploadedPaths[0];
 
     expect(upload).toHaveBeenCalled();
-    expect(storedPath).toContain('user-1/car-123/');
-    expect(storedPath).toMatch(/\.png$/);
+    expect(storedPath.startsWith(`${VALID_UUID}/${VALID_UUID}/`)).toBeTrue();
+    expect(storedPath).toMatch(/\.webp$/); // optimizeImage converts to webp
     expect(upload).toHaveBeenCalledWith(storedPath, file, {
       cacheControl: '3600',
       upsert: false,
@@ -121,7 +118,7 @@ describe('CarsService', () => {
     expect(getPublicUrl).toHaveBeenCalledWith(storedPath);
     expect(result).toEqual(
       jasmine.objectContaining({
-        car_id: 'car-123',
+        car_id: VALID_UUID,
         stored_path: storedPath,
         url: 'https://cdn.example/car.jpg',
       }) as any,

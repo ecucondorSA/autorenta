@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Card hover effects */
+.cursor-pointer:hover {
+  transform: translateY(-2px);
+}
+
+.cursor-pointer {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Button disabled state */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Radio button custom styling */
+input[type="radio"] {
+  cursor: pointer;
+}
+
+input[type="radio"]:checked {
+  background-color: #9333ea;
+  border-color: #9333ea;
+}

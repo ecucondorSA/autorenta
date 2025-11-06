@@ -11,10 +11,12 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import * as mapboxgl from 'mapbox-gl';
 import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '../../../../environments/environment';
 import { GeocodingService } from '../../../core/services/geocoding.service';
+
+// Type import (doesn't increase bundle size)
+import type mapboxgl from 'mapbox-gl';
 
 export interface LocationCoordinates {
   latitude: number;
@@ -103,6 +105,7 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
 
   private map?: mapboxgl.Map;
   private marker?: mapboxgl.Marker;
+  private mapboxgl?: typeof mapboxgl;
 
   isLoading = signal(true);
   coordinates = signal<LocationCoordinates | null>(null);
@@ -124,12 +127,17 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
     this.destroyMap();
   }
 
-  private initializeMap(): void {
+  private async initializeMap(): Promise<void> {
     // Use initial coordinates or default to Buenos Aires center
     const initialLng = this.initialLongitude ?? -58.3816;
     const initialLat = this.initialLatitude ?? -34.6037;
 
     try {
+      // Lazy load Mapbox GL (only imported at runtime, not in initial bundle)
+      const mapboxModule = await import('mapbox-gl');
+      const mapboxgl = mapboxModule.default;
+      this.mapboxgl = mapboxgl;
+
       // Initialize Mapbox map
       this.map = new mapboxgl.Map({
         container: this.mapContainer.nativeElement,
@@ -158,7 +166,7 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
       });
 
       // Handle map errors
-      this.map.on('error', (e) => {
+      this.map.on('error', (_e: any) => {
         this.isLoading.set(false);
       });
     } catch (error) {
@@ -167,10 +175,10 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private addDraggableMarker(lng: number, lat: number): void {
-    if (!this.map) return;
+    if (!this.map || !this.mapboxgl) return;
 
     // Create draggable marker
-    this.marker = new mapboxgl.Marker({
+    this.marker = new this.mapboxgl.Marker({
       draggable: true,
       color: '#2563eb', // Blue color
     })

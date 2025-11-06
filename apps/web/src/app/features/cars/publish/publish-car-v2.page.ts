@@ -160,31 +160,30 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
 
             <div
               *ngIf="showMpBanner()"
-              class="mt-4 rounded-2xl border border-amber-200/80 bg-amber-50/80 p-5 text-sm text-amber-900 shadow-sm dark:border-amber-400/40 dark:bg-amber-500/15 dark:text-amber-100"
+              class="mt-4 rounded-2xl border border-blue-200/80 bg-blue-50/80 p-5 text-sm text-blue-900 shadow-sm dark:border-blue-400/40 dark:bg-blue-500/15 dark:text-blue-100"
             >
               <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div class="flex items-start gap-3">
-                  <span class="text-2xl leading-none">🔒</span>
+                  <span class="text-2xl leading-none">💳</span>
                   <div class="space-y-1">
-                    <p class="text-base font-semibold">Conectá Mercado Pago para activar tu auto</p>
+                    <p class="text-base font-semibold">Conectá Mercado Pago y empezá a ganar</p>
                     <p class="text-xs md:text-sm md:max-w-xl">
-                      Guardaremos la publicación como borrador hasta que completes el onboarding.
-                      Sin esa vinculación las reservas quedan pendientes y el dinero no se
-                      distribuye automáticamente.
+                      Conectá tu cuenta en 30 segundos y empezá a recibir reservas con pagos automáticos.
+                      Tu auto se guardará como borrador y podrás activarlo cuando quieras.
                     </p>
                   </div>
                 </div>
                 <div class="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    class="rounded-lg bg-accent-petrol px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-accent-petrol/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-petrol"
+                    class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-blue-600/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600"
                     (click)="openOnboardingModal()"
                   >
-                    Vincular Mercado Pago
+                    Conectar ahora
                   </button>
                   <button
                     type="button"
-                    class="rounded-lg border border-transparent px-4 py-2 text-sm font-medium text-amber-800/80 transition hover:bg-amber-100/80 dark:text-amber-100/90 dark:hover:bg-amber-500/25"
+                    class="rounded-lg border border-transparent px-4 py-2 text-sm font-medium text-blue-800/80 transition hover:bg-blue-100/80 dark:text-blue-100/90 dark:hover:bg-blue-500/25"
                     (click)="dismissOnboardingReminder()"
                   >
                     Recordarme luego
@@ -1135,10 +1134,7 @@ export class PublishCarV2Page implements OnInit {
 
       await this.refreshMarketplaceSnapshot(userId);
 
-      if (this.mpNeedsAttention() && !this.hasPromptedOnboarding) {
-        this.hasPromptedOnboarding = true;
-        await this.promptMarketplaceOnboarding(userId);
-      }
+      // Modal automático removido - solo mostrar banner pasivo
     } catch (error) {
       this.mpStatusError.set(
         error instanceof Error
@@ -1222,26 +1218,23 @@ export class PublishCarV2Page implements OnInit {
 
   private async presentOnboardingWarning(): Promise<void> {
     const alert = await this.alertController.create({
-      header: 'Activá tus cobros con Mercado Pago',
-      message: `
-        <div class="space-y-2 text-left">
-          <p><strong>Guardaremos la publicación como borrador hasta que vincules tu cuenta.</strong></p>
-          <ul class="list-disc list-inside space-y-1 text-sm">
-            <li>Sin split automático el dinero queda retenido en la plataforma.</li>
-            <li>Las reservas se marcan como pendientes hasta completar el onboarding.</li>
-            <li>Podés retomar el proceso desde tu perfil cuando quieras.</li>
-          </ul>
-        </div>
-      `,
+      header: '¡Conectá Mercado Pago y empezá a ganar!',
+      message: `<p><strong>Tu auto se guardará como borrador y podrás activarlo cuando quieras.</strong></p>
+<p>Si conectás Mercado Pago ahora:</p>
+<ul>
+<li>✅ Recibís pagos automáticamente en cada reserva</li>
+<li>✅ El dinero llega directo a tu cuenta</li>
+<li>✅ Activamos tu auto inmediatamente</li>
+</ul>`,
       buttons: [
         {
-          text: 'Vincular ahora',
+          text: 'Conectar ahora (30 seg)',
           handler: () => {
             void this.openOnboardingModal();
           },
         },
         {
-          text: 'Seguir más tarde',
+          text: 'Guardar y conectar después',
           role: 'cancel',
         },
       ],
@@ -1604,12 +1597,6 @@ export class PublishCarV2Page implements OnInit {
 
   async onSubmit(): Promise<void> {
     if (!this.canSubmit() || this.isSubmitting()) return;
-
-    if (!this.mpReady()) {
-      await this.presentOnboardingWarning();
-      this.isSubmitting.set(false);
-      return;
-    }
 
     try {
       this.isSubmitting.set(true);

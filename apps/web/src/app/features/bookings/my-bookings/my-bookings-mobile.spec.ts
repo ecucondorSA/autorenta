@@ -35,6 +35,11 @@ import { MyBookingsPage } from './my-bookings.page';
  * - Espaciado entre targets: 8px mínimo
  */
 
+/**
+ * ✅ FIXED (2025-11-04): Responsive tests re-enabled after refactoring helper
+ * Solution: Removed window.dispatchEvent(new Event('resize')) from responsive-test-helpers.ts
+ * Now using manual dimension updates + ResizeObserver callbacks without global window events
+ */
 describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
   let component: MyBookingsPage;
   let fixture: ComponentFixture<MyBookingsPage>;
@@ -321,7 +326,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería usar wa.me en móvil en lugar de web.whatsapp.com', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -337,7 +342,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería funcionar correctamente en iOS (iPhone)', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -358,7 +363,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería funcionar correctamente en Android', async () => {
       // Arrange
       setMobileUserAgent('Android');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -394,7 +399,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería incluir el mensaje con información del booking en el link', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -411,7 +416,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería formatear correctamente el número de teléfono con código de país', async () => {
       // Arrange
       setMobileUserAgent('Android');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act
       await component.openChat(mockBooking);
@@ -468,7 +473,7 @@ describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
     it('debería prevenir múltiples clics en botón de WhatsApp', async () => {
       // Arrange
       setMobileUserAgent('iOS');
-      spyOn(window, 'open');
+      spyOn(window, 'open').and.returnValue(null);
 
       // Act - llamar dos veces rápidamente
       const promise1 = component.openChat(mockBooking);
