@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TourService } from '../../../core/services/tour.service';
 import { GuidedTourService } from '../../../core/guided-tour/guided-tour.service';
 import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.interface';
 
@@ -111,8 +110,7 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
   ],
 })
 export class HelpButtonComponent {
-  private readonly tourService = inject(TourService); // OLD - Keeping for compatibility
-  private readonly guidedTour = inject(GuidedTourService); // NEW
+  private readonly guidedTour = inject(GuidedTourService);
   private readonly router = inject(Router);
 
   readonly showMenu = signal(false);

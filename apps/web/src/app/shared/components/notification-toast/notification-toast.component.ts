@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NotificationService, type Notification } from '../../../core/services/notification.service';
+import { ToastService, type Toast } from '../../../core/services/toast.service';
 
 @Component({
   standalone: true,
@@ -92,15 +92,15 @@ import { NotificationService, type Notification } from '../../../core/services/n
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationToastComponent {
-  private readonly notificationService = inject(NotificationService);
+  private readonly toast = inject(ToastService);
 
-  readonly notifications = this.notificationService.notifications;
+  readonly notifications = this.toast.notifications;
 
   close(id: string): void {
-    this.notificationService.remove(id);
+    this.toast.remove(id);
   }
 
-  getNotificationClass(type: Notification['type']): string {
+  getNotificationClass(type: Toast['type']): string {
     const baseClass = 'border-l-4';
     switch (type) {
       case 'success':
@@ -114,7 +114,7 @@ export class NotificationToastComponent {
     }
   }
 
-  getIconClass(type: Notification['type']): string {
+  getIconClass(type: Toast['type']): string {
     switch (type) {
       case 'success':
         return 'bg-green-100 text-green-600';
@@ -127,7 +127,7 @@ export class NotificationToastComponent {
     }
   }
 
-  getProgressBarClass(type: Notification['type']): string {
+  getProgressBarClass(type: Toast['type']): string {
     switch (type) {
       case 'success':
         return 'bg-green-500';

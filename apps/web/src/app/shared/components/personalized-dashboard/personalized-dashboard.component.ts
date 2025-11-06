@@ -8,7 +8,7 @@ import { ProfileService } from '../../../core/services/profile.service';
 import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { WalletService } from '../../../core/services/wallet.service';
-import { NotificationsService } from '../../../core/services/notifications/notifications.service';
+import { NotificationsService } from '../../../core/services/user-notifications.service';
 
 // Models
 import type { Car } from '../../../core/models';

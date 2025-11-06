@@ -2,103 +2,112 @@ import { Injectable, signal } from '@angular/core';
 
 export interface Toast {
   id: string;
-  message: string;
   type: 'success' | 'error' | 'warning' | 'info';
+  title: string;
+  message: string;
   duration?: number;
+  icon?: string;
 }
 
 /**
- * ToastService
- *
- * Servicio para mostrar notificaciones toast en la aplicación.
- * Reemplaza el uso de alert() con notificaciones más amigables.
- *
- * Uso:
- * ```typescript
- * constructor(private toast: ToastService) {}
- *
- * this.toast.success('Operación exitosa');
- * this.toast.error('Error al procesar');
- * this.toast.warning('Advertencia');
- * this.toast.info('Información');
- * ```
+ * Toast service for temporary UI notifications
  */
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  private readonly toasts = signal<Toast[]>([]);
+  readonly notifications = signal<Toast[]>([]);
 
   /**
-   * Obtiene la lista de toasts activos
+   * Show success notification
    */
-  getToasts() {
-    return this.toasts.asReadonly();
+  success(title: string, message: string, duration = 5000): void {
+    this.show({
+      id: this.generateId(),
+      type: 'success',
+      title,
+      message,
+      duration,
+      icon: '✓',
+    });
   }
 
   /**
-   * Muestra un toast de éxito
+   * Show error notification
    */
-  success(message: string, duration = 3000): void {
-    this.show(message, 'success', duration);
+  error(title: string, message: string, duration = 7000): void {
+    this.show({
+      id: this.generateId(),
+      type: 'error',
+      title,
+      message,
+      duration,
+      icon: '✕',
+    });
   }
 
   /**
-   * Muestra un toast de error
+   * Show warning notification
    */
-  error(message: string, duration = 5000): void {
-    this.show(message, 'error', duration);
+  warning(title: string, message: string, duration = 6000): void {
+    this.show({
+      id: this.generateId(),
+      type: 'warning',
+      title,
+      message,
+      duration,
+      icon: '⚠',
+    });
   }
 
   /**
-   * Muestra un toast de advertencia
+   * Show info notification
    */
-  warning(message: string, duration = 4000): void {
-    this.show(message, 'warning', duration);
+  info(title: string, message: string, duration = 5000): void {
+    this.show({
+      id: this.generateId(),
+      type: 'info',
+      title,
+      message,
+      duration,
+      icon: 'ℹ',
+    });
   }
 
   /**
-   * Muestra un toast de información
+   * Show custom toast
    */
-  info(message: string, duration = 3000): void {
-    this.show(message, 'info', duration);
-  }
+  show(notification: Toast): void {
+    const notifications = this.notifications();
+    this.notifications.set([...notifications, notification]);
 
-  /**
-   * Muestra un toast genérico
-   */
-  private show(message: string, type: Toast['type'], duration: number = 3000): void {
-    const id = this.generateId();
-    const toast: Toast = { id, message, type, duration };
-
-    this.toasts.update((toasts) => [...toasts, toast]);
-
-    // Auto-remover después del duration
-    if (duration > 0) {
+    // Auto-remove after duration
+    if (notification.duration && notification.duration > 0) {
       setTimeout(() => {
-        this.remove(id);
-      }, duration);
+        this.remove(notification.id);
+      }, notification.duration);
     }
   }
 
   /**
-   * Remueve un toast por ID
+   * Remove notification by ID
    */
   remove(id: string): void {
-    this.toasts.update((toasts) => toasts.filter((t) => t.id !== id));
+    const notifications = this.notifications();
+    this.notifications.set(notifications.filter((n) => n.id !== id));
   }
 
   /**
-   * Remueve todos los toasts
+   * Remove all notifications
    */
   clear(): void {
-    this.toasts.set([]);
+    this.notifications.set([]);
   }
 
   /**
-   * Genera un ID único para el toast
+   * Generate unique ID
    */
   private generateId(): string {
-    return `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `notification-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
   }
 }
