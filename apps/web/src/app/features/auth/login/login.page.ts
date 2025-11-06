@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
@@ -16,6 +16,7 @@ export class LoginPage {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -39,7 +40,10 @@ export class LoginPage {
     try {
       const { email, password } = this.form.getRawValue();
       await this.auth.signIn(email, password);
-      await this.router.navigateByUrl('/');
+
+      // Get returnUrl from query params, default to '/'
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+      await this.router.navigateByUrl(returnUrl);
     } catch (err) {
       this.error.set(
         err instanceof Error ? err.message : 'No pudimos iniciar sesión, revisá tus credenciales.',
