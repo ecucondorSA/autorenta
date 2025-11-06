@@ -67,7 +67,7 @@ export class PendingApprovalPage implements OnInit {
       const bookings = await this.bookingsService.getPendingApprovals();
       this.pendingBookings.set(bookings as unknown as PendingApproval[]);
     } catch (error) {
-      this.toastService.error('Error al cargar reservas pendientes');
+      this.toastService.error('Error', 'Error al cargar reservas pendientes');
     } finally {
       this.loading.set(false);
     }
@@ -90,10 +90,10 @@ export class PendingApprovalPage implements OnInit {
         this.toastService.success('✅ Reserva aprobada exitosamente');
         await this.loadPendingApprovals();
       } else {
-        this.toastService.error(`Error: ${result.error}`);
+        this.toastService.error('Error', `Error: ${result.error}`);
       }
     } catch (error: unknown) {
-      this.toastService.error('Error al aprobar reserva');
+      this.toastService.error('Error', 'Error al aprobar reserva');
     } finally {
       this.processingBookingId.set(null);
     }
@@ -110,7 +110,7 @@ export class PendingApprovalPage implements OnInit {
     const reason = this.rejectionReason();
 
     if (!bookingId || !reason) {
-      this.toastService.warning('Por favor selecciona una razón');
+      this.toastService.warning('Advertencia', 'Por favor selecciona una razón');
       return;
     }
 
@@ -124,10 +124,10 @@ export class PendingApprovalPage implements OnInit {
         this.toastService.success('✅ Reserva rechazada. Se notificará al cliente.');
         await this.loadPendingApprovals();
       } else {
-        this.toastService.error(`Error: ${result.error}`);
+        this.toastService.error('Error', `Error: ${result.error}`);
       }
     } catch (error: unknown) {
-      this.toastService.error('Error al rechazar reserva');
+      this.toastService.error('Error', 'Error al rechazar reserva');
     } finally {
       this.processingBookingId.set(null);
       this.selectedBookingId.set(null);
