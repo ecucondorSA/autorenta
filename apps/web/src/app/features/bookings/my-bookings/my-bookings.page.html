@@ -168,6 +168,7 @@
               <button
                 [routerLink]="['/bookings/detail-payment']"
                 [queryParams]="{ bookingId: booking.id }"
+                (click)="$event.stopPropagation()"
                 data-tour-step="complete-payment-btn"
                 class="flex-1 px-4 py-3 bg-gradient-to-r from-accent-petrol to-accent-warm text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 order-1"
               >
@@ -177,6 +178,7 @@
               <!-- Ver Detalle (secundario) -->
               <button
                 [routerLink]="['/bookings', booking.id]"
+                (click)="$event.stopPropagation()"
                 data-tour-step="view-detail-btn"
                 class="px-4 py-3 border-2 border-accent-petrol/30 dark:border-accent-petrol/50 text-accent-petrol dark:text-accent-warm rounded-xl font-semibold hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base order-2 sm:flex-none sm:w-auto"
               >
