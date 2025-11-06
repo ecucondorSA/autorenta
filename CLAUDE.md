@@ -141,57 +141,111 @@ autorenta/
 
 ## Common Commands
 
-### Root Package Scripts (from project root)
+### Consolidated Script Runner (✨ NEW - Nov 2025)
 
-**🚀 Claude Code Workflows (NEW - Oct 2025):**
-```bash
-npm run workflows          # Ver ayuda de todos los workflows
-npm run ci                 # Pipeline CI/CD completo (lint + test + build)
-npm run dev                # Inicia entorno completo (web + worker)
-npm run deploy             # Deploy completo a producción
-npm run test:quick         # Tests rápidos sin coverage
-npm run test:coverage      # Tests completos con coverage
-npm run lint:fix           # Auto-fix de linting issues
-npm run install:all        # Instala todas las dependencias
-```
-
-**💡 Tip**: Todos los workflows aprovechan auto-background de Claude Code para comandos largos.
-
-### Angular Web App (from `apps/web/`)
-
-**Development:**
-```bash
-npm run start              # Dev server at http://localhost:4200
-npm run build              # Production build to dist/autorenta-web
-npm run lint               # ESLint with Angular ESLint (flat config)
-npm run format             # Prettier with cache
-npm run test               # Karma/Jasmine unit tests
-```
-
-**Deployment:**
-```bash
-npm run deploy:pages       # Build + deploy to Cloudflare Pages
-```
-
-**Worker shortcuts (from web app root):**
-```bash
-npm run worker:dev         # Start payments webhook worker locally
-npm run worker:deploy      # Deploy payments webhook worker
-```
-
-### Payments Webhook Worker (from `functions/workers/payments_webhook/`)
+**All commands have been consolidated into a single, unified CLI interface:**
 
 ```bash
-npm install                # Install dependencies
-npm run dev                # Wrangler dev at http://localhost:8787/webhooks/payments
-npm run build              # TypeScript build to dist/
-npm run deploy             # Deploy to Cloudflare Workers
+# Two ways to run commands:
+./tools/run.sh [command]   # Direct execution
+npm run [command]          # Via package.json shortcuts
 ```
 
-**Set worker secrets:**
+**🚀 Quick Start Commands:**
+```bash
+npm run dev                # Start full dev environment (web + worker)
+npm run test:quick         # Run quick tests (no coverage)
+npm run ci                 # Full CI/CD pipeline (lint + test + build)
+npm run deploy             # Deploy to production (with confirmation)
+npm run status             # Show project status
+```
+
+**📋 All Available Commands:**
+
+```bash
+# DEVELOPMENT
+npm run dev              # Start web + worker in background
+npm run dev:web          # Start web app only
+npm run dev:worker       # Start payment webhook only
+npm run dev:stop         # Stop all dev servers
+
+# TESTING
+npm run test             # Run all tests
+npm run test:quick       # Quick tests (no coverage)
+npm run test:coverage    # Tests with coverage report
+npm run test:e2e         # E2E tests with Playwright
+npm run test:e2e:ui      # E2E tests in UI mode
+
+# BUILDING
+npm run build            # Build all (parallel)
+npm run build:web        # Build web app only
+npm run build:worker     # Build worker only
+
+# DEPLOYMENT
+npm run deploy           # Full deployment (requires confirmation)
+npm run deploy:web       # Deploy web to Cloudflare Pages
+npm run deploy:worker    # Deploy payment webhook
+
+# CI/CD
+npm run ci               # Full pipeline (lint + test + build)
+npm run lint             # Run ESLint
+npm run lint:fix         # Auto-fix lint issues + format
+npm run format           # Format code with Prettier
+
+# UTILITIES
+npm run install          # Install all dependencies (parallel)
+npm run clean            # Clean build artifacts
+npm run sync:types       # Sync database types from Supabase
+npm run status           # Show project status (git, builds, servers)
+
+# SETUP (one-time)
+npm run setup:auth       # Setup CLI auth (GitHub, Supabase, Cloudflare)
+npm run setup:prod       # Setup production environment
+
+# MONITORING
+npm run monitor:health   # Check system health
+npm run monitor:wallet   # Monitor wallet deposits
+npm run check:auth       # Check authentication status
+```
+
+**💡 Benefits of Consolidated Scripts:**
+- ✅ Single source of truth (`tools/run.sh`)
+- ✅ Consistent command structure across all operations
+- ✅ Better error handling and logging
+- ✅ Parallel execution for independent tasks
+- ✅ Auto-background support for long-running commands
+- ✅ Categorized help with `./tools/run.sh help`
+
+**🔧 For detailed help:**
+```bash
+./tools/run.sh help      # Show all commands with descriptions
+npm run status           # Quick project health check
+```
+
+### Project-Specific Commands
+
+**Note:** Most operations should use the consolidated runner (`./tools/run.sh` or `npm run`).
+The commands below are for direct subproject operations when needed.
+
+**Angular Web App** (from `apps/web/`):
+```bash
+npm run start              # Dev server (prefer: npm run dev:web from root)
+npm run test               # Karma/Jasmine tests (prefer: npm run test from root)
+npm run lint               # ESLint (prefer: npm run lint from root)
+npm run format             # Prettier (prefer: npm run format from root)
+```
+
+**Payments Webhook Worker** (from `functions/workers/payments_webhook/`):
+```bash
+npm run dev                # Wrangler dev (prefer: npm run dev:worker from root)
+npm run build              # TypeScript build (prefer: npm run build:worker from root)
+```
+
+**Worker secrets** (one-time setup):
 ```bash
 wrangler secret put SUPABASE_URL
 wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+wrangler secret put MERCADOPAGO_ACCESS_TOKEN
 ```
 
 ## Architecture Patterns
