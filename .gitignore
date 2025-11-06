@@ -23,3 +23,13 @@ node_modules
 # ONNX models (too large for GitHub)
 apps/web/src/assets/models/*.onnx
 test-results/
+
+# Temporary files and archives
+*.log
+*.png
+*.backup
+*.tar.gz
+scripts/temp/
+database/temp/
+docs/archived/logs/
+docs/archived/screenshots/
