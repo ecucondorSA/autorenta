@@ -32,9 +32,18 @@ export class WalletService {
   readonly lockedBalance = computed(() => this.balance()?.locked_balance ?? 0);
   readonly totalBalance = computed(() => this.balance()?.total_balance ?? 0);
   readonly withdrawableBalance = computed(() => this.balance()?.withdrawable_balance ?? 0);
-  readonly nonWithdrawableBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
-  readonly protectedCreditBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
   readonly transferableBalance = computed(() => this.balance()?.transferable_balance ?? 0);
+
+  // Nuevo sistema de créditos separados (Bonus-Malus Migration 20251106)
+  readonly autorentarCreditBalance = computed(() => this.balance()?.autorentar_credit_balance ?? 0);
+  readonly cashDepositBalance = computed(() => this.balance()?.cash_deposit_balance ?? 0);
+
+  // DEPRECATED: Backward compatibility
+  /** @deprecated Use autorentarCreditBalance and cashDepositBalance instead */
+  readonly protectedCreditBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
+  /** @deprecated Use autorentarCreditBalance and cashDepositBalance instead */
+  readonly nonWithdrawableBalance = computed(() => this.balance()?.protected_credit_balance ?? 0);
+
   readonly pendingDepositsCount = signal(0);
 
   constructor() {

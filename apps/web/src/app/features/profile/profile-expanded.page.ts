@@ -25,6 +25,13 @@ import { MetaService } from '../../core/services/meta.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs/operators';
 import { from } from 'rxjs';
+import { VerificationStateService } from '../../core/services/verification-state.service';
+import { VerificationNotificationsService } from '../../core/services/verification-notifications.service';
+import { VerificationProgressComponent } from '../../shared/components/verification-progress/verification-progress.component';
+import { EmailVerificationComponent } from '../../shared/components/email-verification/email-verification.component';
+import { PhoneVerificationComponent } from '../../shared/components/phone-verification/phone-verification.component';
+import { SelfieCaptureComponent } from '../../shared/components/selfie-capture/selfie-capture.component';
+import { NotificationToastComponent } from '../../shared/components/notification-toast/notification-toast.component';
 
 type TabId =
   | 'general'
@@ -38,7 +45,17 @@ type TabId =
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    TranslateModule,
+    VerificationProgressComponent,
+    EmailVerificationComponent,
+    PhoneVerificationComponent,
+    SelfieCaptureComponent,
+    NotificationToastComponent,
+  ],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,6 +66,8 @@ export class ProfileExpandedPage {
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
   private readonly metaService = inject(MetaService);
+  private readonly verificationStateService = inject(VerificationStateService);
+  private readonly verificationNotificationsService = inject(VerificationNotificationsService);
 
   // Core signals
   readonly profile = toSignal(
@@ -381,9 +400,22 @@ export class ProfileExpandedPage {
     });
 
     this.metaService.updateProfileMeta();
-    
+
     // Load documents on init
     this.loadDocuments();
+
+    // Initialize verification state and notifications
+    this.initializeVerificationServices();
+  }
+
+  private async initializeVerificationServices(): Promise<void> {
+    try {
+      await this.verificationStateService.initialize();
+      this.verificationNotificationsService.initialize();
+      console.log('[ProfileExpanded] Verification services initialized');
+    } catch (error) {
+      console.error('[ProfileExpanded] Error initializing verification services:', error);
+    }
   }
 
   private async loadDocuments(): Promise<void> {

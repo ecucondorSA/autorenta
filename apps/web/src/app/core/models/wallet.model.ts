@@ -21,7 +21,15 @@ export interface WalletBalance {
   available_balance: number; // Fondos disponibles (Total - Locked)
   transferable_balance: number; // Fondos transferibles in-app (Available - Protected)
   withdrawable_balance: number; // Fondos retirables a banco (Transferable - Hold)
-  protected_credit_balance: number; // Crédito Autorentar (meta inicial USD 300, no retirable)
+
+  // Nuevo sistema de créditos separados (Migration 20251106)
+  autorentar_credit_balance: number; // Crédito Autorentar USD $300 renovable (no retirable)
+  cash_deposit_balance: number; // Depósitos en efectivo (no retirables)
+
+  // DEPRECATED: Sum of autorentar_credit + cash_deposit for backward compatibility
+  /** @deprecated Use autorentar_credit_balance and cash_deposit_balance instead */
+  protected_credit_balance: number;
+
   locked_balance: number; // Fondos bloqueados en reservas activas
   total_balance: number; // Total (available + locked)
   currency: string; // 'USD' o 'UYU'

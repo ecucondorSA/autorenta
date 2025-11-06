@@ -40,7 +40,7 @@ describe('Verification Flow Integration', () => {
     progress_percentage: 0,
     requirements: {
       level_1: { email_verified: false, phone_verified: false, completed: false },
-      level_2: { document_verified: false, driver_license_verified: false, completed: false, ai_score: null },
+      level_2: { document_verified: false, driver_license_verified: false, completed: false, ai_score: null, driver_license_score: null },
       level_3: { selfie_verified: false, completed: false, face_match_score: null },
     },
     missing_requirements: [
@@ -86,7 +86,7 @@ describe('Verification Flow Integration', () => {
     progress_percentage: 80,
     requirements: {
       level_1: { email_verified: true, phone_verified: true, completed: true },
-      level_2: { document_verified: true, driver_license_verified: true, completed: true, ai_score: 85 },
+      level_2: { document_verified: true, driver_license_verified: true, completed: true, ai_score: 85, driver_license_score: 90 },
       level_3: { selfie_verified: false, completed: false, face_match_score: null },
     },
     missing_requirements: [
@@ -103,7 +103,7 @@ describe('Verification Flow Integration', () => {
     progress_percentage: 100,
     requirements: {
       level_1: { email_verified: true, phone_verified: true, completed: true },
-      level_2: { document_verified: true, driver_license_verified: true, completed: true, ai_score: 85 },
+      level_2: { document_verified: true, driver_license_verified: true, completed: true, ai_score: 85, driver_license_score: 90 },
       level_3: { selfie_verified: true, completed: true, face_match_score: 90 },
     },
     missing_requirements: [],

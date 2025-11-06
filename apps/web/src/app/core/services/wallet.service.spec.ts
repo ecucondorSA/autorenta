@@ -18,6 +18,8 @@ describe('WalletService', () => {
     available_balance: 0,
     locked_balance: 0,
     protected_credit_balance: 0,
+    autorentar_credit_balance: 0,
+    cash_deposit_balance: 0,
     total_balance: 0,
     transferable_balance: 0,
     withdrawable_balance: 0,

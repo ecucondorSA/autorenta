@@ -18,9 +18,9 @@ describe('FaceVerificationService', () => {
 
   const mockFaceVerificationResult: FaceVerificationResult = {
     success: true,
+    face_detected: true,
     face_match_score: 85,
     liveness_score: 90,
-    message: 'Face verified successfully',
   };
 
   beforeEach(() => {
@@ -218,6 +218,8 @@ describe('FaceVerificationService', () => {
       expect(supabaseMock.from).toHaveBeenCalledWith('user_identity_levels');
       expect(status).toEqual({
         isVerified: true,
+        selfieUrl: 'https://storage.supabase.co/selfie.webm',
+        verifiedAt: '2024-01-01T00:00:00.000Z',
         requiresLevel2: false,
         faceMatchScore: 85,
         livenessScore: 90,
@@ -252,12 +254,10 @@ describe('FaceVerificationService', () => {
 
   describe('deleteSelfieVideo', () => {
     it('should delete selfie video successfully', async () => {
-      const videoUrl = 'https://storage.supabase.co/test-user-123/selfie_123.webm';
-
-      await service.deleteSelfieVideo(videoUrl);
+      await service.deleteSelfieVideo();
 
       expect(supabaseMock.storage.from).toHaveBeenCalledWith('identity-documents');
-      expect(supabaseMock.storage.from().remove).toHaveBeenCalledWith(['test-user-123/selfie_123.webm']);
+      expect(supabaseMock.storage.from().remove).toHaveBeenCalled();
     });
 
     it('should handle delete errors gracefully', async () => {
@@ -268,9 +268,7 @@ describe('FaceVerificationService', () => {
         }),
       });
 
-      const videoUrl = 'https://storage.supabase.co/test-user-123/selfie_123.webm';
-
-      await expectAsync(service.deleteSelfieVideo(videoUrl)).toBeRejectedWithError('Delete failed');
+      await expectAsync(service.deleteSelfieVideo()).toBeRejectedWithError('Delete failed');
     });
   });
 

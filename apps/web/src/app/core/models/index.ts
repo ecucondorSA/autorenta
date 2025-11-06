@@ -92,6 +92,12 @@ export interface UserProfile {
   postal_code?: string | null;
   country?: string | null;
 
+  // Ubicación GPS (para pricing por distancia)
+  home_latitude?: number | null;
+  home_longitude?: number | null;
+  location_verified_at?: string | null;
+  preferred_search_radius_km?: number | null;
+
   // Preferencias
   timezone: string;
   locale: string;
@@ -413,6 +419,16 @@ export interface Booking {
   cancellation_fee_cents?: number;
   cancelled_at?: string;
   cancellation_reason?: string;
+
+  // ✅ DISTANCE-BASED PRICING: Campos de ubicación y distancia
+  pickup_location_lat?: number | null;
+  pickup_location_lng?: number | null;
+  dropoff_location_lat?: number | null;
+  dropoff_location_lng?: number | null;
+  delivery_required?: boolean | null;
+  delivery_distance_km?: number | null;
+  delivery_fee_cents?: number | null;
+  distance_risk_tier?: 'local' | 'regional' | 'long_distance' | null;
 
   // Extended fields from views (my_bookings, owner_bookings)
   car_title?: string;

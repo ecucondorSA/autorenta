@@ -519,6 +519,33 @@
         </div>
       </div>
 
+      <!-- Banner MP para autos draft -->
+      <div
+        *ngIf="countDraft() > 0"
+        class="mb-6 rounded-xl bg-amber-50 border border-amber-200 p-5 shadow-sm dark:bg-amber-500/10 dark:border-amber-400/40"
+      >
+        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl leading-none">⚠️</span>
+            <div class="flex-1">
+              <p class="font-semibold text-amber-900 dark:text-amber-100 mb-1">
+                Tenés {{ countDraft() }} auto(s) pendiente(s) de activación
+              </p>
+              <p class="text-sm text-amber-700 dark:text-amber-200">
+                Conectá Mercado Pago para activarlos y empezar a recibir reservas automáticamente.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            (click)="openOnboardingModal()"
+            class="flex-shrink-0 rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-amber-600/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 transition-all"
+          >
+            Conectar Mercado Pago
+          </button>
+        </div>
+      </div>
+
       <!-- Cars Grid -->
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <app-car-card

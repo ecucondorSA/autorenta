@@ -16,6 +16,8 @@ import { MetaService } from '../../../core/services/meta.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { FxService } from '../../../core/services/fx.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
+import { LocationService } from '../../../core/services/location.service';
 
 // Models
 import { Car, Review, CarStats } from '../../../core/models';
@@ -36,6 +38,7 @@ import { SocialProofIndicatorsComponent } from '../../../shared/components/socia
 import { BookingBenefitsComponent } from '../../../shared/components/booking-benefits/booking-benefits.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
+import { DistanceBadgeComponent } from '../../../shared/components/distance-badge/distance-badge.component';
 
 // Services
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
@@ -64,6 +67,7 @@ interface CarDetailState {
     SocialProofIndicatorsComponent,
     BookingBenefitsComponent,
     StickyCtaMobileComponent,
+    DistanceBadgeComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,10 +86,18 @@ export class CarDetailPage implements OnInit {
   readonly pricingService = inject(DynamicPricingService);
   readonly urgentRentalService = inject(UrgentRentalService);
   private readonly analytics = inject(AnalyticsService);
+  private readonly distanceCalculator = inject(DistanceCalculatorService);
+  private readonly locationService = inject(LocationService);
 
   readonly expressMode = signal(false);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
   readonly urgentAvailability = signal<{ available: boolean; distance?: number; eta?: number } | null>(null);
+
+  // ✅ NEW: Distance-based pricing
+  readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
+  readonly distanceKm = signal<number | null>(null);
+  readonly deliveryFeeCents = signal<number>(0);
+  readonly distanceTier = signal<'local' | 'regional' | 'long_distance' | null>(null);
   readonly bookingInProgress = signal(false);
   readonly bookingError = signal<string | null>(null);
   readonly selectedPaymentMethod = signal<BookingPaymentMethod>('credit_card');
@@ -307,8 +319,45 @@ export class CarDetailPage implements OnInit {
         if (state.car.region_id) {
           void this.loadDynamicPrice();
         }
+        // ✅ NEW: Inicializar ubicación y calcular distancia
+        void this.initializeUserLocationAndDistance(state.car);
       }
     });
+  }
+
+  /**
+   * Initialize user location and calculate distance to car
+   */
+  private async initializeUserLocationAndDistance(car: Car): Promise<void> {
+    try {
+      // Get user location
+      const locationData = await this.locationService.getUserLocation();
+      if (locationData) {
+        this.userLocation.set({ lat: locationData.lat, lng: locationData.lng });
+
+        // Calculate distance if car has location
+        if (car.location_lat && car.location_lng) {
+          const distance = this.distanceCalculator.calculateDistance(
+            locationData.lat,
+            locationData.lng,
+            car.location_lat,
+            car.location_lng
+          );
+
+          this.distanceKm.set(distance);
+
+          // Calculate tier and delivery fee
+          const tier = this.distanceCalculator.getDistanceTier(distance);
+          this.distanceTier.set(tier);
+
+          const deliveryFee = this.distanceCalculator.calculateDeliveryFee(distance);
+          this.deliveryFeeCents.set(deliveryFee);
+        }
+      }
+    } catch (error) {
+      // Silently fail - distance is optional
+      console.warn('Could not calculate distance:', error);
+    }
   }
 
   /**

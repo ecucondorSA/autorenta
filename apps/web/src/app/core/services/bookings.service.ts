@@ -7,6 +7,7 @@ import { LoggerService } from './logger.service';
 import { WalletService } from './wallet.service';
 import { PwaService } from './pwa.service';
 import { InsuranceService } from './insurance.service';
+import { DriverProfileService } from './driver-profile.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -17,6 +18,7 @@ export class BookingsService {
   private readonly walletService = inject(WalletService);
   private readonly pwaService = inject(PwaService);
   private readonly insuranceService = inject(InsuranceService);
+  private readonly driverProfileService = inject(DriverProfileService);
   private readonly errorHandler = inject(ErrorHandlerService);
   private readonly logger = inject(LoggerService);
 
@@ -1171,6 +1173,127 @@ export class BookingsService {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Error inesperado al crear la reserva',
+      };
+    }
+  }
+
+  // ============================================================================
+  // BONUS-MALUS SYSTEM: DRIVER CLASS UPDATES
+  // ============================================================================
+
+  /**
+   * Complete booking without damages (clean booking)
+   * This will:
+   * 1. Release security deposit
+   * 2. Update driver class (improve for clean booking)
+   */
+  async completeBookingClean(bookingId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const booking = await this.getBookingById(bookingId);
+      if (!booking) {
+        return { success: false, error: 'Booking not found' };
+      }
+
+      // 1. Release security deposit if locked
+      if (booking.wallet_status === 'locked') {
+        await this.releaseSecurityDeposit(bookingId, 'Reserva completada sin daños');
+      }
+
+      // 2. Mark booking as completed
+      await this.updateBooking(bookingId, {
+        status: 'completed',
+      });
+
+      // 3. Update driver class (clean booking improves class)
+      if (booking.user_id) {
+        try {
+          await firstValueFrom(
+            this.driverProfileService.updateClassOnEvent({
+              userId: booking.user_id,
+              bookingId: bookingId,
+              claimWithFault: false,
+              claimSeverity: 0,
+            })
+          );
+          this.logger.info(`Driver class updated for clean booking ${bookingId}`);
+        } catch (classError) {
+          // Don't fail the booking completion if class update fails
+          this.logger.error('Failed to update driver class', classError instanceof Error ? classError : new Error(String(classError)));
+        }
+      }
+
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : 'Error completing booking',
+      };
+    }
+  }
+
+  /**
+   * Complete booking with damages
+   * This will:
+   * 1. Deduct damage amount from security deposit
+   * 2. Update driver class (worsen for claim with fault)
+   */
+  async completeBookingWithDamages(
+    bookingId: string,
+    damageAmountCents: number,
+    damageDescription: string,
+    claimSeverity: number = 1 // 1=minor, 2=moderate, 3=major
+  ): Promise<{ success: boolean; remaining_deposit?: number; error?: string }> {
+    try {
+      const booking = await this.getBookingById(bookingId);
+      if (!booking) {
+        return { success: false, error: 'Booking not found' };
+      }
+
+      // 1. Deduct from security deposit
+      const deductResult = await this.deductFromSecurityDeposit(
+        bookingId,
+        damageAmountCents,
+        damageDescription
+      );
+
+      if (!deductResult.ok) {
+        return {
+          success: false,
+          error: deductResult.error,
+        };
+      }
+
+      // 2. Mark booking as completed
+      await this.updateBooking(bookingId, {
+        status: 'completed',
+      });
+
+      // 3. Update driver class (claim worsens class)
+      if (booking.user_id) {
+        try {
+          await firstValueFrom(
+            this.driverProfileService.updateClassOnEvent({
+              userId: booking.user_id,
+              bookingId: bookingId,
+              claimWithFault: true,
+              claimSeverity: claimSeverity,
+            })
+          );
+          this.logger.info(`Driver class updated for claim on booking ${bookingId}`);
+        } catch (classError) {
+          // Don't fail the booking completion if class update fails
+          this.logger.error('Failed to update driver class', classError instanceof Error ? classError : new Error(String(classError)));
+        }
+      }
+
+      return {
+        success: true,
+        remaining_deposit: deductResult.remaining_deposit,
+      };
+    } catch (err) {
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : 'Error completing booking with damages',
       };
     }
   }

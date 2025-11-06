@@ -18,18 +18,31 @@ describe('IdentityLevelService', () => {
 
   const mockIdentityLevel = {
     user_id: mockUserId,
-    current_level: 1,
+    current_level: 1 as 1 | 2 | 3,
+    // Level 1: Email + Phone
     email_verified_at: '2024-01-01T00:00:00.000Z',
     phone_verified_at: null,
+    phone_number: null,
+    // Level 2: Documents (DNI + Driver License)
+    document_type: null,
+    document_number: null,
     document_front_url: null,
     document_back_url: null,
     document_ai_score: null,
     driver_license_url: null,
+    driver_license_number: null,
+    driver_license_category: null,
+    driver_license_expiry: null,
     driver_license_verified_at: null,
+    driver_license_ai_score: null,
+    // Level 3: Biometric (Selfie)
     selfie_url: null,
     selfie_verified_at: null,
     face_match_score: null,
     liveness_score: null,
+    // Extracted data from documents
+    extracted_full_name: null,
+    extracted_birth_date: null,
     created_at: '2024-01-01T00:00:00.000Z',
     updated_at: '2024-01-01T00:00:00.000Z',
   };
@@ -50,6 +63,7 @@ describe('IdentityLevelService', () => {
         driver_license_verified: false,
         completed: false,
         ai_score: null,
+        driver_license_score: null,
       },
       level_3: {
         selfie_verified: false,
@@ -234,13 +248,13 @@ describe('IdentityLevelService', () => {
     it('should return true for accessible levels', async () => {
       await service.getVerificationProgress();
       const hasAccess = await service.checkLevelAccess(1);
-      expect(hasAccess).toBe(true);
+      expect(hasAccess.allowed).toBe(true);
     });
 
     it('should return false for inaccessible levels', async () => {
       await service.getVerificationProgress();
       const hasAccess = await service.checkLevelAccess(2);
-      expect(hasAccess).toBe(false);
+      expect(hasAccess.allowed).toBe(false);
     });
   });
 
@@ -275,12 +289,12 @@ describe('IdentityLevelService', () => {
     });
   });
 
-  describe('invalidateCache', () => {
-    it('should invalidate cache and reload', async () => {
+  describe('refresh', () => {
+    it('should refresh all verification data', async () => {
       spyOn(service, 'loadIdentityLevel').and.resolveTo(mockIdentityLevel);
       spyOn(service, 'getVerificationProgress').and.resolveTo(mockVerificationProgress);
 
-      await service.invalidateCache();
+      await service.refresh();
 
       expect(service.loadIdentityLevel).toHaveBeenCalled();
       expect(service.getVerificationProgress).toHaveBeenCalled();

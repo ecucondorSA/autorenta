@@ -1,3 +1,18 @@
+interface DistanceConfig {
+  localThresholdKm: number;
+  regionalThresholdKm: number;
+  guaranteeMultipliers: {
+    local: number;
+    regional: number;
+    longDistance: number;
+  };
+  deliveryFeePerKm: number;
+  minDistanceForDeliveryFee: number;
+  maxDeliveryDistance: number;
+  defaultSearchRadiusKm: number;
+  maxSearchRadiusKm: number;
+}
+
 interface EnvDefaults {
   production?: boolean;
   supabaseUrl?: string;
@@ -11,10 +26,14 @@ interface EnvDefaults {
   mercadopagoPublicKey?: string;
   mercadopagoClientId?: string;
   mercadopagoClientSecret?: string;
+  paypalClientId?: string;
+  paypalClientSecret?: string;
   appUrl?: string;
   encryptionKey?: string;
   googleAnalyticsMeasurementId?: string;
   enableAnalytics?: boolean;
+  distanceConfig?: DistanceConfig;
+  docVerifierUrl?: string;
 }
 
 // Type-safe interfaces for global environment access
@@ -58,6 +77,21 @@ const resolve = (key: string, fallback?: string): string => {
   return readEnv(key) ?? fallback ?? '';
 };
 
+const defaultDistanceConfig: DistanceConfig = {
+  localThresholdKm: 20,
+  regionalThresholdKm: 100,
+  guaranteeMultipliers: {
+    local: 1.0,
+    regional: 1.15,
+    longDistance: 1.3,
+  },
+  deliveryFeePerKm: 0.5,
+  minDistanceForDeliveryFee: 5,
+  maxDeliveryDistance: 50,
+  defaultSearchRadiusKm: 50,
+  maxSearchRadiusKm: 100,
+};
+
 export const buildEnvironment = (defaults: EnvDefaults) => ({
   production: defaults.production ?? false,
   supabaseUrl: resolve('NG_APP_SUPABASE_URL', defaults.supabaseUrl),
@@ -77,6 +111,8 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     'NG_APP_MERCADOPAGO_CLIENT_SECRET',
     defaults.mercadopagoClientSecret,
   ),
+  paypalClientId: resolve('NG_APP_PAYPAL_CLIENT_ID', defaults.paypalClientId),
+  paypalClientSecret: resolve('NG_APP_PAYPAL_CLIENT_SECRET', defaults.paypalClientSecret),
   appUrl: resolve('NG_APP_URL', defaults.appUrl ?? 'http://localhost:4200'),
   encryptionKey: resolve('NG_APP_ENCRYPTION_KEY', defaults.encryptionKey),
   googleAnalyticsMeasurementId: resolve(
@@ -84,6 +120,8 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     defaults.googleAnalyticsMeasurementId,
   ),
   enableAnalytics: defaults.enableAnalytics ?? defaults.production ?? false,
+  distanceConfig: defaults.distanceConfig ?? defaultDistanceConfig,
+  docVerifierUrl: resolve('NG_APP_DOC_VERIFIER_URL', defaults.docVerifierUrl),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;
