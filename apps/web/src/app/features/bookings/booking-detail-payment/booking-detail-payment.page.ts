@@ -536,7 +536,20 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Guardar estado en sessionStorage para recuperación
       this.saveStateToSession();
     } catch (err: unknown) {
-      this.error.set('Error al inicializar cálculos de reserva');
+      const message = err instanceof Error ? err.message : 'Error desconocido';
+      let detailedError = 'Error al inicializar cálculos de reserva: ' + message;
+
+      // Add diagnostic information
+      if (!this.fxSnapshot()) {
+        detailedError += ' (No se pudo obtener el tipo de cambio)';
+      } else if (!this.riskSnapshot()) {
+        detailedError += ' (No se pudo calcular el análisis de riesgo)';
+      } else if (!this.priceBreakdown()) {
+        detailedError += ' (No se pudo calcular el precio final)';
+      }
+
+      console.error('Initialization error:', err);
+      this.error.set(detailedError);
     }
   }
 
@@ -546,7 +559,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private async loadFxSnapshot(): Promise<void> {
     this.loadingFx.set(true);
     try {
-      const snapshot = await firstValueFrom(this.fxService.getFxSnapshot('USD', 'ARS'));
+      // Add timeout to prevent hanging forever (10 seconds)
+      const fxPromise = firstValueFrom(this.fxService.getFxSnapshot('USD', 'ARS'));
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout obteniendo tipo de cambio')), 10000);
+      });
+
+      const snapshot = await Promise.race([fxPromise, timeoutPromise]);
       if (!snapshot) {
         throw new Error('No se pudo obtener tipo de cambio');
       }
@@ -764,6 +783,14 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   /**
    * Handler: Confirmar y crear booking
    */
+  /**
+   * Retry initialization of snapshots and data
+   */
+  protected async retryInitialization(): Promise<void> {
+    this.error.set(null);
+    await this.initializeSnapshots();
+  }
+
   protected async onConfirm(): Promise<void> {
     if (!this.canProceed()) {
       // Mostrar errores de validación
