@@ -1,16 +1,10 @@
-import { inject, Injectable, signal } from '@angular/core';
-import type { SupabaseClient, AuthChangeEvent, Session } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
+import { Injectable } from '@angular/core';
+import { VerificationBaseService, VerificationStatus } from './verification-base.service';
 
 /**
- * Phone Verification Status
+ * Phone Verification Status (extends base with OTP-specific fields)
  */
-export interface PhoneVerificationStatus {
-  isVerified: boolean;
-  phone: string | null;
-  verifiedAt: string | null;
-  canResend: boolean;
-  cooldownSeconds: number;
+export interface PhoneVerificationStatus extends VerificationStatus {
   otpSent: boolean;
 }
 
@@ -27,46 +21,51 @@ export interface OTPVerificationResult {
 /**
  * Service for managing phone number verification via SMS OTP
  *
- * Handles:
+ * Extends VerificationBaseService with phone-specific functionality:
  * - Sending OTP codes via SMS
  * - Verifying OTP codes
- * - Phone verification status
- * - Rate limiting for OTP attempts
- * - Real-time updates when phone is verified
+ * - Phone-specific rate limiting (3 attempts per hour)
+ * - Argentina phone number validation (+54)
+ *
+ * Base class provides:
+ * - Cooldown management (calculateCooldownRemaining, startCooldownTimer)
+ * - Auth listener initialization
+ * - Status updates from user object
+ * - Reactive state (signals)
  */
 @Injectable({
   providedIn: 'root',
 })
-export class PhoneVerificationService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
-  private lastOTPSendTime: number = 0;
-  private readonly OTP_COOLDOWN_MS = 60 * 1000; // 60 seconds
+export class PhoneVerificationService extends VerificationBaseService<PhoneVerificationStatus> {
+  // VerificationBaseService abstract properties
+  protected readonly verificationType = 'phone' as const;
+  protected readonly cooldownMs = 60 * 1000; // 60 seconds
+
+  // Phone-specific rate limiting
   private readonly MAX_ATTEMPTS_PER_HOUR = 3;
   private otpAttempts: number[] = []; // Timestamps of OTP attempts
 
-  // Reactive state
-  readonly status = signal<PhoneVerificationStatus>({
-    isVerified: false,
-    phone: null,
-    verifiedAt: null,
-    canResend: true,
-    cooldownSeconds: 0,
-    otpSent: false,
-  });
-  readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
-
   constructor() {
-    this.initializeAuthListener();
-    this.checkPhoneStatus().catch((err) => {
+    super();
+    this.checkStatus().catch((err) => {
       console.error('Failed to check initial phone status:', err);
     });
   }
 
   /**
-   * Check current phone verification status
+   * Override extendStatus to add phone-specific fields
    */
-  async checkPhoneStatus(): Promise<PhoneVerificationStatus> {
+  protected override extendStatus(baseStatus: VerificationStatus): PhoneVerificationStatus {
+    return {
+      ...baseStatus,
+      otpSent: this.statusSignal().otpSent ?? false,
+    };
+  }
+
+  /**
+   * Check current phone verification status (implements abstract method)
+   */
+  async checkStatus(): Promise<PhoneVerificationStatus> {
     this.loading.set(true);
     this.error.set(null);
 
@@ -89,20 +88,8 @@ export class PhoneVerificationService {
         isVerified: user.phone_confirmed_at !== null,
       });
 
-      const isVerified = user.phone_confirmed_at !== null;
-      const cooldownRemaining = this.calculateCooldownRemaining();
-
-      const statusData: PhoneVerificationStatus = {
-        isVerified,
-        phone: user.phone ?? null,
-        verifiedAt: user.phone_confirmed_at ?? null,
-        canResend: !isVerified && cooldownRemaining === 0 && this.canSendOTP(),
-        cooldownSeconds: cooldownRemaining,
-        otpSent: this.status().otpSent,
-      };
-
-      this.status.set(statusData);
-      return statusData;
+      this.updateStatusFromUser(user as Record<string, unknown>);
+      return this.status();
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'No pudimos verificar el estado del teléfono';
@@ -114,24 +101,36 @@ export class PhoneVerificationService {
   }
 
   /**
-   * Send OTP code to phone number
+   * Override updateStatusFromUser to include phone-specific logic
+   */
+  protected override updateStatusFromUser(user: Record<string, unknown>): void {
+    super.updateStatusFromUser(user); // Call base implementation
+
+    // Add phone-specific canResend logic (includes rate limiting)
+    const currentStatus = this.statusSignal();
+    const canResendWithRateLimit = currentStatus.canResend && this.canSendOTP();
+
+    this.statusSignal.set({
+      ...currentStatus,
+      canResend: canResendWithRateLimit,
+      otpSent: currentStatus.otpSent && !currentStatus.isVerified,
+    } as PhoneVerificationStatus);
+  }
+
+  /**
+   * Send OTP code to phone number (implements abstract sendVerification)
    * @param phone Phone number in E.164 format (e.g., +5491123456789)
    * @param countryCode Country code (default: +54 for Argentina)
    */
-  async sendOTP(phone: string, countryCode: string = '+54'): Promise<boolean> {
+  async sendVerification(phone: string, countryCode: string = '+54'): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      // Check cooldown
-      const cooldownRemaining = this.calculateCooldownRemaining();
-      if (cooldownRemaining > 0) {
-        throw new Error(
-          `Por favor espera ${cooldownRemaining} segundos antes de reenviar el código`,
-        );
-      }
+      // Check cooldown (using base class method)
+      this.checkCooldown();
 
-      // Check rate limiting
+      // Check phone-specific rate limiting
       if (!this.canSendOTP()) {
         throw new Error(
           'Has alcanzado el límite de intentos por hora. Por favor intenta más tarde.',
@@ -158,8 +157,8 @@ export class PhoneVerificationService {
         throw error;
       }
 
-      // Update tracking
-      this.lastOTPSendTime = Date.now();
+      // Update tracking (using base class method + phone-specific)
+      this.recordSendTime();
       this.otpAttempts.push(Date.now());
       this.cleanupOldAttempts();
 
@@ -169,17 +168,13 @@ export class PhoneVerificationService {
         p_country_code: countryCode,
       });
 
-      // Update status
-      const currentStatus = this.status();
-      this.status.set({
+      // Update phone-specific status
+      const currentStatus = this.statusSignal();
+      this.statusSignal.set({
         ...currentStatus,
         otpSent: true,
-        phone: formattedPhone,
-        canResend: false,
-        cooldownSeconds: 60,
-      });
-
-      return true;
+        value: formattedPhone,
+      } as PhoneVerificationStatus);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'No pudimos enviar el código SMS';
       this.error.set(message);
@@ -187,6 +182,15 @@ export class PhoneVerificationService {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  /**
+   * Send OTP code to phone number (convenience method, delegates to sendVerification)
+   * @deprecated Use sendVerification instead
+   */
+  async sendOTP(phone: string, countryCode: string = '+54'): Promise<boolean> {
+    await this.sendVerification(phone, countryCode);
+    return true;
   }
 
   /**
@@ -229,7 +233,7 @@ export class PhoneVerificationService {
       });
 
       // Update status
-      await this.checkPhoneStatus();
+      await this.checkStatus();
 
       return {
         success: true,
@@ -295,91 +299,48 @@ export class PhoneVerificationService {
   }
 
   /**
-   * Calculate remaining cooldown time in seconds
+   * Override startCooldownTimer to include phone-specific rate limiting
    */
-  private calculateCooldownRemaining(): number {
-    if (this.lastOTPSendTime === 0) {
-      return 0;
-    }
-
-    const elapsed = Date.now() - this.lastOTPSendTime;
-    const remaining = Math.ceil((this.OTP_COOLDOWN_MS - elapsed) / 1000);
-    return Math.max(0, remaining);
-  }
-
-  /**
-   * Initialize auth listener for automatic status updates
-   */
-  private initializeAuthListener(): void {
-    this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
-      if ((event === 'USER_UPDATED' || event === 'SIGNED_IN') && session?.user) {
-        this.updateStatusFromUser(session.user);
-      }
-    });
-  }
-
-  /**
-   * Update status from user object
-   */
-  private updateStatusFromUser(user: { phone?: string; phone_confirmed_at?: string }): void {
-    const isVerified = user.phone_confirmed_at !== null && user.phone_confirmed_at !== undefined;
-    const cooldownRemaining = this.calculateCooldownRemaining();
-
-    this.status.set({
-      isVerified,
-      phone: user.phone ?? null,
-      verifiedAt: user.phone_confirmed_at ?? null,
-      canResend: !isVerified && cooldownRemaining === 0 && this.canSendOTP(),
-      cooldownSeconds: cooldownRemaining,
-      otpSent: this.status().otpSent && !isVerified,
-    });
-  }
-
-  /**
-   * Subscribe to phone verification changes (real-time)
-   */
-  subscribeToPhoneChanges(callback: (verified: boolean) => void): () => void {
-    const {
-      data: { subscription },
-    } = this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
-      if (event === 'USER_UPDATED' && session?.user) {
-        const isVerified = session.user.phone_confirmed_at !== null;
-        this.updateStatusFromUser(session.user);
-        callback(isVerified);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }
-
-  /**
-   * Start cooldown timer (updates UI every second)
-   */
-  startCooldownTimer(callback: (seconds: number) => void): () => void {
+  override startCooldownTimer(callback: (seconds: number) => void): () => void {
     const interval = setInterval(() => {
       const remaining = this.calculateCooldownRemaining();
-      const currentStatus = this.status();
+      const currentStatus = this.statusSignal();
+
+      callback(remaining);
 
       if (remaining === 0 && !currentStatus.isVerified) {
-        this.status.set({
+        // Phone-specific: check rate limiting before allowing resend
+        this.statusSignal.set({
           ...currentStatus,
           canResend: this.canSendOTP(),
           cooldownSeconds: 0,
-        });
+        } as PhoneVerificationStatus);
         clearInterval(interval);
       } else {
-        this.status.set({
+        this.statusSignal.set({
           ...currentStatus,
           cooldownSeconds: remaining,
-        });
+        } as PhoneVerificationStatus);
       }
-
-      callback(remaining);
     }, 1000);
 
     return () => clearInterval(interval);
+  }
+
+  /**
+   * Subscribe to phone verification changes (convenience method, delegates to base)
+   * @deprecated Use subscribeToChanges instead
+   */
+  subscribeToPhoneChanges(callback: (verified: boolean) => void): () => void {
+    return this.subscribeToChanges(callback);
+  }
+
+  /**
+   * Convenience method for backward compatibility
+   * @deprecated Use checkStatus instead
+   */
+  async checkPhoneStatus(): Promise<PhoneVerificationStatus> {
+    return this.checkStatus();
   }
 
   /**
