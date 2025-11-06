@@ -46,3 +46,4 @@ Thumbs.db
 .env*
 .env
 .env.test
+app_start.log
