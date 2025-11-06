@@ -1,2 +1,0 @@
-polyfills.js
-main.js

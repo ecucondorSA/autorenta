@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import type mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 
 // Type import (doesn't increase bundle size)
-import type mapboxgl from 'mapbox-gl';
 
 export interface LocationCoordinates {
   latitude: number;

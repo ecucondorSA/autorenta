@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PaymentMethodComparisonModalComponent } from './payment-method-comparison-modal.component';
 import {
   PriceBreakdown,
   RiskSnapshot,
   FxSnapshot,
 } from '../../../../core/models/booking-detail-payment.model';
+import { PaymentMethodComparisonModalComponent } from './payment-method-comparison-modal.component';
 
 describe('PaymentMethodComparisonModalComponent - Escenario 4', () => {
   let component: PaymentMethodComparisonModalComponent;

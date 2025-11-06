@@ -1,6 +1,8 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { RealtimeChannel, SupabaseClient, PostgrestSingleResponse } from '@supabase/supabase-js';
 import { environment } from '@environment';
+import { from, Observable, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import type {
   WalletBalance,
   WalletHistoryEntry as WalletTransaction,
@@ -13,8 +15,6 @@ import type {
 } from '../models/wallet.model';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
-import { from, Observable, throwError } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',

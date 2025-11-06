@@ -1,7 +1,7 @@
 
-import { ChatMessageInsertSchema } from '../contracts/chat-message.schemas';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
+import { ChatMessageInsertSchema } from '../contracts/chat-message.schemas';
 
 // Mock for queueOffline
 const queueOffline = (data: any) => {

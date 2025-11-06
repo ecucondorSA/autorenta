@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { CarsService } from './cars.service';
-import { SupabaseClientService } from './supabase-client.service';
 import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
 import { VALID_UUID } from '../../../test-helpers/factories';
+import { CarsService } from './cars.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 describe('CarsService', () => {
   let service: CarsService;

@@ -2,14 +2,14 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { switchMap, map, catchError } from 'rxjs/operators';
+import { of, from } from 'rxjs';
 import { ProfileService } from '../../core/services/profile.service';
 import { CarsService } from '../../core/services/cars.service';
 import { ReviewsService } from '../../core/services/reviews.service';
 import type { UserProfile, Car, Review } from '../../core/models';
 import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { of, from } from 'rxjs';
 
 interface UserStats {
   owner_rating_avg: number | null;

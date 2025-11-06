@@ -25,6 +25,7 @@ export class HelpMenuComponent {
     });
 
     if (!started) {
+      // Tour didn't start, could handle failure here
     }
   }
 }
