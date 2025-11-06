@@ -1,11 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { FranchiseTableService } from './franchise-table.service';
-import {
-  DistanceCalculatorService,
-  DistanceRiskTier,
-} from './distance-calculator.service';
 import { DriverProfileService } from './driver-profile.service';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Tipos de pago soportados
@@ -24,6 +20,7 @@ export interface RiskCalculation {
   guaranteeType: 'hold' | 'security_credit';
   guaranteeAmountArs: number;
   guaranteeAmountUsd: number;
+  baseGuaranteeAmountUsd: number; // Garantía base sin ajuste de clase
 
   // FX snapshot
   fxRate: number;
@@ -36,20 +33,10 @@ export interface RiskCalculation {
   hasCard: boolean;
   requiresRevalidation: boolean;
 
-  // ✅ DISTANCE-BASED RISK: Campos de riesgo por distancia
-  distanceKm?: number;
-  distanceRiskMultiplier?: number; // Multiplicador (1.0 - 1.5)
-  distanceRiskTier?: 'local' | 'regional' | 'long_distance';
-  guaranteeByRisk: number; // Garantía calculada solo por riesgo del auto
-  guaranteeByDistance: number; // Garantía calculada solo por distancia
-  guaranteeFinal: number; // Mayor de ambos (garantía aplicada)
-
-  // ✅ DRIVER CLASS (Bonus-Malus System)
-  driverClass?: number; // Clase del conductor (0-10)
-  driverScore?: number; // Score de conductor (0-100)
-  classMultiplier?: number; // Multiplicador por clase aplicado
-  guaranteeBeforeClass?: number; // Garantía antes de aplicar clase
-  guaranteeAfterClass?: number; // Garantía después de aplicar clase
+  // Bonus-Malus (opcional)
+  driverClass?: number;
+  guaranteeMultiplier?: number;
+  guaranteeDiscountPct?: number;
 }
 
 /**
@@ -70,9 +57,7 @@ export interface RiskCalculation {
 })
 export class RiskCalculatorService {
   private readonly franchiseService = inject(FranchiseTableService);
-  private readonly distanceService = inject(DistanceCalculatorService);
-  private readonly driverProfileService = inject(DriverProfileService);
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
 
   /**
    * Determina el bucket del auto según su valor
@@ -93,8 +78,7 @@ export class RiskCalculatorService {
    * @param carValueUsd - Valor del auto en USD
    * @param fxRate - Tasa de cambio USD → ARS
    * @param hasCard - Si el usuario tiene tarjeta registrada
-   * @param distanceKm - Distancia entre usuario y auto (opcional)
-   * @param userId - ID del usuario para aplicar clase de conductor (opcional)
+   * @param userId - ID del usuario (opcional, para aplicar multiplicadores de clase)
    * @param existingSnapshot - Snapshot previo (para revalidación)
    * @returns Cálculo de risk completo
    */
@@ -102,7 +86,6 @@ export class RiskCalculatorService {
     carValueUsd: number,
     fxRate: number,
     hasCard: boolean,
-    distanceKm?: number,
     userId?: string,
     existingSnapshot?: {
       fxRate: number;
@@ -112,89 +95,50 @@ export class RiskCalculatorService {
     const bucket = this.determineBucket(carValueUsd);
     const franchiseInfo = this.franchiseService.getFranchiseInfo(carValueUsd, bucket, fxRate);
 
-    // Determinar tipo de garantía
-    const guaranteeType: 'hold' | 'security_credit' = hasCard ? 'hold' : 'security_credit';
-
-    // STEP 1: Calcular garantía BASE por riesgo del auto
-    let guaranteeByRiskUsd = 0;
-    let guaranteeByRiskArs = 0;
-
-    if (hasCard) {
-      // Hold en ARS (preautorización)
-      guaranteeByRiskArs = franchiseInfo.holdArs;
-      guaranteeByRiskUsd = Math.round((guaranteeByRiskArs / fxRate) * 100) / 100;
-    } else {
-      // Crédito de Seguridad en USD (wallet)
-      guaranteeByRiskUsd = franchiseInfo.securityCreditUsd;
-      guaranteeByRiskArs = Math.round(guaranteeByRiskUsd * fxRate);
-    }
-
-    // STEP 2: Calcular garantía por DISTANCIA (si se proporciona)
-    let guaranteeByDistanceUsd = guaranteeByRiskUsd; // Default: igual a garantía por riesgo
-    let guaranteeByDistanceArs = guaranteeByRiskArs;
-    let distanceRiskTier: DistanceRiskTier | undefined = undefined;
-    let distanceRiskMultiplier: number | undefined = undefined;
-
-    if (distanceKm !== undefined) {
-      // Determinar tier de distancia y multiplicador
-      distanceRiskTier = this.distanceService.getDistanceTier(distanceKm);
-      distanceRiskMultiplier = this.distanceService.getGuaranteeMultiplier(distanceRiskTier);
-
-      // Calcular garantía ajustada por distancia
-      guaranteeByDistanceUsd = Math.ceil(guaranteeByRiskUsd * distanceRiskMultiplier);
-      guaranteeByDistanceArs = Math.round(guaranteeByDistanceUsd * fxRate);
-    }
-
-    // STEP 3: Aplicar criterio MAYOR (tomar la garantía más alta)
-    let guaranteeFinalUsd = Math.max(guaranteeByRiskUsd, guaranteeByDistanceUsd);
-    let guaranteeFinalArs = Math.round(guaranteeFinalUsd * fxRate);
-    const guaranteeBeforeClass = guaranteeFinalUsd;
-
-    // STEP 4: Aplicar clase de conductor (si se proporciona userId)
-    let driverClass: number | undefined = undefined;
-    let driverScore: number | undefined = undefined;
-    let classMultiplier: number | undefined = undefined;
-    let guaranteeAfterClass: number | undefined = undefined;
+    // Obtener multiplicador de clase del conductor (si userId está disponible)
+    let guaranteeMultiplier = 1.0;
+    let driverClass: number | undefined;
+    let guaranteeDiscountPct: number | undefined;
 
     if (userId) {
       try {
-        // Obtener perfil de conductor
-        const profile = this.driverProfileService.profile();
-        if (profile) {
+        const { data, error } = await this.supabase.rpc('get_driver_profile', {
+          p_user_id: userId,
+        });
+
+        if (!error && data && data.length > 0) {
+          const profile = data[0];
+          guaranteeMultiplier = profile.guarantee_multiplier || 1.0;
           driverClass = profile.class;
-          driverScore = profile.driver_score;
-          classMultiplier = profile.guarantee_multiplier;
-
-          // Llamar al RPC para obtener garantía ajustada por clase
-          const baseGuaranteeCents = Math.round(guaranteeFinalUsd * 100);
-          const { data, error } = await this.supabase.rpc('compute_guarantee_with_class', {
-            p_base_guarantee_cents: baseGuaranteeCents,
-            p_user_id: userId,
-            p_has_card: hasCard,
-          });
-
-          if (!error && data && data.length > 0) {
-            const result = data[0] as {
-              adjusted_guarantee_cents: number;
-              class_multiplier: number;
-              card_discount_multiplier: number;
-              driver_class: number;
-            };
-
-            // Actualizar garantía final con ajuste por clase
-            guaranteeAfterClass = result.adjusted_guarantee_cents / 100;
-            guaranteeFinalUsd = guaranteeAfterClass;
-            guaranteeFinalArs = Math.round(guaranteeFinalUsd * fxRate);
-            classMultiplier = result.class_multiplier;
-          }
+          guaranteeDiscountPct = Math.round((1.0 - guaranteeMultiplier) * 100);
         }
-      } catch (err) {
-        // Si falla la obtención de clase, continuar sin ajuste
-        console.warn('Error aplicando clase de conductor:', err);
+      } catch (error) {
+        console.warn('[RiskCalculatorService] Error al obtener perfil de conductor:', error);
+        // Continuar con multiplicador 1.0 (sin ajuste)
       }
     }
 
-    // STEP 5: Revalidación
+    // Determinar tipo de garantía
+    const guaranteeType: 'hold' | 'security_credit' = hasCard ? 'hold' : 'security_credit';
+
+    let baseGuaranteeAmountUsd = 0;
+    let guaranteeAmountArs = 0;
+    let guaranteeAmountUsd = 0;
+
+    if (hasCard) {
+      // Hold en ARS (preautorización)
+      const baseHoldArs = franchiseInfo.holdArs;
+      guaranteeAmountArs = Math.round(baseHoldArs * guaranteeMultiplier);
+      baseGuaranteeAmountUsd = Math.round((baseHoldArs / fxRate) * 100) / 100;
+      guaranteeAmountUsd = Math.round((guaranteeAmountArs / fxRate) * 100) / 100;
+    } else {
+      // Crédito de Seguridad en USD (wallet)
+      baseGuaranteeAmountUsd = franchiseInfo.securityCreditUsd;
+      guaranteeAmountUsd = Math.round(baseGuaranteeAmountUsd * guaranteeMultiplier * 100) / 100;
+      guaranteeAmountArs = Math.round(guaranteeAmountUsd * fxRate);
+    }
+
+    // Revalidación
     let requiresRevalidation = false;
     if (existingSnapshot) {
       const daysSince = Math.floor(
@@ -211,29 +155,17 @@ export class RiskCalculatorService {
       standardFranchiseUsd: franchiseInfo.standardUsd,
       rolloverFranchiseUsd: franchiseInfo.rolloverUsd,
       guaranteeType,
-      // Garantías finales (aplicadas)
-      guaranteeAmountArs: guaranteeFinalArs,
-      guaranteeAmountUsd: guaranteeFinalUsd,
-      // Desglose de garantías
-      guaranteeByRisk: guaranteeByRiskUsd,
-      guaranteeByDistance: guaranteeByDistanceUsd,
-      guaranteeFinal: guaranteeFinalUsd,
-      // Distancia
-      distanceKm,
-      distanceRiskMultiplier,
-      distanceRiskTier,
-      // Clase de conductor (Bonus-Malus)
-      driverClass,
-      driverScore,
-      classMultiplier,
-      guaranteeBeforeClass,
-      guaranteeAfterClass,
-      // FX y metadata
+      guaranteeAmountArs,
+      guaranteeAmountUsd,
+      baseGuaranteeAmountUsd,
       fxRate,
       fxSnapshotDate: new Date(),
       bucket,
       hasCard,
       requiresRevalidation,
+      driverClass,
+      guaranteeMultiplier,
+      guaranteeDiscountPct,
     };
   }
 
@@ -300,15 +232,25 @@ export class RiskCalculatorService {
     description: string;
     amountArs: string;
     amountUsd: string;
+    discountBadge?: string;
   } {
+    const discountBadge =
+      risk.guaranteeDiscountPct && risk.guaranteeDiscountPct !== 0
+        ? risk.guaranteeDiscountPct > 0
+          ? `🎉 ${risk.guaranteeDiscountPct}% de descuento por tu clase de conductor`
+          : `⚠️ ${Math.abs(risk.guaranteeDiscountPct)}% de recargo por tu clase de conductor`
+        : undefined;
+
     if (risk.guaranteeType === 'hold') {
       return {
         title: 'Garantía (preautorización reembolsable)',
         description:
           'Se preautoriza en tu tarjeta. Si está todo ok, se libera automáticamente. ' +
-          'Si hay gastos o daños, capturamos solo lo necesario (hasta tu franquicia).',
+          'Si hay gastos o daños, capturamos solo lo necesario (hasta tu franquicia).' +
+          (discountBadge ? ` ${discountBadge}` : ''),
         amountArs: this.franchiseService.formatArs(risk.guaranteeAmountArs),
         amountUsd: this.franchiseService.formatUsd(risk.guaranteeAmountUsd),
+        discountBadge,
       };
     } else {
       return {
@@ -316,9 +258,11 @@ export class RiskCalculatorService {
         description:
           `Pagas ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)}. ` +
           'Queda en tu wallet (no retirable). Se usa primero para gastos/daños. ' +
-          'Si no se usa, queda disponible para próximas reservas.',
+          'Si no se usa, queda disponible para próximas reservas.' +
+          (discountBadge ? ` ${discountBadge}` : ''),
         amountArs: this.franchiseService.formatArs(risk.guaranteeAmountArs),
         amountUsd: this.franchiseService.formatUsd(risk.guaranteeAmountUsd),
+        discountBadge,
       };
     }
   }

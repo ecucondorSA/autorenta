@@ -383,4 +383,126 @@ export class WalletService {
       this.logger.error('Error al obtener depósitos pendientes', err instanceof Error ? err : new Error(String(err)));
     }
   }
+
+  // ============================================================================
+  // PROTECTION CREDIT METHODS - Added 2025-11-05
+  // ============================================================================
+
+  /**
+   * Get Protection Credit balance
+   * Nota: Ya existe protectedCreditBalance computed, pero este método llama al RPC actualizado
+   */
+  async getProtectionCreditBalance(): Promise<{
+    balance_cents: number;
+    balance_usd: number;
+    issued_at: string | null;
+    expires_at: string | null;
+    is_expired: boolean;
+    days_until_expiry: number | null;
+  } | null> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      if (!user) throw new Error('Usuario no autenticado');
+
+      const { data, error } = await this.supabase.rpc('get_protection_credit_balance', {
+        p_user_id: user.id,
+      });
+
+      if (error) throw error;
+      return data?.[0] || null;
+    } catch (err: any) {
+      this.handleError(err, 'Error al obtener balance de Crédito de Protección');
+      throw err;
+    }
+  }
+
+  /**
+   * Issue Protection Credit to a new user ($300 USD)
+   * Only callable by service role, but exposed for admin operations
+   */
+  async issueProtectionCredit(
+    userId: string,
+    amountCents: number = 30000,
+    validityDays: number = 365,
+  ): Promise<string> {
+    try {
+      const { data, error } = await this.supabase.rpc('issue_protection_credit', {
+        p_user_id: userId,
+        p_amount_cents: amountCents,
+        p_validity_days: validityDays,
+      });
+
+      if (error) throw error;
+
+      // Refresh balance after issuing CP
+      this.getBalance().subscribe();
+
+      return data;
+    } catch (err: any) {
+      this.handleError(err, 'Error al emitir Crédito de Protección');
+      throw err;
+    }
+  }
+
+  /**
+   * Check Protection Credit renewal eligibility
+   */
+  async checkProtectionCreditRenewal(): Promise<{
+    eligible: boolean;
+    completedBookings: number;
+    totalClaims: number;
+    bookingsNeeded: number;
+  }> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      if (!user) throw new Error('Usuario no autenticado');
+
+      // Contar bookings completados
+      const { count: completedBookings } = await this.supabase
+        .from('bookings')
+        .select('*', { count: 'exact', head: true })
+        .eq('renter_id', user.id)
+        .eq('status', 'completed');
+
+      // Contar siniestros
+      const { count: totalClaims } = await this.supabase
+        .from('booking_claims')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .in('status', ['approved', 'resolved']);
+
+      const eligible = (completedBookings ?? 0) >= 10 && (totalClaims ?? 0) === 0;
+      const bookingsNeeded = Math.max(0, 10 - (completedBookings ?? 0));
+
+      return {
+        eligible,
+        completedBookings: completedBookings ?? 0,
+        totalClaims: totalClaims ?? 0,
+        bookingsNeeded,
+      };
+    } catch (err: any) {
+      this.handleError(err, 'Error al verificar elegibilidad de renovación');
+      throw err;
+    }
+  }
+
+  /**
+   * Get formatted Protection Credit balance for UI display
+   */
+  getProtectionCreditFormatted(): string {
+    const balance = this.protectedCreditBalance();
+    return `$${balance.toFixed(2)} USD`;
+  }
+
+  /**
+   * Get total available funds (including Protection Credit)
+   * Para cálculos de cobertura de siniestros
+   */
+  getTotalCoverageBalance(): number {
+    return this.availableBalance() + this.protectedCreditBalance();
+  }
 }
