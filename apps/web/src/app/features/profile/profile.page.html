@@ -660,6 +660,13 @@
               🚗 Mis autos
             </a>
             <a
+              *ngIf="canPublishCars()"
+              routerLink="/bookings/owner"
+              class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
+            >
+              📋 Reservas de mis autos
+            </a>
+            <a
               *ngIf="canBookCars()"
               routerLink="/bookings"
               class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
