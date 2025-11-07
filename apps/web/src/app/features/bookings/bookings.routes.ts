@@ -62,6 +62,11 @@ export const BOOKINGS_ROUTES: Routes = [
     loadComponent: () => import('./report-claim/report-claim.page').then((m) => m.ReportClaimPage),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'claims',
+    loadComponent: () => import('./claims/my-claims.page').then((m) => m.MyClaimsPage),
+    canActivate: [AuthGuard],
+  },
   // {
   //   path: ':id/voucher',
   //   loadComponent: () =>
