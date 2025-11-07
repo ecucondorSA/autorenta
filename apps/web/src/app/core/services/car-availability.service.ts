@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { BlockedDateRange } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { injectSupabase } from './supabase-client.service';
 import { CarBlockingService, BlockedDateRange as ManualBlock } from './car-blocking.service';
+import { LoggerService } from './logger.service';
 
 /**
  * Blocked date range from database
@@ -56,6 +57,7 @@ export interface DetailedBlockedRange {
 export class CarAvailabilityService {
   private readonly supabase = injectSupabase();
   private readonly carBlockingService = inject(CarBlockingService);
+  private readonly logger = inject(LoggerService).createChildLogger('CarAvailability');
 
   // Cache for blocked dates (5 minutes TTL)
   private readonly cache = new Map<string, { data: BlockedDateRange[]; timestamp: number }>();
@@ -111,7 +113,7 @@ export class CarAvailabilityService {
 
       return allBlocks;
     } catch (error) {
-      console.error('[CarAvailability] Exception in getBlockedDates:', error);
+      this.logger.error('Exception in getBlockedDates', error);
       return []; // Return empty array on error to allow UI to continue
     }
   }
@@ -159,7 +161,7 @@ export class CarAvailabilityService {
 
       return [...bookingRanges, ...manualRanges];
     } catch (error) {
-      console.error('[CarAvailability] Exception in getBlockedRangesWithDetails:', error);
+      this.logger.error('Exception in getBlockedRangesWithDetails', error);
       return [];
     }
   }
@@ -179,7 +181,7 @@ export class CarAvailabilityService {
     });
 
     if (error) {
-      console.error('[CarAvailability] Error fetching booking blocks:', error);
+      this.logger.error('Error fetching booking blocks', error);
       throw new Error(`Failed to fetch booking blocks: ${error.message}`);
     }
 
@@ -208,12 +210,12 @@ export class CarAvailabilityService {
       today.setHours(0, 0, 0, 0);
 
       if (start >= end) {
-        console.warn('[CarAvailability] Start date must be before end date');
+        this.logger.warn('Start date must be before end date');
         return false;
       }
 
       if (start < today) {
-        console.warn('[CarAvailability] Cannot book dates in the past');
+        this.logger.warn('Cannot book dates in the past');
         return false;
       }
 
@@ -225,13 +227,13 @@ export class CarAvailabilityService {
       });
 
       if (error) {
-        console.error('[CarAvailability] Error checking availability:', error);
+        this.logger.error('Error checking availability', error);
         return false;
       }
 
       return data === true;
     } catch (error) {
-      console.error('[CarAvailability] Exception in checkAvailability:', error);
+      this.logger.error('Exception in checkAvailability', error);
       return false;
     }
   }
@@ -262,13 +264,13 @@ export class CarAvailabilityService {
       });
 
       if (error) {
-        console.error('[CarAvailability] Error finding next available date:', error);
+        this.logger.error('Error finding next available date', error);
         return null;
       }
 
       return data as string | null;
     } catch (error) {
-      console.error('[CarAvailability] Exception in getNextAvailableDate:', error);
+      this.logger.error('Exception in getNextAvailableDate', error);
       return null;
     }
   }

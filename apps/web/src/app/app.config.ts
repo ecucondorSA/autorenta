@@ -19,6 +19,7 @@ import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
+import { traceIdInterceptor } from './core/interceptors/trace-id.interceptor';
 import { SupabaseClientService } from './core/services/supabase-client.service';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
 import { SentryErrorHandler } from './core/services/sentry.service';
@@ -64,7 +65,7 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled'
       })
     ),
-    provideHttpClient(withInterceptors([SupabaseAuthInterceptor, httpErrorInterceptor])),
+    provideHttpClient(withInterceptors([traceIdInterceptor, SupabaseAuthInterceptor, httpErrorInterceptor])),
     provideAnimationsAsync(),
     provideIonicAngular({
       mode: 'md',

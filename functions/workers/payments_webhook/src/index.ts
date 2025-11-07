@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { withSentry, captureError, addBreadcrumb, type SentryEnv } from './sentry';
+import { fromRequest, type Logger } from '../../logger';
 
 interface Env extends SentryEnv {
   SUPABASE_URL: string;
@@ -84,7 +85,7 @@ const normalizeMockStatus = (status: string): { payment: string; booking: string
 /**
  * Normaliza el status de Mercado Pago a estados de DB
  */
-const normalizeMPStatus = (status: string): { payment: string; booking: string } | null => {
+const normalizeMPStatus = (status: string, log?: Logger): { payment: string; booking: string } | null => {
   switch (status) {
     case 'approved':
       return { payment: 'completed', booking: 'confirmed' };
@@ -98,7 +99,7 @@ const normalizeMPStatus = (status: string): { payment: string; booking: string }
     case 'charged_back':
       return { payment: 'refunded', booking: 'cancelled' };
     default:
-      console.warn('Unknown MP status:', status);
+      log?.warn('Unknown MP status', { status });
       return null;
   }
 };
@@ -130,18 +131,19 @@ const verifyMercadoPagoSignature = async (params: {
   signatureHeader?: string | null | undefined;
   requestId?: string | null | undefined;
   secret: string;
+  log?: Logger;
 }): Promise<boolean> => {
-  const { paymentId, signatureHeader, requestId, secret } = params;
+  const { paymentId, signatureHeader, requestId, secret, log } = params;
 
   if (!signatureHeader || !requestId) {
     // Si no hay firma, no podemos verificar. Mercado Pago puede omitirla en ciertos entornos.
-    console.warn('Mercado Pago signature headers missing, skipping validation');
+    log?.warn('Mercado Pago signature headers missing, skipping validation');
     return true;
   }
 
   const { ts, hash } = parseSignatureHeader(signatureHeader);
   if (!ts || !hash) {
-    console.warn('Malformed x-signature header, skipping validation');
+    log?.warn('Malformed x-signature header, skipping validation');
     return true;
   }
 
@@ -166,7 +168,7 @@ const verifyMercadoPagoSignature = async (params: {
     const isValid = computedHash === hash;
 
     if (!isValid) {
-      console.error('Invalid Mercado Pago signature', {
+      log?.error('Invalid Mercado Pago signature', {
         paymentId,
         requestId,
         ts,
@@ -177,7 +179,7 @@ const verifyMercadoPagoSignature = async (params: {
 
     return isValid;
   } catch (error) {
-    console.error('Failed to validate Mercado Pago signature', error);
+    log?.error('Failed to validate Mercado Pago signature', error);
     return false;
   }
 };
@@ -244,7 +246,7 @@ const processMockWebhook = async (
       );
 
     if (paymentsError) {
-      console.error('Payments update failed:', paymentsError);
+      log.error('Payments update failed', paymentsError);
       throw new Error('Error updating payment');
     }
 
@@ -255,7 +257,7 @@ const processMockWebhook = async (
       .eq('id', payload.booking_id);
 
     if (bookingError) {
-      console.error('Booking update failed:', bookingError);
+      log.error('Booking update failed', bookingError);
       throw new Error('Error updating booking');
     }
 
@@ -266,7 +268,7 @@ const processMockWebhook = async (
       .eq('booking_id', payload.booking_id);
 
     if (intentError) {
-      console.error('Payment intent update failed:', intentError);
+      log.error('Payment intent update failed', intentError);
       throw new Error('Error updating payment intent');
     }
 
@@ -340,6 +342,7 @@ const processMercadoPagoWebhook = async (
     signatureHeader: options.signatureHeader || undefined,
     requestId: options.requestId || undefined,
     secret: mpAccessToken,
+    log,
   });
 
   if (!signatureValid) {
@@ -348,24 +351,24 @@ const processMercadoPagoWebhook = async (
 
   // Obtener detalles completos del pago desde MP
   let paymentDetail: MercadoPagoPaymentDetail;
-  
+
   try {
     paymentDetail = await getMercadoPagoPaymentDetails(paymentId, mpAccessToken);
   } catch (error) {
     // Si falla (ej: payment ID de test), retornar 200 para que MP acepte el webhook
-    console.log('Payment not found in MercadoPago API (probably a test):', paymentId);
-    return jsonResponse({ 
+    log.info('Payment not found in MercadoPago API (probably a test)', { paymentId });
+    return jsonResponse({
       message: 'Webhook endpoint verified successfully',
       paymentId,
       note: 'Payment ID not found in MercadoPago API - this is expected for test notifications'
     }, { status: 200 });
   }
-  
+
   const bookingId =
     paymentDetail.external_reference || paymentDetail.metadata?.booking_id;
 
   if (!bookingId) {
-    console.error('Cannot resolve booking ID from payment', {
+    log.error('Cannot resolve booking ID from payment', {
       paymentId,
       external_reference: paymentDetail.external_reference,
       metadata: paymentDetail.metadata,
@@ -375,10 +378,10 @@ const processMercadoPagoWebhook = async (
     return jsonResponse({ message: 'Booking reference not found' }, { status: 200 });
   }
 
-  const normalized = normalizeMPStatus(paymentDetail.status);
+  const normalized = normalizeMPStatus(paymentDetail.status, log);
 
   if (!normalized) {
-    console.warn('Unsupported Mercado Pago status', {
+    log.warn('Unsupported Mercado Pago status', {
       paymentId,
       status: paymentDetail.status,
     });
@@ -389,7 +392,7 @@ const processMercadoPagoWebhook = async (
   const existing = await env.AUTORENT_WEBHOOK_KV.get(dedupeKey);
 
   if (existing === 'processed') {
-    console.log('Payment already processed:', paymentId, paymentDetail.status);
+    log.info('Payment already processed', { paymentId, status: paymentDetail.status });
     return jsonResponse({ message: 'Already processed' }, { status: 200 });
   }
 
@@ -426,7 +429,7 @@ const processMercadoPagoWebhook = async (
     }
 
     if (!intentData) {
-      console.warn('Payment intent not found for payment', {
+      log.warn('Payment intent not found for payment', {
         paymentId,
         bookingId,
       });
@@ -451,7 +454,7 @@ const processMercadoPagoWebhook = async (
     );
 
     if (paymentError) {
-      console.error('Payment update failed:', paymentError);
+      log.error('Payment update failed', paymentError);
       throw new Error('Error updating payment');
     }
 
@@ -465,7 +468,7 @@ const processMercadoPagoWebhook = async (
         .eq('id', bookingId);
 
       if (bookingError) {
-        console.error('Booking update failed:', bookingError);
+        log.error('Booking update failed', bookingError);
         throw new Error('Error updating booking');
       }
     }
@@ -486,7 +489,7 @@ const processMercadoPagoWebhook = async (
       .eq('id', intentData.id);
 
     if (intentUpdateError) {
-      console.error('Intent update failed:', intentUpdateError);
+      log.error('Intent update failed', intentUpdateError);
       throw new Error('Error updating payment intent');
     }
 
@@ -494,7 +497,7 @@ const processMercadoPagoWebhook = async (
       expirationTtl: 60 * 60 * 24 * 30,
     });
 
-    console.log('Mercado Pago payment processed successfully', {
+    log.info('Mercado Pago payment processed successfully', {
       paymentId,
       bookingId,
       status: paymentDetail.status,
@@ -522,6 +525,7 @@ const processMercadoPagoWebhook = async (
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     return withSentry(request, env, ctx, async () => {
+      const log = fromRequest(request, 'payments-webhook');
       const url = new URL(request.url);
 
       // Health check endpoint - GET permite verificación
@@ -550,7 +554,7 @@ const worker = {
         try {
           payload = JSON.parse(rawBody);
         } catch (error) {
-          console.warn('Invalid JSON payload, continuing with query params fallback:', error);
+          log.warn('Invalid JSON payload, continuing with query params fallback', error);
           addBreadcrumb('Invalid JSON payload', 'validation', { error });
           payload = {};
         }
@@ -564,7 +568,7 @@ const worker = {
           if (!payload.booking_id || !payload.status) {
             return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
           }
-          return await processMockWebhook(payload, supabase, env);
+          return await processMockWebhook(payload, supabase, env, log);
         }
 
         addBreadcrumb('Processing MercadoPago webhook', 'webhook', {
@@ -575,9 +579,9 @@ const worker = {
           requestId: request.headers.get('x-request-id'),
           rawBody,
           query: url.searchParams,
-        });
+        }, log);
       } catch (error) {
-        console.error('Error processing webhook:', error);
+        log.error('Error processing webhook', error);
         captureError(error, {
           tags: {
             provider: payload?.provider || 'mercadopago',

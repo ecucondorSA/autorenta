@@ -46,6 +46,10 @@ export default [
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-undef': 'off', // Disabled for test files with jasmine globals
       '@angular-eslint/prefer-inject': 'off', // Allow constructor injection for now
+      // Centralized Logging: Enforce LoggerService usage
+      'no-console': ['error', {
+        allow: [] // No raw console.* allowed - use LoggerService instead
+      }],
     },
   },
   // Relaxed rules for test files
@@ -54,6 +58,7 @@ export default [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off', // Allow 'any' in tests for mocking
       '@typescript-eslint/no-unused-vars': 'off', // Allow unused vars in test setup
+      'no-console': 'off', // Allow console in tests for debugging
     },
   },
 ];

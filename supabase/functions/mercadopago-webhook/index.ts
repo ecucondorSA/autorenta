@@ -169,11 +169,11 @@ serve(async (req) => {
     const isProduction = Deno.env.get('ENVIRONMENT') === 'production' || !Deno.env.get('ENVIRONMENT');
     
     if (!isAuthorizedIP && isProduction) {
-      console.warn('⚠️ Unauthorized IP attempt:', {
+      log.warn('Unauthorized IP attempt', {
         ip: clientIP,
         userAgent: req.headers.get('user-agent'),
       });
-      
+
       return new Response(
         JSON.stringify({
           error: 'Unauthorized IP address',
@@ -191,9 +191,9 @@ serve(async (req) => {
     // Prevenir DDoS limitando requests por IP
     // ========================================
     const rateLimit = checkRateLimit(clientIP);
-    
+
     if (!rateLimit.allowed) {
-      console.warn('⚠️ Rate limit exceeded:', {
+      log.warn('Rate limit exceeded', {
         ip: clientIP,
         resetAt: new Date(rateLimit.resetAt).toISOString(),
       });
@@ -232,8 +232,8 @@ serve(async (req) => {
 
     const xSignature = req.headers.get('x-signature');
     const xRequestId = req.headers.get('x-request-id');
-    
-    console.log('Webhook validation:', {
+
+    log.info('Webhook validation', {
       ip: clientIP,
       isAuthorizedIP,
       hasSignature: !!xSignature,
@@ -252,7 +252,7 @@ serve(async (req) => {
     try {
       webhookPayload = JSON.parse(rawBody);
     } catch (e) {
-      console.error('Invalid JSON in webhook payload:', e);
+      log.error('Invalid JSON in webhook payload', e);
       return new Response(
         JSON.stringify({ error: 'Invalid JSON payload' }),
         {
@@ -294,7 +294,7 @@ serve(async (req) => {
         const paymentId = webhookPayload.data?.id || dataId || '';
         const manifest = `id:${paymentId};request-id:${xRequestId};ts:${ts};`;
 
-        console.log('HMAC validation:', {
+        log.info('HMAC validation', {
           manifest,
           ts,
           hash_received: hash.substring(0, 20) + '...',
@@ -323,11 +323,11 @@ serve(async (req) => {
           const hashArray = Array.from(new Uint8Array(signature));
           const calculatedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-          console.log('HMAC calculated:', calculatedHash.substring(0, 20) + '...');
+          log.info('HMAC calculated', { hash: calculatedHash.substring(0, 20) + '...' });
 
           // Comparar hashes
           if (calculatedHash !== hash) {
-            console.error('HMAC validation FAILED', {
+            log.error('HMAC validation FAILED', {
               expected: hash.substring(0, 20) + '...',
               calculated: calculatedHash.substring(0, 20) + '...',
             });
@@ -344,23 +344,23 @@ serve(async (req) => {
               }
             );
           } else {
-            console.log('✅ HMAC validation passed');
+            log.info('HMAC validation passed');
           }
         } catch (cryptoError) {
-          console.error('Error calculating HMAC:', cryptoError);
+          log.error('Error calculating HMAC', cryptoError);
           // No fallar por errores de crypto, solo loggear
         }
       } else {
-        console.warn('x-signature present but missing ts or v1 parts');
+        log.warn('x-signature present but missing ts or v1 parts');
       }
     } else {
-      console.warn('⚠️ No x-signature header - webhook signature not validated');
+      log.warn('No x-signature header - webhook signature not validated');
       // En producción deberíamos rechazar, por ahora solo loggeamos
     }
 
     // Solo procesar notificaciones de tipo 'payment'
     if (webhookPayload.type !== 'payment') {
-      console.log(`Ignoring webhook type: ${webhookPayload.type}`);
+      log.info('Ignoring webhook type', { type: webhookPayload.type });
       return new Response(
         JSON.stringify({ success: true, message: 'Webhook type ignored' }),
         {
@@ -376,7 +376,7 @@ serve(async (req) => {
     // ========================================
 
     const paymentId = webhookPayload.data.id;
-    console.log(`Fetching payment ${paymentId} using MercadoPago REST API...`);
+    log.info('Fetching payment using MercadoPago REST API', { paymentId });
 
     // Llamar directamente a la REST API (sin SDK)
     let paymentData;
@@ -391,7 +391,7 @@ serve(async (req) => {
 
       if (!mpResponse.ok) {
         const errorText = await mpResponse.text();
-        console.error('MercadoPago API Error:', {
+        log.error('MercadoPago API Error', {
           status: mpResponse.status,
           statusText: mpResponse.statusText,
           body: errorText,
@@ -425,7 +425,7 @@ serve(async (req) => {
 
       // Validar que la respuesta contiene datos válidos
       if (!paymentData || !paymentData.id) {
-        console.error('Invalid payment data received from MercadoPago API:', paymentData);
+        log.error('Invalid payment data received from MercadoPago API', { paymentData });
         return new Response(
           JSON.stringify({
             success: false,
@@ -478,7 +478,7 @@ serve(async (req) => {
 
     // Check if this is a preauthorization (status: authorized)
     if (paymentData.status === 'authorized') {
-      console.log('Processing preauthorization (hold) webhook...');
+      log.info('Processing preauthorization (hold) webhook');
 
       // Find payment intent by mp_payment_id
       const { data: intent, error: intentError } = await supabase
@@ -488,7 +488,7 @@ serve(async (req) => {
         .single();
 
       if (intentError || !intent) {
-        console.log('No payment intent found for authorized payment:', paymentId);
+        log.info('No payment intent found for authorized payment', { paymentId });
         // This might be a regular authorized payment, not a preauth
         return new Response(
           JSON.stringify({
@@ -517,9 +517,9 @@ serve(async (req) => {
       });
 
       if (updateError) {
-        console.error('Error updating preauth intent:', updateError);
+        log.error('Error updating preauth intent', updateError);
       } else {
-        console.log('✅ Preauthorization updated successfully');
+        log.info('Preauthorization updated successfully');
       }
 
       return new Response(
@@ -549,7 +549,7 @@ serve(async (req) => {
       .single();
 
     if (!capturedIntentError && capturedIntent && paymentData.status === 'approved') {
-      console.log('Processing preauth capture webhook...');
+      log.info('Processing preauth capture webhook');
 
       // Update payment intent to captured
       const { error: updateError } = await supabase.rpc('update_payment_intent_status', {
@@ -564,7 +564,7 @@ serve(async (req) => {
       });
 
       if (updateError) {
-        console.error('Error updating captured preauth:', updateError);
+        log.error('Error updating captured preauth', updateError);
       }
 
       // Call capture_preauth RPC to handle ledger entries
@@ -575,9 +575,9 @@ serve(async (req) => {
         });
 
         if (captureError) {
-          console.error('Error processing capture ledger:', captureError);
+          log.error('Error processing capture ledger', captureError);
         } else {
-          console.log('✅ Preauth captured and ledger updated');
+          log.info('Preauth captured and ledger updated');
         }
       }
 
@@ -600,7 +600,7 @@ serve(async (req) => {
     // ========================================
 
     if (paymentData.status === 'cancelled') {
-      console.log('Processing preauth cancellation webhook...');
+      log.info('Processing preauth cancellation webhook');
 
       // Find payment intent by mp_payment_id
       const { data: cancelledIntent, error: cancelledIntentError } = await supabase
@@ -623,7 +623,7 @@ serve(async (req) => {
         });
 
         if (updateError) {
-          console.error('Error updating cancelled preauth:', updateError);
+          log.error('Error updating cancelled preauth', updateError);
         }
 
         // Call cancel_preauth RPC to release any locked funds
@@ -632,9 +632,9 @@ serve(async (req) => {
         });
 
         if (cancelError) {
-          console.error('Error processing cancellation:', cancelError);
+          log.error('Error processing cancellation', cancelError);
         } else {
-          console.log('✅ Preauth cancelled successfully');
+          log.info('Preauth cancelled successfully');
         }
 
         return new Response(
@@ -658,7 +658,7 @@ serve(async (req) => {
 
     // Verificar que el pago esté aprobado
     if (paymentData.status !== 'approved') {
-      console.log(`Payment not approved. Status: ${paymentData.status}`);
+      log.info('Payment not approved', { status: paymentData.status });
       return new Response(
         JSON.stringify({
           success: true,
@@ -676,7 +676,7 @@ serve(async (req) => {
     const reference_id = paymentData.external_reference;
 
     if (!reference_id) {
-      console.error('Missing external_reference in payment data');
+      log.error('Missing external_reference in payment data');
       throw new Error('Missing external_reference');
     }
 
@@ -693,11 +693,11 @@ serve(async (req) => {
 
     // Si es un booking, procesar pago de booking
     if (booking && !bookingError) {
-      console.log('Processing booking payment:', reference_id);
+      log.info('Processing booking payment', { bookingId: reference_id });
 
       // Verificar que el booking esté pendiente de pago
       if (booking.status !== 'pending') {
-        console.log(`Booking is not pending (status: ${booking.status}), ignoring webhook`);
+        log.info('Booking is not pending, ignoring webhook', { status: booking.status });
         return new Response(
           JSON.stringify({ success: true, message: 'Booking already processed' }),
           {
@@ -719,7 +719,7 @@ serve(async (req) => {
       const validationIssues: Array<{type: string; [key: string]: any}> = [];
 
       if (isMarketplaceSplit) {
-        console.log('💰 Processing marketplace split payment...');
+        log.info('Processing marketplace split payment');
 
         // ========================================
         // VALIDACIÓN DE SPLIT (Paso 4)
@@ -733,7 +733,7 @@ serve(async (req) => {
           .single();
 
         if (carError || !car) {
-          console.error('Error fetching car owner info:', carError);
+          log.error('Error fetching car owner info', carError);
         }
 
         const expectedCollectorId = car?.profiles?.mercadopago_collector_id;
@@ -742,7 +742,7 @@ serve(async (req) => {
         // 2. Validar que el collector_id coincida
 
         if (expectedCollectorId && receivedCollectorId !== expectedCollectorId) {
-          console.error('❌ Split payment error: wrong collector', {
+          log.error('Split payment error: wrong collector', {
             expected: expectedCollectorId,
             received: receivedCollectorId,
             booking_id: reference_id,
@@ -784,7 +784,7 @@ serve(async (req) => {
         const amountDifference = Math.abs(calculatedTotal - totalAmount);
 
         if (amountDifference > 0.01) { // Tolerar diferencia de 1 centavo por redondeo
-          console.error('❌ Split amount validation failed', {
+          log.error('Split amount validation failed', {
             total: totalAmount,
             calculated: calculatedTotal,
             difference: amountDifference,
@@ -818,7 +818,7 @@ serve(async (req) => {
 
         // 4. Validar que marketplace_fee coincida con expected
         if (marketplaceFee !== expectedPlatformFee) {
-          console.warn('⚠️ Marketplace fee mismatch (non-critical)', {
+          log.warn('Marketplace fee mismatch (non-critical)', {
             expected: expectedPlatformFee,
             received: marketplaceFee
           });
@@ -826,14 +826,14 @@ serve(async (req) => {
 
         // 5. Log de validación exitosa o fallida
         if (validationPassed) {
-          console.log('✅ Split validation passed:', {
+          log.info('Split validation passed', {
             total: totalAmount,
             owner: expectedOwnerAmount,
             platform: expectedPlatformFee,
             collector_id: receivedCollectorId
           });
         } else {
-          console.error('❌ Split validation failed:', validationIssues);
+          log.error('Split validation failed', { validationIssues });
         }
 
         // Registrar split en BD
@@ -845,10 +845,10 @@ serve(async (req) => {
         });
 
         if (splitError) {
-          console.error('Error registering payment split:', splitError);
+          log.error('Error registering payment split', splitError);
           // No fallar el webhook, solo logear
         } else {
-          console.log('✅ Payment split registered successfully');
+          log.info('Payment split registered successfully');
         }
       }
 
@@ -888,11 +888,11 @@ serve(async (req) => {
         .eq('id', reference_id);
 
       if (updateError) {
-        console.error('Error updating booking:', updateError);
+        log.error('Error updating booking', updateError);
         throw updateError;
       }
 
-      console.log('✅ Booking payment confirmed successfully:', reference_id);
+      log.info('Booking payment confirmed successfully', { bookingId: reference_id });
 
         return new Response(
           JSON.stringify({
@@ -918,15 +918,15 @@ serve(async (req) => {
       .single();
 
     if (txError || !transaction) {
-      console.error('Neither booking nor wallet transaction found:', reference_id);
+      log.error('Neither booking nor wallet transaction found', { referenceId: reference_id });
       throw new Error('Reference not found - not a booking or wallet deposit');
     }
 
-    console.log('Processing wallet deposit:', reference_id);
+    log.info('Processing wallet deposit', { transactionId: reference_id });
 
     // Si la transacción ya fue completada, ignorar (idempotencia)
     if (transaction.status === 'completed') {
-      console.log('Transaction already completed, ignoring webhook');
+      log.info('Transaction already completed, ignoring webhook');
       return new Response(
         JSON.stringify({ success: true, message: 'Transaction already completed' }),
         {
@@ -966,11 +966,11 @@ serve(async (req) => {
     );
 
     if (confirmError) {
-      console.error('Error confirming deposit:', confirmError);
+      log.error('Error confirming deposit', confirmError);
       throw confirmError;
     }
 
-    console.log('Deposit confirmed successfully:', confirmResult);
+    log.info('Deposit confirmed successfully', confirmResult);
 
     // ========================================
     // REGISTRAR EN WALLET LEDGER (NUEVO SISTEMA)
@@ -979,7 +979,10 @@ serve(async (req) => {
     const amountCents = Math.round(paymentData.transaction_amount * 100);
     const refKey = `mp-${paymentData.id}`;
 
-    console.log(`Registering deposit in ledger: ${amountCents} cents for user ${transaction.user_id}`);
+    log.info('Registering deposit in ledger', {
+      amountCents,
+      userId: transaction.user_id
+    });
 
     const { data: ledgerResult, error: ledgerError } = await supabase.rpc(
       'wallet_deposit_ledger',
@@ -1006,9 +1009,9 @@ serve(async (req) => {
     if (ledgerError) {
       // No fallar el webhook si el ledger falla, solo loggear
       // El sistema viejo (wallet_transactions) ya funcionó
-      console.error('Warning: Error registering in ledger (old system still worked):', ledgerError);
+      log.error('Warning: Error registering in ledger (old system still worked)', ledgerError);
     } else {
-      console.log('✅ Deposit registered in ledger successfully:', ledgerResult);
+      log.info('Deposit registered in ledger successfully', ledgerResult);
     }
 
     // Retornar éxito
@@ -1025,7 +1028,7 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error processing MercadoPago webhook:', error);
+    log.error('Error processing MercadoPago webhook', error);
 
     // Retornar 200 incluso en error para evitar reintentos de MP
     // MP reintenta si recibe 4xx/5xx
