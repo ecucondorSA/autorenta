@@ -5,6 +5,7 @@ on:
     paths:
       - 'apps/web/**'
       - 'package.json'
+      - '.github/workflows/deploy_pages.yml'
 
 jobs:
   deploy:
