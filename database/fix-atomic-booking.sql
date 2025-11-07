@@ -23,7 +23,11 @@ CREATE OR REPLACE FUNCTION create_booking_atomic(
   p_risk_payment_mode TEXT,
   p_risk_total_usd NUMERIC,
   p_risk_total_ars NUMERIC,
-  p_risk_exchange_rate NUMERIC
+  p_risk_exchange_rate NUMERIC,
+  -- Distance-based pricing parameters
+  p_distance_km NUMERIC DEFAULT NULL,
+  p_distance_risk_tier TEXT DEFAULT NULL,
+  p_delivery_fee_cents BIGINT DEFAULT 0
 )
 RETURNS TABLE (
   success BOOLEAN,
@@ -80,6 +84,9 @@ BEGIN
     coverage_upgrade,
     authorized_payment_id,
     wallet_lock_id,
+    delivery_distance_km,
+    distance_risk_tier,
+    delivery_fee_cents,
     status,
     created_at,
     updated_at
@@ -95,6 +102,9 @@ BEGIN
     p_coverage_upgrade,
     p_authorized_payment_id,
     p_wallet_lock_id,
+    p_distance_km,
+    p_distance_risk_tier,
+    p_delivery_fee_cents,
     'pending',
     NOW(),
     NOW()
@@ -113,6 +123,9 @@ BEGIN
     total_usd,
     total_ars,
     exchange_rate,
+    distance_km,
+    distance_risk_tier,
+    distance_risk_multiplier,
     created_at
   ) VALUES (
     v_booking_id,
@@ -125,6 +138,14 @@ BEGIN
     p_risk_total_usd,
     p_risk_total_ars,
     p_risk_exchange_rate,
+    p_distance_km,
+    p_distance_risk_tier,
+    CASE
+      WHEN p_distance_risk_tier = 'local' THEN 1.0
+      WHEN p_distance_risk_tier = 'regional' THEN 1.15
+      WHEN p_distance_risk_tier = 'long_distance' THEN 1.3
+      ELSE 1.0
+    END,
     NOW()
   )
   RETURNING id INTO v_risk_snapshot_id;
