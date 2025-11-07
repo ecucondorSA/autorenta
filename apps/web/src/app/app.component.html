@@ -143,6 +143,8 @@
         <app-language-selector></app-language-selector>
         <!-- Help Button -->
         <app-help-button></app-help-button>
+        <!-- Notifications -->
+        <app-notifications *ngIf="isAuthenticatedSig()"></app-notifications>
         <!-- Theme Toggle -->
         <button
           (click)="toggleDarkMode()"

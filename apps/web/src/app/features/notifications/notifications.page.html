@@ -1,0 +1,150 @@
+<div class="notifications-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="page-title">Notificaciones</h1>
+        <p class="page-subtitle" *ngIf="hasUnread()">
+          Tienes {{ unreadCount() }} notificación{{ unreadCount() > 1 ? 'es' : '' }} sin leer
+        </p>
+        <p class="page-subtitle" *ngIf="!hasUnread()">Todas las notificaciones están al día</p>
+      </div>
+
+      <div class="header-actions">
+        <button
+          class="btn-secondary"
+          (click)="goToSettings()"
+          title="Configurar notificaciones"
+        >
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          Configurar
+        </button>
+
+        <button
+          class="btn-primary"
+          (click)="markAllAsRead()"
+          [disabled]="!hasUnread()"
+          title="Marcar todas como leídas"
+        >
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          Marcar todas como leídas
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <!-- Filter by type -->
+    <div class="filter-group">
+      <label class="filter-label">Tipo:</label>
+      <div class="filter-buttons">
+        <button
+          *ngFor="let type of notificationTypes"
+          class="filter-btn"
+          [class.active]="filterType() === type.value"
+          (click)="setFilterType(type.value)"
+        >
+          <span class="filter-icon">{{ type.icon }}</span>
+          {{ type.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter by status -->
+    <div class="filter-group">
+      <label class="filter-label">Estado:</label>
+      <div class="filter-buttons">
+        <button
+          *ngFor="let status of statusFilters"
+          class="filter-btn"
+          [class.active]="filterStatus() === status.value"
+          (click)="setFilterStatus(status.value)"
+        >
+          {{ status.label }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="notifications-container">
+    <!-- Empty state -->
+    <div *ngIf="!hasNotifications()" class="empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+        />
+      </svg>
+      <h3 class="empty-title">No hay notificaciones</h3>
+      <p class="empty-description">
+        No tienes notificaciones que coincidan con los filtros seleccionados
+      </p>
+    </div>
+
+    <!-- Notifications list -->
+    <div class="notifications-list" *ngIf="hasNotifications()">
+      <div
+        *ngFor="let notification of filteredNotifications()"
+        class="notification-card"
+        [class.unread]="!notification.read"
+        (click)="handleNotificationClick(notification)"
+      >
+        <!-- Icon -->
+        <div class="notification-icon-wrapper" [ngClass]="getNotificationColor(notification.type)">
+          <span class="notification-icon-emoji">{{ getNotificationIcon(notification.type) }}</span>
+        </div>
+
+        <!-- Content -->
+        <div class="notification-content">
+          <div class="notification-header">
+            <h3 class="notification-title">{{ notification.title }}</h3>
+            <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
+          </div>
+
+          <p class="notification-message">{{ notification.message }}</p>
+
+          <div *ngIf="notification.actionText" class="notification-action">
+            <span class="action-text">{{ notification.actionText }}</span>
+            <svg class="action-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Unread indicator -->
+        <div *ngIf="!notification.read" class="unread-indicator">
+          <div class="unread-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

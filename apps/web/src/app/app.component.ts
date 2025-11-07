@@ -40,6 +40,7 @@ import { LanguageSelectorComponent } from './shared/components/language-selector
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
+import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 
 @Component({
   selector: 'app-root',
@@ -60,6 +61,7 @@ import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/
     VerificationBadgeComponent,
     LanguageSelectorComponent,
     HelpButtonComponent,
+    NotificationsComponent,
     ToastComponent,
     MobileBottomNavComponent,
   ],
