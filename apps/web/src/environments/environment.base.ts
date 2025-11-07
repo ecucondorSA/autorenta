@@ -38,8 +38,6 @@ interface EnvDefaults {
   sentryDsn?: string;
   sentryEnvironment?: string;
   sentryTracesSampleRate?: number;
-  sentryReplaysSessionSampleRate?: number;
-  sentryReplaysOnErrorSampleRate?: number;
 }
 
 // Type-safe interfaces for global environment access
@@ -132,8 +130,6 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),
   sentryEnvironment: resolve('NG_APP_SENTRY_ENVIRONMENT', defaults.sentryEnvironment ?? (defaults.production ? 'production' : 'development')),
   sentryTracesSampleRate: defaults.sentryTracesSampleRate ?? (defaults.production ? 0.1 : 1.0),
-  sentryReplaysSessionSampleRate: defaults.sentryReplaysSessionSampleRate ?? (defaults.production ? 0.1 : 0.0),
-  sentryReplaysOnErrorSampleRate: defaults.sentryReplaysOnErrorSampleRate ?? 1.0,
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

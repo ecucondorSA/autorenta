@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import * as Sentry from '@sentry/angular';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -209,17 +210,16 @@ export class LoggerService {
     message: string,
     data?: unknown,
   ): void {
-    // Only send to Sentry if in production and module is loaded
-    if (!this.isDevelopment && typeof window !== 'undefined') {
-      // Dynamically import Sentry to avoid bundling in development
-      import('@sentry/angular').then((Sentry) => {
-        const captureContext: {
-          level: 'debug' | 'info' | 'warning' | 'error' | 'fatal';
-          extra?: unknown;
-        } = {
-          level: level as 'debug' | 'info' | 'warning' | 'error' | 'fatal',
-          extra: this.sanitizeData(data),
-        };
+    // Only send to Sentry if DSN is configured
+    if (!environment.sentryDsn) {
+      return;
+    }
+
+    try {
+      const captureContext: Sentry.CaptureContext = {
+        level: level as Sentry.SeverityLevel,
+        extra: { data: this.sanitizeData(data) },
+      };
 
         if (level === 'error' || level === 'fatal') {
           if (data instanceof Error) {
@@ -230,10 +230,12 @@ export class LoggerService {
         } else {
           Sentry.captureMessage(message, captureContext);
         }
-      }).catch((err) => {
-        // Fail silently if Sentry is not available
-        console.error('Sentry not available:', err);
-      });
+      } else {
+        Sentry.captureMessage(message, captureContext);
+      }
+    } catch (e) {
+      // Fallback if Sentry fails
+      console.error('Failed to send to Sentry:', e);
     }
   }
 }
