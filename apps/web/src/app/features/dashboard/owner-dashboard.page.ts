@@ -7,6 +7,7 @@ import { BookingsService } from '../../core/services/bookings.service';
 import { CarsService } from '../../core/services/cars.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
+import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';
 
 interface EarningsSummary {
   thisMonth: number;
@@ -17,7 +18,14 @@ interface EarningsSummary {
 @Component({
   standalone: true,
   selector: 'app-owner-dashboard',
-  imports: [CommonModule, RouterLink, MoneyPipe, TranslateModule, MultiCarCalendarComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    MoneyPipe,
+    TranslateModule,
+    MultiCarCalendarComponent,
+    MissingDocumentsWidgetComponent,
+  ],
   templateUrl: './owner-dashboard.page.html',
   styleUrls: ['./owner-dashboard.page.css'],
 })
