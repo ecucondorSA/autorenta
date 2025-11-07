@@ -34,7 +34,33 @@
     <div class="error-icon">⚠️</div>
     <h3>No disponible</h3>
     <p class="error-message">{{ error() }}</p>
-    
+
+    <!-- ✅ NUEVO: Mostrar alternativas de fechas disponibles -->
+    <div *ngIf="availableAlternatives().length > 0" class="alternatives-section">
+      <div class="alternatives-header">
+        <div class="alternatives-icon">📅</div>
+        <div class="alternatives-text">
+          <h4>Próximas ventanas disponibles</h4>
+          <p>Seleccioná una de estas fechas alternativas con la misma duración</p>
+        </div>
+      </div>
+
+      <div class="alternatives-chips">
+        <button
+          *ngFor="let alt of availableAlternatives()"
+          class="alternative-chip"
+          (click)="selectAlternative(alt)"
+        >
+          <div class="chip-dates">
+            <span class="chip-date">{{ alt.startDate | date: 'dd/MM' }}</span>
+            <span class="chip-arrow">→</span>
+            <span class="chip-date">{{ alt.endDate | date: 'dd/MM' }}</span>
+          </div>
+          <div class="chip-duration">{{ alt.daysCount }} días</div>
+        </button>
+      </div>
+    </div>
+
     <!-- Opción de Waitlist cuando hay conflicto de constraint -->
     <div *ngIf="canWaitlist()" class="waitlist-option">
       <div class="waitlist-info">
@@ -44,8 +70,8 @@
           <p>El auto está ocupado en esas fechas, pero puedes agregarte a la lista de espera. Te notificaremos automáticamente cuando otro usuario cancele o expire su reserva (generalmente en 30 minutos).</p>
         </div>
       </div>
-      <button 
-        class="waitlist-button" 
+      <button
+        class="waitlist-button"
         (click)="addToWaitlist()"
         [disabled]="addingToWaitlist()"
       >
@@ -59,8 +85,8 @@
         </span>
       </button>
     </div>
-    
-    <button class="retry-button" (click)="error.set(null); canWaitlist.set(false)">Intentar nuevamente</button>
+
+    <button class="retry-button" (click)="error.set(null); canWaitlist.set(false); availableAlternatives.set([])">Intentar nuevamente</button>
   </div>
 
   <!-- Step Content -->

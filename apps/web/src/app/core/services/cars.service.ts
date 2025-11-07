@@ -570,4 +570,138 @@ export class CarsService {
       throw error;
     }
   }
+
+  /**
+   * ✅ NUEVO: Obtener próximos rangos de fechas disponibles
+   * Retorna hasta 3 opciones de rangos disponibles con la misma duración solicitada
+   *
+   * @param carId - ID del auto
+   * @param startDate - Fecha inicio solicitada (ISO string)
+   * @param endDate - Fecha fin solicitada (ISO string)
+   * @param maxOptions - Número máximo de opciones a retornar (default: 3)
+   * @returns Promise con array de rangos disponibles
+   *
+   * @example
+   * const alternatives = await carsService.getNextAvailableRange(
+   *   'car-uuid',
+   *   '2025-11-10',
+   *   '2025-11-15'
+   * );
+   * // Retorna: [
+   * //   { startDate: '2025-11-16', endDate: '2025-11-21', daysCount: 5 },
+   * //   { startDate: '2025-11-22', endDate: '2025-11-27', daysCount: 5 },
+   * //   { startDate: '2025-12-01', endDate: '2025-12-06', daysCount: 5 }
+   * // ]
+   */
+  async getNextAvailableRange(
+    carId: string,
+    startDate: string,
+    endDate: string,
+    maxOptions = 3,
+  ): Promise<
+    Array<{
+      startDate: string;
+      endDate: string;
+      daysCount: number;
+    }>
+  > {
+    try {
+      // 1. Calcular duración solicitada
+      const requestedStart = new Date(startDate);
+      const requestedEnd = new Date(endDate);
+      const durationMs = requestedEnd.getTime() - requestedStart.getTime();
+      const durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
+
+      // 2. Obtener todas las reservas futuras del auto (desde hoy)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const { data: bookings, error } = await this.supabase
+        .from('bookings')
+        .select('start_at, end_at')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'confirmed', 'in_progress'])
+        .gte('end_at', today.toISOString())
+        .order('start_at', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching bookings for availability:', error);
+        return [];
+      }
+
+      // 3. Construir intervalos bloqueados
+      const blockedIntervals: Array<{ start: Date; end: Date }> =
+        bookings?.map((b) => ({
+          start: new Date(b.start_at),
+          end: new Date(b.end_at),
+        })) || [];
+
+      // 4. Buscar ventanas disponibles
+      const alternatives: Array<{
+        startDate: string;
+        endDate: string;
+        daysCount: number;
+      }> = [];
+
+      // Comenzar a buscar desde el día siguiente al rango solicitado
+      let searchStart = new Date(requestedEnd);
+      searchStart.setDate(searchStart.getDate() + 1);
+      searchStart.setHours(0, 0, 0, 0);
+
+      // Limitar búsqueda a los próximos 90 días
+      const maxSearchDate = new Date(today);
+      maxSearchDate.setDate(maxSearchDate.getDate() + 90);
+
+      let attempts = 0;
+      const maxAttempts = 100; // Evitar loops infinitos
+
+      while (alternatives.length < maxOptions && searchStart < maxSearchDate && attempts < maxAttempts) {
+        attempts++;
+
+        // Calcular end date propuesto
+        const searchEnd = new Date(searchStart);
+        searchEnd.setDate(searchEnd.getDate() + durationDays);
+
+        // Verificar si este rango está libre
+        const hasConflict = blockedIntervals.some((blocked) => {
+          // Overlap si: searchStart < blocked.end && searchEnd > blocked.start
+          return searchStart < blocked.end && searchEnd > blocked.start;
+        });
+
+        if (!hasConflict) {
+          // Rango disponible!
+          alternatives.push({
+            startDate: searchStart.toISOString().split('T')[0],
+            endDate: searchEnd.toISOString().split('T')[0],
+            daysCount: durationDays,
+          });
+
+          // Avanzar al siguiente día después de este rango
+          searchStart = new Date(searchEnd);
+          searchStart.setDate(searchStart.getDate() + 1);
+        } else {
+          // Hay conflicto, buscar el próximo día libre
+          // Encontrar la reserva que bloquea
+          const blockingReservation = blockedIntervals.find((blocked) => {
+            return searchStart < blocked.end && searchEnd > blocked.start;
+          });
+
+          if (blockingReservation) {
+            // Saltar al día siguiente después del fin de la reserva bloqueante
+            searchStart = new Date(blockingReservation.end);
+            searchStart.setDate(searchStart.getDate() + 1);
+            searchStart.setHours(0, 0, 0, 0);
+          } else {
+            // No debería pasar, pero por seguridad avanzamos 1 día
+            searchStart.setDate(searchStart.getDate() + 1);
+          }
+        }
+      }
+
+      return alternatives;
+    } catch (error) {
+      console.error('Error in getNextAvailableRange:', error);
+      return [];
+    }
+  }
 }
