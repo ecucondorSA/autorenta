@@ -165,5 +165,23 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'notifications',
+    canMatch: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/notifications/notifications.page').then((m) => m.NotificationsPage),
+      },
+      {
+        path: 'preferences',
+        loadComponent: () =>
+          import('./features/notifications/preferences/notification-preferences.page').then(
+            (m) => m.NotificationPreferencesPage,
+          ),
+      },
+    ],
+  },
   { path: '**', redirectTo: '' },
 ];
