@@ -59,8 +59,8 @@
               "serviceWorker": false,
               "sourceMap": {
                 "scripts": true,
-                "styles": true,
-                "vendor": true
+                "styles": false,
+                "hidden": true
               }
             },
             "development": {

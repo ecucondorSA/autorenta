@@ -129,7 +129,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   cloudflareWorkerUrl: resolve('NG_APP_CLOUDFLARE_WORKER_URL', defaults.cloudflareWorkerUrl ?? 'http://localhost:8787'),
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),
   sentryEnvironment: resolve('NG_APP_SENTRY_ENVIRONMENT', defaults.sentryEnvironment ?? (defaults.production ? 'production' : 'development')),
-  sentryTracesSampleRate: defaults.sentryTracesSampleRate ?? 0.1,
+  sentryTracesSampleRate: defaults.sentryTracesSampleRate ?? (defaults.production ? 0.1 : 1.0),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;
