@@ -43,6 +43,14 @@ export const routes: Routes = [
           import('./features/cars/my-cars/my-cars.page').then((m) => m.MyCarsPage),
       },
       {
+        path: ':id/documents',
+        canMatch: [AuthGuard],
+        loadComponent: () =>
+          import('./features/cars/vehicle-documents/vehicle-documents.page').then(
+            (m) => m.VehicleDocumentsPage
+          ),
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('./features/cars/detail/car-detail.page').then((m) => m.CarDetailPage),
