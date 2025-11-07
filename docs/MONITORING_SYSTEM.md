@@ -9,11 +9,22 @@
 ## 🎯 Resumen
 
 Sistema completo de monitoreo para AutoRenta que incluye:
+
+### Monitoreo Interno (Implementado ✅)
 - ✅ Health checks periódicos automatizados (cada 5 minutos)
 - ✅ Alertas automáticas (Slack, Email, Webhooks)
 - ✅ Métricas de performance (response times, error rates)
 - ✅ Dashboard de métricas via API
 - ✅ Integración con Supabase Edge Functions
+
+### Monitoreo Externo (P0 - Ver Runbook 📖)
+- 📖 **Uptime monitoring** con UptimeRobot (multi-región)
+- 📖 **Detección rápida** de outages (< 2 minutos)
+- 📖 **Alertas críticas** vía PagerDuty, Slack, Email, SMS
+- 📖 **SLA tracking** para cumplimiento de 99.9% uptime
+- 📖 **Status page** público para usuarios
+
+**Ver**: [External Uptime Monitoring Runbook](./runbooks/external-uptime-monitoring.md) (Issue #121)
 
 ---
 
@@ -299,15 +310,116 @@ SELECT * FROM pg_policies WHERE tablename LIKE 'monitoring%';
 
 ## 🚀 Próximos Pasos
 
-1. **Dashboard UI**: Crear dashboard Angular para visualizar métricas
-2. **Email Alerts**: Agregar notificaciones por email
-3. **Custom Webhooks**: Permitir configurar webhooks personalizados
+1. ~~**Dashboard UI**: Crear dashboard Angular para visualizar métricas~~ (Futuro)
+2. ~~**Email Alerts**: Agregar notificaciones por email~~ (Futuro)
+3. ~~**Custom Webhooks**: Permitir configurar webhooks personalizados~~ (Futuro)
 4. **Performance Baselines**: Establecer baseline de performance y alertar desviaciones
 5. **Integration Tests**: Agregar health checks para tests de integración
 
 ---
 
-**Última actualización**: 2025-11-03
+## 🌐 Monitoreo Externo (External Uptime Monitoring)
+
+### ¿Por qué necesitamos monitoreo externo?
+
+El sistema de monitoreo interno (descrito arriba) es **esencial** pero tiene limitaciones:
+
+| Limitación | Solución Externa |
+|------------|------------------|
+| ❌ Si Supabase cae, no podemos monitorear | ✅ UptimeRobot es independiente |
+| ❌ No detecta problemas de DNS | ✅ Verifica desde Internet real |
+| ❌ No cubre múltiples regiones | ✅ Checks desde 3+ regiones |
+| ❌ No proporciona SLA tracking externo | ✅ Reportes de uptime para compliance |
+| ❌ No detecta problemas de routing/CDN | ✅ Tests desde perspectiva del usuario |
+
+### 📖 Runbook Completo: External Uptime Monitoring
+
+**Documento principal**: [docs/runbooks/external-uptime-monitoring.md](./runbooks/external-uptime-monitoring.md)
+
+El runbook incluye:
+- ✅ **Setup paso a paso** de UptimeRobot (incluye alternativas: Pingdom, Hetrix)
+- ✅ **6 monitores configurados**: Website, API, Payment Webhook, Database, Auth, Cars
+- ✅ **Multi-región**: US, Brazil, Germany (cobertura completa para Argentina)
+- ✅ **Alertas en 4 canales**: Email, Slack, PagerDuty, SMS
+- ✅ **Integración con PagerDuty** (Issue #119)
+- ✅ **Status page público** para usuarios
+- ✅ **API automation** para CI/CD
+- ✅ **Troubleshooting** completo (false positives, delays, SSL issues)
+- ✅ **Incident response** workflow detallado
+
+### 🎯 Configuración Rápida
+
+**Template JSON**: [docs/runbooks/uptimerobot-config-template.json](./runbooks/uptimerobot-config-template.json)
+
+```bash
+# Ver configuración completa
+cat docs/runbooks/uptimerobot-config-template.json
+
+# Configurar en UptimeRobot:
+# 1. Crear cuenta Pro ($7/month)
+# 2. Importar monitors usando template como referencia
+# 3. Configurar alertas (Email, Slack, PagerDuty, SMS)
+# 4. Verificar multi-región enabled
+```
+
+### 📊 Métricas de Éxito (SLA)
+
+El monitoreo externo debe cumplir:
+
+```
+✅ Uptime Target: 99.9% (máximo 43 minutos downtime/mes)
+✅ Detection Time: < 2 minutos (checks cada 1 min + 2 fallos)
+✅ False Positive Rate: < 1% (threshold: 2 consecutive failures)
+✅ Multi-Region Coverage: 3 regiones (US, Brazil, Germany)
+✅ Alert Delivery: < 30 segundos después de detección
+```
+
+### 🔄 Integración con Sistema Interno
+
+Ambos sistemas se complementan:
+
+| Aspecto | Monitoreo Interno | Monitoreo Externo |
+|---------|-------------------|-------------------|
+| **Perspectiva** | Desde Supabase (interno) | Desde Internet (usuario) |
+| **Alcance** | Servicios, DB, Edge Functions | Endpoints públicos HTTP |
+| **Detección** | 5 minutos | 1-2 minutos |
+| **Independencia** | Depende de Supabase | Totalmente independiente |
+| **Alertas** | Slack (interno) | PagerDuty + SMS (crítico) |
+| **Métricas** | Response times, error rates | Uptime %, SLA tracking |
+| **Uso** | Debugging, performance | Outage detection, compliance |
+
+**Recomendación**: Usar ambos sistemas para cobertura completa.
+
+### 🚨 Flujo de Alertas Combinado
+
+```
+1. UptimeRobot detecta outage (1-2 min)
+   ↓
+2. PagerDuty página on-call engineer (< 30 seg)
+   ↓
+3. Slack alert en #production-alerts (< 30 seg)
+   ↓
+4. Engineer checks internal monitoring dashboard
+   ↓
+5. Internal system provee detalles (DB status, error logs, etc.)
+   ↓
+6. Engineer diagnostica y resuelve
+   ↓
+7. UptimeRobot confirma recovery
+   ↓
+8. PagerDuty incident resolved
+```
+
+### 📚 Recursos Adicionales
+
+- **Issue tracking**: [#121 External Uptime Monitoring](https://github.com/ecucondorSA/autorenta/issues/121)
+- **PagerDuty setup**: [#119 PagerDuty Integration](https://github.com/ecucondorSA/autorenta/issues/119)
+- **Disaster Recovery**: [docs/disaster-recovery-plan.md](./disaster-recovery-plan.md)
+- **Production Readiness**: [#114 Production Audit](https://github.com/ecucondorSA/autorenta/issues/114)
+
+---
+
+**Última actualización**: 2025-11-07
 
 
 
