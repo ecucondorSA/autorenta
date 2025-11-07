@@ -83,6 +83,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'refunds',
+        loadComponent: () =>
+          import('./features/admin/refunds/admin-refunds.page').then(
+            (m) => m.AdminRefundsPage,
+          ),
+      },
+      {
         path: 'coverage-fund',
         loadComponent: () =>
           import('./features/admin/components/coverage-fund-dashboard.component').then(
