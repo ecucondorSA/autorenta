@@ -1,23 +1,27 @@
 import {
   ApplicationConfig,
   LOCALE_ID,
+  ErrorHandler,
   importProvidersFrom,
   isDevMode,
   provideZoneChangeDetection,
   APP_INITIALIZER,
+  ErrorHandler,
 } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, Router, withEnabledBlockingInitialNavigation, withInMemoryScrolling } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { SupabaseClientService } from './core/services/supabase-client.service';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
+import { SentryErrorHandler } from './core/services/sentry.service';
 
 /**
  * Inicializa el servicio de monitoreo de performance
@@ -34,7 +38,7 @@ function initializePerformanceMonitoring(_perfService: PerformanceMonitoringServ
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, 
+    provideRouter(routes,
       withEnabledBlockingInitialNavigation(),
       withInMemoryScrolling({
         scrollPositionRestoration: 'enabled',
@@ -57,6 +61,8 @@ export const appConfig: ApplicationConfig = {
       prefix: './assets/i18n/',
       suffix: '.json',
     }),
+    // ✅ Sentry Error Handler (production only)
+    environment.sentryDsn ? { provide: ErrorHandler, useClass: SentryErrorHandler } : [],
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode() ? {
       provide: APP_INITIALIZER,
