@@ -100,13 +100,17 @@
           <!-- Content Overlay -->
           <div class="relative h-full flex flex-col justify-between p-4 sm:p-6">
             <!-- Top: Status Badge -->
-            <div class="flex justify-between items-start">
+            <div class="flex justify-between items-start gap-2 flex-wrap">
               <span
                 class="badge-status text-white border-white/30 backdrop-blur-sm"
                 [ngClass]="statusBadgeClass(booking)"
               >
                 {{ statusLabel(booking) }}
               </span>
+              <app-deposit-status-badge
+                *ngIf="booking.deposit_status"
+                [status]="booking.deposit_status"
+              ></app-deposit-status-badge>
             </div>
 
             <!-- Bottom: Car Info -->

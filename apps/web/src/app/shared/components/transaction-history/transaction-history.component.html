@@ -147,9 +147,25 @@
             <span class="font-mono text-xs text-smoke-black dark:text-pearl-white">{{ transaction.id }}</span>
           </div>
           
-          <div class="flex justify-between" *ngIf="transaction.booking_id">
-            <span class="text-charcoal-medium dark:text-pearl-light/70">Reserva:</span>
-            <span class="font-mono text-xs text-smoke-black dark:text-pearl-white">{{ transaction.booking_id }}</span>
+          <div *ngIf="transaction.booking_id">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-charcoal-medium dark:text-pearl-light/70">Reserva:</span>
+              <a
+                [routerLink]="['/bookings', transaction.booking_id]"
+                class="font-mono text-xs text-accent-petrol hover:text-accent-warm transition-colors underline"
+              >
+                {{ transaction.booking_id | slice: 0:8 }}...
+              </a>
+            </div>
+            <div
+              *ngIf="isDepositRelatedTransaction(transaction) && getDepositStatus(transaction.booking_id)"
+              class="flex justify-between items-center"
+            >
+              <span class="text-charcoal-medium dark:text-pearl-light/70">Estado del depósito:</span>
+              <app-deposit-status-badge
+                [status]="getDepositStatus(transaction.booking_id)!"
+              ></app-deposit-status-badge>
+            </div>
           </div>
 
           <div class="flex justify-between">

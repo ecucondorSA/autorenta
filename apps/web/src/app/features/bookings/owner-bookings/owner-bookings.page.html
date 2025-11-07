@@ -216,7 +216,7 @@
               <!-- Header -->
               <div class="flex items-start justify-between mb-4">
                 <div class="flex-1">
-                  <div class="flex items-center gap-3 mb-2">
+                  <div class="flex items-center gap-3 mb-2 flex-wrap">
                     <span class="text-2xl">{{ statusIcon(booking) }}</span>
                     <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
                       Vehículo ID: {{ booking.car_id }}
@@ -227,6 +227,10 @@
                     >
                       {{ statusLabel(booking) }}
                     </span>
+                    <app-deposit-status-badge
+                      *ngIf="booking.deposit_status"
+                      [status]="booking.deposit_status"
+                    ></app-deposit-status-badge>
                   </div>
                   <div class="space-y-1">
                     <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">

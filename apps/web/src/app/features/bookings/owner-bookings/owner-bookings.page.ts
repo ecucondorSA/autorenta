@@ -13,6 +13,7 @@ import {
   MarketplaceOnboardingService,
   MarketplaceStatus,
 } from '../../../core/services/marketplace-onboarding.service';
+import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 
 interface CarLead {
   carId: string;
@@ -26,7 +27,7 @@ interface CarLead {
 @Component({
   standalone: true,
   selector: 'app-owner-bookings-page',
-  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule, IonicModule],
+  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule, IonicModule, DepositStatusBadgeComponent],
   templateUrl: './owner-bookings.page.html',
   styleUrl: './owner-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
