@@ -9,6 +9,9 @@ export const environment = buildEnvironment({
   mapboxAccessToken: 'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg',
   paymentsWebhookUrl: 'http://localhost:8787/webhooks/payments',
   appUrl: 'http://localhost:4200',
+  // Sentry DSN for development (optional - disabled by default)
+  // Configurar via NG_APP_SENTRY_DSN si deseas testing en desarrollo
+  sentryDsn: '',
   // PayPal Sandbox Credentials
   // TODO: Reemplazar con tus credenciales de PayPal Sandbox
   // Obtener en: https://developer.paypal.com/dashboard/applications/sandbox

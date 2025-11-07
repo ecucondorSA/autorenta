@@ -202,6 +202,7 @@ export class LoggerService {
 
   /**
    * Send log to Sentry (production)
+   * CRITICAL: Enabled for issue #112 - Security Hardening Epic
    * @private
    */
   private sendToSentry(
@@ -209,34 +210,32 @@ export class LoggerService {
     message: string,
     data?: unknown,
   ): void {
-    // This is a placeholder for Sentry integration
-    // In production, initialize Sentry in main.ts:
-    //
-    // import * as Sentry from "@sentry/angular";
-    // Sentry.init({
-    //   dsn: environment.sentryDsn,
-    //   environment: environment.production ? 'production' : 'development',
-    // });
-    //
-    // Then uncomment below:
-    /*
-    if (typeof Sentry !== 'undefined') {
-      const captureContext: Sentry.CaptureContext = {
-        level: level as Sentry.SeverityLevel,
-        extra: this.sanitizeData(data),
-      };
+    // Dynamic import to avoid breaking if Sentry is not initialized
+    import('@sentry/angular').then((Sentry) => {
+      if (typeof Sentry !== 'undefined' && Sentry.isInitialized?.()) {
+        const captureContext: Sentry.CaptureContext = {
+          level: level as Sentry.SeverityLevel,
+          extra: this.sanitizeData(data),
+          tags: {
+            severity: level,
+            timestamp: new Date().toISOString(),
+          },
+        };
 
-      if (level === 'error' || level === 'fatal') {
-        if (data instanceof Error) {
-          Sentry.captureException(data, captureContext);
+        if (level === 'error' || level === 'fatal') {
+          if (data instanceof Error) {
+            Sentry.captureException(data, captureContext);
+          } else {
+            Sentry.captureException(new Error(message), captureContext);
+          }
         } else {
-          Sentry.captureException(new Error(message), captureContext);
+          Sentry.captureMessage(message, captureContext);
         }
-      } else {
-        Sentry.captureMessage(message, captureContext);
       }
-    }
-    */
+    }).catch((err) => {
+      // If Sentry fails to load, log to console instead
+      console.warn('Failed to send log to Sentry:', err);
+    });
   }
 }
 
