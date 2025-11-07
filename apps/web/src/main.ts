@@ -52,4 +52,9 @@ if (environment.sentryDsn) {
 bootstrapApplication(AppComponent, {
   ...appConfig,
   providers: [...(appConfig.providers ?? []), provideAnimations()],
-}).catch((err) => console.error('Bootstrap failed', err));
+}).catch((err) => {
+  console.error('Bootstrap failed', err);
+  if (environment.production && environment.sentryDsn) {
+    Sentry.captureException(err);
+  }
+});
