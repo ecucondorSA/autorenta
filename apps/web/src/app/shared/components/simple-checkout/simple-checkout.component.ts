@@ -211,13 +211,14 @@ export class SimpleCheckoutComponent {
         return true;
       }
 
-      const nextRange = await this.carsService.getNextAvailableRange(
+      const nextRanges = await this.carsService.getNextAvailableRange(
         this.car.id,
         this.startDate(),
         this.endDate()
       );
 
-      if (nextRange) {
+      if (nextRanges && nextRanges.length > 0) {
+        const nextRange = nextRanges[0];
         const formattedStart = this.formatInputDateValue(nextRange.startDate);
         const formattedEnd = this.formatInputDateValue(nextRange.endDate);
 

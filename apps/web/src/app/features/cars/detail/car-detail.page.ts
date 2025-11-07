@@ -364,14 +364,16 @@ export class CarDetailPage implements OnInit {
     to: string,
   ): Promise<DateRange | null> {
     try {
-      const suggestion = await this.carsService.getNextAvailableRange(carId, from, to);
-      if (!suggestion) {
+      const suggestions = await this.carsService.getNextAvailableRange(carId, from, to);
+      if (!suggestions || suggestions.length === 0) {
         return null;
       }
 
+      // Get the first suggestion
+      const firstSuggestion = suggestions[0];
       return {
-        from: this.normalizeDateInput(suggestion.startDate),
-        to: this.normalizeDateInput(suggestion.endDate),
+        from: this.normalizeDateInput(firstSuggestion.startDate),
+        to: this.normalizeDateInput(firstSuggestion.endDate),
       };
     } catch (_error) {
       console.warn('No se pudo obtener próxima ventana disponible:', _error);
