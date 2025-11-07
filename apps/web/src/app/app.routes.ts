@@ -108,7 +108,20 @@ export const routes: Routes = [
             (m) => m.MercadoPagoConnectComponent,
           ),
       },
+      {
+        path: 'notifications-settings',
+        loadComponent: () =>
+          import('./features/profile/notifications-settings/notifications-settings.page').then(
+            (m) => m.NotificationsSettingsPage,
+          ),
+      },
     ],
+  },
+  {
+    path: 'notifications',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/notifications/notifications.page').then((m) => m.NotificationsPage),
   },
   {
     path: 'users/:id',
