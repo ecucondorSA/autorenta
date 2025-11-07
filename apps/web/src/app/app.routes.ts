@@ -94,6 +94,13 @@ export const routes: Routes = [
           import('./features/admin/fgo/fgo-overview.page').then((m) => m.FgoOverviewPage),
       },
       {
+        path: 'accounting',
+        loadComponent: () =>
+          import('./features/admin/accounting/accounting-admin.page').then(
+            (m) => m.AccountingAdminPage,
+          ),
+      },
+      {
         path: 'claims',
         loadComponent: () =>
           import('./features/admin/claims/admin-claims.page').then((m) => m.AdminClaimsPage),
