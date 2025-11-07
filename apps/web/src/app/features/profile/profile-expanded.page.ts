@@ -97,32 +97,47 @@ export class ProfileExpandedPage {
   readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
   
   readonly canPublishCars = computed(() => {
-    const role = this.profile()?.role;
-    return role === 'owner' || role === 'both';
+    // Use RPC data: can_access_level_2 indicates ability to publish
+    return this.verificationStateService.verificationProgress()?.can_access_level_2 ?? false;
   });
-  
+
   readonly canBookCars = computed(() => {
+    // Basic role check - Level 1 allows booking, Level 3 for premium features
     const role = this.profile()?.role;
     return role === 'renter' || role === 'both';
   });
 
-  // Verification status
+  // Verification status from RPC (replaces local document-based calculations)
   readonly driverLicenseStatus = computed((): KycStatus => {
-    const docs = this.documents();
-    const driverDoc = docs.find(d => d.kind === 'driver_license');
-    return (driverDoc?.status as KycStatus) ?? 'not_started';
+    const progress = this.verificationStateService.verificationProgress();
+    if (!progress) return 'not_started';
+
+    const driverLicenseVerified = progress.requirements?.level_2?.driver_license_verified ?? false;
+    if (driverLicenseVerified) return 'verified';
+
+    // Check if Level 2 can be accessed (at least email+phone verified)
+    if (progress.can_access_level_2) return 'pending';
+
+    return 'not_started';
   });
-  
+
   readonly vehicleRegistrationStatus = computed((): KycStatus => {
-    const docs = this.documents();
-    const vehicleDoc = docs.find(d => d.kind === 'vehicle_registration');
-    return (vehicleDoc?.status as KycStatus) ?? 'not_started';
+    const progress = this.verificationStateService.verificationProgress();
+    if (!progress) return 'not_started';
+
+    // Vehicle registration is represented by document_verified in Level 2
+    const documentVerified = progress.requirements?.level_2?.document_verified ?? false;
+    if (documentVerified) return 'verified';
+
+    if (progress.can_access_level_2) return 'pending';
+
+    return 'not_started';
   });
-  
+
   readonly kycStatus = computed((): KycStatus => {
     const dl = this.driverLicenseStatus();
     const vr = this.vehicleRegistrationStatus();
-    
+
     if (dl === 'rejected' || vr === 'rejected') return 'rejected';
     if (dl === 'pending' || vr === 'pending') return 'pending';
     if (dl === 'verified' && vr === 'verified') return 'verified';
@@ -130,19 +145,16 @@ export class ProfileExpandedPage {
   });
 
   readonly overallVerificationStatus = computed((): VerificationStatus => {
-    const profile = this.profile();
-    if (!profile) return 'PENDIENTE';
-    
-    const emailVerified = profile.is_email_verified ?? false;
-    const phoneVerified = profile.is_phone_verified ?? false;
-    const kycVerified = this.kycStatus() === 'verified';
-    
-    if (emailVerified && phoneVerified && kycVerified) {
+    const progress = this.verificationStateService.verificationProgress();
+
+    if (!progress) return 'PENDIENTE';
+
+    // VERIFICADO when at least Level 2 is complete
+    if (progress.current_level >= 2) {
       return 'VERIFICADO';
     }
-    if (this.kycStatus() === 'rejected') {
-      return 'RECHAZADO';
-    }
+
+    // PENDIENTE for Level 1 or incomplete
     return 'PENDIENTE';
   });
 
@@ -161,76 +173,119 @@ export class ProfileExpandedPage {
   });
 
   readonly driverVerification = computed(() => {
-    const kycStatus = this.driverLicenseStatus();
-    let verificationStatus: VerificationStatus = 'PENDIENTE';
-    
-    if (kycStatus === 'verified') verificationStatus = 'VERIFICADO';
-    else if (kycStatus === 'rejected') verificationStatus = 'RECHAZADO';
-    
+    const progress = this.verificationStateService.verificationProgress();
+    if (!progress) {
+      return {
+        status: 'PENDIENTE' as VerificationStatus,
+        progress: 0,
+      };
+    }
+
+    // Driver verification based on Level 2 driver_license_verified flag
+    const driverVerified = progress.requirements?.level_2?.driver_license_verified ?? false;
+    const emailVerified = progress.requirements?.level_1?.email_verified ?? false;
+    const phoneVerified = progress.requirements?.level_1?.phone_verified ?? false;
+
+    let status: VerificationStatus = 'PENDIENTE';
+    let percentage = 0;
+
+    if (driverVerified) {
+      status = 'VERIFICADO';
+      percentage = 100;
+    } else if (emailVerified && phoneVerified) {
+      status = 'PENDIENTE';
+      percentage = 50; // Level 1 complete, waiting for driver license
+    }
+
     return {
-      status: verificationStatus,
-      progress: kycStatus === 'verified' ? 100 : 50,
-    };
-  });
-  
-  readonly ownerVerification = computed(() => {
-    const kycStatus = this.vehicleRegistrationStatus();
-    let verificationStatus: VerificationStatus = 'PENDIENTE';
-    
-    if (kycStatus === 'verified') verificationStatus = 'VERIFICADO';
-    else if (kycStatus === 'rejected') verificationStatus = 'RECHAZADO';
-    
-    return {
-      status: verificationStatus,
-      progress: kycStatus === 'verified' ? 100 : 50,
+      status,
+      progress: percentage,
     };
   });
 
-  readonly driverChecklist = computed(() => [
-    {
-      id: 'email',
-      label: 'Email verificado',
-      completed: this.profile()?.is_email_verified ?? false,
-      description: null,
-      missingKey: null,
-      notes: null,
-    },
-    {
-      id: 'phone',
-      label: 'Teléfono verificado',
-      completed: this.profile()?.is_phone_verified ?? false,
-      description: null,
-      missingKey: null,
-      notes: null,
-    },
-    {
-      id: 'driver_license',
-      label: 'Licencia de conducir',
-      completed: this.driverLicenseStatus() === 'verified',
-      description: null,
-      missingKey: null,
-      notes: null,
-    },
-  ]);
-  
-  readonly ownerChecklist = computed(() => [
-    {
-      id: 'email',
-      label: 'Email verificado',
-      completed: this.profile()?.is_email_verified ?? false,
-      description: null,
-      missingKey: null,
-      notes: null,
-    },
-    {
-      id: 'vehicle',
-      label: 'Registro de vehículo',
-      completed: this.vehicleRegistrationStatus() === 'verified',
-      description: null,
-      missingKey: null,
-      notes: null,
-    },
-  ]);
+  readonly ownerVerification = computed(() => {
+    const progress = this.verificationStateService.verificationProgress();
+    if (!progress) {
+      return {
+        status: 'PENDIENTE' as VerificationStatus,
+        progress: 0,
+      };
+    }
+
+    // Owner verification based on Level 2 document_verified flag
+    const documentVerified = progress.requirements?.level_2?.document_verified ?? false;
+    const emailVerified = progress.requirements?.level_1?.email_verified ?? false;
+
+    let status: VerificationStatus = 'PENDIENTE';
+    let percentage = 0;
+
+    if (documentVerified) {
+      status = 'VERIFICADO';
+      percentage = 100;
+    } else if (emailVerified) {
+      status = 'PENDIENTE';
+      percentage = 50; // Email verified, waiting for vehicle documents
+    }
+
+    return {
+      status,
+      progress: percentage,
+    };
+  });
+
+  readonly driverChecklist = computed(() => {
+    const progress = this.verificationStateService.verificationProgress();
+
+    return [
+      {
+        id: 'email',
+        label: 'Email verificado',
+        completed: progress?.requirements?.level_1?.email_verified ?? false,
+        description: null,
+        missingKey: null,
+        notes: null,
+      },
+      {
+        id: 'phone',
+        label: 'Teléfono verificado',
+        completed: progress?.requirements?.level_1?.phone_verified ?? false,
+        description: null,
+        missingKey: null,
+        notes: null,
+      },
+      {
+        id: 'driver_license',
+        label: 'Licencia de conducir',
+        completed: progress?.requirements?.level_2?.driver_license_verified ?? false,
+        description: null,
+        missingKey: null,
+        notes: null,
+      },
+    ];
+  });
+
+  readonly ownerChecklist = computed(() => {
+    const progress = this.verificationStateService.verificationProgress();
+
+    return [
+      {
+        id: 'email',
+        label: 'Email verificado',
+        completed: progress?.requirements?.level_1?.email_verified ?? false,
+        description: null,
+        missingKey: null,
+        notes: null,
+      },
+      {
+        id: 'vehicle',
+        label: 'Registro de vehículo',
+        completed: progress?.requirements?.level_2?.document_verified ?? false,
+        description: null,
+        missingKey: null,
+        notes: null,
+      },
+    ];
+  });
 
   readonly tosAccepted = computed(() => !!this.profile()?.tos_accepted_at);
 
@@ -380,6 +435,8 @@ export class ProfileExpandedPage {
       await this.profileService.uploadDocument(file, kind);
       // Refresh documents list
       await this.loadDocuments();
+      // Invalidate verification cache to force refresh from RPC
+      await this.verificationStateService.invalidateCache();
       this.message.set('Documento subido exitosamente. La verificación puede tardar unos minutos.');
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al subir el documento');
