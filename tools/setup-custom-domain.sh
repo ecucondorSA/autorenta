@@ -73,3 +73,5 @@ echo "⏳ Espera 2-5 minutos para que SSL se active"
 echo "🔍 Verificar: curl -I https://$DOMAIN"
 
 
+
+

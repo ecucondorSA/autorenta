@@ -201,7 +201,7 @@ import { UserProfile } from '../../../core/models';
           <button
             type="button"
             (click)="closeBenefits()"
-            class="text-charcoal-medium hover:text-smoke-black dark:hover:text-white transition-colors"
+            class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-white transition-colors"
           >
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -326,7 +326,7 @@ import { UserProfile } from '../../../core/models';
           <button
             type="button"
             (click)="closeBenefits()"
-            class="px-4 py-2 text-sm font-medium text-charcoal-medium hover:text-smoke-black dark:text-pearl-light dark:hover:text-white transition-colors"
+            class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:text-pearl-light dark:hover:text-white transition-colors"
           >
             Cerrar
           </button>
@@ -368,7 +368,7 @@ export class VerificationPromptBannerComponent implements OnInit {
     try {
       const profile = await this.profileService.getCurrentProfile();
       this.profile.set(profile);
-    } catch (error) {}
+    } catch (__error) { /* Silenced */ }
   }
 
   /**

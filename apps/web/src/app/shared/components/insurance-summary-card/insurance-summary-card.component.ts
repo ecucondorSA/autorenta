@@ -424,7 +424,7 @@ export class InsuranceSummaryCardComponent implements OnInit {
       this.loading = true;
       this.error = false;
       this.summary = await this.insuranceService.getInsuranceSummary(this.bookingId);
-    } catch (err) {
+    } catch (_err) {
       this.error = true;
     } finally {
       this.loading = false;

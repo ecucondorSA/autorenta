@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BookingConfirmationPage } from './booking-confirmation.page';
 import { BookingsService } from '../../../../core/services/bookings.service';
+import { BookingConfirmationPage } from './booking-confirmation.page';
 
 describe('BookingConfirmationPage', () => {
   let component: BookingConfirmationPage;

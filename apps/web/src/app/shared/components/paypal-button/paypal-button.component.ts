@@ -31,8 +31,8 @@ import { environment } from '../../../../environments/environment';
  * <app-paypal-button
  *   [bookingId]="booking.id"
  *   [useSplitPayment]="true"
- *   (onApprove)="handleApproval($event)"
- *   (onError)="handleError($event)"
+ *   (paymentApproved)="handleApproval($event)"
+ *   (paymentError)="handleError($event)"
  * ></app-paypal-button>
  * ```
  */
@@ -50,10 +50,10 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() currency = 'USD';
   @Input() disabled = false;
 
-  @Output() onApprove = new EventEmitter<{ orderId: string; captureId: string }>();
-  @Output() onError = new EventEmitter<Error>();
-  @Output() onCancel = new EventEmitter<void>();
-  @Output() onLoading = new EventEmitter<boolean>();
+  @Output() paymentApproved = new EventEmitter<{ orderId: string; captureId: string }>();
+  @Output() paymentError = new EventEmitter<Error>();
+  @Output() paymentCancelled = new EventEmitter<void>();
+  @Output() loadingChange = new EventEmitter<boolean>();
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly gatewayService = inject(PayPalBookingGatewayService);
@@ -66,7 +66,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     if (!this.bookingId) {
       this.error = 'Booking ID is required';
-      this.onError.emit(new Error(this.error));
+      this.paymentError.emit(new Error(this.error));
       return;
     }
   }
@@ -96,16 +96,16 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.isLoading = true;
-    this.onLoading.emit(true);
+    this.loadingChange.emit(true);
 
     // Get client ID from environment or input
     const clientId = this.clientId || this.getPayPalClientId();
 
     if (!clientId) {
       this.error = 'PayPal Client ID not configured';
-      this.onError.emit(new Error(this.error));
+      this.paymentError.emit(new Error(this.error));
       this.isLoading = false;
-      this.onLoading.emit(false);
+      this.loadingChange.emit(false);
       return;
     }
 
@@ -117,15 +117,15 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
     this.paypalScript.onload = () => {
       this.sdkLoaded = true;
       this.isLoading = false;
-      this.onLoading.emit(false);
+      this.loadingChange.emit(false);
       this.renderPayPalButton();
     };
 
     this.paypalScript.onerror = () => {
       this.error = 'Failed to load PayPal SDK';
-      this.onError.emit(new Error(this.error));
+      this.paymentError.emit(new Error(this.error));
       this.isLoading = false;
-      this.onLoading.emit(false);
+      this.loadingChange.emit(false);
     };
 
     document.head.appendChild(this.paypalScript);
@@ -154,7 +154,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
     paypal
       .Buttons({
         // Create order on PayPal side
-        createOrder: async (data: any, actions: any) => {
+        createOrder: async (data: unknown, actions: unknown) => {
           return this.createOrder();
         },
 
@@ -164,16 +164,16 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
         },
 
         // Handle errors
-        onError: (err: any) => {
+        onError: (err: unknown) => {
           console.error('PayPal button error:', err);
           this.error = 'Error processing PayPal payment';
-          this.onError.emit(new Error(this.error));
+          this.paymentError.emit(new Error(this.error));
         },
 
         // Handle cancellation
-        onCancel: (data: any) => {
+        onCancel: (data: unknown) => {
           console.log('PayPal payment cancelled', data);
-          this.onCancel.emit();
+          this.paymentCancelled.emit();
         },
 
         // Styling
@@ -194,7 +194,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
   private async createOrder(): Promise<string> {
     try {
       this.isLoading = true;
-      this.onLoading.emit(true);
+      this.loadingChange.emit(true);
       this.error = null;
 
       const response = await this.gatewayService
@@ -208,16 +208,16 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('PayPal order created:', response.preference_id);
 
       this.isLoading = false;
-      this.onLoading.emit(false);
+      this.loadingChange.emit(false);
 
       // Return order ID to PayPal SDK
       return response.preference_id;
-    } catch (error) {
+    } catch (_error) {
       this.isLoading = false;
-      this.onLoading.emit(false);
-      this.error = error instanceof Error ? error.message : 'Unknown error';
-      this.onError.emit(error instanceof Error ? error : new Error(String(error)));
-      throw error;
+      this.loadingChange.emit(false);
+      this.error = _error instanceof Error ? _error.message : 'Unknown error';
+      this.paymentError.emit(_error instanceof Error ? _error : new Error(String(_error)));
+      throw _error;
     }
   }
 
@@ -227,7 +227,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
   private async handleApproval(orderId: string): Promise<void> {
     try {
       this.isLoading = true;
-      this.onLoading.emit(true);
+      this.loadingChange.emit(true);
       this.error = null;
 
       console.log('Capturing PayPal order:', orderId);
@@ -241,18 +241,18 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('PayPal payment captured:', captureResponse.capture_id);
 
       this.isLoading = false;
-      this.onLoading.emit(false);
+      this.loadingChange.emit(false);
 
       // Emit success to parent component
-      this.onApprove.emit({
+      this.paymentApproved.emit({
         orderId: captureResponse.order_id,
         captureId: captureResponse.capture_id,
       });
-    } catch (error) {
+    } catch (_error) {
       this.isLoading = false;
-      this.onLoading.emit(false);
-      this.error = error instanceof Error ? error.message : 'Failed to capture payment';
-      this.onError.emit(error instanceof Error ? error : new Error(String(error)));
+      this.loadingChange.emit(false);
+      this.error = _error instanceof Error ? _error.message : 'Failed to capture payment';
+      this.paymentError.emit(_error instanceof Error ? _error : new Error(String(_error)));
     }
   }
 

@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { CarsService } from './cars.service';
-import { SupabaseClientService } from './supabase-client.service';
 import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
 import { VALID_UUID } from '../../../test-helpers/factories';
+import { CarsService } from './cars.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 describe('CarsService', () => {
   let service: CarsService;
@@ -124,5 +124,119 @@ describe('CarsService', () => {
       }) as any,
     );
     expect(result.id.length).toBeGreaterThan(0);
+  });
+
+  // ✅ NUEVO: Tests para getNextAvailableRange
+  describe('getNextAvailableRange', () => {
+    it('should return alternative date ranges when car has conflicts', async () => {
+      const carId = VALID_UUID;
+      const requestedStart = '2025-11-10';
+      const requestedEnd = '2025-11-15'; // 5 días
+
+      // Mock de reservas existentes
+      const mockBookings = [
+        { start_at: '2025-11-16T00:00:00Z', end_at: '2025-11-18T00:00:00Z' }, // Bloquea 16-18
+        { start_at: '2025-11-22T00:00:00Z', end_at: '2025-11-25T00:00:00Z' }, // Bloquea 22-25
+      ];
+
+      const builder: Record<string, any> = {};
+      builder.select = jasmine.createSpy('select').and.returnValue(builder);
+      builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
+      builder.in = jasmine.createSpy('in').and.returnValue(builder);
+      builder.gte = jasmine.createSpy('gte').and.returnValue(builder);
+      builder.order = jasmine.createSpy('order').and.returnValue(builder);
+      builder.then = (resolve: (value: { data: unknown; error: null }) => unknown) =>
+        resolve({ data: mockBookings, error: null });
+
+      supabase.from.and.returnValue(builder);
+
+      const alternatives = await service.getNextAvailableRange(carId, requestedStart, requestedEnd);
+
+      expect(builder.eq).toHaveBeenCalledWith('car_id', carId);
+      expect(builder.in).toHaveBeenCalledWith('status', ['pending', 'confirmed', 'in_progress']);
+      expect(alternatives.length).toBeGreaterThan(0);
+      expect(alternatives.length).toBeLessThanOrEqual(3);
+
+      // Verificar que todas las alternativas tengan la misma duración (5 días)
+      alternatives.forEach((alt) => {
+        expect(alt.daysCount).toBe(5);
+        expect(alt.startDate).toBeTruthy();
+        expect(alt.endDate).toBeTruthy();
+      });
+    });
+
+    it('should return empty array when no bookings exist', async () => {
+      const carId = VALID_UUID;
+      const requestedStart = '2025-11-10';
+      const requestedEnd = '2025-11-15';
+
+      const builder: Record<string, any> = {};
+      builder.select = jasmine.createSpy('select').and.returnValue(builder);
+      builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
+      builder.in = jasmine.createSpy('in').and.returnValue(builder);
+      builder.gte = jasmine.createSpy('gte').and.returnValue(builder);
+      builder.order = jasmine.createSpy('order').and.returnValue(builder);
+      builder.then = (resolve: (value: { data: unknown; error: null }) => unknown) =>
+        resolve({ data: [], error: null });
+
+      supabase.from.and.returnValue(builder);
+
+      const alternatives = await service.getNextAvailableRange(carId, requestedStart, requestedEnd);
+
+      // Debería retornar alternativas empezando después del rango solicitado
+      expect(alternatives.length).toBeGreaterThan(0);
+      alternatives.forEach((alt) => {
+        expect(new Date(alt.startDate).getTime()).toBeGreaterThan(new Date(requestedEnd).getTime());
+      });
+    });
+
+    it('should handle database errors gracefully', async () => {
+      const carId = VALID_UUID;
+      const requestedStart = '2025-11-10';
+      const requestedEnd = '2025-11-15';
+
+      const builder: Record<string, any> = {};
+      builder.select = jasmine.createSpy('select').and.returnValue(builder);
+      builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
+      builder.in = jasmine.createSpy('in').and.returnValue(builder);
+      builder.gte = jasmine.createSpy('gte').and.returnValue(builder);
+      builder.order = jasmine.createSpy('order').and.returnValue(builder);
+      builder.then = (resolve: (value: { data: null; error: unknown }) => unknown) =>
+        resolve({ data: null, error: { message: 'Database error' } });
+
+      supabase.from.and.returnValue(builder);
+
+      const alternatives = await service.getNextAvailableRange(carId, requestedStart, requestedEnd);
+
+      // Debería retornar array vacío en caso de error
+      expect(alternatives).toEqual([]);
+    });
+
+    it('should limit alternatives to maxOptions parameter', async () => {
+      const carId = VALID_UUID;
+      const requestedStart = '2025-11-10';
+      const requestedEnd = '2025-11-15';
+      const maxOptions = 2;
+
+      const builder: Record<string, any> = {};
+      builder.select = jasmine.createSpy('select').and.returnValue(builder);
+      builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
+      builder.in = jasmine.createSpy('in').and.returnValue(builder);
+      builder.gte = jasmine.createSpy('gte').and.returnValue(builder);
+      builder.order = jasmine.createSpy('order').and.returnValue(builder);
+      builder.then = (resolve: (value: { data: unknown; error: null }) => unknown) =>
+        resolve({ data: [], error: null });
+
+      supabase.from.and.returnValue(builder);
+
+      const alternatives = await service.getNextAvailableRange(
+        carId,
+        requestedStart,
+        requestedEnd,
+        maxOptions,
+      );
+
+      expect(alternatives.length).toBeLessThanOrEqual(maxOptions);
+    });
   });
 });

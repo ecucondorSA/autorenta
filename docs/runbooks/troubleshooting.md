@@ -110,33 +110,44 @@ LIMIT 10;
 **Síntomas**:
 - Error 401 en `/auth/login`
 - "Invalid credentials" en UI
+- "No se pudo contactar con Supabase" error
 - Supabase Auth retorna error
 
 **Diagnóstico**:
 
 ```bash
+# 0. FIRST: Check if Supabase is paused (most common issue!)
+./tools/diagnose-supabase.sh
+
 # 1. Verificar configuración de Supabase
 curl https://obxvffplochgeiclibng.supabase.co/rest/v1/ \
   -H "apikey: $(grep NG_APP_SUPABASE_ANON_KEY apps/web/.env.development.local | cut -d'=' -f2)"
 
 # 2. Verificar usuarios en DB
 psql "$DB_URL" -c "
-  SELECT id, email, created_at, last_sign_in_at 
-  FROM auth.users 
-  ORDER BY created_at DESC 
+  SELECT id, email, created_at, last_sign_in_at
+  FROM auth.users
+  ORDER BY created_at DESC
   LIMIT 10;
 "
 
 # 3. Verificar políticas RLS
 psql "$DB_URL" -c "
   SELECT tablename, policyname, permissive, roles, cmd
-  FROM pg_policies 
-  WHERE schemaname = 'public' 
+  FROM pg_policies
+  WHERE schemaname = 'public'
   AND tablename = 'profiles';
 "
 ```
 
 **Soluciones**:
+
+0. **🚨 CRITICAL: Supabase Project Paused** (most common):
+   - **Symptom**: All endpoints return "Access denied"
+   - **Cause**: Free tier projects pause after 7 days of inactivity
+   - **Fix**: Login to [Supabase Dashboard](https://supabase.com/dashboard/project/obxvffplochgeiclibng) and click "Restore Project"
+   - **Full Guide**: See `SUPABASE_PAUSED_FIX.md` for detailed instructions
+   - **Prevention**: Setup keepalive or upgrade to Pro ($25/month)
 
 1. **Credenciales incorrectas**:
    - Verificar que usuario existe: `SELECT * FROM auth.users WHERE email = 'user@example.com';`
@@ -699,6 +710,8 @@ Antes de escalar, verificar:
 
 **Última revisión**: 2025-11-03  
 **Mantenedor**: Equipo de Desarrollo AutoRenta
+
+
 
 
 

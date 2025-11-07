@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PaymentSummaryPanelComponent } from './payment-summary-panel.component';
 import {
   PriceBreakdown,
   RiskSnapshot,
   FxSnapshot,
 } from '../../../../core/models/booking-detail-payment.model';
+import { PaymentSummaryPanelComponent } from './payment-summary-panel.component';
 
 describe('PaymentSummaryPanelComponent - Escenario 1 & 2', () => {
   let component: PaymentSummaryPanelComponent;

@@ -79,9 +79,9 @@ export class GeocodingService {
         fullAddress: feature.place_name,
         placeName: feature.text,
       };
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
+    } catch (_error) {
+      if (_error instanceof Error) {
+        throw _error;
       }
 
       throw new Error('Error al geocodificar la dirección. Por favor intenta nuevamente.');
@@ -197,9 +197,9 @@ export class GeocodingService {
       });
 
       return result;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
+    } catch (_error) {
+      if (_error instanceof Error) {
+        throw _error;
       }
 
       throw new Error(

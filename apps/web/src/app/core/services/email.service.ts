@@ -47,7 +47,7 @@ export class EmailService {
         }
       );
 
-      if (error) {
+      if ((error)) {
         console.error('Error sending booking confirmation email:', error);
         return { success: false, error: error.message };
       }
@@ -83,7 +83,7 @@ export class EmailService {
         }
       );
 
-      if (error) {
+      if ((error)) {
         console.error('Error sending cancellation email:', error);
         return { success: false, error: error.message };
       }
@@ -120,7 +120,7 @@ export class EmailService {
         }
       );
 
-      if (error) {
+      if ((error)) {
         console.error('Error sending reminder email:', error);
         return { success: false, error: error.message };
       }

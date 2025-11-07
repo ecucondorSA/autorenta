@@ -2,15 +2,47 @@
   class="wallet-page min-h-screen bg-ivory-soft dark:bg-graphite-dark dark:text-pearl-light py-section-sm"
 >
   <div class="container-page px-container space-y-10">
+    <!-- ✅ FIX: Error Alert - Show wallet service errors -->
+    @if (walletError(); as error) {
+      <div
+        class="bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4 transition-colors duration-300"
+      >
+        <div class="flex items-start space-x-3">
+          <svg
+            class="w-6 h-6 text-red-600 dark:text-error-300 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-red-900 dark:text-error-100">Error al cargar el wallet</p>
+            <p class="mt-1 text-sm text-red-700 dark:text-error-200">{{ error.message }}</p>
+            <button
+              type="button"
+              (click)="refreshWalletData()"
+              class="mt-2 text-sm font-medium text-red-800 dark:text-error-100 hover:text-red-900 dark:hover:text-error-50 underline"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- Hero Snapshot -->
     <section
-      class="rounded-3xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
+      class="rounded-3xl border border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
     >
       <div class="grid gap-6 lg:grid-cols-5 items-start">
         <div class="lg:col-span-3 flex flex-col gap-4">
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60"
+              class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
             >
               Panel de control
             </p>
@@ -87,7 +119,7 @@
               <button
                 type="button"
                 (click)="setActiveTab('withdrawals')"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-pearl-gray text-charcoal-medium dark:text-pearl-light font-semibold hover:border-primary-300 transition"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-pearl-gray dark:border-gray-600 text-charcoal-medium dark:text-pearl-light font-semibold hover:border-primary-300 transition"
               >
                 Solicitar retiro
               </button>
@@ -139,7 +171,7 @@
         <button
           type="button"
           (click)="dismissOnboardingBanner()"
-          class="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/50 dark:hover:bg-slate-deep/50 transition"
+          class="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white dark:bg-slate-deep/50 dark:hover:bg-slate-deep/50 transition"
           aria-label="Cerrar banner"
         >
           <svg
@@ -325,7 +357,7 @@
 
         <!-- Expandable Content -->
         @if (benefitsSectionExpanded()) {
-          <div class="px-6 pb-6 pt-2 space-y-6 border-t border-pearl-gray/30 dark:border-neutral-700">
+          <div class="px-6 pb-6 pt-2 space-y-6 border-t border-pearl-gray dark:border-gray-600/30 dark:border-neutral-700">
             <!-- Benefits Grid -->
             <div>
               <h4 class="text-sm font-bold text-smoke-black dark:text-ivory-luminous mb-3">
@@ -523,12 +555,12 @@
     <section class="grid gap-6 lg:grid-cols-3">
       <div class="lg:col-span-2 space-y-6">
         <section
-          class="rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
+          class="rounded-2xl border border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
         >
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p
-                class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60"
+                class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
               >
                 Protección de reservas
               </p>
@@ -589,23 +621,23 @@
                 </p>
               </div>
               <div
-                class="rounded-xl border border-pearl-gray/60 dark:border-neutral-700 px-3 py-3 bg-white/80 dark:bg-slate-deep/80"
+                class="rounded-xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-700 px-3 py-3 bg-white dark:bg-slate-deep/80 dark:bg-slate-deep/80"
               >
                 <p
-                  class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/70"
+                  class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/70"
                 >
                   Retirable (off-ramp)
                 </p>
                 <p class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
                   USD {{ withdrawableBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <p class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60 mt-1">
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 mt-1">
                   Disponible para tu cuenta bancaria
                 </p>
               </div>
             </div>
 
-            <p class="text-xs text-charcoal-medium/80 dark:text-pearl-light/70">
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light/80 dark:text-pearl-light/70">
               Los fondos bloqueados se liberan automáticamente cuando finalizan tus reservas. Podés
               sumar saldo retirables para completar pagos o solicitar retiros cuando quieras.
             </p>
@@ -623,7 +655,7 @@
         }
 
         <section
-          class="rounded-2xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-5 shadow-soft"
+          class="rounded-2xl border border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-5 shadow-soft"
         >
           <h3 class="text-base font-semibold text-smoke-black dark:text-ivory-luminous mb-2">
             Acciones rápidas
@@ -663,12 +695,12 @@
 
     <!-- Transactions & Withdrawals -->
     <section
-      class="rounded-3xl border border-pearl-gray/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
+      class="rounded-3xl border border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
     >
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <p
-            class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60"
+            class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
           >
             Movimientos y retiros
           </p>
@@ -825,14 +857,14 @@
           <button
             type="button"
             (click)="openDepositModal()"
-            class="px-5 py-3 bg-white text-accent-petrol font-semibold rounded-xl hover:bg-sand-light transition"
+            class="px-5 py-3 bg-white dark:bg-slate-deep text-accent-petrol font-semibold rounded-xl hover:bg-sand-light transition"
           >
             Depositar
           </button>
           <button
             type="button"
             (click)="goToTransfer()"
-            class="px-5 py-3 bg-white/20 border border-white/40 text-white font-semibold rounded-xl hover:bg-white/30 transition"
+            class="px-5 py-3 bg-white dark:bg-slate-deep/20 border border-white/40 text-white font-semibold rounded-xl hover:bg-white dark:bg-slate-deep/30 transition"
           >
             Transferir
           </button>
@@ -847,14 +879,19 @@
       </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section>
+      <app-wallet-faq></app-wallet-faq>
+    </section>
+
     <!-- Help -->
     <section class="text-center">
       <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
-        ¿Necesitas ayuda?
+        ¿Necesitas más ayuda?
         <a
-          href="/ayuda/wallet"
+          href="mailto:autorentardev@gmail.com"
           class="text-accent-petrol hover:text-accent-warm font-semibold ml-1 transition"
-          >Consulta nuestras preguntas frecuentes</a
+          >Contacta a soporte</a
         >
       </p>
     </section>

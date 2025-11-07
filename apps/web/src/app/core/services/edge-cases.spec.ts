@@ -6,6 +6,7 @@
  */
 
 import { TestBed } from '@angular/core/testing';
+import { VALID_UUID, randomUuid } from '../../../test-helpers/factories';
 import { BookingsService } from './bookings.service';
 import { CarsService } from './cars.service';
 import { SupabaseClientService } from './supabase-client.service';
@@ -14,7 +15,6 @@ import { PwaService } from './pwa.service';
 import { InsuranceService } from './insurance.service';
 import { ErrorHandlerService } from './error-handler.service';
 import { LoggerService } from './logger.service';
-import { VALID_UUID, randomUuid } from '../../../test-helpers/factories';
 
 describe('Sprint 5.2 - Edge Cases', () => {
   let bookingsService: BookingsService;
@@ -341,7 +341,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
           const cars = await carsService.listActiveCars({ city });
           expect(cars).toBeDefined();
           // No debería causar SQL injection ni XSS
-        } catch (error) {
+        } catch (_error) {
           // Es aceptable que falle, pero no debe comprometer seguridad
         }
       }

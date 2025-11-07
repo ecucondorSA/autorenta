@@ -1,6 +1,5 @@
 import { Component, Input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 import {
   PriceBreakdown,
   FxSnapshot,
@@ -10,6 +9,7 @@ import {
   formatArs,
   formatUsd,
 } from '../../../../core/models/booking-detail-payment.model';
+import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 
 /**
  * Componente que muestra el resumen de la reserva (columna derecha)

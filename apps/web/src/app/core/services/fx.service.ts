@@ -67,7 +67,7 @@ export class FxService {
 
         return snapshot;
       }),
-      catchError((error) => {
+      catchError((error: any) => {
         console.error('Error obteniendo FX snapshot:', error);
         return of(null);
       }),

@@ -27,7 +27,7 @@ export const onboardingGuard: CanMatchFn = async () => {
     }
 
     return true;
-  } catch (err) {
+  } catch (__err) {
     // Si hay error, permitir acceso (fail-open)
     return true;
   }
@@ -60,7 +60,7 @@ export const tosGuard: CanMatchFn = async () => {
     }
 
     return true;
-  } catch (err) {
+  } catch (__err) {
     // Si hay error, permitir acceso (fail-open)
     return true;
   }
@@ -94,7 +94,7 @@ export const verifiedDriverGuard: CanMatchFn = async () => {
     }
 
     return true;
-  } catch (err) {
+  } catch (__err) {
     // Si hay error, bloquear acceso (fail-closed para verificación)
     return router.createUrlTree(['/profile'], {
       queryParams: { tab: 'verification' },
@@ -130,7 +130,7 @@ export const verifiedEmailGuard: CanMatchFn = async () => {
     }
 
     return true;
-  } catch (err) {
+  } catch (__err) {
     // Si hay error, bloquear acceso (fail-closed para verificación)
     return router.createUrlTree(['/profile'], {
       queryParams: { tab: 'security' },
@@ -166,7 +166,7 @@ export const kycGuard: CanMatchFn = async () => {
     }
 
     return true;
-  } catch (err) {
+  } catch (__err) {
     // Si hay error, bloquear acceso (fail-closed para verificación)
     return router.createUrlTree(['/profile'], {
       queryParams: { tab: 'verification' },

@@ -35,7 +35,7 @@ interface Conversation {
       <div class="sticky top-0 z-10 bg-white shadow dark:bg-gray-800">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mensajes</h1>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+          <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
             {{ conversations().length }} conversaciones
           </p>
         </div>
@@ -49,7 +49,7 @@ interface Conversation {
               <div
                 class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
               ></div>
-              <p class="text-gray-600 dark:text-gray-400">Cargando conversaciones...</p>
+              <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando conversaciones...</p>
             </div>
           </div>
         } @else if (error()) {
@@ -60,7 +60,7 @@ interface Conversation {
           <!-- Empty state -->
           <div class="py-16 text-center">
             <svg
-              class="mx-auto h-16 w-16 text-gray-400"
+              class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ interface Conversation {
             <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
               No hay mensajes
             </h3>
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
               Cuando alguien te escriba, aparecerá aquí
             </p>
           </div>
@@ -114,7 +114,7 @@ interface Conversation {
                           {{ conv.otherUserName }}
                         </p>
                         @if (conv.carBrand) {
-                          <p class="text-sm text-gray-500 dark:text-gray-400">
+                          <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
                             {{ conv.carBrand }} {{ conv.carModel }} {{ conv.carYear }}
                           </p>
                         }
@@ -132,12 +132,12 @@ interface Conversation {
                       [class.font-semibold]="conv.unreadCount > 0"
                       [class.text-gray-900]="conv.unreadCount > 0"
                       [class.dark:text-white]="conv.unreadCount > 0"
-                      [class.text-gray-600]="conv.unreadCount === 0"
-                      [class.dark:text-gray-400]="conv.unreadCount === 0"
+                      [class.text-gray-600 dark:text-gray-300]="conv.unreadCount === 0"
+                      [class.dark:text-gray-400 dark:text-gray-300]="conv.unreadCount === 0"
                     >
                       {{ conv.lastMessage }}
                     </p>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
                       {{ formatDate(conv.lastMessageAt) }}
                     </p>
                   </div>

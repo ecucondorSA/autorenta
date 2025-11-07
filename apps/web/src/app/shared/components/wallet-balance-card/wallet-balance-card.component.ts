@@ -233,7 +233,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     try {
       await this.walletService.getBalance();
       this.lastUpdate.set(new Date()); // Guardar timestamp de actualización
-    } catch (err) {
+    } catch (_err) {
       // El error ya está en walletService.error()
     } finally {
       this.isLoadingBalance.set(false);
@@ -274,7 +274,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
           '⏳ Tus depósitos aún están pendientes de aprobación en MercadoPago.\n\nPueden tardar algunos minutos. Te notificaremos cuando se acrediten.',
         );
       }
-    } catch (err) {
+    } catch (_err) {
       // El error ya está en walletService.error(), solo recargamos el balance local
       await this.loadBalance();
       await this.loadPendingDeposits();
@@ -289,7 +289,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   async loadPendingDeposits(): Promise<void> {
     try {
       await this.walletService.refreshPendingDepositsCount();
-    } catch (err) {}
+    } catch (_err) {}
   }
 
   /**
@@ -408,7 +408,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       await navigator.clipboard.writeText(text);
       // TODO: Agregar toast notification en vez de alert
       alert(`✅ Copiado al portapapeles: ${text}`);
-    } catch (err) {
+    } catch (_err) {
       alert('❌ Error al copiar. Por favor, copia manualmente.');
     }
   }

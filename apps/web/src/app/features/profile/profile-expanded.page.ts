@@ -10,8 +10,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs/operators';
+import { from } from 'rxjs';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
+import { DriverProfileCardComponent } from '../../shared/components/driver-profile-card/driver-profile-card.component';
 import {
   UserProfile,
   Role,
@@ -22,9 +26,6 @@ import {
   VerificationStatus,
 } from '../../core/models';
 import { MetaService } from '../../core/services/meta.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { tap } from 'rxjs/operators';
-import { from } from 'rxjs';
 import { VerificationStateService } from '../../core/services/verification-state.service';
 import { VerificationNotificationsService } from '../../core/services/verification-notifications.service';
 import { VerificationProgressComponent } from '../../shared/components/verification-progress/verification-progress.component';
@@ -37,6 +38,7 @@ type TabId =
   | 'general'
   | 'contact'
   | 'address'
+  | 'conductor'
   | 'verification'
   | 'notifications'
   | 'preferences'
@@ -55,6 +57,7 @@ type TabId =
     PhoneVerificationComponent,
     SelfieCaptureComponent,
     NotificationToastComponent,
+    DriverProfileCardComponent,
   ],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
@@ -270,6 +273,7 @@ export class ProfileExpandedPage {
     { id: 'general' as TabId, label: 'General' },
     { id: 'contact' as TabId, label: 'Contacto' },
     { id: 'address' as TabId, label: 'Dirección' },
+    { id: 'conductor' as TabId, label: 'Conductor' },
     { id: 'verification' as TabId, label: 'Verificación' },
     { id: 'notifications' as TabId, label: 'Notificaciones' },
     { id: 'preferences' as TabId, label: 'Preferencias' },
@@ -335,7 +339,7 @@ export class ProfileExpandedPage {
   }
 
   getStepStatusClass(step: { completed: boolean }): string {
-    return step.completed ? 'text-green-600' : 'text-gray-400';
+    return step.completed ? 'text-green-600' : 'text-gray-400 dark:text-gray-300';
   }
 
   getStepStatusLabel(step: { completed: boolean }): string {
@@ -352,12 +356,12 @@ export class ProfileExpandedPage {
     return labels[key] || key;
   }
 
-  async refreshVerificationStatuses(flow: 'driver' | 'owner'): Promise<void> {
+  async refreshVerificationStatuses(_flow: 'driver' | 'owner'): Promise<void> {
     this.verificationLoading.set(true);
     try {
       await this.loadDocuments();
       this.message.set('Estado de verificación actualizado');
-    } catch (err) {
+    } catch (_err) {
       this.verificationError.set('Error al actualizar estado');
     } finally {
       this.verificationLoading.set(false);
@@ -413,8 +417,8 @@ export class ProfileExpandedPage {
       await this.verificationStateService.initialize();
       this.verificationNotificationsService.initialize();
       console.log('[ProfileExpanded] Verification services initialized');
-    } catch (error) {
-      console.error('[ProfileExpanded] Error initializing verification services:', error);
+    } catch (_error) {
+      console.error('[ProfileExpanded] Error initializing verification services:', _error);
     }
   }
 
@@ -429,7 +433,7 @@ export class ProfileExpandedPage {
 
   private isValidTab(tab: string | null): boolean {
     if (!tab) return false;
-    return ['general', 'contact', 'address', 'verification', 'notifications', 'preferences', 'security'].includes(tab);
+    return ['general', 'contact', 'address', 'conductor', 'verification', 'notifications', 'preferences', 'security'].includes(tab);
   }
 
   private populateForms(profile: UserProfile): void {
@@ -562,7 +566,7 @@ export class ProfileExpandedPage {
   async signOut(): Promise<void> {
     try {
       await this.authService.signOut();
-    } catch (err) {
+    } catch (_err) {
       this.error.set('Error al cerrar sesión');
     }
   }

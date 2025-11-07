@@ -6,6 +6,7 @@ import { WalletService } from '../../core/services/wallet.service';
 import { BookingsService } from '../../core/services/bookings.service';
 import { CarsService } from '../../core/services/cars.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 
 interface EarningsSummary {
   thisMonth: number;
@@ -16,7 +17,7 @@ interface EarningsSummary {
 @Component({
   standalone: true,
   selector: 'app-owner-dashboard',
-  imports: [CommonModule, RouterLink, MoneyPipe, TranslateModule],
+  imports: [CommonModule, RouterLink, MoneyPipe, TranslateModule, MultiCarCalendarComponent],
   templateUrl: './owner-dashboard.page.html',
   styleUrls: ['./owner-dashboard.page.css'],
 })
@@ -27,6 +28,7 @@ export class OwnerDashboardPage implements OnInit {
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly showCalendar = signal(false);
 
   // Balance del wallet
   readonly availableBalance = computed(() => this.walletService.availableBalance());
@@ -104,7 +106,7 @@ export class OwnerDashboardPage implements OnInit {
         .reduce((sum, b) => sum + (b.total_amount || 0), 0);
 
       this.earnings.set({ thisMonth, lastMonth, total });
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
     } finally {
       this.loading.set(false);
@@ -120,5 +122,9 @@ export class OwnerDashboardPage implements OnInit {
 
   get isGrowthPositive(): boolean {
     return this.growthPercentage >= 0;
+  }
+
+  toggleCalendar(): void {
+    this.showCalendar.set(!this.showCalendar());
   }
 }

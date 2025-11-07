@@ -1,6 +1,8 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { RealtimeChannel, SupabaseClient, PostgrestSingleResponse } from '@supabase/supabase-js';
 import { environment } from '@environment';
+import { from, Observable, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import type {
   WalletBalance,
   WalletHistoryEntry as WalletTransaction,
@@ -13,8 +15,6 @@ import type {
 } from '../models/wallet.model';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
-import { from, Observable, throwError } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -47,14 +47,39 @@ export class WalletService {
   readonly pendingDepositsCount = signal(0);
 
   constructor() {
-    this.getBalance().subscribe();
-    this.getTransactions().subscribe();
+    // ✅ FIX: Only fetch balance and transactions if user is authenticated
+    // Handle errors gracefully to prevent silent failures on page load
+    this.supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        this.getBalance().subscribe({
+          error: (err) => {
+            // Log error but don't block page - wallet page will show error state
+            console.warn('Failed to load wallet balance on init:', err);
+          }
+        });
+        this.getTransactions().subscribe({
+          error: (err) => {
+            // Log error but don't block page - wallet page will show error state
+            console.warn('Failed to load wallet transactions on init:', err);
+          }
+        });
+      }
+    });
   }
 
   getBalance(): Observable<WalletBalance> {
     this.loading.set(true);
     this.error.set(null);
-    return from(this.supabase.rpc('wallet_get_balance')).pipe(
+
+    // Check authentication before making RPC call
+    return from(this.supabase.auth.getSession()).pipe(
+      switchMap(({ data: { session } }) => {
+        if (!session?.user) {
+          this.loading.set(false);
+          return throwError(() => new Error('Usuario no autenticado'));
+        }
+        return from(this.supabase.rpc('wallet_get_balance'));
+      }),
       map(({ data, error }) => {
         if (error) throw error;
         if (!data) throw new Error('No se pudo obtener el balance');
@@ -73,15 +98,24 @@ export class WalletService {
     );
   }
 
-  getTransactions(filters?: WalletTransactionFilters): Observable<WalletTransaction[]> {
+  getTransactions(_filters?: WalletTransactionFilters): Observable<WalletTransaction[]> {
     this.loading.set(true);
     this.error.set(null);
-    return from(
-      this.supabase
-        .from('v_wallet_history')
-        .select('*')
-        .order('transaction_date', { ascending: false }),
-    ).pipe(
+
+    // Check authentication before querying transactions
+    return from(this.supabase.auth.getSession()).pipe(
+      switchMap(({ data: { session } }) => {
+        if (!session?.user) {
+          this.loading.set(false);
+          return throwError(() => new Error('Usuario no autenticado'));
+        }
+        return from(
+          this.supabase
+            .from('v_wallet_history')
+            .select('*')
+            .order('transaction_date', { ascending: false }),
+        );
+      }),
       map(({ data, error }) => {
         if (error) throw error;
         const transactions = (data ?? []) as WalletTransaction[];
@@ -169,7 +203,7 @@ export class WalletService {
   private handleError(err: unknown, defaultMessage: string): void {
     const errorMessage = err instanceof Error ? err.message : defaultMessage;
     this.error.set({ message: errorMessage });
-    this.logger.error(defaultMessage, err instanceof Error ? err : new Error(String(err)));
+    this.logger.error(defaultMessage, String(err));
   }
 
   // ============================================================================
@@ -346,7 +380,129 @@ export class WalletService {
       if (error) throw error;
       this.pendingDepositsCount.set(data?.length ?? 0);
     } catch (err: unknown) {
-      this.logger.error('Error al obtener depósitos pendientes', err instanceof Error ? err : new Error(String(err)));
+      this.logger.error('Error al obtener depósitos pendientes', String(err));
     }
+  }
+
+  // ============================================================================
+  // PROTECTION CREDIT METHODS - Added 2025-11-05
+  // ============================================================================
+
+  /**
+   * Get Protection Credit balance
+   * Nota: Ya existe protectedCreditBalance computed, pero este método llama al RPC actualizado
+   */
+  async getProtectionCreditBalance(): Promise<{
+    balance_cents: number;
+    balance_usd: number;
+    issued_at: string | null;
+    expires_at: string | null;
+    is_expired: boolean;
+    days_until_expiry: number | null;
+  } | null> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      if (!user) throw new Error('Usuario no autenticado');
+
+      const { data, error } = await this.supabase.rpc('get_protection_credit_balance', {
+        p_user_id: user.id,
+      });
+
+      if (error) throw error;
+      return data?.[0] || null;
+    } catch (err: unknown) {
+      this.handleError(err, 'Error al obtener balance de Crédito de Protección');
+      throw err;
+    }
+  }
+
+  /**
+   * Issue Protection Credit to a new user ($300 USD)
+   * Only callable by service role, but exposed for admin operations
+   */
+  async issueProtectionCredit(
+    userId: string,
+    amountCents: number = 30000,
+    validityDays: number = 365,
+  ): Promise<string> {
+    try {
+      const { data, error } = await this.supabase.rpc('issue_protection_credit', {
+        p_user_id: userId,
+        p_amount_cents: amountCents,
+        p_validity_days: validityDays,
+      });
+
+      if (error) throw error;
+
+      // Refresh balance after issuing CP
+      this.getBalance().subscribe();
+
+      return data;
+    } catch (err: unknown) {
+      this.handleError(err, 'Error al emitir Crédito de Protección');
+      throw err;
+    }
+  }
+
+  /**
+   * Check Protection Credit renewal eligibility
+   */
+  async checkProtectionCreditRenewal(): Promise<{
+    eligible: boolean;
+    completedBookings: number;
+    totalClaims: number;
+    bookingsNeeded: number;
+  }> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      if (!user) throw new Error('Usuario no autenticado');
+
+      // Contar bookings completados
+      const { count: completedBookings } = await this.supabase
+        .from('bookings')
+        .select('*', { count: 'exact', head: true })
+        .eq('renter_id', user.id)
+        .eq('status', 'completed');
+
+      // Contar siniestros
+      const { count: totalClaims } = await this.supabase
+        .from('booking_claims')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .in('status', ['approved', 'resolved']);
+
+      const eligible = (completedBookings ?? 0) >= 10 && (totalClaims ?? 0) === 0;
+      const bookingsNeeded = Math.max(0, 10 - (completedBookings ?? 0));
+
+      return {
+        eligible,
+        completedBookings: completedBookings ?? 0,
+        totalClaims: totalClaims ?? 0,
+        bookingsNeeded,
+      };
+    } catch (err: unknown) {
+      this.handleError(err, 'Error al verificar elegibilidad de renovación');
+      throw err;
+    }
+  }
+
+  /**
+   * Get formatted Protection Credit balance for UI display
+   */
+  getProtectionCreditFormatted(): string {
+    const balance = this.protectedCreditBalance();
+    return `$${balance.toFixed(2)} USD`;
+  }
+
+  /**
+   * Get total available funds (including Protection Credit)
+   * Para cálculos de cobertura de siniestros
+   */
+  getTotalCoverageBalance(): number {
+    return this.availableBalance() + this.protectedCreditBalance();
   }
 }

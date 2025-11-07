@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, map } from 'rxjs/operators';
-import { of, combineLatest } from 'rxjs';
+import { of, combineLatest, from } from 'rxjs';
 
 // Services
 import { CarsService } from '../../../core/services/cars.service';
@@ -20,8 +20,9 @@ import { DistanceCalculatorService } from '../../../core/services/distance-calcu
 import { LocationService } from '../../../core/services/location.service';
 
 // Models
-import { Car, Review, CarStats } from '../../../core/models';
+import { Car, Review, CarStats, CarPhoto } from '../../../core/models';
 import { BookingPaymentMethod } from '../../../core/models/wallet.model';
+import { calculateCreditSecurityUsd } from '../../../core/models/booking-detail-payment.model';
 
 // Components
 import {
@@ -35,14 +36,20 @@ import { ShareMenuComponent } from '../../../shared/components/share-menu/share-
 import { DynamicPriceDisplayComponent } from '../../../shared/components/dynamic-price-display/dynamic-price-display.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { SocialProofIndicatorsComponent } from '../../../shared/components/social-proof-indicators/social-proof-indicators.component';
-import { BookingBenefitsComponent } from '../../../shared/components/booking-benefits/booking-benefits.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { DistanceBadgeComponent } from '../../../shared/components/distance-badge/distance-badge.component';
+import { CarChatComponent } from '../../messages/components/car-chat.component';
+import {
+  PaymentMethodButtonsComponent,
+  type PaymentMethod,
+} from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
 
 // Services
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { AnalyticsService } from '../../../core/services/analytics.service';
+import { WaitlistService } from '../../../core/services/waitlist.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 interface CarDetailState {
   car: Car | null;
@@ -65,9 +72,10 @@ interface CarDetailState {
     TranslateModule,
     UrgentRentalBannerComponent,
     SocialProofIndicatorsComponent,
-    BookingBenefitsComponent,
     StickyCtaMobileComponent,
     DistanceBadgeComponent,
+    CarChatComponent,
+    PaymentMethodButtonsComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -88,6 +96,8 @@ export class CarDetailPage implements OnInit {
   private readonly analytics = inject(AnalyticsService);
   private readonly distanceCalculator = inject(DistanceCalculatorService);
   private readonly locationService = inject(LocationService);
+  private readonly waitlistService = inject(WaitlistService);
+  private readonly toastService = inject(ToastService);
 
   readonly expressMode = signal(false);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -100,10 +110,18 @@ export class CarDetailPage implements OnInit {
   readonly distanceTier = signal<'local' | 'regional' | 'long_distance' | null>(null);
   readonly bookingInProgress = signal(false);
   readonly bookingError = signal<string | null>(null);
+  readonly validatingAvailability = signal(false); // ✅ NEW: Loading state for re-validation
   readonly selectedPaymentMethod = signal<BookingPaymentMethod>('credit_card');
+
+  // ✅ NEW: Date suggestions and waitlist
+  readonly suggestedDateRanges = signal<Array<{ startDate: string; endDate: string; daysCount: number }>>([]);
+  readonly canWaitlist = signal(false);
+  readonly addingToWaitlist = signal(false);
   readonly currentPhotoIndex = signal(0);
-  readonly blockedDates = signal<string[]>([]);
+  readonly blockedDates = signal<string[]>([]); // DEPRECATED: Usado solo para inline calendar
+  readonly blockedRanges = signal<Array<{ from: string; to: string }>>([]); // ✅ NEW: Rangos bloqueados para date picker
   readonly imageLoaded = signal(false);
+  readonly specsCollapsed = signal(false);
   
   // ✅ FIX: Precio dinámico para mostrar en lugar del estático
   readonly dynamicPrice = signal<number | null>(null);
@@ -111,6 +129,14 @@ export class CarDetailPage implements OnInit {
   readonly hourlyRateLoading = signal(false);
 
   private readonly carId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
+
+  /**
+   * Valida si un string es un UUID válido
+   */
+  private isValidUUID(uuid: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(uuid);
+  }
 
   private readonly carData$ = this.carId$.pipe(
     switchMap((id) => {
@@ -123,10 +149,34 @@ export class CarDetailPage implements OnInit {
           error: 'Auto no encontrado',
         });
       }
+      // ✅ FIX: Validar que el ID sea un UUID válido
+      // Previene errores cuando se navega a rutas como /cars/publish
+      if (!this.isValidUUID(id)) {
+        console.warn(`ID inválido para auto: "${id}". Redirigiendo...`);
+        // Redirigir a la lista de autos si el ID no es válido
+        setTimeout(() => this.router.navigate(['/cars']), 100);
+        return of({
+          car: null,
+          reviews: [],
+          stats: null,
+          loading: false,
+          error: 'ID de auto inválido',
+        });
+      }
       return combineLatest([
-        this.carsService.getCarById(id),
-        this.reviewsService.getReviewsForCar(id),
-        this.reviewsService.getCarStats(id),
+        from(this.carsService.getCarById(id)),
+        from(this.reviewsService.getReviewsForCar(id)).pipe(
+          catchError((err) => {
+            console.error('Error cargando reviews:', err);
+            return of([]); // Retornar array vacío si falla
+          }),
+        ),
+        from(this.reviewsService.getCarStats(id)).pipe(
+          catchError((err) => {
+            console.error('Error cargando estadísticas:', err);
+            return of(null); // Retornar null si falla
+          }),
+        ),
       ]).pipe(
         map(([car, reviews, stats]) => {
           if (car) {
@@ -134,15 +184,27 @@ export class CarDetailPage implements OnInit {
           }
           return { car, reviews, stats, loading: false, error: car ? null : 'Auto no disponible' };
         }),
-        catchError(() =>
-          of({
+        catchError((err) => {
+          console.error('Error cargando auto:', err);
+          // Determinar mensaje de error más específico
+          let errorMessage = 'Error al cargar el auto';
+          if (err?.code === 'PGRST116') {
+            errorMessage = 'Auto no encontrado';
+          } else if (err?.message?.includes('permission') || err?.code === '42501') {
+            errorMessage = 'No tienes permiso para ver este auto';
+          } else if (err?.message?.includes('network') || err?.message?.includes('fetch')) {
+            errorMessage = 'Error de conexión. Verifica tu internet';
+          } else if (err?.message) {
+            errorMessage = `Error: ${err.message}`;
+          }
+          return of({
             car: null,
             reviews: [],
             stats: null,
             loading: false,
-            error: 'Error al cargar el auto',
-          }),
-        ),
+            error: errorMessage,
+          });
+        }),
       );
     }),
   );
@@ -200,7 +262,25 @@ export class CarDetailPage implements OnInit {
     this.fxService.getFxSnapshot('USD', 'ARS').pipe(map((s) => s?.rate ?? null)),
   );
 
-  readonly allPhotos = computed(() => this.car()?.photos ?? this.car()?.car_photos ?? []);
+  readonly allPhotos = computed(() => {
+    const photos = (this.car()?.photos ?? this.car()?.car_photos ?? []) as CarPhoto[];
+    if (!Array.isArray(photos) || photos.length === 0) {
+      return [] as CarPhoto[];
+    }
+
+    const seen = new Set<string>();
+    return photos.filter((photo) => {
+      const key = photo.stored_path || photo.url;
+      if (!key) {
+        return true;
+      }
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
+  });
   readonly currentPhoto = computed(() => this.allPhotos()[this.currentPhotoIndex()]);
   readonly hasMultiplePhotos = computed(() => this.allPhotos().length > 1);
 
@@ -221,6 +301,18 @@ export class CarDetailPage implements OnInit {
     );
     return diff > 0 ? Math.max(diff, 5) : 5; // Mínimo 5 horas
   });
+
+  readonly isCurrentUserOwner = computed(() => {
+    const car = this.car();
+    const session = this.authService.session$();
+    const currentUserId = session?.user?.id;
+    if (!car || !currentUserId) {
+      return false;
+    }
+    return car.owner_id === currentUserId;
+  });
+
+  readonly canContactOwner = computed(() => this.authService.isAuthenticated() && !this.isCurrentUserOwner());
 
   // ✅ FIX: Precio por hora dinámico (cargado desde el servicio de pricing)
   readonly dynamicHourlyRate = signal<number | null>(null);
@@ -260,7 +352,10 @@ export class CarDetailPage implements OnInit {
     return hourlyRate;
   });
 
-  readonly totalPrice = computed(() => {
+  /**
+   * Total del alquiler (sin incluir depósito de seguridad)
+   */
+  readonly rentalTotal = computed(() => {
     const car = this.car();
     if (!car) return null;
 
@@ -276,11 +371,54 @@ export class CarDetailPage implements OnInit {
     // Modo normal: precio por día (usar precio dinámico si está disponible)
     const days = this.daysCount();
     if (days <= 0) return null;
-    
+
     // ✅ FIX: Usar precio dinámico si está disponible, sino precio estático
     const pricePerDay = this.displayPrice();
     return isNaN(pricePerDay) ? null : days * pricePerDay;
   });
+
+  /**
+   * Depósito de seguridad en USD (para mostrar)
+   * Retorna siempre US$ 600 según el sistema de garantías
+   */
+  readonly depositAmount = computed(() => {
+    const car = this.car();
+    if (!car) return 0;
+
+    // Usar el sistema de cálculo de garantías (siempre retorna 600 USD)
+    const vehicleValueUsd = car.value_usd ?? 10000;
+    return calculateCreditSecurityUsd(vehicleValueUsd);
+  });
+
+  /**
+   * Depósito de seguridad en ARS (para cálculos)
+   * Convierte el depósito USD a ARS usando la tasa de cambio
+   */
+  readonly depositAmountArs = computed(() => {
+    const depositUsd = this.depositAmount();
+    const fxRate = this.currentFxRate();
+
+    if (!fxRate) return depositUsd; // Fallback a USD si no hay tasa
+    return depositUsd * fxRate;
+  });
+
+  /**
+   * Total a autorizar (alquiler + depósito)
+   * Este es el monto que se pre-autoriza en tarjeta o se bloquea en wallet
+   */
+  readonly authorizationTotal = computed(() => {
+    const rental = this.rentalTotal();
+    const depositArs = this.depositAmountArs();
+
+    if (rental === null) return null;
+    return rental + depositArs;
+  });
+
+  /**
+   * @deprecated Usar rentalTotal() en su lugar
+   * Mantenido por compatibilidad temporal
+   */
+  readonly totalPrice = computed(() => this.rentalTotal());
 
   readonly canBook = computed(() => {
     if (this.expressMode()) {
@@ -296,9 +434,32 @@ export class CarDetailPage implements OnInit {
   checkAvailability = async (carId: string, from: string, to: string): Promise<boolean> => {
     try {
       return await this.carsService.isCarAvailable(carId, from, to);
-    } catch (error) {
-      console.error('Error checking availability:', error);
+    } catch (_error) {
+      console.error('Error checking availability:', _error);
       return false;
+    }
+  };
+
+  suggestNextAvailableRange = async (
+    carId: string,
+    from: string,
+    to: string,
+  ): Promise<DateRange | null> => {
+    try {
+      const suggestions = await this.carsService.getNextAvailableRange(carId, from, to);
+      if (!suggestions || suggestions.length === 0) {
+        return null;
+      }
+
+      // Get the first suggestion
+      const firstSuggestion = suggestions[0];
+      return {
+        from: this.normalizeDateInput(firstSuggestion.startDate),
+        to: this.normalizeDateInput(firstSuggestion.endDate),
+      };
+    } catch (_error) {
+      console.warn('No se pudo obtener próxima ventana disponible:', _error);
+      return null;
     }
   };
 
@@ -323,6 +484,53 @@ export class CarDetailPage implements OnInit {
         void this.initializeUserLocationAndDistance(state.car);
       }
     });
+  }
+
+  onContactOwner(): void {
+    const car = this.car();
+    if (!car?.owner_id) {
+      console.warn('No se puede iniciar el chat: falta owner_id en el auto');
+      return;
+    }
+
+    const session = this.authService.session$();
+    const currentUserId = session?.user?.id;
+
+    if (!currentUserId) {
+      void this.router.navigate(['/auth/login'], {
+        queryParams: { returnUrl: this.router.url },
+      });
+      return;
+    }
+
+    if (currentUserId === car.owner_id) {
+      return;
+    }
+
+    const queryParams = {
+      carId: car.id,
+      userId: car.owner_id,
+      carName: this.getCarChatTitle(car),
+      userName: car.owner?.full_name ?? 'Anfitrión',
+    };
+
+    void this.router.navigate(['/messages/chat'], { queryParams });
+  }
+
+  private getCarChatTitle(car: Car): string {
+    if (car.title?.trim()) {
+      return car.title;
+    }
+
+    const parts = [
+      car.brand ?? car.brand_name ?? car.brand_text_backup,
+      car.model ?? car.model_name ?? car.model_text_backup,
+      car.year ? String(car.year) : '',
+    ]
+      .map((value) => (value ? value.toString().trim() : ''))
+      .filter((value) => !!value);
+
+    return parts.join(' ').trim() || 'Auto';
   }
 
   /**
@@ -354,9 +562,9 @@ export class CarDetailPage implements OnInit {
           this.deliveryFeeCents.set(deliveryFee);
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently fail - distance is optional
-      console.warn('Could not calculate distance:', error);
+      console.warn('Could not calculate distance:', _error);
     }
   }
 
@@ -403,8 +611,8 @@ export class CarDetailPage implements OnInit {
           // Usar el precio por hora del sistema de pricing dinámico
           this.dynamicHourlyRate.set(quote.hourlyRate);
           console.log(`💰 [CarDetail] Dynamic hourly rate loaded: $${quote.hourlyRate}/hora (quote para ${hours} horas)`);
-        } catch (error) {
-          console.warn('⚠️ [CarDetail] Could not load dynamic hourly rate:', error);
+        } catch (_error) {
+          console.warn('⚠️ [CarDetail] Could not load dynamic hourly rate:', _error);
           // Fallback: calcular desde precio diario
           const pricePerDay = this.displayPrice();
           if (pricePerDay > 0) {
@@ -416,8 +624,8 @@ export class CarDetailPage implements OnInit {
           this.hourlyRateLoading.set(false);
         }
       }
-    } catch (error) {
-      console.error('❌ [CarDetail] Error loading dynamic price:', error);
+    } catch (_error) {
+      console.error('❌ [CarDetail] Error loading dynamic price:', _error);
     } finally {
       this.priceLoading.set(false);
     }
@@ -440,8 +648,8 @@ export class CarDetailPage implements OnInit {
       // Obtener ubicación del usuario
       try {
         await this.urgentRentalService.getCurrentLocation();
-      } catch (error) {
-        console.warn('No se pudo obtener ubicación:', error);
+      } catch (_error) {
+        console.warn('No se pudo obtener ubicación:', _error);
       }
 
       // Verificar disponibilidad inmediata
@@ -461,8 +669,8 @@ export class CarDetailPage implements OnInit {
         // Usar el precio por hora del sistema de pricing dinámico
         this.dynamicHourlyRate.set(quote.hourlyRate);
         console.log(`💰 [CarDetail] Express mode hourly rate: $${quote.hourlyRate}/hora (quote para ${hours} horas)`);
-      } catch (error) {
-        console.warn('⚠️ [CarDetail] Could not load hourly rate for express mode:', error);
+      } catch (_error) {
+        console.warn('⚠️ [CarDetail] Could not load hourly rate for express mode:', _error);
         // Fallback: calcular desde precio diario si está disponible
         const pricePerDay = this.displayPrice();
         if (pricePerDay > 0) {
@@ -481,8 +689,8 @@ export class CarDetailPage implements OnInit {
         from: now.toISOString().split('T')[0],
         to: fiveHoursLater.toISOString().split('T')[0],
       });
-    } catch (error) {
-      console.error('Error setting up express mode:', error);
+    } catch (_error) {
+      console.error('Error setting up express mode:', _error);
     }
   }
 
@@ -524,6 +732,82 @@ export class CarDetailPage implements OnInit {
     this.dateRange.set(range);
   }
 
+  toggleSpecs(): void {
+    this.specsCollapsed.update((value) => !value);
+  }
+
+  /**
+   * ✅ NEW: Handle payment method selection
+   * Saves the selected method and navigates to payment page
+   */
+  onPaymentMethodSelected(method: PaymentMethod): void {
+    const car = this.car();
+    const { from, to } = this.dateRange();
+
+    if (!car || !from || !to) {
+      this.bookingError.set('Por favor seleccioná las fechas de alquiler');
+      return;
+    }
+
+    // Track: Booking initiated with payment method
+    this.analytics.trackEvent('booking_initiated', {
+      car_id: car.id,
+      payment_method: method,
+      rental_amount: this.rentalTotal() ?? undefined,
+      deposit_amount: this.depositAmount(),
+      total_amount: this.authorizationTotal() ?? undefined,
+    });
+
+    // Save method in sessionStorage for payment page
+    sessionStorage.setItem('payment_method', method);
+
+    // Navigate to payment page with method pre-selected
+    void this.navigateToPaymentPage(method);
+  }
+
+  /**
+   * Navigate to payment page with payment method pre-selected
+   */
+  private async navigateToPaymentPage(paymentMethod?: PaymentMethod): Promise<void> {
+    const car = this.car();
+    const { from, to } = this.dateRange();
+
+    if (!car || !from || !to) return;
+
+    // Check authentication
+    if (!(await this.authService.isAuthenticated())) {
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
+
+    // Prepare booking data
+    const startDate = new Date(from).toISOString();
+    const endDate = new Date(to).toISOString();
+
+    // Save booking detail input for payment page
+    sessionStorage.setItem('booking_detail_input', JSON.stringify({
+      carId: car.id,
+      startDate,
+      endDate,
+      bucket: 'standard', // Default bucket, not stored in Car model
+      vehicleValueUsd: car.value_usd ?? 10000,
+      country: car.location_country ?? 'AR',
+    }));
+
+    // Navigate with payment method if provided
+    const queryParams: Record<string, string> = {
+      carId: car.id,
+      startDate,
+      endDate,
+    };
+
+    if (paymentMethod) {
+      queryParams['paymentMethod'] = paymentMethod;
+    }
+
+    await this.router.navigate(['/bookings/detail-payment'], { queryParams });
+  }
+
   async onBookClick(): Promise<void> {
     const car = this.car();
     const { from, to } = this.dateRange();
@@ -563,6 +847,51 @@ export class CarDetailPage implements OnInit {
       } else {
         startDate = new Date(from).toISOString();
         endDate = new Date(to).toISOString();
+      }
+
+      // ✅ NEW: Re-validate availability before booking
+      // This prevents race conditions where another user books between selection and booking
+      if (!this.expressMode()) {
+        this.validatingAvailability.set(true);
+        try {
+          const isAvailable = await this.carsService.isCarAvailable(car.id, startDate, endDate);
+          if (!isAvailable) {
+            // Track: Booking failed due to availability
+            this.analytics.trackEvent('booking_failed', {
+              car_id: car.id,
+              error: 'Fechas no disponibles - reserva confirmada en ese período',
+            });
+
+            // ✅ NEW: Try to suggest alternative dates
+            const suggestions = await this.carsService.getNextAvailableRange(
+              car.id,
+              startDate,
+              endDate,
+              3, // Get up to 3 alternative date ranges
+            );
+
+            if (suggestions && suggestions.length > 0) {
+              this.suggestedDateRanges.set(suggestions);
+              this.bookingError.set(
+                'El auto no está disponible para esas fechas. Te sugerimos las siguientes alternativas:',
+              );
+              this.canWaitlist.set(false); // Don't show waitlist if we have suggestions
+            } else {
+              // No suggestions available - show waitlist option
+              this.suggestedDateRanges.set([]);
+              this.bookingError.set(
+                'El auto no está disponible para esas fechas. Hay una reserva confirmada en ese período.',
+              );
+              this.canWaitlist.set(true);
+            }
+
+            // Refresh blocked ranges to update calendar
+            await this.loadBlockedDates(car.id);
+            return;
+          }
+        } finally {
+          this.validatingAvailability.set(false);
+        }
       }
 
       // Track: Booking initiated
@@ -639,41 +968,118 @@ export class CarDetailPage implements OnInit {
   }
 
   /**
-   * Carga las fechas bloqueadas del auto
-   * Obtiene todas las reservas confirmadas y genera un array de fechas bloqueadas
+   * ✅ UPDATED: Carga los rangos de fechas bloqueadas del auto
+   * Usa el nuevo método del servicio que incluye TODOS los estados de reserva bloqueantes:
+   * pending, pending_payment, confirmed, in_progress
    */
   private async loadBlockedDates(carId: string): Promise<void> {
     try {
-      const { data: bookings, error } = await this.supabase
-        .from('bookings')
-        .select('start_at, end_at')
-        .eq('car_id', carId)
-        .in('status', ['confirmed', 'in_progress']);
+      const ranges = await this.carsService.getBlockedDateRanges(carId);
+      this.blockedRanges.set(ranges);
 
-      if (error || !bookings) {
-        console.error('Error loading blocked dates:', error);
-        return;
-      }
-
-      // Generar array de fechas bloqueadas
+      // DEPRECATED: Mantener blockedDates para compatibilidad con inline calendar
+      // TODO: Migrar inline calendar a usar blockedRanges también
       const blocked = new Set<string>();
-
-      bookings.forEach((booking) => {
-        const start = new Date(booking.start_at);
-        const end = new Date(booking.end_at);
-
-        // Marcar todos los días entre start y end como bloqueados
+      ranges.forEach((range) => {
+        const start = new Date(range.from);
+        const end = new Date(range.to);
         const currentDate = new Date(start);
         while (currentDate <= end) {
-          const dateKey = currentDate.toISOString().split('T')[0];
-          blocked.add(dateKey);
+          blocked.add(currentDate.toISOString().split('T')[0]);
           currentDate.setDate(currentDate.getDate() + 1);
         }
       });
-
       this.blockedDates.set(Array.from(blocked));
     } catch (error) {
       console.error('Error in loadBlockedDates:', error);
     }
+  }
+
+  private normalizeDateInput(value: string): string {
+    const parsed = new Date(value);
+    return isNaN(parsed.getTime()) ? value : parsed.toISOString().split('T')[0];
+  }
+
+  /**
+   * ✅ NEW: Aplica una sugerencia de fecha clickeada por el usuario
+   */
+  applySuggestedDates(suggestion: { startDate: string; endDate: string; daysCount: number}): void {
+    // Convertir fechas de YYYY-MM-DD a DateRange format
+    this.dateRange.set({
+      from: suggestion.startDate,
+      to: suggestion.endDate,
+    });
+
+    // Clear errors and suggestions
+    this.bookingError.set(null);
+    this.suggestedDateRanges.set([]);
+    this.canWaitlist.set(false);
+
+    // Show success toast
+    this.toastService.success(
+      'Fechas actualizadas',
+      `Seleccionaste ${suggestion.daysCount} día${suggestion.daysCount !== 1 ? 's' : ''} disponibles`,
+    );
+
+    // Track: Date suggestion applied
+    this.analytics.trackEvent('date_range_selected', {
+      car_id: this.car()?.id,
+      days_count: suggestion.daysCount,
+      source: 'suggestion_chip',
+    });
+  }
+
+  /**
+   * ✅ NEW: Agrega el usuario a la lista de espera
+   */
+  async addToWaitlist(): Promise<void> {
+    const car = this.car();
+    const { from, to } = this.dateRange();
+
+    if (!car || !from || !to) {
+      this.toastService.error('Error', 'Por favor seleccioná las fechas primero');
+      return;
+    }
+
+    this.addingToWaitlist.set(true);
+    try {
+      const result = await this.waitlistService.addToWaitlist(car.id, from, to);
+
+      if (result.success) {
+        this.bookingError.set(null);
+        this.canWaitlist.set(false);
+        this.suggestedDateRanges.set([]);
+
+        this.toastService.success(
+          'Agregado a lista de espera',
+          'Te notificaremos cuando el auto esté disponible para esas fechas',
+        );
+
+        // Track: Waitlist joined
+        this.analytics.trackEvent('date_range_selected', {
+          car_id: car.id,
+          source: 'waitlist_added',
+        });
+      } else {
+        this.toastService.error('Error', result.error || 'No pudimos agregarte a la lista de espera');
+      }
+    } catch (error) {
+      console.error('Error adding to waitlist:', error);
+      this.toastService.error('Error', 'No pudimos agregarte a la lista de espera. Intentá nuevamente');
+    } finally {
+      this.addingToWaitlist.set(false);
+    }
+  }
+
+  /**
+   * ✅ NEW: Formatea una fecha para mostrar en los chips de sugerencias
+   */
+  formatSuggestionDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    return new Intl.DateTimeFormat('es-AR', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+    }).format(date);
   }
 }

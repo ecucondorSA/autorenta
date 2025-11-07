@@ -1,7 +1,7 @@
-import { insertMessage } from './messages.repo';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { randomUuid, VALID_UUID } from '../../../test-helpers/factories';
 import { createMockQueryBuilder } from '../../../test-helpers/mock-types';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { insertMessage } from './messages.repo';
 
 describe('messages repo', () => {
   let mockBuilder: ReturnType<typeof createMockQueryBuilder>;

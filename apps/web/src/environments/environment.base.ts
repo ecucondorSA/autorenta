@@ -34,6 +34,7 @@ interface EnvDefaults {
   enableAnalytics?: boolean;
   distanceConfig?: DistanceConfig;
   docVerifierUrl?: string;
+  cloudflareWorkerUrl?: string;
 }
 
 // Type-safe interfaces for global environment access
@@ -85,7 +86,7 @@ const defaultDistanceConfig: DistanceConfig = {
     regional: 1.15,
     longDistance: 1.3,
   },
-  deliveryFeePerKm: 0.5,
+  deliveryFeePerKm: 0, // DESHABILITADO - delivery gratis
   minDistanceForDeliveryFee: 5,
   maxDeliveryDistance: 50,
   defaultSearchRadiusKm: 50,
@@ -122,6 +123,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   enableAnalytics: defaults.enableAnalytics ?? defaults.production ?? false,
   distanceConfig: defaults.distanceConfig ?? defaultDistanceConfig,
   docVerifierUrl: resolve('NG_APP_DOC_VERIFIER_URL', defaults.docVerifierUrl),
+  cloudflareWorkerUrl: resolve('NG_APP_CLOUDFLARE_WORKER_URL', defaults.cloudflareWorkerUrl ?? 'http://localhost:8787'),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { of, throwError } from 'rxjs';
 import { LocationService } from './location.service';
 import { SupabaseClientService } from './supabase-client.service';
 import { GeocodingService } from './geocoding.service';
-import { of, throwError } from 'rxjs';
 
 describe('LocationService', () => {
   let service: LocationService;

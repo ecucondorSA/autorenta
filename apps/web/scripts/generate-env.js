@@ -22,7 +22,8 @@ const envVars = {
   NG_APP_MERCADOPAGO_PUBLIC_KEY:
     process.env.NG_APP_MERCADOPAGO_PUBLIC_KEY ||
     process.env.MERCADOPAGO_PUBLIC_KEY ||
-    ''
+    '',
+  NG_APP_CLOUDFLARE_WORKER_URL: process.env.NG_APP_CLOUDFLARE_WORKER_URL || 'https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev'
 };
 
 const envJsContent = `// Auto-generated environment configuration

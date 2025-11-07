@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 import {
   InsurancePolicy,
   BookingInsuranceCoverage,
@@ -44,7 +45,7 @@ export class InsuranceService {
         if (error) throw error;
         return (data as InsurancePolicy[]) || [];
       }),
-      catchError((err) => {
+      catchError((_err) => {
         return of([]);
       }),
     );
@@ -69,7 +70,7 @@ export class InsuranceService {
         }
         return data as InsurancePolicy;
       }),
-      catchError((err) => {
+      catchError((_err) => {
         return of(null);
       }),
     );
@@ -267,7 +268,7 @@ export class InsuranceService {
         if (error) throw error;
         return (data as InsuranceAddon[]) || [];
       }),
-      catchError((err) => {
+      catchError((_err) => {
         return of([]);
       }),
     );
@@ -301,6 +302,51 @@ export class InsuranceService {
   // ============================================
 
   /**
+   * Subir foto de evidencia de siniestro
+   * Path: {user_id}/claim-evidence/{booking_id}/{uuid}.{ext}
+   */
+  async uploadClaimEvidence(file: File, bookingId: string): Promise<string> {
+    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    if (!userId) throw new Error('Usuario no autenticado');
+
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Solo se permiten imágenes');
+    }
+
+    // Validar tamaño (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error('Imagen muy grande. Máximo 5MB');
+    }
+
+    // Obtener extensión del archivo
+    const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+
+    // Path: {userId}/claim-evidence/{bookingId}/{uuid}.{extension}
+    const filePath = `${userId}/claim-evidence/${bookingId}/${uuidv4()}.${extension}`;
+
+    const { error } = await this.supabase.storage
+      .from('documents')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (error) throw error;
+
+    // Retornar la ruta del archivo (sin bucket name)
+    return filePath;
+  }
+
+  /**
+   * Obtener URL pública de foto de evidencia
+   */
+  getClaimEvidenceUrl(filePath: string): string {
+    const { data } = this.supabase.storage.from('documents').getPublicUrl(filePath);
+    return data.publicUrl;
+  }
+
+  /**
    * Reportar un siniestro
    */
   async reportClaim(request: ReportClaimRequest): Promise<string> {
@@ -328,7 +374,7 @@ export class InsuranceService {
         if (error) throw error;
         return (data as InsuranceClaim[]) || [];
       }),
-      catchError((err) => {
+      catchError((_err) => {
         return of([]);
       }),
     );

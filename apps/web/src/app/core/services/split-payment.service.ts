@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
-import { SupabaseClientService } from './supabase-client.service';
 import { environment } from '../../../environments/environment';
+import { SupabaseClientService } from './supabase-client.service';
 
 export interface SplitPaymentCollector {
   userId: string;
@@ -174,7 +174,7 @@ export class SplitPaymentService {
    * Get detailed breakdown for a specific payment
    */
   getPaymentBreakdown(paymentId: string): Observable<{
-    payment: any;
+    payment: unknown;
     splits: PaymentSplit[];
     summary: {
       totalAmount: number;
@@ -190,13 +190,13 @@ export class SplitPaymentService {
           .select('*')
           .eq('id', paymentId)
           .single()
-          .then((res: any) => res.data),
+          .then((res: any) => (res as any).data),
         this.supabase
           .getClient()
           .from('payment_splits')
           .select('*')
           .eq('payment_id', paymentId)
-          .then((res: any) => res.data),
+          .then((res: any) => (res as any).data),
       ]),
     ).pipe(
       map(([payment, splits]) => {
@@ -327,7 +327,7 @@ export class SplitPaymentService {
         totalFee,
         errors: errors.length > 0 ? errors : undefined,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         splits: [],
@@ -335,7 +335,7 @@ export class SplitPaymentService {
         totalFee: 0,
         errors: [
           ...(errors || []),
-          `Database error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          `Database error: ${_error instanceof Error ? _error.message : 'Unknown error'}`,
         ],
       };
     }
@@ -386,8 +386,8 @@ export class SplitPaymentService {
         });
 
       return split;
-    } catch (error) {
-      throw error;
+    } catch (_error) {
+      throw _error;
     }
   }
 

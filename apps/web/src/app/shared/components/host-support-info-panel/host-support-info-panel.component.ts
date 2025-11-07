@@ -79,7 +79,7 @@ import { TranslateModule } from '@ngx-translate/core';
               [class.dark:border-accent-petrol/70]="activeTab() === 'tips'"
               [class.dark:text-accent-petrol/70]="activeTab() === 'tips'"
               [class.border-transparent]="activeTab() !== 'tips'"
-              [class.text-ash-gray]="activeTab() !== 'tips'"
+              [class.text-ash-gray dark:text-pearl-light/70]="activeTab() !== 'tips'"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
             >
               📚 Tips y Obligaciones
@@ -92,7 +92,7 @@ import { TranslateModule } from '@ngx-translate/core';
               [class.dark:border-accent-petrol/70]="activeTab() === 'calculator'"
               [class.dark:text-accent-petrol/70]="activeTab() === 'calculator'"
               [class.border-transparent]="activeTab() !== 'calculator'"
-              [class.text-ash-gray]="activeTab() !== 'calculator'"
+              [class.text-ash-gray dark:text-pearl-light/70]="activeTab() !== 'calculator'"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
             >
               💰 Calculadora
@@ -105,7 +105,7 @@ import { TranslateModule } from '@ngx-translate/core';
               [class.dark:border-accent-petrol/70]="activeTab() === 'pricing'"
               [class.dark:text-accent-petrol/70]="activeTab() === 'pricing'"
               [class.border-transparent]="activeTab() !== 'pricing'"
-              [class.text-ash-gray]="activeTab() !== 'pricing'"
+              [class.text-ash-gray dark:text-pearl-light/70]="activeTab() !== 'pricing'"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
             >
               💵 Precios Sugeridos

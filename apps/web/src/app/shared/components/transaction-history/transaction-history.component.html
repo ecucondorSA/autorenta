@@ -70,7 +70,7 @@
 
   <!-- Empty State -->
   <div *ngIf="!isLoading() && filteredTransactions().length === 0" class="text-center py-12" data-testid="empty-transactions">
-    <svg class="mx-auto h-16 w-16 text-ash-gray dark:text-charcoal-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg class="mx-auto h-16 w-16 text-ash-gray dark:text-charcoal-medium dark:text-pearl-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
     </svg>
     <h3 class="mt-4 text-lg font-medium text-charcoal-dark dark:text-pearl-light">
@@ -140,7 +140,6 @@
       <div
         *ngIf="expandedTransactionId() === transaction.id"
         class="px-4 pb-4 border-t border-ash-gray dark:border-charcoal-medium"
-        data-testid="transaction-detail"
       >
         <div class="mt-4 space-y-2 text-sm">
           <div class="flex justify-between">

@@ -81,15 +81,15 @@ export class PerformanceMonitoringService {
         });
         
         lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
-      } catch (e) {
+      } catch (_e) {
         // Browser doesn't support LCP
       }
 
       // FID (First Input Delay)
       try {
         const fidObserver = new PerformanceObserver((list) => {
-          list.getEntries().forEach((entry: any) => {
-            const fid = entry.processingStart - entry.startTime;
+          list.getEntries().forEach((entry: unknown) => {
+            const fid = (entry as any).processingStart - (entry as any).startTime;
             console.log(`📊 FID: ${fid.toFixed(2)}ms`);
             
             if (fid > 100) {
@@ -99,7 +99,7 @@ export class PerformanceMonitoringService {
         });
         
         fidObserver.observe({ entryTypes: ['first-input'] });
-      } catch (e) {
+      } catch (_e) {
         // Browser doesn't support FID
       }
 
@@ -107,9 +107,9 @@ export class PerformanceMonitoringService {
       try {
         let clsScore = 0;
         const clsObserver = new PerformanceObserver((list) => {
-          list.getEntries().forEach((entry: any) => {
-            if (!entry.hadRecentInput) {
-              clsScore += entry.value;
+          list.getEntries().forEach((entry: unknown) => {
+            if (!(entry as any).hadRecentInput) {
+              clsScore += (entry as any).value;
               console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
               
               if (clsScore > 0.1) {
@@ -120,7 +120,7 @@ export class PerformanceMonitoringService {
         });
         
         clsObserver.observe({ entryTypes: ['layout-shift'] });
-      } catch (e) {
+      } catch (_e) {
         // Browser doesn't support CLS
       }
     }

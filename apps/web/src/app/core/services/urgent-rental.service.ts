@@ -172,8 +172,8 @@ export class UrgentRentalService {
         distance,
         eta,
       };
-    } catch (error) {
-      console.error('Error checking immediate availability:', error);
+    } catch (_error) {
+      console.error('Error checking immediate availability:', _error);
       return {
         available: false,
         reason: 'Error al verificar disponibilidad',
@@ -221,8 +221,8 @@ export class UrgentRentalService {
         surgeFactor: pricing.breakdown.total_multiplier,
         currency: pricing.currency,
       };
-    } catch (error) {
-      console.error('Error calculating urgent quote:', error);
+    } catch (_error) {
+      console.error('Error calculating urgent quote:', _error);
       throw new Error('No se pudo calcular el precio');
     }
   }
@@ -256,11 +256,11 @@ export class UrgentRentalService {
         success: true,
         bookingId: result.booking.id,
       };
-    } catch (error) {
-      console.error('Error creating urgent booking:', error);
+    } catch (_error) {
+      console.error('Error creating urgent booking:', _error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error al crear la reserva',
+        error: _error instanceof Error ? _error.message : 'Error al crear la reserva',
       };
     }
   }
@@ -295,19 +295,22 @@ export class UrgentRentalService {
     return (degrees * Math.PI) / 180;
   }
 
-  private getGeolocationErrorMessage(error: GeolocationPositionError): string {
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
+  private getGeolocationErrorMessage(_error: GeolocationPositionError): string {
+    switch (_error.code) {
+      case _error.PERMISSION_DENIED:
         return 'Permiso de ubicación denegado';
-      case error.POSITION_UNAVAILABLE:
+      case _error.POSITION_UNAVAILABLE:
         return 'Ubicación no disponible';
-      case error.TIMEOUT:
+      case _error.TIMEOUT:
         return 'Tiempo de espera agotado';
       default:
         return 'Error al obtener ubicación';
     }
   }
 }
+
+
+
 
 
 

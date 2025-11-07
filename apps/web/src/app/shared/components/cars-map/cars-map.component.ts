@@ -19,13 +19,13 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import type mapboxgl from 'mapbox-gl';
 import { CarLocationsService, CarMapLocation } from '../../../core/services/car-locations.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { environment } from '../../../../environments/environment';
 
 // Type imports (these don't increase bundle size)
-import type mapboxgl from 'mapbox-gl';
 
 type LngLatLike = [number, number] | { lng: number; lat: number };
 
@@ -80,6 +80,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   private carMarkersMap: Map<string, mapboxgl.Marker> = new Map();
   private mapboxgl: typeof mapboxgl | null = null;
   private lastCarsJson: string = ''; // Para evitar updates redundantes
+  private markerPhotoTimers = new Map<string, number>();
 
   // Clustering & pricing cache
   private clusteringEnabled = false;
@@ -124,6 +125,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     // Clean up all car markers
     this.carMarkersMap.forEach(marker => marker.remove());
     this.carMarkersMap.clear();
+    this.clearAllPhotoRotations();
     
     // Clean up user marker
     this.userMarker?.remove();
@@ -195,14 +197,14 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         this.loadDynamicPricesForViewport();
       });
 
-      this.map.on('error', (e: any) => {
+      this.map.on('error', (e: unknown) => {
         console.error('❌ Error en el mapa:', e);
-        this.error.set('Error al cargar el mapa: ' + (e.error?.message || 'Error desconocido'));
+        this.error.set('Error al cargar el mapa: ' + ((e as any).error?.message || 'Error desconocido'));
         this.loading.set(false);
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('❌ Error inicializando mapa:', err);
-      this.error.set('Error al inicializar el mapa: ' + err.message);
+      this.error.set('Error al inicializar el mapa: ' + (err as Error).message);
       this.loading.set(false);
     }
   }
@@ -225,6 +227,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       if (!currentCarIds.has(carId)) {
         console.log('🗑️ Eliminando marker:', carId);
         marker.remove();
+        this.clearPhotoRotation(carId);
         this.carMarkersMap.delete(carId);
       }
     });
@@ -235,6 +238,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       // Limpiar markers HTML existentes
       this.carMarkersMap.forEach((m) => m.remove());
       this.carMarkersMap.clear();
+      this.clearAllPhotoRotations();
       this.addOrUpdateClusterLayers(locations);
       console.log('🧩 Clustering activado:', locations.length, 'autos');
       return;
@@ -391,7 +395,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       } as any);
 
       // Click en cluster para expandir
-      this.map.on('click', 'clusters', (e: any) => {
+      this.map.on('click', 'clusters', (e: mapboxgl.MapMouseEvent) => {
         const map = this.map;
         if (!map) return;
         const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
@@ -415,12 +419,13 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       });
 
       // Popup para puntos individuales
-      this.map.on('click', 'unclustered-point', (e: any) => {
+      this.map.on('click', 'unclustered-point', (e: mapboxgl.MapMouseEvent) => {
         const map = this.map;
         if (!map || !e.features || !e.features[0]) return;
         const f = e.features[0];
-        const coords = f.geometry.coordinates.slice();
+        const coords = (f.geometry as GeoJSON.Point).coordinates.slice();
         const props = f.properties;
+        if (!props) return;
         const carLocation: CarMapLocation = {
           carId: props.carId,
           title: props.title,
@@ -434,7 +439,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
           description: '',
         } as any;
         const popup = this.buildPopup(carLocation);
-        popup.setLngLat(coords).addTo(map);
+        popup.setLngLat(coords as [number, number]).addTo(map);
         
         // Make popup image clickable to navigate to car detail
         popup.on('open', () => {
@@ -579,9 +584,9 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         }
       }
       console.log(`💰 [Pricing] Updated ${updatedCount} markers with dynamic prices`);
-    } catch (error) {
+    } catch (_error) {
       // Silent fallback - markers will show static prices
-      console.error('❌ [Pricing] Failed to load dynamic prices:', error);
+      console.error('❌ [Pricing] Failed to load dynamic prices:', _error);
     } finally {
       this.loadingPrices = false;
     }
@@ -665,6 +670,8 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   private buildPopup(location: CarMapLocation): mapboxgl.Popup {
     // ✅ FIX: Solo mostrar precio dinámico, no precio estático
     const cachedPrice = this.getCachedDynamicPrice(location.carId);
+    const fallbackPrice = location.pricePerDay ?? null;
+    const fallbackCurrency = location.currency ?? 'ARS';
     
     let formattedPrice: string;
     if (cachedPrice) {
@@ -674,9 +681,15 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       }).format(cachedPrice.price);
+    } else if (fallbackPrice) {
+      formattedPrice = new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: fallbackCurrency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(fallbackPrice);
     } else {
-      // Mostrar indicador de carga si no hay precio dinámico
-      formattedPrice = 'Cargando...';
+      formattedPrice = '—';
     }
 
     const html = `
@@ -697,7 +710,31 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     if (!this.mapboxgl) {
       throw new Error('Mapbox not loaded');
     }
-    return new this.mapboxgl.Popup({ closeButton: false, className: 'car-popup' }).setHTML(html);
+    const popup = new this.mapboxgl.Popup({ 
+      closeButton: false, 
+      className: 'car-popup',
+      maxWidth: '75px' // Reducido 4x (antes 300px)
+    }).setHTML(html);
+    
+    // Asegurar que el popup respete los límites del viewport SOLO en móvil
+    if (typeof window !== 'undefined' && window.innerWidth <= 640) {
+      popup.on('open', () => {
+        setTimeout(() => {
+          const popupElement = popup.getElement();
+          if (popupElement) {
+            const content = popupElement.querySelector('.mapboxgl-popup-content') as HTMLElement;
+            if (content) {
+              // Reducción 8x: máximo 37.5px (1/8 de 300px) o viewport - 12px
+              const maxWidth = Math.min(window.innerWidth - 12, 37.5);
+              content.style.maxWidth = `${maxWidth}px`;
+              content.style.width = 'auto';
+            }
+          }
+        }, 0);
+      });
+    }
+    
+    return popup;
   }
 
   private addGeolocateButton(): void {
@@ -707,14 +744,71 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     button.setAttribute('aria-label', 'Centrar en mi ubicación');
     button.style.position = 'absolute';
     button.style.right = '10px';
-    button.style.bottom = '10px';
+    button.style.top = '10px'; // Movido hacia arriba
     button.style.zIndex = '10';
     button.style.width = '36px';
     button.style.height = '36px';
     button.style.borderRadius = '6px';
     button.style.border = '1px solid rgba(0,0,0,0.1)';
     button.style.background = '#fff';
+    button.style.color = '#222';
+    button.style.cursor = 'pointer';
+    button.style.transition = 'all 0.2s ease';
+    button.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+    
+    // Detectar dark mode y aplicar estilos
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    if (isDarkMode) {
+      button.style.background = '#1e1e1e';
+      button.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+      button.style.color = '#ffffff';
+      button.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.4)';
+    }
+    
+    // Observar cambios en dark mode
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        button.style.background = '#1e1e1e';
+        button.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        button.style.color = '#ffffff';
+        button.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.4)';
+      } else {
+        button.style.background = '#fff';
+        button.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+        button.style.color = '#222';
+        button.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+      }
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    
     button.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="margin:8px"><circle cx="10" cy="10" r="2"/><path d="M10 2v6m0 4v6M2 10h6m4 0h6" stroke="currentColor" stroke-width="2"/></svg>';
+    
+    // Hover effects
+    button.addEventListener('mouseenter', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      button.style.transform = 'scale(1.05)';
+      if (isDark) {
+        button.style.background = '#2a2a2a';
+      } else {
+        button.style.background = '#f8f9fa';
+      }
+    });
+    
+    button.addEventListener('mouseleave', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      button.style.transform = 'scale(1)';
+      if (isDark) {
+        button.style.background = '#1e1e1e';
+      } else {
+        button.style.background = '#fff';
+      }
+    });
+    
     button.addEventListener('click', () => {
       const map = this.map;
       if (!map) return;
@@ -733,20 +827,31 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   private createPhotoMarker(location: CarMapLocation): HTMLElement {
     const el = document.createElement('div');
     el.className = 'car-marker';
+    this.clearPhotoRotation(location.carId);
+    el.setAttribute('data-title', location.title || 'Ver detalle');
     el.setAttribute('data-car-id', location.carId);
 
     // Determinar si mostrar distancia o precio
     const distanceText = this.getDistanceText(location.lat, location.lng);
-    const showDistanceIfNearby = distanceText && parseFloat(distanceText.replace(/[^\d.]/g, '')) <= 10; // Mostrar distancia si <= 10km
+    const showDistanceIfNearby =
+      distanceText && parseFloat(distanceText.replace(/[^\d.]/g, '')) <= 10; // Mostrar distancia si <= 10km
 
-    let displayText: string;
-    let displayClass: string;
+    const gallery = this.getPhotoGallery(location);
+    const hasPhoto = gallery.length > 0;
+    const initialPhoto = hasPhoto ? this.sanitizeUrl(gallery[0]) : '';
 
-    // ✅ FIX: Prioridad: 1) Precio dinámico, 2) Distancia si está cerca, 3) Distancia si no hay precio
+    const themeClass = this.isDarkMap() ? 'car-marker--dark' : 'car-marker--light';
+    el.classList.add(themeClass);
+
+    // ✅ Prioridad renovada: 1) Precio dinámico, 2) Precio estático del auto, 3) Distancia
     const cachedPrice = this.getCachedDynamicPrice(location.carId);
-    
+    const fallbackPrice = location.pricePerDay ?? null;
+    const fallbackCurrency = location.currency ?? 'ARS';
+
+    let displayText: string | null = null;
+    let displayClass: string | null = null;
+
     if (cachedPrice) {
-      // Mostrar precio dinámico si está disponible
       const formattedPrice = new Intl.NumberFormat('es-AR', {
         style: 'currency',
         currency: cachedPrice.currency,
@@ -754,31 +859,113 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         maximumFractionDigits: 0,
       }).format(cachedPrice.price);
       displayText = formattedPrice;
-      displayClass = 'car-marker-price';
-    } else if (showDistanceIfNearby && distanceText) {
-      // Si está cerca y no hay precio dinámico, mostrar distancia
-      displayText = distanceText;
-      displayClass = 'car-marker-distance';
-      el.classList.add('nearby');
+      displayClass = 'car-marker-price car-marker-price--dynamic';
+    } else if (fallbackPrice) {
+      const formattedPrice = new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: fallbackCurrency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(fallbackPrice);
+      displayText = formattedPrice;
+      displayClass = 'car-marker-price car-marker-price--fallback';
     } else if (distanceText) {
-      // Si no hay precio dinámico pero hay distancia, mostrar distancia
       displayText = distanceText;
       displayClass = 'car-marker-distance';
-    } else {
-      // Fallback: mostrar "..." solo si no hay ni precio ni distancia
-      displayText = '...';
-      displayClass = 'car-marker-price car-marker-loading';
+      if (showDistanceIfNearby) {
+        el.classList.add('nearby');
+      }
     }
+    // Si no hay precio ni distancia, no mostrar nada (displayText y displayClass quedan null)
 
-    // Marker estilo Airbnb con foto y distancia/precio
+    const pillHtml =
+      displayText && displayClass
+        ? `<div class="car-marker-pill ${displayClass}">
+            ${displayText}${
+            displayClass.includes('price') ? '<span class="car-marker-pill-sub">/día</span>' : ''
+          }
+          </div>`
+        : '';
+
+    const title = this.sanitizeText(location.title || 'Auto disponible');
+    const meta = this.sanitizeText(location.locationLabel || distanceText || '');
+    const avatarContent = hasPhoto
+      ? `<div class="car-marker-avatar" style="background-image:url('${initialPhoto}')"></div>`
+      : `<div class="car-marker-avatar car-marker-avatar--empty">${this.getInitials(title)}</div>`;
+    const metaHtml = meta ? `<p class="car-marker-meta">${meta}</p>` : '';
+
     el.innerHTML = `
-      <div class="car-marker-content">
-        <img class="car-marker-photo" src="${location.photoUrl}" alt="Car" loading="lazy" />
-        <span class="${displayClass}">${displayText}</span>
+      <div class="car-marker-card ${showDistanceIfNearby ? 'car-marker-card--nearby' : ''}">
+        <div class="car-marker-body">
+          ${avatarContent}
+          <div class="car-marker-text">
+            <p class="car-marker-title">${title}</p>
+            ${metaHtml}
+          </div>
+        </div>
+        ${pillHtml}
       </div>
     `;
 
+    const avatarEl = el.querySelector('.car-marker-avatar') as HTMLElement | null;
+    this.startPhotoRotation(location.carId, avatarEl, gallery);
+
     return el;
+  }
+
+  private getPhotoGallery(location: CarMapLocation): string[] {
+    const gallery = (location as CarMapLocation & { photoGallery?: unknown }).photoGallery;
+    if (Array.isArray(gallery) && gallery.length > 0) {
+      return gallery
+        .map((url) => (typeof url === 'string' ? url : null))
+        .filter((url): url is string => !!url);
+    }
+    return location.photoUrl ? [location.photoUrl] : [];
+  }
+
+  private startPhotoRotation(
+    carId: string,
+    avatarEl: HTMLElement | null,
+    gallery: string[],
+  ): void {
+    if (!avatarEl) {
+      return;
+    }
+    this.clearPhotoRotation(carId);
+    if (gallery.length === 0) {
+      avatarEl.style.backgroundImage = '';
+      return;
+    }
+    avatarEl.style.backgroundImage = `url('${this.sanitizeUrl(gallery[0])}')`;
+    if (gallery.length < 2 || typeof window === 'undefined') {
+      return;
+    }
+    let index = 0;
+    const rotate = () => {
+      index = (index + 1) % gallery.length;
+      avatarEl.style.backgroundImage = `url('${this.sanitizeUrl(gallery[index])}')`;
+    };
+    const timer = window.setInterval(rotate, 4000);
+    this.markerPhotoTimers.set(carId, timer);
+  }
+
+  private clearPhotoRotation(carId: string): void {
+    if (typeof window === 'undefined') {
+      this.markerPhotoTimers.delete(carId);
+      return;
+    }
+    const timer = this.markerPhotoTimers.get(carId);
+    if (timer) {
+      window.clearInterval(timer);
+      this.markerPhotoTimers.delete(carId);
+    }
+  }
+
+  private clearAllPhotoRotations(): void {
+    if (typeof window !== 'undefined') {
+      this.markerPhotoTimers.forEach((timer) => window.clearInterval(timer));
+    }
+    this.markerPhotoTimers.clear();
   }
 
   private animateMarkerBounce(element: HTMLElement): void {
@@ -893,6 +1080,17 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     return this.formatDistance(distance);
   }
 
+  private isDarkMap(): boolean {
+    if (typeof document !== 'undefined' && document.body.classList.contains('dark')) {
+      return true;
+    }
+    if (this.map) {
+      const styleName = this.map.getStyle()?.name?.toLowerCase() ?? '';
+      return styleName.includes('dark') || styleName.includes('night');
+    }
+    return false;
+  }
+
   flyToCarLocation(carId: string): void {
     if (!this.map) {
       return;
@@ -922,5 +1120,37 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       zoom,
       essential: true,
     });
+  }
+
+  private sanitizeText(value: string): string {
+    return value.replace(/[&<>"']/g, (char) => {
+      const map: Record<string, string> = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      };
+      return map[char] || char;
+    });
+  }
+
+  private sanitizeUrl(url: string): string {
+    if (typeof window === 'undefined') {
+      return url;
+    }
+    try {
+      const parsed = new URL(url, window.location.origin);
+      return parsed.href;
+    } catch {
+      return 'https://cdn.autorenta.com/markers/marker-fallback.png';
+    }
+  }
+
+  private getInitials(text: string): string {
+    const words = text.trim().split(/\s+/);
+    if (words.length === 0) return 'AR';
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
   }
 }

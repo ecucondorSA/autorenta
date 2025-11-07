@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { NotificationService } from './notification.service';
+import { Injectable, inject, OnDestroy } from '@angular/core';
+import { ToastService } from './toast.service';
 import { VerificationStateService } from './verification-state.service';
 
 /**
@@ -11,8 +11,8 @@ import { VerificationStateService } from './verification-state.service';
 @Injectable({
   providedIn: 'root',
 })
-export class VerificationNotificationsService {
-  private readonly notificationService = inject(NotificationService);
+export class VerificationNotificationsService implements OnDestroy {
+  private readonly toast = inject(ToastService);
   private readonly verificationStateService = inject(VerificationStateService);
 
   private unsubscribe?: () => void;
@@ -35,35 +35,35 @@ export class VerificationNotificationsService {
   private handleVerificationEvent(eventType: string): void {
     switch (eventType) {
       case 'email_verified':
-        this.notificationService.success(
+        this.toast.success(
           '¡Email Verificado!',
           'Tu correo electrónico ha sido verificado exitosamente.',
         );
         break;
 
       case 'phone_verified':
-        this.notificationService.success(
+        this.toast.success(
           '¡Teléfono Verificado!',
           'Tu número de teléfono ha sido verificado exitosamente.',
         );
         break;
 
       case 'level_2_achieved':
-        this.notificationService.success(
+        this.toast.success(
           '¡Level 2 Desbloqueado!',
           'Tus documentos han sido verificados. Ahora puedes publicar autos y hacer reservas.',
         );
         break;
 
       case 'selfie_verified':
-        this.notificationService.success(
+        this.toast.success(
           '¡Selfie Verificado!',
           'Tu identidad facial ha sido verificada correctamente.',
         );
         break;
 
       case 'level_3_achieved':
-        this.notificationService.success(
+        this.toast.success(
           '🎉 ¡Level 3 Completo!',
           '¡Felicitaciones! Tienes acceso completo a todas las funcionalidades de AutoRenta.',
           7000,

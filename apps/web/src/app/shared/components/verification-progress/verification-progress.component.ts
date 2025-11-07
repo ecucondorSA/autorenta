@@ -13,13 +13,13 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       <div class="flex items-center justify-between mb-6">
         <div>
           <h3 class="text-lg font-semibold text-gray-900">Estado de Verificación</h3>
-          <p class="text-sm text-gray-600 mt-1">
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
             Completa los niveles para desbloquear todas las funcionalidades
           </p>
         </div>
         <div class="text-right">
           <div class="text-3xl font-bold text-blue-600">{{ progressPercentage() }}%</div>
-          <div class="text-xs text-gray-500">Completado</div>
+          <div class="text-xs text-gray-500 dark:text-gray-300">Completado</div>
         </div>
       </div>
 
@@ -54,7 +54,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 {{ getLevelStatusLabel(1) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 mt-1">Verifica tu email o teléfono</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Verifica tu email o teléfono</p>
             <div class="mt-2 space-y-1">
               <div class="flex items-center gap-2 text-sm">
                 <span [class]="getCheckmarkClass(requirements()?.level_1?.email_verified)">
@@ -93,7 +93,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 {{ getLevelStatusLabel(2) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 mt-1">
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
               Sube tus documentos de identidad
               <span *ngIf="!canAccessLevel2()" class="text-orange-600 font-medium">
                 (Requiere Level 1)
@@ -107,7 +107,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 <span class="text-gray-700">DNI verificado</span>
                 <span
                   *ngIf="requirements()?.level_2?.ai_score"
-                  class="text-xs text-gray-500 ml-auto"
+                  class="text-xs text-gray-500 dark:text-gray-300 ml-auto"
                 >
                   ({{ requirements()?.level_2?.ai_score }}% confianza)
                 </span>
@@ -121,7 +121,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 <span class="text-gray-700">Licencia de conducir</span>
                 <span
                   *ngIf="requirements()?.level_2?.driver_license_score"
-                  class="text-xs text-gray-500 ml-auto"
+                  class="text-xs text-gray-500 dark:text-gray-300 ml-auto"
                 >
                   ({{ requirements()?.level_2?.driver_license_score }}% confianza)
                 </span>
@@ -151,7 +151,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 {{ getLevelStatusLabel(3) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 mt-1">
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
               Verifica tu identidad con selfie video
               <span *ngIf="!canAccessLevel3()" class="text-orange-600 font-medium">
                 (Requiere Level 2)
@@ -165,7 +165,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 <span class="text-gray-700">Selfie verificado</span>
                 <span
                   *ngIf="requirements()?.level_3?.face_match_score"
-                  class="text-xs text-gray-500 ml-auto"
+                  class="text-xs text-gray-500 dark:text-gray-300 ml-auto"
                 >
                   ({{ requirements()?.level_3?.face_match_score }}% match)
                 </span>
@@ -223,8 +223,8 @@ export class VerificationProgressComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       await this.identityLevelService.getVerificationProgress();
-    } catch (error) {
-      console.error('Failed to load verification progress:', error);
+    } catch (_error) {
+      console.error('Failed to load verification progress:', _error);
     }
   }
 
@@ -242,7 +242,7 @@ export class VerificationProgressComponent implements OnInit {
     if (isCurrent) {
       return 'bg-blue-500 text-white shadow-md animate-pulse';
     }
-    return 'bg-gray-200 text-gray-500';
+    return 'bg-gray-200 text-gray-500 dark:text-gray-300';
   }
 
   getLevelStatusClass(level: number): string {
@@ -254,7 +254,7 @@ export class VerificationProgressComponent implements OnInit {
     if (this.currentLevel() === level - 1) {
       return 'bg-blue-100 text-blue-800';
     }
-    return 'bg-gray-100 text-gray-600';
+    return 'bg-gray-100 text-gray-600 dark:text-gray-300';
   }
 
   getLevelStatusLabel(level: number): string {
@@ -272,7 +272,7 @@ export class VerificationProgressComponent implements OnInit {
   getCheckmarkClass(isComplete: boolean | undefined): string {
     return isComplete
       ? 'text-green-600 font-bold'
-      : 'text-gray-400';
+      : 'text-gray-400 dark:text-gray-300';
   }
 
   getProgressBarClass(): string {

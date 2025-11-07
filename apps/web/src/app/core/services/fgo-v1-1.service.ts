@@ -74,7 +74,7 @@ export class FgoV1_1Service {
         }
         return response.data ? mapFgoParameters(response.data as FgoParametersDb) : null;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -93,7 +93,7 @@ export class FgoV1_1Service {
         }
         return (response.data || []).map((p) => mapFgoParameters(p as FgoParametersDb));
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of([]);
       }),
     );
@@ -123,7 +123,7 @@ export class FgoV1_1Service {
         }
         return true;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(false);
       }),
     );
@@ -162,7 +162,7 @@ export class FgoV1_1Service {
           ? mapBookingRiskSnapshot(response.data as BookingRiskSnapshotDb)
           : null;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -187,7 +187,7 @@ export class FgoV1_1Service {
           ? mapBookingRiskSnapshot(response.data as BookingRiskSnapshotDb)
           : null;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -221,7 +221,7 @@ export class FgoV1_1Service {
         }
         return response.data ? mapBookingInspection(response.data as BookingInspectionDb) : null;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -243,7 +243,7 @@ export class FgoV1_1Service {
         }
         return true;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(false);
       }),
     );
@@ -266,7 +266,7 @@ export class FgoV1_1Service {
         }
         return (response.data || []).map((i) => mapBookingInspection(i as BookingInspectionDb));
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of([]);
       }),
     );
@@ -293,7 +293,7 @@ export class FgoV1_1Service {
         }
         return response.data ? mapBookingInspection(response.data as BookingInspectionDb) : null;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -344,7 +344,7 @@ export class FgoV1_1Service {
           updatedAt: new Date(data.updated_at),
         } as FgoStatusV1_1;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -386,7 +386,7 @@ export class FgoV1_1Service {
           totalRecovered: centsToUsd(data.total_recovered_cents as number),
         } as PemCalculation;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -423,7 +423,7 @@ export class FgoV1_1Service {
           calculatedAt: new Date(data.calculated_at),
         } as RcCalculationV1_1;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -458,7 +458,7 @@ export class FgoV1_1Service {
           timestamp: new Date(data.timestamp),
         } as AlphaAdjustment;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -503,7 +503,7 @@ export class FgoV1_1Service {
           snapshot: data.snapshot,
         } as EligibilityResult;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -548,7 +548,7 @@ export class FgoV1_1Service {
           executedAt: new Date(data.executed_at),
         } as WaterfallResult;
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of(null);
       }),
     );
@@ -600,7 +600,7 @@ export class FgoV1_1Service {
         }
         return response.data as FgoMovementView[];
       }),
-      catchError((error) => {
+      catchError((_error) => {
         return of([]);
       }),
     );
@@ -614,8 +614,8 @@ export class FgoV1_1Service {
         }
         return { ok: true };
       }),
-      catchError((error) => {
-        return of({ ok: false, error: error.message });
+      catchError((_error) => {
+        return of({ ok: false, error: _error.message });
       }),
     );
   }
@@ -642,8 +642,8 @@ export class FgoV1_1Service {
         }
         return { ok: true, ref: response.data };
       }),
-      catchError((error) => {
-        return of({ ok: false, error: error.message });
+      catchError((_error) => {
+        return of({ ok: false, error: _error.message });
       }),
     );
   }
@@ -666,8 +666,8 @@ export class FgoV1_1Service {
         }
         return { ok: true, ref: response.data };
       }),
-      catchError((error) => {
-        return of({ ok: false, error: error.message });
+      catchError((_error) => {
+        return of({ ok: false, error: _error.message });
       }),
     );
   }

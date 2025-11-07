@@ -49,7 +49,7 @@ export class RiskService {
       vehicleValueUsd,
       fxRate,
       true, // hasCard=true
-      distanceKm,
+      distanceKm?.toString(),
     );
 
     // Modalidad SIN tarjeta (crédito de seguridad)
@@ -57,7 +57,7 @@ export class RiskService {
       vehicleValueUsd,
       fxRate,
       false, // hasCard=false
-      distanceKm,
+      distanceKm?.toString(),
     );
 
     // 4. Hold estimado en ARS con distancia aplicada (usa guaranteeAmountArs que incluye criterio MAYOR)
@@ -220,9 +220,9 @@ export class RiskService {
       errors.push(`Hold fuera de rango: ${holdUsd.toFixed(2)} USD (esperado: 150-2000)`);
     }
 
-    // 4. Crédito de seguridad debe ser 300 o 500
-    if (![300, 500].includes(snapshot.creditSecurityUsd)) {
-      errors.push('Crédito de seguridad debe ser 300 o 500 USD');
+    // 4. Crédito de seguridad debe ser 600
+    if (snapshot.creditSecurityUsd !== 600) {
+      errors.push('Crédito de seguridad debe ser 600 USD');
     }
 
     // 5. FX rate debe ser razonable para ARS (>= 100, <= 10000)

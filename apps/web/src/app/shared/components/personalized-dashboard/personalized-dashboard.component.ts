@@ -8,7 +8,7 @@ import { ProfileService } from '../../../core/services/profile.service';
 import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { WalletService } from '../../../core/services/wallet.service';
-import { NotificationsService } from '../../../core/services/notifications/notifications.service';
+import { NotificationsService } from '../../../core/services/user-notifications.service';
 
 // Models
 import type { Car } from '../../../core/models';
@@ -200,8 +200,8 @@ export class PersonalizedDashboardComponent implements OnInit {
         this.loadStats(),
         this.loadRecentData(),
       ]);
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
+    } catch (_error) {
+      console.error('Error loading dashboard data:', _error);
     } finally {
       this.loading.set(false);
     }
@@ -256,8 +256,8 @@ export class PersonalizedDashboardComponent implements OnInit {
           activeBookings,
         }));
       }
-    } catch (error) {
-      console.error('Error loading stats:', error);
+    } catch (_error) {
+      console.error('Error loading stats:', _error);
     }
   }
 
@@ -276,8 +276,8 @@ export class PersonalizedDashboardComponent implements OnInit {
         const bookings = await this.bookingsService.getMyBookings();
         this.recentBookings.set(bookings.slice(0, 3));
       }
-    } catch (error) {
-      console.error('Error loading recent data:', error);
+    } catch (_error) {
+      console.error('Error loading recent data:', _error);
     }
   }
 

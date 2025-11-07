@@ -19,3 +19,5 @@ CREATE INDEX IF NOT EXISTS idx_profiles_mercadopago_customer_id
 
 
 
+
+

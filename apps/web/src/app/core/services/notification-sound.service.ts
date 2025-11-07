@@ -53,8 +53,8 @@ export class NotificationSoundService {
       } else {
         await this.playWithAudioElement();
       }
-    } catch (error) {
-      console.warn('Failed to play notification sound:', error);
+    } catch (_error) {
+      console.warn('Failed to play notification sound:', _error);
     }
   }
 
@@ -139,8 +139,8 @@ export class NotificationSoundService {
 
       oscillator.start(now);
       oscillator.stop(now + duration);
-    } catch (error) {
-      console.warn('Failed to play sent sound:', error);
+    } catch (_error) {
+      console.warn('Failed to play sent sound:', _error);
     }
   }
 

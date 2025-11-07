@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import type mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 
 // Type import (doesn't increase bundle size)
-import type mapboxgl from 'mapbox-gl';
 
 export interface LocationCoordinates {
   latitude: number;
@@ -41,7 +41,7 @@ export interface LocationCoordinates {
             <p class="text-sm font-medium text-gray-800">
               {{ isLoading() ? 'Cargando mapa...' : 'Ajusta la ubicación' }}
             </p>
-            <p class="text-xs text-gray-600 mt-1">
+            <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">
               {{
                 isLoading()
                   ? 'Por favor espera...'
@@ -51,7 +51,7 @@ export interface LocationCoordinates {
             <div *ngIf="currentAddress()" class="mt-2 text-xs text-gray-700 bg-gray-50 p-2 rounded">
               📍 {{ currentAddress() }}
             </div>
-            <div *ngIf="coordinates()" class="mt-1 text-xs text-gray-500">
+            <div *ngIf="coordinates()" class="mt-1 text-xs text-gray-500 dark:text-gray-300">
               Lat: {{ coordinates()!.latitude.toFixed(6) }}, Lng:
               {{ coordinates()!.longitude.toFixed(6) }}
             </div>
@@ -166,10 +166,10 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
       });
 
       // Handle map errors
-      this.map.on('error', (_e: any) => {
+      this.map.on('error', (_e: unknown) => {
         this.isLoading.set(false);
       });
-    } catch (error) {
+    } catch (__error) {
       this.isLoading.set(false);
     }
   }
@@ -209,7 +209,9 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
       // In a full implementation, you could call a reverse geocoding service
       this.currentAddress.set('Ubicación ajustada manualmente');
       newCoordinates.address = 'Ubicación ajustada manualmente';
-    } catch (error) {}
+    } catch (__error) {
+      console.warn('No se pudo actualizar la dirección durante el drag del marcador', __error);
+    }
 
     // Emit the new coordinates
     this.locationChange.emit(newCoordinates);

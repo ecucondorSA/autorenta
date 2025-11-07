@@ -1,57 +1,44 @@
-import { inject, Injectable, signal } from '@angular/core';
-import type { SupabaseClient, AuthChangeEvent, Session } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
+import { Injectable } from '@angular/core';
+import { VerificationBaseService, VerificationStatus } from './verification-base.service';
 
 /**
- * Email Verification Status
+ * Email Verification Status (identical to base VerificationStatus)
  */
-export interface EmailVerificationStatus {
-  isVerified: boolean;
-  email: string | null;
-  verifiedAt: string | null;
-  canResend: boolean;
-  cooldownSeconds: number;
-}
+export type EmailVerificationStatus = VerificationStatus;
 
 /**
  * Service for managing email verification
  *
- * Handles:
+ * Extends VerificationBaseService with email-specific functionality:
+ * - Resending verification emails via Supabase Auth
  * - Email verification status checks
- * - Resending verification emails
- * - Real-time updates when email is confirmed
- * - Rate limiting for resend attempts
+ *
+ * Base class provides:
+ * - Cooldown management (calculateCooldownRemaining, startCooldownTimer)
+ * - Auth listener initialization
+ * - Status updates from user object
+ * - Reactive state (signals)
+ * - Real-time subscription to verification changes
  */
 @Injectable({
   providedIn: 'root',
 })
-export class EmailVerificationService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
-  private lastResendTime: number = 0;
-  private readonly RESEND_COOLDOWN_MS = 60 * 1000; // 60 seconds
-
-  // Reactive state
-  readonly status = signal<EmailVerificationStatus>({
-    isVerified: false,
-    email: null,
-    verifiedAt: null,
-    canResend: true,
-    cooldownSeconds: 0,
-  });
-  readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
+export class EmailVerificationService extends VerificationBaseService<EmailVerificationStatus> {
+  // VerificationBaseService abstract properties
+  protected readonly verificationType = 'email' as const;
+  protected readonly cooldownMs = 60 * 1000; // 60 seconds
 
   constructor() {
-    this.initializeAuthListener();
-    this.checkEmailStatus().catch((err) => {
+    super();
+    this.checkStatus().catch((err) => {
       console.error('Failed to check initial email status:', err);
     });
   }
 
   /**
-   * Check current email verification status
+   * Check current email verification status (implements abstract method)
    */
-  async checkEmailStatus(): Promise<EmailVerificationStatus> {
+  async checkStatus(): Promise<EmailVerificationStatus> {
     this.loading.set(true);
     this.error.set(null);
 
@@ -64,19 +51,9 @@ export class EmailVerificationService {
         throw new Error('Usuario no autenticado');
       }
 
-      const isVerified = user.email_confirmed_at !== null;
-      const cooldownRemaining = this.calculateCooldownRemaining();
-
-      const statusData: EmailVerificationStatus = {
-        isVerified,
-        email: user.email ?? null,
-        verifiedAt: user.email_confirmed_at ?? null,
-        canResend: !isVerified && cooldownRemaining === 0,
-        cooldownSeconds: cooldownRemaining,
-      };
-
-      this.status.set(statusData);
-      return statusData;
+      // Use base class method to update status
+      this.updateStatusFromUser(user as unknown as Record<string, unknown>);
+      return this.status();
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'No pudimos verificar el estado del email';
@@ -88,20 +65,23 @@ export class EmailVerificationService {
   }
 
   /**
-   * Resend verification email
+   * Convenience method for backward compatibility
+   * @deprecated Use checkStatus instead
    */
-  async resendVerificationEmail(): Promise<boolean> {
+  async checkEmailStatus(): Promise<EmailVerificationStatus> {
+    return this.checkStatus();
+  }
+
+  /**
+   * Resend verification email (implements abstract sendVerification)
+   */
+  async sendVerification(): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      // Check cooldown
-      const cooldownRemaining = this.calculateCooldownRemaining();
-      if (cooldownRemaining > 0) {
-        throw new Error(
-          `Por favor espera ${cooldownRemaining} segundos antes de reenviar el email`,
-        );
-      }
+      // Check cooldown (using base class method)
+      this.checkCooldown();
 
       const {
         data: { user },
@@ -128,13 +108,11 @@ export class EmailVerificationService {
         throw new Error(result.error ?? 'No pudimos reenviar el email de verificación');
       }
 
-      // Update last resend time
-      this.lastResendTime = Date.now();
+      // Update tracking (using base class method)
+      this.recordSendTime();
 
       // Update status
-      await this.checkEmailStatus();
-
-      return true;
+      await this.checkStatus();
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'No pudimos reenviar el email de verificación';
@@ -146,90 +124,20 @@ export class EmailVerificationService {
   }
 
   /**
-   * Subscribe to email verification changes (real-time)
+   * Resend verification email (convenience method, delegates to sendVerification)
+   * @deprecated Use sendVerification instead
+   */
+  async resendVerificationEmail(): Promise<boolean> {
+    await this.sendVerification();
+    return true;
+  }
+
+  /**
+   * Subscribe to email verification changes (convenience method, delegates to base)
+   * @deprecated Use subscribeToChanges instead
    */
   subscribeToEmailChanges(callback: (verified: boolean) => void): () => void {
-    const {
-      data: { subscription },
-    } = this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
-      if (event === 'USER_UPDATED' && session?.user) {
-        const isVerified = session.user.email_confirmed_at !== null;
-        this.updateStatusFromUser(session.user);
-        callback(isVerified);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }
-
-  /**
-   * Calculate remaining cooldown time in seconds
-   */
-  private calculateCooldownRemaining(): number {
-    if (this.lastResendTime === 0) {
-      return 0;
-    }
-
-    const elapsed = Date.now() - this.lastResendTime;
-    const remaining = Math.ceil((this.RESEND_COOLDOWN_MS - elapsed) / 1000);
-    return Math.max(0, remaining);
-  }
-
-  /**
-   * Initialize auth listener for automatic status updates
-   */
-  private initializeAuthListener(): void {
-    this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
-      if ((event === 'USER_UPDATED' || event === 'SIGNED_IN') && session?.user) {
-        this.updateStatusFromUser(session.user);
-      }
-    });
-  }
-
-  /**
-   * Update status from user object
-   */
-  private updateStatusFromUser(user: { email?: string; email_confirmed_at?: string }): void {
-    const isVerified = user.email_confirmed_at !== null && user.email_confirmed_at !== undefined;
-    const cooldownRemaining = this.calculateCooldownRemaining();
-
-    this.status.set({
-      isVerified,
-      email: user.email ?? null,
-      verifiedAt: user.email_confirmed_at ?? null,
-      canResend: !isVerified && cooldownRemaining === 0,
-      cooldownSeconds: cooldownRemaining,
-    });
-  }
-
-  /**
-   * Start cooldown timer (updates UI every second)
-   */
-  startCooldownTimer(callback: (seconds: number) => void): () => void {
-    const interval = setInterval(() => {
-      const remaining = this.calculateCooldownRemaining();
-      const currentStatus = this.status();
-
-      if (remaining === 0 && !currentStatus.isVerified) {
-        this.status.set({
-          ...currentStatus,
-          canResend: true,
-          cooldownSeconds: 0,
-        });
-        clearInterval(interval);
-      } else {
-        this.status.set({
-          ...currentStatus,
-          cooldownSeconds: remaining,
-        });
-      }
-
-      callback(remaining);
-    }, 1000);
-
-    return () => clearInterval(interval);
+    return this.subscribeToChanges(callback);
   }
 
   /**

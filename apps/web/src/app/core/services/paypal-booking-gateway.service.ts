@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { SupabaseClientService } from './supabase-client.service';
 import {
   PaymentGateway,
   PaymentPreferenceResponse,
   PaymentProvider,
 } from '../interfaces/payment-gateway.interface';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * PayPal Create Order Response
@@ -229,7 +229,7 @@ export class PayPalBookingGatewayService implements PaymentGateway {
 
       // La orden es válida si el booking no ha sido confirmado aún
       return booking.status === 'pending';
-    } catch (err) {
+    } catch (_err) {
       return false;
     }
   }

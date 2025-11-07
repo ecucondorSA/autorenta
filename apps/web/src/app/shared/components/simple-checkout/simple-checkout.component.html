@@ -60,7 +60,7 @@
       </button>
     </div>
     
-    <button class="retry-button" (click)="error.set(null); canWaitlist.set(false)">Intentar nuevamente</button>
+    <button class="retry-button" (click)="onRetry()">Intentar nuevamente</button>
   </div>
 
   <!-- Step Content -->
@@ -87,7 +87,7 @@
           <input
             type="date"
             [value]="startDate()"
-            (input)="startDate.set($any($event.target).value)"
+            (input)="onDateInput('start', $event)"
             [min]="getMinDate()"
             [max]="getMaxDate()"
           />
@@ -98,10 +98,20 @@
           <input
             type="date"
             [value]="endDate()"
-            (input)="endDate.set($any($event.target).value)"
+            (input)="onDateInput('end', $event)"
             [min]="startDate() || getMinDate()"
             [max]="getMaxDate()"
           />
+        </div>
+      </div>
+
+      <div *ngIf="availabilityInfo()" class="availability-hint">
+        <div class="hint-icon">🔄</div>
+        <div>
+          <p>{{ availabilityInfo() }}</p>
+          <small *ngIf="availabilitySuggestion()">
+            Si preferís tus fechas originales, podés intentar más tarde o usar la lista de espera.
+          </small>
         </div>
       </div>
 

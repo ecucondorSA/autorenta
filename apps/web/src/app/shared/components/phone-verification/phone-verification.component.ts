@@ -29,8 +29,8 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
           </div>
           <div>
             <h4 class="font-semibold text-gray-900">Verificación de Teléfono</h4>
-            <p class="text-sm text-gray-600">
-              {{ status()?.phone || 'No configurado' }}
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {{ status().value || 'No configurado' }}
             </p>
           </div>
         </div>
@@ -40,7 +40,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
       </div>
 
       <!-- Verified State -->
-      <div *ngIf="status()?.isVerified" class="p-4 bg-green-50 border border-green-200 rounded-lg">
+      <div *ngIf="status().isVerified" class="p-4 bg-green-50 border border-green-200 rounded-lg">
         <div class="flex items-center gap-2 text-green-800">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -52,25 +52,25 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
           <span class="text-sm font-medium">Teléfono verificado exitosamente</span>
         </div>
         <p class="text-xs text-green-700 mt-2">
-          Verificado el {{ formatDate(status()?.verifiedAt) }}
+          Verificado el {{ formatDate(status().verifiedAt) }}
         </p>
       </div>
 
       <!-- Pending State -->
-      <div *ngIf="!status()?.isVerified" class="space-y-4">
+      <div *ngIf="!status().isVerified" class="space-y-4">
         <!-- Debug Panel (temporal) -->
         <div class="p-3 bg-yellow-100 border-2 border-yellow-500 rounded text-xs">
           <p class="font-bold mb-2">🐛 DEBUG - Estado del componente:</p>
-          <p>isVerified: <strong>{{ status()?.isVerified }}</strong></p>
-          <p>phone: <strong>{{ status()?.phone || 'null' }}</strong></p>
-          <p>otpSent: <strong>{{ status()?.otpSent }}</strong></p>
-          <p>verifiedAt: <strong>{{ status()?.verifiedAt || 'null' }}</strong></p>
-          <p>canResend: <strong>{{ status()?.canResend }}</strong></p>
-          <p>cooldownSeconds: <strong>{{ status()?.cooldownSeconds }}</strong></p>
+          <p>isVerified: <strong>{{ status().isVerified }}</strong></p>
+          <p>phone: <strong>{{ status().value || 'null' }}</strong></p>
+          <p>otpSent: <strong>{{ status().otpSent }}</strong></p>
+          <p>verifiedAt: <strong>{{ status().verifiedAt || 'null' }}</strong></p>
+          <p>canResend: <strong>{{ status().canResend }}</strong></p>
+          <p>cooldownSeconds: <strong>{{ status().cooldownSeconds }}</strong></p>
         </div>
 
         <!-- Phone Input (if OTP not sent yet) -->
-        <div *ngIf="!status()?.otpSent" class="space-y-4">
+        <div *ngIf="!status().otpSent" class="space-y-4">
           <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <p class="text-sm text-blue-800">
               Ingresa tu número de teléfono para recibir un código de verificación por SMS.
@@ -102,7 +102,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
                 [disabled]="loading()"
               />
             </div>
-            <p class="text-xs text-gray-500 mt-1">
+            <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
               Formato: sin el 0 inicial. Ej: 11 2345 6789
             </p>
           </div>
@@ -115,7 +115,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             [class]="
               canSendOTP()
                 ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                : 'bg-gray-200 text-gray-500 dark:text-gray-300 cursor-not-allowed'
             "
           >
             <span *ngIf="!loading()" class="flex items-center justify-center gap-2">
@@ -147,10 +147,10 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         </div>
 
         <!-- OTP Input (if OTP sent) -->
-        <div *ngIf="status()?.otpSent" class="space-y-4">
+        <div *ngIf="status().otpSent" class="space-y-4">
           <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <p class="text-sm text-blue-800 font-medium">
-              Código enviado a {{ status()?.phone }}
+              Código enviado a {{ status().value }}
             </p>
             <p class="text-xs text-blue-700 mt-1">
               Ingresa el código de 6 dígitos que recibiste por SMS
@@ -173,7 +173,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               [disabled]="loading()"
               (input)="onOTPInput($event)"
             />
-            <p class="text-xs text-gray-500 mt-1 text-center">
+            <p class="text-xs text-gray-500 dark:text-gray-300 mt-1 text-center">
               Solo números, 6 dígitos
             </p>
           </div>
@@ -187,7 +187,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               [class]="
                 canVerifyOTP()
                   ? 'bg-green-600 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-                  : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  : 'bg-gray-200 text-gray-500 dark:text-gray-300 cursor-not-allowed'
               "
             >
               <span *ngIf="!loading()" class="flex items-center justify-center gap-2">
@@ -221,7 +221,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             type="button"
             (click)="resendOTP()"
             [disabled]="!canResend() || loading()"
-            class="w-full px-4 py-2 text-sm text-blue-600 hover:text-blue-700 disabled:text-gray-400"
+            class="w-full px-4 py-2 text-sm text-blue-600 hover:text-blue-700 disabled:text-gray-400 dark:text-gray-300"
           >
             {{
               cooldownRemaining() > 0
@@ -248,7 +248,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         </div>
 
         <!-- Help Text -->
-        <div class="text-xs text-gray-500 space-y-1">
+        <div class="text-xs text-gray-500 dark:text-gray-300 space-y-1">
           <p>• El código expira en 10 minutos</p>
           <p>• Máximo 3 intentos por hora</p>
           <p>• Revisa que tu teléfono pueda recibir SMS</p>
@@ -282,7 +282,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   readonly canVerifyOTP = computed(() => this.otpCode().length === 6);
 
   readonly canResend = computed(
-    () => this.status()?.otpSent && this.cooldownRemaining() === 0 && this.remainingAttempts() > 0,
+    () => this.status().otpSent && this.cooldownRemaining() === 0 && this.remainingAttempts() > 0,
   );
 
   private unsubscribe?: () => void;
@@ -291,14 +291,14 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     console.log('[PhoneVerification] Component initialized');
 
-    await this.phoneVerificationService.checkPhoneStatus();
+    await this.phoneVerificationService.checkStatus();
 
     console.log('[PhoneVerification] Status after check:', this.status());
-    console.log('[PhoneVerification] Is verified?', this.status()?.isVerified);
-    console.log('[PhoneVerification] Phone:', this.status()?.phone);
-    console.log('[PhoneVerification] OTP sent?', this.status()?.otpSent);
+    console.log('[PhoneVerification] Is verified?', this.status().isVerified);
+    console.log('[PhoneVerification] Phone:', this.status().value);
+    console.log('[PhoneVerification] OTP sent?', this.status().otpSent);
 
-    this.unsubscribe = this.phoneVerificationService.subscribeToPhoneChanges((verified) => {
+    this.unsubscribe = this.phoneVerificationService.subscribeToChanges((verified) => {
       if (verified) {
         this.successMessage.set('¡Teléfono verificado exitosamente!');
         setTimeout(() => this.successMessage.set(null), 5000);
@@ -307,7 +307,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
 
     this.updateRemainingAttempts();
 
-    if (this.status()?.cooldownSeconds && this.status()!.cooldownSeconds > 0) {
+    if (this.status().cooldownSeconds && this.status()!.cooldownSeconds > 0) {
       this.startCooldownTimer();
     }
   }
@@ -332,8 +332,8 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
       this.startCooldownTimer();
 
       setTimeout(() => this.successMessage.set(null), 5000);
-    } catch (error) {
-      console.error('Failed to send OTP:', error);
+    } catch (_error) {
+      console.error('Failed to send OTP:', _error);
     }
   }
 
@@ -344,15 +344,15 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
     this.phoneVerificationService.clearError();
 
     try {
-      const phone = this.status()?.phone || '';
+      const phone = this.status().value || '';
       const result = await this.phoneVerificationService.verifyOTP(phone, this.otpCode());
 
       if (result.verified) {
         this.successMessage.set('¡Teléfono verificado exitosamente!');
         this.otpCode.set('');
       }
-    } catch (error) {
-      console.error('Failed to verify OTP:', error);
+    } catch (_error) {
+      console.error('Failed to verify OTP:', _error);
     }
   }
 
@@ -389,21 +389,21 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   }
 
   getStatusIcon(): string {
-    return this.status()?.isVerified ? '✓' : '○';
+    return this.status().isVerified ? '✓' : '○';
   }
 
   getStatusBadgeClass(): string {
-    return this.status()?.isVerified
+    return this.status().isVerified
       ? 'bg-green-100 text-green-600'
       : 'bg-yellow-100 text-yellow-600';
   }
 
   getStatusLabel(): string {
-    return this.status()?.isVerified ? 'Verificado' : 'Pendiente';
+    return this.status().isVerified ? 'Verificado' : 'Pendiente';
   }
 
   getStatusLabelClass(): string {
-    return this.status()?.isVerified
+    return this.status().isVerified
       ? 'bg-green-100 text-green-800'
       : 'bg-yellow-100 text-yellow-800';
   }

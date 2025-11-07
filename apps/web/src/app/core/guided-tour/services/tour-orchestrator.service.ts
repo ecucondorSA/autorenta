@@ -337,7 +337,7 @@ export class TourOrchestratorService implements OnDestroy {
       try {
         const result = await guard.check();
         if (!result) return false;
-      } catch (error) {
+      } catch (__error) {
         return false;
       }
     }

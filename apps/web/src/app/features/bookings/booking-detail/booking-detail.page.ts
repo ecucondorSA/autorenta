@@ -16,6 +16,8 @@ import { RenterConfirmationComponent } from '../../../shared/components/renter-c
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
 import { MetaService } from '../../../core/services/meta.service';
+import { InsuranceService } from '../../../core/services/insurance.service';
+import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insurance.model';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 
@@ -57,11 +59,51 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly metaService = inject(MetaService);
   private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly fgoService = inject(FgoV1_1Service);
+  private readonly insuranceService = inject(InsuranceService);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   timeRemaining = signal<string | null>(null);
+
+  readonly bookingFlowSteps = [
+    {
+      key: 'pending',
+      label: 'Solicitud enviada',
+      description: 'Estamos esperando la aprobación del anfitrión.',
+    },
+    {
+      key: 'pending_payment',
+      label: 'Pago pendiente',
+      description: 'Confirma el pago para bloquear las fechas.',
+    },
+    {
+      key: 'confirmed',
+      label: 'Reserva confirmada',
+      description: 'Preparate para coordinar el check-in y la entrega.',
+    },
+    {
+      key: 'in_progress',
+      label: 'Check-in y uso',
+      description: 'Realizá las inspecciones y disfrutá del viaje.',
+    },
+    {
+      key: 'completed',
+      label: 'Check-out y cierre',
+      description: 'Inspección final y liberación de fondos.',
+    },
+  ] as const;
+
+  readonly currentBookingStageIndex = computed(() => {
+    const booking = this.booking();
+    if (!booking) return 0;
+    const idx = this.bookingFlowSteps.findIndex((step) => step.key === booking.status);
+    if (idx >= 0) return idx;
+    if (booking.status === 'cancelled') {
+      return 0;
+    }
+    return this.bookingFlowSteps.length - 1;
+  });
 
   // Exchange rate signals
   exchangeRate = signal<number | null>(null);
@@ -70,6 +112,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   // FGO signals
   inspections = signal<BookingInspection[]>([]);
+
+  // Claims signals
+  bookingClaims = signal<InsuranceClaim[]>([]);
+  loadingClaims = signal(false);
 
   private countdownInterval: number | null = null;
 
@@ -127,8 +173,21 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   });
 
   readonly hasClaim = computed(() => {
-    // TODO: Implementar cuando se agregue tabla de claims en DB
-    return false;
+    return this.bookingClaims().length > 0;
+  });
+
+  readonly canReportClaim = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isRenter()) return false;
+    // Can report claim during in_progress or completed status
+    const validStatus = booking.status === 'in_progress' || booking.status === 'completed';
+    // Only allow if no claim already exists for this booking
+    return validStatus && !this.hasClaim();
+  });
+
+  readonly latestClaim = computed(() => {
+    const claims = this.bookingClaims();
+    return claims.length > 0 ? claims[0] : null;
   });
 
   // Computed properties para acciones de check-in/check-out
@@ -145,6 +204,18 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const validStatus = booking.status === 'in_progress';
     return validStatus && this.hasCheckIn() && !this.hasCheckOut();
   });
+
+  isStepCompleted(index: number): boolean {
+    return index < this.currentBookingStageIndex();
+  }
+
+  isStepCurrent(index: number): boolean {
+    return index === this.currentBookingStageIndex();
+  }
+
+  isStepUpcoming(index: number): boolean {
+    return index > this.currentBookingStageIndex();
+  }
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
@@ -176,7 +247,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       // Load FGO inspections
       await this.loadInspections();
-    } catch (err) {
+
+      // Load claims for this booking
+      await this.loadClaims();
+    } catch (_err) {
       this.error.set('Error al cargar la reserva');
     } finally {
       this.loading.set(false);
@@ -196,7 +270,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       const totalUSD = booking.breakdown.total_cents / 100; // Convertir centavos a dólares
       const totalARS = await this.exchangeRateService.convertUsdToArs(totalUSD);
       this.totalInARS.set(totalARS);
-    } catch (error) {
+    } catch (__error) {
       // No fallar si no se puede obtener la tasa, solo no mostrar conversión
     } finally {
       this.loadingRate.set(false);
@@ -220,7 +294,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         const ownerFullName = owner?.full_name || 'el anfitrión';
         this.carOwnerName.set(ownerFullName);
       }
-    } catch (error) {}
+    } catch (__error) {}
   }
 
   private async loadInspections(): Promise<void> {
@@ -230,9 +304,42 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const inspections = await firstValueFrom(this.fgoService.getInspections(booking.id));
       this.inspections.set(inspections);
-    } catch (error) {
+    } catch (__error) {
       // Non-blocking error, inspections are optional
     }
+  }
+
+  private async loadClaims(): Promise<void> {
+    const booking = this.booking();
+    if (!booking) return;
+
+    try {
+      this.loadingClaims.set(true);
+      // Get all claims and filter by booking_id
+      const allClaims = await firstValueFrom(this.insuranceService.getMyClaims());
+      const bookingClaims = allClaims.filter((c) => c.booking_id === booking.id);
+      this.bookingClaims.set(bookingClaims);
+    } catch (__error) {
+      // Non-blocking error, claims are optional
+    } finally {
+      this.loadingClaims.set(false);
+    }
+  }
+
+  getClaimStatusLabel(status: InsuranceClaim['status']): string {
+    return CLAIM_STATUS_LABELS[status];
+  }
+
+  getClaimStatusColor(status: InsuranceClaim['status']): string {
+    const colorMap = {
+      reported: 'orange',
+      under_review: 'blue',
+      approved: 'green',
+      rejected: 'red',
+      paid: 'green',
+      closed: 'gray',
+    };
+    return colorMap[status] || 'gray';
   }
 
   ngOnDestroy() {

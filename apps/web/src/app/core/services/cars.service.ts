@@ -30,12 +30,47 @@ export class CarsService {
     if (!userId) {
       throw new Error('Usuario no autenticado');
     }
+
+    // Validate required fields
+    if (!input.brand_id || !input.model_id) {
+      throw new Error('Marca y modelo son requeridos');
+    }
+    if (!input.price_per_day || input.price_per_day <= 0) {
+      throw new Error('Precio por día debe ser mayor a 0');
+    }
+
+    // Check for coordinates (using type assertion since latitude/longitude come from form)
+    const carInput = input as Record<string, unknown>;
+    if (!carInput.latitude || !carInput.longitude) {
+      console.warn('⚠️ Auto sin coordenadas - no aparecerá en el mapa');
+    }
+
+    // Prepare clean data for insert
+    const carData = {
+      ...input,
+      owner_id: userId,
+      status: input.status || 'active', // Default to active if not specified
+      created_at: new Date().toISOString(),
+    };
+
+    console.log('🚗 Creating car with data:', {
+      ...carData,
+      // Redact sensitive fields for logging
+      owner_id: '***',
+    });
+
     const { data, error } = await this.supabase
       .from('cars')
-      .insert({ ...input, owner_id: userId })
+      .insert(carData)
       .select('*, car_photos(*)')
       .single();
-    if (error) throw error;
+
+    if (error) {
+      console.error('❌ Error creating car:', error);
+      throw error;
+    }
+
+    console.log('✅ Car created successfully:', data.id);
 
     return {
       ...data,
@@ -435,53 +470,49 @@ export class CarsService {
       city?: string;
     } = {},
   ): Promise<Car[]> {
-    try {
-      // Llamar a la función RPC que creamos en Sprint 2
-      const { data, error } = await this.supabase.rpc('get_available_cars', {
-        p_start_date: startDate,
-        p_end_date: endDate,
-        p_limit: options.limit || 100,
-        p_offset: options.offset || 0,
-      });
+    // Llamar a la función RPC que creamos en Sprint 2
+    const { data, error } = await this.supabase.rpc('get_available_cars', {
+      p_start_date: startDate,
+      p_end_date: endDate,
+      p_limit: options.limit || 100,
+      p_offset: options.offset || 0,
+    });
 
-      if (error) {
-        throw error;
-      }
-
-      if (!data || data.length === 0) {
-        return [];
-      }
-
-      // Filtrar por ciudad si se especificó
-      let filteredCars = data;
-      if (options.city) {
-        filteredCars = data.filter((car: Record<string, unknown>) => {
-          const carLocation = car.location as Record<string, unknown> | undefined;
-          const cityInLocation = (carLocation?.city as string | undefined)?.toLowerCase();
-          return cityInLocation?.includes(options.city!.toLowerCase());
-        });
-      }
-
-      // Cargar fotos para cada auto (la RPC no las incluye por performance)
-      const carsWithPhotos = await Promise.all(
-        filteredCars.map(async (car: Record<string, unknown>) => {
-          const { data: photos } = await this.supabase
-            .from('car_photos')
-            .select('*')
-            .eq('car_id', car.id)
-            .order('position');
-
-          return {
-            ...car,
-            photos: photos || [],
-          } as Car;
-        }),
-      );
-
-      return carsWithPhotos;
-    } catch (error) {
+    if (error) {
       throw error;
     }
+
+    if (!data || data.length === 0) {
+      return [];
+    }
+
+    // Filtrar por ciudad si se especificó
+    let filteredCars = data;
+    if (options.city) {
+      filteredCars = data.filter((car: Record<string, unknown>) => {
+        const carLocation = car.location as Record<string, unknown> | undefined;
+        const cityInLocation = (carLocation?.city as string | undefined)?.toLowerCase();
+        return cityInLocation?.includes(options.city!.toLowerCase());
+      });
+    }
+
+    // Cargar fotos para cada auto (la RPC no las incluye por performance)
+    const carsWithPhotos = await Promise.all(
+      filteredCars.map(async (car: Record<string, unknown>) => {
+        const { data: photos } = await this.supabase
+          .from('car_photos')
+          .select('*')
+          .eq('car_id', car.id)
+          .order('position');
+
+        return {
+          ...car,
+          photos: photos || [],
+        } as Car;
+      }),
+    );
+
+    return carsWithPhotos;
   }
 
   /**
@@ -516,10 +547,11 @@ export class CarsService {
       }
 
       return data === true;
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }
+
 
   /**
    * ✅ NUEVO: Verifica si un auto tiene reservas activas
@@ -530,44 +562,174 @@ export class CarsService {
     count: number;
     bookings?: Array<{ id: string; status: string; start_date: string; end_date: string }>;
   }> {
-    try {
-      // Verificar TODAS las reservas (incluidas completadas y canceladas)
-      // porque el foreign key no tiene ON DELETE CASCADE
-      const { data: allBookings, error: allError } = await this.supabase
+    // Verificar TODAS las reservas (incluidas completadas y canceladas)
+    // porque el foreign key no tiene ON DELETE CASCADE
+    const { data: allBookings, error: allError } = await this.supabase
+      .from('bookings')
+      .select('id, status')
+      .eq('car_id', carId);
+
+    if (allError) {
+      throw allError;
+    }
+
+    // Si hay CUALQUIER reserva, no permitir eliminar
+    if (allBookings && allBookings.length > 0) {
+      // Contar activas para el mensaje
+      const { data: activeBookings, error: activeError } = await this.supabase
         .from('bookings')
-        .select('id, status')
-        .eq('car_id', carId);
+        .select('id, status, start_date, end_date')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'confirmed', 'in_progress'])
+        .order('start_date', { ascending: true });
 
-      if (allError) {
-        throw allError;
-      }
-
-      // Si hay CUALQUIER reserva, no permitir eliminar
-      if (allBookings && allBookings.length > 0) {
-        // Contar activas para el mensaje
-        const { data: activeBookings, error: activeError } = await this.supabase
-          .from('bookings')
-          .select('id, status, start_date, end_date')
-          .eq('car_id', carId)
-          .in('status', ['pending', 'confirmed', 'in_progress'])
-          .order('start_date', { ascending: true });
-
-        if (activeError) throw activeError;
-
-        return {
-          hasActive: true,
-          count: allBookings.length,
-          bookings: activeBookings || [],
-        };
-      }
+      if (activeError) throw activeError;
 
       return {
-        hasActive: false,
-        count: 0,
-        bookings: [],
+        hasActive: true,
+        count: allBookings.length,
+        bookings: activeBookings || [],
       };
+    }
+
+    return {
+      hasActive: false,
+      count: 0,
+      bookings: [],
+    };
+  }
+
+  /**
+   * ✅ NUEVO: Obtener próximos rangos de fechas disponibles
+   * Retorna hasta 3 opciones de rangos disponibles con la misma duración solicitada
+   *
+   * @param carId - ID del auto
+   * @param startDate - Fecha inicio solicitada (ISO string)
+   * @param endDate - Fecha fin solicitada (ISO string)
+   * @param maxOptions - Número máximo de opciones a retornar (default: 3)
+   * @returns Promise con array de rangos disponibles
+   *
+   * @example
+   * const alternatives = await carsService.getNextAvailableRange(
+   *   'car-uuid',
+   *   '2025-11-10',
+   *   '2025-11-15'
+   * );
+   * // Retorna: [
+   * //   { startDate: '2025-11-16', endDate: '2025-11-21', daysCount: 5 },
+   * //   { startDate: '2025-11-22', endDate: '2025-11-27', daysCount: 5 },
+   * //   { startDate: '2025-12-01', endDate: '2025-12-06', daysCount: 5 }
+   * // ]
+   */
+  async getNextAvailableRange(
+    carId: string,
+    startDate: string,
+    endDate: string,
+    maxOptions = 3,
+  ): Promise<
+    Array<{
+      startDate: string;
+      endDate: string;
+      daysCount: number;
+    }>
+  > {
+    try {
+      // 1. Calcular duración solicitada
+      const requestedStart = new Date(startDate);
+      const requestedEnd = new Date(endDate);
+      const durationMs = requestedEnd.getTime() - requestedStart.getTime();
+      const durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
+
+      // 2. Obtener todas las reservas futuras del auto (desde hoy)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const { data: bookings, error } = await this.supabase
+        .from('bookings')
+        .select('start_at, end_at')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'confirmed', 'in_progress'])
+        .gte('end_at', today.toISOString())
+        .order('start_at', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching bookings for availability:', error);
+        return [];
+      }
+
+      // 3. Construir intervalos bloqueados
+      const blockedIntervals: Array<{ start: Date; end: Date }> =
+        bookings?.map((b) => ({
+          start: new Date(b.start_at),
+          end: new Date(b.end_at),
+        })) || [];
+
+      // 4. Buscar ventanas disponibles
+      const alternatives: Array<{
+        startDate: string;
+        endDate: string;
+        daysCount: number;
+      }> = [];
+
+      // Comenzar a buscar desde el día siguiente al rango solicitado
+      let searchStart = new Date(requestedEnd);
+      searchStart.setDate(searchStart.getDate() + 1);
+      searchStart.setHours(0, 0, 0, 0);
+
+      // Limitar búsqueda a los próximos 90 días
+      const maxSearchDate = new Date(today);
+      maxSearchDate.setDate(maxSearchDate.getDate() + 90);
+
+      let attempts = 0;
+      const maxAttempts = 100; // Evitar loops infinitos
+
+      while (alternatives.length < maxOptions && searchStart < maxSearchDate && attempts < maxAttempts) {
+        attempts++;
+
+        // Calcular end date propuesto
+        const searchEnd = new Date(searchStart);
+        searchEnd.setDate(searchEnd.getDate() + durationDays);
+
+        // Verificar si este rango está libre
+        const hasConflict = blockedIntervals.some((blocked) => {
+          // Overlap si: searchStart < blocked.end && searchEnd > blocked.start
+          return searchStart < blocked.end && searchEnd > blocked.start;
+        });
+
+        if (!hasConflict) {
+          // Rango disponible!
+          alternatives.push({
+            startDate: searchStart.toISOString().split('T')[0],
+            endDate: searchEnd.toISOString().split('T')[0],
+            daysCount: durationDays,
+          });
+
+          // Avanzar al siguiente día después de este rango
+          searchStart = new Date(searchEnd);
+          searchStart.setDate(searchStart.getDate() + 1);
+        } else {
+          // Hay conflicto, buscar el próximo día libre
+          // Encontrar la reserva que bloquea
+          const blockingReservation = blockedIntervals.find((blocked) => {
+            return searchStart < blocked.end && searchEnd > blocked.start;
+          });
+
+          if (blockingReservation) {
+            // Saltar al día siguiente después del fin de la reserva bloqueante
+            searchStart = new Date(blockingReservation.end);
+            searchStart.setDate(searchStart.getDate() + 1);
+            searchStart.setHours(0, 0, 0, 0);
+          } else {
+            // No debería pasar, pero por seguridad avanzamos 1 día
+            searchStart.setDate(searchStart.getDate() + 1);
+          }
+        }
+      }
+
+      return alternatives;
     } catch (error) {
-      throw error;
+      console.error('Error in getNextAvailableRange:', error);
+      return [];
     }
   }
 }

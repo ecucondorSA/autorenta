@@ -112,7 +112,7 @@ export class InspectionUploaderComponent implements OnInit {
           this.photos.update((p) => [...p, photo]);
         }
       }
-    } catch (err) {
+    } catch (_err) {
       this.error.set('Error al subir fotos. Intente nuevamente.');
     } finally {
       this.uploading.set(false);
@@ -160,7 +160,7 @@ export class InspectionUploaderComponent implements OnInit {
         url: publicUrl,
         type: 'exterior', // Por defecto exterior, en versión avanzada podría categorizarse
       };
-    } catch (error) {
+    } catch (__error) {
       return null;
     }
   }
@@ -226,9 +226,9 @@ export class InspectionUploaderComponent implements OnInit {
       if (win.inspectionUploaderCallback) {
         win.inspectionUploaderCallback(inspection);
       }
-    } catch (error) {
+    } catch (_error) {
       this.error.set(
-        error instanceof Error ? error.message : 'Error al guardar inspección. Intente nuevamente.',
+        _error instanceof Error ? _error.message : 'Error al guardar inspección. Intente nuevamente.',
       );
     } finally {
       this.saving.set(false);

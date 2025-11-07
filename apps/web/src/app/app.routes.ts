@@ -43,6 +43,14 @@ export const routes: Routes = [
           import('./features/cars/my-cars/my-cars.page').then((m) => m.MyCarsPage),
       },
       {
+        path: ':id/availability',
+        canMatch: [AuthGuard],
+        loadComponent: () =>
+          import('./features/cars/availability-calendar/availability-calendar.page').then(
+            (m) => m.AvailabilityCalendarPage,
+          ),
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('./features/cars/detail/car-detail.page').then((m) => m.CarDetailPage),
@@ -85,6 +93,32 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/admin/fgo/fgo-overview.page').then((m) => m.FgoOverviewPage),
       },
+      {
+        path: 'exchange-rates',
+        loadComponent: () =>
+          import('./features/admin/exchange-rates/exchange-rates.page').then(
+            (m) => m.ExchangeRatesPage,
+          ),
+      },
+      {
+        path: 'accounting',
+        loadComponent: () =>
+          import('./features/admin/accounting/accounting-admin.page').then(
+            (m) => m.AccountingAdminPage,
+          ),
+      },
+      {
+        path: 'claims',
+        loadComponent: () =>
+          import('./features/admin/claims/admin-claims.page').then((m) => m.AdminClaimsPage),
+      },
+      {
+        path: 'claims/:id',
+        loadComponent: () =>
+          import('./features/admin/claims/admin-claim-detail.page').then(
+            (m) => m.AdminClaimDetailPage,
+          ),
+      },
     ],
   },
   {
@@ -109,6 +143,18 @@ export const routes: Routes = [
           ),
       },
     ],
+  },
+  {
+    path: 'driver-profile',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/driver-profile/driver-profile.page').then((m) => m.DriverProfilePage),
+  },
+  {
+    path: 'protections',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/protections/protections.page').then((m) => m.ProtectionsPage),
   },
   {
     path: 'users/:id',
@@ -154,6 +200,24 @@ export const routes: Routes = [
       {
         path: 'chat',
         loadComponent: () => import('./features/messages/messages.page').then((m) => m.MessagesPage),
+      },
+    ],
+  },
+  {
+    path: 'notifications',
+    canMatch: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/notifications/notifications.page').then((m) => m.NotificationsPage),
+      },
+      {
+        path: 'preferences',
+        loadComponent: () =>
+          import('./features/notifications/preferences/notification-preferences.page').then(
+            (m) => m.NotificationPreferencesPage,
+          ),
       },
     ],
   },

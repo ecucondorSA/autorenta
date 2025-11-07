@@ -1,0 +1,36 @@
+.multi-car-calendar {
+  /* Container styles */
+}
+
+/* Mini Calendar Day Cells */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Smooth transitions for day cells */
+.grid > div {
+  transition: all 0.15s ease-in-out;
+}
+
+/* Hover effect for available days */
+.grid > div:not(.bg-green-500):not(.bg-red-500):not(.bg-gray-200):hover {
+  transform: scale(1.1);
+}
+
+/* Selected car card highlight */
+.border-accent-petrol {
+  box-shadow: 0 0 0 1px rgba(8, 145, 178, 0.2);
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 1024px) {
+  .grid-cols-7 > div {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-7 > div {
+    font-size: 0.7rem;
+  }
+}

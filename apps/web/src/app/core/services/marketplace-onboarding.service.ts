@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { SupabaseClientService } from './supabase-client.service';
+import { EncryptionService } from './encryption.service';
 
 /**
  * Estado de onboarding de Mercado Pago
@@ -63,6 +64,7 @@ export interface MarketplaceStatus {
 })
 export class MarketplaceOnboardingService {
   private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly encryptionService = inject(EncryptionService);
 
   // URLs de Mercado Pago
   private readonly MP_OAUTH_URL = 'https://auth.mercadopago.com.ar/authorization';
@@ -164,24 +166,24 @@ export class MarketplaceOnboardingService {
         .eq('id', userId)
         .single();
 
-      if (error) {
+      if ((error)) {
         return {
           isApproved: false,
           hasActiveTokens: false,
         };
       }
 
-      const hasActiveTokens = data.mp_token_expires_at
-        ? new Date(data.mp_token_expires_at) > new Date()
+      const hasActiveTokens = data?.mp_token_expires_at
+        ? new Date(data?.mp_token_expires_at!) > new Date()
         : false;
 
       return {
-        isApproved: data.marketplace_approved || false,
-        collectorId: data.mercadopago_collector_id || undefined,
-        completedAt: data.mp_onboarding_completed_at || undefined,
+        isApproved: data?.marketplace_approved || false,
+        collectorId: data?.mercadopago_collector_id || undefined,
+        completedAt: data?.mp_onboarding_completed_at || undefined,
         hasActiveTokens,
       };
-    } catch (error) {
+    } catch (__error) {
       return {
         isApproved: false,
         hasActiveTokens: false,
@@ -203,12 +205,12 @@ export class MarketplaceOnboardingService {
         p_user_id: userId,
       });
 
-      if (error) {
+      if ((error)) {
         return false;
       }
 
       return data === true;
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }
@@ -236,9 +238,63 @@ export class MarketplaceOnboardingService {
         })
         .eq('id', userId);
 
-      if (error) throw error;
+      if ((error)) throw error;
     } catch (error) {
       throw error;
+    }
+  }
+
+  /**
+   * Obtiene el access token desencriptado de un usuario
+   * Útil para hacer llamadas a la API de MercadoPago
+   *
+   * @param userId ID del usuario
+   * @returns Access token en plaintext o null si no existe
+   */
+  async getDecryptedAccessToken(userId: string): Promise<string | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('users')
+        .select('mp_access_token_encrypted')
+        .eq('id', userId)
+        .single();
+
+      if (error || !data?.mp_access_token_encrypted) {
+        return null;
+      }
+
+      // Desencriptar token
+      return await this.encryptionService.decrypt(data.mp_access_token_encrypted);
+    } catch (error) {
+      console.error('[MarketplaceOnboarding] Error decrypting access token:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Obtiene el refresh token desencriptado de un usuario
+   * Útil para renovar el access token cuando expire
+   *
+   * @param userId ID del usuario
+   * @returns Refresh token en plaintext o null si no existe
+   */
+  async getDecryptedRefreshToken(userId: string): Promise<string | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('users')
+        .select('mp_refresh_token_encrypted')
+        .eq('id', userId)
+        .single();
+
+      if (error || !data?.mp_refresh_token_encrypted) {
+        return null;
+      }
+
+      // Desencriptar token
+      return await this.encryptionService.decrypt(data.mp_refresh_token_encrypted);
+    } catch (error) {
+      console.error('[MarketplaceOnboarding] Error decrypting refresh token:', error);
+      return null;
     }
   }
 
@@ -327,14 +383,14 @@ export class MarketplaceOnboardingService {
 
       const tokenData: MpTokenResponse = await response.json();
       return tokenData;
-    } catch (error) {
+    } catch (__error) {
       throw new Error('No se pudo completar la autorización con Mercado Pago');
     }
   }
 
   /**
    * Guarda las credenciales de marketplace en BD
-   * NOTA: En producción, los tokens deben estar ENCRIPTADOS
+   * Los tokens se encriptan con AES-256-GCM antes de almacenarlos
    */
   private async saveMarketplaceCredentials(
     userId: string,
@@ -343,8 +399,11 @@ export class MarketplaceOnboardingService {
     // Calcular expiración del token
     const expiresAt = new Date(Date.now() + tokenResponse.expires_in * 1000).toISOString();
 
-    // TODO: En producción, ENCRIPTAR los tokens antes de guardar
-    // Usar función de Supabase: vault.create_secret() o biblioteca de encriptación
+    // ✅ ENCRIPTAR tokens antes de guardar
+    const encryptedAccessToken = await this.encryptionService.encrypt(tokenResponse.access_token);
+    const encryptedRefreshToken = await this.encryptionService.encrypt(
+      tokenResponse.refresh_token,
+    );
 
     const { error } = await this.supabase
       .from('users')
@@ -352,13 +411,13 @@ export class MarketplaceOnboardingService {
         mercadopago_collector_id: tokenResponse.user_id,
         marketplace_approved: true,
         mp_onboarding_completed_at: new Date().toISOString(),
-        mp_access_token_encrypted: tokenResponse.access_token, // ⚠️ ENCRIPTAR
-        mp_refresh_token_encrypted: tokenResponse.refresh_token, // ⚠️ ENCRIPTAR
+        mp_access_token_encrypted: encryptedAccessToken,
+        mp_refresh_token_encrypted: encryptedRefreshToken,
         mp_token_expires_at: expiresAt,
       })
       .eq('id', userId);
 
-    if (error) {
+    if ((error)) {
       throw new Error('No se pudieron guardar las credenciales');
     }
   }
@@ -375,7 +434,7 @@ export class MarketplaceOnboardingService {
       })
       .eq('state', state);
 
-    if (error) {
+    if ((error)) {
       // No throw, esto no es crítico
     }
   }

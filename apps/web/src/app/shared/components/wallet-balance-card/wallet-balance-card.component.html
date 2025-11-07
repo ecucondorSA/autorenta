@@ -168,7 +168,7 @@
             ></path>
           </svg>
         </div>
-        <p class="text-2xl font-bold text-success-900 dark:text-success-100">
+        <p class="text-2xl font-bold text-success-900 dark:text-success-100" data-testid="available-balance">
           {{ formatCurrency(availableBalance()) }}
         </p>
         <p class="text-xs text-success-700 dark:text-success-100/80 mt-1">
@@ -207,6 +207,7 @@
       <!-- Locked Balance -->
       <div
         class="bg-warning-50 dark:bg-warning-500/15 rounded-xl p-4 border border-warning-500 dark:border-warning-500/40"
+        data-testid="locked-balance-card"
       >
         <div class="flex items-center justify-between mb-2">
           <p class="text-xs text-warning-700 dark:text-warning-100 font-medium">Bloqueado</p>
@@ -224,7 +225,7 @@
             ></path>
           </svg>
         </div>
-        <p class="text-2xl font-bold text-warning-900 dark:text-warning-100">
+        <p class="text-2xl font-bold text-warning-900 dark:text-warning-100" data-testid="locked-balance">
           {{ formatCurrency(lockedBalance()) }}
         </p>
         <p class="text-xs text-warning-700 dark:text-warning-100/80 mt-1">En reservas</p>
@@ -237,6 +238,7 @@
       type="button"
       (click)="onDepositClick()"
       class="btn-primary w-full"
+      data-testid="deposit-button"
     >
       <div class="flex items-center justify-center">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

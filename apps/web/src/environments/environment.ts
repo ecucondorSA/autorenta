@@ -28,7 +28,7 @@ export const environment = buildEnvironment({
     },
 
     // Configuración de delivery/entrega
-    deliveryFeePerKm: 0.5,        // ARS por km
+    deliveryFeePerKm: 0,          // ARS por km - DESHABILITADO (delivery gratis)
     minDistanceForDeliveryFee: 5, // km - no cobrar delivery si es < 5km
     maxDeliveryDistance: 50,      // km - distancia máxima para entrega
 

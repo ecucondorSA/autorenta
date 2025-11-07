@@ -25,9 +25,9 @@ export class PwaInstallService {
    * Inicializa el evento de instalación
    */
   private initializeInstallPrompt(): void {
-    window.addEventListener('beforeinstallprompt', (e: any) => {
+    window.addEventListener('beforeinstallprompt', (e: unknown) => {
       // Prevenir el prompt automático de Chrome
-      e.preventDefault();
+      (e as Event).preventDefault();
       
       // Guardar el evento para usarlo después
       this.deferredPrompt = e;

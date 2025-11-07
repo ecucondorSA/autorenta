@@ -22,10 +22,9 @@
       *ngIf="displayImage()"
       [ngSrc]="displayImage()!.url"
       [alt]="displayImage()!.alt"
-      width="400"
-      height="300"
+      fill
       [priority]="priority"
-      class="absolute inset-0 w-full h-full object-cover transition-slow group-hover:scale-105"
+      class="object-cover transition-slow group-hover:scale-105"
     />
 
     <!-- Fallback premium cuando no hay foto -->
@@ -59,8 +58,8 @@
 
       <!-- Texto elegante -->
       <div class="text-center px-4">
-        <p class="text-sm font-medium text-charcoal-medium">Sin foto</p>
-        <p class="text-xs text-ash-gray mt-1">Imagen no disponible</p>
+        <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">Sin foto</p>
+        <p class="text-xs text-ash-gray dark:text-pearl-light/70 mt-1">Imagen no disponible</p>
       </div>
 
       <!-- Pattern decorativo sutil -->
@@ -89,7 +88,7 @@
         </span>
         <span
           *ngIf="urgentAvailability()?.distance"
-          class="text-charcoal-medium"
+          class="text-charcoal-medium dark:text-pearl-light"
         >
           📍 {{ formatDistance(urgentAvailability()!.distance!) }}
         </span>
@@ -100,7 +99,7 @@
   <!-- Contenido del card con padding uniforme -->
   <div class="flex flex-1 flex-col gap-4 p-6">
     <!-- Título premium con sistema tipográfico -->
-    <h3 class="text-xl font-semibold text-smoke-black group-hover:text-charcoal-medium transition-base">
+    <h3 class="text-xl font-semibold text-smoke-black group-hover:text-charcoal-medium dark:text-pearl-light transition-base">
       {{ car.title }}
     </h3>
 
@@ -120,21 +119,21 @@
       <span class="text-sm font-medium text-smoke-black">
         {{ car.rating_avg | number:'1.1-1' }}
       </span>
-      <span class="text-xs text-ash-gray">
+      <span class="text-xs text-ash-gray dark:text-pearl-light/70">
         ({{ car.rating_count }} {{ car.rating_count === 1 ? 'reseña' : 'reseñas' }})
       </span>
     </div>
 
     <!-- Specs: Asientos y Puertas -->
     <div class="flex items-center gap-4">
-      <div class="flex items-center gap-2 text-charcoal-medium">
+      <div class="flex items-center gap-2 text-charcoal-medium dark:text-pearl-light">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
         </svg>
         <span class="text-sm font-medium">{{ car.seats }} asientos</span>
       </div>
       <span class="w-1.5 h-1.5 rounded-full bg-pearl-gray"></span>
-      <div class="flex items-center gap-2 text-charcoal-medium">
+      <div class="flex items-center gap-2 text-charcoal-medium dark:text-pearl-light">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
         </svg>
@@ -143,7 +142,7 @@
     </div>
 
     <!-- Ubicación con icono minimalista -->
-    <div class="flex items-start gap-2 text-charcoal-medium">
+    <div class="flex items-start gap-2 text-charcoal-medium dark:text-pearl-light">
       <svg
         class="w-5 h-5 mt-0.5 flex-shrink-0"
         fill="none"
@@ -186,7 +185,7 @@
     </div>
 
     <!-- Especificaciones con separador elegante -->
-    <div class="flex items-center gap-3 text-xs text-ash-gray font-medium">
+    <div class="flex items-center gap-3 text-xs text-ash-gray dark:text-pearl-light/70 font-medium">
       <span>{{ car.transmission | titlecase }}</span>
       <span class="w-1 h-1 rounded-full bg-pearl-gray"></span>
       <span>{{ car.fuel_type | titlecase }}</span>
@@ -225,7 +224,7 @@
             </div>
             <div class="flex flex-col">
               <span class="text-lg font-semibold text-smoke-black">por hora</span>
-              <span class="text-sm text-charcoal-medium line-through">$ {{ displayPrice() | number:'1.0-0' }}</span>
+              <span class="text-sm text-charcoal-medium dark:text-pearl-light line-through">$ {{ displayPrice() | number:'1.0-0' }}</span>
             </div>
           </div>
         </ng-container>
@@ -250,7 +249,7 @@
               {{ priceSurgeIcon() }}
             </span>
           </div>
-          <p class="text-sm font-medium text-charcoal-medium mt-1">por día</p>
+          <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mt-1">por día</p>
         </ng-container>
       </div>
 

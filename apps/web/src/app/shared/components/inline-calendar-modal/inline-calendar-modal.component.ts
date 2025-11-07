@@ -55,7 +55,7 @@ export class InlineCalendarModalComponent {
   /**
    * Handler de cambio de fecha en ion-datetime
    */
-  async onDateChange(event: any): Promise<void> {
+  async onDateChange(event: CustomEvent): Promise<void> {
     const value = event.detail.value;
 
     // ion-datetime puede devolver un string (single) o array (multiple/range)
@@ -100,8 +100,8 @@ export class InlineCalendarModalComponent {
               source: 'inline_calendar',
             });
           }
-        } catch (error) {
-          console.error('Error checking availability:', error);
+        } catch (_error) {
+          console.error('Error checking availability:', _error);
         } finally {
           this.isCheckingAvailability.set(false);
         }

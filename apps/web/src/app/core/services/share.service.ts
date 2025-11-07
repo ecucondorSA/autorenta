@@ -30,8 +30,8 @@ export class ShareService {
       await navigator.share(data);
       console.log('✅ Compartido exitosamente');
       return true;
-    } catch (error: any) {
-      if (error.name === 'AbortError') {
+    } catch (error: unknown) {
+      if ((error as any)?.name === 'AbortError') {
         console.log('Usuario canceló compartir');
         return false;
       }

@@ -6,14 +6,14 @@
     @if (loading()) {
       <!-- Skeleton loader -->
       <div class="animate-pulse">
-        <div class="h-8 bg-gray-200 rounded w-32 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-48"></div>
+        <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-2"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-48"></div>
       </div>
     } @else if (reviewsCount() > 0) {
       <div class="stats flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-2">
         <div class="rating flex items-center gap-2">
           <span class="text-4xl font-bold text-gray-900">{{ averageRating() | number: '1.1-1' }}</span>
-          <span class="text-gray-600 text-lg">/5.0</span>
+          <span class="text-gray-600 dark:text-gray-300 text-lg">/5.0</span>
         </div>
         <div class="stars flex items-center gap-1">
           @for (star of getStarRating(averageRating()); track $index) {
@@ -31,7 +31,7 @@
             </svg>
           }
         </div>
-        <span class="text-gray-600">
+        <span class="text-gray-600 dark:text-gray-300">
           {{ reviewsCount() }} {{ reviewsCount() === 1 ? 'calificación' : 'calificaciones' }}
         </span>
       </div>
@@ -63,9 +63,9 @@
       }
     </div>
   } @else if (!loading() && reviewsCount() === 0) {
-    <div class="empty-state text-center py-12 bg-gray-50 rounded-lg">
+    <div class="empty-state text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
       <svg
-        class="mx-auto h-12 w-12 text-gray-400"
+        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-300"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -79,12 +79,15 @@
         />
       </svg>
       <h3 class="mt-4 text-sm font-medium text-gray-900">Sin calificaciones aún</h3>
-      <p class="mt-2 text-sm text-gray-500">
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
         Este auto aún no tiene calificaciones de arrendatarios. ¡Sé el primero en reservarlo y dejar una reseña!
       </p>
     </div>
   }
 </section>
+
+
+
 
 
 

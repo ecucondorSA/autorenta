@@ -158,7 +158,7 @@
                     <span>Copiar</span>
                   }
                 </button>
-                <p class="mt-2 text-xs text-charcoal-medium/70 dark:text-pearl-light/60 text-center">
+                <p class="mt-2 text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 text-center">
                   Para recibir transferencias
                 </p>
               </div>
@@ -226,7 +226,7 @@
                   <svg
                     class="mr-2 h-5 w-5"
                     [class.text-accent-petrol]="canPublishCars()"
-                    [class.text-ash-gray]="!canPublishCars()"
+                    [class.text-ash-gray dark:text-pearl-light/70]="!canPublishCars()"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -242,7 +242,7 @@
                   <svg
                     class="mr-2 h-5 w-5"
                     [class.text-accent-petrol]="canBookCars()"
-                    [class.text-ash-gray]="!canBookCars()"
+                    [class.text-ash-gray dark:text-pearl-light/70]="!canBookCars()"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -331,7 +331,7 @@
                   <svg
                     class="mr-2 h-4 w-4"
                     [class.text-accent-petrol]="profile()?.is_email_verified"
-                    [class.text-ash-gray]="!profile()?.is_email_verified"
+                    [class.text-ash-gray dark:text-pearl-light/70]="!profile()?.is_email_verified"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -343,7 +343,7 @@
                   <svg
                     class="mr-2 h-4 w-4"
                     [class.text-accent-petrol]="profile()?.is_phone_verified"
-                    [class.text-ash-gray]="!profile()?.is_phone_verified"
+                    [class.text-ash-gray dark:text-pearl-light/70]="!profile()?.is_phone_verified"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -355,7 +355,7 @@
                   <svg
                     class="mr-2 h-4 w-4"
                     [class.text-accent-petrol]="profile()?.is_driver_verified"
-                    [class.text-ash-gray]="!profile()?.is_driver_verified"
+                    [class.text-ash-gray dark:text-pearl-light/70]="!profile()?.is_driver_verified"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -454,7 +454,7 @@
                 class="relative flex cursor-pointer rounded-xl border p-4 transition-base hover:bg-sand-light dark:hover:bg-slate-deep/60"
                 [class.border-accent-petrol]="form.value.role === roleOption.value"
                 [class.bg-accent-petrol/5]="form.value.role === roleOption.value"
-                [class.border-pearl-gray]="form.value.role !== roleOption.value"
+                [class.border-pearl-gray dark:border-gray-600]="form.value.role !== roleOption.value"
                 [class.dark:bg-slate-deep/80]="form.value.role === roleOption.value"
                 [class.dark:border-slate-deep/70]="form.value.role !== roleOption.value"
               >
@@ -462,7 +462,7 @@
                   type="radio"
                   [value]="roleOption.value"
                   formControlName="role"
-                  class="mt-1 h-4 w-4 border-pearl-gray text-accent-petrol focus:ring-accent-petrol"
+                  class="mt-1 h-4 w-4 border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol"
                 />
                 <label class="ml-3 flex flex-1 cursor-pointer flex-col">
                   <span class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous">
@@ -660,6 +660,13 @@
               🚗 Mis autos
             </a>
             <a
+              *ngIf="canPublishCars()"
+              routerLink="/bookings/owner"
+              class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
+            >
+              📋 Reservas de mis autos
+            </a>
+            <a
               *ngIf="canBookCars()"
               routerLink="/bookings"
               class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
@@ -677,14 +684,14 @@
                 </span>
               </div>
               <div *ngIf="availableBalance() > 0" class="grid grid-cols-2 gap-2 text-xs">
-                <div class="bg-white-pure dark:bg-slate-deep/50 rounded-lg px-2 py-1">
-                  <p class="text-charcoal-medium/70 dark:text-pearl-light/60">Retirable</p>
+                <div class="bg-white dark:bg-slate-deep-pure dark:bg-slate-deep/50 rounded-lg px-2 py-1">
+                  <p class="text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60">Retirable</p>
                   <p class="font-semibold text-accent-petrol dark:text-ivory-luminous">
                     ${{ withdrawableBalance() | number:'1.2-2' }}
                   </p>
                 </div>
                 <div class="bg-amber-50 dark:bg-amber-500/10 rounded-lg px-2 py-1">
-                  <p class="text-charcoal-medium/70 dark:text-amber-200/70">Protegido</p>
+                  <p class="text-charcoal-medium dark:text-pearl-light/70 dark:text-amber-200/70">Protegido</p>
                   <p class="font-semibold text-accent-warm dark:text-amber-200">
                     ${{ protectedCreditBalance() | number:'1.2-2' }}
                   </p>

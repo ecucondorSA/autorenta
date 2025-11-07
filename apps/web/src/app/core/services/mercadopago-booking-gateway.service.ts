@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { SupabaseClientService } from './supabase-client.service';
 import { PaymentPreferenceResponse, PaymentGateway } from '../interfaces/payment-gateway.interface';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Respuesta de creación de preferencia de MercadoPago
@@ -146,7 +146,7 @@ export class MercadoPagoBookingGatewayService implements PaymentGateway {
 
       // La preferencia es válida si el booking no ha sido pagado aún
       return booking.status === 'pending';
-    } catch (err) {
+    } catch (_err) {
       return false;
     }
   }

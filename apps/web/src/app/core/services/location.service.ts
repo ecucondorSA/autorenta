@@ -64,7 +64,7 @@ export class LocationService {
 
   /**
    * Get user's saved home location from profile
-   * @returns Home location or null if not set
+   * @returns Home location or null if not set or user not authenticated
    */
   async getHomeLocation(): Promise<LocationData | null> {
     try {
@@ -88,6 +88,11 @@ export class LocationService {
 
       return null;
     } catch (error) {
+      // Silently handle authentication errors - user is not logged in
+      if (error instanceof Error && error.message.includes('Usuario no autenticado')) {
+        return null;
+      }
+      // Log other errors but don't throw
       console.error('Error getting home location:', error);
       return null;
     }
@@ -112,7 +117,7 @@ export class LocationService {
             lng: position.coords.longitude,
           });
         },
-        (error) => {
+        (error: any) => {
           console.warn('Error getting current position:', error.message);
           resolve(null);
         },

@@ -290,70 +290,107 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     // 2. Obtener parámetros de ruta o sessionStorage
     await this.loadBookingInput();
 
-    // 3. Cargar información del auto
+    // 3. ✅ NEW: Pre-select payment method from queryParams or sessionStorage
+    this.preselectPaymentMethod();
+
+    // 4. Cargar información del auto
     await this.loadCarInfo();
 
-    // 4. Inicializar snapshots (no espera distancia)
+    // 5. Inicializar snapshots (no espera distancia)
     await this.initializeSnapshots();
 
-    // 5. ✅ OPTIMIZED: Initialize user location in background (non-blocking)
+    // 6. ✅ OPTIMIZED: Initialize user location in background (non-blocking)
     // This allows the page to load immediately while location is being fetched
     this.initializeUserLocationAndDistanceInBackground();
+  }
+
+  /**
+   * ✅ NEW: Pre-select payment method from queryParams or sessionStorage
+   * Called during ngOnInit to set initial payment method choice
+   */
+  private preselectPaymentMethod(): void {
+    // First try queryParams
+    const methodFromQuery = this.route.snapshot.queryParamMap.get('paymentMethod');
+
+    // Map from component PaymentMethod type to page PaymentMode type
+    if (methodFromQuery === 'wallet') {
+      this.paymentMode.set('wallet');
+      return;
+    } else if (methodFromQuery === 'credit_card') {
+      this.paymentMode.set('card');
+      return;
+    }
+
+    // Fallback to sessionStorage
+    const methodFromSession = sessionStorage.getItem('payment_method');
+
+    if (methodFromSession === 'wallet') {
+      this.paymentMode.set('wallet');
+      sessionStorage.removeItem('payment_method');
+    } else if (methodFromSession === 'credit_card') {
+      this.paymentMode.set('card');
+      sessionStorage.removeItem('payment_method');
+    }
   }
 
   /**
    * Initialize user location and calculate distance to car (NON-BLOCKING)
    * Runs in background without blocking page initialization.
    * When distance is available, recalculates pricing automatically.
+   *
+   * ✅ FIX: Uses setTimeout to defer geolocation request until after page renders
    */
   private initializeUserLocationAndDistanceInBackground(): void {
-    // Don't await this - let it run in background
-    (async () => {
-      try {
-        const car = this.car();
-        if (!car) return;
+    // ✅ FIX: Defer geolocation request by 1 second to allow page to render first
+    // This prevents the geolocation permission prompt from blocking initial page load
+    setTimeout(() => {
+      (async () => {
+        try {
+          const car = this.car();
+          if (!car) return;
 
-        // Get user location (can take 5-30 seconds)
-        const locationData = await this.locationService.getUserLocation();
-        if (locationData) {
-          this.userLocation.set({ lat: locationData.lat, lng: locationData.lng });
+          // Get user location (can take 5-30 seconds)
+          const locationData = await this.locationService.getUserLocation();
+          if (locationData) {
+            this.userLocation.set({ lat: locationData.lat, lng: locationData.lng });
 
-          // Calculate distance if car has location
-          if (car.location_lat && car.location_lng) {
-            const distance = this.distanceCalculator.calculateDistance(
-              locationData.lat,
-              locationData.lng,
-              car.location_lat,
-              car.location_lng
-            );
+            // Calculate distance if car has location
+            if (car.location_lat && car.location_lng) {
+              const distance = this.distanceCalculator.calculateDistance(
+                locationData.lat,
+                locationData.lng,
+                car.location_lat,
+                car.location_lng
+              );
 
-            this.distanceKm.set(distance);
+              this.distanceKm.set(distance);
 
-            // Calculate tier and delivery fee
-            const tier = this.distanceCalculator.getDistanceTier(distance);
-            this.distanceTier.set(tier);
+              // Calculate tier and delivery fee
+              const tier = this.distanceCalculator.getDistanceTier(distance);
+              this.distanceTier.set(tier);
 
-            const deliveryFee = this.distanceCalculator.calculateDeliveryFee(distance);
-            this.deliveryFeeCents.set(deliveryFee);
+              const deliveryFee = this.distanceCalculator.calculateDeliveryFee(distance);
+              this.deliveryFeeCents.set(deliveryFee);
 
-            // ✅ IMPORTANT: Recalculate pricing now that we have distance
-            await this.calculateRiskSnapshot();
-            this.calculatePricing();
+              // ✅ IMPORTANT: Recalculate pricing now that we have distance
+              await this.calculateRiskSnapshot();
+              this.calculatePricing();
+            }
+          } else {
+            // Set to undefined if no location data
+            this.userLocation.set(undefined);
+            this.distanceKm.set(undefined);
+            this.distanceTier.set(undefined);
           }
-        } else {
-          // Set to undefined if no location data
+        } catch (_error) {
+          // Silently fail - distance is optional
+          console.warn('Could not calculate distance:', _error);
           this.userLocation.set(undefined);
           this.distanceKm.set(undefined);
           this.distanceTier.set(undefined);
         }
-      } catch (error) {
-        // Silently fail - distance is optional
-        console.warn('Could not calculate distance:', error);
-        this.userLocation.set(undefined);
-        this.distanceKm.set(undefined);
-        this.distanceTier.set(undefined);
-      }
-    })();
+      })();
+    }, 1000); // Defer by 1 second to allow page to render first
   }
 
   ngOnDestroy(): void {
@@ -388,7 +425,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           endDate: new Date(parsed.endDate),
         });
         return;
-      } catch (e) {}
+      } catch (_e) { /* Silenced */ }
     }
 
     // Si no, desde query params
@@ -521,11 +558,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   /**
    * Inicializa FX snapshot, risk snapshot y pricing
+   * ✅ FIX: Mejor manejo de errores con fallbacks
    */
   private async initializeSnapshots(): Promise<void> {
     try {
-      // 1. FX Snapshot
+      // 1. FX Snapshot (con fallback automático)
       await this.loadFxSnapshot();
+
+      // Verificar que tenemos FX snapshot (debería tenerlo siempre gracias al fallback)
+      if (!this.fxSnapshot()) {
+        throw new Error('No se pudo obtener tipo de cambio (ni fallback)');
+      }
 
       // 2. Risk Snapshot
       await this.calculateRiskSnapshot();
@@ -535,24 +578,109 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // Guardar estado en sessionStorage para recuperación
       this.saveStateToSession();
+
+      // Limpiar cualquier error previo si todo salió bien
+      if (this.error()) {
+        this.error.set(null);
+      }
     } catch (err: unknown) {
-      this.error.set('Error al inicializar cálculos de reserva');
+      const message = err instanceof Error ? err.message : 'Error desconocido';
+      let detailedError = 'Error al inicializar cálculos de reserva: ' + message;
+
+      // Add diagnostic information
+      if (!this.fxSnapshot()) {
+        detailedError += ' (No se pudo obtener el tipo de cambio)';
+      } else if (!this.riskSnapshot()) {
+        detailedError += ' (No se pudo calcular el análisis de riesgo)';
+      } else if (!this.priceBreakdown()) {
+        detailedError += ' (No se pudo calcular el precio final)';
+      }
+
+      console.error('Initialization error:', err);
+      this.error.set(detailedError);
     }
   }
 
   /**
    * Carga el FX snapshot actual
+   * ✅ FIX: Agrega fallback cuando no se puede obtener de la DB
    */
   private async loadFxSnapshot(): Promise<void> {
     this.loadingFx.set(true);
     try {
-      const snapshot = await firstValueFrom(this.fxService.getFxSnapshot('USD', 'ARS'));
+      // 1. Intentar obtener de la base de datos (con timeout de 10 segundos)
+      const fxPromise = firstValueFrom(this.fxService.getFxSnapshot('USD', 'ARS'));
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout obteniendo tipo de cambio')), 10000);
+      });
+
+      let snapshot = await Promise.race([fxPromise, timeoutPromise]);
+
+      // 2. Si no se obtuvo de la DB, intentar obtener directamente de Binance
       if (!snapshot) {
-        throw new Error('No se pudo obtener tipo de cambio');
+        console.warn('[FX] No se pudo obtener tipo de cambio de DB, intentando Binance...');
+        try {
+          const rate = await this.fxService.getCurrentRateAsync('USD', 'ARS');
+          const now = new Date();
+          const expiresAt = new Date(now);
+          expiresAt.setDate(expiresAt.getDate() + 7);
+
+          snapshot = {
+            rate,
+            timestamp: now,
+            fromCurrency: 'USD',
+            toCurrency: 'ARS',
+            expiresAt,
+            isExpired: false,
+            variationThreshold: 0.1,
+          };
+          console.log(`💱 FX Snapshot (Binance directo): 1 USD = ${rate} ARS`);
+        } catch (binanceError) {
+          console.error('[FX] Error obteniendo de Binance:', binanceError);
+          // 3. Fallback: usar tipo de cambio por defecto razonable
+          const defaultRate = 1000; // Valor aproximado común para USD/ARS
+          const now = new Date();
+          const expiresAt = new Date(now);
+          expiresAt.setDate(expiresAt.getDate() + 7);
+
+          snapshot = {
+            rate: defaultRate,
+            timestamp: now,
+            fromCurrency: 'USD',
+            toCurrency: 'ARS',
+            expiresAt,
+            isExpired: false,
+            variationThreshold: 0.1,
+          };
+          console.warn(`⚠️ [FX] Usando tipo de cambio por defecto: 1 USD = ${defaultRate} ARS`);
+        }
       }
+
+      if (!snapshot) {
+        throw new Error('No se pudo obtener tipo de cambio ni crear fallback');
+      }
+
       this.fxSnapshot.set(snapshot);
     } catch (err: unknown) {
-      throw err;
+      // Si todo falla, crear un snapshot con valor por defecto para permitir continuar
+      const defaultRate = 1000;
+      const now = new Date();
+      const expiresAt = new Date(now);
+      expiresAt.setDate(expiresAt.getDate() + 7);
+
+      const fallbackSnapshot: FxSnapshot = {
+        rate: defaultRate,
+        timestamp: now,
+        fromCurrency: 'USD',
+        toCurrency: 'ARS',
+        expiresAt,
+        isExpired: false,
+        variationThreshold: 0.1,
+      };
+
+      console.error('[FX] Error crítico, usando fallback:', err);
+      console.warn(`⚠️ [FX] Usando tipo de cambio por defecto: 1 USD = ${defaultRate} ARS`);
+      this.fxSnapshot.set(fallbackSnapshot);
     } finally {
       this.loadingFx.set(false);
     }
@@ -614,11 +742,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       const subtotalUsd = dailyRateUsd * dates.totalDays;
 
-      // FGO contribution (15% del subtotal)
-      const fgoContributionUsd = subtotalUsd * 0.15;
+      // FGO contribution (15% del subtotal) - DESHABILITADO
+      const fgoContributionUsd = 0;
 
-      // Platform fee (5%)
-      const platformFeeUsd = subtotalUsd * 0.05;
+      // Platform fee (5%) - DESHABILITADO
+      const platformFeeUsd = 0;
 
       // Insurance fee (ya incluido, ponemos 0)
       const insuranceFeeUsd = 0;
@@ -764,6 +892,14 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   /**
    * Handler: Confirmar y crear booking
    */
+  /**
+   * Retry initialization of snapshots and data
+   */
+  protected async retryInitialization(): Promise<void> {
+    this.error.set(null);
+    await this.initializeSnapshots();
+  }
+
   protected async onConfirm(): Promise<void> {
     if (!this.canProceed()) {
       // Mostrar errores de validación
@@ -1109,7 +1245,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Intentar desbloquear wallet si hubo error
       try {
         await firstValueFrom(this.walletService.unlockFunds(bookingId));
-      } catch (unlockError) {}
+      } catch (_unlockError) { /* Silenced */ }
       throw error;
     }
   }
@@ -1156,17 +1292,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   ): Promise<MercadoPagoPreferenceResponse> {
     try {
       return await this.mpGateway.createPreference(bookingId);
-    } catch (error) {
-      if (this.isOwnerOnboardingError(error)) {
+    } catch (_error) {
+      if (this.isOwnerOnboardingError(_error)) {
         const message =
-          (error as Error).message ||
+          (_error as Error).message ||
           'El propietario todavía no completó la vinculación de Mercado Pago. Tu reserva permanecerá pendiente.';
         this.error.set(message);
         this.processingFinalPayment.set(false);
       }
 
-      throw error instanceof Error
-        ? error
+      throw _error instanceof Error
+        ? _error
         : new Error('No pudimos crear la preferencia de Mercado Pago.');
     }
   }

@@ -30,10 +30,14 @@
             data-tour-step="guided-search"
             class="map-controls__filters filter-section"
           >
-            <app-map-filters
-              (filtersChange)="onFiltersChange($event)"
-              (filtersReset)="onFiltersReset()"
-            ></app-map-filters>
+            <app-date-range-picker
+              label="Fechas de alquiler"
+              [initialFrom]="dateRange().from"
+              [initialTo]="dateRange().to"
+              [showPrices]="false"
+              (rangeChange)="onRangeChange($event)"
+              class="mb-3"
+            ></app-date-range-picker>
           </div>
           <div class="map-controls__sort">
             <label class="sr-only" for="sort-by">Ordenar resultados</label>
@@ -49,11 +53,6 @@
               <option value="rating">Mejor valorados</option>
               <option value="newest">Más nuevos</option>
             </select>
-          </div>
-          <!-- Badge de resultados filtrados -->
-          <div *ngIf="hasActiveFilters()" class="ml-auto hidden md:flex items-center gap-2 bg-white/90 rounded-full px-3 py-1 text-sm font-semibold border border-black/10 shadow-sm">
-            {{ filteredCount() }} de {{ totalCount() }}
-            <button (click)="onFiltersReset()" class="underline decoration-dotted">Limpiar</button>
           </div>
         </div>
 

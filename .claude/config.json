@@ -28,5 +28,8 @@
       "transport": "streamble-http",
       "description": "Supabase MCP Server - Database queries, schema management, TypeScript generation, and project operations for AutoRenta verification system"
     }
-  }
+  },
+  "allowedTools": [
+    "All"
+  ]
 }

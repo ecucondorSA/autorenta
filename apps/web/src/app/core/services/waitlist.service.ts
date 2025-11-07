@@ -45,7 +45,7 @@ export class WaitlistService {
       });
 
       if (error) {
-        this.logger.error('Error adding to waitlist', error);
+        this.logger.error('Error adding to waitlist', error?.message || String(error));
         return {
           success: false,
           error: error.message || 'Error al agregar a la lista de espera',
@@ -57,7 +57,7 @@ export class WaitlistService {
         waitlistEntry: data as WaitlistEntry,
       };
     } catch (error: unknown) {
-      this.logger.error('Exception adding to waitlist', error);
+      this.logger.error('Exception adding to waitlist', (error as Error)?.message || String(error));
       return {
         success: false,
         error:
@@ -83,7 +83,7 @@ export class WaitlistService {
       });
 
       if (error) {
-        this.logger.error('Error removing from waitlist', error);
+        this.logger.error('Error removing from waitlist', error?.message || String(error));
         return {
           success: false,
           error: error.message || 'Error al remover de la lista de espera',
@@ -92,7 +92,7 @@ export class WaitlistService {
 
       return { success: true };
     } catch (error: unknown) {
-      this.logger.error('Exception removing from waitlist', error);
+      this.logger.error('Exception removing from waitlist', (error as Error)?.message || String(error));
       return {
         success: false,
         error:
@@ -112,13 +112,13 @@ export class WaitlistService {
       const { data, error } = await this.supabase.rpc('get_my_waitlist');
 
       if (error) {
-        this.logger.error('Error getting waitlist', error);
+        this.logger.error('Error getting waitlist', error?.message || String(error));
         return [];
       }
 
       return (data ?? []) as WaitlistEntry[];
     } catch (error: unknown) {
-      this.logger.error('Exception getting waitlist', error);
+      this.logger.error('Exception getting waitlist', (error as Error)?.message || String(error));
       return [];
     }
   }
@@ -143,17 +143,20 @@ export class WaitlistService {
       });
 
       if (error) {
-        this.logger.error('Error getting waitlist count', error);
+        this.logger.error('Error getting waitlist count', error?.message || String(error));
         return 0;
       }
 
       return (data ?? 0) as number;
     } catch (error: unknown) {
-      this.logger.error('Exception getting waitlist count', error);
+      this.logger.error('Exception getting waitlist count', (error as Error)?.message || String(error));
       return 0;
     }
   }
 }
+
+
+
 
 
 

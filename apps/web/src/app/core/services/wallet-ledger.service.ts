@@ -180,7 +180,7 @@ export class WalletLedgerService {
     }).format(cents / 100);
   }
 
-  private handleError(err: any, defaultMessage: string): void {
+  private handleError(err: unknown, defaultMessage: string): void {
     const errorMessage = err instanceof Error ? err.message : defaultMessage;
     this.error.set(errorMessage);
   }

@@ -43,6 +43,16 @@ export const BOOKINGS_ROUTES: Routes = [
     loadComponent: () => import('./check-out/check-out.page').then((m) => m.CheckOutPage),
   },
   {
+    path: ':id/owner-check-in',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./owner-check-in/owner-check-in.page').then((m) => m.OwnerCheckInPage),
+  },
+  {
+    path: ':id/owner-check-out',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./owner-check-out/owner-check-out.page').then((m) => m.OwnerCheckOutPage),
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),

@@ -25,6 +25,7 @@ export class HelpMenuComponent {
     });
 
     if (!started) {
+      // Tour didn't start, could handle failure here
     }
   }
 }
@@ -378,7 +379,7 @@ export class AnalyticsDemoComponent implements OnInit {
     // All tour events are automatically tracked via TelemetryBridge
     // You can also access event history:
 
-    const history = this.guidedTour.getEventHistory();
+    const _history = this.guidedTour.getEventHistory();
 
     // Events automatically sent:
     // - tour_started

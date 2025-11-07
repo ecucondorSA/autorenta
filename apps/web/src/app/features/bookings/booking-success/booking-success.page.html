@@ -9,7 +9,7 @@
   @if (loading()) {
     <div class="flex flex-col items-center justify-center min-h-screen">
       <ion-spinner name="crescent" color="primary"></ion-spinner>
-      <p class="mt-4 text-gray-600">Cargando detalles...</p>
+      <p class="mt-4 text-gray-600 dark:text-gray-300">Cargando detalles...</p>
     </div>
   }
 
@@ -101,7 +101,7 @@
         ¡Tu reserva está confirmada!
       </h1>
 
-      <p class="text-center text-gray-600 dark:text-gray-400 mb-8">
+      <p class="text-center text-gray-600 dark:text-gray-300 dark:text-gray-300 mb-8">
         Hemos enviado los detalles a tu email
       </p>
 
@@ -122,11 +122,11 @@
               <div
                 class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center"
               >
-                <ion-icon name="car-outline" class="text-4xl text-gray-400"></ion-icon>
+                <ion-icon name="car-outline" class="text-4xl text-gray-400 dark:text-gray-300"></ion-icon>
               </div>
               <div>
                 <h3 class="font-semibold text-lg">{{ getCarName() }}</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                   <ion-icon name="location-outline"></ion-icon>
                   Reserva confirmada
                 </p>
@@ -163,7 +163,7 @@
 
             <!-- Booking ID -->
             <div class="detail-row text-xs">
-              <span class="label text-gray-500">Número de Reserva:</span>
+              <span class="label text-gray-500 dark:text-gray-300">Número de Reserva:</span>
               <span class="value font-mono text-gray-700 dark:text-gray-300">
                 {{ bookingId() | slice: 0 : 8 }}...
               </span>
@@ -186,7 +186,7 @@
               <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
                 <h3 class="font-semibold">Revisa tu email</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                   Te enviamos todos los detalles y el contrato de alquiler
                 </p>
               </ion-label>
@@ -196,7 +196,7 @@
               <ion-icon name="chatbubble-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
                 <h3 class="font-semibold">Contacta al propietario</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                   Coordina la entrega del vehículo con 24hs de anticipación
                 </p>
               </ion-label>
@@ -206,7 +206,7 @@
               <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
                 <h3 class="font-semibold">Prepara tu documentación</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                   DNI, licencia de conducir vigente y tarjeta de crédito a tu nombre
                 </p>
               </ion-label>
@@ -216,7 +216,7 @@
               <ion-icon name="car-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
                 <h3 class="font-semibold">¡Disfruta tu viaje!</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                   Recuerda devolver el vehículo en las mismas condiciones
                 </p>
               </ion-label>

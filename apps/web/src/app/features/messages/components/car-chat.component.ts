@@ -78,7 +78,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
             <div
               class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#075E54]"
             ></div>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Cargando mensajes...</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando mensajes...</p>
           </div>
         </div>
 
@@ -99,7 +99,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
             class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white/70 dark:bg-gray-800/70"
           >
             <svg
-              class="h-10 w-10 text-[#075E54] dark:text-gray-400"
+              class="h-10 w-10 text-[#075E54] dark:text-gray-400 dark:text-gray-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -115,7 +115,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
           <p class="mb-2 text-base font-medium text-gray-700 dark:text-gray-300">
             Inicia la conversación
           </p>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+          <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
             Pregunta sobre disponibilidad, precios o lo que necesites
           </p>
         </div>
@@ -137,7 +137,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
                 {{ message.body }}
               </p>
               <div class="mt-1 flex items-center justify-end gap-1">
-                <span class="text-[10px] text-gray-500 dark:text-gray-400">{{
+                <span class="text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-300">{{
                   formatTime(message.created_at)
                 }}</span>
               </div>
@@ -163,7 +163,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
                 <!-- Check marks - Single check (sent) -->
                 <svg
                   *ngIf="getMessageStatus(message) === 'sent'"
-                  class="h-4 w-4 text-gray-500 dark:text-gray-400"
+                  class="h-4 w-4 text-gray-500 dark:text-gray-300 dark:text-gray-300"
                   fill="currentColor"
                   viewBox="0 0 16 15"
                 >
@@ -175,7 +175,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
                 <!-- Double check (delivered) -->
                 <svg
                   *ngIf="getMessageStatus(message) === 'delivered'"
-                  class="h-4 w-4 text-gray-500 dark:text-gray-400"
+                  class="h-4 w-4 text-gray-500 dark:text-gray-300 dark:text-gray-300"
                   fill="currentColor"
                   viewBox="0 0 16 15"
                 >
@@ -230,7 +230,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
         <!-- Emoji button -->
         <button
           type="button"
-          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
+          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-gray-500 dark:text-gray-300 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
         >
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -281,7 +281,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
         <!-- Mic button -->
         <button
           type="button"
-          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
+          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-gray-500 dark:text-gray-300 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
         >
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -399,7 +399,7 @@ export class CarChatComponent implements OnInit, OnDestroy {
     try {
       const messages = await this.messagesService.listByCar(this.carId());
       this.messages.set(messages);
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No pudimos cargar los mensajes');
     } finally {
       this.loading.set(false);
@@ -437,7 +437,7 @@ export class CarChatComponent implements OnInit, OnDestroy {
       this.newMessage.set('');
 
       // Don't reload - realtime will update
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
     } finally {
       this.sending.set(false);

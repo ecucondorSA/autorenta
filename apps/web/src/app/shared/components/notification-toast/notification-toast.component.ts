@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NotificationService, type Notification } from '../../../core/services/notification.service';
+import { ToastService, type Toast } from '../../../core/services/toast.service';
 
 @Component({
   standalone: true,
@@ -27,7 +27,7 @@ import { NotificationService, type Notification } from '../../../core/services/n
               <p class="text-sm font-medium text-gray-900">
                 {{ notification.title }}
               </p>
-              <p class="mt-1 text-sm text-gray-500">
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
                 {{ notification.message }}
               </p>
             </div>
@@ -35,7 +35,7 @@ import { NotificationService, type Notification } from '../../../core/services/n
               <button
                 type="button"
                 (click)="close(notification.id)"
-                class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-md"
+                class="inline-flex text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-md"
               >
                 <span class="sr-only">Cerrar</span>
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,15 +92,15 @@ import { NotificationService, type Notification } from '../../../core/services/n
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationToastComponent {
-  private readonly notificationService = inject(NotificationService);
+  private readonly toast = inject(ToastService);
 
-  readonly notifications = this.notificationService.notifications;
+  readonly notifications = this.toast.notifications;
 
   close(id: string): void {
-    this.notificationService.remove(id);
+    this.toast.remove(id);
   }
 
-  getNotificationClass(type: Notification['type']): string {
+  getNotificationClass(type: Toast['type']): string {
     const baseClass = 'border-l-4';
     switch (type) {
       case 'success':
@@ -114,7 +114,7 @@ export class NotificationToastComponent {
     }
   }
 
-  getIconClass(type: Notification['type']): string {
+  getIconClass(type: Toast['type']): string {
     switch (type) {
       case 'success':
         return 'bg-green-100 text-green-600';
@@ -127,7 +127,7 @@ export class NotificationToastComponent {
     }
   }
 
-  getProgressBarClass(type: Notification['type']): string {
+  getProgressBarClass(type: Toast['type']): string {
     switch (type) {
       case 'success':
         return 'bg-green-500';

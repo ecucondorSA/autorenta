@@ -1,7 +1,7 @@
 import { Injectable, signal, inject, computed, effect, Injector, DestroyRef } from '@angular/core';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
-import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface UnreadConversation {
   conversationId: string; // booking_id or car_id
@@ -60,8 +60,8 @@ export class UnreadMessagesService {
     try {
       await this.fetchUnreadConversations(user.id);
       this.subscribeToNewMessages(user.id);
-    } catch (error) {
-      console.error('Error initializing unread messages:', error);
+    } catch (_error) {
+      console.error('Error initializing unread messages:', _error);
     } finally {
       this.isLoading.set(false);
     }
@@ -91,10 +91,10 @@ export class UnreadMessagesService {
       const conversationsMap = new Map<string, UnreadConversation>();
 
       for (const message of data) {
-        const conversationId = message.booking_id || message.car_id;
+        const conversationId = (message as any).booking_id || (message as any).car_id;
         if (!conversationId) continue;
 
-        const type = message.booking_id ? 'booking' : 'car';
+        const type = (message as any).booking_id ? 'booking' : 'car';
         const key = `${type}-${conversationId}`;
 
         if (!conversationsMap.has(key)) {
@@ -102,9 +102,9 @@ export class UnreadMessagesService {
             conversationId,
             type: type as 'booking' | 'car',
             unreadCount: 0,
-            lastMessage: message.body,
-            lastMessageAt: message.created_at,
-            otherUserId: message.sender_id,
+            lastMessage: (message as any).body,
+            lastMessageAt: (message as any).created_at,
+            otherUserId: (message as any).sender_id,
           });
         }
 
@@ -112,15 +112,15 @@ export class UnreadMessagesService {
         conv.unreadCount++;
         
         // Keep the most recent message
-        if (new Date(message.created_at) > new Date(conv.lastMessageAt)) {
-          conv.lastMessage = message.body;
-          conv.lastMessageAt = message.created_at;
+        if (new Date((message as any).created_at) > new Date(conv.lastMessageAt)) {
+          conv.lastMessage = (message as any).body;
+          conv.lastMessageAt = (message as any).created_at;
         }
       }
 
       this.unreadConversations.set(Array.from(conversationsMap.values()));
-    } catch (error) {
-      console.error('Error fetching unread conversations:', error);
+    } catch (_error) {
+      console.error('Error fetching unread conversations:', _error);
     }
   }
 
@@ -166,11 +166,11 @@ export class UnreadMessagesService {
   /**
    * Handle new message received via real-time
    */
-  private handleNewMessage(message: any): void {
-    const conversationId = message.booking_id || message.car_id;
+  private handleNewMessage(message: unknown): void {
+    const conversationId = (message as any).booking_id || (message as any).car_id;
     if (!conversationId) return;
 
-    const type = message.booking_id ? 'booking' : 'car';
+    const type = (message as any).booking_id ? 'booking' : 'car';
     const conversations = [...this.unreadConversations()];
     const existingIndex = conversations.findIndex(
       (c) => c.conversationId === conversationId && c.type === type
@@ -181,8 +181,8 @@ export class UnreadMessagesService {
       conversations[existingIndex] = {
         ...conversations[existingIndex],
         unreadCount: conversations[existingIndex].unreadCount + 1,
-        lastMessage: message.body,
-        lastMessageAt: message.created_at,
+        lastMessage: (message as any).body,
+        lastMessageAt: (message as any).created_at,
       };
     } else {
       // Add new conversation
@@ -190,9 +190,9 @@ export class UnreadMessagesService {
         conversationId,
         type: type as 'booking' | 'car',
         unreadCount: 1,
-        lastMessage: message.body,
-        lastMessageAt: message.created_at,
-        otherUserId: message.sender_id,
+        lastMessage: (message as any).body,
+        lastMessageAt: (message as any).created_at,
+        otherUserId: (message as any).sender_id,
       });
     }
 
@@ -205,13 +205,13 @@ export class UnreadMessagesService {
   /**
    * Handle message update (e.g., marked as read)
    */
-  private handleMessageUpdate(message: any): void {
-    if (message.read_at) {
+  private handleMessageUpdate(message: unknown): void {
+    if ((message as any).read_at) {
       // Message was marked as read, decrement count
-      const conversationId = message.booking_id || message.car_id;
+      const conversationId = (message as any).booking_id || (message as any).car_id;
       if (!conversationId) return;
 
-      const type = message.booking_id ? 'booking' : 'car';
+      const type = (message as any).booking_id ? 'booking' : 'car';
       const conversations = [...this.unreadConversations()];
       const existingIndex = conversations.findIndex(
         (c) => c.conversationId === conversationId && c.type === type
@@ -259,8 +259,8 @@ export class UnreadMessagesService {
         (c) => !(c.conversationId === conversationId && c.type === type)
       );
       this.unreadConversations.set(conversations);
-    } catch (error) {
-      console.error('Error marking conversation as read:', error);
+    } catch (_error) {
+      console.error('Error marking conversation as read:', _error);
     }
   }
 
@@ -285,7 +285,7 @@ export class UnreadMessagesService {
 
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + 0.2);
-    } catch (error) {
+    } catch (__error) {
       // Silently fail if audio context not supported
     }
   }

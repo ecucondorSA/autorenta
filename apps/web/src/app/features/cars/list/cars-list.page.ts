@@ -18,21 +18,17 @@ import { RealtimeChannel } from '@supabase/supabase-js';
 import { CarsService } from '../../../core/services/cars.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
 import { MetaService } from '../../../core/services/meta.service';
-import { TourService } from '../../../core/services/tour.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
 import { Car } from '../../../core/models';
-import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRange, DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
-import {
-  MapFiltersComponent,
-  MapFilters,
-} from '../../../shared/components/map-filters/map-filters.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
+import { getErrorMessage } from '../../../core/utils/type-guards';
 
 // Interface para auto con distancia
 export interface CarWithDistance extends Car {
@@ -58,7 +54,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
   imports: [
     CommonModule,
     CarsMapComponent,
-    MapFiltersComponent,
+    DateRangePickerComponent,
     CarCardComponent,
     SkeletonLoaderComponent,
     TranslateModule,
@@ -76,7 +72,6 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly carsService = inject(CarsService);
   private readonly compareService = inject(CarsCompareService);
   private readonly metaService = inject(MetaService);
-  private readonly tourService = inject(TourService);
   private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
@@ -97,26 +92,25 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly loading = signal(false);
   readonly cars = signal<Car[]>([]);
   readonly carMapLocations = computed(() =>
-    this.cars().map((car) => ({
-      carId: car.id,
-      title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
-      pricePerDay: car.price_per_day,
-      currency: car.currency || 'ARS',
-      lat: car.location_lat || 0,
+    this.cars().map((car) => {
+      const gallery = this.extractPhotoGallery(car);
+      return {
+        carId: car.id,
+        title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
+        pricePerDay: car.price_per_day,
+        currency: car.currency || 'ARS',
+        lat: car.location_lat || 0,
       lng: car.location_lng || 0,
       updatedAt: car.updated_at || new Date().toISOString(),
       city: car.location_city,
       state: car.location_state,
       country: car.location_country,
       locationLabel: car.location_city || 'Sin ubicación',
-      photoUrl:
-        car.photos && car.photos[0]
-          ? typeof car.photos[0] === 'string'
-            ? car.photos[0]
-            : car.photos[0].url
-          : null,
-      description: car.description,
-    })),
+        photoUrl: gallery[0] ?? null,
+        photoGallery: gallery,
+        description: car.description,
+      };
+    }),
   );
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
   readonly hasFilters = computed(() => !!this.city() || !!this.dateRange().from);
@@ -129,21 +123,11 @@ export class CarsListPage implements OnInit, OnDestroy {
   });
 
   // Filtros y ordenamiento
-  readonly mapFilters = signal<MapFilters | null>(null);
   readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('rating');
   readonly sortLabel = computed(() => this.getSortLabel(this.sortBy()));
 
   // Contadores para badge de resultados
-  readonly filteredCount = computed(() => this.filteredCarsWithDistance().length);
   readonly totalCount = computed(() => this.cars().length);
-  readonly hasActiveFilters = computed(() => {
-    const f = this.mapFilters();
-    if (!f) return false;
-    if (f.minPrice > 5000 || f.maxPrice < 50000) return true;
-    if (f.transmission !== 'all' || f.fuelType !== 'all') return true;
-    if (f.minSeats > 2) return true;
-    return Object.values(f.features).some((v) => v === true);
-  });
 
   private readonly persistSortEffect = effect(() => {
     if (!this.isBrowser || !this.sortInitialized) {
@@ -176,40 +160,6 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly filteredCarsWithDistance = computed<CarWithDistance[]>(() => {
     let carsList = this.cars();
     const userLoc = this.userLocation();
-    const filters = this.mapFilters();
-
-    // Aplicar filtros
-    if (filters) {
-      carsList = carsList.filter((car) => {
-        // Filtro de precio
-        if (car.price_per_day < filters.minPrice || car.price_per_day > filters.maxPrice) {
-          return false;
-        }
-
-        // Filtro de transmisión
-        if (filters.transmission !== 'all' && car.transmission !== filters.transmission) {
-          return false;
-        }
-
-        // Filtro de combustible
-        if (filters.fuelType !== 'all' && car.fuel_type !== filters.fuelType) {
-          return false;
-        }
-
-        // Filtro de asientos
-        if (car.seats < filters.minSeats) {
-          return false;
-        }
-
-        // Filtro de características
-        if (filters.features.ac && !car.features?.['ac']) return false;
-        if (filters.features.gps && !car.features?.['gps']) return false;
-        if (filters.features.bluetooth && !car.features?.['bluetooth']) return false;
-        if (filters.features.backup_camera && !car.features?.['backup_camera']) return false;
-
-        return true;
-      });
-    }
 
     if (!carsList.length) {
       return [] as CarWithDistance[];
@@ -527,9 +477,9 @@ export class CarsListPage implements OnInit, OnDestroy {
           lng: locationData.lng,
         });
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently fail - user location is optional
-      console.warn('Could not get user location:', error);
+      console.warn('Could not get user location:', _error);
     }
   }
 
@@ -562,12 +512,9 @@ export class CarsListPage implements OnInit, OnDestroy {
       // Collapse search form on mobile after search
       this.searchExpanded.set(false);
 
-      // Notificar que el inventario está listo y esperar a que el DOM se actualice
+      // Notificar que el inventario está listo
       if (this.isBrowser && !this.inventoryReady()) {
         this.inventoryReady.set(true);
-        setTimeout(() => {
-          this.tourService.startGuidedBookingTour();
-        }, 500);
       }
 
       // Setup real-time subscription on first load
@@ -575,7 +522,11 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.setupRealtimeSubscription();
       }
     } catch (err) {
-      this.logger.error('Error loading cars', err);
+      this.logger.error(
+        'Error loading cars',
+        'CarsListPage',
+        err instanceof Error ? err : new Error(getErrorMessage(err))
+      );
       // Mostrar mensaje al usuario en caso de error crítico
       if (err instanceof Error) {
         console.error('Error al cargar autos:', err.message);
@@ -604,13 +555,17 @@ export class CarsListPage implements OnInit, OnDestroy {
   async handleRefresh(): Promise<void> {
     try {
       await this.loadCars();
-      
+
       // Completar el refresh
       if (this.pullToRefresh) {
         this.pullToRefresh.completeRefresh();
       }
-    } catch (error) {
-      this.logger.error('Error al refrescar autos', error);
+    } catch (_error) {
+      this.logger.error(
+        'Error al refrescar autos',
+        'CarsListPage',
+        _error instanceof Error ? _error : new Error(getErrorMessage(_error))
+      );
       if (this.pullToRefresh) {
         this.pullToRefresh.completeRefresh();
       }
@@ -782,6 +737,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   onRangeChange(range: DateRange): void {
     this.dateRange.set(range);
+    void this.loadCars();
   }
 
   onCarSelected(carId: string): void {
@@ -862,15 +818,6 @@ export class CarsListPage implements OnInit, OnDestroy {
     return this.distanceCalculator.calculateDistance(lat1, lon1, lat2, lon2);
   }
 
-  // Filtros y ordenamiento
-  onFiltersChange(filters: MapFilters): void {
-    this.mapFilters.set(filters);
-  }
-
-  onFiltersReset(): void {
-    this.mapFilters.set(null);
-  }
-
   onSortChange(sortBy: 'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'): void {
     this.sortBy.set(sortBy);
   }
@@ -916,9 +863,9 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     const carousel = this.unifiedCarousel.nativeElement;
     const card = carousel.querySelector(`[data-car-id="${carId}"]`) as HTMLElement;
-    
+
     if (!card) {
-      this.logger.warn('Car card not found in carousel', { carId });
+      this.logger.warn(`Car card not found in carousel: ${carId}`, 'CarsListPage');
       return;
     }
 
@@ -938,6 +885,16 @@ export class CarsListPage implements OnInit, OnDestroy {
     setTimeout(() => {
       card.classList.remove('pulse-highlight');
     }, 1500);
+  }
+
+  private extractPhotoGallery(car: Car): string[] {
+    const rawPhotos = car.photos ?? car.car_photos ?? [];
+    if (!Array.isArray(rawPhotos)) {
+      return [];
+    }
+    return rawPhotos
+      .map((photo) => (typeof photo === 'string' ? photo : photo?.url ?? null))
+      .filter((url): url is string => typeof url === 'string' && url.length > 0);
   }
 
   private isValidSort(

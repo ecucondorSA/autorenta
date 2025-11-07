@@ -114,7 +114,7 @@ export class BookingChatComponent implements OnInit, OnDestroy {
     try {
       const messages = await this.messagesService.listByBooking(this.bookingId());
       this.messages.set(messages);
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No pudimos cargar los mensajes');
     } finally {
       this.loading.set(false);
@@ -150,7 +150,7 @@ export class BookingChatComponent implements OnInit, OnDestroy {
       this.newMessage.set('');
 
       // Don't reload - realtime will update
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
     } finally {
       this.sending.set(false);
