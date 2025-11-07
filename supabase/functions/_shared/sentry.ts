@@ -1,287 +1,249 @@
 /**
- * Sentry integration for Supabase Edge Functions (Deno)
+ * Sentry Integration for Supabase Edge Functions
+ *
+ * Provides error tracking and performance monitoring for Edge Functions.
+ * Uses Sentry's Deno SDK.
  *
  * Usage:
- * ```typescript
- * import { initSentry, captureError, captureMessage } from '../_shared/sentry.ts';
+ *   import { initSentry, captureError, captureMessage } from '../_shared/sentry.ts';
  *
- * // In your edge function:
- * const sentry = initSentry({
- *   functionName: 'my-function',
- *   environment: Deno.env.get('ENVIRONMENT') || 'production',
- * });
+ *   // Initialize at the start of your function
+ *   const sentry = initSentry('function-name');
  *
- * try {
- *   // Your code
- * } catch (error) {
- *   captureError(error, { tags: { function: 'my-function' } });
- *   throw error;
- * }
- * ```
+ *   // Capture errors
+ *   try {
+ *     // ... your code
+ *   } catch (error) {
+ *     captureError(error, { context: 'operation-name' });
+ *   }
  */
 
-// Sentry DSN (should be set via environment variable)
-const SENTRY_DSN = Deno.env.get('SENTRY_DSN');
+import * as Sentry from 'https://deno.land/x/sentry@7.114.0/index.mjs';
 
 interface SentryConfig {
-  functionName: string;
+  dsn?: string;
   environment?: string;
-  release?: string;
+  tracesSampleRate?: number;
 }
 
-interface SentryContext {
-  tags?: Record<string, string>;
-  extra?: Record<string, unknown>;
-  level?: 'debug' | 'info' | 'warning' | 'error' | 'fatal';
-}
+// Global Sentry initialization flag
+let sentryInitialized = false;
 
 /**
- * Initialize Sentry for the current Edge Function
+ * Initialize Sentry for Edge Function
+ *
+ * @param functionName - Name of the Edge Function (for tagging)
+ * @returns Sentry client or null if not configured
  */
-export function initSentry(config: SentryConfig): void {
-  if (!SENTRY_DSN) {
-    console.warn('⚠️ Sentry DSN not configured - error tracking disabled');
-    return;
+export function initSentry(functionName: string): typeof Sentry | null {
+  // Get DSN from environment
+  const dsn = Deno.env.get('SENTRY_DSN');
+
+  if (!dsn) {
+    console.warn('⚠️ SENTRY_DSN not configured - error tracking disabled');
+    return null;
   }
 
-  // Set default context
-  globalThis._sentryConfig = {
-    ...config,
-    environment: config.environment || 'production',
-    release: config.release || 'unknown',
-  };
+  if (!sentryInitialized) {
+    const environment = Deno.env.get('SENTRY_ENVIRONMENT') || 'production';
+    const tracesSampleRate = parseFloat(Deno.env.get('SENTRY_TRACES_SAMPLE_RATE') || '0.1');
 
-  console.log(`✅ Sentry initialized for ${config.functionName}`);
-}
+    Sentry.init({
+      dsn,
+      environment,
+      tracesSampleRate,
+      release: `autorenta-functions@${environment}`,
 
-/**
- * Capture an exception and send to Sentry
- */
-export async function captureError(
-  error: Error | unknown,
-  context?: SentryContext
-): Promise<void> {
-  if (!SENTRY_DSN) return;
-
-  const config = (globalThis as any)._sentryConfig as SentryConfig | undefined;
-
-  const event = {
-    event_id: crypto.randomUUID(),
-    timestamp: new Date().toISOString(),
-    platform: 'javascript',
-    server_name: 'supabase-edge-function',
-    environment: config?.environment || 'production',
-    release: config?.release || 'unknown',
-    level: context?.level || 'error',
-    message: error instanceof Error ? error.message : String(error),
-    exception: {
-      values: [
-        {
-          type: error instanceof Error ? error.constructor.name : 'Error',
-          value: error instanceof Error ? error.message : String(error),
-          stacktrace: error instanceof Error && error.stack
-            ? {
-                frames: parseStackTrace(error.stack),
-              }
-            : undefined,
+      // Add function name as tag
+      initialScope: {
+        tags: {
+          function: functionName,
+          runtime: 'edge-function',
         },
-      ],
-    },
-    tags: {
-      function: config?.functionName || 'unknown',
-      runtime: 'deno',
-      ...context?.tags,
-    },
-    extra: {
-      ...context?.extra,
-    },
-  };
+      },
 
-  try {
-    await sendToSentry(event);
-  } catch (sendError) {
-    console.error('Failed to send error to Sentry:', sendError);
-  }
-}
+      // Filter sensitive data
+      beforeSend(event) {
+        // Remove sensitive environment variables
+        if (event.extra?.env) {
+          const sensitiveKeys = [
+            'SUPABASE_SERVICE_ROLE_KEY',
+            'SUPABASE_ANON_KEY',
+            'MERCADOPAGO_ACCESS_TOKEN',
+            'MERCADOPAGO_WEBHOOK_SECRET',
+            'PAYPAL_CLIENT_SECRET',
+            'SENTRY_DSN',
+          ];
 
-/**
- * Capture a message and send to Sentry
- */
-export async function captureMessage(
-  message: string,
-  context?: SentryContext
-): Promise<void> {
-  if (!SENTRY_DSN) return;
+          sensitiveKeys.forEach(key => {
+            if (event.extra?.env?.[key]) {
+              event.extra.env[key] = '[REDACTED]';
+            }
+          });
+        }
 
-  const config = (globalThis as any)._sentryConfig as SentryConfig | undefined;
+        // Remove authorization headers
+        if (event.request?.headers?.authorization) {
+          event.request.headers.authorization = '[REDACTED]';
+        }
 
-  const event = {
-    event_id: crypto.randomUUID(),
-    timestamp: new Date().toISOString(),
-    platform: 'javascript',
-    server_name: 'supabase-edge-function',
-    environment: config?.environment || 'production',
-    release: config?.release || 'unknown',
-    level: context?.level || 'info',
-    message,
-    tags: {
-      function: config?.functionName || 'unknown',
-      runtime: 'deno',
-      ...context?.tags,
-    },
-    extra: {
-      ...context?.extra,
-    },
-  };
-
-  try {
-    await sendToSentry(event);
-  } catch (sendError) {
-    console.error('Failed to send message to Sentry:', sendError);
-  }
-}
-
-/**
- * Measure performance of an operation and send to Sentry
- */
-export async function measureOperation<T>(
-  operationName: string,
-  operation: () => Promise<T>,
-  context?: SentryContext
-): Promise<T> {
-  const start = performance.now();
-
-  try {
-    const result = await operation();
-    const duration = performance.now() - start;
-
-    // Log slow operations (>2s)
-    if (duration > 2000) {
-      console.warn(`⚠️ Slow operation: ${operationName} took ${duration.toFixed(2)}ms`);
-
-      if (SENTRY_DSN) {
-        await captureMessage(
-          `Slow operation: ${operationName} took ${duration.toFixed(2)}ms`,
-          {
-            level: 'warning',
-            tags: {
-              ...context?.tags,
-              operation: operationName,
-            },
-            extra: {
-              ...context?.extra,
-              duration_ms: duration,
-            },
-          }
-        );
-      }
-    }
-
-    return result;
-  } catch (error) {
-    const duration = performance.now() - start;
-
-    await captureError(error, {
-      ...context,
-      extra: {
-        ...context?.extra,
-        operation: operationName,
-        duration_ms: duration,
+        return event;
       },
     });
 
-    throw error;
+    sentryInitialized = true;
+    console.log(`✅ Sentry initialized for ${functionName}`);
   }
+
+  return Sentry;
 }
 
 /**
- * Send event to Sentry
+ * Capture an error to Sentry
+ *
+ * @param error - Error to capture
+ * @param context - Additional context (tags, extra data)
  */
-async function sendToSentry(event: unknown): Promise<void> {
-  if (!SENTRY_DSN) return;
-
-  // Extract project ID from DSN
-  const dsnMatch = SENTRY_DSN.match(/https:\/\/([^@]+)@([^/]+)\/(.+)/);
-  if (!dsnMatch) {
-    console.error('Invalid Sentry DSN format');
+export function captureError(
+  error: Error | unknown,
+  context?: {
+    tags?: Record<string, string>;
+    extra?: Record<string, unknown>;
+    level?: 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
+  },
+): void {
+  if (!sentryInitialized) {
+    console.error('❌ Error:', error);
     return;
   }
 
-  const [, publicKey, host, projectId] = dsnMatch;
-  const url = `https://${host}/api/${projectId}/store/`;
+  const captureContext: Sentry.CaptureContext = {
+    level: context?.level || 'error',
+    tags: context?.tags,
+    extra: context?.extra,
+  };
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Sentry-Auth': `Sentry sentry_version=7, sentry_key=${publicKey}, sentry_client=deno-sentry/1.0.0`,
-    },
-    body: JSON.stringify(event),
+  if (error instanceof Error) {
+    Sentry.captureException(error, captureContext);
+  } else {
+    Sentry.captureException(new Error(String(error)), captureContext);
+  }
+}
+
+/**
+ * Capture a message to Sentry
+ *
+ * @param message - Message to capture
+ * @param level - Severity level
+ * @param context - Additional context
+ */
+export function captureMessage(
+  message: string,
+  level: 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug' = 'info',
+  context?: {
+    tags?: Record<string, string>;
+    extra?: Record<string, unknown>;
+  },
+): void {
+  if (!sentryInitialized) {
+    console.log(`[${level.toUpperCase()}] ${message}`);
+    return;
+  }
+
+  Sentry.captureMessage(message, {
+    level,
+    tags: context?.tags,
+    extra: context?.extra,
   });
-
-  if (!response.ok) {
-    throw new Error(`Sentry returned ${response.status}: ${await response.text()}`);
-  }
 }
 
 /**
- * Parse stack trace into Sentry format
+ * Start a Sentry transaction for performance monitoring
+ *
+ * @param name - Transaction name
+ * @param op - Operation type
+ * @returns Transaction or null
  */
-function parseStackTrace(stack: string): Array<{
-  filename?: string;
-  function?: string;
-  lineno?: number;
-  colno?: number;
-}> {
-  const frames: Array<{
-    filename?: string;
-    function?: string;
-    lineno?: number;
-    colno?: number;
-  }> = [];
-
-  const lines = stack.split('\n');
-
-  for (const line of lines) {
-    // Parse Deno stack trace format: "    at functionName (file:line:col)"
-    const match = line.match(/at\s+(.+?)\s+\((.+?):(\d+):(\d+)\)/);
-
-    if (match) {
-      const [, functionName, filename, lineno, colno] = match;
-      frames.push({
-        filename,
-        function: functionName,
-        lineno: parseInt(lineno, 10),
-        colno: parseInt(colno, 10),
-      });
-    }
+export function startTransaction(
+  name: string,
+  op: string = 'function',
+): Sentry.Transaction | null {
+  if (!sentryInitialized) {
+    return null;
   }
 
-  return frames.reverse(); // Sentry expects oldest frame first
+  return Sentry.startTransaction({
+    name,
+    op,
+  });
 }
 
 /**
- * Create a Sentry-aware error handler for Edge Functions
+ * Wrap an Edge Function handler with Sentry error tracking
+ *
+ * @param functionName - Name of the function
+ * @param handler - Request handler function
+ * @returns Wrapped handler
  */
-export function createErrorHandler(functionName: string) {
-  return async (error: Error | unknown): Promise<Response> => {
-    console.error(`Error in ${functionName}:`, error);
+export function withSentry(
+  functionName: string,
+  handler: (req: Request) => Promise<Response>,
+): (req: Request) => Promise<Response> {
+  // Initialize Sentry
+  initSentry(functionName);
 
-    // Send to Sentry
-    await captureError(error, {
-      tags: { function: functionName },
-    });
+  return async (req: Request): Promise<Response> => {
+    const transaction = startTransaction(functionName, 'http.server');
 
-    // Return error response
-    return new Response(
-      JSON.stringify({
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error',
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
+    try {
+      // Set request context
+      if (sentryInitialized) {
+        Sentry.setContext('request', {
+          method: req.method,
+          url: req.url,
+          headers: {
+            'content-type': req.headers.get('content-type'),
+            'user-agent': req.headers.get('user-agent'),
+          },
+        });
       }
-    );
+
+      const response = await handler(req);
+
+      // Tag response status
+      if (sentryInitialized && transaction) {
+        transaction.setTag('http.status_code', response.status.toString());
+      }
+
+      return response;
+    } catch (error) {
+      // Capture error
+      captureError(error, {
+        tags: {
+          function: functionName,
+          method: req.method,
+        },
+        extra: {
+          url: req.url,
+        },
+        level: 'error',
+      });
+
+      // Return error response
+      return new Response(
+        JSON.stringify({
+          error: 'Internal server error',
+          message: error instanceof Error ? error.message : String(error),
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    } finally {
+      if (transaction) {
+        transaction.finish();
+      }
+    }
   };
 }

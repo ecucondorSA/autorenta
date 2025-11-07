@@ -215,19 +215,27 @@ export class LoggerService {
       return;
     }
 
-    const captureContext: Sentry.CaptureContext = {
-      level: level as Sentry.SeverityLevel,
-      extra: this.sanitizeData(data) as Record<string, unknown>,
-    };
+    try {
+      const captureContext: Sentry.CaptureContext = {
+        level: level as Sentry.SeverityLevel,
+        extra: { data: this.sanitizeData(data) },
+      };
 
-    if (level === 'error' || level === 'fatal') {
-      if (data instanceof Error) {
-        Sentry.captureException(data, captureContext);
+        if (level === 'error' || level === 'fatal') {
+          if (data instanceof Error) {
+            Sentry.captureException(data, captureContext);
+          } else {
+            Sentry.captureException(new Error(message), captureContext);
+          }
+        } else {
+          Sentry.captureMessage(message, captureContext);
+        }
       } else {
-        Sentry.captureException(new Error(message), captureContext);
+        Sentry.captureMessage(message, captureContext);
       }
-    } else {
-      Sentry.captureMessage(message, captureContext);
+    } catch (e) {
+      // Fallback if Sentry fails
+      console.error('Failed to send to Sentry:', e);
     }
   }
 }
