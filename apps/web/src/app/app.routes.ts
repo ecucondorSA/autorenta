@@ -115,6 +115,13 @@ export const routes: Routes = [
             (m) => m.NotificationsSettingsPage,
           ),
       },
+      {
+        path: 'driving-stats',
+        loadComponent: () =>
+          import('./features/profile/driving-stats/driving-stats.page').then(
+            (m) => m.DrivingStatsPage,
+          ),
+      },
     ],
   },
   {
