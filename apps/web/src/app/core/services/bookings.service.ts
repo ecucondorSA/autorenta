@@ -338,6 +338,9 @@ export class BookingsService {
     coverageUpgrade?: string;
     authorizedPaymentId?: string;
     walletLockId?: string;
+    distanceKm?: number;
+    distanceTier?: 'local' | 'regional' | 'long_distance';
+    deliveryFeeCents?: number;
     riskSnapshot: {
       dailyPriceUsd: number;
       securityDepositUsd: number;
@@ -384,6 +387,9 @@ export class BookingsService {
         p_risk_total_usd: params.riskSnapshot.totalUsd,
         p_risk_total_ars: params.riskSnapshot.totalArs,
         p_risk_exchange_rate: params.riskSnapshot.exchangeRate,
+        p_distance_km: params.distanceKm || null,
+        p_distance_risk_tier: params.distanceTier || null,
+        p_delivery_fee_cents: params.deliveryFeeCents || 0,
       });
 
       if (error) {
