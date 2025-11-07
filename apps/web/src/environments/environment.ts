@@ -47,5 +47,10 @@ export const environment = buildEnvironment({
     // Radio de búsqueda por defecto
     defaultSearchRadiusKm: 50,
     maxSearchRadiusKm: 100
-  }
+  },
+  // Sentry Configuration
+  // IMPORTANTE: Configurar NG_APP_SENTRY_DSN via Cloudflare Pages environment variables
+  sentryDsn: '', // Se configura via NG_APP_SENTRY_DSN
+  sentryEnvironment: 'production',
+  sentryTracesSampleRate: 0.1, // 10% of transactions for performance monitoring
 });
