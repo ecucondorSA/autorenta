@@ -1,239 +1,306 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+
+import { AdminService } from '@core/services/admin.service';
+import { RefundRequest, RefundStatus, Booking, RefundDestination } from '@core/models';
+import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 
-import type { Booking, AdminAuditLog } from '@core/models';
-import { AdminService } from '@core/services/admin.service';
-import { RBACService } from '@core/services/rbac.service';
-import { RefundService } from '@core/services/refund.service';
-import { MoneyPipe } from '@shared/pipes/money.pipe';
-import { LoggerService } from '@core/services/logger.service';
-
-interface RefundRequest {
+interface RefundFormData {
   bookingId: string;
-  type: 'full' | 'partial';
-  amount?: number;
-  destination: 'wallet' | 'original';
+  amount: number;
+  destination: RefundDestination;
   reason: string;
 }
 
 @Component({
   selector: 'autorenta-admin-refunds-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslateModule, MoneyPipe],
+  imports: [CommonModule, FormsModule, MoneyPipe, TranslateModule],
   templateUrl: './admin-refunds.page.html',
   styleUrl: './admin-refunds.page.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminRefundsPage implements OnInit {
   private readonly adminService = inject(AdminService);
-  private readonly refundService = inject(RefundService);
-  private readonly rbac = inject(RBACService);
-  private readonly logger = inject(LoggerService);
 
   // State signals
-  private readonly bookingsSignal = signal<Booking[]>([]);
-  private readonly selectedBookingSignal = signal<Booking | null>(null);
-  private readonly refundHistorySignal = signal<AdminAuditLog[]>([]);
-  private readonly loadingSignal = signal(false);
-  private readonly processingRefundSignal = signal(false);
-  private readonly searchQuerySignal = signal('');
-  private readonly filterStatusSignal = signal<string>('all');
+  private readonly refundRequestsSignal = signal<RefundRequest[]>([]);
+  private readonly loadingSignal = signal<boolean>(true);
+  private readonly filterStatusSignal = signal<RefundStatus | ''>('');
+  private readonly selectedRefundSignal = signal<RefundRequest | null>(null);
+  private readonly searchQuerySignal = signal<string>('');
+  private readonly searchResultsSignal = signal<
+    Array<Booking & { can_refund: boolean; refund_eligible_amount: number }>
+  >([]);
+  private readonly searchingSignal = signal<boolean>(false);
+  private readonly processingSignal = signal<boolean>(false);
 
-  // Refund form
-  readonly refundForm = signal<RefundRequest>({
+  // Form state
+  private readonly showNewRefundModalSignal = signal<boolean>(false);
+  private readonly refundFormSignal = signal<RefundFormData>({
     bookingId: '',
-    type: 'full',
+    amount: 0,
     destination: 'wallet',
     reason: '',
   });
 
-  // Computed properties
-  readonly bookings = computed(() => this.bookingsSignal());
-  readonly selectedBooking = computed(() => this.selectedBookingSignal());
-  readonly refundHistory = computed(() => this.refundHistorySignal());
+  // Computed values
+  readonly refundRequests = computed(() => this.refundRequestsSignal());
   readonly loading = computed(() => this.loadingSignal());
-  readonly processingRefund = computed(() => this.processingRefundSignal());
-  readonly searchQuery = computed(() => this.searchQuerySignal());
   readonly filterStatus = computed(() => this.filterStatusSignal());
+  readonly selectedRefund = computed(() => this.selectedRefundSignal());
+  readonly searchQuery = computed(() => this.searchQuerySignal());
+  readonly searchResults = computed(() => this.searchResultsSignal());
+  readonly searching = computed(() => this.searchingSignal());
+  readonly processing = computed(() => this.processingSignal());
+  readonly showNewRefundModal = computed(() => this.showNewRefundModalSignal());
+  readonly refundForm = computed(() => this.refundFormSignal());
 
-  // Filtered bookings
-  readonly filteredBookings = computed(() => {
-    let bookings = this.bookingsSignal();
-    const query = this.searchQuerySignal().toLowerCase();
-    const status = this.filterStatusSignal();
+  readonly pendingCount = computed(
+    () => this.refundRequestsSignal().filter((r) => r.status === 'pending').length,
+  );
 
-    if (query) {
-      bookings = bookings.filter(
-        (b) =>
-          b.id.toLowerCase().includes(query) ||
-          b.renter_name?.toLowerCase().includes(query) ||
-          b.car_title?.toLowerCase().includes(query),
-      );
-    }
+  readonly totalPendingAmount = computed(() =>
+    this.refundRequestsSignal()
+      .filter((r) => r.status === 'pending')
+      .reduce((sum, r) => sum + r.refund_amount, 0),
+  );
 
-    if (status && status !== 'all') {
-      bookings = bookings.filter((b) => b.status === status);
-    }
-
-    return bookings;
+  readonly completedToday = computed(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return this.refundRequestsSignal().filter(
+      (r) => r.status === 'completed' && r.completed_at?.startsWith(today),
+    ).length;
   });
 
-  readonly hasFinanceRole = computed(() => this.rbac.isFinance() || this.rbac.isSuperAdmin());
-
   async ngOnInit(): Promise<void> {
-    await this.loadBookings();
-    await this.loadRefundHistory();
+    await this.loadRefundRequests();
   }
 
-  async loadBookings(): Promise<void> {
+  async loadRefundRequests(): Promise<void> {
     this.loadingSignal.set(true);
     try {
-      const bookings = await this.adminService.listRecentBookings(100);
-      this.bookingsSignal.set(bookings);
-    } catch (error) {
-      this.logger.error('Error loading bookings', 'AdminRefundsPage', error as Error);
+      const status = this.filterStatusSignal();
+      const refunds = await this.adminService.listRefundRequests(status || undefined);
+      this.refundRequestsSignal.set(refunds);
+    } catch (__error) {
+      this.refundRequestsSignal.set([]);
     } finally {
       this.loadingSignal.set(false);
     }
   }
 
-  async loadRefundHistory(): Promise<void> {
-    try {
-      const { data } = await this.rbac.getAuditLogs({
-        action: 'payment_refund_full',
-        limit: 50,
-      });
-      this.refundHistorySignal.set(data);
-    } catch (error) {
-      this.logger.error('Error loading refund history', 'AdminRefundsPage', error as Error);
-    }
+  async filterByStatus(status: RefundStatus | ''): Promise<void> {
+    this.filterStatusSignal.set(status);
+    await this.loadRefundRequests();
   }
 
-  selectBooking(booking: Booking): void {
-    this.selectedBookingSignal.set(booking);
-    this.refundForm.set({
-      bookingId: booking.id,
-      type: 'full',
+  selectRefund(refund: RefundRequest): void {
+    this.selectedRefundSignal.set(refund);
+  }
+
+  closeDetailModal(): void {
+    this.selectedRefundSignal.set(null);
+  }
+
+  // ============================================
+  // NEW REFUND WORKFLOW
+  // ============================================
+
+  openNewRefundModal(): void {
+    this.showNewRefundModalSignal.set(true);
+    this.searchQuerySignal.set('');
+    this.searchResultsSignal.set([]);
+    this.refundFormSignal.set({
+      bookingId: '',
+      amount: 0,
       destination: 'wallet',
       reason: '',
     });
   }
 
-  updateRefundType(type: 'full' | 'partial'): void {
-    this.refundForm.update((form) => ({...form, type }));
-  }
-
-  updateRefundAmount(amount: number): void {
-    this.refundForm.update((form) => ({...form, amount }));
-  }
-
-  updateDestination(destination: 'wallet' | 'original'): void {
-    this.refundForm.update((form) => ({...form, destination }));
-  }
-
-  updateReason(reason: string): void {
-    this.refundForm.update((form) => ({...form, reason }));
+  closeNewRefundModal(): void {
+    this.showNewRefundModalSignal.set(false);
   }
 
   updateSearchQuery(query: string): void {
     this.searchQuerySignal.set(query);
   }
 
-  updateFilterStatus(status: string): void {
-    this.filterStatusSignal.set(status);
+  async searchBookings(): Promise<void> {
+    const query = this.searchQuerySignal();
+    if (!query || query.length < 3) {
+      alert('Ingrese al menos 3 caracteres para buscar');
+      return;
+    }
+
+    this.searchingSignal.set(true);
+    try {
+      const results = await this.adminService.searchBookingsForRefund(query);
+      this.searchResultsSignal.set(results);
+    } catch (error) {
+      alert('Error buscando bookings: ' + (error as Error).message);
+      this.searchResultsSignal.set([]);
+    } finally {
+      this.searchingSignal.set(false);
+    }
   }
 
-  async processRefund(): Promise<void> {
-    const form = this.refundForm();
-    const booking = this.selectedBookingSignal();
+  selectBookingForRefund(booking: Booking & { refund_eligible_amount: number }): void {
+    this.refundFormSignal.set({
+      bookingId: booking.id,
+      amount: booking.refund_eligible_amount,
+      destination: 'wallet',
+      reason: '',
+    });
+  }
 
-    if (!booking || !form.reason.trim()) {
-      this.logger.warn('Refund form invalid', 'AdminRefundsPage');
+  updateRefundAmount(amount: number): void {
+    const current = this.refundFormSignal();
+    this.refundFormSignal.set({ ...current, amount });
+  }
+
+  updateRefundDestination(destination: RefundDestination): void {
+    const current = this.refundFormSignal();
+    this.refundFormSignal.set({ ...current, destination });
+  }
+
+  updateRefundReason(reason: string): void {
+    const current = this.refundFormSignal();
+    this.refundFormSignal.set({ ...current, reason });
+  }
+
+  async submitRefund(): Promise<void> {
+    const form = this.refundFormSignal();
+
+    if (!form.bookingId) {
+      alert('Debe seleccionar un booking');
       return;
     }
 
-    if (form.type === 'partial' && (!form.amount || form.amount <= 0)) {
-      this.logger.warn('Partial refund amount required', 'AdminRefundsPage');
+    if (form.amount <= 0) {
+      alert('El monto debe ser mayor a 0');
       return;
     }
 
-    this.processingRefundSignal.set(true);
+    if (!form.reason || form.reason.trim().length === 0) {
+      alert('Debe ingresar un motivo para el reembolso');
+      return;
+    }
+
+    // Confirmation dialog
+    const confirmMessage = `¿Confirmar reembolso de $${form.amount} a ${
+      form.destination === 'wallet' ? 'wallet (instantáneo)' : 'método de pago original (2-5 días)'
+    }?\n\nMotivo: ${form.reason}`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    this.processingSignal.set(true);
     try {
-      // Process refund
-      const result = await this.refundService.processRefund({
+      const result = await this.adminService.processRefund({
         booking_id: form.bookingId,
-        refund_type: form.type,
-        amount: form.type === 'partial' ? form.amount : undefined,
+        refund_amount: form.amount,
+        destination: form.destination,
         reason: form.reason,
       });
 
-      if (result.success) {
-        // Log action
-        await this.rbac.logAction(
-          form.type === 'full' ? 'payment_refund_full' : 'payment_refund_partial',
-          'booking',
-          form.bookingId,
-          {
-            before: { status: booking.status, total_amount: booking.total_amount },
-            after: { refund_amount: result.refund.amount },
-          },
-          {
-            reason: form.reason,
-            destination: form.destination,
-            refund_id: result.refund.id,
-          },
-        );
-
-        this.logger.info(
-          `Refund processed successfully: ${result.refund.id}`,
-          'AdminRefundsPage',
-        );
-
-        // Refresh data
-        await this.loadBookings();
-        await this.loadRefundHistory();
-
-        // Reset form
-        this.selectedBookingSignal.set(null);
-        this.refundForm.set({
-          bookingId: '',
-          type: 'full',
-          destination: 'wallet',
-          reason: '',
-        });
-      }
+      alert(result.message);
+      this.closeNewRefundModal();
+      await this.loadRefundRequests();
     } catch (error) {
-      this.logger.error('Error processing refund', 'AdminRefundsPage', error as Error);
+      alert('Error procesando reembolso: ' + (error as Error).message);
     } finally {
-      this.processingRefundSignal.set(false);
+      this.processingSignal.set(false);
     }
   }
 
-  getRefundableAmount(booking: Booking): number {
-    // Calculate refundable amount based on booking status and cancellation policy
-    if (!booking.total_cents) return 0;
+  // ============================================
+  // UTILITIES
+  // ============================================
 
-    // If already refunded, return 0
-    if (booking.metadata?.refund) return 0;
-
-    // For now, return full amount (should implement cancellation policy logic)
-    return booking.total_cents / 100;
-  }
-
-  formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleString();
-  }
-
-  getStatusBadgeClass(status: string): string {
-    const statusClasses: Record<string, string> = {
+  getStatusBadgeClass(status: RefundStatus): string {
+    const classes: Record<RefundStatus, string> = {
       pending: 'bg-yellow-100 text-yellow-800',
-      confirmed: 'bg-green-100 text-green-800',
-      in_progress: 'bg-blue-100 text-blue-800',
-      completed: 'bg-gray-100 text-gray-800',
-      cancelled: 'bg-red-100 text-red-800',
+      approved: 'bg-blue-100 text-blue-800',
+      processing: 'bg-indigo-100 text-indigo-800',
+      completed: 'bg-green-100 text-green-800',
+      failed: 'bg-red-100 text-red-800',
+      rejected: 'bg-gray-100 text-gray-800',
     };
-    return statusClasses[status] || 'bg-gray-100 text-gray-800';
+    return classes[status] || 'bg-gray-100 text-gray-800';
+  }
+
+  getStatusText(status: RefundStatus): string {
+    const texts: Record<RefundStatus, string> = {
+      pending: 'Pendiente',
+      approved: 'Aprobado',
+      processing: 'Procesando',
+      completed: 'Completado',
+      failed: 'Fallido',
+      rejected: 'Rechazado',
+    };
+    return texts[status] || status;
+  }
+
+  getDestinationText(destination: string): string {
+    return destination === 'wallet' ? 'Wallet (Instantáneo)' : 'Método de Pago Original';
+  }
+
+  formatDate(date: string | null | undefined): string {
+    if (!date) return 'N/A';
+    return new Date(date).toLocaleDateString('es-AR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  exportToCSV(): void {
+    const rows = this.refundRequestsSignal().map((r) => ({
+      fecha: this.formatDate(r.created_at),
+      booking_id: r.booking_id,
+      usuario: r.user_name || 'N/A',
+      email: r.user_email || 'N/A',
+      monto: r.refund_amount,
+      destino: r.destination,
+      estado: r.status,
+      procesado: this.formatDate(r.processed_at),
+      completado: this.formatDate(r.completed_at),
+    }));
+
+    const headers = Object.keys(rows[0] || {}).join(',');
+    const csvContent = [
+      headers,
+      ...rows.map((row) =>
+        Object.values(row)
+          .map((v) => (typeof v === 'string' && v.includes(',') ? `"${v}"` : v))
+          .join(','),
+      ),
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', `reembolsos-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

@@ -10,6 +10,12 @@ export const environment = buildEnvironment({
   googleAnalyticsMeasurementId: '', // Configurar via NG_APP_GA4_MEASUREMENT_ID
   enableAnalytics: true,
   docVerifierUrl: 'https://doc-verifier.autorentar.workers.dev',
+  // Sentry Configuration
+  // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
+  // NG_APP_SENTRY_DSN - Sentry Project DSN
+  sentryDsn: '', // Se configura via NG_APP_SENTRY_DSN
+  sentryEnvironment: 'production',
+  sentryTracesSampleRate: 0.1, // 10% sampling for performance monitoring
   // PayPal Production Credentials
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
   // NG_APP_PAYPAL_CLIENT_ID - Client ID de PayPal Production

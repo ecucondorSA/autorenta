@@ -83,6 +83,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'refunds',
+        loadComponent: () =>
+          import('./features/admin/refunds/admin-refunds.page').then(
+            (m) => m.AdminRefundsPage,
+          ),
+      },
+      {
         path: 'coverage-fund',
         loadComponent: () =>
           import('./features/admin/components/coverage-fund-dashboard.component').then(
@@ -126,9 +133,11 @@ export const routes: Routes = [
           import('./features/admin/reviews/admin-reviews.page').then((m) => m.AdminReviewsPage),
       },
       {
-        path: 'refunds',
+        path: 'verifications',
         loadComponent: () =>
-          import('./features/admin/refunds/admin-refunds.page').then((m) => m.AdminRefundsPage),
+          import('./features/admin/verifications/admin-verifications.page').then(
+            (m) => m.AdminVerificationsPage,
+          ),
       },
     ],
   },
