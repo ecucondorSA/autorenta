@@ -1,8 +1,9 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { DriverProfileService } from '../../../core/services/driver-profile.service';
-import { TelemetryService, TelemetryHistory } from '../../../core/services/telemetry.service';
+import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
 import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benefits-modal.component';
 
 /**
@@ -13,14 +14,16 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
  * MUESTRA:
  * - Clase actual (0-10) con badge visual
  * - Score telemático (0-100)
+ * - Estado de Bonus Protector activo (NUEVO)
  * - Beneficios (descuentos) o recargos
  * - Historial de siniestros
  * - Progreso hacia mejor clase
  *
  * DISEÑO:
  * - Badge de clase con color según riesgo
+ * - Badge de protector activo con nivel y expiración (NUEVO)
  * - Barra de progreso para score telemático
- * - Iconos visuales (🏆, ⭐, ⚠️, 🔴)
+ * - Iconos visuales (🏆, ⭐, ⚠️, 🔴, 🛡️)
  * - Información detallada expandible
  */
 
@@ -61,6 +64,71 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
               </ion-badge>
             </div>
             <p class="class-description">{{ classDescription() }}</p>
+          </div>
+
+          <!-- Bonus Protector Status (NEW) -->
+          <div class="protector-section" *ngIf="!bonusProtectorService.loading()">
+            <!-- Active Protector -->
+            <ion-card class="protector-card" *ngIf="hasActiveProtector() && !isProtectorExpired()">
+              <ion-card-content>
+                <div class="protector-active">
+                  <div class="protector-header">
+                    <ion-badge [color]="protectorBadgeColor()" class="protector-badge">
+                      <ion-icon [name]="protectorIcon()"></ion-icon>
+                      <span>{{ protectorBadgeText() }}</span>
+                    </ion-badge>
+                  </div>
+                  <div class="protector-info">
+                    <div class="protector-detail">
+                      <ion-icon name="shield-checkmark-outline" color="success"></ion-icon>
+                      <span>{{ remainingClaims() }} uso{{ remainingClaims() === 1 ? '' : 's' }} restante{{ remainingClaims() === 1 ? '' : 's' }}</span>
+                    </div>
+                    <div class="protector-detail">
+                      <ion-icon name="calendar-outline" [color]="isNearExpiry() ? 'warning' : 'medium'"></ion-icon>
+                      <span>{{ expiryMessage() }}</span>
+                    </div>
+                  </div>
+                  <ion-button
+                    fill="clear"
+                    size="small"
+                    (click)="onManageProtector()"
+                    class="manage-button"
+                  >
+                    <ion-icon slot="start" name="settings-outline"></ion-icon>
+                    Gestionar
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <!-- Expired or No Protector -->
+            <ion-card class="protector-card warning" *ngIf="!hasActiveProtector() || isProtectorExpired()">
+              <ion-card-content>
+                <div class="protector-warning">
+                  <ion-icon name="shield-outline" color="medium"></ion-icon>
+                  <div class="warning-content">
+                    <p class="warning-title">
+                      {{ isProtectorExpired() ? 'Tu protección expiró' : 'Sin protección activa' }}
+                    </p>
+                    <p class="warning-message">
+                      {{ isProtectorExpired()
+                        ? 'Renueva tu Bonus Protector para seguir protegido'
+                        : 'Protege tu clase de conductor de siniestros inesperados'
+                      }}
+                    </p>
+                  </div>
+                </div>
+                <ion-button
+                  expand="block"
+                  size="small"
+                  color="primary"
+                  (click)="onPurchaseProtector()"
+                >
+                  <ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>
+                  {{ isProtectorExpired() ? 'Renovar Protección' : 'Comprar Protección' }}
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
           </div>
 
           <!-- Score Section -->
@@ -141,136 +209,6 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
               <ion-icon name="time-outline"></ion-icon>
               Último siniestro: {{ formatDate(profile()!.last_claim_at) }}
             </p>
-          </div>
-
-          <!-- Telemetry Data Section -->
-          <div class="telemetry-section" *ngIf="telemetryHistory().length > 0">
-            <h3>
-              <ion-icon name="speedometer-outline"></ion-icon>
-              Datos Telemáticos Recientes
-            </h3>
-
-            <div class="telemetry-item" *ngFor="let trip of telemetryHistory().slice(0, 3)">
-              <div class="telemetry-header">
-                <span class="trip-date">{{ formatDate(trip.trip_date) }}</span>
-                <ion-badge [color]="getScoreBadgeColor(trip.driver_score)">
-                  Score: {{ trip.driver_score }}
-                </ion-badge>
-              </div>
-
-              <div class="telemetry-details">
-                <div class="telemetry-stat">
-                  <ion-icon name="car-outline" size="small"></ion-icon>
-                  <span>{{ trip.total_km }} km</span>
-                </div>
-                <div class="telemetry-stat warning" *ngIf="trip.hard_brakes > 0">
-                  <ion-icon name="warning-outline" size="small" color="warning"></ion-icon>
-                  <span>{{ trip.hard_brakes }} frenadas bruscas</span>
-                </div>
-                <div class="telemetry-stat danger" *ngIf="trip.speed_violations > 0">
-                  <ion-icon name="alert-circle-outline" size="small" color="danger"></ion-icon>
-                  <span>{{ trip.speed_violations }} excesos velocidad</span>
-                </div>
-                <div class="telemetry-stat" *ngIf="trip.night_driving_hours > 0">
-                  <ion-icon name="moon-outline" size="small"></ion-icon>
-                  <span>{{ trip.night_driving_hours }}h conducción nocturna</span>
-                </div>
-              </div>
-
-              <p class="trip-car">{{ trip.car_brand }} {{ trip.car_model }}</p>
-            </div>
-
-            <p class="telemetry-footer" *ngIf="telemetryHistory().length === 0">
-              No hay datos telemáticos registrados aún.
-            </p>
-          </div>
-
-          <!-- Scoring Methodology Section -->
-          <div class="methodology-section">
-            <h3>
-              <ion-icon name="calculator-outline"></ion-icon>
-              Metodología de Puntuación
-            </h3>
-
-            <ion-accordion-group>
-              <!-- Class Progression -->
-              <ion-accordion value="class-progression">
-                <ion-item slot="header">
-                  <ion-label>
-                    <h4>Progresión de Clase</h4>
-                  </ion-label>
-                </ion-item>
-                <div slot="content" class="accordion-content">
-                  <p><strong>Mejora de clase:</strong></p>
-                  <ul>
-                    <li>1 año sin siniestros con responsabilidad = -1 clase</li>
-                    <li>La clase 0 es la mejor (máximos descuentos)</li>
-                    <li>La clase 5 es la base (sin ajustes)</li>
-                  </ul>
-
-                  <p><strong>Aumento de clase por siniestro:</strong></p>
-                  <ul>
-                    <li>Siniestro leve: +1 clase</li>
-                    <li>Siniestro moderado: +2 clases</li>
-                    <li>Siniestro grave: +3 clases</li>
-                    <li>Máximo: Clase 10 (mayores recargos)</li>
-                  </ul>
-                </div>
-              </ion-accordion>
-
-              <!-- Telemetry Score -->
-              <ion-accordion value="telemetry-score">
-                <ion-item slot="header">
-                  <ion-label>
-                    <h4>Score Telemático (0-100)</h4>
-                  </ion-label>
-                </ion-item>
-                <div slot="content" class="accordion-content">
-                  <p><strong>Factores evaluados:</strong></p>
-                  <ul>
-                    <li><strong>Frenadas bruscas:</strong> -5 puntos por evento</li>
-                    <li><strong>Excesos de velocidad:</strong> -10 puntos por evento</li>
-                    <li><strong>Conducción nocturna:</strong> -2 puntos por hora</li>
-                    <li><strong>Zonas de riesgo:</strong> -3 puntos por visita</li>
-                  </ul>
-
-                  <p><strong>Rangos de evaluación:</strong></p>
-                  <ul>
-                    <li>90-100: Excelente conductor 🏆</li>
-                    <li>80-89: Muy bueno 👏</li>
-                    <li>70-79: Bueno 👍</li>
-                    <li>60-69: Aceptable 📈</li>
-                    <li>40-59: Necesita mejorar ⚠️</li>
-                    <li>0-39: Riesgo alto 🚨</li>
-                  </ul>
-                </div>
-              </ion-accordion>
-
-              <!-- Benefits Calculation -->
-              <ion-accordion value="benefits">
-                <ion-item slot="header">
-                  <ion-label>
-                    <h4>Cálculo de Beneficios</h4>
-                  </ion-label>
-                </ion-item>
-                <div slot="content" class="accordion-content">
-                  <p><strong>Multiplicadores por clase:</strong></p>
-                  <ul>
-                    <li><strong>Clase 0:</strong> -15% fee, -25% garantía</li>
-                    <li><strong>Clase 1:</strong> -12% fee, -20% garantía</li>
-                    <li><strong>Clase 2:</strong> -9% fee, -15% garantía</li>
-                    <li><strong>Clase 3:</strong> -6% fee, -10% garantía</li>
-                    <li><strong>Clase 4:</strong> -3% fee, -5% garantía</li>
-                    <li><strong>Clase 5:</strong> Base (sin ajustes)</li>
-                    <li><strong>Clase 6:</strong> +3% fee, +10% garantía</li>
-                    <li><strong>Clase 7:</strong> +6% fee, +20% garantía</li>
-                    <li><strong>Clase 8:</strong> +10% fee, +40% garantía</li>
-                    <li><strong>Clase 9:</strong> +15% fee, +60% garantía</li>
-                    <li><strong>Clase 10:</strong> +20% fee, +80% garantía</li>
-                  </ul>
-                </div>
-              </ion-accordion>
-            </ion-accordion-group>
           </div>
 
           <!-- Progress to Next Class -->
@@ -382,6 +320,103 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
         color: var(--ion-color-medium);
         font-size: 0.95rem;
         margin: 0;
+      }
+
+      /* Protector Section (NEW) */
+      .protector-section {
+        margin-bottom: 24px;
+      }
+
+      .protector-card {
+        margin: 0 0 16px 0;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .protector-card.warning {
+        background: var(--ion-color-light);
+      }
+
+      .protector-card ion-card-content {
+        padding: 16px;
+      }
+
+      .protector-active {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .protector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .protector-badge {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .protector-badge ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .protector-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .protector-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--ion-color-dark);
+      }
+
+      .protector-detail ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .manage-button {
+        align-self: flex-start;
+        margin: 0;
+        --padding-start: 0;
+      }
+
+      .protector-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .protector-warning > ion-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+
+      .warning-content {
+        flex: 1;
+      }
+
+      .warning-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin: 0 0 4px 0;
+      }
+
+      .warning-message {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        line-height: 1.4;
       }
 
       /* Score Section */
@@ -561,152 +596,17 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
       ion-button {
         margin-top: 16px;
       }
-
-      /* Telemetry Section */
-      .telemetry-section {
-        margin-bottom: 24px;
-      }
-
-      .telemetry-section h3 {
-        font-size: 1rem;
-        font-weight: 600;
-        margin-bottom: 12px;
-        color: var(--ion-color-dark);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .telemetry-item {
-        background: var(--ion-color-light);
-        border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 12px;
-      }
-
-      .telemetry-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-      }
-
-      .trip-date {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--ion-color-dark);
-      }
-
-      .telemetry-details {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 8px;
-      }
-
-      .telemetry-stat {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 0.85rem;
-        color: var(--ion-color-medium);
-        padding: 4px 8px;
-        background: white;
-        border-radius: 4px;
-      }
-
-      .telemetry-stat.warning {
-        color: var(--ion-color-warning);
-      }
-
-      .telemetry-stat.danger {
-        color: var(--ion-color-danger);
-      }
-
-      .trip-car {
-        font-size: 0.85rem;
-        color: var(--ion-color-medium);
-        margin: 0;
-        font-style: italic;
-      }
-
-      .telemetry-footer {
-        text-align: center;
-        color: var(--ion-color-medium);
-        font-size: 0.9rem;
-        padding: 16px;
-      }
-
-      /* Methodology Section */
-      .methodology-section {
-        margin-bottom: 24px;
-      }
-
-      .methodology-section h3 {
-        font-size: 1rem;
-        font-weight: 600;
-        margin-bottom: 12px;
-        color: var(--ion-color-dark);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .accordion-content {
-        padding: 16px;
-        font-size: 0.9rem;
-      }
-
-      .accordion-content p {
-        margin-top: 0;
-        margin-bottom: 8px;
-        color: var(--ion-color-dark);
-      }
-
-      .accordion-content ul {
-        margin: 0 0 12px 0;
-        padding-left: 20px;
-      }
-
-      .accordion-content li {
-        margin-bottom: 6px;
-        line-height: 1.5;
-        color: var(--ion-color-medium-shade);
-      }
-
-      .accordion-content li:last-child {
-        margin-bottom: 0;
-      }
-
-      ion-accordion-group {
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      ion-accordion ion-item {
-        --background: var(--ion-color-light);
-        --padding-start: 12px;
-        --padding-end: 12px;
-      }
-
-      ion-accordion ion-item h4 {
-        font-size: 0.95rem;
-        font-weight: 600;
-        margin: 0;
-      }
     `,
   ],
 })
 export class DriverProfileCardComponent implements OnInit {
   readonly driverProfileService = inject(DriverProfileService);
-  readonly telemetryService = inject(TelemetryService);
+  readonly bonusProtectorService = inject(BonusProtectorService);
   private readonly modalController = inject(ModalController);
+  private readonly router = inject(Router);
 
   // Expose Math for template
   readonly Math = Math;
-
-  // Telemetry history signal
-  readonly telemetryHistory = signal<TelemetryHistory[]>([]);
 
   // Computed signals from service
   readonly profile = computed(() => this.driverProfileService.profile());
@@ -736,22 +636,65 @@ export class DriverProfileCardComponent implements OnInit {
     return this.driverProfileService.getScoreMessage();
   });
 
+  // Bonus Protector signals (NEW)
+  readonly hasActiveProtector = computed(() => this.bonusProtectorService.hasActiveProtector());
+  readonly isProtectorExpired = computed(() => this.bonusProtectorService.isExpired());
+  readonly isNearExpiry = computed(() => this.bonusProtectorService.isNearExpiry());
+  readonly protectionLevel = computed(() => this.bonusProtectorService.protectionLevel());
+  readonly activeProtector = computed(() => this.bonusProtectorService.activeProtector());
+
+  readonly remainingClaims = computed(() => {
+    const protector = this.activeProtector();
+    return protector?.remaining_protected_claims ?? 0;
+  });
+
+  readonly protectorBadgeColor = computed(() => {
+    if (this.isProtectorExpired()) return 'danger';
+    if (this.isNearExpiry()) return 'warning';
+    return 'success';
+  });
+
+  readonly protectorIcon = computed(() => {
+    const level = this.protectionLevel();
+    if (level === 1) return 'shield-outline';
+    if (level === 2) return 'shield-half-outline';
+    if (level === 3) return 'shield-checkmark-outline';
+    return 'shield-outline';
+  });
+
+  readonly protectorBadgeText = computed(() => {
+    const level = this.protectionLevel();
+    const icon = level === 1 ? '🛡️' : level === 2 ? '🛡️🛡️' : '🛡️🛡️🛡️';
+    return `${icon} Protegido Nivel ${level}`;
+  });
+
+  readonly expiryMessage = computed(() => {
+    const protector = this.activeProtector();
+    if (!protector) return '';
+
+    const days = protector.days_until_expiry ?? 0;
+    if (days < 0) return 'Expirado';
+    if (days === 0) return 'Expira hoy';
+    if (days === 1) return 'Expira mañana';
+    if (days <= 7) return `Expira en ${days} días`;
+    if (days <= 30) return `Expira en ${Math.ceil(days / 7)} semanas`;
+    return `Expira en ${Math.ceil(days / 30)} meses`;
+  });
+
   async ngOnInit(): Promise<void> {
     await this.loadProfile();
-    await this.loadTelemetryHistory();
+    await this.loadActiveProtector();
   }
 
   async loadProfile(): Promise<void> {
     await this.driverProfileService.loadProfile();
   }
 
-  async loadTelemetryHistory(): Promise<void> {
+  async loadActiveProtector(): Promise<void> {
     try {
-      const history = await this.telemetryService.getHistory(5);
-      this.telemetryHistory.set(history);
+      await this.bonusProtectorService.loadActiveProtector();
     } catch (error) {
-      console.error('[DriverProfileCard] Error loading telemetry history:', error);
-      this.telemetryHistory.set([]);
+      console.error('[DriverProfileCard] Error al cargar protector activo:', error);
     }
   }
 
@@ -761,6 +704,14 @@ export class DriverProfileCardComponent implements OnInit {
     } catch (_error) {
       console.error('[DriverProfileCard] Error al inicializar perfil:', _error);
     }
+  }
+
+  onManageProtector(): void {
+    this.router.navigate(['/protections']);
+  }
+
+  onPurchaseProtector(): void {
+    this.router.navigate(['/protections']);
   }
 
   async onViewDetails(): Promise<void> {
@@ -785,13 +736,5 @@ export class DriverProfileCardComponent implements OnInit {
       month: 'long',
       year: 'numeric',
     });
-  }
-
-  getScoreBadgeColor(score: number): string {
-    if (score >= 90) return 'success';
-    if (score >= 80) return 'primary';
-    if (score >= 70) return 'secondary';
-    if (score >= 60) return 'warning';
-    return 'danger';
   }
 }

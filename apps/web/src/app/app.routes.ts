@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { MercadoPagoGuard } from './core/guards/mercadopago.guard';
+import { VerificationGuard } from './core/guards/verification.guard';
 
 export const routes: Routes = [
   {
@@ -32,7 +33,7 @@ export const routes: Routes = [
       },
       {
         path: 'publish',
-        canMatch: [AuthGuard],
+        canMatch: [AuthGuard, VerificationGuard],
         loadComponent: () =>
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },
@@ -119,6 +120,11 @@ export const routes: Routes = [
             (m) => m.AdminClaimDetailPage,
           ),
       },
+      {
+        path: 'reviews',
+        loadComponent: () =>
+          import('./features/admin/reviews/admin-reviews.page').then((m) => m.AdminReviewsPage),
+      },
     ],
   },
   {
@@ -154,6 +160,11 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
     loadComponent: () =>
       import('./features/protections/protections.page').then((m) => m.ProtectionsPage),
+  },
+  {
+    path: 'verification',
+    loadChildren: () =>
+      import('./features/verification/verification.routes').then((m) => m.VERIFICATION_ROUTES),
   },
   {
     path: 'users/:id',
