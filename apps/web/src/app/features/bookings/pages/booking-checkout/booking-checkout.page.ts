@@ -6,12 +6,13 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
 import { PayPalButtonComponent } from '../../../../shared/components/paypal-button/paypal-button.component';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
 import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway.factory';
 import { BookingsService } from '../../../../core/services/bookings.service';
+import { DriverProfileService } from '../../../../core/services/driver-profile.service';
 
 /**
  * Booking Checkout Page
@@ -34,6 +35,7 @@ import { BookingsService } from '../../../../core/services/bookings.service';
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     PaymentProviderSelectorComponent,
     PayPalButtonComponent,
   ],
@@ -45,6 +47,10 @@ export class BookingCheckoutPage implements OnInit {
   private readonly router = inject(Router);
   private readonly gatewayFactory = inject(PaymentGatewayFactory);
   private readonly bookingsService = inject(BookingsService);
+  readonly driverProfileService = inject(DriverProfileService);
+
+  // Expose Math for template
+  readonly Math = Math;
 
   // ==================== SIGNALS ====================
 
@@ -98,6 +104,11 @@ export class BookingCheckoutPage implements OnInit {
    */
   mercadoPagoInitPoint = signal<string>('');
 
+  /**
+   * Mostrar/ocultar oferta de Bonus Protector
+   */
+  showProtectorOffer = signal<boolean>(false);
+
   // ==================== COMPUTED SIGNALS ====================
 
   /**
@@ -126,6 +137,38 @@ export class BookingCheckoutPage implements OnInit {
     return this.selectedProvider() === 'paypal';
   });
 
+  // ==================== DRIVER PROFILE COMPUTED ====================
+
+  /**
+   * Clase de conductor del usuario
+   */
+  readonly driverClass = computed(() => this.driverProfileService.driverClass());
+
+  /**
+   * Descuento/recargo de tarifa (%)
+   */
+  readonly feeDiscountPct = computed(() => this.driverProfileService.feeDiscountPct());
+
+  /**
+   * Descuento/recargo de garantía (%)
+   */
+  readonly guaranteeDiscountPct = computed(() => this.driverProfileService.guaranteeDiscountPct());
+
+  /**
+   * ¿Tiene descuentos por buena clase?
+   */
+  readonly hasDiscount = computed(() => this.driverProfileService.hasDiscount());
+
+  /**
+   * ¿Tiene recargos por mala clase?
+   */
+  readonly hasSurcharge = computed(() => this.driverProfileService.hasSurcharge());
+
+  /**
+   * Badge de clase (color e icono)
+   */
+  readonly classBadge = computed(() => this.driverProfileService.getClassBadge());
+
   // ==================== LIFECYCLE ====================
 
   async ngOnInit(): Promise<void> {
@@ -140,7 +183,11 @@ export class BookingCheckoutPage implements OnInit {
     this.bookingId.set(id);
 
     try {
-      await this.loadBooking();
+      // Cargar booking y perfil de conductor en paralelo
+      await Promise.all([
+        this.loadBooking(),
+        this.driverProfileService.loadProfile(),
+      ]);
     } catch (err) {
       this.error.set(
         err instanceof Error ? err.message : 'Error cargando el booking'
@@ -276,5 +323,12 @@ export class BookingCheckoutPage implements OnInit {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  }
+
+  /**
+   * Toggle de la oferta de Bonus Protector
+   */
+  toggleProtectorOffer(): void {
+    this.showProtectorOffer.update((value) => !value);
   }
 }

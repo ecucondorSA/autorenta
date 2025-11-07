@@ -145,6 +145,18 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'driver-profile',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/driver-profile/driver-profile.page').then((m) => m.DriverProfilePage),
+  },
+  {
+    path: 'protections',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/protections/protections.page').then((m) => m.ProtectionsPage),
+  },
+  {
     path: 'users/:id',
     loadComponent: () =>
       import('./features/users/public-profile.page').then((m) => m.PublicProfilePage),
