@@ -100,6 +100,18 @@ export const routes: Routes = [
             (m) => m.AccountingAdminPage,
           ),
       },
+      {
+        path: 'claims',
+        loadComponent: () =>
+          import('./features/admin/claims/admin-claims.page').then((m) => m.AdminClaimsPage),
+      },
+      {
+        path: 'claims/:id',
+        loadComponent: () =>
+          import('./features/admin/claims/admin-claim-detail.page').then(
+            (m) => m.AdminClaimDetailPage,
+          ),
+      },
     ],
   },
   {
@@ -169,6 +181,24 @@ export const routes: Routes = [
       {
         path: 'chat',
         loadComponent: () => import('./features/messages/messages.page').then((m) => m.MessagesPage),
+      },
+    ],
+  },
+  {
+    path: 'notifications',
+    canMatch: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/notifications/notifications.page').then((m) => m.NotificationsPage),
+      },
+      {
+        path: 'preferences',
+        loadComponent: () =>
+          import('./features/notifications/preferences/notification-preferences.page').then(
+            (m) => m.NotificationPreferencesPage,
+          ),
       },
     ],
   },
