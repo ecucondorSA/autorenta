@@ -584,6 +584,16 @@
 
         <!-- Bilateral Confirmation Section -->
         <div *ngIf="showConfirmationSection()" class="space-y-4">
+          <!-- Timeline Component -->
+          <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep p-4 sm:p-6 shadow-sm">
+            <app-booking-confirmation-timeline
+              [booking]="booking()!"
+              [ownerName]="carOwnerName()"
+              [renterName]="booking()?.renter_name ?? 'el locatario'"
+              (confirmationRequested)="handleTimelineAction($event)"
+            ></app-booking-confirmation-timeline>
+          </div>
+
           <!-- Owner Confirmation Component -->
           <div *ngIf="isOwner()">
             <app-owner-confirmation
