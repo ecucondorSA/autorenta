@@ -1,0 +1,349 @@
+{
+  "_comment": "UptimeRobot Monitor Configuration Template for AutoRenta",
+  "_version": "1.0.0",
+  "_last_updated": "2025-11-07",
+
+  "account": {
+    "plan": "Pro",
+    "monthly_cost_usd": 7,
+    "interval_minutes": 1,
+    "max_monitors": 50
+  },
+
+  "monitors": [
+    {
+      "priority": "P0",
+      "name": "AutoRenta - Main Website",
+      "type": "HTTP(s)",
+      "url": "https://autorenta.pages.dev",
+      "method": "GET",
+      "interval_minutes": 1,
+      "timeout_seconds": 30,
+      "expected_status_code": 200,
+      "keyword_check": "AutoRenta",
+      "regions": [
+        "North America - US East (Virginia)",
+        "South America - Brazil (São Paulo)",
+        "Europe - Germany (Frankfurt)"
+      ],
+      "alert_threshold": "2 consecutive failures",
+      "estimated_detection_time_minutes": 2,
+      "alert_contacts": [
+        "email_devops",
+        "slack_production_alerts",
+        "pagerduty_critical",
+        "sms_oncall"
+      ]
+    },
+    {
+      "priority": "P0",
+      "name": "AutoRenta - Health Check API",
+      "type": "HTTP(s)",
+      "url": "https://obxvffplochgeiclibng.supabase.co/functions/v1/monitoring-health-check",
+      "method": "POST",
+      "interval_minutes": 1,
+      "timeout_seconds": 30,
+      "expected_status_code": 200,
+      "keyword_check": "total_checks",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{}",
+      "regions": [
+        "North America - US East",
+        "South America - Brazil",
+        "Europe - Germany"
+      ],
+      "alert_threshold": "2 consecutive failures",
+      "estimated_detection_time_minutes": 2,
+      "alert_contacts": [
+        "email_devops",
+        "slack_production_alerts",
+        "pagerduty_critical"
+      ]
+    },
+    {
+      "priority": "P0",
+      "name": "AutoRenta - Payment Webhook",
+      "type": "HTTP(s)",
+      "url": "https://payments-webhook.autorenta.workers.dev/webhooks/payments",
+      "url_note": "Replace with actual Cloudflare Worker URL from: wrangler deployments list --name payments_webhook",
+      "method": "GET",
+      "interval_minutes": 5,
+      "timeout_seconds": 30,
+      "expected_status_code": 200,
+      "keyword_check": "\"status\":\"ok\"",
+      "regions": [
+        "North America - US East",
+        "South America - Brazil"
+      ],
+      "alert_threshold": "2 consecutive failures",
+      "estimated_detection_time_minutes": 10,
+      "alert_contacts": [
+        "email_devops",
+        "slack_production_alerts",
+        "pagerduty_medium"
+      ]
+    },
+    {
+      "priority": "P1",
+      "name": "AutoRenta - Database Health",
+      "type": "HTTP(s)",
+      "url": "https://obxvffplochgeiclibng.supabase.co/functions/v1/monitoring-metrics?action=summary",
+      "method": "GET",
+      "interval_minutes": 5,
+      "timeout_seconds": 30,
+      "expected_status_code": 200,
+      "keyword_check": "healthy",
+      "headers": {
+        "Authorization": "Bearer SERVICE_ROLE_KEY_HERE",
+        "_security_note": "Use read-only key if possible. Rotate quarterly."
+      },
+      "regions": [
+        "North America - US East"
+      ],
+      "alert_threshold": "2 consecutive failures",
+      "estimated_detection_time_minutes": 10,
+      "alert_contacts": [
+        "email_devops",
+        "slack_production_alerts"
+      ]
+    },
+    {
+      "priority": "P1",
+      "name": "AutoRenta - Auth Login Page",
+      "type": "HTTP(s)",
+      "url": "https://autorenta.pages.dev/auth/login",
+      "method": "GET",
+      "interval_minutes": 5,
+      "timeout_seconds": 30,
+      "expected_status_code": 200,
+      "keyword_check": "login",
+      "regions": [
+        "North America - US East",
+        "South America - Brazil"
+      ],
+      "alert_threshold": "2 consecutive failures",
+      "estimated_detection_time_minutes": 10,
+      "alert_contacts": [
+        "email_devops",
+        "slack_production_alerts"
+      ]
+    },
+    {
+      "priority": "P2",
+      "name": "AutoRenta - Car Listings Page",
+      "type": "HTTP(s)",
+      "url": "https://autorenta.pages.dev/cars",
+      "method": "GET",
+      "interval_minutes": 5,
+      "timeout_seconds": 30,
+      "expected_status_code": 200,
+      "regions": [
+        "North America - US East",
+        "South America - Brazil"
+      ],
+      "alert_threshold": "2 consecutive failures",
+      "estimated_detection_time_minutes": 10,
+      "alert_contacts": [
+        "email_devops",
+        "slack_production_alerts"
+      ]
+    }
+  ],
+
+  "alert_contacts": {
+    "email_devops": {
+      "type": "Email",
+      "name": "DevOps Team",
+      "address": "devops@autorenta.com",
+      "alerts_for": ["down", "up", "ssl_expiry"],
+      "ssl_expiry_days": 30
+    },
+    "email_team": {
+      "type": "Email",
+      "name": "Team Distribution",
+      "address": "alerts@autorenta.com",
+      "alerts_for": ["down", "up"]
+    },
+    "slack_production_alerts": {
+      "type": "Slack",
+      "name": "Slack - Production Alerts",
+      "channel": "#production-alerts",
+      "alerts_for": ["down", "up", "ssl_expiry"],
+      "setup_notes": "Connect via Slack integration in UptimeRobot settings"
+    },
+    "pagerduty_critical": {
+      "type": "PagerDuty",
+      "name": "PagerDuty - Critical",
+      "integration_key": "REPLACE_WITH_INTEGRATION_KEY",
+      "email_format": "<integration-key>@autorenta.pagerduty.com",
+      "alerts_for": ["down"],
+      "severity": "critical",
+      "applies_to_monitors": [
+        "AutoRenta - Main Website",
+        "AutoRenta - Health Check API",
+        "AutoRenta - Payment Webhook"
+      ]
+    },
+    "pagerduty_medium": {
+      "type": "PagerDuty",
+      "name": "PagerDuty - Medium",
+      "alerts_for": ["down"],
+      "severity": "medium",
+      "applies_to_monitors": [
+        "AutoRenta - Database Health"
+      ]
+    },
+    "sms_oncall": {
+      "type": "SMS",
+      "name": "On-Call Engineer SMS",
+      "phone": "+54 9 11 XXXX-XXXX",
+      "phone_format_note": "Argentina international format",
+      "alerts_for": ["down"],
+      "applies_to_monitors": [
+        "AutoRenta - Main Website"
+      ],
+      "notes": "Use sparingly - SMS credits limited"
+    },
+    "sms_backup": {
+      "type": "SMS",
+      "name": "Backup On-Call",
+      "phone": "+54 9 11 YYYY-YYYY",
+      "alerts_for": ["down"],
+      "alert_after_minutes": 10,
+      "applies_to_monitors": [
+        "AutoRenta - Main Website"
+      ]
+    }
+  },
+
+  "maintenance_windows": [
+    {
+      "name": "Weekly Deployment Window",
+      "type": "recurring",
+      "schedule": "Every Wednesday, 02:00-03:00 UTC",
+      "duration_hours": 1,
+      "affects": "all monitors",
+      "notification": "Email team 1 hour before"
+    },
+    {
+      "name": "Monthly Database Maintenance",
+      "type": "recurring",
+      "schedule": "First Sunday of month, 04:00-05:00 UTC",
+      "duration_hours": 1,
+      "affects": ["AutoRenta - Database Health"],
+      "notification": "Email team 24 hours before"
+    },
+    {
+      "name": "Emergency Maintenance (template)",
+      "type": "once",
+      "start": "YYYY-MM-DD HH:MM UTC",
+      "duration_hours": 2,
+      "affects": "selected monitors",
+      "create_via": "API or dashboard as needed"
+    }
+  ],
+
+  "status_page": {
+    "enabled": true,
+    "name": "AutoRenta Status",
+    "custom_domain": "status.autorenta.com",
+    "default_url": "https://stats.uptimerobot.com/XXXXX",
+    "display_monitors": [
+      "AutoRenta - Main Website",
+      "AutoRenta - Auth Login Page",
+      "AutoRenta - Car Listings Page"
+    ],
+    "hide_monitors": [
+      "AutoRenta - Database Health",
+      "AutoRenta - Health Check API"
+    ],
+    "history_days": 90,
+    "show_response_times": true,
+    "branding": {
+      "logo": "Upload AutoRenta logo",
+      "colors": {
+        "primary": "#your-brand-color",
+        "secondary": "#your-secondary-color"
+      }
+    }
+  },
+
+  "success_metrics": {
+    "uptime_target_percent": 99.9,
+    "max_downtime_minutes_per_month": 43,
+    "detection_time_minutes": 2,
+    "false_positive_rate_percent": 1,
+    "alert_delivery_seconds": 30,
+    "multi_region_coverage_minimum": 3
+  },
+
+  "api_integration": {
+    "api_key_location": "My Settings → Account Settings → API Settings",
+    "api_endpoint": "https://api.uptimerobot.com/v2/",
+    "rate_limits": {
+      "free": "10 requests/minute",
+      "pro": "Unlimited"
+    },
+    "common_endpoints": {
+      "get_monitors": "/getMonitors",
+      "create_monitor": "/newMonitor",
+      "edit_monitor": "/editMonitor",
+      "delete_monitor": "/deleteMonitor",
+      "get_alert_contacts": "/getAlertContacts"
+    },
+    "automation_scripts": {
+      "check_status": "tools/check-uptime-status.sh",
+      "create_monitor": "tools/create-uptime-monitor.sh",
+      "monthly_report": "tools/get-monthly-uptime.sh"
+    }
+  },
+
+  "security": {
+    "2fa_enabled": true,
+    "api_key_rotation": "Quarterly",
+    "access_control": {
+      "admins": ["DevOps Lead"],
+      "viewers": ["Engineers", "Support"]
+    },
+    "secrets_management": {
+      "service_role_keys": "1Password/Vault",
+      "api_keys": "GitHub Secrets (for CI/CD)",
+      "pagerduty_keys": "PagerDuty dashboard"
+    }
+  },
+
+  "incident_response": {
+    "severity_levels": {
+      "critical": {
+        "response_time_minutes": 0,
+        "examples": ["Main site down", "Payment system down"],
+        "escalation": ["Page on-call", "Create war room", "Post status update"]
+      },
+      "high": {
+        "response_time_minutes": 15,
+        "examples": ["API down", "Backend degraded"],
+        "escalation": ["Investigate", "Prepare rollback", "Notify team"]
+      },
+      "medium": {
+        "response_time_minutes": 30,
+        "examples": ["Slow response times", "Non-critical service down"],
+        "escalation": ["Monitor", "Investigate during business hours"]
+      },
+      "low": {
+        "response_time_minutes": 60,
+        "examples": ["Minor issues", "Non-critical features"],
+        "escalation": ["Create ticket", "Fix in next sprint"]
+      }
+    },
+    "runbook": "docs/runbooks/external-uptime-monitoring.md"
+  },
+
+  "reporting": {
+    "weekly": "Review uptime percentage in dashboard",
+    "monthly": "Export uptime report (Dashboard → Reports → Export CSV)",
+    "quarterly": "Review incident history and MTTR",
+    "annual": "SLA compliance audit"
+  }
+}
