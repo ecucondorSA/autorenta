@@ -6,7 +6,7 @@ account_id = "5b448192fe4b369642b68ad8f53a7603"
 env = { }
 
 [vars]
-SUPABASE_URL = "https://obxvffplochgeiclibng.supabase.co"
+SUPABASE_URL = "https://pisqjmoklivzpwufhscx.supabase.co"
 
 [build]
 command = "npm run build"
