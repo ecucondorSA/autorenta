@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { fromRequest, generateTraceId, type Logger } from '../../logger';
 
 interface Env {
   SUPABASE_URL: string;
@@ -206,8 +207,9 @@ const processMockWebhook = async (
   payload: MockPaymentWebhookPayload,
   supabase: ReturnType<typeof getSupabaseAdminClient>,
   env: Env,
+  log: Logger,
 ): Promise<Response> => {
-  console.log('Processing mock webhook for booking:', payload.booking_id);
+  log.info('Processing mock webhook', { bookingId: payload.booking_id, status: payload.status });
 
   // Idempotency check
   const dedupeKey = `webhook:mock:${payload.booking_id}:${payload.status}`;
@@ -298,11 +300,12 @@ const processMercadoPagoWebhook = async (
     rawBody: string;
     query: URLSearchParams;
   },
+  log: Logger,
 ): Promise<Response> => {
   const mpAccessToken = env.MERCADOPAGO_ACCESS_TOKEN;
 
   if (!mpAccessToken) {
-    console.error('Mercado Pago access token not configured in environment');
+    log.error('Mercado Pago access token not configured');
     return jsonResponse({ message: 'Mercado Pago access token missing' }, { status: 500 });
   }
 
@@ -310,7 +313,7 @@ const processMercadoPagoWebhook = async (
     payload?.data?.id || options.query.get('data.id') || options.query.get('id');
 
   if (!paymentId) {
-    console.error('Mercado Pago webhook without payment ID', {
+    log.error('Mercado Pago webhook without payment ID', {
       payload,
       query: Object.fromEntries(options.query.entries()),
     });
@@ -320,11 +323,11 @@ const processMercadoPagoWebhook = async (
   const webhookType = payload?.type || options.query.get('type') || '';
 
   if (webhookType && webhookType !== 'payment') {
-    console.log('Ignoring non-payment event:', webhookType);
+    log.info('Ignoring non-payment event', { webhookType });
     return jsonResponse({ message: 'Event type not supported' }, { status: 200 });
   }
 
-  console.log('Processing Mercado Pago webhook:', {
+  log.info('Processing Mercado Pago webhook', {
     paymentId,
     action: payload?.action,
     type: webhookType,
@@ -516,11 +519,15 @@ const processMercadoPagoWebhook = async (
  */
 const worker = {
   async fetch(request: Request, env: Env): Promise<Response> {
+    // Initialize logger with trace ID from request
+    const log = fromRequest(request, 'payments-webhook');
+
     const url = new URL(request.url);
 
     // Health check endpoint - GET permite verificación
     if (url.pathname === '/webhooks/payments') {
       if (request.method === 'GET') {
+        log.debug('Health check request received');
         return jsonResponse({
           status: 'ok',
           message: 'Webhook endpoint is ready',
@@ -530,9 +537,11 @@ const worker = {
 
       // Solo acepta POST para procesamiento real
       if (request.method !== 'POST') {
+        log.warn('Invalid method', { method: request.method });
         return jsonResponse({ message: 'Method not allowed' }, { status: 405 });
       }
     } else {
+      log.warn('Invalid path', { path: url.pathname });
       return jsonResponse({ message: 'Not found' }, { status: 404 });
     }
 
@@ -554,9 +563,10 @@ const worker = {
       if (payload?.provider === 'mock') {
         // Validar campos requeridos para mock
         if (!payload.booking_id || !payload.status) {
+          log.warn('Missing required fields for mock webhook', { payload });
           return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
         }
-        return await processMockWebhook(payload, supabase, env);
+        return await processMockWebhook(payload, supabase, env, log);
       }
 
       return await processMercadoPagoWebhook(payload ?? {}, supabase, env, {
@@ -564,9 +574,9 @@ const worker = {
         requestId: request.headers.get('x-request-id'),
         rawBody,
         query: url.searchParams,
-      });
+      }, log);
     } catch (error) {
-      console.error('Error processing webhook:', error);
+      log.error('Error processing webhook', error);
       return jsonResponse(
         {
           message: error instanceof Error ? error.message : 'Internal server error',
