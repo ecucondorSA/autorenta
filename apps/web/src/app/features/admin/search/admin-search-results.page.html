@@ -1,0 +1,344 @@
+<div class="admin-search-results-page min-h-screen bg-gray-50 p-6">
+  <!-- Header -->
+  <div class="max-w-7xl mx-auto mb-6">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">Resultados de Búsqueda</h1>
+
+    <!-- Search Bar -->
+    <div class="mb-6">
+      <app-admin-global-search></app-admin-global-search>
+    </div>
+
+    <!-- Results Summary -->
+    @if (searchQuery()) {
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">
+              Búsqueda: <span class="font-semibold text-gray-900">"{{ searchQuery() }}"</span>
+            </p>
+            <p class="text-sm text-gray-600 mt-1">
+              Total de resultados: <span class="font-semibold text-gray-900">{{ totalResults() }}</span>
+            </p>
+          </div>
+          <button
+            (click)="exportToCSV()"
+            [disabled]="loading() || totalResults() === 0"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Exportar CSV
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Tabs -->
+  <div class="max-w-7xl mx-auto">
+    <div class="border-b border-gray-200 mb-6">
+      <nav class="-mb-px flex gap-8">
+        <button
+          (click)="switchTab('users')"
+          [class.border-blue-500]="activeTab() === 'users'"
+          [class.text-blue-600]="activeTab() === 'users'"
+          [class.border-transparent]="activeTab() !== 'users'"
+          [class.text-gray-500]="activeTab() !== 'users'"
+          class="pb-4 px-1 border-b-2 font-semibold text-sm whitespace-nowrap hover:text-blue-600 hover:border-blue-300 transition-colors"
+        >
+          👤 Usuarios
+          @if (tabCounts().users > 0) {
+            <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+              {{ tabCounts().users }}
+            </span>
+          }
+        </button>
+
+        <button
+          (click)="switchTab('bookings')"
+          [class.border-blue-500]="activeTab() === 'bookings'"
+          [class.text-blue-600]="activeTab() === 'bookings'"
+          [class.border-transparent]="activeTab() !== 'bookings'"
+          [class.text-gray-500]="activeTab() !== 'bookings'"
+          class="pb-4 px-1 border-b-2 font-semibold text-sm whitespace-nowrap hover:text-blue-600 hover:border-blue-300 transition-colors"
+        >
+          📅 Reservas
+          @if (tabCounts().bookings > 0) {
+            <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+              {{ tabCounts().bookings }}
+            </span>
+          }
+        </button>
+
+        <button
+          (click)="switchTab('cars')"
+          [class.border-blue-500]="activeTab() === 'cars'"
+          [class.text-blue-600]="activeTab() === 'cars'"
+          [class.border-transparent]="activeTab() !== 'cars'"
+          [class.text-gray-500]="activeTab() !== 'cars'"
+          class="pb-4 px-1 border-b-2 font-semibold text-sm whitespace-nowrap hover:text-blue-600 hover:border-blue-300 transition-colors"
+        >
+          🚗 Autos
+          @if (tabCounts().cars > 0) {
+            <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+              {{ tabCounts().cars }}
+            </span>
+          }
+        </button>
+
+        <button
+          (click)="switchTab('transactions')"
+          [class.border-blue-500]="activeTab() === 'transactions'"
+          [class.text-blue-600]="activeTab() === 'transactions'"
+          [class.border-transparent]="activeTab() !== 'transactions'"
+          [class.text-gray-500]="activeTab() !== 'transactions'"
+          class="pb-4 px-1 border-b-2 font-semibold text-sm whitespace-nowrap hover:text-blue-600 hover:border-blue-300 transition-colors"
+        >
+          💰 Transacciones
+          @if (tabCounts().transactions > 0) {
+            <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+              {{ tabCounts().transactions }}
+            </span>
+          }
+        </button>
+      </nav>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <p class="ml-4 text-gray-600">Buscando...</p>
+      </div>
+    }
+
+    <!-- Results -->
+    @if (!loading()) {
+      <div class="results-container">
+        <!-- Users Tab -->
+        @if (activeTab() === 'users') {
+          @if (users().length > 0) {
+            <div class="space-y-4">
+              @for (user of paginatedResults(); track user.id) {
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ user.full_name }}</h3>
+                        @if (user.is_suspended) {
+                          <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded">Suspendido</span>
+                        } @else {
+                          <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Activo</span>
+                        }
+                      </div>
+                      <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                        <div>
+                          <span class="font-medium">Email:</span> {{ user.email }}
+                          <button (click)="copyToClipboard(user.email)" class="ml-2 text-blue-600 hover:text-blue-800">📋</button>
+                        </div>
+                        <div><span class="font-medium">ID:</span> {{ user.id }}</div>
+                        <div><span class="font-medium">Nivel de verificación:</span> {{ user.verification_level }}</div>
+                        <div><span class="font-medium">Rol:</span> {{ user.role }}</div>
+                        <div><span class="font-medium">Reservas (locatario):</span> {{ user.total_bookings_as_renter }}</div>
+                        <div><span class="font-medium">Reservas (locador):</span> {{ user.total_bookings_as_owner }}</div>
+                        <div><span class="font-medium">Saldo wallet:</span> {{ formatMoney(user.wallet_balance, 'ARS') }}</div>
+                        <div><span class="font-medium">Registrado:</span> {{ formatDate(user.created_at) }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-center py-12 text-gray-500">
+              No se encontraron usuarios
+            </div>
+          }
+        }
+
+        <!-- Bookings Tab -->
+        @if (activeTab() === 'bookings') {
+          @if (bookings().length > 0) {
+            <div class="space-y-4">
+              @for (booking of paginatedResults(); track booking.id) {
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                  <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ booking.car_title }}</h3>
+                        <span [class]="'px-2 py-1 text-xs rounded ' + getStatusClass(booking.status)">
+                          {{ booking.status }}
+                        </span>
+                        @if (booking.payment_status) {
+                          <span [class]="'px-2 py-1 text-xs rounded ' + getStatusClass(booking.payment_status)">
+                            {{ booking.payment_status }}
+                          </span>
+                        }
+                      </div>
+                      <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                        <div><span class="font-medium">ID:</span> {{ booking.id }}</div>
+                        <div><span class="font-medium">Monto:</span> {{ formatMoney(booking.total_amount, booking.currency) }}</div>
+                        <div><span class="font-medium">Locatario:</span> {{ booking.renter_name }} ({{ booking.renter_email }})</div>
+                        <div><span class="font-medium">Locador:</span> {{ booking.owner_name }} ({{ booking.owner_email }})</div>
+                        <div><span class="font-medium">Auto:</span> {{ booking.car_brand }} {{ booking.car_model }}</div>
+                        <div><span class="font-medium">Inicio:</span> {{ formatDate(booking.start_at) }}</div>
+                        <div><span class="font-medium">Fin:</span> {{ formatDate(booking.end_at) }}</div>
+                        <div><span class="font-medium">Creado:</span> {{ formatDate(booking.created_at) }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-center py-12 text-gray-500">
+              No se encontraron reservas
+            </div>
+          }
+        }
+
+        <!-- Cars Tab -->
+        @if (activeTab() === 'cars') {
+          @if (cars().length > 0) {
+            <div class="space-y-4">
+              @for (car of paginatedResults(); track car.id) {
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ car.title }}</h3>
+                        <span [class]="'px-2 py-1 text-xs rounded ' + getStatusClass(car.status)">
+                          {{ car.status }}
+                        </span>
+                      </div>
+                      <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                        <div><span class="font-medium">ID:</span> {{ car.id }}</div>
+                        <div><span class="font-medium">Precio:</span> {{ formatMoney(car.price_per_day, car.currency) }}/día</div>
+                        <div><span class="font-medium">Marca/Modelo:</span> {{ car.brand }} {{ car.model }} {{ car.year }}</div>
+                        <div>
+                          <span class="font-medium">Patente:</span>
+                          @if (car.license_plate) {
+                            {{ car.license_plate }}
+                          } @else {
+                            N/A
+                          }
+                        </div>
+                        <div><span class="font-medium">Propietario:</span> {{ car.owner_name }} ({{ car.owner_email }})</div>
+                        <div><span class="font-medium">Ubicación:</span> {{ car.city }}, {{ car.province }}</div>
+                        <div><span class="font-medium">Total reservas:</span> {{ car.total_bookings }}</div>
+                        <div><span class="font-medium">Creado:</span> {{ formatDate(car.created_at) }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-center py-12 text-gray-500">
+              No se encontraron autos
+            </div>
+          }
+        }
+
+        <!-- Transactions Tab -->
+        @if (activeTab() === 'transactions') {
+          @if (transactions().length > 0) {
+            <div class="space-y-4">
+              @for (transaction of paginatedResults(); track transaction.id) {
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ transaction.type }}</h3>
+                        <span [class]="'px-2 py-1 text-xs rounded ' + getStatusClass(transaction.status)">
+                          {{ transaction.status }}
+                        </span>
+                        <span class="text-xl font-bold" [class.text-green-600]="transaction.type === 'deposit'" [class.text-red-600]="transaction.type === 'withdrawal'">
+                          {{ formatMoney(transaction.amount, transaction.currency) }}
+                        </span>
+                      </div>
+                      <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                        <div><span class="font-medium">ID:</span> {{ transaction.id }}</div>
+                        <div><span class="font-medium">Usuario:</span> {{ transaction.user_name }} ({{ transaction.user_email }})</div>
+                        <div>
+                          <span class="font-medium">Provider:</span>
+                          @if (transaction.provider) {
+                            {{ transaction.provider }}
+                          } @else {
+                            N/A
+                          }
+                        </div>
+                        <div>
+                          <span class="font-medium">Provider TX ID:</span>
+                          @if (transaction.provider_transaction_id) {
+                            {{ transaction.provider_transaction_id }}
+                          } @else {
+                            N/A
+                          }
+                        </div>
+                        <div>
+                          <span class="font-medium">Booking ID:</span>
+                          @if (transaction.booking_id) {
+                            {{ transaction.booking_id }}
+                          } @else {
+                            N/A
+                          }
+                        </div>
+                        <div><span class="font-medium">Fecha:</span> {{ formatDate(transaction.created_at) }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-center py-12 text-gray-500">
+              No se encontraron transacciones
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="mt-6 flex items-center justify-between">
+          <div class="text-sm text-gray-600">
+            Página {{ currentPage() }} de {{ totalPages() }}
+          </div>
+          <div class="flex gap-2">
+            <button
+              (click)="goToPage(currentPage() - 1)"
+              [disabled]="currentPage() === 1"
+              class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+            @for (page of [].constructor(totalPages()); track $index) {
+              @if ($index + 1 === currentPage() || $index + 1 === 1 || $index + 1 === totalPages() || Math.abs($index + 1 - currentPage()) <= 2) {
+                <button
+                  (click)="goToPage($index + 1)"
+                  [class.bg-blue-600]="$index + 1 === currentPage()"
+                  [class.text-white]="$index + 1 === currentPage()"
+                  [class.bg-white]="$index + 1 !== currentPage()"
+                  class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                >
+                  {{ $index + 1 }}
+                </button>
+              } @else if (Math.abs($index + 1 - currentPage()) === 3) {
+                <span class="px-4 py-2">...</span>
+              }
+            }
+            <button
+              (click)="goToPage(currentPage() + 1)"
+              [disabled]="currentPage() === totalPages()"
+              class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

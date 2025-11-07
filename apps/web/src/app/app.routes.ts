@@ -139,6 +139,13 @@ export const routes: Routes = [
             (m) => m.AdminVerificationsPage,
           ),
       },
+      {
+        path: 'search',
+        loadComponent: () =>
+          import('./features/admin/search/admin-search-results.page').then(
+            (m) => m.AdminSearchResultsPage,
+          ),
+      },
     ],
   },
   {

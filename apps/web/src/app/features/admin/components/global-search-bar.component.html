@@ -1,0 +1,245 @@
+<div class="global-search-container relative">
+  <!-- Search Input -->
+  <div class="search-input-wrapper relative">
+    <input
+      #searchInput
+      type="text"
+      [value]="searchQuery()"
+      (input)="updateSearchQuery($any($event.target).value)"
+      (keydown)="onKeyDown($event)"
+      (focus)="showDropdown() && showDropdownSignal.set(true)"
+      placeholder="Buscar usuarios, reservas, autos, transacciones..."
+      class="search-input w-full px-4 py-2 pl-10 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+    />
+
+    <!-- Search Icon -->
+    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+    </div>
+
+    <!-- Loading Spinner -->
+    @if (searching()) {
+      <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+        <div
+          class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"
+        ></div>
+      </div>
+    }
+
+    <!-- Clear Button -->
+    @if (searchQuery() && !searching()) {
+      <button
+        (click)="clearSearch()"
+        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    }
+  </div>
+
+  <!-- Autocomplete Dropdown -->
+  @if (showDropdown() && searchQuery().length >= 2) {
+    <div
+      class="autocomplete-dropdown absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"
+    >
+      @if (searching()) {
+        <div class="p-4 text-center text-gray-500">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+          Buscando...
+        </div>
+      } @else if (hasResults()) {
+        <!-- Users Section -->
+        @if (searchResults().users.length > 0) {
+          <div class="result-section">
+            <div class="section-header px-4 py-2 bg-gray-50 border-b text-sm font-semibold text-gray-700">
+              {{ getEntityIcon('user') }} Usuarios ({{ searchResults().users.length }})
+            </div>
+            @for (user of searchResults().users; track user.id; let i = $index) {
+              <button
+                (click)="navigateToItem('user', user)"
+                [class.selected]="flattenedResults().findIndex(r => r.data === user) === selectedIndex()"
+                class="result-item w-full px-4 py-3 hover:bg-gray-50 border-b last:border-b-0 text-left"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="font-semibold text-gray-900">{{ user.full_name }}</div>
+                    <div class="text-sm text-gray-600">{{ user.email }}</div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      Nivel {{ user.verification_level }} •
+                      {{ user.total_bookings_as_renter + user.total_bookings_as_owner }} reservas •
+                      Wallet: {{ formatMoney(user.wallet_balance, 'ARS') }}
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    @if (user.is_suspended) {
+                      <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded">Suspendido</span>
+                    } @else {
+                      <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Activo</span>
+                    }
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Bookings Section -->
+        @if (searchResults().bookings.length > 0) {
+          <div class="result-section">
+            <div class="section-header px-4 py-2 bg-gray-50 border-b text-sm font-semibold text-gray-700">
+              {{ getEntityIcon('booking') }} Reservas ({{ searchResults().bookings.length }})
+            </div>
+            @for (booking of searchResults().bookings; track booking.id) {
+              <button
+                (click)="navigateToItem('booking', booking)"
+                [class.selected]="flattenedResults().findIndex(r => r.data === booking) === selectedIndex()"
+                class="result-item w-full px-4 py-3 hover:bg-gray-50 border-b last:border-b-0 text-left"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="font-semibold text-gray-900">{{ booking.car_title }}</div>
+                    <div class="text-sm text-gray-600">
+                      {{ booking.renter_name }} ({{ booking.renter_email }})
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      {{ formatDate(booking.start_at) }} - {{ formatDate(booking.end_at) }} •
+                      {{ formatMoney(booking.total_amount, booking.currency) }}
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <span
+                      [class]="'px-2 py-1 text-xs rounded ' + getStatusClass(booking.status)"
+                    >
+                      {{ booking.status }}
+                    </span>
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Cars Section -->
+        @if (searchResults().cars.length > 0) {
+          <div class="result-section">
+            <div class="section-header px-4 py-2 bg-gray-50 border-b text-sm font-semibold text-gray-700">
+              {{ getEntityIcon('car') }} Autos ({{ searchResults().cars.length }})
+            </div>
+            @for (car of searchResults().cars; track car.id) {
+              <button
+                (click)="navigateToItem('car', car)"
+                [class.selected]="flattenedResults().findIndex(r => r.data === car) === selectedIndex()"
+                class="result-item w-full px-4 py-3 hover:bg-gray-50 border-b last:border-b-0 text-left"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="font-semibold text-gray-900">{{ car.title }}</div>
+                    <div class="text-sm text-gray-600">
+                      {{ car.brand }} {{ car.model }} {{ car.year }}
+                      @if (car.license_plate) {
+                        • {{ car.license_plate }}
+                      }
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      {{ car.owner_name }} ({{ car.owner_email }}) •
+                      {{ car.city }}, {{ car.province }} •
+                      {{ car.total_bookings }} reservas
+                    </div>
+                  </div>
+                  <div class="ml-4 text-right">
+                    <div class="font-semibold text-gray-900">
+                      {{ formatMoney(car.price_per_day, car.currency) }}/día
+                    </div>
+                    <span
+                      [class]="'px-2 py-1 text-xs rounded ' + getStatusClass(car.status)"
+                    >
+                      {{ car.status }}
+                    </span>
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Transactions Section -->
+        @if (searchResults().transactions.length > 0) {
+          <div class="result-section">
+            <div class="section-header px-4 py-2 bg-gray-50 border-b text-sm font-semibold text-gray-700">
+              {{ getEntityIcon('transaction') }} Transacciones ({{ searchResults().transactions.length }})
+            </div>
+            @for (transaction of searchResults().transactions; track transaction.id) {
+              <button
+                (click)="navigateToItem('transaction', transaction)"
+                [class.selected]="flattenedResults().findIndex(r => r.data === transaction) === selectedIndex()"
+                class="result-item w-full px-4 py-3 hover:bg-gray-50 border-b last:border-b-0 text-left"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="font-semibold text-gray-900">{{ transaction.type }}</div>
+                    <div class="text-sm text-gray-600">
+                      {{ transaction.user_name }} ({{ transaction.user_email }})
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      {{ formatDate(transaction.created_at) }}
+                      @if (transaction.provider_transaction_id) {
+                        • ID: {{ transaction.provider_transaction_id }}
+                      }
+                    </div>
+                  </div>
+                  <div class="ml-4 text-right">
+                    <div class="font-semibold text-gray-900">
+                      {{ formatMoney(transaction.amount, transaction.currency) }}
+                    </div>
+                    <span
+                      [class]="'px-2 py-1 text-xs rounded ' + getStatusClass(transaction.status)"
+                    >
+                      {{ transaction.status }}
+                    </span>
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+        }
+
+        <!-- View All Results Link -->
+        <div class="border-t">
+          <button
+            (click)="navigateToSearchPage()"
+            class="w-full px-4 py-3 text-center text-sm text-blue-600 hover:bg-blue-50 font-semibold"
+          >
+            Ver todos los resultados ({{ totalResults() }}) →
+          </button>
+        </div>
+      } @else {
+        <div class="p-4 text-center text-gray-500">
+          No se encontraron resultados para "{{ searchQuery() }}"
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Keyboard Hints -->
+  @if (showDropdown() && hasResults()) {
+    <div class="mt-2 text-xs text-gray-500 flex gap-4">
+      <span>↑↓ Navegar</span>
+      <span>Enter Seleccionar</span>
+      <span>Esc Cerrar</span>
+    </div>
+  }
+</div>

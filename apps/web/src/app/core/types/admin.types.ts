@@ -242,3 +242,108 @@ export interface AdminUserWithProfile extends AdminUser {
     email: string;
   };
 }
+
+// ============================================================================
+// GLOBAL SEARCH TYPES (Issue #137)
+// ============================================================================
+
+/**
+ * User search result
+ */
+export interface UserSearchResult {
+  id: string;
+  email: string;
+  full_name: string;
+  avatar_url: string | null;
+  role: string;
+  verification_level: number;
+  created_at: string;
+  last_sign_in_at: string | null;
+  is_suspended: boolean;
+  total_bookings_as_renter: number;
+  total_bookings_as_owner: number;
+  wallet_balance: number;
+}
+
+/**
+ * Booking search result
+ */
+export interface BookingSearchResult {
+  id: string;
+  car_id: string;
+  car_title: string;
+  car_brand: string | null;
+  car_model: string | null;
+  renter_id: string;
+  renter_name: string;
+  renter_email: string;
+  owner_id: string;
+  owner_name: string;
+  owner_email: string;
+  start_at: string;
+  end_at: string;
+  status: string;
+  total_amount: number;
+  currency: string;
+  payment_status: string | null;
+  created_at: string;
+}
+
+/**
+ * Car search result
+ */
+export interface CarSearchResult {
+  id: string;
+  owner_id: string;
+  owner_name: string;
+  owner_email: string;
+  title: string;
+  brand: string | null;
+  model: string | null;
+  year: number | null;
+  license_plate: string | null;
+  price_per_day: number;
+  currency: string;
+  status: string;
+  city: string;
+  province: string;
+  total_bookings: number;
+  created_at: string;
+}
+
+/**
+ * Transaction search result
+ */
+export interface TransactionSearchResult {
+  id: string;
+  user_id: string;
+  user_name: string;
+  user_email: string;
+  type: string;
+  amount: number;
+  currency: string;
+  status: string;
+  provider: string | null;
+  provider_transaction_id: string | null;
+  booking_id: string | null;
+  created_at: string;
+}
+
+/**
+ * Global search results (all entity types)
+ */
+export interface GlobalSearchResults {
+  users: UserSearchResult[];
+  bookings: BookingSearchResult[];
+  cars: CarSearchResult[];
+  transactions: TransactionSearchResult[];
+}
+
+/**
+ * Search result metadata
+ */
+export interface SearchResultMetadata {
+  query: string;
+  total_results: number;
+  search_time_ms: number;
+}

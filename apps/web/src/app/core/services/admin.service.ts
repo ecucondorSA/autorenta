@@ -1054,4 +1054,145 @@ export class AdminService {
 
     if (error) throw error;
   }
+
+  // ============================================================================
+  // GLOBAL SEARCH (Issue #137)
+  // ============================================================================
+
+  /**
+   * Search users by email, name, ID, or phone
+   * @param query Search query string
+   * @param limit Max results to return (default: 20)
+   * @param offset Pagination offset (default: 0)
+   * @returns Promise<UserSearchResult[]>
+   */
+  async searchUsers(
+    query: string,
+    limit = 20,
+    offset = 0
+  ): Promise<import('../types/admin.types').UserSearchResult[]> {
+    const { data, error } = await this.supabase.rpc('admin_search_users', {
+      p_query: query,
+      p_limit: limit,
+      p_offset: offset,
+    });
+
+    if (error) {
+      this.logger.error('Error searching users:', error);
+      throw error;
+    }
+
+    return (data as import('../types/admin.types').UserSearchResult[]) ?? [];
+  }
+
+  /**
+   * Search bookings by ID, user, car, or dates
+   * @param query Search query string
+   * @param limit Max results to return (default: 20)
+   * @param offset Pagination offset (default: 0)
+   * @returns Promise<BookingSearchResult[]>
+   */
+  async searchBookings(
+    query: string,
+    limit = 20,
+    offset = 0
+  ): Promise<import('../types/admin.types').BookingSearchResult[]> {
+    const { data, error } = await this.supabase.rpc('admin_search_bookings', {
+      p_query: query,
+      p_limit: limit,
+      p_offset: offset,
+    });
+
+    if (error) {
+      this.logger.error('Error searching bookings:', error);
+      throw error;
+    }
+
+    return (data as import('../types/admin.types').BookingSearchResult[]) ?? [];
+  }
+
+  /**
+   * Search cars by plate, ID, title, or owner
+   * @param query Search query string
+   * @param limit Max results to return (default: 20)
+   * @param offset Pagination offset (default: 0)
+   * @returns Promise<CarSearchResult[]>
+   */
+  async searchCars(
+    query: string,
+    limit = 20,
+    offset = 0
+  ): Promise<import('../types/admin.types').CarSearchResult[]> {
+    const { data, error } = await this.supabase.rpc('admin_search_cars', {
+      p_query: query,
+      p_limit: limit,
+      p_offset: offset,
+    });
+
+    if (error) {
+      this.logger.error('Error searching cars:', error);
+      throw error;
+    }
+
+    return (data as import('../types/admin.types').CarSearchResult[]) ?? [];
+  }
+
+  /**
+   * Search transactions by ID, amount, or user
+   * @param query Search query string
+   * @param limit Max results to return (default: 20)
+   * @param offset Pagination offset (default: 0)
+   * @returns Promise<TransactionSearchResult[]>
+   */
+  async searchTransactions(
+    query: string,
+    limit = 20,
+    offset = 0
+  ): Promise<import('../types/admin.types').TransactionSearchResult[]> {
+    const { data, error } = await this.supabase.rpc('admin_search_transactions', {
+      p_query: query,
+      p_limit: limit,
+      p_offset: offset,
+    });
+
+    if (error) {
+      this.logger.error('Error searching transactions:', error);
+      throw error;
+    }
+
+    return (data as import('../types/admin.types').TransactionSearchResult[]) ?? [];
+  }
+
+  /**
+   * Global search across all entity types
+   * Searches users, bookings, cars, and transactions in parallel
+   * Returns up to 5 results per entity type for autocomplete
+   * @param query Search query string
+   * @returns Promise<GlobalSearchResults>
+   */
+  async globalSearch(query: string): Promise<import('../types/admin.types').GlobalSearchResults> {
+    if (!query || query.length < 2) {
+      return {
+        users: [],
+        bookings: [],
+        cars: [],
+        transactions: [],
+      };
+    }
+
+    // Execute all searches in parallel
+    const [users, bookings, cars, transactions] = await Promise.all([
+      this.searchUsers(query, 5, 0),
+      this.searchBookings(query, 5, 0),
+      this.searchCars(query, 5, 0),
+      this.searchTransactions(query, 5, 0),
+    ]);
+
+    return {
+      users,
+      bookings,
+      cars,
+      transactions,
+    };
+  }
 }
