@@ -1290,6 +1290,23 @@
   (ctaClick)="onBookClick()"
 ></app-sticky-cta-mobile>
 
+<!-- ✅ NEW: Booking Location Form Modal -->
+@if (showLocationForm()) {
+  <div class="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-end sm:items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-t-lg sm:rounded-lg w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div class="p-4 sm:p-6">
+        <app-booking-location-form
+          [carOwnerLat]="car()?.location_lat"
+          [carOwnerLng]="car()?.location_lng"
+          [carOwnerAddress]="car()?.location_address"
+          (locationSelected)="onLocationFormSubmit($event)"
+          (cancelled)="onLocationFormCancelled()"
+        ></app-booking-location-form>
+      </div>
+    </div>
+  </div>
+}
+
 <!-- WhatsApp FAB - Contactar al propietario -->
 <!-- TODO: Activar cuando el modelo CarOwner incluya phone/whatsapp -->
 <!-- <app-whatsapp-fab
