@@ -1,0 +1,82 @@
+/* Component-specific styles for Exchange Rates page */
+
+/* Smooth transitions for all interactive elements */
+button,
+.hover\:bg-gray-50,
+.hover\:bg-gray-900,
+.hover\:text-gray-900,
+.hover\:bg-blue-700 {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Table row hover effect */
+tr.hover\:bg-gray-50:hover {
+  background-color: rgba(249, 250, 251, 0.8);
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  table {
+    font-size: 0.875rem;
+  }
+
+  th,
+  td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+/* Custom scrollbar for modal */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.7);
+}
+
+/* Margin visualization bar animation */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Alert icon pulse animation for outdated rates */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+svg[title*="Desactualizado"] {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
