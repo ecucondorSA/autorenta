@@ -59,6 +59,7 @@
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "@sentry/angular": "^10.23.0",
+    "@sentry/tracing": "^7.120.4",
     "@supabase/storage-js": "^2.78.0",
     "@supabase/supabase-js": "^2.76.1",
     "@types/mapbox-gl": "^3.4.1",
