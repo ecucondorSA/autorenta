@@ -132,6 +132,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/admin/reviews/admin-reviews.page').then((m) => m.AdminReviewsPage),
       },
+      {
+        path: 'verifications',
+        loadComponent: () =>
+          import('./features/admin/verifications/admin-verifications.page').then(
+            (m) => m.AdminVerificationsPage,
+          ),
+      },
     ],
   },
   {
