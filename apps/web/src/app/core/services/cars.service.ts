@@ -552,65 +552,6 @@ export class CarsService {
     }
   }
 
-  async getNextAvailableRange(
-    carId: string,
-    startDate: string,
-    endDate: string,
-  ): Promise<{ startDate: string; endDate: string } | null> {
-    try {
-      const requestedStart = new Date(startDate);
-      const requestedEnd = new Date(endDate);
-
-      if (isNaN(requestedStart.getTime()) || isNaN(requestedEnd.getTime())) {
-        return null;
-      }
-
-      const desiredDurationMs = requestedEnd.getTime() - requestedStart.getTime();
-      if (desiredDurationMs <= 0) {
-        return null;
-      }
-
-      const { data, error } = await this.supabase
-        .from('bookings')
-        .select('start_at, end_at')
-        .eq('car_id', carId)
-        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
-        .gte('end_at', requestedStart.toISOString())
-        .order('start_at', { ascending: true });
-
-      if (error) {
-        console.warn('Error fetching bookings for availability suggestion:', error);
-        return null;
-      }
-
-      let cursor = new Date(requestedStart);
-      const timeline = data ?? [];
-
-      for (const booking of timeline) {
-        const bookingStart = new Date(booking.start_at);
-        const bookingEnd = new Date(booking.end_at);
-
-        if (bookingStart.getTime() - cursor.getTime() >= desiredDurationMs) {
-          return {
-            startDate: cursor.toISOString(),
-            endDate: new Date(cursor.getTime() + desiredDurationMs).toISOString(),
-          };
-        }
-
-        if (bookingEnd > cursor) {
-          cursor = new Date(bookingEnd.getTime());
-        }
-      }
-
-      return {
-        startDate: cursor.toISOString(),
-        endDate: new Date(cursor.getTime() + desiredDurationMs).toISOString(),
-      };
-    } catch (err) {
-      console.warn('Failed to calculate next available range:', err);
-      return null;
-    }
-  }
 
   /**
    * ✅ NUEVO: Verifica si un auto tiene reservas activas
