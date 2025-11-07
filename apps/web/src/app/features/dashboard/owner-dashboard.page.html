@@ -238,7 +238,7 @@
         <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
           ⚡ Acciones Rápidas
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <a
             routerLink="/cars/publish"
             class="flex items-center gap-3 p-4 border border-pearl-gray dark:border-neutral-700 rounded-lg hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
@@ -265,6 +265,19 @@
             </div>
           </a>
 
+          <button
+            (click)="toggleCalendar()"
+            class="flex items-center gap-3 p-4 border border-pearl-gray dark:border-neutral-700 rounded-lg hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors text-left w-full"
+          >
+            <span class="text-2xl">📅</span>
+            <div>
+              <p class="font-medium text-smoke-black dark:text-ivory-luminous">Calendario</p>
+              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                Gestiona disponibilidad
+              </p>
+            </div>
+          </button>
+
           <a
             routerLink="/wallet"
             class="flex items-center gap-3 p-4 border border-pearl-gray dark:border-neutral-700 rounded-lg hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
@@ -277,6 +290,26 @@
           </a>
         </div>
       </div>
+
+      <!-- Multi-Car Calendar Section (Expandable) -->
+      @if (showCalendar()) {
+        <div
+          class="mt-8 bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        >
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+              📅 Calendario de Disponibilidad
+            </h2>
+            <button
+              (click)="toggleCalendar()"
+              class="text-sm text-charcoal-medium hover:text-smoke-black dark:hover:text-pearl-light transition-colors"
+            >
+              Ocultar
+            </button>
+          </div>
+          <app-multi-car-calendar />
+        </div>
+      }
     }
   </div>
 </div>
