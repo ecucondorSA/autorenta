@@ -434,8 +434,8 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
   ],
 })
 export class DriverProfileCardComponent implements OnInit {
-  private readonly modalController = inject(ModalController);
   readonly driverProfileService = inject(DriverProfileService);
+  private readonly modalController = inject(ModalController);
 
   // Expose Math for template
   readonly Math = Math;
@@ -485,11 +485,17 @@ export class DriverProfileCardComponent implements OnInit {
   }
 
   async onViewDetails(): Promise<void> {
-    const modal = await this.modalController.create({
-      component: ClassBenefitsModalComponent,
-    });
-
-    await modal.present();
+    try {
+      const modal = await this.modalController.create({
+        component: ClassBenefitsModalComponent,
+        componentProps: {
+          currentClass: this.driverClass(),
+        },
+      });
+      await modal.present();
+    } catch (error) {
+      console.error('[DriverProfileCard] Error al abrir modal de beneficios:', error);
+    }
   }
 
   formatDate(dateString: string | null | undefined): string {

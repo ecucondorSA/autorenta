@@ -55,7 +55,7 @@
 
           <div
             *ngIf="hasMultiplePhotos()"
-            class="absolute inset-0 flex items-center justify-between px-4"
+            class="absolute inset-y-0 left-1/2 flex w-[88%] -translate-x-1/2 items-center justify-between px-2 sm:px-3 lg:px-4"
           >
             <button
               type="button"
@@ -109,27 +109,7 @@
           </div>
         </div>
 
-        <div *ngIf="hasMultiplePhotos()" class="grid grid-cols-4 gap-2 md:grid-cols-6">
-          <button
-            *ngFor="let photo of allPhotos(); let i = index"
-            type="button"
-            (click)="goToPhoto(i)"
-            [class.ring-2]="currentPhotoIndex() === i"
-            [class.ring-accent-petrol]="currentPhotoIndex() === i"
-            [class.opacity-50]="currentPhotoIndex() !== i"
-            class="aspect-square overflow-hidden rounded-lg transition-all hover:opacity-100"
-          >
-            <img
-              [src]="photo.url"
-              [alt]="'Foto ' + (i + 1)"
-              loading="lazy"
-              decoding="async"
-              width="100"
-              height="100"
-              class="h-full w-full object-cover"
-            />
-          </button>
-        </div>
+        <!-- Thumbnail strip removed -->
       </div>
 
       <div class="space-y-3">
@@ -201,8 +181,29 @@
       <div
         class="card-premium rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft"
       >
-        <h2 class="h4 mb-4">Especificaciones</h2>
-        <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div class="flex items-start justify-between gap-4">
+          <h2 class="h4">Especificaciones</h2>
+          <button
+            type="button"
+            (click)="toggleSpecs()"
+            [attr.aria-expanded]="!specsCollapsed()"
+            class="flex items-center gap-2 rounded-lg border border-pearl-gray dark:border-gray-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-charcoal-medium dark:text-pearl-light transition hover:bg-pearl-gray/20 dark:hover:bg-slate-deep-pure/60"
+          >
+            <span>{{ specsCollapsed() ? 'Ver detalles' : 'Ocultar' }}</span>
+            <svg
+              class="h-4 w-4 transition-transform"
+              [class.rotate-180]="!specsCollapsed()"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+
+        <ng-container *ngIf="!specsCollapsed()">
+        <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
           <div class="flex items-center gap-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sand-light">
               <svg
@@ -419,7 +420,59 @@
             </ng-container>
           </div>
         </div>
+        </ng-container>
       </div>
+
+      <div
+        class="card-premium rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="h4">Chat con el anfitrión</h2>
+          <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ash-gray dark:text-pearl-light/70">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+            <span>Mensajes directos</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="car() as currentCar">
+          <ng-container *ngIf="canContactOwner(); else chatUnavailable">
+            <app-car-chat
+              [carId]="currentCar.id"
+              [recipientId]="currentCar.owner_id"
+              [recipientName]="currentCar.owner?.full_name || 'Anfitrión'"
+            ></app-car-chat>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <ng-template #chatUnavailable>
+        <div class="mt-4 rounded-xl border border-pearl-gray dark:border-gray-600 bg-sand-light/60 dark:bg-slate-deep-pure/60 p-5 text-sm text-charcoal-medium dark:text-pearl-light">
+          <ng-container *ngIf="!authService.isAuthenticated(); else ownerChatNotice">
+            <p class="font-semibold mb-2">Iniciá sesión para chatear con el anfitrión.</p>
+            <p class="text-xs text-ash-gray dark:text-pearl-light/70">
+              Vas a poder coordinar detalles y hacer preguntas directamente.
+            </p>
+            <a
+              routerLink="/auth/login"
+              [queryParams]="{ returnUrl: router.url }"
+              class="btn-primary mt-4 inline-flex items-center gap-2"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              Iniciar sesión
+            </a>
+          </ng-container>
+          <ng-template #ownerChatNotice>
+            <p class="font-semibold mb-2">Este es tu auto.</p>
+            <p class="text-xs text-ash-gray dark:text-pearl-light/70">
+              El chat se habilita automáticamente para los viajeros interesados en tu publicación.
+            </p>
+          </ng-template>
+        </div>
+      </ng-template>
 
       <div
         class="card-premium rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft"
@@ -432,7 +485,7 @@
 
       <div
         id="reviews"
-        class="card-premium reviews-section rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft"
+        class="card-premium reviews-section rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft max-w-3xl mx-auto"
       >
         <!-- Estadísticas del auto (mantener si hay carStats) -->
         <div
@@ -536,73 +589,6 @@
     </div>
 
     <aside class="space-y-4">
-      <div
-        class="mb-4 rounded-xl border-2 p-4"
-        [class.border-green-500]="car()?.status === 'active'"
-        [class.bg-green-50]="car()?.status === 'active'"
-        [class.border-yellow-500]="car()?.status !== 'active'"
-        [class.bg-yellow-50]="car()?.status !== 'active'"
-      >
-        <div class="flex items-center gap-3">
-          <div
-            class="flex h-10 w-10 items-center justify-center rounded-full"
-            [class.bg-green-100]="car()?.status === 'active'"
-            [class.bg-yellow-100]="car()?.status !== 'active'"
-          >
-            <svg
-              *ngIf="car()?.status === 'active'"
-              class="h-6 w-6 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <svg
-              *ngIf="car()?.status !== 'active'"
-              class="h-6 w-6 text-yellow-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          <div>
-            <p
-              class="text-sm font-semibold"
-              [class.text-green-900]="car()?.status === 'active'"
-              [class.text-yellow-900]="car()?.status !== 'active'"
-            >
-              {{
-                car()?.status === 'active' ? '✓ Disponible para reservar' : 'Revisar disponibilidad'
-              }}
-            </p>
-            <p
-              class="text-xs"
-              [class.text-green-700]="car()?.status === 'active'"
-              [class.text-yellow-700]="car()?.status !== 'active'"
-            >
-              {{
-                car()?.status === 'active'
-                  ? 'Este auto está listo para tu viaje'
-                  : 'Consultá con el propietario'
-              }}
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div
         class="card-premium lg:sticky lg:top-24 rounded-2xl border-2 border-pearl-gray dark:border-gray-600 bg-gradient-to-br from-white-pure via-accent-petrol/5 to-accent-warm/5 p-4 sm:p-6 shadow-elevated hover:shadow-xl transition-all duration-300"
         [class.border-accent-petrol/20]="expressMode()"
@@ -775,12 +761,6 @@
           </div>
         </div>
 
-        <!-- Booking Benefits -->
-        <div class="mb-6">
-          <h3 class="text-sm font-bold text-smoke-black mb-3">¿Por qué reservar con AutoRenta?</h3>
-          <app-booking-benefits [car]="car()" [compact]="true"></app-booking-benefits>
-        </div>
-
         <div class="mb-6" id="tour-date-picker">
           <app-date-range-picker
             [label]="expressMode() ? 'Duración de alquiler' : 'Fechas de alquiler'"
@@ -791,8 +771,7 @@
             [showPrices]="!expressMode()"
             [carId]="car()?.id ?? null"
             [availabilityChecker]="!expressMode() ? checkAvailability : null"
-            [nextAvailableRangeProvider]="!expressMode() ? suggestNextAvailableRange : null"
-            [blockedDates]="blockedDates()"
+            [blockedRanges]="blockedRanges()"
           ></app-date-range-picker>
 
           <div
@@ -859,9 +838,27 @@
         </div>
 
         <div *ngIf="totalPrice() as total" class="mb-6 space-y-3">
-          <div class="rounded-xl bg-sand-light p-4" id="tour-price-summary">
-            <h3 class="mb-3 text-sm font-semibold text-smoke-black">Resumen de Precios</h3>
+          <div
+            class="rounded-xl bg-sand-light p-4 transition-all duration-300"
+            [class.ring-2]="dateRange().from && dateRange().to"
+            [class.ring-accent-petrol]="dateRange().from && dateRange().to"
+            [class.shadow-lg]="dateRange().from && dateRange().to"
+            id="tour-price-summary"
+          >
+            <h3 class="mb-3 text-sm font-semibold text-smoke-black flex items-center gap-2">
+              Resumen de Precios
+              <span
+                *ngIf="dateRange().from && dateRange().to"
+                class="inline-flex items-center gap-1 text-xs text-green-600 font-normal animate-fade-in"
+              >
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Actualizado
+              </span>
+            </h3>
             <div class="space-y-2 text-sm">
+              <!-- Subtotal del alquiler -->
               <div class="flex justify-between">
                 <span class="text-charcoal-medium dark:text-pearl-light">
                   <ng-container *ngIf="expressMode() && calculatedHourlyRate()">
@@ -873,31 +870,53 @@
                 </span>
                 <span class="font-semibold text-smoke-black">{{ total | money }}</span>
               </div>
+
+              <!-- Depósito de seguridad (reembolsable) -->
               <div
-                *ngIf="car()?.deposit_required && car()?.deposit_amount"
-                class="flex justify-between"
+                *ngIf="car()?.deposit_required && depositAmount()"
+                class="flex justify-between items-center"
               >
-                <span class="text-charcoal-medium dark:text-pearl-light">Depósito de seguridad</span>
-                <span class="font-semibold text-smoke-black">{{
-                  car()?.deposit_amount | money
-                }}</span>
-              </div>
-              <div class="border-t border-pearl-gray dark:border-gray-600 pt-2">
-                <div class="flex justify-between">
-                  <span class="font-semibold text-smoke-black">Total</span>
-                  <span class="text-xl font-bold text-smoke-black">{{ total | money }}</span>
+                <div class="flex items-center gap-1">
+                  <span class="text-charcoal-medium dark:text-pearl-light">Garantía</span>
+                  <span
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700 font-medium"
+                    title="Este monto se pre-autoriza pero NO se cobra. Se libera automáticamente al finalizar sin incidentes."
+                  >
+                    Reembolsable
+                  </span>
                 </div>
+                <span class="font-semibold text-smoke-black">{{ depositAmount() | money:'USD' }}</span>
+              </div>
+
+              <!-- Total a autorizar -->
+              <div class="border-t border-pearl-gray dark:border-gray-600 pt-2 mt-3">
+                <div class="flex justify-between items-baseline">
+                  <div class="flex flex-col">
+                    <span class="font-semibold text-smoke-black">Total a Autorizar</span>
+                    <span class="text-xs text-charcoal-medium">Alquiler + Garantía</span>
+                  </div>
+                  <span class="text-xl font-bold text-accent-petrol">
+                    {{ authorizationTotal() | money }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Clarificación: Solo se cobra el alquiler -->
+              <div *ngIf="car()?.deposit_required && depositAmount()" class="pt-1">
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light italic">
+                  💡 Se cobrará solo <strong>{{ total | money }}</strong> por el alquiler
+                </p>
               </div>
             </div>
           </div>
 
           <div
             *ngIf="car()?.deposit_required"
-            class="rounded-lg bg-accent-petrol/10 p-3 insurance-info"
+            class="rounded-lg bg-accent-petrol/10 border border-accent-petrol/20 p-3 insurance-info"
           >
-            <p class="text-xs text-accent-petrol">
+            <div class="flex items-start gap-2">
               <svg
-                class="mb-1 inline h-4 w-4"
+                class="h-5 w-5 text-accent-petrol flex-shrink-0 mt-0.5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -906,21 +925,32 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                 />
               </svg>
-              El depósito de seguridad se devolverá al finalizar el alquiler
-            </p>
+              <div class="flex-1">
+                <p class="text-xs text-accent-petrol font-medium">
+                  <strong>Sobre la Garantía (Depósito de Seguridad)</strong>
+                </p>
+                <p class="text-xs text-accent-petrol/80 mt-1">
+                  • Este monto se <strong>pre-autoriza</strong> pero <strong>NO se cobra</strong><br />
+                  • Se libera automáticamente al finalizar el alquiler sin incidentes<br />
+                  • Protege al propietario en caso de daños o multas
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- ✅ NEW: Recommendation block with suggestions and waitlist -->
         <div
           *ngIf="bookingError()"
-          class="mb-4 rounded-lg border-2 border-red-300 bg-red-50 p-4 text-sm text-red-800"
+          class="mb-4 rounded-lg border-2 border-blue-300 bg-blue-50 p-4 text-sm"
         >
-          <div class="flex items-start gap-2">
+          <!-- Icon and title -->
+          <div class="flex items-start gap-3 mb-3">
             <svg
-              class="h-5 w-5 flex-shrink-0 text-red-600 mt-0.5"
+              class="h-6 w-6 flex-shrink-0 text-blue-600 mt-0.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -929,12 +959,84 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
             <div class="flex-1">
-              <p class="font-semibold">Error</p>
-              <p>{{ bookingError() }}</p>
+              <p class="font-semibold text-blue-900">Fechas no disponibles</p>
+              <p class="text-blue-800 mt-1">{{ bookingError() }}</p>
+            </div>
+          </div>
+
+          <!-- Date suggestions chips -->
+          <div *ngIf="suggestedDateRanges().length > 0" class="mt-4">
+            <p class="text-xs font-semibold text-blue-900 mb-2">Próximas fechas disponibles:</p>
+            <div class="flex flex-wrap gap-2">
+              <button
+                *ngFor="let suggestion of suggestedDateRanges()"
+                (click)="applySuggestedDates(suggestion)"
+                class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-blue-300 rounded-lg text-blue-900 hover:bg-blue-100 hover:border-blue-400 transition-all duration-200 text-xs font-medium"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <span>
+                  {{ formatSuggestionDate(suggestion.startDate) }} →
+                  {{ formatSuggestionDate(suggestion.endDate) }}
+                  ({{ suggestion.daysCount }} día{{ suggestion.daysCount !== 1 ? 's' : '' }})
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Waitlist CTA -->
+          <div *ngIf="canWaitlist()" class="mt-4 pt-4 border-t border-blue-300">
+            <div class="flex items-start gap-3 mb-3">
+              <svg class="h-5 w-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
+              </svg>
+              <div class="flex-1">
+                <p class="font-semibold text-blue-900 mb-1">¿Querés que te notifiquemos?</p>
+                <p class="text-blue-800 text-xs mb-3">
+                  Te avisaremos automáticamente si otro usuario cancela o si el auto queda disponible para estas fechas.
+                </p>
+                <button
+                  (click)="addToWaitlist()"
+                  [disabled]="addingToWaitlist()"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors duration-200 text-sm font-medium"
+                >
+                  <svg *ngIf="!addingToWaitlist()" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                    />
+                  </svg>
+                  <span *ngIf="!addingToWaitlist()">Anotarme en lista de espera</span>
+                  <span *ngIf="addingToWaitlist()" class="flex items-center gap-2">
+                    <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Agregando...
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -968,15 +1070,28 @@
         </div>
 
         <!-- Confirmación Instantánea Badge (si auto_approval está activado) -->
-        <div *ngIf="car()?.auto_approval && canBook()" class="mb-3 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-green-50 border border-green-200">
+        <div *ngIf="car()?.auto_approval && canBook() && !expressMode()" class="mb-3 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-green-50 border border-green-200">
           <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
           </svg>
           <span class="text-sm font-semibold text-green-800">Confirmación Instantánea</span>
         </div>
 
-        <!-- CTA Button with optimizations -->
-        <div class="relative group">
+        <!-- ✅ NEW: Payment Method Buttons (Normal Mode) -->
+        <div *ngIf="authService.isAuthenticated() && !expressMode() && canBook()">
+          <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-pearl-light">
+            Elegí tu Método de Pago
+          </h3>
+          <app-payment-method-buttons
+            [rentalAmount]="rentalTotal() ?? 0"
+            [depositAmount]="depositAmount()"
+            [disabled]="!canBook()"
+            (methodSelected)="onPaymentMethodSelected($event)"
+          />
+        </div>
+
+        <!-- CTA Button (Express Mode or not authenticated) -->
+        <div *ngIf="!authService.isAuthenticated() || expressMode() || !canBook()" class="relative group">
           <!-- Tooltip -->
           <div
             *ngIf="canBook()"
@@ -1001,7 +1116,7 @@
             [class.hover:shadow-xl]="expressMode()"
             [class.transform]="expressMode()"
             [class.hover:scale-105]="expressMode()"
-            [class.animate-pulse]="canBook() && !bookingInProgress()"
+            [class.animate-pulse]="canBook() && !bookingInProgress() && expressMode()"
             class="w-full py-4 text-base font-bold transition-all duration-300"
             [class.btn-primary]="!expressMode() && canBook()"
             [class.bg-charcoal-medium]="!canBook() && !expressMode()"
@@ -1043,11 +1158,6 @@
                 <span *ngIf="urgentAvailability()?.eta" class="text-xs opacity-90">
                   ({{ urgentAvailability()!.eta }} min)
                 </span>
-              </ng-container>
-
-              <!-- Normal Mode - Can Book -->
-              <ng-container *ngIf="!expressMode() && canBook()">
-                Solicitar Reserva
               </ng-container>
 
               <!-- Normal Mode - Cannot Book (no dates selected) -->

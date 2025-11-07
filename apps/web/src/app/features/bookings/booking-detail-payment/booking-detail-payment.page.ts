@@ -290,15 +290,47 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     // 2. Obtener parámetros de ruta o sessionStorage
     await this.loadBookingInput();
 
-    // 3. Cargar información del auto
+    // 3. ✅ NEW: Pre-select payment method from queryParams or sessionStorage
+    this.preselectPaymentMethod();
+
+    // 4. Cargar información del auto
     await this.loadCarInfo();
 
-    // 4. Inicializar snapshots (no espera distancia)
+    // 5. Inicializar snapshots (no espera distancia)
     await this.initializeSnapshots();
 
-    // 5. ✅ OPTIMIZED: Initialize user location in background (non-blocking)
+    // 6. ✅ OPTIMIZED: Initialize user location in background (non-blocking)
     // This allows the page to load immediately while location is being fetched
     this.initializeUserLocationAndDistanceInBackground();
+  }
+
+  /**
+   * ✅ NEW: Pre-select payment method from queryParams or sessionStorage
+   * Called during ngOnInit to set initial payment method choice
+   */
+  private preselectPaymentMethod(): void {
+    // First try queryParams
+    const methodFromQuery = this.route.snapshot.queryParamMap.get('paymentMethod');
+
+    // Map from component PaymentMethod type to page PaymentMode type
+    if (methodFromQuery === 'wallet') {
+      this.paymentMode.set('wallet');
+      return;
+    } else if (methodFromQuery === 'credit_card') {
+      this.paymentMode.set('card');
+      return;
+    }
+
+    // Fallback to sessionStorage
+    const methodFromSession = sessionStorage.getItem('payment_method');
+
+    if (methodFromSession === 'wallet') {
+      this.paymentMode.set('wallet');
+      sessionStorage.removeItem('payment_method');
+    } else if (methodFromSession === 'credit_card') {
+      this.paymentMode.set('card');
+      sessionStorage.removeItem('payment_method');
+    }
   }
 
   /**
@@ -526,11 +558,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   /**
    * Inicializa FX snapshot, risk snapshot y pricing
+   * ✅ FIX: Mejor manejo de errores con fallbacks
    */
   private async initializeSnapshots(): Promise<void> {
     try {
-      // 1. FX Snapshot
+      // 1. FX Snapshot (con fallback automático)
       await this.loadFxSnapshot();
+
+      // Verificar que tenemos FX snapshot (debería tenerlo siempre gracias al fallback)
+      if (!this.fxSnapshot()) {
+        throw new Error('No se pudo obtener tipo de cambio (ni fallback)');
+      }
 
       // 2. Risk Snapshot
       await this.calculateRiskSnapshot();
@@ -540,6 +578,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // Guardar estado en sessionStorage para recuperación
       this.saveStateToSession();
+
+      // Limpiar cualquier error previo si todo salió bien
+      if (this.error()) {
+        this.error.set(null);
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error desconocido';
       let detailedError = 'Error al inicializar cálculos de reserva: ' + message;
@@ -560,23 +603,84 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   /**
    * Carga el FX snapshot actual
+   * ✅ FIX: Agrega fallback cuando no se puede obtener de la DB
    */
   private async loadFxSnapshot(): Promise<void> {
     this.loadingFx.set(true);
     try {
-      // Add timeout to prevent hanging forever (10 seconds)
+      // 1. Intentar obtener de la base de datos (con timeout de 10 segundos)
       const fxPromise = firstValueFrom(this.fxService.getFxSnapshot('USD', 'ARS'));
       const timeoutPromise = new Promise<never>((_, reject) => {
         setTimeout(() => reject(new Error('Timeout obteniendo tipo de cambio')), 10000);
       });
 
-      const snapshot = await Promise.race([fxPromise, timeoutPromise]);
+      let snapshot = await Promise.race([fxPromise, timeoutPromise]);
+
+      // 2. Si no se obtuvo de la DB, intentar obtener directamente de Binance
       if (!snapshot) {
-        throw new Error('No se pudo obtener tipo de cambio');
+        console.warn('[FX] No se pudo obtener tipo de cambio de DB, intentando Binance...');
+        try {
+          const rate = await this.fxService.getCurrentRateAsync('USD', 'ARS');
+          const now = new Date();
+          const expiresAt = new Date(now);
+          expiresAt.setDate(expiresAt.getDate() + 7);
+
+          snapshot = {
+            rate,
+            timestamp: now,
+            fromCurrency: 'USD',
+            toCurrency: 'ARS',
+            expiresAt,
+            isExpired: false,
+            variationThreshold: 0.1,
+          };
+          console.log(`💱 FX Snapshot (Binance directo): 1 USD = ${rate} ARS`);
+        } catch (binanceError) {
+          console.error('[FX] Error obteniendo de Binance:', binanceError);
+          // 3. Fallback: usar tipo de cambio por defecto razonable
+          const defaultRate = 1000; // Valor aproximado común para USD/ARS
+          const now = new Date();
+          const expiresAt = new Date(now);
+          expiresAt.setDate(expiresAt.getDate() + 7);
+
+          snapshot = {
+            rate: defaultRate,
+            timestamp: now,
+            fromCurrency: 'USD',
+            toCurrency: 'ARS',
+            expiresAt,
+            isExpired: false,
+            variationThreshold: 0.1,
+          };
+          console.warn(`⚠️ [FX] Usando tipo de cambio por defecto: 1 USD = ${defaultRate} ARS`);
+        }
       }
+
+      if (!snapshot) {
+        throw new Error('No se pudo obtener tipo de cambio ni crear fallback');
+      }
+
       this.fxSnapshot.set(snapshot);
     } catch (err: unknown) {
-      throw err;
+      // Si todo falla, crear un snapshot con valor por defecto para permitir continuar
+      const defaultRate = 1000;
+      const now = new Date();
+      const expiresAt = new Date(now);
+      expiresAt.setDate(expiresAt.getDate() + 7);
+
+      const fallbackSnapshot: FxSnapshot = {
+        rate: defaultRate,
+        timestamp: now,
+        fromCurrency: 'USD',
+        toCurrency: 'ARS',
+        expiresAt,
+        isExpired: false,
+        variationThreshold: 0.1,
+      };
+
+      console.error('[FX] Error crítico, usando fallback:', err);
+      console.warn(`⚠️ [FX] Usando tipo de cambio por defecto: 1 USD = ${defaultRate} ARS`);
+      this.fxSnapshot.set(fallbackSnapshot);
     } finally {
       this.loadingFx.set(false);
     }
@@ -638,11 +742,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       const subtotalUsd = dailyRateUsd * dates.totalDays;
 
-      // FGO contribution (15% del subtotal)
-      const fgoContributionUsd = subtotalUsd * 0.15;
+      // FGO contribution (15% del subtotal) - DESHABILITADO
+      const fgoContributionUsd = 0;
 
-      // Platform fee (5%)
-      const platformFeeUsd = subtotalUsd * 0.05;
+      // Platform fee (5%) - DESHABILITADO
+      const platformFeeUsd = 0;
 
       // Insurance fee (ya incluido, ponemos 0)
       const insuranceFeeUsd = 0;
