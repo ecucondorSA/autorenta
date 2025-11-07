@@ -1,7 +1,8 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { DriverProfileService } from '../../../core/services/driver-profile.service';
+import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benefits-modal.component';
 
 /**
  * DriverProfileCardComponent
@@ -433,6 +434,7 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
   ],
 })
 export class DriverProfileCardComponent implements OnInit {
+  private readonly modalController = inject(ModalController);
   readonly driverProfileService = inject(DriverProfileService);
 
   // Expose Math for template
@@ -482,9 +484,12 @@ export class DriverProfileCardComponent implements OnInit {
     }
   }
 
-  onViewDetails(): void {
-    // TODO: Open ClassBenefitsModal
-    console.log('[DriverProfileCard] View details clicked');
+  async onViewDetails(): Promise<void> {
+    const modal = await this.modalController.create({
+      component: ClassBenefitsModalComponent,
+    });
+
+    await modal.present();
   }
 
   formatDate(dateString: string | null | undefined): string {

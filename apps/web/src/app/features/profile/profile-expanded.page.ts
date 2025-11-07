@@ -15,6 +15,7 @@ import { tap } from 'rxjs/operators';
 import { from } from 'rxjs';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
+import { DriverProfileCardComponent } from '../../shared/components/driver-profile-card/driver-profile-card.component';
 import {
   UserProfile,
   Role,
@@ -37,6 +38,7 @@ type TabId =
   | 'general'
   | 'contact'
   | 'address'
+  | 'conductor'
   | 'verification'
   | 'notifications'
   | 'preferences'
@@ -55,6 +57,7 @@ type TabId =
     PhoneVerificationComponent,
     SelfieCaptureComponent,
     NotificationToastComponent,
+    DriverProfileCardComponent,
   ],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
@@ -270,6 +273,7 @@ export class ProfileExpandedPage {
     { id: 'general' as TabId, label: 'General' },
     { id: 'contact' as TabId, label: 'Contacto' },
     { id: 'address' as TabId, label: 'Dirección' },
+    { id: 'conductor' as TabId, label: 'Conductor' },
     { id: 'verification' as TabId, label: 'Verificación' },
     { id: 'notifications' as TabId, label: 'Notificaciones' },
     { id: 'preferences' as TabId, label: 'Preferencias' },
@@ -429,7 +433,7 @@ export class ProfileExpandedPage {
 
   private isValidTab(tab: string | null): boolean {
     if (!tab) return false;
-    return ['general', 'contact', 'address', 'verification', 'notifications', 'preferences', 'security'].includes(tab);
+    return ['general', 'contact', 'address', 'conductor', 'verification', 'notifications', 'preferences', 'security'].includes(tab);
   }
 
   private populateForms(profile: UserProfile): void {
