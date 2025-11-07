@@ -1,0 +1,214 @@
+/* Timeline Container */
+.booking-confirmation-timeline {
+  @apply space-y-6;
+}
+
+.timeline-header {
+  @apply space-y-2;
+}
+
+.timeline-container {
+  @apply relative py-4;
+}
+
+.timeline-list {
+  @apply space-y-0;
+}
+
+/* Timeline Item */
+.timeline-item {
+  @apply relative flex gap-4;
+  @apply transition-all duration-300;
+}
+
+/* Mobile: Vertical layout */
+@media (max-width: 640px) {
+  .timeline-item {
+    @apply flex-row;
+    @apply pb-6;
+  }
+}
+
+/* Desktop: Keep vertical */
+@media (min-width: 641px) {
+  .timeline-item {
+    @apply flex-row;
+    @apply pb-8;
+  }
+}
+
+/* Remove bottom padding from last item */
+.timeline-item:last-child {
+  @apply pb-0;
+}
+
+/* Timeline Line Wrapper */
+.timeline-line-wrapper {
+  @apply relative flex flex-col items-center;
+  @apply flex-shrink-0;
+  @apply w-10;
+}
+
+/* Timeline Line */
+.timeline-line {
+  @apply absolute w-0.5 bg-gray-200 dark:bg-gray-700;
+  @apply transition-colors duration-300;
+}
+
+.timeline-line--top {
+  @apply top-0 bottom-1/2;
+}
+
+.timeline-line--bottom {
+  @apply top-1/2 bottom-0;
+}
+
+.timeline-line--completed {
+  @apply bg-accent-petrol dark:bg-accent-petrol;
+}
+
+/* Timeline Marker (Circle) */
+.timeline-marker {
+  @apply relative z-10;
+  @apply flex items-center justify-center;
+  @apply w-10 h-10 rounded-full;
+  @apply border-2;
+  @apply transition-all duration-300;
+  @apply flex-shrink-0;
+}
+
+.timeline-marker--completed {
+  @apply bg-accent-petrol border-accent-petrol;
+  @apply shadow-md shadow-accent-petrol/30;
+}
+
+.timeline-marker--current {
+  @apply bg-white dark:bg-slate-deep;
+  @apply border-accent-petrol;
+  @apply ring-4 ring-accent-petrol/20;
+  @apply animate-pulse;
+}
+
+.timeline-marker--pending {
+  @apply bg-white dark:bg-slate-deep;
+  @apply border-gray-300 dark:border-gray-600;
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+/* Timeline Content */
+.timeline-content {
+  @apply flex-1 min-w-0;
+  @apply pb-2;
+}
+
+.timeline-step-header {
+  @apply flex items-start justify-between gap-3 flex-wrap;
+  @apply mb-2;
+}
+
+.timeline-step-title {
+  @apply text-base font-semibold;
+  @apply transition-colors duration-200;
+}
+
+.timeline-step-badge {
+  @apply inline-flex items-center gap-1.5;
+  @apply px-2.5 py-1;
+  @apply text-xs font-semibold rounded-full;
+  @apply transition-all duration-200;
+  @apply flex-shrink-0;
+}
+
+.timeline-step-badge--completed {
+  @apply bg-green-100 text-green-800;
+  @apply dark:bg-green-900/40 dark:text-green-200;
+}
+
+.timeline-step-badge--pending {
+  @apply bg-orange-100 text-orange-800;
+  @apply dark:bg-orange-900/40 dark:text-orange-200;
+}
+
+.timeline-step-description {
+  @apply text-sm text-gray-600 dark:text-gray-300;
+  @apply mb-2;
+}
+
+.timeline-step-metadata {
+  @apply flex flex-wrap items-center gap-4;
+  @apply text-xs text-gray-500 dark:text-gray-400;
+}
+
+.timeline-metadata-item {
+  @apply flex items-center gap-1.5;
+}
+
+/* Action Button */
+.timeline-action-button {
+  @apply inline-flex items-center gap-2;
+  @apply px-4 py-2;
+  @apply bg-accent-petrol hover:bg-accent-warm;
+  @apply text-white font-medium;
+  @apply rounded-lg;
+  @apply transition-all duration-200;
+  @apply shadow-sm hover:shadow-md;
+  @apply focus:outline-none focus:ring-2 focus:ring-accent-petrol focus:ring-offset-2;
+  @apply active:scale-95;
+}
+
+.timeline-action-button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Timeline Footer */
+.timeline-footer {
+  @apply pt-4;
+}
+
+/* Conditional Step Styling */
+.timeline-item--conditional .timeline-marker {
+  @apply border-red-400 dark:border-red-600;
+}
+
+.timeline-item--conditional.timeline-item--completed .timeline-marker {
+  @apply bg-red-500 border-red-500;
+  @apply shadow-md shadow-red-500/30;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .timeline-step-title {
+    @apply text-sm;
+  }
+
+  .timeline-marker {
+    @apply w-8 h-8;
+  }
+
+  .timeline-line-wrapper {
+    @apply w-8;
+  }
+
+  .timeline-step-badge {
+    @apply text-xs px-2 py-0.5;
+  }
+
+  .timeline-action-button {
+    @apply w-full justify-center;
+  }
+}
+
+/* Animations */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
