@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import * as Sentry from '@sentry/angular';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -272,38 +273,33 @@ export class LoggerService {
     message: string,
     data?: unknown,
   ): void {
-    // This is a placeholder for Sentry integration
-    // In production, initialize Sentry in main.ts:
-    //
-    // import * as Sentry from "@sentry/angular";
-    // Sentry.init({
-    //   dsn: environment.sentryDsn,
-    //   environment: environment.production ? 'production' : 'development',
-    // });
-    //
-    // Then uncomment below:
-    /*
-    if (typeof Sentry !== 'undefined') {
+    // Only send to Sentry if DSN is configured
+    if (!environment.sentryDsn) {
+      return;
+    }
+
+    try {
       const captureContext: Sentry.CaptureContext = {
         level: level as Sentry.SeverityLevel,
-        extra: {
-          ...this.sanitizeData(data),
-          trace_id: this.traceId, // Include trace ID for correlation
-        },
-        tags: this.traceId ? { trace_id: this.traceId } : undefined,
+        extra: { data: this.sanitizeData(data) },
       };
 
-      if (level === 'error' || level === 'fatal') {
-        if (data instanceof Error) {
-          Sentry.captureException(data, captureContext);
+        if (level === 'error' || level === 'fatal') {
+          if (data instanceof Error) {
+            Sentry.captureException(data, captureContext);
+          } else {
+            Sentry.captureException(new Error(message), captureContext);
+          }
         } else {
-          Sentry.captureException(new Error(message), captureContext);
+          Sentry.captureMessage(message, captureContext);
         }
       } else {
         Sentry.captureMessage(message, captureContext);
       }
+    } catch (e) {
+      // Fallback if Sentry fails
+      console.error('Failed to send to Sentry:', e);
     }
-    */
   }
 }
 

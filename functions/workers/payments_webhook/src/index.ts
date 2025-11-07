@@ -1,11 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
-import { fromRequest, generateTraceId, type Logger } from '../../logger';
+import { withSentry, captureError, addBreadcrumb, type SentryEnv } from './sentry';
 
-interface Env {
+interface Env extends SentryEnv {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
   AUTORENT_WEBHOOK_KV: KVNamespace;
   MERCADOPAGO_ACCESS_TOKEN?: string;
+  SENTRY_DSN?: string;
+  ENVIRONMENT?: string;
 }
 
 // Payload para mock
@@ -518,72 +520,82 @@ const processMercadoPagoWebhook = async (
  * Worker principal
  */
 const worker = {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    // Initialize logger with trace ID from request
-    const log = fromRequest(request, 'payments-webhook');
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    return withSentry(request, env, ctx, async () => {
+      const url = new URL(request.url);
 
-    const url = new URL(request.url);
-
-    // Health check endpoint - GET permite verificación
-    if (url.pathname === '/webhooks/payments') {
-      if (request.method === 'GET') {
-        log.debug('Health check request received');
-        return jsonResponse({
-          status: 'ok',
-          message: 'Webhook endpoint is ready',
-          timestamp: new Date().toISOString(),
-        });
-      }
-
-      // Solo acepta POST para procesamiento real
-      if (request.method !== 'POST') {
-        log.warn('Invalid method', { method: request.method });
-        return jsonResponse({ message: 'Method not allowed' }, { status: 405 });
-      }
-    } else {
-      log.warn('Invalid path', { path: url.pathname });
-      return jsonResponse({ message: 'Not found' }, { status: 404 });
-    }
-
-    const supabase = getSupabaseAdminClient(env);
-    const rawBody = await request.text();
-    let payload: any = {};
-
-    if (rawBody) {
-      try {
-        payload = JSON.parse(rawBody);
-      } catch (error) {
-        console.warn('Invalid JSON payload, continuing with query params fallback:', error);
-        payload = {};
-      }
-    }
-
-    try {
-      // Rutear según el provider
-      if (payload?.provider === 'mock') {
-        // Validar campos requeridos para mock
-        if (!payload.booking_id || !payload.status) {
-          log.warn('Missing required fields for mock webhook', { payload });
-          return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
+      // Health check endpoint - GET permite verificación
+      if (url.pathname === '/webhooks/payments') {
+        if (request.method === 'GET') {
+          return jsonResponse({
+            status: 'ok',
+            message: 'Webhook endpoint is ready',
+            timestamp: new Date().toISOString(),
+          });
         }
-        return await processMockWebhook(payload, supabase, env, log);
+
+        // Solo acepta POST para procesamiento real
+        if (request.method !== 'POST') {
+          return jsonResponse({ message: 'Method not allowed' }, { status: 405 });
+        }
+      } else {
+        return jsonResponse({ message: 'Not found' }, { status: 404 });
       }
 
-      return await processMercadoPagoWebhook(payload ?? {}, supabase, env, {
-        signatureHeader: request.headers.get('x-signature'),
-        requestId: request.headers.get('x-request-id'),
-        rawBody,
-        query: url.searchParams,
-      }, log);
-    } catch (error) {
-      log.error('Error processing webhook', error);
-      return jsonResponse(
-        {
-          message: error instanceof Error ? error.message : 'Internal server error',
-        },
-        { status: 500 },
-      );
-    }
+      const supabase = getSupabaseAdminClient(env);
+      const rawBody = await request.text();
+      let payload: any = {};
+
+      if (rawBody) {
+        try {
+          payload = JSON.parse(rawBody);
+        } catch (error) {
+          console.warn('Invalid JSON payload, continuing with query params fallback:', error);
+          addBreadcrumb('Invalid JSON payload', 'validation', { error });
+          payload = {};
+        }
+      }
+
+      try {
+        // Rutear según el provider
+        if (payload?.provider === 'mock') {
+          addBreadcrumb('Processing mock webhook', 'webhook', { bookingId: payload.booking_id });
+          // Validar campos requeridos para mock
+          if (!payload.booking_id || !payload.status) {
+            return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
+          }
+          return await processMockWebhook(payload, supabase, env);
+        }
+
+        addBreadcrumb('Processing MercadoPago webhook', 'webhook', {
+          paymentId: payload?.data?.id,
+        });
+        return await processMercadoPagoWebhook(payload ?? {}, supabase, env, {
+          signatureHeader: request.headers.get('x-signature'),
+          requestId: request.headers.get('x-request-id'),
+          rawBody,
+          query: url.searchParams,
+        });
+      } catch (error) {
+        console.error('Error processing webhook:', error);
+        captureError(error, {
+          tags: {
+            provider: payload?.provider || 'mercadopago',
+            action: 'process-webhook',
+          },
+          extra: {
+            url: url.pathname,
+            method: request.method,
+          },
+        });
+        return jsonResponse(
+          {
+            message: error instanceof Error ? error.message : 'Internal server error',
+          },
+          { status: 500 },
+        );
+      }
+    });
   },
 };
 
