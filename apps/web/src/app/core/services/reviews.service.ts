@@ -537,4 +537,110 @@ export class ReviewsService {
       reviewer_avatar: review.reviewer?.avatar_url || null,
     })) as Review[];
   }
+
+  // ============================================
+  // ADMIN MODERATION METHODS
+  // ============================================
+
+  /**
+   * Get all flagged reviews for admin moderation
+   * Requires admin role
+   */
+  async getFlaggedReviews(status?: 'pending' | 'approved' | 'rejected'): Promise<Review[]> {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await this.supabase.auth.getUser();
+
+      if (authError || !user?.id) throw new Error('Usuario no autenticado');
+
+      const { data, error } = await this.supabase.rpc('get_flagged_reviews', {
+        p_admin_id: user.id,
+        p_status: status || null,
+      });
+
+      if (error) throw error;
+
+      return (data || []) as Review[];
+    } catch (error) {
+      console.error('Error fetching flagged reviews:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Moderate a review (approve or reject)
+   * Requires admin role
+   */
+  async moderateReview(
+    reviewId: string,
+    action: 'approved' | 'rejected',
+    notes?: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await this.supabase.auth.getUser();
+
+      if (authError || !user?.id) throw new Error('Usuario no autenticado');
+
+      const { data, error } = await this.supabase.rpc('moderate_review', {
+        p_review_id: reviewId,
+        p_admin_id: user.id,
+        p_action: action,
+        p_notes: notes || null,
+      });
+
+      if (error) throw error;
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error moderating review:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al moderar la review',
+      };
+    }
+  }
+
+  /**
+   * Bulk moderate multiple reviews at once
+   * Requires admin role
+   */
+  async bulkModerateReviews(
+    reviewIds: string[],
+    action: 'approved' | 'rejected',
+    notes?: string,
+  ): Promise<{ success: boolean; updatedCount?: number; error?: string }> {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await this.supabase.auth.getUser();
+
+      if (authError || !user?.id) throw new Error('Usuario no autenticado');
+
+      const { data, error } = await this.supabase.rpc('bulk_moderate_reviews', {
+        p_review_ids: reviewIds,
+        p_admin_id: user.id,
+        p_action: action,
+        p_notes: notes || null,
+      });
+
+      if (error) throw error;
+
+      return {
+        success: true,
+        updatedCount: data?.updated_count || 0,
+      };
+    } catch (error) {
+      console.error('Error bulk moderating reviews:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al moderar las reviews',
+      };
+    }
+  }
 }

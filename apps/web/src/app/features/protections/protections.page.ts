@@ -105,7 +105,7 @@ import { MetaService } from '../../core/services/meta.service';
         <h3>Enlaces Rápidos</h3>
 
         <ion-list lines="none">
-          <ion-item button [routerLink]="['/driver-profile']">
+          <ion-item button [routerLink]="['/profile/driver-profile']">
             <ion-icon slot="start" name="person-circle-outline" color="primary"></ion-icon>
             <ion-label>
               <h4>Mi Perfil de Conductor</h4>
