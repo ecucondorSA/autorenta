@@ -10,17 +10,23 @@ export const environment = buildEnvironment({
   googleAnalyticsMeasurementId: '', // Configurar via NG_APP_GA4_MEASUREMENT_ID
   enableAnalytics: true,
   docVerifierUrl: 'https://doc-verifier.autorentar.workers.dev',
-  // Sentry Configuration - Configure via environment variables
-  sentryDsn: '', // Set via NG_APP_SENTRY_DSN in Cloudflare Pages
+  // Sentry Configuration
+  // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
+  // NG_APP_SENTRY_DSN - Sentry Project DSN
+  sentryDsn: '', // Se configura via NG_APP_SENTRY_DSN
   sentryEnvironment: 'production',
-  sentryTracesSampleRate: 0.1, // 10% of transactions for performance monitoring
-  sentryReplaysSessionSampleRate: 0.1, // 10% of sessions for session replay
-  sentryReplaysOnErrorSampleRate: 1.0, // 100% of error sessions
+  sentryTracesSampleRate: 0.1, // 10% sampling for performance monitoring
   // PayPal Production Credentials
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
   // NG_APP_PAYPAL_CLIENT_ID - Client ID de PayPal Production
   paypalClientId: '', // Se configura via NG_APP_PAYPAL_CLIENT_ID
   paypalClientSecret: '', // No se usa en frontend
+  // Sentry Error Tracking
+  // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
+  // NG_APP_SENTRY_DSN - Sentry DSN de AutoRenta
+  sentryDsn: '', // Se configura via NG_APP_SENTRY_DSN
+  sentryEnvironment: 'production',
+  sentryTracesSampleRate: 0.1, // 10% performance sampling
   distanceConfig: {
     // Umbrales de tiers (km)
     localThresholdKm: 20,

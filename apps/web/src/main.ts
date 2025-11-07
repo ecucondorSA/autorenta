@@ -5,15 +5,22 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import * as Sentry from '@sentry/angular';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
-import { environment } from './environments/environment';
+import { initSentry } from './app/core/services/sentry.service';
 
-// Initialize Sentry for error tracking and performance monitoring
-if (environment.production && environment.sentryDsn) {
+// Initialize Sentry before bootstrapping (production only)
+initSentry();
+
+registerLocaleData(localeEsAr);
+
+// Initialize Sentry error tracking
+if (environment.sentryDsn) {
   Sentry.init({
     dsn: environment.sentryDsn,
     environment: environment.sentryEnvironment,
     integrations: [
+      // Performance monitoring
       Sentry.browserTracingIntegration(),
+      // Replay for debugging (only in production)
       Sentry.replayIntegration({
         maskAllText: true,
         blockAllMedia: true,
@@ -21,27 +28,26 @@ if (environment.production && environment.sentryDsn) {
     ],
     // Performance Monitoring
     tracesSampleRate: environment.sentryTracesSampleRate,
-    // Session Replay
-    replaysSessionSampleRate: environment.sentryReplaysSessionSampleRate,
-    replaysOnErrorSampleRate: environment.sentryReplaysOnErrorSampleRate,
-    // Filter sensitive data
-    beforeSend(event, hint) {
-      // Don't send events with sensitive paths
-      if (event.request?.url) {
-        const sensitivePatterns = ['/api/auth/', '/wallet/', '/payment/'];
-        if (sensitivePatterns.some((pattern) => event.request?.url?.includes(pattern))) {
-          // Redact URL params
-          if (event.request.url) {
-            event.request.url = event.request.url.split('?')[0];
-          }
-        }
-      }
-      return event;
+    // Session Replay (10% in production)
+    replaysSessionSampleRate: environment.production ? 0.1 : 0,
+    // Replay 100% of sessions with errors
+    replaysOnErrorSampleRate: 1.0,
+    // Release tracking
+    release: 'autorenta-web@0.1.0',
+    // Enable debug mode in development
+    debug: !environment.production,
+    // Custom tags
+    initialScope: {
+      tags: {
+        service: 'web',
+        platform: 'angular',
+      },
     },
   });
+  console.log('✅ Sentry initialized:', environment.sentryEnvironment);
+} else {
+  console.warn('⚠️  Sentry DSN not configured - error tracking disabled');
 }
-
-registerLocaleData(localeEsAr);
 
 bootstrapApplication(AppComponent, {
   ...appConfig,

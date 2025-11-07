@@ -36,7 +36,16 @@ jobs:
         run: pnpm run build:web
         env:
           NODE_ENV: production
-      
+
+      - name: Upload source maps to Sentry
+        working-directory: apps/web
+        run: npm run sentry:sourcemaps
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG || 'autorenta' }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT || 'autorenta-web' }}
+        continue-on-error: true
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:

@@ -799,3 +799,84 @@ export interface BonusMalusDisplay {
   color: string;
   tips?: string[]; // Consejos para mejorar el factor
 }
+
+// ============================================
+// REFUND MANAGEMENT SYSTEM
+// ============================================
+
+export type RefundStatus = 'pending' | 'approved' | 'processing' | 'completed' | 'failed' | 'rejected';
+export type RefundDestination = 'wallet' | 'original_payment_method';
+
+export interface RefundRequest {
+  id: string;
+  booking_id: string;
+  user_id: string;
+  refund_amount: number;
+  currency: string;
+  destination: RefundDestination;
+  status: RefundStatus;
+
+  // Admin actions
+  approved_by?: string | null;
+  approved_at?: string | null;
+  processed_by?: string | null;
+  processed_at?: string | null;
+  rejected_by?: string | null;
+  rejected_at?: string | null;
+
+  // Reasons and notes
+  request_reason?: string | null;
+  rejection_reason?: string | null;
+  admin_notes?: string | null;
+
+  // Provider tracking
+  provider?: string | null;
+  provider_refund_id?: string | null;
+  provider_metadata?: Record<string, unknown> | null;
+
+  // Wallet transaction
+  wallet_transaction_id?: string | null;
+
+  // Timestamps
+  created_at: string;
+  updated_at: string;
+  completed_at?: string | null;
+  failed_at?: string | null;
+
+  // Extended fields (from joins)
+  user_name?: string;
+  user_email?: string;
+  booking_total?: number;
+  car_title?: string;
+}
+
+export interface AdminAuditLog {
+  id: string;
+  admin_id: string;
+  action_type: string;
+  target_type: string;
+  target_id: string;
+  amount?: number | null;
+  currency?: string | null;
+  reason?: string | null;
+  metadata?: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export interface ProcessRefundParams {
+  booking_id: string;
+  refund_amount: number;
+  destination: RefundDestination;
+  reason?: string;
+}
+
+export interface ProcessRefundResult {
+  success: boolean;
+  refund_request_id: string;
+  booking_id: string;
+  amount: number;
+  destination: RefundDestination;
+  status: RefundStatus;
+  wallet_transaction_id?: string | null;
+  message: string;
+}
