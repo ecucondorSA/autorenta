@@ -136,6 +136,13 @@ export const routes: Routes = [
           import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
       },
       {
+        path: 'verification',
+        loadComponent: () =>
+          import('./features/profile/pages/verification/verification.page').then(
+            (m) => m.VerificationPage,
+          ),
+      },
+      {
         path: 'mercadopago-connect',
         loadComponent: () =>
           import('./features/profile/mercadopago-connect.component').then(
