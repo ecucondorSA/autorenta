@@ -85,6 +85,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/admin/fgo/fgo-overview.page').then((m) => m.FgoOverviewPage),
       },
+      {
+        path: 'accounting',
+        loadChildren: () =>
+          import('./features/admin/accounting/accounting.routes').then((m) => m.ACCOUNTING_ROUTES),
+      },
     ],
   },
   {
