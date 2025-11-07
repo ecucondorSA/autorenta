@@ -20,7 +20,7 @@ import { InsuranceService } from '../../../core/services/insurance.service';
 import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insurance.model';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
-import { BookingPricingBreakdownComponent } from './booking-pricing-breakdown.component';
+import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 
 /**
  * BookingDetailPage
@@ -46,7 +46,7 @@ import { BookingPricingBreakdownComponent } from './booking-pricing-breakdown.co
     TranslateModule,
     BookingStatusComponent,
     ReviewManagementComponent,
-    BookingPricingBreakdownComponent,
+    DepositStatusBadgeComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -205,6 +205,15 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking || !this.isRenter()) return false;
     const validStatus = booking.status === 'in_progress';
     return validStatus && this.hasCheckIn() && !this.hasCheckOut();
+  });
+
+  readonly canReportDamage = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return false;
+    // Owner can report damage after vehicle return (completed status or returned_at is set)
+    const canReport = (booking.status === 'completed' || booking.returned_at !== null)
+                      && !booking.owner_reported_damages;
+    return canReport;
   });
 
   isStepCompleted(index: number): boolean {
