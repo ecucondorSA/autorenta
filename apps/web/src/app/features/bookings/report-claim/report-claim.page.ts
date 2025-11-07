@@ -154,15 +154,24 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 expand="block"
                 fill="outline"
                 (click)="fileInput.click()"
-                [disabled]="uploadedPhotos.length >= 10"
+                [disabled]="uploadedPhotoPreviews.length >= 10 || uploadingPhotos"
               >
-                <ion-icon slot="start" name="camera"></ion-icon>
-                {{ uploadedPhotos.length > 0 ? 'Agregar más fotos' : 'Tomar/Subir Fotos' }}
-                ({{ uploadedPhotos.length }}/10)
+                <ion-icon
+                  slot="start"
+                  [name]="uploadingPhotos ? 'hourglass' : 'camera'"
+                ></ion-icon>
+                {{
+                  uploadingPhotos
+                    ? 'Subiendo...'
+                    : uploadedPhotoPreviews.length > 0
+                      ? 'Agregar más fotos'
+                      : 'Tomar/Subir Fotos'
+                }}
+                ({{ uploadedPhotoPreviews.length }}/10)
               </ion-button>
 
-              <div class="photo-preview" *ngIf="uploadedPhotos.length > 0">
-                <div class="photo-item" *ngFor="let photo of uploadedPhotos; let i = index">
+              <div class="photo-preview" *ngIf="uploadedPhotoPreviews.length > 0">
+                <div class="photo-item" *ngFor="let photo of uploadedPhotoPreviews; let i = index">
                   <img [src]="photo" [alt]="'Foto ' + (i + 1)" />
                   <ion-button
                     fill="clear"
@@ -202,12 +211,12 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
             <ion-button
               expand="block"
               type="submit"
-              [disabled]="!claimForm.valid || submitting || !confirmDeclaration"
+              [disabled]="!claimForm.valid || submitting || uploadingPhotos || !confirmDeclaration"
               color="danger"
               class="submit-button"
             >
               <ion-icon slot="start" [name]="submitting ? 'hourglass' : 'alert-circle'"></ion-icon>
-              {{ submitting ? 'Enviando...' : 'Reportar Siniestro' }}
+              {{ submitting ? 'Enviando...' : uploadingPhotos ? 'Subiendo fotos...' : 'Reportar Siniestro' }}
             </ion-button>
 
             <!-- Información Legal -->
@@ -388,8 +397,11 @@ export class ReportClaimPage implements OnInit {
     police_report_number: '',
   };
 
-  uploadedPhotos: string[] = [];
+  uploadedPhotos: string[] = []; // Storage paths
+  uploadedPhotoPreviews: string[] = []; // Data URLs for preview
+  uploadedFiles: File[] = []; // Original files
   maxDate = new Date().toISOString();
+  uploadingPhotos = false;
 
   claimTypes = Object.entries(CLAIM_TYPE_LABELS).map(([value, label]) => ({
     value: value as ClaimType,
@@ -408,8 +420,10 @@ export class ReportClaimPage implements OnInit {
     const files = input.files;
     if (!files || files.length === 0) return;
 
-    const remainingSlots = 10 - this.uploadedPhotos.length;
+    const remainingSlots = 10 - this.uploadedPhotoPreviews.length;
     const filesToProcess = Math.min(files.length, remainingSlots);
+
+    this.uploadingPhotos = true;
 
     for (let i = 0; i < filesToProcess; i++) {
       const file = files[i];
@@ -420,15 +434,37 @@ export class ReportClaimPage implements OnInit {
         continue;
       }
 
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        const result = e.target?.result;
-        if (result) {
-          this.uploadedPhotos.push(result as string);
-        }
-      };
-      reader.readAsDataURL(file);
+      // Validar tipo
+      if (!file.type.startsWith('image/')) {
+        await this.showToast('Solo se permiten imágenes', 'warning');
+        continue;
+      }
+
+      try {
+        // Subir a Storage
+        const filePath = await this.insuranceService.uploadClaimEvidence(file, this.bookingId);
+        this.uploadedPhotos.push(filePath);
+
+        // Crear preview local
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          const result = e.target?.result;
+          if (result) {
+            this.uploadedPhotoPreviews.push(result as string);
+          }
+        };
+        reader.readAsDataURL(file);
+
+        // Guardar archivo original por si necesitamos re-subirlo
+        this.uploadedFiles.push(file);
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : 'Error al subir foto. Intenta nuevamente.';
+        await this.showToast(message, 'danger');
+      }
     }
+
+    this.uploadingPhotos = false;
 
     // Reset input
     input.value = '';
@@ -436,6 +472,8 @@ export class ReportClaimPage implements OnInit {
 
   removePhoto(index: number) {
     this.uploadedPhotos.splice(index, 1);
+    this.uploadedPhotoPreviews.splice(index, 1);
+    this.uploadedFiles.splice(index, 1);
   }
 
   async useCurrentLocation() {
@@ -459,7 +497,7 @@ export class ReportClaimPage implements OnInit {
   }
 
   async submitClaim() {
-    if (this.submitting) return;
+    if (this.submitting || this.uploadingPhotos) return;
 
     // Validaciones extra
     if (this.uploadedPhotos.length === 0) {
