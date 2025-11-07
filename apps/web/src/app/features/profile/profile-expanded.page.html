@@ -427,6 +427,76 @@
         </form>
       </div>
 
+      <!-- Conductor Tab -->
+      <div *ngIf="activeTab() === 'conductor'">
+        <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Perfil de Conductor</h3>
+        <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mb-6">
+          Tu clase de conductor determina los descuentos o recargos que se aplican en tus reservas.
+          Mejora tu clase conduciendo sin siniestros.
+        </p>
+
+        <!-- Driver Profile Card Component -->
+        <app-driver-profile-card></app-driver-profile-card>
+
+        <!-- Quick Actions -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a
+            [routerLink]="['/driver-profile']"
+            class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-petrol/10 to-accent-petrol/5 dark:from-accent-petrol/12 dark:to-transparent border border-accent-petrol/20 dark:border-accent-petrol/35 hover:border-accent-petrol/40 dark:hover:border-accent-petrol/50 transition-all"
+          >
+            <div class="flex items-center gap-3">
+              <svg class="h-6 w-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+              <div>
+                <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Ver Perfil Completo</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">Detalles de tu clase y progreso</p>
+              </div>
+            </div>
+            <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+
+          <a
+            [routerLink]="['/protections']"
+            class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-amber-500/5 dark:from-amber-500/12 dark:to-transparent border border-amber-500/20 dark:border-amber-500/35 hover:border-amber-500/40 dark:hover:border-amber-500/50 transition-all"
+          >
+            <div class="flex items-center gap-3">
+              <svg class="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+              <div>
+                <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Proteger mi Clase</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">Comprar Bonus Protector</p>
+              </div>
+            </div>
+            <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Info Box -->
+        <div class="mt-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700/30">
+          <div class="flex gap-3">
+            <svg class="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="text-sm text-blue-800 dark:text-blue-200">
+              <p class="font-semibold mb-1">¿Cómo funciona el sistema Bonus-Malus?</p>
+              <p>
+                Tu clase va de 0 (excelente) a 10 (alto riesgo). Cada año sin siniestros mejora tu clase en 1 nivel.
+                Los siniestros con responsabilidad pueden subir tu clase según la gravedad.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Verification Tab -->
       <div *ngIf="activeTab() === 'verification'">
         <h3 class="text-lg font-semibold text-smoke-black mb-6">Verificación de Identidad</h3>
