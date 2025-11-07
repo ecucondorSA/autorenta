@@ -358,11 +358,11 @@ export class CarDetailPage implements OnInit {
     }
   };
 
-  async suggestNextAvailableRange(
+  suggestNextAvailableRange = async (
     carId: string,
     from: string,
     to: string,
-  ): Promise<DateRange | null> {
+  ): Promise<DateRange | null> => {
     try {
       const suggestions = await this.carsService.getNextAvailableRange(carId, from, to);
       if (!suggestions || suggestions.length === 0) {
@@ -379,7 +379,7 @@ export class CarDetailPage implements OnInit {
       console.warn('No se pudo obtener próxima ventana disponible:', _error);
       return null;
     }
-  }
+  };
 
   ngOnInit(): void {
     // Verificar si viene con query param urgent
