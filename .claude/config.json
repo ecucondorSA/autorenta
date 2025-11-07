@@ -24,7 +24,7 @@
       "description": "MercadoPago MCP Server - Integraciones con IA, documentación y optimización de pagos"
     },
     "supabase": {
-      "url": "https://mcp.supabase.com/mcp?project_ref=obxvffplochgeiclibng",
+      "url": "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx",
       "transport": "streamble-http",
       "description": "Supabase MCP Server - Database queries, schema management, TypeScript generation, and project operations for AutoRenta verification system"
     }

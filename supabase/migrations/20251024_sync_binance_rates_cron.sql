@@ -30,7 +30,7 @@ DECLARE
 BEGIN
   -- URL de tu proyecto Supabase + Edge Function
   -- IMPORTANTE: Reemplazar con tu URL real
-  v_function_url := 'https://obxvffplochgeiclibng.supabase.co/functions/v1/sync-binance-rates';
+  v_function_url := 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/sync-binance-rates';
 
   -- Service role key desde variables de entorno
   -- NOTA: En producción, la función ya tiene acceso al service role key

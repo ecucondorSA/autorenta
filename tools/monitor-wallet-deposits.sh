@@ -13,7 +13,7 @@
 #   ./tools/monitor-wallet-deposits.sh --last 10    # Últimas 10 transacciones
 #
 
-DB_URL="postgresql://postgres.obxvffplochgeiclibng:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+DB_URL="postgresql://postgres.pisqjmoklivzpwufhscx:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
 PGPASSWORD="ECUCONDOR08122023"
 
 # Colores para output

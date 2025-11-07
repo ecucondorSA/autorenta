@@ -63,7 +63,7 @@
     "workflows": "./tools/run.sh help",
     "check:skills": "tools/check-skills.sh",
     "accounting:export": "node tools/accounting/export-ledger.mjs",
-    "types:db:gen": "supabase gen types typescript --project-id obxvffplochgeiclibng > supabase.types.generated.ts",
+    "types:db:gen": "supabase gen types typescript --project-id pisqjmoklivzpwufhscx > supabase.types.generated.ts",
     "types:db:check": "npm run types:db:gen && git diff --exit-code supabase.types.generated.ts",
     "monitoring:setup": "./tools/monitoring-setup.sh",
     "monitoring:health": "./tools/run.sh monitor:health",

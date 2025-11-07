@@ -9,14 +9,14 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-SUPABASE_URL="https://obxvffplochgeiclibng.supabase.co"
+SUPABASE_URL="https://pisqjmoklivzpwufhscx.supabase.co"
 ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU"
 
 echo ""
 echo "🔍 Supabase Connection Diagnostics"
 echo "===================================="
 echo ""
-echo "Project: obxvffplochgeiclibng"
+echo "Project: pisqjmoklivzpwufhscx"
 echo "URL: $SUPABASE_URL"
 echo ""
 
@@ -58,7 +58,7 @@ elif echo "$BODY" | grep -qi "access denied"; then
   echo ""
   echo "   Free tier projects are paused after 7 days of inactivity."
   echo "   Login to Supabase dashboard to restore the project:"
-  echo "   👉 https://supabase.com/dashboard/project/obxvffplochgeiclibng"
+  echo "   👉 https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx"
 else
   echo -e "${RED}❌ Auth service error${NC}"
   echo "   HTTP Code: $HTTP_CODE"
@@ -110,7 +110,7 @@ if echo "$BODY" | grep -qi "access denied"; then
   echo ""
   echo "Action Required:"
   echo "1. Login to Supabase Dashboard:"
-  echo "   https://supabase.com/dashboard/project/obxvffplochgeiclibng"
+  echo "   https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx"
   echo ""
   echo "2. Check project status:"
   echo "   - If PAUSED: Click 'Restore Project' or 'Unpause'"

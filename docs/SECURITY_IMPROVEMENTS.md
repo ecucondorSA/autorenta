@@ -180,7 +180,7 @@ Deberías ver:
 ```bash
 # Hacer 101 requests rápidas
 for i in {1..101}; do
-  curl -X POST https://obxvffplochgeiclibng.supabase.co/functions/v1/mercadopago-webhook \
+  curl -X POST https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/mercadopago-webhook \
     -H "Content-Type: application/json" \
     -d '{"type":"test"}'
 done
@@ -192,7 +192,7 @@ La request #101 debería retornar `429 Too Many Requests` con header `Retry-Afte
 
 ```bash
 # Simular request desde IP no autorizada
-curl -X POST https://obxvffplochgeiclibng.supabase.co/functions/v1/mercadopago-webhook \
+curl -X POST https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/mercadopago-webhook \
   -H "Content-Type: application/json" \
   -H "X-Forwarded-For: 1.2.3.4" \
   -d '{"type":"payment","data":{"id":"test"}}'

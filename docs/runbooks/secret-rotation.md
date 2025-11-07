@@ -110,7 +110,7 @@ cd /home/edu/autorenta
 ### Anon Key (Public)
 
 1. **Dashboard**
-   - https://supabase.com/dashboard/project/obxvffplochgeiclibng/settings/api
+   - https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/settings/api
 
 2. **Generar Nueva Key**
    - Settings → API → Anon Key → Regenerate
@@ -176,7 +176,7 @@ pg_dump "$DB_URL" > backup_before_password_rotation_$(date +%Y%m%d).sql
 
 ```bash
 # Nueva URL con nueva password
-NEW_DB_URL="postgresql://postgres.obxvffplochgeiclibng:<NEW_PASSWORD>@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+NEW_DB_URL="postgresql://postgres.pisqjmoklivzpwufhscx:<NEW_PASSWORD>@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
 
 # GitHub Actions
 gh secret set DATABASE_URL -b"$NEW_DB_URL"
@@ -371,7 +371,7 @@ jobs:
 ## Referencias
 
 - [Mercado Pago Credentials](https://www.mercadopago.com.ar/developers/panel/credentials)
-- [Supabase API Settings](https://supabase.com/dashboard/project/obxvffplochgeiclibng/settings/api)
+- [Supabase API Settings](https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/settings/api)
 - [Mapbox Tokens](https://account.mapbox.com/access-tokens/)
 - [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens)
 - [GitHub Secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)

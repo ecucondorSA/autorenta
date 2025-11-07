@@ -83,8 +83,8 @@ Después del setup inicial (`./tools/setup-auth.sh`):
 
 #### Supabase
 - **Proyecto**: autarenta
-- **Reference ID**: obxvffplochgeiclibng
-- **URL**: https://obxvffplochgeiclibng.supabase.co
+- **Reference ID**: pisqjmoklivzpwufhscx
+- **URL**: https://pisqjmoklivzpwufhscx.supabase.co
 - **Región**: us-east-2
 - **Edge Functions activas**: 20 functions (mercadopago-webhook, create-preference, wallet-*, etc.)
 
@@ -313,7 +313,7 @@ npm run sync:types
 ### Angular (`.env.development.local`)
 
 ```bash
-NG_APP_SUPABASE_URL=https://obxvffplochgeiclibng.supabase.co
+NG_APP_SUPABASE_URL=https://pisqjmoklivzpwufhscx.supabase.co
 NG_APP_SUPABASE_ANON_KEY=<your-anon-key>
 NG_APP_DEFAULT_CURRENCY=ARS
 NG_APP_PAYMENTS_WEBHOOK_URL=http://localhost:8787/webhooks/payments

@@ -129,7 +129,7 @@ supabase projects list
 psql "$DB_URL" -c "SELECT NOW();"
 
 # 3. Verificar backups disponibles
-# Via Dashboard: https://supabase.com/dashboard/project/obxvffplochgeiclibng/settings/database
+# Via Dashboard: https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/settings/database
 ```
 
 #### Fase 2: Recuperación (1-2 horas)
@@ -138,7 +138,7 @@ psql "$DB_URL" -c "SELECT NOW();"
 
 ```bash
 # 1. Acceder a Supabase Dashboard
-# https://supabase.com/dashboard/project/obxvffplochgeiclibng/settings/database
+# https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/settings/database
 
 # 2. Ir a sección "Backups"
 # 3. Seleccionar backup más reciente (< 24 horas)

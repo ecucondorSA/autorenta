@@ -128,7 +128,7 @@ SELECT cron.schedule(
     \$\$
     SELECT
         net.http_post(
-            url := 'https://obxvffplochgeiclibng.supabase.co/functions/v1/monitoring-health-check',
+            url := 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/monitoring-health-check',
             headers := jsonb_build_object(
                 'Content-Type', 'application/json',
                 'Authorization', 'Bearer ' || current_setting('app.settings.service_role_key')
@@ -145,7 +145,7 @@ SELECT cron.schedule(
     \$\$
     SELECT
         net.http_post(
-            url := 'https://obxvffplochgeiclibng.supabase.co/functions/v1/monitoring-alerts',
+            url := 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/monitoring-alerts',
             headers := jsonb_build_object(
                 'Content-Type', 'application/json',
                 'Authorization', 'Bearer ' || current_setting('app.settings.service_role_key')
@@ -180,7 +180,7 @@ success "Cron jobs configured!"
 log "Step 5: Testing monitoring system..."
 
 log "Testing health check endpoint..."
-HEALTH_CHECK_URL="https://obxvffplochgeiclibng.supabase.co/functions/v1/monitoring-health-check"
+HEALTH_CHECK_URL="https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/monitoring-health-check"
 response=$(curl -s -w "\n%{http_code}" -X POST "$HEALTH_CHECK_URL" \
     -H "Authorization: Bearer $SERVICE_ROLE_KEY" \
     -H "Content-Type: application/json" || echo "000")
@@ -193,7 +193,7 @@ else
 fi
 
 log "Testing metrics endpoint..."
-METRICS_URL="https://obxvffplochgeiclibng.supabase.co/functions/v1/monitoring-metrics?action=summary"
+METRICS_URL="https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/monitoring-metrics?action=summary"
 response=$(curl -s -w "\n%{http_code}" "$METRICS_URL" \
     -H "Authorization: Bearer $SERVICE_ROLE_KEY" || echo "000")
 
@@ -215,10 +215,10 @@ echo "=========================================="
 echo ""
 echo "Next steps:"
 echo "  1. Verify health checks are running:"
-echo "     https://obxvffplochgeiclibng.supabase.co/functions/v1/monitoring-metrics?action=summary"
+echo "     https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/monitoring-metrics?action=summary"
 echo ""
 echo "  2. View active alerts:"
-echo "     https://obxvffplochgeiclibng.supabase.co/functions/v1/monitoring-metrics?action=active_alerts"
+echo "     https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/monitoring-metrics?action=active_alerts"
 echo ""
 echo "  3. Check cron jobs in Supabase Dashboard:"
 echo "     Database > Extensions > pg_cron > Scheduled Jobs"

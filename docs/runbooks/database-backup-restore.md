@@ -9,10 +9,10 @@ Procedimientos para backup y restore de la base de datos PostgreSQL en Supabase.
 ```bash
 # Método 1: Via Pooler (recomendado para operaciones)
 export PGPASSWORD=ECUCONDOR08122023
-export DB_URL="postgresql://postgres.obxvffplochgeiclibng:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+export DB_URL="postgresql://postgres.pisqjmoklivzpwufhscx:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
 
 # Método 2: Direct connection (para dumps grandes)
-export DB_DIRECT_URL="postgresql://postgres.obxvffplochgeiclibng:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:5432/postgres"
+export DB_DIRECT_URL="postgresql://postgres.pisqjmoklivzpwufhscx:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:5432/postgres"
 
 # Test connection
 psql "$DB_URL" -c "SELECT NOW();"
@@ -153,7 +153,7 @@ psql "$DB_URL" < backup_file.sql
 
 ### Via Dashboard
 
-1. Ir a: https://supabase.com/dashboard/project/obxvffplochgeiclibng/settings/database
+1. Ir a: https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/settings/database
 2. Sección "Backups"
 3. Ver backups diarios automáticos
 4. Descargar backup específico
@@ -178,7 +178,7 @@ psql "$DB_URL" < backup_file.sql
 
 # Descargar último backup de Supabase
 supabase db dump \
-  --project-ref obxvffplochgeiclibng \
+  --project-ref pisqjmoklivzpwufhscx \
   --output backup_from_supabase.sql
 
 # O via Dashboard → Download

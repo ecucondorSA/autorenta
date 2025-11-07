@@ -23,8 +23,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PROJECT_REF="obxvffplochgeiclibng"
-FUNCTION_URL="https://obxvffplochgeiclibng.supabase.co/functions/v1/wallet-reconciliation"
+PROJECT_REF="pisqjmoklivzpwufhscx"
+FUNCTION_URL="https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/wallet-reconciliation"
 SUPABASE_ANON_KEY="${SUPABASE_ANON_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MzQ4ODgsImV4cCI6MjA0NTAxMDg4OH0.WaZNdM1PmUUyDZ9VKXIHfQU12sMJZiRm-Fw9OMCzb_o}"
 REPORT_FILE="/tmp/wallet-reconciliation-$(date +%Y%m%d-%H%M%S).json"
 

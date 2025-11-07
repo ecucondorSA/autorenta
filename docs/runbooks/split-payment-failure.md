@@ -24,7 +24,7 @@ Cuando una reserva se completa pero el locador no recibe su porcentaje del pago 
 
 ```sql
 -- Conectar a Supabase
--- psql postgresql://postgres.obxvffplochgeiclibng:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres
+-- psql postgresql://postgres.pisqjmoklivzpwufhscx:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres
 
 SELECT 
   b.id as booking_id,

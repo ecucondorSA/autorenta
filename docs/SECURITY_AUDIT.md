@@ -1,9 +1,11 @@
 # 🔒 Security Audit Report - AutoRenta
 
-**Fecha de Auditoría**: 2025-10-28  
-**Auditor**: Claude Code + GitHub Copilot  
-**Scope**: Secrets exposure, authentication, data protection  
+**Fecha de Auditoría**: 2025-10-28
+**Auditor**: Claude Code + GitHub Copilot
+**Scope**: Secrets exposure, authentication, data protection
 **Estado General**: ⚠️ **ADVERTENCIAS ENCONTRADAS**
+
+> **NOTA (2025-11-07)**: Este audit documenta el estado del 2025-10-28. La URL de Supabase ha cambiado desde entonces de `obxvffplochgeiclibng.supabase.co` a `pisqjmoklivzpwufhscx.supabase.co`. Las referencias en este documento reflejan la configuración al momento del audit.
 
 ---
 

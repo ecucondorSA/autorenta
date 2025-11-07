@@ -23,7 +23,7 @@ interface HealthCheckResult {
 
 const HEALTH_CHECK_CONFIG = {
   production_url: Deno.env.get('PRODUCTION_URL') || 'https://autorenta.com',
-  supabase_url: Deno.env.get('SUPABASE_URL') || 'https://obxvffplochgeiclibng.supabase.co',
+  supabase_url: Deno.env.get('SUPABASE_URL') || 'https://pisqjmoklivzpwufhscx.supabase.co',
   supabase_anon_key: Deno.env.get('SUPABASE_ANON_KEY') || '',
   
   // Thresholds

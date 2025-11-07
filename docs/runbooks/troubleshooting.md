@@ -45,10 +45,10 @@
 curl -I https://autorenta-web.pages.dev
 
 # Verificar Supabase
-curl -I https://obxvffplochgeiclibng.supabase.co/rest/v1/
+curl -I https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/
 
 # Verificar Edge Functions
-curl -I https://obxvffplochgeiclibng.supabase.co/functions/v1/mercadopago-webhook
+curl -I https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/mercadopago-webhook
 ```
 
 ### 2. Verificar Logs de Cloudflare
@@ -68,14 +68,14 @@ wrangler tail payments_webhook
 supabase functions logs mercadopago-webhook --limit 50
 
 # Ver logs de database (via Dashboard)
-# https://supabase.com/dashboard/project/obxvffplochgeiclibng/logs
+# https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/logs
 ```
 
 ### 4. Verificar Estado de Base de Datos
 
 ```sql
 -- Conectar a Supabase
-export DB_URL="postgresql://postgres.obxvffplochgeiclibng:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+export DB_URL="postgresql://postgres.pisqjmoklivzpwufhscx:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
 
 -- Verificar conexiones activas
 SELECT count(*) as active_connections 
@@ -120,7 +120,7 @@ LIMIT 10;
 ./tools/diagnose-supabase.sh
 
 # 1. Verificar configuración de Supabase
-curl https://obxvffplochgeiclibng.supabase.co/rest/v1/ \
+curl https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/ \
   -H "apikey: $(grep NG_APP_SUPABASE_ANON_KEY apps/web/.env.development.local | cut -d'=' -f2)"
 
 # 2. Verificar usuarios en DB
@@ -145,7 +145,7 @@ psql "$DB_URL" -c "
 0. **🚨 CRITICAL: Supabase Project Paused** (most common):
    - **Symptom**: All endpoints return "Access denied"
    - **Cause**: Free tier projects pause after 7 days of inactivity
-   - **Fix**: Login to [Supabase Dashboard](https://supabase.com/dashboard/project/obxvffplochgeiclibng) and click "Restore Project"
+   - **Fix**: Login to [Supabase Dashboard](https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx) and click "Restore Project"
    - **Full Guide**: See `SUPABASE_PAUSED_FIX.md` for detailed instructions
    - **Prevention**: Setup keepalive or upgrade to Pro ($25/month)
 
@@ -189,7 +189,7 @@ supabase functions logs mercadopago-webhook --limit 20
 
 # 2. Verificar configuración en MercadoPago
 # Dashboard MP → Configuración → Webhooks
-# URL debe ser: https://obxvffplochgeiclibng.supabase.co/functions/v1/mercadopago-webhook
+# URL debe ser: https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/mercadopago-webhook
 
 # 3. Verificar bookings pendientes
 psql "$DB_URL" -c "
@@ -655,7 +655,7 @@ ls -lh dist/web/
 ### Dashboards
 
 - **Cloudflare**: https://dash.cloudflare.com/
-- **Supabase**: https://supabase.com/dashboard/project/obxvffplochgeiclibng
+- **Supabase**: https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx
 - **MercadoPago**: https://www.mercadopago.com.ar/developers/panel
 - **GitHub Actions**: https://github.com/ecucondorSA/autorenta/actions
 

@@ -185,7 +185,7 @@ Las Edge Functions se despliegan manualmente a Supabase:
 supabase login
 
 # 2. Link proyecto
-supabase link --project-ref obxvffplochgeiclibng
+supabase link --project-ref pisqjmoklivzpwufhscx
 
 # 3. Deploy función específica
 supabase functions deploy mercadopago-webhook
@@ -211,10 +211,10 @@ supabase functions list
 
 ```bash
 # Setear secret para función
-supabase secrets set MERCADOPAGO_ACCESS_TOKEN=APP_USR-xxx --project-ref obxvffplochgeiclibng
+supabase secrets set MERCADOPAGO_ACCESS_TOKEN=APP_USR-xxx --project-ref pisqjmoklivzpwufhscx
 
 # Verificar secrets
-supabase secrets list --project-ref obxvffplochgeiclibng
+supabase secrets list --project-ref pisqjmoklivzpwufhscx
 ```
 
 ---
@@ -242,7 +242,7 @@ supabase secrets list --project-ref obxvffplochgeiclibng
 curl -I https://autorenta-web.pages.dev
 
 # Verificar Edge Functions
-curl -I https://obxvffplochgeiclibng.supabase.co/functions/v1/mercadopago-webhook
+curl -I https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/mercadopago-webhook
 
 # Verificar logs
 supabase functions logs mercadopago-webhook --limit 10
@@ -396,7 +396,7 @@ curl -I https://autorenta-web.pages.dev/
 supabase functions logs mercadopago-webhook --limit 50
 
 # Test función
-curl -X POST https://obxvffplochgeiclibng.supabase.co/functions/v1/mercadopago-webhook \
+curl -X POST https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/mercadopago-webhook \
   -H "Authorization: Bearer $(supabase secrets get SUPABASE_ANON_KEY)"
 ```
 
