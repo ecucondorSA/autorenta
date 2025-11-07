@@ -1,5 +1,5 @@
 /**
- * Centralized Logger for Supabase Edge Functions
+ * Centralized Logger for Cloudflare Workers
  *
  * Part of the centralized logging infrastructure (Issue #120).
  *
@@ -10,22 +10,23 @@
  * - ISO 8601 timestamp formatting
  * - Trace ID support for request correlation
  * - Service identifier for multi-service environments
- * - Context support for function/module identification
+ * - Context support for worker/module identification
  *
  * Usage:
  * ```typescript
- * import { logger, withTraceId } from '../_shared/logger.ts';
+ * import { logger, fromRequest } from './logger';
  *
- * // Basic logging
- * logger.info('Payment processed', { paymentId: '123' });
+ * // From request (automatically extracts/generates trace ID)
+ * const log = fromRequest(request);
+ * log.info('Processing payment', { paymentId: '123' });
  *
- * // With trace ID for request correlation
+ * // With custom trace ID
  * const requestLogger = withTraceId('req-abc-123');
- * requestLogger.info('Processing payment', { amount: 1000 });
+ * requestLogger.info('Payment processed');
  *
  * // Child logger with context
- * const log = requestLogger.child('PaymentWebhook');
- * log.error('Payment failed', error);
+ * const paymentLog = log.child('PaymentProcessor');
+ * paymentLog.error('Payment failed', error);
  * ```
  *
  * Log Format (JSON):
@@ -33,11 +34,11 @@
  * {
  *   "level": "INFO",
  *   "timestamp": "2025-11-07T10:30:45.123Z",
- *   "service": "edge-function",
- *   "function": "mercadopago-webhook",
+ *   "service": "worker",
+ *   "worker": "payments-webhook",
  *   "trace_id": "req-abc-123",
  *   "message": "Payment processed",
- *   "context": "PaymentWebhook",
+ *   "context": "PaymentProcessor",
  *   "data": { "paymentId": "123" }
  * }
  * ```
@@ -45,7 +46,7 @@
  * Production:
  * - DEBUG and INFO are filtered out (only WARN and ERROR logged)
  * - Sensitive data is automatically redacted
- * - Logs are output as JSON for ingestion by log aggregators
+ * - Logs are output as JSON for ingestion by Cloudflare Logpush
  */
 
 export enum LogLevel {
@@ -59,7 +60,7 @@ interface LogEntry {
   level: string;
   timestamp: string;
   service: string;
-  function?: string;
+  worker?: string;
   trace_id?: string;
   message: string;
   context?: string;
@@ -73,7 +74,7 @@ class Logger {
   private readonly isProduction: boolean;
   private readonly minLevel: LogLevel;
   private readonly serviceName: string;
-  private readonly functionName?: string;
+  private readonly workerName?: string;
   private traceId?: string;
   private defaultContext?: string;
   private readonly outputJson: boolean;
@@ -96,25 +97,33 @@ class Logger {
     'mp_access_token',
     'mp_refresh_token',
     'mercadopago_access_token',
+    'supabase_service_role_key',
+    'SUPABASE_SERVICE_ROLE_KEY',
   ];
 
   constructor(options?: {
     traceId?: string;
     context?: string;
     serviceName?: string;
-    functionName?: string;
+    workerName?: string;
     outputJson?: boolean;
+    isProduction?: boolean;
   }) {
-    // Check if running in production (Supabase Edge Function environment)
-    this.isProduction = Deno.env.get('ENVIRONMENT') === 'production';
+    // Check if running in production
+    // Cloudflare Workers don't have a standard env var for this,
+    // so we check multiple possible indicators
+    this.isProduction =
+      options?.isProduction ??
+      (typeof ENVIRONMENT !== 'undefined' && ENVIRONMENT === 'production') ||
+      false;
 
     // Production: Only WARN and ERROR
     // Development: All levels
     this.minLevel = this.isProduction ? LogLevel.WARN : LogLevel.DEBUG;
 
     // Service identification
-    this.serviceName = options?.serviceName || 'edge-function';
-    this.functionName = options?.functionName || Deno.env.get('FUNCTION_NAME');
+    this.serviceName = options?.serviceName || 'worker';
+    this.workerName = options?.workerName;
     this.traceId = options?.traceId;
     this.defaultContext = options?.context;
 
@@ -144,8 +153,9 @@ class Logger {
       traceId: this.traceId,
       context,
       serviceName: this.serviceName,
-      functionName: this.functionName,
+      workerName: this.workerName,
       outputJson: this.outputJson,
+      isProduction: this.isProduction,
     });
   }
 
@@ -198,13 +208,15 @@ class Logger {
       level: LogLevel[level],
       timestamp: new Date().toISOString(),
       service: this.serviceName,
-      function: this.functionName,
+      worker: this.workerName,
       trace_id: this.traceId,
       message,
       context: context || this.defaultContext,
       data: data ? this.sanitizeData(data) : undefined,
       error: error ? this.formatError(error) : undefined,
-      metadata: metadata ? this.sanitizeData(metadata) as Record<string, unknown> : undefined,
+      metadata: metadata
+        ? (this.sanitizeData(metadata) as Record<string, unknown>)
+        : undefined,
     };
 
     // Output to console
@@ -219,7 +231,7 @@ class Logger {
       // JSON output for production/aggregation
       // Remove undefined fields for cleaner JSON
       const cleanEntry = Object.fromEntries(
-        Object.entries(entry).filter(([_, v]) => v !== undefined)
+        Object.entries(entry).filter(([_, v]) => v !== undefined),
       );
       const jsonString = JSON.stringify(cleanEntry);
 
@@ -356,7 +368,7 @@ class Logger {
   private isSensitiveKey(key: string): boolean {
     const lowerKey = key.toLowerCase();
     return this.SENSITIVE_KEYS.some((sensitiveKey) =>
-      lowerKey.includes(sensitiveKey.toLowerCase())
+      lowerKey.includes(sensitiveKey.toLowerCase()),
     );
   }
 }
@@ -398,8 +410,11 @@ export function extractTraceId(headers: Headers): string | undefined {
  * requestLogger.info('Processing payment', { amount: 1000 });
  * ```
  */
-export function withTraceId(traceId?: string): Logger {
-  return new Logger({ traceId: traceId || generateTraceId() });
+export function withTraceId(traceId?: string, workerName?: string): Logger {
+  return new Logger({
+    traceId: traceId || generateTraceId(),
+    workerName,
+  });
 }
 
 /**
@@ -408,25 +423,24 @@ export function withTraceId(traceId?: string): Logger {
  *
  * Usage:
  * ```typescript
- * const log = fromRequest(request);
+ * const log = fromRequest(request, 'payments-webhook');
  * log.info('Request received');
  * ```
  */
-export function fromRequest(request: Request): Logger {
+export function fromRequest(request: Request, workerName?: string): Logger {
   const traceId = extractTraceId(request.headers) || generateTraceId();
-  return new Logger({ traceId });
+  return new Logger({ traceId, workerName });
 }
 
 /**
  * Create a child logger with fixed context
- * (Legacy API - prefer logger.child())
  *
  * Usage:
  * ```typescript
- * const log = createChildLogger('PaymentWebhook');
+ * const log = createChildLogger('PaymentProcessor');
  * log.info('Payment received');
  * ```
  */
-export function createChildLogger(context: string) {
+export function createChildLogger(context: string): Logger {
   return logger.child(context);
 }

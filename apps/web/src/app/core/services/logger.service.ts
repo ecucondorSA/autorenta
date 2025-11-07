@@ -2,26 +2,89 @@ import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 /**
- * LoggerService: Professional logging with Sentry integration
+ * Centralized LoggerService for Angular Frontend
  *
- * Replaces console.log with structured logging.
- * In production: sends to Sentry, filters DEBUG/INFO
- * In development: logs to console (no sensitive data)
+ * Part of the centralized logging infrastructure (Issue #120).
+ *
+ * Features:
+ * - Structured logging with Sentry integration
+ * - Level-based filtering (debug, info, warn, error, critical)
+ * - Automatic sensitive data sanitization
+ * - Trace ID support for request correlation
+ * - Performance and action logging
  *
  * Usage:
  *   constructor(private logger: LoggerService) {}
+ *
+ *   // Basic logging
  *   this.logger.debug('User logged in', 'AuthService');
  *   this.logger.error('Payment failed', 'PaymentService', error);
  *
- * With ChildLogger:
+ *   // With trace ID for request correlation
+ *   this.logger.setTraceId('req-abc-123');
+ *   this.logger.info('Processing payment', 'PaymentService', { amount: 1000 });
+ *
+ *   // With ChildLogger
  *   private logger = inject(LoggerService).createChildLogger('MyService');
  *   this.logger.info('Action completed'); // Auto-prefixed with [MyService]
+ *
+ * Log Format (Console):
+ *   [INFO] [req-abc-123] [PaymentService] Processing payment { amount: 1000 }
+ *
+ * Production:
+ * - DEBUG/INFO filtered out, only WARN/ERROR/CRITICAL sent to Sentry
+ * - Sensitive data automatically redacted
+ * - Trace IDs included in Sentry context
  */
 @Injectable({
   providedIn: 'root',
 })
 export class LoggerService {
   private readonly isDevelopment = !environment.production;
+  private traceId?: string;
+
+  /**
+   * Set trace ID for request correlation
+   */
+  setTraceId(traceId: string): void {
+    this.traceId = traceId;
+  }
+
+  /**
+   * Get current trace ID
+   */
+  getTraceId(): string | undefined {
+    return this.traceId;
+  }
+
+  /**
+   * Generate a trace ID for request correlation
+   * Format: req-{timestamp}-{random}
+   */
+  generateTraceId(): string {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substring(2, 9);
+    const traceId = `req-${timestamp}-${random}`;
+    this.setTraceId(traceId);
+    return traceId;
+  }
+
+  /**
+   * Build log prefix with trace ID
+   */
+  private buildLogPrefix(level: string, context?: string): string {
+    const parts: string[] = [level];
+
+    if (this.traceId) {
+      parts.push(`[${this.traceId.substring(0, 8)}]`);
+    }
+
+    if (context) {
+      parts.push(`[${context}]`);
+    }
+
+    return parts.join(' ');
+  }
 
   /**
    * Debug level: Detailed diagnostic information
@@ -31,8 +94,8 @@ export class LoggerService {
     if (this.isDevelopment) {
       // In development, log to console with safe data only
       const safeData = this.sanitizeData(data);
-      const prefix = context ? `[${context}]` : '';
-      console.log(`[DEBUG] ${prefix} ${message}`, safeData);
+      const prefix = this.buildLogPrefix('[DEBUG]', context);
+      console.log(`${prefix} ${message}`, safeData);
     }
   }
 
@@ -44,8 +107,8 @@ export class LoggerService {
   info(message: string, context?: string, data?: unknown): void {
     if (this.isDevelopment) {
       const safeData = this.sanitizeData(data);
-      const prefix = context ? `[${context}]` : '';
-      console.log(`[INFO] ${prefix} ${message}`, safeData);
+      const prefix = this.buildLogPrefix('[INFO]', context);
+      console.log(`${prefix} ${message}`, safeData);
     }
     // Production: INFO is too noisy, don't send to Sentry
   }
@@ -56,9 +119,9 @@ export class LoggerService {
    * Development: Logged to console
    */
   warn(message: string, context?: string, error?: Error | unknown): void {
-    const prefix = context ? `[${context}]` : '';
+    const prefix = this.buildLogPrefix('[WARN]', context);
     if (this.isDevelopment) {
-      console.warn(`[WARN] ${prefix} ${message}`, error);
+      console.warn(`${prefix} ${message}`, error);
     } else {
       this.sendToSentry('warning', message, error);
     }
@@ -70,9 +133,9 @@ export class LoggerService {
    * Development: Also logged to console
    */
   error(message: string, context?: string, error?: Error | unknown): void {
-    const prefix = context ? `[${context}]` : '';
+    const prefix = this.buildLogPrefix('[ERROR]', context);
     if (this.isDevelopment) {
-      console.error(`[ERROR] ${prefix} ${message}`, error);
+      console.error(`${prefix} ${message}`, error);
     }
 
     // Always report errors to Sentry
@@ -88,9 +151,9 @@ export class LoggerService {
    * ALWAYS sent to Sentry with highest priority
    */
   critical(message: string, context?: string, error?: Error): void {
-    const prefix = context ? `[${context}]` : '';
+    const prefix = this.buildLogPrefix('[CRITICAL]', context);
     if (this.isDevelopment) {
-      console.error(`[CRITICAL] ${prefix} ${message}`, error);
+      console.error(`${prefix} ${message}`, error);
     }
     this.sendToSentry('fatal', message, error);
   }
@@ -223,7 +286,11 @@ export class LoggerService {
     if (typeof Sentry !== 'undefined') {
       const captureContext: Sentry.CaptureContext = {
         level: level as Sentry.SeverityLevel,
-        extra: this.sanitizeData(data),
+        extra: {
+          ...this.sanitizeData(data),
+          trace_id: this.traceId, // Include trace ID for correlation
+        },
+        tags: this.traceId ? { trace_id: this.traceId } : undefined,
       };
 
       if (level === 'error' || level === 'fatal') {
