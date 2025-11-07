@@ -47,6 +47,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
  */
 import { GuaranteeOptionsInfoComponent } from '../../shared/components/guarantee-options-info/guarantee-options-info.component';
 import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
+import { WalletFaqComponent } from './components/wallet-faq.component';
 
 @Component({
   selector: 'app-wallet',
@@ -63,6 +64,7 @@ import { WalletAccountNumberCardComponent } from '../../shared/components/wallet
     TranslateModule,
     WalletAccountNumberCardComponent,
     GuaranteeOptionsInfoComponent,
+    WalletFaqComponent,
   ],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
