@@ -120,6 +120,11 @@ export const routes: Routes = [
             (m) => m.AdminClaimDetailPage,
           ),
       },
+      {
+        path: 'reviews',
+        loadComponent: () =>
+          import('./features/admin/reviews/admin-reviews.page').then((m) => m.AdminReviewsPage),
+      },
     ],
   },
   {

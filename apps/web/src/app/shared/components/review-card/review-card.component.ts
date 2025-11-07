@@ -86,4 +86,28 @@ export class ReviewCardComponent {
   get canFlag(): boolean {
     return !!this.currentUserId && this.currentUserId !== this.review.reviewer_id;
   }
+
+  getModerationStatusLabel(): string {
+    if (!this.review.moderation_status) return 'Pendiente de moderación';
+
+    const labels: Record<string, string> = {
+      pending: 'Pendiente de moderación',
+      approved: 'Aprobada por moderación',
+      rejected: 'Rechazada por moderación',
+    };
+
+    return labels[this.review.moderation_status] || this.review.moderation_status;
+  }
+
+  getModerationBadgeClass(): string {
+    const status = this.review.moderation_status || 'pending';
+
+    const classes: Record<string, string> = {
+      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300',
+      approved: 'bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300',
+      rejected: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300',
+    };
+
+    return classes[status] || classes.pending;
+  }
 }
