@@ -1,7 +1,8 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { ProtectionCreditService } from '../../../core/services/protection-credit.service';
+import { ProtectionCreditExplanationModalComponent } from '../protection-credit-explanation-modal/protection-credit-explanation-modal.component';
 
 /**
  * ProtectionCreditCardComponent
@@ -436,6 +437,7 @@ import { ProtectionCreditService } from '../../../core/services/protection-credi
 })
 export class ProtectionCreditCardComponent implements OnInit {
   readonly protectionCreditService = inject(ProtectionCreditService);
+  private readonly modalController = inject(ModalController);
 
   // Computed signals from service
   readonly balance = computed(() => this.protectionCreditService.balance());
@@ -481,8 +483,14 @@ export class ProtectionCreditCardComponent implements OnInit {
     }
   }
 
-  onLearnMore(): void {
-    // TODO: Open modal with CP explanation
-    console.log('[ProtectionCreditCard] Learn more clicked');
+  async onLearnMore(): Promise<void> {
+    try {
+      const modal = await this.modalController.create({
+        component: ProtectionCreditExplanationModalComponent,
+      });
+      await modal.present();
+    } catch (error) {
+      console.error('[ProtectionCreditCard] Error al abrir modal de explicación:', error);
+    }
   }
 }
