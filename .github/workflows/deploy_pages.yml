@@ -21,24 +21,27 @@ jobs:
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
       - run: cd apps/web && npm ci
-      - name: Generate env.js with production credentials
+      - run: cd apps/web && npm run build
+      - name: Inject production env.js
         run: |
-          cd apps/web
-          cat > public/env.js <<EOF
+          cat > apps/web/dist/web/browser/env.js << 'ENVEOF'
 // Auto-generated environment configuration
 // This file is generated during GitHub Actions deployment
 window.__env = {
-  "NG_APP_SUPABASE_URL": "${{ secrets.SUPABASE_URL }}",
-  "NG_APP_SUPABASE_ANON_KEY": "${{ secrets.SUPABASE_ANON_KEY }}",
+  "NG_APP_SUPABASE_URL": "SUPABASE_URL_PLACEHOLDER",
+  "NG_APP_SUPABASE_ANON_KEY": "SUPABASE_ANON_KEY_PLACEHOLDER",
   "NG_APP_DEFAULT_CURRENCY": "ARS",
   "NG_APP_PAYMENTS_WEBHOOK_URL": "http://localhost:8787/webhooks/payments",
-  "NG_APP_MAPBOX_ACCESS_TOKEN": "${{ secrets.MAPBOX_ACCESS_TOKEN }}",
+  "NG_APP_MAPBOX_ACCESS_TOKEN": "MAPBOX_TOKEN_PLACEHOLDER",
   "NG_APP_CAR_LOCATIONS_EDGE_FUNCTION": "",
-  "NG_APP_MERCADOPAGO_PUBLIC_KEY": "${{ secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}",
+  "NG_APP_MERCADOPAGO_PUBLIC_KEY": "MP_PUBLIC_KEY_PLACEHOLDER",
   "NG_APP_CLOUDFLARE_WORKER_URL": "https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev"
 };
-EOF
-      - run: cd apps/web && npm run build
+ENVEOF
+          sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" apps/web/dist/web/browser/env.js
+          sed -i "s|SUPABASE_ANON_KEY_PLACEHOLDER|${{ secrets.SUPABASE_ANON_KEY }}|g" apps/web/dist/web/browser/env.js
+          sed -i "s|MAPBOX_TOKEN_PLACEHOLDER|${{ secrets.MAPBOX_ACCESS_TOKEN }}|g" apps/web/dist/web/browser/env.js
+          sed -i "s|MP_PUBLIC_KEY_PLACEHOLDER|${{ secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}|g" apps/web/dist/web/browser/env.js
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
