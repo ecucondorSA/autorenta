@@ -93,6 +93,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/admin/fgo/fgo-overview.page').then((m) => m.FgoOverviewPage),
       },
+      {
+        path: 'exchange-rates',
+        loadComponent: () =>
+          import('./features/admin/exchange-rates/exchange-rates.page').then(
+            (m) => m.ExchangeRatesPage,
+          ),
+      },
     ],
   },
   {
