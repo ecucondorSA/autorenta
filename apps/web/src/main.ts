@@ -5,7 +5,10 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import * as Sentry from '@sentry/angular';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
-import { environment } from './environments/environment';
+import { initSentry } from './app/core/services/sentry.service';
+
+// Initialize Sentry before bootstrapping (production only)
+initSentry();
 
 registerLocaleData(localeEsAr);
 

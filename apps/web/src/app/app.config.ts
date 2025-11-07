@@ -1,6 +1,7 @@
 import {
   ApplicationConfig,
   LOCALE_ID,
+  ErrorHandler,
   importProvidersFrom,
   isDevMode,
   provideZoneChangeDetection,
@@ -14,13 +15,13 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import * as Sentry from '@sentry/angular';
+import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { SupabaseClientService } from './core/services/supabase-client.service';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
-import { environment } from '../environments/environment';
+import { SentryErrorHandler } from './core/services/sentry.service';
 
 /**
  * Inicializa el servicio de monitoreo de performance
@@ -60,25 +61,8 @@ export const appConfig: ApplicationConfig = {
       prefix: './assets/i18n/',
       suffix: '.json',
     }),
-    // ✅ Sentry Error Handler (if configured)
-    environment.sentryDsn ? {
-      provide: ErrorHandler,
-      useValue: Sentry.createErrorHandler({
-        showDialog: false,
-        logErrors: !environment.production,
-      }),
-    } : [],
-    // ✅ Sentry Trace Service for routing instrumentation
-    environment.sentryDsn ? {
-      provide: Sentry.TraceService,
-      deps: [Router],
-    } : [],
-    environment.sentryDsn ? {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    } : [],
+    // ✅ Sentry Error Handler (production only)
+    environment.sentryDsn ? { provide: ErrorHandler, useClass: SentryErrorHandler } : [],
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode() ? {
       provide: APP_INITIALIZER,
