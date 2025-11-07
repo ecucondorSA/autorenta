@@ -799,3 +799,101 @@ export interface BonusMalusDisplay {
   color: string;
   tips?: string[]; // Consejos para mejorar el factor
 }
+
+// ============================================
+// ADMIN RBAC & AUDIT LOGGING SYSTEM
+// ============================================
+
+export type AdminRoleType = 'super_admin' | 'operations' | 'support' | 'finance';
+
+export type AdminActionType =
+  // User Management
+  | 'user_search'
+  | 'user_view'
+  | 'user_update'
+  | 'user_suspend'
+  | 'user_unsuspend'
+  // Verification Management
+  | 'verification_view'
+  | 'verification_approve'
+  | 'verification_reject'
+  // Booking Management
+  | 'booking_search'
+  | 'booking_view'
+  | 'booking_cancel'
+  | 'booking_refund'
+  // Payment Management
+  | 'payment_view'
+  | 'payment_refund_full'
+  | 'payment_refund_partial'
+  | 'payment_investigate'
+  // Withdrawal Management
+  | 'withdrawal_view'
+  | 'withdrawal_approve'
+  | 'withdrawal_reject'
+  | 'withdrawal_complete'
+  | 'withdrawal_fail'
+  // Car Management
+  | 'car_approve'
+  | 'car_suspend'
+  | 'car_delete'
+  // Content Moderation
+  | 'review_flag'
+  | 'review_approve'
+  | 'review_reject'
+  | 'review_hide'
+  // System Configuration
+  | 'config_view'
+  | 'config_update'
+  | 'role_grant'
+  | 'role_revoke';
+
+export interface AdminRole {
+  id: string;
+  name: AdminRoleType;
+  display_name: string;
+  description: string;
+  permissions: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminUserRole {
+  id: string;
+  user_id: string;
+  role: AdminRoleType;
+  granted_by: string | null;
+  granted_at: string;
+  expires_at: string | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface AdminAuditLog {
+  id: string;
+  admin_user_id: string;
+  admin_role: AdminRoleType;
+  action: AdminActionType;
+  resource_type: string;
+  resource_id: string | null;
+  changes: {
+    before?: Record<string, unknown>;
+    after?: Record<string, unknown>;
+  } | null;
+  metadata: Record<string, unknown> | null;
+  success: boolean;
+  error_message: string | null;
+  created_at: string;
+}
+
+export interface AdminStats {
+  total_users: number;
+  total_bookings: number;
+  pending_verifications: number;
+  pending_withdrawals: number;
+  flagged_reviews: number;
+  failed_payments_24h: number;
+  active_users_24h: number;
+  revenue_24h: number;
+  error_rate_24h: number;
+}
