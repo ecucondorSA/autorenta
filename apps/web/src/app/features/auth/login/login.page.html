@@ -90,7 +90,7 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-white dark:bg-slate-deep text-smoke-black dark:text-ivory-luminous"
-            [class.border-pearl-gray]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.border-pearl-gray dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
             [class.dark:border-charcoal-medium]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
@@ -146,7 +146,7 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-white dark:bg-slate-deep text-smoke-black dark:text-ivory-luminous"
-            [class.border-pearl-gray]="
+            [class.border-pearl-gray dark:border-gray-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
             [class.dark:border-charcoal-medium]="
@@ -233,7 +233,7 @@
     </div>
 
     <!-- Footer Info -->
-    <p class="text-center text-xs text-ash-gray dark:text-charcoal-medium mt-6">
+    <p class="text-center text-xs text-ash-gray dark:text-charcoal-medium dark:text-pearl-light mt-6">
       Al ingresar, aceptás nuestros Términos y Condiciones
     </p>
   </div>

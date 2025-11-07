@@ -70,3 +70,5 @@ Antes de cada release:
 **Documento completo**: [TESTING_PLAN.md](./TESTING_PLAN.md)  
 **Última actualización**: 2025-11-05
 
+
+

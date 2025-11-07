@@ -42,7 +42,7 @@ export class PendingReviewsBannerComponent implements OnInit {
     try {
       const reviews = await this.reviewsService.getPendingReviews();
       this.pendingReviews.set(reviews);
-    } catch (error) { /* Silenced */ } finally {
+    } catch (__error) { /* Silenced */ } finally {
       this.loading.set(false);
     }
   }

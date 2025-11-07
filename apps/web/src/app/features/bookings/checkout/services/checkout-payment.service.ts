@@ -91,10 +91,10 @@ export class CheckoutPaymentService {
       await this.router.navigate(['/bookings', bookingId]);
 
       return { kind: 'wallet_success', bookingId };
-    } catch (error) {
+    } catch (_error) {
       await this.safeUnlockWallet(bookingId, 'Reversión por error en checkout (wallet)');
-      throw error instanceof Error
-        ? error
+      throw _error instanceof Error
+        ? _error
         : new Error('Error inesperado al actualizar la reserva.');
     }
   }
@@ -193,7 +193,7 @@ export class CheckoutPaymentService {
         preferenceId: preference.preferenceId,
         bookingId,
       };
-    } catch (error) {
+    } catch (_error) {
       if (walletLocked) {
         await this.safeUnlockWallet(bookingId, 'Reversión pago parcial fallido');
       }
@@ -207,10 +207,10 @@ export class CheckoutPaymentService {
           wallet_lock_transaction_id: booking.wallet_lock_transaction_id ?? undefined,
           payment_intent_id: booking.payment_intent_id ?? undefined,
         });
-      } catch (rollbackError) {}
+      } catch (_rollbackError) {}
 
-      throw error instanceof Error
-        ? error
+      throw _error instanceof Error
+        ? _error
         : new Error('No pudimos completar el pago mixto. Intentá nuevamente.');
     }
   }
@@ -220,13 +220,13 @@ export class CheckoutPaymentService {
   ): Promise<MercadoPagoPreferenceResponse> {
     try {
       return await this.mpGateway.createPreference(bookingId);
-    } catch (error) {
-      if (this.isOwnerOnboardingError(error)) {
-        this.handleOwnerOnboardingBlock(error);
+    } catch (_error) {
+      if (this.isOwnerOnboardingError(_error)) {
+        this.handleOwnerOnboardingBlock(_error);
       }
 
-      throw error instanceof Error
-        ? error
+      throw _error instanceof Error
+        ? _error
         : new Error('No pudimos iniciar el pago con Mercado Pago.');
     }
   }
@@ -242,13 +242,13 @@ export class CheckoutPaymentService {
     );
   }
 
-  private handleOwnerOnboardingBlock(error: Error & { code?: string; meta?: unknown }): never {
+  private handleOwnerOnboardingBlock(_error: Error & { code?: string; meta?: unknown }): never {
     const message =
-      error.message ||
+      _error.message ||
       'El propietario todavía no completó la vinculación de Mercado Pago. Tu reserva quedará pendiente y te avisaremos cuando pueda cobrar.';
     this.state.setStatus('owner_onboarding_blocked');
     this.state.setMessage(message);
-    throw error;
+    throw _error;
   }
 
   private async scheduleRiskSnapshot(
@@ -302,7 +302,7 @@ export class CheckoutPaymentService {
         bookingId,
         reason,
       ));
-    } catch (unlockError) {}
+    } catch (_unlockError) {}
   }
 
   private formatUsd(amount: number): string {

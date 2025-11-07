@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="checkout-header">
     <h1 class="text-2xl font-bold text-gray-900 mb-2">Completar Pago</h1>
-    <p class="text-sm text-gray-600">Selecciona tu método de pago preferido y completa la reserva</p>
+    <p class="text-sm text-gray-600 dark:text-gray-300">Selecciona tu método de pago preferido y completa la reserva</p>
   </div>
 
   <!-- Loading State -->
@@ -113,8 +113,8 @@
           [bookingId]="bookingId()"
           [useSplitPayment]="true"
           [disabled]="!isPaymentButtonEnabled()"
-          (onApprove)="handlePayPalApprove($event)"
-          (onError)="handlePayPalError($event)">
+          (paymentApproved)="handlePayPalApprove($event)"
+          (paymentError)="handlePayPalError($event)">
         </app-paypal-button>
 
         <p class="payment-info">
@@ -146,7 +146,7 @@
       </svg>
       <div class="security-text">
         <p class="font-medium">Pago 100% Seguro</p>
-        <p class="text-xs text-gray-500">Tus datos están protegidos mediante encriptación SSL</p>
+        <p class="text-xs text-gray-500 dark:text-gray-300">Tus datos están protegidos mediante encriptación SSL</p>
       </div>
     </div>
 

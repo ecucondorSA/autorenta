@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:4200",
+  "loginUser": "ecucondor@gmail.com",
+  "loginPassword": "Ab.12345",
+  "executionArgs": {
+    "projectName": "autorenta",
+    "projectPath": "/home/edu/autorenta",
+    "testIds": [],
+    "additionalInstruction": "Re-ejecutar tests después de correcciones: inputs de fecha con data-testid y fix de aspect ratio en imágenes. Validar que las correcciones funcionan correctamente.",
+    "envs": {
+      "API_KEY": "sk-user-a_BEGEcm2xz-V-fFocrQioqh5T9TYavlWvD7T2OZ0K4iiwVaADSUTDyIACZLBayVs2_cRmN3sCdjooOwz0natVnTqpNRJQwRUn9dHAUS4sSI2iTrhPB3ERSoSzuaNUtHWBg"
+    }
+  },
+  "proxy": "http://2d7d4756-03ea-447b-a65d-4e001731eca3:Q2470PthM5CpmHV7Qsg5mkRdnTsP45IH@tun.testsprite.com:8080"
+}

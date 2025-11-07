@@ -44,7 +44,7 @@ export class InsuranceService {
         if (error) throw error;
         return (data as InsurancePolicy[]) || [];
       }),
-      catchError((err) => {
+      catchError((_err) => {
         return of([]);
       }),
     );
@@ -69,7 +69,7 @@ export class InsuranceService {
         }
         return data as InsurancePolicy;
       }),
-      catchError((err) => {
+      catchError((_err) => {
         return of(null);
       }),
     );
@@ -267,7 +267,7 @@ export class InsuranceService {
         if (error) throw error;
         return (data as InsuranceAddon[]) || [];
       }),
-      catchError((err) => {
+      catchError((_err) => {
         return of([]);
       }),
     );
@@ -328,7 +328,7 @@ export class InsuranceService {
         if (error) throw error;
         return (data as InsuranceClaim[]) || [];
       }),
-      catchError((err) => {
+      catchError((_err) => {
         return of([]);
       }),
     );

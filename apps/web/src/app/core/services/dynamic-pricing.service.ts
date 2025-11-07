@@ -392,7 +392,7 @@ export class DynamicPricingService {
       };
 
       return result;
-    } catch (error) {
+    } catch (__error) {
       return null;
     }
   }

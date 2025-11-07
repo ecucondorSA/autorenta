@@ -24,7 +24,7 @@
       <p class="text-smoke-black" [class.text-green-800]="benefit.highlight">
         {{ benefit.title }}
       </p>
-      <p class="text-xs text-charcoal-medium mt-0.5">{{ benefit.description }}</p>
+      <p class="text-xs text-charcoal-medium dark:text-pearl-light mt-0.5">{{ benefit.description }}</p>
     </div>
   </div>
 </div>
@@ -36,8 +36,8 @@
     class="relative p-4 rounded-xl border transition-all duration-200 hover:shadow-md"
     [class.bg-green-50]="benefit.highlight"
     [class.border-green-200]="benefit.highlight"
-    [class.bg-white]="!benefit.highlight"
-    [class.border-pearl-gray]="!benefit.highlight"
+    [class.bg-white dark:bg-slate-deep]="!benefit.highlight"
+    [class.border-pearl-gray dark:border-gray-600]="!benefit.highlight"
   >
     <!-- Highlight Badge -->
     <div
@@ -83,7 +83,7 @@
         <p
           class="text-xs"
           [class.text-green-700]="benefit.highlight"
-          [class.text-charcoal-medium]="!benefit.highlight"
+          [class.text-charcoal-medium dark:text-pearl-light]="!benefit.highlight"
         >
           {{ benefit.description }}
         </p>

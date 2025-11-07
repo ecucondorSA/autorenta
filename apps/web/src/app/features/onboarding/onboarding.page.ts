@@ -16,7 +16,7 @@ import { SmartOnboardingComponent } from '../../shared/components/smart-onboardi
 export class OnboardingPage {
   private readonly router = inject(Router);
 
-  onOnboardingCompleted(data: any) {
+  onOnboardingCompleted(data: unknown) {
     console.log('🎉 Onboarding completed:', data);
 
     // El componente ya maneja la redirección automática

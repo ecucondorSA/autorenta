@@ -27,7 +27,7 @@ import { ToastService, type Toast } from '../../../core/services/toast.service';
               <p class="text-sm font-medium text-gray-900">
                 {{ notification.title }}
               </p>
-              <p class="mt-1 text-sm text-gray-500">
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
                 {{ notification.message }}
               </p>
             </div>
@@ -35,7 +35,7 @@ import { ToastService, type Toast } from '../../../core/services/toast.service';
               <button
                 type="button"
                 (click)="close(notification.id)"
-                class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-md"
+                class="inline-flex text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-md"
               >
                 <span class="sr-only">Cerrar</span>
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -153,7 +153,7 @@ export class PublishCarMpOnboardingService {
         return 'Mercado Pago vinculado correctamente';
       case 'pending':
         return 'Vinculación pendiente - Completá el proceso';
-      case 'failed':
+      case 'error':
         return 'Error en la vinculación - Intenta nuevamente';
       default:
         return 'No vinculado';

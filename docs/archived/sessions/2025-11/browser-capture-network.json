@@ -1,0 +1,196 @@
+{
+  "timestamp": "2025-11-03T12:44:00Z",
+  "url": "http://localhost:4200/cars",
+  "total_requests": 217,
+  "summary": {
+    "by_type": {
+      "script": 120,
+      "xhr": 68,
+      "image": 10,
+      "stylesheet": 1,
+      "webSocket": 2,
+      "other": 16
+    },
+    "by_status": {
+      "200": 200,
+      "204": 8,
+      "101": 2,
+      "failed": 7
+    },
+    "by_domain": {
+      "localhost:4200": 140,
+      "obxvffplochgeiclibng.supabase.co": 48,
+      "api.mapbox.com": 24,
+      "events.mapbox.com": 4,
+      "example.com": 1
+    }
+  },
+  "key_requests": [
+    {
+      "category": "Application Bootstrap",
+      "requests": [
+        {
+          "url": "http://localhost:4200/main.js",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "script"
+        },
+        {
+          "url": "http://localhost:4200/polyfills.js",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "script"
+        },
+        {
+          "url": "http://localhost:4200/styles.css",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "stylesheet"
+        }
+      ]
+    },
+    {
+      "category": "Supabase API Calls",
+      "requests": [
+        {
+          "url": "https://obxvffplochgeiclibng.supabase.co/rest/v1/cars?select=*%2Ccar_photos%28*%29%2Cowner%3Av_car_owner_info%21owner_id%28id%2Cfull_name%2Cavatar_url%2Crating_avg%2Crating_count%2Ccreated_at%29&status=eq.active&order=created_at.desc",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "xhr",
+          "description": "Fetch active cars with photos and owner info"
+        },
+        {
+          "url": "https://obxvffplochgeiclibng.supabase.co/rest/v1/rpc/calculate_dynamic_price",
+          "method": "POST",
+          "statusCode": 200,
+          "resourceType": "xhr",
+          "count": 24,
+          "description": "Dynamic pricing calculation RPC (called multiple times for different cars)"
+        },
+        {
+          "url": "https://obxvffplochgeiclibng.supabase.co/rest/v1/exchange_rates?select=*&is_active=eq.true&order=last_updated.desc&limit=1",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "xhr",
+          "count": 15,
+          "description": "Fetch latest exchange rates for pricing"
+        },
+        {
+          "url": "https://obxvffplochgeiclibng.supabase.co/rest/v1/pricing_special_events",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "xhr",
+          "count": 14,
+          "description": "Check for active special pricing events"
+        },
+        {
+          "url": "https://obxvffplochgeiclibng.supabase.co/rest/v1/pricing_demand_snapshots",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "xhr",
+          "count": 13,
+          "description": "Fetch demand snapshots for dynamic pricing"
+        },
+        {
+          "url": "wss://obxvffplochgeiclibng.supabase.co/realtime/v1/websocket",
+          "method": "GET",
+          "statusCode": 101,
+          "resourceType": "webSocket",
+          "description": "Supabase Realtime WebSocket connection"
+        }
+      ]
+    },
+    {
+      "category": "Mapbox Integration",
+      "requests": [
+        {
+          "url": "https://api.mapbox.com/styles/v1/mapbox/dark-v11",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "xhr",
+          "description": "Mapbox dark theme style"
+        },
+        {
+          "url": "https://api.mapbox.com/fonts/v1/mapbox/...",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "xhr",
+          "count": 6,
+          "description": "Mapbox font glyphs"
+        },
+        {
+          "url": "https://api.mapbox.com/v4/mapbox.mapbox-streets-v8...",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "xhr",
+          "count": 12,
+          "description": "Mapbox vector tile data"
+        },
+        {
+          "url": "https://events.mapbox.com/events/v2",
+          "method": "POST",
+          "statusCode": 204,
+          "resourceType": "xhr",
+          "count": 4,
+          "description": "Mapbox analytics events"
+        }
+      ]
+    },
+    {
+      "category": "Static Assets",
+      "requests": [
+        {
+          "url": "https://obxvffplochgeiclibng.supabase.co/storage/v1/object/public/car-photos/...",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "image",
+          "count": 8,
+          "description": "Car photo images from Supabase Storage"
+        },
+        {
+          "url": "http://localhost:4200/assets/images/autorentar-logo.png",
+          "method": "GET",
+          "statusCode": 200,
+          "resourceType": "image",
+          "description": "Application logo"
+        }
+      ]
+    },
+    {
+      "category": "Failed Requests",
+      "requests": [
+        {
+          "url": "https://example.com/cars/demo.jpg",
+          "method": "GET",
+          "resourceType": "image",
+          "status": "failed",
+          "description": "Placeholder/demo image that doesn't exist"
+        }
+      ]
+    }
+  ],
+  "performance_insights": {
+    "total_size_estimate": "~15-20 MB",
+    "slowest_requests": [
+      {
+        "type": "Vector tiles",
+        "reason": "Large PBF files for map rendering"
+      },
+      {
+        "type": "Car images",
+        "reason": "Multiple high-resolution photos loading"
+      },
+      {
+        "type": "Angular chunks",
+        "reason": "Large JavaScript bundles for development mode"
+      }
+    ],
+    "optimization_opportunities": [
+      "Multiple RPC calls to calculate_dynamic_price could be batched",
+      "Exchange rates and pricing data fetched multiple times - could be cached",
+      "Car images could benefit from lazy loading or responsive images",
+      "Vector tiles are loaded on demand which is good"
+    ]
+  }
+}
+

@@ -146,7 +146,7 @@ export class MercadoPagoBookingGatewayService implements PaymentGateway {
 
       // La preferencia es válida si el booking no ha sido pagado aún
       return booking.status === 'pending';
-    } catch (err) {
+    } catch (_err) {
       return false;
     }
   }

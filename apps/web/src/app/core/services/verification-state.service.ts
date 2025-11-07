@@ -70,8 +70,8 @@ export class VerificationStateService implements OnDestroy {
       this.subscribeToChanges(user.id);
 
       console.log('[VerificationState] Initialized for user:', user.id);
-    } catch (error) {
-      console.error('[VerificationState] Initialization failed:', error);
+    } catch (_error) {
+      console.error('[VerificationState] Initialization failed:', _error);
       this.error.set('No se pudo inicializar el estado de verificación');
     }
   }
@@ -109,11 +109,11 @@ export class VerificationStateService implements OnDestroy {
       });
 
       return progress;
-    } catch (error) {
+    } catch (_error) {
       const message =
-        error instanceof Error ? error.message : 'Error al obtener progreso de verificación';
+        _error instanceof Error ? _error.message : 'Error al obtener progreso de verificación';
       this.error.set(message);
-      console.error('[VerificationState] Refresh failed:', error);
+      console.error('[VerificationState] Refresh failed:', _error);
       return null;
     } finally {
       this.loading.set(false);
@@ -176,10 +176,10 @@ export class VerificationStateService implements OnDestroy {
   /**
    * Emit custom events for notification system
    */
-  private emitVerificationEvent(payload: any): void {
-    const eventType = payload.eventType; // INSERT, UPDATE, DELETE
-    const newData = payload.new;
-    const oldData = payload.old;
+  private emitVerificationEvent(payload: unknown): void {
+    const eventType = (payload as any).eventType; // INSERT, UPDATE, DELETE
+    const newData = (payload as any).new;
+    const oldData = (payload as any).old;
 
     // Check what changed
     if (eventType === 'UPDATE') {

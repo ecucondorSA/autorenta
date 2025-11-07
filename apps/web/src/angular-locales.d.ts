@@ -6,17 +6,17 @@
  */
 
 declare module '@angular/common/locales/es-AR' {
-  const locale: any;
+  const locale: unknown;
   export default locale;
 }
 
 declare module '@angular/common/locales/pt' {
-  const locale: any;
+  const locale: unknown;
   export default locale;
 }
 
 declare module '@angular/common/locales/en' {
-  const locale: any;
+  const locale: unknown;
   export default locale;
 }
 

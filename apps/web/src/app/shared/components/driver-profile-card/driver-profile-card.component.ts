@@ -477,8 +477,8 @@ export class DriverProfileCardComponent implements OnInit {
   async onInitializeProfile(): Promise<void> {
     try {
       await this.driverProfileService.initializeProfile();
-    } catch (error) {
-      console.error('[DriverProfileCard] Error al inicializar perfil:', error);
+    } catch (_error) {
+      console.error('[DriverProfileCard] Error al inicializar perfil:', _error);
     }
   }
 
@@ -487,7 +487,8 @@ export class DriverProfileCardComponent implements OnInit {
     console.log('[DriverProfileCard] View details clicked');
   }
 
-  formatDate(dateString: string): string {
+  formatDate(dateString: string | null | undefined): string {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('es-AR', {
       day: 'numeric',

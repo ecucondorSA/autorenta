@@ -385,6 +385,22 @@
   border-color: #667eea;
 }
 
+.availability-hint {
+  display: flex;
+  gap: 0.75rem;
+  background: #f3f4ff;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #312e81;
+  font-size: 0.9rem;
+  align-items: center;
+}
+
+.hint-icon {
+  font-size: 1.5rem;
+}
+
 .booking-summary {
   background: #f9fafb;
   padding: 1.5rem;

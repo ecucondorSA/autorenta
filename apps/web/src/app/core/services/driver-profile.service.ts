@@ -363,4 +363,46 @@ export class DriverProfileService {
     if (score >= 40) return 'Necesitas mejorar tu conducción ⚠️';
     return 'Conduce con precaución y mejora tus hábitos 🚨';
   }
+
+  /**
+   * Update driver class based on booking event
+   * Called when booking is completed or when a claim occurs
+   */
+  async updateClassOnEvent(params: {
+    eventType: 'booking_completed' | 'claim_filed';
+    userId: string;
+    claimSeverity?: number;
+    claimWithFault?: boolean;
+  }): Promise<void> {
+    try {
+      if (params.eventType === 'booking_completed') {
+        // Increment good_years counter on successful booking completion
+        const { error } = await this.supabase.rpc('increment_driver_good_years', {
+          p_user_id: params.userId,
+        });
+
+        if (error) {
+          throw new Error(`Error updating driver class: ${error.message}`);
+        }
+      } else if (params.eventType === 'claim_filed') {
+        // Update class based on claim severity
+        const { error } = await this.supabase.rpc('update_driver_class_on_claim', {
+          p_user_id: params.userId,
+          p_severity: params.claimSeverity ?? 1,
+          p_with_fault: params.claimWithFault ?? false,
+        });
+
+        if (error) {
+          throw new Error(`Error updating driver class: ${error.message}`);
+        }
+      }
+
+      // Reload profile after update
+      await this.loadProfile();
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      console.error('[DriverProfileService] Error updating class:', errorMessage);
+      throw error;
+    }
+  }
 }

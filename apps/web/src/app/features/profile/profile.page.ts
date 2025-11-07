@@ -293,7 +293,7 @@ export class ProfilePage implements OnInit {
 
       this.message.set('Avatar eliminado');
       setTimeout(() => this.message.set(null), 3000);
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No pudimos eliminar tu avatar.');
     } finally {
       this.uploadingAvatar.set(false);
@@ -303,7 +303,7 @@ export class ProfilePage implements OnInit {
   async signOut(): Promise<void> {
     try {
       await this.authService.signOut();
-    } catch (err) {
+    } catch (_err) {
       this.error.set('Error al cerrar sesión');
     }
   }
@@ -326,7 +326,7 @@ export class ProfilePage implements OnInit {
       this.userStats.set(stats);
       this.reviewsAsOwner.set(reviewsAsOwner);
       this.reviewsAsRenter.set(reviewsAsRenter);
-    } catch (error) {
+    } catch (__error) {
     } finally {
       this.reviewsLoading.set(false);
     }
@@ -355,7 +355,7 @@ export class ProfilePage implements OnInit {
       setTimeout(() => {
         this.copiedWAN.set(false);
       }, 2000);
-    } catch (error) {
+    } catch (__error) {
       this.error.set('Error al copiar el número de cuenta');
     }
   }

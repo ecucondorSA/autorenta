@@ -269,7 +269,7 @@ export class PublishCarV2Page implements OnInit {
         ...formData,
         latitude: coordinates?.latitude || null,
         longitude: coordinates?.longitude || null,
-        status: 'pending' as const, // Admin must approve
+        status: 'active' as const, // Car is active immediately and will appear on map
       };
 
       let carId: string;

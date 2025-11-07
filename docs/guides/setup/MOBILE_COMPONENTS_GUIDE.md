@@ -134,7 +134,7 @@ export class CarsListComponent {
 
 ```html
 <!-- Envuelve tu contenido -->
-<app-pull-to-refresh (onRefresh)="handleRefresh()">
+<app-pull-to-refresh (refresh)="handleRefresh()">
   <div class="cars-list">
     <app-car-card 
       *ngFor="let car of cars()" 
@@ -185,7 +185,7 @@ export class CarsListComponent {
 
 ```html
 <!-- cars-list.component.html -->
-<app-pull-to-refresh (onRefresh)="handleRefresh()">
+<app-pull-to-refresh (refresh)="handleRefresh()">
   <!-- Skeleton mientras carga inicial -->
   <div *ngIf="loading()" class="skeleton-container">
     <app-skeleton-loader 
@@ -262,7 +262,7 @@ export class CarsPageComponent {
 ```
 
 ```html
-<app-pull-to-refresh (onRefresh)="handleRefresh()">
+<app-pull-to-refresh (refresh)="handleRefresh()">
   <div class="container">
     <!-- Header -->
     <header class="page-header">

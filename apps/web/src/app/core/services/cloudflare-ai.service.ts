@@ -67,7 +67,7 @@ export class CloudflareAiService {
       const blob = this.base64ToBlob(response.image, 'image/png');
 
       return blob;
-    } catch (error) {
+    } catch (__error) {
       throw new Error('No pudimos generar la imagen con IA. Por favor, intenta de nuevo.');
     }
   }

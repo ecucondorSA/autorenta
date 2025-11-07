@@ -1,0 +1,154 @@
+{
+  "testName": "Car Publication and Map Visibility Test",
+  "baseUrl": "https://ca6618ec.autorenta-web.pages.dev",
+  "description": "Test that verifies cars are published with status 'active' and appear on the map immediately",
+  "testScenarios": [
+    {
+      "name": "Verify Active Cars on Explore Page",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/explore",
+          "description": "Navigate to explore page where map is displayed"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "app-cars-map",
+          "timeout": 15000,
+          "description": "Wait for map component to load"
+        },
+        {
+          "action": "waitForNetworkIdle",
+          "timeout": 5000,
+          "description": "Wait for API calls to complete"
+        },
+        {
+          "action": "checkApiResponse",
+          "urlPattern": "/rest/v1/cars",
+          "expectedStatus": 200,
+          "description": "Verify cars API returns 200"
+        },
+        {
+          "action": "validateApiData",
+          "urlPattern": "/rest/v1/cars",
+          "validations": [
+            {
+              "field": "status",
+              "value": "active",
+              "allItems": true,
+              "description": "All cars should have status='active'"
+            },
+            {
+              "field": "location_lat",
+              "exists": true,
+              "description": "All cars should have latitude coordinates"
+            },
+            {
+              "field": "location_lng",
+              "exists": true,
+              "description": "All cars should have longitude coordinates"
+            }
+          ]
+        },
+        {
+          "action": "assertElementVisible",
+          "selector": "#map-container, .map-container",
+          "description": "Map container should be visible"
+        }
+      ]
+    },
+    {
+      "name": "Verify Cars List Page",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/cars",
+          "description": "Navigate to cars list page"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "app-car-card, .car-card",
+          "timeout": 10000,
+          "description": "Wait for car cards to load"
+        },
+        {
+          "action": "countElements",
+          "selector": "app-car-card, .car-card",
+          "expectedMin": 1,
+          "description": "At least one car should be visible"
+        },
+        {
+          "action": "checkApiResponse",
+          "urlPattern": "/rest/v1/cars",
+          "expectedStatus": 200,
+          "description": "Verify cars API call succeeds"
+        }
+      ]
+    },
+    {
+      "name": "Verify Map Markers Render",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/explore",
+          "description": "Navigate to explore page"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "app-cars-map",
+          "timeout": 15000,
+          "description": "Wait for map component"
+        },
+        {
+          "action": "wait",
+          "duration": 5000,
+          "description": "Wait for map to fully initialize and render markers"
+        },
+        {
+          "action": "executeScript",
+          "script": "return document.querySelector('app-cars-map')?.getBoundingClientRect().width > 0",
+          "expectedResult": true,
+          "description": "Map should have non-zero width"
+        },
+        {
+          "action": "executeScript",
+          "script": "return document.querySelector('app-cars-map')?.getBoundingClientRect().height > 0",
+          "expectedResult": true,
+          "description": "Map should have non-zero height"
+        }
+      ]
+    },
+    {
+      "name": "Check Console for Errors",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/explore",
+          "description": "Navigate to explore page"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "app-cars-map",
+          "timeout": 15000,
+          "description": "Wait for map component"
+        },
+        {
+          "action": "wait",
+          "duration": 3000,
+          "description": "Wait for initialization"
+        },
+        {
+          "action": "checkConsoleErrors",
+          "allowedErrors": [],
+          "description": "No console errors should appear during map load"
+        }
+      ]
+    }
+  ],
+  "assertions": {
+    "carsHaveActiveStatus": "All cars returned from API should have status='active'",
+    "carsHaveCoordinates": "All cars should have location_lat and location_lng",
+    "mapRenders": "Map component should render without errors",
+    "carCardsVisible": "Car cards should be visible on the page"
+  }
+}

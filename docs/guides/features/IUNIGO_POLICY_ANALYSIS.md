@@ -427,3 +427,5 @@ export const POLICY_PLAN_LABELS: Record<PolicyPlan, string> = {
 **Autor**: Claude Code (análisis de PDF iúnigo)
 
 
+
+

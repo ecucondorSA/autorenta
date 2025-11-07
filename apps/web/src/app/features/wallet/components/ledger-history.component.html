@@ -1,7 +1,7 @@
 <div class="max-w-4xl mx-auto p-4">
   <div class="mb-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Historial de Movimientos</h1>
-    <p class="text-gray-600 dark:text-gray-400">Todos tus movimientos de AutoCréditos</p>
+    <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Todos tus movimientos de AutoCréditos</p>
   </div>
 
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-4">
@@ -52,7 +52,7 @@
     class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center"
   >
     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-    <p class="text-gray-600 dark:text-gray-400">Cargando historial...</p>
+    <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando historial...</p>
   </div>
 
   <div
@@ -61,7 +61,7 @@
   >
     <div class="text-6xl mb-4">📋</div>
     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No hay movimientos</h3>
-    <p class="text-gray-600 dark:text-gray-400">
+    <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
       {{
         selectedKind()
           ? 'No hay movimientos de este tipo'
@@ -87,12 +87,12 @@
               </h3>
               <p
                 *ngIf="entry.meta && entry.meta['description']"
-                class="text-sm text-gray-600 dark:text-gray-400 mb-1"
+                class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mb-1"
               >
                 {{ entry.meta['description'] }}
               </p>
-              <p class="text-xs text-gray-500 dark:text-gray-500 font-mono">Ref: {{ entry.ref }}</p>
-              <p *ngIf="entry.booking_id" class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+              <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 font-mono">Ref: {{ entry.ref }}</p>
+              <p *ngIf="entry.booking_id" class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
                 Reserva: {{ entry.booking_id.substring(0, 8) }}...
                 <span
                   *ngIf="entry.booking_status"
@@ -101,7 +101,7 @@
                   {{ entry.booking_status }}
                 </span>
               </p>
-              <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+              <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
                 {{ formatDate(entry.ts) }}
               </p>
             </div>
@@ -110,7 +110,7 @@
             <p class="text-lg font-bold" [ngClass]="ledgerService.getKindColor(entry.kind)">
               {{ formatBalanceChange(entry.balance_change_cents) }}
             </p>
-            <p class="text-xs text-gray-500 dark:text-gray-500">
+            <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
               {{ ledgerService.formatAmount(entry.amount_cents) }}
             </p>
           </div>

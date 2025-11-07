@@ -1,12 +1,11 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { AutorentarCreditService } from '../../../core/services/autorentar-credit.service';
 
 @Component({
   selector: 'app-autorentar-credit-card',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './autorentar-credit-card.component.html',
   styleUrls: ['./autorentar-credit-card.component.css'],
 })
@@ -30,7 +29,7 @@ export class AutorentarCreditCardComponent {
 
   getExpirationColor(): string {
     const days = this.daysUntilExpiration();
-    if (days === null) return 'text-gray-600';
+    if (days === null) return 'text-gray-600 dark:text-gray-300';
     if (this.isExpired()) return 'text-red-600';
     if (days <= 30) return 'text-orange-600';
     if (days <= 90) return 'text-yellow-600';

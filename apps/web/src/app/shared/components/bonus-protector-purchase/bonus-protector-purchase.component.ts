@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
 import { DriverProfileService } from '../../../core/services/driver-profile.service';
@@ -30,7 +31,7 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
 @Component({
   selector: 'app-bonus-protector-purchase',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule],
   template: `
     <ion-card>
       <ion-card-header>
@@ -777,8 +778,8 @@ export class BonusProtectorPurchaseComponent implements OnInit {
 
       // Reload
       await this.loadActiveProtector();
-    } catch (error) {
-      console.error('[BonusProtectorPurchase] Error al comprar:', error);
+    } catch (_error) {
+      console.error('[BonusProtectorPurchase] Error al comprar:', _error);
       alert('Error al comprar Protector de Bonus. Verifica que tengas fondos suficientes en tu wallet.');
     } finally {
       this.purchasing.set(false);

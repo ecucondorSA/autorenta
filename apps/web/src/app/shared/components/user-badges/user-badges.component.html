@@ -12,13 +12,13 @@
       <span class="badge-icon">{{ badge.icon }}</span>
     </div>
 
-    <p *ngIf="showLabels" class="badge-label text-xs text-gray-600 mt-1 text-center font-medium">
+    <p *ngIf="showLabels" class="badge-label text-xs text-gray-600 dark:text-gray-300 mt-1 text-center font-medium">
       {{ badge.label }}
     </p>
   </div>
 
   <!-- No badges message -->
-  <div *ngIf="activeBadges.length === 0" class="text-gray-400 text-sm italic">
+  <div *ngIf="activeBadges.length === 0" class="text-gray-400 dark:text-gray-300 text-sm italic">
     Sin insignias aún
   </div>
 </div>

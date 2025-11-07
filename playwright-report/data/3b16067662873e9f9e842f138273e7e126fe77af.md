@@ -1,0 +1,108 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - link "Saltar al contenido" [ref=e5] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=e6]:
+      - link "Autorentar AutoRentar Car Sharing" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img "Autorentar" [ref=e8]
+        - generic [ref=e9]:
+          - generic [ref=e10]: AutoRentar
+          - generic [ref=e11]: Car Sharing
+      - navigation "Principal" [ref=e12]:
+        - link "Buscar autos" [ref=e13] [cursor=pointer]:
+          - /url: /cars
+          - img [ref=e14]
+          - generic [ref=e16]: Buscar autos
+      - generic [ref=e17]:
+        - button "Seleccionar idioma" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: 🇦🇷
+          - generic [ref=e22]: Español
+          - img [ref=e23]
+        - button "Ayuda" [ref=e27] [cursor=pointer]:
+          - img [ref=e28]
+        - button "Cambiar tema" [ref=e30] [cursor=pointer]:
+          - img [ref=e31]
+        - link "Ingresar" [ref=e33] [cursor=pointer]:
+          - /url: /auth/login
+  - main [ref=e34]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - img "Autorentar" [ref=e40]
+        - heading "Bienvenido de vuelta" [level=1] [ref=e41]
+        - paragraph [ref=e42]: Ingresá a tu cuenta de Autorentar
+      - generic [ref=e43]:
+        - button "Continuar con Google" [ref=e44] [cursor=pointer]:
+          - img [ref=e45]
+          - generic [ref=e50]: Continuar con Google
+        - generic [ref=e55]: O continuar con email
+        - generic [ref=e56]:
+          - generic [ref=e57]:
+            - generic [ref=e58]: Email *
+            - textbox "Email" [ref=e59]:
+              - /placeholder: tu@email.com
+          - generic [ref=e60]:
+            - generic [ref=e61]: Contraseña *
+            - textbox "Contraseña" [ref=e62]:
+              - /placeholder: ••••••••
+          - button "Ingresar" [disabled] [ref=e63]
+          - generic [ref=e64]:
+            - link "Crear cuenta" [ref=e65] [cursor=pointer]:
+              - /url: /auth/register
+            - link "¿Olvidaste tu contraseña?" [ref=e66] [cursor=pointer]:
+              - /url: /auth/reset-password
+      - paragraph [ref=e67]: Al ingresar, aceptás nuestros Términos y Condiciones
+  - contentinfo [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - img "Autorentar" [ref=e73]
+          - paragraph [ref=e74]: Alquiler de autos premium en Uruguay. Conectamos personas y experiencias con vehículos de anfitriones verificados.
+        - generic [ref=e75]:
+          - heading "Explorar" [level=4] [ref=e76]
+          - list [ref=e77]:
+            - listitem [ref=e78]:
+              - link "Buscar autos" [ref=e79] [cursor=pointer]:
+                - /url: /cars
+            - listitem [ref=e80]:
+              - link "Publicar auto" [ref=e81] [cursor=pointer]:
+                - /url: /cars/publish
+            - listitem [ref=e82]:
+              - link "Wallet" [ref=e83] [cursor=pointer]:
+                - /url: /wallet
+        - generic [ref=e84]:
+          - heading "Legal" [level=4] [ref=e85]
+          - list [ref=e86]:
+            - listitem [ref=e87]:
+              - link "Términos y condiciones" [ref=e88] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e89]:
+              - link "Política de privacidad" [ref=e90] [cursor=pointer]:
+                - /url: "#"
+        - generic [ref=e91]:
+          - heading "Contacto" [level=4] [ref=e92]
+          - list [ref=e93]:
+            - listitem [ref=e94]:
+              - link "autorentardev@gmail.com" [ref=e95] [cursor=pointer]:
+                - /url: mailto:autorentardev@gmail.com
+                - img [ref=e96]
+                - text: autorentardev@gmail.com
+            - listitem [ref=e99]:
+              - link "+598 99 123 456" [ref=e100] [cursor=pointer]:
+                - /url: tel:+59899123456
+                - img [ref=e101]
+                - text: +598 99 123 456
+          - generic [ref=e103]:
+            - heading "Síguenos" [level=5] [ref=e104]
+            - generic [ref=e105]:
+              - link "Instagram" [ref=e106] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e107]
+              - link "WhatsApp" [ref=e111] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e112]
+      - paragraph [ref=e115]: © 2025 Autorentar. Todos los derechos reservados.
+```

@@ -208,7 +208,7 @@ describe('BonusMalusService', () => {
       expect(display.percentage).toBe(0);
       expect(display.message).toContain('estándar');
       expect(display.icon).toBe('➖');
-      expect(display.color).toBe('text-gray-600');
+      expect(display.color).toBe('text-gray-600 dark:text-gray-300');
     });
 
     it('should format small MALUS correctly', () => {

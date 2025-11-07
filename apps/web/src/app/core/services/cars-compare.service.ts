@@ -88,7 +88,7 @@ export class CarsCompareService {
       // Filtrar nulls por si algún auto no existe
       const validCars = cars.filter((car) => car !== null) as Car[];
       this.comparedCars.set(validCars);
-    } catch (error) {
+    } catch (__error) {
       this.comparedCars.set([]);
     }
   }
@@ -241,7 +241,7 @@ export class CarsCompareService {
       } else {
         sessionStorage.removeItem(STORAGE_KEY);
       }
-    } catch (error) {
+    } catch (__error) {
       sessionStorage.removeItem(STORAGE_KEY);
     }
   }

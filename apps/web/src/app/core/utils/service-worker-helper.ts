@@ -35,7 +35,7 @@ export async function forceServiceWorkerUpdate(): Promise<void> {
 
     // 5. Reload the page to get fresh content
     window.location.reload();
-  } catch (error) {}
+  } catch (_error) {}
 }
 
 /**
@@ -68,7 +68,7 @@ export async function checkServiceWorkerHealth(): Promise<boolean> {
     }
 
     return true; // Healthy
-  } catch (error) {
+  } catch (_error) {
     return false; // Assume not healthy on error
   }
 }

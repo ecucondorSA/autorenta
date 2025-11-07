@@ -282,10 +282,10 @@ export class AutorentarCreditService {
     }).format(date);
   }
 
-  private handleError(error: any, defaultMessage: string): void {
-    const message = error?.message || defaultMessage;
+  private handleError(error: unknown, defaultMessage: string): void {
+    const message = (error as any)?.message || defaultMessage;
     this.error.set({ message });
     this.loading.set(false);
-    this.logger.error(defaultMessage, error);
+    this.logger.error(defaultMessage, (error as Error)?.message || String(error));
   }
 }

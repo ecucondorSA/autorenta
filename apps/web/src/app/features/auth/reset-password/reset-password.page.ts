@@ -23,7 +23,7 @@ export class ResetPasswordPage {
     try {
       await this.auth.resetPassword(this.email(), `${window.location.origin}/auth/update-password`);
       this.message.set('Te enviamos un correo para restablecer la contraseña.');
-    } catch (err) {
+    } catch (_err) {
       this.message.set('No pudimos enviar el correo, intentá más tarde.');
     } finally {
       this.loading.set(false);

@@ -63,6 +63,45 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   error = signal<string | null>(null);
   timeRemaining = signal<string | null>(null);
 
+  readonly bookingFlowSteps = [
+    {
+      key: 'pending',
+      label: 'Solicitud enviada',
+      description: 'Estamos esperando la aprobación del anfitrión.',
+    },
+    {
+      key: 'pending_payment',
+      label: 'Pago pendiente',
+      description: 'Confirma el pago para bloquear las fechas.',
+    },
+    {
+      key: 'confirmed',
+      label: 'Reserva confirmada',
+      description: 'Preparate para coordinar el check-in y la entrega.',
+    },
+    {
+      key: 'in_progress',
+      label: 'Check-in y uso',
+      description: 'Realizá las inspecciones y disfrutá del viaje.',
+    },
+    {
+      key: 'completed',
+      label: 'Check-out y cierre',
+      description: 'Inspección final y liberación de fondos.',
+    },
+  ] as const;
+
+  readonly currentBookingStageIndex = computed(() => {
+    const booking = this.booking();
+    if (!booking) return 0;
+    const idx = this.bookingFlowSteps.findIndex((step) => step.key === booking.status);
+    if (idx >= 0) return idx;
+    if (booking.status === 'cancelled') {
+      return 0;
+    }
+    return this.bookingFlowSteps.length - 1;
+  });
+
   // Exchange rate signals
   exchangeRate = signal<number | null>(null);
   totalInARS = signal<number | null>(null);
@@ -146,6 +185,18 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return validStatus && this.hasCheckIn() && !this.hasCheckOut();
   });
 
+  isStepCompleted(index: number): boolean {
+    return index < this.currentBookingStageIndex();
+  }
+
+  isStepCurrent(index: number): boolean {
+    return index === this.currentBookingStageIndex();
+  }
+
+  isStepUpcoming(index: number): boolean {
+    return index > this.currentBookingStageIndex();
+  }
+
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
     if (!bookingId) {
@@ -176,7 +227,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       // Load FGO inspections
       await this.loadInspections();
-    } catch (err) {
+    } catch (_err) {
       this.error.set('Error al cargar la reserva');
     } finally {
       this.loading.set(false);
@@ -196,7 +247,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       const totalUSD = booking.breakdown.total_cents / 100; // Convertir centavos a dólares
       const totalARS = await this.exchangeRateService.convertUsdToArs(totalUSD);
       this.totalInARS.set(totalARS);
-    } catch (error) {
+    } catch (__error) {
       // No fallar si no se puede obtener la tasa, solo no mostrar conversión
     } finally {
       this.loadingRate.set(false);
@@ -220,7 +271,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         const ownerFullName = owner?.full_name || 'el anfitrión';
         this.carOwnerName.set(ownerFullName);
       }
-    } catch (error) {}
+    } catch (__error) {}
   }
 
   private async loadInspections(): Promise<void> {
@@ -230,7 +281,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const inspections = await firstValueFrom(this.fgoService.getInspections(booking.id));
       this.inspections.set(inspections);
-    } catch (error) {
+    } catch (__error) {
       // Non-blocking error, inspections are optional
     }
   }

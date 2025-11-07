@@ -27,7 +27,7 @@
           <h3 class="text-lg font-semibold text-gray-900" [class.text-base]="compact">
             Clase {{ driverClass() }}
           </h3>
-          <p class="text-sm text-gray-600">{{ classDescription() }}</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">{{ classDescription() }}</p>
         </div>
       </div>
 
@@ -43,7 +43,7 @@
 
     <!-- Progress Bar -->
     <div class="mb-4" *ngIf="!compact">
-      <div class="flex justify-between text-xs text-gray-600 mb-1">
+      <div class="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
         <span>Clase 10 (Inicial)</span>
         <span>Clase 0 (Mejor)</span>
       </div>
@@ -61,23 +61,23 @@
       <!-- Driver Score -->
       <div class="bg-gray-50 rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-600">Score de Conducción</span>
+          <span class="text-xs text-gray-600 dark:text-gray-300">Score de Conducción</span>
           <span [class]="getScoreColor(driverScore())" class="text-sm font-semibold">
             {{ driverScore() }}/100
           </span>
         </div>
-        <p class="text-xs text-gray-500 mt-1">{{ getScoreLabel(driverScore()) }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">{{ getScoreLabel(driverScore()) }}</p>
       </div>
 
       <!-- Clean Bookings Percentage -->
       <div class="bg-gray-50 rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-600">Reservas Sin Daños</span>
+          <span class="text-xs text-gray-600 dark:text-gray-300">Reservas Sin Daños</span>
           <span class="text-sm font-semibold text-green-600">
             {{ cleanPercentage() }}%
           </span>
         </div>
-        <p class="text-xs text-gray-500 mt-1">
+        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
           {{ profile()?.clean_bookings || 0 }} de {{ profile()?.total_bookings || 0 }} reservas
         </p>
       </div>
@@ -85,35 +85,35 @@
       <!-- Fee Multiplier -->
       <div class="bg-gray-50 rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-600">Ajuste en Tarifas</span>
+          <span class="text-xs text-gray-600 dark:text-gray-300">Ajuste en Tarifas</span>
           <span
-            [class]="feeMultiplier() < 1 ? 'text-green-600' : feeMultiplier() > 1 ? 'text-red-600' : 'text-gray-600'"
+            [class]="feeMultiplier() < 1 ? 'text-green-600' : feeMultiplier() > 1 ? 'text-red-600' : 'text-gray-600 dark:text-gray-300'"
             class="text-sm font-semibold"
           >
             {{ getFeeMultiplierLabel(feeMultiplier()) }}
           </span>
         </div>
-        <p class="text-xs text-gray-500 mt-1">Multiplicador: {{ feeMultiplier() }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">Multiplicador: {{ feeMultiplier() }}</p>
       </div>
 
       <!-- Guarantee Multiplier -->
       <div class="bg-gray-50 rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-600">Ajuste en Garantía</span>
+          <span class="text-xs text-gray-600 dark:text-gray-300">Ajuste en Garantía</span>
           <span
-            [class]="guaranteeMultiplier() < 1 ? 'text-green-600' : guaranteeMultiplier() > 1 ? 'text-red-600' : 'text-gray-600'"
+            [class]="guaranteeMultiplier() < 1 ? 'text-green-600' : guaranteeMultiplier() > 1 ? 'text-red-600' : 'text-gray-600 dark:text-gray-300'"
             class="text-sm font-semibold"
           >
             {{ getGuaranteeMultiplierLabel(guaranteeMultiplier()) }}
           </span>
         </div>
-        <p class="text-xs text-gray-500 mt-1">Multiplicador: {{ guaranteeMultiplier() }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">Multiplicador: {{ guaranteeMultiplier() }}</p>
       </div>
     </div>
 
     <!-- Compact Stats -->
     <div *ngIf="!showDetails && compact" class="mt-2 text-center">
-      <p class="text-sm text-gray-600">
+      <p class="text-sm text-gray-600 dark:text-gray-300">
         Score: <span [class]="getScoreColor(driverScore())" class="font-semibold">{{ driverScore() }}</span>
         • Clean: <span class="font-semibold text-green-600">{{ cleanPercentage() }}%</span>
       </p>

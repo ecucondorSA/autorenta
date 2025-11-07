@@ -325,10 +325,10 @@ export class MpCallbackPage implements OnInit, OnDestroy {
 
       // Iniciar countdown para redirect automático
       this.startCountdown();
-    } catch (error) {
+    } catch (_error) {
       this.handleError(
-        error instanceof Error
-          ? error.message
+        (_error) instanceof Error
+          ? _error.message
           : 'Ocurrió un error al procesar la autorización. Por favor, intentá nuevamente.',
       );
     }

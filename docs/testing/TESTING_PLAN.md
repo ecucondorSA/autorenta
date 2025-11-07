@@ -710,3 +710,5 @@ Antes de cada deploy a producción, verificar:
 **Última actualización**: 2025-11-05  
 **Próxima revisión**: 2025-11-12
 
+
+

@@ -80,7 +80,7 @@ export class AdminDashboardPage implements OnInit {
         totalBookings: bookings,
         totalPayments: payments,
       });
-    } catch (err) {
+    } catch (_err) {
       this.message.set('No pudimos cargar las estadísticas.');
     } finally {
       this.loading.set(false);
@@ -125,7 +125,7 @@ export class AdminDashboardPage implements OnInit {
       await this.adminService.approveCar(car.id);
       this.message.set(`Auto ${car.title} aprobado.`);
       await this.loadDashboardData();
-    } catch (err) {
+    } catch (_err) {
       this.message.set('Fallo al aprobar el auto.');
     }
   }

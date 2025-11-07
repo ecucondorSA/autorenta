@@ -301,7 +301,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     try {
       const profile = await this.profileService.getCurrentProfile();
       this.userProfile.set(profile as Record<string, unknown> | null);
-    } catch (error) {
+    } catch (__error) {
       // Silently fail - avatar will show placeholder
     }
   }

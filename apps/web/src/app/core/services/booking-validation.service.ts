@@ -89,25 +89,35 @@ export class BookingValidationService {
         errorLower.includes('auto no disponible');
 
       if (isUnavailableError) {
-        errorMessage =
-          'El auto no está disponible para esas fechas. Otro usuario ya tiene una reserva en esas fechas.';
+        // ✅ FIX 2025-11-06: Distinguir entre reserva pendiente y confirmada
+        const hasPendingBookings = await this.checkPendingBookings(carId, startDate, endDate);
+
+        if (hasPendingBookings) {
+          errorMessage =
+            'El auto está reservado temporalmente (pendiente de pago). Intenta con otras fechas o únete a la lista de espera.';
+        } else {
+          errorMessage =
+            'El auto no está disponible para esas fechas. Hay una reserva confirmada en ese período.';
+        }
+
         canWaitlist = true;
 
         // Log for debugging
-        this.logger.warn('Waitlist activated due to unavailable error', {
+        this.logger.warn('Waitlist activated due to unavailable error: ' + JSON.stringify({
           originalError: errorMessage,
           errorLower,
+          hasPendingBookings,
           carId,
           startDate,
           endDate,
-        });
+        }));
       } else if (errorLower.includes('no disponible') || errorLower.includes('not available')) {
         // Check if there are pending bookings that could cause the conflict
         const hasPendingBookings = await this.checkPendingBookings(carId, startDate, endDate);
 
         if (hasPendingBookings) {
           errorMessage =
-            'El auto no está disponible para esas fechas. Otro usuario ya tiene una reserva en esas fechas.';
+            'El auto está reservado temporalmente (pendiente de pago). Intenta con otras fechas o únete a la lista de espera.';
           canWaitlist = true;
         } else {
           errorMessage = 'El auto no está disponible para esas fechas. Por favor elige otras fechas.';
@@ -154,6 +164,8 @@ export class BookingValidationService {
 
   /**
    * Check if there are pending bookings that overlap with the requested dates
+   * ✅ FIX 2025-11-06: Corregida lógica de overlap (lt/gt en lugar de lte/gte)
+   * ✅ FIX 2025-11-06: Incluir 'pending_payment' en estados a verificar
    */
   private async checkPendingBookings(
     carId: string,
@@ -163,11 +175,11 @@ export class BookingValidationService {
     try {
       const { data: pendingBookings } = await this.supabase
         .from('bookings')
-        .select('id')
+        .select('id, status')
         .eq('car_id', carId)
-        .eq('status', 'pending')
-        .lte('start_at', endDate) // start_at <= endDate (overlap condition 1)
-        .gte('end_at', startDate); // end_at >= startDate (overlap condition 2)
+        .in('status', ['pending', 'pending_payment'])
+        .lt('start_at', endDate) // ✅ FIX: start_at < endDate (overlap correcto)
+        .gt('end_at', startDate); // ✅ FIX: end_at > startDate (overlap correcto)
 
       return pendingBookings ? pendingBookings.length > 0 : false;
     } catch {

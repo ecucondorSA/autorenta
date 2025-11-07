@@ -16,6 +16,14 @@ export interface MarketplaceValidation {
   config?: MarketplaceConfig;
 }
 
+export interface MarketplaceStatus {
+  status: 'not_started' | 'pending' | 'completed' | 'error';
+  canReceivePayments: boolean;
+  onboardingUrl?: string;
+  collectorId?: string;
+  error?: string;
+}
+
 /**
  * Servicio para gestionar la configuración del Marketplace de MercadoPago
  * y validar que todo esté correcto para split payments
@@ -199,6 +207,90 @@ export class MarketplaceService {
 
     if (error) {
       throw error;
+    }
+  }
+
+  /**
+   * Get onboarding status for current user
+   */
+  async getOnboardingStatus(): Promise<MarketplaceStatus> {
+    try {
+      const { data: { user } } = await this.supabase.auth.getUser();
+
+      if (!user) {
+        return {
+          status: 'not_started',
+          canReceivePayments: false,
+          error: 'Usuario no autenticado'
+        };
+      }
+
+      const { data, error } = await this.supabase
+        .from('user_profiles')
+        .select('mp_onboarding_completed, mercadopago_collector_id, mp_onboarding_url')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error || !data) {
+        return {
+          status: 'not_started',
+          canReceivePayments: false
+        };
+      }
+
+      if (data.mp_onboarding_completed && data.mercadopago_collector_id) {
+        return {
+          status: 'completed',
+          canReceivePayments: true,
+          collectorId: data.mercadopago_collector_id
+        };
+      }
+
+      if (data.mp_onboarding_url) {
+        return {
+          status: 'pending',
+          canReceivePayments: false,
+          onboardingUrl: data.mp_onboarding_url
+        };
+      }
+
+      return {
+        status: 'not_started',
+        canReceivePayments: false
+      };
+    } catch (error) {
+      return {
+        status: 'error',
+        canReceivePayments: false,
+        error: error instanceof Error ? error.message : 'Error desconocido'
+      };
+    }
+  }
+
+  /**
+   * Initiate MercadoPago onboarding for current user
+   */
+  async initiateOnboarding(): Promise<string | null> {
+    try {
+      const { data: { user } } = await this.supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      // Call Edge Function to initiate onboarding
+      const { data, error } = await this.supabase.functions.invoke('mercadopago-initiate-onboarding', {
+        body: { user_id: user.id }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data?.onboarding_url || null;
+    } catch (error) {
+      console.error('Error initiating onboarding:', error);
+      return null;
     }
   }
 }

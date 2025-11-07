@@ -75,7 +75,7 @@ export class MercadoPagoScriptService {
         locale: 'es-AR',
       });
       return this.mercadoPagoInstance;
-    } catch (error) {
+    } catch (error: any) {
       console.error(
         'Detailed error object in getMercadoPago:',
         JSON.stringify(error, Object.getOwnPropertyNames(error), 2),

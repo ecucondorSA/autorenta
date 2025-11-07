@@ -87,7 +87,7 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
-            [class.border-pearl-gray]="
+            [class.border-pearl-gray dark:border-gray-600]="
               !form.controls.fullName.touched || !form.controls.fullName.invalid
             "
             [class.border-red-500]="
@@ -143,7 +143,7 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
-            [class.border-pearl-gray]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.border-pearl-gray dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
             [class.border-red-500]="form.controls.email.touched && form.controls.email.invalid"
             [class.focus:ring-accent-petrol]="
               !form.controls.email.touched || !form.controls.email.invalid
@@ -195,7 +195,7 @@
                 : 'register-password-hint'
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
-            [class.border-pearl-gray]="
+            [class.border-pearl-gray dark:border-gray-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
             [class.border-red-500]="
@@ -299,7 +299,7 @@
     </div>
 
     <!-- Footer Info -->
-    <p class="text-center text-xs text-ash-gray dark:text-charcoal-medium mt-6">
+    <p class="text-center text-xs text-ash-gray dark:text-charcoal-medium dark:text-pearl-light mt-6">
       Al crear tu cuenta, aceptás nuestros Términos y Condiciones y Política de Privacidad
     </p>
   </div>

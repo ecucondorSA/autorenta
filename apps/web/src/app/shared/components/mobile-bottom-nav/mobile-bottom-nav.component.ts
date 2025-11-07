@@ -94,7 +94,7 @@ export class MobileBottomNavComponent {
       if ('vibrate' in navigator) {
         navigator.vibrate(10);
       }
-    } catch (e) {
+    } catch (_e) {
       // Silently fail en navegadores sin soporte
     }
     

@@ -68,7 +68,7 @@ export class OwnerBookingsPage implements OnInit {
       } else {
         this.marketplaceStatus.set(null);
       }
-    } catch (error) {
+    } catch (__error) {
       this.currentUserId = null;
       this.marketplaceStatus.set(null);
     } finally {
@@ -86,7 +86,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.loadRenterContacts(items);
       this.bookings.set(items);
       await this.loadCarLeads();
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No pudimos cargar las reservas. Por favor intentá de nuevo más tarde.');
     } finally {
       this.loading.set(false);
@@ -170,6 +170,16 @@ export class OwnerBookingsPage implements OnInit {
   }
 
   // ✅ NUEVO: Acciones del locador
+  canDoOwnerCheckIn(booking: Booking): boolean {
+    // Check-in cuando está confirmed y llega la fecha
+    return booking.status === 'confirmed' && new Date(booking.start_at) <= new Date();
+  }
+
+  canDoOwnerCheckOut(booking: Booking): boolean {
+    // Check-out cuando está in_progress
+    return booking.status === 'in_progress';
+  }
+
   canStartRental(booking: Booking): boolean {
     return booking.status === 'confirmed';
   }
@@ -195,7 +205,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.updateBooking(bookingId, { status: 'in_progress' });
       await this.loadBookings();
       await this.presentToast('Alquiler iniciado correctamente');
-    } catch (error) {
+    } catch (__error) {
       await this.presentToast('Error al iniciar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -215,7 +225,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.updateBooking(bookingId, { status: 'completed' });
       await this.loadBookings();
       await this.presentToast('Alquiler finalizado correctamente');
-    } catch (error) {
+    } catch (__error) {
       await this.presentToast('Error al finalizar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -236,7 +246,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.cancelBooking(bookingId, false);
       await this.loadBookings();
       await this.presentToast('Reserva cancelada');
-    } catch (error) {
+    } catch (__error) {
       await this.presentToast('Error al cancelar la reserva', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -326,7 +336,7 @@ export class OwnerBookingsPage implements OnInit {
             if (contact.success) {
               participantName = contact.name || contact.email || null;
             }
-          } catch (err) {}
+          } catch (_err) {}
 
           return {
             ...lead,
@@ -336,7 +346,7 @@ export class OwnerBookingsPage implements OnInit {
       );
 
       this.carLeads.set(enriched);
-    } catch (error) {
+    } catch (__error) {
     } finally {
       this.leadsLoading.set(false);
     }
@@ -357,7 +367,7 @@ export class OwnerBookingsPage implements OnInit {
     try {
       const status = await this.marketplaceService.getMarketplaceStatus(userId);
       this.marketplaceStatus.set(status);
-    } catch (error) {
+    } catch (__error) {
       this.marketplaceStatus.set(null);
     }
   }
@@ -381,7 +391,7 @@ export class OwnerBookingsPage implements OnInit {
             };
           } else {
           }
-        } catch (error) {}
+        } catch (__error) {}
       }),
     );
 

@@ -166,24 +166,24 @@ export class MarketplaceOnboardingService {
         .eq('id', userId)
         .single();
 
-      if (error) {
+      if ((error)) {
         return {
           isApproved: false,
           hasActiveTokens: false,
         };
       }
 
-      const hasActiveTokens = data.mp_token_expires_at
-        ? new Date(data.mp_token_expires_at) > new Date()
+      const hasActiveTokens = data?.mp_token_expires_at
+        ? new Date(data?.mp_token_expires_at!) > new Date()
         : false;
 
       return {
-        isApproved: data.marketplace_approved || false,
-        collectorId: data.mercadopago_collector_id || undefined,
-        completedAt: data.mp_onboarding_completed_at || undefined,
+        isApproved: data?.marketplace_approved || false,
+        collectorId: data?.mercadopago_collector_id || undefined,
+        completedAt: data?.mp_onboarding_completed_at || undefined,
         hasActiveTokens,
       };
-    } catch (error) {
+    } catch (__error) {
       return {
         isApproved: false,
         hasActiveTokens: false,
@@ -205,12 +205,12 @@ export class MarketplaceOnboardingService {
         p_user_id: userId,
       });
 
-      if (error) {
+      if ((error)) {
         return false;
       }
 
       return data === true;
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }
@@ -238,7 +238,7 @@ export class MarketplaceOnboardingService {
         })
         .eq('id', userId);
 
-      if (error) throw error;
+      if ((error)) throw error;
     } catch (error) {
       throw error;
     }
@@ -383,7 +383,7 @@ export class MarketplaceOnboardingService {
 
       const tokenData: MpTokenResponse = await response.json();
       return tokenData;
-    } catch (error) {
+    } catch (__error) {
       throw new Error('No se pudo completar la autorización con Mercado Pago');
     }
   }
@@ -417,7 +417,7 @@ export class MarketplaceOnboardingService {
       })
       .eq('id', userId);
 
-    if (error) {
+    if ((error)) {
       throw new Error('No se pudieron guardar las credenciales');
     }
   }
@@ -434,7 +434,7 @@ export class MarketplaceOnboardingService {
       })
       .eq('state', state);
 
-    if (error) {
+    if ((error)) {
       // No throw, esto no es crítico
     }
   }

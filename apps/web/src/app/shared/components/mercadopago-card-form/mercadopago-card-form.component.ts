@@ -324,8 +324,8 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
           },
         },
       });
-    } catch (error) {
-      console.error('❌ Error fatal inicializando Mercado Pago:', error);
+    } catch (_error) {
+      console.error('❌ Error fatal inicializando Mercado Pago:', _error);
       this.errorMessage.set('No pudimos cargar Mercado Pago. Intenta recargar la página.');
       this.cardError.emit('Error al inicializar Mercado Pago');
     }

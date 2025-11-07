@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
  * UX estándar en apps móviles.
  * 
  * @example
- * <app-pull-to-refresh (onRefresh)="handleRefresh()">
+ * <app-pull-to-refresh (refresh)="handleRefresh()">
  *   <div>Tu contenido aquí</div>
  * </app-pull-to-refresh>
  */
@@ -127,7 +127,7 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PullToRefreshComponent {
-  @Output() onRefresh = new EventEmitter<void>();
+  @Output() refresh = new EventEmitter<void>();
 
   readonly pullDistance = signal(0);
   readonly isRefreshing = signal(false);
@@ -176,7 +176,7 @@ export class PullToRefreshComponent {
       this.isRefreshing.set(true);
       this.refreshText.set('Actualizando...');
       
-      this.onRefresh.emit();
+      this.refresh.emit();
 
       setTimeout(() => {
         if (this.isRefreshing()) {

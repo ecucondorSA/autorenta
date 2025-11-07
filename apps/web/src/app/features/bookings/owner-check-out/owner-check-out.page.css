@@ -1,0 +1,21 @@
+canvas {
+  touch-action: none;
+  cursor: crosshair;
+}
+
+ion-range {
+  --bar-background: #e5e7eb;
+  --bar-background-active: var(--ion-color-primary);
+  --knob-background: var(--ion-color-primary);
+}
+
+ion-toggle {
+  --handle-width: 26px;
+  --handle-height: 26px;
+}
+
+.card-premium {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

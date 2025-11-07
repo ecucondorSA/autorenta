@@ -1,15 +1,15 @@
 <div class="min-h-screen bg-ivory-soft pb-20">
   <!-- Header Premium -->
-  <div class="bg-white-pure border-b border-pearl-gray/30 mb-8">
+  <div class="bg-white dark:bg-slate-deep-pure border-b border-pearl-gray dark:border-gray-600/30 mb-8">
     <div class="mx-auto max-w-7xl px-6 py-8">
       <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 class="text-3xl font-bold text-smoke-black tracking-tight">Mis Autos</h1>
-          <p class="mt-2 text-sm text-charcoal-medium">Gestioná las publicaciones que creaste</p>
+          <p class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light">Gestioná las publicaciones que creaste</p>
         </div>
-        <a
-          routerLink="/cars/publish"
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 hover:shadow-lg transition-all"
+        <button
+          (click)="openPublishModal()"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 hover:shadow-lg transition-all cursor-pointer"
         >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -20,7 +20,7 @@
             />
           </svg>
           Publicar nuevo auto
-        </a>
+        </button>
       </div>
     </div>
   </div>
@@ -32,7 +32,7 @@
       <div
         class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-accent-petrol border-r-transparent"
       ></div>
-      <p class="mt-4 text-charcoal-medium font-medium">Cargando tus autos...</p>
+      <p class="mt-4 text-charcoal-medium dark:text-pearl-light font-medium">Cargando tus autos...</p>
     </div>
 
     <!-- Empty State with Benefits -->
@@ -42,7 +42,7 @@
         <div class="mx-auto max-w-md">
           <div class="card-premium p-12">
             <svg
-              class="mx-auto h-20 w-20 text-charcoal-medium mb-6"
+              class="mx-auto h-20 w-20 text-charcoal-medium dark:text-pearl-light mb-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -55,12 +55,12 @@
               />
             </svg>
             <h3 class="text-xl font-bold text-smoke-black mb-2">Todavía no publicaste autos</h3>
-            <p class="text-sm text-charcoal-medium mb-6">
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-6">
               Comenzá a ganar dinero publicando tu primer auto en Autorentar
             </p>
-            <a
-              routerLink="/cars/publish"
-              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 transition-all"
+            <button
+              (click)="openPublishModal()"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 transition-all cursor-pointer"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -71,7 +71,7 @@
                 />
               </svg>
               Publicar mi primer auto
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -82,7 +82,7 @@
           <h2 class="text-2xl font-bold text-smoke-black mb-2">
             Por qué conviene subir tu auto a Autorentar
           </h2>
-          <p class="text-charcoal-medium">Transformá tu auto en una fuente de ingresos pasivos</p>
+          <p class="text-charcoal-medium dark:text-pearl-light">Transformá tu auto en una fuente de ingresos pasivos</p>
         </div>
 
         <!-- Comparison: Auto Parado vs Auto en Autorentar -->
@@ -125,7 +125,7 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium"
+                <span class="text-charcoal-medium dark:text-pearl-light"
                   ><strong class="text-smoke-black">$0 USD/mes</strong> de ingresos</span
                 >
               </li>
@@ -143,7 +143,7 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium"
+                <span class="text-charcoal-medium dark:text-pearl-light"
                   >Depreciación <strong class="text-red-700">100% pérdida</strong> (10-15%
                   anual)</span
                 >
@@ -162,7 +162,7 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium"
+                <span class="text-charcoal-medium dark:text-pearl-light"
                   >Mantenimiento = <strong class="text-smoke-black">gasto puro</strong></span
                 >
               </li>
@@ -180,7 +180,7 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium">Seguro sin utilizar el vehículo</span>
+                <span class="text-charcoal-medium dark:text-pearl-light">Seguro sin utilizar el vehículo</span>
               </li>
               <li class="flex items-start gap-2">
                 <svg
@@ -196,7 +196,7 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium">Ningún retorno de inversión</span>
+                <span class="text-charcoal-medium dark:text-pearl-light">Ningún retorno de inversión</span>
               </li>
             </ul>
           </div>
@@ -241,7 +241,7 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium"
+                <span class="text-charcoal-medium dark:text-pearl-light"
                   ><strong class="text-green-700">$300-500 USD/mes</strong> de ingresos</span
                 >
               </li>
@@ -259,7 +259,7 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium"
+                <span class="text-charcoal-medium dark:text-pearl-light"
                   >Depreciación <strong class="text-green-700">compensada</strong> por
                   alquileres</span
                 >
@@ -278,7 +278,7 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium"
+                <span class="text-charcoal-medium dark:text-pearl-light"
                   >Mantenimiento <strong class="text-smoke-black">cubierto</strong> por
                   ganancias</span
                 >
@@ -297,7 +297,7 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium">Seguro completo + depósito de garantía</span>
+                <span class="text-charcoal-medium dark:text-pearl-light">Seguro completo + depósito de garantía</span>
               </li>
               <li class="flex items-start gap-2">
                 <svg
@@ -313,7 +313,7 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium"
+                <span class="text-charcoal-medium dark:text-pearl-light"
                   >ROI: <strong class="text-green-700">12-18% anual</strong></span
                 >
               </li>
@@ -329,20 +329,20 @@
             Estimación de Ganancias
           </h3>
           <div class="grid md:grid-cols-3 gap-6">
-            <div class="text-center p-4 bg-white-pure rounded-lg">
-              <p class="text-sm text-charcoal-medium mb-1">Valor del auto</p>
+            <div class="text-center p-4 bg-white dark:bg-slate-deep-pure rounded-lg">
+              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-1">Valor del auto</p>
               <p class="text-2xl font-bold text-smoke-black">$10,000</p>
-              <p class="text-xs text-ash-gray">USD promedio</p>
+              <p class="text-xs text-ash-gray dark:text-pearl-light/70">USD promedio</p>
             </div>
-            <div class="text-center p-4 bg-white-pure rounded-lg">
-              <p class="text-sm text-charcoal-medium mb-1">Ingreso mensual</p>
+            <div class="text-center p-4 bg-white dark:bg-slate-deep-pure rounded-lg">
+              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-1">Ingreso mensual</p>
               <p class="text-2xl font-bold text-green-600">$300-500</p>
-              <p class="text-xs text-ash-gray">USD (20-25 días alquilados)</p>
+              <p class="text-xs text-ash-gray dark:text-pearl-light/70">USD (20-25 días alquilados)</p>
             </div>
-            <div class="text-center p-4 bg-white-pure rounded-lg">
-              <p class="text-sm text-charcoal-medium mb-1">Retorno total</p>
+            <div class="text-center p-4 bg-white dark:bg-slate-deep-pure rounded-lg">
+              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-1">Retorno total</p>
               <p class="text-2xl font-bold text-accent-petrol">4-6 años</p>
-              <p class="text-xs text-ash-gray">El auto se autopaga</p>
+              <p class="text-xs text-ash-gray dark:text-pearl-light/70">El auto se autopaga</p>
             </div>
           </div>
         </div>
@@ -368,7 +368,7 @@
               </svg>
             </div>
             <h4 class="font-bold text-smoke-black mb-2">100% Seguro</h4>
-            <p class="text-sm text-charcoal-medium">
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
               Seguro completo + verificación de usuarios + depósito de garantía
             </p>
           </div>
@@ -391,7 +391,7 @@
               </svg>
             </div>
             <h4 class="font-bold text-smoke-black mb-2">Gestión 100% Digital</h4>
-            <p class="text-sm text-charcoal-medium">
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
               Todo desde tu celular: pagos, contratos y seguimiento automático
             </p>
           </div>
@@ -414,7 +414,7 @@
               </svg>
             </div>
             <h4 class="font-bold text-smoke-black mb-2">Libertad Total</h4>
-            <p class="text-sm text-charcoal-medium">
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
               Vos decidís cuándo, a quién y a qué precio alquilar tu auto
             </p>
           </div>
@@ -422,9 +422,9 @@
 
         <!-- CTA Bottom -->
         <div class="text-center">
-          <a
-            routerLink="/cars/publish"
-            class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-accent-petrol to-accent-warm text-white-pure font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105"
+          <button
+            (click)="openPublishModal()"
+            class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-accent-petrol to-accent-warm text-white-pure font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 cursor-pointer"
           >
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -435,7 +435,7 @@
               />
             </svg>
             Publicar mi primer auto ahora
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -447,7 +447,7 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium mb-1">Total de Autos</p>
+              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">Total de Autos</p>
               <p class="text-3xl font-bold text-smoke-black">{{ cars().length }}</p>
             </div>
             <div
@@ -473,7 +473,7 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium mb-1">Activos</p>
+              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">Activos</p>
               <p class="text-3xl font-bold text-green-600">{{ countActive() }}</p>
             </div>
             <div class="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center">
@@ -497,12 +497,12 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium mb-1">En Borrador</p>
-              <p class="text-3xl font-bold text-ash-gray">{{ countDraft() }}</p>
+              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">En Borrador</p>
+              <p class="text-3xl font-bold text-ash-gray dark:text-pearl-light/70">{{ countDraft() }}</p>
             </div>
             <div class="h-14 w-14 rounded-full bg-sand-light flex items-center justify-center">
               <svg
-                class="h-7 w-7 text-charcoal-medium"
+                class="h-7 w-7 text-charcoal-medium dark:text-pearl-light"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -565,13 +565,13 @@
         <div class="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h3 class="text-lg font-bold text-smoke-black mb-1">¿Tenés más autos?</h3>
-            <p class="text-sm text-charcoal-medium">
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
               Publicá más vehículos y aumentá tus ingresos pasivos
             </p>
           </div>
-          <a
-            routerLink="/cars/publish"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 transition-all"
+          <button
+            (click)="openPublishModal()"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 transition-all cursor-pointer"
           >
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -582,7 +582,7 @@
               />
             </svg>
             Publicar otro auto
-          </a>
+          </button>
         </div>
       </div>
     </div>

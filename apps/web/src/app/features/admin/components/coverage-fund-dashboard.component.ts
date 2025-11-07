@@ -36,7 +36,7 @@ interface WalletLedgerEntry {
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">📊 Fondo de Cobertura</h1>
-        <p class="text-gray-600 dark:text-gray-400">
+        <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
           Administración del fondo de franquicias para incidentes
         </p>
       </div>
@@ -47,7 +47,7 @@ interface WalletLedgerEntry {
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
           ></div>
-          <p class="text-gray-600 dark:text-gray-400">Cargando datos del fondo...</p>
+          <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando datos del fondo...</p>
         </div>
       }
 
@@ -105,49 +105,49 @@ interface WalletLedgerEntry {
               <!-- Total Collected -->
               <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-400">Total Recaudado</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Total Recaudado</p>
                   <span class="text-2xl">📥</span>
                 </div>
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
                   {{ stats()!.total_franchises_collected }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">franquicias cobradas</p>
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">franquicias cobradas</p>
               </div>
 
               <!-- Total Disbursed -->
               <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-400">Total Desembolsado</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Total Desembolsado</p>
                   <span class="text-2xl">📤</span>
                 </div>
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
                   {{ stats()!.total_franchises_disbursed }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">franquicias pagadas</p>
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">franquicias pagadas</p>
               </div>
 
               <!-- Total Entries -->
               <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-400">Entradas en Ledger</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Entradas en Ledger</p>
                   <span class="text-2xl">📝</span>
                 </div>
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
                   {{ stats()!.total_ledger_entries }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">movimientos totales</p>
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">movimientos totales</p>
               </div>
 
               <!-- Average Amount -->
               <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-400">Promedio Franquicia</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Promedio Franquicia</p>
                   <span class="text-2xl">💰</span>
                 </div>
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
                   {{ formatAmount(stats()!.avg_franchise_amount) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">por incidente</p>
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">por incidente</p>
               </div>
             </div>
           }
@@ -193,7 +193,7 @@ interface WalletLedgerEntry {
               </div>
             } @else if (recentActivity().length === 0) {
               <div class="p-8 text-center">
-                <p class="text-gray-500 dark:text-gray-400">No hay actividad reciente</p>
+                <p class="text-gray-500 dark:text-gray-300 dark:text-gray-300">No hay actividad reciente</p>
               </div>
             } @else {
               <div class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -209,11 +209,11 @@ interface WalletLedgerEntry {
                             {{ getKindLabel(entry.kind) }}
                           </p>
                           @if (entry.meta && entry.meta['description']) {
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mt-1">
                               {{ entry.meta!['description'] }}
                             </p>
                           }
-                          <div class="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                          <div class="flex items-center space-x-4 mt-2 text-xs text-gray-500 dark:text-gray-300">
                             <span>Ref: {{ entry.ref }}</span>
                             @if (entry.booking_id) {
                               <span>Reserva: {{ entry.booking_id.substring(0, 8) }}...</span>
@@ -351,7 +351,7 @@ export class CoverageFundDashboardComponent implements OnInit {
         total_ledger_entries: entries.length,
         avg_franchise_amount: avgAmount,
       });
-    } catch (err) { /* Silenced */ }
+    } catch (_err) { /* Silenced */ }
   }
 
   async loadRecentActivity(): Promise<void> {
@@ -368,7 +368,7 @@ export class CoverageFundDashboardComponent implements OnInit {
       if (error) throw error;
 
       this.recentActivity.set(data || []);
-    } catch (err) { /* Silenced */ } finally {
+    } catch (_err) { /* Silenced */ } finally {
       this.loadingActivity.set(false);
     }
   }

@@ -12,6 +12,7 @@ export type ConversionEventType =
   | 'date_range_selected'
   | 'date_availability_checked'
   | 'date_unavailable_error'
+  | 'date_autosuggest_applied'
   // Social Proof Events
   | 'social_proof_viewed'
   | 'urgency_indicator_viewed'
@@ -163,7 +164,7 @@ export class AnalyticsService {
         created_at: new Date().toISOString(),
       });
 
-      if (error) {
+      if ((error)) {
         console.error('Error tracking Supabase event:', error);
       }
     } catch (error) {
@@ -181,6 +182,7 @@ export class AnalyticsService {
       date_range_selected: 'begin_checkout',
       date_availability_checked: 'view_item',
       date_unavailable_error: 'exception',
+      date_autosuggest_applied: 'select_content',
 
       // Social Proof
       social_proof_viewed: 'view_promotion',

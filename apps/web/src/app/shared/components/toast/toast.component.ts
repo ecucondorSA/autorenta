@@ -27,7 +27,7 @@ import { ToastService } from '../../../core/services/toast.service';
 export class ToastComponent {
   private readonly toastService = inject(ToastService);
 
-  readonly toasts = this.toastService.getToasts();
+  readonly toasts = this.toastService.notifications;
 
   /**
    * Remueve un toast manualmente

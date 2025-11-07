@@ -31,7 +31,7 @@ export class MercadoPagoConnectComponent implements OnInit {
     try {
       const status = await this.oauthService.checkConnection();
       this.connectionStatus.set(status);
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.error.set('Error al verificar estado de conexión');
     }
   }
@@ -45,8 +45,8 @@ export class MercadoPagoConnectComponent implements OnInit {
       await this.oauthService.connectMercadoPago();
       // El usuario será redirigido a MercadoPago
       // No hay código después de esto porque se redirige
-    } catch (err: any) {
-      this.error.set(err.message || 'Error al conectar con MercadoPago');
+    } catch (err: unknown) {
+      this.error.set((err as Error).message || 'Error al conectar con MercadoPago');
       this.loading.set(false);
     }
   }
@@ -74,8 +74,8 @@ export class MercadoPagoConnectComponent implements OnInit {
       } else {
         this.error.set('No se pudo desconectar la cuenta');
       }
-    } catch (err: any) {
-      this.error.set(err.message || 'Error al desconectar cuenta');
+    } catch (err: unknown) {
+      this.error.set((err as Error).message || 'Error al desconectar cuenta');
     } finally {
       this.disconnecting.set(false);
     }

@@ -98,7 +98,7 @@ import {
                 [class.bg-amber-100]="factor.value > 0"
                 [class.text-amber-700]="factor.value > 0"
                 [class.bg-gray-100]="factor.value === 0"
-                [class.text-gray-600]="factor.value === 0"
+                [class.text-gray-600 dark:text-gray-300]="factor.value === 0"
               >
                 {{ formatFactor(factor.value) }}
               </span>
@@ -204,7 +204,7 @@ export class DynamicPriceDisplayComponent implements OnInit, OnDestroy {
 
       const result = await this.pricingService.calculatePrice(request);
       this.pricing.set(result);
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No se pudo calcular el precio. Intenta nuevamente.');
     } finally {
       this.loading.set(false);

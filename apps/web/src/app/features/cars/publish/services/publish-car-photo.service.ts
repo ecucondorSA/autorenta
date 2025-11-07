@@ -114,24 +114,39 @@ export class PublishCarPhotoService {
     this.isGeneratingAIPhotos.set(true);
 
     try {
-      const prompt = `professional car photo, ${brand} ${model} ${year}, high quality, studio lighting, white background`;
-      const response = await fetch(`${environment.cloudflareWorkerUrl}/generate-car-image`, {
+      const response = await fetch(`${environment.cloudflareWorkerUrl}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({
+          brand,
+          model,
+          year,
+          angle: '3/4-front',
+          style: 'showroom',
+          num_steps: 8
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error('Error al generar fotos con IA');
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Error al generar fotos con IA');
       }
 
-      const blob = await response.blob();
-      const file = new File([blob], `ai-${Date.now()}.png`, { type: 'image/png' });
+      // Convert base64 to blob
+      const base64Data = result.image.replace(/^data:image\/\w+;base64,/, '');
+      const binaryData = atob(base64Data);
+      const bytes = new Uint8Array(binaryData.length);
+      for (let i = 0; i < binaryData.length; i++) {
+        bytes[i] = binaryData.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: 'image/png' });
+      const file = new File([blob], `ai-${brand}-${model}-${Date.now()}.png`, { type: 'image/png' });
       const preview = await this.createPreview(file);
 
       this.uploadedPhotos.set([...currentPhotos, { file, preview }]);
 
-      alert('✨ Foto generada exitosamente con IA');
+      alert(`✨ Foto generada exitosamente con IA en ${result.metadata?.duration_ms}ms`);
     } catch (error) {
       console.error('AI photo generation failed:', error);
       alert('No se pudo generar la foto. Intenta nuevamente o sube fotos manualmente.');
@@ -185,27 +200,29 @@ export class PublishCarPhotoService {
 
   /**
    * Load existing photos for editing
+   * TODO: Implement getCarPhotos method in CarsService
    */
   async loadExistingPhotos(carId: string): Promise<void> {
     try {
-      const photos = await this.carsService.getCarPhotos(carId);
+      // const photos = await this.carsService.getCarPhotos(carId);
 
-      // Convert URLs to PhotoPreview format
-      const previews: PhotoPreview[] = await Promise.all(
-        photos.map(async (photo) => {
-          // Fetch image as blob
-          const response = await fetch(photo.url);
-          const blob = await response.blob();
-          const file = new File([blob], `photo-${photo.position}.jpg`, { type: 'image/jpeg' });
+      // // Convert URLs to PhotoPreview format
+      // const previews: PhotoPreview[] = await Promise.all(
+      //   photos.map(async (photo: any) => {
+      //     // Fetch image as blob
+      //     const response = await fetch(photo.url);
+      //     const blob = await response.blob();
+      //     const file = new File([blob], `photo-${photo.position}.jpg`, { type: 'image/jpeg' });
 
-          return {
-            file,
-            preview: photo.url,
-          };
-        })
-      );
+      //     return {
+      //       file,
+      //       preview: photo.url,
+      //     };
+      //   })
+      // );
 
-      this.uploadedPhotos.set(previews);
+      // this.uploadedPhotos.set(previews);
+      console.warn('loadExistingPhotos not implemented - getCarPhotos method missing in CarsService');
     } catch (error) {
       console.error('Failed to load existing photos:', error);
     }

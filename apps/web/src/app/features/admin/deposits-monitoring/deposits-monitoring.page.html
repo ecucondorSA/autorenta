@@ -5,7 +5,7 @@
       <div>
         <button
           (click)="goBack()"
-          class="mb-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-2"
+          class="mb-4 text-gray-600 dark:text-gray-300 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -18,7 +18,7 @@
           Volver al Dashboard
         </button>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">💰 Monitoreo de Depósitos</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">
+        <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300 mt-2">
           Vista en tiempo real del sistema de depósitos
         </p>
       </div>
@@ -65,7 +65,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Depósitos</p>
+          <p class="text-sm font-medium text-gray-600 dark:text-gray-300 dark:text-gray-300">Total Depósitos</p>
           <span class="text-2xl">📊</span>
         </div>
         <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ stats().total_deposits }}</p>
@@ -109,7 +109,7 @@
             [class.border-blue-500]="selectedTab() === 'pending'"
             [class.text-blue-600]="selectedTab() === 'pending'"
             [class.dark:text-blue-400]="selectedTab() === 'pending'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             ⏳ Pendientes ({{ pendingDeposits().length }})
           </button>
@@ -118,7 +118,7 @@
             [class.border-blue-500]="selectedTab() === 'recent'"
             [class.text-blue-600]="selectedTab() === 'recent'"
             [class.dark:text-blue-400]="selectedTab() === 'recent'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             ✅ Recientes ({{ recentDeposits().length }})
           </button>
@@ -127,7 +127,7 @@
             [class.border-blue-500]="selectedTab() === 'failed'"
             [class.text-blue-600]="selectedTab() === 'failed'"
             [class.dark:text-blue-400]="selectedTab() === 'failed'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             ❌ Fallidos ({{ failedDeposits().length }})
           </button>
@@ -138,7 +138,7 @@
       <div *ngIf="selectedTab() === 'pending'" class="p-6">
         <div
           *ngIf="pendingDeposits().length === 0"
-          class="text-center py-12 text-gray-500 dark:text-gray-400"
+          class="text-center py-12 text-gray-500 dark:text-gray-300 dark:text-gray-300"
         >
           No hay depósitos pendientes
         </div>
@@ -152,10 +152,10 @@
                 <p class="font-medium text-gray-900 dark:text-white">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
                   {{ formatRelativeTime(deposit.created_at) }}
                 </p>
               </div>
@@ -173,7 +173,7 @@
       <div *ngIf="selectedTab() === 'recent'" class="p-6">
         <div
           *ngIf="recentDeposits().length === 0"
-          class="text-center py-12 text-gray-500 dark:text-gray-400"
+          class="text-center py-12 text-gray-500 dark:text-gray-300 dark:text-gray-300"
         >
           No hay depósitos recientes
         </div>
@@ -187,10 +187,10 @@
                 <p class="font-medium text-gray-900 dark:text-white">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
                   {{ formatRelativeTime(deposit.completed_at || deposit.created_at) }}
                   <span *ngIf="deposit.time_to_complete_minutes" class="ml-2">
                     (Confirmado en {{ formatDuration(deposit.time_to_complete_minutes) }})
@@ -211,7 +211,7 @@
       <div *ngIf="selectedTab() === 'failed'" class="p-6">
         <div
           *ngIf="failedDeposits().length === 0"
-          class="text-center py-12 text-gray-500 dark:text-gray-400"
+          class="text-center py-12 text-gray-500 dark:text-gray-300 dark:text-gray-300"
         >
           No hay depósitos fallidos
         </div>
@@ -225,10 +225,10 @@
                 <p class="font-medium text-gray-900 dark:text-white">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
                   {{ formatRelativeTime(deposit.updated_at) }}
                 </p>
               </div>

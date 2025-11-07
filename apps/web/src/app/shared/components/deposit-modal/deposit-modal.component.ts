@@ -99,7 +99,7 @@ export class DepositModalComponent implements OnInit {
     try {
       const rate = await this.exchangeRateService.getPlatformRate();
       this.platformRate.set(rate);
-    } catch (error) {
+    } catch (__error) {
       this.platformRate.set(1748.01);
     } finally {
       this.loadingRate.set(false);
@@ -274,15 +274,16 @@ export class DepositModalComponent implements OnInit {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   }
 
-  private getFriendlyErrorMessage(error: any): string {
-    if (error?.code === 'MERCADOPAGO_ERROR') {
+  private getFriendlyErrorMessage(error: unknown): string {
+    const err = error as any;
+    if (err?.code === 'MERCADOPAGO_ERROR') {
       return 'No pudimos iniciar el pago con Mercado Pago. Reintentá en unos minutos o elegí otro método.';
     }
-    if (error?.code === 'NETWORK_ERROR') {
+    if (err?.code === 'NETWORK_ERROR') {
       return 'No pudimos conectarnos al servicio de pagos. Verificá tu conexión y probá otra vez.';
     }
     return (
-      error?.message || 'Ocurrió un error inesperado al iniciar el depósito. Intenta nuevamente.'
+      err?.message || 'Ocurrió un error inesperado al iniciar el depósito. Intenta nuevamente.'
     );
   }
 }

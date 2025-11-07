@@ -1,16 +1,16 @@
-<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-800 py-8 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900">Gestión de Retiros</h1>
-      <p class="mt-2 text-gray-600">
+      <p class="mt-2 text-gray-600 dark:text-gray-300">
         Administra las solicitudes de retiro de fondos de los locadores
       </p>
     </div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white rounded-lg shadow p-6">
+      <div class="bg-white dark:bg-slate-deep rounded-lg shadow p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
             <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,13 +23,13 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Retiros Pendientes</p>
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Retiros Pendientes</p>
             <p class="text-2xl font-semibold text-gray-900">{{ pendingCount() }}</p>
           </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow p-6">
+      <div class="bg-white dark:bg-slate-deep rounded-lg shadow p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
             <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,7 +42,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Monto Total Pendiente</p>
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Monto Total Pendiente</p>
             <p class="text-2xl font-semibold text-gray-900">
               {{ totalPendingAmount() | money: 'ARS' }}
             </p>
@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow p-6">
+      <div class="bg-white dark:bg-slate-deep rounded-lg shadow p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
             <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Total Solicitudes</p>
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Total Solicitudes</p>
             <p class="text-2xl font-semibold text-gray-900">{{ withdrawals().length }}</p>
           </div>
         </div>
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Filters and Actions -->
-    <div class="bg-white rounded-lg shadow mb-6 p-4">
+    <div class="bg-white dark:bg-slate-deep rounded-lg shadow mb-6 p-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div class="flex gap-2 flex-wrap">
           <button
@@ -79,7 +79,7 @@
             [class]="
               filterStatus() === ''
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 hover:bg-gray-300'
             "
             class="px-4 py-2 rounded-md font-medium transition-colors"
           >
@@ -90,7 +90,7 @@
             [class]="
               filterStatus() === 'pending'
                 ? 'bg-yellow-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 hover:bg-gray-300'
             "
             class="px-4 py-2 rounded-md font-medium transition-colors"
           >
@@ -101,7 +101,7 @@
             [class]="
               filterStatus() === 'approved'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 hover:bg-gray-300'
             "
             class="px-4 py-2 rounded-md font-medium transition-colors"
           >
@@ -112,7 +112,7 @@
             [class]="
               filterStatus() === 'completed'
                 ? 'bg-green-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 hover:bg-gray-300'
             "
             class="px-4 py-2 rounded-md font-medium transition-colors"
           >
@@ -138,7 +138,7 @@
     </div>
 
     <!-- Withdrawals Table -->
-    <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="bg-white dark:bg-slate-deep rounded-lg shadow overflow-hidden">
       @if (loading()) {
         <div class="flex justify-center items-center p-12">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -146,7 +146,7 @@
       } @else if (withdrawals().length === 0) {
         <div class="text-center py-12">
           <svg
-            class="mx-auto h-12 w-12 text-gray-400"
+            class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -159,7 +159,7 @@
             />
           </svg>
           <h3 class="mt-2 text-sm font-medium text-gray-900">No hay solicitudes de retiro</h3>
-          <p class="mt-1 text-sm text-gray-500">
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
             @if (filterStatus()) {
               Prueba cambiando el filtro.
             } @else {
@@ -170,37 +170,37 @@
       } @else {
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Fecha
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Usuario
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Cuenta Bancaria
                 </th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Monto
                 </th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Comisión
                 </th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Neto
                 </th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Estado
                 </th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   Acciones
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white dark:bg-slate-deep divide-y divide-gray-200">
               @for (withdrawal of withdrawals(); track withdrawal.id) {
-                <tr class="hover:bg-gray-50">
+                <tr class="hover:bg-gray-50 dark:bg-gray-800">
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {{ withdrawal.created_at | date: 'short' }}
                   </td>
@@ -208,21 +208,21 @@
                     <div class="text-sm font-medium text-gray-900">
                       {{ withdrawal.user_name || 'N/A' }}
                     </div>
-                    <div class="text-sm text-gray-500">{{ withdrawal.user_email || 'N/A' }}</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-300">{{ withdrawal.user_email || 'N/A' }}</div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-900">
                       {{ formatAccountType(withdrawal.bank_account?.account_type || '') }}:
                       {{ withdrawal.bank_account?.account_number || 'N/A' }}
                     </div>
-                    <div class="text-sm text-gray-500">
+                    <div class="text-sm text-gray-500 dark:text-gray-300">
                       {{ withdrawal.bank_account?.account_holder_name || 'N/A' }}
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">
                     {{ withdrawal.amount | money: withdrawal.currency }}
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500 dark:text-gray-300">
                     -{{ withdrawal.fee_amount | money: withdrawal.currency }}
                   </td>
                   <td
@@ -259,11 +259,11 @@
 <!-- Modal de Detalles -->
 @if (selectedWithdrawal()) {
   <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-      <div class="px-6 py-4 border-b border-gray-200">
+    <div class="bg-white dark:bg-slate-deep rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <div class="flex justify-between items-start">
           <h3 class="text-lg font-medium text-gray-900">Detalles de Solicitud de Retiro</h3>
-          <button (click)="closeModal()" class="text-gray-400 hover:text-gray-500">
+          <button (click)="closeModal()" class="text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:text-gray-300">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
@@ -281,13 +281,13 @@
         <div class="mb-6">
           <h4 class="text-sm font-medium text-gray-700 mb-2">Usuario</h4>
           <p class="text-sm text-gray-900">{{ selectedWithdrawal()!.user_name || 'N/A' }}</p>
-          <p class="text-sm text-gray-500">{{ selectedWithdrawal()!.user_email || 'N/A' }}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-300">{{ selectedWithdrawal()!.user_email || 'N/A' }}</p>
         </div>
 
         <!-- Bank Account Info -->
         <div class="mb-6">
           <h4 class="text-sm font-medium text-gray-700 mb-2">Cuenta Bancaria</h4>
-          <div class="bg-gray-50 rounded p-3">
+          <div class="bg-gray-50 dark:bg-gray-800 rounded p-3">
             <p class="text-sm">
               <span class="font-medium">Tipo:</span>
               {{ formatAccountType(selectedWithdrawal()!.bank_account?.account_type || '') }}
@@ -316,7 +316,7 @@
         <!-- Amounts -->
         <div class="mb-6">
           <h4 class="text-sm font-medium text-gray-700 mb-2">Montos</h4>
-          <div class="bg-gray-50 rounded p-3">
+          <div class="bg-gray-50 dark:bg-gray-800 rounded p-3">
             <div class="flex justify-between text-sm mb-1">
               <span>Monto solicitado:</span>
               <span class="font-medium">{{
@@ -331,7 +331,7 @@
                 }}</span
               >
             </div>
-            <div class="flex justify-between text-sm font-medium pt-2 border-t border-gray-200">
+            <div class="flex justify-between text-sm font-medium pt-2 border-t border-gray-200 dark:border-gray-700">
               <span>Monto neto a transferir:</span>
               <span class="text-green-600">{{
                 selectedWithdrawal()!.net_amount | money: selectedWithdrawal()!.currency
@@ -349,16 +349,16 @@
           >
             {{ getStatusText(selectedWithdrawal()!.status) }}
           </span>
-          <p class="text-sm text-gray-500 mt-2">
+          <p class="text-sm text-gray-500 dark:text-gray-300 mt-2">
             Creado: {{ selectedWithdrawal()!.created_at | date: 'medium' }}
           </p>
           @if (selectedWithdrawal()!.approved_at) {
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-gray-500 dark:text-gray-300">
               Aprobado: {{ selectedWithdrawal()!.approved_at | date: 'medium' }}
             </p>
           }
           @if (selectedWithdrawal()!.completed_at) {
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-gray-500 dark:text-gray-300">
               Completado: {{ selectedWithdrawal()!.completed_at | date: 'medium' }}
             </p>
           }
@@ -397,7 +397,7 @@
               [value]="actionNotes()"
               (input)="updateActionNotes($any($event.target).value)"
               rows="3"
-              class="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Ingrese notas adicionales..."
             ></textarea>
           </div>
@@ -405,7 +405,7 @@
       </div>
 
       <!-- Actions -->
-      <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-2">
+      <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2">
         @if (selectedWithdrawal()!.status === 'pending') {
           <button
             (click)="rejectWithdrawal(selectedWithdrawal()!)"
@@ -430,7 +430,7 @@
         }
         <button
           (click)="closeModal()"
-          class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-md hover:bg-gray-50 dark:bg-gray-800"
         >
           Cerrar
         </button>

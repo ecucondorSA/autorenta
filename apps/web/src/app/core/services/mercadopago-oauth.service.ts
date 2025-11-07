@@ -79,8 +79,8 @@ export class MercadoPagoOAuthService {
 
       // Redirigir a MercadoPago para autorización
       window.location.href = response.authorization_url;
-    } catch (err: any) {
-      throw new Error(err.message || 'Error inesperado al conectar con MercadoPago');
+    } catch (err: unknown) {
+      throw new Error((err as Error).message || 'Error inesperado al conectar con MercadoPago');
     }
   }
 
@@ -110,7 +110,7 @@ export class MercadoPagoOAuthService {
       }
 
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
       throw err;
     }
   }
@@ -136,7 +136,7 @@ export class MercadoPagoOAuthService {
       }
 
       return status;
-    } catch (err: any) {
+    } catch (err: unknown) {
       return { connected: false };
     }
   }
@@ -161,7 +161,7 @@ export class MercadoPagoOAuthService {
       }
 
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
       throw err;
     }
   }
@@ -206,7 +206,7 @@ export class MercadoPagoOAuthService {
       }
 
       return data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       return null;
     }
   }

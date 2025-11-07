@@ -78,7 +78,7 @@ export interface ResponsiveTestEnvironment {
   /** Cleanup function to restore original state */
   cleanup: () => void;
   /** Mocked ResizeObserver instance */
-  resizeObserver: any;
+  resizeObserver: unknown;
   /** Trigger resize without affecting Karma */
   triggerResize: (newWidth: number, newHeight: number) => void;
   /** Get current viewport dimensions */

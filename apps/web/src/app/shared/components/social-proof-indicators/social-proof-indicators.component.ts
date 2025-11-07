@@ -91,8 +91,8 @@ export class SocialProofIndicatorsComponent implements OnInit, OnDestroy {
 
       // Track: Social proof viewed
       this.trackSocialProofViewed(data);
-    } catch (error) {
-      console.error('Error loading social proof data:', error);
+    } catch (_error) {
+      console.error('Error loading social proof data:', _error);
     }
   }
 
@@ -214,8 +214,8 @@ export class SocialProofIndicatorsComponent implements OnInit, OnDestroy {
       }
 
       return count ?? 0;
-    } catch (error) {
-      console.error('Error in getRecentBookingsCount:', error);
+    } catch (_error) {
+      console.error('Error in getRecentBookingsCount:', _error);
       return 0;
     }
   }
@@ -262,8 +262,8 @@ export class SocialProofIndicatorsComponent implements OnInit, OnDestroy {
 
       const availableDays = totalDaysInMonth - blockedDays.size;
       return Math.max(0, availableDays);
-    } catch (error) {
-      console.error('Error in getAvailableDaysThisMonth:', error);
+    } catch (_error) {
+      console.error('Error in getAvailableDaysThisMonth:', _error);
       // Fallback optimista
       return 20;
     }

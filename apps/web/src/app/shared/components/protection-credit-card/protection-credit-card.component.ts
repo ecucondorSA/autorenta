@@ -476,8 +476,8 @@ export class ProtectionCreditCardComponent implements OnInit {
   async loadRenewalProgress(): Promise<void> {
     try {
       this._renewalProgressData = await this.protectionCreditService.getRenewalProgress();
-    } catch (error) {
-      console.error('[ProtectionCreditCard] Error al cargar progreso de renovación:', error);
+    } catch (_error) {
+      console.error('[ProtectionCreditCard] Error al cargar progreso de renovación:', _error);
     }
   }
 

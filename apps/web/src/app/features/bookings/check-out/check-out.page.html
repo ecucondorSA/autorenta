@@ -3,8 +3,8 @@
     <!-- Loading State -->
     @if (loading()) {
       <div class="text-center py-12">
-        <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-        <p class="mt-4 text-gray-600 dark:text-gray-400">Cargando reserva...</p>
+        <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 dark:border-gray-600 border-t-blue-600"></div>
+        <p class="mt-4 text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando reserva...</p>
       </div>
     }
 
@@ -33,7 +33,7 @@
       <div class="mb-6">
         <button
           routerLink="/bookings"
-          class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -50,7 +50,7 @@
           <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             🔄 Check-out del Vehículo
           </h1>
-          <p class="text-gray-600 dark:text-gray-400">
+          <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
             Realizá la inspección final del vehículo al devolver el auto
           </p>
         </div>
@@ -63,25 +63,25 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Vehículo</p>
+            <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">Vehículo</p>
             <p class="font-medium text-gray-900 dark:text-white">
               {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
             </p>
           </div>
           <div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Inicio del alquiler</p>
+            <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">Inicio del alquiler</p>
             <p class="font-medium text-gray-900 dark:text-white">
               {{ formatDateTime(booking()!.start_at) }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Fin del alquiler</p>
+            <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">Fin del alquiler</p>
             <p class="font-medium text-gray-900 dark:text-white">
               {{ formatDateTime(booking()!.end_at) }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Estado</p>
+            <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">Estado</p>
             <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
             >
@@ -183,7 +183,7 @@
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               Instrucciones
             </h2>
-            <ul class="list-disc list-inside space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <ul class="list-disc list-inside space-y-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
               <li>Tomá al menos 8 fotos claras del vehículo en el mismo estado que al inicio</li>
               <li>Registrá el kilometraje final (odómetro)</li>
               <li>Verificá el nivel de combustible (debe estar al mismo nivel que al inicio)</li>
@@ -229,6 +229,8 @@
     }
   </div>
 </div>
+
+
 
 
 

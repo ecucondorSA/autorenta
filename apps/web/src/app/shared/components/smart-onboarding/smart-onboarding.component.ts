@@ -353,8 +353,8 @@ export class SmartOnboardingComponent implements OnInit {
       } else {
         this.router.navigate(['/tabs/explore']);
       }
-    } catch (error) {
-      console.error('Error completing onboarding:', error);
+    } catch (_error) {
+      console.error('Error completing onboarding:', _error);
       // Fallback: ir a home
       this.router.navigate(['/tabs/home']);
     } finally {

@@ -4,14 +4,14 @@ import { z } from 'zod';
 import { ChatMessageInsertSchema } from '../contracts/chat-message.schemas';
 
 // Mock for queueOffline
-const queueOffline = (data: any) => {
+const queueOffline = (data: unknown) => {
   console.log('Queuing offline:', data);
 };
 
-export async function insertMessage(supabase: SupabaseClient, input: any) {
+export async function insertMessage(supabase: SupabaseClient, input: unknown) {
   try {
     // Strip full_name before validation (UI might send it but DB doesn't need it)
-    const { full_name, ...rest } = input;
+    const { full_name, ...rest } = input as any;
     const clean = ChatMessageInsertSchema.parse(rest);
     const { data, error } = await supabase.from('messages').insert(clean).select('*').single();
     if (error) {
