@@ -119,6 +119,12 @@
               ></app-deposit-status-badge>
             </div>
 
+            <!-- Distance Risk Tier Badge -->
+            <app-distance-risk-tier-badge
+              *ngIf="booking()?.distance_risk_tier && booking()?.delivery_required"
+              [tier]="booking()!.distance_risk_tier!"
+            ></app-distance-risk-tier-badge>
+
             <!-- Car Info -->
             <div class="flex-1 min-w-0">
               <h1 class="text-lg font-bold text-gray-900 dark:text-white truncate">
