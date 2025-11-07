@@ -111,7 +111,19 @@
         >
           <div class="flex items-center gap-4 p-4">
             <!-- Status Badge -->
-            <app-booking-status [booking]="booking()!"></app-booking-status>
+            <div class="flex flex-col gap-2">
+              <app-booking-status [booking]="booking()!"></app-booking-status>
+              <app-deposit-status-badge
+                *ngIf="booking()?.deposit_status"
+                [status]="booking()!.deposit_status!"
+              ></app-deposit-status-badge>
+            </div>
+
+            <!-- Distance Risk Tier Badge -->
+            <app-distance-risk-tier-badge
+              *ngIf="booking()?.distance_risk_tier && booking()?.delivery_required"
+              [tier]="booking()!.distance_risk_tier!"
+            ></app-distance-risk-tier-badge>
 
             <!-- Car Info -->
             <div class="flex-1 min-w-0">
@@ -165,29 +177,73 @@
               </div>
             </div>
 
-            <!-- 🆕 Delivery Information Card -->
-            <div
-              *ngIf="booking()?.delivery_required && booking()?.delivery_distance_km && booking()?.delivery_distance_km > 0"
-              class="rounded-lg border border-blue-200 dark:border-blue-800/50 bg-blue-50 dark:bg-blue-900/20 p-3 shadow-sm"
-            >
-              <h3 class="mb-3 text-sm font-semibold text-blue-900 dark:text-blue-100">
-                🚚 Información de Entrega
-              </h3>
-              <div class="space-y-2">
-                <div class="flex justify-between text-sm">
-                  <span class="text-blue-700 dark:text-blue-200">Distancia:</span>
-                  <span class="font-medium text-blue-900 dark:text-blue-100">
-                    {{ (booking()?.delivery_distance_km).toFixed(1) }} km
-                  </span>
-                </div>
-                <div class="flex justify-between text-sm" *ngIf="booking()?.delivery_fee_cents && booking()?.delivery_fee_cents > 0">
-                  <span class="text-blue-700 dark:text-blue-200">Cargo de entrega:</span>
-                  <span class="font-medium text-blue-900 dark:text-blue-100">
-                    {{ formatCurrency(booking()!.delivery_fee_cents, 'ARS') }}
-                  </span>
+            <!-- ✅ NEW: Distance and Delivery Card -->
+            @if (booking()?.pickup_location_lat && booking()?.dropoff_location_lat) {
+              <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep p-3 shadow-sm">
+                <h3 class="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  📍 Ubicaciones de Retiro y Devolución
+                </h3>
+
+                <!-- Distance Info -->
+                @if (booking()?.delivery_distance_km) {
+                  <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm text-gray-700 dark:text-gray-300">Distancia</span>
+                      <span class="font-semibold text-gray-900 dark:text-white">
+                        {{ booking()!.delivery_distance_km | number: '1.0-2' }} km
+                      </span>
+                    </div>
+                    @if (booking()?.distance_risk_tier) {
+                      <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                        Categoría:
+                        @switch (booking()?.distance_risk_tier) {
+                          @case ('local') {
+                            <span class="text-green-600 dark:text-green-400 font-medium">Local</span>
+                          }
+                          @case ('regional') {
+                            <span class="text-yellow-600 dark:text-yellow-400 font-medium">Regional</span>
+                          }
+                          @case ('long_distance') {
+                            <span class="text-orange-600 dark:text-orange-400 font-medium">Larga distancia</span>
+                          }
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- Locations -->
+                <div class="space-y-3">
+                  <!-- Pickup Location -->
+                  <div>
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Retiro</p>
+                    <p class="text-sm text-gray-900 dark:text-white">
+                      {{ booking()!.pickup_location_lat | number: '1.0-4' }}, {{ booking()!.pickup_location_lng | number: '1.0-4' }}
+                    </p>
+                  </div>
+
+                  <!-- Dropoff Location -->
+                  <div>
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Devolución</p>
+                    <p class="text-sm text-gray-900 dark:text-white">
+                      {{ booking()!.dropoff_location_lat | number: '1.0-4' }}, {{ booking()!.dropoff_location_lng | number: '1.0-4' }}
+                    </p>
+                  </div>
+
+                  <!-- Delivery Fee -->
+                  @if (booking()?.delivery_required && booking()?.delivery_fee_cents) {
+                    <div class="pt-3 border-t border-gray-200 dark:border-gray-700">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Tarifa de delivery</span>
+                        <span class="font-semibold text-gray-900 dark:text-white">
+                          ARS ${{ (booking()!.delivery_fee_cents / 100) | number: '1.2-2' }}
+                        </span>
+                      </div>
+                    </div>
+                  }
                 </div>
               </div>
-            </div>
+            }
 
             <!-- Requirements Card - Solo para reservas confirmadas o en progreso -->
             <div
@@ -605,6 +661,96 @@
         </div>
 
         <app-review-management [booking]="booking()!"></app-review-management>
+
+        <!-- Owner Damage Report Button -->
+        <div
+          *ngIf="canReportDamage()"
+          class="card-premium p-4 rounded-2xl shadow-soft bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-l-4 border-red-500"
+        >
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <svg
+                class="w-8 h-8 text-red-600 dark:text-red-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-smoke-black dark:text-white-pure mb-2">
+                ¿Detectaste daños en el vehículo?
+              </h3>
+              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
+                Reporta cualquier daño detectado después de la devolución del vehículo.
+                El monto será deducido del depósito de garantía del locatario.
+              </p>
+              <a
+                [routerLink]="['/bookings', booking()?.id, 'owner-damage-report']"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-base shadow-sm"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                Reportar Daños
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display Damage Report if already submitted -->
+        <div
+          *ngIf="isOwner() && booking()?.owner_reported_damages"
+          class="card-premium p-4 rounded-2xl shadow-soft border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20"
+        >
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <svg
+                class="w-8 h-8 text-amber-600 dark:text-amber-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-amber-900 dark:text-amber-200 mb-2">
+                Reporte de Daños Enviado
+              </h3>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-amber-800 dark:text-amber-300">Monto del daño:</span>
+                  <span class="font-semibold text-amber-900 dark:text-amber-100">
+                    ${{ (booking()?.owner_damage_amount ?? 0) / 100 }} USD
+                  </span>
+                </div>
+                <div *ngIf="booking()?.owner_damage_description" class="pt-2 border-t border-amber-200 dark:border-amber-700">
+                  <p class="text-xs text-amber-800 dark:text-amber-300 font-medium mb-1">Descripción:</p>
+                  <p class="text-sm text-amber-900 dark:text-amber-100">
+                    {{ booking()?.owner_damage_description }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Bilateral Confirmation Section -->
         <div *ngIf="showConfirmationSection()" class="space-y-4">

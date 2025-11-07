@@ -2,7 +2,11 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
 import { WalletService } from '../../../core/services/wallet.service';
+import { BookingsService } from '../../../core/services/bookings.service';
+import { BookingDepositStatus } from '../../../core/models';
+import { DepositStatusBadgeComponent } from '../deposit-status-badge/deposit-status-badge.component';
 
 type TransactionType = 'deposit' | 'withdrawal' | 'lock' | 'unlock' | 'charge' | 'refund' | 'bonus' | 'rental_payment_lock' | 'rental_payment_transfer' | 'security_deposit_lock' | 'security_deposit_release' | 'security_deposit_charge' | 'all';
 type TransactionStatus = 'pending' | 'completed' | 'failed' | 'refunded' | 'all';
@@ -25,12 +29,13 @@ interface WalletHistoryEntry {
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, RouterLink, DepositStatusBadgeComponent],
   templateUrl: './transaction-history.component.html',
   styleUrls: ['./transaction-history.component.css'],
 })
 export class TransactionHistoryComponent implements OnInit {
   private readonly walletService = inject(WalletService);
+  private readonly bookingsService = inject(BookingsService);
 
   readonly transactions = this.walletService.transactions;
   readonly isLoading = this.walletService.loading;
@@ -39,6 +44,9 @@ export class TransactionHistoryComponent implements OnInit {
   readonly expandedTransactionId = signal<string | null>(null);
   readonly filterType = signal<TransactionType>('all');
   readonly filterStatus = signal<TransactionStatus>('all');
+
+  // Track deposit statuses for bookings
+  readonly bookingDepositStatuses = signal<Map<string, BookingDepositStatus | null>>(new Map());
 
   readonly filteredTransactions = computed(() => {
     let transactions = this.transactions() as unknown as WalletHistoryEntry[];
@@ -96,6 +104,11 @@ export class TransactionHistoryComponent implements OnInit {
       this.expandedTransactionId.set(null);
     } else {
       this.expandedTransactionId.set(transactionId);
+      // Load deposit status for deposit-related transactions
+      const transaction = this.filteredTransactions().find(t => t.id === transactionId);
+      if (transaction && transaction.booking_id && this.isDepositRelatedTransaction(transaction)) {
+        void this.loadBookingDepositStatus(transaction.booking_id);
+      }
     }
   }
 
@@ -217,5 +230,41 @@ export class TransactionHistoryComponent implements OnInit {
 
   trackByTransactionId(_index: number, transaction: WalletHistoryEntry): string {
     return transaction.id;
+  }
+
+  /**
+   * Check if a transaction is related to security deposits
+   */
+  isDepositRelatedTransaction(transaction: WalletHistoryEntry): boolean {
+    const type = this.getTransactionType(transaction);
+    return ['security_deposit_lock', 'security_deposit_release', 'security_deposit_charge'].includes(type);
+  }
+
+  /**
+   * Load deposit status for a booking
+   */
+  async loadBookingDepositStatus(bookingId: string): Promise<void> {
+    // Skip if already loaded
+    if (this.bookingDepositStatuses().has(bookingId)) {
+      return;
+    }
+
+    try {
+      const booking = await this.bookingsService.getBookingById(bookingId);
+      const currentMap = this.bookingDepositStatuses();
+      const newMap = new Map(currentMap);
+      newMap.set(bookingId, booking?.deposit_status || null);
+      this.bookingDepositStatuses.set(newMap);
+    } catch (error) {
+      // Silent fail - deposit status is optional enhancement
+      console.error('Failed to load booking deposit status:', error);
+    }
+  }
+
+  /**
+   * Get deposit status for a booking
+   */
+  getDepositStatus(bookingId: string): BookingDepositStatus | null {
+    return this.bookingDepositStatuses().get(bookingId) || null;
   }
 }

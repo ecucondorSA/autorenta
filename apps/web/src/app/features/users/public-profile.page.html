@@ -222,8 +222,21 @@
     </div>
 
     <!-- Reviews as Owner Tab -->
-    <div *ngIf="activeTab() === 'reviews-owner'" class="space-y-4">
-      <div *ngFor="let review of displayedReviewsOwner()" class="card-premium p-6">
+    <div *ngIf="activeTab() === 'reviews-owner'" class="space-y-6">
+      <!-- Radar Chart for Owner Ratings -->
+      <div *ngIf="ownerRadarData()" class="card-premium p-6">
+        <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+          Desglose de Calificaciones como Locador
+        </h3>
+        <app-review-radar-chart [data]="ownerRadarData()!" [size]="300" />
+      </div>
+
+      <!-- Reviews List -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+          Reseñas Recibidas
+        </h3>
+        <div *ngFor="let review of displayedReviewsOwner()" class="card-premium p-6">
         <div class="flex items-start gap-4">
           <img
             [src]="review.reviewer_avatar || '/assets/avatar-placeholder.png'"
@@ -244,12 +257,26 @@
             <p *ngIf="review.comment_public" class="mt-2 text-sm text-smoke-black dark:text-pearl-light/80">{{ review.comment_public }}</p>
           </div>
         </div>
+        </div>
       </div>
     </div>
 
     <!-- Reviews as Renter Tab -->
-    <div *ngIf="activeTab() === 'reviews-renter'" class="space-y-4">
-      <div *ngFor="let review of displayedReviewsRenter()" class="card-premium p-6">
+    <div *ngIf="activeTab() === 'reviews-renter'" class="space-y-6">
+      <!-- Radar Chart for Renter Ratings -->
+      <div *ngIf="renterRadarData()" class="card-premium p-6">
+        <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+          Desglose de Calificaciones como Locatario
+        </h3>
+        <app-review-radar-chart [data]="renterRadarData()!" [size]="300" />
+      </div>
+
+      <!-- Reviews List -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+          Reseñas Recibidas
+        </h3>
+        <div *ngFor="let review of displayedReviewsRenter()" class="card-premium p-6">
         <div class="flex items-start gap-4">
           <img
             [src]="review.reviewer_avatar || '/assets/avatar-placeholder.png'"
@@ -269,6 +296,7 @@
             </div>
             <p *ngIf="review.comment_public" class="mt-2 text-sm text-smoke-black dark:text-pearl-light/80">{{ review.comment_public }}</p>
           </div>
+        </div>
         </div>
       </div>
     </div>
