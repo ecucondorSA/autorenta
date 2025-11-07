@@ -56,7 +56,12 @@
                 }
               ],
               "outputHashing": "all",
-              "serviceWorker": false
+              "serviceWorker": false,
+              "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "vendor": true
+              }
             },
             "development": {
               "fileReplacements": [

@@ -1,6 +1,7 @@
 import {
   ApplicationConfig,
   LOCALE_ID,
+  ErrorHandler,
   importProvidersFrom,
   isDevMode,
   provideZoneChangeDetection,
@@ -13,6 +14,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import * as Sentry from '@sentry/angular';
 import { routes } from './app.routes';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
@@ -33,8 +35,27 @@ function initializePerformanceMonitoring(_perfService: PerformanceMonitoringServ
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // ✅ Sentry Error Handler - Must be first to catch all errors
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler({
+        showDialog: false, // Don't show Sentry dialog to users
+        logErrors: isDevMode(), // Log to console in development
+      }),
+    },
+    // ✅ Sentry Tracing - Track Router events for performance monitoring
+    {
+      provide: Sentry.TraceService,
+      deps: [],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, 
+    provideRouter(routes,
       withEnabledBlockingInitialNavigation(),
       withInMemoryScrolling({
         scrollPositionRestoration: 'enabled',
