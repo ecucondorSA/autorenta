@@ -209,8 +209,9 @@ const processMockWebhook = async (
   payload: MockPaymentWebhookPayload,
   supabase: ReturnType<typeof getSupabaseAdminClient>,
   env: Env,
+  log: Logger,
 ): Promise<Response> => {
-  console.log('Processing mock webhook for booking:', payload.booking_id);
+  log.info('Processing mock webhook', { bookingId: payload.booking_id, status: payload.status });
 
   // Idempotency check
   const dedupeKey = `webhook:mock:${payload.booking_id}:${payload.status}`;
@@ -301,11 +302,12 @@ const processMercadoPagoWebhook = async (
     rawBody: string;
     query: URLSearchParams;
   },
+  log: Logger,
 ): Promise<Response> => {
   const mpAccessToken = env.MERCADOPAGO_ACCESS_TOKEN;
 
   if (!mpAccessToken) {
-    console.error('Mercado Pago access token not configured in environment');
+    log.error('Mercado Pago access token not configured');
     return jsonResponse({ message: 'Mercado Pago access token missing' }, { status: 500 });
   }
 
@@ -313,7 +315,7 @@ const processMercadoPagoWebhook = async (
     payload?.data?.id || options.query.get('data.id') || options.query.get('id');
 
   if (!paymentId) {
-    console.error('Mercado Pago webhook without payment ID', {
+    log.error('Mercado Pago webhook without payment ID', {
       payload,
       query: Object.fromEntries(options.query.entries()),
     });
@@ -323,11 +325,11 @@ const processMercadoPagoWebhook = async (
   const webhookType = payload?.type || options.query.get('type') || '';
 
   if (webhookType && webhookType !== 'payment') {
-    console.log('Ignoring non-payment event:', webhookType);
+    log.info('Ignoring non-payment event', { webhookType });
     return jsonResponse({ message: 'Event type not supported' }, { status: 200 });
   }
 
-  console.log('Processing Mercado Pago webhook:', {
+  log.info('Processing Mercado Pago webhook', {
     paymentId,
     action: payload?.action,
     type: webhookType,
