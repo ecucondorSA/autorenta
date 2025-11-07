@@ -44,6 +44,7 @@ import {
   PaymentMethodButtonsComponent,
   type PaymentMethod,
 } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
+import { BookingLocationFormComponent, BookingLocationData } from '../../bookings/components/booking-location-form/booking-location-form.component';
 
 // Services
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
@@ -76,6 +77,7 @@ interface CarDetailState {
     DistanceBadgeComponent,
     CarChatComponent,
     PaymentMethodButtonsComponent,
+    BookingLocationFormComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -112,6 +114,10 @@ export class CarDetailPage implements OnInit {
   readonly bookingError = signal<string | null>(null);
   readonly validatingAvailability = signal(false); // ✅ NEW: Loading state for re-validation
   readonly selectedPaymentMethod = signal<BookingPaymentMethod>('credit_card');
+
+  // ✅ NEW: Booking location form state
+  readonly showLocationForm = signal(false);
+  readonly pendingBookingData = signal<{ from: string; to: string } | null>(null);
 
   // ✅ NEW: Date suggestions and waitlist
   readonly suggestedDateRanges = signal<Array<{ startDate: string; endDate: string; daysCount: number }>>([]);
@@ -830,27 +836,48 @@ export class CarDetailPage implements OnInit {
       return;
     }
 
+    // ✅ NEW: Show location form instead of directly booking
+    // Prepare dates in ISO format
+    let startDate: string;
+    let endDate: string;
+
+    if (this.expressMode()) {
+      const now = new Date();
+      const hours = this.hoursCount();
+      const end = new Date(now.getTime() + hours * 60 * 60 * 1000);
+      startDate = now.toISOString();
+      endDate = end.toISOString();
+    } else {
+      startDate = new Date(from).toISOString();
+      endDate = new Date(to).toISOString();
+    }
+
+    // Store booking data and show form
+    this.pendingBookingData.set({ from: startDate, to: endDate });
+    this.showLocationForm.set(true);
+    this.bookingError.set(null);
+  }
+
+  /**
+   * ✅ NEW: Handle location form submission
+   */
+  async onLocationFormSubmit(locationData: BookingLocationData): Promise<void> {
+    const car = this.car();
+    const pendingData = this.pendingBookingData();
+
+    if (!car || !pendingData) {
+      this.bookingError.set('Datos incompletos. Por favor intentá nuevamente.');
+      return;
+    }
+
     this.bookingInProgress.set(true);
     this.bookingError.set(null);
 
     try {
-      // Modo express: usar fechas inmediatas
-      let startDate: string;
-      let endDate: string;
-
-      if (this.expressMode()) {
-        const now = new Date();
-        const hours = this.hoursCount();
-        const end = new Date(now.getTime() + hours * 60 * 60 * 1000);
-        startDate = now.toISOString();
-        endDate = end.toISOString();
-      } else {
-        startDate = new Date(from).toISOString();
-        endDate = new Date(to).toISOString();
-      }
+      const startDate = pendingData.from;
+      const endDate = pendingData.to;
 
       // ✅ NEW: Re-validate availability before booking
-      // This prevents race conditions where another user books between selection and booking
       if (!this.expressMode()) {
         this.validatingAvailability.set(true);
         try {
@@ -862,12 +889,12 @@ export class CarDetailPage implements OnInit {
               error: 'Fechas no disponibles - reserva confirmada en ese período',
             });
 
-            // ✅ NEW: Try to suggest alternative dates
+            // Try to suggest alternative dates
             const suggestions = await this.carsService.getNextAvailableRange(
               car.id,
               startDate,
               endDate,
-              3, // Get up to 3 alternative date ranges
+              3,
             );
 
             if (suggestions && suggestions.length > 0) {
@@ -875,9 +902,8 @@ export class CarDetailPage implements OnInit {
               this.bookingError.set(
                 'El auto no está disponible para esas fechas. Te sugerimos las siguientes alternativas:',
               );
-              this.canWaitlist.set(false); // Don't show waitlist if we have suggestions
+              this.canWaitlist.set(false);
             } else {
-              // No suggestions available - show waitlist option
               this.suggestedDateRanges.set([]);
               this.bookingError.set(
                 'El auto no está disponible para esas fechas. Hay una reserva confirmada en ese período.',
@@ -885,7 +911,6 @@ export class CarDetailPage implements OnInit {
               this.canWaitlist.set(true);
             }
 
-            // Refresh blocked ranges to update calendar
             await this.loadBlockedDates(car.id);
             return;
           }
@@ -900,13 +925,18 @@ export class CarDetailPage implements OnInit {
         days_count: this.daysCount(),
         total_amount: this.totalPrice() ?? undefined,
         express_mode: this.expressMode(),
+        has_delivery: locationData.deliveryRequired,
+        delivery_distance_km: locationData.distanceKm,
       });
 
+      // ✅ NEW: Create booking with location data
       const result = await this.bookingsService.createBookingWithValidation(
         car.id,
         startDate,
         endDate,
+        locationData,
       );
+
       if (!result.success || !result.booking) {
         // Track: Booking failed
         this.analytics.trackEvent('booking_failed', {
@@ -915,6 +945,7 @@ export class CarDetailPage implements OnInit {
         });
 
         this.bookingError.set(result.error || 'No pudimos crear la reserva.');
+        this.showLocationForm.set(false);
         return;
       }
 
@@ -925,6 +956,10 @@ export class CarDetailPage implements OnInit {
         total_amount: this.totalPrice() ?? undefined,
         days_count: this.daysCount(),
       });
+
+      // Close form and navigate
+      this.showLocationForm.set(false);
+      this.pendingBookingData.set(null);
 
       this.router.navigate(['/bookings/detail-payment'], {
         queryParams: { bookingId: result.booking.id },
@@ -940,6 +975,15 @@ export class CarDetailPage implements OnInit {
     } finally {
       this.bookingInProgress.set(false);
     }
+  }
+
+  /**
+   * ✅ NEW: Handle location form cancellation
+   */
+  onLocationFormCancelled(): void {
+    this.showLocationForm.set(false);
+    this.pendingBookingData.set(null);
+    this.bookingError.set(null);
   }
 
   private updateMetaTags(car: Car, stats: CarStats | null): void {

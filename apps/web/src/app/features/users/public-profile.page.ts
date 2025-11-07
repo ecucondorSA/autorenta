@@ -10,6 +10,10 @@ import { CarsService } from '../../core/services/cars.service';
 import { ReviewsService } from '../../core/services/reviews.service';
 import type { UserProfile, Car, Review } from '../../core/models';
 import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
+import {
+  ReviewRadarChartComponent,
+  type RadarChartData,
+} from '../../shared/components/review-radar-chart/review-radar-chart.component';
 
 interface UserStats {
   owner_rating_avg: number | null;
@@ -25,7 +29,7 @@ interface UserStats {
 @Component({
   selector: 'app-public-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, ReviewRadarChartComponent],
   templateUrl: './public-profile.page.html',
 })
 export class PublicProfilePage {
@@ -105,6 +109,35 @@ export class PublicProfilePage {
   displayedCars = computed(() => this.userCars().slice(0, 6));
   displayedReviewsOwner = computed(() => this.reviewsAsOwner().slice(0, 3));
   displayedReviewsRenter = computed(() => this.reviewsAsRenter().slice(0, 3));
+
+  // Radar chart data
+  ownerRadarData = computed<RadarChartData | null>(() => {
+    const stats = this.userStats();
+    if (!stats || !stats.owner_reviews_count) return null;
+
+    return {
+      cleanliness: stats.owner_rating_cleanliness_avg || 0,
+      communication: stats.owner_rating_communication_avg || 0,
+      accuracy: stats.owner_rating_accuracy_avg || 0,
+      location: stats.owner_rating_location_avg || 0,
+      checkin: stats.owner_rating_checkin_avg || 0,
+      value: stats.owner_rating_value_avg || 0,
+    };
+  });
+
+  renterRadarData = computed<RadarChartData | null>(() => {
+    const stats = this.userStats();
+    if (!stats || !stats.renter_reviews_count) return null;
+
+    return {
+      cleanliness: stats.renter_rating_cleanliness_avg || 0,
+      communication: stats.renter_rating_communication_avg || 0,
+      accuracy: stats.renter_rating_accuracy_avg || 0,
+      location: 0, // Renters don't have location ratings typically
+      checkin: stats.renter_rating_checkin_avg || 0,
+      value: 0, // Renters don't have value ratings typically
+    };
+  });
 
   averageCarPrice = computed(() => {
     const cars = this.userCars();

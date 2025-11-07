@@ -145,6 +145,26 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             </span>
           </div>
 
+          <!-- Delivery Distance -->
+          <div class="flex justify-between text-sm" *ngIf="priceBreakdown.distanceKm !== undefined && priceBreakdown.distanceKm > 0">
+            <span class="text-gray-600 dark:text-pearl-light/70">
+              Distancia de entrega
+            </span>
+            <span class="font-medium text-gray-900 dark:text-ivory-luminous">
+              {{ (priceBreakdown.distanceKm).toFixed(1) }} km
+            </span>
+          </div>
+
+          <!-- Delivery Fee -->
+          <div class="flex justify-between text-sm" *ngIf="priceBreakdown.deliveryFeeUsd !== undefined && priceBreakdown.deliveryFeeUsd > 0">
+            <span class="text-gray-600 dark:text-pearl-light/70">
+              Cargo por entrega
+            </span>
+            <span class="font-medium text-gray-900 dark:text-ivory-luminous">
+              {{ formatUsd(priceBreakdown.deliveryFeeUsd) }}
+            </span>
+          </div>
+
           <!-- Subtotal USD -->
           <div
             class="flex justify-between text-sm pt-2 border-t border-gray-100 dark:border-neutral-800/80"

@@ -1,7 +1,9 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { DriverProfileService } from '../../../core/services/driver-profile.service';
+import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
 import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benefits-modal.component';
 
 /**
@@ -12,14 +14,16 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
  * MUESTRA:
  * - Clase actual (0-10) con badge visual
  * - Score telemático (0-100)
+ * - Estado de Bonus Protector activo (NUEVO)
  * - Beneficios (descuentos) o recargos
  * - Historial de siniestros
  * - Progreso hacia mejor clase
  *
  * DISEÑO:
  * - Badge de clase con color según riesgo
+ * - Badge de protector activo con nivel y expiración (NUEVO)
  * - Barra de progreso para score telemático
- * - Iconos visuales (🏆, ⭐, ⚠️, 🔴)
+ * - Iconos visuales (🏆, ⭐, ⚠️, 🔴, 🛡️)
  * - Información detallada expandible
  */
 
@@ -60,6 +64,71 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
               </ion-badge>
             </div>
             <p class="class-description">{{ classDescription() }}</p>
+          </div>
+
+          <!-- Bonus Protector Status (NEW) -->
+          <div class="protector-section" *ngIf="!bonusProtectorService.loading()">
+            <!-- Active Protector -->
+            <ion-card class="protector-card" *ngIf="hasActiveProtector() && !isProtectorExpired()">
+              <ion-card-content>
+                <div class="protector-active">
+                  <div class="protector-header">
+                    <ion-badge [color]="protectorBadgeColor()" class="protector-badge">
+                      <ion-icon [name]="protectorIcon()"></ion-icon>
+                      <span>{{ protectorBadgeText() }}</span>
+                    </ion-badge>
+                  </div>
+                  <div class="protector-info">
+                    <div class="protector-detail">
+                      <ion-icon name="shield-checkmark-outline" color="success"></ion-icon>
+                      <span>{{ remainingClaims() }} uso{{ remainingClaims() === 1 ? '' : 's' }} restante{{ remainingClaims() === 1 ? '' : 's' }}</span>
+                    </div>
+                    <div class="protector-detail">
+                      <ion-icon name="calendar-outline" [color]="isNearExpiry() ? 'warning' : 'medium'"></ion-icon>
+                      <span>{{ expiryMessage() }}</span>
+                    </div>
+                  </div>
+                  <ion-button
+                    fill="clear"
+                    size="small"
+                    (click)="onManageProtector()"
+                    class="manage-button"
+                  >
+                    <ion-icon slot="start" name="settings-outline"></ion-icon>
+                    Gestionar
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <!-- Expired or No Protector -->
+            <ion-card class="protector-card warning" *ngIf="!hasActiveProtector() || isProtectorExpired()">
+              <ion-card-content>
+                <div class="protector-warning">
+                  <ion-icon name="shield-outline" color="medium"></ion-icon>
+                  <div class="warning-content">
+                    <p class="warning-title">
+                      {{ isProtectorExpired() ? 'Tu protección expiró' : 'Sin protección activa' }}
+                    </p>
+                    <p class="warning-message">
+                      {{ isProtectorExpired()
+                        ? 'Renueva tu Bonus Protector para seguir protegido'
+                        : 'Protege tu clase de conductor de siniestros inesperados'
+                      }}
+                    </p>
+                  </div>
+                </div>
+                <ion-button
+                  expand="block"
+                  size="small"
+                  color="primary"
+                  (click)="onPurchaseProtector()"
+                >
+                  <ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>
+                  {{ isProtectorExpired() ? 'Renovar Protección' : 'Comprar Protección' }}
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
           </div>
 
           <!-- Score Section -->
@@ -253,6 +322,103 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
         margin: 0;
       }
 
+      /* Protector Section (NEW) */
+      .protector-section {
+        margin-bottom: 24px;
+      }
+
+      .protector-card {
+        margin: 0 0 16px 0;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .protector-card.warning {
+        background: var(--ion-color-light);
+      }
+
+      .protector-card ion-card-content {
+        padding: 16px;
+      }
+
+      .protector-active {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .protector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .protector-badge {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .protector-badge ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .protector-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .protector-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--ion-color-dark);
+      }
+
+      .protector-detail ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .manage-button {
+        align-self: flex-start;
+        margin: 0;
+        --padding-start: 0;
+      }
+
+      .protector-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .protector-warning > ion-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+
+      .warning-content {
+        flex: 1;
+      }
+
+      .warning-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin: 0 0 4px 0;
+      }
+
+      .warning-message {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        line-height: 1.4;
+      }
+
       /* Score Section */
       .score-section {
         margin-bottom: 24px;
@@ -435,7 +601,9 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
 })
 export class DriverProfileCardComponent implements OnInit {
   readonly driverProfileService = inject(DriverProfileService);
+  readonly bonusProtectorService = inject(BonusProtectorService);
   private readonly modalController = inject(ModalController);
+  private readonly router = inject(Router);
 
   // Expose Math for template
   readonly Math = Math;
@@ -468,12 +636,66 @@ export class DriverProfileCardComponent implements OnInit {
     return this.driverProfileService.getScoreMessage();
   });
 
+  // Bonus Protector signals (NEW)
+  readonly hasActiveProtector = computed(() => this.bonusProtectorService.hasActiveProtector());
+  readonly isProtectorExpired = computed(() => this.bonusProtectorService.isExpired());
+  readonly isNearExpiry = computed(() => this.bonusProtectorService.isNearExpiry());
+  readonly protectionLevel = computed(() => this.bonusProtectorService.protectionLevel());
+  readonly activeProtector = computed(() => this.bonusProtectorService.activeProtector());
+
+  readonly remainingClaims = computed(() => {
+    const protector = this.activeProtector();
+    return protector?.remaining_protected_claims ?? 0;
+  });
+
+  readonly protectorBadgeColor = computed(() => {
+    if (this.isProtectorExpired()) return 'danger';
+    if (this.isNearExpiry()) return 'warning';
+    return 'success';
+  });
+
+  readonly protectorIcon = computed(() => {
+    const level = this.protectionLevel();
+    if (level === 1) return 'shield-outline';
+    if (level === 2) return 'shield-half-outline';
+    if (level === 3) return 'shield-checkmark-outline';
+    return 'shield-outline';
+  });
+
+  readonly protectorBadgeText = computed(() => {
+    const level = this.protectionLevel();
+    const icon = level === 1 ? '🛡️' : level === 2 ? '🛡️🛡️' : '🛡️🛡️🛡️';
+    return `${icon} Protegido Nivel ${level}`;
+  });
+
+  readonly expiryMessage = computed(() => {
+    const protector = this.activeProtector();
+    if (!protector) return '';
+
+    const days = protector.days_until_expiry ?? 0;
+    if (days < 0) return 'Expirado';
+    if (days === 0) return 'Expira hoy';
+    if (days === 1) return 'Expira mañana';
+    if (days <= 7) return `Expira en ${days} días`;
+    if (days <= 30) return `Expira en ${Math.ceil(days / 7)} semanas`;
+    return `Expira en ${Math.ceil(days / 30)} meses`;
+  });
+
   async ngOnInit(): Promise<void> {
     await this.loadProfile();
+    await this.loadActiveProtector();
   }
 
   async loadProfile(): Promise<void> {
     await this.driverProfileService.loadProfile();
+  }
+
+  async loadActiveProtector(): Promise<void> {
+    try {
+      await this.bonusProtectorService.loadActiveProtector();
+    } catch (error) {
+      console.error('[DriverProfileCard] Error al cargar protector activo:', error);
+    }
   }
 
   async onInitializeProfile(): Promise<void> {
@@ -482,6 +704,14 @@ export class DriverProfileCardComponent implements OnInit {
     } catch (_error) {
       console.error('[DriverProfileCard] Error al inicializar perfil:', _error);
     }
+  }
+
+  onManageProtector(): void {
+    this.router.navigate(['/protections']);
+  }
+
+  onPurchaseProtector(): void {
+    this.router.navigate(['/protections']);
   }
 
   async onViewDetails(): Promise<void> {

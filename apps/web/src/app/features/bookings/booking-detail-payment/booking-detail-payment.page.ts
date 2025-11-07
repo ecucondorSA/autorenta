@@ -941,7 +941,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       throw new Error(riskSnapshotResult.error || 'Error al guardar risk snapshot');
     }
 
-    // 2. Actualizar booking con payment_mode y autorizaciones
+    // 2. Actualizar booking con payment_mode, autorizaciones y datos de distancia
     const { error } = await this.supabaseClient
       .from('bookings')
       .update({
@@ -951,6 +951,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         wallet_lock_id: this.walletLock()?.lockId,
         risk_snapshot_booking_id: bookingId, // FIXED: Column is risk_snapshot_booking_id, not risk_snapshot_id
         risk_snapshot_date: new Date().toISOString(),
+        delivery_distance_km: this.distanceKm() || null,
+        distance_risk_tier: this.distanceTier() || null,
+        delivery_fee_cents: this.deliveryFeeCents() || 0,
         updated_at: new Date().toISOString(),
       })
       .eq('id', bookingId);
@@ -993,6 +996,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       coverageUpgrade: this.mapCoverageUpgrade(this.coverageUpgrade()),
       authorizedPaymentId: this.paymentAuthorization()?.authorizedPaymentId,
       walletLockId: this.walletLock()?.lockId,
+      distanceKm: this.distanceKm(),
+      distanceTier: this.distanceTier(),
+      deliveryFeeCents: this.deliveryFeeCents(),
       riskSnapshot: {
         dailyPriceUsd: pricing.totalUsd / (calculateTotalDays(input.startDate, input.endDate) || 1),
         securityDepositUsd: risk.creditSecurityUsd,

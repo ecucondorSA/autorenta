@@ -14,13 +14,13 @@ import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
-import { ConfirmAndReleaseResponse, BookingConfirmationService } from '../../../core/services/booking-confirmation.service';
+import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { InsuranceService } from '../../../core/services/insurance.service';
 import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insurance.model';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
-import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
+import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 
 /**
  * BookingDetailPage
@@ -46,7 +46,7 @@ import { BookingConfirmationTimelineComponent } from '../../../shared/components
     TranslateModule,
     BookingStatusComponent,
     ReviewManagementComponent,
-    BookingConfirmationTimelineComponent,
+    DepositStatusBadgeComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -62,7 +62,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly insuranceService = inject(InsuranceService);
-  private readonly confirmationService = inject(BookingConfirmationService);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
@@ -206,6 +205,15 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking || !this.isRenter()) return false;
     const validStatus = booking.status === 'in_progress';
     return validStatus && this.hasCheckIn() && !this.hasCheckOut();
+  });
+
+  readonly canReportDamage = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return false;
+    // Owner can report damage after vehicle return (completed status or returned_at is set)
+    const canReport = (booking.status === 'completed' || booking.returned_at !== null)
+                      && !booking.owner_reported_damages;
+    return canReport;
   });
 
   isStepCompleted(index: number): boolean {
@@ -448,55 +456,5 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   handleConfirmationError(errorMessage: string): void {
     alert(`❌ Error: ${errorMessage}`);
-  }
-
-  /**
-   * Handle timeline confirmation actions
-   * Delegates to appropriate confirmation components or services
-   */
-  async handleTimelineAction(event: {
-    action: 'owner_confirm' | 'renter_confirm' | 'mark_returned';
-    bookingId: string;
-  }): Promise<void> {
-    const booking = this.booking();
-    const currentUser = this.authService.session$()?.user;
-
-    if (!booking || !currentUser) {
-      this.handleConfirmationError('Usuario o booking no disponible');
-      return;
-    }
-
-    try {
-      switch (event.action) {
-        case 'mark_returned':
-          // Mark booking as returned
-          const returnedResult = await this.confirmationService.markAsReturned({
-            booking_id: booking.id,
-            returned_by: currentUser.id,
-          });
-
-          if (returnedResult.success) {
-            // Reload booking
-            const updated = await this.bookingsService.getBookingById(booking.id);
-            this.booking.set(updated);
-            alert(`✅ ${returnedResult.message}`);
-          }
-          break;
-
-        case 'owner_confirm':
-          // Redirect to owner confirmation component (it has damage reporting UI)
-          // The existing OwnerConfirmationComponent will handle this
-          alert('Por favor, usa el panel de confirmación de propietario más abajo para confirmar con o sin daños.');
-          break;
-
-        case 'renter_confirm':
-          // Redirect to renter confirmation component
-          alert('Por favor, usa el panel de confirmación de locatario más abajo para autorizar la liberación de fondos.');
-          break;
-      }
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-      this.handleConfirmationError(errorMessage);
-    }
   }
 }
