@@ -125,6 +125,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/admin/reviews/admin-reviews.page').then((m) => m.AdminReviewsPage),
       },
+      {
+        path: 'refunds',
+        loadComponent: () =>
+          import('./features/admin/refunds/admin-refunds.page').then((m) => m.AdminRefundsPage),
+      },
     ],
   },
   {
