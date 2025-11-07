@@ -142,6 +142,11 @@ export const routes: Routes = [
           import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
       },
       {
+        path: 'driver-profile',
+        loadComponent: () =>
+          import('./features/driver-profile/driver-profile.page').then((m) => m.DriverProfilePage),
+      },
+      {
         path: 'mercadopago-connect',
         loadComponent: () =>
           import('./features/profile/mercadopago-connect.component').then(
@@ -149,12 +154,6 @@ export const routes: Routes = [
           ),
       },
     ],
-  },
-  {
-    path: 'driver-profile',
-    canMatch: [AuthGuard],
-    loadComponent: () =>
-      import('./features/driver-profile/driver-profile.page').then((m) => m.DriverProfilePage),
   },
   {
     path: 'protections',
