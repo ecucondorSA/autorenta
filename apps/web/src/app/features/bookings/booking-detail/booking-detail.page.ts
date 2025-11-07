@@ -205,6 +205,15 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return validStatus && this.hasCheckIn() && !this.hasCheckOut();
   });
 
+  readonly canReportDamage = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return false;
+    // Owner can report damage after vehicle return (completed status or returned_at is set)
+    const canReport = (booking.status === 'completed' || booking.returned_at !== null)
+                      && !booking.owner_reported_damages;
+    return canReport;
+  });
+
   isStepCompleted(index: number): boolean {
     return index < this.currentBookingStageIndex();
   }
