@@ -36,6 +36,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { createChildLogger } from '../_shared/logger.ts';
+import { enforceRateLimit, RateLimitError, getClientIp } from '../_shared/rate-limiter.ts';
 
 // Logger con contexto fijo
 const log = createChildLogger('MercadoPagoWebhook');
@@ -70,12 +71,10 @@ const MERCADOPAGO_IP_RANGES = [
   { start: ipToNumber('216.33.196.0'), end: ipToNumber('216.33.196.255') },
 ];
 
-// Rate limiting: Map<IP, {count: number, resetAt: number}>
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-// Configuración de rate limiting
-const RATE_LIMIT_MAX_REQUESTS = 100; // Máximo 100 requests
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // Por minuto
+// OLD: In-memory rate limiting (replaced with database-backed solution)
+// const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+// const RATE_LIMIT_MAX_REQUESTS = 100;
+// const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 
 /**
  * Convierte una IP a número para comparación
@@ -103,9 +102,10 @@ function isMercadoPagoIP(clientIP: string): boolean {
 }
 
 /**
- * Verifica rate limiting por IP
+ * OLD: In-memory rate limiting function (replaced with database-backed solution)
+ * Using enforceRateLimit() from _shared/rate-limiter.ts instead
  */
-function checkRateLimit(clientIP: string): { allowed: boolean; remaining: number; resetAt: number } {
+/* function checkRateLimit(clientIP: string): { allowed: boolean; remaining: number; resetAt: number } {
   const now = Date.now();
   const key = clientIP || 'unknown';
 
@@ -125,7 +125,7 @@ function checkRateLimit(clientIP: string): { allowed: boolean; remaining: number
   limit.count++;
   rateLimitMap.set(key, limit);
   return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - limit.count, resetAt: limit.resetAt };
-}
+} */
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -187,43 +187,29 @@ serve(async (req) => {
     }
 
     // ========================================
-    // RATE LIMITING
+    // RATE LIMITING (P0 Security - Database-backed)
     // Prevenir DDoS limitando requests por IP
     // ========================================
-    const rateLimit = checkRateLimit(clientIP);
-    
-    if (!rateLimit.allowed) {
-      console.warn('⚠️ Rate limit exceeded:', {
-        ip: clientIP,
-        resetAt: new Date(rateLimit.resetAt).toISOString(),
+    try {
+      await enforceRateLimit(req, {
+        endpoint: 'mercadopago-webhook',
+        windowSeconds: 60, // 1 minute window
+        identifier: clientIP || undefined, // Use IP-based rate limiting for webhooks
       });
-
-      return new Response(
-        JSON.stringify({
-          error: 'Rate limit exceeded',
-          code: 'RATE_LIMIT_EXCEEDED',
-          retry_after: Math.ceil((rateLimit.resetAt - Date.now()) / 1000),
-        }),
-        {
-          status: 429,
-          headers: {
-            ...corsHeaders,
-            'Content-Type': 'application/json',
-            'X-RateLimit-Limit': String(RATE_LIMIT_MAX_REQUESTS),
-            'X-RateLimit-Remaining': String(rateLimit.remaining),
-            'X-RateLimit-Reset': String(rateLimit.resetAt),
-            'Retry-After': String(Math.ceil((rateLimit.resetAt - Date.now()) / 1000)),
-          },
-        }
-      );
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        console.warn('⚠️ Rate limit exceeded:', {
+          ip: clientIP,
+          resetAt: error.resetAt,
+        });
+        return error.toResponse();
+      }
+      // Don't block on rate limiter errors - fail open for availability
+      console.error('[RateLimit] Error enforcing rate limit:', error);
     }
 
-    // Agregar headers de rate limit a todas las respuestas
-    const rateLimitHeaders = {
-      'X-RateLimit-Limit': String(RATE_LIMIT_MAX_REQUESTS),
-      'X-RateLimit-Remaining': String(rateLimit.remaining),
-      'X-RateLimit-Reset': String(rateLimit.resetAt),
-    };
+    // OLD: Rate limit headers (now handled by RateLimitError.toResponse())
+    // const rateLimitHeaders = { ... };
 
     // ========================================
     // VALIDACIÓN DE FIRMA HMAC (CRÍTICA)
