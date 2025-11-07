@@ -21,12 +21,6 @@ export const environment = buildEnvironment({
   // NG_APP_PAYPAL_CLIENT_ID - Client ID de PayPal Production
   paypalClientId: '', // Se configura via NG_APP_PAYPAL_CLIENT_ID
   paypalClientSecret: '', // No se usa en frontend
-  // Sentry Error Tracking
-  // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
-  // NG_APP_SENTRY_DSN - Sentry DSN de AutoRenta
-  sentryDsn: '', // Se configura via NG_APP_SENTRY_DSN
-  sentryEnvironment: 'production',
-  sentryTracesSampleRate: 0.1, // 10% performance sampling
   distanceConfig: {
     // Umbrales de tiers (km)
     localThresholdKm: 20,
@@ -48,9 +42,4 @@ export const environment = buildEnvironment({
     defaultSearchRadiusKm: 50,
     maxSearchRadiusKm: 100
   },
-  // Sentry Configuration
-  // IMPORTANTE: Configurar NG_APP_SENTRY_DSN via Cloudflare Pages environment variables
-  sentryDsn: '', // Se configura via NG_APP_SENTRY_DSN
-  sentryEnvironment: 'production',
-  sentryTracesSampleRate: 0.1, // 10% of transactions for performance monitoring
 });
