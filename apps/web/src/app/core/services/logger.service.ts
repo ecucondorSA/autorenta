@@ -221,11 +221,14 @@ export class LoggerService {
         extra: { data: this.sanitizeData(data) },
       };
 
-      if (level === 'error' || level === 'fatal') {
-        if (data instanceof Error) {
-          Sentry.captureException(data, captureContext);
+        if (level === 'error' || level === 'fatal') {
+          if (data instanceof Error) {
+            Sentry.captureException(data, captureContext);
+          } else {
+            Sentry.captureException(new Error(message), captureContext);
+          }
         } else {
-          Sentry.captureException(new Error(message), captureContext);
+          Sentry.captureMessage(message, captureContext);
         }
       } else {
         Sentry.captureMessage(message, captureContext);
