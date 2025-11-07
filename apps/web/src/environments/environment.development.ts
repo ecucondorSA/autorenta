@@ -14,4 +14,9 @@ export const environment = buildEnvironment({
   // Obtener en: https://developer.paypal.com/dashboard/applications/sandbox
   paypalClientId: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
   paypalClientSecret: '', // No se necesita en frontend (solo para backend)
+  // Sentry Configuration
+  // TODO: Replace with actual Sentry DSN from https://sentry.io/settings/projects/
+  sentryDsn: '', // Empty in development - set NG_APP_SENTRY_DSN to test
+  sentryEnvironment: 'development',
+  sentryTracesSampleRate: 0.1, // 10% of transactions for performance monitoring
 });
