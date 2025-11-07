@@ -6,13 +6,14 @@ import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
 import { formatDateRange } from '../../../shared/utils/date.utils';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 
 type BookingStatusFilter = 'all' | 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
 
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
-  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule],
+  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule, DepositStatusBadgeComponent],
   templateUrl: './my-bookings.page.html',
   styleUrl: './my-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

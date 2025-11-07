@@ -111,7 +111,13 @@
         >
           <div class="flex items-center gap-4 p-4">
             <!-- Status Badge -->
-            <app-booking-status [booking]="booking()!"></app-booking-status>
+            <div class="flex flex-col gap-2">
+              <app-booking-status [booking]="booking()!"></app-booking-status>
+              <app-deposit-status-badge
+                *ngIf="booking()?.deposit_status"
+                [status]="booking()!.deposit_status!"
+              ></app-deposit-status-badge>
+            </div>
 
             <!-- Car Info -->
             <div class="flex-1 min-w-0">
