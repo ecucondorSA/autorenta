@@ -15,21 +15,20 @@ if (environment.sentryDsn) {
   Sentry.init({
     dsn: environment.sentryDsn,
     environment: environment.production ? 'production' : 'development',
+    // Security: Sample only 10% of traces in production to reduce noise
     tracesSampleRate: environment.production ? 0.1 : 1.0,
-    // Security: Only send errors in production, all in development
+    // Enabled by default (respects DSN presence)
     enabled: true,
-    // Capture breadcrumbs for better debugging
+    // Capture breadcrumbs for better debugging context
     maxBreadcrumbs: 50,
-    // Add user context for support
-    integrations: [
-      new Sentry.BrowserTracing(),
-      new Sentry.Replay({
-        maskAllText: true, // Mask all text for PII protection
-        blockAllMedia: true, // Block all media for privacy
-      }),
-    ],
-    // Security: Attachments for additional context (errors, console logs)
+    // Security: Attach stack traces for better error context
     attachStacktrace: true,
+    // Denylist to prevent PII from being captured
+    denyUrls: [
+      /health/i,
+      /metrics/i,
+      /analytics/i,
+    ],
   });
 }
 

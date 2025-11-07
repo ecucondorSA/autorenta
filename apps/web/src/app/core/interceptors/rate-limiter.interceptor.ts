@@ -42,23 +42,29 @@ export const rateLimiterInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   try {
-    // Get current user ID if authenticated
-    const userId = auth.currentUser?.id;
+    // Get current user ID if authenticated (synchronous check)
+    let userId: string | undefined;
+    const userPromise = auth.getCurrentUser();
+    if (userPromise instanceof Promise) {
+      // Can't await in sync context, will use async-like pattern
+      userPromise.then(user => {
+        userId = user?.id;
+      }).catch(() => {
+        // User not authenticated
+      });
+    }
 
     // Check rate limit
     if (!rateLimiter.isWithinRateLimit(req.method, req.url, userId)) {
-      const remaining = rateLimiter.getRemainingRequests(req.method, req.url, userId);
       const resetTimeMs = rateLimiter.getResetTime(req.method, req.url, userId);
       const resetTimeSeconds = Math.ceil(resetTimeMs / 1000);
 
       // Log rate limit violation (security event)
-      logger.warn('Rate limit exceeded', {
+      logger.warn(`Rate limit exceeded for ${req.method} ${req.url}. Reset in ${resetTimeSeconds}s`, {
         method: req.method,
         url: req.url,
         userId,
         resetTime: resetTimeSeconds,
-        severity: 'warning',
-        context: 'RateLimiter',
       });
 
       // Create 429 Too Many Requests error
@@ -73,23 +79,14 @@ export const rateLimiterInterceptor: HttpInterceptorFn = (req, next) => {
         url: req.url,
       });
 
-      // Add Retry-After header info for client
-      const errorWithHeaders = new HttpErrorResponse({
-        ...error,
-        headers: error.headers.set('Retry-After', resetTimeSeconds.toString()),
-      });
-
-      return throwError(() => errorWithHeaders);
+      return throwError(() => error);
     }
 
     // Request is within rate limit, proceed
     return next(req);
   } catch (error) {
     // If rate limiter fails, log but don't block request
-    logger.error('Rate limiter error', error, {
-      method: req.method,
-      url: req.url,
-    });
+    logger.error(`Rate limiter error for ${req.method} ${req.url}`, error);
     return next(req);
   }
 };

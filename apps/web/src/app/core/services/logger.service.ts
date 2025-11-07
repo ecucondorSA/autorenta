@@ -211,31 +211,36 @@ export class LoggerService {
     data?: unknown,
   ): void {
     // Dynamic import to avoid breaking if Sentry is not initialized
-    import('@sentry/angular').then((Sentry) => {
-      if (typeof Sentry !== 'undefined' && Sentry.isInitialized?.()) {
-        const captureContext: Sentry.CaptureContext = {
-          level: level as Sentry.SeverityLevel,
-          extra: this.sanitizeData(data),
-          tags: {
-            severity: level,
-            timestamp: new Date().toISOString(),
-          },
-        };
+    try {
+      import('@sentry/angular').then((SentryModule: any) => {
+        // Check if Sentry is available and initialized
+        if (typeof SentryModule !== 'undefined' && SentryModule.isInitialized?.()) {
+          const captureContext = {
+            level: level as any,
+            extra: this.sanitizeData(data),
+            tags: {
+              severity: level,
+              timestamp: new Date().toISOString(),
+            },
+          };
 
-        if (level === 'error' || level === 'fatal') {
-          if (data instanceof Error) {
-            Sentry.captureException(data, captureContext);
+          if (level === 'error' || level === 'fatal') {
+            if (data instanceof Error) {
+              SentryModule.captureException(data, captureContext);
+            } else {
+              SentryModule.captureException(new Error(message), captureContext);
+            }
           } else {
-            Sentry.captureException(new Error(message), captureContext);
+            SentryModule.captureMessage(message, captureContext);
           }
-        } else {
-          Sentry.captureMessage(message, captureContext);
         }
-      }
-    }).catch((err) => {
-      // If Sentry fails to load, log to console instead
-      console.warn('Failed to send log to Sentry:', err);
-    });
+      }).catch((_err: any) => {
+        // If Sentry fails to load, silently continue
+        // This is expected in development or if Sentry is not configured
+      });
+    } catch (_err) {
+      // If dynamic import fails, silently continue
+    }
   }
 }
 
