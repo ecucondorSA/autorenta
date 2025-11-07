@@ -311,7 +311,7 @@ export class BookingWalletService {
       );
 
       if (!unlockResult.success) {
-        this.logger.error('Failed to unlock funds', new Error(unlockResult.message));
+        this.logger.error('Failed to unlock funds', 'BookingWalletService', new Error(unlockResult.message));
         return { ok: false, error: unlockResult.message };
       }
 

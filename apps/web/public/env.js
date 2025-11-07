@@ -8,5 +8,6 @@ window.__env = {
   "NG_APP_PAYMENTS_WEBHOOK_URL": "http://localhost:8787/webhooks/payments",
   "NG_APP_MAPBOX_ACCESS_TOKEN": "pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg",
   "NG_APP_CAR_LOCATIONS_EDGE_FUNCTION": "",
-  "NG_APP_MERCADOPAGO_PUBLIC_KEY": ""
+  "NG_APP_MERCADOPAGO_PUBLIC_KEY": "",
+  "NG_APP_CLOUDFLARE_WORKER_URL": "https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev"
 };

@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-ivory-soft dark:bg-graphite-dark pb-20 transition-colors duration-300">
   <!-- Header with back button -->
-  <div class="bg-white-pure dark:bg-anthracite border-b border-pearl-gray/30 dark:border-slate-deep/50 transition-colors">
+  <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite border-b border-pearl-gray dark:border-gray-600/30 dark:border-slate-deep/50 transition-colors">
     <div class="mx-auto max-w-5xl px-6 py-6">
       <button
         (click)="goBack()"
@@ -61,7 +61,7 @@
                 </h1>
                 <div class="mt-2 flex flex-wrap items-center gap-2">
                   <!-- Role Badge -->
-                  <span class="inline-flex items-center gap-1.5 rounded-full bg-sand-light dark:bg-slate-deep/70 px-3 py-1 text-sm font-semibold text-smoke-black dark:text-ivory-luminous border border-pearl-gray/30 dark:border-slate-deep/50">
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-sand-light dark:bg-slate-deep/70 px-3 py-1 text-sm font-semibold text-smoke-black dark:text-ivory-luminous border border-pearl-gray dark:border-gray-600/30 dark:border-slate-deep/50">
                     {{ profile()?.role === 'renter' ? '🚗 Locatario' : profile()?.role === 'owner' ? '🏠 Locador' : '🔄 Ambos' }}
                   </span>
 
@@ -112,7 +112,7 @@
           </div>
 
           <!-- Total Cars -->
-          <div class="rounded-xl bg-sand-light dark:bg-slate-deep/50 border border-pearl-gray/30 dark:border-slate-deep/50 p-4 transition-colors">
+          <div class="rounded-xl bg-sand-light dark:bg-slate-deep/50 border border-pearl-gray dark:border-gray-600/30 dark:border-slate-deep/50 p-4 transition-colors">
             <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">{{ 'publicProfile.activeCars' | translate }}</p>
             <p class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
               {{ userCars().length }}
@@ -139,7 +139,7 @@
                                                   (click)="setActiveTab('cars')"
                                                   [class.text-accent-petrol]="activeTab() === 'cars'"
                                                   [class.border-accent-petrol]="activeTab() === 'cars'"
-                                                  [class.text-charcoal-medium]="activeTab() !== 'cars'"
+                                                  [class.text-charcoal-medium dark:text-pearl-light]="activeTab() !== 'cars'"
                                                   [class.dark:text-pearl-light/70]="activeTab() !== 'cars'"
                                                   [class.border-transparent]="activeTab() !== 'cars'"
                                                   class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous">
@@ -156,7 +156,7 @@
           (click)="setActiveTab('reviews-owner')"
           [class.text-accent-petrol]="activeTab() === 'reviews-owner'"
           [class.border-accent-petrol]="activeTab() === 'reviews-owner'"
-          [class.text-charcoal-medium]="activeTab() !== 'reviews-owner'"
+          [class.text-charcoal-medium dark:text-pearl-light]="activeTab() !== 'reviews-owner'"
           [class.dark:text-pearl-light/70]="activeTab() !== 'reviews-owner'"
           [class.border-transparent]="activeTab() !== 'reviews-owner'"
           class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"
@@ -168,7 +168,7 @@
           (click)="setActiveTab('reviews-renter')"
           [class.text-accent-petrol]="activeTab() === 'reviews-renter'"
           [class.border-accent-petrol]="activeTab() === 'reviews-renter'"
-          [class.text-charcoal-medium]="activeTab() !== 'reviews-renter'"
+          [class.text-charcoal-medium dark:text-pearl-light]="activeTab() !== 'reviews-renter'"
           [class.dark:text-pearl-light/70]="activeTab() !== 'reviews-renter'"
           [class.border-transparent]="activeTab() !== 'reviews-renter'"
           class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"

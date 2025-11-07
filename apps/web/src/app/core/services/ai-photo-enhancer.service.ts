@@ -92,7 +92,7 @@ export class AiPhotoEnhancerService {
 
         // Track download (requerido por Unsplash)
         await this.stockPhotos.trackDownload(stockPhoto.id);
-      } catch (error) {
+      } catch (__error) {
         // Continuar con las demás fotos
       }
     }
@@ -147,7 +147,7 @@ export class AiPhotoEnhancerService {
           preview,
           source: 'cloudflare-ai',
         });
-      } catch (error) {
+      } catch (__error) {
         // Continuar con las demás imágenes
       }
     }

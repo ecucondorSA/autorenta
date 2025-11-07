@@ -117,7 +117,7 @@ export class LocationService {
             lng: position.coords.longitude,
           });
         },
-        (error) => {
+        (error: any) => {
           console.warn('Error getting current position:', error.message);
           resolve(null);
         },

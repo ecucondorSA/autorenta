@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, map } from 'rxjs/operators';
-import { of, combineLatest } from 'rxjs';
+import { of, combineLatest, from } from 'rxjs';
 
 // Services
 import { CarsService } from '../../../core/services/cars.service';
@@ -112,6 +112,14 @@ export class CarDetailPage implements OnInit {
 
   private readonly carId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
 
+  /**
+   * Valida si un string es un UUID válido
+   */
+  private isValidUUID(uuid: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(uuid);
+  }
+
   private readonly carData$ = this.carId$.pipe(
     switchMap((id) => {
       if (!id) {
@@ -123,10 +131,34 @@ export class CarDetailPage implements OnInit {
           error: 'Auto no encontrado',
         });
       }
+      // ✅ FIX: Validar que el ID sea un UUID válido
+      // Previene errores cuando se navega a rutas como /cars/publish
+      if (!this.isValidUUID(id)) {
+        console.warn(`ID inválido para auto: "${id}". Redirigiendo...`);
+        // Redirigir a la lista de autos si el ID no es válido
+        setTimeout(() => this.router.navigate(['/cars']), 100);
+        return of({
+          car: null,
+          reviews: [],
+          stats: null,
+          loading: false,
+          error: 'ID de auto inválido',
+        });
+      }
       return combineLatest([
-        this.carsService.getCarById(id),
-        this.reviewsService.getReviewsForCar(id),
-        this.reviewsService.getCarStats(id),
+        from(this.carsService.getCarById(id)),
+        from(this.reviewsService.getReviewsForCar(id)).pipe(
+          catchError((err) => {
+            console.error('Error cargando reviews:', err);
+            return of([]); // Retornar array vacío si falla
+          }),
+        ),
+        from(this.reviewsService.getCarStats(id)).pipe(
+          catchError((err) => {
+            console.error('Error cargando estadísticas:', err);
+            return of(null); // Retornar null si falla
+          }),
+        ),
       ]).pipe(
         map(([car, reviews, stats]) => {
           if (car) {
@@ -134,15 +166,27 @@ export class CarDetailPage implements OnInit {
           }
           return { car, reviews, stats, loading: false, error: car ? null : 'Auto no disponible' };
         }),
-        catchError(() =>
-          of({
+        catchError((err) => {
+          console.error('Error cargando auto:', err);
+          // Determinar mensaje de error más específico
+          let errorMessage = 'Error al cargar el auto';
+          if (err?.code === 'PGRST116') {
+            errorMessage = 'Auto no encontrado';
+          } else if (err?.message?.includes('permission') || err?.code === '42501') {
+            errorMessage = 'No tienes permiso para ver este auto';
+          } else if (err?.message?.includes('network') || err?.message?.includes('fetch')) {
+            errorMessage = 'Error de conexión. Verifica tu internet';
+          } else if (err?.message) {
+            errorMessage = `Error: ${err.message}`;
+          }
+          return of({
             car: null,
             reviews: [],
             stats: null,
             loading: false,
-            error: 'Error al cargar el auto',
-          }),
-        ),
+            error: errorMessage,
+          });
+        }),
       );
     }),
   );
@@ -222,6 +266,18 @@ export class CarDetailPage implements OnInit {
     return diff > 0 ? Math.max(diff, 5) : 5; // Mínimo 5 horas
   });
 
+  readonly isCurrentUserOwner = computed(() => {
+    const car = this.car();
+    const session = this.authService.session$();
+    const currentUserId = session?.user?.id;
+    if (!car || !currentUserId) {
+      return false;
+    }
+    return car.owner_id === currentUserId;
+  });
+
+  readonly canContactOwner = computed(() => this.authService.isAuthenticated() && !this.isCurrentUserOwner());
+
   // ✅ FIX: Precio por hora dinámico (cargado desde el servicio de pricing)
   readonly dynamicHourlyRate = signal<number | null>(null);
 
@@ -296,11 +352,32 @@ export class CarDetailPage implements OnInit {
   checkAvailability = async (carId: string, from: string, to: string): Promise<boolean> => {
     try {
       return await this.carsService.isCarAvailable(carId, from, to);
-    } catch (error) {
-      console.error('Error checking availability:', error);
+    } catch (_error) {
+      console.error('Error checking availability:', _error);
       return false;
     }
   };
+
+  async suggestNextAvailableRange(
+    carId: string,
+    from: string,
+    to: string,
+  ): Promise<DateRange | null> {
+    try {
+      const suggestion = await this.carsService.getNextAvailableRange(carId, from, to);
+      if (!suggestion) {
+        return null;
+      }
+
+      return {
+        from: this.normalizeDateInput(suggestion.startDate),
+        to: this.normalizeDateInput(suggestion.endDate),
+      };
+    } catch (_error) {
+      console.warn('No se pudo obtener próxima ventana disponible:', _error);
+      return null;
+    }
+  }
 
   ngOnInit(): void {
     // Verificar si viene con query param urgent
@@ -323,6 +400,53 @@ export class CarDetailPage implements OnInit {
         void this.initializeUserLocationAndDistance(state.car);
       }
     });
+  }
+
+  onContactOwner(): void {
+    const car = this.car();
+    if (!car?.owner_id) {
+      console.warn('No se puede iniciar el chat: falta owner_id en el auto');
+      return;
+    }
+
+    const session = this.authService.session$();
+    const currentUserId = session?.user?.id;
+
+    if (!currentUserId) {
+      void this.router.navigate(['/auth/login'], {
+        queryParams: { returnUrl: this.router.url },
+      });
+      return;
+    }
+
+    if (currentUserId === car.owner_id) {
+      return;
+    }
+
+    const queryParams = {
+      carId: car.id,
+      userId: car.owner_id,
+      carName: this.getCarChatTitle(car),
+      userName: car.owner?.full_name ?? 'Anfitrión',
+    };
+
+    void this.router.navigate(['/messages/chat'], { queryParams });
+  }
+
+  private getCarChatTitle(car: Car): string {
+    if (car.title?.trim()) {
+      return car.title;
+    }
+
+    const parts = [
+      car.brand ?? car.brand_name ?? car.brand_text_backup,
+      car.model ?? car.model_name ?? car.model_text_backup,
+      car.year ? String(car.year) : '',
+    ]
+      .map((value) => (value ? value.toString().trim() : ''))
+      .filter((value) => !!value);
+
+    return parts.join(' ').trim() || 'Auto';
   }
 
   /**
@@ -354,9 +478,9 @@ export class CarDetailPage implements OnInit {
           this.deliveryFeeCents.set(deliveryFee);
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently fail - distance is optional
-      console.warn('Could not calculate distance:', error);
+      console.warn('Could not calculate distance:', _error);
     }
   }
 
@@ -403,8 +527,8 @@ export class CarDetailPage implements OnInit {
           // Usar el precio por hora del sistema de pricing dinámico
           this.dynamicHourlyRate.set(quote.hourlyRate);
           console.log(`💰 [CarDetail] Dynamic hourly rate loaded: $${quote.hourlyRate}/hora (quote para ${hours} horas)`);
-        } catch (error) {
-          console.warn('⚠️ [CarDetail] Could not load dynamic hourly rate:', error);
+        } catch (_error) {
+          console.warn('⚠️ [CarDetail] Could not load dynamic hourly rate:', _error);
           // Fallback: calcular desde precio diario
           const pricePerDay = this.displayPrice();
           if (pricePerDay > 0) {
@@ -416,8 +540,8 @@ export class CarDetailPage implements OnInit {
           this.hourlyRateLoading.set(false);
         }
       }
-    } catch (error) {
-      console.error('❌ [CarDetail] Error loading dynamic price:', error);
+    } catch (_error) {
+      console.error('❌ [CarDetail] Error loading dynamic price:', _error);
     } finally {
       this.priceLoading.set(false);
     }
@@ -440,8 +564,8 @@ export class CarDetailPage implements OnInit {
       // Obtener ubicación del usuario
       try {
         await this.urgentRentalService.getCurrentLocation();
-      } catch (error) {
-        console.warn('No se pudo obtener ubicación:', error);
+      } catch (_error) {
+        console.warn('No se pudo obtener ubicación:', _error);
       }
 
       // Verificar disponibilidad inmediata
@@ -461,8 +585,8 @@ export class CarDetailPage implements OnInit {
         // Usar el precio por hora del sistema de pricing dinámico
         this.dynamicHourlyRate.set(quote.hourlyRate);
         console.log(`💰 [CarDetail] Express mode hourly rate: $${quote.hourlyRate}/hora (quote para ${hours} horas)`);
-      } catch (error) {
-        console.warn('⚠️ [CarDetail] Could not load hourly rate for express mode:', error);
+      } catch (_error) {
+        console.warn('⚠️ [CarDetail] Could not load hourly rate for express mode:', _error);
         // Fallback: calcular desde precio diario si está disponible
         const pricePerDay = this.displayPrice();
         if (pricePerDay > 0) {
@@ -481,8 +605,8 @@ export class CarDetailPage implements OnInit {
         from: now.toISOString().split('T')[0],
         to: fiveHoursLater.toISOString().split('T')[0],
       });
-    } catch (error) {
-      console.error('Error setting up express mode:', error);
+    } catch (_error) {
+      console.error('Error setting up express mode:', _error);
     }
   }
 
@@ -672,8 +796,13 @@ export class CarDetailPage implements OnInit {
       });
 
       this.blockedDates.set(Array.from(blocked));
-    } catch (error) {
-      console.error('Error in loadBlockedDates:', error);
+    } catch (_error) {
+      console.error('Error in loadBlockedDates:', _error);
     }
+  }
+
+  private normalizeDateInput(value: string): string {
+    const parsed = new Date(value);
+    return isNaN(parsed.getTime()) ? value : parsed.toISOString().split('T')[0];
   }
 }

@@ -3,7 +3,7 @@
 >
   <!-- Header -->
   <div
-    class="bg-white-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
@@ -79,7 +79,7 @@
               <a
                 [routerLink]="['/profile']"
                 [queryParams]="{ section: 'payments' }"
-                class="inline-flex items-center gap-2 rounded-lg border border-amber-400 bg-white px-3 py-2 text-sm font-medium text-amber-800 transition hover:bg-amber-100 dark:border-amber-500/70 dark:bg-transparent dark:text-amber-100 dark:hover:bg-amber-900/40"
+                class="inline-flex items-center gap-2 rounded-lg border border-amber-400 bg-white dark:bg-slate-deep px-3 py-2 text-sm font-medium text-amber-800 transition hover:bg-amber-100 dark:border-amber-500/70 dark:bg-transparent dark:text-amber-100 dark:hover:bg-amber-900/40"
               >
                 Vincular ahora →
               </a>
@@ -101,7 +101,7 @@
 
         @if (leadsLoading()) {
           <div
-            class="flex items-center gap-3 rounded-lg border border-pearl-gray/60 dark:border-neutral-800/60 bg-white-pure dark:bg-anthracite px-4 py-3 text-sm text-charcoal-medium dark:text-pearl-light/70"
+            class="flex items-center gap-3 rounded-lg border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3 text-sm text-charcoal-medium dark:text-pearl-light/70"
           >
             <svg
               class="h-5 w-5 animate-spin text-primary-600 dark:text-accent-petrol"
@@ -126,7 +126,7 @@
           </div>
         } @else if (carLeads().length === 0) {
           <div
-            class="rounded-lg border border-dashed border-pearl-gray dark:border-neutral-800/60 bg-white/40 dark:bg-anthracite/40 px-4 py-6 text-center"
+            class="rounded-lg border border-dashed border-pearl-gray dark:border-neutral-800/60 bg-white dark:bg-slate-deep/40 dark:bg-anthracite/40 px-4 py-6 text-center"
           >
             <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
               Aún no hay consultas pendientes sin reserva.
@@ -136,12 +136,12 @@
           <div class="grid gap-4 md:grid-cols-2">
             @for (lead of carLeads(); track lead.carId + lead.participantId) {
               <div
-                class="rounded-lg border border-pearl-gray dark:border-neutral-800/60 bg-white-pure dark:bg-anthracite p-4 shadow-sm transition"
+                class="rounded-lg border border-pearl-gray dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-4 shadow-sm transition"
               >
                 <div class="flex items-start justify-between gap-3">
                   <div>
                     <p
-                      class="text-xs uppercase tracking-wide text-charcoal-medium/70 dark:text-pearl-light/60"
+                      class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
                     >
                       {{ lead.carTitle }}
                     </p>
@@ -162,7 +162,7 @@
                 <p class="mt-3 text-sm text-charcoal-medium dark:text-pearl-light/70 line-clamp-3">
                   {{ lead.lastMessage.body }}
                 </p>
-                <p class="mt-2 text-xs text-charcoal-medium/70 dark:text-pearl-light/50">
+                <p class="mt-2 text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/50">
                   {{ lead.lastMessage.created_at | date: 'dd/MM/yyyy HH:mm' }}
                 </p>
 
@@ -211,7 +211,7 @@
         <div class="space-y-4">
           @for (booking of bookings(); track booking.id) {
             <div
-              class="bg-white-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 transition-colors duration-300"
+              class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 transition-colors duration-300"
             >
               <!-- Header -->
               <div class="flex items-start justify-between mb-4">
@@ -236,12 +236,12 @@
                       </strong>
                     </p>
                     @if (renterEmail(booking); as renterEmail) {
-                      <p class="text-xs text-charcoal-medium/80 dark:text-pearl-light/60">
+                      <p class="text-xs text-charcoal-medium dark:text-pearl-light/80 dark:text-pearl-light/60">
                         Email: {{ renterEmail }}
                       </p>
                     }
                     @if (renterPhone(booking); as renterPhone) {
-                      <p class="text-xs text-charcoal-medium/80 dark:text-pearl-light/60">
+                      <p class="text-xs text-charcoal-medium dark:text-pearl-light/80 dark:text-pearl-light/60">
                         Teléfono: {{ renterPhone }}
                       </p>
                     }
@@ -284,13 +284,31 @@
 
               <!-- Actions -->
               <div class="flex flex-wrap gap-2">
+                @if (canDoOwnerCheckIn(booking)) {
+                  <a
+                    [routerLink]="['/bookings', booking.id, 'owner-check-in']"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    📝 Check-In (Entregar Auto)
+                  </a>
+                }
+
+                @if (canDoOwnerCheckOut(booking)) {
+                  <a
+                    [routerLink]="['/bookings', booking.id, 'owner-check-out']"
+                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    🏁 Check-Out (Recibir Auto)
+                  </a>
+                }
+
                 @if (canStartRental(booking)) {
                   <button
                     (click)="onStartRental(booking.id)"
                     [disabled]="processingAction() === booking.id"
                     class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
-                    {{ processingAction() === booking.id ? '...' : '🚗 Iniciar Alquiler' }}
+                    {{ processingAction() === booking.id ? '...' : '🚗 Iniciar Alquiler (Manual)' }}
                   </button>
                 }
 
@@ -298,9 +316,9 @@
                   <button
                     (click)="onCompleteRental(booking.id)"
                     [disabled]="processingAction() === booking.id"
-                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
-                    {{ processingAction() === booking.id ? '...' : '🏁 Finalizar Alquiler' }}
+                    {{ processingAction() === booking.id ? '...' : '✅ Finalizar Alquiler (Manual)' }}
                   </button>
                 }
 

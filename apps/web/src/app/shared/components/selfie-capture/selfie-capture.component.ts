@@ -31,7 +31,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           </div>
           <div>
             <h4 class="font-semibold text-gray-900">Verificación Facial (Level 3)</h4>
-            <p class="text-sm text-gray-600">Verifica tu identidad con un selfie en video</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Verifica tu identidad con un selfie en video</p>
           </div>
         </div>
         <span class="text-xs font-medium px-2 py-1 rounded-full" [class]="getStatusLabelClass()">
@@ -40,7 +40,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       </div>
 
       <!-- Verified State -->
-      <div *ngIf="status()?.isVerified" class="p-4 bg-green-50 border border-green-200 rounded-lg">
+      <div *ngIf="status().isVerified" class="p-4 bg-green-50 border border-green-200 rounded-lg">
         <div class="flex items-center gap-2 text-green-800">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -48,20 +48,20 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           <span class="text-sm font-medium">Identidad verificada exitosamente</span>
         </div>
         <div class="mt-3 space-y-1 text-sm">
-          <p class="text-green-700">✓ Face Match: {{ status()?.faceMatchScore }}%</p>
-          <p class="text-green-700">✓ Liveness: {{ status()?.livenessScore }}%</p>
+          <p class="text-green-700">✓ Face Match: {{ status().faceMatchScore }}%</p>
+          <p class="text-green-700">✓ Liveness: {{ status().livenessScore }}%</p>
         </div>
       </div>
 
       <!-- Level 2 Required -->
-      <div *ngIf="status()?.requiresLevel2" class="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+      <div *ngIf="status().requiresLevel2" class="p-4 bg-orange-50 border border-orange-200 rounded-lg">
         <p class="text-sm text-orange-800">
           ⚠️ Debes completar Level 2 (documentos) antes de verificar tu identidad con selfie.
         </p>
       </div>
 
       <!-- Capture State -->
-      <div *ngIf="!status()?.isVerified && !status()?.requiresLevel2" class="space-y-4">
+      <div *ngIf="!status().isVerified && !status().requiresLevel2" class="space-y-4">
         <!-- Instructions -->
         <div *ngIf="!isRecording() && !hasVideo()" class="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2">
           <p class="text-sm font-medium text-blue-900">Instrucciones:</p>
@@ -255,8 +255,8 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
           this.stopRecording();
         }
       }, 1000);
-    } catch (error) {
-      console.error('Failed to start recording:', error);
+    } catch (_error) {
+      console.error('Failed to start recording:', _error);
       this.error.set('No se pudo acceder a la cámara. Por favor verifica los permisos.');
     }
   }
@@ -311,8 +311,8 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
 
       // Reload status
       await this.faceVerificationService.checkFaceVerificationStatus();
-    } catch (error) {
-      console.error('Failed to verify face:', error);
+    } catch (_error) {
+      console.error('Failed to verify face:', _error);
     }
   }
 
@@ -331,21 +331,21 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   }
 
   getStatusIcon(): string {
-    return this.status()?.isVerified ? '✓' : '○';
+    return this.status().isVerified ? '✓' : '○';
   }
 
   getStatusBadgeClass(): string {
-    return this.status()?.isVerified
+    return this.status().isVerified
       ? 'bg-green-100 text-green-600'
       : 'bg-purple-100 text-purple-600';
   }
 
   getStatusLabel(): string {
-    return this.status()?.isVerified ? 'Verificado' : 'Pendiente';
+    return this.status().isVerified ? 'Verificado' : 'Pendiente';
   }
 
   getStatusLabelClass(): string {
-    return this.status()?.isVerified
+    return this.status().isVerified
       ? 'bg-green-100 text-green-800'
       : 'bg-purple-100 text-purple-800';
   }

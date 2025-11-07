@@ -67,9 +67,9 @@ export class EncryptionService {
       combined.set(new Uint8Array(encryptedData), salt.length + iv.length);
 
       return this.arrayBufferToBase64(combined);
-    } catch (error) {
+    } catch (_error) {
       throw new Error(
-        `Failed to encrypt token: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to encrypt token: ${_error instanceof Error ? _error.message : 'Unknown error'}`,
       );
     }
   }
@@ -103,9 +103,9 @@ export class EncryptionService {
 
       const decoder = new TextDecoder();
       return decoder.decode(decryptedData);
-    } catch (error) {
+    } catch (_error) {
       throw new Error(
-        `Failed to decrypt token: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to decrypt token: ${_error instanceof Error ? _error.message : 'Unknown error'}`,
       );
     }
   }

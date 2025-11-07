@@ -335,7 +335,7 @@ export class ProfileExpandedPage {
   }
 
   getStepStatusClass(step: { completed: boolean }): string {
-    return step.completed ? 'text-green-600' : 'text-gray-400';
+    return step.completed ? 'text-green-600' : 'text-gray-400 dark:text-gray-300';
   }
 
   getStepStatusLabel(step: { completed: boolean }): string {
@@ -352,12 +352,12 @@ export class ProfileExpandedPage {
     return labels[key] || key;
   }
 
-  async refreshVerificationStatuses(flow: 'driver' | 'owner'): Promise<void> {
+  async refreshVerificationStatuses(_flow: 'driver' | 'owner'): Promise<void> {
     this.verificationLoading.set(true);
     try {
       await this.loadDocuments();
       this.message.set('Estado de verificación actualizado');
-    } catch (err) {
+    } catch (_err) {
       this.verificationError.set('Error al actualizar estado');
     } finally {
       this.verificationLoading.set(false);
@@ -413,8 +413,8 @@ export class ProfileExpandedPage {
       await this.verificationStateService.initialize();
       this.verificationNotificationsService.initialize();
       console.log('[ProfileExpanded] Verification services initialized');
-    } catch (error) {
-      console.error('[ProfileExpanded] Error initializing verification services:', error);
+    } catch (_error) {
+      console.error('[ProfileExpanded] Error initializing verification services:', _error);
     }
   }
 
@@ -562,7 +562,7 @@ export class ProfileExpandedPage {
   async signOut(): Promise<void> {
     try {
       await this.authService.signOut();
-    } catch (err) {
+    } catch (_err) {
       this.error.set('Error al cerrar sesión');
     }
   }

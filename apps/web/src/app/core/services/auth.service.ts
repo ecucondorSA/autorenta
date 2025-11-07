@@ -2,6 +2,7 @@ import { Injectable, computed, inject, signal, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
+import { getErrorMessage } from '../utils/type-guards';
 import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
@@ -68,7 +69,7 @@ export class AuthService implements OnDestroy {
       error,
     } = await this.supabase.auth.getSession();
     if (error) {
-      this.logger.error('Failed to load session', error instanceof Error ? error : new Error(String(error)));
+      this.logger.error('Failed to load session', 'AuthService', error instanceof Error ? error : new Error(getErrorMessage(error)));
     }
     this.state.set({ session: session ?? null, loading: false });
   }

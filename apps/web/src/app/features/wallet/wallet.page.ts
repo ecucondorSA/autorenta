@@ -263,7 +263,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   async ngOnInit(): Promise<void> {
     try {
       await this.walletService.refreshPendingDepositsCount();
-    } catch (error) { /* Silenced */ }
+    } catch (__error) { /* Silenced */ }
   }
 
   /**
@@ -336,7 +336,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   /**
    * Maneja el evento de depósito exitoso
    */
-  handleDepositSuccess(paymentUrl: string): void {
+  handleDepositSuccess(_paymentUrl: string): void {
     // El modal ya maneja la redirección automática
     // Aquí podríamos agregar tracking o analytics
   }
@@ -362,7 +362,7 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       const balanceRefresh = this.balanceCard ? this.balanceCard.loadBalance() : Promise.resolve();
       await Promise.all([balanceRefresh, this.walletService.refreshPendingDepositsCount()]);
-    } catch (error) { /* Silenced */ }
+    } catch (__error) { /* Silenced */ }
   }
 
   /**
@@ -374,7 +374,7 @@ export class WalletPage implements AfterViewInit, OnInit {
         this.withdrawalService.getBankAccounts(),
         this.withdrawalService.getWithdrawalRequests(),
       ]);
-    } catch (error) { /* Silenced */ }
+    } catch (__error) { /* Silenced */ }
   }
 
   /**
@@ -383,7 +383,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   async handleAddBankAccount(params: AddBankAccountParams): Promise<void> {
     try {
       await this.withdrawalService.addBankAccount(params);
-      this.toastService.success('Cuenta bancaria agregada exitosamente');
+      this.toastService.success('Éxito', 'Cuenta bancaria agregada exitosamente');
       this.setWithdrawalMode('form');
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
@@ -402,6 +402,7 @@ export class WalletPage implements AfterViewInit, OnInit {
       const result = await this.withdrawalService.requestWithdrawal(params);
       if (result.success) {
         this.toastService.success(
+          'Éxito',
           `Retiro solicitado exitosamente! Monto: $${params.amount}, Comisión: $${result.fee_amount}, Neto: $${result.net_amount}`,
         );
         // Recargar historial
@@ -424,7 +425,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   async handleSetDefaultAccount(accountId: string): Promise<void> {
     try {
       await this.withdrawalService.setDefaultBankAccount(accountId);
-      this.toastService.success('Cuenta establecida como predeterminada');
+      this.toastService.success('Éxito', 'Cuenta establecida como predeterminada');
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
       this.toastService.error('Error', 'Error: ' + (errorObj.message || 'Error desconocido'));
@@ -437,7 +438,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   async handleDeleteAccount(accountId: string): Promise<void> {
     try {
       await this.withdrawalService.deleteBankAccount(accountId);
-      this.toastService.success('Cuenta eliminada exitosamente');
+      this.toastService.success('Éxito', 'Cuenta eliminada exitosamente');
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
       this.toastService.error(
@@ -453,7 +454,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   async handleCancelWithdrawal(requestId: string): Promise<void> {
     try {
       await this.withdrawalService.cancelWithdrawalRequest(requestId);
-      this.toastService.success('Solicitud de retiro cancelada');
+      this.toastService.success('Éxito', 'Solicitud de retiro cancelada');
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
       this.toastService.error('Error', 'Error al cancelar: ' + (errorObj.message || 'Error desconocido'));
@@ -466,7 +467,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   async handleRefreshWithdrawals(): Promise<void> {
     try {
       await this.withdrawalService.getWithdrawalRequests();
-    } catch (error) { /* Silenced */ }
+    } catch (__error) { /* Silenced */ }
   }
 
   /**
@@ -506,7 +507,7 @@ export class WalletPage implements AfterViewInit, OnInit {
       if (profile?.wallet_account_number) {
         this.walletAccountNumber.set(profile.wallet_account_number);
       }
-    } catch (error) { /* Silenced */ }
+    } catch (__error) { /* Silenced */ }
   }
 
   /**
@@ -531,7 +532,7 @@ export class WalletPage implements AfterViewInit, OnInit {
       setTimeout(() => {
         this.copied.set(false);
       }, 2000);
-    } catch (error) {
+    } catch (__error) {
       this.toastService.error('Error', 'Error al copiar el número de cuenta');
     }
   }

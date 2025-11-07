@@ -32,7 +32,7 @@
           class="input-premium font-mono"
           [disabled]="loading()"
         />
-        <p class="mt-1 text-xs text-charcoal-medium/70 dark:text-pearl-light/60">
+        <p class="mt-1 text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60">
           Ingresa el número de 16 caracteres (AR + 14 dígitos)
         </p>
 
@@ -44,7 +44,7 @@
 
         <div
           *ngIf="searchResults().length > 0 && searchQuery().length > 0"
-          class="mt-2 border border-pearl-gray dark:border-slate-deep rounded-xl bg-white-pure dark:bg-anthracite shadow-soft max-h-60 overflow-y-auto"
+          class="mt-2 border border-pearl-gray dark:border-slate-deep rounded-xl bg-white dark:bg-slate-deep-pure dark:bg-anthracite shadow-soft max-h-60 overflow-y-auto"
         >
           <button
             *ngFor="let user of searchResults()"
@@ -96,7 +96,7 @@
             <button
               type="button"
               (click)="clearRecipient()"
-              class="text-charcoal-medium hover:text-smoke-black dark:text-pearl-light/70 dark:hover:text-ivory-luminous transition-base"
+              class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:text-pearl-light/70 dark:hover:text-ivory-luminous transition-base"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -132,7 +132,7 @@
             [disabled]="loading()"
           />
         </div>
-        <p class="mt-1 text-xs text-charcoal-medium/70 dark:text-pearl-light/60">
+        <p class="mt-1 text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60">
           Mínimo: ARS 1.00
         </p>
 
@@ -208,7 +208,7 @@
         {{ loading() ? 'Procesando...' : 'Transferir' }}
       </button>
 
-      <p class="mt-4 text-xs text-charcoal-medium/70 dark:text-pearl-light/60 text-center">
+      <p class="mt-4 text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 text-center">
         Máximo 10 transferencias por hora
       </p>
     </form>

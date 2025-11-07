@@ -14,7 +14,7 @@
       <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Depositar Fondos</h2>
       <button
         (click)="onClose()"
-        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        class="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -83,13 +83,13 @@
                 en cada reserva.
               </p>
               <ul class="mt-2 space-y-1">
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Se usa automáticamente para garantías de reservas
                 </li>
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
@@ -154,19 +154,19 @@
                 Para pagar alquileres o retirar a tu cuenta bancaria. Máxima flexibilidad.
               </p>
               <ul class="mt-2 space-y-1">
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Puedes usarlo para pagar alquileres
                 </li>
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Se puede retirar a tu cuenta bancaria en cualquier momento
                 </li>
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
@@ -191,12 +191,12 @@
           placeholder="0.00"
           data-testid="deposit-amount-input"
         />
-        <div *ngIf="loadingRate()" class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+        <div *ngIf="loadingRate()" class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
           Cargando cotización...
         </div>
         <div
           *ngIf="!loadingRate() && platformRate()"
-          class="text-sm text-gray-500 dark:text-gray-400 mt-1"
+          class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1"
         >
           Recibirás aprox.
           <span class="font-semibold">{{ formatCurrency(usdAmount()) }}</span> (Tasa: 1 USD ≈

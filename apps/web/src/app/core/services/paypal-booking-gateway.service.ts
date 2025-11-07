@@ -229,7 +229,7 @@ export class PayPalBookingGatewayService implements PaymentGateway {
 
       // La orden es válida si el booking no ha sido confirmado aún
       return booking.status === 'pending';
-    } catch (err) {
+    } catch (_err) {
       return false;
     }
   }

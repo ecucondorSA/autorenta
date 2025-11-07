@@ -23,7 +23,7 @@ import { PerformanceMonitoringService } from './core/services/performance-monito
  * Inicializa el servicio de monitoreo de performance
  * Solo en development mode
  */
-function initializePerformanceMonitoring(perfService: PerformanceMonitoringService) {
+function initializePerformanceMonitoring(_perfService: PerformanceMonitoringService) {
   return () => {
     if (isDevMode()) {
       console.log('📊 Performance Monitoring initialized');

@@ -13,7 +13,7 @@
       <!-- Loading overlay -->
       <div
         *ngIf="isCheckingAvailability()"
-        class="absolute inset-0 bg-white/80 z-50 flex items-center justify-center"
+        class="absolute inset-0 bg-white dark:bg-slate-deep/80 z-50 flex items-center justify-center"
       >
         <div class="flex flex-col items-center gap-3">
           <svg class="animate-spin h-8 w-8 text-accent-petrol" fill="none" viewBox="0 0 24 24">
@@ -31,7 +31,7 @@
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          <span class="text-sm text-charcoal-medium">Verificando disponibilidad...</span>
+          <span class="text-sm text-charcoal-medium dark:text-pearl-light">Verificando disponibilidad...</span>
         </div>
       </div>
 
@@ -50,10 +50,10 @@
 
       <!-- Instrucciones -->
       <div class="mt-4 px-2">
-        <p class="text-xs text-charcoal-medium mb-2">
+        <p class="text-xs text-charcoal-medium dark:text-pearl-light mb-2">
           💡 <strong>Instrucciones:</strong>
         </p>
-        <ul class="text-xs text-charcoal-medium space-y-1 list-disc list-inside">
+        <ul class="text-xs text-charcoal-medium dark:text-pearl-light space-y-1 list-disc list-inside">
           <li>Seleccioná la fecha de inicio</li>
           <li>Luego seleccioná la fecha de fin</li>
           <li>Las fechas en gris están bloqueadas o no disponibles</li>
@@ -64,11 +64,11 @@
       <div class="mt-4 px-2 flex flex-wrap gap-3 text-xs">
         <div class="flex items-center gap-1.5">
           <div class="w-3 h-3 rounded-full bg-accent-petrol"></div>
-          <span class="text-charcoal-medium">Disponible</span>
+          <span class="text-charcoal-medium dark:text-pearl-light">Disponible</span>
         </div>
         <div class="flex items-center gap-1.5">
           <div class="w-3 h-3 rounded-full bg-gray-300"></div>
-          <span class="text-charcoal-medium">Bloqueado</span>
+          <span class="text-charcoal-medium dark:text-pearl-light">Bloqueado</span>
         </div>
       </div>
     </ion-content>

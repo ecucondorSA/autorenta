@@ -98,7 +98,7 @@ export class WalletService {
     );
   }
 
-  getTransactions(filters?: WalletTransactionFilters): Observable<WalletTransaction[]> {
+  getTransactions(_filters?: WalletTransactionFilters): Observable<WalletTransaction[]> {
     this.loading.set(true);
     this.error.set(null);
 
@@ -203,7 +203,7 @@ export class WalletService {
   private handleError(err: unknown, defaultMessage: string): void {
     const errorMessage = err instanceof Error ? err.message : defaultMessage;
     this.error.set({ message: errorMessage });
-    this.logger.error(defaultMessage, err instanceof Error ? err : new Error(String(err)));
+    this.logger.error(defaultMessage, String(err));
   }
 
   // ============================================================================
@@ -380,7 +380,7 @@ export class WalletService {
       if (error) throw error;
       this.pendingDepositsCount.set(data?.length ?? 0);
     } catch (err: unknown) {
-      this.logger.error('Error al obtener depósitos pendientes', err instanceof Error ? err : new Error(String(err)));
+      this.logger.error('Error al obtener depósitos pendientes', String(err));
     }
   }
 
@@ -412,7 +412,7 @@ export class WalletService {
 
       if (error) throw error;
       return data?.[0] || null;
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.handleError(err, 'Error al obtener balance de Crédito de Protección');
       throw err;
     }
@@ -440,7 +440,7 @@ export class WalletService {
       this.getBalance().subscribe();
 
       return data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.handleError(err, 'Error al emitir Crédito de Protección');
       throw err;
     }
@@ -484,7 +484,7 @@ export class WalletService {
         totalClaims: totalClaims ?? 0,
         bookingsNeeded,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.handleError(err, 'Error al verificar elegibilidad de renovación');
       throw err;
     }

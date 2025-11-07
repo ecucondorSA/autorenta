@@ -151,7 +151,7 @@ export class MessagesService {
       });
 
       if (error) throw error;
-    } catch (error) {
+    } catch (_error) {
       // Queue for retry when connection is restored
       await this.offlineMessages.queueMessage({
         bookingId: params.bookingId,
@@ -161,7 +161,7 @@ export class MessagesService {
       });
 
       // Re-throw so UI can show "Sending..." state
-      throw error;
+      throw _error;
     }
   }
 
@@ -249,7 +249,7 @@ export class MessagesService {
       } else {
         await channel.untrack();
       }
-    } catch (error) {
+    } catch (__error) {
       // Don't throw - typing is not critical
     }
   }
@@ -280,7 +280,7 @@ export class MessagesService {
             .map((presence) => presence.user_id)
             .filter((id): id is string => typeof id === 'string');
           callback(typingUsers);
-        } catch (error) {}
+        } catch (__error) {}
       })
       .subscribe();
 
@@ -323,7 +323,7 @@ export class MessagesService {
 
           // Success: remove from queue
           await this.offlineMessages.removeMessage(message.id);
-        } catch (error) {
+        } catch (__error) {
           // Increment retry counter
           await this.offlineMessages.incrementRetry(message.id);
 
@@ -333,7 +333,7 @@ export class MessagesService {
           }
         }
       }
-    } catch (error) {
+    } catch (__error) {
     } finally {
       this.isSyncing.set(false);
     }

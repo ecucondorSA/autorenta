@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { getErrorMessage } from '../utils/type-guards';
 import { LoggerService } from './logger.service';
 import { ToastService } from './toast.service';
 
@@ -54,7 +55,7 @@ export class ErrorHandlerService {
 
     // 3. Handle critical errors specially
     if (severity === 'critical' && error instanceof Error) {
-      this.logger.critical(`Critical error in ${context}`, error);
+      this.logger.critical(`Critical error in ${context}`, error?.message || String(error));
     }
   }
 
@@ -78,7 +79,7 @@ export class ErrorHandlerService {
    */
   handleValidationError(message: string, showToUser = true): void {
     if (showToUser) {
-      this.toast.warning(message);
+      this.toast.warning('Validación', message);
     }
     // Validation errors are usually expected, so we don't log them
   }
@@ -108,17 +109,17 @@ export class ErrorHandlerService {
     switch (severity) {
       case 'critical':
         if (error instanceof Error) {
-          this.logger.critical(message, error);
+          this.logger.critical(message, error?.message || String(error));
         } else {
-          this.logger.critical(message, new Error(String(error)));
+          this.logger.critical(message, String(error));
         }
         break;
       case 'warning':
-        this.logger.warn(message, error);
+        this.logger.warn(message, String(error));
         break;
       case 'error':
       default:
-        this.logger.error(message, error);
+        this.logger.error(message, 'ErrorHandlerService', error instanceof Error ? error : new Error(getErrorMessage(error)));
         break;
     }
   }

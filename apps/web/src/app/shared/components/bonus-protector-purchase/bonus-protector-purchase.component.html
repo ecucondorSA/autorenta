@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg shadow-md p-6" [class.p-4]="compact">
+<div class="bg-white dark:bg-slate-deep rounded-lg shadow-md p-6" [class.p-4]="compact">
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center mb-2">
@@ -9,7 +9,7 @@
         Protector de Bonus
       </h3>
     </div>
-    <p class="text-sm text-gray-600">
+    <p class="text-sm text-gray-600 dark:text-gray-300">
       Protege tu clase de conductor de reclamos inesperados
     </p>
   </div>
@@ -57,7 +57,7 @@
           />
           <div class="ml-3">
             <p class="text-sm font-semibold text-gray-900">{{ level.name }}</p>
-            <p class="text-xs text-gray-600">Nivel {{ level.level }}</p>
+            <p class="text-xs text-gray-600 dark:text-gray-300">Nivel {{ level.level }}</p>
           </div>
         </div>
 
@@ -93,10 +93,10 @@
     </div>
 
     <!-- Balance Info -->
-    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+    <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600">Tu saldo disponible</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">Tu saldo disponible</p>
           <p class="text-lg font-semibold text-gray-900">
             {{ formatPrice(availableBalance() * 100) }}
           </p>
@@ -149,7 +149,7 @@
     </div>
 
     <!-- How It Works -->
-    <div class="mt-6 pt-6 border-t border-gray-200">
+    <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
       <h4 class="text-sm font-semibold text-gray-900 mb-3">¿Cómo funciona?</h4>
       <ul class="space-y-2">
         <li class="flex items-start text-sm text-gray-700">

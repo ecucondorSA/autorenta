@@ -186,13 +186,14 @@
                 >
                   Collector ID: {{ mpStatus()?.collectorId }}
                 </p>
-                <p
+                <!-- TODO: Fix MarketplaceStatus type conflict between services -->
+                <!-- <p
                   *ngIf="mpStatus()?.completedAt"
                   class="text-xs text-emerald-800/80 dark:text-emerald-100/80"
                 >
                   Onboarding completado
                   {{ mpStatus()?.completedAt | date: 'dd/MM/yyyy HH:mm' }}.
-                </p>
+                </p> -->
               </div>
             </div>
             <button
@@ -735,7 +736,7 @@
                   class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
                   [class.opacity-50]="isGeneratingAIPhotos()"
                 >
-                  <span *ngIf="!isGeneratingAIPhotos()">Generar fotos AutorentA</span>
+                  <span *ngIf="!isGeneratingAIPhotos()">✨ Generar fotos con IA</span>
                   <span *ngIf="isGeneratingAIPhotos()" class="flex items-center gap-2">
                     <svg
                       class="animate-spin h-5 w-5"

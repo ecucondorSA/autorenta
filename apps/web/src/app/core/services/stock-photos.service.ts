@@ -92,7 +92,7 @@ export class StockPhotosService {
         width: photo.width,
         height: photo.height,
       }));
-    } catch (error) {
+    } catch (__error) {
       // Fallback: buscar fotos genéricas de autos
       return this.getFallbackPhotos(params.brand);
     }
@@ -113,7 +113,7 @@ export class StockPhotosService {
       return new File([response], `${stockPhoto.id}.jpg`, {
         type: 'image/jpeg',
       });
-    } catch (error) {
+    } catch (__error) {
       throw new Error('No se pudo descargar la foto');
     }
   }
@@ -145,7 +145,7 @@ export class StockPhotosService {
         width: photo.width,
         height: photo.height,
       }));
-    } catch (error) {
+    } catch (__error) {
       return [];
     }
   }
@@ -162,7 +162,7 @@ export class StockPhotosService {
           },
         }),
       );
-    } catch (error) {
+    } catch (__error) {
       // No crítico si falla el tracking
     }
   }

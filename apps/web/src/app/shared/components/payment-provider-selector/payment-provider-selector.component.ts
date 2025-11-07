@@ -143,8 +143,8 @@ export class PaymentProviderSelectorComponent implements OnInit {
         // Fallback rate if snapshot is null
         this.exchangeRate.set(1015.0);
       }
-    } catch (error) {
-      console.error('Error loading exchange rate:', error);
+    } catch (_error) {
+      console.error('Error loading exchange rate:', _error);
       // Fallback rate
       this.exchangeRate.set(1015.0);
     } finally {

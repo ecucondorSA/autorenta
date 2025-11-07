@@ -70,7 +70,7 @@ export class ProtectionCreditService {
   readonly hasBalance = computed(() => (this.state().balance?.balance_cents ?? 0) > 0);
   readonly isNearExpiry = computed(() => {
     const days = this.state().balance?.days_until_expiry;
-    return days !== null && days <= 30; // Próximo a expirar en 30 días
+    return days !== null && days !== undefined && days <= 30; // Próximo a expirar en 30 días
   });
 
   /**

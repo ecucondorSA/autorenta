@@ -59,15 +59,8 @@ export class SimpleCheckoutComponent {
   // Fechas
   readonly startDate = signal<string>('');
   readonly endDate = signal<string>('');
-
-  // Alternativas de fechas disponibles
-  readonly availableAlternatives = signal<
-    Array<{
-      startDate: string;
-      endDate: string;
-      daysCount: number;
-    }>
-  >([]);
+  readonly availabilitySuggestion = signal<{ startDate: string; endDate: string } | null>(null);
+  readonly availabilityInfo = signal<string | null>(null);
 
   // Cálculos automáticos
   readonly totalDays = computed(() => {
@@ -113,8 +106,8 @@ export class SimpleCheckoutComponent {
     try {
       const balance = await firstValueFrom(this.walletService.getBalance());
       this.walletBalance.set(balance.available_balance);
-    } catch (error) {
-      console.warn('Could not load wallet balance:', error);
+    } catch (_error) {
+      console.warn('Could not load wallet balance:', _error);
     }
   }
 
@@ -124,11 +117,12 @@ export class SimpleCheckoutComponent {
     }
   }
 
-  nextStep() {
+  async nextStep() {
     const currentStepData = this.steps[this.currentStep()];
 
     // Validar paso actual
-    if (!this.validateCurrentStep()) {
+    const stepIsValid = await this.runStepValidation();
+    if (!stepIsValid) {
       return;
     }
 
@@ -169,9 +163,7 @@ export class SimpleCheckoutComponent {
           this.error.set('La fecha de inicio no puede ser en el pasado');
           return false;
         }
-        // Validar disponibilidad del auto (async, pero bloqueamos el paso hasta que se valide)
-        void this.validateAvailability();
-        break;
+        return true;
 
       case 2: // Pago
         if (this.paymentMethod() === 'wallet' && this.finalTotal() > this.walletBalance()) {
@@ -185,8 +177,26 @@ export class SimpleCheckoutComponent {
     return true;
   }
 
-  private async validateAvailability(): Promise<void> {
-    if (!this.startDate() || !this.endDate()) return;
+  private async runStepValidation(): Promise<boolean> {
+    // ✅ FIX 2025-11-06: Eliminar validación redundante de disponibilidad
+    // La validación ahora se hace de forma atómica en request_booking()
+    // Esto evita race conditions donde otro usuario reserva entre la validación y la creación
+    const baseValid = this.validateCurrentStep();
+    if (!baseValid) {
+      return false;
+    }
+
+    // ❌ REMOVIDO: validateAvailability() - causaba race condition
+    // La validación de disponibilidad ahora se hace dentro de createBookingWithValidation()
+    // de forma atómica en la función SQL request_booking()
+
+    return true;
+  }
+
+  private async validateAvailability(): Promise<boolean> {
+    if (!this.startDate() || !this.endDate()) return false;
+
+    this.clearAvailabilityHints();
 
     try {
       const isAvailable = await this.carsService.isCarAvailable(
@@ -195,62 +205,49 @@ export class SimpleCheckoutComponent {
         this.endDate()
       );
 
-      if (!isAvailable) {
-        // ✅ NUEVO: Obtener próximas fechas disponibles
-        const alternatives = await this.carsService.getNextAvailableRange(
-          this.car.id,
-          this.startDate(),
-          this.endDate(),
-          3 // Máximo 3 opciones
-        );
-
-        this.availableAlternatives.set(alternatives);
-
-        // Mostrar mensaje con alternativas si las hay
-        if (alternatives.length > 0) {
-          const firstAlt = alternatives[0];
-          this.error.set(
-            `El auto no está disponible para esas fechas. Próxima ventana disponible: ${this.formatDate(firstAlt.startDate)} → ${this.formatDate(firstAlt.endDate)}`
-          );
-        } else {
-          this.error.set('El auto no está disponible para esas fechas. Por favor elige otras fechas.');
-        }
-      } else {
-        // Limpiar alternativas si está disponible
-        this.availableAlternatives.set([]);
+      if (isAvailable) {
+        this.error.set(null);
+        this.canWaitlist.set(false);
+        return true;
       }
-    } catch (error) {
-      // Si falla la validación, permitir continuar pero mostrar warning
-      console.warn('No se pudo verificar disponibilidad:', error);
+
+      const nextRange = await this.carsService.getNextAvailableRange(
+        this.car.id,
+        this.startDate(),
+        this.endDate()
+      );
+
+      if (nextRange) {
+        const formattedStart = this.formatInputDateValue(nextRange.startDate);
+        const formattedEnd = this.formatInputDateValue(nextRange.endDate);
+
+        this.startDate.set(formattedStart);
+        this.endDate.set(formattedEnd);
+        this.availabilitySuggestion.set({
+          startDate: formattedStart,
+          endDate: formattedEnd,
+        });
+        this.availabilityInfo.set(
+          `Actualizamos tus fechas al primer espacio libre: ${this.formatHumanDate(
+            formattedStart
+          )} → ${this.formatHumanDate(formattedEnd)}`
+        );
+        this.toastService.info(
+          'Fechas sugeridas',
+          'Encontramos la próxima ventana disponible y actualizamos tu reserva.'
+        );
+        this.error.set(null);
+        this.canWaitlist.set(false);
+        return true;
+      }
+
+      this.error.set('El auto no está disponible para esas fechas. Por favor elige otras fechas.');
+      this.canWaitlist.set(true);
+      return false;
+    } catch (_error) {
+      console.warn('No se pudo verificar disponibilidad:', _error);
+      return true;
     }
-  }
-
-  /**
-   * Aplica una fecha alternativa seleccionada por el usuario
-   */
-  selectAlternative(alternative: { startDate: string; endDate: string; daysCount: number }): void {
-    this.startDate.set(alternative.startDate);
-    this.endDate.set(alternative.endDate);
-    this.availableAlternatives.set([]);
-    this.error.set(null);
-    this.canWaitlist.set(false);
-
-    // Mostrar mensaje de éxito
-    this.toastService.success(
-      `✅ Fechas actualizadas: ${this.formatDate(alternative.startDate)} → ${this.formatDate(alternative.endDate)}`,
-      3000
-    );
-  }
-
-  /**
-   * Formatea una fecha ISO a formato legible dd/mm/yyyy
-   */
-  private formatDate(isoDate: string): string {
-    const date = new Date(isoDate);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
   }
 
   private async processBooking() {
@@ -331,6 +328,7 @@ export class SimpleCheckoutComponent {
         
         // Mostrar toast de éxito
         this.toastService.success(
+          'Éxito',
           '✅ Te agregamos a la lista de espera. Te notificaremos cuando el auto esté disponible.',
           5000
         );
@@ -343,6 +341,24 @@ export class SimpleCheckoutComponent {
     } finally {
       this.addingToWaitlist.set(false);
     }
+  }
+
+  onDateInput(type: 'start' | 'end', event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    if (type === 'start') {
+      this.startDate.set(value);
+    } else {
+      this.endDate.set(value);
+    }
+    this.clearAvailabilityHints();
+    this.error.set(null);
+    this.canWaitlist.set(false);
+  }
+
+  onRetry(): void {
+    this.error.set(null);
+    this.canWaitlist.set(false);
+    this.clearAvailabilityHints();
   }
 
   private async processWalletPayment(bookingId: string) {
@@ -373,6 +389,25 @@ export class SimpleCheckoutComponent {
     const maxDate = new Date();
     maxDate.setDate(maxDate.getDate() + 90); // Máximo 90 días adelante
     return maxDate.toISOString().split('T')[0];
+  }
+
+  private clearAvailabilityHints(): void {
+    this.availabilitySuggestion.set(null);
+    this.availabilityInfo.set(null);
+  }
+
+  private formatInputDateValue(date: string | Date): string {
+    const parsed = typeof date === 'string' ? new Date(date) : date;
+    return parsed.toISOString().split('T')[0];
+  }
+
+  private formatHumanDate(date: string): string {
+    const parsed = new Date(date);
+    return new Intl.DateTimeFormat('es-AR', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+    }).format(parsed);
   }
 
   cancel() {

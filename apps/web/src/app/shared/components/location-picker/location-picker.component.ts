@@ -33,7 +33,7 @@ export interface LocationSelection {
     <div class="location-picker">
       <div class="location-picker-header">
         <h3 class="text-lg font-semibold mb-2">¿Desde dónde querés buscar autos?</h3>
-        <p class="text-sm text-gray-600 mb-4">
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
           Mostramos autos cercanos a tu ubicación con mejores precios
         </p>
       </div>
@@ -96,7 +96,7 @@ export interface LocationSelection {
             />
           </div>
           @if (addressSearching()) {
-            <p class="text-xs text-gray-500 mt-1 ml-10">Buscando...</p>
+            <p class="text-xs text-gray-500 dark:text-gray-300 mt-1 ml-10">Buscando...</p>
           }
         </div>
       </div>
@@ -132,7 +132,7 @@ export interface LocationSelection {
       <!-- Loading Indicator -->
       @if (loading()) {
         <div class="loading-indicator mt-3 text-center">
-          <p class="text-sm text-gray-600">Obteniendo ubicación...</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">Obteniendo ubicación...</p>
         </div>
       }
     </div>
@@ -267,7 +267,7 @@ export class LocationPickerComponent {
   homeLocationAddress = signal<string | null>(null);
   currentLocationAddress = signal<string | null>(null);
 
-  private addressSearchTimeout: any;
+  private addressSearchTimeout: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
     this.checkHomeLocation();
@@ -310,8 +310,8 @@ export class LocationPickerComponent {
       } else {
         throw new Error('No se pudo obtener tu domicilio guardado');
       }
-    } catch (error: any) {
-      this.errorMessage.set(error.message || 'Error al obtener domicilio');
+    } catch (error: unknown) {
+      this.errorMessage.set((error as Error).message || 'Error al obtener domicilio');
       this.selectedChoice.set(null);
     } finally {
       this.loading.set(false);
@@ -352,8 +352,8 @@ export class LocationPickerComponent {
 
       this.selectedLocation.set(selection);
       this.locationSelected.emit(selection);
-    } catch (error: any) {
-      this.errorMessage.set(error.message || 'Error al obtener ubicación actual');
+    } catch (error: unknown) {
+      this.errorMessage.set((error as Error).message || 'Error al obtener ubicación actual');
       this.selectedChoice.set(null);
     } finally {
       this.loading.set(false);
@@ -402,8 +402,8 @@ export class LocationPickerComponent {
       } else {
         throw new Error('No se encontró la dirección');
       }
-    } catch (error: any) {
-      this.errorMessage.set(error.message || 'Error al buscar dirección');
+    } catch (error: unknown) {
+      this.errorMessage.set((error as Error).message || 'Error al buscar dirección');
     } finally {
       this.addressSearching.set(false);
     }

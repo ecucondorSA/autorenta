@@ -81,7 +81,7 @@ export class TransferFundsComponent {
       } else {
         this.searchError.set('Número de cuenta no encontrado');
       }
-    } catch (err) {
+    } catch (_err) {
       this.searchError.set('Error al buscar usuario');
     }
   }

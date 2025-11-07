@@ -117,7 +117,7 @@ export abstract class VerificationBaseService<
   protected initializeAuthListener(): void {
     this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       if ((event === 'USER_UPDATED' || event === 'SIGNED_IN') && session?.user) {
-        this.updateStatusFromUser(session.user as Record<string, unknown>);
+        this.updateStatusFromUser(session.user as unknown as Record<string, unknown>);
       }
     });
   }
@@ -188,7 +188,7 @@ export abstract class VerificationBaseService<
     const subscription = this.supabase.auth.onAuthStateChange(
       (event: AuthChangeEvent, session: Session | null) => {
         if ((event === 'USER_UPDATED' || event === 'SIGNED_IN') && session?.user) {
-          const user = session.user as Record<string, unknown>;
+          const user = session.user as unknown as Record<string, unknown>;
           const isVerified =
             user[this.confirmedAtField] !== null && user[this.confirmedAtField] !== undefined;
           this.updateStatusFromUser(user);

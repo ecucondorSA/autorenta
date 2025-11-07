@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, from } from 'rxjs';
+import { ignoreElements } from 'rxjs/operators';
 import { Booking } from '../models';
+import { getErrorMessage } from '../utils/type-guards';
 import { BookingWalletService } from './booking-wallet.service';
 import { DriverProfileService } from './driver-profile.service';
 import { LoggerService } from './logger.service';
@@ -53,19 +55,20 @@ export class BookingCompletionService {
       if (booking.user_id) {
         try {
           await firstValueFrom(
-            this.driverProfileService.updateClassOnEvent({
+            from(this.driverProfileService.updateClassOnEvent({
+              eventType: 'booking_completed',
               userId: booking.user_id,
-              bookingId: booking.id,
               claimWithFault: false,
               claimSeverity: 0,
-            }),
+            })).pipe(ignoreElements()),
           );
           this.logger.info(`Driver class updated for clean booking ${booking.id}`);
         } catch (classError) {
           // Don't fail the booking completion if class update fails
           this.logger.error(
             'Failed to update driver class',
-            classError instanceof Error ? classError : new Error(String(classError)),
+            'BookingCompletionService',
+            classError instanceof Error ? classError : new Error(getErrorMessage(classError)),
           );
         }
       }
@@ -122,19 +125,20 @@ export class BookingCompletionService {
       if (booking.user_id) {
         try {
           await firstValueFrom(
-            this.driverProfileService.updateClassOnEvent({
+            from(this.driverProfileService.updateClassOnEvent({
+              eventType: 'booking_completed',
               userId: booking.user_id,
-              bookingId: booking.id,
               claimWithFault: true,
               claimSeverity: claimSeverity,
-            }),
+            })).pipe(ignoreElements()),
           );
           this.logger.info(`Driver class updated for claim on booking ${booking.id}`);
         } catch (classError) {
           // Don't fail the booking completion if class update fails
           this.logger.error(
             'Failed to update driver class',
-            classError instanceof Error ? classError : new Error(String(classError)),
+            'BookingCompletionService',
+            classError instanceof Error ? classError : new Error(getErrorMessage(classError)),
           );
         }
       }

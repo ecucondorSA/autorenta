@@ -52,7 +52,7 @@ export class EmailVerificationService extends VerificationBaseService<EmailVerif
       }
 
       // Use base class method to update status
-      this.updateStatusFromUser(user as Record<string, unknown>);
+      this.updateStatusFromUser(user as unknown as Record<string, unknown>);
       return this.status();
     } catch (err) {
       const message =

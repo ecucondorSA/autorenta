@@ -114,7 +114,7 @@ export class StepResolverService {
       try {
         const result = await condition();
         if (result) return true;
-      } catch (_error) {
+      } catch (__error) {
         // Ignore errors while waiting for condition
       }
 

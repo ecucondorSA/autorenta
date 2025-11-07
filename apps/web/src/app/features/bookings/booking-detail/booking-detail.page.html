@@ -1,7 +1,7 @@
 <div class="max-w-7xl mx-auto py-8 px-4">
   <!-- Loading State -->
   <div *ngIf="loading()" class="text-center py-12">
-    <p class="text-gray-600">Cargando reserva...</p>
+    <p class="text-gray-600 dark:text-gray-300">Cargando reserva...</p>
   </div>
 
   <!-- Error State -->
@@ -33,13 +33,81 @@
       Volver a mis reservas
     </button>
 
+    <!-- Booking Flow Progress -->
+    <div
+      class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep p-4 sm:p-6 shadow-sm"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-ash-gray dark:text-pearl-light/70">
+            Estado del flujo
+          </p>
+          <p class="text-sm text-charcoal-medium dark:text-pearl-light/80">
+            Seguimiento paso a paso de tu reserva
+          </p>
+        </div>
+        <span class="text-xs font-medium text-accent-petrol">
+          Paso {{ currentBookingStageIndex() + 1 }} / {{ bookingFlowSteps.length }}
+        </span>
+      </div>
+
+      <div class="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-0">
+        <ng-container *ngFor="let step of bookingFlowSteps; let i = index">
+          <div class="flex flex-1 items-start gap-3 p-2">
+            <div
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition-colors"
+              [ngClass]="{
+                'bg-accent-petrol text-white border-accent-petrol shadow-md shadow-accent-petrol/30': isStepCompleted(i) || isStepCurrent(i),
+                'bg-white text-ash-gray border-ash-gray/40 dark:bg-slate-deep/60 dark:text-pearl-light/50 dark:border-pearl-light/20': isStepUpcoming(i)
+              }"
+            >
+              <svg
+                *ngIf="isStepCompleted(i)"
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <span *ngIf="!isStepCompleted(i)">{{ i + 1 }}</span>
+            </div>
+            <div>
+              <p
+                class="text-sm font-semibold"
+                [ngClass]="{
+                  'text-smoke-black dark:text-white': isStepCompleted(i) || isStepCurrent(i),
+                  'text-ash-gray dark:text-pearl-light/60': isStepUpcoming(i)
+                }"
+              >
+                {{ step.label }}
+              </p>
+              <p class="text-xs text-ash-gray dark:text-pearl-light/70">
+                {{ step.description }}
+              </p>
+            </div>
+          </div>
+
+          <div
+            *ngIf="i < bookingFlowSteps.length - 1"
+            class="hidden sm:block h-0.5 flex-1 bg-gradient-to-r from-ash-gray/10 via-ash-gray/40 to-ash-gray/10"
+          ></div>
+        </ng-container>
+      </div>
+    </div>
+
     <!-- Two Column Layout for Desktop -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Left Column: Booking Info -->
       <div class="space-y-4 sm:space-y-6">
         <!-- Compact Hero Section -->
         <div
-          class="relative overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 dark:border-gray-700 dark:from-gray-800 dark:to-gray-900"
+          class="relative overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-gray-100 dark:border-gray-700 dark:from-gray-800 dark:to-gray-900"
         >
           <div class="flex items-center gap-4 p-4">
             <!-- Status Badge -->
@@ -50,17 +118,17 @@
               <h1 class="text-lg font-bold text-gray-900 dark:text-white truncate">
                 {{ booking()?.car_title }}
               </h1>
-              <p class="text-sm text-gray-600 dark:text-gray-400">
+              <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
                 {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
               </p>
-              <p class="text-xs text-gray-500 dark:text-gray-500" *ngIf="booking()?.car_city">
+              <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300" *ngIf="booking()?.car_city">
                 📍 {{ booking()?.car_city }}
               </p>
             </div>
 
             <!-- ID Badge -->
             <div class="hidden sm:block">
-              <p class="text-xs text-gray-500 font-mono">ID: {{ booking()?.id | slice: 0 : 8 }}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-300 font-mono">ID: {{ booking()?.id | slice: 0 : 8 }}</p>
             </div>
           </div>
         </div>
@@ -69,7 +137,7 @@
           <section class="booking-detail-main">
             <!-- Compact Dates Card -->
             <div
-              class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+              class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800"
               id="tour-booking-dates"
             >
               <h3 class="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -77,19 +145,19 @@
               </h3>
               <div class="flex items-center gap-4 text-sm">
                 <div class="flex-1">
-                  <p class="text-xs text-gray-500">Inicio</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-300">Inicio</p>
                   <p class="font-medium text-gray-900 dark:text-white">
                     {{ formatDateTime(booking()!.start_at) }}
                   </p>
                 </div>
                 <div class="flex-1">
-                  <p class="text-xs text-gray-500">Fin</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-300">Fin</p>
                   <p class="font-medium text-gray-900 dark:text-white">
                     {{ formatDateTime(booking()!.end_at) }}
                   </p>
                 </div>
                 <div class="flex-shrink-0" *ngIf="booking()?.days_count">
-                  <p class="text-xs text-gray-500">Duración</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-300">Duración</p>
                   <p class="font-semibold text-gray-900 dark:text-white">
                     {{ booking()?.days_count }}d
                   </p>
@@ -316,7 +384,7 @@
                   </div>
                   <div class="flex-1">
                     <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Check-in del Vehículo</h4>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mb-3">
                       Realizá la inspección inicial del vehículo antes de iniciar el alquiler. Necesitarás tomar fotos, registrar el odómetro y el nivel de combustible.
                     </p>
                     <a
@@ -347,7 +415,7 @@
                   </div>
                   <div class="flex-1">
                     <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Check-out del Vehículo</h4>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mb-3">
                       Realizá la inspección final del vehículo al devolver el auto. Compará el estado con el check-in y reportá cualquier daño.
                     </p>
                     <a
@@ -530,15 +598,15 @@
               <div class="space-y-3 text-sm">
                 <div>
                   <p class="font-medium text-gray-800 dark:text-gray-200">¿Cuánto tiempo tengo para pagar?</p>
-                  <p class="text-gray-600 dark:text-gray-400">Tenés 24 horas para completar el pago antes de que expire la reserva.</p>
+                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Tenés 24 horas para completar el pago antes de que expire la reserva.</p>
                 </div>
                 <div>
                   <p class="font-medium text-gray-800 dark:text-gray-200">¿Puedo hacer preguntas al anfitrión?</p>
-                  <p class="text-gray-600 dark:text-gray-400">Sí, pero primero completá el pago para activar el chat.</p>
+                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Sí, pero primero completá el pago para activar el chat.</p>
                 </div>
                 <div>
                   <p class="font-medium text-gray-800 dark:text-gray-200">¿Qué métodos de pago aceptan?</p>
-                  <p class="text-gray-600 dark:text-gray-400">Tarjeta de crédito/débito o saldo en tu wallet AutoRenta.</p>
+                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Tarjeta de crédito/débito o saldo en tu wallet AutoRenta.</p>
                 </div>
               </div>
             </div>

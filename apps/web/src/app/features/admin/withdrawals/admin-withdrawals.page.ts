@@ -70,7 +70,7 @@ export class AdminWithdrawalsPage implements OnInit {
       const status = this.filterStatusSignal();
       const withdrawals = await this.adminService.listWithdrawalRequests(status || undefined);
       this.withdrawalsSignal.set(withdrawals);
-    } catch (error) {
+    } catch (__error) {
       this.withdrawalsSignal.set([]);
     } finally {
       this.loadingSignal.set(false);

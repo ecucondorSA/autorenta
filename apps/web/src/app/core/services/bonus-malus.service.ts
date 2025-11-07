@@ -47,7 +47,7 @@ export class BonusMalusService {
       }
 
       return data as UserBonusMalus;
-    } catch (error) {
+    } catch (__error) {
       return null;
     }
   }
@@ -75,7 +75,7 @@ export class BonusMalusService {
 
       if (error) throw error;
       return data as BonusMalusCalculation;
-    } catch (error) {
+    } catch (__error) {
       return null;
     }
   }
@@ -87,7 +87,7 @@ export class BonusMalusService {
     try {
       const bonusMalus = await this.getUserBonusMalus(userId);
       return bonusMalus?.total_factor ?? 0;
-    } catch (error) {
+    } catch (__error) {
       return 0;
     }
   }
@@ -124,7 +124,7 @@ export class BonusMalusService {
       type = 'NEUTRAL';
       message = 'Precio estándar sin ajustes';
       icon = '➖';
-      color = 'text-gray-600';
+      color = 'text-gray-600 dark:text-gray-300';
       tips.push('Completa reservas y obtén buenas calificaciones para recibir descuentos.');
       tips.push('Evita cancelaciones para no recibir recargos.');
     } else if (factor <= 0.05) {
@@ -166,7 +166,7 @@ export class BonusMalusService {
 
       const nextRecalc = new Date(bonusMalus.next_recalculation_at);
       return nextRecalc < new Date();
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }
@@ -229,7 +229,7 @@ export class BonusMalusService {
       }
 
       return tips;
-    } catch (error) {
+    } catch (__error) {
       return [];
     }
   }
@@ -284,7 +284,7 @@ export class BonusMalusService {
         usersNeutral,
         averageFactor,
       };
-    } catch (error) {
+    } catch (__error) {
       return null;
     }
   }
@@ -302,7 +302,7 @@ export class BonusMalusService {
         count: data as number,
         success: true,
       };
-    } catch (error) {
+    } catch (__error) {
       return {
         count: 0,
         success: false,

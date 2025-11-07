@@ -13,7 +13,7 @@
       >
         <span
           *ngIf="exporting()"
-          class="inline-block h-2 w-2 animate-pulse rounded-full bg-white"
+          class="inline-block h-2 w-2 animate-pulse rounded-full bg-white dark:bg-slate-deep"
           aria-hidden="true"
         ></span>
         Exportar inspección Supabase
@@ -30,20 +30,20 @@
 
   <!-- Database Statistics -->
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
       <p class="text-sm font-medium text-slate-600">Usuarios Registrados</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalProfiles }}</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
       <p class="text-sm font-medium text-slate-600">Total de Autos</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalCars }}</p>
       <p class="mt-1 text-xs text-slate-500">{{ stats().activeCars }} activos</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
       <p class="text-sm font-medium text-slate-600">Fotos de Autos</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalPhotos }}</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
       <p class="text-sm font-medium text-slate-600">Reservas</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalBookings }}</p>
     </div>

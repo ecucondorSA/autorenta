@@ -1,5 +1,5 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { injectSupabase } from '../supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 export interface NotificationItem {
   id: string;
@@ -40,24 +40,24 @@ export class NotificationsService {
         .order('created_at', { ascending: false })
         .limit(50);
 
-      if (error) throw error;
+      if (error) throw error as Error;
 
-      const notifications: NotificationItem[] = (data || []).map(notification => ({
-        id: notification.id,
-        title: notification.title,
-        message: notification.message,
-        type: notification.type || 'info',
-        read: notification.read || false,
-        createdAt: new Date(notification.created_at),
-        actionUrl: notification.action_url,
-        actionText: notification.action_text,
-        metadata: notification.metadata,
+      const notifications: NotificationItem[] = (data || []).map((notification: unknown) => ({
+        id: (notification as any).id,
+        title: (notification as any).title,
+        message: (notification as any).message,
+        type: (notification as any).type || 'info',
+        read: (notification as any).read || false,
+        createdAt: new Date((notification as any).created_at),
+        actionUrl: (notification as any).action_url,
+        actionText: (notification as any).action_text,
+        metadata: (notification as any).metadata,
       }));
 
       this.notifications.set(notifications);
       this.updateUnreadCount();
-    } catch (error) {
-      console.error('Error loading notifications:', error);
+    } catch (_error) {
+      console.error('Error loading notifications:', _error);
     }
   }
 
@@ -75,24 +75,24 @@ export class NotificationsService {
           table: 'notifications',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
-          this.addNotification(payload.new as any);
+        (payload: unknown) => {
+          this.addNotification((payload as any).new as any);
         }
       )
       .subscribe();
   }
 
-  private addNotification(notificationData: any) {
+  private addNotification(notificationData: unknown) {
     const notification: NotificationItem = {
-      id: notificationData.id,
-      title: notificationData.title,
-      message: notificationData.message,
-      type: notificationData.type || 'info',
+      id: (notificationData as any).id,
+      title: (notificationData as any).title,
+      message: (notificationData as any).message,
+      type: (notificationData as any).type || 'info',
       read: false,
-      createdAt: new Date(notificationData.created_at),
-      actionUrl: notificationData.action_url,
-      actionText: notificationData.action_text,
-      metadata: notificationData.metadata,
+      createdAt: new Date((notificationData as any).created_at),
+      actionUrl: (notificationData as any).action_url,
+      actionText: (notificationData as any).action_text,
+      metadata: (notificationData as any).metadata,
     };
 
     const current = this.notifications();
@@ -115,7 +115,7 @@ export class NotificationsService {
         .update({ read: true })
         .eq('id', notificationId);
 
-      if (error) throw error;
+      if (error) throw error as Error;
 
       // Actualizar estado local
       const current = this.notifications();
@@ -124,8 +124,8 @@ export class NotificationsService {
       );
       this.notifications.set(updated);
       this.updateUnreadCount();
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
+    } catch (_error) {
+      console.error('Error marking notification as read:', _error);
     }
   }
 
@@ -140,26 +140,26 @@ export class NotificationsService {
         .eq('user_id', user.id)
         .eq('read', false);
 
-      if (error) throw error;
+      if (error) throw error as Error;
 
       // Actualizar estado local
       const current = this.notifications();
       const updated = current.map(n => ({ ...n, read: true }));
       this.notifications.set(updated);
       this.unreadCount.set(0);
-    } catch (error) {
-      console.error('Error marking all notifications as read:', error);
+    } catch (_error) {
+      console.error('Error marking all notifications as read:', _error);
     }
   }
 
   // Notificaciones push del navegador
   private async showBrowserNotification(notification: NotificationItem) {
     if ('Notification' in window && Notification.permission === 'granted') {
-      const browserNotification = new Notification(notification.title, {
-        body: notification.message,
+      const browserNotification = new Notification((notification as any).title, {
+        body: (notification as any).message,
         icon: '/assets/icons/icon-192x192.png',
         badge: '/assets/icons/icon-192x192.png',
-        tag: notification.id, // Evita duplicados
+        tag: (notification as any).id, // Evita duplicados
       });
 
       browserNotification.onclick = () => {
@@ -198,21 +198,21 @@ export class NotificationsService {
         .from('notifications')
         .insert({
           user_id: userId,
-          title: notification.title,
-          message: notification.message,
-          type: notification.type,
+          title: (notification as any).title,
+          message: (notification as any).message,
+          type: (notification as any).type,
           action_url: notification.actionUrl,
           action_text: notification.actionText,
-          metadata: notification.metadata,
+          metadata: (notification as any).metadata,
         })
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) throw error as Error;
       return data;
-    } catch (error) {
-      console.error('Error creating notification:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error creating notification:', _error);
+      throw _error as Error;
     }
   }
 

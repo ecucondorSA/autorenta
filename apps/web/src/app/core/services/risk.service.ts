@@ -49,7 +49,7 @@ export class RiskService {
       vehicleValueUsd,
       fxRate,
       true, // hasCard=true
-      distanceKm,
+      distanceKm?.toString(),
     );
 
     // Modalidad SIN tarjeta (crédito de seguridad)
@@ -57,7 +57,7 @@ export class RiskService {
       vehicleValueUsd,
       fxRate,
       false, // hasCard=false
-      distanceKm,
+      distanceKm?.toString(),
     );
 
     // 4. Hold estimado en ARS con distancia aplicada (usa guaranteeAmountArs que incluye criterio MAYOR)

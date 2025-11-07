@@ -350,9 +350,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
             this.distanceKm.set(undefined);
             this.distanceTier.set(undefined);
           }
-        } catch (error) {
+        } catch (_error) {
           // Silently fail - distance is optional
-          console.warn('Could not calculate distance:', error);
+          console.warn('Could not calculate distance:', _error);
           this.userLocation.set(undefined);
           this.distanceKm.set(undefined);
           this.distanceTier.set(undefined);
@@ -393,7 +393,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           endDate: new Date(parsed.endDate),
         });
         return;
-      } catch (e) { /* Silenced */ }
+      } catch (_e) { /* Silenced */ }
     }
 
     // Si no, desde query params
@@ -1141,7 +1141,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Intentar desbloquear wallet si hubo error
       try {
         await firstValueFrom(this.walletService.unlockFunds(bookingId));
-      } catch (unlockError) { /* Silenced */ }
+      } catch (_unlockError) { /* Silenced */ }
       throw error;
     }
   }
@@ -1188,17 +1188,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   ): Promise<MercadoPagoPreferenceResponse> {
     try {
       return await this.mpGateway.createPreference(bookingId);
-    } catch (error) {
-      if (this.isOwnerOnboardingError(error)) {
+    } catch (_error) {
+      if (this.isOwnerOnboardingError(_error)) {
         const message =
-          (error as Error).message ||
+          (_error as Error).message ||
           'El propietario todavía no completó la vinculación de Mercado Pago. Tu reserva permanecerá pendiente.';
         this.error.set(message);
         this.processingFinalPayment.set(false);
       }
 
-      throw error instanceof Error
-        ? error
+      throw _error instanceof Error
+        ? _error
         : new Error('No pudimos crear la preferencia de Mercado Pago.');
     }
   }

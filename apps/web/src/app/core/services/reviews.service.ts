@@ -138,7 +138,7 @@ export class ReviewsService {
         reviewer_avatar: review.reviewer?.avatar_url,
         car_title: review.car?.title,
       })) as Review[];
-    } catch (error) {
+    } catch (__error) {
       return [];
     }
   }
@@ -277,7 +277,7 @@ export class ReviewsService {
 
       if (error) throw error;
       return data as boolean;
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }
@@ -303,7 +303,7 @@ export class ReviewsService {
 
       if (error) throw error;
       return data as boolean;
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }
@@ -387,7 +387,7 @@ export class ReviewsService {
         rating_distribution: distribution,
         category_averages: categoryAverages,
       };
-    } catch (error) {
+    } catch (__error) {
       return {
         total_count: 0,
         average_rating: 0,
@@ -479,7 +479,7 @@ export class ReviewsService {
       }
 
       return pendingReviews;
-    } catch (error) {
+    } catch (__error) {
       return [];
     }
   }

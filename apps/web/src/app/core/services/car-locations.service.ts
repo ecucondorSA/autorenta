@@ -23,6 +23,7 @@ export interface CarMapLocation {
   locationLabel: string;
   formattedAddress?: string | null;
   photoUrl?: string | null;
+  photoGallery?: string[] | null;
   description?: string | null;
 }
 
@@ -123,7 +124,7 @@ export class CarLocationsService {
       }
       const normalized = this.normalizePayloadArray(data);
       return normalized.length > 0 ? normalized : null;
-    } catch (err) {
+    } catch (_err) {
       return null;
     }
   }

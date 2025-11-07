@@ -145,7 +145,7 @@ export class PwaService {
       this.updateAvailable.set(false);
       // Reload the page to load the new version
       document.location.reload();
-    } catch (error) {}
+    } catch (__error) {}
   }
 
   /**
@@ -166,8 +166,8 @@ export class PwaService {
     try {
       await navigator.share(data);
       return true;
-    } catch (error) {
-      if ((error as Error).name !== 'AbortError') {
+    } catch (__error) {
+      if ((__error as Error).name !== 'AbortError') {
       }
       return false;
     }
@@ -254,7 +254,7 @@ export class PwaService {
 
     try {
       await nav.setAppBadge(count);
-    } catch (error) {}
+    } catch (__error) {}
   }
 
   /**
@@ -268,7 +268,7 @@ export class PwaService {
 
     try {
       await nav.clearAppBadge();
-    } catch (error) {}
+    } catch (__error) {}
   }
 
   /**
@@ -288,8 +288,8 @@ export class PwaService {
         multiple,
       });
       return contacts;
-    } catch (error) {
-      if ((error as Error).name !== 'AbortError') {
+    } catch (__error) {
+      if ((__error as Error).name !== 'AbortError') {
       }
       return null;
     }
@@ -311,7 +311,7 @@ export class PwaService {
       wakeLock.addEventListener('release', () => {});
 
       return wakeLock;
-    } catch (error) {
+    } catch (__error) {
       return null;
     }
   }
@@ -341,7 +341,7 @@ export class PwaService {
 
       await navigator.clipboard.write([new ClipboardItem(items)]);
       return true;
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }
@@ -358,7 +358,7 @@ export class PwaService {
     try {
       await screenOrientation.lock(orientation);
       return true;
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }
@@ -391,7 +391,7 @@ export class PwaService {
 
       await registration.periodicSync.register(tag, { minInterval });
       return true;
-    } catch (error) {
+    } catch (__error) {
       return false;
     }
   }

@@ -68,7 +68,7 @@ export class HomePage implements OnInit {
     try {
       const cars = await this.carsService.listActiveCars({});
       this.featuredCars = cars.slice(0, 6);
-    } catch (error) { /* Silenced */ } finally {
+    } catch (__error) { /* Silenced */ } finally {
       this.loading = false;
     }
   }

@@ -273,45 +273,11 @@ test.describe('Cars Map Component - Visitor', () => {
     }
   });
 
-  test('should display map filters', async ({ page }) => {
+  test('should not render legacy map filters UI', async ({ page }) => {
     await page.waitForTimeout(2000);
-    
-    // Look for filter controls
-    const filters = page.locator(
-      'app-map-filters, [class*="map-filters"], [class*="filters"]'
-    ).first();
-    
-    const filtersVisible = await filters.isVisible().catch(() => false);
-    
-    if (filtersVisible) {
-      await expect(filters).toBeVisible();
-    }
-  });
 
-  test('should filter cars on map when filters applied', async ({ page }) => {
-    await page.waitForTimeout(2000);
-    
-    // Find filter component
     const filters = page.locator('app-map-filters, [class*="map-filters"]').first();
-    const filtersVisible = await filters.isVisible().catch(() => false);
-    
-    if (filtersVisible) {
-      // Try to interact with price filter
-      const priceFilter = filters.locator('input[type="range"], [class*="price"]').first();
-      const priceFilterExists = await priceFilter.isVisible().catch(() => false);
-      
-      if (priceFilterExists) {
-        // Apply a filter change
-        await priceFilter.fill('10000');
-        
-        // Wait for map to update
-        await page.waitForTimeout(2000);
-        
-        // Map should still be visible after filter
-        const mapCanvas = page.locator('.map-canvas').first();
-        await expect(mapCanvas).toBeVisible();
-      }
-    }
+    await expect(filters).toHaveCount(0);
   });
 
   test('should handle empty state when no cars available', async ({ page }) => {
@@ -735,4 +701,3 @@ test.describe('Cars Map Component - Performance', () => {
     }
   });
 });
-

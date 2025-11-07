@@ -221,9 +221,9 @@ export class MercadoPagoCallbackPage implements OnInit {
       } else {
         this.errorMessage.set('Error al procesar la autorización');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.processing.set(false);
-      this.errorMessage.set(err.message || 'Error inesperado');
+      this.errorMessage.set((err as Error).message || 'Error inesperado');
     }
   }
 

@@ -556,8 +556,8 @@ export class ClassBenefitsModalComponent implements OnInit {
       // Load all class benefits
       const benefits = await this.driverProfileService.getAllClassBenefits();
       this.allBenefits.set(benefits);
-    } catch (error) {
-      console.error('[ClassBenefitsModal] Error al cargar beneficios:', error);
+    } catch (_error) {
+      console.error('[ClassBenefitsModal] Error al cargar beneficios:', _error);
     } finally {
       this.loading.set(false);
     }

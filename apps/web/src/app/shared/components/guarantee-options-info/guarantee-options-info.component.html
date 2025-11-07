@@ -31,7 +31,7 @@
             [ngClass]="{
               'bg-success-100 text-success-700': protectedCreditStatus === 'active',
               'bg-warning-100 text-warning-800': protectedCreditStatus === 'partial',
-              'bg-sand-light text-charcoal-medium': protectedCreditStatus === 'pending',
+              'bg-sand-light text-charcoal-medium dark:text-pearl-light': protectedCreditStatus === 'pending',
             }"
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@
               <p class="text-base font-bold text-charcoal-medium dark:text-pearl-light">
                 1. Tarjeta de crédito
               </p>
-              <p class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60 mt-1">
+              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 mt-1">
                 Método tradicional
               </p>
             </div>
@@ -88,7 +88,7 @@
             >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
                 >
                   Requiere tarjeta internacional
                 </p>
@@ -133,7 +133,7 @@
             >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
                 >
                   Monto bloqueado por reserva
                 </p>
@@ -142,7 +142,7 @@
                 <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">
                   USD 500 - 1.200
                 </p>
-                <p class="text-xs text-charcoal-medium/60 dark:text-pearl-light/50">Variable</p>
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50">Variable</p>
               </div>
               <div class="text-center sm:text-left">
                 <p class="text-sm font-semibold text-warning-700 dark:text-warning-200">
@@ -158,7 +158,7 @@
             >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
                 >
                   Reembolsable a cuenta bancaria
                 </p>
@@ -207,7 +207,7 @@
             >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
                 >
                   Configuración requerida
                 </p>
@@ -216,7 +216,7 @@
                 <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">
                   Cada reserva
                 </p>
-                <p class="text-xs text-charcoal-medium/60 dark:text-pearl-light/50">
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50">
                   Ingresar datos
                 </p>
               </div>
@@ -236,7 +236,7 @@
             >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
                 >
                   Liberación de fondos
                 </p>
@@ -245,7 +245,7 @@
                 <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">
                   5-10 días hábiles
                 </p>
-                <p class="text-xs text-charcoal-medium/60 dark:text-pearl-light/50">
+                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50">
                   Post-viaje
                 </p>
               </div>
@@ -263,7 +263,7 @@
             >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
                 >
                   Ideal para
                 </p>
@@ -318,7 +318,7 @@
             <span class="text-xl font-bold text-accent-petrol dark:text-accent-petrol">
               USD {{ protectedCreditBalance / 100 | number: '1.2-2' }}
             </span>
-            <span class="text-xs text-charcoal-medium/70 dark:text-pearl-light/60">
+            <span class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60">
               / USD {{ protectedCreditTarget / 100 | number: '1.0-0' }}
             </span>
           </div>
@@ -385,7 +385,7 @@
         }
 
         <!-- Tooltip/Help Text -->
-        <p class="text-xs text-charcoal-medium/60 dark:text-pearl-light/50 flex items-start gap-1.5">
+        <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50 flex items-start gap-1.5">
           <svg
             class="w-3.5 h-3.5 flex-shrink-0 mt-0.5"
             fill="none"

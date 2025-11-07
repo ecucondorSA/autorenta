@@ -30,12 +30,47 @@ export class CarsService {
     if (!userId) {
       throw new Error('Usuario no autenticado');
     }
+
+    // Validate required fields
+    if (!input.brand_id || !input.model_id) {
+      throw new Error('Marca y modelo son requeridos');
+    }
+    if (!input.price_per_day || input.price_per_day <= 0) {
+      throw new Error('Precio por día debe ser mayor a 0');
+    }
+
+    // Check for coordinates (using type assertion since latitude/longitude come from form)
+    const carInput = input as Record<string, unknown>;
+    if (!carInput.latitude || !carInput.longitude) {
+      console.warn('⚠️ Auto sin coordenadas - no aparecerá en el mapa');
+    }
+
+    // Prepare clean data for insert
+    const carData = {
+      ...input,
+      owner_id: userId,
+      status: input.status || 'active', // Default to active if not specified
+      created_at: new Date().toISOString(),
+    };
+
+    console.log('🚗 Creating car with data:', {
+      ...carData,
+      // Redact sensitive fields for logging
+      owner_id: '***',
+    });
+
     const { data, error } = await this.supabase
       .from('cars')
-      .insert({ ...input, owner_id: userId })
+      .insert(carData)
       .select('*, car_photos(*)')
       .single();
-    if (error) throw error;
+
+    if (error) {
+      console.error('❌ Error creating car:', error);
+      throw error;
+    }
+
+    console.log('✅ Car created successfully:', data.id);
 
     return {
       ...data,
@@ -435,53 +470,49 @@ export class CarsService {
       city?: string;
     } = {},
   ): Promise<Car[]> {
-    try {
-      // Llamar a la función RPC que creamos en Sprint 2
-      const { data, error } = await this.supabase.rpc('get_available_cars', {
-        p_start_date: startDate,
-        p_end_date: endDate,
-        p_limit: options.limit || 100,
-        p_offset: options.offset || 0,
-      });
+    // Llamar a la función RPC que creamos en Sprint 2
+    const { data, error } = await this.supabase.rpc('get_available_cars', {
+      p_start_date: startDate,
+      p_end_date: endDate,
+      p_limit: options.limit || 100,
+      p_offset: options.offset || 0,
+    });
 
-      if (error) {
-        throw error;
-      }
-
-      if (!data || data.length === 0) {
-        return [];
-      }
-
-      // Filtrar por ciudad si se especificó
-      let filteredCars = data;
-      if (options.city) {
-        filteredCars = data.filter((car: Record<string, unknown>) => {
-          const carLocation = car.location as Record<string, unknown> | undefined;
-          const cityInLocation = (carLocation?.city as string | undefined)?.toLowerCase();
-          return cityInLocation?.includes(options.city!.toLowerCase());
-        });
-      }
-
-      // Cargar fotos para cada auto (la RPC no las incluye por performance)
-      const carsWithPhotos = await Promise.all(
-        filteredCars.map(async (car: Record<string, unknown>) => {
-          const { data: photos } = await this.supabase
-            .from('car_photos')
-            .select('*')
-            .eq('car_id', car.id)
-            .order('position');
-
-          return {
-            ...car,
-            photos: photos || [],
-          } as Car;
-        }),
-      );
-
-      return carsWithPhotos;
-    } catch (error) {
+    if (error) {
       throw error;
     }
+
+    if (!data || data.length === 0) {
+      return [];
+    }
+
+    // Filtrar por ciudad si se especificó
+    let filteredCars = data;
+    if (options.city) {
+      filteredCars = data.filter((car: Record<string, unknown>) => {
+        const carLocation = car.location as Record<string, unknown> | undefined;
+        const cityInLocation = (carLocation?.city as string | undefined)?.toLowerCase();
+        return cityInLocation?.includes(options.city!.toLowerCase());
+      });
+    }
+
+    // Cargar fotos para cada auto (la RPC no las incluye por performance)
+    const carsWithPhotos = await Promise.all(
+      filteredCars.map(async (car: Record<string, unknown>) => {
+        const { data: photos } = await this.supabase
+          .from('car_photos')
+          .select('*')
+          .eq('car_id', car.id)
+          .order('position');
+
+        return {
+          ...car,
+          photos: photos || [],
+        } as Car;
+      }),
+    );
+
+    return carsWithPhotos;
   }
 
   /**
@@ -516,8 +547,68 @@ export class CarsService {
       }
 
       return data === true;
-    } catch (error) {
+    } catch (__error) {
       return false;
+    }
+  }
+
+  async getNextAvailableRange(
+    carId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<{ startDate: string; endDate: string } | null> {
+    try {
+      const requestedStart = new Date(startDate);
+      const requestedEnd = new Date(endDate);
+
+      if (isNaN(requestedStart.getTime()) || isNaN(requestedEnd.getTime())) {
+        return null;
+      }
+
+      const desiredDurationMs = requestedEnd.getTime() - requestedStart.getTime();
+      if (desiredDurationMs <= 0) {
+        return null;
+      }
+
+      const { data, error } = await this.supabase
+        .from('bookings')
+        .select('start_at, end_at')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
+        .gte('end_at', requestedStart.toISOString())
+        .order('start_at', { ascending: true });
+
+      if (error) {
+        console.warn('Error fetching bookings for availability suggestion:', error);
+        return null;
+      }
+
+      let cursor = new Date(requestedStart);
+      const timeline = data ?? [];
+
+      for (const booking of timeline) {
+        const bookingStart = new Date(booking.start_at);
+        const bookingEnd = new Date(booking.end_at);
+
+        if (bookingStart.getTime() - cursor.getTime() >= desiredDurationMs) {
+          return {
+            startDate: cursor.toISOString(),
+            endDate: new Date(cursor.getTime() + desiredDurationMs).toISOString(),
+          };
+        }
+
+        if (bookingEnd > cursor) {
+          cursor = new Date(bookingEnd.getTime());
+        }
+      }
+
+      return {
+        startDate: cursor.toISOString(),
+        endDate: new Date(cursor.getTime() + desiredDurationMs).toISOString(),
+      };
+    } catch (err) {
+      console.warn('Failed to calculate next available range:', err);
+      return null;
     }
   }
 
@@ -530,45 +621,41 @@ export class CarsService {
     count: number;
     bookings?: Array<{ id: string; status: string; start_date: string; end_date: string }>;
   }> {
-    try {
-      // Verificar TODAS las reservas (incluidas completadas y canceladas)
-      // porque el foreign key no tiene ON DELETE CASCADE
-      const { data: allBookings, error: allError } = await this.supabase
+    // Verificar TODAS las reservas (incluidas completadas y canceladas)
+    // porque el foreign key no tiene ON DELETE CASCADE
+    const { data: allBookings, error: allError } = await this.supabase
+      .from('bookings')
+      .select('id, status')
+      .eq('car_id', carId);
+
+    if (allError) {
+      throw allError;
+    }
+
+    // Si hay CUALQUIER reserva, no permitir eliminar
+    if (allBookings && allBookings.length > 0) {
+      // Contar activas para el mensaje
+      const { data: activeBookings, error: activeError } = await this.supabase
         .from('bookings')
-        .select('id, status')
-        .eq('car_id', carId);
+        .select('id, status, start_date, end_date')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'confirmed', 'in_progress'])
+        .order('start_date', { ascending: true });
 
-      if (allError) {
-        throw allError;
-      }
-
-      // Si hay CUALQUIER reserva, no permitir eliminar
-      if (allBookings && allBookings.length > 0) {
-        // Contar activas para el mensaje
-        const { data: activeBookings, error: activeError } = await this.supabase
-          .from('bookings')
-          .select('id, status, start_date, end_date')
-          .eq('car_id', carId)
-          .in('status', ['pending', 'confirmed', 'in_progress'])
-          .order('start_date', { ascending: true });
-
-        if (activeError) throw activeError;
-
-        return {
-          hasActive: true,
-          count: allBookings.length,
-          bookings: activeBookings || [],
-        };
-      }
+      if (activeError) throw activeError;
 
       return {
-        hasActive: false,
-        count: 0,
-        bookings: [],
+        hasActive: true,
+        count: allBookings.length,
+        bookings: activeBookings || [],
       };
-    } catch (error) {
-      throw error;
     }
+
+    return {
+      hasActive: false,
+      count: 0,
+      bookings: [],
+    };
   }
 
   /**

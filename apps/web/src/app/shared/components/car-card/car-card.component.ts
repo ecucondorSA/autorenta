@@ -294,8 +294,8 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
         this.cdr.detectChanges();
       }
-    } catch (error) {
-      console.error('❌ [CarCard] Error loading dynamic price:', error);
+    } catch (_error) {
+      console.error('❌ [CarCard] Error loading dynamic price:', _error);
     } finally {
       this.priceLoading.set(false);
       this.cdr.markForCheck();
@@ -353,8 +353,8 @@ export class CarCardComponent implements OnInit, OnDestroy {
       });
 
       this.cdr.markForCheck();
-    } catch (error) {
-      console.error('Error loading urgent mode data:', error);
+    } catch (_error) {
+      console.error('Error loading urgent mode data:', _error);
     }
   }
 }

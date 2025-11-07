@@ -341,7 +341,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
           const cars = await carsService.listActiveCars({ city });
           expect(cars).toBeDefined();
           // No debería causar SQL injection ni XSS
-        } catch (error) {
+        } catch (_error) {
           // Es aceptable que falle, pero no debe comprometer seguridad
         }
       }

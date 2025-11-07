@@ -191,13 +191,13 @@ export class BookingConfirmationPage implements OnInit {
   /**
    * Extrae detalles del pago de los query params
    */
-  private extractPaymentDetails(queryParams: any): void {
-    const provider = queryParams['provider'] as PaymentProvider;
-    const orderId = queryParams['orderId'];
-    const captureId = queryParams['captureId'];
-    const preferenceId = queryParams['preference_id'];
-    const paymentId = queryParams['payment_id'];
-    const mpStatus = queryParams['status'];
+  private extractPaymentDetails(queryParams: unknown): void {
+    const provider = (queryParams as any)['provider'] as PaymentProvider;
+    const orderId = (queryParams as any)['orderId'];
+    const captureId = (queryParams as any)['captureId'];
+    const preferenceId = (queryParams as any)['preference_id'];
+    const paymentId = (queryParams as any)['payment_id'];
+    const mpStatus = (queryParams as any)['status'];
 
     if (!provider) {
       this.status.set('error');
@@ -286,8 +286,8 @@ export class BookingConfirmationPage implements OnInit {
           // Después de 30 segundos, dejar en pending
           clearInterval(pollInterval);
         }
-      } catch (error) {
-        console.error('Error polling booking status:', error);
+      } catch (_error) {
+        console.error('Error polling booking status:', _error);
         clearInterval(pollInterval);
       }
     }, interval);
@@ -335,7 +335,7 @@ export class BookingConfirmationPage implements OnInit {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `recibo-${booking.id}.html`;
+    link.download = `recibo-${(booking as any).id}.html`;
     link.click();
 
     // Cleanup
@@ -345,11 +345,11 @@ export class BookingConfirmationPage implements OnInit {
   /**
    * Genera HTML del recibo de pago
    */
-  private generateReceiptHTML(booking: any, payment: PaymentDetails): string {
+  private generateReceiptHTML(booking: unknown, _payment: PaymentDetails): string {
     const confirmDate = this.formatDate(this.confirmedAt());
     const totalAmount = this.formatCurrency(
-      booking.total_price,
-      booking.currency || 'ARS'
+      (booking as any).total_price,
+      (booking as any).currency || 'ARS'
     );
 
     return `
@@ -358,7 +358,7 @@ export class BookingConfirmationPage implements OnInit {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recibo de Pago - ${booking.id}</title>
+  <title>Recibo de Pago - ${(booking as any).id}</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -472,19 +472,19 @@ export class BookingConfirmationPage implements OnInit {
       <h2 class="section-title">Información de la Reserva</h2>
       <div class="detail-row">
         <span class="detail-label">ID de Reserva:</span>
-        <span class="detail-value">${booking.id}</span>
+        <span class="detail-value">${(booking as any).id}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Vehículo:</span>
-        <span class="detail-value">${booking.car?.brand || ''} ${booking.car?.model || ''}</span>
+        <span class="detail-value">${(booking as any).car?.brand || ''} ${(booking as any).car?.model || ''}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Desde:</span>
-        <span class="detail-value">${this.formatDate(booking.start_date)}</span>
+        <span class="detail-value">${this.formatDate((booking as any).start_date)}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Hasta:</span>
-        <span class="detail-value">${this.formatDate(booking.end_date)}</span>
+        <span class="detail-value">${this.formatDate((booking as any).end_date)}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Estado:</span>

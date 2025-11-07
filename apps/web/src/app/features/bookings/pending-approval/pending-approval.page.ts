@@ -66,7 +66,7 @@ export class PendingApprovalPage implements OnInit {
       this.loading.set(true);
       const bookings = await this.bookingsService.getPendingApprovals();
       this.pendingBookings.set(bookings as unknown as PendingApproval[]);
-    } catch (error) {
+    } catch (__error) {
       this.toastService.error('Error', 'Error al cargar reservas pendientes');
     } finally {
       this.loading.set(false);
@@ -87,7 +87,7 @@ export class PendingApprovalPage implements OnInit {
       const result = await this.bookingsService.approveBooking(bookingId);
 
       if (result.success) {
-        this.toastService.success('✅ Reserva aprobada exitosamente');
+        this.toastService.success('Éxito', '✅ Reserva aprobada exitosamente');
         await this.loadPendingApprovals();
       } else {
         this.toastService.error('Error', `Error: ${result.error}`);
@@ -121,7 +121,7 @@ export class PendingApprovalPage implements OnInit {
       const result = await this.bookingsService.rejectBooking(bookingId, reason);
 
       if (result.success) {
-        this.toastService.success('✅ Reserva rechazada. Se notificará al cliente.');
+        this.toastService.success('Éxito', '✅ Reserva rechazada. Se notificará al cliente.');
         await this.loadPendingApprovals();
       } else {
         this.toastService.error('Error', `Error: ${result.error}`);

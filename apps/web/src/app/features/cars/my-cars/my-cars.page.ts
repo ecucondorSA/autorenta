@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModalController } from '@ionic/angular/standalone';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -14,7 +14,7 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
 @Component({
   standalone: true,
   selector: 'app-my-cars-page',
-  imports: [CommonModule, RouterLink, CarCardComponent, TranslateModule],
+  imports: [CommonModule, CarCardComponent, TranslateModule],
   templateUrl: './my-cars.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -39,6 +39,11 @@ export class MyCarsPage {
     () => this.cars().filter((car) => car.status === 'active').length,
   );
   readonly countDraft = computed(() => this.cars().filter((car) => car.status === 'draft').length);
+
+  async openPublishModal(carId?: string): Promise<void> {
+    const queryParams = carId ? { edit: carId } : {};
+    await this.router.navigate(['/cars/publish'], { queryParams });
+  }
 
   async onEditCar(carId: string): Promise<void> {
     await this.router.navigate(['/cars/publish'], { queryParams: { edit: carId } });

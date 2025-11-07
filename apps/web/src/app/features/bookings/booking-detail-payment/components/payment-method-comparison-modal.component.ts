@@ -39,7 +39,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <button
             type="button"
             (click)="onClose()"
-            class="text-gray-400 hover:text-gray-600 dark:text-pearl-light/60 dark:hover:text-pearl-light transition-colors"
+            class="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:text-pearl-light/60 dark:hover:text-pearl-light transition-colors"
             aria-label="Cerrar modal"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

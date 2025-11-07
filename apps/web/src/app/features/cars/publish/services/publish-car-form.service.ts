@@ -246,10 +246,79 @@ export class PublishCarFormService {
       throw new Error('Form not initialized');
     }
 
-    const rawValue = this.formInstance.getRawValue() as Record<string, unknown>;
-    // Remove pricing_strategy as it's not stored in DB
-    const { pricing_strategy, ...formData } = rawValue;
-    return formData;
+    const rawValue = this.formInstance.getRawValue();
+
+    // Extract only fields that exist in the database schema (exclude pricing_strategy)
+    const {
+      brand_id,
+      model_id,
+      year,
+      color,
+      mileage,
+      transmission,
+      fuel,
+      price_per_day,
+      currency,
+      value_usd,
+      min_rental_days,
+      max_rental_days,
+      deposit_required,
+      deposit_amount,
+      insurance_included,
+      auto_approval,
+      location_street,
+      location_street_number,
+      location_city,
+      location_state,
+      location_country,
+    } = rawValue;
+
+    // Get brand and model info
+    const brand = this.brands().find((b) => b.id === brand_id);
+    const model = this.models().find((m) => m.id === model_id);
+
+    // Return clean data for database
+    return {
+      // Vehicle fields
+      brand_id,
+      model_id,
+      year,
+      color,
+      mileage,
+      transmission,
+      fuel,
+
+      // Pricing fields
+      price_per_day,
+      currency,
+      value_usd,
+      min_rental_days,
+      max_rental_days,
+      deposit_required,
+      deposit_amount,
+      insurance_included,
+      auto_approval,
+
+      // Location fields
+      location_street,
+      location_street_number,
+      location_city,
+      location_state,
+      location_country,
+
+      // Generated/computed fields
+      title: this.generateTitle() || 'Auto sin título',
+      description: '',
+      brand_text_backup: brand?.name || '',
+      model_text_backup: model?.name || '',
+      seats: model?.seats || 5,
+      doors: model?.doors || 4,
+      features: {},
+      fuel_type: fuel,
+      location_province: location_state,
+      rating_avg: 0,
+      rating_count: 0,
+    };
   }
 
   /**

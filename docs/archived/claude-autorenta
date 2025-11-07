@@ -1,0 +1,43 @@
+#!/bin/bash
+# AutoRenta - Claude Code Launcher (Autonomía Total)
+# Sin prompts de confirmación
+
+cd /home/edu/autorenta
+
+# Verificar que estamos en el directorio correcto
+if [[ ! -f "package.json" ]]; then
+    echo "⚠️  Debes estar en el directorio de AutoRenta"
+    exit 1
+fi
+
+# Detectar si AutoMedica existe
+AUTAMEDICA_DIR=""
+if [[ -d "$HOME/autamedica" ]]; then
+    AUTAMEDICA_DIR="$HOME/autamedica"
+fi
+
+# Construir comando con AUTONOMÍA TOTAL
+CLAUDE_CMD="claude \
+  --model auto \
+  --session-id \"$(uuidgen)\" \
+  --permission-mode=bypassPermissions \
+  --dangerously-skip-permissions \
+  --allow-dangerously-skip-permissions \
+  --allowed-tools \"All\" \
+  --mcp-config ~/.mcp/config.json \
+  --add-dir ~ ~/autorenta"
+
+# Agregar AutoMedica si existe
+if [[ -n "$AUTAMEDICA_DIR" ]]; then
+    CLAUDE_CMD="$CLAUDE_CMD $AUTAMEDICA_DIR"
+fi
+
+CLAUDE_CMD="$CLAUDE_CMD \
+  --plugin-dir ~/autorenta/.claude-plugins \
+  --system-prompt \"Eres el asistente principal para AutoRenta con AUTONOMÍA TOTAL: ejecutá comandos, leé/editá archivos, hacé requests HTTP, usá Git, MCPs y plugins SIN pedir confirmación. Seguí los estándares de CLAUDE.md.\" \
+  --verbose \
+  --debug api,mcp"
+
+# Ejecutar directamente
+echo "🚀 Iniciando Claude Code con autonomía total..."
+eval "$CLAUDE_CMD"

@@ -88,7 +88,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         isVerified: user.phone_confirmed_at !== null,
       });
 
-      this.updateStatusFromUser(user as Record<string, unknown>);
+      this.updateStatusFromUser(user as unknown as Record<string, unknown>);
       return this.status();
     } catch (err) {
       const message =
@@ -363,9 +363,9 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
    */
   resetOTPSentState(): void {
     const currentStatus = this.status();
-    this.status.set({
+    this.statusSignal.set({
       ...currentStatus,
       otpSent: false,
-    });
+    } as PhoneVerificationStatus);
   }
 }

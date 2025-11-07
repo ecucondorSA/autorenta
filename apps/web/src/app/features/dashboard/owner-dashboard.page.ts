@@ -104,7 +104,7 @@ export class OwnerDashboardPage implements OnInit {
         .reduce((sum, b) => sum + (b.total_amount || 0), 0);
 
       this.earnings.set({ thisMonth, lastMonth, total });
-    } catch (err) {
+    } catch (_err) {
       this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
     } finally {
       this.loading.set(false);

@@ -69,17 +69,17 @@ export interface MockQueryBuilder<T = any> {
   upsert: jasmine.Spy<(data: Partial<T> | Partial<T>[]) => MockQueryBuilder<T>>;
 
   // Filtros
-  eq: jasmine.Spy<(column: string, value: any) => MockQueryBuilder<T>>;
-  neq: jasmine.Spy<(column: string, value: any) => MockQueryBuilder<T>>;
-  gt: jasmine.Spy<(column: string, value: any) => MockQueryBuilder<T>>;
-  gte: jasmine.Spy<(column: string, value: any) => MockQueryBuilder<T>>;
-  lt: jasmine.Spy<(column: string, value: any) => MockQueryBuilder<T>>;
-  lte: jasmine.Spy<(column: string, value: any) => MockQueryBuilder<T>>;
+  eq: jasmine.Spy<(column: string, value: unknown) => MockQueryBuilder<T>>;
+  neq: jasmine.Spy<(column: string, value: unknown) => MockQueryBuilder<T>>;
+  gt: jasmine.Spy<(column: string, value: unknown) => MockQueryBuilder<T>>;
+  gte: jasmine.Spy<(column: string, value: unknown) => MockQueryBuilder<T>>;
+  lt: jasmine.Spy<(column: string, value: unknown) => MockQueryBuilder<T>>;
+  lte: jasmine.Spy<(column: string, value: unknown) => MockQueryBuilder<T>>;
   like: jasmine.Spy<(column: string, pattern: string) => MockQueryBuilder<T>>;
   ilike: jasmine.Spy<(column: string, pattern: string) => MockQueryBuilder<T>>;
-  is: jasmine.Spy<(column: string, value: any) => MockQueryBuilder<T>>;
+  is: jasmine.Spy<(column: string, value: unknown) => MockQueryBuilder<T>>;
   in: jasmine.Spy<(column: string, values: any[]) => MockQueryBuilder<T>>;
-  contains: jasmine.Spy<(column: string, value: any) => MockQueryBuilder<T>>;
+  contains: jasmine.Spy<(column: string, value: unknown) => MockQueryBuilder<T>>;
 
   // Ordenamiento y limitación
   order: jasmine.Spy<(column: string, options?: { ascending?: boolean }) => MockQueryBuilder<T>>;
@@ -93,7 +93,7 @@ export interface MockQueryBuilder<T = any> {
   // Propiedad especial para permitir await directo
   then: (
     onFulfilled: (value: MockSupabaseResponse<T[] | T>) => any,
-    onRejected?: (reason: any) => any
+    onRejected?: (reason: unknown) => any
   ) => Promise<any>;
 }
 
@@ -183,7 +183,7 @@ export interface MockFunctionResponse<T = any> {
 export interface MockFunctions {
   invoke: jasmine.Spy<(
     functionName: string,
-    options?: { body?: any; headers?: Record<string, string> }
+    options?: { body?: unknown; headers?: Record<string, string> }
   ) => Promise<MockFunctionResponse>>;
 }
 
@@ -261,7 +261,7 @@ export function createMockQueryBuilder<T = any>(
   builder.maybeSingle = jasmine.createSpy('maybeSingle').and.resolveTo({ data: defaultData, error: null });
 
   // Soporte para await directo
-  builder.then = (onFulfilled: any) => {
+  builder.then = (onFulfilled: unknown) => {
     return Promise.resolve({ data: defaultData, error: null }).then(onFulfilled);
   };
 
@@ -366,7 +366,7 @@ export function createMockAuth(mockUser: MockUser | null = null): MockAuth {
  * ```
  */
 export function createMockSupabaseClient(options?: {
-  defaultData?: any;
+  defaultData?: unknown;
   user?: MockUser | null;
 }): MockSupabaseClient {
   const mockBucket = createMockStorageBucket();

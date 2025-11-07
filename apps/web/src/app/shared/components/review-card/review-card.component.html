@@ -1,5 +1,5 @@
 <div
-  class="review-card bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
+  class="review-card bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
 >
   <!-- Header with user info and rating -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
@@ -44,7 +44,7 @@
         >
           {{ review.reviewer_name || 'Usuario' }}
         </a>
-        <p class="text-sm text-gray-500 flex items-center gap-1">
+        <p class="text-sm text-gray-500 dark:text-gray-300 flex items-center gap-1">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -55,14 +55,14 @@
           </svg>
           {{ getTimeSince(review.created_at) }}
         </p>
-        <p *ngIf="showCarTitle && review.car_title" class="text-xs text-gray-400 mt-1">
+        <p *ngIf="showCarTitle && review.car_title" class="text-xs text-gray-400 dark:text-gray-300 mt-1">
           {{ review.car_title }}
         </p>
       </div>
     </div>
 
     <!-- Overall rating -->
-    <div class="flex items-center space-x-2 bg-gray-50 rounded-lg px-3 py-2">
+    <div class="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
       <span class="text-2xl font-bold text-gray-900">{{ getOverallRating() }}</span>
       <div class="flex items-center">
         @for (star of getRatingStars(getOverallRating()); track $index) {
@@ -84,15 +84,15 @@
   </div>
 
   <!-- Public comment -->
-  <div *ngIf="review.comment_public" class="mb-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+  <div *ngIf="review.comment_public" class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-l-4 border-blue-500">
     <p class="text-gray-700 leading-relaxed">{{ review.comment_public }}</p>
   </div>
 
   <!-- Category ratings -->
-  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-gray-50 rounded-lg">
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
     <div class="category-rating" *ngIf="review.rating_cleanliness">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600">Limpieza</span>
+        <span class="text-gray-600 dark:text-gray-300">Limpieza</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_cleanliness)"
@@ -112,7 +112,7 @@
 
     <div class="category-rating" *ngIf="review.rating_communication">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600">Comunicación</span>
+        <span class="text-gray-600 dark:text-gray-300">Comunicación</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_communication)"
@@ -132,7 +132,7 @@
 
     <div class="category-rating" *ngIf="review.rating_accuracy">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600">Precisión</span>
+        <span class="text-gray-600 dark:text-gray-300">Precisión</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_accuracy)"
@@ -152,7 +152,7 @@
 
     <div class="category-rating" *ngIf="review.rating_location">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600">Ubicación</span>
+        <span class="text-gray-600 dark:text-gray-300">Ubicación</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_location)"
@@ -172,7 +172,7 @@
 
     <div class="category-rating" *ngIf="review.rating_checkin">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600">Check-in</span>
+        <span class="text-gray-600 dark:text-gray-300">Check-in</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_checkin)"
@@ -192,7 +192,7 @@
 
     <div class="category-rating" *ngIf="review.rating_value">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600">Valor</span>
+        <span class="text-gray-600 dark:text-gray-300">Valor</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_value)"
@@ -215,7 +215,7 @@
   <div *ngIf="canFlag" class="border-t border-gray-100 pt-3">
     <button
       (click)="onFlagReview()"
-      class="text-sm text-gray-500 hover:text-red-600 transition-colors flex items-center space-x-1"
+      class="text-sm text-gray-500 dark:text-gray-300 hover:text-red-600 transition-colors flex items-center space-x-1"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path

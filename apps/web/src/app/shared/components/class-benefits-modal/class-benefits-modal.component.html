@@ -57,17 +57,17 @@
                   <span class="text-white text-lg font-bold">{{ benefits.current_class }}</span>
                 </div>
                 <div>
-                  <p class="text-xs text-gray-600">Clase Actual</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-300">Clase Actual</p>
                   <p class="text-sm font-medium text-gray-900">{{ benefits.current_class_description }}</p>
                 </div>
               </div>
               <div class="mt-3 space-y-1">
                 <div class="flex justify-between text-xs">
-                  <span class="text-gray-600">Tarifa:</span>
+                  <span class="text-gray-600 dark:text-gray-300">Tarifa:</span>
                   <span class="font-medium">{{ getFeeDiscountLabel(benefits.current_fee_multiplier) }}</span>
                 </div>
                 <div class="flex justify-between text-xs">
-                  <span class="text-gray-600">Garantía:</span>
+                  <span class="text-gray-600 dark:text-gray-300">Garantía:</span>
                   <span class="font-medium">{{ getGuaranteeDiscountLabel(benefits.current_guarantee_multiplier) }}</span>
                 </div>
               </div>
@@ -81,17 +81,17 @@
                   <span class="text-white text-lg font-bold">{{ benefits.next_better_class }}</span>
                 </div>
                 <div>
-                  <p class="text-xs text-gray-600">Siguiente Clase</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-300">Siguiente Clase</p>
                   <p class="text-sm font-medium text-gray-900">{{ benefits.next_better_description }}</p>
                 </div>
               </div>
               <div class="mt-3 space-y-1">
                 <div class="flex justify-between text-xs">
-                  <span class="text-gray-600">Tarifa:</span>
+                  <span class="text-gray-600 dark:text-gray-300">Tarifa:</span>
                   <span class="font-medium text-green-600">{{ getFeeDiscountLabel(benefits.next_better_fee_multiplier) }}</span>
                 </div>
                 <div class="flex justify-between text-xs">
-                  <span class="text-gray-600">Garantía:</span>
+                  <span class="text-gray-600 dark:text-gray-300">Garantía:</span>
                   <span class="font-medium text-green-600">{{ getGuaranteeDiscountLabel(benefits.next_better_guarantee_multiplier) }}</span>
                 </div>
               </div>
@@ -163,7 +163,7 @@
             <p class="text-lg font-bold text-green-600">
               {{ getSavingsExample(benefits.next_better_fee_multiplier, benefits.next_better_guarantee_multiplier) }}
             </p>
-            <p class="text-xs text-gray-600 mt-1">
+            <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">
               Basado en reserva promedio de $50/día con garantía de $200
             </p>
           </div>
@@ -246,7 +246,7 @@
 
         <!-- Info Footer -->
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <p class="text-xs text-gray-600">
+          <p class="text-xs text-gray-600 dark:text-gray-300">
             <strong>ℹ️ Nota:</strong> Los ajustes de tarifa y garantía se aplican automáticamente en cada reserva.
             Tu clase se actualiza automáticamente después de cada reserva completada.
           </p>

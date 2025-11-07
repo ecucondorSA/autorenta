@@ -74,18 +74,18 @@ export class PaymentAuthorizationService {
               }),
             );
           }),
-          map((mpResponse: any) => {
-            if (mpResponse.data.status === 'rejected') {
-              throw new Error(this.getErrorMessage(mpResponse.data.status_detail));
+          map((mpResponse: unknown) => {
+            if ((mpResponse as any).data.status === 'rejected') {
+              throw new Error(this.getErrorMessage((mpResponse as any).data.status_detail));
             }
-            if (!mpResponse.data.success) {
-              throw new Error(mpResponse.data.error || 'Authorization failed');
+            if (!(mpResponse as any).data.success) {
+              throw new Error((mpResponse as any).data.error || 'Authorization failed');
             }
             return {
               ok: true,
               authorizedPaymentId: data.intent_id,
-              expiresAt: mpResponse.data.expires_at
-                ? new Date(mpResponse.data.expires_at)
+              expiresAt: (mpResponse as any).data.expires_at
+                ? new Date((mpResponse as any).data.expires_at)
                 : undefined,
             };
           }),
@@ -133,20 +133,20 @@ export class PaymentAuthorizationService {
 
   private invokeFunction(
     functionName: string,
-    body: any,
+    body: unknown,
   ): Observable<{ ok: boolean; error?: string }> {
     return from(this.authService.ensureSession()).pipe(
       switchMap((session) => {
         if (!session?.access_token) throw new Error('No session token');
         return from(
           this.supabase.functions.invoke(functionName, {
-            body,
+            body: (body as any),
             headers: { Authorization: `Bearer ${session.access_token}` },
           }),
         );
       }),
-      map((response: any) => {
-        if (!response.data.success) throw new Error(response.data.error || 'Function call failed');
+      map((response: unknown) => {
+        if (!(response as any).data.success) throw new Error((response as any).data.error || 'Function call failed');
         return { ok: true };
       }),
       catchError((error) => of({ ok: false, error: error.message || 'Error desconocido' })),

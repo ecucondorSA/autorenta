@@ -101,7 +101,7 @@ export class PaymentOrchestrationService {
    * and coordinates all necessary services.
    */
   processBookingPayment(params: BookingPaymentParams): Observable<PaymentResult> {
-    this.logger.info('Processing booking payment', { params });
+    this.logger.info('Processing booking payment', JSON.stringify({ params }));
 
     switch (params.method) {
       case 'wallet':
@@ -253,8 +253,8 @@ export class PaymentOrchestrationService {
    * This method processes IPN notifications from payment providers
    * like MercadoPago and updates the booking status accordingly.
    */
-  async handlePaymentWebhook(payload: any): Promise<void> {
-    this.logger.info('Processing payment webhook', { payload });
+  async handlePaymentWebhook(payload: unknown): Promise<void> {
+    this.logger.info('Processing payment webhook', JSON.stringify({ payload }));
 
     try {
       // Validate webhook signature (implement based on provider)
@@ -263,7 +263,7 @@ export class PaymentOrchestrationService {
       //   throw new Error('Invalid webhook signature');
       // }
 
-      const { booking_id, status, payment_id } = payload;
+      const { booking_id, status, payment_id } = payload as any;
 
       if (!booking_id) {
         throw new Error('Missing booking_id in webhook payload');
@@ -293,9 +293,9 @@ export class PaymentOrchestrationService {
           .subscribe();
       }
 
-      this.logger.info('Webhook processed successfully', { booking_id, status });
+      this.logger.info('Webhook processed successfully', JSON.stringify({ booking_id, status }));
     } catch (error) {
-      this.logger.error('Webhook processing failed', error);
+      this.logger.error('Webhook processing failed', String(error));
       throw error;
     }
   }
@@ -304,7 +304,7 @@ export class PaymentOrchestrationService {
    * Process refund for cancelled booking
    */
   processRefund(params: RefundParams): Observable<RefundResult> {
-    this.logger.info('Processing refund', { params });
+    this.logger.info('Processing refund', JSON.stringify({ params }));
 
     return from(this.bookingsService.getBookingById(params.bookingId)).pipe(
       switchMap((booking) => {
@@ -351,7 +351,7 @@ export class PaymentOrchestrationService {
   /**
    * Calculate refund amount based on cancellation policy
    */
-  private calculateRefundAmount(booking: any, params: RefundParams): number {
+  private calculateRefundAmount(booking: unknown, params: RefundParams): number {
     if (params.refundType === 'full') {
       return params.amount;
     }

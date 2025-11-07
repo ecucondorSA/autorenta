@@ -112,8 +112,8 @@ export class RiskCalculatorService {
           driverClass = profile.class;
           guaranteeDiscountPct = Math.round((1.0 - guaranteeMultiplier) * 100);
         }
-      } catch (error) {
-        console.warn('[RiskCalculatorService] Error al obtener perfil de conductor:', error);
+      } catch (err) {
+        console.warn('[RiskCalculatorService] Error al obtener perfil de conductor:', err);
         // Continuar con multiplicador 1.0 (sin ajuste)
       }
     }

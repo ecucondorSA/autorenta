@@ -40,6 +40,7 @@ export class DateRangePickerComponent {
   @Input() showPrices = true; // Mostrar precios en los presets
   @Input() carId: string | null = null; // ID del auto para validar disponibilidad
   @Input() availabilityChecker: ((carId: string, from: string, to: string) => Promise<boolean>) | null = null;
+  @Input() nextAvailableRangeProvider: ((carId: string, from: string, to: string) => Promise<DateRange | null>) | null = null;
   @Input() blockedDates: string[] = []; // Fechas bloqueadas para el calendario inline
   @Output() readonly rangeChange = new EventEmitter<DateRange>();
   @Output() readonly availabilityChange = new EventEmitter<boolean>();
@@ -49,6 +50,7 @@ export class DateRangePickerComponent {
   readonly isCheckingAvailability = signal(false);
   readonly isAvailable = signal<boolean | null>(null);
   readonly availabilityError = signal(false); // Para animación shake
+  readonly availabilityHint = signal<string | null>(null);
   readonly isCalendarModalOpen = signal(false);
 
   readonly presets: DatePreset[] = [
@@ -125,6 +127,7 @@ export class DateRangePickerComponent {
 
     // Emitir cambio de rango inmediatamente
     this.rangeChange.emit({ from, to });
+    this.availabilityHint.set(null);
 
     // Track: date range selected
     if (from && to) {
@@ -156,37 +159,113 @@ export class DateRangePickerComponent {
 
     try {
       const available = await this.availabilityChecker(this.carId, from, to);
-      this.isAvailable.set(available);
-      this.availabilityChange.emit(available);
+      if (available) {
+        this.isAvailable.set(true);
+        this.availabilityHint.set(null);
+        this.availabilityChange.emit(true);
+        // Track: availability checked
+        this.analytics.trackEvent('date_availability_checked', {
+          car_id: this.carId,
+          is_available: true,
+          days_count: Math.ceil(
+            (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24),
+          ),
+        });
+        return;
+      }
+
+      // Intentar recuperar sugiriendo próxima ventana disponible
+      const suggestion = await this.trySuggestNextRange(from, to);
+      if (suggestion) {
+        this.isAvailable.set(true);
+        this.availabilityChange.emit(true);
+        return;
+      }
+
+      this.isAvailable.set(false);
+      this.availabilityHint.set(null);
+      this.availabilityChange.emit(false);
 
       // Track: availability checked
       this.analytics.trackEvent('date_availability_checked', {
         car_id: this.carId,
-        is_available: available,
+        is_available: false,
         days_count: Math.ceil(
           (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24),
         ),
       });
 
       // Activar animación shake si no está disponible
-      if (!available) {
-        // Track: unavailable error
-        this.analytics.trackEvent('date_unavailable_error', {
-          car_id: this.carId,
-          from_date: from,
-          to_date: to,
-        });
+      // Track: unavailable error
+      this.analytics.trackEvent('date_unavailable_error', {
+        car_id: this.carId,
+        from_date: from,
+        to_date: to,
+      });
 
-        this.availabilityError.set(true);
-        // Desactivar shake después de la animación
-        setTimeout(() => this.availabilityError.set(false), 600);
-      }
-    } catch (error) {
-      console.error('Error checking availability:', error);
+      this.availabilityError.set(true);
+      // Desactivar shake después de la animación
+      setTimeout(() => this.availabilityError.set(false), 600);
+    } catch (_error) {
+      console.error('Error checking availability:', _error);
       this.isAvailable.set(null);
     } finally {
       this.isCheckingAvailability.set(false);
     }
+  }
+
+  private async trySuggestNextRange(from: string, to: string): Promise<DateRange | null> {
+    if (!this.nextAvailableRangeProvider || !this.carId) {
+      return null;
+    }
+
+    try {
+      const suggestion = await this.nextAvailableRangeProvider(this.carId, from, to);
+      if (!suggestion?.from || !suggestion?.to) {
+        return null;
+      }
+
+      const normalizedFrom = this.normalizeDate(suggestion.from);
+      const normalizedTo = this.normalizeDate(suggestion.to);
+
+      // Actualizar fechas y emitir nuevo rango
+      this.from.set(normalizedFrom);
+      this.to.set(normalizedTo);
+      this.rangeChange.emit({ from: normalizedFrom, to: normalizedTo });
+
+      const hint = `Actualizamos tus fechas a la próxima ventana libre: ${this.formatDateForHint(
+        normalizedFrom,
+      )} → ${this.formatDateForHint(normalizedTo)}`;
+      this.availabilityHint.set(hint);
+
+      this.analytics.trackEvent('date_autosuggest_applied', {
+        car_id: this.carId,
+        original_from: from,
+        original_to: to,
+        suggested_from: normalizedFrom,
+        suggested_to: normalizedTo,
+      });
+
+      return { from: normalizedFrom, to: normalizedTo };
+    } catch (_error) {
+      console.warn('No se pudo sugerir nueva ventana disponible:', _error);
+      return null;
+    }
+  }
+
+  private normalizeDate(value: string): string {
+    const parsed = new Date(value);
+    return isNaN(parsed.getTime()) ? value : parsed.toISOString().split('T')[0];
+  }
+
+  private formatDateForHint(value: string): string {
+    const parsed = new Date(value);
+    if (isNaN(parsed.getTime())) return value;
+    return new Intl.DateTimeFormat('es-AR', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+    }).format(parsed);
   }
 
   /**

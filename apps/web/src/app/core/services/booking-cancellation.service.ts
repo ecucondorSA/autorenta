@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Booking } from '../models';
 import { environment } from '../../../environments/environment';
+import { getErrorMessage } from '../utils/type-guards';
 import { injectSupabase } from './supabase-client.service';
 import { BookingWalletService } from './booking-wallet.service';
 import { BookingValidationService } from './booking-validation.service';
@@ -165,7 +166,7 @@ export class BookingCancellationService {
 
       if (!refundResponse.ok) {
         const errorData = await refundResponse.json().catch(() => ({}));
-        this.logger.error('Error processing refund', new Error(JSON.stringify(errorData)));
+        this.logger.error('Error processing refund', 'BookingCancellationService', new Error(JSON.stringify(errorData)));
       } else {
         const refundData = await refundResponse.json();
         this.logger.info('Refund processed successfully', refundData);
@@ -173,7 +174,8 @@ export class BookingCancellationService {
     } catch (refundError) {
       this.logger.error(
         'Error calling refund API',
-        refundError instanceof Error ? refundError : new Error(String(refundError)),
+        'BookingCancellationService',
+        refundError instanceof Error ? refundError : new Error(getErrorMessage(refundError)),
       );
     }
   }

@@ -33,7 +33,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
           <div class="text-2xl font-bold text-accent-petrol">
             {{ quote()?.hourlyRate ? (quote()!.hourlyRate | currency:'ARS':'symbol':'1.0-0') : '...' }}
           </div>
-          <div class="text-xs text-charcoal-medium">/hora</div>
+          <div class="text-xs text-charcoal-medium dark:text-pearl-light">/hora</div>
         </div>
       </div>
 
@@ -93,7 +93,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
       </div>
 
       <!-- Loading state -->
-      <div *ngIf="loading()" class="flex items-center gap-2 text-sm text-charcoal-medium">
+      <div *ngIf="loading()" class="flex items-center gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
         <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
           <circle
             class="opacity-25"
@@ -165,8 +165,8 @@ export class UrgentRentalBannerComponent implements OnInit, OnDestroy {
     try {
       const avail = await this.urgentRentalService.checkImmediateAvailability(this.carId);
       this.availability.set(avail);
-    } catch (error) {
-      console.error('Error checking availability:', error);
+    } catch (_error) {
+      console.error('Error checking availability:', _error);
       this.availability.set({
         available: false,
         reason: 'Error al verificar disponibilidad',
@@ -180,8 +180,8 @@ export class UrgentRentalBannerComponent implements OnInit, OnDestroy {
     try {
       const quote = await this.urgentRentalService.getUrgentQuote(this.carId, this.regionId, 1);
       this.quote.set(quote);
-    } catch (error) {
-      console.error('Error loading quote:', error);
+    } catch (_error) {
+      console.error('Error loading quote:', _error);
     }
   }
 

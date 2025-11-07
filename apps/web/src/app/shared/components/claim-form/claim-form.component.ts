@@ -232,9 +232,9 @@ export class ClaimFormComponent implements OnInit {
 
       // Cerrar modal y retornar claim
       this.closeModal(claim);
-    } catch (error) {
+    } catch (_error) {
       this.error.set(
-        error instanceof Error ? error.message : 'Error al crear claim. Intente nuevamente.',
+        _error instanceof Error ? _error.message : 'Error al crear claim. Intente nuevamente.',
       );
     } finally {
       this.creating.set(false);
