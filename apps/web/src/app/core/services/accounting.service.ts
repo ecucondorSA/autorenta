@@ -1,16 +1,9 @@
 /**
  * Servicio de Contabilidad Automatizada
  * Integración con sistema contable basado en NIIF 15 y NIIF 37
- *
- * @version 2.0 - Migrado a Angular 17 con Signals
  */
 
-import { Injectable, signal, computed, inject } from '@angular/core';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { from, Observable, throwError } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { SupabaseClientService } from './supabase-client.service';
-import { LoggerService } from './logger.service';
+import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
 export interface AccountingAccount {
   id: string;
@@ -33,23 +26,6 @@ export interface JournalEntry {
   total_credit: number;
   is_balanced: boolean;
   status: 'DRAFT' | 'POSTED' | 'VOIDED';
-}
-
-export interface LedgerEntry {
-  id: string;
-  entry_date: string;
-  account_code: string;
-  debit_amount: number;
-  credit_amount: number;
-  balance: number;
-  description: string;
-  transaction_type: string;
-  reference_id?: string;
-  accounting_accounts?: {
-    code: string;
-    name: string;
-    account_type: string;
-  };
 }
 
 export interface Provision {
@@ -111,145 +87,141 @@ export interface CommissionReport {
   avg_commission: number;
 }
 
-export interface PeriodClosure {
+export interface LedgerEntry {
   id: string;
-  period: string;
-  closure_type: 'DAILY' | 'MONTHLY';
-  total_income: number;
-  total_expenses: number;
-  net_profit: number;
-  closed_at: string;
-  closed_by: string;
+  entry_date: string;
+  account_code: string;
+  debit: number;
+  credit: number;
+  description: string;
+  reference_type?: string;
+  reference_id?: string;
+  user_id?: string;
+  batch_id?: string;
+  fiscal_period?: string;
+  is_closing_entry: boolean;
+  is_reversed: boolean;
+  created_by?: string;
+  created_at: string;
+  accounting_chart_of_accounts?: {
+    code: string;
+    name: string;
+    account_type: string;
+  };
 }
 
-export interface AuditLogEntry {
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface ProvisionDetail {
   id: string;
-  user_id: string;
-  action: string;
-  table_name: string;
-  record_id: string;
-  old_values?: Record<string, unknown>;
-  new_values?: Record<string, unknown>;
+  provision_type: string;
+  amount: number;
+  currency: string;
+  probability?: string;
+  measurement_basis?: string;
+  booking_id?: string;
+  user_id?: string;
+  status: string;
+  created_date: string;
+  review_date?: string;
+  utilization_date?: string;
+  notes?: string;
+}
+
+export interface PeriodClosure {
+  id: string;
+  period_type: string;
+  period_code: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  total_debits: number;
+  total_credits: number;
+  balance_check: boolean;
+  closing_entries_batch_id?: string;
+  closed_by?: string;
+  closed_at?: string;
+  notes?: string;
   created_at: string;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+export interface AuditLog {
+  id: string;
+  audit_type: string;
+  severity: string;
+  description: string;
+  affected_period?: string;
+  affected_account?: string;
+  expected_value?: number;
+  actual_value?: number;
+  variance?: number;
+  resolution_status: string;
+  resolved_by?: string;
+  resolved_at?: string;
+  created_at: string;
+}
+
+export interface RevenueRecognition {
+  id: string;
+  booking_id: string;
+  revenue_type: string;
+  gross_amount: number;
+  commission_amount: number;
+  owner_amount: number;
+  recognition_date: string;
+  performance_obligation_met: boolean;
+  is_recognized: boolean;
+  ledger_batch_id?: string;
+  created_at: string;
+}
+
 export class AccountingService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
-  private readonly logger = inject(LoggerService);
+  private supabase: SupabaseClient;
 
-  // Signals
-  readonly dashboard = signal<AccountingDashboard | null>(null);
-  readonly balanceSheet = signal<BalanceSheet[]>([]);
-  readonly incomeStatement = signal<IncomeStatement[]>([]);
-  readonly provisions = signal<Provision[]>([]);
-  readonly journalEntries = signal<JournalEntry[]>([]);
-  readonly ledgerEntries = signal<LedgerEntry[]>([]);
-  readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
-
-  // Computed values
-  readonly totalAssets = computed(() =>
-    this.balanceSheet()
-      .filter((a) => a.account_type === 'ASSET')
-      .reduce((sum, a) => sum + a.balance, 0)
-  );
-
-  readonly totalLiabilities = computed(() =>
-    this.balanceSheet()
-      .filter((a) => a.account_type === 'LIABILITY')
-      .reduce((sum, a) => sum + a.balance, 0)
-  );
-
-  readonly totalEquity = computed(() =>
-    this.balanceSheet()
-      .filter((a) => a.account_type === 'EQUITY')
-      .reduce((sum, a) => sum + a.balance, 0)
-  );
-
-  readonly totalIncome = computed(() =>
-    this.incomeStatement()
-      .filter((i) => i.account_type === 'INCOME')
-      .reduce((sum, i) => sum + i.amount, 0)
-  );
-
-  readonly totalExpenses = computed(() =>
-    this.incomeStatement()
-      .filter((i) => i.account_type === 'EXPENSE')
-      .reduce((sum, i) => sum + i.amount, 0)
-  );
-
-  readonly netProfit = computed(() => this.totalIncome() - this.totalExpenses());
-
-  readonly activeProvisions = computed(() =>
-    this.provisions().filter((p) => p.status === 'ACTIVE')
-  );
-
-  private handleError(error: unknown, context: string): void {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    this.logger.error(
-      `AccountingService: ${context}`,
-      'AccountingService',
-      error instanceof Error ? error : new Error(errorMessage)
-    );
-    this.error.set(errorMessage);
+  constructor(supabaseUrl: string, supabaseKey: string) {
+    this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
   /**
    * Obtener dashboard ejecutivo con KPIs financieros
    */
-  getDashboard(): Observable<AccountingDashboard | null> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getDashboard(): Promise<AccountingDashboard | null> {
+    const { data, error } = await this.supabase.from('accounting_dashboard').select('*').single();
 
-    return from(this.supabase.from('accounting_dashboard').select('*').single()).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        this.dashboard.set(data);
-        return data;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener dashboard');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    if (error) {
+      return null;
+    }
+
+    return data;
   }
 
   /**
    * Obtener Balance General (Estado de Situación Financiera)
    */
-  getBalanceSheet(): Observable<BalanceSheet[]> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getBalanceSheet(): Promise<BalanceSheet[]> {
+    const { data, error } = await this.supabase
+      .from('accounting_balance_sheet')
+      .select('*')
+      .order('code');
 
-    return from(
-      this.supabase.from('accounting_balance_sheet').select('*').order('code')
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        const balances = (data || []) as BalanceSheet[];
-        this.balanceSheet.set(balances);
-        return balances;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener Balance General');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    if (error) {
+      return [];
+    }
+
+    return data || [];
   }
 
   /**
    * Obtener Estado de Resultados (P&L)
    * @param period - Período en formato YYYY-MM (ej: '2025-10')
    */
-  getIncomeStatement(period?: string): Observable<IncomeStatement[]> {
-    this.loading.set(true);
-    this.error.set(null);
-
+  async getIncomeStatement(period?: string): Promise<IncomeStatement[]> {
     let query = this.supabase
       .from('accounting_income_statement')
       .select('*')
@@ -260,164 +232,102 @@ export class AccountingService {
       query = query.eq('period', period);
     }
 
-    return from(query).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        const statements = (data || []) as IncomeStatement[];
-        this.incomeStatement.set(statements);
-        return statements;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener Estado de Resultados');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    const { data, error } = await query;
+
+    if (error) {
+      return [];
+    }
+
+    return data || [];
   }
 
   /**
    * Obtener provisiones activas (FGO, depósitos de garantía)
    */
-  getActiveProvisions(): Observable<Provision[]> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getActiveProvisions(): Promise<Provision[]> {
+    const { data, error } = await this.supabase
+      .from('accounting_provisions_report')
+      .select('*')
+      .eq('status', 'ACTIVE');
 
-    return from(
-      this.supabase
-        .from('accounting_provisions_report')
-        .select('*')
-        .eq('status', 'ACTIVE')
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        const provisions = (data || []) as Provision[];
-        this.provisions.set(provisions);
-        return provisions;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener provisiones');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
-  }
-
-  /**
-   * Obtener todas las provisiones (con filtros opcionales)
-   */
-  getAllProvisions(status?: string): Observable<Provision[]> {
-    this.loading.set(true);
-    this.error.set(null);
-
-    let query = this.supabase.from('accounting_provisions_report').select('*');
-
-    if (status) {
-      query = query.eq('status', status);
+    if (error) {
+      return [];
     }
 
-    return from(query).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        const provisions = (data || []) as Provision[];
-        this.provisions.set(provisions);
-        return provisions;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener provisiones');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    return data || [];
   }
 
   /**
    * Obtener conciliación wallet vs contabilidad
    */
-  getWalletReconciliation(): Observable<WalletReconciliation[]> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getWalletReconciliation(): Promise<WalletReconciliation[]> {
+    const { data, error } = await this.supabase
+      .from('accounting_wallet_reconciliation')
+      .select('*');
 
-    return from(this.supabase.from('accounting_wallet_reconciliation').select('*')).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        return (data || []) as WalletReconciliation[];
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener conciliación wallet');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    if (error) {
+      return [];
+    }
+
+    return data || [];
   }
 
   /**
    * Obtener reporte de comisiones por período
    */
-  getCommissionsReport(limit: number = 12): Observable<CommissionReport[]> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getCommissionsReport(): Promise<CommissionReport[]> {
+    const { data, error } = await this.supabase
+      .from('accounting_commissions_report')
+      .select('*')
+      .order('period', { ascending: false })
+      .limit(12); // Últimos 12 meses
 
-    return from(
-      this.supabase
-        .from('accounting_commissions_report')
-        .select('*')
-        .order('period', { ascending: false })
-        .limit(limit)
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        return (data || []) as CommissionReport[];
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener reporte de comisiones');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    if (error) {
+      return [];
+    }
+
+    return data || [];
   }
 
   /**
    * Obtener plan de cuentas
    */
-  getChartOfAccounts(): Observable<AccountingAccount[]> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getChartOfAccounts(): Promise<AccountingAccount[]> {
+    const { data, error } = await this.supabase
+      .from('accounting_chart_of_accounts')
+      .select('*')
+      .eq('is_active', true)
+      .order('code');
 
-    return from(
-      this.supabase
-        .from('accounting_accounts')
-        .select('*')
-        .eq('is_active', true)
-        .order('code')
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        return (data || []) as AccountingAccount[];
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener plan de cuentas');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    if (error) {
+      return [];
+    }
+
+    return data || [];
   }
 
   /**
-   * Obtener asientos del libro diario (journal entries)
+   * Obtener libro mayor (ledger) con filtros opcionales
    */
-  getJournalEntries(filters?: {
+  async getLedger(filters?: {
     startDate?: string;
     endDate?: string;
+    accountCode?: string;
     transactionType?: string;
-    status?: 'DRAFT' | 'POSTED' | 'VOIDED';
     limit?: number;
-  }): Observable<JournalEntry[]> {
-    this.loading.set(true);
-    this.error.set(null);
-
+  }): Promise<unknown[]> {
     let query = this.supabase
-      .from('accounting_journal_entries')
-      .select('*')
+      .from('accounting_ledger')
+      .select(
+        `
+        *,
+        accounting_accounts (
+          code,
+          name,
+          account_type
+        )
+      `,
+      )
       .order('entry_date', { ascending: false });
 
     if (filters?.startDate) {
@@ -432,56 +342,137 @@ export class AccountingService {
       query = query.eq('transaction_type', filters.transactionType);
     }
 
-    if (filters?.status) {
-      query = query.eq('status', filters.status);
-    }
-
     if (filters?.limit) {
       query = query.limit(filters.limit);
     }
 
-    return from(query).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        const entries = (data || []) as JournalEntry[];
-        this.journalEntries.set(entries);
-        return entries;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener asientos del diario');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    const { data, error } = await query;
+
+    if (error) {
+      return [];
+    }
+
+    return data || [];
   }
 
   /**
-   * Obtener libro mayor (ledger) con filtros opcionales
+   * Obtener flujo de caja
    */
-  getLedger(filters?: {
-    startDate?: string;
-    endDate?: string;
-    accountCode?: string;
-    transactionType?: string;
-    limit?: number;
-  }): Observable<LedgerEntry[]> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getCashFlow(limit: number = 100): Promise<unknown[]> {
+    const { data, error } = await this.supabase
+      .from('accounting_cash_flow')
+      .select('*')
+      .limit(limit);
 
+    if (error) {
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Refrescar balances (materializar vista)
+   */
+  async refreshBalances(): Promise<boolean> {
+    const { error } = await this.supabase.rpc('refresh_accounting_balances');
+
+    if (error) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Crear asiento contable manual (para ajustes)
+   */
+  async createManualJournalEntry(
+    transactionType: string,
+    description: string,
+    entries: Array<{
+      account_code: string;
+      debit?: number;
+      credit?: number;
+      description?: string;
+    }>,
+  ): Promise<string | null> {
+    const { data, error } = await this.supabase.rpc('create_journal_entry', {
+      p_transaction_type: transactionType,
+      p_reference_id: null,
+      p_reference_table: 'manual_entry',
+      p_description: description,
+      p_entries: entries,
+    });
+
+    if (error) {
+      return null;
+    }
+
+    return data;
+  }
+
+  /**
+   * Obtener resumen financiero para un período
+   */
+  async getFinancialSummary(period: string): Promise<{
+    income: number;
+    expenses: number;
+    profit: number;
+    profitMargin: number;
+  }> {
+    const incomeStatement = await this.getIncomeStatement(period);
+
+    const income = incomeStatement
+      .filter((item) => item.account_type === 'INCOME')
+      .reduce((sum, item) => sum + item.amount, 0);
+
+    const expenses = incomeStatement
+      .filter((item) => item.account_type === 'EXPENSE')
+      .reduce((sum, item) => sum + item.amount, 0);
+
+    const profit = income - expenses;
+    const profitMargin = income > 0 ? (profit / income) * 100 : 0;
+
+    return {
+      income,
+      expenses,
+      profit,
+      profitMargin,
+    };
+  }
+
+  /**
+   * Obtener libro mayor con paginación
+   */
+  async getLedgerPaginated(
+    page: number = 1,
+    pageSize: number = 50,
+    filters?: {
+      startDate?: string;
+      endDate?: string;
+      accountCode?: string;
+      referenceType?: string;
+      searchTerm?: string;
+    },
+  ): Promise<PaginatedResult<LedgerEntry>> {
     let query = this.supabase
       .from('accounting_ledger')
       .select(
         `
         *,
-        accounting_accounts (
+        accounting_chart_of_accounts!accounting_ledger_account_code_fkey (
           code,
           name,
           account_type
         )
-      `
+      `,
+        { count: 'exact' },
       )
-      .order('entry_date', { ascending: false });
+      .order('entry_date', { ascending: false })
+      .order('created_at', { ascending: false });
 
+    // Apply filters
     if (filters?.startDate) {
       query = query.gte('entry_date', filters.startDate);
     }
@@ -494,72 +485,142 @@ export class AccountingService {
       query = query.eq('account_code', filters.accountCode);
     }
 
-    if (filters?.transactionType) {
-      query = query.eq('transaction_type', filters.transactionType);
+    if (filters?.referenceType) {
+      query = query.eq('reference_type', filters.referenceType);
     }
 
-    if (filters?.limit) {
-      query = query.limit(filters.limit);
+    if (filters?.searchTerm) {
+      query = query.ilike('description', `%${filters.searchTerm}%`);
     }
 
-    return from(query).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        const entries = (data || []) as LedgerEntry[];
-        this.ledgerEntries.set(entries);
-        return entries;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener libro mayor');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    // Apply pagination
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+    query = query.range(from, to);
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      return {
+        data: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      };
+    }
+
+    const total = count || 0;
+    const totalPages = Math.ceil(total / pageSize);
+
+    return {
+      data: (data as LedgerEntry[]) || [],
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
   }
 
   /**
-   * Obtener cierres de período
+   * Obtener provisiones con filtros
    */
-  getPeriodClosures(limit: number = 12): Observable<PeriodClosure[]> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getProvisions(filters?: {
+    status?: string;
+    provisionType?: string;
+  }): Promise<ProvisionDetail[]> {
+    let query = this.supabase
+      .from('accounting_provisions')
+      .select('*')
+      .order('created_date', { ascending: false });
 
-    return from(
-      this.supabase
-        .from('accounting_period_closures')
-        .select('*')
-        .order('period', { ascending: false })
-        .limit(limit)
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        return (data || []) as PeriodClosure[];
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener cierres de período');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    if (filters?.status) {
+      query = query.eq('status', filters.status);
+    }
+
+    if (filters?.provisionType) {
+      query = query.eq('provision_type', filters.provisionType);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      return [];
+    }
+
+    return (data as ProvisionDetail[]) || [];
   }
 
   /**
-   * Obtener log de auditoría
+   * Obtener cierres de período con filtros
    */
-  getAuditLog(filters?: {
+  async getPeriodClosures(filters?: {
+    periodType?: string;
+    status?: string;
     startDate?: string;
     endDate?: string;
-    userId?: string;
-    tableName?: string;
-    limit?: number;
-  }): Observable<AuditLogEntry[]> {
-    this.loading.set(true);
-    this.error.set(null);
+  }): Promise<PeriodClosure[]> {
+    let query = this.supabase
+      .from('accounting_period_closures')
+      .select('*')
+      .order('end_date', { ascending: false });
 
+    if (filters?.periodType) {
+      query = query.eq('period_type', filters.periodType);
+    }
+
+    if (filters?.status) {
+      query = query.eq('status', filters.status);
+    }
+
+    if (filters?.startDate) {
+      query = query.gte('start_date', filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      query = query.lte('end_date', filters.endDate);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      return [];
+    }
+
+    return (data as PeriodClosure[]) || [];
+  }
+
+  /**
+   * Obtener logs de auditoría con filtros
+   */
+  async getAuditLogs(
+    page: number = 1,
+    pageSize: number = 50,
+    filters?: {
+      severity?: string;
+      auditType?: string;
+      resolutionStatus?: string;
+      startDate?: string;
+      endDate?: string;
+    },
+  ): Promise<PaginatedResult<AuditLog>> {
     let query = this.supabase
       .from('accounting_audit_log')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false });
+
+    // Apply filters
+    if (filters?.severity) {
+      query = query.eq('severity', filters.severity);
+    }
+
+    if (filters?.auditType) {
+      query = query.eq('audit_type', filters.auditType);
+    }
+
+    if (filters?.resolutionStatus) {
+      query = query.eq('resolution_status', filters.resolutionStatus);
+    }
 
     if (filters?.startDate) {
       query = query.gte('created_at', filters.startDate);
@@ -569,166 +630,167 @@ export class AccountingService {
       query = query.lte('created_at', filters.endDate);
     }
 
-    if (filters?.userId) {
-      query = query.eq('user_id', filters.userId);
+    // Apply pagination
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+    query = query.range(from, to);
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      return {
+        data: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      };
     }
 
-    if (filters?.tableName) {
-      query = query.eq('table_name', filters.tableName);
-    }
+    const total = count || 0;
+    const totalPages = Math.ceil(total / pageSize);
 
-    if (filters?.limit) {
-      query = query.limit(filters.limit);
-    }
-
-    return from(query).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        return (data || []) as AuditLogEntry[];
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al obtener log de auditoría');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    return {
+      data: (data as AuditLog[]) || [],
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
   }
 
   /**
-   * Refrescar balances (materializar vista)
+   * Obtener reconocimiento de ingresos por booking
    */
-  refreshBalances(): Observable<void> {
-    this.loading.set(true);
-    this.error.set(null);
+  async getRevenueRecognition(filters?: {
+    bookingId?: string;
+    isRecognized?: boolean;
+    startDate?: string;
+    endDate?: string;
+  }): Promise<RevenueRecognition[]> {
+    let query = this.supabase
+      .from('accounting_revenue_recognition')
+      .select('*')
+      .order('recognition_date', { ascending: false });
 
-    return from(this.supabase.rpc('refresh_accounting_balances')).pipe(
-      map(({ error }) => {
-        if (error) throw error;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al refrescar balances');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    if (filters?.bookingId) {
+      query = query.eq('booking_id', filters.bookingId);
+    }
+
+    if (filters?.isRecognized !== undefined) {
+      query = query.eq('is_recognized', filters.isRecognized);
+    }
+
+    if (filters?.startDate) {
+      query = query.gte('recognition_date', filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      query = query.lte('recognition_date', filters.endDate);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      return [];
+    }
+
+    return (data as RevenueRecognition[]) || [];
   }
 
   /**
-   * Ejecutar cierre de período mensual
+   * Ejecutar cierre de período
    */
-  executeMonthlyClosing(period: string): Observable<void> {
-    this.loading.set(true);
-    this.error.set(null);
+  async executePeriodClosure(
+    periodType: 'daily' | 'monthly' | 'yearly',
+    periodCode: string,
+  ): Promise<{ success: boolean; message: string; closureId?: string }> {
+    const { data, error } = await this.supabase.rpc('execute_period_closure', {
+      p_period_type: periodType,
+      p_period_code: periodCode,
+    });
 
-    return from(
-      this.supabase.rpc('accounting_monthly_closure', { p_period: period })
-    ).pipe(
-      map(({ error }) => {
-        if (error) throw error;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al ejecutar cierre mensual');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
-  }
+    if (error) {
+      return {
+        success: false,
+        message: error.message || 'Error al ejecutar cierre de período',
+      };
+    }
 
-  /**
-   * Crear asiento contable manual (para ajustes)
-   */
-  createManualJournalEntry(
-    transactionType: string,
-    description: string,
-    entries: Array<{
-      account_code: string;
-      debit?: number;
-      credit?: number;
-      description?: string;
-    }>
-  ): Observable<string> {
-    this.loading.set(true);
-    this.error.set(null);
-
-    return from(
-      this.supabase.rpc('create_journal_entry', {
-        p_transaction_type: transactionType,
-        p_reference_id: null,
-        p_reference_table: 'manual_entry',
-        p_description: description,
-        p_entries: entries,
-      })
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        return data as string;
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al crear asiento manual');
-        return throwError(() => error);
-      }),
-      tap(() => this.loading.set(false))
-    );
+    return {
+      success: true,
+      message: 'Cierre de período ejecutado exitosamente',
+      closureId: data,
+    };
   }
 
   /**
    * Verificar salud financiera
    */
-  checkFinancialHealth(): Observable<FinancialHealth> {
-    return this.getDashboard().pipe(
-      switchMap((dashboard) => {
-        if (!dashboard) {
-          return throwError(() => new Error('No se pudo obtener dashboard'));
-        }
+  async checkFinancialHealth(): Promise<FinancialHealth> {
+    const dashboard = await this.getDashboard();
+    const reconciliation = await this.getWalletReconciliation();
+    const alerts: string[] = [];
 
-        return this.getWalletReconciliation().pipe(
-          map((reconciliation) => {
-            const alerts: string[] = [];
+    if (!dashboard) {
+      return {
+        walletReconciled: false,
+        fgoAdequate: false,
+        profitability: 'CRITICAL',
+        alerts: ['No se pudo obtener dashboard financiero'],
+      };
+    }
 
-            // Verificar conciliación wallet
-            const walletDiff = reconciliation.find((r) => r.source.includes('Diferencia'));
-            const walletReconciled = walletDiff ? Math.abs(walletDiff.amount) < 0.01 : false;
+    // Verificar conciliación wallet
+    const walletDiff = reconciliation.find((r) => r.source.includes('Diferencia'));
+    const walletReconciled = walletDiff ? Math.abs(walletDiff.amount) < 0.01 : false;
 
-            if (!walletReconciled) {
-              alerts.push(
-                `Diferencia en conciliación wallet: $${walletDiff?.amount.toFixed(2)}`
-              );
-            }
+    if (!walletReconciled) {
+      alerts.push(`Diferencia en conciliación wallet: $${walletDiff?.amount.toFixed(2)}`);
+    }
 
-            // Verificar FGO adecuado (debe ser al menos 5% del total de pasivos activos)
-            const minFGO = dashboard.active_security_deposits * 0.05;
-            const fgoAdequate = dashboard.fgo_provision >= minFGO;
+    // Verificar FGO adecuado (debe ser al menos 5% del total de pasivos activos)
+    const minFGO = dashboard.active_security_deposits * 0.05;
+    const fgoAdequate = dashboard.fgo_provision >= minFGO;
 
-            if (!fgoAdequate) {
-              alerts.push(
-                `FGO insuficiente: $${dashboard.fgo_provision.toFixed(2)} (mínimo recomendado: $${minFGO.toFixed(2)})`
-              );
-            }
+    if (!fgoAdequate) {
+      alerts.push(
+        `FGO insuficiente: $${dashboard.fgo_provision.toFixed(2)} (mínimo recomendado: $${minFGO.toFixed(2)})`,
+      );
+    }
 
-            // Evaluar rentabilidad
-            let profitability: 'GOOD' | 'WARNING' | 'CRITICAL' = 'GOOD';
+    // Evaluar rentabilidad
+    let profitability: 'GOOD' | 'WARNING' | 'CRITICAL' = 'GOOD';
 
-            if (dashboard.monthly_profit < 0) {
-              profitability = 'CRITICAL';
-              alerts.push('Pérdidas en el mes actual');
-            } else if (dashboard.monthly_profit < dashboard.monthly_income * 0.05) {
-              profitability = 'WARNING';
-              alerts.push('Margen de utilidad bajo (<5%)');
-            }
+    if (dashboard.monthly_profit < 0) {
+      profitability = 'CRITICAL';
+      alerts.push('Pérdidas en el mes actual');
+    } else if (dashboard.monthly_profit < dashboard.monthly_income * 0.05) {
+      profitability = 'WARNING';
+      alerts.push('Margen de utilidad bajo (<5%)');
+    }
 
-            return {
-              walletReconciled,
-              fgoAdequate,
-              profitability,
-              alerts,
-            };
-          })
-        );
-      }),
-      catchError((error) => {
-        this.handleError(error, 'Error al verificar salud financiera');
-        return throwError(() => error);
-      })
-    );
+    return {
+      walletReconciled,
+      fgoAdequate,
+      profitability,
+      alerts,
+    };
   }
+}
+
+// Export singleton instance (opcional)
+let accountingServiceInstance: AccountingService | null = null;
+
+export function getAccountingService(
+  supabaseUrl?: string,
+  supabaseKey?: string,
+): AccountingService {
+  if (!accountingServiceInstance) {
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Supabase credentials required for first initialization');
+    }
+    accountingServiceInstance = new AccountingService(supabaseUrl, supabaseKey);
+  }
+  return accountingServiceInstance;
 }

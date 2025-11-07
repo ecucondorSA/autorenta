@@ -16,6 +16,8 @@ import { RenterConfirmationComponent } from '../../../shared/components/renter-c
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
 import { MetaService } from '../../../core/services/meta.service';
+import { InsuranceService } from '../../../core/services/insurance.service';
+import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insurance.model';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 
@@ -57,6 +59,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly metaService = inject(MetaService);
   private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly fgoService = inject(FgoV1_1Service);
+  private readonly insuranceService = inject(InsuranceService);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
@@ -109,6 +112,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   // FGO signals
   inspections = signal<BookingInspection[]>([]);
+
+  // Claims signals
+  bookingClaims = signal<InsuranceClaim[]>([]);
+  loadingClaims = signal(false);
 
   private countdownInterval: number | null = null;
 
@@ -166,8 +173,21 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   });
 
   readonly hasClaim = computed(() => {
-    // TODO: Implementar cuando se agregue tabla de claims en DB
-    return false;
+    return this.bookingClaims().length > 0;
+  });
+
+  readonly canReportClaim = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isRenter()) return false;
+    // Can report claim during in_progress or completed status
+    const validStatus = booking.status === 'in_progress' || booking.status === 'completed';
+    // Only allow if no claim already exists for this booking
+    return validStatus && !this.hasClaim();
+  });
+
+  readonly latestClaim = computed(() => {
+    const claims = this.bookingClaims();
+    return claims.length > 0 ? claims[0] : null;
   });
 
   // Computed properties para acciones de check-in/check-out
@@ -227,6 +247,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       // Load FGO inspections
       await this.loadInspections();
+
+      // Load claims for this booking
+      await this.loadClaims();
     } catch (_err) {
       this.error.set('Error al cargar la reserva');
     } finally {
@@ -284,6 +307,39 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     } catch (__error) {
       // Non-blocking error, inspections are optional
     }
+  }
+
+  private async loadClaims(): Promise<void> {
+    const booking = this.booking();
+    if (!booking) return;
+
+    try {
+      this.loadingClaims.set(true);
+      // Get all claims and filter by booking_id
+      const allClaims = await firstValueFrom(this.insuranceService.getMyClaims());
+      const bookingClaims = allClaims.filter((c) => c.booking_id === booking.id);
+      this.bookingClaims.set(bookingClaims);
+    } catch (__error) {
+      // Non-blocking error, claims are optional
+    } finally {
+      this.loadingClaims.set(false);
+    }
+  }
+
+  getClaimStatusLabel(status: InsuranceClaim['status']): string {
+    return CLAIM_STATUS_LABELS[status];
+  }
+
+  getClaimStatusColor(status: InsuranceClaim['status']): string {
+    const colorMap = {
+      reported: 'orange',
+      under_review: 'blue',
+      approved: 'green',
+      rejected: 'red',
+      paid: 'green',
+      closed: 'gray',
+    };
+    return colorMap[status] || 'gray';
   }
 
   ngOnDestroy() {

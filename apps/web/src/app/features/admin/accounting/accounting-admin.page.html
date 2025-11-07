@@ -1,0 +1,808 @@
+<div class="accounting-admin-container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">Panel de Contabilidad</h1>
+    <div class="header-actions">
+      <button
+        class="btn btn-secondary"
+        (click)="loadWalletReconciliation()"
+        type="button"
+      >
+        Ver Conciliación Wallet
+      </button>
+      <button
+        class="btn btn-secondary"
+        (click)="loadRevenueRecognition()"
+        type="button"
+      >
+        Ver Reconocimiento de Ingresos
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation">
+    <button
+      class="tab-button"
+      [class.active]="activeTab() === 'ledger'"
+      (click)="setActiveTab('ledger')"
+      type="button"
+    >
+      Libro Mayor
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab() === 'provisions'"
+      (click)="setActiveTab('provisions')"
+      type="button"
+    >
+      Provisiones
+      @if (activeProvisionsCount() > 0) {
+        <span class="badge">{{ activeProvisionsCount() }}</span>
+      }
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab() === 'closures'"
+      (click)="setActiveTab('closures')"
+      type="button"
+    >
+      Cierres de Período
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab() === 'audit'"
+      (click)="setActiveTab('audit')"
+      type="button"
+    >
+      Auditoría
+    </button>
+  </div>
+
+  <!-- Ledger Tab -->
+  @if (activeTab() === 'ledger') {
+    <div class="tab-content">
+      <!-- Filters -->
+      <div class="filters-section">
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label for="ledger-start-date">Fecha Inicio</label>
+            <input
+              id="ledger-start-date"
+              type="date"
+              class="filter-input"
+              [value]="ledgerFilters().startDate"
+              (input)="updateLedgerFilters({ startDate: $any($event.target).value })"
+            />
+          </div>
+          <div class="filter-group">
+            <label for="ledger-end-date">Fecha Fin</label>
+            <input
+              id="ledger-end-date"
+              type="date"
+              class="filter-input"
+              [value]="ledgerFilters().endDate"
+              (input)="updateLedgerFilters({ endDate: $any($event.target).value })"
+            />
+          </div>
+          <div class="filter-group">
+            <label for="ledger-account">Código de Cuenta</label>
+            <input
+              id="ledger-account"
+              type="text"
+              class="filter-input"
+              placeholder="1105, 2805..."
+              [value]="ledgerFilters().accountCode"
+              (input)="updateLedgerFilters({ accountCode: $any($event.target).value })"
+            />
+          </div>
+          <div class="filter-group">
+            <label for="ledger-reference">Tipo de Referencia</label>
+            <select
+              id="ledger-reference"
+              class="filter-input"
+              [value]="ledgerFilters().referenceType"
+              (change)="updateLedgerFilters({ referenceType: $any($event.target).value })"
+            >
+              <option value="">Todos</option>
+              <option value="booking">Booking</option>
+              <option value="withdrawal">Retiro</option>
+              <option value="deposit">Depósito</option>
+              <option value="fgo">FGO</option>
+              <option value="insurance">Seguro</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="ledger-search">Buscar</label>
+            <input
+              id="ledger-search"
+              type="text"
+              class="filter-input"
+              placeholder="Descripción..."
+              [value]="ledgerFilters().searchTerm"
+              (input)="updateLedgerFilters({ searchTerm: $any($event.target).value })"
+            />
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button
+            class="btn btn-primary"
+            (click)="applyLedgerFilters()"
+            type="button"
+          >
+            Aplicar Filtros
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="clearLedgerFilters()"
+            type="button"
+          >
+            Limpiar
+          </button>
+          <button
+            class="btn btn-success"
+            (click)="exportLedgerToCSV()"
+            type="button"
+          >
+            Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Ledger Table -->
+      @if (ledgerLoading()) {
+        <div class="loading">Cargando libro mayor...</div>
+      } @else {
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Cuenta</th>
+                <th>Débito</th>
+                <th>Crédito</th>
+                <th>Descripción</th>
+                <th>Tipo</th>
+                <th>Período Fiscal</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (entry of ledgerData().data; track entry.id) {
+                <tr>
+                  <td>{{ entry.entry_date | date: 'short' }}</td>
+                  <td>
+                    <span class="account-code">{{ entry.account_code }}</span>
+                    @if (entry.accounting_chart_of_accounts) {
+                      <div class="account-name">{{ entry.accounting_chart_of_accounts.name }}</div>
+                    }
+                  </td>
+                  <td class="amount">{{ entry.debit | money }}</td>
+                  <td class="amount">{{ entry.credit | money }}</td>
+                  <td>{{ entry.description }}</td>
+                  <td>
+                    @if (entry.reference_type) {
+                      <span class="badge badge-info">{{ entry.reference_type }}</span>
+                    }
+                  </td>
+                  <td>{{ entry.fiscal_period }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="empty-state">
+                    No hay entradas en el libro mayor
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (ledgerData().totalPages > 1) {
+          <div class="pagination">
+            <button
+              class="btn btn-sm"
+              [disabled]="ledgerData().page === 1"
+              (click)="changeLedgerPage(ledgerData().page - 1)"
+              type="button"
+            >
+              Anterior
+            </button>
+            <span class="pagination-info">
+              Página {{ ledgerData().page }} de {{ ledgerData().totalPages }}
+              ({{ ledgerData().total }} registros)
+            </span>
+            <button
+              class="btn btn-sm"
+              [disabled]="ledgerData().page === ledgerData().totalPages"
+              (click)="changeLedgerPage(ledgerData().page + 1)"
+              type="button"
+            >
+              Siguiente
+            </button>
+          </div>
+        }
+      }
+    </div>
+  }
+
+  <!-- Provisions Tab -->
+  @if (activeTab() === 'provisions') {
+    <div class="tab-content">
+      <!-- Filters -->
+      <div class="filters-section">
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label for="provisions-status">Estado</label>
+            <select
+              id="provisions-status"
+              class="filter-input"
+              [value]="provisionsFilters().status"
+              (change)="updateProvisionsFilters({ status: $any($event.target).value })"
+            >
+              <option value="">Todos</option>
+              <option value="active">Activo</option>
+              <option value="utilized">Utilizado</option>
+              <option value="released">Liberado</option>
+              <option value="reversed">Revertido</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="provisions-type">Tipo</label>
+            <select
+              id="provisions-type"
+              class="filter-input"
+              [value]="provisionsFilters().provisionType"
+              (change)="updateProvisionsFilters({ provisionType: $any($event.target).value })"
+            >
+              <option value="">Todos</option>
+              <option value="fgo_claims">Siniestros FGO</option>
+              <option value="insurance_claims">Siniestros Seguro</option>
+              <option value="bad_debt">Deuda Incobrable</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button
+            class="btn btn-primary"
+            (click)="applyProvisionsFilters()"
+            type="button"
+          >
+            Aplicar Filtros
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="clearProvisionsFilters()"
+            type="button"
+          >
+            Limpiar
+          </button>
+          <button
+            class="btn btn-success"
+            (click)="exportProvisionsToCSV()"
+            type="button"
+          >
+            Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Provisiones Activas</div>
+          <div class="stat-value">{{ activeProvisionsCount() }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Monto Total Activo</div>
+          <div class="stat-value">{{ totalProvisionsAmount() | money }}</div>
+        </div>
+      </div>
+
+      <!-- Provisions Table -->
+      @if (provisionsLoading()) {
+        <div class="loading">Cargando provisiones...</div>
+      } @else {
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fecha Creación</th>
+                <th>Tipo</th>
+                <th>Monto</th>
+                <th>Probabilidad</th>
+                <th>Estado</th>
+                <th>Notas</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (provision of provisions(); track provision.id) {
+                <tr>
+                  <td>{{ provision.created_date | date: 'short' }}</td>
+                  <td>{{ provision.provision_type }}</td>
+                  <td class="amount">{{ provision.amount | money }}</td>
+                  <td>
+                    @if (provision.probability) {
+                      <span class="badge badge-info">{{ provision.probability }}</span>
+                    }
+                  </td>
+                  <td>
+                    <span [class]="getStatusClass(provision.status)">
+                      {{ provision.status }}
+                    </span>
+                  </td>
+                  <td class="notes-cell">{{ provision.notes }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="empty-state">
+                    No hay provisiones registradas
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Period Closures Tab -->
+  @if (activeTab() === 'closures') {
+    <div class="tab-content">
+      <!-- Filters -->
+      <div class="filters-section">
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label for="closures-period-type">Tipo de Período</label>
+            <select
+              id="closures-period-type"
+              class="filter-input"
+              [value]="closuresFilters().periodType"
+              (change)="updateClosuresFilters({ periodType: $any($event.target).value })"
+            >
+              <option value="">Todos</option>
+              <option value="daily">Diario</option>
+              <option value="monthly">Mensual</option>
+              <option value="yearly">Anual</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="closures-status">Estado</label>
+            <select
+              id="closures-status"
+              class="filter-input"
+              [value]="closuresFilters().status"
+              (change)="updateClosuresFilters({ status: $any($event.target).value })"
+            >
+              <option value="">Todos</option>
+              <option value="open">Abierto</option>
+              <option value="closed">Cerrado</option>
+              <option value="audited">Auditado</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="closures-start-date">Fecha Inicio</label>
+            <input
+              id="closures-start-date"
+              type="date"
+              class="filter-input"
+              [value]="closuresFilters().startDate"
+              (input)="updateClosuresFilters({ startDate: $any($event.target).value })"
+            />
+          </div>
+          <div class="filter-group">
+            <label for="closures-end-date">Fecha Fin</label>
+            <input
+              id="closures-end-date"
+              type="date"
+              class="filter-input"
+              [value]="closuresFilters().endDate"
+              (input)="updateClosuresFilters({ endDate: $any($event.target).value })"
+            />
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button
+            class="btn btn-primary"
+            (click)="applyClosuresFilters()"
+            type="button"
+          >
+            Aplicar Filtros
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="clearClosuresFilters()"
+            type="button"
+          >
+            Limpiar
+          </button>
+          <button
+            class="btn btn-warning"
+            (click)="openClosureDialog()"
+            type="button"
+          >
+            Ejecutar Cierre
+          </button>
+          <button
+            class="btn btn-success"
+            (click)="exportClosuresToCSV()"
+            type="button"
+          >
+            Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Closures Table -->
+      @if (closuresLoading()) {
+        <div class="loading">Cargando cierres de período...</div>
+      } @else {
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Código Período</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Total Débitos</th>
+                <th>Total Créditos</th>
+                <th>Balanceado</th>
+                <th>Fecha Cierre</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (closure of periodClosures(); track closure.id) {
+                <tr>
+                  <td>{{ closure.period_code }}</td>
+                  <td>{{ closure.period_type }}</td>
+                  <td>
+                    <span [class]="getStatusClass(closure.status)">
+                      {{ closure.status }}
+                    </span>
+                  </td>
+                  <td class="amount">{{ closure.total_debits | money }}</td>
+                  <td class="amount">{{ closure.total_credits | money }}</td>
+                  <td>
+                    @if (closure.balance_check) {
+                      <span class="badge badge-success">✓</span>
+                    } @else {
+                      <span class="badge badge-error">✗</span>
+                    }
+                  </td>
+                  <td>
+                    @if (closure.closed_at) {
+                      {{ closure.closed_at | date: 'short' }}
+                    }
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="empty-state">
+                    No hay cierres de período registrados
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Audit Logs Tab -->
+  @if (activeTab() === 'audit') {
+    <div class="tab-content">
+      <!-- Filters -->
+      <div class="filters-section">
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label for="audit-severity">Severidad</label>
+            <select
+              id="audit-severity"
+              class="filter-input"
+              [value]="auditLogsFilters().severity"
+              (change)="updateAuditLogsFilters({ severity: $any($event.target).value })"
+            >
+              <option value="">Todos</option>
+              <option value="info">Info</option>
+              <option value="warning">Warning</option>
+              <option value="error">Error</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="audit-type">Tipo</label>
+            <select
+              id="audit-type"
+              class="filter-input"
+              [value]="auditLogsFilters().auditType"
+              (change)="updateAuditLogsFilters({ auditType: $any($event.target).value })"
+            >
+              <option value="">Todos</option>
+              <option value="balance_check">Balance Check</option>
+              <option value="reconciliation">Reconciliación</option>
+              <option value="anomaly">Anomalía</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="audit-resolution">Estado Resolución</label>
+            <select
+              id="audit-resolution"
+              class="filter-input"
+              [value]="auditLogsFilters().resolutionStatus"
+              (change)="updateAuditLogsFilters({ resolutionStatus: $any($event.target).value })"
+            >
+              <option value="">Todos</option>
+              <option value="pending">Pendiente</option>
+              <option value="resolved">Resuelto</option>
+              <option value="ignored">Ignorado</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="audit-start-date">Fecha Inicio</label>
+            <input
+              id="audit-start-date"
+              type="date"
+              class="filter-input"
+              [value]="auditLogsFilters().startDate"
+              (input)="updateAuditLogsFilters({ startDate: $any($event.target).value })"
+            />
+          </div>
+          <div class="filter-group">
+            <label for="audit-end-date">Fecha Fin</label>
+            <input
+              id="audit-end-date"
+              type="date"
+              class="filter-input"
+              [value]="auditLogsFilters().endDate"
+              (input)="updateAuditLogsFilters({ endDate: $any($event.target).value })"
+            />
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button
+            class="btn btn-primary"
+            (click)="applyAuditLogsFilters()"
+            type="button"
+          >
+            Aplicar Filtros
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="clearAuditLogsFilters()"
+            type="button"
+          >
+            Limpiar
+          </button>
+          <button
+            class="btn btn-success"
+            (click)="exportAuditLogsToCSV()"
+            type="button"
+          >
+            Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Audit Logs Table -->
+      @if (auditLogsLoading()) {
+        <div class="loading">Cargando logs de auditoría...</div>
+      } @else {
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Severidad</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Período Afectado</th>
+                <th>Cuenta Afectada</th>
+                <th>Estado Resolución</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (log of auditLogs().data; track log.id) {
+                <tr>
+                  <td>{{ log.created_at | date: 'short' }}</td>
+                  <td>
+                    <span [class]="getSeverityClass(log.severity)">
+                      {{ log.severity }}
+                    </span>
+                  </td>
+                  <td>{{ log.audit_type }}</td>
+                  <td>{{ log.description }}</td>
+                  <td>{{ log.affected_period }}</td>
+                  <td>{{ log.affected_account }}</td>
+                  <td>
+                    <span [class]="getStatusClass(log.resolution_status)">
+                      {{ log.resolution_status }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="empty-state">
+                    No hay logs de auditoría
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (auditLogs().totalPages > 1) {
+          <div class="pagination">
+            <button
+              class="btn btn-sm"
+              [disabled]="auditLogs().page === 1"
+              (click)="changeAuditLogsPage(auditLogs().page - 1)"
+              type="button"
+            >
+              Anterior
+            </button>
+            <span class="pagination-info">
+              Página {{ auditLogs().page }} de {{ auditLogs().totalPages }}
+              ({{ auditLogs().total }} registros)
+            </span>
+            <button
+              class="btn btn-sm"
+              [disabled]="auditLogs().page === auditLogs().totalPages"
+              (click)="changeAuditLogsPage(auditLogs().page + 1)"
+              type="button"
+            >
+              Siguiente
+            </button>
+          </div>
+        }
+      }
+    </div>
+  }
+
+  <!-- Period Closure Dialog -->
+  @if (showClosureDialog()) {
+    <div class="modal-overlay" (click)="closeClosureDialog()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Ejecutar Cierre de Período</h2>
+
+        <div class="form-group">
+          <label for="closure-type">Tipo de Período</label>
+          <select
+            id="closure-type"
+            class="form-input"
+            [value]="closurePeriodType()"
+            (change)="closurePeriodType.set($any($event.target).value)"
+          >
+            <option value="daily">Diario</option>
+            <option value="monthly">Mensual</option>
+            <option value="yearly">Anual</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="closure-code">Código de Período</label>
+          <input
+            id="closure-code"
+            type="text"
+            class="form-input"
+            placeholder="YYYY-MM-DD, YYYY-MM, o YYYY"
+            [value]="closurePeriodCode()"
+            (input)="closurePeriodCode.set($any($event.target).value)"
+          />
+          <div class="help-text">
+            Formato: Diario (2025-11-07), Mensual (2025-11), Anual (2025)
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            class="btn btn-primary"
+            (click)="executePeriodClosure()"
+            type="button"
+          >
+            Ejecutar Cierre
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="closeClosureDialog()"
+            type="button"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Wallet Reconciliation Dialog -->
+  @if (showReconciliation()) {
+    <div class="modal-overlay" (click)="showReconciliation.set(false)">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Conciliación Wallet vs Contabilidad</h2>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fuente</th>
+              <th>Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of walletReconciliation(); track item.source) {
+              <tr>
+                <td>{{ item.source }}</td>
+                <td class="amount">{{ item.amount | money }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <div class="modal-actions">
+          <button
+            class="btn btn-primary"
+            (click)="showReconciliation.set(false)"
+            type="button"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Revenue Recognition Dialog -->
+  @if (showRevenue()) {
+    <div class="modal-overlay" (click)="showRevenue.set(false)">
+      <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+        <h2>Reconocimiento de Ingresos (NIIF 15)</h2>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Tipo</th>
+                <th>Monto Bruto</th>
+                <th>Comisión</th>
+                <th>Monto Owner</th>
+                <th>Fecha Reconocimiento</th>
+                <th>Reconocido</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (revenue of revenueRecognition(); track revenue.id) {
+                <tr>
+                  <td>{{ revenue.booking_id }}</td>
+                  <td>{{ revenue.revenue_type }}</td>
+                  <td class="amount">{{ revenue.gross_amount | money }}</td>
+                  <td class="amount">{{ revenue.commission_amount | money }}</td>
+                  <td class="amount">{{ revenue.owner_amount | money }}</td>
+                  <td>{{ revenue.recognition_date | date: 'short' }}</td>
+                  <td>
+                    @if (revenue.is_recognized) {
+                      <span class="badge badge-success">✓</span>
+                    } @else {
+                      <span class="badge badge-warning">Pendiente</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            class="btn btn-primary"
+            (click)="showRevenue.set(false)"
+            type="button"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
