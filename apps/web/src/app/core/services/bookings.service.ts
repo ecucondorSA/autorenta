@@ -98,6 +98,89 @@ export class BookingsService {
   }
 
   /**
+   * Request a new booking with location data
+   * ✅ NEW: Supports pickup/dropoff locations and delivery fees
+   */
+  async requestBookingWithLocation(
+    carId: string,
+    start: string,
+    end: string,
+    locationData: {
+      pickupLat: number;
+      pickupLng: number;
+      dropoffLat: number;
+      dropoffLng: number;
+      deliveryRequired: boolean;
+      distanceKm: number;
+      deliveryFeeCents: number;
+      distanceTier: 'local' | 'regional' | 'long_distance';
+    },
+  ): Promise<Booking> {
+    const { data, error } = await this.supabase.rpc('request_booking', {
+      p_car_id: carId,
+      p_start: start,
+      p_end: end,
+      p_pickup_lat: locationData.pickupLat,
+      p_pickup_lng: locationData.pickupLng,
+      p_dropoff_lat: locationData.dropoffLat,
+      p_dropoff_lng: locationData.dropoffLng,
+      p_delivery_required: locationData.deliveryRequired,
+      p_delivery_distance_km: locationData.distanceKm,
+      p_delivery_fee_cents: locationData.deliveryFeeCents,
+      p_distance_risk_tier: locationData.distanceTier,
+    });
+
+    if (error) {
+      const errorMessage = error.message || error.details || 'Error al crear la reserva';
+
+      this.logger.error('requestBookingWithLocation RPC failed: ' + JSON.stringify({
+        error,
+        carId,
+        start,
+        end,
+        locationData,
+        message: errorMessage,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      }));
+
+      throw new Error(errorMessage);
+    }
+
+    const bookingId = this.utilsService.extractBookingId(data);
+    if (!bookingId) {
+      throw new Error('request_booking did not return a booking id');
+    }
+
+    // Activate insurance coverage automatically
+    try {
+      await this.insuranceService.activateCoverage({
+        booking_id: bookingId,
+        addon_ids: [],
+      });
+    } catch (insuranceError) {
+      this.logger.error(
+        'Insurance activation failed',
+        'BookingsService',
+        insuranceError instanceof Error ? insuranceError : new Error(getErrorMessage(insuranceError)),
+      );
+      // Don't block booking if insurance fails
+    }
+
+    // Recalculate pricing breakdown
+    await this.recalculatePricing(bookingId);
+
+    // Fetch the updated booking
+    const updated = await this.getBookingById(bookingId);
+    if (updated) {
+      return updated;
+    }
+
+    return { ...(data as Booking), id: bookingId };
+  }
+
+  /**
    * Get bookings for current user using the my_bookings view
    */
   async getMyBookings(): Promise<Booking[]> {
@@ -486,17 +569,33 @@ export class BookingsService {
     carId: string,
     startDate: string,
     endDate: string,
+    locationData?: {
+      pickupLat: number;
+      pickupLng: number;
+      dropoffLat: number;
+      dropoffLng: number;
+      deliveryRequired: boolean;
+      distanceKm: number;
+      deliveryFeeCents: number;
+      distanceTier: 'local' | 'regional' | 'long_distance';
+    },
   ): Promise<{
     success: boolean;
     booking?: Booking;
     error?: string;
     canWaitlist?: boolean;
   }> {
+    // ✅ NEW: Use requestBookingWithLocation if location data is provided
+    const requestBookingCallback = locationData
+      ? (carId: string, startDate: string, endDate: string) =>
+          this.requestBookingWithLocation(carId, startDate, endDate, locationData)
+      : this.requestBooking.bind(this);
+
     return this.validationService.createBookingWithValidation(
       carId,
       startDate,
       endDate,
-      this.requestBooking.bind(this),
+      requestBookingCallback,
     );
   }
 
