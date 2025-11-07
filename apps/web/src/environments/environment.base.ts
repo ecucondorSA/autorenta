@@ -86,7 +86,7 @@ const defaultDistanceConfig: DistanceConfig = {
     regional: 1.15,
     longDistance: 1.3,
   },
-  deliveryFeePerKm: 0.5,
+  deliveryFeePerKm: 0, // DESHABILITADO - delivery gratis
   minDistanceForDeliveryFee: 5,
   maxDeliveryDistance: 50,
   defaultSearchRadiusKm: 50,

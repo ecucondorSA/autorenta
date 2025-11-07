@@ -1,0 +1,247 @@
+<div class="space-y-3">
+  <!-- Credit Card Payment Option -->
+  <button
+    type="button"
+    (click)="selectMethod('credit_card')"
+    [disabled]="disabled"
+    [class.ring-2]="isSelected('credit_card')"
+    [class.ring-accent-petrol]="isSelected('credit_card')"
+    [class.bg-accent-petrol/5]="isSelected('credit_card')"
+    class="w-full p-4 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure hover:border-accent-petrol hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
+  >
+    <!-- Recommended Badge -->
+    <div
+      *ngIf="isRecommended('credit_card')"
+      class="absolute -top-2 left-4 px-2 py-0.5 bg-accent-warm text-white text-xs font-semibold rounded-full"
+    >
+      ⭐ Recomendado
+    </div>
+
+    <div class="flex items-start gap-3">
+      <!-- Icon -->
+      <div
+        class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+        [class.bg-accent-petrol]="isSelected('credit_card')"
+        [class.bg-accent-petrol/10]="!isSelected('credit_card')"
+      >
+        <svg
+          class="w-6 h-6"
+          [class.text-white]="isSelected('credit_card')"
+          [class.text-accent-petrol]="!isSelected('credit_card')"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+          />
+        </svg>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1">
+        <h3 class="font-semibold text-smoke-black dark:text-pearl-light mb-1">
+          💳 Tarjeta de Crédito/Débito
+        </h3>
+        <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+          Pre-autorización segura con MercadoPago
+        </p>
+      </div>
+
+      <!-- Radio indicator -->
+      <div
+        class="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center"
+        [class.border-accent-petrol]="isSelected('credit_card')"
+        [class.bg-accent-petrol]="isSelected('credit_card')"
+        [class.border-pearl-gray]="!isSelected('credit_card')"
+      >
+        <div *ngIf="isSelected('credit_card')" class="w-3 h-3 bg-white rounded-full"></div>
+      </div>
+    </div>
+  </button>
+
+  <!-- Wallet Payment Option -->
+  <button
+    type="button"
+    (click)="selectMethod('wallet')"
+    [disabled]="disabled || !hasSufficientFunds()"
+    [class.ring-2]="isSelected('wallet')"
+    [class.ring-accent-petrol]="isSelected('wallet')"
+    [class.bg-accent-petrol/5]="isSelected('wallet')"
+    class="w-full p-4 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure hover:border-accent-petrol hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
+  >
+    <!-- Recommended Badge -->
+    <div
+      *ngIf="isRecommended('wallet')"
+      class="absolute -top-2 left-4 px-2 py-0.5 bg-accent-warm text-white text-xs font-semibold rounded-full"
+    >
+      ⭐ Recomendado
+    </div>
+
+    <div class="flex items-start gap-3">
+      <!-- Icon -->
+      <div
+        class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+        [class.bg-accent-petrol]="isSelected('wallet')"
+        [class.bg-accent-petrol/10]="!isSelected('wallet')"
+      >
+        <svg
+          class="w-6 h-6"
+          [class.text-white]="isSelected('wallet')"
+          [class.text-accent-petrol]="!isSelected('wallet')"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+          />
+        </svg>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1">
+        <h3 class="font-semibold text-smoke-black dark:text-pearl-light mb-1">
+          🏦 Wallet AutoRenta
+        </h3>
+        <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-2">
+          Pago instantáneo • Sin comisiones • Ideal para locadores y usuarios frecuentes
+        </p>
+
+        <!-- Wallet Benefits -->
+        <div class="mb-2 space-y-1">
+          <div class="flex items-center gap-1 text-xs text-charcoal-medium dark:text-pearl-light">
+            <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span>Recibe tus pagos como locador directamente aquí</span>
+          </div>
+          <div class="flex items-center gap-1 text-xs text-charcoal-medium dark:text-pearl-light">
+            <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span>Garantía reutilizable en futuras reservas</span>
+          </div>
+          <div class="flex items-center gap-1 text-xs text-charcoal-medium dark:text-pearl-light">
+            <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span>Carga saldo con MercadoPago, transferencia o efectivo</span>
+          </div>
+        </div>
+
+        <!-- Wallet Balance -->
+        <div *ngIf="!loadingBalance(); else loadingTemplate" class="space-y-2">
+          <!-- Balance Display -->
+          <div
+            class="flex items-center gap-2 px-3 py-2 rounded-lg"
+            [class.bg-green-50]="hasSufficientFunds()"
+            [class.bg-red-50]="!hasSufficientFunds()"
+          >
+            <svg
+              class="w-4 h-4"
+              [class.text-green-600]="hasSufficientFunds()"
+              [class.text-red-600]="!hasSufficientFunds()"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                *ngIf="hasSufficientFunds()"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+              <path
+                *ngIf="!hasSufficientFunds()"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span
+              class="text-xs font-medium"
+              [class.text-green-700]="hasSufficientFunds()"
+              [class.text-red-700]="!hasSufficientFunds()"
+            >
+              Balance disponible: <strong>{{ walletBalance() | money }}</strong>
+            </span>
+          </div>
+
+          <!-- Price Breakdown (if sufficient funds) -->
+          <div *ngIf="hasSufficientFunds()" class="text-xs text-charcoal-medium dark:text-pearl-light space-y-0.5">
+            <div class="flex justify-between">
+              <span>Bloqueo de alquiler:</span>
+              <span class="font-semibold">{{ rentalAmount | money }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Bloqueo de garantía:</span>
+              <span class="font-semibold">{{ depositAmount | money }}</span>
+            </div>
+            <div class="flex justify-between pt-1 border-t border-pearl-gray dark:border-gray-600">
+              <span class="font-semibold">Total bloqueado:</span>
+              <span class="font-bold text-accent-petrol">{{ totalRequired() | money }}</span>
+            </div>
+          </div>
+
+          <!-- Insufficient Funds Warning -->
+          <div
+            *ngIf="!hasSufficientFunds()"
+            class="px-3 py-2 bg-red-50 border border-red-200 rounded-lg"
+          >
+            <p class="text-xs text-red-700">
+              <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              Fondos insuficientes. Recarga tu wallet para usar esta opción.
+            </p>
+          </div>
+
+          <!-- Success Badge (if sufficient funds) -->
+          <div *ngIf="hasSufficientFunds()" class="flex items-center gap-1 text-xs text-green-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
+            </svg>
+            <span>Confirmación instantánea</span>
+          </div>
+        </div>
+
+        <!-- Loading Template -->
+        <ng-template #loadingTemplate>
+          <div class="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg animate-pulse">
+            <div class="w-4 h-4 bg-gray-300 rounded-full"></div>
+            <div class="h-3 bg-gray-300 rounded w-32"></div>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Radio indicator -->
+      <div
+        class="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center"
+        [class.border-accent-petrol]="isSelected('wallet')"
+        [class.bg-accent-petrol]="isSelected('wallet')"
+        [class.border-pearl-gray]="!isSelected('wallet')"
+      >
+        <div *ngIf="isSelected('wallet')" class="w-3 h-3 bg-white rounded-full"></div>
+      </div>
+    </div>
+  </button>
+</div>
