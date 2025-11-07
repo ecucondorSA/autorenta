@@ -20,6 +20,7 @@ import { InsuranceService } from '../../../core/services/insurance.service';
 import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insurance.model';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
+import { BookingPricingBreakdownComponent } from './booking-pricing-breakdown.component';
 
 /**
  * BookingDetailPage
@@ -45,6 +46,7 @@ import { ReviewManagementComponent } from './review-management.component';
     TranslateModule,
     BookingStatusComponent,
     ReviewManagementComponent,
+    BookingPricingBreakdownComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
