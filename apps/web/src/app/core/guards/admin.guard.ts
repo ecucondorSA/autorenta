@@ -1,73 +1,126 @@
-import { inject } from '@angular/core';
-import { CanMatchFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { ProfileService } from '../services/profile.service';
-import { RBACService } from '../services/rbac.service';
-import { LoggerService } from '../services/logger.service';
-import type { AdminRoleType } from '../models';
-
 /**
- * AdminGuard - Protege rutas que requieren permisos de administrador
+ * AdminGuard - Role-Based Access Control for Admin Routes
+ * Created: 2025-11-07
+ * Issue: #123 - Admin Authentication & Role-Based Access Control
  *
- * Verifica que el usuario esté autenticado Y que tenga permisos de admin
- * (via RBAC roles o legacy is_admin flag)
+ * Protects routes that require admin permissions with role-based access control.
  *
- * Uso:
+ * Basic usage (any admin role):
  * ```typescript
  * {
- *   path: 'admin/accounting',
- *   canMatch: [AuthGuard, AdminGuard],
- *   loadChildren: () => import('./accounting/accounting.routes')
+ *   path: 'admin',
+ *   canMatch: [AdminGuard],
+ *   loadChildren: () => import('./admin/admin.routes')
+ * }
+ * ```
+ *
+ * Role-specific usage:
+ * ```typescript
+ * {
+ *   path: 'admin/audit-log',
+ *   canMatch: [AdminGuard],
+ *   data: { requiredRole: 'super_admin' }, // Only super admins
+ *   loadChildren: () => import('./admin/audit-log/audit-log.routes')
+ * }
+ * ```
+ *
+ * Permission-specific usage:
+ * ```typescript
+ * {
+ *   path: 'admin/verifications',
+ *   canMatch: [AdminGuard],
+ *   data: { requiredPermission: 'approve_verifications' },
+ *   loadChildren: () => import('./admin/verifications/verifications.routes')
  * }
  * ```
  */
-export const AdminGuard: CanMatchFn = async () => {
+
+import { inject } from '@angular/core';
+import { CanMatchFn, Router, Route } from '@angular/router';
+import { AdminService } from '../services/admin.service';
+import { AuthService } from '../services/auth.service';
+import { LoggerService } from '../services/logger.service';
+import type { AdminRole, AdminPermission } from '../types/admin.types';
+
+/**
+ * AdminGuard - Protects admin routes with RBAC
+ *
+ * Supports three modes via route data:
+ * 1. No data: User must be any admin
+ * 2. data.requiredRole: User must have specific role
+ * 3. data.requiredPermission: User must have specific permission
+ */
+export const AdminGuard: CanMatchFn = async (route: Route) => {
   const auth = inject(AuthService);
-  const profileService = inject(ProfileService);
-  const rbac = inject(RBACService);
+  const adminService = inject(AdminService);
   const router = inject(Router);
   const logger = inject(LoggerService);
 
   try {
-    // Verificar autenticación primero
+    // 1. Verify authentication first
     const session = await auth.ensureSession();
 
     if (!session?.user) {
-      logger.warn('AdminGuard: Usuario no autenticado', 'AdminGuard');
-      return router.createUrlTree(['/auth/login']);
+      logger.warn('AdminGuard: User not authenticated', 'AdminGuard');
+      return router.createUrlTree(['/auth/login'], {
+        queryParams: { returnUrl: route.path },
+      });
     }
 
-    // Check RBAC first (new system)
-    const isAdmin = await rbac.checkIsAdmin();
+    // 2. Check if user is admin at all
+    const isAdmin = await adminService.isAdmin();
 
-    if (isAdmin) {
-      // Load roles into cache for later use
-      await rbac.loadUserRoles();
-      return true;
-    }
-
-    // Fallback to legacy is_admin check
-    const profile = await profileService.getCurrentProfile();
-
-    if (!profile) {
-      logger.error('AdminGuard: No se pudo cargar perfil del usuario', 'AdminGuard');
+    if (!isAdmin) {
+      logger.warn(
+        `AdminGuard: User ${session.user.id} attempted to access admin route without admin role`,
+        'AdminGuard',
+      );
       return router.createUrlTree(['/']);
     }
 
-    if (profile.is_admin) {
-      return true;
+    // 3. Check role-specific or permission-specific requirements
+    const requiredRole = route.data?.['requiredRole'] as AdminRole | undefined;
+    const requiredPermission = route.data?.['requiredPermission'] as AdminPermission | undefined;
+
+    // If specific role is required
+    if (requiredRole) {
+      const hasRole = await adminService.hasRole(requiredRole);
+
+      if (!hasRole) {
+        logger.warn(
+          `AdminGuard: User ${session.user.id} attempted to access route requiring role '${requiredRole}'`,
+          'AdminGuard',
+        );
+        return router.createUrlTree(['/admin'], {
+          queryParams: { error: 'insufficient_permissions' },
+        });
+      }
     }
 
-    // No es admin - rechazar acceso
-    logger.warn(
-      `AdminGuard: Usuario ${profile.id} (${profile.full_name}) intentó acceder a ruta admin sin permisos`,
+    // If specific permission is required
+    if (requiredPermission) {
+      const hasPermission = await adminService.hasPermission(requiredPermission);
+
+      if (!hasPermission) {
+        logger.warn(
+          `AdminGuard: User ${session.user.id} attempted to access route requiring permission '${requiredPermission}'`,
+          'AdminGuard',
+        );
+        return router.createUrlTree(['/admin'], {
+          queryParams: { error: 'insufficient_permissions' },
+        });
+      }
+    }
+
+    // All checks passed
+    logger.info(
+      `AdminGuard: User ${session.user.id} granted access to ${route.path}`,
       'AdminGuard',
     );
-
-    return router.createUrlTree(['/']);
+    return true;
   } catch (error) {
     logger.error(
-      'AdminGuard: Error verificando permisos de admin',
+      'AdminGuard: Error verifying admin permissions',
       'AdminGuard',
       error instanceof Error ? error : new Error(String(error)),
     );
@@ -77,49 +130,53 @@ export const AdminGuard: CanMatchFn = async () => {
 };
 
 /**
- * RoleGuard Factory - Crea un guard que verifica un rol específico
+ * Helper function to create admin guards with specific requirements
  *
- * @param roles - Rol(es) requerido(s)
- *
- * @example
+ * Example:
  * ```typescript
- * {
- *   path: 'admin/users',
- *   canMatch: [AuthGuard, AdminGuard, RoleGuard(['super_admin', 'support'])],
- *   loadComponent: () => import('./users.page')
- * }
+ * const SuperAdminGuard = createAdminGuard('super_admin');
+ * const OperationsGuard = createAdminGuard(null, 'approve_verifications');
  * ```
  */
-export function RoleGuard(roles: AdminRoleType | AdminRoleType[]): CanMatchFn {
-  return async () => {
-    const rbac = inject(RBACService);
-    const router = inject(Router);
-    const logger = inject(LoggerService);
+export function createAdminGuard(
+  requiredRole?: AdminRole,
+  requiredPermission?: AdminPermission,
+): CanMatchFn {
+  return async (route: Route) => {
+    // Override route data with specified requirements
+    const modifiedRoute = {
+      ...route,
+      data: {
+        ...route.data,
+        ...(requiredRole && { requiredRole }),
+        ...(requiredPermission && { requiredPermission }),
+      },
+    };
 
-    const requiredRoles = Array.isArray(roles) ? roles : [roles];
-
-    try {
-      // Check if user has any of the required roles
-      const hasRole = await rbac.hasAnyRole(requiredRoles);
-
-      if (hasRole) {
-        return true;
-      }
-
-      // Check if user is super_admin (has access to everything)
-      if (await rbac.hasRole('super_admin')) {
-        return true;
-      }
-
-      logger.warn(`RoleGuard: Usuario no tiene los roles requeridos: ${requiredRoles.join(', ')}`);
-      return router.createUrlTree(['/admin']);
-    } catch (error) {
-      logger.error(
-        'RoleGuard: Error verificando roles',
-        'RoleGuard',
-        error instanceof Error ? error : new Error(String(error)),
-      );
-      return router.createUrlTree(['/admin']);
-    }
+    return AdminGuard(modifiedRoute);
   };
 }
+
+// ============================================================================
+// COMMON GUARD PRESETS
+// ============================================================================
+
+/**
+ * SuperAdminGuard - Only super admins can access
+ */
+export const SuperAdminGuard: CanMatchFn = createAdminGuard('super_admin');
+
+/**
+ * OperationsGuard - Only operations or super admins can access
+ */
+export const OperationsGuard: CanMatchFn = createAdminGuard('operations');
+
+/**
+ * SupportGuard - Only support or super admins can access
+ */
+export const SupportGuard: CanMatchFn = createAdminGuard('support');
+
+/**
+ * FinanceGuard - Only finance or super admins can access
+ */
+export const FinanceGuard: CanMatchFn = createAdminGuard('finance');
