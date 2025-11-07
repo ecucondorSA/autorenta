@@ -35,6 +35,9 @@ interface EnvDefaults {
   distanceConfig?: DistanceConfig;
   docVerifierUrl?: string;
   cloudflareWorkerUrl?: string;
+  sentryDsn?: string;
+  sentryEnvironment?: string;
+  sentryTracesSampleRate?: number;
 }
 
 // Type-safe interfaces for global environment access
@@ -124,6 +127,9 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   distanceConfig: defaults.distanceConfig ?? defaultDistanceConfig,
   docVerifierUrl: resolve('NG_APP_DOC_VERIFIER_URL', defaults.docVerifierUrl),
   cloudflareWorkerUrl: resolve('NG_APP_CLOUDFLARE_WORKER_URL', defaults.cloudflareWorkerUrl ?? 'http://localhost:8787'),
+  sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),
+  sentryEnvironment: resolve('NG_APP_SENTRY_ENVIRONMENT', defaults.sentryEnvironment ?? (defaults.production ? 'production' : 'development')),
+  sentryTracesSampleRate: defaults.sentryTracesSampleRate ?? (defaults.production ? 0.1 : 1.0),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;
