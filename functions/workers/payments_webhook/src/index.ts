@@ -1,10 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
+import { Toucan } from 'toucan-js';
 
 interface Env {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
   AUTORENT_WEBHOOK_KV: KVNamespace;
   MERCADOPAGO_ACCESS_TOKEN?: string;
+  SENTRY_DSN?: string;
+  ENVIRONMENT?: string;
 }
 
 // Payload para mock
@@ -515,57 +518,52 @@ const processMercadoPagoWebhook = async (
  * Worker principal
  */
 const worker = {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, context: ExecutionContext): Promise<Response> {
+    // Initialize Sentry for error tracking (only if DSN is configured)
+    let sentry: Toucan | null = null;
+    if (env.SENTRY_DSN) {
+      sentry = new Toucan({
+        dsn: env.SENTRY_DSN,
+        environment: env.ENVIRONMENT || 'development',
+        context,
+        request,
+        // Before send hook to sanitize sensitive data
+        beforeSend(event: any) {
+          // Remove sensitive data from breadcrumbs and context
+          if (event.breadcrumbs) {
+            event.breadcrumbs = event.breadcrumbs.map((breadcrumb: any) => {
+              if (breadcrumb.data) {
+                const sanitized = { ...breadcrumb.data };
+                const sensitiveKeys = ['password', 'token', 'authorization', 'api_key', 'apiKey', 'secret', 'access_token'];
+                sensitiveKeys.forEach((key) => {
+                  if (key in sanitized) {
+                    sanitized[key] = '[REDACTED]';
+                  }
+                });
+                return { ...breadcrumb, data: sanitized };
+              }
+              return breadcrumb;
+            });
+          }
+          return event;
+        },
+      });
+
+      // Add tags for better filtering
+      sentry.setTag('worker', 'payments_webhook');
+      sentry.setTag('runtime', 'cloudflare-worker');
+    }
+
     const url = new URL(request.url);
 
-    // Health check endpoint - GET permite verificación
-    if (url.pathname === '/webhooks/payments') {
-      if (request.method === 'GET') {
-        return jsonResponse({
-          status: 'ok',
-          message: 'Webhook endpoint is ready',
-          timestamp: new Date().toISOString(),
-        });
-      }
-
-      // Solo acepta POST para procesamiento real
-      if (request.method !== 'POST') {
-        return jsonResponse({ message: 'Method not allowed' }, { status: 405 });
-      }
-    } else {
-      return jsonResponse({ message: 'Not found' }, { status: 404 });
-    }
-
-    const supabase = getSupabaseAdminClient(env);
-    const rawBody = await request.text();
-    let payload: any = {};
-
-    if (rawBody) {
-      try {
-        payload = JSON.parse(rawBody);
-      } catch (error) {
-        console.warn('Invalid JSON payload, continuing with query params fallback:', error);
-        payload = {};
-      }
-    }
-
     try {
-      // Rutear según el provider
-      if (payload?.provider === 'mock') {
-        // Validar campos requeridos para mock
-        if (!payload.booking_id || !payload.status) {
-          return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
-        }
-        return await processMockWebhook(payload, supabase, env);
+      return await processRequest(request, env, url, sentry);
+    } catch (error) {
+      // Capture error in Sentry
+      if (sentry) {
+        sentry.captureException(error);
       }
 
-      return await processMercadoPagoWebhook(payload ?? {}, supabase, env, {
-        signatureHeader: request.headers.get('x-signature'),
-        requestId: request.headers.get('x-request-id'),
-        rawBody,
-        query: url.searchParams,
-      });
-    } catch (error) {
       console.error('Error processing webhook:', error);
       return jsonResponse(
         {
@@ -576,5 +574,76 @@ const worker = {
     }
   },
 };
+
+/**
+ * Process webhook request
+ */
+async function processRequest(
+  request: Request,
+  env: Env,
+  url: URL,
+  sentry: Toucan | null,
+): Promise<Response> {
+
+  // Health check endpoint - GET permite verificación
+  if (url.pathname === '/webhooks/payments') {
+    if (request.method === 'GET') {
+      return jsonResponse({
+        status: 'ok',
+        message: 'Webhook endpoint is ready',
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    // Solo acepta POST para procesamiento real
+    if (request.method !== 'POST') {
+      return jsonResponse({ message: 'Method not allowed' }, { status: 405 });
+    }
+  } else {
+    return jsonResponse({ message: 'Not found' }, { status: 404 });
+  }
+
+  const supabase = getSupabaseAdminClient(env);
+  const rawBody = await request.text();
+  let payload: any = {};
+
+  if (rawBody) {
+    try {
+      payload = JSON.parse(rawBody);
+    } catch (error) {
+      console.warn('Invalid JSON payload, continuing with query params fallback:', error);
+      if (sentry) {
+        sentry.captureMessage('Invalid JSON payload in webhook', 'warning');
+      }
+      payload = {};
+    }
+  }
+
+  try {
+    // Rutear según el provider
+    if (payload?.provider === 'mock') {
+      // Validar campos requeridos para mock
+      if (!payload.booking_id || !payload.status) {
+        return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
+      }
+      return await processMockWebhook(payload, supabase, env);
+    }
+
+    return await processMercadoPagoWebhook(payload ?? {}, supabase, env, {
+      signatureHeader: request.headers.get('x-signature'),
+      requestId: request.headers.get('x-request-id'),
+      rawBody,
+      query: url.searchParams,
+    });
+  } catch (error) {
+    // Capture error in Sentry with context
+    if (sentry) {
+      sentry.setTag('provider', payload?.provider || 'mercadopago');
+      sentry.setTag('booking_id', payload?.booking_id || 'unknown');
+      sentry.captureException(error);
+    }
+    throw error;
+  }
+}
 
 export default worker;

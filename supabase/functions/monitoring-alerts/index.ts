@@ -24,7 +24,8 @@ interface Alert {
 const NOTIFICATION_CONFIG = {
   slack_webhook: Deno.env.get('SLACK_WEBHOOK_URL') || '',
   email_enabled: Deno.env.get('EMAIL_ALERTS_ENABLED') === 'true',
-  // Add more notification channels as needed
+  pagerduty_integration_key: Deno.env.get('PAGERDUTY_INTEGRATION_KEY') || '',
+  pagerduty_enabled: Deno.env.get('PAGERDUTY_ENABLED') === 'true',
 };
 
 // ============================================================================
@@ -38,9 +39,9 @@ async function sendSlackAlert(alert: Alert): Promise<boolean> {
   }
 
   try {
-    const color = alert.severity === 'critical' ? '#FF0000' : 
+    const color = alert.severity === 'critical' ? '#FF0000' :
                   alert.severity === 'warning' ? '#FFA500' : '#36A2EB';
-    
+
     const payload = {
       text: `🚨 AutoRenta Alert: ${alert.title}`,
       attachments: [
@@ -83,6 +84,64 @@ async function sendSlackAlert(alert: Alert): Promise<boolean> {
     return response.ok;
   } catch (error) {
     console.error('Slack notification error:', error);
+    return false;
+  }
+}
+
+async function sendPagerDutyAlert(alert: Alert): Promise<boolean> {
+  if (!NOTIFICATION_CONFIG.pagerduty_enabled || !NOTIFICATION_CONFIG.pagerduty_integration_key) {
+    console.warn('PagerDuty not configured or disabled');
+    return false;
+  }
+
+  // Only send critical alerts to PagerDuty to avoid alert fatigue
+  if (alert.severity !== 'critical') {
+    return true; // Return true to indicate it was handled (by design)
+  }
+
+  try {
+    const payload = {
+      routing_key: NOTIFICATION_CONFIG.pagerduty_integration_key,
+      event_action: 'trigger',
+      dedup_key: `autorenta-${alert.id}`,
+      payload: {
+        summary: `${alert.title}: ${alert.message}`,
+        severity: alert.severity,
+        source: 'AutoRenta Monitoring',
+        timestamp: alert.created_at,
+        component: alert.alert_type,
+        custom_details: {
+          alert_id: alert.id,
+          alert_type: alert.alert_type,
+          message: alert.message,
+          created_at: alert.created_at,
+        },
+      },
+      links: [
+        {
+          href: 'https://autorenta-web.pages.dev/admin/monitoring',
+          text: 'View AutoRenta Monitoring Dashboard',
+        },
+      ],
+    };
+
+    const response = await fetch('https://events.pagerduty.com/v2/enqueue', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('PagerDuty API error:', response.status, errorText);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('PagerDuty notification error:', error);
     return false;
   }
 }
@@ -147,8 +206,9 @@ serve(async (req) => {
 
         // Send notifications
         const slackSent = await sendSlackAlert(alert);
+        const pagerDutySent = await sendPagerDutyAlert(alert);
 
-        // Record notification
+        // Record Slack notification
         const { error: notifyError } = await supabaseAdmin
           .from('monitoring_alert_notifications')
           .insert({
@@ -160,14 +220,32 @@ serve(async (req) => {
           });
 
         if (notifyError) {
-          console.error('Error recording notification:', notifyError);
+          console.error('Error recording Slack notification:', notifyError);
+        }
+
+        // Record PagerDuty notification (only if it was attempted for critical alerts)
+        if (alert.severity === 'critical' && NOTIFICATION_CONFIG.pagerduty_enabled) {
+          const { error: pdNotifyError } = await supabaseAdmin
+            .from('monitoring_alert_notifications')
+            .insert({
+              alert_id: alert.id,
+              notification_channel: 'pagerduty',
+              notification_status: pagerDutySent ? 'sent' : 'failed',
+              sent_at: pagerDutySent ? new Date().toISOString() : null,
+              error_message: pagerDutySent ? null : 'PagerDuty API call failed',
+            });
+
+          if (pdNotifyError) {
+            console.error('Error recording PagerDuty notification:', pdNotifyError);
+          }
         }
 
         return {
           alert_id: alert.id,
-          status: slackSent ? 'sent' : 'failed',
+          status: (slackSent || pagerDutySent) ? 'sent' : 'failed',
           channels: {
             slack: slackSent,
+            pagerduty: pagerDutySent,
           },
         };
       })

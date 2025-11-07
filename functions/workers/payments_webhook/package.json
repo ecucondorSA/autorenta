@@ -15,6 +15,7 @@
   "dependencies": {
     "@cloudflare/workers-types": "^4.20251011.0",
     "@supabase/supabase-js": "^2.75.0",
+    "toucan-js": "^4.1.1",
     "undici": "^7.16.0"
   },
   "devDependencies": {

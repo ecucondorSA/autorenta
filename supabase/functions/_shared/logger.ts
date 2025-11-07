@@ -6,6 +6,7 @@
  * - Automatic sensitive data sanitization
  * - ISO timestamp formatting
  * - Context support
+ * - Sentry integration for error tracking
  *
  * Usage:
  * ```typescript
@@ -20,7 +21,10 @@
  * - DEBUG and INFO are filtered out
  * - Only WARN and ERROR are logged
  * - Sensitive data is automatically redacted
+ * - Errors automatically sent to Sentry
  */
+
+import { captureError, captureMessage } from './sentry.ts';
 
 export enum LogLevel {
   DEBUG = 0,
@@ -126,6 +130,28 @@ class Logger {
 
     // Output to console
     this.outputToConsole(entry);
+
+    // Send to Sentry (only WARN and ERROR in production)
+    if (this.isProduction && Deno.env.get('SENTRY_DSN')) {
+      if (level === LogLevel.ERROR && error) {
+        // Send errors to Sentry
+        captureError(error, {
+          context: context || 'edge-function',
+          extra: {
+            message,
+            data: this.sanitizeData(data),
+          },
+        });
+      } else if (level === LogLevel.WARN) {
+        // Send warnings as messages to Sentry
+        captureMessage(message, 'warning', {
+          extra: {
+            data: this.sanitizeData(data),
+            context,
+          },
+        });
+      }
+    }
   }
 
   /**
