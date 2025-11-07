@@ -70,19 +70,23 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     continue-on-error: true
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      
+
       - name: Install worker dependencies
-        workingDirectory: functions/workers/payments_webhook
+        working-directory: functions/workers/payments_webhook
         run: npm install
-      
+
+      - name: Build worker
+        working-directory: functions/workers/payments_webhook
+        run: npm run build
+
       - name: Deploy worker (legacy - not used in production)
         uses: cloudflare/wrangler-action@v3
         with:
