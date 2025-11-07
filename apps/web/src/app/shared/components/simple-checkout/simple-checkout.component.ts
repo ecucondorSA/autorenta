@@ -60,6 +60,15 @@ export class SimpleCheckoutComponent {
   readonly startDate = signal<string>('');
   readonly endDate = signal<string>('');
 
+  // Alternativas de fechas disponibles
+  readonly availableAlternatives = signal<
+    Array<{
+      startDate: string;
+      endDate: string;
+      daysCount: number;
+    }>
+  >([]);
+
   // Cálculos automáticos
   readonly totalDays = computed(() => {
     if (!this.startDate() || !this.endDate()) return 0;
@@ -187,12 +196,61 @@ export class SimpleCheckoutComponent {
       );
 
       if (!isAvailable) {
-        this.error.set('El auto no está disponible para esas fechas. Por favor elige otras fechas.');
+        // ✅ NUEVO: Obtener próximas fechas disponibles
+        const alternatives = await this.carsService.getNextAvailableRange(
+          this.car.id,
+          this.startDate(),
+          this.endDate(),
+          3 // Máximo 3 opciones
+        );
+
+        this.availableAlternatives.set(alternatives);
+
+        // Mostrar mensaje con alternativas si las hay
+        if (alternatives.length > 0) {
+          const firstAlt = alternatives[0];
+          this.error.set(
+            `El auto no está disponible para esas fechas. Próxima ventana disponible: ${this.formatDate(firstAlt.startDate)} → ${this.formatDate(firstAlt.endDate)}`
+          );
+        } else {
+          this.error.set('El auto no está disponible para esas fechas. Por favor elige otras fechas.');
+        }
+      } else {
+        // Limpiar alternativas si está disponible
+        this.availableAlternatives.set([]);
       }
     } catch (error) {
       // Si falla la validación, permitir continuar pero mostrar warning
       console.warn('No se pudo verificar disponibilidad:', error);
     }
+  }
+
+  /**
+   * Aplica una fecha alternativa seleccionada por el usuario
+   */
+  selectAlternative(alternative: { startDate: string; endDate: string; daysCount: number }): void {
+    this.startDate.set(alternative.startDate);
+    this.endDate.set(alternative.endDate);
+    this.availableAlternatives.set([]);
+    this.error.set(null);
+    this.canWaitlist.set(false);
+
+    // Mostrar mensaje de éxito
+    this.toastService.success(
+      `✅ Fechas actualizadas: ${this.formatDate(alternative.startDate)} → ${this.formatDate(alternative.endDate)}`,
+      3000
+    );
+  }
+
+  /**
+   * Formatea una fecha ISO a formato legible dd/mm/yyyy
+   */
+  private formatDate(isoDate: string): string {
+    const date = new Date(isoDate);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   }
 
   private async processBooking() {
