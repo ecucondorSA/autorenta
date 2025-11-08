@@ -1,0 +1,137 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin/accounting"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Libro Mayor</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="exportToCSV()">
+        <ion-icon name="download" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Filters -->
+  <ion-card class="mb-4">
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <ion-item>
+          <ion-label position="stacked">Fecha Inicio</ion-label>
+          <ion-input type="date" [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="startDate"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha Fin</ion-label>
+          <ion-input type="date" [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="endDate"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Código de Cuenta</ion-label>
+          <ion-input [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="accountCode" placeholder="Ej: 1.01.01"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Tipo de Referencia</ion-label>
+          <ion-input [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="referenceType" placeholder="Ej: booking"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Búsqueda</ion-label>
+          <ion-input [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="searchTerm" placeholder="Buscar en descripción"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <ion-button (click)="applyFilters()">Aplicar</ion-button>
+        <ion-button fill="outline" (click)="clearFilters()">Limpiar</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="mt-4 text-gray-500">Cargando libro mayor...</p>
+  </div>
+
+  <!-- Ledger Table -->
+  <ion-card *ngIf="!loading()">
+    <ion-card-header>
+      <ion-card-title>
+        Entradas del Libro Mayor
+        <span class="text-sm font-normal text-gray-500">
+          ({{ ledgerData().total }} total)
+        </span>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b">
+              <th class="text-left py-2 px-3 text-sm font-semibold">Fecha</th>
+              <th class="text-left py-2 px-3 text-sm font-semibold">Cuenta</th>
+              <th class="text-right py-2 px-3 text-sm font-semibold">Débito</th>
+              <th class="text-right py-2 px-3 text-sm font-semibold">Crédito</th>
+              <th class="text-left py-2 px-3 text-sm font-semibold">Descripción</th>
+              <th class="text-left py-2 px-3 text-sm font-semibold">Referencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of ledgerData().data" class="border-b hover:bg-gray-50">
+              <td class="py-2 px-3 text-sm">{{ entry.entry_date | date: 'short' }}</td>
+              <td class="py-2 px-3 text-sm">
+                {{ entry.account_code }}
+                <span *ngIf="entry.accounting_chart_of_accounts" class="text-gray-500">
+                  - {{ entry.accounting_chart_of_accounts.name }}
+                </span>
+              </td>
+              <td class="py-2 px-3 text-sm text-right">
+                <span *ngIf="entry.debit > 0">{{ entry.debit | number: '1.2-2' }}</span>
+              </td>
+              <td class="py-2 px-3 text-sm text-right">
+                <span *ngIf="entry.credit > 0">{{ entry.credit | number: '1.2-2' }}</span>
+              </td>
+              <td class="py-2 px-3 text-sm">{{ entry.description }}</td>
+              <td class="py-2 px-3 text-sm">
+                <span *ngIf="entry.reference_type" class="text-xs bg-gray-100 px-2 py-1 rounded">
+                  {{ entry.reference_type }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="ledgerData().totalPages > 1" class="flex items-center justify-between mt-4">
+        <p class="text-sm text-gray-500">
+          Página {{ ledgerData().page }} de {{ ledgerData().totalPages }}
+        </p>
+        <div class="flex gap-2">
+          <ion-button
+            fill="outline"
+            size="small"
+            [disabled]="ledgerData().page === 1"
+            (click)="changePage(ledgerData().page - 1)"
+          >
+            Anterior
+          </ion-button>
+          <ion-button
+            fill="outline"
+            size="small"
+            [disabled]="ledgerData().page === ledgerData().totalPages"
+            (click)="changePage(ledgerData().page + 1)"
+          >
+            Siguiente
+          </ion-button>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

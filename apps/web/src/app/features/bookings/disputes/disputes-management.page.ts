@@ -1,0 +1,245 @@
+import { Component, OnInit, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { DisputesService, Dispute, DisputeEvidence, DisputeKind } from '../../../core/services/disputes.service';
+import { BookingsService } from '../../../core/services/bookings.service';
+import { Booking } from '../../../core/models';
+import { ToastService } from '../../../core/services/toast.service';
+import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+
+@Component({
+  selector: 'app-disputes-management',
+  standalone: true,
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule],
+  templateUrl: './disputes-management.page.html',
+  styleUrls: ['./disputes-management.page.scss'],
+})
+export class DisputesManagementPage implements OnInit {
+  private readonly disputesService = inject(DisputesService);
+  private readonly bookingsService = inject(BookingsService);
+  private readonly toastService = inject(ToastService);
+  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  readonly bookingId = signal<string>('');
+  readonly booking = signal<Booking | null>(null);
+  readonly loading = signal(false);
+  readonly disputes = signal<Dispute[]>([]);
+  readonly selectedDispute = signal<Dispute | null>(null);
+  readonly showCreateModal = signal(false);
+  readonly showEvidenceModal = signal(false);
+  readonly evidence = signal<DisputeEvidence[]>([]);
+  readonly uploadingEvidence = signal(false);
+
+  readonly newDispute = signal({
+    kind: '' as DisputeKind | '',
+    description: '',
+  });
+
+  readonly evidenceFiles = signal<File[]>([]);
+  readonly evidenceNote = signal('');
+
+  async ngOnInit(): Promise<void> {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) {
+      this.toastService.error('Error', 'ID de booking no encontrado');
+      await this.router.navigate(['/bookings']);
+      return;
+    }
+
+    this.bookingId.set(id);
+    await Promise.all([this.loadBooking(), this.loadDisputes()]);
+  }
+
+  async loadBooking(): Promise<void> {
+    try {
+      const booking = await this.bookingsService.getBookingById(this.bookingId());
+      this.booking.set(booking);
+    } catch (err) {
+      console.error('Error loading booking:', err);
+      this.toastService.error('Error', 'No se pudo cargar la reserva');
+    }
+  }
+
+  async loadDisputes(): Promise<void> {
+    this.loading.set(true);
+    try {
+      const disputesList = await this.disputesService.listByBooking(this.bookingId());
+      this.disputes.set(disputesList);
+    } catch (err) {
+      console.error('Error loading disputes:', err);
+      this.toastService.error('Error', 'No se pudieron cargar las disputas');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  openCreateModal(): void {
+    this.showCreateModal.set(true);
+    this.newDispute.set({ kind: '', description: '' });
+  }
+
+  closeCreateModal(): void {
+    this.showCreateModal.set(false);
+    this.newDispute.set({ kind: '', description: '' });
+    this.evidenceFiles.set([]);
+  }
+
+  async createDispute(): Promise<void> {
+    if (!this.newDispute().kind || !this.newDispute().description.trim()) {
+      this.toastService.error('Error', 'Debe completar todos los campos');
+      return;
+    }
+
+    this.loading.set(true);
+    try {
+      const dispute = await this.disputesService.createDispute({
+        bookingId: this.bookingId(),
+        kind: this.newDispute().kind as DisputeKind,
+        description: this.newDispute().description.trim(),
+      });
+
+      // Upload evidence if any
+      if (this.evidenceFiles().length > 0) {
+        await this.uploadEvidenceFiles(dispute.id);
+      }
+
+      this.toastService.success('Disputa creada exitosamente');
+      this.closeCreateModal();
+      await this.loadDisputes();
+    } catch (err) {
+      console.error('Error creating dispute:', err);
+      this.toastService.error('Error', err instanceof Error ? err.message : 'Error al crear disputa');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async openEvidenceModal(dispute: Dispute): Promise<void> {
+    this.selectedDispute.set(dispute);
+    this.loading.set(true);
+    try {
+      const evidenceList = await this.disputesService.listEvidence(dispute.id);
+      this.evidence.set(evidenceList);
+      this.showEvidenceModal.set(true);
+    } catch (err) {
+      console.error('Error loading evidence:', err);
+      this.toastService.error('Error', 'No se pudieron cargar las evidencias');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  closeEvidenceModal(): void {
+    this.showEvidenceModal.set(false);
+    this.selectedDispute.set(null);
+    this.evidence.set([]);
+    this.evidenceFiles.set([]);
+    this.evidenceNote.set('');
+  }
+
+  onEvidenceFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.evidenceFiles.set(Array.from(input.files));
+    }
+  }
+
+  async uploadEvidenceFiles(disputeId: string): Promise<void> {
+    if (this.evidenceFiles().length === 0) return;
+
+    this.uploadingEvidence.set(true);
+    const supabase = this.supabaseService.getClient();
+
+    try {
+      for (const file of this.evidenceFiles()) {
+        // Upload to storage
+        const filePath = `disputes/${disputeId}/${Date.now()}_${file.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('documents')
+          .upload(filePath, file);
+
+        if (uploadError) {
+          console.error('Error uploading file:', uploadError);
+          continue;
+        }
+
+        // Get public URL
+        const { data: urlData } = supabase.storage.from('documents').getPublicUrl(filePath);
+
+        // Add evidence record
+        await this.disputesService.addEvidence(disputeId, urlData.publicUrl, this.evidenceNote() || undefined);
+      }
+
+      this.toastService.success('Evidencias subidas exitosamente');
+      this.evidenceFiles.set([]);
+      this.evidenceNote.set('');
+      await this.loadDisputes();
+    } catch (err) {
+      console.error('Error uploading evidence:', err);
+      this.toastService.error('Error', 'Error al subir evidencias');
+    } finally {
+      this.uploadingEvidence.set(false);
+    }
+  }
+
+  async addEvidenceToSelectedDispute(): Promise<void> {
+    const dispute = this.selectedDispute();
+    if (!dispute) return;
+
+    await this.uploadEvidenceFiles(dispute.id);
+    await this.openEvidenceModal(dispute); // Reload evidence
+  }
+
+  getStatusLabel(status: Dispute['status']): string {
+    const labels: Record<Dispute['status'], string> = {
+      open: 'Abierta',
+      in_review: 'En revisión',
+      resolved: 'Resuelta',
+      rejected: 'Rechazada',
+    };
+    return labels[status] || status;
+  }
+
+  getStatusColor(status: Dispute['status']): string {
+    switch (status) {
+      case 'open':
+        return 'warning';
+      case 'in_review':
+        return 'primary';
+      case 'resolved':
+        return 'success';
+      case 'rejected':
+        return 'danger';
+      default:
+        return 'medium';
+    }
+  }
+
+  getKindLabel(kind: Dispute['kind']): string {
+    const labels: Record<Dispute['kind'], string> = {
+      damage: 'Daños',
+      no_show: 'No se presentó',
+      late_return: 'Devolución tardía',
+      other: 'Otro',
+    };
+    return labels[kind] || kind;
+  }
+
+  formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  isImage(path: string): boolean {
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(path);
+  }
+}

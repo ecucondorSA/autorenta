@@ -5,6 +5,7 @@ import { MessagesService } from '../../core/services/messages.service';
 import { AuthService } from '../../core/services/auth.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { UnreadMessagesService } from '../../core/services/unread-messages.service';
+import { OfflineMessagesIndicatorComponent } from '../../shared/components/offline-messages-indicator/offline-messages-indicator.component';
 
 interface Conversation {
   id: string;
@@ -28,16 +29,21 @@ interface Conversation {
 @Component({
   selector: 'app-inbox',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, OfflineMessagesIndicatorComponent],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <!-- Header -->
       <div class="sticky top-0 z-10 bg-white shadow dark:bg-gray-800">
         <div class="mx-auto max-w-4xl px-4 py-4">
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mensajes</h1>
-          <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
-            {{ conversations().length }} conversaciones
-          </p>
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mensajes</h1>
+              <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                {{ conversations().length }} conversaciones
+              </p>
+            </div>
+            <app-offline-messages-indicator />
+          </div>
         </div>
       </div>
 

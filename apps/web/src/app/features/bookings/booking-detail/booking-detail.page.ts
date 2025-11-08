@@ -21,6 +21,12 @@ import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insura
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
+import { DisputeFormComponent } from '../../../shared/components/dispute-form/dispute-form.component';
+import { DisputesListComponent } from '../../../shared/components/disputes-list/disputes-list.component';
+import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
+import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
+import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
+import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
 
 /**
  * BookingDetailPage
@@ -47,6 +53,12 @@ import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-
     BookingStatusComponent,
     ReviewManagementComponent,
     DepositStatusBadgeComponent,
+    DisputeFormComponent,
+    DisputesListComponent,
+    RefundRequestComponent,
+    BookingContractComponent,
+    RefundStatusComponent,
+    ShareButtonComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -191,6 +203,42 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const claims = this.bookingClaims();
     return claims.length > 0 ? claims[0] : null;
   });
+
+  // Disputes and refunds
+  showDisputeForm = signal(false);
+  showRefundForm = signal(false);
+
+  readonly canCreateDispute = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    // Can create dispute for active or completed bookings
+    return booking.status === 'in_progress' || booking.status === 'completed';
+  });
+
+  readonly canRequestRefund = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    // Can request refund for completed or cancelled bookings
+    return booking.status === 'completed' || booking.status === 'cancelled';
+  });
+
+  onDisputeCreated(): void {
+    // Reload disputes if needed
+    this.showDisputeForm.set(false);
+  }
+
+  onRefundRequested(): void {
+    // Reload booking to get updated refund status
+    const bookingId = this.booking()?.id;
+    if (bookingId) {
+      this.bookingsService.getBookingById(bookingId).then((updated) => {
+        if (updated) {
+          this.booking.set(updated);
+        }
+      });
+    }
+    this.showRefundForm.set(false);
+  }
 
   // Computed properties para acciones de check-in/check-out
   readonly canPerformCheckIn = computed(() => {
@@ -400,6 +448,18 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
+  }
+
+  getBookingDetailsText(): string {
+    const booking = this.booking();
+    if (!booking) return 'Mi reserva en Autorentar';
+
+    const carInfo = `${booking.car_brand} ${booking.car_model}`;
+    const dates = booking.start_at && booking.end_at
+      ? `${this.formatDateTime(booking.start_at)} - ${this.formatDateTime(booking.end_at)}`
+      : '';
+
+    return `Reserva: ${carInfo}${dates ? ` (${dates})` : ''}`;
   }
 
   private getTotalCents(booking: Booking): number {

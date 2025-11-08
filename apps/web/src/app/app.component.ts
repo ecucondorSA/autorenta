@@ -41,6 +41,7 @@ import { HelpButtonComponent } from './shared/components/help-button/help-button
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
+import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
 
 @Component({
   selector: 'app-root',
@@ -64,6 +65,7 @@ import { NotificationsComponent } from './shared/components/notifications/notifi
     NotificationsComponent,
     ToastComponent,
     MobileBottomNavComponent,
+    ShareButtonComponent,
   ],
   templateUrl: './app.component.html',
   styles: [

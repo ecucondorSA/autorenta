@@ -239,4 +239,12 @@
       <span>Reportar review</span>
     </button>
   </div>
+
+  <!-- Flag Review Modal -->
+  <app-flag-review-modal
+    [isOpen]="showFlagModal()"
+    [reviewId]="review.id"
+    (closeModal)="onCloseFlagModal()"
+    (flagged)="onFlagged()"
+  ></app-flag-review-modal>
 </div>

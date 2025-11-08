@@ -5,6 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
+import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
+import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
 
 // ✅ NEW: Extracted services
 import { PublishCarFormService } from './services/publish-car-form.service';
@@ -35,6 +37,8 @@ import { PublishCarMpOnboardingService } from './services/publish-car-mp-onboard
     ReactiveFormsModule,
     TranslateModule,
     HostSupportInfoPanelComponent,
+    StockPhotosSelectorComponent,
+    AiPhotoGeneratorComponent,
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -60,6 +64,8 @@ export class PublishCarV2Page implements OnInit {
   // Component state
   readonly isSubmitting = signal(false);
   readonly editMode = signal(false);
+  readonly showStockPhotosModal = signal(false);
+  readonly showAIPhotosModal = signal(false);
   private carId: string | null = null;
 
   // Form reference

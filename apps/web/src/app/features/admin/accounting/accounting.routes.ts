@@ -40,4 +40,39 @@ export const ACCOUNTING_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/provisions.page').then((m) => m.ProvisionsPage),
   },
+  {
+    path: 'manual-entry',
+    loadComponent: () =>
+      import('./pages/manual-journal-entry.page').then((m) => m.ManualJournalEntryPage),
+  },
+  {
+    path: 'ledger',
+    loadComponent: () =>
+      import('./pages/ledger.page').then((m) => m.LedgerPage),
+  },
+  {
+    path: 'revenue-recognition',
+    loadComponent: () =>
+      import('./pages/revenue-recognition.page').then((m) => m.RevenueRecognitionPage),
+  },
+  {
+    path: 'period-closures',
+    loadComponent: () =>
+      import('./pages/period-closures.page').then((m) => m.PeriodClosuresPage),
+  },
+  {
+    path: 'financial-health',
+    loadComponent: () =>
+      import('./pages/financial-health.page').then((m) => m.FinancialHealthPage),
+  },
+  {
+    path: 'cash-flow',
+    loadComponent: () =>
+      import('./cash-flow/cash-flow.page').then((m) => m.CashFlowPage),
+  },
+  {
+    path: 'audit-logs',
+    loadComponent: () =>
+      import('./audit-logs/audit-logs.page').then((m) => m.AuditLogsPage),
+  },
 ];

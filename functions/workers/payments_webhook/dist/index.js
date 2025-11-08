@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { withSentry, captureError, addBreadcrumb } from './sentry';
 const jsonResponse = (data, init = {}) => new Response(JSON.stringify(data), {
     headers: {
         'content-type': 'application/json; charset=UTF-8',
@@ -119,8 +120,8 @@ const getMercadoPagoPaymentDetails = async (paymentId, accessToken) => {
 /**
  * Procesa un webhook mock
  */
-const processMockWebhook = async (payload, supabase, env) => {
-    console.log('Processing mock webhook for booking:', payload.booking_id);
+const processMockWebhook = async (payload, supabase, env, log) => {
+    log.info('Processing mock webhook', { bookingId: payload.booking_id, status: payload.status });
     // Idempotency check
     const dedupeKey = `webhook:mock:${payload.booking_id}:${payload.status}`;
     const existing = await env.AUTORENT_WEBHOOK_KV.get(dedupeKey);
@@ -185,15 +186,15 @@ const processMockWebhook = async (payload, supabase, env) => {
 /**
  * Procesa un webhook de Mercado Pago
  */
-const processMercadoPagoWebhook = async (payload, supabase, env, options) => {
+const processMercadoPagoWebhook = async (payload, supabase, env, options, log) => {
     const mpAccessToken = env.MERCADOPAGO_ACCESS_TOKEN;
     if (!mpAccessToken) {
-        console.error('Mercado Pago access token not configured in environment');
+        log.error('Mercado Pago access token not configured');
         return jsonResponse({ message: 'Mercado Pago access token missing' }, { status: 500 });
     }
     const paymentId = payload?.data?.id || options.query.get('data.id') || options.query.get('id');
     if (!paymentId) {
-        console.error('Mercado Pago webhook without payment ID', {
+        log.error('Mercado Pago webhook without payment ID', {
             payload,
             query: Object.fromEntries(options.query.entries()),
         });
@@ -201,10 +202,10 @@ const processMercadoPagoWebhook = async (payload, supabase, env, options) => {
     }
     const webhookType = payload?.type || options.query.get('type') || '';
     if (webhookType && webhookType !== 'payment') {
-        console.log('Ignoring non-payment event:', webhookType);
+        log.info('Ignoring non-payment event', { webhookType });
         return jsonResponse({ message: 'Event type not supported' }, { status: 200 });
     }
-    console.log('Processing Mercado Pago webhook:', {
+    log.info('Processing Mercado Pago webhook', {
         paymentId,
         action: payload?.action,
         type: webhookType,
@@ -362,59 +363,76 @@ const processMercadoPagoWebhook = async (payload, supabase, env, options) => {
  * Worker principal
  */
 const worker = {
-    async fetch(request, env) {
-        const url = new URL(request.url);
-        // Health check endpoint - GET permite verificación
-        if (url.pathname === '/webhooks/payments') {
-            if (request.method === 'GET') {
-                return jsonResponse({
-                    status: 'ok',
-                    message: 'Webhook endpoint is ready',
-                    timestamp: new Date().toISOString(),
+    async fetch(request, env, ctx) {
+        return withSentry(request, env, ctx, async () => {
+            const url = new URL(request.url);
+            // Health check endpoint - GET permite verificación
+            if (url.pathname === '/webhooks/payments') {
+                if (request.method === 'GET') {
+                    return jsonResponse({
+                        status: 'ok',
+                        message: 'Webhook endpoint is ready',
+                        timestamp: new Date().toISOString(),
+                    });
+                }
+                // Solo acepta POST para procesamiento real
+                if (request.method !== 'POST') {
+                    return jsonResponse({ message: 'Method not allowed' }, { status: 405 });
+                }
+            }
+            else {
+                return jsonResponse({ message: 'Not found' }, { status: 404 });
+            }
+            const supabase = getSupabaseAdminClient(env);
+            const rawBody = await request.text();
+            let payload = {};
+            if (rawBody) {
+                try {
+                    payload = JSON.parse(rawBody);
+                }
+                catch (error) {
+                    console.warn('Invalid JSON payload, continuing with query params fallback:', error);
+                    addBreadcrumb('Invalid JSON payload', 'validation', { error });
+                    payload = {};
+                }
+            }
+            try {
+                // Rutear según el provider
+                if (payload?.provider === 'mock') {
+                    addBreadcrumb('Processing mock webhook', 'webhook', { bookingId: payload.booking_id });
+                    // Validar campos requeridos para mock
+                    if (!payload.booking_id || !payload.status) {
+                        return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
+                    }
+                    return await processMockWebhook(payload, supabase, env);
+                }
+                addBreadcrumb('Processing MercadoPago webhook', 'webhook', {
+                    paymentId: payload?.data?.id,
+                });
+                return await processMercadoPagoWebhook(payload ?? {}, supabase, env, {
+                    signatureHeader: request.headers.get('x-signature'),
+                    requestId: request.headers.get('x-request-id'),
+                    rawBody,
+                    query: url.searchParams,
                 });
             }
-            // Solo acepta POST para procesamiento real
-            if (request.method !== 'POST') {
-                return jsonResponse({ message: 'Method not allowed' }, { status: 405 });
-            }
-        }
-        else {
-            return jsonResponse({ message: 'Not found' }, { status: 404 });
-        }
-        const supabase = getSupabaseAdminClient(env);
-        const rawBody = await request.text();
-        let payload = {};
-        if (rawBody) {
-            try {
-                payload = JSON.parse(rawBody);
-            }
             catch (error) {
-                console.warn('Invalid JSON payload, continuing with query params fallback:', error);
-                payload = {};
+                console.error('Error processing webhook:', error);
+                captureError(error, {
+                    tags: {
+                        provider: payload?.provider || 'mercadopago',
+                        action: 'process-webhook',
+                    },
+                    extra: {
+                        url: url.pathname,
+                        method: request.method,
+                    },
+                });
+                return jsonResponse({
+                    message: error instanceof Error ? error.message : 'Internal server error',
+                }, { status: 500 });
             }
-        }
-        try {
-            // Rutear según el provider
-            if (payload?.provider === 'mock') {
-                // Validar campos requeridos para mock
-                if (!payload.booking_id || !payload.status) {
-                    return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
-                }
-                return await processMockWebhook(payload, supabase, env);
-            }
-            return await processMercadoPagoWebhook(payload ?? {}, supabase, env, {
-                signatureHeader: request.headers.get('x-signature'),
-                requestId: request.headers.get('x-request-id'),
-                rawBody,
-                query: url.searchParams,
-            });
-        }
-        catch (error) {
-            console.error('Error processing webhook:', error);
-            return jsonResponse({
-                message: error instanceof Error ? error.message : 'Internal server error',
-            }, { status: 500 });
-        }
+        });
     },
 };
 export default worker;

@@ -1,0 +1,136 @@
+<div class="payouts-container">
+  <!-- Header -->
+  <div class="header">
+    <a routerLink="/profile" class="back-button">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Volver al Perfil
+    </a>
+    <h1 class="title">Retiros Bancarios</h1>
+    <p class="subtitle">
+      Retirá el saldo de tu wallet a tu cuenta bancaria
+    </p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando información...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error()" class="alert alert-error">
+    <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+    </svg>
+    {{ error() }}
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading() && !error()" class="content">
+    <!-- Balance Card -->
+    <div class="balance-card">
+      <div class="balance-header">
+        <h2 class="balance-title">Saldo Disponible</h2>
+        <svg class="balance-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+        </svg>
+      </div>
+      <div class="balance-amount">{{ formattedBalance() }}</div>
+      <button
+        type="button"
+        class="btn-primary"
+        [disabled]="!canRequestPayout()"
+        (click)="openRequestModal()"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Solicitar Retiro
+      </button>
+      <p *ngIf="!canRequestPayout()" class="balance-hint">
+        <span *ngIf="walletBalance() < 1000">
+          Mínimo ARS 1.000 para retirar
+        </span>
+        <span *ngIf="walletBalance() >= 1000 && !defaultBankAccount()">
+          Agregá una cuenta bancaria para retirar
+        </span>
+      </p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid" *ngIf="stats()">
+      <div class="stat-card">
+        <div class="stat-header">
+          <svg class="stat-icon pending" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+          </svg>
+          <span class="stat-label">Pendientes</span>
+        </div>
+        <div class="stat-value">{{ stats()!.pendingPayouts }}</div>
+        <div class="stat-amount">
+          {{ stats()!.pendingAmount | number:'1.0-0' | currency:'ARS':'symbol-narrow' }}
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <svg class="stat-icon completed" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+          <span class="stat-label">Completados</span>
+        </div>
+        <div class="stat-value">{{ stats()!.completedPayouts }}</div>
+        <div class="stat-amount">
+          {{ stats()!.completedAmount | number:'1.0-0' | currency:'ARS':'symbol-narrow' }}
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <svg class="stat-icon total" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+          </svg>
+          <span class="stat-label">Total Retirado</span>
+        </div>
+        <div class="stat-value">{{ stats()!.totalPayouts }}</div>
+        <div class="stat-amount">
+          {{ stats()!.totalAmount | number:'1.0-0' | currency:'ARS':'symbol-narrow' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bank Accounts Section -->
+    <div class="section">
+      <h2 class="section-title">Cuentas Bancarias</h2>
+      <p class="section-description">
+        Gestioná tus cuentas bancarias para recibir pagos
+      </p>
+      <app-bank-accounts
+        [userId]="userId()!"
+        (accountUpdated)="onBankAccountUpdated()"
+      ></app-bank-accounts>
+    </div>
+
+    <!-- Payout History Section -->
+    <div class="section">
+      <h2 class="section-title">Historial de Retiros</h2>
+      <p class="section-description">
+        Seguí el estado de tus retiros bancarios
+      </p>
+      <app-payout-history [userId]="userId()!"></app-payout-history>
+    </div>
+  </div>
+
+  <!-- Request Payout Modal -->
+  <app-request-payout-modal
+    *ngIf="showRequestModal()"
+    [userId]="userId()!"
+    [maxAmount]="walletBalance()"
+    [defaultBankAccount]="defaultBankAccount()"
+    (close)="closeRequestModal()"
+    (payoutRequested)="onPayoutRequested()"
+  ></app-request-payout-modal>
+</div>

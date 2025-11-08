@@ -117,11 +117,21 @@
           <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-smoke-black">
             {{ car()?.title }}
           </h1>
-          <app-share-menu
-            [title]="car()?.title || 'Auto en Autorentar'"
-            [text]="'Mirá este auto increíble en Autorentar: ' + (car()?.title || '')"
-            [url]="'https://autorenta-web.pages.dev/cars/' + car()?.id"
-          ></app-share-menu>
+          <div class="flex items-center gap-2">
+            <app-share-button
+              type="car"
+              [carId]="car()?.id || ''"
+              [carTitle]="car()?.title || ''"
+              [carPrice]="displayPrice() || 0"
+              label="Compartir"
+              buttonClass="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+            ></app-share-button>
+            <app-share-menu
+              [title]="car()?.title || 'Auto en Autorentar'"
+              [text]="'Mirá este auto increíble en Autorentar: ' + (car()?.title || '')"
+              [url]="'https://autorenta-web.pages.dev/cars/' + car()?.id"
+            ></app-share-menu>
+          </div>
         </div>
 
         <div class="space-y-2">

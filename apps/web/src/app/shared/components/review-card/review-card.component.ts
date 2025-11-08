@@ -1,13 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Review } from '../../../core/models';
+import { FlagReviewModalComponent } from '../flag-review-modal/flag-review-modal.component';
 
 @Component({
   selector: 'app-review-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule, FlagReviewModalComponent],
   templateUrl: './review-card.component.html',
   styleUrls: ['./review-card.component.css'],
 })
@@ -17,6 +18,8 @@ export class ReviewCardComponent {
   @Input() currentUserId?: string;
 
   @Output() flagReview = new EventEmitter<string>();
+
+  showFlagModal = signal(false);
 
   categoryLabels: Record<string, string> = {
     rating_cleanliness: 'Limpieza',
@@ -79,8 +82,17 @@ export class ReviewCardComponent {
 
   onFlagReview(): void {
     if (this.review?.id) {
-      this.flagReview.emit(this.review.id);
+      this.showFlagModal.set(true);
     }
+  }
+
+  onFlagged(): void {
+    this.flagReview.emit(this.review.id);
+    this.showFlagModal.set(false);
+  }
+
+  onCloseFlagModal(): void {
+    this.showFlagModal.set(false);
   }
 
   get canFlag(): boolean {
