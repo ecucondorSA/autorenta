@@ -1,0 +1,475 @@
+<!-- 🎨 MARKETPLACE V2 - PREMIUM DESIGN -->
+
+<!-- Hero Header with Search -->
+<div class="hero-header relative bg-gradient-to-br from-accent-petrol via-teal-700 to-cyan-800 text-white overflow-hidden">
+  <!-- Animated background pattern -->
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Top bar with logo and user -->
+    <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+          <span class="text-2xl">🚗</span>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold">AutoRenta</h1>
+          <p class="text-xs text-white/80">Tu auto ideal te espera</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Quick stats -->
+        <div class="hidden md:flex items-center gap-4 text-sm">
+          <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-lg">
+            <span class="text-lg">⚡</span>
+            <span>{{carsWithDistance().length}} autos disponibles</span>
+          </div>
+          <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-lg">
+            <span class="text-lg">✓</span>
+            <span>Reserva en 2 minutos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Search Bar -->
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Location Search -->
+          <div class="relative">
+            <label class="block text-xs font-medium text-charcoal-medium mb-2">📍 Ubicación</label>
+            <input
+              type="text"
+              placeholder="¿Dónde necesitas el auto?"
+              [value]="searchValue()"
+              (input)="onSearchChange($any($event.target).value)"
+              class="w-full px-4 py-3 bg-pearl-light/50 border border-pearl-gray rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-petrol text-smoke-black placeholder-charcoal-light"
+            />
+          </div>
+
+          <!-- Date Range -->
+          <div class="relative">
+            <label class="block text-xs font-medium text-charcoal-medium mb-2">📅 Fechas</label>
+            <input
+              type="text"
+              placeholder="Selecciona fechas"
+              value="{{dateRange().from && dateRange().to ? (dateRange().from + ' - ' + dateRange().to) : 'Cuando lo necesitas?'}}"
+              class="w-full px-4 py-3 bg-pearl-light/50 border border-pearl-gray rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-petrol text-smoke-black placeholder-charcoal-light cursor-pointer"
+              readonly
+            />
+          </div>
+
+          <!-- Search Button -->
+          <div class="flex items-end">
+            <button
+              (click)="onSearchSubmit(searchValue())"
+              class="w-full px-6 py-3 bg-gradient-to-r from-accent-petrol to-teal-600 hover:from-accent-petrol/90 hover:to-teal-600/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
+            >
+              🔍 Buscar autos
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Filters Pills -->
+        <div class="flex items-center gap-2 mt-4 overflow-x-auto pb-2">
+          <span class="text-xs text-charcoal-medium flex-shrink-0">Filtros rápidos:</span>
+          <button
+            *ngFor="let filter of quickFilters"
+            (click)="onQuickFilterClick(filter.id)"
+            class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-pearl-gray rounded-full text-xs font-medium text-charcoal-medium hover:bg-accent-petrol hover:text-white hover:border-accent-petrol transition-all duration-200 flex-shrink-0"
+          >
+            <span>{{filter.icon}}</span>
+            <span>{{filter.label}}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wave separator -->
+  <div class="absolute bottom-0 left-0 right-0">
+    <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-12">
+      <path d="M0 48H1440V0C1440 0 1080 48 720 48C360 48 0 0 0 0V48Z" fill="currentColor" class="text-white dark:text-slate-deep"/>
+    </svg>
+  </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="marketplace-content bg-pearl-light/30 dark:bg-slate-deep min-h-screen">
+  <div class="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Stats Strip -->
+    <div class="mb-6">
+      <app-stats-strip
+        [totalCars]="carsWithDistance().length"
+        [availableNow]="carsWithDistance().filter(c => c.distance && c.distance < 5).length"
+        [averagePrice]="calculateAveragePrice()"
+      />
+    </div>
+
+    <!-- Trust Badges -->
+    <div class="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+          <span class="text-xl">✓</span>
+        </div>
+        <div>
+          <p class="text-xs text-charcoal-medium dark:text-pearl-light">Verificación</p>
+          <p class="text-sm font-semibold text-smoke-black dark:text-white">100% Segura</p>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+          <span class="text-xl">🛡️</span>
+        </div>
+        <div>
+          <p class="text-xs text-charcoal-medium dark:text-pearl-light">Seguro</p>
+          <p class="text-sm font-semibold text-smoke-black dark:text-white">Incluido</p>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+          <span class="text-xl">💳</span>
+        </div>
+        <div>
+          <p class="text-xs text-charcoal-medium dark:text-pearl-light">Sin tarjeta</p>
+          <p class="text-sm font-semibold text-smoke-black dark:text-white">Requerida</p>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
+          <span class="text-xl">⚡</span>
+        </div>
+        <div>
+          <p class="text-xs text-charcoal-medium dark:text-pearl-light">Entrega</p>
+          <p class="text-sm font-semibold text-smoke-black dark:text-white">Inmediata</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Toggle -->
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-smoke-black dark:text-white">
+        Autos cerca de ti
+        <span class="text-base font-normal text-charcoal-medium ml-2">({{carsWithDistance().length}} resultados)</span>
+      </h2>
+
+      <div class="flex items-center gap-2">
+        <!-- View mode toggle -->
+        <div class="bg-white dark:bg-slate-800 rounded-lg p-1 shadow-sm flex">
+          <button
+            [class.bg-accent-petrol]="viewMode() === 'grid'"
+            [class.text-white]="viewMode() === 'grid'"
+            [class.text-charcoal-medium]="viewMode() !== 'grid'"
+            (click)="viewMode.set('grid')"
+            class="px-3 py-2 rounded-md transition-all duration-200"
+          >
+            <span class="text-lg">▦</span>
+          </button>
+          <button
+            [class.bg-accent-petrol]="viewMode() === 'list'"
+            [class.text-white]="viewMode() === 'list'"
+            [class.text-charcoal-medium]="viewMode() !== 'list'"
+            (click)="viewMode.set('list')"
+            class="px-3 py-2 rounded-md transition-all duration-200"
+          >
+            <span class="text-lg">☰</span>
+          </button>
+          <button
+            [class.bg-accent-petrol]="viewMode() === 'map'"
+            [class.text-white]="viewMode() === 'map'"
+            [class.text-charcoal-medium]="viewMode() !== 'map'"
+            (click)="viewMode.set('map')"
+            class="px-3 py-2 rounded-md transition-all duration-200"
+          >
+            <span class="text-lg">🗺️</span>
+          </button>
+        </div>
+
+        <!-- Sort dropdown -->
+        <select
+          class="bg-white dark:bg-slate-800 border border-pearl-gray dark:border-gray-600 rounded-lg px-4 py-2 text-sm text-smoke-black dark:text-white focus:outline-none focus:ring-2 focus:ring-accent-petrol"
+        >
+          <option>Más cercanos</option>
+          <option>Precio: menor a mayor</option>
+          <option>Precio: mayor a menor</option>
+          <option>Mejor valorados</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid View -->
+    <div *ngIf="viewMode() === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div
+        *ngFor="let car of carsWithDistance(); trackBy: trackByCarId"
+        class="car-card-enhanced group"
+        (click)="onCarSelected(car.id)"
+      >
+        <!-- Enhanced Car Card -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-[1.02]">
+          <!-- Image Container with Badge -->
+          <div class="relative aspect-[4/3] overflow-hidden">
+            <img
+              [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.jpg'"
+              [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              loading="lazy"
+            />
+
+            <!-- Gradient overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+
+            <!-- Top badges -->
+            <div class="absolute top-3 left-3 flex flex-col gap-2">
+              <span *ngIf="car.distance && car.distance < 5" class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm">
+                ⚡ Cerca de ti
+              </span>
+              <span *ngIf="car.instant_booking" class="bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm">
+                🔥 Reserva instantánea
+              </span>
+            </div>
+
+            <!-- Favorite button -->
+            <button class="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg">
+              <span class="text-lg">♡</span>
+            </button>
+
+            <!-- Distance badge at bottom -->
+            <div *ngIf="car.distanceText" class="absolute bottom-3 left-3">
+              <span class="bg-white/95 backdrop-blur-sm text-smoke-black text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                <span>📍</span>
+                <span>{{car.distanceText}}</span>
+              </span>
+            </div>
+
+            <!-- Photo counter -->
+            <div class="absolute bottom-3 right-3">
+              <span class="bg-black/70 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                <span>📷</span>
+                <span>{{extractPhotoGallery(car).length}}</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="p-4">
+            <!-- Title and Rating -->
+            <div class="mb-3">
+              <h3 class="text-lg font-bold text-smoke-black dark:text-white mb-1 truncate">
+                {{car.brand_text_backup}} {{car.model_text_backup}}
+              </h3>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1 text-xs text-charcoal-medium">
+                  <span class="text-yellow-500">⭐</span>
+                  <span class="font-semibold">4.8</span>
+                  <span>(124 viajes)</span>
+                </div>
+                <span class="text-xs text-charcoal-medium">{{car.location_city}}</span>
+              </div>
+            </div>
+
+            <!-- Features -->
+            <div class="flex items-center gap-3 mb-4 text-xs text-charcoal-medium">
+              <div class="flex items-center gap-1">
+                <span>⚙️</span>
+                <span>{{car.transmission || 'Manual'}}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span>👥</span>
+                <span>{{car.seats || 5}} asientos</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span>⛽</span>
+                <span>{{car.fuel_type || 'Nafta'}}</span>
+              </div>
+            </div>
+
+            <!-- Price and CTA -->
+            <div class="flex items-center justify-between pt-3 border-t border-pearl-gray dark:border-gray-700">
+              <div>
+                <p class="text-xs text-charcoal-medium">Desde</p>
+                <p class="text-2xl font-bold text-accent-petrol">
+                  ${{car.price_per_day | number:'1.0-0'}}
+                  <span class="text-sm font-normal text-charcoal-medium">/día</span>
+                </p>
+              </div>
+              <button
+                (click)="onQuickBook(car.id); $event.stopPropagation()"
+                class="px-4 py-2 bg-accent-petrol hover:bg-accent-petrol/90 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+              >
+                Reservar
+              </button>
+            </div>
+          </div>
+
+          <!-- Social Proof -->
+          <div class="px-4 pb-4">
+            <app-social-proof-indicators [car]="car" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading skeleton -->
+      <div *ngIf="loading()" class="col-span-full flex items-center justify-center py-12">
+        <div class="flex flex-col items-center gap-4">
+          <div class="animate-spin rounded-full h-12 w-12 border-4 border-accent-petrol border-t-transparent"></div>
+          <p class="text-charcoal-medium">Cargando autos increíbles...</p>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!loading() && carsWithDistance().length === 0" class="col-span-full">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-12 text-center">
+          <div class="w-24 h-24 bg-pearl-light dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-5xl">🔍</span>
+          </div>
+          <h3 class="text-xl font-bold text-smoke-black dark:text-white mb-2">
+            No encontramos autos
+          </h3>
+          <p class="text-charcoal-medium mb-6">
+            Intenta ajustar los filtros o buscar en otra ubicación
+          </p>
+          <button class="px-6 py-3 bg-accent-petrol hover:bg-accent-petrol/90 text-white font-semibold rounded-lg transition-colors">
+            Limpiar filtros
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- List View -->
+    <div *ngIf="viewMode() === 'list'" class="space-y-4">
+      <div
+        *ngFor="let car of carsWithDistance(); trackBy: trackByCarId"
+        (click)="onCarSelected(car.id)"
+        class="bg-white dark:bg-slate-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
+      >
+        <div class="flex flex-col md:flex-row">
+          <!-- Image -->
+          <div class="relative md:w-80 aspect-[16/9] md:aspect-auto overflow-hidden flex-shrink-0">
+            <img
+              [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.jpg'"
+              [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
+              class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+              loading="lazy"
+            />
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1 p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <h3 class="text-xl font-bold text-smoke-black dark:text-white mb-1">
+                    {{car.brand_text_backup}} {{car.model_text_backup}}
+                  </h3>
+                  <div class="flex items-center gap-3 text-sm text-charcoal-medium">
+                    <span class="flex items-center gap-1">
+                      <span class="text-yellow-500">⭐</span>
+                      <span class="font-semibold">4.8</span>
+                    </span>
+                    <span>•</span>
+                    <span>📍 {{car.distanceText}}</span>
+                    <span>•</span>
+                    <span>{{car.location_city}}</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-3xl font-bold text-accent-petrol">
+                    ${{car.price_per_day | number:'1.0-0'}}
+                  </p>
+                  <p class="text-sm text-charcoal-medium">por día</p>
+                </div>
+              </div>
+
+              <p *ngIf="car.description" class="text-charcoal-medium text-sm mb-4 line-clamp-2">
+                {{car.description}}
+              </p>
+
+              <div class="flex items-center gap-4 mb-4">
+                <span class="flex items-center gap-1.5 text-sm text-charcoal-medium">
+                  <span>⚙️</span>
+                  <span>{{car.transmission || 'Manual'}}</span>
+                </span>
+                <span class="flex items-center gap-1.5 text-sm text-charcoal-medium">
+                  <span>👥</span>
+                  <span>{{car.seats || 5}} asientos</span>
+                </span>
+                <span class="flex items-center gap-1.5 text-sm text-charcoal-medium">
+                  <span>⛽</span>
+                  <span>{{car.fuel_type || 'Nafta'}}</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button
+                (click)="onCarSelected(car.id); $event.stopPropagation()"
+                class="flex-1 px-6 py-3 bg-pearl-light dark:bg-gray-700 hover:bg-pearl-gray text-smoke-black dark:text-white font-semibold rounded-lg transition-colors"
+              >
+                Ver detalles
+              </button>
+              <button
+                (click)="onQuickBook(car.id); $event.stopPropagation()"
+                class="flex-1 px-6 py-3 bg-accent-petrol hover:bg-accent-petrol/90 text-white font-semibold rounded-lg transition-colors shadow-md"
+              >
+                Reservar ahora
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map View -->
+    <div *ngIf="viewMode() === 'map'" class="relative h-[calc(100vh-400px)] min-h-[600px] rounded-2xl overflow-hidden shadow-2xl">
+      <app-cars-map
+        [cars]="carMapLocations()"
+        [selectedCarId]="selectedCarId()"
+        [userLocation]="userLocation()"
+        (carSelected)="onCarSelected($event)"
+        (quickBook)="onQuickBook($event)"
+        (userLocationChange)="onUserLocationChange($event)"
+        class="w-full h-full"
+      />
+    </div>
+
+  </div>
+</div>
+
+<!-- Quick Booking Modal -->
+<app-quick-booking-modal
+  *ngIf="quickBookingCar()"
+  [car]="quickBookingCar()!"
+  [userLocation]="userLocation() || undefined"
+  [isOpen]="quickBookingModalOpen()"
+  (confirm)="onQuickBookingConfirm($event)"
+  (cancel)="onQuickBookingCancel()"
+/>
+
+<!-- Floating Action Button -->
+<app-floating-action-fab
+  [actions]="fabActions"
+  position="bottom-right"
+  (actionClick)="onFabActionClick($event)"
+/>
+
+<!-- Notification Toast -->
+<app-notification-toast
+  [message]="toastMessage()"
+  [type]="toastType()"
+  [isVisible]="toastVisible()"
+  (dismiss)="toastVisible.set(false)"
+/>
+
+<!-- Mobile Bottom Nav -->
+<app-mobile-bottom-nav />
+
+<!-- WhatsApp FAB -->
+<app-whatsapp-fab />

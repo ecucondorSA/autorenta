@@ -1,7 +1,10 @@
 import { Component, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { NotificationsService, NotificationItem } from '../../../core/services/user-notifications.service';
+import {
+  NotificationsService,
+  NotificationItem,
+} from '../../../core/services/user-notifications.service';
 
 @Component({
   standalone: true,
@@ -18,14 +21,12 @@ export class NotificationsComponent {
   readonly unreadCount = this.notificationsService.unreadCount;
   readonly showDropdown = signal(false);
 
-  readonly recentNotifications = computed(() =>
-    this.notifications().slice(0, 5)
-  );
+  readonly recentNotifications = computed(() => this.notifications().slice(0, 5));
 
   readonly hasUnread = computed(() => this.unreadCount() > 0);
 
   toggleDropdown() {
-    this.showDropdown.update(show => !show);
+    this.showDropdown.update((show) => !show);
   }
 
   closeDropdown() {
@@ -61,10 +62,14 @@ export class NotificationsComponent {
 
   getNotificationIcon(type: NotificationItem['type']): string {
     switch (type) {
-      case 'success': return '✅';
-      case 'warning': return '⚠️';
-      case 'error': return '❌';
-      default: return 'ℹ️';
+      case 'success':
+        return '✅';
+      case 'warning':
+        return '⚠️';
+      case 'error':
+        return '❌';
+      default:
+        return 'ℹ️';
     }
   }
 }

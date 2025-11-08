@@ -48,24 +48,28 @@ export class ContractsManagementPage implements OnInit {
 
     try {
       // Obtener todos los bookings con contratos
-      const { data: bookings } = await this.bookingsService.getBookings();
+      const bookings = await this.bookingsService.getMyBookings();
       if (!bookings) {
         this.contracts.set([]);
         return;
       }
 
       const contractsWithBookings = await Promise.all(
-        bookings.map(async (booking) => {
+        bookings.map(async (booking: Booking) => {
           try {
             const contract = await this.contractsService.getContractByBooking(booking.id);
-            return contract ? { ...contract, booking } : null;
+            return contract ? { ...contract, booking: booking || undefined } : null;
           } catch {
             return null;
           }
         }),
       );
 
-      this.contracts.set(contractsWithBookings.filter((c) => c !== null) as Array<BookingContract & { booking?: Booking }>);
+      this.contracts.set(
+        contractsWithBookings.filter((c: any) => c !== null) as Array<
+          BookingContract & { booking?: Booking }
+        >,
+      );
     } catch (err) {
       console.error('Error loading contracts:', err);
       this.error.set('Error al cargar contratos');
@@ -82,7 +86,7 @@ export class ContractsManagementPage implements OnInit {
       const contract = await this.contractsService.getContractByBooking(bookingId);
       if (contract) {
         const booking = await this.bookingsService.getBookingById(bookingId);
-        this.contracts.set([{ ...contract, booking }]);
+        this.contracts.set([{ ...contract, booking: booking || undefined }]);
       } else {
         this.contracts.set([]);
       }

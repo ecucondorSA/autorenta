@@ -75,12 +75,12 @@ export class PayPalBookingGatewayService implements PaymentGateway {
    */
   createBookingPreference(
     bookingId: string,
-    useSplitPayment = false
+    useSplitPayment = false,
   ): Observable<PaymentPreferenceResponse> {
     return from(this._createOrder(bookingId, useSplitPayment)).pipe(
       catchError((err) => {
         return throwError(() => new Error(this.formatError(err)));
-      })
+      }),
     );
   }
 
@@ -89,7 +89,7 @@ export class PayPalBookingGatewayService implements PaymentGateway {
    */
   private async _createOrder(
     bookingId: string,
-    useSplitPayment: boolean
+    useSplitPayment: boolean,
   ): Promise<PaymentPreferenceResponse> {
     const supabase = this.supabaseService.getClient();
 
@@ -156,7 +156,7 @@ export class PayPalBookingGatewayService implements PaymentGateway {
     return from(this._captureOrder(orderId)).pipe(
       catchError((err) => {
         return throwError(() => new Error(this.formatError(err)));
-      })
+      }),
     );
   }
 

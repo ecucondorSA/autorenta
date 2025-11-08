@@ -536,3 +536,7 @@ BEGIN
   RAISE NOTICE 'Views creadas: 2';
   RAISE NOTICE 'RLS policies: Configuradas';
 END $$;
+
+
+
+

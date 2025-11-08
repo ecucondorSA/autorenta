@@ -1,4 +1,3 @@
-
 import { formatDateRange } from './date.utils';
 
 describe('Date Utils', () => {

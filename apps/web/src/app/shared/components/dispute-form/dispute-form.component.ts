@@ -20,9 +20,7 @@ import { ToastService } from '../../../core/services/toast.service';
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-smoke-black dark:text-pearl-light">
-            Crear Disputa
-          </h2>
+          <h2 class="text-xl font-bold text-smoke-black dark:text-pearl-light">Crear Disputa</h2>
           <button
             type="button"
             (click)="close()"
@@ -43,7 +41,8 @@ import { ToastService } from '../../../core/services/toast.service';
         <!-- Content -->
         <div class="space-y-4">
           <p class="text-sm text-charcoal-medium dark:text-pearl-light">
-            Si tienes un problema con esta reserva, puedes crear una disputa. Nuestro equipo la revisará y te ayudará a resolverla.
+            Si tienes un problema con esta reserva, puedes crear una disputa. Nuestro equipo la
+            revisará y te ayudará a resolverla.
           </p>
 
           <!-- Dispute Kind Selector -->
@@ -76,7 +75,8 @@ import { ToastService } from '../../../core/services/toast.service';
               required
             ></textarea>
             <p class="text-xs text-charcoal-medium dark:text-pearl-light mt-1">
-              Proporciona todos los detalles relevantes para ayudar a nuestro equipo a entender el problema.
+              Proporciona todos los detalles relevantes para ayudar a nuestro equipo a entender el
+              problema.
             </p>
           </div>
 
@@ -113,7 +113,14 @@ import { ToastService } from '../../../core/services/toast.service';
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
               <path
                 class="opacity-75"
                 fill="currentColor"
@@ -171,13 +178,14 @@ export class DisputeFormComponent {
         description: this.description.trim(),
       });
 
-      this.toastService.success('Disputa creada exitosamente. Nuestro equipo la revisará pronto.');
+      this.toastService.success(
+        'Disputa creada exitosamente. Nuestro equipo la revisará pronto.',
+        '',
+      );
       this.disputeCreated.emit();
       this.close();
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al crear la disputa'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al crear la disputa');
     } finally {
       this.loading.set(false);
     }
@@ -189,4 +197,6 @@ export class DisputeFormComponent {
     this.error.set(null);
   }
 }
+
+
 

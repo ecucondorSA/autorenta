@@ -28,7 +28,9 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
           </div>
           <div>
             <h4 class="font-semibold text-gray-900">Verificación de Email</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-300">{{ status().value || 'No configurado' }}</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {{ status().value || 'No configurado' }}
+            </p>
           </div>
         </div>
         <span class="text-xs font-medium px-2 py-1 rounded-full" [class]="getStatusLabelClass()">
@@ -86,9 +88,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
                 />
               </svg>
               <span>{{
-                cooldownRemaining() > 0
-                  ? 'Espera ' + cooldownRemaining() + 's'
-                  : 'Reenviar email'
+                cooldownRemaining() > 0 ? 'Espera ' + cooldownRemaining() + 's' : 'Reenviar email'
               }}</span>
             </span>
             <span *ngIf="loading()" class="flex items-center justify-center gap-2">
@@ -134,9 +134,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
 
   readonly cooldownRemaining = signal(0);
   readonly successMessage = signal<string | null>(null);
-  readonly canResend = computed(
-    () => this.status().canResend && this.cooldownRemaining() === 0,
-  );
+  readonly canResend = computed(() => this.status().canResend && this.cooldownRemaining() === 0);
 
   private unsubscribe?: () => void;
   private stopCooldownTimer?: () => void;

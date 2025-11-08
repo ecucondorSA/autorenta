@@ -50,7 +50,11 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly _urgentMode = signal<boolean>(false);
 
   readonly hourlyPrice = signal<number | null>(null);
-  readonly urgentAvailability = signal<{ available: boolean; distance?: number; eta?: number } | null>(null);
+  readonly urgentAvailability = signal<{
+    available: boolean;
+    distance?: number;
+    eta?: number;
+  } | null>(null);
 
   @Output() compareToggle = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();
@@ -177,6 +181,14 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
     return { url, alt: car.title };
   });
+
+  /**
+   * Verifica si una URL es una imagen Base64
+   * NgOptimizedImage no soporta Base64, así que debemos usar src normal
+   */
+  protected isBase64Image(url: string): boolean {
+    return url.startsWith('data:image');
+  }
 
   readonly topFeatures = computed(() => {
     const car = this._car();

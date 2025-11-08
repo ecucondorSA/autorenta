@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService } from '../../../../core/services/accounting.service';
@@ -30,14 +30,27 @@ import { AccountingService } from '../../../../core/services/accounting.service'
         </ion-item>
       </ion-list>
     </ion-content>
-  `
+  `,
 })
 export class ProvisionsPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
-  provisions = this.accountingService.provisions;
+  readonly provisions = signal<any[]>([]);
+  readonly loading = signal(false);
 
-  ngOnInit() {
-    this.accountingService.getAllProvisions().subscribe();
+  async ngOnInit() {
+    await this.loadProvisions();
+  }
+
+  async loadProvisions() {
+    this.loading.set(true);
+    try {
+      const data = await this.accountingService.getProvisions({});
+      this.provisions.set(data);
+    } catch (err) {
+      console.error('Error loading provisions:', err);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   formatCurrency(amount: number) {

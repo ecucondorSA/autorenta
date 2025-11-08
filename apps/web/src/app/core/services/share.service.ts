@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 
 /**
  * 📤 Share Service
- * 
+ *
  * Maneja la funcionalidad de compartir usando Web Share API
  * Fallback a clipboard si no está disponible
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ShareService {
   /**
@@ -50,7 +50,7 @@ export class ShareService {
     return this.share({
       title: carTitle,
       text: text,
-      url: url
+      url: url,
     });
   }
 
@@ -61,7 +61,7 @@ export class ShareService {
     return this.share({
       title: 'Autorentar - Alquiler de Autos',
       text: '🚗 Encontrá el auto perfecto para tu próximo viaje',
-      url: window.location.origin
+      url: window.location.origin,
     });
   }
 
@@ -70,11 +70,11 @@ export class ShareService {
    */
   async shareBooking(bookingId: string, details: string): Promise<boolean> {
     const url = `${window.location.origin}/bookings/${bookingId}`;
-    
+
     return this.share({
       title: 'Mi Reserva - Autorentar',
       text: `📅 ${details}`,
-      url: url
+      url: url,
     });
   }
 
@@ -84,7 +84,7 @@ export class ShareService {
   private async fallbackShare(data: ShareData): Promise<boolean> {
     try {
       const textToCopy = `${data.title}\n${data.text}\n${data.url}`;
-      
+
       if ('clipboard' in navigator) {
         await navigator.clipboard.writeText(textToCopy);
         this.showToast('¡Enlace copiado al portapapeles!');
@@ -100,7 +100,7 @@ export class ShareService {
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
-      
+
       this.showToast('¡Enlace copiado!');
       return true;
     } catch (error) {
@@ -115,7 +115,7 @@ export class ShareService {
    */
   canShareFiles(files: File[]): boolean {
     if (!this.canShare) return false;
-    
+
     try {
       return (navigator as any).canShare({ files });
     } catch {
@@ -136,7 +136,7 @@ export class ShareService {
       await navigator.share({
         files,
         title,
-        text
+        text,
       });
       return true;
     } catch (error) {

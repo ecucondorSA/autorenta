@@ -25,7 +25,7 @@ describe('LocationService', () => {
           Promise.resolve({
             data: { user: { id: 'user-123' } },
             error: null,
-          })
+          }),
         ),
       },
       from: jasmine.createSpy('from').and.returnValue({
@@ -35,7 +35,7 @@ describe('LocationService', () => {
               Promise.resolve({
                 data: mockProfile,
                 error: null,
-              })
+              }),
             ),
           }),
         }),
@@ -44,7 +44,7 @@ describe('LocationService', () => {
             Promise.resolve({
               data: mockProfile,
               error: null,
-            })
+            }),
           ),
         }),
       }),
@@ -94,12 +94,16 @@ describe('LocationService', () => {
 
     it('should return false when user has no home location', async () => {
       const profileWithoutHome = { ...mockProfile, home_latitude: null, home_longitude: null };
-      mockSupabaseClient.from().select().eq().single.and.returnValue(
-        Promise.resolve({
-          data: profileWithoutHome,
-          error: null,
-        })
-      );
+      mockSupabaseClient
+        .from()
+        .select()
+        .eq()
+        .single.and.returnValue(
+          Promise.resolve({
+            data: profileWithoutHome,
+            error: null,
+          }),
+        );
 
       const result = await service.hasHomeLocation();
 
@@ -107,12 +111,16 @@ describe('LocationService', () => {
     });
 
     it('should return false when profile not found', async () => {
-      mockSupabaseClient.from().select().eq().single.and.returnValue(
-        Promise.resolve({
-          data: null,
-          error: { message: 'Not found' },
-        })
-      );
+      mockSupabaseClient
+        .from()
+        .select()
+        .eq()
+        .single.and.returnValue(
+          Promise.resolve({
+            data: null,
+            error: { message: 'Not found' },
+          }),
+        );
 
       const result = await service.hasHomeLocation();
 
@@ -132,12 +140,16 @@ describe('LocationService', () => {
 
     it('should return null when home location not set', async () => {
       const profileWithoutHome = { ...mockProfile, home_latitude: null, home_longitude: null };
-      mockSupabaseClient.from().select().eq().single.and.returnValue(
-        Promise.resolve({
-          data: profileWithoutHome,
-          error: null,
-        })
-      );
+      mockSupabaseClient
+        .from()
+        .select()
+        .eq()
+        .single.and.returnValue(
+          Promise.resolve({
+            data: profileWithoutHome,
+            error: null,
+          }),
+        );
 
       const result = await service.getHomeLocation();
 
@@ -149,7 +161,7 @@ describe('LocationService', () => {
         Promise.resolve({
           data: { user: null },
           error: null,
-        })
+        }),
       );
 
       const result = await service.getHomeLocation();
@@ -199,7 +211,7 @@ describe('LocationService', () => {
       spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake(
         (success: any, error: any) => {
           error({ code: 1, message: 'Permission denied' });
-        }
+        },
       );
 
       const result = await service.getCurrentPosition();
@@ -217,7 +229,7 @@ describe('LocationService', () => {
         jasmine.objectContaining({
           home_latitude: -34.6037,
           home_longitude: -58.3816,
-        })
+        }),
       );
     });
 
@@ -226,12 +238,12 @@ describe('LocationService', () => {
         Promise.resolve({
           data: { user: null },
           error: null,
-        })
+        }),
       );
 
-      await expectAsync(
-        service.saveHomeLocation(-34.6037, -58.3816, 'Test')
-      ).toBeRejectedWithError('Usuario no autenticado');
+      await expectAsync(service.saveHomeLocation(-34.6037, -58.3816, 'Test')).toBeRejectedWithError(
+        'Usuario no autenticado',
+      );
     });
 
     it('should save without address if not provided', async () => {
@@ -241,7 +253,7 @@ describe('LocationService', () => {
         jasmine.objectContaining({
           home_latitude: -34.6037,
           home_longitude: -58.3816,
-        })
+        }),
       );
     });
   });
@@ -258,19 +270,14 @@ describe('LocationService', () => {
         country: 'Argentina',
       };
 
-      mockGeocodingService.geocodeAddress.and.returnValue(
-        Promise.resolve(mockGeocodingResult)
-      );
+      mockGeocodingService.geocodeAddress.and.returnValue(Promise.resolve(mockGeocodingResult));
 
-      const result = await service.geocodeAndSaveHomeLocation(
-        'Buenos Aires, Argentina',
-        'AR'
-      );
+      const result = await service.geocodeAndSaveHomeLocation('Buenos Aires, Argentina', 'AR');
 
       expect(result).toEqual(mockGeocodingResult);
       expect(mockGeocodingService.geocodeAddress).toHaveBeenCalledWith(
         'Buenos Aires, Argentina',
-        'AR'
+        'AR',
       );
       expect(mockSupabaseClient.from().update).toHaveBeenCalled();
     });
@@ -279,7 +286,7 @@ describe('LocationService', () => {
       mockGeocodingService.geocodeAddress.and.returnValue(Promise.resolve(null) as Promise<any>);
 
       await expectAsync(
-        service.geocodeAndSaveHomeLocation('Invalid Address', 'AR')
+        service.geocodeAndSaveHomeLocation('Invalid Address', 'AR'),
       ).toBeRejectedWithError('No se pudo geocodificar la dirección');
     });
   });
@@ -297,12 +304,16 @@ describe('LocationService', () => {
     it('should fallback to GPS when home location not available', async () => {
       // Mock no home location
       const profileWithoutHome = { ...mockProfile, home_latitude: null, home_longitude: null };
-      mockSupabaseClient.from().select().eq().single.and.returnValue(
-        Promise.resolve({
-          data: profileWithoutHome,
-          error: null,
-        })
-      );
+      mockSupabaseClient
+        .from()
+        .select()
+        .eq()
+        .single.and.returnValue(
+          Promise.resolve({
+            data: profileWithoutHome,
+            error: null,
+          }),
+        );
 
       // Mock GPS success
       const mockPosition: GeolocationPosition = {
@@ -335,18 +346,22 @@ describe('LocationService', () => {
     it('should return null when both home and GPS fail', async () => {
       // Mock no home location
       const profileWithoutHome = { ...mockProfile, home_latitude: null, home_longitude: null };
-      mockSupabaseClient.from().select().eq().single.and.returnValue(
-        Promise.resolve({
-          data: profileWithoutHome,
-          error: null,
-        })
-      );
+      mockSupabaseClient
+        .from()
+        .select()
+        .eq()
+        .single.and.returnValue(
+          Promise.resolve({
+            data: profileWithoutHome,
+            error: null,
+          }),
+        );
 
       // Mock GPS failure
       spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake(
         (success: any, error: any) => {
           error({ code: 1, message: 'Permission denied' });
-        }
+        },
       );
 
       const result = await service.getUserLocation();

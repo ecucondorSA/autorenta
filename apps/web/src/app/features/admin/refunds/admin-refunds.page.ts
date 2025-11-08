@@ -303,4 +303,9 @@ export class AdminRefundsPage implements OnInit {
     link.click();
     document.body.removeChild(link);
   }
+
+  parseFloatValue(value: string): number {
+    const parsed = parseFloat(value);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  }
 }

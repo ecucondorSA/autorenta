@@ -14,7 +14,10 @@ import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
-import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
+import {
+  BookingConfirmationService,
+  ConfirmAndReleaseResponse,
+} from '../../../core/services/booking-confirmation.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { InsuranceService } from '../../../core/services/insurance.service';
 import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insurance.model';
@@ -27,6 +30,8 @@ import { RefundRequestComponent } from '../../../shared/components/refund-reques
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
 import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
 import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
+import { DistanceRiskTierBadgeComponent } from '../../../shared/components/distance-risk-tier-badge/distance-risk-tier-badge.component';
+import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 
 /**
  * BookingDetailPage
@@ -59,6 +64,8 @@ import { ShareButtonComponent } from '../../../shared/components/share-button/sh
     BookingContractComponent,
     RefundStatusComponent,
     ShareButtonComponent,
+    DistanceRiskTierBadgeComponent,
+    BookingConfirmationTimelineComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -70,6 +77,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly paymentsService = inject(PaymentsService);
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
+  private readonly confirmationService = inject(BookingConfirmationService);
   private readonly metaService = inject(MetaService);
   private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly fgoService = inject(FgoV1_1Service);
@@ -259,8 +267,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const booking = this.booking();
     if (!booking || !this.isOwner()) return false;
     // Owner can report damage after vehicle return (completed status or returned_at is set)
-    const canReport = (booking.status === 'completed' || booking.returned_at !== null)
-                      && !booking.owner_reported_damages;
+    const canReport =
+      (booking.status === 'completed' || booking.returned_at !== null) &&
+      !booking.owner_reported_damages;
     return canReport;
   });
 
@@ -392,6 +401,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   getClaimStatusColor(status: InsuranceClaim['status']): string {
     const colorMap = {
       reported: 'orange',
+      pending: 'yellow',
+      investigating: 'purple',
       under_review: 'blue',
       approved: 'green',
       rejected: 'red',
@@ -455,9 +466,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking) return 'Mi reserva en Autorentar';
 
     const carInfo = `${booking.car_brand} ${booking.car_model}`;
-    const dates = booking.start_at && booking.end_at
-      ? `${this.formatDateTime(booking.start_at)} - ${this.formatDateTime(booking.end_at)}`
-      : '';
+    const dates =
+      booking.start_at && booking.end_at
+        ? `${this.formatDateTime(booking.start_at)} - ${this.formatDateTime(booking.end_at)}`
+        : '';
 
     return `Reserva: ${carInfo}${dates ? ` (${dates})` : ''}`;
   }
@@ -516,5 +528,61 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   handleConfirmationError(errorMessage: string): void {
     alert(`❌ Error: ${errorMessage}`);
+  }
+
+  async handleTimelineAction(event: {
+    action: 'owner_confirm' | 'renter_confirm' | 'mark_returned';
+    bookingId: string;
+  }): Promise<void> {
+    switch (event.action) {
+      case 'owner_confirm':
+        this.scrollToSection('owner-confirmation-section');
+        break;
+      case 'renter_confirm':
+        this.scrollToSection('renter-confirmation-section');
+        break;
+      case 'mark_returned':
+        await this.handleMarkAsReturned(event.bookingId);
+        break;
+      default:
+        console.warn('Acción de timeline desconocida', event);
+    }
+  }
+
+  private scrollToSection(elementId: string): void {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  private async handleMarkAsReturned(bookingId: string): Promise<void> {
+    const userId = this.authService.session$()?.user?.id;
+    if (!userId) {
+      alert('Necesitas iniciar sesión para continuar.');
+      return;
+    }
+
+    const confirmReturn = confirm('¿Confirmás que devolviste el vehículo al propietario?');
+    if (!confirmReturn) {
+      return;
+    }
+
+    try {
+      await this.confirmationService.markAsReturned({
+        booking_id: bookingId,
+        returned_by: userId,
+      });
+
+      const updatedBooking = await this.bookingsService.getBookingById(bookingId);
+      if (updatedBooking) {
+        this.booking.set(updatedBooking);
+      }
+
+      alert('Marcaste la reserva como devuelta. Gracias por completar este paso.');
+    } catch (error) {
+      console.error('Error al marcar la reserva como devuelta', error);
+      alert('No pudimos marcar la devolución. Intentalo nuevamente en unos minutos.');
+    }
   }
 }

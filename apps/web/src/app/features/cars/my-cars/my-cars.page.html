@@ -1,11 +1,15 @@
 <div class="min-h-screen bg-ivory-soft pb-20">
   <!-- Header Premium -->
-  <div class="bg-white dark:bg-slate-deep-pure border-b border-pearl-gray dark:border-gray-600/30 mb-8">
+  <div
+    class="bg-white dark:bg-slate-deep-pure border-b border-pearl-gray dark:border-gray-600/30 mb-8"
+  >
     <div class="mx-auto max-w-7xl px-6 py-8">
       <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 class="text-3xl font-bold text-smoke-black tracking-tight">Mis Autos</h1>
-          <p class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light">Gestioná las publicaciones que creaste</p>
+          <p class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light">
+            Gestioná las publicaciones que creaste
+          </p>
         </div>
         <button
           (click)="openPublishModal()"
@@ -32,7 +36,9 @@
       <div
         class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-accent-petrol border-r-transparent"
       ></div>
-      <p class="mt-4 text-charcoal-medium dark:text-pearl-light font-medium">Cargando tus autos...</p>
+      <p class="mt-4 text-charcoal-medium dark:text-pearl-light font-medium">
+        Cargando tus autos...
+      </p>
     </div>
 
     <!-- Empty State with Benefits -->
@@ -82,7 +88,9 @@
           <h2 class="text-2xl font-bold text-smoke-black mb-2">
             Por qué conviene subir tu auto a Autorentar
           </h2>
-          <p class="text-charcoal-medium dark:text-pearl-light">Transformá tu auto en una fuente de ingresos pasivos</p>
+          <p class="text-charcoal-medium dark:text-pearl-light">
+            Transformá tu auto en una fuente de ingresos pasivos
+          </p>
         </div>
 
         <!-- Comparison: Auto Parado vs Auto en Autorentar -->
@@ -180,7 +188,9 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light">Seguro sin utilizar el vehículo</span>
+                <span class="text-charcoal-medium dark:text-pearl-light"
+                  >Seguro sin utilizar el vehículo</span
+                >
               </li>
               <li class="flex items-start gap-2">
                 <svg
@@ -196,7 +206,9 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light">Ningún retorno de inversión</span>
+                <span class="text-charcoal-medium dark:text-pearl-light"
+                  >Ningún retorno de inversión</span
+                >
               </li>
             </ul>
           </div>
@@ -297,7 +309,9 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light">Seguro completo + depósito de garantía</span>
+                <span class="text-charcoal-medium dark:text-pearl-light"
+                  >Seguro completo + depósito de garantía</span
+                >
               </li>
               <li class="flex items-start gap-2">
                 <svg
@@ -337,7 +351,9 @@
             <div class="text-center p-4 bg-white dark:bg-slate-deep-pure rounded-lg">
               <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-1">Ingreso mensual</p>
               <p class="text-2xl font-bold text-green-600">$300-500</p>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">USD (20-25 días alquilados)</p>
+              <p class="text-xs text-ash-gray dark:text-pearl-light/70">
+                USD (20-25 días alquilados)
+              </p>
             </div>
             <div class="text-center p-4 bg-white dark:bg-slate-deep-pure rounded-lg">
               <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-1">Retorno total</p>
@@ -447,7 +463,9 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">Total de Autos</p>
+              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">
+                Total de Autos
+              </p>
               <p class="text-3xl font-bold text-smoke-black">{{ cars().length }}</p>
             </div>
             <div
@@ -473,7 +491,9 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">Activos</p>
+              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">
+                Activos
+              </p>
               <p class="text-3xl font-bold text-green-600">{{ countActive() }}</p>
             </div>
             <div class="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center">
@@ -497,8 +517,12 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">En Borrador</p>
-              <p class="text-3xl font-bold text-ash-gray dark:text-pearl-light/70">{{ countDraft() }}</p>
+              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">
+                En Borrador
+              </p>
+              <p class="text-3xl font-bold text-ash-gray dark:text-pearl-light/70">
+                {{ countDraft() }}
+              </p>
             </div>
             <div class="h-14 w-14 rounded-full bg-sand-light flex items-center justify-center">
               <svg

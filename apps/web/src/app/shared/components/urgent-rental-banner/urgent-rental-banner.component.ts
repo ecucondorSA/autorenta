@@ -1,6 +1,10 @@
 import { Component, Input, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UrgentRentalService, UrgentRentalAvailability, UrgentRentalQuote } from '../../../core/services/urgent-rental.service';
+import {
+  UrgentRentalService,
+  UrgentRentalAvailability,
+  UrgentRentalQuote,
+} from '../../../core/services/urgent-rental.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 
 @Component({
@@ -31,17 +35,18 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
         </div>
         <div class="text-right">
           <div class="text-2xl font-bold text-accent-petrol">
-            {{ quote()?.hourlyRate ? (quote()!.hourlyRate | currency:'ARS':'symbol':'1.0-0') : '...' }}
+            {{
+              quote()?.hourlyRate
+                ? (quote()!.hourlyRate | currency: 'ARS' : 'symbol' : '1.0-0')
+                : '...'
+            }}
           </div>
           <div class="text-xs text-charcoal-medium dark:text-pearl-light">/hora</div>
         </div>
       </div>
 
       <!-- Estado de disponibilidad -->
-      <div
-        *ngIf="availability()?.available"
-        class="flex items-center gap-4 text-sm mb-3"
-      >
+      <div *ngIf="availability()?.available" class="flex items-center gap-4 text-sm mb-3">
         <span
           *ngIf="availability()!.distance"
           class="flex items-center gap-1.5 text-accent-petrol font-semibold"
@@ -93,7 +98,10 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
       </div>
 
       <!-- Loading state -->
-      <div *ngIf="loading()" class="flex items-center gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+      <div
+        *ngIf="loading()"
+        class="flex items-center gap-2 text-sm text-charcoal-medium dark:text-pearl-light"
+      >
         <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
           <circle
             class="opacity-25"
@@ -116,7 +124,8 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
   styles: [
     `
       @keyframes pulse-subtle {
-        0%, 100% {
+        0%,
+        100% {
           opacity: 1;
         }
         50% {
@@ -193,4 +202,3 @@ export class UrgentRentalBannerComponent implements OnInit, OnDestroy {
     return this.urgentRentalService.formatTime(minutes);
   }
 }
-

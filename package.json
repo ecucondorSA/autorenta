@@ -4,13 +4,11 @@
   "packageManager": "pnpm@9.0.0",
   "scripts": {
     "postinstall": "cd apps/web && npm install",
-
     "_comment_dev": "=== DEVELOPMENT ===",
     "dev": "./tools/run.sh dev",
     "dev:web": "./tools/run.sh dev:web",
     "dev:worker": "./tools/run.sh dev:worker",
     "dev:stop": "./tools/run.sh dev:stop",
-
     "_comment_test": "=== TESTING ===",
     "test": "./tools/run.sh test",
     "test:quick": "./tools/run.sh test:quick",
@@ -25,23 +23,19 @@
     "test:e2e:success": "playwright test tests/renter/booking/success-page.spec.ts",
     "test:e2e:report": "playwright show-report",
     "test:coverage:report": "cd apps/web && bash scripts/generate-coverage-report.sh",
-
     "_comment_build": "=== BUILDING ===",
     "build": "./tools/run.sh build",
     "build:web": "./tools/run.sh build:web",
     "build:worker": "./tools/run.sh build:worker",
-
     "_comment_deploy": "=== DEPLOYMENT ===",
     "deploy": "./tools/run.sh deploy",
     "deploy:web": "./tools/run.sh deploy:web",
     "deploy:worker": "./tools/run.sh deploy:worker",
-
     "_comment_ci": "=== CI/CD ===",
     "ci": "./tools/run.sh ci",
     "lint": "./tools/run.sh lint",
     "lint:fix": "./tools/run.sh lint:fix",
     "format": "./tools/run.sh format",
-
     "_comment_utils": "=== UTILITIES ===",
     "install": "./tools/run.sh install",
     "install:all": "./tools/run.sh install",
@@ -49,16 +43,13 @@
     "sync:types": "./tools/run.sh sync:types",
     "sync:types:remote": "./tools/run.sh sync:types:remote",
     "status": "./tools/run.sh status",
-
     "_comment_setup": "=== SETUP (one-time) ===",
     "setup:auth": "./tools/run.sh setup:auth",
     "setup:prod": "./tools/run.sh setup:prod",
-
     "_comment_monitor": "=== MONITORING ===",
     "monitor:health": "./tools/run.sh monitor:health",
     "monitor:wallet": "./tools/run.sh monitor:wallet",
     "check:auth": "./tools/run.sh check:auth",
-
     "_comment_legacy": "=== LEGACY (kept for compatibility) ===",
     "workflows": "./tools/run.sh help",
     "check:skills": "tools/check-skills.sh",
@@ -134,6 +125,7 @@
   },
   "dependencies": {
     "@supabase/storage-js": "^2.78.0",
+    "flatpickr": "^4.6.13",
     "mapbox-gl": "^3.16.0",
     "shepherd.js": "^14.5.1",
     "zod": "^4.1.12"

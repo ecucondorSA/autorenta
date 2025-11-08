@@ -30,9 +30,7 @@ export class WaitlistPage implements OnInit {
       const entries = await this.waitlistService.getMyWaitlist();
       this.waitlistEntries.set(entries);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar lista de espera'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar lista de espera');
     } finally {
       this.loading.set(false);
     }
@@ -50,16 +48,12 @@ export class WaitlistPage implements OnInit {
 
       if (result.success) {
         // Remove from list
-        this.waitlistEntries.set(
-          this.waitlistEntries().filter((entry) => entry.id !== waitlistId)
-        );
+        this.waitlistEntries.set(this.waitlistEntries().filter((entry) => entry.id !== waitlistId));
       } else {
         this.error.set(result.error || 'Error al cancelar entrada');
       }
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cancelar entrada'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cancelar entrada');
     } finally {
       this.cancelling.set(null);
     }

@@ -58,7 +58,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
               </button>
             </div>
           </div>
-        } @else if (verificationStatus()?.status === 'VERIFICADO') {
+        } @else if (currentStatus()?.status === 'VERIFICADO') {
           <!-- Verified Badge -->
           <div
             class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/40 rounded-lg p-4 mb-6"
@@ -75,7 +75,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
               </div>
             </div>
           </div>
-        } @else if (verificationStatus()?.status === 'RECHAZADO') {
+        } @else if (currentStatus()?.status === 'RECHAZADO') {
           <!-- Rejected Status -->
           <div
             class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded-lg p-4 mb-6"
@@ -87,7 +87,10 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
                   Verificación Rechazada
                 </p>
                 <p class="text-sm text-red-800 dark:text-red-300 mb-3">
-                  {{ verificationStatus()?.notes || 'Tu verificación fue rechazada. Contacta con soporte para más información.' }}
+                  {{
+                    currentStatus()?.notes ||
+                      'Tu verificación fue rechazada. Contacta con soporte para más información.'
+                  }}
                 </p>
                 <a
                   routerLink="/verification"
@@ -114,9 +117,13 @@ export class MissingDocumentsWidgetComponent implements OnInit {
   private readonly verificationService = inject(VerificationService);
 
   readonly verificationStatus = this.verificationService.statuses;
-  readonly missingDocs = computed(() => this.verificationStatus()?.missing_docs || []);
+  readonly currentStatus = computed(() => {
+    const statuses = this.verificationStatus();
+    return statuses && statuses.length > 0 ? statuses[0] : null;
+  });
+  readonly missingDocs = computed(() => this.currentStatus()?.missing_docs || []);
   readonly missingDocsCount = computed(() => this.missingDocs().length);
-  readonly hasVerificationStatus = computed(() => !!this.verificationStatus());
+  readonly hasVerificationStatus = computed(() => !!this.currentStatus());
   readonly showDismissed = signal(false);
 
   ngOnInit() {

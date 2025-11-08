@@ -16,17 +16,16 @@ interface PendingReview {
 @Component({
   selector: 'app-pending-reviews',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReviewCardComponent],
+  imports: [CommonModule, RouterLink],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div class="max-w-4xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Reseñas Pendientes
-          </h1>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Reseñas Pendientes</h1>
           <p class="text-gray-600 dark:text-gray-300">
-            Tienes {{ pendingReviews().length }} {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
+            Tienes {{ pendingReviews().length }}
+            {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
           </p>
         </div>
 
@@ -39,7 +38,9 @@ interface PendingReview {
 
         <!-- Error State -->
         @if (error() && !loading()) {
-          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+          <div
+            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
+          >
             <p class="text-red-800 dark:text-red-200">{{ error() }}</p>
           </div>
         }
@@ -93,19 +94,22 @@ interface PendingReview {
                       Califica a: <span class="font-medium">{{ review.reviewee_name }}</span>
                     </p>
                     <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                      <span>
-                        Finalizó: {{ formatDate(review.checkout_date) }}
-                      </span>
+                      <span> Finalizó: {{ formatDate(review.checkout_date) }} </span>
                       <span
                         class="px-2 py-1 rounded-full text-xs font-medium"
                         [class.bg-yellow-100]="review.days_remaining > 7"
                         [class.text-yellow-800]="review.days_remaining > 7"
-                        [class.bg-orange-100]="review.days_remaining <= 7 && review.days_remaining > 3"
-                        [class.text-orange-800]="review.days_remaining <= 7 && review.days_remaining > 3"
+                        [class.bg-orange-100]="
+                          review.days_remaining <= 7 && review.days_remaining > 3
+                        "
+                        [class.text-orange-800]="
+                          review.days_remaining <= 7 && review.days_remaining > 3
+                        "
                         [class.bg-red-100]="review.days_remaining <= 3"
                         [class.text-red-800]="review.days_remaining <= 3"
                       >
-                        {{ review.days_remaining }} {{ review.days_remaining === 1 ? 'día restante' : 'días restantes' }}
+                        {{ review.days_remaining }}
+                        {{ review.days_remaining === 1 ? 'día restante' : 'días restantes' }}
                       </span>
                     </div>
                   </div>
@@ -146,9 +150,7 @@ export class PendingReviewsPage implements OnInit {
       const reviews = await this.reviewsService.getPendingReviews();
       this.pendingReviews.set(reviews);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar reseñas pendientes'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar reseñas pendientes');
     } finally {
       this.loading.set(false);
     }
@@ -162,4 +164,3 @@ export class PendingReviewsPage implements OnInit {
     });
   }
 }
-

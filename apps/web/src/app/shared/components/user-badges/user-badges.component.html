@@ -12,7 +12,10 @@
       <span class="badge-icon">{{ badge.icon }}</span>
     </div>
 
-    <p *ngIf="showLabels" class="badge-label text-xs text-gray-600 dark:text-gray-300 mt-1 text-center font-medium">
+    <p
+      *ngIf="showLabels"
+      class="badge-label text-xs text-gray-600 dark:text-gray-300 mt-1 text-center font-medium"
+    >
       {{ badge.label }}
     </p>
   </div>

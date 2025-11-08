@@ -1,0 +1,378 @@
+/* 🎨 MARKETPLACE V2 - PREMIUM STYLES */
+
+/* Hero Header Animations */
+.hero-header {
+  position: relative;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card Animations */
+.car-card-enhanced {
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.car-card-enhanced:nth-child(1) { animation-delay: 0.1s; }
+.car-card-enhanced:nth-child(2) { animation-delay: 0.15s; }
+.car-card-enhanced:nth-child(3) { animation-delay: 0.2s; }
+.car-card-enhanced:nth-child(4) { animation-delay: 0.25s; }
+.car-card-enhanced:nth-child(5) { animation-delay: 0.3s; }
+.car-card-enhanced:nth-child(6) { animation-delay: 0.35s; }
+.car-card-enhanced:nth-child(7) { animation-delay: 0.4s; }
+.car-card-enhanced:nth-child(8) { animation-delay: 0.45s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover Effects */
+.car-card-enhanced:hover {
+  z-index: 10;
+}
+
+.car-card-enhanced img {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.car-card-enhanced:hover img {
+  transform: scale(1.1);
+}
+
+/* Badge Animations */
+.car-card-enhanced [class*="bg-green-"],
+.car-card-enhanced [class*="bg-orange-"] {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Favorite Button */
+.car-card-enhanced button[class*="favorite"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.car-card-enhanced button[class*="favorite"]:hover {
+  transform: scale(1.1);
+}
+
+.car-card-enhanced button[class*="favorite"]:active {
+  transform: scale(0.95);
+}
+
+/* Price Animation */
+.car-card-enhanced .text-accent-petrol {
+  animation: priceGlow 2s ease-in-out infinite;
+}
+
+@keyframes priceGlow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(58, 109, 124, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(58, 109, 124, 0.6);
+  }
+}
+
+/* Button Hover Effects */
+button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* Search Bar Focus */
+input:focus {
+  animation: inputFocus 0.3s ease-out;
+}
+
+@keyframes inputFocus {
+  0% {
+    box-shadow: 0 0 0 0 rgba(58, 109, 124, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(58, 109, 124, 0.1);
+  }
+}
+
+/* Quick Filter Pills */
+.quick-filter-pill {
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+}
+
+.quick-filter-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading Animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(200, 200, 200, 0.2) 25%,
+    rgba(200, 200, 200, 0.3) 50%,
+    rgba(200, 200, 200, 0.2) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Stats Strip Animation */
+.stats-strip {
+  animation: slideInFromTop 0.6s ease-out;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Trust Badges */
+.trust-badge {
+  animation: fadeIn 0.6s ease-out backwards;
+}
+
+.trust-badge:nth-child(1) { animation-delay: 0.1s; }
+.trust-badge:nth-child(2) { animation-delay: 0.2s; }
+.trust-badge:nth-child(3) { animation-delay: 0.3s; }
+.trust-badge:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* View Mode Toggle */
+.view-toggle button {
+  transition: all 0.2s ease-out;
+}
+
+.view-toggle button:not(.active):hover {
+  background-color: rgba(58, 109, 124, 0.1);
+}
+
+/* Map View Container */
+.map-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* List View Animation */
+.list-item {
+  animation: slideInFromLeft 0.5s ease-out backwards;
+}
+
+.list-item:nth-child(odd) {
+  animation-name: slideInFromLeft;
+}
+
+.list-item:nth-child(even) {
+  animation-name: slideInFromRight;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(58, 109, 124, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(58, 109, 124, 0.5);
+}
+
+/* Dark Mode Transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #3A6D7C 0%, #4F7C72 50%, #5A8A7F 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass Morphism Effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Floating Animation */
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Shine Effect on Hover */
+.shine-on-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-on-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.shine-on-hover:hover::before {
+  left: 100%;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .car-card-enhanced {
+    animation-delay: 0s !important;
+  }
+
+  .hero-header {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .hero-header,
+  .floating-action-fab,
+  .mobile-bottom-nav,
+  .whatsapp-fab {
+    display: none !important;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus Visible */
+*:focus-visible {
+  outline: 2px solid #3A6D7C;
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(58, 109, 124, 0.3);
+  color: inherit;
+}

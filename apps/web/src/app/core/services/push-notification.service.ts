@@ -56,7 +56,9 @@ export class PushNotificationService {
       if (subscription) {
         await this.saveTokenToDatabase(subscription);
       }
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   /**

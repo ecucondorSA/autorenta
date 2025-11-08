@@ -81,11 +81,13 @@ describe('WalletService', () => {
         error: null,
       });
 
-    const result = await firstValueFrom(service.initiateDeposit({
-      amount: 100,
-      provider: 'mercadopago',
-      description: 'Test deposit',
-    }));
+    const result = await firstValueFrom(
+      service.initiateDeposit({
+        amount: 100,
+        provider: 'mercadopago',
+        description: 'Test deposit',
+      }),
+    );
 
     expect(result.success).toBeTrue();
     expect(result.transaction_id).toBe('tx-1');

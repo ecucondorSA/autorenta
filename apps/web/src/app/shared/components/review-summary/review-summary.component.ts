@@ -13,7 +13,9 @@ import type { ReviewSummary } from '../../../core/models';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+          <div
+            class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+          ></div>
         </div>
       } @else if (summary(); as s) {
         <div class="space-y-6">
@@ -26,7 +28,7 @@ import type { ReviewSummary } from '../../../core/models';
             <div class="rounded-lg bg-green-50 p-4">
               <p class="text-sm font-medium text-green-600">Promedio</p>
               <p class="text-2xl font-bold text-green-900">
-                {{ s.average_rating | number: '1.1-1' }} ⭐
+                {{ formatRating(s.average_rating) }} ⭐
               </p>
             </div>
           </div>
@@ -34,7 +36,9 @@ import type { ReviewSummary } from '../../../core/models';
           <!-- Distribución -->
           @if (s.rating_distribution) {
             <div>
-              <h4 class="mb-3 text-sm font-semibold text-gray-700">Distribución de Calificaciones</h4>
+              <h4 class="mb-3 text-sm font-semibold text-gray-700">
+                Distribución de Calificaciones
+              </h4>
               <div class="space-y-2">
                 @for (rating of [5, 4, 3, 2, 1]; track rating) {
                   <div class="flex items-center gap-3">
@@ -43,12 +47,17 @@ import type { ReviewSummary } from '../../../core/models';
                       <div class="h-4 w-full rounded-full bg-gray-200">
                         <div
                           class="h-4 rounded-full bg-blue-500"
-                          [style.width.%]="getPercentage(s.rating_distribution[rating], s.total_count)"
+                          [style.width.%]="
+                            getPercentage(
+                              getRatingCount(s.rating_distribution, rating),
+                              s.total_count
+                            )
+                          "
                         ></div>
                       </div>
                     </div>
                     <span class="w-12 text-right text-sm text-gray-600">
-                      {{ s.rating_distribution[rating] }}
+                      {{ getRatingCount(s.rating_distribution, rating) }}
                     </span>
                   </div>
                 }
@@ -64,37 +73,37 @@ import type { ReviewSummary } from '../../../core/models';
                 <div class="rounded-lg border border-gray-200 p-3">
                   <p class="text-xs font-medium text-gray-600">Limpieza</p>
                   <p class="text-lg font-bold text-gray-900">
-                    {{ s.category_averages.cleanliness | number: '1.1-1' }} ⭐
+                    {{ formatRating(s.category_averages.cleanliness) }} ⭐
                   </p>
                 </div>
                 <div class="rounded-lg border border-gray-200 p-3">
                   <p class="text-xs font-medium text-gray-600">Comunicación</p>
                   <p class="text-lg font-bold text-gray-900">
-                    {{ s.category_averages.communication | number: '1.1-1' }} ⭐
+                    {{ formatRating(s.category_averages.communication) }} ⭐
                   </p>
                 </div>
                 <div class="rounded-lg border border-gray-200 p-3">
                   <p class="text-xs font-medium text-gray-600">Precisión</p>
                   <p class="text-lg font-bold text-gray-900">
-                    {{ s.category_averages.accuracy | number: '1.1-1' }} ⭐
+                    {{ formatRating(s.category_averages.accuracy) }} ⭐
                   </p>
                 </div>
                 <div class="rounded-lg border border-gray-200 p-3">
                   <p class="text-xs font-medium text-gray-600">Ubicación</p>
                   <p class="text-lg font-bold text-gray-900">
-                    {{ s.category_averages.location | number: '1.1-1' }} ⭐
+                    {{ formatRating(s.category_averages.location) }} ⭐
                   </p>
                 </div>
                 <div class="rounded-lg border border-gray-200 p-3">
                   <p class="text-xs font-medium text-gray-600">Check-in</p>
                   <p class="text-lg font-bold text-gray-900">
-                    {{ s.category_averages.checkin | number: '1.1-1' }} ⭐
+                    {{ formatRating(s.category_averages.checkin) }} ⭐
                   </p>
                 </div>
                 <div class="rounded-lg border border-gray-200 p-3">
                   <p class="text-xs font-medium text-gray-600">Valor</p>
                   <p class="text-lg font-bold text-gray-900">
-                    {{ s.category_averages.value | number: '1.1-1' }} ⭐
+                    {{ formatRating(s.category_averages.value) }} ⭐
                   </p>
                 </div>
               </div>
@@ -139,5 +148,16 @@ export class ReviewSummaryComponent implements OnInit {
     if (total === 0) return 0;
     return (count / total) * 100;
   }
-}
 
+  getRatingCount(
+    distribution: { 5: number; 4: number; 3: number; 2: number; 1: number } | undefined,
+    rating: number,
+  ): number {
+    if (!distribution) return 0;
+    return distribution[rating as keyof typeof distribution] || 0;
+  }
+
+  formatRating(rating: number): string {
+    return rating.toFixed(1);
+  }
+}

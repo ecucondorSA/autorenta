@@ -31,7 +31,8 @@
             [ngClass]="{
               'bg-success-100 text-success-700': protectedCreditStatus === 'active',
               'bg-warning-100 text-warning-800': protectedCreditStatus === 'partial',
-              'bg-sand-light text-charcoal-medium dark:text-pearl-light': protectedCreditStatus === 'pending',
+              'bg-sand-light text-charcoal-medium dark:text-pearl-light':
+                protectedCreditStatus === 'pending',
             }"
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +60,9 @@
               <p class="text-base font-bold text-charcoal-medium dark:text-pearl-light">
                 1. Tarjeta de crédito
               </p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 mt-1">
+              <p
+                class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 mt-1"
+              >
                 Método tradicional
               </p>
             </div>
@@ -142,7 +145,11 @@
                 <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">
                   USD 500 - 1.200
                 </p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50">Variable</p>
+                <p
+                  class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50"
+                >
+                  Variable
+                </p>
               </div>
               <div class="text-center sm:text-left">
                 <p class="text-sm font-semibold text-warning-700 dark:text-warning-200">
@@ -216,7 +223,9 @@
                 <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">
                   Cada reserva
                 </p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50">
+                <p
+                  class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50"
+                >
                   Ingresar datos
                 </p>
               </div>
@@ -224,9 +233,7 @@
                 <p class="text-sm font-semibold text-success-700 dark:text-success-200">
                   Una sola vez
                 </p>
-                <p class="text-xs text-success-600/70 dark:text-success-200/60">
-                  Uso automático
-                </p>
+                <p class="text-xs text-success-600/70 dark:text-success-200/60">Uso automático</p>
               </div>
             </div>
 
@@ -245,7 +252,9 @@
                 <p class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">
                   5-10 días hábiles
                 </p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50">
+                <p
+                  class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50"
+                >
                   Post-viaje
                 </p>
               </div>
@@ -318,7 +327,9 @@
             <span class="text-xl font-bold text-accent-petrol dark:text-accent-petrol">
               USD {{ protectedCreditBalance / 100 | number: '1.2-2' }}
             </span>
-            <span class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60">
+            <span
+              class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+            >
               / USD {{ protectedCreditTarget / 100 | number: '1.0-0' }}
             </span>
           </div>
@@ -326,8 +337,9 @@
             class="text-sm font-semibold px-2 py-1 rounded-lg"
             [ngClass]="{
               'bg-success-100 text-success-700': protectedCreditProgress === 100,
-              'bg-warning-100 text-warning-700': protectedCreditProgress >= 80 && protectedCreditProgress < 100,
-              'bg-primary-50 text-primary-700': protectedCreditProgress < 80
+              'bg-warning-100 text-warning-700':
+                protectedCreditProgress >= 80 && protectedCreditProgress < 100,
+              'bg-primary-50 text-primary-700': protectedCreditProgress < 80,
             }"
           >
             {{ protectedCreditProgress | number: '1.0-0' }}%
@@ -338,7 +350,8 @@
         @if (protectedCreditProgress < 100) {
           <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/80">
             <span class="text-warning-700 dark:text-warning-300">
-              Te faltan USD {{ (protectedCreditTarget - protectedCreditBalance) / 100 | number: '1.2-2' }}
+              Te faltan USD
+              {{ (protectedCreditTarget - protectedCreditBalance) / 100 | number: '1.2-2' }}
             </span>
             para completar tu crédito protegido
           </p>
@@ -353,8 +366,9 @@
             class="h-full rounded-full transition-all duration-500 ease-out"
             [ngClass]="{
               'bg-gradient-to-r from-success-500 to-success-600': protectedCreditProgress === 100,
-              'bg-gradient-to-r from-warning-500 to-accent-petrol': protectedCreditProgress >= 50 && protectedCreditProgress < 100,
-              'bg-accent-petrol': protectedCreditProgress < 50
+              'bg-gradient-to-r from-warning-500 to-accent-petrol':
+                protectedCreditProgress >= 50 && protectedCreditProgress < 100,
+              'bg-accent-petrol': protectedCreditProgress < 50,
             }"
             [style.width.%]="protectedCreditProgress"
           ></div>
@@ -385,7 +399,9 @@
         }
 
         <!-- Tooltip/Help Text -->
-        <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50 flex items-start gap-1.5">
+        <p
+          class="text-xs text-charcoal-medium dark:text-pearl-light/60 dark:text-pearl-light/50 flex items-start gap-1.5"
+        >
           <svg
             class="w-3.5 h-3.5 flex-shrink-0 mt-0.5"
             fill="none"

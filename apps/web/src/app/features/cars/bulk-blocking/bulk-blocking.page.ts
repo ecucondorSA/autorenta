@@ -35,7 +35,7 @@ export class BulkBlockingPage implements OnInit {
   async loadCars(): Promise<void> {
     this.loading.set(true);
     try {
-      const myCars = await this.carsService.getMyCars();
+      const myCars = await this.carsService.listMyCars();
       this.cars.set(myCars || []);
     } catch (err) {
       console.error('Error loading cars:', err);

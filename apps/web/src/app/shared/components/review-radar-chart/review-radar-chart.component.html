@@ -1,10 +1,5 @@
 <div class="radar-chart-container">
-  <svg
-    [attr.viewBox]="getViewBox()"
-    [attr.width]="size"
-    [attr.height]="size"
-    class="radar-chart"
-  >
+  <svg [attr.viewBox]="getViewBox()" [attr.width]="size" [attr.height]="size" class="radar-chart">
     <!-- Grid levels -->
     <g *ngIf="showGrid" class="grid-levels">
       <path

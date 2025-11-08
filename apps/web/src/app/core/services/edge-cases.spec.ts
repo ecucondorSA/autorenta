@@ -36,7 +36,16 @@ describe('Sprint 5.2 - Edge Cases', () => {
     });
 
     // Setup FROM handlers for table queries
-    const queryBuilder = jasmine.createSpyObj('QueryBuilder', ['select', 'eq', 'ilike', 'order', 'single', 'neq', 'gte', 'lte']);
+    const queryBuilder = jasmine.createSpyObj('QueryBuilder', [
+      'select',
+      'eq',
+      'ilike',
+      'order',
+      'single',
+      'neq',
+      'gte',
+      'lte',
+    ]);
     queryBuilder.select.and.returnValue(queryBuilder);
     queryBuilder.eq.and.returnValue(queryBuilder);
     queryBuilder.ilike.and.returnValue(queryBuilder);

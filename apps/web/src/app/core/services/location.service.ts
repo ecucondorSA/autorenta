@@ -125,7 +125,7 @@ export class LocationService {
           enableHighAccuracy: true,
           timeout: 10000, // 10 seconds
           maximumAge: 300000, // 5 minutes cache
-        }
+        },
       );
     });
   }
@@ -190,7 +190,7 @@ export class LocationService {
    */
   async geocodeAndSaveHomeLocation(
     address: string,
-    countryCode: string = 'AR'
+    countryCode: string = 'AR',
   ): Promise<GeocodingResult> {
     const result = await this.geocodingService.geocodeAddress(address, countryCode);
 
@@ -247,7 +247,7 @@ export class LocationService {
         try {
           const result = await this.geocodingService.reverseGeocode(
             gpsLocation.lat,
-            gpsLocation.lng
+            gpsLocation.lng,
           );
           return {
             ...gpsLocation,

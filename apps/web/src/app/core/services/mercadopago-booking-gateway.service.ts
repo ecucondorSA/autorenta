@@ -40,7 +40,10 @@ export class MercadoPagoBookingGatewayService implements PaymentGateway {
    * @param useSplitPayment - Whether to use marketplace split payments (optional)
    * @returns Observable con la respuesta de MercadoPago
    */
-  createBookingPreference(bookingId: string, useSplitPayment?: boolean): Observable<MercadoPagoPreferenceResponse> {
+  createBookingPreference(
+    bookingId: string,
+    useSplitPayment?: boolean,
+  ): Observable<MercadoPagoPreferenceResponse> {
     return from(this._createPreference(bookingId, useSplitPayment)).pipe(
       catchError((err) => {
         return throwError(() => new Error(this.formatError(err)));
@@ -51,7 +54,10 @@ export class MercadoPagoBookingGatewayService implements PaymentGateway {
   /**
    * Implementación interna usando async/await
    */
-  private async _createPreference(bookingId: string, _useSplitPayment?: boolean): Promise<MercadoPagoPreferenceResponse> {
+  private async _createPreference(
+    bookingId: string,
+    _useSplitPayment?: boolean,
+  ): Promise<MercadoPagoPreferenceResponse> {
     const supabase = this.supabaseService.getClient();
 
     // Obtener token de autenticación

@@ -43,7 +43,7 @@ export class ShareMenuComponent {
 
     if (success) {
       this.menuOpen.set(false);
-      this.toastService.success('¡Compartido exitosamente!');
+      this.toastService.success('Éxito', '¡Compartido exitosamente!');
     }
   }
 
@@ -71,7 +71,7 @@ export class ShareMenuComponent {
 
     if (success) {
       this.menuOpen.set(false);
-      this.toastService.success('Enlace copiado al portapapeles');
+      this.toastService.success('Éxito', 'Enlace copiado al portapapeles');
     }
   }
 }

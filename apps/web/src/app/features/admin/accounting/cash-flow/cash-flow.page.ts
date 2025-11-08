@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { AccountingService } from '../../../../core/services/accounting.service';
-import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-cash-flow',
@@ -50,10 +50,10 @@ import { SupabaseClientService } from '../../../../core/services/supabase-client
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-              @for (entry of cashFlow(); track entry.id || $index) {
+              @for (entry of cashFlow(); track entry.id ?? $index) {
                 <tr>
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                    {{ entry.date || entry.created_at | date: 'short' }}
+                    {{ (entry.date || entry.created_at) | date: 'short' }}
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
                     {{ entry.type || entry.transaction_type || 'N/A' }}
@@ -63,20 +63,20 @@ import { SupabaseClientService } from '../../../../core/services/supabase-client
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-green-600">
                     @if (entry.inflow || entry.debit) {
-                      ${{ (entry.inflow || entry.debit) | number: '1.2-2' }}
+                      \${{ (entry.inflow || entry.debit) | number: '1.2-2' }}
                     } @else {
                       -
                     }
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-red-600">
                     @if (entry.outflow || entry.credit) {
-                      ${{ (entry.outflow || entry.credit) | number: '1.2-2' }}
+                      \${{ (entry.outflow || entry.credit) | number: '1.2-2' }}
                     } @else {
                       -
                     }
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                    ${{ (entry.balance || 0) | number: '1.2-2' }}
+                    \${{ (entry.balance || 0) | number: '1.2-2' }}
                   </td>
                 </tr>
               }
@@ -88,17 +88,19 @@ import { SupabaseClientService } from '../../../../core/services/supabase-client
   `,
 })
 export class CashFlowPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseClientService);
-  private accountingService!: AccountingService;
+  private readonly accountingService: AccountingService;
 
   readonly cashFlow = signal<any[]>([]);
   readonly loading = signal(false);
 
+  constructor() {
+    this.accountingService = new AccountingService(
+      environment.supabaseUrl,
+      environment.supabaseAnonKey,
+    );
+  }
+
   async ngOnInit(): Promise<void> {
-    const supabase = this.supabaseService.getClient();
-    const url = supabase.supabaseUrl;
-    const key = (supabase as any).supabaseKey || '';
-    this.accountingService = new AccountingService(url, key);
     await this.loadCashFlow();
   }
 
@@ -115,4 +117,3 @@ export class CashFlowPage implements OnInit {
     }
   }
 }
-

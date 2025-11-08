@@ -166,7 +166,7 @@ export class MarketplaceOnboardingService {
         .eq('id', userId)
         .single();
 
-      if ((error)) {
+      if (error) {
         return {
           isApproved: false,
           hasActiveTokens: false,
@@ -205,7 +205,7 @@ export class MarketplaceOnboardingService {
         p_user_id: userId,
       });
 
-      if ((error)) {
+      if (error) {
         return false;
       }
 
@@ -238,7 +238,7 @@ export class MarketplaceOnboardingService {
         })
         .eq('id', userId);
 
-      if ((error)) throw error;
+      if (error) throw error;
     } catch (error) {
       throw error;
     }
@@ -401,9 +401,7 @@ export class MarketplaceOnboardingService {
 
     // ✅ ENCRIPTAR tokens antes de guardar
     const encryptedAccessToken = await this.encryptionService.encrypt(tokenResponse.access_token);
-    const encryptedRefreshToken = await this.encryptionService.encrypt(
-      tokenResponse.refresh_token,
-    );
+    const encryptedRefreshToken = await this.encryptionService.encrypt(tokenResponse.refresh_token);
 
     const { error } = await this.supabase
       .from('users')
@@ -417,7 +415,7 @@ export class MarketplaceOnboardingService {
       })
       .eq('id', userId);
 
-    if ((error)) {
+    if (error) {
       throw new Error('No se pudieron guardar las credenciales');
     }
   }
@@ -434,7 +432,7 @@ export class MarketplaceOnboardingService {
       })
       .eq('state', state);
 
-    if ((error)) {
+    if (error) {
       // No throw, esto no es crítico
     }
   }

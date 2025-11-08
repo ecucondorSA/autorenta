@@ -8,7 +8,16 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonDatetime } from '@ionic/angular/standalone';
+import {
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonContent,
+  IonDatetime,
+} from '@ionic/angular/standalone';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 import { AnalyticsService } from '../../../core/services/analytics.service';
 
@@ -36,7 +45,9 @@ export class InlineCalendarModalComponent {
   @Input() initialFrom: string | null = null;
   @Input() initialTo: string | null = null;
   @Input() carId: string | null = null;
-  @Input() availabilityChecker: ((carId: string, from: string, to: string) => Promise<boolean>) | null = null;
+  @Input() availabilityChecker:
+    | ((carId: string, from: string, to: string) => Promise<boolean>)
+    | null = null;
   @Input() blockedDates: string[] = []; // Array de fechas bloqueadas en formato YYYY-MM-DD
 
   @Output() readonly isOpenChange = new EventEmitter<boolean>();

@@ -1,7 +1,11 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService, WalletReconciliation } from '../../../../core/services/accounting.service';
+import {
+  AccountingService,
+  WalletReconciliation,
+} from '../../../../core/services/accounting.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-reconciliation',
@@ -32,16 +36,26 @@ import { AccountingService, WalletReconciliation } from '../../../../core/servic
         </ion-list>
       </ion-card>
     </ion-content>
-  `
+  `,
 })
 export class ReconciliationPage implements OnInit {
-  private readonly accountingService = inject(AccountingService);
+  private readonly accountingService: AccountingService;
   reconciliation = signal<WalletReconciliation[]>([]);
 
-  ngOnInit() {
-    this.accountingService.getWalletReconciliation().subscribe({
-      next: (data) => this.reconciliation.set(data),
-    });
+  constructor() {
+    this.accountingService = new AccountingService(
+      environment.supabaseUrl,
+      environment.supabaseAnonKey,
+    );
+  }
+
+  async ngOnInit(): Promise<void> {
+    try {
+      const data = await this.accountingService.getWalletReconciliation();
+      this.reconciliation.set(data);
+    } catch (error) {
+      console.error('Error loading reconciliation:', error);
+    }
   }
 
   getColor(item: WalletReconciliation) {

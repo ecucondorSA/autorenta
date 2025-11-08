@@ -16,7 +16,10 @@
       </div>
 
       <!-- No dates selected - show daily price -->
-      <div *ngIf="(totalPrice === null || daysCount === 0) && pricePerDay !== null" class="flex flex-col">
+      <div
+        *ngIf="(totalPrice === null || daysCount === 0) && pricePerDay !== null"
+        class="flex flex-col"
+      >
         <p class="text-xs text-charcoal-medium dark:text-pearl-light">Desde</p>
         <p class="text-lg font-bold text-smoke-black">{{ pricePerDay | money }}</p>
         <p class="text-[10px] text-charcoal-medium dark:text-pearl-light -mt-0.5">por día</p>
@@ -55,13 +58,7 @@
             d="M5 13l4 4L19 7"
           />
         </svg>
-        <svg
-          *ngIf="disabled"
-          class="h-5 w-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg *ngIf="disabled" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"

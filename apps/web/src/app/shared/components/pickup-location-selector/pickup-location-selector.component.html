@@ -1,23 +1,26 @@
 <div class="pickup-selector-container">
   <h3 class="section-title">Ubicación de Entrega</h3>
-  <p class="section-description">
-    Elegí dónde querés retirar el auto
-  </p>
+  <p class="section-description">Elegí dónde querés retirar el auto</p>
 
   <form [formGroup]="form" class="pickup-options">
     <!-- Option 1: Pick up at car location -->
     <label class="option-card" [class.selected]="!isDelivery()">
-      <input
-        type="radio"
-        formControlName="pickupOption"
-        value="car_location"
-        class="radio-input"
-      />
+      <input type="radio" formControlName="pickupOption" value="car_location" class="radio-input" />
       <div class="option-content">
         <div class="option-header">
           <svg class="option-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
           </svg>
           <span class="option-title">Retirar en ubicación del auto</span>
         </div>
@@ -42,7 +45,12 @@
       <div class="option-content">
         <div class="option-header">
           <svg class="option-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+            />
           </svg>
           <span class="option-title">Entrega a domicilio</span>
         </div>
@@ -50,7 +58,8 @@
           {{ userHomeLocation.address || 'Tu ubicación guardada' }}
         </p>
         <p class="option-description text-gray-500" *ngIf="!userHomeLocation">
-          <a href="/profile/location" class="text-blue-600 underline">Configurá tu ubicación</a> para usar delivery
+          <a href="/profile/location" class="text-blue-600 underline">Configurá tu ubicación</a>
+          para usar delivery
         </p>
         <div class="option-badge" *ngIf="isDelivery()">
           <span class="badge-paid">{{ formatDeliveryFee() }}</span>
@@ -63,9 +72,7 @@
   <!-- Map for custom delivery location -->
   <div *ngIf="isDelivery() && userHomeLocation" class="map-section">
     <h4 class="map-title">Ajustar ubicación de entrega</h4>
-    <p class="map-description">
-      Arrastrá el marcador para ajustar la ubicación exacta de entrega
-    </p>
+    <p class="map-description">Arrastrá el marcador para ajustar la ubicación exacta de entrega</p>
     <app-location-map-picker
       [initialLatitude]="selectedPickupLocation()?.latitude"
       [initialLongitude]="selectedPickupLocation()?.longitude"

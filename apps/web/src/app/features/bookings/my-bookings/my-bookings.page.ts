@@ -8,7 +8,13 @@ import { formatDateRange } from '../../../shared/utils/date.utils';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 
-type BookingStatusFilter = 'all' | 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
+type BookingStatusFilter =
+  | 'all'
+  | 'pending'
+  | 'confirmed'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled';
 
 @Component({
   standalone: true,

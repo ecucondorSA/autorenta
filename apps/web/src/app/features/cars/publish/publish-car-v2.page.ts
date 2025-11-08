@@ -166,6 +166,49 @@ export class PublishCarV2Page implements OnInit {
   }
 
   /**
+   * Handle stock photos selection
+   */
+  async onStockPhotosSelected(photos: File[]): Promise<void> {
+    await this.photoService.addStockPhotosFiles(photos);
+    this.showStockPhotosModal.set(false);
+  }
+
+  /**
+   * Handle AI photos generation
+   */
+  async onAIPhotosGenerated(photos: File[]): Promise<void> {
+    await this.photoService.addAIPhotosFiles(photos);
+    this.showAIPhotosModal.set(false);
+  }
+
+  /**
+   * Get current brand name
+   */
+  getCurrentBrand(): string {
+    const brandId = this.publishForm?.get('brand_id')?.value;
+    if (!brandId) return '';
+    const brand = this.brands().find((b) => b.id === brandId);
+    return brand?.name || '';
+  }
+
+  /**
+   * Get current model name
+   */
+  getCurrentModel(): string {
+    const modelId = this.publishForm?.get('model_id')?.value;
+    if (!modelId) return '';
+    const model = this.models().find((m) => m.id === modelId);
+    return model?.name || '';
+  }
+
+  /**
+   * Get current year
+   */
+  getCurrentYear(): number {
+    return this.publishForm?.get('year')?.value || new Date().getFullYear();
+  }
+
+  /**
    * Generate AI photos
    */
   async generateAIPhotos(): Promise<void> {
@@ -206,7 +249,7 @@ export class PublishCarV2Page implements OnInit {
       // Reverse geocode to get address
       const address = await this.locationService.reverseGeocode(
         location.latitude,
-        location.longitude
+        location.longitude,
       );
 
       if (address) {

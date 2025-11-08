@@ -33,9 +33,7 @@ import {
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-semibold text-blue-900 dark:text-info-100">
-              Pago con Tarjeta
-            </p>
+            <p class="text-sm font-semibold text-blue-900 dark:text-info-100">Pago con Tarjeta</p>
             <p class="text-sm text-blue-800 dark:text-info-200 mt-1">
               Se bloqueará <strong>{{ formatArs(holdAmountArs()) }}</strong> en tu tarjeta como
               garantía. Si todo está bien al devolver el auto,

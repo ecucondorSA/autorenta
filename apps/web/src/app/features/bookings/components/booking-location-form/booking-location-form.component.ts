@@ -1,4 +1,13 @@
-import { Component, Output, EventEmitter, Input, signal, inject, computed, effect } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  Input,
+  signal,
+  inject,
+  computed,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -35,12 +44,7 @@ export interface BookingLocationData {
 @Component({
   selector: 'app-booking-location-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TranslateModule,
-    LocationPickerComponent,
-  ],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="booking-location-form bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6">
       <!-- Header -->
@@ -55,9 +59,7 @@ export interface BookingLocationData {
 
       <!-- Pickup Location -->
       <div class="mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          📍 Lugar de retiro
-        </h3>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">📍 Lugar de retiro</h3>
         <div class="location-input-group">
           <!-- Address Input -->
           <input
@@ -69,14 +71,18 @@ export interface BookingLocationData {
             [disabled]="loading()"
           />
           @if (pickupSuggestions().length > 0) {
-            <div class="mt-2 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <div
+              class="mt-2 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+            >
               @for (suggestion of pickupSuggestions(); track suggestion.address) {
                 <button
                   type="button"
                   (click)="selectPickupSuggestion(suggestion)"
                   class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
                 >
-                  <div class="font-medium text-gray-900 dark:text-white">{{ suggestion.address }}</div>
+                  <div class="font-medium text-gray-900 dark:text-white">
+                    {{ suggestion.address }}
+                  </div>
                   <div class="text-sm text-gray-500">{{ suggestion.city }}</div>
                 </button>
               }
@@ -84,7 +90,8 @@ export interface BookingLocationData {
           }
           @if (pickupCoordinates()) {
             <div class="mt-2 text-sm text-green-600 dark:text-green-400">
-              ✓ Ubicación: {{ pickupCoordinates()!.lat.toFixed(4) }}, {{ pickupCoordinates()!.lng.toFixed(4) }}
+              ✓ Ubicación: {{ pickupCoordinates()!.lat.toFixed(4) }},
+              {{ pickupCoordinates()!.lng.toFixed(4) }}
             </div>
           }
         </div>
@@ -106,14 +113,18 @@ export interface BookingLocationData {
             [disabled]="loading()"
           />
           @if (dropoffSuggestions().length > 0) {
-            <div class="mt-2 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <div
+              class="mt-2 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+            >
               @for (suggestion of dropoffSuggestions(); track suggestion.address) {
                 <button
                   type="button"
                   (click)="selectDropoffSuggestion(suggestion)"
                   class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
                 >
-                  <div class="font-medium text-gray-900 dark:text-white">{{ suggestion.address }}</div>
+                  <div class="font-medium text-gray-900 dark:text-white">
+                    {{ suggestion.address }}
+                  </div>
                   <div class="text-sm text-gray-500">{{ suggestion.city }}</div>
                 </button>
               }
@@ -121,7 +132,8 @@ export interface BookingLocationData {
           }
           @if (dropoffCoordinates()) {
             <div class="mt-2 text-sm text-green-600 dark:text-green-400">
-              ✓ Ubicación: {{ dropoffCoordinates()!.lat.toFixed(4) }}, {{ dropoffCoordinates()!.lng.toFixed(4) }}
+              ✓ Ubicación: {{ dropoffCoordinates()!.lat.toFixed(4) }},
+              {{ dropoffCoordinates()!.lng.toFixed(4) }}
             </div>
           }
         </div>
@@ -129,12 +141,21 @@ export interface BookingLocationData {
 
       <!-- Distance Display -->
       @if (distanceKm() !== null) {
-        <div class="mb-8 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg border border-blue-200 dark:border-blue-700">
+        <div
+          class="mb-8 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg border border-blue-200 dark:border-blue-700"
+        >
           <div class="text-lg font-semibold text-blue-900 dark:text-blue-100">
             Distancia: {{ distanceKm()! | number: '1.0-2' }} km
           </div>
           <div class="text-sm text-blue-700 dark:text-blue-300">
-            Categoría: {{ distanceTier() === 'local' ? 'Local' : distanceTier() === 'regional' ? 'Regional' : 'Larga distancia' }}
+            Categoría:
+            {{
+              distanceTier() === 'local'
+                ? 'Local'
+                : distanceTier() === 'regional'
+                  ? 'Regional'
+                  : 'Larga distancia'
+            }}
           </div>
         </div>
       }
@@ -165,10 +186,10 @@ export interface BookingLocationData {
         </label>
 
         <!-- Delivery Fee Display -->
-        @if (deliveryRequired && deliveryFeeCents() > 0) {
+        @if (deliveryRequired() && deliveryFeeCents() > 0) {
           <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div class="text-lg font-semibold text-gray-900 dark:text-white">
-              Tarifa de delivery: ARS ${{ (deliveryFeeCents() / 100) | number: '1.2-2' }}
+              Tarifa de delivery: ARS {{ '$' + formatDeliveryFee() }}
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
               Se agregará al precio total del alquiler
@@ -179,7 +200,9 @@ export interface BookingLocationData {
 
       <!-- Error Messages -->
       @if (errorMessage()) {
-        <div class="mb-6 p-4 bg-red-50 dark:bg-red-900 rounded-lg border border-red-200 dark:border-red-700">
+        <div
+          class="mb-6 p-4 bg-red-50 dark:bg-red-900 rounded-lg border border-red-200 dark:border-red-700"
+        >
           <div class="text-red-700 dark:text-red-100">{{ errorMessage() }}</div>
         </div>
       }
@@ -208,16 +231,18 @@ export interface BookingLocationData {
       </div>
     </div>
   `,
-  styles: [`
-    .booking-location-form {
-      max-width: 600px;
-      margin: 0 auto;
-    }
+  styles: [
+    `
+      .booking-location-form {
+        max-width: 600px;
+        margin: 0 auto;
+      }
 
-    .location-input-group {
-      position: relative;
-    }
-  `],
+      .location-input-group {
+        position: relative;
+      }
+    `,
+  ],
 })
 export class BookingLocationFormComponent {
   private readonly locationService = inject(LocationService);
@@ -238,12 +263,16 @@ export class BookingLocationFormComponent {
   // Pickup location
   pickupAddress = signal('');
   pickupCoordinates = signal<{ lat: number; lng: number } | null>(null);
-  pickupSuggestions = signal<Array<{ address: string; city: string; lat: number; lng: number }>>([]);
+  pickupSuggestions = signal<Array<{ address: string; city: string; lat: number; lng: number }>>(
+    [],
+  );
 
   // Dropoff location
   dropoffAddress = signal('');
   dropoffCoordinates = signal<{ lat: number; lng: number } | null>(null);
-  dropoffSuggestions = signal<Array<{ address: string; city: string; lat: number; lng: number }>>([]);
+  dropoffSuggestions = signal<Array<{ address: string; city: string; lat: number; lng: number }>>(
+    [],
+  );
 
   // Delivery
   deliveryRequired = signal(false);
@@ -302,10 +331,10 @@ export class BookingLocationFormComponent {
       if (results) {
         this.pickupSuggestions.set([
           {
-            address: results.address || address,
-            city: results.city || 'Argentina',
-            lat: results.lat,
-            lng: results.lng,
+            address: results.fullAddress || address,
+            city: results.placeName || 'Argentina',
+            lat: results.latitude,
+            lng: results.longitude,
           },
         ]);
       }
@@ -332,10 +361,10 @@ export class BookingLocationFormComponent {
       if (results) {
         this.dropoffSuggestions.set([
           {
-            address: results.address || address,
-            city: results.city || 'Argentina',
-            lat: results.lat,
-            lng: results.lng,
+            address: results.fullAddress || address,
+            city: results.placeName || 'Argentina',
+            lat: results.latitude,
+            lng: results.longitude,
           },
         ]);
       }
@@ -349,7 +378,12 @@ export class BookingLocationFormComponent {
   /**
    * Select pickup suggestion
    */
-  selectPickupSuggestion(suggestion: { address: string; city: string; lat: number; lng: number }): void {
+  selectPickupSuggestion(suggestion: {
+    address: string;
+    city: string;
+    lat: number;
+    lng: number;
+  }): void {
     this.pickupAddress.set(suggestion.address);
     this.pickupCoordinates.set({ lat: suggestion.lat, lng: suggestion.lng });
     this.pickupSuggestions.set([]);
@@ -358,7 +392,12 @@ export class BookingLocationFormComponent {
   /**
    * Select dropoff suggestion
    */
-  selectDropoffSuggestion(suggestion: { address: string; city: string; lat: number; lng: number }): void {
+  selectDropoffSuggestion(suggestion: {
+    address: string;
+    city: string;
+    lat: number;
+    lng: number;
+  }): void {
     this.dropoffAddress.set(suggestion.address);
     this.dropoffCoordinates.set({ lat: suggestion.lat, lng: suggestion.lng });
     this.dropoffSuggestions.set([]);
@@ -369,14 +408,14 @@ export class BookingLocationFormComponent {
    */
   private calculateDistance(
     pickup: { lat: number; lng: number },
-    dropoff: { lat: number; lng: number }
+    dropoff: { lat: number; lng: number },
   ): void {
     try {
       const distance = this.distanceCalculator.calculateDistance(
         pickup.lat,
         pickup.lng,
         dropoff.lat,
-        dropoff.lng
+        dropoff.lng,
       );
 
       this.distanceKm.set(distance);
@@ -461,6 +500,13 @@ export class BookingLocationFormComponent {
     };
 
     this.locationSelected.emit(locationData);
+  }
+
+  /**
+   * Format delivery fee for display
+   */
+  formatDeliveryFee(): string {
+    return (this.deliveryFeeCents() / 100).toFixed(2);
   }
 
   /**

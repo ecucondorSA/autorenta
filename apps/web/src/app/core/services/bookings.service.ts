@@ -51,16 +51,19 @@ export class BookingsService {
     if (error) {
       const errorMessage = error.message || error.details || 'Error al crear la reserva';
 
-      this.logger.error('request_booking RPC failed: ' + JSON.stringify({
-        error,
-        carId,
-        start,
-        end,
-        message: errorMessage,
-        code: error.code,
-        details: error.details,
-        hint: error.hint,
-      }));
+      this.logger.error(
+        'request_booking RPC failed: ' +
+          JSON.stringify({
+            error,
+            carId,
+            start,
+            end,
+            message: errorMessage,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+          }),
+      );
 
       throw new Error(errorMessage);
     }
@@ -80,7 +83,9 @@ export class BookingsService {
       this.logger.error(
         'Insurance activation failed',
         'BookingsService',
-        insuranceError instanceof Error ? insuranceError : new Error(getErrorMessage(insuranceError)),
+        insuranceError instanceof Error
+          ? insuranceError
+          : new Error(getErrorMessage(insuranceError)),
       );
       // Don't block booking if insurance fails
     }
@@ -133,17 +138,20 @@ export class BookingsService {
     if (error) {
       const errorMessage = error.message || error.details || 'Error al crear la reserva';
 
-      this.logger.error('requestBookingWithLocation RPC failed: ' + JSON.stringify({
-        error,
-        carId,
-        start,
-        end,
-        locationData,
-        message: errorMessage,
-        code: error.code,
-        details: error.details,
-        hint: error.hint,
-      }));
+      this.logger.error(
+        'requestBookingWithLocation RPC failed: ' +
+          JSON.stringify({
+            error,
+            carId,
+            start,
+            end,
+            locationData,
+            message: errorMessage,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+          }),
+      );
 
       throw new Error(errorMessage);
     }
@@ -163,7 +171,9 @@ export class BookingsService {
       this.logger.error(
         'Insurance activation failed',
         'BookingsService',
-        insuranceError instanceof Error ? insuranceError : new Error(getErrorMessage(insuranceError)),
+        insuranceError instanceof Error
+          ? insuranceError
+          : new Error(getErrorMessage(insuranceError)),
       );
       // Don't block booking if insurance fails
     }
@@ -444,7 +454,11 @@ export class BookingsService {
     const booking = await this.getBookingById(bookingId);
     if (!booking) return { ok: false, error: 'Booking not found' };
 
-    const result = await this.walletService.chargeRentalFromWallet(booking, amountCents, description);
+    const result = await this.walletService.chargeRentalFromWallet(
+      booking,
+      amountCents,
+      description,
+    );
     if (result.ok) {
       await this.updateBooking(bookingId, {
         status: 'completed',
@@ -474,7 +488,11 @@ export class BookingsService {
     const booking = await this.getBookingById(bookingId);
     if (!booking) return { ok: false, error: 'Booking not found' };
 
-    const result = await this.walletService.lockSecurityDeposit(booking, depositAmountCents, description);
+    const result = await this.walletService.lockSecurityDeposit(
+      booking,
+      depositAmountCents,
+      description,
+    );
     if (result.ok) {
       await this.updateBooking(bookingId, {
         wallet_status: 'locked',
@@ -762,7 +780,9 @@ export class BookingsService {
         this.logger.error(
           'Coverage query error',
           'BookingsService',
-          coverageError instanceof Error ? coverageError : new Error(getErrorMessage(coverageError)),
+          coverageError instanceof Error
+            ? coverageError
+            : new Error(getErrorMessage(coverageError)),
         );
         throw new Error(`Failed to load coverage: ${coverageError.message}`);
       }

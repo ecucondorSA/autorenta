@@ -4,6 +4,9 @@
 /* 🗺️ Autorent Custom Map Theme - Dark Minimal + Brand Accent */
 @import './styles/map-theme.css';
 
+/* 🗺️ Map Marketplace Theme - Neutral conversion-optimized */
+@import './styles/map-marketplace-theme.css';
+
 /* Shepherd.js Tours CSS */
 @import './styles/shepherd-custom.scss';
 
@@ -784,3 +787,4 @@
 .dark .whatsapp-bg {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiPjxwYXRoIGQ9Ik0wIDBoMTAwdjEwMEgweiIgZmlsbD0iIzBiMTQxYSIvPjxwYXRoIGQ9Ik0wIDBoNTB2NTBIMHptNTAgNTBoNTB2NTBINTB6IiBmaWxsPSIjMWYyYzMzIiBmaWxsLW9wYWNpdHk9Ii4xIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+');
 }
+

@@ -55,12 +55,14 @@ export class BookingCompletionService {
       if (booking.user_id) {
         try {
           await firstValueFrom(
-            from(this.driverProfileService.updateClassOnEvent({
-              eventType: 'booking_completed',
-              userId: booking.user_id,
-              claimWithFault: false,
-              claimSeverity: 0,
-            })).pipe(ignoreElements()),
+            from(
+              this.driverProfileService.updateClassOnEvent({
+                eventType: 'booking_completed',
+                userId: booking.user_id,
+                claimWithFault: false,
+                claimSeverity: 0,
+              }),
+            ).pipe(ignoreElements()),
           );
           this.logger.info(`Driver class updated for clean booking ${booking.id}`);
         } catch (classError) {
@@ -125,12 +127,14 @@ export class BookingCompletionService {
       if (booking.user_id) {
         try {
           await firstValueFrom(
-            from(this.driverProfileService.updateClassOnEvent({
-              eventType: 'booking_completed',
-              userId: booking.user_id,
-              claimWithFault: true,
-              claimSeverity: claimSeverity,
-            })).pipe(ignoreElements()),
+            from(
+              this.driverProfileService.updateClassOnEvent({
+                eventType: 'booking_completed',
+                userId: booking.user_id,
+                claimWithFault: true,
+                claimSeverity: claimSeverity,
+              }),
+            ).pipe(ignoreElements()),
           );
           this.logger.info(`Driver class updated for claim on booking ${booking.id}`);
         } catch (classError) {

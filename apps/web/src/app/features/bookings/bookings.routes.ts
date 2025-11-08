@@ -45,17 +45,20 @@ export const BOOKINGS_ROUTES: Routes = [
   {
     path: ':id/owner-check-in',
     canActivate: [AuthGuard],
-    loadComponent: () => import('./owner-check-in/owner-check-in.page').then((m) => m.OwnerCheckInPage),
+    loadComponent: () =>
+      import('./owner-check-in/owner-check-in.page').then((m) => m.OwnerCheckInPage),
   },
   {
     path: ':id/owner-check-out',
     canActivate: [AuthGuard],
-    loadComponent: () => import('./owner-check-out/owner-check-out.page').then((m) => m.OwnerCheckOutPage),
+    loadComponent: () =>
+      import('./owner-check-out/owner-check-out.page').then((m) => m.OwnerCheckOutPage),
   },
   {
     path: ':id/owner-damage-report',
     canActivate: [AuthGuard],
-    loadComponent: () => import('./owner-damage-report/owner-damage-report.page').then((m) => m.OwnerDamageReportPage),
+    loadComponent: () =>
+      import('./owner-damage-report/owner-damage-report.page').then((m) => m.OwnerDamageReportPage),
   },
   {
     path: ':id/contract',

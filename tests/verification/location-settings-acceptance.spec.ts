@@ -203,3 +203,7 @@ test.describe('Verificación de Criterios de Aceptación - /profile/location', (
   });
 });
 
+
+
+
+

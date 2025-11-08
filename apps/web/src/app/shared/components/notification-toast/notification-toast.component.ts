@@ -1,142 +1,67 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ToastService, type Toast } from '../../../core/services/toast.service';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  ChangeDetectionStrategy,
+  OnInit,
+  PLATFORM_ID,
+  inject,
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+
+export type ToastType = 'success' | 'info' | 'warning' | 'error';
 
 @Component({
-  standalone: true,
   selector: 'app-notification-toast',
+  standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">
-      <div
-        *ngFor="let notification of notifications()"
-        class="pointer-events-auto max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out animate-slide-in"
-        [class]="getNotificationClass(notification.type)"
-      >
-        <div class="p-4">
-          <div class="flex items-start">
-            <div class="flex-shrink-0">
-              <div
-                class="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold"
-                [class]="getIconClass(notification.type)"
-              >
-                {{ notification.icon }}
-              </div>
-            </div>
-            <div class="ml-3 w-0 flex-1 pt-0.5">
-              <p class="text-sm font-medium text-gray-900">
-                {{ notification.title }}
-              </p>
-              <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
-                {{ notification.message }}
-              </p>
-            </div>
-            <div class="ml-4 flex-shrink-0 flex">
-              <button
-                type="button"
-                (click)="close(notification.id)"
-                class="inline-flex text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-md"
-              >
-                <span class="sr-only">Cerrar</span>
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress bar -->
-        <div *ngIf="notification.duration && notification.duration > 0" class="h-1 bg-gray-200">
-          <div
-            class="h-full transition-all ease-linear"
-            [class]="getProgressBarClass(notification.type)"
-            [style.animation]="'progress ' + notification.duration + 'ms linear'"
-          ></div>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [
-    `
-      @keyframes slide-in {
-        from {
-          transform: translateX(100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-
-      @keyframes progress {
-        from {
-          width: 100%;
-        }
-        to {
-          width: 0%;
-        }
-      }
-
-      .animate-slide-in {
-        animation: slide-in 0.3s ease-out;
-      }
-    `,
-  ],
+  templateUrl: './notification-toast.component.html',
+  styleUrls: ['./notification-toast.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationToastComponent {
-  private readonly toast = inject(ToastService);
+export class NotificationToastComponent implements OnInit {
+  @Input() message = '';
+  @Input() type: ToastType = 'info';
+  @Input() duration = 3000;
+  @Input() isVisible = signal(false);
 
-  readonly notifications = this.toast.notifications;
+  @Output() dismiss = new EventEmitter<void>();
 
-  close(id: string): void {
-    this.toast.remove(id);
-  }
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  getNotificationClass(type: Toast['type']): string {
-    const baseClass = 'border-l-4';
-    switch (type) {
-      case 'success':
-        return `${baseClass} border-green-500`;
-      case 'error':
-        return `${baseClass} border-red-500`;
-      case 'warning':
-        return `${baseClass} border-yellow-500`;
-      case 'info':
-        return `${baseClass} border-blue-500`;
+  ngOnInit(): void {
+    if (this.isBrowser && this.isVisible() && this.duration > 0) {
+      setTimeout(() => {
+        this.onDismiss();
+      }, this.duration);
     }
   }
 
-  getIconClass(type: Toast['type']): string {
-    switch (type) {
-      case 'success':
-        return 'bg-green-100 text-green-600';
-      case 'error':
-        return 'bg-red-100 text-red-600';
-      case 'warning':
-        return 'bg-yellow-100 text-yellow-600';
-      case 'info':
-        return 'bg-blue-100 text-blue-600';
-    }
+  onDismiss(): void {
+    this.isVisible.set(false);
+    this.dismiss.emit();
   }
 
-  getProgressBarClass(type: Toast['type']): string {
-    switch (type) {
-      case 'success':
-        return 'bg-green-500';
-      case 'error':
-        return 'bg-red-500';
-      case 'warning':
-        return 'bg-yellow-500';
-      case 'info':
-        return 'bg-blue-500';
-    }
+  getIcon(): string {
+    const icons = {
+      success: '✓',
+      info: 'ℹ️',
+      warning: '⚠️',
+      error: '✕',
+    };
+    return icons[this.type];
+  }
+
+  getColorClasses(): string {
+    const colors = {
+      success: 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200',
+      info: 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-200',
+      warning: 'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200',
+      error: 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200',
+    };
+    return colors[this.type];
   }
 }

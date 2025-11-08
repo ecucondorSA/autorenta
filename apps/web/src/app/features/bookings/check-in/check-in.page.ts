@@ -11,18 +11,14 @@ import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 
 /**
  * Página de Check-in para locatarios
- * 
+ *
  * Permite realizar la inspección inicial del vehículo antes de iniciar el alquiler.
  * Integra con el sistema FGO v1.1 para registrar evidencias.
  */
 @Component({
   selector: 'app-check-in',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    InspectionUploaderComponent,
-  ],
+  imports: [CommonModule, RouterLink, InspectionUploaderComponent],
   templateUrl: './check-in.page.html',
   styleUrl: './check-in.page.css',
 })
@@ -43,7 +39,7 @@ export class CheckInPage implements OnInit {
   readonly canPerformCheckIn = computed(() => {
     const booking = this.booking();
     if (!booking) return false;
-    
+
     // Solo permite check-in si:
     // 1. Booking está confirmado o en progreso
     // 2. El usuario es el locatario
@@ -51,7 +47,7 @@ export class CheckInPage implements OnInit {
     const isRenter = booking.renter_id === this.authService.session$()?.user?.id;
     const validStatus = booking.status === 'confirmed' || booking.status === 'in_progress';
     const hasCheckIn = this.existingInspection()?.signedAt !== undefined;
-    
+
     return isRenter && validStatus && !hasCheckIn;
   });
 
@@ -96,9 +92,9 @@ export class CheckInPage implements OnInit {
 
       // Cargar inspección existente (si existe)
       const inspection = await firstValueFrom(
-        this.fgoService.getInspectionByStage(bookingId, 'check_in')
+        this.fgoService.getInspectionByStage(bookingId, 'check_in'),
       );
-      
+
       if (inspection?.signedAt) {
         this.existingInspection.set(inspection);
         this.inspectionCompleted.set(true);
@@ -165,11 +161,6 @@ export class CheckInPage implements OnInit {
     });
   }
 }
-
-
-
-
-
 
 
 

@@ -80,7 +80,9 @@ export class PublishCarPhotoService {
 
     // Check file size
     if (file.size > this.MAX_FILE_SIZE) {
-      throw new Error(`Archivo muy pesado: ${(file.size / 1024 / 1024).toFixed(1)}MB. Máximo 10MB.`);
+      throw new Error(
+        `Archivo muy pesado: ${(file.size / 1024 / 1024).toFixed(1)}MB. Máximo 10MB.`,
+      );
     }
   }
 
@@ -123,7 +125,7 @@ export class PublishCarPhotoService {
           year,
           angle: '3/4-front',
           style: 'showroom',
-          num_steps: 8
+          num_steps: 8,
         }),
       });
 
@@ -141,7 +143,9 @@ export class PublishCarPhotoService {
         bytes[i] = binaryData.charCodeAt(i);
       }
       const blob = new Blob([bytes], { type: 'image/png' });
-      const file = new File([blob], `ai-${brand}-${model}-${Date.now()}.png`, { type: 'image/png' });
+      const file = new File([blob], `ai-${brand}-${model}-${Date.now()}.png`, {
+        type: 'image/png',
+      });
       const preview = await this.createPreview(file);
 
       this.uploadedPhotos.set([...currentPhotos, { file, preview }]);
@@ -199,6 +203,150 @@ export class PublishCarPhotoService {
   }
 
   /**
+   * Add stock photos (Files) to the photo list
+   */
+  async addStockPhotosFiles(files: File[]): Promise<void> {
+    const currentPhotos = this.uploadedPhotos();
+    const remainingSlots = this.MAX_PHOTOS - currentPhotos.length;
+
+    if (files.length > remainingSlots) {
+      alert(`Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`);
+      return;
+    }
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const newPhotos: PhotoPreview[] = [];
+
+      for (const file of files) {
+        this.validatePhoto(file);
+        const preview = await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+    }
+  }
+
+  /**
+   * Add stock photos (URLs) to the photo list
+   */
+  async addStockPhotos(photoUrls: string[]): Promise<void> {
+    const currentPhotos = this.uploadedPhotos();
+    const remainingSlots = this.MAX_PHOTOS - currentPhotos.length;
+
+    if (photoUrls.length > remainingSlots) {
+      alert(`Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`);
+      return;
+    }
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const newPhotos: PhotoPreview[] = [];
+
+      for (const url of photoUrls) {
+        // Fetch image and convert to File
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const file = new File([blob], `stock-${Date.now()}.jpg`, {
+          type: blob.type || 'image/jpeg',
+        });
+
+        this.validatePhoto(file);
+        const preview = await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+    }
+  }
+
+  /**
+   * Add AI generated photos (Files) to the photo list
+   */
+  async addAIPhotosFiles(files: File[]): Promise<void> {
+    const currentPhotos = this.uploadedPhotos();
+    const remainingSlots = this.MAX_PHOTOS - currentPhotos.length;
+
+    if (files.length > remainingSlots) {
+      alert(`Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`);
+      return;
+    }
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const newPhotos: PhotoPreview[] = [];
+
+      for (const file of files) {
+        this.validatePhoto(file);
+        const preview = await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+    }
+  }
+
+  /**
+   * Add AI generated photos (URLs) to the photo list
+   */
+  async addAIPhotos(photoUrls: string[]): Promise<void> {
+    const currentPhotos = this.uploadedPhotos();
+    const remainingSlots = this.MAX_PHOTOS - currentPhotos.length;
+
+    if (photoUrls.length > remainingSlots) {
+      alert(`Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`);
+      return;
+    }
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const newPhotos: PhotoPreview[] = [];
+
+      for (const url of photoUrls) {
+        // Fetch image and convert to File
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const file = new File([blob], `ai-${Date.now()}.png`, { type: blob.type || 'image/png' });
+
+        this.validatePhoto(file);
+        const preview = await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+    }
+  }
+
+  /**
    * Load existing photos for editing
    * TODO: Implement getCarPhotos method in CarsService
    */
@@ -222,7 +370,9 @@ export class PublishCarPhotoService {
       // );
 
       // this.uploadedPhotos.set(previews);
-      console.warn('loadExistingPhotos not implemented - getCarPhotos method missing in CarsService');
+      console.warn(
+        'loadExistingPhotos not implemented - getCarPhotos method missing in CarsService',
+      );
     } catch (error) {
       console.error('Failed to load existing photos:', error);
     }

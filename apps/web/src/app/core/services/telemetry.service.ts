@@ -396,7 +396,7 @@ export class TelemetryService {
     prevLng: number,
     currLat: number,
     currLng: number,
-    timeElapsed: number
+    timeElapsed: number,
   ): number {
     // Fórmula de Haversine para distancia entre coordenadas
     const R = 6371; // Radio de la Tierra en km

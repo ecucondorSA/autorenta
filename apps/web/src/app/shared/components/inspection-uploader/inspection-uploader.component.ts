@@ -1,10 +1,23 @@
-import { Component, Input, OnInit, Output, EventEmitter, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
-import { InspectionStage, InspectionPhoto, BookingInspection } from '../../../core/models/fgo-v1-1.model';
+import {
+  InspectionStage,
+  InspectionPhoto,
+  BookingInspection,
+} from '../../../core/models/fgo-v1-1.model';
 
 // Window extension for inspection callback
 interface WindowWithInspectionCallback extends Window {
@@ -228,7 +241,9 @@ export class InspectionUploaderComponent implements OnInit {
       }
     } catch (_error) {
       this.error.set(
-        _error instanceof Error ? _error.message : 'Error al guardar inspección. Intente nuevamente.',
+        _error instanceof Error
+          ? _error.message
+          : 'Error al guardar inspección. Intente nuevamente.',
       );
     } finally {
       this.saving.set(false);
@@ -245,7 +260,7 @@ export class InspectionUploaderComponent implements OnInit {
       }
     }
     this.inspectionCancelled.emit();
-    
+
     // También mantener compatibilidad con callback window (legacy)
     const win = window as WindowWithInspectionCallback;
     if (win.inspectionUploaderCallback) {

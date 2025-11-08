@@ -70,9 +70,7 @@ describe('PayPalWalletGatewayService', () => {
         json: async () => mockResponse,
       } as Response);
 
-      const result = await firstValueFrom(
-        service.createDepositOrder(100, 'transaction-123')
-      );
+      const result = await firstValueFrom(service.createDepositOrder(100, 'transaction-123'));
 
       expect(result.success).toBe(true);
       expect(result.order_id).toBe('ORDER-DEPOSIT-123');
@@ -95,7 +93,7 @@ describe('PayPalWalletGatewayService', () => {
             amount_usd: 100,
             transaction_id: 'transaction-123',
           }),
-        })
+        }),
       );
     });
 
@@ -113,9 +111,7 @@ describe('PayPalWalletGatewayService', () => {
         json: async () => mockResponse,
       } as Response);
 
-      const result = await firstValueFrom(
-        service.createDepositOrder(50, 'transaction-456')
-      );
+      const result = await firstValueFrom(service.createDepositOrder(50, 'transaction-456'));
 
       expect(result.currency).toBe('USD');
     });
@@ -347,8 +343,7 @@ describe('PayPalWalletGatewayService', () => {
           eq: () => ({
             eq: () => ({
               eq: () => ({
-                single: () =>
-                  Promise.reject(new Error('Database connection failed')),
+                single: () => Promise.reject(new Error('Database connection failed')),
               }),
             }),
           }),
@@ -429,8 +424,7 @@ describe('PayPalWalletGatewayService', () => {
         select: () => ({
           eq: () => ({
             eq: () => ({
-              single: () =>
-                Promise.reject(new Error('Database connection failed')),
+              single: () => Promise.reject(new Error('Database connection failed')),
             }),
           }),
         }),
@@ -501,7 +495,9 @@ describe('PayPalWalletGatewayService', () => {
         await firstValueFrom(service.createDepositOrder(100, 'transaction-123'));
         fail('Should have thrown error');
       } catch (error: any) {
-        expect(error.message).toBe('Error al procesar el depósito con PayPal. Por favor intente nuevamente.');
+        expect(error.message).toBe(
+          'Error al procesar el depósito con PayPal. Por favor intente nuevamente.',
+        );
       }
     });
   });
@@ -523,7 +519,7 @@ describe('PayPalWalletGatewayService', () => {
       } as Response);
 
       const depositOrder = await firstValueFrom(
-        service.createDepositOrder(200, 'transaction-integration')
+        service.createDepositOrder(200, 'transaction-integration'),
       );
 
       expect(depositOrder.success).toBe(true);
@@ -600,7 +596,7 @@ describe('PayPalWalletGatewayService', () => {
       } as Response);
 
       const depositOrder = await firstValueFrom(
-        service.createDepositOrder(75, 'transaction-failed')
+        service.createDepositOrder(75, 'transaction-failed'),
       );
 
       expect(depositOrder.success).toBe(true);
@@ -655,9 +651,7 @@ describe('PayPalWalletGatewayService', () => {
         json: async () => mockResponse,
       } as Response);
 
-      const result = await firstValueFrom(
-        service.createDepositOrder(10000, 'transaction-large')
-      );
+      const result = await firstValueFrom(service.createDepositOrder(10000, 'transaction-large'));
 
       expect(result.success).toBe(true);
       expect(result.amount_usd).toBe(10000);
@@ -679,9 +673,7 @@ describe('PayPalWalletGatewayService', () => {
 
       const specialTransactionId = 'txn-2025-01-15-ABC123';
 
-      const result = await firstValueFrom(
-        service.createDepositOrder(50, specialTransactionId)
-      );
+      const result = await firstValueFrom(service.createDepositOrder(50, specialTransactionId));
 
       expect(result.success).toBe(true);
       expect(result.transaction_id).toBe(specialTransactionId);

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { WithdrawalService } from '../../../../core/services/withdrawal.service';
-import { ToastService } from '../../../../core/services/toast.service';
-import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
+import { WithdrawalService } from '@core/services/withdrawal.service';
+import { ToastService } from '@core/services/toast.service';
+import type { WithdrawalRequest } from '@core/models/wallet.model';
 
 @Component({
   selector: 'app-withdrawals-admin',
@@ -64,8 +64,8 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
                 <div>
                   <h3 class="font-semibold text-gray-900">Solicitud #{{ withdrawal.id.slice(0, 8) }}</h3>
                   <p class="text-sm text-gray-600">
-                    Usuario: {{ withdrawal.user_id.slice(0, 8) }}... | 
-                    Monto: ${{ withdrawal.amount | number: '1.2-2' }}
+                    Usuario: {{ withdrawal.user_id.slice(0, 8) }}... |
+                    Monto: \${{ withdrawal.amount | number: '1.2-2' }}
                   </p>
                   <p class="text-xs text-gray-500">
                     {{ withdrawal.created_at | date: 'short' }}
@@ -206,6 +206,7 @@ export class WithdrawalsAdminPage implements OnInit {
       this.withdrawals.set(requests);
     } catch (err) {
       this.toastService.error(
+        'Retiros',
         err instanceof Error ? err.message : 'Error al cargar retiros',
       );
     } finally {
@@ -219,12 +220,13 @@ export class WithdrawalsAdminPage implements OnInit {
     try {
       await this.withdrawalService.approveWithdrawal({
         request_id: requestId,
-        admin_notes: this.adminNotes[requestId] || null,
+        admin_notes: this.adminNotes[requestId] || undefined,
       });
-      this.toastService.success('Retiro aprobado correctamente');
+      this.toastService.success('Retiros', 'Retiro aprobado correctamente');
       await this.loadWithdrawals(this.filterStatus() || undefined);
     } catch (err) {
       this.toastService.error(
+        'Retiros',
         err instanceof Error ? err.message : 'Error al aprobar retiro',
       );
     } finally {
@@ -253,11 +255,12 @@ export class WithdrawalsAdminPage implements OnInit {
         request_id: requestId,
         rejection_reason: this.rejectionReason,
       });
-      this.toastService.success('Retiro rechazado');
+      this.toastService.success('Retiros', 'Retiro rechazado');
       this.cancelReject();
       await this.loadWithdrawals(this.filterStatus() || undefined);
     } catch (err) {
       this.toastService.error(
+        'Retiros',
         err instanceof Error ? err.message : 'Error al rechazar retiro',
       );
     } finally {
@@ -265,4 +268,6 @@ export class WithdrawalsAdminPage implements OnInit {
     }
   }
 }
+
+
 

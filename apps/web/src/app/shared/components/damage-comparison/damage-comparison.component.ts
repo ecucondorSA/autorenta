@@ -1,4 +1,12 @@
-import { Component, input, output, signal, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  signal,
+  inject,
+  OnInit,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettlementService, DamageItem } from '../../../core/services/settlement.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
@@ -8,6 +16,7 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-damage-comparison',
   standalone: true,
   imports: [CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './damage-comparison.component.html',
   styleUrls: ['./damage-comparison.component.scss'],
 })
@@ -111,5 +120,11 @@ export class DamageComparisonComponent implements OnInit {
       default:
         return 'medium';
     }
+  }
+
+  getTotalDamageCost(): string {
+    return this.damages()
+      .reduce((sum, d) => sum + d.estimatedCostUsd, 0)
+      .toFixed(2);
   }
 }

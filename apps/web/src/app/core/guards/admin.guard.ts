@@ -142,7 +142,7 @@ export function createAdminGuard(
   requiredRole?: AdminRole,
   requiredPermission?: AdminPermission,
 ): CanMatchFn {
-  return async (route: Route) => {
+  return (route: Route, segments: import('@angular/router').UrlSegment[]) => {
     // Override route data with specified requirements
     const modifiedRoute = {
       ...route,
@@ -153,7 +153,7 @@ export function createAdminGuard(
       },
     };
 
-    return AdminGuard(modifiedRoute);
+    return AdminGuard(modifiedRoute, segments);
   };
 }
 

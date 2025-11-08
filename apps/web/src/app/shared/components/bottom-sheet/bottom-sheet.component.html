@@ -1,0 +1,64 @@
+<!-- Backdrop -->
+<div
+  *ngIf="isOpen()"
+  class="bottom-sheet-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+  [class.opacity-0]="!isOpen()"
+  [class.opacity-100]="isOpen()"
+  (click)="onClose()"
+></div>
+
+<!-- Bottom Sheet -->
+<div
+  #sheet
+  class="bottom-sheet fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-deep rounded-t-2xl shadow-2xl transition-all duration-300 ease-out"
+  [class]="heightClass()"
+  [class.bottom-sheet--peek]="currentHeight() === 'peek'"
+  [class.bottom-sheet--half]="currentHeight() === 'half'"
+  [class.bottom-sheet--full]="currentHeight() === 'full'"
+  [style.transform]="getTransform()"
+  [class.hidden]="!isOpen()"
+>
+  <!-- Drag Handle -->
+  <div
+    *ngIf="showDragHandle"
+    class="drag-handle-wrapper flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
+    (touchstart)="onDragStart($event)"
+    (touchmove)="onDragMove($event)"
+    (touchend)="onDragEnd()"
+    (mousedown)="onDragStart($event)"
+  >
+    <div class="drag-handle w-12 h-1.5 bg-pearl-gray dark:bg-gray-600 rounded-full"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="bottom-sheet-header px-4 pb-3 border-b border-pearl-gray dark:border-gray-600 flex-shrink-0">
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg font-semibold text-smoke-black dark:text-white-pure">
+        <ng-content select="[slot=header]"></ng-content>
+      </h2>
+      <button
+        type="button"
+        (click)="onClose()"
+        class="p-2 rounded-lg hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-colors"
+        aria-label="Cerrar"
+      >
+        <svg class="w-6 h-6 text-charcoal-medium dark:text-pearl-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="bottom-sheet-content flex-1 overflow-y-auto px-4 py-4">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Footer (optional) -->
+  <div *ngIf="currentHeight() !== 'full'" class="bottom-sheet-footer px-4 py-3 border-t border-pearl-gray dark:border-gray-600 flex-shrink-0">
+    <ng-content select="[slot=footer]"></ng-content>
+  </div>
+</div>
+
+
+

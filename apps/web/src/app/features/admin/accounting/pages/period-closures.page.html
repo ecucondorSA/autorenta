@@ -22,7 +22,11 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ion-item>
           <ion-label position="stacked">Tipo de Período</ion-label>
-          <ion-select [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="periodType">
+          <ion-select
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="periodType"
+          >
             <ion-select-option value="">Todos</ion-select-option>
             <ion-select-option value="daily">Diario</ion-select-option>
             <ion-select-option value="monthly">Mensual</ion-select-option>
@@ -41,12 +45,22 @@
 
         <ion-item>
           <ion-label position="stacked">Fecha Inicio</ion-label>
-          <ion-input type="date" [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="startDate"></ion-input>
+          <ion-input
+            type="date"
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="startDate"
+          ></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Fecha Fin</ion-label>
-          <ion-input type="date" [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="endDate"></ion-input>
+          <ion-input
+            type="date"
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="endDate"
+          ></ion-input>
         </ion-item>
       </div>
 
@@ -66,9 +80,7 @@
   <!-- Closures List -->
   <ion-card *ngIf="!loading()">
     <ion-card-header>
-      <ion-card-title>
-        Cierres de Período ({{ closures().length }})
-      </ion-card-title>
+      <ion-card-title> Cierres de Período ({{ closures().length }}) </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <div *ngIf="closures().length === 0" class="text-center py-8 text-gray-500">
@@ -120,7 +132,12 @@
         <form (ngSubmit)="executeClosure()">
           <ion-item class="mb-4">
             <ion-label position="stacked">Tipo de Período *</ion-label>
-            <ion-select [(ngModel)]="newClosure" [ngModelOptions]="{ standalone: true }" name="periodType" (ionChange)="openCreateModal()">
+            <ion-select
+              [(ngModel)]="newClosure"
+              [ngModelOptions]="{ standalone: true }"
+              name="periodType"
+              (ionChange)="openCreateModal()"
+            >
               <ion-select-option value="daily">Diario</ion-select-option>
               <ion-select-option value="monthly">Mensual</ion-select-option>
               <ion-select-option value="yearly">Anual</ion-select-option>

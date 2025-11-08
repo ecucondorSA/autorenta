@@ -60,10 +60,7 @@ export class WaitlistService {
       this.logger.error('Exception adding to waitlist', (error as Error)?.message || String(error));
       return {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Error al agregar a la lista de espera',
+        error: error instanceof Error ? error.message : 'Error al agregar a la lista de espera',
       };
     }
   }
@@ -92,13 +89,13 @@ export class WaitlistService {
 
       return { success: true };
     } catch (error: unknown) {
-      this.logger.error('Exception removing from waitlist', (error as Error)?.message || String(error));
+      this.logger.error(
+        'Exception removing from waitlist',
+        (error as Error)?.message || String(error),
+      );
       return {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Error al remover de la lista de espera',
+        error: error instanceof Error ? error.message : 'Error al remover de la lista de espera',
       };
     }
   }
@@ -130,11 +127,7 @@ export class WaitlistService {
    * @param endDate - Fecha fin (ISO string)
    * @returns Promise con el número de usuarios en waitlist
    */
-  async getWaitlistCount(
-    carId: string,
-    startDate: string,
-    endDate: string,
-  ): Promise<number> {
+  async getWaitlistCount(carId: string, startDate: string, endDate: string): Promise<number> {
     try {
       const { data, error } = await this.supabase.rpc('get_waitlist_count', {
         p_car_id: carId,
@@ -149,14 +142,14 @@ export class WaitlistService {
 
       return (data ?? 0) as number;
     } catch (error: unknown) {
-      this.logger.error('Exception getting waitlist count', (error as Error)?.message || String(error));
+      this.logger.error(
+        'Exception getting waitlist count',
+        (error as Error)?.message || String(error),
+      );
       return 0;
     }
   }
 }
-
-
-
 
 
 

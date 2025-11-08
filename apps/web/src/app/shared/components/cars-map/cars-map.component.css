@@ -96,7 +96,9 @@
   opacity: 0;
   pointer-events: none;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .car-marker:hover::after,
@@ -166,7 +168,9 @@
   border-radius: inherit;
   padding: 2px;
   background: linear-gradient(135deg, #f97316, #ea580c);
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
@@ -263,7 +267,9 @@
   color: rgba(15, 23, 42, 0.6);
 }
 
-.car-marker-price { color: inherit; }
+.car-marker-price {
+  color: inherit;
+}
 
 .car-marker-price--dynamic {
   background: linear-gradient(120deg, #f97316, #ea580c);
@@ -271,14 +277,19 @@
   box-shadow: 0 12px 20px rgba(234, 88, 12, 0.35);
 }
 
-.car-marker-price--dynamic .car-marker-pill-sub { color: rgba(255,255,255,0.75); }
-
-.car-marker-price--fallback {
-  background: linear-gradient(120deg, #1f2937, #0f172a);
-  color: #e2e8f0;
+.car-marker-price--dynamic .car-marker-pill-sub {
+  color: rgba(255, 255, 255, 0.75);
 }
 
-.car-marker-price--fallback .car-marker-pill-sub { color: rgba(226,232,240,0.65); }
+.car-marker-price--fallback {
+  background: linear-gradient(120deg, #f97316, #ea580c);
+  color: #fff;
+  box-shadow: 0 12px 20px rgba(234, 88, 12, 0.35);
+}
+
+.car-marker-price--fallback .car-marker-pill-sub {
+  color: rgba(255, 255, 255, 0.75);
+}
 
 .car-marker-distance {
   background: linear-gradient(120deg, #10b981, #047857);
@@ -324,11 +335,18 @@
 
 /* Bounce animation on load */
 @keyframes markerBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-.car-marker.bounce { animation: markerBounce 0.6s ease; }
+.car-marker.bounce {
+  animation: markerBounce 0.6s ease;
+}
 
 /* Enhanced active states */
 /* Enhanced active states */
@@ -336,7 +354,9 @@
   background: linear-gradient(135deg, #dc2626, #b91c1c);
   border-color: #dc2626;
   transform: scale(1.2);
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3), 0 8px 24px rgba(220, 38, 38, 0.4);
+  box-shadow:
+    0 0 0 4px rgba(220, 38, 38, 0.3),
+    0 8px 24px rgba(220, 38, 38, 0.4);
 }
 
 /* User location marker */
@@ -423,7 +443,6 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8) !important; /* Sombra más intensa */
   border: 1px solid rgba(255, 255, 255, 0.15) !important; /* Borde sutil */
 }
-
 
 .car-popup-content {
   display: flex;
@@ -536,7 +555,6 @@ img.car-popup-image {
   color: #60a5fa !important; /* Azul claro para precio en dark mode */
 }
 
-
 /* Responsive: Mejorar contraste y tamaño en móvil - REDUCCIÓN AL 1/8 (8x más pequeño) */
 @media (max-width: 640px) {
   /* Limitar el ancho máximo del popup en móvil - 1/8 del tamaño original */
@@ -546,7 +564,7 @@ img.car-popup-image {
     padding: 1.5px 2px !important; /* Reducido 8x (antes 12px 16px) */
     box-sizing: border-box !important;
   }
-  
+
   /* Ajustar el contenido del popup en móvil - 1/8 del tamaño original */
   .car-popup-content {
     min-width: auto !important;
@@ -555,7 +573,7 @@ img.car-popup-image {
     flex-wrap: nowrap !important;
     box-sizing: border-box !important;
   }
-  
+
   /* Reducir tamaño de imagen en móvil - 1/8 del tamaño original */
   .car-popup-image-wrapper {
     width: 11px !important; /* Reducido 8x (antes 88px) */
@@ -566,7 +584,7 @@ img.car-popup-image {
     box-sizing: border-box !important;
     border-radius: 1.25px !important; /* Reducido 8x (antes 10px) */
   }
-  
+
   /* Aplicar tamaño reducido a todas las imágenes del popup en móvil - 1/8 */
   .car-popup .mapboxgl-popup-content img.car-popup-image,
   .car-popup .mapboxgl-popup-content .car-popup-image-wrapper img,
@@ -586,7 +604,7 @@ img.car-popup-image {
     border-radius: 1.25px !important; /* Reducido 8x */
     clip-path: inset(0 round 1.25px) !important;
   }
-  
+
   /* Ajustar información del popup en móvil - 1/8 del tamaño original */
   .car-popup-info {
     flex: 1 !important;
@@ -595,7 +613,7 @@ img.car-popup-image {
     overflow: hidden !important;
     box-sizing: border-box !important;
   }
-  
+
   .car-popup-info h4 {
     font-size: 1.75px !important; /* Reducido 8x (antes 14px) */
     font-weight: 700 !important;
@@ -606,13 +624,13 @@ img.car-popup-image {
     margin: 0 0 0.5px 0 !important; /* Reducido 8x */
     line-height: 1.2 !important;
   }
-  
+
   .car-popup-price {
     font-size: 2px !important; /* Reducido 8x (antes 16px) */
     margin: 0 !important;
     line-height: 1.3 !important;
   }
-  
+
   .car-popup-info p:not(.car-popup-price) {
     font-size: 1.625px !important; /* Reducido 8x (antes 13px) */
     white-space: nowrap !important;
@@ -643,27 +661,27 @@ img.car-popup-image {
     border-radius: 4.5px !important; /* Reducido 4x (antes 18px) */
     -webkit-border-radius: 4.5px !important;
   }
-  
+
   .dark .car-popup .mapboxgl-popup-content {
     background-color: #1e1e1e !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9) !important; /* Reducido 4x */
   }
-  
+
   .car-popup-info h4,
   .car-popup-title {
     font-size: 3.75px; /* Reducido 4x (antes 15px) */
     font-weight: 700;
   }
-  
+
   .dark .car-popup-info h4,
   .dark .car-popup-title {
     color: #ffffff !important;
   }
-  
+
   .car-popup-price {
     font-size: 4.25px; /* Reducido 4x (antes 17px) */
   }
-  
+
   .dark .car-popup-price {
     color: #60a5fa !important;
   }
@@ -746,7 +764,9 @@ img.car-popup-image {
   opacity: 0;
   pointer-events: none;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .car-marker:hover::after,
@@ -869,12 +889,13 @@ img.car-popup-image {
 }
 
 .car-marker-price--fallback {
-  background: linear-gradient(120deg, #1f2937, #0f172a);
-  color: #e2e8f0;
+  background: linear-gradient(120deg, #f97316, #ea580c);
+  color: #fff;
+  box-shadow: 0 12px 20px rgba(234, 88, 12, 0.35);
 }
 
 .car-marker-price--fallback .car-marker-pill-sub {
-  color: rgba(226, 232, 240, 0.65);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .car-marker-distance {
@@ -949,5 +970,120 @@ img.car-popup-image {
 }
 
 .car-marker--light .car-marker-price--fallback {
-  background: linear-gradient(120deg, #0f172a, #1f2937);
+  background: linear-gradient(120deg, #f97316, #ea580c);
+  color: #fff;
+}
+
+
+/* 🎯 Simple Car Markers (Neutral Style) */
+.car-marker-simple {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.car-marker-simple:hover {
+  transform: scale(1.15);
+  z-index: 10;
+}
+
+.car-marker-simple.car-marker--selected .marker-circle {
+  transform: scale(1.2);
+  box-shadow:
+    0 0 0 4px rgba(44, 122, 123, 0.3),
+    0 4px 12px rgba(44, 122, 123, 0.6),
+    0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: pulse-marker 2s ease-in-out infinite;
+}
+
+.marker-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2c7a7b 0%, #4a9fa0 100%);
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(44, 122, 123, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.marker-price-simple {
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.car-marker-simple:hover .marker-circle {
+  transform: scale(1.2);
+  box-shadow: 0 6px 20px rgba(44, 122, 123, 0.7);
+}
+
+@keyframes pulse-marker {
+  0%, 100% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 0.9;
+  }
+}
+
+/* 🎯 User Location Marker */
+.user-location-marker {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.user-marker-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2c7a7b;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.user-marker-halo {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(44, 122, 123, 0.2);
+  animation: pulse-halo 2s ease-in-out infinite;
+}
+
+@keyframes pulse-halo {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+}
+
+.user-location-popup {
+  padding: 8px 12px;
+}
+
+.user-location-popup p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* 🎯 Tooltip Container */
+.map-tooltip-container {
+  width: 100%;
 }

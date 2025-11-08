@@ -71,7 +71,7 @@ export class VehicleDocumentsService {
         .from('vehicle_documents')
         .select('*')
         .eq('car_id', carId)
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
@@ -80,7 +80,7 @@ export class VehicleDocumentsService {
       catchError((error) => {
         console.error('Error fetching car documents:', error);
         return of([]);
-      })
+      }),
     );
   }
 
@@ -89,7 +89,7 @@ export class VehicleDocumentsService {
    */
   getDocument(documentId: string): Observable<VehicleDocument | null> {
     return from(
-      this.supabase.from('vehicle_documents').select('*').eq('id', documentId).single()
+      this.supabase.from('vehicle_documents').select('*').eq('id', documentId).single(),
     ).pipe(
       map(({ data, error }) => {
         if (error) {
@@ -98,7 +98,7 @@ export class VehicleDocumentsService {
         }
         return data as VehicleDocument;
       }),
-      catchError(() => of(null))
+      catchError(() => of(null)),
     );
   }
 
@@ -153,7 +153,7 @@ export class VehicleDocumentsService {
    */
   async updateDocument(
     documentId: string,
-    updates: { expiry_date?: string; notes?: string }
+    updates: { expiry_date?: string; notes?: string },
   ): Promise<void> {
     const { error } = await this.supabase
       .from('vehicle_documents')
@@ -262,13 +262,13 @@ export class VehicleDocumentsService {
         .eq('car_id', carId)
         .eq('status', 'verified')
         .not('expiry_date', 'is', null)
-        .lte('expiry_date', thirtyDaysFromNow.toISOString().split('T')[0])
+        .lte('expiry_date', thirtyDaysFromNow.toISOString().split('T')[0]),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
         return (data as VehicleDocument[]) || [];
       }),
-      catchError(() => of([]))
+      catchError(() => of([])),
     );
   }
 

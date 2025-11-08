@@ -1,101 +1,74 @@
 <section class="cars-map-page bg-ivory-soft dark:bg-graphite-dark transition-colors duration-300">
-  <!-- ✅ FIXED: Uso de app-car-card para precios dinámicos consistentes -->
-  <ng-template #carouselCard let-car let-isTopRated="isTopRated">
-    <div class="map-carousel-card-wrapper" role="listitem" [attr.data-car-id]="car.id" [class.top-rated]="isTopRated">
-      <app-car-card
-        [car]="car"
-        [selected]="isCarSelected(car.id)"
-        [distance]="car.distanceText"
-        (click)="onCarSelected(car.id)"
-        class="map-carousel-card--dynamic"
-        [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto recomendado')"
-      ></app-car-card>
-    </div>
-  </ng-template>
+  <!-- Barra superior fija -->
+  <app-pwa-titlebar />
 
-  <!-- Mapa full-width (sin panel lateral) -->
-  <div class="w-full h-screen">
-    <div id="map-container" class="w-full h-full relative">
-      <app-cars-map
-        [cars]="carMapLocations()"
-        [selectedCarId]="selectedCarId()"
-        (carSelected)="onMapCarSelected($event)"
-        (userLocationChange)="onUserLocationChange($event)"
-      ></app-cars-map>
+  <!-- Layout principal 70/30 (desktop) o full-width (mobile) -->
+  <div class="map-page-layout">
+    <!-- Región del mapa (70% desktop, full mobile) -->
+    <div class="map-section">
+      <div id="map-container" class="w-full h-full relative">
+        <app-cars-map
+          [cars]="carMapLocations()"
+          [selectedCarId]="selectedCarId()"
+          [userLocation]="userLocation()"
+          (carSelected)="onMapCarSelected($event)"
+          (userLocationChange)="onUserLocationChange($event)"
+        ></app-cars-map>
 
-      <div class="pointer-events-none absolute inset-0">
-        <div class="map-controls pointer-events-auto">
-          <div
-            id="filters"
-            data-tour-step="guided-search"
-            class="map-controls__filters filter-section"
-          >
-            <app-date-range-picker
-              label="Fechas de alquiler"
-              [initialFrom]="dateRange().from"
-              [initialTo]="dateRange().to"
-              [showPrices]="false"
-              (rangeChange)="onRangeChange($event)"
-              class="mb-3"
-            ></app-date-range-picker>
-          </div>
-          <div class="map-controls__sort">
-            <label class="sr-only" for="sort-by">Ordenar resultados</label>
-            <select
-              id="sort-by"
-              [value]="sortBy()"
-              (change)="onSortChange($any($event.target).value)"
-              class="map-controls__select"
-            >
-              <option value="distance" [disabled]="!userLocation()">Más cercanos</option>
-              <option value="price_asc">Precio: menor a mayor</option>
-              <option value="price_desc">Precio: mayor a menor</option>
-              <option value="rating">Mejor valorados</option>
-              <option value="newest">Más nuevos</option>
-            </select>
+        <!-- Filtros flotantes sobre el mapa -->
+        <div class="map-filters-overlay pointer-events-none">
+          <div class="pointer-events-auto">
+            <app-map-filters
+              (filterChange)="onFiltersChange($event)"
+            />
           </div>
         </div>
 
-        <!-- Carousel de autos recomendados (visible en móvil y desktop) -->
+        <!-- Urgent Rental Banner (si hay auto seleccionado) -->
         <div
-          *ngIf="showRecommendedCarousel()"
-          class="map-carousel-container pointer-events-none"
-          role="region"
-          [attr.aria-label]="'Autos mejor evaluados y recomendados'"
+          *ngIf="selectedCarId() && urgentAvailability()?.available"
+          class="urgent-banner-overlay pointer-events-none"
         >
-          <div class="map-carousel-heading pointer-events-auto">
-            <span class="map-carousel-heading__pill recommended">
-              ⭐ Mejor evaluados
-              <span class="pill-subtitle">Rating + Cercanía</span>
-            </span>
-          </div>
-          <div
-            #unifiedCarousel
-            class="map-carousel pointer-events-auto"
-            data-tour-step="guided-select-car"
-            role="list"
-            (mouseenter)="onCarouselMouseEnter()"
-            (mouseleave)="onCarouselMouseLeave()"
-            (touchstart)="onCarouselMouseEnter()"
-            (touchend)="onCarouselMouseLeave()"
-          >
-            <!-- Skeletons mientras carga -->
-            <ng-container *ngIf="loading(); else recommendedList">
-              <div *ngFor="let i of [1,2,3,4]" class="map-carousel-card" aria-hidden="true">
-                <app-skeleton-loader type="card"></app-skeleton-loader>
-              </div>
-            </ng-container>
-            <ng-template #recommendedList>
-            <ng-container *ngFor="let car of recommendedCars(); trackBy: trackByCarId">
-              <ng-container
-                [ngTemplateOutlet]="carouselCard"
-                [ngTemplateOutletContext]="{ $implicit: car, isTopRated: isTopRated(car) }"
-              ></ng-container>
-            </ng-container>
-            </ng-template>
+          <div class="pointer-events-auto">
+            <app-urgent-rental-banner
+              [carId]="selectedCarId()!"
+              [regionId]="selectedCar()?.region_id || ''"
+              [expressMode]="expressModeSignal"
+            />
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Drawer lateral (30% desktop, tabs mobile) -->
+    <app-cars-drawer
+      [cars]="premiumCars()"
+      [isOpen]="drawerOpen()"
+      [selectedCarId]="selectedCarId()"
+      (carSelected)="onCarSelected($event)"
+      (close)="onDrawerClose()"
+      (reserveClick)="onReserveClick($event)"
+    />
   </div>
+
+  <!-- Sticky CTA Mobile -->
+  <app-sticky-cta-mobile
+    *ngIf="selectedCarId() && selectedCarPrice()"
+    [pricePerDay]="selectedCarPrice()!"
+    [ctaText]="'Rentar ahora'"
+    [expressMode]="urgentAvailability()?.available || false"
+    (ctaClick)="onReserveClick(selectedCarId()!)"
+  />
+
+  <!-- WhatsApp FAB -->
+  <!-- Note: ownerPhone will be loaded via getOwnerContact when needed -->
+  <app-whatsapp-fab
+    *ngIf="selectedCar()"
+    [car]="selectedCar()!"
+    [ownerPhone]="null"
+    [ownerName]="selectedCar()?.owner?.full_name || null"
+  />
+
+  <!-- Mobile Bottom Nav -->
+  <app-mobile-bottom-nav />
 </section>

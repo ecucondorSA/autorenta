@@ -34,6 +34,7 @@ export interface UpdateProfileData {
   marketing_opt_in?: boolean;
   notif_prefs?: NotificationPrefs;
   tos_accepted_at?: boolean;
+  preferred_search_radius_km?: number | null;
 }
 
 @Injectable({
