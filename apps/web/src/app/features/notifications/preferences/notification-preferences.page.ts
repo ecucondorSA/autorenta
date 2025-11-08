@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { NotificationSoundService } from '../../../core/services/notification-sound.service';
 
 interface NotificationPreference {
   type: string;
@@ -202,12 +203,21 @@ interface NotificationPreference {
 export class NotificationPreferencesPage implements OnInit {
   private readonly supabase = injectSupabase();
   private readonly router = inject(Router);
+  private readonly notificationSound = inject(NotificationSoundService);
 
   loading = signal(true);
   saving = signal(false);
   browserNotificationsEnabled = signal(false);
   browserNotificationsPermission = signal<NotificationPermission>('default');
   soundEnabled = signal(true);
+
+  constructor() {
+    // Sync with NotificationSoundService
+    effect(() => {
+      const soundState = this.notificationSound.isSoundEnabledSignal()();
+      this.soundEnabled.set(soundState);
+    });
+  }
 
   preferences = signal<NotificationPreference[]>([
     {
@@ -279,6 +289,10 @@ export class NotificationPreferencesPage implements OnInit {
       const { data: { user } } = await this.supabase.auth.getUser();
       if (!user) return;
 
+      // Load sound state from NotificationSoundService
+      const soundState = this.notificationSound.isSoundEnabledSignal()();
+      this.soundEnabled.set(soundState);
+
       // Load preferences from localStorage for now
       // TODO: Move to database table if needed
       const savedPrefs = localStorage.getItem(`notification_prefs_${user.id}`);
@@ -293,7 +307,14 @@ export class NotificationPreferencesPage implements OnInit {
           }))
         );
 
-        this.soundEnabled.set(parsed.soundEnabled ?? true);
+        // Sync sound state (service takes precedence)
+        if (parsed.soundEnabled !== undefined) {
+          if (parsed.soundEnabled) {
+            this.notificationSound.enableSound();
+          } else {
+            this.notificationSound.disableSound();
+          }
+        }
       }
     } catch (error) {
       console.error('Error loading preferences:', error);
@@ -331,7 +352,14 @@ export class NotificationPreferencesPage implements OnInit {
   }
 
   toggleSound() {
-    this.soundEnabled.update(v => !v);
+    const newState = this.notificationSound.toggleSound();
+    this.soundEnabled.set(newState);
+    // Play test sound if enabling
+    if (newState) {
+      this.notificationSound.playNotificationSound().catch(() => {
+        // Silently fail if can't play
+      });
+    }
   }
 
   togglePreference(pref: NotificationPreference) {
@@ -348,7 +376,7 @@ export class NotificationPreferencesPage implements OnInit {
 
       // Save to localStorage for now
       const prefsToSave = {
-        soundEnabled: this.soundEnabled(),
+        soundEnabled: this.soundEnabled(), // Already synced with service
         browserNotificationsEnabled: this.browserNotificationsEnabled(),
         types: this.preferences().reduce((acc, p) => {
           acc[p.type] = p.enabled;

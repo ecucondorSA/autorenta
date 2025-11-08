@@ -127,15 +127,27 @@
 
             <!-- Car Info -->
             <div class="flex-1 min-w-0">
-              <h1 class="text-lg font-bold text-gray-900 dark:text-white truncate">
-                {{ booking()?.car_title }}
-              </h1>
-              <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
-                {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300" *ngIf="booking()?.car_city">
-                📍 {{ booking()?.car_city }}
-              </p>
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex-1 min-w-0">
+                  <h1 class="text-lg font-bold text-gray-900 dark:text-white truncate">
+                    {{ booking()?.car_title }}
+                  </h1>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                    {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300" *ngIf="booking()?.car_city">
+                    📍 {{ booking()?.car_city }}
+                  </p>
+                </div>
+                <app-share-button
+                  type="booking"
+                  [bookingId]="booking()?.id || ''"
+                  [bookingDetails]="getBookingDetailsText()"
+                  label=""
+                  buttonClass="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                  ariaLabel="Compartir reserva"
+                ></app-share-button>
+              </div>
             </div>
 
             <!-- ID Badge -->
@@ -661,6 +673,65 @@
         </div>
 
         <app-review-management [booking]="booking()!"></app-review-management>
+
+        <!-- Disputes Section -->
+        @if (canCreateDispute() || booking()?.status === 'completed') {
+          <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
+            <app-disputes-list
+              [bookingId]="booking()!.id"
+              [showCreateButton]="canCreateDispute()"
+              (createDispute)="showDisputeForm.set(true)"
+            ></app-disputes-list>
+          </div>
+        }
+
+        <!-- Refund Request Section -->
+        @if (canRequestRefund()) {
+          <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  Solicitar Reembolso
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  Si necesitas un reembolso para esta reserva, puedes solicitarlo aquí.
+                </p>
+              </div>
+              <button
+                (click)="showRefundForm.set(true)"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Solicitar Reembolso
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Dispute Form Modal -->
+        <app-dispute-form
+          [isOpen]="showDisputeForm()"
+          [bookingId]="booking()!.id"
+          (closeModal)="showDisputeForm.set(false)"
+          (disputeCreated)="onDisputeCreated()"
+        ></app-dispute-form>
+
+        <!-- Refund Request Modal -->
+        <app-refund-request
+          [isOpen]="showRefundForm()"
+          [bookingId]="booking()!.id"
+          (closeModal)="showRefundForm.set(false)"
+          (refundRequested)="onRefundRequested()"
+        ></app-refund-request>
+
+        <!-- Contract Section -->
+        <div class="mt-6" *ngIf="booking()">
+          <app-booking-contract [bookingId]="booking()!.id"></app-booking-contract>
+        </div>
+
+        <!-- Refund Status -->
+        <div class="mt-6" *ngIf="booking()">
+          <app-refund-status [bookingId]="booking()!.id"></app-refund-status>
+        </div>
 
         <!-- Owner Damage Report Button -->
         <div

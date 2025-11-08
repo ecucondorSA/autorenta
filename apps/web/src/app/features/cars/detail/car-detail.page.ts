@@ -33,6 +33,7 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
 import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
 import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
+import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
 import { DynamicPriceDisplayComponent } from '../../../shared/components/dynamic-price-display/dynamic-price-display.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { SocialProofIndicatorsComponent } from '../../../shared/components/social-proof-indicators/social-proof-indicators.component';
@@ -70,6 +71,7 @@ interface CarDetailState {
     MoneyPipe,
     CarReviewsSectionComponent,
     ShareMenuComponent,
+    ShareButtonComponent,
     TranslateModule,
     UrgentRentalBannerComponent,
     SocialProofIndicatorsComponent,

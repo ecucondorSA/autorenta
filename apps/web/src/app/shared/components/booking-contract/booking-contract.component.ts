@@ -1,0 +1,159 @@
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { ContractsService, BookingContract } from '../../../core/services/contracts.service';
+import { ToastService } from '../../../core/services/toast.service';
+
+@Component({
+  selector: 'app-booking-contract',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div class="mb-4 flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-gray-900">Contrato de Alquiler</h3>
+        @if (contract(); as c) {
+          <span
+            class="rounded-full px-3 py-1 text-sm font-medium"
+            [class.bg-green-100]="c.accepted_by_renter"
+            [class.text-green-800]="c.accepted_by_renter"
+            [class.bg-yellow-100]="!c.accepted_by_renter"
+            [class.text-yellow-800]="!c.accepted_by_renter"
+          >
+            {{ c.accepted_by_renter ? 'Aceptado' : 'Pendiente' }}
+          </span>
+        }
+      </div>
+
+      @if (loading()) {
+        <div class="flex items-center justify-center py-8">
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+        </div>
+      } @else if (error()) {
+        <div class="rounded-lg bg-red-50 p-4 text-red-800">
+          <p class="font-medium">Error al cargar el contrato</p>
+          <p class="text-sm">{{ error() }}</p>
+        </div>
+      } @else if (contract(); as c) {
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm font-medium text-gray-500">Versión de Términos</p>
+              <p class="text-base text-gray-900">{{ c.terms_version }}</p>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-500">Fecha de Creación</p>
+              <p class="text-base text-gray-900">{{ c.created_at | date: 'short' }}</p>
+            </div>
+            @if (c.accepted_at) {
+              <div>
+                <p class="text-sm font-medium text-gray-500">Fecha de Aceptación</p>
+                <p class="text-base text-gray-900">{{ c.accepted_at | date: 'short' }}</p>
+              </div>
+            }
+          </div>
+
+          @if (c.pdf_url) {
+            <div>
+              <a
+                [href]="c.pdf_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                <svg
+                  class="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                Ver Contrato PDF
+              </a>
+            </div>
+          }
+
+          @if (!c.accepted_by_renter) {
+            <div class="rounded-lg bg-yellow-50 p-4">
+              <p class="mb-3 text-sm text-yellow-800">
+                Por favor, lee y acepta el contrato para continuar con la reserva.
+              </p>
+              <button
+                (click)="acceptContract()"
+                [disabled]="accepting()"
+                class="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-700 disabled:opacity-50"
+              >
+                @if (accepting()) {
+                  <span class="flex items-center gap-2">
+                    <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                    Aceptando...
+                  </span>
+                } @else {
+                  Aceptar Contrato
+                }
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="rounded-lg bg-gray-50 p-4 text-center text-gray-600">
+          <p>No hay contrato disponible para esta reserva.</p>
+        </div>
+      }
+    </div>
+  `,
+})
+export class BookingContractComponent implements OnInit {
+  @Input({ required: true }) bookingId!: string;
+
+  private readonly contractsService = inject(ContractsService);
+  private readonly toastService = inject(ToastService);
+
+  readonly contract = signal<BookingContract | null>(null);
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly accepting = signal(false);
+
+  async ngOnInit(): Promise<void> {
+    await this.loadContract();
+  }
+
+  async loadContract(): Promise<void> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const contract = await this.contractsService.getContractByBooking(this.bookingId);
+      this.contract.set(contract);
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'Error desconocido');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async acceptContract(): Promise<void> {
+    const contract = this.contract();
+    if (!contract) return;
+
+    this.accepting.set(true);
+
+    try {
+      await this.contractsService.acceptContract(contract.id);
+      await this.loadContract();
+      this.toastService.success('Contrato aceptado correctamente');
+    } catch (err) {
+      this.toastService.error(
+        err instanceof Error ? err.message : 'Error al aceptar el contrato',
+      );
+    } finally {
+      this.accepting.set(false);
+    }
+  }
+}
+

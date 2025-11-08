@@ -1,0 +1,137 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin/accounting"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Salud Financiera</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="checkHealth()" [disabled]="loading()">
+        <ion-icon name="refresh" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Last Checked -->
+  <ion-card *ngIf="lastChecked()" class="mb-4">
+    <ion-card-content>
+      <p class="text-sm text-gray-500">
+        Última verificación: {{ lastChecked()! | date: 'short' }}
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="mt-4 text-gray-500">Verificando salud financiera...</p>
+  </div>
+
+  <!-- Health Status -->
+  <div *ngIf="!loading() && health()">
+    <!-- Overall Status -->
+    <ion-card [color]="getProfitabilityColor()" class="mb-6">
+      <ion-card-header>
+        <div class="flex items-center">
+          <ion-icon [name]="getProfitabilityIcon()" class="text-3xl mr-3"></ion-icon>
+          <div>
+            <ion-card-title>Estado General: {{ getProfitabilityLabel() }}</ion-card-title>
+            <ion-card-subtitle>Evaluación de salud financiera</ion-card-subtitle>
+          </div>
+        </div>
+      </ion-card-header>
+    </ion-card>
+
+    <!-- Indicators -->
+    <div class="space-y-4 mb-6">
+      <!-- Wallet Reconciliation -->
+      <ion-card [color]="health()!.walletReconciled ? 'success' : 'danger'">
+        <ion-card-content>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <ion-icon
+                [name]="health()!.walletReconciled ? 'checkmark-circle' : 'close-circle'"
+                class="text-2xl mr-3"
+              ></ion-icon>
+              <div>
+                <p class="font-semibold">Conciliación Wallet</p>
+                <p class="text-sm text-gray-500">
+                  {{ health()!.walletReconciled ? 'OK - Sin diferencias' : 'Error - Verificar conciliación' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- FGO Adequacy -->
+      <ion-card [color]="health()!.fgoAdequate ? 'success' : 'warning'">
+        <ion-card-content>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <ion-icon
+                [name]="health()!.fgoAdequate ? 'checkmark-circle' : 'warning'"
+                class="text-2xl mr-3"
+              ></ion-icon>
+              <div>
+                <p class="font-semibold">Provisión FGO</p>
+                <p class="text-sm text-gray-500">
+                  {{ health()!.fgoAdequate ? 'Adecuada (≥5% de depósitos)' : 'Insuficiente - Revisar' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Profitability -->
+      <ion-card [color]="getProfitabilityColor()">
+        <ion-card-content>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <ion-icon [name]="getProfitabilityIcon()" class="text-2xl mr-3"></ion-icon>
+              <div>
+                <p class="font-semibold">Rentabilidad</p>
+                <p class="text-sm text-gray-500">
+                  {{
+                    health()!.profitability === 'GOOD'
+                      ? 'Buena (margen ≥5%)'
+                      : health()!.profitability === 'WARNING'
+                        ? 'Regular (margen <5%)'
+                        : 'Crítica (pérdidas)'
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Alerts -->
+    <ion-card *ngIf="health()!.alerts.length > 0" color="warning" class="mb-6">
+      <ion-card-header>
+        <ion-card-title>Alertas ({{ health()!.alerts.length }})</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item *ngFor="let alert of health()!.alerts">
+            <ion-icon name="alert-circle" slot="start" color="warning"></ion-icon>
+            <ion-label class="ion-text-wrap">{{ alert }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- No Alerts -->
+    <ion-card *ngIf="health()!.alerts.length === 0" color="success" class="mb-6">
+      <ion-card-content>
+        <div class="flex items-center">
+          <ion-icon name="checkmark-circle" class="text-2xl mr-3"></ion-icon>
+          <p class="font-semibold">No hay alertas. El sistema financiero está saludable.</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

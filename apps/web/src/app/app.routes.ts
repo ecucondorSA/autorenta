@@ -18,6 +18,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),
   },
   {
+    path: 'dashboard/owner',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/dashboard/owner-dashboard.page').then((m) => m.OwnerDashboardPage),
+  },
+  {
     path: 'cars',
     children: [
       {
@@ -52,6 +58,22 @@ export const routes: Routes = [
           ),
       },
       {
+        path: ':id/bulk-blocking',
+        canMatch: [AuthGuard],
+        loadComponent: () =>
+          import('./features/cars/bulk-blocking/bulk-blocking.page').then(
+            (m) => m.BulkBlockingPage,
+          ),
+      },
+      {
+        path: ':id/documents',
+        canMatch: [AuthGuard],
+        loadComponent: () =>
+          import('./features/cars/vehicle-documents/vehicle-documents.page').then(
+            (m) => m.VehicleDocumentsPage,
+          ),
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('./features/cars/detail/car-detail.page').then((m) => m.CarDetailPage),
@@ -63,6 +85,27 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
     loadChildren: () =>
       import('./features/bookings/bookings.routes').then((m) => m.BOOKINGS_ROUTES),
+  },
+  {
+    path: 'bookings/urgent/:carId',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/bookings/urgent-booking/urgent-booking.page').then(
+        (m) => m.UrgentBookingPage,
+      ),
+  },
+  {
+    path: 'reviews',
+    canMatch: [AuthGuard],
+    children: [
+      {
+        path: 'pending',
+        loadComponent: () =>
+          import('./features/reviews/pending-reviews/pending-reviews.page').then(
+            (m) => m.PendingReviewsPage,
+          ),
+      },
+    ],
   },
   {
     path: 'admin',
@@ -109,11 +152,16 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'accounting',
+        path: 'disputes',
         loadComponent: () =>
-          import('./features/admin/accounting/accounting-admin.page').then(
-            (m) => m.AccountingAdminPage,
+          import('./features/admin/disputes/admin-disputes.page').then(
+            (m) => m.AdminDisputesPage,
           ),
+      },
+      {
+        path: 'accounting',
+        loadChildren: () =>
+          import('./features/admin/accounting/accounting.routes').then((m) => m.ACCOUNTING_ROUTES),
       },
       {
         path: 'claims',
@@ -128,9 +176,30 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'settlements',
+        loadComponent: () =>
+          import('./features/admin/settlements/admin-settlements.page').then(
+            (m) => m.AdminSettlementsPage,
+          ),
+      },
+      {
         path: 'reviews',
         loadComponent: () =>
           import('./features/admin/reviews/admin-reviews.page').then((m) => m.AdminReviewsPage),
+      },
+      {
+        path: 'reviews/moderate',
+        loadComponent: () =>
+          import('./features/admin/reviews/moderate-reviews/moderate-reviews.page').then(
+            (m) => m.ModerateReviewsPage,
+          ),
+      },
+      {
+        path: 'database-export',
+        loadComponent: () =>
+          import('./features/admin/database-export/database-export.page').then(
+            (m) => m.DatabaseExportPage,
+          ),
       },
       {
         path: 'verifications',
@@ -166,6 +235,22 @@ export const routes: Routes = [
           import('./features/profile/mercadopago-connect.component').then(
             (m) => m.MercadoPagoConnectComponent,
           ),
+      },
+      {
+        path: 'location',
+        loadComponent: () =>
+          import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
+      },
+      {
+        path: 'driving-stats',
+        loadComponent: () =>
+          import('./features/profile/driving-stats/driving-stats.page').then(
+            (m) => m.DrivingStatsPage,
+          ),
+      },
+      {
+        path: 'payouts',
+        loadComponent: () => import('./features/payouts/payouts.page').then((m) => m.PayoutsPage),
       },
     ],
   },
