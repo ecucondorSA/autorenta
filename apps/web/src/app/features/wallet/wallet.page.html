@@ -20,7 +20,9 @@
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-red-900 dark:text-error-100">Error al cargar el wallet</p>
+            <p class="text-sm font-medium text-red-900 dark:text-error-100">
+              Error al cargar el wallet
+            </p>
             <p class="mt-1 text-sm text-red-700 dark:text-error-200">{{ error.message }}</p>
             <button
               type="button"
@@ -351,20 +353,29 @@
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </button>
 
         <!-- Expandable Content -->
         @if (benefitsSectionExpanded()) {
-          <div class="px-6 pb-6 pt-2 space-y-6 border-t border-pearl-gray dark:border-gray-600/30 dark:border-neutral-700">
+          <div
+            class="px-6 pb-6 pt-2 space-y-6 border-t border-pearl-gray dark:border-gray-600/30 dark:border-neutral-700"
+          >
             <!-- Benefits Grid -->
             <div>
               <h4 class="text-sm font-bold text-smoke-black dark:text-ivory-luminous mb-3">
                 Beneficios principales
               </h4>
               <div class="grid gap-3 sm:grid-cols-2">
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-success-50 dark:bg-success-500/10">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-success-50 dark:bg-success-500/10"
+                >
                   <svg
                     class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -388,7 +399,9 @@
                   </div>
                 </div>
 
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-primary-50 dark:bg-primary-500/10">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-primary-50 dark:bg-primary-500/10"
+                >
                   <svg
                     class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -412,7 +425,9 @@
                   </div>
                 </div>
 
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-accent-petrol/10 dark:bg-accent-petrol/20">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-accent-petrol/10 dark:bg-accent-petrol/20"
+                >
                   <svg
                     class="w-5 h-5 text-accent-petrol dark:text-accent-petrol flex-shrink-0 mt-0.5"
                     fill="none"
@@ -436,7 +451,9 @@
                   </div>
                 </div>
 
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-warning-50 dark:bg-warning-500/10">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-warning-50 dark:bg-warning-500/10"
+                >
                   <svg
                     class="w-5 h-5 text-warning-600 dark:text-warning-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -468,7 +485,9 @@
                 Casos de uso ideales
               </h4>
               <ul class="space-y-2">
-                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                <li
+                  class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light"
+                >
                   <svg
                     class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -487,7 +506,9 @@
                     compras internacionales
                   </span>
                 </li>
-                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                <li
+                  class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light"
+                >
                   <svg
                     class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -506,7 +527,9 @@
                     simplificar el proceso
                   </span>
                 </li>
-                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                <li
+                  class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light"
+                >
                   <svg
                     class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -631,13 +654,17 @@
                 <p class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
                   USD {{ withdrawableBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 mt-1">
+                <p
+                  class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 mt-1"
+                >
                   Disponible para tu cuenta bancaria
                 </p>
               </div>
             </div>
 
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/80 dark:text-pearl-light/70">
+            <p
+              class="text-xs text-charcoal-medium dark:text-pearl-light/80 dark:text-pearl-light/70"
+            >
               Los fondos bloqueados se liberan automáticamente cuando finalizan tus reservas. Podés
               sumar saldo retirables para completar pagos o solicitar retiros cuando quieras.
             </p>

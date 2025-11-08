@@ -125,7 +125,7 @@ export class EncryptionService {
     return crypto.subtle.deriveKey(
       {
         name: 'PBKDF2',
-salt: salt as any,
+        salt: salt as any,
         iterations: this.PBKDF2_ITERATIONS,
         hash: 'SHA-256',
       },

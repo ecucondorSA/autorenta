@@ -162,9 +162,7 @@ describe('BonusMalusService', () => {
 
   describe('getBonusMalusFactor', () => {
     it('should return the total factor', async () => {
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(mockUserBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(mockUserBonusMalus));
 
       const factor = await service.getBonusMalusFactor(mockUserId);
 
@@ -237,9 +235,7 @@ describe('BonusMalusService', () => {
       const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(); // Yesterday
       const outdatedBonusMalus = { ...mockUserBonusMalus, next_recalculation_at: pastDate };
 
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(outdatedBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(outdatedBonusMalus));
 
       const needs = await service.needsRecalculation(mockUserId);
 
@@ -247,9 +243,7 @@ describe('BonusMalusService', () => {
     });
 
     it('should return false if next_recalculation_at is in the future', async () => {
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(mockUserBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(mockUserBonusMalus));
 
       const needs = await service.needsRecalculation(mockUserId);
 
@@ -275,9 +269,7 @@ describe('BonusMalusService', () => {
         },
       };
 
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(lowRatingBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(lowRatingBonusMalus));
 
       const tips = await service.getImprovementTips(mockUserId);
 
@@ -312,9 +304,7 @@ describe('BonusMalusService', () => {
         },
       };
 
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(lowExperienceBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(lowExperienceBonusMalus));
 
       const tips = await service.getImprovementTips(mockUserId);
 
@@ -322,9 +312,7 @@ describe('BonusMalusService', () => {
     });
 
     it('should provide tips for unverified users', async () => {
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(mockUserBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(mockUserBonusMalus));
 
       const tips = await service.getImprovementTips(mockUserId);
 
@@ -348,9 +336,7 @@ describe('BonusMalusService', () => {
         },
       };
 
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(excellentBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(excellentBonusMalus));
 
       const tips = await service.getImprovementTips(mockUserId);
 

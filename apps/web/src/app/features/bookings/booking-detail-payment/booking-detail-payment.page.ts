@@ -268,7 +268,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         return;
       }
 
-      this.riskService.recalculateWithUpgrade(currentRisk, upgrade).then(newRisk => {
+      this.riskService.recalculateWithUpgrade(currentRisk, upgrade).then((newRisk) => {
         this.riskSnapshot.set(newRisk);
         // Recalcular pricing también
         this.calculatePricing();
@@ -360,7 +360,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
                 locationData.lat,
                 locationData.lng,
                 car.location_lat,
-                car.location_lng
+                car.location_lng,
               );
 
               this.distanceKm.set(distance);
@@ -425,7 +425,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           endDate: new Date(parsed.endDate),
         });
         return;
-      } catch (_e) { /* Silenced */ }
+      } catch (_e) {
+        /* Silenced */
+      }
     }
 
     // Si no, desde query params
@@ -756,11 +758,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // ✅ NEW: Delivery fee based on distance
       const deliveryFeeCents = this.deliveryFeeCents();
-      const deliveryFeeUsd = deliveryFeeCents > 0 ? this.fxService.convertReverse(deliveryFeeCents / 100, fx) : 0;
+      const deliveryFeeUsd =
+        deliveryFeeCents > 0 ? this.fxService.convertReverse(deliveryFeeCents / 100, fx) : 0;
 
       // Total USD
       const totalUsd =
-        subtotalUsd + fgoContributionUsd + platformFeeUsd + insuranceFeeUsd + coverageUpgradeUsd + deliveryFeeUsd;
+        subtotalUsd +
+        fgoContributionUsd +
+        platformFeeUsd +
+        insuranceFeeUsd +
+        coverageUpgradeUsd +
+        deliveryFeeUsd;
 
       // Total ARS
       const totalArs = this.fxService.convert(totalUsd, fx);
@@ -1018,7 +1026,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     // ✅ NUEVO: Guardar booking ID para procesamiento de pago
     this.lastCreatedBookingId.set(result.bookingId);
-    
+
     // ✅ Guardar booking ID en sessionStorage para redirect de MercadoPago
     sessionStorage.setItem('pending_booking_id', result.bookingId);
 
@@ -1251,7 +1259,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Intentar desbloquear wallet si hubo error
       try {
         await firstValueFrom(this.walletService.unlockFunds(bookingId));
-      } catch (_unlockError) { /* Silenced */ }
+      } catch (_unlockError) {
+        /* Silenced */
+      }
       throw error;
     }
   }
@@ -1335,7 +1345,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * Cambia entre vista estándar y optimizada
    */
   toggleConversionMode(): void {
-    this.conversionMode.update(mode => mode === 'optimized' ? 'standard' : 'optimized');
+    this.conversionMode.update((mode) => (mode === 'optimized' ? 'standard' : 'optimized'));
   }
 
   /**

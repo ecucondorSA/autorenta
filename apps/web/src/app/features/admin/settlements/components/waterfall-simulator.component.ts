@@ -85,7 +85,7 @@ import { WaterfallBreakdown, EligibilityResult, centsToUsd } from '../../../../c
         <div *ngIf="eligibility()!.eligible" class="eligibility-info">
           <div class="info-row">
             <span>Cobertura Máxima:</span>
-            <span class="info-value">${{ formatAmount(eligibility()!.maxCoverCents) }}</span>
+            <span class="info-value">\${{ formatAmount(eligibility()!.maxCoverCents) }}</span>
           </div>
         </div>
       </div>

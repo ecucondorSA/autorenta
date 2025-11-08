@@ -205,9 +205,7 @@ import {
               <div class="space-y-4">
                 <!-- Resolution Notes -->
                 <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Notas de resolución
                   </label>
                   <textarea
@@ -231,9 +229,7 @@ import {
                   </button>
 
                   <button
-                    *ngIf="
-                      claim()!.status === 'reported' || claim()!.status === 'under_review'
-                    "
+                    *ngIf="claim()!.status === 'reported' || claim()!.status === 'under_review'"
                     (click)="updateStatus('approved')"
                     [disabled]="submitting()"
                     class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-lg font-medium transition-colors"
@@ -243,9 +239,7 @@ import {
                   </button>
 
                   <button
-                    *ngIf="
-                      claim()!.status === 'reported' || claim()!.status === 'under_review'
-                    "
+                    *ngIf="claim()!.status === 'reported' || claim()!.status === 'under_review'"
                     (click)="updateStatus('rejected')"
                     [disabled]="submitting()"
                     class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg font-medium transition-colors"
@@ -265,9 +259,7 @@ import {
                   </button>
 
                   <button
-                    *ngIf="
-                      claim()!.status === 'paid' || claim()!.status === 'rejected'
-                    "
+                    *ngIf="claim()!.status === 'paid' || claim()!.status === 'rejected'"
                     (click)="updateStatus('closed')"
                     [disabled]="submitting()"
                     class="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors"
@@ -427,13 +419,15 @@ export class AdminClaimDetailPage implements OnInit {
   }
 
   private getConfirmMessage(status: ClaimStatus): string {
-    const messages = {
+    const messages: Partial<Record<ClaimStatus, string>> = {
+      reported: 'Confirmar cambio de estado?',
+      pending: '¿Marcar este siniestro como pendiente?',
+      investigating: '¿Marcar este siniestro como en investigación?',
       under_review: '¿Poner este siniestro en revisión?',
       approved: '¿Aprobar este siniestro? Se notificará al usuario.',
       rejected: '¿Rechazar este siniestro? Se notificará al usuario.',
       paid: '¿Marcar como pagado? Confirma que el pago fue procesado.',
       closed: '¿Cerrar este siniestro? No se podrá modificar después.',
-      reported: 'Confirmar cambio de estado?',
     };
     return messages[status] || '¿Confirmar cambio de estado?';
   }
@@ -450,7 +444,10 @@ export class AdminClaimDetailPage implements OnInit {
     this.selectedPhotoIndex.set(null);
   }
 
-  formatDateTime(dateStr: string): string {
+  formatDateTime(dateStr?: string | null): string {
+    if (!dateStr) {
+      return 'Sin datos';
+    }
     return new Date(dateStr).toLocaleString('es-AR', {
       day: '2-digit',
       month: '2-digit',
@@ -461,8 +458,10 @@ export class AdminClaimDetailPage implements OnInit {
   }
 
   getStatusBadgeClass(status: ClaimStatus): string {
-    const classes = {
+    const classes: Record<ClaimStatus, string> = {
       reported: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200',
+      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200',
+      investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
       under_review: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200',
       approved: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',

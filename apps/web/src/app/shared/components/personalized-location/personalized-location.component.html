@@ -1,0 +1,80 @@
+<!-- Permission Modal -->
+<div
+  *ngIf="showPermissionModal()"
+  class="permission-modal fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+  (click)="dismissPermissionModal()"
+>
+  <div
+    class="permission-modal-content bg-white dark:bg-slate-deep rounded-lg shadow-xl p-6 max-w-md mx-4"
+    (click)="$event.stopPropagation()"
+  >
+    <h3 class="text-lg font-semibold text-smoke-black dark:text-pearl-light mb-2">
+      Ubicación personalizada
+    </h3>
+    <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-6">
+      Permite el acceso a tu ubicación para mostrar autos cercanos y personalizar tu experiencia.
+    </p>
+    <div class="flex gap-3">
+      <button
+        type="button"
+        (click)="dismissPermissionModal()"
+        class="flex-1 px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light bg-pearl-light dark:bg-charcoal-medium rounded-lg hover:bg-pearl-gray transition-colors"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        (click)="requestPermission()"
+        class="flex-1 px-4 py-2 text-sm font-semibold text-white bg-accent-petrol hover:bg-accent-petrol/90 rounded-lg transition-colors"
+      >
+        Permitir ubicación
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Radius Control Panel -->
+<div
+  *ngIf="permissionGranted() && showRadiusSlider"
+  class="radius-control fixed bottom-20 right-4 z-40 bg-white dark:bg-slate-deep rounded-lg shadow-lg p-4 border border-pearl-gray dark:border-gray-600"
+>
+  <div class="flex items-center justify-between mb-3">
+    <span class="text-sm font-medium text-smoke-black dark:text-pearl-light">Radio de búsqueda</span>
+    <button
+      type="button"
+      (click)="toggleRadiusControl()"
+      class="text-ash-gray hover:text-charcoal-medium transition-colors"
+      aria-label="Cerrar"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Quick radius buttons -->
+  <div class="flex gap-2 mb-3">
+    <button
+      *ngFor="let radius of radiusOptions"
+      type="button"
+      (click)="onRadiusChange(radius)"
+      class="flex-1 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all"
+      [class.bg-accent-petrol]="radiusKm() === radius"
+      [class.text-white]="radiusKm() === radius"
+      [class.border-accent-petrol]="radiusKm() === radius"
+      [class.border-pearl-gray]="radiusKm() !== radius"
+      [class.text-charcoal-medium]="radiusKm() !== radius"
+      [class.dark:text-pearl-light]="radiusKm() !== radius"
+    >
+      {{ radius }} km
+    </button>
+  </div>
+
+  <!-- Count display -->
+  <p class="text-xs text-charcoal-medium dark:text-pearl-light text-center">
+    Autos en tu zona: <span class="font-semibold">{{ radiusKm() }} km</span>
+  </p>
+</div>
+
+
+

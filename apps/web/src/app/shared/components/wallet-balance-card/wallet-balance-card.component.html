@@ -141,7 +141,10 @@
       <p class="text-sm text-charcoal-medium dark:text-pearl-light/90 font-medium mb-1">
         Balance Total
       </p>
-      <p class="text-4xl font-bold text-smoke-black dark:text-ivory-luminous" data-testid="wallet-balance">
+      <p
+        class="text-4xl font-bold text-smoke-black dark:text-ivory-luminous"
+        data-testid="wallet-balance"
+      >
         {{ formatCurrency(totalBalance()) }}
       </p>
     </div>
@@ -168,7 +171,10 @@
             ></path>
           </svg>
         </div>
-        <p class="text-2xl font-bold text-success-900 dark:text-success-100" data-testid="available-balance">
+        <p
+          class="text-2xl font-bold text-success-900 dark:text-success-100"
+          data-testid="available-balance"
+        >
           {{ formatCurrency(availableBalance()) }}
         </p>
         <p class="text-xs text-success-700 dark:text-success-100/80 mt-1">
@@ -186,7 +192,10 @@
           </div>
 
           @if (nonWithdrawableBalance() > 0) {
-            <div class="flex items-start justify-between text-xs text-info-700 dark:text-info-100" data-testid="non-withdrawable-balance">
+            <div
+              class="flex items-start justify-between text-xs text-info-700 dark:text-info-100"
+              data-testid="non-withdrawable-balance"
+            >
               <span class="flex items-center gap-1">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -225,7 +234,10 @@
             ></path>
           </svg>
         </div>
-        <p class="text-2xl font-bold text-warning-900 dark:text-warning-100" data-testid="locked-balance">
+        <p
+          class="text-2xl font-bold text-warning-900 dark:text-warning-100"
+          data-testid="locked-balance"
+        >
           {{ formatCurrency(lockedBalance()) }}
         </p>
         <p class="text-xs text-warning-700 dark:text-warning-100/80 mt-1">En reservas</p>

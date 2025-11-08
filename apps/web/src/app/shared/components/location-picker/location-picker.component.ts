@@ -76,9 +76,7 @@ export interface LocationSelection {
         </button>
 
         @if (!isGeolocationAvailable()) {
-          <p class="text-xs text-red-600 ml-10">
-            Geolocalización no disponible en tu navegador
-          </p>
+          <p class="text-xs text-red-600 ml-10">Geolocalización no disponible en tu navegador</p>
         }
 
         <!-- Address Search -->
@@ -335,7 +333,7 @@ export class LocationPickerComponent {
       try {
         const result = await this.geocodingService.reverseGeocode(
           locationData.lat,
-          locationData.lng
+          locationData.lng,
         );
         address = result.fullAddress;
         this.currentLocationAddress.set(address);

@@ -51,9 +51,9 @@ describe('BonusProtectorService', () => {
   };
 
   beforeEach(() => {
-    const rpcSpy = jasmine.createSpy('rpc').and.returnValue(
-      Promise.resolve({ data: [mockActiveProtector], error: null })
-    );
+    const rpcSpy = jasmine
+      .createSpy('rpc')
+      .and.returnValue(Promise.resolve({ data: [mockActiveProtector], error: null }));
 
     supabaseMock = {
       rpc: rpcSpy,
@@ -154,7 +154,7 @@ describe('BonusProtectorService', () => {
       const level1Result = { ...mockPurchaseResult, protection_level: 1, price_paid_cents: 1500 };
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [level1Result], error: null }),
-        Promise.resolve({ data: [mockActiveProtector], error: null })
+        Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
       service.purchaseProtector('user-123', 1).subscribe({
@@ -174,7 +174,7 @@ describe('BonusProtectorService', () => {
     it('should purchase protector with level 2', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockPurchaseResult], error: null }),
-        Promise.resolve({ data: [mockActiveProtector], error: null })
+        Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
       service.purchaseProtector('user-123', 2).subscribe({
@@ -195,7 +195,7 @@ describe('BonusProtectorService', () => {
       const level3Result = { ...mockPurchaseResult, protection_level: 3, price_paid_cents: 4500 };
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [level3Result], error: null }),
-        Promise.resolve({ data: [mockActiveProtector], error: null })
+        Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
       service.purchaseProtector('user-123', 3).subscribe({
@@ -216,7 +216,7 @@ describe('BonusProtectorService', () => {
       const level1Result = { ...mockPurchaseResult, protection_level: 1, price_paid_cents: 1500 };
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [level1Result], error: null }),
-        Promise.resolve({ data: [mockActiveProtector], error: null })
+        Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
       service.purchaseProtector('user-123').subscribe({
@@ -235,7 +235,7 @@ describe('BonusProtectorService', () => {
     it('should refresh protector info after successful purchase', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockPurchaseResult], error: null }),
-        Promise.resolve({ data: [mockActiveProtector], error: null })
+        Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
       service.purchaseProtector('user-123', 2).subscribe({
@@ -359,7 +359,7 @@ describe('BonusProtectorService', () => {
         const result = { ...mockPurchaseResult, protection_level: level, price_paid_cents: price };
         supabaseMock.rpc.and.returnValues(
           Promise.resolve({ data: [result], error: null }),
-          Promise.resolve({ data: [mockActiveProtector], error: null })
+          Promise.resolve({ data: [mockActiveProtector], error: null }),
         );
 
         service.purchaseProtector('user-123', level).subscribe({

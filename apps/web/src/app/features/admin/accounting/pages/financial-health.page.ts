@@ -1,11 +1,8 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import {
-  AccountingService,
-  FinancialHealth,
-} from '../../../../core/services/accounting.service';
-import { SupabaseService } from '../../../../core/services/supabase.service';
+import { AccountingService, FinancialHealth } from '../../../../core/services/accounting.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-financial-health',
@@ -15,7 +12,6 @@ import { SupabaseService } from '../../../../core/services/supabase.service';
   styleUrls: ['./financial-health.page.scss'],
 })
 export class FinancialHealthPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseService);
   private readonly accountingService: AccountingService;
 
   readonly loading = signal(false);
@@ -23,10 +19,9 @@ export class FinancialHealthPage implements OnInit {
   readonly lastChecked = signal<Date | null>(null);
 
   constructor() {
-    const supabase = this.supabaseService.getClient();
     this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
+      environment.supabaseUrl,
+      environment.supabaseAnonKey,
     );
   }
 

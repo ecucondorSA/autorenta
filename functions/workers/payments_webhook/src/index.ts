@@ -1,6 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 import { withSentry, captureError, addBreadcrumb, type SentryEnv } from './sentry';
 
+interface Logger {
+  info: (message: string, data?: unknown) => void;
+  error: (message: string, error?: unknown) => void;
+  warn: (message: string, data?: unknown) => void;
+  debug: (message: string, data?: unknown) => void;
+}
+
 interface Env extends SentryEnv {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
@@ -557,6 +564,14 @@ const worker = {
       }
 
       try {
+        // Create logger
+        const log: Logger = {
+          info: (msg, data) => console.log(`ℹ️  ${msg}`, data || ''),
+          error: (msg, err) => console.error(`❌ ${msg}`, err || ''),
+          warn: (msg, data) => console.warn(`⚠️  ${msg}`, data || ''),
+          debug: (msg, data) => console.debug(`🐛 ${msg}`, data || ''),
+        };
+
         // Rutear según el provider
         if (payload?.provider === 'mock') {
           addBreadcrumb('Processing mock webhook', 'webhook', { bookingId: payload.booking_id });
@@ -564,7 +579,7 @@ const worker = {
           if (!payload.booking_id || !payload.status) {
             return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
           }
-          return await processMockWebhook(payload, supabase, env);
+          return await processMockWebhook(payload, supabase, env, log);
         }
 
         addBreadcrumb('Processing MercadoPago webhook', 'webhook', {
@@ -575,7 +590,7 @@ const worker = {
           requestId: request.headers.get('x-request-id'),
           rawBody,
           query: url.searchParams,
-        });
+        }, log);
       } catch (error) {
         console.error('Error processing webhook:', error);
         captureError(error, {

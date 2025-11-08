@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { AccountingService } from '../../../../core/services/accounting.service';
-import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 import type { AuditLog, PaginatedResult } from '../../../../core/services/accounting.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-audit-logs',
@@ -109,7 +109,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
                   <p class="text-sm font-medium text-gray-900">{{ log.description }}</p>
                   @if (log.variance !== null && log.variance !== undefined) {
                     <p class="mt-1 text-xs text-gray-600">
-                      Diferencia: ${{ log.variance | number: '1.2-2' }}
+                      Diferencia: \${{ log.variance | number: '1.2-2' }}
                     </p>
                   }
                   <p class="mt-1 text-xs text-gray-500">
@@ -157,7 +157,6 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
   `,
 })
 export class AuditLogsPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseClientService);
   private accountingService!: AccountingService;
 
   readonly logs = signal<PaginatedResult<AuditLog>>({
@@ -177,10 +176,10 @@ export class AuditLogsPage implements OnInit {
   };
 
   async ngOnInit(): Promise<void> {
-    const supabase = this.supabaseService.getClient();
-    const url = supabase.supabaseUrl;
-    const key = (supabase as any).supabaseKey || '';
-    this.accountingService = new AccountingService(url, key);
+    this.accountingService = new AccountingService(
+      environment.supabaseUrl,
+      environment.supabaseAnonKey,
+    );
     await this.loadLogs();
   }
 
@@ -215,4 +214,6 @@ export class AuditLogsPage implements OnInit {
     }
   }
 }
+
+
 

@@ -62,7 +62,7 @@ export class DistanceCalculatorService {
    */
   calculateDistanceMetadata(
     distanceKm: number,
-    baseGuaranteeUsd: number = 300
+    baseGuaranteeUsd: number = 300,
   ): DistanceCalculation {
     const tier = this.getDistanceTier(distanceKm);
     const guaranteeMultiplier = this.getGuaranteeMultiplier(tier);
@@ -174,7 +174,7 @@ export class DistanceCalculatorService {
    */
   calculateDistanceBetweenLocations(
     userLocation: { lat: number; lng: number } | null,
-    carLocation: { lat: number; lng: number } | null
+    carLocation: { lat: number; lng: number } | null,
   ): number | null {
     if (!userLocation || !carLocation) {
       return null;
@@ -184,7 +184,7 @@ export class DistanceCalculatorService {
       userLocation.lat,
       userLocation.lng,
       carLocation.lat,
-      carLocation.lng
+      carLocation.lng,
     );
   }
 
@@ -199,13 +199,13 @@ export class DistanceCalculatorService {
   isNearLocation(
     userLocation: { lat: number; lng: number },
     targetLocation: { lat: number; lng: number },
-    thresholdKm: number = 0.5
+    thresholdKm: number = 0.5,
   ): boolean {
     const distance = this.calculateDistance(
       userLocation.lat,
       userLocation.lng,
       targetLocation.lat,
-      targetLocation.lng
+      targetLocation.lng,
     );
 
     return distance <= thresholdKm;

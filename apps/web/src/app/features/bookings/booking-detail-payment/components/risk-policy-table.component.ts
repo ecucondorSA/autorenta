@@ -188,16 +188,25 @@ import {
       <div
         class="mt-4 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg p-4 transition-colors duration-300"
       >
-        <h4 class="text-sm font-semibold text-blue-900 dark:text-info-100 mb-2 flex items-center gap-2">
+        <h4
+          class="text-sm font-semibold text-blue-900 dark:text-info-100 mb-2 flex items-center gap-2"
+        >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           Cómo funciona
         </h4>
         <div class="text-xs text-blue-800 dark:text-info-200 space-y-2">
           <div *ngIf="paymentMode === 'card'" class="bg-white/50 dark:bg-gray-800/30 rounded p-3">
             <p class="font-medium mb-1">Con tarjeta:</p>
-            <p>• Si hay un daño menor, solo se cobra lo necesario (hasta el límite de protección).</p>
+            <p>
+              • Si hay un daño menor, solo se cobra lo necesario (hasta el límite de protección).
+            </p>
             <p>• Si no hay problemas, se libera todo automáticamente al devolver el auto.</p>
           </div>
           <div *ngIf="paymentMode === 'wallet'" class="bg-white/50 dark:bg-gray-800/30 rounded p-3">
@@ -205,9 +214,13 @@ import {
             <p>• Solo se usa tu saldo bloqueado si hay gastos o daños.</p>
             <p>• Si hay problemas grandes, te ayudamos a resolverlo.</p>
           </div>
-          <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/60 rounded p-3">
+          <div
+            class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/60 rounded p-3"
+          >
             <p class="font-medium text-green-800 dark:text-green-200 mb-1">¿Qué está cubierto?</p>
-            <p class="text-green-700 dark:text-green-300">Daños al vehículo, robo, combustible faltante, multas y peajes.</p>
+            <p class="text-green-700 dark:text-green-300">
+              Daños al vehículo, robo, combustible faltante, multas y peajes.
+            </p>
           </div>
         </div>
       </div>

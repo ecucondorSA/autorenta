@@ -13,7 +13,9 @@ import { AuthService } from '../../../core/services/auth.service';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+          <div
+            class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+          ></div>
         </div>
       } @else if (stats(); as s) {
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
@@ -24,27 +26,27 @@ import { AuthService } from '../../../core/services/auth.service';
           <div class="rounded-lg bg-green-50 p-4">
             <p class="text-sm font-medium text-green-600">Total Monto</p>
             <p class="text-2xl font-bold text-green-900">
-              ${{ s.totalAmount | number: '1.2-2' }}
+              {{ formatCurrency(s.totalAmount) }}
             </p>
           </div>
           <div class="rounded-lg bg-yellow-50 p-4">
             <p class="text-sm font-medium text-yellow-600">Pendientes</p>
             <p class="text-2xl font-bold text-yellow-900">{{ s.pendingPayouts }}</p>
             <p class="text-xs text-yellow-700">
-              ${{ s.pendingAmount | number: '1.2-2' }}
+              {{ formatCurrency(s.pendingAmount) }}
             </p>
           </div>
           <div class="rounded-lg bg-purple-50 p-4">
             <p class="text-sm font-medium text-purple-600">Completados</p>
             <p class="text-2xl font-bold text-purple-900">{{ s.completedPayouts }}</p>
             <p class="text-xs text-purple-700">
-              ${{ s.completedAmount | number: '1.2-2' }}
+              {{ formatCurrency(s.completedAmount) }}
             </p>
           </div>
           <div class="rounded-lg bg-indigo-50 p-4">
             <p class="text-sm font-medium text-indigo-600">Promedio</p>
             <p class="text-2xl font-bold text-indigo-900">
-              ${{ s.averagePayoutAmount | number: '1.2-2' }}
+              {{ formatCurrency(s.averagePayoutAmount) }}
             </p>
           </div>
         </div>
@@ -98,5 +100,11 @@ export class PayoutStatsComponent implements OnInit {
       this.loading.set(false);
     }
   }
-}
 
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+    }).format(amount / 100);
+  }
+}

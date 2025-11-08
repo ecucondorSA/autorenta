@@ -62,7 +62,9 @@ import type { Review } from '../../../../core/models';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div
+            class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"
+          ></div>
         </div>
       } @else if (flaggedReviews().length === 0) {
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -76,8 +78,8 @@ import type { Review } from '../../../../core/models';
                 <div>
                   <h3 class="font-semibold text-gray-900">Review #{{ review.id }}</h3>
                   <p class="text-sm text-gray-600">
-                    Por: {{ review.reviewer_name || 'Usuario' }} | 
-                    Auto: {{ review.car_title || 'N/A' }}
+                    Por: {{ review.reviewer_name || 'Usuario' }} | Auto:
+                    {{ review.car_title || 'N/A' }}
                   </p>
                 </div>
                 <span
@@ -94,7 +96,9 @@ import type { Review } from '../../../../core/models';
               </div>
 
               <div class="mb-4 rounded-lg bg-gray-50 p-4">
-                <p class="text-sm text-gray-700">{{ review.comment_public || 'Sin comentario público' }}</p>
+                <p class="text-sm text-gray-700">
+                  {{ review.comment_public || 'Sin comentario público' }}
+                </p>
               </div>
 
               @if (review.flag_reason) {
@@ -151,6 +155,7 @@ export class ModerateReviewsPage implements OnInit {
       this.flaggedReviews.set(reviews);
     } catch (err) {
       this.toastService.error(
+        'Moderación',
         err instanceof Error ? err.message : 'Error al cargar reviews',
       );
     } finally {
@@ -164,13 +169,17 @@ export class ModerateReviewsPage implements OnInit {
     try {
       const result = await this.reviewsService.moderateReview(reviewId, action);
       if (result.success) {
-        this.toastService.success(`Review ${action === 'approved' ? 'aprobada' : 'rechazada'}`);
+        this.toastService.success(
+          'Moderación',
+          `Review ${action === 'approved' ? 'aprobada' : 'rechazada'}`,
+        );
         await this.loadFlaggedReviews(this.filterStatus() || undefined);
       } else {
-        this.toastService.error(result.error || 'Error al moderar');
+        this.toastService.error('Moderación', result.error || 'Error al moderar');
       }
     } catch (err) {
       this.toastService.error(
+        'Moderación',
         err instanceof Error ? err.message : 'Error al moderar review',
       );
     } finally {
@@ -178,4 +187,6 @@ export class ModerateReviewsPage implements OnInit {
     }
   }
 }
+
+
 

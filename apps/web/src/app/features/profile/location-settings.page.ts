@@ -114,7 +114,7 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
         debounceTime(500), // Wait 500ms after user stops typing
         distinctUntilChanged(), // Only emit if value actually changed
         filter((value) => value !== null && value.trim().length >= 3), // Minimum 3 characters
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe(() => {
         // Auto-search when user stops typing
@@ -244,7 +244,7 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
       await this.locationService.saveHomeLocation(
         coords.latitude,
         coords.longitude,
-        coords.address
+        coords.address,
       );
 
       // Update preferred search radius
@@ -281,7 +281,9 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
       const currentPos = await this.locationService.getCurrentPosition();
 
       if (!currentPos) {
-        this.error.set('No pudimos obtener tu ubicación actual. Verifica los permisos del navegador.');
+        this.error.set(
+          'No pudimos obtener tu ubicación actual. Verifica los permisos del navegador.',
+        );
         this.verifying.set(false);
         return;
       }
@@ -291,7 +293,7 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
         coords.latitude,
         coords.longitude,
         currentPos.lat,
-        currentPos.lng
+        currentPos.lng,
       );
 
       // Allow verification if within 500 meters
@@ -302,7 +304,7 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
         await this.locationService.saveHomeLocation(
           coords.latitude,
           coords.longitude,
-          coords.address
+          coords.address,
         );
 
         await this.loadProfile();
@@ -312,7 +314,7 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
       } else {
         this.error.set(
           `Debes estar cerca de tu ubicación guardada para verificarla. ` +
-          `Distancia actual: ${distance.toFixed(2)} km`
+            `Distancia actual: ${distance.toFixed(2)} km`,
         );
       }
     } catch (err) {

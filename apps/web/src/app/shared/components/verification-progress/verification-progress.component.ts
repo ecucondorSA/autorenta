@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IdentityLevelService } from '../../../core/services/identity-level.service';
 
@@ -54,7 +61,9 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 {{ getLevelStatusLabel(1) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Verifica tu email o teléfono</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+              Verifica tu email o teléfono
+            </p>
             <div class="mt-2 space-y-1">
               <div class="flex items-center gap-2 text-sm">
                 <span [class]="getCheckmarkClass(requirements()?.level_1?.email_verified)">
@@ -113,9 +122,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm">
-                <span
-                  [class]="getCheckmarkClass(requirements()?.level_2?.driver_license_verified)"
-                >
+                <span [class]="getCheckmarkClass(requirements()?.level_2?.driver_license_verified)">
                   {{ requirements()?.level_2?.driver_license_verified ? '✓' : '○' }}
                 </span>
                 <span class="text-gray-700">Licencia de conducir</span>
@@ -270,9 +277,7 @@ export class VerificationProgressComponent implements OnInit {
   }
 
   getCheckmarkClass(isComplete: boolean | undefined): string {
-    return isComplete
-      ? 'text-green-600 font-bold'
-      : 'text-gray-400 dark:text-gray-300';
+    return isComplete ? 'text-green-600 font-bold' : 'text-gray-400 dark:text-gray-300';
   }
 
   getProgressBarClass(): string {

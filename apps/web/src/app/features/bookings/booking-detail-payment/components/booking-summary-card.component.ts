@@ -146,20 +146,22 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           </div>
 
           <!-- Delivery Distance -->
-          <div class="flex justify-between text-sm" *ngIf="priceBreakdown.distanceKm !== undefined && priceBreakdown.distanceKm > 0">
-            <span class="text-gray-600 dark:text-pearl-light/70">
-              Distancia de entrega
-            </span>
+          <div
+            class="flex justify-between text-sm"
+            *ngIf="priceBreakdown.distanceKm !== undefined && priceBreakdown.distanceKm > 0"
+          >
+            <span class="text-gray-600 dark:text-pearl-light/70"> Distancia de entrega </span>
             <span class="font-medium text-gray-900 dark:text-ivory-luminous">
-              {{ (priceBreakdown.distanceKm).toFixed(1) }} km
+              {{ priceBreakdown.distanceKm.toFixed(1) }} km
             </span>
           </div>
 
           <!-- Delivery Fee -->
-          <div class="flex justify-between text-sm" *ngIf="priceBreakdown.deliveryFeeUsd !== undefined && priceBreakdown.deliveryFeeUsd > 0">
-            <span class="text-gray-600 dark:text-pearl-light/70">
-              Cargo por entrega
-            </span>
+          <div
+            class="flex justify-between text-sm"
+            *ngIf="priceBreakdown.deliveryFeeUsd !== undefined && priceBreakdown.deliveryFeeUsd > 0"
+          >
+            <span class="text-gray-600 dark:text-pearl-light/70"> Cargo por entrega </span>
             <span class="font-medium text-gray-900 dark:text-ivory-luminous">
               {{ formatUsd(priceBreakdown.deliveryFeeUsd) }}
             </span>
@@ -235,7 +237,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           </div>
 
           <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-2">
-            {{ paymentMode === 'card' ? 'Se bloquea en tu tarjeta' : 'Se bloquea de tu saldo wallet' }}
+            {{
+              paymentMode === 'card' ? 'Se bloquea en tu tarjeta' : 'Se bloquea de tu saldo wallet'
+            }}
           </p>
         </div>
       </div>

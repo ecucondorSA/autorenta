@@ -20,9 +20,7 @@ import { ToastService } from '../../../core/services/toast.service';
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-smoke-black dark:text-pearl-light">
-            Reportar Reseña
-          </h2>
+          <h2 class="text-xl font-bold text-smoke-black dark:text-pearl-light">Reportar Reseña</h2>
           <button
             type="button"
             (click)="close()"
@@ -43,7 +41,8 @@ import { ToastService } from '../../../core/services/toast.service';
         <!-- Content -->
         <div class="space-y-4">
           <p class="text-sm text-charcoal-medium dark:text-pearl-light">
-            ¿Por qué quieres reportar esta reseña? Tu reporte será revisado por nuestro equipo de moderación.
+            ¿Por qué quieres reportar esta reseña? Tu reporte será revisado por nuestro equipo de
+            moderación.
           </p>
 
           <!-- Reason Selector -->
@@ -111,7 +110,14 @@ import { ToastService } from '../../../core/services/toast.service';
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
               <path
                 class="opacity-75"
                 fill="currentColor"
@@ -170,16 +176,14 @@ export class FlagReviewModalComponent {
       const success = await this.reviewsService.flagReview(this.reviewId(), reason);
 
       if (success) {
-        this.toastService.success('Reseña reportada. Nuestro equipo la revisará pronto.');
+        this.toastService.success('Reseña reportada. Nuestro equipo la revisará pronto.', '');
         this.flagged.emit();
         this.close();
       } else {
         this.error.set('No se pudo reportar la reseña. Por favor, intenta nuevamente.');
       }
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al reportar la reseña'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al reportar la reseña');
     } finally {
       this.loading.set(false);
     }
@@ -191,4 +195,6 @@ export class FlagReviewModalComponent {
     this.error.set(null);
   }
 }
+
+
 

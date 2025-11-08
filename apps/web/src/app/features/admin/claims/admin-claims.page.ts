@@ -41,9 +41,7 @@ import {
 
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-              Gestión de Siniestros
-            </h1>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Gestión de Siniestros</h1>
             <p class="text-gray-600 dark:text-gray-300 mt-1">
               Administra y resuelve los siniestros reportados
             </p>
@@ -119,10 +117,7 @@ import {
       </div>
 
       <!-- Error State -->
-      <div
-        *ngIf="error() && !loading()"
-        class="bg-red-50 border border-red-200 rounded-xl p-6"
-      >
+      <div *ngIf="error() && !loading()" class="bg-red-50 border border-red-200 rounded-xl p-6">
         <p class="text-red-800">{{ error() }}</p>
       </div>
 
@@ -172,7 +167,9 @@ import {
                 </span>
 
                 <!-- Type Badge -->
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                >
                   {{ CLAIM_TYPE_LABELS[claim.claim_type] }}
                 </span>
 
@@ -312,8 +309,11 @@ export class AdminClaimsPage implements OnInit {
   }
 
   getStatusBadgeClass(status: ClaimStatus): string {
-    const classes = {
+    const classes: Record<ClaimStatus, string> = {
       reported: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200',
+      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200',
+      investigating:
+        'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
       under_review: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200',
       approved: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',

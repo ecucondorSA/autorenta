@@ -19,7 +19,7 @@ export const MercadoPagoGuard: CanMatchFn = async () => {
 
     // Usuario no puede publicar autos sin MercadoPago conectado
     return router.createUrlTree(['/profile/mercadopago-connect'], {
-      queryParams: { returnUrl: router.url }
+      queryParams: { returnUrl: router.url },
     });
   } catch (error) {
     // En caso de error, permitir acceso pero mostrar mensaje

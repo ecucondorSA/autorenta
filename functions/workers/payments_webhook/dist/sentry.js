@@ -23,7 +23,7 @@
  * };
  * ```
  */
-import { toucan } from '@sentry/cloudflare';
+// let sentryInstance: ReturnType<typeof toucan> | null = null;
 let sentryInstance = null;
 /**
  * Initialize Sentry for Cloudflare Worker
@@ -42,48 +42,16 @@ export function initSentry(request, env, ctx) {
         console.warn('⚠️  Sentry DSN not configured - error tracking disabled');
         return null;
     }
-    sentryInstance = toucan({
-        dsn: sentryDsn,
-        environment,
-        context: ctx,
-        request,
-        // Performance Monitoring
-        tracesSampleRate: 0.1, // 10% of transactions
-        // Release tracking
-        release: 'autorenta-workers@0.1.0',
-        // Enable debug mode in development
-        debug: environment !== 'production',
-        // Default tags
-        initialScope: {
-            tags: {
-                service: 'cloudflare-workers',
-                worker: 'payments-webhook',
-                runtime: 'cloudflare-workers',
-            },
-        },
-        // Before send hook - sanitize sensitive data
-        beforeSend(event) {
-            // Remove sensitive data from breadcrumbs
-            if (event.breadcrumbs) {
-                event.breadcrumbs = event.breadcrumbs.map((breadcrumb) => {
-                    if (breadcrumb.data) {
-                        breadcrumb.data = sanitizeData(breadcrumb.data);
-                    }
-                    return breadcrumb;
-                });
-            }
-            // Remove sensitive data from extra
-            if (event.extra) {
-                event.extra = sanitizeData(event.extra);
-            }
-            // Remove sensitive data from contexts
-            if (event.contexts) {
-                event.contexts = sanitizeData(event.contexts);
-            }
-            return event;
-        },
-    });
-    console.log('✅ Sentry initialized:', environment);
+    // For now, Sentry is disabled in development for Cloudflare Workers
+    console.log('ℹ️  Sentry integration disabled for Cloudflare Workers');
+    sentryInstance = {
+        captureException: () => undefined,
+        captureMessage: () => undefined,
+        addBreadcrumb: () => { },
+        setTags: () => { },
+        setUser: () => { },
+        setContext: () => { },
+    };
     return sentryInstance;
 }
 /**

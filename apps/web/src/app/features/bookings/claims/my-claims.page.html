@@ -110,11 +110,7 @@
   <!-- Claims List -->
   <div class="claims-container" *ngIf="!loading() && hasClaims()">
     <div class="claims-list">
-      <div
-        *ngFor="let claim of filteredClaims()"
-        class="claim-card"
-        (click)="viewClaim(claim.id)"
-      >
+      <div *ngFor="let claim of filteredClaims()" class="claim-card" (click)="viewClaim(claim.id)">
         <!-- Claim Header -->
         <div class="claim-header">
           <div class="claim-icon">{{ getClaimTypeIcon(claim.claim_type) }}</div>
@@ -181,7 +177,10 @@
           </div>
 
           <!-- Photos Preview -->
-          <div *ngIf="claim.evidence_photos && claim.evidence_photos.length > 0" class="claim-photos">
+          <div
+            *ngIf="claim.evidence_photos && claim.evidence_photos.length > 0"
+            class="claim-photos"
+          >
             <div class="photos-label">📸 {{ claim.evidence_photos.length }} foto(s)</div>
           </div>
         </div>

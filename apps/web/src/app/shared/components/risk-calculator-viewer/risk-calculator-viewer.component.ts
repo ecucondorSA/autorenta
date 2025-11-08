@@ -1,11 +1,15 @@
-import { Component, input, signal, inject, computed } from '@angular/core';
+import { Component, input, signal, inject, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RiskCalculatorService, RiskCalculation } from '../../../core/services/risk-calculator.service';
+import {
+  RiskCalculatorService,
+  RiskCalculation,
+} from '../../../core/services/risk-calculator.service';
 
 @Component({
   selector: 'app-risk-calculator-viewer',
   standalone: true,
   imports: [CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './risk-calculator-viewer.component.html',
   styleUrls: ['./risk-calculator-viewer.component.scss'],
 })

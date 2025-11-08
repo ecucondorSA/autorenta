@@ -12,33 +12,27 @@ export const ACCOUNTING_ROUTES: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () =>
-      import('./pages/dashboard.page').then((m) => m.AccountingDashboardPage),
+    loadComponent: () => import('./pages/dashboard.page').then((m) => m.AccountingDashboardPage),
   },
   {
     path: 'balance-sheet',
-    loadComponent: () =>
-      import('./pages/balance-sheet.page').then((m) => m.BalanceSheetPage),
+    loadComponent: () => import('./pages/balance-sheet.page').then((m) => m.BalanceSheetPage),
   },
   {
     path: 'income-statement',
-    loadComponent: () =>
-      import('./pages/income-statement.page').then((m) => m.IncomeStatementPage),
+    loadComponent: () => import('./pages/income-statement.page').then((m) => m.IncomeStatementPage),
   },
   {
     path: 'journal-entries',
-    loadComponent: () =>
-      import('./pages/journal-entries.page').then((m) => m.JournalEntriesPage),
+    loadComponent: () => import('./pages/journal-entries.page').then((m) => m.JournalEntriesPage),
   },
   {
     path: 'reconciliation',
-    loadComponent: () =>
-      import('./pages/reconciliation.page').then((m) => m.ReconciliationPage),
+    loadComponent: () => import('./pages/reconciliation.page').then((m) => m.ReconciliationPage),
   },
   {
     path: 'provisions',
-    loadComponent: () =>
-      import('./pages/provisions.page').then((m) => m.ProvisionsPage),
+    loadComponent: () => import('./pages/provisions.page').then((m) => m.ProvisionsPage),
   },
   {
     path: 'manual-entry',
@@ -47,8 +41,7 @@ export const ACCOUNTING_ROUTES: Routes = [
   },
   {
     path: 'ledger',
-    loadComponent: () =>
-      import('./pages/ledger.page').then((m) => m.LedgerPage),
+    loadComponent: () => import('./pages/ledger.page').then((m) => m.LedgerPage),
   },
   {
     path: 'revenue-recognition',
@@ -57,22 +50,18 @@ export const ACCOUNTING_ROUTES: Routes = [
   },
   {
     path: 'period-closures',
-    loadComponent: () =>
-      import('./pages/period-closures.page').then((m) => m.PeriodClosuresPage),
+    loadComponent: () => import('./pages/period-closures.page').then((m) => m.PeriodClosuresPage),
   },
   {
     path: 'financial-health',
-    loadComponent: () =>
-      import('./pages/financial-health.page').then((m) => m.FinancialHealthPage),
+    loadComponent: () => import('./pages/financial-health.page').then((m) => m.FinancialHealthPage),
   },
   {
     path: 'cash-flow',
-    loadComponent: () =>
-      import('./cash-flow/cash-flow.page').then((m) => m.CashFlowPage),
+    loadComponent: () => import('./cash-flow/cash-flow.page').then((m) => m.CashFlowPage),
   },
   {
     path: 'audit-logs',
-    loadComponent: () =>
-      import('./audit-logs/audit-logs.page').then((m) => m.AuditLogsPage),
+    loadComponent: () => import('./audit-logs/audit-logs.page').then((m) => m.AuditLogsPage),
   },
 ];

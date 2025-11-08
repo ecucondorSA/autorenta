@@ -9,7 +9,9 @@ import { RefundService } from '../../../core/services/refund.service';
   template: `
     @if (loading()) {
       <div class="flex items-center justify-center py-4">
-        <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+        <div
+          class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+        ></div>
       </div>
     } @else if (refundStatus(); as status) {
       @if (status.has_refund) {
@@ -35,22 +37,27 @@ import { RefundService } from '../../../core/services/refund.service';
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Monto:</span>
-              <span class="font-semibold text-gray-900">${{ status.refund_amount | number: '1.2-2' }}</span>
+              <span class="font-semibold text-gray-900">{{
+                formatCurrency(status.refund_amount || 0)
+              }}</span>
             </div>
             @if (status.refund_date) {
               <div class="flex justify-between">
                 <span class="text-gray-600">Fecha:</span>
-                <span class="text-gray-900">{{ status.refund_date | date: 'short' }}</span>
+                <span class="text-gray-900">{{ formatDate(status.refund_date) }}</span>
               </div>
             }
           </div>
         </div>
       } @else {
-        <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-sm text-gray-600">
+        <div
+          class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-sm text-gray-600"
+        >
           No hay reembolso registrado para esta reserva.
         </div>
       }
-    } @else if (error()) {
+    }
+    @if (error()) {
       <div class="rounded-lg bg-red-50 p-4 text-sm text-red-800">
         {{ error() }}
       </div>
@@ -100,5 +107,18 @@ export class RefundStatusComponent implements OnInit {
     };
     return labels[status] || status;
   }
-}
 
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+    }).format(amount / 100);
+  }
+
+  formatDate(date: string): string {
+    return new Date(date).toLocaleString('es-AR', {
+      dateStyle: 'short',
+      timeStyle: 'short',
+    });
+  }
+}

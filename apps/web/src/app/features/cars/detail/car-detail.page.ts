@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -45,7 +52,14 @@ import {
   PaymentMethodButtonsComponent,
   type PaymentMethod,
 } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
-import { BookingLocationFormComponent, BookingLocationData } from '../../bookings/components/booking-location-form/booking-location-form.component';
+import {
+  BookingLocationFormComponent,
+  BookingLocationData,
+} from '../../bookings/components/booking-location-form/booking-location-form.component';
+import {
+  PickupLocationSelectorComponent,
+  PickupLocationSelection,
+} from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
 
 // Services
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
@@ -80,6 +94,7 @@ interface CarDetailState {
     CarChatComponent,
     PaymentMethodButtonsComponent,
     BookingLocationFormComponent,
+    PickupLocationSelectorComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,7 +120,11 @@ export class CarDetailPage implements OnInit {
 
   readonly expressMode = signal(false);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
-  readonly urgentAvailability = signal<{ available: boolean; distance?: number; eta?: number } | null>(null);
+  readonly urgentAvailability = signal<{
+    available: boolean;
+    distance?: number;
+    eta?: number;
+  } | null>(null);
 
   // ✅ NEW: Distance-based pricing
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
@@ -121,8 +140,14 @@ export class CarDetailPage implements OnInit {
   readonly showLocationForm = signal(false);
   readonly pendingBookingData = signal<{ from: string; to: string } | null>(null);
 
+  // ✅ NEW: Pickup location selector state
+  readonly pickupLocationSelection = signal<PickupLocationSelection | null>(null);
+  readonly userHomeLocation = signal<{ lat: number; lng: number; address?: string } | null>(null);
+
   // ✅ NEW: Date suggestions and waitlist
-  readonly suggestedDateRanges = signal<Array<{ startDate: string; endDate: string; daysCount: number }>>([]);
+  readonly suggestedDateRanges = signal<
+    Array<{ startDate: string; endDate: string; daysCount: number }>
+  >([]);
   readonly canWaitlist = signal(false);
   readonly addingToWaitlist = signal(false);
   readonly currentPhotoIndex = signal(0);
@@ -130,7 +155,7 @@ export class CarDetailPage implements OnInit {
   readonly blockedRanges = signal<Array<{ from: string; to: string }>>([]); // ✅ NEW: Rangos bloqueados para date picker
   readonly imageLoaded = signal(false);
   readonly specsCollapsed = signal(false);
-  
+
   // ✅ FIX: Precio dinámico para mostrar en lugar del estático
   readonly dynamicPrice = signal<number | null>(null);
   readonly priceLoading = signal(false);
@@ -304,9 +329,7 @@ export class CarDetailPage implements OnInit {
   readonly hoursCount = computed(() => {
     const { from, to } = this.dateRange();
     if (!from || !to) return 0;
-    const diff = Math.ceil(
-      (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60),
-    );
+    const diff = Math.ceil((new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60));
     return diff > 0 ? Math.max(diff, 5) : 5; // Mínimo 5 horas
   });
 
@@ -320,7 +343,9 @@ export class CarDetailPage implements OnInit {
     return car.owner_id === currentUserId;
   });
 
-  readonly canContactOwner = computed(() => this.authService.isAuthenticated() && !this.isCurrentUserOwner());
+  readonly canContactOwner = computed(
+    () => this.authService.isAuthenticated() && !this.isCurrentUserOwner(),
+  );
 
   // ✅ FIX: Precio por hora dinámico (cargado desde el servicio de pricing)
   readonly dynamicHourlyRate = signal<number | null>(null);
@@ -356,7 +381,9 @@ export class CarDetailPage implements OnInit {
 
     // 75% del precio diario / 24 horas
     const hourlyRate = (pricePerDay * 0.75) / 24;
-    console.log(`💰 [CarDetail] Calculated hourly rate from daily price: $${pricePerDay}/día → $${hourlyRate}/hora`);
+    console.log(
+      `💰 [CarDetail] Calculated hourly rate from daily price: $${pricePerDay}/día → $${hourlyRate}/hora`,
+    );
     return hourlyRate;
   });
 
@@ -557,7 +584,7 @@ export class CarDetailPage implements OnInit {
             locationData.lat,
             locationData.lng,
             car.location_lat,
-            car.location_lng
+            car.location_lng,
           );
 
           this.distanceKm.set(distance);
@@ -569,6 +596,16 @@ export class CarDetailPage implements OnInit {
           const deliveryFee = this.distanceCalculator.calculateDeliveryFee(distance);
           this.deliveryFeeCents.set(deliveryFee);
         }
+      }
+
+      // ✅ NEW: Load home location for pickup-location-selector
+      const homeLocation = await this.locationService.getHomeLocation();
+      if (homeLocation) {
+        this.userHomeLocation.set({
+          lat: homeLocation.lat,
+          lng: homeLocation.lng,
+          address: homeLocation.address,
+        });
       }
     } catch (_error) {
       // Silently fail - distance is optional
@@ -607,7 +644,9 @@ export class CarDetailPage implements OnInit {
 
       if (data && data.total_price) {
         this.dynamicPrice.set(data.total_price);
-        console.log(`💰 [CarDetail] Dynamic price loaded: $${data.total_price} (was $${car.price_per_day})`);
+        console.log(
+          `💰 [CarDetail] Dynamic price loaded: $${data.total_price} (was $${car.price_per_day})`,
+        );
       }
 
       // ✅ FIX: Cargar precio por hora para modo express (5 horas mínimo)
@@ -618,7 +657,9 @@ export class CarDetailPage implements OnInit {
           const quote = await this.urgentRentalService.getUrgentQuote(car.id, car.region_id, hours);
           // Usar el precio por hora del sistema de pricing dinámico
           this.dynamicHourlyRate.set(quote.hourlyRate);
-          console.log(`💰 [CarDetail] Dynamic hourly rate loaded: $${quote.hourlyRate}/hora (quote para ${hours} horas)`);
+          console.log(
+            `💰 [CarDetail] Dynamic hourly rate loaded: $${quote.hourlyRate}/hora (quote para ${hours} horas)`,
+          );
         } catch (_error) {
           console.warn('⚠️ [CarDetail] Could not load dynamic hourly rate:', _error);
           // Fallback: calcular desde precio diario
@@ -676,7 +717,9 @@ export class CarDetailPage implements OnInit {
         const quote = await this.urgentRentalService.getUrgentQuote(car.id, car.region_id, hours);
         // Usar el precio por hora del sistema de pricing dinámico
         this.dynamicHourlyRate.set(quote.hourlyRate);
-        console.log(`💰 [CarDetail] Express mode hourly rate: $${quote.hourlyRate}/hora (quote para ${hours} horas)`);
+        console.log(
+          `💰 [CarDetail] Express mode hourly rate: $${quote.hourlyRate}/hora (quote para ${hours} horas)`,
+        );
       } catch (_error) {
         console.warn('⚠️ [CarDetail] Could not load hourly rate for express mode:', _error);
         // Fallback: calcular desde precio diario si está disponible
@@ -793,14 +836,17 @@ export class CarDetailPage implements OnInit {
     const endDate = new Date(to).toISOString();
 
     // Save booking detail input for payment page
-    sessionStorage.setItem('booking_detail_input', JSON.stringify({
-      carId: car.id,
-      startDate,
-      endDate,
-      bucket: 'standard', // Default bucket, not stored in Car model
-      vehicleValueUsd: car.value_usd ?? 10000,
-      country: car.location_country ?? 'AR',
-    }));
+    sessionStorage.setItem(
+      'booking_detail_input',
+      JSON.stringify({
+        carId: car.id,
+        startDate,
+        endDate,
+        bucket: 'standard', // Default bucket, not stored in Car model
+        vehicleValueUsd: car.value_usd ?? 10000,
+        country: car.location_country ?? 'AR',
+      }),
+    );
 
     // Navigate with payment method if provided
     const queryParams: Record<string, string> = {
@@ -988,6 +1034,25 @@ export class CarDetailPage implements OnInit {
     this.bookingError.set(null);
   }
 
+  /**
+   * ✅ NEW: Handle pickup location selection from pickup-location-selector component
+   * Updates delivery fee and distance based on selection
+   */
+  onPickupLocationSelected(selection: PickupLocationSelection): void {
+    this.pickupLocationSelection.set(selection);
+    this.deliveryFeeCents.set(selection.deliveryFeeCents);
+    this.distanceKm.set(selection.distanceKm);
+
+    // Log the selection for debugging
+    console.log('📍 Pickup location selected:', {
+      pickupLat: selection.pickupLocation?.lat,
+      pickupLng: selection.pickupLocation?.lng,
+      deliveryRequired: selection.deliveryRequired,
+      deliveryFee: selection.deliveryFeeCents,
+      distance: selection.distanceKm,
+    });
+  }
+
   private updateMetaTags(car: Car, stats: CarStats | null): void {
     const mainPhoto = (car.photos?.[0] ?? car.car_photos?.[0])?.url;
     const description =
@@ -1026,7 +1091,7 @@ export class CarDetailPage implements OnInit {
       // DEPRECATED: Mantener blockedDates para compatibilidad con inline calendar
       // TODO: Migrar inline calendar a usar blockedRanges también
       const blocked = new Set<string>();
-      ranges.forEach((range) => {
+      ranges.forEach((range: { from: string; to: string }) => {
         const start = new Date(range.from);
         const end = new Date(range.to);
         const currentDate = new Date(start);
@@ -1049,7 +1114,7 @@ export class CarDetailPage implements OnInit {
   /**
    * ✅ NEW: Aplica una sugerencia de fecha clickeada por el usuario
    */
-  applySuggestedDates(suggestion: { startDate: string; endDate: string; daysCount: number}): void {
+  applySuggestedDates(suggestion: { startDate: string; endDate: string; daysCount: number }): void {
     // Convertir fechas de YYYY-MM-DD a DateRange format
     this.dateRange.set({
       from: suggestion.startDate,
@@ -1107,11 +1172,17 @@ export class CarDetailPage implements OnInit {
           source: 'waitlist_added',
         });
       } else {
-        this.toastService.error('Error', result.error || 'No pudimos agregarte a la lista de espera');
+        this.toastService.error(
+          'Error',
+          result.error || 'No pudimos agregarte a la lista de espera',
+        );
       }
     } catch (error) {
       console.error('Error adding to waitlist:', error);
-      this.toastService.error('Error', 'No pudimos agregarte a la lista de espera. Intentá nuevamente');
+      this.toastService.error(
+        'Error',
+        'No pudimos agregarte a la lista de espera. Intentá nuevamente',
+      );
     } finally {
       this.addingToWaitlist.set(false);
     }

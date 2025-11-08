@@ -31,10 +31,7 @@ describe('AdminService', () => {
     (mockSupabase as any).auth = mockAuth;
 
     TestBed.configureTestingModule({
-      providers: [
-        AdminService,
-        { provide: LoggerService, useValue: mockLogger },
-      ],
+      providers: [AdminService, { provide: LoggerService, useValue: mockLogger }],
     });
 
     service = TestBed.inject(AdminService);
@@ -44,9 +41,7 @@ describe('AdminService', () => {
 
   describe('isAdmin', () => {
     it('should return true when user is admin', async () => {
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: true, error: null }),
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: true, error: null }));
 
       const result = await service.isAdmin();
 
@@ -57,9 +52,7 @@ describe('AdminService', () => {
     });
 
     it('should return false when user is not admin', async () => {
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: false, error: null }),
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: false, error: null }));
 
       const result = await service.isAdmin();
 
@@ -160,9 +153,7 @@ describe('AdminService', () => {
   describe('getAdminRoles', () => {
     it('should return admin roles from RPC', async () => {
       const mockRoles: AdminRole[] = ['super_admin', 'operations'];
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockRoles, error: null }),
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockRoles, error: null }));
 
       const result = await service.getAdminRoles();
 
@@ -174,9 +165,7 @@ describe('AdminService', () => {
 
     it('should cache roles for same user', async () => {
       const mockRoles: AdminRole[] = ['super_admin'];
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockRoles, error: null }),
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockRoles, error: null }));
 
       // First call
       await service.getAdminRoles();
@@ -190,9 +179,7 @@ describe('AdminService', () => {
 
     it('should clear cache and refetch for different user', async () => {
       const mockRoles: AdminRole[] = ['super_admin'];
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockRoles, error: null }),
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockRoles, error: null }));
 
       // First call with user 1
       await service.getAdminRoles();
@@ -234,9 +221,7 @@ describe('AdminService', () => {
   describe('clearCache', () => {
     it('should clear roles cache', async () => {
       const mockRoles: AdminRole[] = ['super_admin'];
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockRoles, error: null }),
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockRoles, error: null }));
 
       // Populate cache
       await service.getAdminRoles();
@@ -254,9 +239,7 @@ describe('AdminService', () => {
   describe('logAction', () => {
     it('should log admin action successfully', async () => {
       const mockLogId = 'log-entry-id';
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockLogId, error: null }),
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockLogId, error: null }));
 
       const result = await service.logAction({
         action: 'approve_verification',
@@ -277,9 +260,7 @@ describe('AdminService', () => {
     });
 
     it('should include IP and user agent if provided', async () => {
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: 'log-id', error: null }),
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: 'log-id', error: null }));
 
       await service.logAction({
         action: 'test_action',
@@ -372,9 +353,9 @@ describe('AdminService', () => {
     it('should throw error when user lacks permission', async () => {
       (service.hasPermission as jasmine.Spy).and.returnValue(Promise.resolve(false));
 
-      await expectAsync(
-        service.grantAdminRole('user-id', 'operations'),
-      ).toBeRejectedWithError('Insufficient permissions to grant admin roles');
+      await expectAsync(service.grantAdminRole('user-id', 'operations')).toBeRejectedWithError(
+        'Insufficient permissions to grant admin roles',
+      );
     });
   });
 
@@ -384,9 +365,9 @@ describe('AdminService', () => {
       spyOn(service, 'hasPermission').and.returnValue(Promise.resolve(true));
 
       // Mock from().update()
-      const mockEq = jasmine.createSpy('eq').and.returnValue(
-        Promise.resolve({ data: null, error: null }),
-      );
+      const mockEq = jasmine
+        .createSpy('eq')
+        .and.returnValue(Promise.resolve({ data: null, error: null }));
 
       const mockUpdate = jasmine.createSpy('update').and.returnValue({ eq: mockEq });
 

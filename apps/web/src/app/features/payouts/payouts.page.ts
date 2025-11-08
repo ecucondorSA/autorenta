@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PayoutService, Payout, BankAccount } from '../../core/services/payout.service';
 import { WalletService } from '../../core/services/wallet.service';
+import { SupabaseClientService } from '../../core/services/supabase-client.service';
 import { take } from 'rxjs/operators';
 import { BankAccountsComponent } from './components/bank-accounts.component';
 import { PayoutHistoryComponent } from './components/payout-history.component';
@@ -33,6 +34,7 @@ import { RequestPayoutModalComponent } from './components/request-payout-modal.c
 export class PayoutsPage implements OnInit {
   private readonly payoutService = inject(PayoutService);
   private readonly walletService = inject(WalletService);
+  private readonly supabase = inject(SupabaseClientService).getClient();
 
   // State
   readonly loading = signal(false);
@@ -76,9 +78,7 @@ export class PayoutsPage implements OnInit {
 
     try {
       // Get current user
-      const user = await this.walletService['supabase']
-        .getClient()
-        .auth.getUser();
+      const user = await this.supabase.auth.getUser();
 
       if (!user.data.user) {
         throw new Error('Usuario no autenticado');
@@ -87,10 +87,7 @@ export class PayoutsPage implements OnInit {
       this.userId.set(user.data.user.id);
 
       // Load wallet balance
-      const wallet = await this.walletService
-        .getWallet()
-        .pipe(take(1))
-        .toPromise();
+      const wallet = await this.walletService.getBalance().pipe(take(1)).toPromise();
 
       if (wallet) {
         this.walletBalance.set(wallet.available_balance);
@@ -114,9 +111,7 @@ export class PayoutsPage implements OnInit {
 
       this.defaultBankAccount.set(bankAccount || null);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar datos'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar datos');
     } finally {
       this.loading.set(false);
     }

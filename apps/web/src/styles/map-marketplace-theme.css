@@ -1,0 +1,301 @@
+/**
+ * Map Marketplace Theme
+ *
+ * Neutral, professional styling for the marketplace map experience
+ * - Optimized for conversion
+ * - Minimalist, clean design
+ * - Accessible (WCAG AA)
+ * - Mobile-first responsive
+ */
+
+/* ===== Mapbox GL Overrides ===== */
+
+/* Neutral map controls */
+.mapboxgl-ctrl-group {
+  @apply shadow-lg border border-gray-200 bg-white rounded-lg overflow-hidden;
+}
+
+.mapboxgl-ctrl-group button {
+  @apply bg-white hover:bg-gray-50 transition-colors;
+}
+
+.mapboxgl-ctrl-group button + button {
+  @apply border-t border-gray-200;
+}
+
+/* Navigation control icons */
+.mapboxgl-ctrl-icon {
+  @apply text-gray-700;
+}
+
+/* Attribution */
+.mapboxgl-ctrl-attrib {
+  @apply text-xs text-gray-600 bg-white/90 backdrop-blur-sm;
+}
+
+/* ===== Enhanced Tooltip Popups ===== */
+
+.mapboxgl-popup {
+  @apply z-50;
+  max-width: 320px !important;
+}
+
+.mapboxgl-popup-content {
+  @apply p-0 rounded-xl shadow-2xl border-0;
+  background: transparent !important;
+}
+
+.mapboxgl-popup-tip {
+  @apply border-t-white border-b-white;
+}
+
+/* Remove default close button (we have custom one in component) */
+.mapboxgl-popup-close-button {
+  @apply hidden;
+}
+
+/* ===== Custom Markers ===== */
+
+/* Simple circular markers with neutral teal gradient */
+.car-marker-simple {
+  @apply cursor-pointer transition-transform duration-200;
+  z-index: 1;
+}
+
+.car-marker-simple:hover {
+  @apply scale-110;
+  z-index: 10;
+}
+
+.car-marker-simple.car-marker--selected {
+  z-index: 20;
+}
+
+.car-marker-simple.car-marker--selected .marker-circle {
+  @apply scale-125;
+  box-shadow:
+    0 0 0 4px rgba(44, 122, 123, 0.3),
+    0 4px 12px rgba(44, 122, 123, 0.6),
+    0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: pulse-marker 2s ease-in-out infinite;
+}
+
+.marker-circle {
+  @apply w-12 h-12 rounded-full flex items-center justify-center relative transition-all duration-200;
+  background: linear-gradient(135deg, #2c7a7b 0%, #4a9fa0 100%);
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(44, 122, 123, 0.5);
+  z-index: 10;
+}
+
+.marker-price-simple {
+  @apply text-white text-xs font-bold text-center leading-tight;
+}
+
+.car-marker-simple:hover .marker-circle {
+  @apply scale-110;
+  box-shadow: 0 6px 20px rgba(44, 122, 123, 0.7);
+}
+
+@keyframes pulse-marker {
+  0%,
+  100% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.9;
+  }
+}
+
+/* ===== User Location Marker ===== */
+
+.user-location-marker {
+  @apply relative;
+  width: 20px;
+  height: 20px;
+}
+
+.user-marker-circle {
+  @apply absolute w-5 h-5 rounded-full;
+  background: #2c7a7b;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.user-marker-halo {
+  @apply absolute rounded-full;
+  top: -10px;
+  left: -10px;
+  width: 40px;
+  height: 40px;
+  background: rgba(44, 122, 123, 0.2);
+  animation: pulse-halo 2s ease-in-out infinite;
+}
+
+@keyframes pulse-halo {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+}
+
+/* User location popup styling */
+.user-location-popup {
+  @apply p-2;
+}
+
+.user-location-popup p {
+  @apply m-0 leading-snug;
+}
+
+/* ===== Map Tooltip Container ===== */
+
+.map-tooltip-container {
+  @apply w-full;
+}
+
+/* ===== Responsive Optimizations ===== */
+
+/* Mobile: Smaller markers */
+@media (max-width: 640px) {
+  .marker-circle {
+    @apply w-10 h-10;
+  }
+
+  .marker-price-simple {
+    @apply text-[10px];
+  }
+
+  .mapboxgl-popup {
+    max-width: calc(100vw - 40px) !important;
+  }
+}
+
+/* Desktop: Larger interactive area */
+@media (min-width: 1024px) {
+  .marker-circle {
+    @apply w-14 h-14;
+  }
+
+  .marker-price-simple {
+    @apply text-sm;
+  }
+}
+
+/* ===== Accessibility ===== */
+
+/* Focus states for keyboard navigation */
+.car-marker-simple:focus,
+.mapboxgl-ctrl-group button:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .marker-circle {
+    border-width: 4px;
+  }
+
+  .mapboxgl-ctrl-group {
+    @apply border-2;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .car-marker-simple,
+  .marker-circle,
+  .mapboxgl-ctrl-group button {
+    @apply transition-none;
+  }
+
+  @keyframes pulse-marker {
+    0%,
+    100% {
+      transform: scale(1.25);
+      opacity: 1;
+    }
+  }
+
+  @keyframes pulse-halo {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+  }
+}
+
+/* ===== Dark Mode Support (Future) ===== */
+
+@media (prefers-color-scheme: dark) {
+  /* Override when dark mode is implemented */
+  /* .mapboxgl-ctrl-group {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .mapboxgl-ctrl-group button {
+    @apply bg-gray-800 hover:bg-gray-700;
+  }
+
+  .mapboxgl-ctrl-icon {
+    @apply text-gray-200;
+  }
+
+  .marker-circle {
+    border-color: #1f2937;
+  } */
+}
+
+/* ===== Loading States ===== */
+
+.map-loading-overlay {
+  @apply absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm z-40;
+}
+
+.map-loading-spinner {
+  @apply w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Error States ===== */
+
+.map-error-overlay {
+  @apply absolute inset-0 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm z-40 p-6 text-center;
+}
+
+.map-error-icon {
+  @apply w-16 h-16 text-red-500 mb-4;
+}
+
+.map-error-message {
+  @apply text-gray-900 text-lg font-semibold mb-2;
+}
+
+.map-error-description {
+  @apply text-gray-600 text-sm;
+}
+
+/* ===== Utility Classes ===== */
+
+/* Shadow variants */
+.shadow-3xl {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}

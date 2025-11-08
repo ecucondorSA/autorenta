@@ -70,20 +70,17 @@
         </ion-card-header>
         <ion-card-content>
           <div class="space-y-2 mb-4">
-            <p class="text-sm">
-              <strong>Booking ID:</strong> {{ contract.booking_id }}
-            </p>
+            <p class="text-sm"><strong>Booking ID:</strong> {{ contract.booking_id }}</p>
             <p class="text-sm">
               <strong>Versión de Términos:</strong> {{ contract.terms_version }}
             </p>
             <p class="text-sm">
               <strong>Fecha de Creación:</strong> {{ formatDate(contract.created_at) }}
             </p>
-            <p class="text-sm">
-              <strong>Aceptado:</strong> {{ formatDate(contract.accepted_at) }}
-            </p>
+            <p class="text-sm"><strong>Aceptado:</strong> {{ formatDate(contract.accepted_at) }}</p>
             <p *ngIf="contract.booking" class="text-sm">
-              <strong>Auto:</strong> {{ contract.booking.car?.brand }} {{ contract.booking.car?.model }}
+              <strong>Auto:</strong> {{ contract.booking.car?.brand }}
+              {{ contract.booking.car?.model }}
             </p>
           </div>
 
@@ -122,10 +119,7 @@
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
     (click)="closeCreateModal()"
   >
-    <ion-card
-      class="max-w-md w-full"
-      (click)="$event.stopPropagation()"
-    >
+    <ion-card class="max-w-md w-full" (click)="$event.stopPropagation()">
       <ion-card-header>
         <ion-card-title>Crear Contrato</ion-card-title>
       </ion-card-header>
@@ -165,9 +159,7 @@
           </ion-item>
 
           <div class="flex gap-2">
-            <ion-button expand="block" type="submit" [disabled]="loading()">
-              Crear
-            </ion-button>
+            <ion-button expand="block" type="submit" [disabled]="loading()"> Crear </ion-button>
             <ion-button expand="block" fill="outline" (click)="closeCreateModal()">
               Cancelar
             </ion-button>

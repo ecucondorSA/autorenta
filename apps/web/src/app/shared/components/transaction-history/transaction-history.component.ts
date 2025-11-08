@@ -8,7 +8,20 @@ import { BookingsService } from '../../../core/services/bookings.service';
 import { BookingDepositStatus } from '../../../core/models';
 import { DepositStatusBadgeComponent } from '../deposit-status-badge/deposit-status-badge.component';
 
-type TransactionType = 'deposit' | 'withdrawal' | 'lock' | 'unlock' | 'charge' | 'refund' | 'bonus' | 'rental_payment_lock' | 'rental_payment_transfer' | 'security_deposit_lock' | 'security_deposit_release' | 'security_deposit_charge' | 'all';
+type TransactionType =
+  | 'deposit'
+  | 'withdrawal'
+  | 'lock'
+  | 'unlock'
+  | 'charge'
+  | 'refund'
+  | 'bonus'
+  | 'rental_payment_lock'
+  | 'rental_payment_transfer'
+  | 'security_deposit_lock'
+  | 'security_deposit_release'
+  | 'security_deposit_charge'
+  | 'all';
 type TransactionStatus = 'pending' | 'completed' | 'failed' | 'refunded' | 'all';
 
 interface WalletHistoryEntry {
@@ -50,17 +63,17 @@ export class TransactionHistoryComponent implements OnInit {
 
   readonly filteredTransactions = computed(() => {
     let transactions = this.transactions() as unknown as WalletHistoryEntry[];
-    
+
     const typeFilter = this.filterType();
     if (typeFilter !== 'all') {
-      transactions = transactions.filter(t => this.getTransactionType(t) === typeFilter);
+      transactions = transactions.filter((t) => this.getTransactionType(t) === typeFilter);
     }
-    
+
     const statusFilter = this.filterStatus();
     if (statusFilter !== 'all') {
-      transactions = transactions.filter(t => this.getTransactionStatus(t) === statusFilter);
+      transactions = transactions.filter((t) => this.getTransactionStatus(t) === statusFilter);
     }
-    
+
     return transactions;
   });
 
@@ -87,7 +100,7 @@ export class TransactionHistoryComponent implements OnInit {
 
   loadTransactions(): void {
     this.walletService.getTransactions().subscribe({
-      error: (err) => console.error('Error loading transactions:', err)
+      error: (err) => console.error('Error loading transactions:', err),
     });
   }
 
@@ -105,7 +118,7 @@ export class TransactionHistoryComponent implements OnInit {
     } else {
       this.expandedTransactionId.set(transactionId);
       // Load deposit status for deposit-related transactions
-      const transaction = this.filteredTransactions().find(t => t.id === transactionId);
+      const transaction = this.filteredTransactions().find((t) => t.id === transactionId);
       if (transaction && transaction.booking_id && this.isDepositRelatedTransaction(transaction)) {
         void this.loadBookingDepositStatus(transaction.booking_id);
       }
@@ -147,85 +160,95 @@ export class TransactionHistoryComponent implements OnInit {
 
   getTypeColor(type: TransactionType): string {
     const colors: Record<TransactionType, string> = {
-      'all': 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200',
-      'deposit': 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
-      'withdrawal': 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
-      'lock': 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
-      'unlock': 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
-      'charge': 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
-      'refund': 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
-      'bonus': 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
-      'rental_payment_lock': 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
-      'rental_payment_transfer': 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
-      'security_deposit_lock': 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
-      'security_deposit_release': 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
-      'security_deposit_charge': 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
+      all: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200',
+      deposit: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      withdrawal: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      lock: 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
+      unlock: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      charge: 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
+      refund: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      bonus: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      rental_payment_lock:
+        'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
+      rental_payment_transfer: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      security_deposit_lock:
+        'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
+      security_deposit_release:
+        'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      security_deposit_charge:
+        'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
     };
     return colors[type] || 'bg-neutral-100 text-neutral-900';
   }
 
   getStatusColor(status: TransactionStatus): string {
     const colors: Record<TransactionStatus, string> = {
-      'all': 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200',
-      'pending': 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
-      'completed': 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
-      'failed': 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
-      'refunded': 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700/40 dark:text-neutral-200',
+      all: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200',
+      pending: 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
+      completed: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
+      failed: 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
+      refunded: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700/40 dark:text-neutral-200',
     };
     return colors[status] || 'bg-neutral-100 text-neutral-900';
   }
 
   translateType(type: TransactionType): string {
     const translations: Record<TransactionType, string> = {
-      'all': 'Todos',
-      'deposit': 'Depósito',
-      'withdrawal': 'Retiro',
-      'lock': 'Bloqueo',
-      'unlock': 'Desbloqueo',
-      'charge': 'Cargo',
-      'refund': 'Reembolso',
-      'bonus': 'Bonificación',
-      'rental_payment_lock': 'Bloqueo de Alquiler',
-      'rental_payment_transfer': 'Pago de Alquiler',
-      'security_deposit_lock': 'Bloqueo de Garantía',
-      'security_deposit_release': 'Devolución de Garantía',
-      'security_deposit_charge': 'Cargo de Garantía',
+      all: 'Todos',
+      deposit: 'Depósito',
+      withdrawal: 'Retiro',
+      lock: 'Bloqueo',
+      unlock: 'Desbloqueo',
+      charge: 'Cargo',
+      refund: 'Reembolso',
+      bonus: 'Bonificación',
+      rental_payment_lock: 'Bloqueo de Alquiler',
+      rental_payment_transfer: 'Pago de Alquiler',
+      security_deposit_lock: 'Bloqueo de Garantía',
+      security_deposit_release: 'Devolución de Garantía',
+      security_deposit_charge: 'Cargo de Garantía',
     };
     return translations[type] || type;
   }
 
   translateStatus(status: TransactionStatus): string {
     const translations: Record<TransactionStatus, string> = {
-      'all': 'Todos',
-      'pending': 'Pendiente',
-      'completed': 'Completada',
-      'failed': 'Fallida',
-      'refunded': 'Reembolsada',
+      all: 'Todos',
+      pending: 'Pendiente',
+      completed: 'Completada',
+      failed: 'Fallida',
+      refunded: 'Reembolsada',
     };
     return translations[status] || status;
   }
 
   getTypeIcon(type: TransactionType): string {
     const icons: Record<TransactionType, string> = {
-      'all': '📋',
-      'deposit': '💰',
-      'withdrawal': '🏦',
-      'lock': '🔒',
-      'unlock': '🔓',
-      'charge': '💳',
-      'refund': '↩️',
-      'bonus': '🎁',
-      'rental_payment_lock': '🚗🔒',
-      'rental_payment_transfer': '🚗💸',
-      'security_deposit_lock': '🛡️🔒',
-      'security_deposit_release': '🛡️✅',
-      'security_deposit_charge': '🛡️⚠️',
+      all: '📋',
+      deposit: '💰',
+      withdrawal: '🏦',
+      lock: '🔒',
+      unlock: '🔓',
+      charge: '💳',
+      refund: '↩️',
+      bonus: '🎁',
+      rental_payment_lock: '🚗🔒',
+      rental_payment_transfer: '🚗💸',
+      security_deposit_lock: '🛡️🔒',
+      security_deposit_release: '🛡️✅',
+      security_deposit_charge: '🛡️⚠️',
     };
     return icons[type] || '💰';
   }
 
   isOutgoingTransaction(type: TransactionType): boolean {
-    return ['charge', 'lock', 'withdrawal', 'rental_payment_lock', 'security_deposit_lock'].includes(type);
+    return [
+      'charge',
+      'lock',
+      'withdrawal',
+      'rental_payment_lock',
+      'security_deposit_lock',
+    ].includes(type);
   }
 
   trackByTransactionId(_index: number, transaction: WalletHistoryEntry): string {
@@ -237,7 +260,11 @@ export class TransactionHistoryComponent implements OnInit {
    */
   isDepositRelatedTransaction(transaction: WalletHistoryEntry): boolean {
     const type = this.getTransactionType(transaction);
-    return ['security_deposit_lock', 'security_deposit_release', 'security_deposit_charge'].includes(type);
+    return [
+      'security_deposit_lock',
+      'security_deposit_release',
+      'security_deposit_charge',
+    ].includes(type);
   }
 
   /**

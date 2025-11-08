@@ -18,13 +18,21 @@
   <!-- Imagen del auto con aspect ratio consistente -->
   <div class="relative w-full aspect-[4/3] bg-sand-light overflow-hidden">
     <!-- Imagen real del auto -->
+    <!-- Usar ngSrc solo si NO es Base64, sino usar src normal -->
     <img
-      *ngIf="displayImage()"
+      *ngIf="displayImage() && !isBase64Image(displayImage()!.url)"
       [ngSrc]="displayImage()!.url"
       [alt]="displayImage()!.alt"
       fill
       [priority]="priority"
       class="object-cover transition-slow group-hover:scale-105"
+    />
+    <!-- Imagen Base64 con src normal (NgOptimizedImage no soporta Base64) -->
+    <img
+      *ngIf="displayImage() && isBase64Image(displayImage()!.url)"
+      [src]="displayImage()!.url"
+      [alt]="displayImage()!.alt"
+      class="absolute inset-0 w-full h-full object-cover transition-slow group-hover:scale-105"
     />
 
     <!-- Fallback premium cuando no hay foto -->

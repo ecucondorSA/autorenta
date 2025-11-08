@@ -40,9 +40,7 @@ interface ModerationStatusOption {
 
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-              Moderación de Reseñas
-            </h1>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Moderación de Reseñas</h1>
             <p class="text-gray-600 dark:text-gray-300 mt-1">
               Gestiona reseñas reportadas por usuarios
             </p>
@@ -207,7 +205,7 @@ interface ModerationStatusOption {
                   </svg>
                 </div>
                 <span class="text-sm text-gray-500 dark:text-gray-400">
-                  {{ review.created_at | date : 'short' }}
+                  {{ review.created_at | date: 'short' }}
                 </span>
               </div>
 
@@ -241,8 +239,8 @@ interface ModerationStatusOption {
                 </p>
                 <p class="text-sm text-red-900 dark:text-red-200">{{ review.flag_reason }}</p>
                 <p class="text-xs text-red-600 dark:text-red-400 mt-1">
-                  Reportado por: {{ review.flagged_by_name }} el
-                  {{ review.flagged_at | date : 'short' }}
+                  Reportado por: {{ review.flagged_by_name || 'Usuario' }} el
+                  {{ review.flagged_at | date: 'short' }}
                 </p>
               </div>
 
@@ -258,8 +256,8 @@ interface ModerationStatusOption {
                   {{ review.moderation_notes }}
                 </p>
                 <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                  Moderado por: {{ review.moderated_by_name }} el
-                  {{ review.moderated_at | date : 'short' }}
+                  Moderado por: {{ review.moderated_by_name || 'Usuario' }} el
+                  {{ review.moderated_at | date: 'short' }}
                 </p>
               </div>
 

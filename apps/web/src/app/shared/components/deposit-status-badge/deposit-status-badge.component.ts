@@ -26,7 +26,9 @@ interface BadgeConfig {
       </span>
 
       <!-- Tooltip -->
-      <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg">
+      <div
+        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
+      >
         {{ config.tooltip }}
         <!-- Arrow -->
         <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
@@ -35,49 +37,51 @@ interface BadgeConfig {
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: inline-block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: inline-block;
+      }
+    `,
+  ],
 })
 export class DepositStatusBadgeComponent {
   @Input({ required: true }) status!: BookingDepositStatus;
   @Input() customTooltip?: string;
 
   private readonly badgeConfigs: Record<BookingDepositStatus, BadgeConfig> = {
-    'none': {
+    none: {
       icon: '⚪',
       label: 'Sin garantía',
       bgColor: 'bg-gray-50 dark:bg-gray-900/20',
       textColor: 'text-gray-700 dark:text-gray-300',
       borderColor: 'border-gray-200 dark:border-gray-700',
-      tooltip: 'No se requiere depósito de garantía para esta reserva'
+      tooltip: 'No se requiere depósito de garantía para esta reserva',
     },
-    'locked': {
+    locked: {
       icon: '🔒',
       label: 'Garantía bloqueada',
       bgColor: 'bg-warning-50 dark:bg-warning-900/20',
       textColor: 'text-warning-700 dark:text-warning-300',
       borderColor: 'border-warning-200 dark:border-warning-700',
-      tooltip: 'El depósito está retenido en tu wallet durante el alquiler'
+      tooltip: 'El depósito está retenido en tu wallet durante el alquiler',
     },
-    'released': {
+    released: {
       icon: '✅',
       label: 'Garantía liberada',
       bgColor: 'bg-success-50 dark:bg-success-900/20',
       textColor: 'text-success-700 dark:text-success-300',
       borderColor: 'border-success-200 dark:border-success-700',
-      tooltip: 'El depósito ha sido devuelto a tu wallet'
+      tooltip: 'El depósito ha sido devuelto a tu wallet',
     },
-    'charged': {
+    charged: {
       icon: '⛔',
       label: 'Garantía cobrada',
       bgColor: 'bg-error-50 dark:bg-error-900/20',
       textColor: 'text-error-700 dark:text-error-300',
       borderColor: 'border-error-200 dark:border-error-700',
-      tooltip: 'El depósito fue cobrado por daños reportados'
-    }
+      tooltip: 'El depósito fue cobrado por daños reportados',
+    },
   };
 
   get config(): BadgeConfig {

@@ -12,7 +12,9 @@ interface FaqItem {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="bg-white dark:bg-slate-deep-pure rounded-xl shadow-sm border border-pearl-gray dark:border-gray-700 p-6">
+    <div
+      class="bg-white dark:bg-slate-deep-pure rounded-xl shadow-sm border border-pearl-gray dark:border-gray-700 p-6"
+    >
       <!-- Header -->
       <div class="mb-6">
         <h2 class="text-2xl font-bold text-smoke-black dark:text-pearl-light mb-2">
@@ -47,7 +49,12 @@ interface FaqItem {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
 
@@ -56,22 +63,39 @@ interface FaqItem {
             *ngIf="item.expanded"
             class="px-4 pb-4 pt-2 bg-pearl-gray/10 dark:bg-gray-800/50 border-t border-pearl-gray dark:border-gray-700"
           >
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light leading-relaxed" [innerHTML]="item.answer"></p>
+            <p
+              class="text-sm text-charcoal-medium dark:text-pearl-light leading-relaxed"
+              [innerHTML]="item.answer"
+            ></p>
           </div>
         </div>
       </div>
 
       <!-- Additional Help -->
-      <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+      <div
+        class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
+      >
         <div class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+          <svg
+            class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            />
           </svg>
           <div>
-            <h3 class="font-semibold text-blue-900 dark:text-blue-300 mb-1">¿Necesitás más ayuda?</h3>
+            <h3 class="font-semibold text-blue-900 dark:text-blue-300 mb-1">
+              ¿Necesitás más ayuda?
+            </h3>
             <p class="text-sm text-blue-800 dark:text-blue-400">
               Contactá a nuestro equipo de soporte en
-              <a href="mailto:autorentardev@gmail.com" class="underline hover:text-blue-600">autorentardev&#64;gmail.com</a>
+              <a href="mailto:autorentardev@gmail.com" class="underline hover:text-blue-600"
+                >autorentardev&#64;gmail.com</a
+              >
             </p>
           </div>
         </div>
@@ -346,7 +370,7 @@ export class WalletFaqComponent {
       items.map((item, i) => ({
         ...item,
         expanded: i === index ? !item.expanded : item.expanded,
-      }))
+      })),
     );
   }
 }

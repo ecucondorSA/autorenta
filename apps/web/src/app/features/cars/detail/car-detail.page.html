@@ -1100,6 +1100,15 @@
           />
         </div>
 
+        <!-- ✅ NEW: Pickup Location Selector -->
+        <div *ngIf="car() && dateRange().from && dateRange().to" class="mb-6">
+          <app-pickup-location-selector
+            [carLocation]="{ lat: car()!.location_lat ?? 0, lng: car()!.location_lng ?? 0, address: car()!.location_formatted_address ?? undefined }"
+            [userHomeLocation]="userHomeLocation() ?? undefined"
+            (locationSelected)="onPickupLocationSelected($event)"
+          ></app-pickup-location-selector>
+        </div>
+
         <!-- CTA Button (Express Mode or not authenticated) -->
         <div *ngIf="!authService.isAuthenticated() || expressMode() || !canBook()" class="relative group">
           <!-- Tooltip -->
@@ -1306,9 +1315,9 @@
     <div class="bg-white dark:bg-gray-900 rounded-t-lg sm:rounded-lg w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
       <div class="p-4 sm:p-6">
         <app-booking-location-form
-          [carOwnerLat]="car()?.location_lat"
-          [carOwnerLng]="car()?.location_lng"
-          [carOwnerAddress]="car()?.location_address"
+          [carOwnerLat]="car()?.location_lat ?? undefined"
+          [carOwnerLng]="car()?.location_lng ?? undefined"
+          [carOwnerAddress]="car()?.location_formatted_address ?? undefined"
           (locationSelected)="onLocationFormSubmit($event)"
           (cancelled)="onLocationFormCancelled()"
         ></app-booking-location-form>

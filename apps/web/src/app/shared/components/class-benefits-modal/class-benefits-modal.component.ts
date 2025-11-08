@@ -58,11 +58,12 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
           </h2>
           <p>
             El sistema Bonus-Malus es un mecanismo de incentivos que premia a los conductores
-            responsables con descuentos y penaliza a quienes tienen siniestros frecuentes con recargos.
+            responsables con descuentos y penaliza a quienes tienen siniestros frecuentes con
+            recargos.
           </p>
           <p>
-            Tu <strong>clase de conductor</strong> va de 0 (excelente) a 10 (alto riesgo) y determina
-            tus tarifas de servicio y garantía.
+            Tu <strong>clase de conductor</strong> va de 0 (excelente) a 10 (alto riesgo) y
+            determina tus tarifas de servicio y garantía.
           </p>
         </div>
 
@@ -130,10 +131,16 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                     </ion-badge>
                   </td>
                   <td>{{ benefit.description }}</td>
-                  <td [class.discount]="benefit.is_discount" [class.surcharge]="!benefit.is_discount && benefit.class !== 5">
+                  <td
+                    [class.discount]="benefit.is_discount"
+                    [class.surcharge]="!benefit.is_discount && benefit.class !== 5"
+                  >
                     {{ formatPercent(benefit.fee_discount_pct) }}
                   </td>
-                  <td [class.discount]="benefit.is_discount" [class.surcharge]="!benefit.is_discount && benefit.class !== 5">
+                  <td
+                    [class.discount]="benefit.is_discount"
+                    [class.surcharge]="!benefit.is_discount && benefit.class !== 5"
+                  >
                     {{ formatPercent(benefit.guarantee_discount_pct) }}
                   </td>
                 </tr>

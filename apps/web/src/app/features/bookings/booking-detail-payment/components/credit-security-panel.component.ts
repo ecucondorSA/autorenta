@@ -89,7 +89,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               {{ riskSnapshot.vehicleValueUsd <= 20000 ? 'Autos ≤ $20k' : 'Autos > $20k' }}
             </p>
             <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-1">
-              TC: {{ fxSnapshot.rate | number:'1.2-2' }} ARS/USD
+              TC: {{ fxSnapshot.rate | number: '1.2-2' }} ARS/USD
             </p>
           </div>
         </div>
@@ -110,9 +110,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         class="mb-4 p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300"
       >
         <p class="text-sm text-gray-700 dark:text-pearl-light/80">
-          <strong>¿Cómo funciona?</strong> Este monto queda como saldo de garantía en tu wallet
-          (no puedes retirarlo a tu banco, pero puedes usarlo en futuras reservas). Si hay daños, se
-          descuenta automáticamente. Si no hay daños, el saldo queda disponible para tu próxima reserva.
+          <strong>¿Cómo funciona?</strong> Este monto queda como saldo de garantía en tu wallet (no
+          puedes retirarlo a tu banco, pero puedes usarlo en futuras reservas). Si hay daños, se
+          descuenta automáticamente. Si no hay daños, el saldo queda disponible para tu próxima
+          reserva.
         </p>
       </div>
 

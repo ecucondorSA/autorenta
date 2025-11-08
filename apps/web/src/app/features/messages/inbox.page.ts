@@ -55,7 +55,9 @@ interface Conversation {
               <div
                 class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
               ></div>
-              <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando conversaciones...</p>
+              <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                Cargando conversaciones...
+              </p>
             </div>
           </div>
         } @else if (error()) {
@@ -78,9 +80,7 @@ interface Conversation {
                 d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-              No hay mensajes
-            </h3>
+            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">No hay mensajes</h3>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
               Cuando alguien te escriba, aparecerá aquí
             </p>
@@ -138,8 +138,10 @@ interface Conversation {
                       [class.font-semibold]="conv.unreadCount > 0"
                       [class.text-gray-900]="conv.unreadCount > 0"
                       [class.dark:text-white]="conv.unreadCount > 0"
-                      [class.text-gray-600 dark:text-gray-300]="conv.unreadCount === 0"
-                      [class.dark:text-gray-400 dark:text-gray-300]="conv.unreadCount === 0"
+                      [class.text-gray-600
+                      dark:text-gray-300]="conv.unreadCount === 0"
+                      [class.dark:text-gray-400
+                      dark:text-gray-300]="conv.unreadCount === 0"
                     >
                       {{ conv.lastMessage }}
                     </p>
@@ -251,7 +253,7 @@ export class InboxPage implements OnInit {
 
         if (profiles) {
           const profilesMap = new Map(profiles.map((p) => [p.id, p]));
-          
+
           // Update conversations with user data
           conversationsMap.forEach((conv) => {
             const profile = profilesMap.get(conv.otherUserId);
@@ -281,12 +283,12 @@ export class InboxPage implements OnInit {
     if (conv.carId) {
       params.carId = conv.carId;
       params.carName = `${conv.carBrand} ${conv.carModel}`;
-      
+
       // Mark car conversation as read
       this.unreadMessagesService.markConversationAsRead(conv.carId, 'car');
     } else if (conv.bookingId) {
       params.bookingId = conv.bookingId;
-      
+
       // Mark booking conversation as read
       this.unreadMessagesService.markConversationAsRead(conv.bookingId, 'booking');
     }

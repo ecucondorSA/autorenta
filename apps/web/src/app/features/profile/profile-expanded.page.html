@@ -290,7 +290,8 @@
           (click)="setActiveTab(tab.id)"
           [class.text-accent-petrol]="activeTab() === tab.id"
           [class.border-accent-petrol]="activeTab() === tab.id"
-          [class.text-charcoal-medium dark:text-pearl-light]="activeTab() !== tab.id"
+          [class.text-charcoal-medium]="activeTab() !== tab.id"
+          [class.dark:text-pearl-light]="activeTab() !== tab.id"
           [class.border-transparent]="activeTab() !== tab.id"
           class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"
         >
@@ -324,7 +325,8 @@
                                                                                     <label *ngFor="let roleOption of roles" class="relative flex cursor-pointer rounded-lg border p-4 transition-all"
                                                                                       [class.border-accent-petrol]="generalForm.value.role === roleOption.value"
                                                                                       [class.bg-accent-petrol/5]="generalForm.value.role === roleOption.value"
-                                                                                      [class.border-pearl-gray dark:border-gray-600]="generalForm.value.role !== roleOption.value">
+                                                                                      [class.border-pearl-gray]="generalForm.value.role !== roleOption.value"
+                                                                                      [class.dark:border-gray-600]="generalForm.value.role !== roleOption.value">
                                                                       
                                                         
                                           

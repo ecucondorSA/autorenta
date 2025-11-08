@@ -123,7 +123,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           route: '/bookings/owner',
           color: 'bg-orange-500',
           priority: 5,
-        }
+        },
       );
     }
 
@@ -146,7 +146,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           route: '/bookings',
           color: 'bg-teal-500',
           priority: 4,
-        }
+        },
       );
     }
 
@@ -191,15 +191,12 @@ export class PersonalizedDashboardComponent implements OnInit {
 
       // Cargar perfil del usuario
       const profile = await this.profileService.getMe();
-      const role = profile.role === 'admin' ? 'owner' : (profile.role || 'renter');
+      const role = profile.role === 'admin' ? 'owner' : profile.role || 'renter';
       this.userRole.set(role as 'owner' | 'renter' | 'both' | null);
       this.userName.set(profile.full_name?.split(' ')[0] || 'Usuario');
 
       // Cargar estadísticas
-      await Promise.all([
-        this.loadStats(),
-        this.loadRecentData(),
-      ]);
+      await Promise.all([this.loadStats(), this.loadRecentData()]);
     } catch (_error) {
       console.error('Error loading dashboard data:', _error);
     } finally {
@@ -213,22 +210,22 @@ export class PersonalizedDashboardComponent implements OnInit {
     try {
       // Notificaciones no leídas
       const unreadCount = this.notificationsService.unreadCount();
-      this.stats.update(stats => ({ ...stats, unreadNotifications: unreadCount }));
+      this.stats.update((stats) => ({ ...stats, unreadNotifications: unreadCount }));
 
       // Balance de wallet
       const walletBalance = await firstValueFrom(this.walletService.getBalance());
-      this.stats.update(stats => ({
+      this.stats.update((stats) => ({
         ...stats,
-        walletBalance: walletBalance.available_balance
+        walletBalance: walletBalance.available_balance,
       }));
 
       if (role === 'owner' || role === 'both') {
         // Autos del owner
         const cars = await this.carsService.listMyCars();
-        const availableCars = cars.filter(car => car.status === 'active').length;
+        const availableCars = cars.filter((car) => car.status === 'active').length;
         const rentedCars = 0; // No existe status 'rented' en CarStatus
 
-        this.stats.update(stats => ({
+        this.stats.update((stats) => ({
           ...stats,
           availableCars,
           rentedCars,
@@ -236,9 +233,9 @@ export class PersonalizedDashboardComponent implements OnInit {
 
         // Reservas pendientes para owner
         const ownerBookings = await this.bookingsService.getOwnerBookings();
-        const pendingBookings = ownerBookings.filter(b => b.status === 'pending').length;
+        const pendingBookings = ownerBookings.filter((b) => b.status === 'pending').length;
 
-        this.stats.update(stats => ({
+        this.stats.update((stats) => ({
           ...stats,
           pendingBookings,
         }));
@@ -247,11 +244,11 @@ export class PersonalizedDashboardComponent implements OnInit {
       if (role === 'renter' || role === 'both') {
         // Reservas activas del renter
         const bookings = await this.bookingsService.getMyBookings();
-        const activeBookings = bookings.filter(b =>
-          b.status === 'confirmed' || b.status === 'in_progress'
+        const activeBookings = bookings.filter(
+          (b) => b.status === 'confirmed' || b.status === 'in_progress',
         ).length;
 
-        this.stats.update(stats => ({
+        this.stats.update((stats) => ({
           ...stats,
           activeBookings,
         }));

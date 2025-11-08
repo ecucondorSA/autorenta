@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 
 /**
  * 📊 Performance Monitoring Service
- * 
+ *
  * Monitorea métricas clave de performance en móvil:
  * - FPS (Frames per second)
  * - Memory usage
@@ -12,12 +12,12 @@ import { environment } from '../../../environments/environment';
  * - Core Web Vitals
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PerformanceMonitoringService {
   private fpsCounter = 0;
   private lastFrameTime = performance.now();
-  
+
   constructor() {
     if (typeof window !== 'undefined') {
       this.initMonitoring();
@@ -30,10 +30,10 @@ export class PerformanceMonitoringService {
   private initMonitoring(): void {
     // Monitorear FPS
     this.monitorFPS();
-    
+
     // Monitorear Core Web Vitals
     this.monitorWebVitals();
-    
+
     // Log inicial de device info
     this.logDeviceInfo();
   }
@@ -45,10 +45,10 @@ export class PerformanceMonitoringService {
     const measureFPS = (currentTime: number) => {
       const delta = currentTime - this.lastFrameTime;
       const fps = Math.round(1000 / delta);
-      
+
       this.lastFrameTime = currentTime;
       this.fpsCounter++;
-      
+
       // Log cada 60 frames (aprox 1 segundo a 60fps)
       if (this.fpsCounter >= 60) {
         if (fps < 50) {
@@ -56,10 +56,10 @@ export class PerformanceMonitoringService {
         }
         this.fpsCounter = 0;
       }
-      
+
       requestAnimationFrame(measureFPS);
     };
-    
+
     requestAnimationFrame(measureFPS);
   }
 
@@ -79,15 +79,17 @@ export class PerformanceMonitoringService {
 
           // Send to Sentry as measurement
           if (environment.sentryDsn) {
-            Sentry.getCurrentScope().setMeasurement('lcp', lcp, 'millisecond');
+            Sentry.getCurrentScope().setContext('performance', {
+              lcp: lcp,
+            });
           }
 
           if (lcp > 2500) {
-            console.warn(`⚠️ LCP is above target (2.5s): ${(lcp/1000).toFixed(2)}s`);
+            console.warn(`⚠️ LCP is above target (2.5s): ${(lcp / 1000).toFixed(2)}s`);
 
             // Send warning to Sentry
             if (environment.sentryDsn && environment.production) {
-              Sentry.captureMessage(`Poor LCP: ${(lcp/1000).toFixed(2)}s`, {
+              Sentry.captureMessage(`Poor LCP: ${(lcp / 1000).toFixed(2)}s`, {
                 level: 'warning',
                 tags: { metric: 'lcp' },
               });
@@ -109,7 +111,9 @@ export class PerformanceMonitoringService {
 
             // Send to Sentry as measurement
             if (environment.sentryDsn) {
-              Sentry.getCurrentScope().setMeasurement('fid', fid, 'millisecond');
+              Sentry.getCurrentScope().setContext('performance', {
+                fid: fid,
+              });
             }
 
             if (fid > 100) {
@@ -142,7 +146,9 @@ export class PerformanceMonitoringService {
 
               // Send to Sentry as measurement
               if (environment.sentryDsn) {
-                Sentry.getCurrentScope().setMeasurement('cls', clsScore, 'none');
+                Sentry.getCurrentScope().setContext('performance', {
+                  cls: clsScore,
+                });
               }
 
               if (clsScore > 0.1) {
@@ -174,23 +180,27 @@ export class PerformanceMonitoringService {
     const info = {
       userAgent: navigator.userAgent,
       platform: navigator.platform,
-      memory: (performance as any).memory ? {
-        used: ((performance as any).memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
-        total: ((performance as any).memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
-        limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB'
-      } : 'Not available',
-      connection: (navigator as any).connection ? {
-        effectiveType: (navigator as any).connection.effectiveType,
-        downlink: (navigator as any).connection.downlink + ' Mbps',
-        rtt: (navigator as any).connection.rtt + ' ms'
-      } : 'Not available',
+      memory: (performance as any).memory
+        ? {
+            used: ((performance as any).memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
+            total: ((performance as any).memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
+            limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
+          }
+        : 'Not available',
+      connection: (navigator as any).connection
+        ? {
+            effectiveType: (navigator as any).connection.effectiveType,
+            downlink: (navigator as any).connection.downlink + ' Mbps',
+            rtt: (navigator as any).connection.rtt + ' ms',
+          }
+        : 'Not available',
       screen: {
         width: window.screen.width,
         height: window.screen.height,
-        pixelRatio: window.devicePixelRatio
-      }
+        pixelRatio: window.devicePixelRatio,
+      },
     };
-    
+
     console.log('📱 Device Info:', info);
   }
 
@@ -206,11 +216,9 @@ export class PerformanceMonitoringService {
 
       // Send to Sentry as measurement
       if (environment.sentryDsn) {
-        Sentry.getCurrentScope().setMeasurement(
-          name.toLowerCase().replace(/\s+/g, '_'),
-          duration,
-          'millisecond'
-        );
+        Sentry.getCurrentScope().setContext('performance', {
+          [name.toLowerCase().replace(/\s+/g, '_')]: duration,
+        });
       }
 
       if (duration > 100) {
@@ -246,7 +254,7 @@ export class PerformanceMonitoringService {
       return {
         used: ((performance as any).memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
         total: ((performance as any).memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
-        limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB'
+        limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
       };
     }
     return null;

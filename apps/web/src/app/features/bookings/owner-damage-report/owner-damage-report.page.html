@@ -32,7 +32,8 @@
         <div class="flex justify-between">
           <span class="text-charcoal-medium">Período:</span>
           <span class="font-semibold">
-            {{ booking()?.start_at | date:'dd/MM/yyyy' }} - {{ booking()?.end_at | date:'dd/MM/yyyy' }}
+            {{ booking()?.start_at | date: 'dd/MM/yyyy' }} -
+            {{ booking()?.end_at | date: 'dd/MM/yyyy' }}
           </span>
         </div>
         <div class="flex justify-between">
@@ -45,15 +46,25 @@
     <!-- Important Notice -->
     <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
       <div class="flex items-start gap-3">
-        <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        <svg
+          class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
         </svg>
         <div>
           <h3 class="font-semibold text-amber-900 mb-1">Importante</h3>
           <p class="text-sm text-amber-800">
-            El monto reportado será deducido del depósito de garantía del locatario (máximo {{ maxFormattedAmount }}).
-            Asegurate de incluir fotos claras del daño y una descripción detallada.
-            Una vez enviado, no podrás modificar este reporte.
+            El monto reportado será deducido del depósito de garantía del locatario (máximo
+            {{ maxFormattedAmount }}). Asegurate de incluir fotos claras del daño y una descripción
+            detallada. Una vez enviado, no podrás modificar este reporte.
           </p>
         </div>
       </div>
@@ -77,7 +88,10 @@
             {{ descriptionCharCount() }} / 1000 caracteres (mínimo 20)
           </ion-note>
         </ion-item>
-        <div *ngIf="descriptionCharCount() > 0 && descriptionCharCount() < 20" class="mt-2 p-3 bg-red-50 rounded-lg">
+        <div
+          *ngIf="descriptionCharCount() > 0 && descriptionCharCount() < 20"
+          class="mt-2 p-3 bg-red-50 rounded-lg"
+        >
           <p class="text-sm text-red-800">
             ⚠️ La descripción debe tener al menos 20 caracteres para ser válida
           </p>
@@ -117,7 +131,8 @@
       <div class="card-premium p-6">
         <h3 class="font-bold text-smoke-black mb-4">3. Fotos de Evidencia (1-10 fotos) *</h3>
         <p class="text-sm text-charcoal-medium mb-4">
-          Sube fotos claras del daño. Las fotos deben mostrar claramente el daño y su ubicación en el vehículo.
+          Sube fotos claras del daño. Las fotos deben mostrar claramente el daño y su ubicación en
+          el vehículo.
         </p>
 
         <input
@@ -137,7 +152,11 @@
         >
           <ion-icon name="camera" class="text-2xl text-accent-petrol"></ion-icon>
           <p class="text-sm text-charcoal-medium mt-2">
-            {{ uploadedFiles().length >= 10 ? 'Límite de 10 fotos alcanzado' : 'Click para subir fotos' }}
+            {{
+              uploadedFiles().length >= 10
+                ? 'Límite de 10 fotos alcanzado'
+                : 'Click para subir fotos'
+            }}
           </p>
         </button>
 
@@ -145,7 +164,11 @@
         <div *ngIf="uploadedPreviews().length > 0" class="mt-4">
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div *ngFor="let preview of uploadedPreviews(); let i = index" class="relative">
-              <img [src]="preview" alt="Foto {{i+1}}" class="w-full h-32 object-cover rounded-lg" />
+              <img
+                [src]="preview"
+                alt="Foto {{ i + 1 }}"
+                class="w-full h-32 object-cover rounded-lg"
+              />
               <button
                 type="button"
                 (click)="removeFile(i)"
@@ -173,25 +196,41 @@
         <div class="space-y-2 text-sm">
           <div class="flex justify-between">
             <span class="text-charcoal-medium">Descripción:</span>
-            <span class="font-semibold" [class.text-red-600]="descriptionCharCount() < 20" [class.text-green-600]="descriptionCharCount() >= 20">
+            <span
+              class="font-semibold"
+              [class.text-red-600]="descriptionCharCount() < 20"
+              [class.text-green-600]="descriptionCharCount() >= 20"
+            >
               {{ descriptionCharCount() >= 20 ? '✓ Completa' : '✗ Incompleta' }}
             </span>
           </div>
           <div class="flex justify-between">
             <span class="text-charcoal-medium">Monto del daño:</span>
-            <span class="font-semibold" [class.text-red-600]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()" [class.text-green-600]="damageAmount() > 0 && damageAmount() <= maxDepositAmount()">
+            <span
+              class="font-semibold"
+              [class.text-red-600]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()"
+              [class.text-green-600]="damageAmount() > 0 && damageAmount() <= maxDepositAmount()"
+            >
               {{ formattedAmount }}
             </span>
           </div>
           <div class="flex justify-between">
             <span class="text-charcoal-medium">Fotos de evidencia:</span>
-            <span class="font-semibold" [class.text-red-600]="uploadedFiles().length === 0" [class.text-green-600]="uploadedFiles().length > 0">
+            <span
+              class="font-semibold"
+              [class.text-red-600]="uploadedFiles().length === 0"
+              [class.text-green-600]="uploadedFiles().length > 0"
+            >
               {{ uploadedFiles().length }} foto(s)
             </span>
           </div>
         </div>
 
-        <div class="mt-4 p-3 rounded-lg" [class.bg-green-50]="canSubmit()" [class.bg-gray-50]="!canSubmit()">
+        <div
+          class="mt-4 p-3 rounded-lg"
+          [class.bg-green-50]="canSubmit()"
+          [class.bg-gray-50]="!canSubmit()"
+        >
           <div class="flex items-center gap-2">
             <ion-icon
               [name]="canSubmit() ? 'checkmark-circle' : 'alert-circle'"
@@ -199,7 +238,11 @@
               [class.text-gray-400]="!canSubmit()"
               class="text-xl"
             ></ion-icon>
-            <span class="text-sm" [class.text-green-800]="canSubmit()" [class.text-gray-600]="!canSubmit()">
+            <span
+              class="text-sm"
+              [class.text-green-800]="canSubmit()"
+              [class.text-gray-600]="!canSubmit()"
+            >
               {{ canSubmit() ? 'Listo para enviar' : 'Completa todos los campos requeridos' }}
             </span>
           </div>
@@ -230,8 +273,9 @@
       <!-- Disclaimer -->
       <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <p class="text-xs text-gray-600">
-          Al enviar este reporte, confirmas que la información proporcionada es precisa y que el daño ocurrió durante el período de alquiler.
-          El locatario será notificado inmediatamente y podrá ver el reporte en el detalle de la reserva.
+          Al enviar este reporte, confirmas que la información proporcionada es precisa y que el
+          daño ocurrió durante el período de alquiler. El locatario será notificado inmediatamente y
+          podrá ver el reporte en el detalle de la reserva.
         </p>
       </div>
     </form>

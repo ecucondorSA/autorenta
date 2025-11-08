@@ -1,4 +1,6 @@
 import * as Sentry from '@sentry/angular';
+import type { Breadcrumb } from '@sentry/types';
+import type { ErrorEvent, EventHint } from '@sentry/core';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -43,7 +45,7 @@ export function initializeSentry(): void {
 
       // Capture console errors
       Sentry.captureConsoleIntegration({
-        levels: ['error', 'assert']
+        levels: ['error', 'assert'],
       }),
 
       // Track HTTP errors
@@ -89,7 +91,7 @@ export function initializeSentry(): void {
     ],
 
     // Configure what data to send
-    beforeSend(event, hint) {
+    beforeSend(event: ErrorEvent, hint: EventHint): ErrorEvent | PromiseLike<ErrorEvent | null> | null {
       // Don't send errors in development unless explicitly testing
       if (!environment.production && !localStorage.getItem('sentry-test-mode')) {
         console.warn('🚫 Sentry error blocked in development:', hint.originalException);
@@ -110,7 +112,7 @@ export function initializeSentry(): void {
     },
 
     // Configure breadcrumbs
-    beforeBreadcrumb(breadcrumb) {
+    beforeBreadcrumb(breadcrumb: Breadcrumb): Breadcrumb | null {
       // Don't log sensitive URLs
       if (breadcrumb.category === 'fetch' || breadcrumb.category === 'xhr') {
         if (breadcrumb.data?.url?.includes('token') || breadcrumb.data?.url?.includes('auth')) {

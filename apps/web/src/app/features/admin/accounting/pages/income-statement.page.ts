@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { AccountingService } from '../../../../core/services/accounting.service';
+import { AccountingService, IncomeStatement } from '../../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-income-statement',
@@ -26,7 +26,9 @@ import { AccountingService } from '../../../../core/services/accounting.service'
           <ion-label>Período:</ion-label>
           <ion-select [(ngModel)]="selectedPeriod" (ionChange)="loadData()" interface="popover">
             <ion-select-option [value]="null">Todos los períodos</ion-select-option>
-            <ion-select-option *ngFor="let p of availablePeriods()" [value]="p">{{ p }}</ion-select-option>
+            <ion-select-option *ngFor="let p of availablePeriods()" [value]="p">{{
+              p
+            }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-toolbar>
@@ -123,56 +125,109 @@ import { AccountingService } from '../../../../core/services/accounting.service'
       </div>
     </ion-content>
   `,
-  styles: [`
-    .flex { display: flex; }
-    .items-center { align-items: center; }
-    .justify-center { justify-content: center; }
-    .text-center { text-align: center; }
-    .grid { display: grid; }
-    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .gap-4 { gap: 1rem; }
-    .font-bold { font-weight: 700; }
-    .font-semibold { font-weight: 600; }
-    .text-lg { font-size: 1.125rem; }
-    .text-xl { font-size: 1.25rem; }
-    .text-3xl { font-size: 1.875rem; }
-    .text-sm { font-size: 0.875rem; }
-    .opacity-70 { opacity: 0.7; }
-    .text-gray-500 { color: #6b7280; }
-    .text-red-500 { color: #ef4444; }
-    .bg-gray-100 { background-color: #f3f4f6; }
-    .mb-2 { margin-bottom: 0.5rem; }
-    .mb-4 { margin-bottom: 1rem; }
-    .mr-2 { margin-right: 0.5rem; }
-    .mt-1 { margin-top: 0.25rem; }
-    .mt-2 { margin-top: 0.5rem; }
-    .mt-4 { margin-top: 1rem; }
-    .mt-6 { margin-top: 1.5rem; }
-    .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
-  `]
+  styles: [
+    `
+      .flex {
+        display: flex;
+      }
+      .items-center {
+        align-items: center;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .grid {
+        display: grid;
+      }
+      .grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .gap-4 {
+        gap: 1rem;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+      .font-semibold {
+        font-weight: 600;
+      }
+      .text-lg {
+        font-size: 1.125rem;
+      }
+      .text-xl {
+        font-size: 1.25rem;
+      }
+      .text-3xl {
+        font-size: 1.875rem;
+      }
+      .text-sm {
+        font-size: 0.875rem;
+      }
+      .opacity-70 {
+        opacity: 0.7;
+      }
+      .text-gray-500 {
+        color: #6b7280;
+      }
+      .text-red-500 {
+        color: #ef4444;
+      }
+      .bg-gray-100 {
+        background-color: #f3f4f6;
+      }
+      .mb-2 {
+        margin-bottom: 0.5rem;
+      }
+      .mb-4 {
+        margin-bottom: 1rem;
+      }
+      .mr-2 {
+        margin-right: 0.5rem;
+      }
+      .mt-1 {
+        margin-top: 0.25rem;
+      }
+      .mt-2 {
+        margin-top: 0.5rem;
+      }
+      .mt-4 {
+        margin-top: 1rem;
+      }
+      .mt-6 {
+        margin-top: 1.5rem;
+      }
+      .py-8 {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+    `,
+  ],
 })
 export class IncomeStatementPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
 
-  readonly incomeStatement = this.accountingService.incomeStatement;
-  readonly loading = this.accountingService.loading;
+  readonly incomeStatement = signal<IncomeStatement[]>([]);
+  readonly loading = signal(false);
 
   selectedPeriod: string | null = null;
 
   readonly incomeItems = computed(() =>
-    this.incomeStatement().filter((item) => item.account_type === 'INCOME')
+    this.incomeStatement().filter((item) => item.account_type === 'INCOME'),
   );
 
   readonly expenseItems = computed(() =>
-    this.incomeStatement().filter((item) => item.account_type === 'EXPENSE')
+    this.incomeStatement().filter((item) => item.account_type === 'EXPENSE'),
   );
 
   readonly totalIncome = computed(() =>
-    this.incomeItems().reduce((sum, item) => sum + item.amount, 0)
+    this.incomeItems().reduce((sum, item) => sum + item.amount, 0),
   );
 
   readonly totalExpenses = computed(() =>
-    this.expenseItems().reduce((sum, item) => sum + item.amount, 0)
+    this.expenseItems().reduce((sum, item) => sum + item.amount, 0),
   );
 
   readonly netProfit = computed(() => this.totalIncome() - this.totalExpenses());
@@ -191,10 +246,18 @@ export class IncomeStatementPage implements OnInit {
     this.loadData();
   }
 
-  loadData(): void {
-    this.accountingService.getIncomeStatement(this.selectedPeriod || undefined).subscribe({
-      error: (err) => console.error('Error loading income statement:', err),
-    });
+  async loadData(): Promise<void> {
+    this.loading.set(true);
+    try {
+      const data = await this.accountingService.getIncomeStatement(
+        this.selectedPeriod || undefined,
+      );
+      this.incomeStatement.set(data);
+    } catch (err) {
+      console.error('Error loading income statement:', err);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   formatCurrency(amount: number): string {

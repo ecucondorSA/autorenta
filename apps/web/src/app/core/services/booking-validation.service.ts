@@ -103,14 +103,17 @@ export class BookingValidationService {
         canWaitlist = true;
 
         // Log for debugging
-        this.logger.warn('Waitlist activated due to unavailable error: ' + JSON.stringify({
-          originalError: errorMessage,
-          errorLower,
-          hasPendingBookings,
-          carId,
-          startDate,
-          endDate,
-        }));
+        this.logger.warn(
+          'Waitlist activated due to unavailable error: ' +
+            JSON.stringify({
+              originalError: errorMessage,
+              errorLower,
+              hasPendingBookings,
+              carId,
+              startDate,
+              endDate,
+            }),
+        );
       } else if (errorLower.includes('no disponible') || errorLower.includes('not available')) {
         // Check if there are pending bookings that could cause the conflict
         const hasPendingBookings = await this.checkPendingBookings(carId, startDate, endDate);
@@ -120,7 +123,8 @@ export class BookingValidationService {
             'El auto está reservado temporalmente (pendiente de pago). Intenta con otras fechas o únete a la lista de espera.';
           canWaitlist = true;
         } else {
-          errorMessage = 'El auto no está disponible para esas fechas. Por favor elige otras fechas.';
+          errorMessage =
+            'El auto no está disponible para esas fechas. Por favor elige otras fechas.';
         }
       } else {
         // Map other common errors
@@ -138,10 +142,7 @@ export class BookingValidationService {
   /**
    * Validate booking dates
    */
-  private validateDates(
-    startDate: string,
-    endDate: string,
-  ): { valid: boolean; error?: string } {
+  private validateDates(startDate: string, endDate: string): { valid: boolean; error?: string } {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
@@ -214,7 +215,10 @@ export class BookingValidationService {
    * Validate cancellation timing
    * Returns true if cancellation is allowed (at least 24h before start)
    */
-  validateCancellationTiming(booking: Booking, force: boolean = false): {
+  validateCancellationTiming(
+    booking: Booking,
+    force: boolean = false,
+  ): {
     allowed: boolean;
     error?: string;
   } {

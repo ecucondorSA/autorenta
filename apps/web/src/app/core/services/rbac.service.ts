@@ -1,7 +1,8 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
-import type { AdminRoleType, AdminUserRole, AdminActionType, AdminAuditLog } from '../models';
+import type { AdminAuditLog } from '../models';
+import type { AdminRole, AdminUser, AdminAuditLog as AdminAuditLogType } from '../types/admin.types';
 
 /**
  * RBAC Service - Role-Based Access Control
@@ -35,7 +36,7 @@ export class RBACService {
   private readonly authService = inject(AuthService);
 
   // Cached user roles
-  private readonly userRolesSignal = signal<AdminUserRole[]>([]);
+  private readonly userRolesSignal = signal<AdminUser[]>([]);
   private readonly loadingSignal = signal<boolean>(false);
 
   // Computed properties
@@ -54,7 +55,7 @@ export class RBACService {
   /**
    * Load current user's admin roles
    */
-  async loadUserRoles(): Promise<AdminUserRole[]> {
+  async loadUserRoles(): Promise<AdminUser[]> {
     this.loadingSignal.set(true);
     try {
       const user = await this.authService.ensureSession();
@@ -72,8 +73,8 @@ export class RBACService {
 
       if (error) throw error;
 
-      this.userRolesSignal.set(data as AdminUserRole[]);
-      return data as AdminUserRole[];
+      this.userRolesSignal.set(data as AdminUser[]);
+      return data as AdminUser[];
     } catch (error) {
       console.error('Error loading user roles:', error);
       this.userRolesSignal.set([]);
@@ -86,7 +87,7 @@ export class RBACService {
   /**
    * Check if current user has a specific admin role
    */
-  async hasRole(role: AdminRoleType): Promise<boolean> {
+  async hasRole(role: AdminRole): Promise<boolean> {
     const roles = this.userRolesSignal();
     if (roles.length === 0) {
       await this.loadUserRoles();
@@ -98,7 +99,7 @@ export class RBACService {
   /**
    * Check if current user has any of the specified roles
    */
-  async hasAnyRole(roles: AdminRoleType[]): Promise<boolean> {
+  async hasAnyRole(roles: AdminRole[]): Promise<boolean> {
     const userRoles = this.userRolesSignal();
     if (userRoles.length === 0) {
       await this.loadUserRoles();
@@ -110,7 +111,7 @@ export class RBACService {
   /**
    * Check if current user has all of the specified roles
    */
-  async hasAllRoles(roles: AdminRoleType[]): Promise<boolean> {
+  async hasAllRoles(roles: AdminRole[]): Promise<boolean> {
     const userRoles = this.userRolesSignal();
     if (userRoles.length === 0) {
       await this.loadUserRoles();
@@ -146,7 +147,7 @@ export class RBACService {
    * Log an admin action to the audit trail
    */
   async logAction(
-    action: AdminActionType,
+    action: string,
     resourceType: string,
     resourceId: string | null = null,
     changes: { before?: unknown; after?: unknown } | null = null,
@@ -179,7 +180,7 @@ export class RBACService {
   async getAuditLogs(params: {
     limit?: number;
     offset?: number;
-    action?: AdminActionType;
+    action?: string;
     resourceType?: string;
     resourceId?: string;
     adminUserId?: string;
@@ -243,7 +244,7 @@ export class RBACService {
    */
   async grantRole(
     userId: string,
-    role: AdminRoleType,
+    role: AdminRole,
     expiresAt: string | null = null,
   ): Promise<boolean> {
     if (!(await this.hasRole('super_admin'))) {
@@ -282,7 +283,7 @@ export class RBACService {
   /**
    * Revoke an admin role from a user (super_admin only)
    */
-  async revokeRole(userId: string, role: AdminRoleType): Promise<boolean> {
+  async revokeRole(userId: string, role: AdminRole): Promise<boolean> {
     if (!(await this.hasRole('super_admin'))) {
       throw new Error('Only super admins can revoke roles');
     }
@@ -309,8 +310,8 @@ export class RBACService {
   /**
    * Get role display name
    */
-  getRoleDisplayName(role: AdminRoleType): string {
-    const roleNames: Record<AdminRoleType, string> = {
+  getRoleDisplayName(role: AdminRole): string {
+    const roleNames: Record<AdminRole, string> = {
       super_admin: 'Super Administrator',
       operations: 'Operations Manager',
       support: 'Support Specialist',
@@ -322,8 +323,8 @@ export class RBACService {
   /**
    * Get role description
    */
-  getRoleDescription(role: AdminRoleType): string {
-    const roleDescriptions: Record<AdminRoleType, string> = {
+  getRoleDescription(role: AdminRole): string {
+    const roleDescriptions: Record<AdminRole, string> = {
       super_admin:
         'Full access to all admin features including user management and system configuration',
       operations: 'Manage withdrawals, verifications, bookings, and operational tasks',
@@ -336,8 +337,8 @@ export class RBACService {
   /**
    * Get role permissions
    */
-  getRolePermissions(role: AdminRoleType): string[] {
-    const rolePermissions: Record<AdminRoleType, string[]> = {
+  getRolePermissions(role: AdminRole): string[] {
+    const rolePermissions: Record<AdminRole, string[]> = {
       super_admin: ['*'],
       operations: ['withdrawals:*', 'verifications:*', 'bookings:*', 'cars:*'],
       support: ['users:view', 'bookings:view', 'reviews:moderate', 'support:*'],

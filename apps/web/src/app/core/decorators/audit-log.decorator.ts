@@ -46,7 +46,7 @@ export interface AuditLogOptions {
    * Custom function to extract resource ID from parameters
    * Default: uses first parameter
    */
-  getResourceId?: (args: unknown[]) => string | undefined;
+  getResourceId?: (args: unknown[], result: any) => string | undefined;
 
   /**
    * Custom function to build audit details
@@ -64,16 +64,8 @@ export interface AuditLogOptions {
  * @param resourceType - The type of resource being acted upon (e.g., 'user', 'booking')
  * @param options - Optional configuration for audit logging
  */
-export function AuditLog(
-  action: string,
-  resourceType: string,
-  options: AuditLogOptions = {},
-) {
-  return function (
-    target: object,
-    propertyKey: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) {
+export function AuditLog(action: string, resourceType: string, options: AuditLogOptions = {}) {
+  return function (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (this: { adminService?: AdminService }, ...args: unknown[]) {
@@ -105,7 +97,7 @@ export function AuditLog(
         // Build resource ID
         let resourceId: string | undefined;
         if (options.getResourceId) {
-          resourceId = options.getResourceId(args);
+          resourceId = options.getResourceId(args, result);
         } else if (args.length > 0 && typeof args[0] === 'string') {
           resourceId = args[0];
         }
@@ -187,7 +179,7 @@ export function AuditRejection(resourceType: string) {
 export function AuditCreation(resourceType: string) {
   return AuditLog(`create_${resourceType}`, resourceType, {
     includeParams: true,
-    getResourceId: (_args, result) => (typeof result === 'string' ? result : undefined),
+    getResourceId: (args: unknown[], result: any) => (typeof result === 'string' ? result : undefined),
   });
 }
 

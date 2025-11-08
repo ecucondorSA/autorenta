@@ -14,7 +14,9 @@ import {
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
-    <div class="verification-page bg-ivory-soft dark:bg-graphite-dark min-h-screen transition-colors duration-300">
+    <div
+      class="verification-page bg-ivory-soft dark:bg-graphite-dark min-h-screen transition-colors duration-300"
+    >
       <!-- Header -->
       <div
         class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300"
@@ -34,7 +36,7 @@ import {
 
       <!-- Content -->
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        @if (verificationStatus(); as status) {
+        @if (currentStatus(); as status) {
           <!-- Status Summary -->
           <div
             class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8"
@@ -85,7 +87,9 @@ import {
             </div>
 
             @if (status.notes) {
-              <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded p-3 text-sm text-red-800 dark:text-red-300">
+              <div
+                class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded p-3 text-sm text-red-800 dark:text-red-300"
+              >
                 {{ status.notes }}
               </div>
             }
@@ -163,7 +167,9 @@ import {
               <details
                 class="group border border-pearl-gray dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
               >
-                <summary class="font-medium text-smoke-black dark:text-ivory-luminous flex items-center justify-between">
+                <summary
+                  class="font-medium text-smoke-black dark:text-ivory-luminous flex items-center justify-between"
+                >
                   ¿Por qué necesito verificarme?
                   <span class="text-lg group-open:rotate-180 transition-transform">▼</span>
                 </summary>
@@ -177,7 +183,9 @@ import {
               <details
                 class="group border border-pearl-gray dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
               >
-                <summary class="font-medium text-smoke-black dark:text-ivory-luminous flex items-center justify-between">
+                <summary
+                  class="font-medium text-smoke-black dark:text-ivory-luminous flex items-center justify-between"
+                >
                   ¿Cuánto tiempo toma la verificación?
                   <span class="text-lg group-open:rotate-180 transition-transform">▼</span>
                 </summary>
@@ -190,7 +198,9 @@ import {
               <details
                 class="group border border-pearl-gray dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
               >
-                <summary class="font-medium text-smoke-black dark:text-ivory-luminous flex items-center justify-between">
+                <summary
+                  class="font-medium text-smoke-black dark:text-ivory-luminous flex items-center justify-between"
+                >
                   ¿Es seguro compartir mis documentos?
                   <span class="text-lg group-open:rotate-180 transition-transform">▼</span>
                 </summary>
@@ -236,8 +246,12 @@ export class VerificationPage implements OnInit {
   private readonly verificationService = inject(VerificationService);
 
   readonly verificationStatus = this.verificationService.statuses;
+  readonly currentStatus = computed(() => {
+    const statuses = this.verificationStatus();
+    return statuses && statuses.length > 0 ? statuses[0] : null;
+  });
   readonly isVerifying = signal(false);
-  readonly missingDocs = computed(() => this.verificationStatus()?.missing_docs || []);
+  readonly missingDocs = computed(() => this.currentStatus()?.missing_docs || []);
 
   ngOnInit() {
     this.verificationService.loadStatuses();

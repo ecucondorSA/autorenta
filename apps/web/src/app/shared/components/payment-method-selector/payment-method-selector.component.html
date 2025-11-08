@@ -211,7 +211,9 @@
               </label>
               <div class="flex items-center gap-2">
                 <div class="relative flex-1">
-                  <span class="absolute left-3 top-2.5 text-gray-500 dark:text-gray-300 font-medium">$</span>
+                  <span class="absolute left-3 top-2.5 text-gray-500 dark:text-gray-300 font-medium"
+                    >$</span
+                  >
                   <input
                     type="number"
                     id="walletAmount"
@@ -238,7 +240,9 @@
                     [style.width.%]="walletPercentage()"
                   ></div>
                 </div>
-                <span class="ml-2 text-xs text-gray-600 dark:text-gray-300">{{ walletPercentage() }}%</span>
+                <span class="ml-2 text-xs text-gray-600 dark:text-gray-300"
+                  >{{ walletPercentage() }}%</span
+                >
               </div>
               <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
                 Disponible: {{ formatCurrency(availableBalance()) }}

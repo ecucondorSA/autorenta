@@ -92,9 +92,7 @@
         <ion-card-content>
           <div class="flex justify-between items-center">
             <span class="font-bold text-lg">Total Estimado:</span>
-            <span class="font-bold text-xl">
-              ${{ damages().reduce((sum, d) => sum + d.estimatedCostUsd, 0).toFixed(2) }} USD
-            </span>
+            <span class="font-bold text-xl"> {{ getTotalDamageCost() }} USD </span>
           </div>
         </ion-card-content>
       </ion-card>
@@ -102,7 +100,11 @@
   </div>
 
   <!-- No Damages Message -->
-  <ion-card *ngIf="!comparing() && !loading() && damages().length === 0 && validationResult()?.valid" color="success" class="mt-4">
+  <ion-card
+    *ngIf="!comparing() && !loading() && damages().length === 0 && validationResult()?.valid"
+    color="success"
+    class="mt-4"
+  >
     <ion-card-content>
       <div class="flex items-center">
         <ion-icon name="checkmark-circle" class="text-xl mr-2"></ion-icon>

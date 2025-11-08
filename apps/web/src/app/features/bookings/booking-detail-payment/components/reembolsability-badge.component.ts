@@ -27,7 +27,9 @@ interface BadgeConfig {
       </span>
 
       <!-- Tooltip -->
-      <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg">
+      <div
+        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
+      >
         {{ config.tooltip }}
         <!-- Arrow -->
         <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
@@ -36,24 +38,26 @@ interface BadgeConfig {
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: inline-block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: inline-block;
+      }
+    `,
+  ],
 })
 export class ReembolsabilityBadgeComponent {
   @Input({ required: true }) type!: ReembolsabilityType;
   @Input() customTooltip?: string;
 
   private readonly badgeConfigs: Record<ReembolsabilityType, BadgeConfig> = {
-    'reembolsable': {
+    reembolsable: {
       icon: '🔄',
       label: 'Reembolsable',
       bgColor: 'bg-success-50 dark:bg-success-900/20',
       textColor: 'text-success-700 dark:text-success-300',
       borderColor: 'border-success-200 dark:border-success-700',
-      tooltip: 'Se libera automáticamente al devolver el auto sin daños'
+      tooltip: 'Se libera automáticamente al devolver el auto sin daños',
     },
     'no-reembolsable': {
       icon: '⚠️',
@@ -61,16 +65,16 @@ export class ReembolsabilityBadgeComponent {
       bgColor: 'bg-warning-50 dark:bg-warning-900/20',
       textColor: 'text-warning-700 dark:text-warning-300',
       borderColor: 'border-warning-200 dark:border-warning-700',
-      tooltip: 'Queda como saldo no retirable en tu wallet'
+      tooltip: 'Queda como saldo no retirable en tu wallet',
     },
-    'reutilizable': {
+    reutilizable: {
       icon: '♻️',
       label: 'Reutilizable',
       bgColor: 'bg-info-50 dark:bg-info-900/20',
       textColor: 'text-info-700 dark:text-info-300',
       borderColor: 'border-info-200 dark:border-info-700',
-      tooltip: 'Disponible para futuras reservas en AutoRenta'
-    }
+      tooltip: 'Disponible para futuras reservas en AutoRenta',
+    },
   };
 
   get config(): BadgeConfig {

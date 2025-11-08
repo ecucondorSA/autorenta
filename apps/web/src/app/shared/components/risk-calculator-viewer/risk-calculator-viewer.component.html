@@ -2,9 +2,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>Cálculo de Riesgo</ion-card-title>
-      <ion-card-subtitle>
-        Análisis completo de garantías y franquicias
-      </ion-card-subtitle>
+      <ion-card-subtitle> Análisis completo de garantías y franquicias </ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <!-- Bucket -->
@@ -72,8 +70,14 @@
         <div class="space-y-3">
           <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
             <span class="text-sm font-medium">Tipo de Garantía</span>
-            <ion-badge [color]="riskCalculation()!.guaranteeType === 'hold' ? 'primary' : 'warning'">
-              {{ riskCalculation()!.guaranteeType === 'hold' ? 'Preautorización (Hold)' : 'Crédito de Seguridad' }}
+            <ion-badge
+              [color]="riskCalculation()!.guaranteeType === 'hold' ? 'primary' : 'warning'"
+            >
+              {{
+                riskCalculation()!.guaranteeType === 'hold'
+                  ? 'Preautorización (Hold)'
+                  : 'Crédito de Seguridad'
+              }}
             </ion-badge>
           </div>
 
@@ -93,16 +97,24 @@
             ></ion-icon>
           </div>
 
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded" *ngIf="riskCalculation()!.driverClass !== undefined">
+          <div
+            class="flex items-center justify-between p-3 bg-gray-50 rounded"
+            *ngIf="riskCalculation()!.driverClass !== undefined"
+          >
             <span class="text-sm font-medium">Clase del Conductor</span>
             <ion-badge [color]="getClassColor(riskCalculation()!.driverClass!)">
               Clase {{ riskCalculation()!.driverClass }}
             </ion-badge>
           </div>
 
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded" *ngIf="riskCalculation()!.guaranteeMultiplier !== undefined">
+          <div
+            class="flex items-center justify-between p-3 bg-gray-50 rounded"
+            *ngIf="riskCalculation()!.guaranteeMultiplier !== undefined"
+          >
             <span class="text-sm font-medium">Multiplicador de Garantía</span>
-            <span class="text-sm font-semibold">{{ riskCalculation()!.guaranteeMultiplier!.toFixed(2) }}x</span>
+            <span class="text-sm font-semibold"
+              >{{ riskCalculation()!.guaranteeMultiplier!.toFixed(2) }}x</span
+            >
           </div>
 
           <div class="p-3 bg-blue-50 rounded">

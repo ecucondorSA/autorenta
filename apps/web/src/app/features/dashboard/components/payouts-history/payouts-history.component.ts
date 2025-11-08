@@ -1,6 +1,5 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { PayoutService, Payout } from '../../../../core/services/payout.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { firstValueFrom } from 'rxjs';
@@ -8,14 +7,12 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-payouts-history',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   template: `
     <div class="space-y-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          Historial de Ingresos
-        </h3>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Historial de Ingresos</h3>
         <button
           (click)="loadPayouts()"
           [disabled]="loading()"
@@ -34,7 +31,9 @@ import { firstValueFrom } from 'rxjs';
 
       <!-- Error State -->
       @if (error() && !loading()) {
-        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+        <div
+          class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+        >
           <p class="text-red-800 dark:text-red-200">{{ error() }}</p>
         </div>
       }
@@ -199,9 +198,7 @@ export class PayoutsHistoryComponent implements OnInit {
       this.completedCount.set(completed);
       this.pendingCount.set(pending);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar historial de ingresos'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar historial de ingresos');
     } finally {
       this.loading.set(false);
     }
@@ -244,4 +241,3 @@ export class PayoutsHistoryComponent implements OnInit {
     alert('Funcionalidad de descarga de comprobante próximamente disponible');
   }
 }
-

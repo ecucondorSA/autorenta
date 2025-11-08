@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { format } from 'date-fns';
-import { SupabaseService } from './supabase.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 export interface BlockedDateRange {
   id: string;
@@ -34,7 +34,7 @@ export class CarBlockingService {
   readonly error = signal<string | null>(null);
 
   constructor() {
-    const supabaseService = inject(SupabaseService);
+    const supabaseService = inject(SupabaseClientService);
     this.supabase = supabaseService.getClient();
   }
 
@@ -114,7 +114,10 @@ export class CarBlockingService {
         created_by: userData.user.id,
       }));
 
-      const { data, error } = await this.supabase.from('car_blocked_dates').insert(blocksData).select();
+      const { data, error } = await this.supabase
+        .from('car_blocked_dates')
+        .insert(blocksData)
+        .select();
 
       if (error) {
         errors.push(error.message);

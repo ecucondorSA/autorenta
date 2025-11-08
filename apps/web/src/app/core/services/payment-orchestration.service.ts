@@ -204,47 +204,49 @@ export class PaymentOrchestrationService {
       return throwError(() => new Error('Wallet and card amounts required for partial payment'));
     }
 
-    return this.walletService.lockFunds(
-      params.bookingId,
-      params.walletAmount,
-      `Partial payment for booking ${params.bookingId}`,
-    ).pipe(
-      switchMap(() => {
-        // Create payment intent for remaining amount
-        return from(this.paymentsService.createIntent(params.bookingId));
-      }),
-      switchMap((intent) => {
-        // Update booking
-        return from(
-          this.bookingsService.updateBooking(params.bookingId, {
-            status: 'pending_payment',
-            payment_method: 'partial_wallet',
-            wallet_amount_cents: Math.round(params.walletAmount! * 100),
-          }),
-        ).pipe(map(() => intent));
-      }),
-      map((intent) => ({
-        success: true,
-        bookingId: params.bookingId,
-        paymentIntentId: intent.id,
-        mercadoPagoInitPoint: 'https://mercadopago.com/checkout', // Replace with actual URL
-        message: 'Wallet funds locked, redirecting to payment provider for remaining amount',
-      })),
-      catchError((error) => {
-        this.logger.error('Partial wallet payment failed', error);
-        // Try to unlock funds if locking succeeded
-        this.walletService
-          .unlockFunds(params.bookingId, 'Payment failed - reverting lock')
-          .subscribe();
-
-        return of({
-          success: false,
+    return this.walletService
+      .lockFunds(
+        params.bookingId,
+        params.walletAmount,
+        `Partial payment for booking ${params.bookingId}`,
+      )
+      .pipe(
+        switchMap(() => {
+          // Create payment intent for remaining amount
+          return from(this.paymentsService.createIntent(params.bookingId));
+        }),
+        switchMap((intent) => {
+          // Update booking
+          return from(
+            this.bookingsService.updateBooking(params.bookingId, {
+              status: 'pending_payment',
+              payment_method: 'partial_wallet',
+              wallet_amount_cents: Math.round(params.walletAmount! * 100),
+            }),
+          ).pipe(map(() => intent));
+        }),
+        map((intent) => ({
+          success: true,
           bookingId: params.bookingId,
-          message: 'Failed to process partial wallet payment',
-          error: error.message || 'Unknown error',
-        });
-      }),
-    );
+          paymentIntentId: intent.id,
+          mercadoPagoInitPoint: 'https://mercadopago.com/checkout', // Replace with actual URL
+          message: 'Wallet funds locked, redirecting to payment provider for remaining amount',
+        })),
+        catchError((error) => {
+          this.logger.error('Partial wallet payment failed', error);
+          // Try to unlock funds if locking succeeded
+          this.walletService
+            .unlockFunds(params.bookingId, 'Payment failed - reverting lock')
+            .subscribe();
+
+          return of({
+            success: false,
+            bookingId: params.bookingId,
+            message: 'Failed to process partial wallet payment',
+            error: error.message || 'Unknown error',
+          });
+        }),
+      );
   }
 
   /**
@@ -288,9 +290,7 @@ export class PaymentOrchestrationService {
         });
 
         // Unlock wallet funds if they were locked
-        this.walletService
-          .unlockFunds(booking_id, 'Payment failed - releasing funds')
-          .subscribe();
+        this.walletService.unlockFunds(booking_id, 'Payment failed - releasing funds').subscribe();
       }
 
       this.logger.info('Webhook processed successfully', JSON.stringify({ booking_id, status }));
@@ -317,16 +317,15 @@ export class PaymentOrchestrationService {
 
         // Unlock funds from wallet
         if (booking.payment_method === 'wallet' || booking.payment_method === 'partial_wallet') {
-          return this.walletService.unlockFunds(
-            params.bookingId,
-            `Refund for cancelled booking`,
-          ).pipe(
-            map(() => ({
-              success: true,
-              amount: refundAmount,
-              message: 'Funds unlocked successfully',
-            })),
-          );
+          return this.walletService
+            .unlockFunds(params.bookingId, `Refund for cancelled booking`)
+            .pipe(
+              map(() => ({
+                success: true,
+                amount: refundAmount,
+                message: 'Funds unlocked successfully',
+              })),
+            );
         }
 
         // For credit card payments, initiate refund with provider

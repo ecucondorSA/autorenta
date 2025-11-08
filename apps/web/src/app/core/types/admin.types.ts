@@ -196,12 +196,7 @@ export const ADMIN_PERMISSIONS: Record<AdminRole, AdminPermission[]> = {
     'suspend_cars',
   ],
 
-  support: [
-    'view_users',
-    'view_verifications',
-    'view_bookings',
-    'view_cars',
-  ],
+  support: ['view_users', 'view_verifications', 'view_bookings', 'view_cars'],
 
   finance: [
     'view_users',
