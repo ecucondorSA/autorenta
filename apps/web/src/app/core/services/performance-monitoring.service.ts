@@ -79,7 +79,7 @@ export class PerformanceMonitoringService {
 
           // Send to Sentry as measurement
           if (environment.sentryDsn) {
-            Sentry.getCurrentScope().setMeasurement('lcp', lcp, 'millisecond');
+            Sentry.getCurrentScope().setContext('performance', { lcp });
           }
 
           if (lcp > 2500) {
@@ -109,7 +109,7 @@ export class PerformanceMonitoringService {
 
             // Send to Sentry as measurement
             if (environment.sentryDsn) {
-              Sentry.getCurrentScope().setMeasurement('fid', fid, 'millisecond');
+              Sentry.getCurrentScope().setContext('performance', { fid });
             }
 
             if (fid > 100) {
@@ -142,7 +142,7 @@ export class PerformanceMonitoringService {
 
               // Send to Sentry as measurement
               if (environment.sentryDsn) {
-                Sentry.getCurrentScope().setMeasurement('cls', clsScore, 'none');
+                Sentry.getCurrentScope().setContext('performance', { cls: clsScore });
               }
 
               if (clsScore > 0.1) {
@@ -210,11 +210,10 @@ export class PerformanceMonitoringService {
 
       // Send to Sentry as measurement
       if (environment.sentryDsn) {
-        Sentry.getCurrentScope().setMeasurement(
-          name.toLowerCase().replace(/\s+/g, '_'),
-          duration,
-          'millisecond',
-        );
+        const metricName = name.toLowerCase().replace(/\s+/g, '_');
+        Sentry.getCurrentScope().setContext('performance', {
+          [metricName]: duration,
+        });
       }
 
       if (duration > 100) {

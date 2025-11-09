@@ -23,7 +23,7 @@
  */
 
 import { Injectable, inject } from '@angular/core';
-import { RefundRequest, ProcessRefundParams, ProcessRefundResult } from '../models';
+import { RefundRequest, ProcessRefundParams, ProcessRefundResult, Booking } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 import type {
@@ -684,7 +684,7 @@ export class AdminService {
       .select(
         `
         *,
-        user:profiles!withdrawal_requests_user_id_fkey(full_name, email:auth.users(email)),
+        user:profiles!withdrawal_requests_user_id_fkey(full_name),
         bank_account:bank_accounts(*)
       `,
       )
@@ -937,7 +937,7 @@ export class AdminService {
       .select(
         `
         *,
-        user:profiles!refund_requests_user_id_fkey(full_name, email:auth.users(email)),
+        user:profiles!refund_requests_user_id_fkey(full_name),
         booking:bookings(total_amount, total_cents, currency, car:cars(title))
       `,
       )

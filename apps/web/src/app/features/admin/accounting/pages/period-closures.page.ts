@@ -1,9 +1,9 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, PeriodClosure } from '../../../../core/services/accounting.service';
-import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-period-closures',
@@ -13,7 +13,6 @@ import { SupabaseClientService } from '../../../../core/services/supabase-client
   styleUrls: ['./period-closures.page.scss'],
 })
 export class PeriodClosuresPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseClientService);
   private readonly accountingService: AccountingService;
 
   readonly loading = signal(false);
@@ -31,8 +30,7 @@ export class PeriodClosuresPage implements OnInit {
   });
 
   constructor() {
-    const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+    this.accountingService = new AccountingService(environment.supabaseUrl, environment.supabaseAnonKey);
   }
 
   async ngOnInit(): Promise<void> {
