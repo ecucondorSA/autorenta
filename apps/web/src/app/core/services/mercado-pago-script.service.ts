@@ -32,16 +32,21 @@ export class MercadoPagoScriptService {
       return this.scriptPromise;
     }
 
+    console.log('📦 Iniciando carga del script de Mercado Pago...');
+
     this.scriptPromise = new Promise((resolve, reject) => {
       const script = this.renderer.createElement('script');
       script.src = 'https://sdk.mercadopago.com/js/v2';
       script.defer = true;
       script.onload = () => {
+        console.log('✅ Script de Mercado Pago cargado exitosamente');
         this.scriptLoaded = true;
         resolve();
       };
       script.onerror = (error: unknown) => {
-        reject(new Error('Failed to load Mercado Pago script.'));
+        console.error('❌ Error al cargar el script de Mercado Pago:', error);
+        const errorMsg = 'No se pudo cargar el SDK de Mercado Pago. Verifica tu conexión a internet e intenta nuevamente.';
+        reject(new Error(errorMsg));
       };
       this.renderer.appendChild(this.document.body, script);
     });
@@ -54,30 +59,36 @@ export class MercadoPagoScriptService {
    */
   public async getMercadoPago(publicKey: string): Promise<unknown> {
     if (!isPlatformBrowser(this.platformId)) {
+      console.error('❌ Mercado Pago SDK no puede cargarse en el servidor (SSR)');
       return Promise.reject('Mercado Pago SDK cannot be loaded on the server.');
     }
 
     if (this.mercadoPagoInstance) {
+      console.log('✅ Reutilizando instancia existente de Mercado Pago');
       return Promise.resolve(this.mercadoPagoInstance);
     }
 
     try {
       await this.loadScript();
 
+      console.log('🔍 Buscando objeto global MercadoPago...');
       const windowWithMP = globalThis as unknown as WindowWithMercadoPago;
       const MercadoPagoGlobal = windowWithMP.MercadoPago ?? windowWithMP.Mercadopago;
 
       if (typeof MercadoPagoGlobal === 'undefined') {
+        console.error('❌ Objeto MercadoPago no encontrado después de cargar el script');
         throw new Error('Mercado Pago object not found after script load.');
       }
 
+      console.log('🎯 Inicializando instancia de Mercado Pago con locale es-AR...');
       this.mercadoPagoInstance = new MercadoPagoGlobal(publicKey, {
         locale: 'es-AR',
       });
+      console.log('✅ Instancia de Mercado Pago creada exitosamente');
       return this.mercadoPagoInstance;
     } catch (error: any) {
       console.error(
-        'Detailed error object in getMercadoPago:',
+        '❌ Error detallado en getMercadoPago:',
         JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
       );
       return Promise.reject(error);
