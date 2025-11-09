@@ -1,19 +1,19 @@
 <div
-  class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite border border-pearl-gray dark:border-gray-600/70 dark:border-slate-deep rounded-2xl shadow-soft dark:shadow-card p-6 max-w-2xl mx-auto transition-colors duration-300"
+  class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 border border-gray-200 dark:border-gray-600/70 dark:border-gray-700 rounded-2xl shadow-soft dark:shadow-card p-6 max-w-2xl mx-auto transition-colors duration-300"
 >
-  <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous mb-6">
+  <h2 class="text-2xl font-bold text-gray-900 dark:text-ivory-50 mb-6">
     Solicitar Retiro
   </h2>
 
   <!-- Saldo disponible -->
   <div class="mb-6 grid gap-3 md:grid-cols-2">
     <div
-      class="p-4 bg-accent-petrol/10 dark:bg-accent-petrol/20 rounded-xl border border-accent-petrol/20 dark:border-accent-petrol/30 transition-colors"
+      class="p-4 bg-sky-600/10 dark:bg-sky-600/20 rounded-xl border border-sky-600/20 dark:border-sky-600/30 transition-colors"
     >
-      <p class="text-sm text-charcoal-medium dark:text-pearl-light/80 mb-1">
+      <p class="text-sm text-gray-600 dark:text-beige-200/80 mb-1">
         Saldo total en wallet
       </p>
-      <p class="text-2xl font-bold text-accent-petrol dark:text-ivory-luminous">
+      <p class="text-2xl font-bold text-sky-600 dark:text-ivory-50">
         ${{ availableBalance | number: '1.2-2' }}
       </p>
     </div>
@@ -55,7 +55,7 @@
       </p>
       <button
         (click)="onCancel()"
-        class="mt-4 px-4 py-2 bg-accent-petrol text-white font-semibold rounded-xl hover:bg-accent-petrol/90 transition"
+        class="mt-4 px-4 py-2 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-600/90 transition"
       >
         Volver
       </button>
@@ -66,14 +66,14 @@
       <div>
         <label
           for="bank_account_id"
-          class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light mb-2"
+          class="block text-sm font-semibold text-gray-600 dark:text-beige-200 mb-2"
         >
           Cuenta de destino *
         </label>
         <select
           id="bank_account_id"
           formControlName="bank_account_id"
-          class="w-full px-4 py-3 border border-pearl-gray dark:border-gray-600/70 dark:border-slate-deep rounded-xl bg-white dark:bg-slate-deep-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
+          class="w-full px-4 py-3 border border-gray-200 dark:border-gray-600/70 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700-pure dark:bg-gray-700 text-gray-900 dark:text-beige-200 focus:ring-2 focus:ring-sky-600 focus:border-transparent transition-colors"
           [class.border-red-500]="
             form.get('bank_account_id')?.invalid && form.get('bank_account_id')?.touched
           "
@@ -100,21 +100,21 @@
         <div class="flex items-center justify-between mb-2">
           <label
             for="amount"
-            class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light"
+            class="block text-sm font-semibold text-gray-600 dark:text-beige-200"
           >
             Monto a retirar *
           </label>
           <button
             type="button"
             (click)="setMaxAmount()"
-            class="text-sm text-accent-petrol dark:text-ivory-luminous hover:underline font-semibold"
+            class="text-sm text-sky-600 dark:text-ivory-50 hover:underline font-semibold"
           >
             Retirar máximo
           </button>
         </div>
         <div class="relative">
           <span
-            class="absolute left-4 top-1/2 -translate-y-1/2 text-ash-gray dark:text-pearl-light/60 font-semibold"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-beige-200/60 font-semibold"
             >$</span
           >
           <input
@@ -122,13 +122,13 @@
             type="number"
             formControlName="amount"
             placeholder="0.00"
-            class="w-full pl-8 pr-4 py-3 border border-pearl-gray dark:border-gray-600/70 dark:border-slate-deep rounded-xl bg-white dark:bg-slate-deep-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-colors"
+            class="w-full pl-8 pr-4 py-3 border border-gray-200 dark:border-gray-600/70 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700-pure dark:bg-gray-700 text-gray-900 dark:text-beige-200 focus:ring-2 focus:ring-sky-600 focus:border-transparent transition-colors"
             [class.border-red-500]="form.get('amount')?.invalid && form.get('amount')?.touched"
             min="{{ MIN_AMOUNT }}"
             step="0.01"
           />
         </div>
-        <p class="mt-1 text-sm text-ash-gray dark:text-pearl-light/70">Mínimo: ${{ MIN_AMOUNT }}</p>
+        <p class="mt-1 text-sm text-gray-400 dark:text-beige-200/70">Mínimo: ${{ MIN_AMOUNT }}</p>
         @if (getErrorMessage('amount')) {
           <p class="mt-1 text-sm text-red-600 dark:text-red-300">{{ getErrorMessage('amount') }}</p>
         }
@@ -137,28 +137,28 @@
       <!-- Desglose de costos -->
       @if (amount() > 0) {
         <div
-          class="bg-sand-light/70 dark:bg-slate-deep/60 rounded-xl p-4 space-y-2 border border-pearl-gray dark:border-gray-600/70 dark:border-slate-deep transition-colors"
+          class="bg-beige-100/70 dark:bg-gray-700/60 rounded-xl p-4 space-y-2 border border-gray-200 dark:border-gray-600/70 dark:border-gray-700 transition-colors"
         >
-          <h4 class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light/80 mb-3">
+          <h4 class="text-sm font-semibold text-gray-600 dark:text-beige-200/80 mb-3">
             Desglose del retiro
           </h4>
 
           <div class="flex items-center justify-between text-sm">
-            <span class="text-charcoal-medium dark:text-pearl-light/70">Monto solicitado</span>
-            <span class="font-semibold text-smoke-black dark:text-ivory-luminous">
+            <span class="text-gray-600 dark:text-beige-200/70">Monto solicitado</span>
+            <span class="font-semibold text-gray-900 dark:text-ivory-50">
               ${{ amount() | number: '1.2-2' }}
             </span>
           </div>
 
           <div class="flex items-center justify-between text-sm">
-            <span class="text-charcoal-medium dark:text-pearl-light/70">Comisión (1.5%)</span>
+            <span class="text-gray-600 dark:text-beige-200/70">Comisión (1.5%)</span>
             <span class="font-semibold text-red-600 dark:text-red-300">
               -${{ feeAmount() | number: '1.2-2' }}
             </span>
           </div>
 
           <div class="border-t border-gray-300 dark:border-gray-600 pt-2 flex items-center justify-between">
-            <span class="text-sm font-bold text-smoke-black dark:text-ivory-luminous"
+            <span class="text-sm font-bold text-gray-900 dark:text-ivory-50"
               >Recibirás en tu cuenta</span
             >
             <span class="text-lg font-bold text-success-700 dark:text-success-200">
@@ -167,12 +167,12 @@
           </div>
 
           <div
-            class="border-t border-gray-300 dark:border-slate-deep pt-2 flex items-center justify-between text-sm"
+            class="border-t border-gray-300 dark:border-gray-700 pt-2 flex items-center justify-between text-sm"
           >
-            <span class="text-charcoal-medium dark:text-pearl-light/70"
+            <span class="text-gray-600 dark:text-beige-200/70"
               >Se debitará de tu wallet</span
             >
-            <span class="font-semibold text-smoke-black dark:text-ivory-luminous">
+            <span class="font-semibold text-gray-900 dark:text-ivory-50">
               ${{ totalDebit() | number: '1.2-2' }}
             </span>
           </div>
@@ -200,7 +200,7 @@
       <div>
         <label
           for="user_notes"
-          class="block text-sm font-semibold text-charcoal-medium dark:text-pearl-light mb-2"
+          class="block text-sm font-semibold text-gray-600 dark:text-beige-200 mb-2"
         >
           Notas (opcional)
         </label>
@@ -209,19 +209,19 @@
           formControlName="user_notes"
           rows="3"
           placeholder="Agrega cualquier comentario sobre este retiro..."
-          class="w-full px-4 py-3 border border-pearl-gray dark:border-gray-600/70 dark:border-slate-deep rounded-xl bg-white dark:bg-slate-deep-pure dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:ring-2 focus:ring-accent-petrol focus:border-transparent resize-none transition-colors"
+          class="w-full px-4 py-3 border border-gray-200 dark:border-gray-600/70 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700-pure dark:bg-gray-700 text-gray-900 dark:text-beige-200 focus:ring-2 focus:ring-sky-600 focus:border-transparent resize-none transition-colors"
         ></textarea>
       </div>
 
       <!-- Información importante -->
       <div
-        class="bg-accent-petrol/5 dark:bg-accent-petrol/20 border border-accent-petrol/20 dark:border-accent-petrol/30 rounded-xl p-4 transition-colors"
+        class="bg-sky-600/5 dark:bg-sky-600/20 border border-sky-600/20 dark:border-sky-600/30 rounded-xl p-4 transition-colors"
       >
-        <p class="text-sm text-accent-petrol dark:text-ivory-luminous">
+        <p class="text-sm text-sky-600 dark:text-ivory-50">
           <strong>ℹ️ Información importante:</strong>
         </p>
         <ul
-          class="mt-2 text-xs text-accent-petrol/80 dark:text-pearl-light/80 space-y-1 list-disc list-inside"
+          class="mt-2 text-xs text-sky-600/80 dark:text-beige-200/80 space-y-1 list-disc list-inside"
         >
           <li>El retiro será procesado en 24-48 horas hábiles.</li>
           <li>La transferencia puede demorar 1-2 días hábiles adicionales según el banco.</li>
@@ -236,7 +236,7 @@
         <button
           type="submit"
           [disabled]="submitting() || form.invalid || !hasEnoughBalance() || amount() === 0"
-          class="flex-1 px-6 py-3 bg-accent-petrol text-ivory-soft font-semibold rounded-xl hover:bg-accent-petrol/90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          class="flex-1 px-6 py-3 bg-sky-600 text-ivory-100 font-semibold rounded-xl hover:bg-sky-600/90 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           {{ submitting() ? 'Procesando...' : 'Solicitar Retiro' }}
         </button>
@@ -244,7 +244,7 @@
           type="button"
           (click)="onCancel()"
           [disabled]="submitting()"
-          class="px-6 py-3 border-2 border-pearl-gray dark:border-gray-600/70 dark:border-slate-deep text-charcoal-medium dark:text-pearl-light font-semibold rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep/70 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          class="px-6 py-3 border-2 border-gray-200 dark:border-gray-600/70 dark:border-gray-700 text-gray-600 dark:text-beige-200 font-semibold rounded-xl hover:bg-beige-100 dark:hover:bg-gray-700/70 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           Cancelar
         </button>

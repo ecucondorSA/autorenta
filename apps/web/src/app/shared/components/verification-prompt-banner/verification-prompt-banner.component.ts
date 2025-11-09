@@ -28,7 +28,7 @@ import { UserProfile } from '../../../core/models';
   template: `
     <div
       *ngIf="shouldShow()"
-      class="bg-gradient-to-r from-accent-warm to-accent-petrol text-white shadow-lg"
+      class="bg-gradient-to-r from-beige-400 to-sky-600 text-white shadow-lg"
       role="alert"
       aria-live="polite"
     >
@@ -63,11 +63,11 @@ import { UserProfile } from '../../../core/models';
 
                 <!-- Status Icon Badge -->
                 <div
-                  class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-accent-warm to-accent-petrol border-2 border-white flex items-center justify-center"
+                  class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-beige-400 to-sky-600 border-2 border-white flex items-center justify-center"
                 >
                   <svg
                     *ngIf="verificationProgress() < 100"
-                    class="h-3 w-3 text-yellow-300 animate-pulse"
+                    class="h-3 w-3 text-beige-300 animate-pulse"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -127,7 +127,7 @@ import { UserProfile } from '../../../core/models';
                 <a
                   routerLink="/profile"
                   [queryParams]="{ tab: 'verification' }"
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-white text-accent-petrol rounded-lg text-sm font-semibold hover:bg-ivory-luminous transition-colors shadow-md hover:shadow-lg"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-white text-sky-600 rounded-lg text-sm font-semibold hover:bg-ivory-50 transition-colors shadow-md hover:shadow-lg"
                 >
                   <svg
                     class="h-4 w-4"
@@ -195,13 +195,13 @@ import { UserProfile } from '../../../core/models';
         (click)="$event.stopPropagation()"
       >
         <div class="flex items-start justify-between mb-4">
-          <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-ivory-50">
             ¿Por qué verificar tu identidad?
           </h2>
           <button
             type="button"
             (click)="closeBenefits()"
-            class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-white transition-colors"
+            class="text-gray-600 dark:text-beige-200 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -214,7 +214,7 @@ import { UserProfile } from '../../../core/models';
           </button>
         </div>
 
-        <div class="space-y-4 text-smoke-black dark:text-pearl-light">
+        <div class="space-y-4 text-gray-900 dark:text-beige-200">
           <div class="flex items-start gap-3">
             <div
               class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center"
@@ -243,10 +243,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-sky-100 dark:bg-sky-700/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-blue-600 dark:text-blue-400"
+                class="w-5 h-5 text-sky-600 dark:text-sky-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -269,10 +269,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-purple-600 dark:text-purple-400"
+                class="w-5 h-5 text-sky-600 dark:text-sky-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -296,10 +296,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-beige-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-yellow-600 dark:text-yellow-400"
+                class="w-5 h-5 text-beige-500 dark:text-beige-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -326,7 +326,7 @@ import { UserProfile } from '../../../core/models';
           <button
             type="button"
             (click)="closeBenefits()"
-            class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:text-pearl-light dark:hover:text-white transition-colors"
+            class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-beige-200 hover:text-gray-900 dark:text-beige-200 dark:hover:text-white transition-colors"
           >
             Cerrar
           </button>
@@ -334,7 +334,7 @@ import { UserProfile } from '../../../core/models';
             routerLink="/profile"
             [queryParams]="{ tab: 'verification' }"
             (click)="closeBenefits()"
-            class="px-4 py-2 bg-accent-petrol text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+            class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Iniciar verificación
           </a>

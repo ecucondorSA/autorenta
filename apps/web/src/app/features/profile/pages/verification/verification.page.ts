@@ -103,21 +103,21 @@ import { MetaService } from '../../../../core/services/meta.service';
             <!-- Level Benefits -->
             <div class="space-y-4">
               <!-- Level 1 Benefits -->
-              <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                <h4 class="font-semibold text-blue-900 dark:text-blue-200 mb-2 text-sm">
+              <div class="bg-sky-50 dark:bg-sky-700/20 border border-sky-200 dark:border-blue-800 rounded-lg p-4">
+                <h4 class="font-semibold text-sky-700 dark:text-sky-200 mb-2 text-sm">
                   Level 1: Explorador
                 </h4>
-                <ul class="space-y-1 text-sm text-blue-800 dark:text-blue-300">
+                <ul class="space-y-1 text-sm text-sky-600 dark:text-sky-300">
                   <li class="flex gap-2">
-                    <span class="text-blue-600 dark:text-blue-400">•</span>
+                    <span class="text-sky-600 dark:text-sky-400">•</span>
                     <span>Navegar catálogo</span>
                   </li>
                   <li class="flex gap-2">
-                    <span class="text-blue-600 dark:text-blue-400">•</span>
+                    <span class="text-sky-600 dark:text-sky-400">•</span>
                     <span>Ver detalles de autos</span>
                   </li>
                   <li class="flex gap-2">
-                    <span class="text-blue-600 dark:text-blue-400">•</span>
+                    <span class="text-sky-600 dark:text-sky-400">•</span>
                     <span>Contactar propietarios</span>
                   </li>
                 </ul>
@@ -145,21 +145,21 @@ import { MetaService } from '../../../../core/services/meta.service';
               </div>
 
               <!-- Level 3 Benefits -->
-              <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
-                <h4 class="font-semibold text-purple-900 dark:text-purple-200 mb-2 text-sm">
+              <div class="bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800 rounded-lg p-4">
+                <h4 class="font-semibold text-sky-900 dark:text-sky-200 mb-2 text-sm">
                   Level 3: Verificado Total
                 </h4>
-                <ul class="space-y-1 text-sm text-purple-800 dark:text-purple-300">
+                <ul class="space-y-1 text-sm text-sky-800 dark:text-sky-300">
                   <li class="flex gap-2">
-                    <span class="text-purple-600 dark:text-purple-400">•</span>
+                    <span class="text-sky-600 dark:text-sky-400">•</span>
                     <span>Límites de reserva ampliados</span>
                   </li>
                   <li class="flex gap-2">
-                    <span class="text-purple-600 dark:text-purple-400">•</span>
+                    <span class="text-sky-600 dark:text-sky-400">•</span>
                     <span>Mejor posicionamiento</span>
                   </li>
                   <li class="flex gap-2">
-                    <span class="text-purple-600 dark:text-purple-400">•</span>
+                    <span class="text-sky-600 dark:text-sky-400">•</span>
                     <span>Soporte prioritario</span>
                   </li>
                 </ul>
@@ -265,7 +265,7 @@ export class VerificationPage implements OnInit {
       return 'bg-green-500 text-white';
     }
     if (level >= 1) {
-      return 'bg-blue-500 text-white';
+      return 'bg-sky-500 text-white';
     }
     return 'bg-gray-300 text-gray-700';
   }

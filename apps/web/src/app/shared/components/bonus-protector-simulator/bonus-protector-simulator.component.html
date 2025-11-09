@@ -40,8 +40,8 @@
             <ion-label>Nivel 3</ion-label>
           </ion-segment-button>
         </ion-segment>
-        <div class="mt-3 p-3 bg-blue-50 rounded">
-          <p class="text-sm text-blue-800">
+        <div class="mt-3 p-3 bg-sky-50 rounded">
+          <p class="text-sm text-sky-600">
             {{ protectionCapacity().description }}
           </p>
         </div>
@@ -162,7 +162,7 @@
               <p class="text-sm font-semibold text-lg">
                 Ahorro total anual: <strong>${{ potentialSavings()!.totalSavings.toFixed(2) }} USD</strong>
               </p>
-              <p class="text-sm" [class.text-green-600]="potentialSavings()!.isWorthIt" [class.text-yellow-600]="!potentialSavings()!.isWorthIt">
+              <p class="text-sm" [class.text-green-600]="potentialSavings()!.isWorthIt" [class.text-beige-500]="!potentialSavings()!.isWorthIt">
                 {{ potentialSavings()!.isWorthIt ? '✓ Vale la pena comprar' : '⚠ Considera si realmente lo necesitas' }}
               </p>
             </div>

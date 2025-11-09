@@ -38,20 +38,20 @@
         <div
           (click)="depositType.set('protected_credit')"
           class="p-4 rounded-xl border-2 cursor-pointer transition-all"
-          [class.border-accent-petrol]="depositType() === 'protected_credit'"
-          [class.bg-accent-petrol/5]="depositType() === 'protected_credit'"
+          [class.border-sky-600]="depositType() === 'protected_credit'"
+          [class.bg-sky-600/5]="depositType() === 'protected_credit'"
           [class.border-gray-200]="depositType() !== 'protected_credit'"
           [class.bg-white]="depositType() !== 'protected_credit'"
-          [class.dark:border-accent-petrol/50]="depositType() === 'protected_credit'"
-          [class.dark:bg-accent-petrol/10]="depositType() === 'protected_credit'"
+          [class.dark:border-sky-600/50]="depositType() === 'protected_credit'"
+          [class.dark:bg-sky-600/10]="depositType() === 'protected_credit'"
           [class.dark:border-gray-600]="depositType() !== 'protected_credit'"
           [class.dark:bg-gray-700]="depositType() !== 'protected_credit'"
         >
           <div class="flex items-start gap-3">
             <div
               class="flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all"
-              [class.border-accent-petrol]="depositType() === 'protected_credit'"
-              [class.bg-accent-petrol]="depositType() === 'protected_credit'"
+              [class.border-sky-600]="depositType() === 'protected_credit'"
+              [class.bg-sky-600]="depositType() === 'protected_credit'"
               [class.border-gray-300]="depositType() !== 'protected_credit'"
               [class.dark:border-gray-500]="depositType() !== 'protected_credit'"
             >
@@ -64,16 +64,16 @@
               <div class="flex items-center gap-2">
                 <p
                   class="text-base font-bold"
-                  [class.text-accent-petrol]="depositType() === 'protected_credit'"
+                  [class.text-sky-600]="depositType() === 'protected_credit'"
                   [class.text-gray-900]="depositType() !== 'protected_credit'"
-                  [class.dark:text-accent-petrol]="depositType() === 'protected_credit'"
+                  [class.dark:text-sky-600]="depositType() === 'protected_credit'"
                   [class.dark:text-white]="depositType() !== 'protected_credit'"
                 >
                   Crédito Autorentar (No retirable)
                 </p>
                 <span
                   *ngIf="depositType() === 'protected_credit'"
-                  class="px-2 py-0.5 text-xs font-semibold rounded-full bg-accent-petrol text-white"
+                  class="px-2 py-0.5 text-xs font-semibold rounded-full bg-sky-600 text-white"
                 >
                   Seleccionado
                 </span>
@@ -240,7 +240,7 @@
 
       <div
         *ngIf="fallbackSuggestion() === 'bank_transfer'"
-        class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4"
+        class="bg-beige-100 border border-beige-400 text-beige-500 px-4 py-3 rounded relative mb-4"
         role="alert"
       >
         <strong class="font-bold">Sugerencia:</strong>

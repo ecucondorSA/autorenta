@@ -59,7 +59,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
       <!-- Pending State -->
       <div *ngIf="!status().isVerified" class="space-y-4">
         <!-- Debug Panel (temporal) -->
-        <div class="p-3 bg-yellow-100 border-2 border-yellow-500 rounded text-xs">
+        <div class="p-3 bg-beige-100 border-2 border-beige-500 rounded text-xs">
           <p class="font-bold mb-2">🐛 DEBUG - Estado del componente:</p>
           <p>isVerified: <strong>{{ status().isVerified }}</strong></p>
           <p>phone: <strong>{{ status().value || 'null' }}</strong></p>
@@ -71,8 +71,8 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
 
         <!-- Phone Input (if OTP not sent yet) -->
         <div *ngIf="!status().otpSent" class="space-y-4">
-          <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p class="text-sm text-blue-800">
+          <div class="p-4 bg-sky-50 border border-sky-200 rounded-lg">
+            <p class="text-sm text-sky-600">
               Ingresa tu número de teléfono para recibir un código de verificación por SMS.
             </p>
           </div>
@@ -84,7 +84,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             <div class="flex gap-2">
               <select
                 [(ngModel)]="countryCode"
-                class="block w-24 rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+                class="block w-24 rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-sky-500 text-sm"
               >
                 <option value="+54">🇦🇷 +54</option>
                 <option value="+1">🇺🇸 +1</option>
@@ -98,7 +98,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
                 [(ngModel)]="phoneNumber"
                 placeholder="11 2345 6789"
                 maxlength="15"
-                class="flex-grow block rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+                class="flex-grow block rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-sky-500 text-sm"
                 [disabled]="loading()"
               />
             </div>
@@ -114,7 +114,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             class="w-full px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             [class]="
               canSendOTP()
-                ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                ? 'bg-sky-600 text-white hover:bg-sky-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
                 : 'bg-gray-200 text-gray-500 dark:text-gray-300 cursor-not-allowed'
             "
           >
@@ -148,11 +148,11 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
 
         <!-- OTP Input (if OTP sent) -->
         <div *ngIf="status().otpSent" class="space-y-4">
-          <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p class="text-sm text-blue-800 font-medium">
+          <div class="p-4 bg-sky-50 border border-sky-200 rounded-lg">
+            <p class="text-sm text-sky-600 font-medium">
               Código enviado a {{ status().value }}
             </p>
-            <p class="text-xs text-blue-700 mt-1">
+            <p class="text-xs text-sky-700 mt-1">
               Ingresa el código de 6 dígitos que recibiste por SMS
             </p>
           </div>
@@ -169,7 +169,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               maxlength="6"
               inputmode="numeric"
               pattern="[0-9]*"
-              class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-center text-2xl tracking-widest font-mono"
+              class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-sky-500 text-center text-2xl tracking-widest font-mono"
               [disabled]="loading()"
               (input)="onOTPInput($event)"
             />
@@ -221,7 +221,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             type="button"
             (click)="resendOTP()"
             [disabled]="!canResend() || loading()"
-            class="w-full px-4 py-2 text-sm text-blue-600 hover:text-blue-700 disabled:text-gray-400 dark:text-gray-300"
+            class="w-full px-4 py-2 text-sm text-sky-600 hover:text-sky-700 disabled:text-gray-400 dark:text-gray-300"
           >
             {{
               cooldownRemaining() > 0
@@ -395,7 +395,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   getStatusBadgeClass(): string {
     return this.status().isVerified
       ? 'bg-green-100 text-green-600'
-      : 'bg-yellow-100 text-yellow-600';
+      : 'bg-beige-100 text-beige-500';
   }
 
   getStatusLabel(): string {
@@ -405,7 +405,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   getStatusLabelClass(): string {
     return this.status().isVerified
       ? 'bg-green-100 text-green-800'
-      : 'bg-yellow-100 text-yellow-800';
+      : 'bg-beige-100 text-beige-500';
   }
 
   formatDate(dateStr: string | null | undefined): string {

@@ -18,7 +18,7 @@ import { SupabaseClientService } from '../../../../core/services/supabase-client
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent"></div>
         </div>
       } @else if (cashFlow().length === 0) {
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">

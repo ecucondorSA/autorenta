@@ -43,10 +43,10 @@ export interface AuditLogOptions {
   includeResult?: boolean;
 
   /**
-   * Custom function to extract resource ID from parameters
+   * Custom function to extract resource ID from parameters and result
    * Default: uses first parameter
    */
-  getResourceId?: (args: unknown[]) => string | undefined;
+  getResourceId?: (args: unknown[], result?: unknown) => string | undefined;
 
   /**
    * Custom function to build audit details
@@ -105,7 +105,7 @@ export function AuditLog(
         // Build resource ID
         let resourceId: string | undefined;
         if (options.getResourceId) {
-          resourceId = options.getResourceId(args);
+          resourceId = options.getResourceId(args, result);
         } else if (args.length > 0 && typeof args[0] === 'string') {
           resourceId = args[0];
         }
@@ -187,7 +187,7 @@ export function AuditRejection(resourceType: string) {
 export function AuditCreation(resourceType: string) {
   return AuditLog(`create_${resourceType}`, resourceType, {
     includeParams: true,
-    getResourceId: (_args, result) => (typeof result === 'string' ? result : undefined),
+    getResourceId: (_args: unknown[], result?: unknown) => (typeof result === 'string' ? result : undefined),
   });
 }
 

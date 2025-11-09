@@ -2,15 +2,15 @@
   <section class="grid gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-[2fr_1fr]">
     <div class="space-y-4 sm:space-y-6">
       <div
-        class="card-premium car-gallery rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft"
+        class="card-premium car-gallery rounded-2xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700-pure p-4 sm:p-6 shadow-soft"
       >
         <div class="relative mb-4">
           <!-- Blur placeholder mientras carga -->
           <div
             *ngIf="currentPhoto() && !imageLoaded()"
-            class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent-warm/10 to-accent-petrol/10 rounded-xl"
+            class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-beige-400/10 to-sky-600/10 rounded-xl"
           >
-            <svg class="animate-spin h-12 w-12 text-accent-petrol" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin h-12 w-12 text-sky-600" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -30,11 +30,11 @@
           />
           <ng-template #placeholderPremium>
             <div
-              class="flex h-80 items-center justify-center rounded-xl bg-gradient-to-br from-accent-warm/10 to-accent-petrol/10"
+              class="flex h-80 items-center justify-center rounded-xl bg-gradient-to-br from-beige-400/10 to-sky-600/10"
             >
               <div class="text-center">
                 <svg
-                  class="mx-auto mb-4 h-24 w-24 text-accent-warm/40"
+                  class="mx-auto mb-4 h-24 w-24 text-beige-400/40"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -48,7 +48,7 @@
                     d="M5 15h14M8 12l1-4h6l1 4"
                   />
                 </svg>
-                <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">Sin fotos disponibles</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-beige-200">Sin fotos disponibles</p>
               </div>
             </div>
           </ng-template>
@@ -61,7 +61,7 @@
               type="button"
               (click)="previousPhoto()"
               aria-label="Ver foto anterior"
-              class="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-slate-deep-pure/90 text-smoke-black shadow-medium backdrop-blur-sm transition-all hover:bg-white dark:bg-slate-deep-pure hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent-petrol focus:ring-offset-2"
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-gray-700-pure/90 text-gray-900 shadow-medium backdrop-blur-sm transition-all hover:bg-white dark:bg-gray-700-pure hover:scale-110 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-offset-2"
             >
               <svg
                 class="h-6 w-6"
@@ -82,7 +82,7 @@
               type="button"
               (click)="nextPhoto()"
               aria-label="Ver foto siguiente"
-              class="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-slate-deep-pure/90 text-smoke-black shadow-medium backdrop-blur-sm transition-all hover:bg-white dark:bg-slate-deep-pure hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent-petrol focus:ring-offset-2"
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-gray-700-pure/90 text-gray-900 shadow-medium backdrop-blur-sm transition-all hover:bg-white dark:bg-gray-700-pure hover:scale-110 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-offset-2"
             >
               <svg
                 class="h-6 w-6"
@@ -103,7 +103,7 @@
 
           <div
             *ngIf="hasMultiplePhotos()"
-            class="absolute bottom-4 right-4 rounded-full bg-smoke-black/70 px-3 py-1 text-xs font-medium text-white-pure backdrop-blur-sm"
+            class="absolute bottom-4 right-4 rounded-full bg-gray-900/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm"
           >
             {{ currentPhotoIndex() + 1 }} / {{ allPhotos().length }}
           </div>
@@ -114,7 +114,7 @@
 
       <div class="space-y-3">
         <div class="flex items-start justify-between gap-4">
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-smoke-black">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900">
             {{ car()?.title }}
           </h1>
           <div class="flex items-center gap-2">
@@ -135,7 +135,7 @@
         </div>
 
         <div class="space-y-2">
-          <div class="flex items-start gap-2 text-charcoal-medium dark:text-pearl-light/70">
+          <div class="flex items-start gap-2 text-gray-600 dark:text-beige-200/70">
             <svg
               class="mt-0.5 h-5 w-5 flex-shrink-0"
               fill="none"
@@ -175,21 +175,21 @@
 
         <div class="flex items-center gap-4">
           <div class="flex items-center gap-1">
-            <svg class="h-5 w-5 text-accent-warm" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="h-5 w-5 text-beige-400" fill="currentColor" viewBox="0 0 20 20">
               <path
                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
               />
             </svg>
-            <span class="font-semibold text-smoke-black">{{ car()?.rating_avg || 'Nuevo' }}</span>
+            <span class="font-semibold text-gray-900">{{ car()?.rating_avg || 'Nuevo' }}</span>
           </div>
-          <span class="text-sm text-ash-gray dark:text-pearl-light/70"
+          <span class="text-sm text-gray-400 dark:text-beige-200/70"
             >{{ car()?.rating_count || 0 }} {{ 'carDetail.reviews' | translate }}</span
           >
         </div>
       </div>
 
       <div
-        class="card-premium rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft"
+        class="card-premium rounded-2xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700-pure p-4 sm:p-6 shadow-soft"
       >
         <div class="flex items-start justify-between gap-4">
           <h2 class="h4">Especificaciones</h2>
@@ -197,7 +197,7 @@
             type="button"
             (click)="toggleSpecs()"
             [attr.aria-expanded]="!specsCollapsed()"
-            class="flex items-center gap-2 rounded-lg border border-pearl-gray dark:border-gray-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-charcoal-medium dark:text-pearl-light transition hover:bg-pearl-gray/20 dark:hover:bg-slate-deep-pure/60"
+            class="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-beige-200 transition hover:bg-gray-200/20 dark:hover:bg-gray-700-pure/60"
           >
             <span>{{ specsCollapsed() ? 'Ver detalles' : 'Ocultar' }}</span>
             <svg
@@ -215,9 +215,9 @@
         <ng-container *ngIf="!specsCollapsed()">
         <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
           <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sand-light">
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-beige-100">
               <svg
-                class="h-5 w-5 text-accent-petrol"
+                class="h-5 w-5 text-sky-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -231,15 +231,15 @@
               </svg>
             </div>
             <div>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">Transmisión</p>
-              <p class="font-semibold text-smoke-black">{{ car()?.transmission | titlecase }}</p>
+              <p class="text-xs text-gray-400 dark:text-beige-200/70">Transmisión</p>
+              <p class="font-semibold text-gray-900">{{ car()?.transmission | titlecase }}</p>
             </div>
           </div>
 
           <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sand-light">
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-beige-100">
               <svg
-                class="h-5 w-5 text-accent-petrol"
+                class="h-5 w-5 text-sky-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -253,15 +253,15 @@
               </svg>
             </div>
             <div>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">Combustible</p>
-              <p class="font-semibold text-smoke-black">{{ car()?.fuel_type | titlecase }}</p>
+              <p class="text-xs text-gray-400 dark:text-beige-200/70">Combustible</p>
+              <p class="font-semibold text-gray-900">{{ car()?.fuel_type | titlecase }}</p>
             </div>
           </div>
 
           <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sand-light">
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-beige-100">
               <svg
-                class="h-5 w-5 text-accent-petrol"
+                class="h-5 w-5 text-sky-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -275,15 +275,15 @@
               </svg>
             </div>
             <div>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">Asientos</p>
-              <p class="font-semibold text-smoke-black">{{ car()?.seats }} personas</p>
+              <p class="text-xs text-gray-400 dark:text-beige-200/70">Asientos</p>
+              <p class="font-semibold text-gray-900">{{ car()?.seats }} personas</p>
             </div>
           </div>
 
           <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sand-light">
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-beige-100">
               <svg
-                class="h-5 w-5 text-accent-petrol"
+                class="h-5 w-5 text-sky-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -297,15 +297,15 @@
               </svg>
             </div>
             <div>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">Año</p>
-              <p class="font-semibold text-smoke-black">{{ car()?.year }}</p>
+              <p class="text-xs text-gray-400 dark:text-beige-200/70">Año</p>
+              <p class="font-semibold text-gray-900">{{ car()?.year }}</p>
             </div>
           </div>
 
           <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sand-light">
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-beige-100">
               <svg
-                class="h-5 w-5 text-accent-petrol"
+                class="h-5 w-5 text-sky-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -319,15 +319,15 @@
               </svg>
             </div>
             <div>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">Color</p>
-              <p class="font-semibold text-smoke-black">{{ car()?.color | titlecase }}</p>
+              <p class="text-xs text-gray-400 dark:text-beige-200/70">Color</p>
+              <p class="font-semibold text-gray-900">{{ car()?.color | titlecase }}</p>
             </div>
           </div>
 
           <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sand-light">
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-beige-100">
               <svg
-                class="h-5 w-5 text-accent-petrol"
+                class="h-5 w-5 text-sky-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -341,18 +341,18 @@
               </svg>
             </div>
             <div>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">Puertas</p>
-              <p class="font-semibold text-smoke-black">{{ car()?.doors }}</p>
+              <p class="text-xs text-gray-400 dark:text-beige-200/70">Puertas</p>
+              <p class="font-semibold text-gray-900">{{ car()?.doors }}</p>
             </div>
           </div>
         </div>
 
         <div
-          class="mt-6 rounded-2xl border border-pearl-gray dark:border-gray-700 bg-white dark:bg-slate-deep-pure p-4 sm:p-5 shadow-soft"
+          class="mt-6 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700-pure p-4 sm:p-5 shadow-soft"
         >
-          <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-ash-gray dark:text-pearl-light/60">
+          <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-beige-200/60">
             <span>Flujo de alquiler</span>
-            <span class="text-[11px] font-medium text-ash-gray/80 dark:text-pearl-light/80">
+            <span class="text-[11px] font-medium text-gray-400/80 dark:text-beige-200/80">
               Paso
               {{
                 canBook()
@@ -371,10 +371,10 @@
                 <div
                   class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold transition-colors"
                   [ngClass]="{
-                    'bg-accent-petrol text-white': (i === 0) || (i === 1 && canContactOwner()) || (i === 2 && canBook()),
-                    'bg-accent-warm text-white': i === 0,
-                    'bg-ash-gray/20 text-ash-gray dark:bg-pearl-gray/10 dark:text-pearl-light/70': (i > 0 && !((i === 1 && canContactOwner()) || (i === 2 && canBook()))),
-                    'ring-2 ring-accent-petrol/40': i === 1 && canContactOwner()
+                    'bg-sky-600 text-white': (i === 0) || (i === 1 && canContactOwner()) || (i === 2 && canBook()),
+                    'bg-beige-400 text-white': i === 0,
+                    'bg-gray-400/20 text-gray-400 dark:bg-gray-200/10 dark:text-beige-200/70': (i > 0 && !((i === 1 && canContactOwner()) || (i === 2 && canBook()))),
+                    'ring-2 ring-sky-600/40': i === 1 && canContactOwner()
                   }"
                 >
                   <ng-container [ngSwitch]="i">
@@ -400,7 +400,7 @@
                   </ng-container>
                 </div>
                 <div class="text-sm">
-                  <p class="font-semibold text-smoke-black dark:text-white">
+                  <p class="font-semibold text-gray-900 dark:text-white">
                     <ng-container [ngSwitch]="i">
                       <span *ngSwitchCase="0">Descubrí</span>
                       <span *ngSwitchCase="1">Contactá al anfitrión</span>
@@ -408,7 +408,7 @@
                       <span *ngSwitchCase="3">Check-in & Check-out</span>
                     </ng-container>
                   </p>
-                  <p class="text-xs text-ash-gray dark:text-pearl-light/70">
+                  <p class="text-xs text-gray-400 dark:text-beige-200/70">
                     <ng-container [ngSwitch]="i">
                       <span *ngSwitchCase="0">Fotos, reseñas y detalles</span>
                       <span *ngSwitchCase="1">
@@ -425,7 +425,7 @@
 
               <div
                 *ngIf="i < 3"
-                class="hidden md:block h-0.5 flex-1 bg-gradient-to-r from-ash-gray/20 via-ash-gray/40 to-ash-gray/20"
+                class="hidden md:block h-0.5 flex-1 bg-gradient-to-r from-gray-400/20 via-gray-400/40 to-gray-400/20"
               ></div>
             </ng-container>
           </div>
@@ -434,11 +434,11 @@
       </div>
 
       <div
-        class="card-premium rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft"
+        class="card-premium rounded-2xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700-pure p-4 sm:p-6 shadow-soft"
       >
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h2 class="h4">Chat con el anfitrión</h2>
-          <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ash-gray dark:text-pearl-light/70">
+          <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-beige-200/70">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
@@ -458,10 +458,10 @@
       </div>
 
       <ng-template #chatUnavailable>
-        <div class="mt-4 rounded-xl border border-pearl-gray dark:border-gray-600 bg-sand-light/60 dark:bg-slate-deep-pure/60 p-5 text-sm text-charcoal-medium dark:text-pearl-light">
+        <div class="mt-4 rounded-xl border border-gray-200 dark:border-gray-600 bg-beige-100/60 dark:bg-gray-700-pure/60 p-5 text-sm text-gray-600 dark:text-beige-200">
           <ng-container *ngIf="!authService.isAuthenticated(); else ownerChatNotice">
             <p class="font-semibold mb-2">Iniciá sesión para chatear con el anfitrión.</p>
-            <p class="text-xs text-ash-gray dark:text-pearl-light/70">
+            <p class="text-xs text-gray-400 dark:text-beige-200/70">
               Vas a poder coordinar detalles y hacer preguntas directamente.
             </p>
             <a
@@ -477,7 +477,7 @@
           </ng-container>
           <ng-template #ownerChatNotice>
             <p class="font-semibold mb-2">Este es tu auto.</p>
-            <p class="text-xs text-ash-gray dark:text-pearl-light/70">
+            <p class="text-xs text-gray-400 dark:text-beige-200/70">
               El chat se habilita automáticamente para los viajeros interesados en tu publicación.
             </p>
           </ng-template>
@@ -485,42 +485,42 @@
       </ng-template>
 
       <div
-        class="card-premium rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft"
+        class="card-premium rounded-2xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700-pure p-4 sm:p-6 shadow-soft"
       >
         <h2 class="h4 mb-3">Descripción</h2>
-        <p class="leading-relaxed text-charcoal-medium dark:text-pearl-light">
+        <p class="leading-relaxed text-gray-600 dark:text-beige-200">
           {{ car()?.description || 'Sin descripción disponible' }}
         </p>
       </div>
 
       <div
         id="reviews"
-        class="card-premium reviews-section rounded-2xl border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure p-4 sm:p-6 shadow-soft max-w-3xl mx-auto"
+        class="card-premium reviews-section rounded-2xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700-pure p-4 sm:p-6 shadow-soft max-w-3xl mx-auto"
       >
         <!-- Estadísticas del auto (mantener si hay carStats) -->
         <div
           *ngIf="carStats() as stats"
-          class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-sand-light rounded-xl"
+          class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-beige-100 rounded-xl"
         >
           <div class="text-center">
-            <div class="text-3xl font-bold text-accent-petrol">
+            <div class="text-3xl font-bold text-sky-600">
               {{ stats.rating_avg | number: '1.1-1' }}
             </div>
-            <div class="text-xs text-ash-gray dark:text-pearl-light/70">Calificación</div>
+            <div class="text-xs text-gray-400 dark:text-beige-200/70">Calificación</div>
           </div>
           <div class="text-center">
-            <div class="text-3xl font-bold text-smoke-black">{{ stats.reviews_count }}</div>
-            <div class="text-xs text-ash-gray dark:text-pearl-light/70">Reseñas</div>
+            <div class="text-3xl font-bold text-gray-900">{{ stats.reviews_count }}</div>
+            <div class="text-xs text-gray-400 dark:text-beige-200/70">Reseñas</div>
           </div>
           <div class="text-center">
-            <div class="text-3xl font-bold text-smoke-black">{{ stats.completed_bookings }}</div>
-            <div class="text-xs text-ash-gray dark:text-pearl-light/70">Viajes</div>
+            <div class="text-3xl font-bold text-gray-900">{{ stats.completed_bookings }}</div>
+            <div class="text-xs text-gray-400 dark:text-beige-200/70">Viajes</div>
           </div>
           <div class="text-center">
-            <div class="text-3xl font-bold text-accent-petrol">
+            <div class="text-3xl font-bold text-sky-600">
               {{ (1 - stats.cancellation_rate) * 100 | number: '1.0-0' }}%
             </div>
-            <div class="text-xs text-ash-gray dark:text-pearl-light/70">Éxito</div>
+            <div class="text-xs text-gray-400 dark:text-beige-200/70">Éxito</div>
           </div>
         </div>
 
@@ -529,50 +529,50 @@
           class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6"
         >
           <div
-            class="flex items-center justify-between p-3 bg-white dark:bg-slate-deep-pure rounded-lg border border-pearl-gray dark:border-gray-600"
+            class="flex items-center justify-between p-3 bg-white dark:bg-gray-700-pure rounded-lg border border-gray-200 dark:border-gray-600"
           >
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">🧼 Limpieza</span>
-            <span class="font-semibold text-smoke-black">{{
+            <span class="text-sm text-gray-600 dark:text-beige-200">🧼 Limpieza</span>
+            <span class="font-semibold text-gray-900">{{
               carStats()!.rating_cleanliness_avg | number: '1.1-1'
             }}</span>
           </div>
           <div
-            class="flex items-center justify-between p-3 bg-white dark:bg-slate-deep-pure rounded-lg border border-pearl-gray dark:border-gray-600"
+            class="flex items-center justify-between p-3 bg-white dark:bg-gray-700-pure rounded-lg border border-gray-200 dark:border-gray-600"
           >
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">💬 Comunicación</span>
-            <span class="font-semibold text-smoke-black">{{
+            <span class="text-sm text-gray-600 dark:text-beige-200">💬 Comunicación</span>
+            <span class="font-semibold text-gray-900">{{
               carStats()!.rating_communication_avg | number: '1.1-1'
             }}</span>
           </div>
           <div
-            class="flex items-center justify-between p-3 bg-white dark:bg-slate-deep-pure rounded-lg border border-pearl-gray dark:border-gray-600"
+            class="flex items-center justify-between p-3 bg-white dark:bg-gray-700-pure rounded-lg border border-gray-200 dark:border-gray-600"
           >
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">✓ Precisión</span>
-            <span class="font-semibold text-smoke-black">{{
+            <span class="text-sm text-gray-600 dark:text-beige-200">✓ Precisión</span>
+            <span class="font-semibold text-gray-900">{{
               carStats()!.rating_accuracy_avg | number: '1.1-1'
             }}</span>
           </div>
           <div
-            class="flex items-center justify-between p-3 bg-white dark:bg-slate-deep-pure rounded-lg border border-pearl-gray dark:border-gray-600"
+            class="flex items-center justify-between p-3 bg-white dark:bg-gray-700-pure rounded-lg border border-gray-200 dark:border-gray-600"
           >
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">📍 Ubicación</span>
-            <span class="font-semibold text-smoke-black">{{
+            <span class="text-sm text-gray-600 dark:text-beige-200">📍 Ubicación</span>
+            <span class="font-semibold text-gray-900">{{
               carStats()!.rating_location_avg | number: '1.1-1'
             }}</span>
           </div>
           <div
-            class="flex items-center justify-between p-3 bg-white dark:bg-slate-deep-pure rounded-lg border border-pearl-gray dark:border-gray-600"
+            class="flex items-center justify-between p-3 bg-white dark:bg-gray-700-pure rounded-lg border border-gray-200 dark:border-gray-600"
           >
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">🔑 Check-in</span>
-            <span class="font-semibold text-smoke-black">{{
+            <span class="text-sm text-gray-600 dark:text-beige-200">🔑 Check-in</span>
+            <span class="font-semibold text-gray-900">{{
               carStats()!.rating_checkin_avg | number: '1.1-1'
             }}</span>
           </div>
           <div
-            class="flex items-center justify-between p-3 bg-white dark:bg-slate-deep-pure rounded-lg border border-pearl-gray dark:border-gray-600"
+            class="flex items-center justify-between p-3 bg-white dark:bg-gray-700-pure rounded-lg border border-gray-200 dark:border-gray-600"
           >
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">💰 Valor</span>
-            <span class="font-semibold text-smoke-black">{{
+            <span class="text-sm text-gray-600 dark:text-beige-200">💰 Valor</span>
+            <span class="font-semibold text-gray-900">{{
               carStats()!.rating_value_avg | number: '1.1-1'
             }}</span>
           </div>
@@ -584,7 +584,7 @@
 
       <a
         routerLink="/cars"
-        class="inline-flex items-center gap-2 text-sm font-medium text-accent-petrol hover:text-accent-petrol/80"
+        class="inline-flex items-center gap-2 text-sm font-medium text-sky-600 hover:text-sky-600/80"
       >
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -600,8 +600,8 @@
 
     <aside class="space-y-4">
       <div
-        class="card-premium lg:sticky lg:top-24 rounded-2xl border-2 border-pearl-gray dark:border-gray-600 bg-gradient-to-br from-white-pure via-accent-petrol/5 to-accent-warm/5 p-4 sm:p-6 shadow-elevated hover:shadow-xl transition-all duration-300"
-        [class.border-accent-petrol/20]="expressMode()"
+        class="card-premium lg:sticky lg:top-24 rounded-2xl border-2 border-gray-200 dark:border-gray-600 bg-gradient-to-br from-white via-sky-600/5 to-beige-400/5 p-4 sm:p-6 shadow-elevated hover:shadow-xl transition-all duration-300"
+        [class.border-sky-600/20]="expressMode()"
       >
         <!-- Banner de modo express -->
         <app-urgent-rental-banner
@@ -616,10 +616,10 @@
           <button
             type="button"
             (click)="toggleExpressMode()"
-            [class.bg-accent-petrol]="expressMode()"
+            [class.bg-sky-600]="expressMode()"
             [class.text-white]="expressMode()"
-            [class.bg-pearl-gray/20]="!expressMode()"
-            [class.text-charcoal-medium dark:text-pearl-light]="!expressMode()"
+            [class.bg-gray-200/20]="!expressMode()"
+            [class.text-gray-600 dark:text-beige-200]="!expressMode()"
             class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -641,12 +641,12 @@
           <div *ngIf="expressMode(); else dailyPrice">
             <div *ngIf="calculatedHourlyRate() && !hourlyRateLoading(); else hourlyLoading">
               <div class="flex items-center gap-3">
-                <div class="text-4xl font-black text-accent-petrol tracking-tight">
+                <div class="text-4xl font-black text-sky-600 tracking-tight">
                   $ {{ calculatedHourlyRate() | number:'1.0-0' }}
                 </div>
                 <div class="flex flex-col">
-                  <span class="text-lg font-semibold text-smoke-black">por hora</span>
-                  <span class="text-sm text-charcoal-medium dark:text-pearl-light">
+                  <span class="text-lg font-semibold text-gray-900">por hora</span>
+                  <span class="text-sm text-gray-600 dark:text-beige-200">
                     (75% del precio diario)
                   </span>
                 </div>
@@ -654,19 +654,19 @@
             </div>
             <ng-template #hourlyLoading>
               <div class="flex items-center gap-3">
-                <div class="text-4xl font-black text-accent-petrol tracking-tight animate-pulse">
+                <div class="text-4xl font-black text-sky-600 tracking-tight animate-pulse">
                   ...
                 </div>
                 <div class="flex flex-col">
-                  <span class="text-lg font-semibold text-smoke-black">por hora</span>
-                  <span class="text-sm text-charcoal-medium dark:text-pearl-light animate-pulse">
+                  <span class="text-lg font-semibold text-gray-900">por hora</span>
+                  <span class="text-sm text-gray-600 dark:text-beige-200 animate-pulse">
                     Cargando precio...
                   </span>
                 </div>
               </div>
             </ng-template>
-            <div class="mt-2 px-3 py-2 bg-accent-petrol/10 rounded-lg">
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light">
+            <div class="mt-2 px-3 py-2 bg-sky-600/10 rounded-lg">
+              <p class="text-xs text-gray-600 dark:text-beige-200">
                 ⏱️ Mínimo 5 horas · Disponibilidad inmediata
               </p>
             </div>
@@ -674,12 +674,12 @@
 
           <!-- Precio por día (modo normal) -->
           <ng-template #dailyPrice>
-            <p class="text-3xl font-bold text-smoke-black">
+            <p class="text-3xl font-bold text-gray-900">
               {{ displayPrice() | money }}
             </p>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light">por día</p>
+            <p class="text-sm text-gray-600 dark:text-beige-200">por día</p>
             <!-- ✅ FIX: Mostrar indicador si está cargando precio dinámico -->
-            <p *ngIf="priceLoading()" class="text-xs text-charcoal-medium dark:text-pearl-light animate-pulse">
+            <p *ngIf="priceLoading()" class="text-xs text-gray-600 dark:text-beige-200 animate-pulse">
               Actualizando precio...
             </p>
           </ng-template>
@@ -696,7 +696,7 @@
         </div>
 
         <!-- Owner Info with Superhost Badge -->
-        <div *ngIf="car()?.owner" class="mb-6 p-4 rounded-xl bg-sand-light border border-pearl-gray dark:border-gray-600">
+        <div *ngIf="car()?.owner" class="mb-6 p-4 rounded-xl bg-beige-100 border border-gray-200 dark:border-gray-600">
           <div class="flex items-center gap-3">
             <!-- Owner Avatar -->
             <div class="relative flex-shrink-0">
@@ -704,10 +704,10 @@
                 *ngIf="car()?.owner?.avatar_url; else defaultAvatar"
                 [src]="car()?.owner?.avatar_url"
                 [alt]="car()?.owner?.full_name"
-                class="w-14 h-14 rounded-full object-cover border-2 border-accent-petrol"
+                class="w-14 h-14 rounded-full object-cover border-2 border-sky-600"
               />
               <ng-template #defaultAvatar>
-                <div class="w-14 h-14 rounded-full bg-accent-petrol text-white flex items-center justify-center text-xl font-bold border-2 border-accent-petrol">
+                <div class="w-14 h-14 rounded-full bg-sky-600 text-white flex items-center justify-center text-xl font-bold border-2 border-sky-600">
                   {{ car()?.owner?.full_name?.charAt(0)?.toUpperCase() ?? 'U' }}
                 </div>
               </ng-template>
@@ -723,7 +723,7 @@
             <!-- Owner Details -->
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-1">
-                <h3 class="text-sm font-semibold text-smoke-black">{{ car()?.owner?.full_name }}</h3>
+                <h3 class="text-sm font-semibold text-gray-900">{{ car()?.owner?.full_name }}</h3>
 
                 <!-- Superhost Badge -->
                 <span
@@ -743,9 +743,9 @@
                   <svg class="h-3.5 w-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span class="font-bold text-smoke-black">{{ car()?.owner?.rating_avg | number: '1.1-1' }}</span>
+                  <span class="font-bold text-gray-900">{{ car()?.owner?.rating_avg | number: '1.1-1' }}</span>
                 </div>
-                <span class="text-charcoal-medium dark:text-pearl-light">({{ car()?.owner?.rating_count }} reseñas)</span>
+                <span class="text-gray-600 dark:text-beige-200">({{ car()?.owner?.rating_count }} reseñas)</span>
               </div>
             </div>
           </div>
@@ -786,11 +786,11 @@
 
           <div
             *ngIf="dateRange().from && dateRange().to"
-            class="mt-3 rounded-lg bg-accent-petrol/10 border border-accent-petrol/20 p-3"
+            class="mt-3 rounded-lg bg-sky-600/10 border border-sky-600/20 p-3"
           >
             <div class="flex items-start gap-2">
               <svg
-                class="h-5 w-5 flex-shrink-0 text-accent-petrol mt-0.5"
+                class="h-5 w-5 flex-shrink-0 text-sky-600 mt-0.5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -803,12 +803,12 @@
                 />
               </svg>
               <div class="flex-1">
-                <p class="text-sm font-semibold text-smoke-black">Fechas seleccionadas:</p>
-                <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+                <p class="text-sm font-semibold text-gray-900">Fechas seleccionadas:</p>
+                <p class="text-sm text-gray-600 dark:text-beige-200">
                   <span class="font-medium">{{ dateRange().from | date: 'dd/MM/yyyy' }}</span>
                   <span class="mx-2">→</span>
                   <span class="font-medium">{{ dateRange().to | date: 'dd/MM/yyyy' }}</span>
-                  <span class="ml-2 text-accent-petrol font-semibold">
+                  <span class="ml-2 text-sky-600 font-semibold">
                     <ng-container *ngIf="expressMode()">
                       ({{ hoursCount() }} {{ hoursCount() === 1 ? 'hora' : 'horas' }})
                     </ng-container>
@@ -849,13 +849,13 @@
 
         <div *ngIf="totalPrice() as total" class="mb-6 space-y-3">
           <div
-            class="rounded-xl bg-sand-light p-4 transition-all duration-300"
+            class="rounded-xl bg-beige-100 p-4 transition-all duration-300"
             [class.ring-2]="dateRange().from && dateRange().to"
-            [class.ring-accent-petrol]="dateRange().from && dateRange().to"
+            [class.ring-sky-600]="dateRange().from && dateRange().to"
             [class.shadow-lg]="dateRange().from && dateRange().to"
             id="tour-price-summary"
           >
-            <h3 class="mb-3 text-sm font-semibold text-smoke-black flex items-center gap-2">
+            <h3 class="mb-3 text-sm font-semibold text-gray-900 flex items-center gap-2">
               Resumen de Precios
               <span
                 *ngIf="dateRange().from && dateRange().to"
@@ -870,7 +870,7 @@
             <div class="space-y-2 text-sm">
               <!-- Subtotal del alquiler -->
               <div class="flex justify-between">
-                <span class="text-charcoal-medium dark:text-pearl-light">
+                <span class="text-gray-600 dark:text-beige-200">
                   <ng-container *ngIf="expressMode() && calculatedHourlyRate()">
                     {{ calculatedHourlyRate() | money }} x {{ hoursCount() }} {{ hoursCount() === 1 ? 'hora' : 'horas' }}
                   </ng-container>
@@ -878,7 +878,7 @@
                     {{ displayPrice() | money }} x {{ daysCount() }} días
                   </ng-container>
                 </span>
-                <span class="font-semibold text-smoke-black">{{ total | money }}</span>
+                <span class="font-semibold text-gray-900">{{ total | money }}</span>
               </div>
 
               <!-- Depósito de seguridad (reembolsable) -->
@@ -887,7 +887,7 @@
                 class="flex justify-between items-center"
               >
                 <div class="flex items-center gap-1">
-                  <span class="text-charcoal-medium dark:text-pearl-light">Garantía</span>
+                  <span class="text-gray-600 dark:text-beige-200">Garantía</span>
                   <span
                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700 font-medium"
                     title="Este monto se pre-autoriza pero NO se cobra. Se libera automáticamente al finalizar sin incidentes."
@@ -895,17 +895,17 @@
                     Reembolsable
                   </span>
                 </div>
-                <span class="font-semibold text-smoke-black">{{ depositAmount() | money:'USD' }}</span>
+                <span class="font-semibold text-gray-900">{{ depositAmount() | money:'USD' }}</span>
               </div>
 
               <!-- Total a autorizar -->
-              <div class="border-t border-pearl-gray dark:border-gray-600 pt-2 mt-3">
+              <div class="border-t border-gray-200 dark:border-gray-600 pt-2 mt-3">
                 <div class="flex justify-between items-baseline">
                   <div class="flex flex-col">
-                    <span class="font-semibold text-smoke-black">Total a Autorizar</span>
-                    <span class="text-xs text-charcoal-medium">Alquiler + Garantía</span>
+                    <span class="font-semibold text-gray-900">Total a Autorizar</span>
+                    <span class="text-xs text-gray-600">Alquiler + Garantía</span>
                   </div>
-                  <span class="text-xl font-bold text-accent-petrol">
+                  <span class="text-xl font-bold text-sky-600">
                     {{ authorizationTotal() | money }}
                   </span>
                 </div>
@@ -913,7 +913,7 @@
 
               <!-- Clarificación: Solo se cobra el alquiler -->
               <div *ngIf="car()?.deposit_required && depositAmount()" class="pt-1">
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light italic">
+                <p class="text-xs text-gray-600 dark:text-beige-200 italic">
                   💡 Se cobrará solo <strong>{{ total | money }}</strong> por el alquiler
                 </p>
               </div>
@@ -922,11 +922,11 @@
 
           <div
             *ngIf="car()?.deposit_required"
-            class="rounded-lg bg-accent-petrol/10 border border-accent-petrol/20 p-3 insurance-info"
+            class="rounded-lg bg-sky-600/10 border border-sky-600/20 p-3 insurance-info"
           >
             <div class="flex items-start gap-2">
               <svg
-                class="h-5 w-5 text-accent-petrol flex-shrink-0 mt-0.5"
+                class="h-5 w-5 text-sky-600 flex-shrink-0 mt-0.5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -939,10 +939,10 @@
                 />
               </svg>
               <div class="flex-1">
-                <p class="text-xs text-accent-petrol font-medium">
+                <p class="text-xs text-sky-600 font-medium">
                   <strong>Sobre la Garantía (Depósito de Seguridad)</strong>
                 </p>
-                <p class="text-xs text-accent-petrol/80 mt-1">
+                <p class="text-xs text-sky-600/80 mt-1">
                   • Este monto se <strong>pre-autoriza</strong> pero <strong>NO se cobra</strong><br />
                   • Se libera automáticamente al finalizar el alquiler sin incidentes<br />
                   • Protege al propietario en caso de daños o multas
@@ -955,12 +955,12 @@
         <!-- ✅ NEW: Recommendation block with suggestions and waitlist -->
         <div
           *ngIf="bookingError()"
-          class="mb-4 rounded-lg border-2 border-blue-300 bg-blue-50 p-4 text-sm"
+          class="mb-4 rounded-lg border-2 border-sky-300 bg-sky-50 p-4 text-sm"
         >
           <!-- Icon and title -->
           <div class="flex items-start gap-3 mb-3">
             <svg
-              class="h-6 w-6 flex-shrink-0 text-blue-600 mt-0.5"
+              class="h-6 w-6 flex-shrink-0 text-sky-600 mt-0.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -973,19 +973,19 @@
               />
             </svg>
             <div class="flex-1">
-              <p class="font-semibold text-blue-900">Fechas no disponibles</p>
-              <p class="text-blue-800 mt-1">{{ bookingError() }}</p>
+              <p class="font-semibold text-sky-700">Fechas no disponibles</p>
+              <p class="text-sky-600 mt-1">{{ bookingError() }}</p>
             </div>
           </div>
 
           <!-- Date suggestions chips -->
           <div *ngIf="suggestedDateRanges().length > 0" class="mt-4">
-            <p class="text-xs font-semibold text-blue-900 mb-2">Próximas fechas disponibles:</p>
+            <p class="text-xs font-semibold text-sky-700 mb-2">Próximas fechas disponibles:</p>
             <div class="flex flex-wrap gap-2">
               <button
                 *ngFor="let suggestion of suggestedDateRanges()"
                 (click)="applySuggestedDates(suggestion)"
-                class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-blue-300 rounded-lg text-blue-900 hover:bg-blue-100 hover:border-blue-400 transition-all duration-200 text-xs font-medium"
+                class="inline-flex items-center gap-2 px-3 py-2 bg-white border-2 border-sky-300 rounded-lg text-sky-700 hover:bg-sky-100 hover:border-sky-400 transition-all duration-200 text-xs font-medium"
               >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -1005,9 +1005,9 @@
           </div>
 
           <!-- Waitlist CTA -->
-          <div *ngIf="canWaitlist()" class="mt-4 pt-4 border-t border-blue-300">
+          <div *ngIf="canWaitlist()" class="mt-4 pt-4 border-t border-sky-300">
             <div class="flex items-start gap-3 mb-3">
-              <svg class="h-5 w-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-5 w-5 text-sky-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -1016,14 +1016,14 @@
                 />
               </svg>
               <div class="flex-1">
-                <p class="font-semibold text-blue-900 mb-1">¿Querés que te notifiquemos?</p>
-                <p class="text-blue-800 text-xs mb-3">
+                <p class="font-semibold text-sky-700 mb-1">¿Querés que te notifiquemos?</p>
+                <p class="text-sky-600 text-xs mb-3">
                   Te avisaremos automáticamente si otro usuario cancela o si el auto queda disponible para estas fechas.
                 </p>
                 <button
                   (click)="addToWaitlist()"
                   [disabled]="addingToWaitlist()"
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors duration-200 text-sm font-medium"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 disabled:bg-sky-400 disabled:cursor-not-allowed transition-colors duration-200 text-sm font-medium"
                 >
                   <svg *ngIf="!addingToWaitlist()" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -1089,7 +1089,7 @@
 
         <!-- ✅ NEW: Payment Method Buttons (Normal Mode) -->
         <div *ngIf="authService.isAuthenticated() && !expressMode() && canBook()">
-          <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-pearl-light">
+          <h3 class="mb-3 text-sm font-semibold text-gray-900 dark:text-beige-200">
             Elegí tu Método de Pago
           </h3>
           <app-payment-method-buttons
@@ -1105,7 +1105,7 @@
           <!-- Tooltip -->
           <div
             *ngIf="canBook()"
-            class="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-smoke-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-10"
+            class="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-10"
           >
             ⚡ Reserva confirmada en 2 minutos
           </div>
@@ -1117,10 +1117,10 @@
             [disabled]="!canBook() || bookingInProgress()"
             [class.cursor-not-allowed]="!canBook() || bookingInProgress()"
             [class.bg-gradient-to-r]="expressMode()"
-            [class.from-accent-petrol]="expressMode()"
-            [class.to-accent-warm]="expressMode()"
-            [class.hover:from-accent-petrol/90]="expressMode()"
-            [class.hover:to-accent-warm/90]="expressMode()"
+            [class.from-sky-600]="expressMode()"
+            [class.to-beige-400]="expressMode()"
+            [class.hover:from-sky-600/90]="expressMode()"
+            [class.hover:to-beige-400/90]="expressMode()"
             [class.text-white]="expressMode()"
             [class.shadow-lg]="expressMode()"
             [class.hover:shadow-xl]="expressMode()"
@@ -1129,8 +1129,8 @@
             [class.animate-pulse]="canBook() && !bookingInProgress() && expressMode()"
             class="w-full py-4 text-base font-bold transition-all duration-300"
             [class.btn-primary]="!expressMode() && canBook()"
-            [class.bg-charcoal-medium]="!canBook() && !expressMode()"
-            [class.hover:bg-charcoal-medium]="!canBook() && !expressMode()"
+            [class.bg-gray-600]="!canBook() && !expressMode()"
+            [class.hover:bg-gray-600]="!canBook() && !expressMode()"
           >
             <span *ngIf="!bookingInProgress()" class="flex items-center justify-center gap-2">
               <svg
@@ -1248,7 +1248,7 @@
           </a>
         </ng-container>
 
-        <div class="mt-4 space-y-2 text-xs text-ash-gray dark:text-pearl-light/70">
+        <div class="mt-4 space-y-2 text-xs text-gray-400 dark:text-beige-200/70">
           <p class="flex items-center gap-2">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path

@@ -1,11 +1,11 @@
 <div class="space-y-4">
   <!-- Header -->
   <div class="flex items-center justify-between">
-    <h3 class="text-lg font-semibold text-smoke-black">Cuentas Bancarias</h3>
+    <h3 class="text-lg font-semibold text-gray-900">Cuentas Bancarias</h3>
     <button
       (click)="onAddNew()"
       [disabled]="loading"
-      class="px-4 py-2 bg-accent-petrol text-white font-semibold rounded-xl hover:bg-accent-petrol/90 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+      class="px-4 py-2 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-600/90 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
     >
       + Agregar Cuenta
     </button>
@@ -15,7 +15,7 @@
   @if (loading) {
     <div class="text-center py-8">
       <div
-        class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent-petrol"
+        class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"
       ></div>
       <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Cargando cuentas...</p>
     </div>
@@ -41,7 +41,7 @@
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">Agregá una cuenta para poder retirar tus ganancias</p>
       <button
         (click)="onAddNew()"
-        class="mt-4 px-4 py-2 bg-accent-petrol text-white font-semibold rounded-xl hover:bg-accent-petrol/90 transition"
+        class="mt-4 px-4 py-2 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-600/90 transition"
       >
         Agregar Primera Cuenta
       </button>
@@ -54,7 +54,7 @@
       @for (account of accounts; track account.id) {
         <div
           class="bg-white border-2 rounded-xl p-4 transition-all"
-          [class.border-accent-petrol]="account.is_default"
+          [class.border-sky-600]="account.is_default"
           [class.border-gray-200]="!account.is_default"
         >
           <div class="flex items-start justify-between">
@@ -66,7 +66,7 @@
                 </span>
                 @if (account.is_default) {
                   <span
-                    class="px-2 py-1 bg-accent-petrol/10 text-accent-petrol text-xs font-semibold rounded-lg"
+                    class="px-2 py-1 bg-sky-600/10 text-sky-600 text-xs font-semibold rounded-lg"
                   >
                     ✓ Predeterminada
                   </span>
@@ -100,7 +100,7 @@
               @if (!account.is_default) {
                 <button
                   (click)="onSetDefault(account.id)"
-                  class="px-3 py-1 text-xs border border-accent-petrol text-accent-petrol rounded-lg hover:bg-accent-petrol/5 transition"
+                  class="px-3 py-1 text-xs border border-sky-600 text-sky-600 rounded-lg hover:bg-sky-600/5 transition"
                 >
                   Usar como predeterminada
                 </button>

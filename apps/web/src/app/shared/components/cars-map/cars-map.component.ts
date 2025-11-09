@@ -361,7 +361,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         source: 'cars',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': ['step', ['get', 'point_count'], '#2c4a52', 10, '#8b7355', 50, '#ffb400'],
+          'circle-color': ['step', ['get', 'point_count'], '#0284C7', 10, '#DDCCA9', 50, '#ffb400'],
           'circle-radius': ['step', ['get', 'point_count'], 18, 10, 24, 50, 30],
         },
       } as any);
@@ -387,7 +387,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         source: 'cars',
         filter: ['!', ['has', 'point_count']],
         paint: {
-          'circle-color': '#2c4a52',
+          'circle-color': '#0284C7',
           'circle-radius': 7,
           'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff',

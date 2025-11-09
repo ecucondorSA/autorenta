@@ -16,8 +16,8 @@ import { ToastService } from '../../../core/services/toast.service';
             class="rounded-full px-3 py-1 text-sm font-medium"
             [class.bg-green-100]="c.accepted_by_renter"
             [class.text-green-800]="c.accepted_by_renter"
-            [class.bg-yellow-100]="!c.accepted_by_renter"
-            [class.text-yellow-800]="!c.accepted_by_renter"
+            [class.bg-beige-100]="!c.accepted_by_renter"
+            [class.text-beige-500]="!c.accepted_by_renter"
           >
             {{ c.accepted_by_renter ? 'Aceptado' : 'Pendiente' }}
           </span>
@@ -26,7 +26,7 @@ import { ToastService } from '../../../core/services/toast.service';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent"></div>
         </div>
       } @else if (error()) {
         <div class="rounded-lg bg-red-50 p-4 text-red-800">
@@ -58,7 +58,7 @@ import { ToastService } from '../../../core/services/toast.service';
                 [href]="c.pdf_url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                class="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
               >
                 <svg
                   class="h-5 w-5"
@@ -79,8 +79,8 @@ import { ToastService } from '../../../core/services/toast.service';
           }
 
           @if (!c.accepted_by_renter) {
-            <div class="rounded-lg bg-yellow-50 p-4">
-              <p class="mb-3 text-sm text-yellow-800">
+            <div class="rounded-lg bg-beige-50 p-4">
+              <p class="mb-3 text-sm text-beige-500">
                 Por favor, lee y acepta el contrato para continuar con la reserva.
               </p>
               <button

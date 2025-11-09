@@ -1,7 +1,7 @@
 <div class="bg-white rounded-lg shadow-md p-6" [class.p-4]="compact">
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex items-center justify-center py-8">
-    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
   </div>
 
   <!-- Error State -->
@@ -35,7 +35,7 @@
       <button
         *ngIf="!compact"
         (click)="onViewBenefits()"
-        class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+        class="text-sky-600 hover:text-sky-700 text-sm font-medium"
       >
         Ver beneficios
       </button>
@@ -120,8 +120,8 @@
     </div>
 
     <!-- Call to Action -->
-    <div *ngIf="!compact && driverClass() > 2" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
-      <p class="text-sm text-blue-800">
+    <div *ngIf="!compact && driverClass() > 2" class="mt-4 bg-sky-50 border border-sky-200 rounded-lg p-3">
+      <p class="text-sm text-sky-600">
         <strong>¡Mejora tu clase!</strong> Completa reservas sin daños para obtener mejores tarifas y garantías más bajas.
       </p>
     </div>

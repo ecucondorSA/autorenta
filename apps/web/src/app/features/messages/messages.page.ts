@@ -59,29 +59,29 @@ import { CarChatComponent } from './components/car-chat.component';
       <div class="mx-auto max-w-4xl p-4">
         <!-- Booking Context Card -->
         @if (hasBookingContext() && bookingContext()) {
-          <div class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+          <div class="mb-4 rounded-lg border border-sky-200 bg-sky-50 p-4 dark:border-blue-800 dark:bg-sky-700/20">
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="h-6 w-6 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
+                <h3 class="text-sm font-semibold text-sky-700 dark:text-sky-200 mb-1">
                   Reserva: {{ bookingContext()!.carTitle }}
                 </h3>
                 @if (bookingContext()!.dates) {
-                  <p class="text-xs text-blue-700 dark:text-blue-300 mb-2">
+                  <p class="text-xs text-sky-700 dark:text-sky-300 mb-2">
                     📅 {{ bookingContext()!.dates }}
                   </p>
                 }
                 <div class="flex items-center gap-2">
                   <span
                     class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                    [class.bg-blue-100]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
-                    [class.text-blue-800]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
-                    [class.bg-yellow-100]="bookingContext()!.status === 'pending'"
-                    [class.text-yellow-800]="bookingContext()!.status === 'pending'"
+                    [class.bg-sky-100]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
+                    [class.text-sky-600]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
+                    [class.bg-beige-100]="bookingContext()!.status === 'pending'"
+                    [class.text-beige-500]="bookingContext()!.status === 'pending'"
                     [class.bg-green-100]="bookingContext()!.status === 'completed'"
                     [class.text-green-800]="bookingContext()!.status === 'completed'"
                   >
@@ -89,7 +89,7 @@ import { CarChatComponent } from './components/car-chat.component';
                   </span>
                   <a
                     [routerLink]="['/bookings', bookingId()]"
-                    class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
+                    class="text-xs text-sky-600 hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300 underline"
                   >
                     Ver detalle
                   </a>
@@ -134,13 +134,13 @@ import { CarChatComponent } from './components/car-chat.component';
             [recipientName]="recipientName()!"
           />
         } @else {
-          <div class="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
-            <p class="text-sm text-yellow-800 dark:text-yellow-200">
+          <div class="rounded-lg bg-beige-50 p-4 dark:bg-yellow-900/20">
+            <p class="text-sm text-beige-500 dark:text-beige-200">
               ⚠️ Faltan parámetros para iniciar el chat
             </p>
             <button
               (click)="goBack()"
-              class="mt-2 text-sm text-yellow-600 underline hover:text-yellow-800 dark:text-yellow-400"
+              class="mt-2 text-sm text-beige-500 underline hover:text-beige-500 dark:text-beige-400"
               type="button"
             >
               Volver

@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #2c4a52 0%, #3a5d66 100%);
+  background: linear-gradient(135deg, #0284C7 0%, #3a5d66 100%);
   color: white;
   z-index: 10000;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -157,7 +157,7 @@
 
 /* Dark mode support */
 :host-context(.dark) .pwa-titlebar {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  background: linear-gradient(135deg, #171717 0%, #2d2d2d 100%);
 }
 
 /* Ajustar body cuando WCO está activo */

@@ -1,13 +1,13 @@
-<div class="min-h-screen bg-ivory-soft dark:bg-graphite-dark">
+<div class="min-h-screen bg-ivory-100 dark:bg-gray-900">
   <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-50">
             Comparar Autos
           </h1>
-          <p class="text-sm text-ash-gray dark:text-charcoal-medium dark:text-pearl-light mt-1">
+          <p class="text-sm text-gray-400 dark:text-gray-600 dark:text-beige-200 mt-1">
             Comparando {{ count() }} auto{{ count() > 1 ? 's' : '' }}
           </p>
         </div>
@@ -20,7 +20,7 @@
           </button>
           <a
             routerLink="/cars"
-            class="px-4 py-2 text-sm rounded-lg bg-accent-petrol text-white hover:opacity-90 transition"
+            class="px-4 py-2 text-sm rounded-lg bg-sky-600 text-white hover:opacity-90 transition"
           >
             Buscar m\u00e1s autos
           </a>
@@ -29,20 +29,20 @@
     </div>
 
     <!-- Comparison Table -->
-    <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-xl shadow-lg overflow-hidden">
+    <div class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
       <!-- Header con fotos de autos -->
       <div
-        class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-pearl-gray/30"
+        class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-gray-200/30"
       >
         <!-- Columna de labels (vac\u00eda en header) -->
-        <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-4">
-          <span class="text-xs font-semibold text-ash-gray dark:text-charcoal-medium dark:text-pearl-light"
+        <div class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-4">
+          <span class="text-xs font-semibold text-gray-400 dark:text-gray-600 dark:text-beige-200"
             >CARACTER\u00cdSTICAS</span
           >
         </div>
 
         <!-- Columnas de autos -->
-        <div *ngFor="let car of cars(); let i = index" class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-4">
+        <div *ngFor="let car of cars(); let i = index" class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-4">
           <div class="space-y-3">
             <!-- Foto -->
             <img
@@ -53,10 +53,10 @@
             />
             <div
               *ngIf="!car.photos || car.photos.length === 0"
-              class="w-full h-32 bg-sand-light dark:bg-slate-deep rounded-lg flex items-center justify-center"
+              class="w-full h-32 bg-beige-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
             >
               <svg
-                class="w-12 h-12 text-ash-gray dark:text-pearl-light/70"
+                class="w-12 h-12 text-gray-400 dark:text-beige-200/70"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -72,7 +72,7 @@
 
             <!-- T\u00edtulo -->
             <h3
-              class="font-semibold text-sm text-smoke-black dark:text-ivory-luminous line-clamp-2"
+              class="font-semibold text-sm text-gray-900 dark:text-ivory-50 line-clamp-2"
             >
               {{ car.title }}
             </h3>
@@ -81,7 +81,7 @@
             <div class="flex gap-2">
               <button
                 (click)="goToCarDetail(car.id)"
-                class="flex-1 px-3 py-1.5 text-xs rounded-lg border border-accent-petrol text-accent-petrol hover:bg-accent-petrol/10 transition"
+                class="flex-1 px-3 py-1.5 text-xs rounded-lg border border-sky-600 text-sky-600 hover:bg-sky-600/10 transition"
               >
                 Ver detalles
               </button>
@@ -98,31 +98,31 @@
       </div>
 
       <!-- Informaci\u00f3n B\u00e1sica -->
-      <div *ngIf="basicRows().length > 0" class="border-t border-pearl-gray dark:border-gray-600/30">
-        <div class="bg-sand-light dark:bg-slate-deep px-4 py-2">
+      <div *ngIf="basicRows().length > 0" class="border-t border-gray-200 dark:border-gray-600/30">
+        <div class="bg-beige-100 dark:bg-gray-700 px-4 py-2">
           <h3
-            class="text-xs font-bold text-charcoal-medium dark:text-pearl-light uppercase tracking-wide"
+            class="text-xs font-bold text-gray-600 dark:text-beige-200 uppercase tracking-wide"
           >
             Informaci\u00f3n B\u00e1sica
           </h3>
         </div>
         <div
           *ngFor="let row of basicRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-pearl-gray/30 border-t border-pearl-gray dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-gray-200/30 border-t border-gray-200 dark:border-gray-600/30"
         >
-          <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3">
-            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">{{
+          <div class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3">
+            <span class="text-sm font-medium text-gray-600 dark:text-beige-200">{{
               row.label
             }}</span>
           </div>
           <div
             *ngFor="let value of row.values; let i = index"
-            class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3"
+            class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3"
             [class.bg-success-50]="isBestValue(row, i)"
             [class.dark:bg-success-950]="isBestValue(row, i)"
           >
             <span
-              class="text-sm text-smoke-black dark:text-ivory-luminous"
+              class="text-sm text-gray-900 dark:text-ivory-50"
               [class.font-semibold]="isBestValue(row, i)"
               [class.text-success-700]="isBestValue(row, i)"
               [class.dark:text-success-400]="isBestValue(row, i)"
@@ -134,31 +134,31 @@
       </div>
 
       <!-- Especificaciones -->
-      <div *ngIf="specsRows().length > 0" class="border-t border-pearl-gray dark:border-gray-600/30">
-        <div class="bg-sand-light dark:bg-slate-deep px-4 py-2">
+      <div *ngIf="specsRows().length > 0" class="border-t border-gray-200 dark:border-gray-600/30">
+        <div class="bg-beige-100 dark:bg-gray-700 px-4 py-2">
           <h3
-            class="text-xs font-bold text-charcoal-medium dark:text-pearl-light uppercase tracking-wide"
+            class="text-xs font-bold text-gray-600 dark:text-beige-200 uppercase tracking-wide"
           >
             Especificaciones
           </h3>
         </div>
         <div
           *ngFor="let row of specsRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-pearl-gray/30 border-t border-pearl-gray dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-gray-200/30 border-t border-gray-200 dark:border-gray-600/30"
         >
-          <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3">
-            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">{{
+          <div class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3">
+            <span class="text-sm font-medium text-gray-600 dark:text-beige-200">{{
               row.label
             }}</span>
           </div>
           <div
             *ngFor="let value of row.values; let i = index"
-            class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3"
+            class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3"
             [class.bg-success-50]="isBestValue(row, i)"
             [class.dark:bg-success-950]="isBestValue(row, i)"
           >
             <span
-              class="text-sm text-smoke-black dark:text-ivory-luminous"
+              class="text-sm text-gray-900 dark:text-ivory-50"
               [class.font-semibold]="isBestValue(row, i)"
               [class.text-success-700]="isBestValue(row, i)"
               [class.dark:text-success-400]="isBestValue(row, i)"
@@ -170,31 +170,31 @@
       </div>
 
       <!-- Precios y Rating -->
-      <div *ngIf="pricingRows().length > 0" class="border-t border-pearl-gray dark:border-gray-600/30">
-        <div class="bg-sand-light dark:bg-slate-deep px-4 py-2">
+      <div *ngIf="pricingRows().length > 0" class="border-t border-gray-200 dark:border-gray-600/30">
+        <div class="bg-beige-100 dark:bg-gray-700 px-4 py-2">
           <h3
-            class="text-xs font-bold text-charcoal-medium dark:text-pearl-light uppercase tracking-wide"
+            class="text-xs font-bold text-gray-600 dark:text-beige-200 uppercase tracking-wide"
           >
             Precio y Valoraci\u00f3n
           </h3>
         </div>
         <div
           *ngFor="let row of pricingRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-pearl-gray/30 border-t border-pearl-gray dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-gray-200/30 border-t border-gray-200 dark:border-gray-600/30"
         >
-          <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3">
-            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">{{
+          <div class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3">
+            <span class="text-sm font-medium text-gray-600 dark:text-beige-200">{{
               row.label
             }}</span>
           </div>
           <div
             *ngFor="let value of row.values; let i = index"
-            class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3"
+            class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3"
             [class.bg-success-50]="isBestValue(row, i)"
             [class.dark:bg-success-950]="isBestValue(row, i)"
           >
             <span
-              class="text-sm text-smoke-black dark:text-ivory-luminous"
+              class="text-sm text-gray-900 dark:text-ivory-50"
               [class.font-semibold]="isBestValue(row, i)"
               [class.text-success-700]="isBestValue(row, i)"
               [class.dark:text-success-400]="isBestValue(row, i)"
@@ -206,49 +206,49 @@
       </div>
 
       <!-- Ubicaci\u00f3n -->
-      <div *ngIf="locationRows().length > 0" class="border-t border-pearl-gray dark:border-gray-600/30">
-        <div class="bg-sand-light dark:bg-slate-deep px-4 py-2">
+      <div *ngIf="locationRows().length > 0" class="border-t border-gray-200 dark:border-gray-600/30">
+        <div class="bg-beige-100 dark:bg-gray-700 px-4 py-2">
           <h3
-            class="text-xs font-bold text-charcoal-medium dark:text-pearl-light uppercase tracking-wide"
+            class="text-xs font-bold text-gray-600 dark:text-beige-200 uppercase tracking-wide"
           >
             Ubicaci\u00f3n
           </h3>
         </div>
         <div
           *ngFor="let row of locationRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-pearl-gray/30 border-t border-pearl-gray dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-gray-200/30 border-t border-gray-200 dark:border-gray-600/30"
         >
-          <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3">
-            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">{{
+          <div class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3">
+            <span class="text-sm font-medium text-gray-600 dark:text-beige-200">{{
               row.label
             }}</span>
           </div>
-          <div *ngFor="let value of row.values" class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3">
-            <span class="text-sm text-smoke-black dark:text-ivory-luminous">{{ value }}</span>
+          <div *ngFor="let value of row.values" class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3">
+            <span class="text-sm text-gray-900 dark:text-ivory-50">{{ value }}</span>
           </div>
         </div>
       </div>
 
       <!-- Propietario -->
-      <div *ngIf="ownerRows().length > 0" class="border-t border-pearl-gray dark:border-gray-600/30">
-        <div class="bg-sand-light dark:bg-slate-deep px-4 py-2">
+      <div *ngIf="ownerRows().length > 0" class="border-t border-gray-200 dark:border-gray-600/30">
+        <div class="bg-beige-100 dark:bg-gray-700 px-4 py-2">
           <h3
-            class="text-xs font-bold text-charcoal-medium dark:text-pearl-light uppercase tracking-wide"
+            class="text-xs font-bold text-gray-600 dark:text-beige-200 uppercase tracking-wide"
           >
             Propietario
           </h3>
         </div>
         <div
           *ngFor="let row of ownerRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-pearl-gray/30 border-t border-pearl-gray dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-gray-200/30 border-t border-gray-200 dark:border-gray-600/30"
         >
-          <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3">
-            <span class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">{{
+          <div class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3">
+            <span class="text-sm font-medium text-gray-600 dark:text-beige-200">{{
               row.label
             }}</span>
           </div>
-          <div *ngFor="let value of row.values" class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite px-4 py-3">
-            <span class="text-sm text-smoke-black dark:text-ivory-luminous">{{ value }}</span>
+          <div *ngFor="let value of row.values" class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 px-4 py-3">
+            <span class="text-sm text-gray-900 dark:text-ivory-50">{{ value }}</span>
           </div>
         </div>
       </div>
@@ -257,7 +257,7 @@
     <!-- Empty State -->
     <div *ngIf="count() === 0" class="text-center py-16">
       <svg
-        class="w-24 h-24 mx-auto text-ash-gray dark:text-pearl-light/70 mb-4"
+        class="w-24 h-24 mx-auto text-gray-400 dark:text-beige-200/70 mb-4"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -269,10 +269,10 @@
           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
         />
       </svg>
-      <p class="text-charcoal-medium dark:text-pearl-light mb-4">No hay autos para comparar</p>
+      <p class="text-gray-600 dark:text-beige-200 mb-4">No hay autos para comparar</p>
       <a
         routerLink="/cars"
-        class="inline-block px-6 py-3 rounded-lg bg-accent-petrol text-white hover:opacity-90 transition"
+        class="inline-block px-6 py-3 rounded-lg bg-sky-600 text-white hover:opacity-90 transition"
       >
         Buscar autos
       </a>

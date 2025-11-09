@@ -31,22 +31,67 @@
      Variables CSS - Paleta y Sistema
      ───────────────────────────────────────────────────────────── */
   :root {
+    /* ═══════════════════════════════════════════════════════════
+       PALETA OFICIAL AUTORENTA - CSS Variables
+       ═══════════════════════════════════════════════════════════ */
+
+    /* Marfil (Ivory) */
+    --color-ivory-50: #FEFCF9;
+    --color-ivory-100: #FDF9F3;
+    --color-ivory-200: #FAF3E6;
+    --color-ivory-300: #F7EDD9;
+    --color-ivory-400: #F4E7CC;
+
+    /* Grises Neutros */
+    --color-gray-50: #FAFAFA;
+    --color-gray-100: #F5F5F5;
+    --color-gray-200: #E5E5E5;
+    --color-gray-300: #D4D4D4;
+    --color-gray-400: #A3A3A3;
+    --color-gray-500: #737373;
+    --color-gray-600: #525252;
+    --color-gray-700: #404040;
+    --color-gray-800: #262626;
+    --color-gray-900: #171717;
+
+    /* Beige */
+    --color-beige-50: #FAF7F2;
+    --color-beige-100: #F5F0E8;
+    --color-beige-200: #EDE4D3;
+    --color-beige-300: #E5D8BE;
+    --color-beige-400: #DDCCA9;
+    --color-beige-500: #D4C094;
+
+    /* Azul Celeste Pastel (Sky) */
+    --color-sky-50: #F0F9FF;
+    --color-sky-100: #E0F2FE;
+    --color-sky-200: #BAE6FD;
+    --color-sky-300: #7DD3FC;
+    --color-sky-400: #38BDF8;
+    --color-sky-500: #0EA5E9;
+    --color-sky-600: #0284C7;
+    --color-sky-700: #0369A1;
+
+    /* ═══════════════════════════════════════════════════════════
+       Variables Semánticas - Basadas en Paleta
+       ═══════════════════════════════════════════════════════════ */
+
     /* Fondos Light Mode */
-    --bg-primary: #f8f6f3;
-    --bg-secondary: #edeae3;
+    --bg-primary: var(--color-ivory-100);
+    --bg-secondary: var(--color-beige-100);
     --bg-elevated: #ffffff;
 
     /* Textos Light Mode */
-    --text-primary: #1a1a1a;
-    --text-secondary: #4b4b4b;
-    --text-disabled: #8e8e8e;
+    --text-primary: var(--color-gray-900);
+    --text-secondary: var(--color-gray-600);
+    --text-disabled: var(--color-gray-400);
 
     /* Bordes */
-    --border-color: #d9d6d0;
+    --border-color: var(--color-gray-200);
 
     /* Accents */
-    --accent-primary: #2c4a52;
-    --accent-warm: #8b7355;
+    --accent-primary: var(--color-sky-600);
+    --accent-warm: var(--color-beige-400);
 
     /* ─── Sistema de Espaciados ─── */
     --spacing-xs: 0.25rem; /* 4px */
@@ -82,15 +127,15 @@
 
   /* Dark mode variables */
   .dark {
-    --bg-primary: #121212;
-    --bg-secondary: #1e1e1e;
-    --bg-elevated: #2a2a2a;
+    --bg-primary: var(--color-gray-900);
+    --bg-secondary: var(--color-gray-800);
+    --bg-elevated: var(--color-gray-700);
 
-    --text-primary: #faf9f6;
-    --text-secondary: #e5e3dd;
-    --text-disabled: #78716c;
+    --text-primary: var(--color-ivory-50);
+    --text-secondary: var(--color-beige-200);
+    --text-disabled: var(--color-gray-500);
 
-    --border-color: #44403c;
+    --border-color: var(--color-gray-700);
   }
 
   /* ─── Responsive Spacing Adjustments ─── */
@@ -154,27 +199,15 @@
   }
 
   body {
-    @apply bg-ivory-soft text-smoke-black antialiased;
+    @apply bg-ivory-100 text-gray-900 antialiased;
     font-size: 16px;
     line-height: 1.6;
     padding-top: env(safe-area-inset-top, 0);
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
-  .dark .text-charcoal-medium {
-    color: rgba(247, 245, 238, 0.72) !important;
-  }
-
-  .dark .text-ash-gray {
-    color: rgba(247, 245, 238, 0.58) !important;
-  }
-
-  .dark .text-smoke-black {
-    color: #f7f5ee !important;
-  }
-
-  .dark .bg-sand-light {
-    background-color: rgba(48, 55, 59, 0.65) !important;
+  .dark body {
+    @apply bg-gray-900 text-ivory-50;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -184,42 +217,42 @@
 
   h1,
   .h1 {
-    @apply text-4xl font-bold tracking-tight text-smoke-black;
+    @apply text-4xl font-bold tracking-tight text-gray-900;
     line-height: 1.2;
     margin: 0;
   }
 
   h2,
   .h2 {
-    @apply text-3xl font-bold tracking-tight text-smoke-black;
+    @apply text-3xl font-bold tracking-tight text-gray-900;
     line-height: 1.25;
     margin: 0;
   }
 
   h3,
   .h3 {
-    @apply text-2xl font-semibold tracking-tight text-smoke-black;
+    @apply text-2xl font-semibold tracking-tight text-gray-900;
     line-height: 1.3;
     margin: 0;
   }
 
   h4,
   .h4 {
-    @apply text-xl font-semibold text-smoke-black;
+    @apply text-xl font-semibold text-gray-900;
     line-height: 1.4;
     margin: 0;
   }
 
   h5,
   .h5 {
-    @apply text-lg font-semibold text-smoke-black;
+    @apply text-lg font-semibold text-gray-900;
     line-height: 1.4;
     margin: 0;
   }
 
   h6,
   .h6 {
-    @apply text-base font-semibold text-smoke-black;
+    @apply text-base font-semibold text-gray-900;
     line-height: 1.5;
     margin: 0;
   }
@@ -237,7 +270,7 @@
   .dark .h5,
   .dark h6,
   .dark .h6 {
-    @apply text-ivory-luminous;
+    @apply text-ivory-50;
   }
 }
 
@@ -251,46 +284,50 @@
      ───────────────────────────────────────────────────────────── */
 
   .text-display {
-    @apply text-5xl font-bold tracking-tight text-smoke-black;
+    @apply text-5xl font-bold tracking-tight text-gray-900;
     line-height: 1.1;
   }
 
   .text-lead {
-    @apply text-xl font-normal text-charcoal-medium;
+    @apply text-xl font-normal text-gray-600;
     line-height: 1.6;
   }
 
   .text-body {
-    @apply text-base text-charcoal-medium;
+    @apply text-base text-gray-600;
     line-height: 1.6;
   }
 
   .text-caption {
-    @apply text-sm text-ash-gray;
+    @apply text-sm text-gray-400;
     line-height: 1.5;
   }
 
   .text-overline {
-    @apply text-xs uppercase tracking-wide font-semibold text-ash-gray;
+    @apply text-xs uppercase tracking-wide font-semibold text-gray-400;
     line-height: 1.4;
     letter-spacing: 0.08em;
   }
 
   /* Dark mode text utilities */
   .dark .text-display {
-    @apply text-ivory-luminous;
+    @apply text-ivory-50;
+  }
+
+  .dark .text-lead {
+    @apply text-beige-200/90;
   }
 
   .dark .text-body {
-    @apply text-pearl-light/80;
+    @apply text-beige-200/80;
   }
 
   .dark .text-caption {
-    @apply text-pearl-light/70;
+    @apply text-beige-200/70;
   }
 
   .dark .text-overline {
-    @apply text-pearl-light/60;
+    @apply text-beige-200/60;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -338,42 +375,42 @@
   }
 
   .btn-primary {
-    @apply btn-base bg-smoke-black text-ivory-soft;
-    @apply hover:bg-charcoal-medium active:scale-95;
+    @apply btn-base bg-gray-900 text-ivory-100;
+    @apply hover:bg-gray-600 active:scale-95;
     @apply shadow-soft hover:shadow-medium;
-    @apply focus-visible:ring-smoke-black;
+    @apply focus-visible:ring-gray-900;
   }
 
   .btn-secondary {
-    @apply btn-base bg-white-pure text-smoke-black;
-    @apply border-2 border-pearl-gray hover:border-charcoal-medium;
-    @apply hover:bg-sand-light active:scale-95;
-    @apply focus-visible:ring-charcoal-medium;
-    @apply dark:bg-slate-deep dark:text-ivory-luminous;
-    @apply dark:border-charcoal-medium dark:hover:border-pearl-light;
-    @apply dark:hover:bg-anthracite;
+    @apply btn-base bg-white text-gray-900;
+    @apply border-2 border-gray-200 hover:border-gray-600;
+    @apply hover:bg-beige-100 active:scale-95;
+    @apply focus-visible:ring-gray-600;
+    @apply dark:bg-gray-700 dark:text-ivory-50;
+    @apply dark:border-gray-600 dark:hover:border-beige-200;
+    @apply dark:hover:bg-gray-800;
   }
 
   .btn-accent {
-    @apply btn-base bg-accent-petrol text-ivory-soft;
+    @apply btn-base bg-sky-600 text-ivory-100;
     @apply hover:bg-opacity-90 active:scale-95;
     @apply shadow-soft hover:shadow-medium;
-    @apply focus-visible:ring-accent-petrol;
+    @apply focus-visible:ring-sky-600;
   }
 
   .btn-ghost {
-    @apply btn-base bg-transparent text-charcoal-medium;
-    @apply hover:bg-sand-light active:scale-95;
-    @apply focus-visible:ring-charcoal-medium;
+    @apply btn-base bg-transparent text-gray-600;
+    @apply hover:bg-beige-100 active:scale-95;
+    @apply focus-visible:ring-gray-600;
   }
 
   /* Icon buttons - WCAG 2.5.5 compliant (44x44px minimum) */
   .icon-button {
     @apply p-3 rounded-xl;
-    @apply text-charcoal-medium dark:text-pearl-light;
-    @apply hover:bg-sand-light dark:hover:bg-slate-deep;
+    @apply text-gray-600 dark:text-beige-200;
+    @apply hover:bg-beige-100 dark:hover:bg-gray-700;
     @apply transition-all active:scale-95;
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600;
     transition-duration: var(--duration-fast);
   }
 
@@ -384,8 +421,8 @@
 
   /* Disabled state - WCAG AA compliant contrast (min 3:1) */
   .btn-disabled {
-    @apply bg-pearl-gray text-ash-gray cursor-not-allowed pointer-events-none;
-    @apply border-pearl-gray;
+    @apply bg-gray-200 text-gray-400 cursor-not-allowed pointer-events-none;
+    @apply border-gray-200;
     opacity: 1; /* Use explicit colors instead of opacity for better contrast */
   }
 
@@ -394,31 +431,31 @@
      ───────────────────────────────────────────────────────────── */
 
   .card-premium {
-    @apply bg-white-pure rounded-2xl shadow-card;
-    @apply border-2 border-pearl-gray/50;
+    @apply bg-white rounded-2xl shadow-card;
+    @apply border-2 border-gray-200/50;
     @apply transition-all;
     transition-duration: var(--duration-normal);
     transition-timing-function: var(--easing-standard);
   }
 
   .dark .card-premium {
-    @apply bg-anthracite border-slate-deep shadow-card;
-    color: #f7f5ee;
+    @apply bg-gray-800 border-gray-700 shadow-card;
+    @apply text-ivory-50;
   }
 
   .card-premium:hover {
-    @apply shadow-elevated border-accent-warm/50;
+    @apply shadow-elevated border-beige-400/50;
     transform: translateY(-4px);
   }
 
   .dark .card-premium:hover {
-    @apply shadow-elevated border-accent-petrol/40;
+    @apply shadow-elevated border-sky-600/40;
     transform: translateY(-4px);
   }
 
   .card-premium.selected {
-    @apply border-accent-petrol shadow-elevated;
-    @apply ring-4 ring-accent-petrol/15;
+    @apply border-sky-600 shadow-elevated;
+    @apply ring-4 ring-sky-600/15;
     transform: scale(1.02) translateY(-4px);
     z-index: 10;
   }
@@ -429,25 +466,25 @@
 
   .input-premium {
     @apply w-full px-4 py-3 rounded-xl;
-    @apply bg-white-pure border-2 border-pearl-gray;
-    @apply text-smoke-black placeholder:text-ash-gray;
+    @apply bg-white border-2 border-gray-200;
+    @apply text-gray-900 placeholder:text-gray-400;
     @apply transition-all;
-    @apply focus:border-accent-petrol focus:ring-4 focus:ring-accent-petrol/15;
+    @apply focus:border-sky-600 focus:ring-4 focus:ring-sky-600/15;
     @apply focus-visible:outline-none;
     transition-duration: var(--duration-fast);
   }
 
   .dark .input-premium {
-    @apply bg-slate-deep border-slate-deep/80 text-pearl-light placeholder:text-pearl-light/40;
-    @apply focus:border-accent-petrol/70 focus:ring-accent-petrol/20;
+    @apply bg-gray-700 border-gray-700/80 text-beige-200 placeholder:text-beige-200/40;
+    @apply focus:border-sky-600/70 focus:ring-sky-600/20;
   }
 
   .input-premium:hover {
-    @apply border-charcoal-medium/30;
+    @apply border-gray-600/30;
   }
 
   .dark .input-premium:hover {
-    @apply border-accent-petrol/60;
+    @apply border-sky-600/60;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -461,34 +498,34 @@
     transition-duration: var(--duration-fast);
   }
 
-  /* Badge de información - Petrol claro */
+  /* Badge de información - Sky claro */
   .badge-info {
-    @apply bg-accent-petrol/10 text-accent-petrol;
-    @apply border border-accent-petrol/20;
+    @apply bg-sky-600/10 text-sky-600;
+    @apply border border-sky-600/20;
   }
 
-  /* Badge de éxito - Petrol medio */
+  /* Badge de éxito - Sky medio */
   .badge-success {
-    @apply bg-accent-petrol/20 text-accent-petrol;
-    @apply border border-accent-petrol/30;
+    @apply bg-sky-600/20 text-sky-600;
+    @apply border border-sky-600/30;
   }
 
-  /* Badge de advertencia - Warm */
+  /* Badge de advertencia - Beige */
   .badge-warning {
-    @apply bg-accent-warm/10 text-accent-warm;
-    @apply border border-accent-warm/20;
+    @apply bg-beige-400/10 text-beige-500;
+    @apply border border-beige-400/20;
   }
 
-  /* Badge de peligro - Warm oscuro */
+  /* Badge de peligro - Error */
   .badge-danger {
-    @apply bg-accent-warm/20 text-accent-warm;
-    @apply border border-accent-warm/30;
+    @apply bg-error-500/20 text-error-600;
+    @apply border border-error-500/30;
   }
 
   /* Badge neutral - Sistema gris */
   .badge-neutral {
-    @apply bg-sand-light text-charcoal-medium;
-    @apply border border-pearl-gray;
+    @apply bg-beige-100 text-gray-600;
+    @apply border border-gray-200;
   }
 
   /* Variante con ícono */
@@ -498,8 +535,8 @@
 
   /* Info Cards - Sistema Neutral */
   .info-card {
-    @apply bg-white-pure rounded-xl shadow-soft;
-    @apply border border-pearl-gray;
+    @apply bg-white rounded-xl shadow-soft;
+    @apply border border-gray-200;
     @apply p-4 transition-all;
     transition-duration: var(--duration-fast);
   }
@@ -510,31 +547,31 @@
   }
 
   .dark .info-card {
-    @apply bg-anthracite border-slate-deep text-pearl-light shadow-card;
+    @apply bg-gray-800 border-gray-700 text-beige-200 shadow-card;
   }
 
   .dark .info-card:hover {
-    @apply shadow-elevated border-accent-petrol/40;
+    @apply shadow-elevated border-sky-600/40;
   }
 
-  /* Info card petrol variant */
-  .info-card-petrol {
+  /* Info card sky variant */
+  .info-card-sky {
     @apply info-card;
-    @apply bg-accent-petrol/5 border-accent-petrol/20;
+    @apply bg-sky-600/5 border-sky-600/20;
   }
 
-  /* Info card warm variant */
-  .info-card-warm {
+  /* Info card beige variant */
+  .info-card-beige {
     @apply info-card;
-    @apply bg-accent-warm/5 border-accent-warm/20;
+    @apply bg-beige-400/5 border-beige-400/20;
   }
 
-  .dark .info-card-petrol {
-    @apply bg-accent-petrol/15 border-accent-petrol/30;
+  .dark .info-card-sky {
+    @apply bg-sky-600/15 border-sky-600/30;
   }
 
-  .dark .info-card-warm {
-    @apply bg-accent-warm/15 border-accent-warm/30;
+  .dark .info-card-beige {
+    @apply bg-beige-400/15 border-beige-400/30;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -615,7 +652,7 @@
 
   /* Skeleton loader */
   .skeleton {
-    @apply bg-gradient-to-r from-sand-light via-pearl-gray/30 to-sand-light;
+    @apply bg-gradient-to-r from-beige-100 via-gray-200/30 to-beige-100;
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s ease-in-out infinite;
   }
@@ -633,9 +670,9 @@
   .spinner {
     width: 48px;
     height: 48px;
-    border: 4px solid rgba(217, 214, 208, 0.3);
-    border-top-color: #2c4a52;
-    border-right-color: #8b7355;
+    border: 4px solid rgba(229, 229, 229, 0.3); /* gray-200 */
+    border-top-color: #0284C7; /* sky-600 */
+    border-right-color: #DDCCA9; /* beige-400 */
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
@@ -658,14 +695,14 @@
 
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2;
-    @apply focus-visible:ring-accent-petrol focus-visible:ring-offset-2;
-    @apply focus-visible:ring-offset-white-pure;
+    @apply focus-visible:ring-sky-600 focus-visible:ring-offset-2;
+    @apply focus-visible:ring-offset-white;
   }
 
   .focus-ring-white {
     @apply focus-visible:outline-none focus-visible:ring-2;
     @apply focus-visible:ring-white focus-visible:ring-offset-2;
-    @apply focus-visible:ring-offset-accent-petrol;
+    @apply focus-visible:ring-offset-sky-600;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -674,8 +711,8 @@
 
   .nav-link {
     @apply inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-base;
-    @apply text-charcoal-medium dark:text-pearl-light;
-    @apply hover:bg-sand-light/70 hover:text-accent-petrol dark:hover:bg-slate-deep/70;
+    @apply text-gray-600 dark:text-beige-200;
+    @apply hover:bg-beige-100/70 hover:text-sky-600 dark:hover:bg-gray-700/70;
   }
 
   .nav-link svg {
@@ -683,12 +720,12 @@
   }
 
   .nav-link-primary {
-    @apply bg-accent-petrol/10 text-accent-petrol shadow-[0_4px_14px_rgba(0,71,79,0.12)];
-    @apply hover:bg-accent-petrol/15 hover:text-accent-petrol;
+    @apply bg-sky-600/10 text-sky-600 shadow-[0_4px_14px_rgba(2,132,199,0.12)];
+    @apply hover:bg-sky-600/15 hover:text-sky-600;
   }
 
   .nav-link-active {
-    @apply bg-accent-petrol/15 text-accent-petrol font-semibold;
+    @apply bg-sky-600/15 text-sky-600 font-semibold;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -696,11 +733,11 @@
      ───────────────────────────────────────────────────────────── */
 
   .section-alt {
-    @apply bg-sand-light dark:bg-anthracite;
+    @apply bg-beige-100 dark:bg-gray-800;
   }
 
   .section-elevated {
-    @apply bg-white-pure dark:bg-slate-deep;
+    @apply bg-white dark:bg-gray-700;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -708,11 +745,11 @@
      ───────────────────────────────────────────────────────────── */
 
   .divider-horizontal {
-    @apply h-px bg-pearl-gray dark:bg-slate-deep;
+    @apply h-px bg-gray-200 dark:bg-gray-700;
   }
 
   .divider-vertical {
-    @apply w-px bg-pearl-gray dark:bg-slate-deep;
+    @apply w-px bg-gray-200 dark:bg-gray-700;
   }
 }
 

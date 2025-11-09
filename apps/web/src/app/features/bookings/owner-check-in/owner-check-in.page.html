@@ -11,26 +11,26 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="text-center py-16">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
-    <p class="mt-4 text-charcoal-medium">Cargando reserva...</p>
+    <p class="mt-4 text-gray-600">Cargando reserva...</p>
   </div>
 
   <!-- Check-In Form -->
   <div *ngIf="!loading() && booking()" class="max-w-2xl mx-auto">
     <!-- Booking Info Card -->
     <div class="card-premium p-6 mb-6">
-      <h2 class="text-xl font-bold text-smoke-black mb-4">Información de la Reserva</h2>
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Información de la Reserva</h2>
 
       <div class="space-y-3">
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Auto:</span>
+          <span class="text-gray-600">Auto:</span>
           <span class="font-semibold">{{ booking()?.car?.title }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Locatario:</span>
+          <span class="text-gray-600">Locatario:</span>
           <span class="font-semibold">{{ booking()?.renter_id || 'N/A' }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Período:</span>
+          <span class="text-gray-600">Período:</span>
           <span class="font-semibold">
             {{ booking()?.start_at | date:'dd/MM/yyyy' }} - {{ booking()?.end_at | date:'dd/MM/yyyy' }}
           </span>
@@ -39,12 +39,12 @@
     </div>
 
     <!-- Instructions Card -->
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+    <div class="bg-sky-50 border border-sky-200 rounded-xl p-4 mb-6">
       <div class="flex items-start gap-3">
-        <ion-icon name="information-circle" class="text-blue-600 text-2xl flex-shrink-0"></ion-icon>
+        <ion-icon name="information-circle" class="text-sky-600 text-2xl flex-shrink-0"></ion-icon>
         <div>
-          <h3 class="font-semibold text-blue-900 mb-1">Instrucciones de Check-In</h3>
-          <p class="text-sm text-blue-700">
+          <h3 class="font-semibold text-sky-700 mb-1">Instrucciones de Check-In</h3>
+          <p class="text-sm text-sky-700">
             Registra el estado inicial del auto antes de entregarlo al locatario. Esta información se comparará con el check-out para identificar daños.
           </p>
         </div>
@@ -55,7 +55,7 @@
     <form class="space-y-6">
       <!-- Odometer -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">1. Kilometraje</h3>
+        <h3 class="font-bold text-gray-900 mb-4">1. Kilometraje</h3>
         <ion-item>
           <ion-label position="stacked">Kilometraje actual *</ion-label>
           <ion-input
@@ -70,11 +70,11 @@
 
       <!-- Fuel Level -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">2. Nivel de Combustible</h3>
+        <h3 class="font-bold text-gray-900 mb-4">2. Nivel de Combustible</h3>
         <div class="px-4">
           <div class="flex justify-between items-center mb-2">
-            <span class="text-charcoal-medium">Nivel:</span>
-            <span class="font-bold text-accent-petrol">{{ fuelLevelPercentage }}</span>
+            <span class="text-gray-600">Nivel:</span>
+            <span class="font-bold text-sky-600">{{ fuelLevelPercentage }}</span>
           </div>
           <ion-range
             [value]="fuelLevel()"
@@ -94,8 +94,8 @@
 
       <!-- Photos -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">3. Fotos del Auto (mínimo 4) *</h3>
-        <p class="text-sm text-charcoal-medium mb-4">
+        <h3 class="font-bold text-gray-900 mb-4">3. Fotos del Auto (mínimo 4) *</h3>
+        <p class="text-sm text-gray-600 mb-4">
           Toma fotos de todos los ángulos: frontal, trasero, laterales, y interior
         </p>
         <input
@@ -109,24 +109,24 @@
         <button
           type="button"
           (click)="fileInput.click()"
-          class="w-full px-4 py-3 border-2 border-dashed border-pearl-gray rounded-lg hover:border-accent-petrol transition-colors"
+          class="w-full px-4 py-3 border-2 border-dashed border-gray-200 rounded-lg hover:border-sky-600 transition-colors"
         >
-          <ion-icon name="camera" class="text-2xl text-accent-petrol"></ion-icon>
-          <p class="text-sm text-charcoal-medium mt-2">Click para subir fotos</p>
+          <ion-icon name="camera" class="text-2xl text-sky-600"></ion-icon>
+          <p class="text-sm text-gray-600 mt-2">Click para subir fotos</p>
         </button>
         <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 gap-4 mt-4">
           <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative">
             <img [src]="photo" alt="Foto {{i+1}}" class="w-full h-32 object-cover rounded-lg" />
           </div>
         </div>
-        <p class="text-sm text-charcoal-medium mt-2">
+        <p class="text-sm text-gray-600 mt-2">
           {{ uploadedPhotos().length }} foto(s) subida(s)
         </p>
       </div>
 
       <!-- Damages Notes -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">4. Daños Pre-Existentes (Opcional)</h3>
+        <h3 class="font-bold text-gray-900 mb-4">4. Daños Pre-Existentes (Opcional)</h3>
         <ion-item>
           <ion-label position="stacked">Notas sobre daños o detalles</ion-label>
           <ion-textarea
@@ -140,14 +140,14 @@
 
       <!-- Signature -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">5. Firma Digital *</h3>
-        <div class="border-2 border-dashed border-pearl-gray rounded-lg p-4">
-          <div class="bg-white border border-pearl-gray rounded p-4 text-center">
-            <p class="text-sm text-charcoal-medium">Firma digital (simulada)</p>
+        <h3 class="font-bold text-gray-900 mb-4">5. Firma Digital *</h3>
+        <div class="border-2 border-dashed border-gray-200 rounded-lg p-4">
+          <div class="bg-white border border-gray-200 rounded p-4 text-center">
+            <p class="text-sm text-gray-600">Firma digital (simulada)</p>
             <button
               type="button"
               (click)="signatureDataUrl.set('signature-placeholder')"
-              class="mt-2 px-4 py-2 bg-accent-petrol text-white rounded-lg"
+              class="mt-2 px-4 py-2 bg-sky-600 text-white rounded-lg"
             >
               {{ signatureDataUrl() ? '✓ Firmado' : 'Firmar' }}
             </button>
@@ -160,7 +160,7 @@
         <button
           type="button"
           (click)="cancel()"
-          class="flex-1 px-6 py-3 rounded-xl border-2 border-pearl-gray text-charcoal-medium font-semibold hover:bg-sand-light transition-all"
+          class="flex-1 px-6 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold hover:bg-beige-100 transition-all"
           [disabled]="submitting()"
         >
           Cancelar
@@ -169,7 +169,7 @@
           type="button"
           (click)="submitCheckIn()"
           [disabled]="!canSubmit() || submitting()"
-          class="flex-1 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          class="flex-1 px-6 py-3 rounded-xl bg-sky-600 text-white font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ion-spinner *ngIf="submitting()" name="crescent" class="mr-2"></ion-spinner>
           {{ submitting() ? 'Procesando...' : 'Completar Check-In' }}

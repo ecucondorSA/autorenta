@@ -91,7 +91,7 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
     loadComponent: () =>
       import('./features/bookings/urgent-booking/urgent-booking.page').then(
-        (m) => m.UrgentBookingPage,
+        (m: any) => m.UrgentBookingPage,
       ),
   },
   {

@@ -25,7 +25,7 @@ interface ModerationStatusOption {
       <div class="mb-6">
         <button
           routerLink="/admin"
-          class="inline-flex items-center gap-2 text-sm font-medium text-accent-petrol hover:text-accent-warm transition-base mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-sky-600 hover:text-beige-400 transition-base mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -58,7 +58,7 @@ interface ModerationStatusOption {
 
       <!-- Filters -->
       <div
-        class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
+        class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
       >
         <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Filtros</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -100,7 +100,7 @@ interface ModerationStatusOption {
       <!-- Loading State -->
       <div *ngIf="loading()" class="text-center py-12">
         <div
-          class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-accent-petrol border-r-transparent"
+          class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-sky-600 border-r-transparent"
         ></div>
         <p class="mt-4 text-gray-600 dark:text-gray-400">Cargando reseñas...</p>
       </div>
@@ -124,7 +124,7 @@ interface ModerationStatusOption {
         <!-- Empty State -->
         <div
           *ngIf="filteredReviews().length === 0"
-          class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center"
+          class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center"
         >
           <svg
             class="mx-auto h-12 w-12 text-gray-400"
@@ -150,7 +150,7 @@ interface ModerationStatusOption {
         <!-- Review Cards -->
         <div
           *ngFor="let review of filteredReviews()"
-          class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow"
+          class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow"
         >
           <!-- Header with Checkbox -->
           <div class="flex items-start gap-4">
@@ -197,7 +197,7 @@ interface ModerationStatusOption {
                 <div class="flex gap-0.5">
                   <svg
                     *ngFor="let _ of [1, 2, 3, 4, 5]"
-                    class="h-4 w-4 text-yellow-400"
+                    class="h-4 w-4 text-beige-400"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -249,15 +249,15 @@ interface ModerationStatusOption {
               <!-- Moderation Notes (if moderated) -->
               <div
                 *ngIf="review.moderation_notes"
-                class="bg-blue-50 dark:bg-blue-500/10 rounded-lg p-3 mb-4"
+                class="bg-sky-50 dark:bg-sky-500/10 rounded-lg p-3 mb-4"
               >
-                <p class="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+                <p class="text-sm font-medium text-sky-700 dark:text-sky-300 mb-1">
                   Notas de Moderación:
                 </p>
-                <p class="text-sm text-blue-900 dark:text-blue-200">
+                <p class="text-sm text-sky-700 dark:text-sky-200">
                   {{ review.moderation_notes }}
                 </p>
-                <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                <p class="text-xs text-sky-600 dark:text-sky-400 mt-1">
                   Moderado por: {{ review.moderated_by_name }} el
                   {{ review.moderated_at | date : 'short' }}
                 </p>
@@ -291,7 +291,7 @@ interface ModerationStatusOption {
       (click)="closeModal()"
     >
       <div
-        class="bg-white dark:bg-slate-deep rounded-lg shadow-xl max-w-md w-full p-6"
+        class="bg-white dark:bg-gray-700 rounded-lg shadow-xl max-w-md w-full p-6"
         (click)="$event.stopPropagation()"
       >
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -526,7 +526,7 @@ export class AdminReviewsPage implements OnInit {
 
   getModerationBadgeClass(status: string): string {
     const classes: Record<string, string> = {
-      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300',
+      pending: 'bg-beige-100 text-beige-500 dark:bg-beige-500/20 dark:text-beige-300',
       approved: 'bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300',
     };

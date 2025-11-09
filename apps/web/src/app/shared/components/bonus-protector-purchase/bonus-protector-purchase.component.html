@@ -1,8 +1,8 @@
-<div class="bg-white dark:bg-slate-deep rounded-lg shadow-md p-6" [class.p-4]="compact">
+<div class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6" [class.p-4]="compact">
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center mb-2">
-      <svg class="w-6 h-6 mr-2 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+      <svg class="w-6 h-6 mr-2 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
       </svg>
       <h3 class="text-xl font-semibold text-gray-900" [class.text-lg]="compact">
@@ -38,11 +38,11 @@
         (click)="selectLevel(level.level)"
         [class.ring-2]="selectedLevel === level.level"
         [class.ring-purple-500]="selectedLevel === level.level"
-        [class.bg-purple-50]="selectedLevel === level.level"
+        [class.bg-sky-50]="selectedLevel === level.level"
         class="relative border rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
       >
         <!-- Popular Badge -->
-        <div *ngIf="level.popular" class="absolute -top-2 -right-2 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+        <div *ngIf="level.popular" class="absolute -top-2 -right-2 bg-sky-600 text-white text-xs font-bold px-2 py-1 rounded-full">
           Popular
         </div>
 
@@ -53,7 +53,7 @@
             [checked]="selectedLevel === level.level"
             [value]="level.level"
             name="protectionLevel"
-            class="mt-1 text-purple-600 focus:ring-purple-500"
+            class="mt-1 text-sky-600 focus:ring-purple-500"
           />
           <div class="ml-3">
             <p class="text-sm font-semibold text-gray-900">{{ level.name }}</p>
@@ -63,7 +63,7 @@
 
         <!-- Price -->
         <div class="mb-3">
-          <p class="text-2xl font-bold text-purple-600">
+          <p class="text-2xl font-bold text-sky-600">
             {{ formatPrice(level.priceCents) }}
           </p>
         </div>
@@ -104,7 +104,7 @@
         <div *ngIf="getSelectedLevel() && !canAfford(getSelectedLevel()!.priceCents)"
              class="text-right">
           <p class="text-sm font-medium text-red-600">Saldo insuficiente</p>
-          <a href="/wallet" class="text-xs text-blue-600 hover:text-blue-700 underline">
+          <a href="/wallet" class="text-xs text-sky-600 hover:text-sky-700 underline">
             Depositar fondos
           </a>
         </div>
@@ -122,7 +122,7 @@
       [disabled]="purchasing || !canAfford(getSelectedLevel()!.priceCents)"
       [class.opacity-50]="purchasing || !canAfford(getSelectedLevel()!.priceCents)"
       [class.cursor-not-allowed]="purchasing || !canAfford(getSelectedLevel()!.priceCents)"
-      class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+      class="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
     >
       <svg *ngIf="purchasing" class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -153,19 +153,19 @@
       <h4 class="text-sm font-semibold text-gray-900 mb-3">¿Cómo funciona?</h4>
       <ul class="space-y-2">
         <li class="flex items-start text-sm text-gray-700">
-          <svg class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-5 h-5 text-sky-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
           </svg>
           <span>Si tienes un reclamo, el protector lo absorbe sin afectar tu clase</span>
         </li>
         <li class="flex items-start text-sm text-gray-700">
-          <svg class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-5 h-5 text-sky-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
           </svg>
           <span>Cada protector tiene un número limitado de usos</span>
         </li>
         <li class="flex items-start text-sm text-gray-700">
-          <svg class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-5 h-5 text-sky-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
           </svg>
           <span>Expira en 6 meses o cuando se agoten los usos</span>
@@ -182,7 +182,7 @@
     <button
       (click)="onPurchase()"
       [disabled]="purchasing"
-      class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg"
+      class="bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium py-2 px-4 rounded-lg"
     >
       Comprar por {{ formatPrice(protectionLevels[selectedLevel - 1].priceCents) }}
     </button>

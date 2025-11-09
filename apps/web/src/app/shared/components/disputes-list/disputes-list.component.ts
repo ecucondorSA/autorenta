@@ -16,7 +16,7 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
         <button
           *ngIf="showCreateButton"
           (click)="createDispute.emit()"
-          class="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          class="text-sm px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
         >
           + Crear Disputa
         </button>
@@ -25,7 +25,7 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
       <!-- Loading State -->
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500"></div>
         </div>
       }
 
@@ -50,10 +50,10 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
                   <div class="flex items-center gap-2 mb-2">
                     <span
                       class="px-2 py-1 rounded-full text-xs font-medium"
-                      [class.bg-yellow-100]="dispute.status === 'open'"
-                      [class.text-yellow-800]="dispute.status === 'open'"
-                      [class.bg-blue-100]="dispute.status === 'in_review'"
-                      [class.text-blue-800]="dispute.status === 'in_review'"
+                      [class.bg-beige-100]="dispute.status === 'open'"
+                      [class.text-beige-500]="dispute.status === 'open'"
+                      [class.bg-sky-100]="dispute.status === 'in_review'"
+                      [class.text-sky-600]="dispute.status === 'in_review'"
                       [class.bg-green-100]="dispute.status === 'resolved'"
                       [class.text-green-800]="dispute.status === 'resolved'"
                       [class.bg-red-100]="dispute.status === 'rejected'"

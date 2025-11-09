@@ -32,7 +32,7 @@
         <button
           (click)="refreshHistory()"
           [disabled]="loading()"
-          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {{ loading() ? 'Cargando...' : 'Actualizar' }}
         </button>
@@ -51,7 +51,7 @@
     *ngIf="loading() && filteredHistory().length === 0"
     class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center"
   >
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto mb-4"></div>
     <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando historial...</p>
   </div>
 

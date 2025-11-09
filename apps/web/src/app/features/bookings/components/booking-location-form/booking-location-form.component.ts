@@ -129,11 +129,11 @@ export interface BookingLocationData {
 
       <!-- Distance Display -->
       @if (distanceKm() !== null) {
-        <div class="mb-8 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg border border-blue-200 dark:border-blue-700">
-          <div class="text-lg font-semibold text-blue-900 dark:text-blue-100">
+        <div class="mb-8 p-4 bg-sky-50 dark:bg-sky-700 rounded-lg border border-sky-200 dark:border-sky-700">
+          <div class="text-lg font-semibold text-sky-700 dark:text-sky-100">
             Distancia: {{ distanceKm()! | number: '1.0-2' }} km
           </div>
-          <div class="text-sm text-blue-700 dark:text-blue-300">
+          <div class="text-sm text-sky-700 dark:text-sky-300">
             Categoría: {{ distanceTier() === 'local' ? 'Local' : distanceTier() === 'regional' ? 'Regional' : 'Larga distancia' }}
           </div>
         </div>
@@ -147,7 +147,7 @@ export interface BookingLocationData {
             [(ngModel)]="deliveryRequired"
             (change)="onDeliveryToggle()"
             [disabled]="loading() || !isWithinDeliveryRange()"
-            class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+            class="w-5 h-5 text-sky-600 rounded focus:ring-2 focus:ring-blue-500"
           />
           <div class="ml-3 flex-1">
             <div class="font-semibold text-gray-900 dark:text-white">
@@ -198,7 +198,7 @@ export interface BookingLocationData {
           type="button"
           (click)="onSubmit()"
           [disabled]="loading() || !isValid()"
-          class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-semibold flex items-center justify-center gap-2"
+          class="flex-1 px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 disabled:opacity-50 font-semibold flex items-center justify-center gap-2"
         >
           @if (loading()) {
             <span class="inline-block animate-spin">⏳</span>

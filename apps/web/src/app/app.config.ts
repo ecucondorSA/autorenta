@@ -6,7 +6,6 @@ import {
   isDevMode,
   provideZoneChangeDetection,
   APP_INITIALIZER,
-  ErrorHandler,
 } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter, Router, withEnabledBlockingInitialNavigation, withInMemoryScrolling } from '@angular/router';
@@ -37,25 +36,6 @@ function initializePerformanceMonitoring(_perfService: PerformanceMonitoringServ
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // ✅ Sentry Error Handler - Must be first to catch all errors
-    {
-      provide: ErrorHandler,
-      useValue: Sentry.createErrorHandler({
-        showDialog: false, // Don't show Sentry dialog to users
-        logErrors: isDevMode(), // Log to console in development
-      }),
-    },
-    // ✅ Sentry Tracing - Track Router events for performance monitoring
-    {
-      provide: Sentry.TraceService,
-      deps: [],
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes,
       withEnabledBlockingInitialNavigation(),

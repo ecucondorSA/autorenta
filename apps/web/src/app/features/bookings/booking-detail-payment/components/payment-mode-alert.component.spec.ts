@@ -49,10 +49,10 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
 
     it('debería mostrar alerta azul con borde azul', () => {
       // Assert
-      const alert = fixture.nativeElement.querySelector('.bg-blue-50');
+      const alert = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(alert).toBeTruthy();
       expect(alert.className).toContain('border-l-4');
-      expect(alert.className).toContain('border-blue-500');
+      expect(alert.className).toContain('border-sky-500');
     });
 
     it('debería mostrar el monto del hold en ARS', () => {
@@ -68,7 +68,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       expect(text).toContain('Reembolsable');
 
       // Verificar que existe el badge con estilos correctos
-      const badge = fixture.nativeElement.querySelector('.bg-blue-100');
+      const badge = fixture.nativeElement.querySelector('.bg-sky-100');
       expect(badge).toBeTruthy();
     });
 
@@ -99,10 +99,10 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
 
     it('debería mostrar alerta morada con borde morado', () => {
       // Assert
-      const alert = fixture.nativeElement.querySelector('.bg-purple-50');
+      const alert = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(alert).toBeTruthy();
       expect(alert.className).toContain('border-l-4');
-      expect(alert.className).toContain('border-purple-500');
+      expect(alert.className).toContain('border-sky-500');
     });
 
     it('debería mostrar el monto del crédito en ARS convertido desde USD', () => {
@@ -119,7 +119,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       expect(text).toContain('No reembolsable');
 
       // Verificar que existe el badge con estilos correctos
-      const badge = fixture.nativeElement.querySelector('.bg-yellow-100');
+      const badge = fixture.nativeElement.querySelector('.bg-beige-100');
       expect(badge).toBeTruthy();
     });
 
@@ -129,7 +129,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       expect(text).toContain('Reutilizable');
 
       // Verificar que existe el badge con estilos correctos
-      const badge = fixture.nativeElement.querySelector('.bg-purple-100');
+      const badge = fixture.nativeElement.querySelector('.bg-sky-100');
       expect(badge).toBeTruthy();
     });
 
@@ -146,7 +146,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       // Arrange - Iniciar con tarjeta
       component.paymentMode = 'card';
       fixture.detectChanges();
-      let alert = fixture.nativeElement.querySelector('.bg-blue-50');
+      let alert = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(alert).toBeTruthy();
 
       // Act - Cambiar a wallet
@@ -154,9 +154,9 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       fixture.detectChanges();
 
       // Assert - Verificar cambio a alerta morada
-      alert = fixture.nativeElement.querySelector('.bg-purple-50');
+      alert = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(alert).toBeTruthy();
-      const blueAlert = fixture.nativeElement.querySelector('.bg-blue-50');
+      const blueAlert = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(blueAlert).toBeFalsy();
     });
 

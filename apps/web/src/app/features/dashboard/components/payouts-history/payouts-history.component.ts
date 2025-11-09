@@ -19,7 +19,7 @@ import { firstValueFrom } from 'rxjs';
         <button
           (click)="loadPayouts()"
           [disabled]="loading()"
-          class="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          class="text-sm px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 disabled:opacity-50 transition-colors"
         >
           {{ loading() ? 'Cargando...' : 'Actualizar' }}
         </button>
@@ -28,7 +28,7 @@ import { firstValueFrom } from 'rxjs';
       <!-- Loading State -->
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500"></div>
         </div>
       }
 
@@ -76,10 +76,10 @@ import { firstValueFrom } from 'rxjs';
                   <div class="flex items-center gap-2 mb-2">
                     <span
                       class="px-2 py-1 rounded-full text-xs font-medium"
-                      [class.bg-yellow-100]="payout.status === 'pending'"
-                      [class.text-yellow-800]="payout.status === 'pending'"
-                      [class.bg-blue-100]="payout.status === 'processing'"
-                      [class.text-blue-800]="payout.status === 'processing'"
+                      [class.bg-beige-100]="payout.status === 'pending'"
+                      [class.text-beige-500]="payout.status === 'pending'"
+                      [class.bg-sky-100]="payout.status === 'processing'"
+                      [class.text-sky-600]="payout.status === 'processing'"
                       [class.bg-green-100]="payout.status === 'completed'"
                       [class.text-green-800]="payout.status === 'completed'"
                       [class.bg-red-100]="payout.status === 'failed'"
@@ -123,7 +123,7 @@ import { firstValueFrom } from 'rxjs';
                   @if (payout.status === 'completed') {
                     <button
                       (click)="downloadReceipt(payout)"
-                      class="text-xs px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      class="text-xs px-3 py-1 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
                     >
                       Descargar
                     </button>
@@ -136,9 +136,9 @@ import { firstValueFrom } from 'rxjs';
 
         <!-- Summary Stats -->
         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-            <p class="text-sm text-blue-600 dark:text-blue-400 mb-1">Total Ingresos</p>
-            <p class="text-2xl font-bold text-blue-900 dark:text-blue-200">
+          <div class="bg-sky-50 dark:bg-sky-700/20 rounded-lg p-4">
+            <p class="text-sm text-sky-600 dark:text-sky-400 mb-1">Total Ingresos</p>
+            <p class="text-2xl font-bold text-sky-700 dark:text-sky-200">
               {{ formatCurrency(totalAmount(), 'ARS') }}
             </p>
           </div>
@@ -148,9 +148,9 @@ import { firstValueFrom } from 'rxjs';
               {{ completedCount() }}
             </p>
           </div>
-          <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4">
-            <p class="text-sm text-yellow-600 dark:text-yellow-400 mb-1">Pendientes</p>
-            <p class="text-2xl font-bold text-yellow-900 dark:text-yellow-200">
+          <div class="bg-beige-50 dark:bg-yellow-900/20 rounded-lg p-4">
+            <p class="text-sm text-beige-500 dark:text-beige-400 mb-1">Pendientes</p>
+            <p class="text-2xl font-bold text-beige-500 dark:text-beige-200">
               {{ pendingCount() }}
             </p>
           </div>

@@ -8,9 +8,9 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
   imports: [CommonModule],
   template: `
     <div
-      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
+      class="rounded-xl border border-gray-200/60 bg-white shadow p-6 dark:border-neutral-800/70 dark:bg-gray-800 transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-50 mb-4">
         Elegí tu método de pago
       </h3>
 
@@ -18,18 +18,18 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
         <!-- Con Tarjeta -->
         <button
           type="button"
-          class="relative p-4 border rounded-lg bg-white-pure dark:bg-slate-deep/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-soft dark:focus-visible:ring-offset-graphite-dark"
+          class="relative p-4 border rounded-lg bg-white dark:bg-gray-700/60 border-gray-200/70 dark:border-neutral-700 hover:border-sky-600/60 dark:hover:border-sky-600/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-600/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-100 dark:focus-visible:ring-offset-gray-900"
           [ngClass]="
             selectedMode === 'card'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-accent-petrol/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-sky-600/60 bg-primary-50 dark:bg-sky-600/10 border-sky-600/60 shadow-card-hover'
               : ''
           "
           (click)="onModeChange('card')"
         >
           <div class="flex flex-col items-center text-center space-y-3">
-            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+            <div class="w-12 h-12 bg-sky-100 dark:bg-sky-700/30 rounded-full flex items-center justify-center">
               <svg
-                class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                class="w-6 h-6 text-sky-600 dark:text-sky-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -43,15 +43,15 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
               </svg>
             </div>
             <div>
-              <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Pagar con tarjeta</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+              <p class="font-semibold text-gray-900 dark:text-ivory-50">Pagar con tarjeta</p>
+              <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
                 Crédito o débito • Liberación automática
               </p>
             </div>
           </div>
           <div *ngIf="selectedMode === 'card'" class="absolute top-2 right-2">
             <svg
-              class="w-5 h-5 text-primary-600 dark:text-accent-petrol"
+              class="w-5 h-5 text-primary-600 dark:text-sky-600"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -67,10 +67,10 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
         <!-- Con Wallet -->
         <button
           type="button"
-          class="relative p-4 border rounded-lg bg-white-pure dark:bg-slate-deep/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-soft dark:focus-visible:ring-offset-graphite-dark"
+          class="relative p-4 border rounded-lg bg-white dark:bg-gray-700/60 border-gray-200/70 dark:border-neutral-700 hover:border-sky-600/60 dark:hover:border-sky-600/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-600/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-100 dark:focus-visible:ring-offset-gray-900"
           [ngClass]="
             selectedMode === 'wallet'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-accent-petrol/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-sky-600/60 bg-primary-50 dark:bg-sky-600/10 border-sky-600/60 shadow-card-hover'
               : ''
           "
           (click)="onModeChange('wallet')"
@@ -92,15 +92,15 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
               </svg>
             </div>
             <div>
-              <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Pagar con wallet</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+              <p class="font-semibold text-gray-900 dark:text-ivory-50">Pagar con wallet</p>
+              <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
                 Usa tu saldo AutoRenta • Sin tarjeta
               </p>
             </div>
           </div>
           <div *ngIf="selectedMode === 'wallet'" class="absolute top-2 right-2">
             <svg
-              class="w-5 h-5 text-primary-600 dark:text-accent-petrol"
+              class="w-5 h-5 text-primary-600 dark:text-sky-600"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -131,14 +131,14 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
             }
           </p>
         </div>
-        <div class="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-lg">
+        <div class="p-3 bg-sky-50 dark:bg-sky-700/20 border border-sky-200 dark:border-blue-800/60 rounded-lg">
           <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
             </svg>
-            <span class="text-sm font-medium text-blue-800 dark:text-blue-200">Garantía incluida</span>
+            <span class="text-sm font-medium text-sky-600 dark:text-sky-200">Garantía incluida</span>
           </div>
-          <p class="text-xs text-blue-700 dark:text-blue-300 mt-1">
+          <p class="text-xs text-sky-700 dark:text-sky-300 mt-1">
             @if (selectedMode === 'card') {
               Liberación automática al devolver
             } @else {

@@ -22,7 +22,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
         <button
           (click)="loadWithdrawals('pending')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'pending'"
+          [class.bg-sky-600]="filterStatus() === 'pending'"
           [class.text-white]="filterStatus() === 'pending'"
           [class.bg-gray-200]="filterStatus() !== 'pending'"
         >
@@ -31,7 +31,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
         <button
           (click)="loadWithdrawals('completed')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'completed'"
+          [class.bg-sky-600]="filterStatus() === 'completed'"
           [class.text-white]="filterStatus() === 'completed'"
           [class.bg-gray-200]="filterStatus() !== 'completed'"
         >
@@ -40,7 +40,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
         <button
           (click)="loadWithdrawals('rejected')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'rejected'"
+          [class.bg-sky-600]="filterStatus() === 'rejected'"
           [class.text-white]="filterStatus() === 'rejected'"
           [class.bg-gray-200]="filterStatus() !== 'rejected'"
         >
@@ -50,7 +50,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent"></div>
         </div>
       } @else if (withdrawals().length === 0) {
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -73,8 +73,8 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
                 </div>
                 <span
                   class="rounded-full px-3 py-1 text-xs font-medium"
-                  [class.bg-yellow-100]="withdrawal.status === 'pending'"
-                  [class.text-yellow-800]="withdrawal.status === 'pending'"
+                  [class.bg-beige-100]="withdrawal.status === 'pending'"
+                  [class.text-beige-500]="withdrawal.status === 'pending'"
                   [class.bg-green-100]="withdrawal.status === 'completed'"
                   [class.text-green-800]="withdrawal.status === 'completed'"
                   [class.bg-red-100]="withdrawal.status === 'rejected'"

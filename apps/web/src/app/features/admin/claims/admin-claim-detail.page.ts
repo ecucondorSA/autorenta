@@ -43,7 +43,7 @@ import {
         <div class="mb-6">
           <button
             routerLink="/admin/claims"
-            class="inline-flex items-center gap-2 text-sm font-medium text-accent-petrol hover:text-accent-warm transition-base mb-4"
+            class="inline-flex items-center gap-2 text-sm font-medium text-sky-600 hover:text-beige-400 transition-base mb-4"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -81,7 +81,7 @@ import {
           <div class="lg:col-span-2 space-y-6">
             <!-- Claim Info Card -->
             <div
-              class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Información del Siniestro
@@ -150,7 +150,7 @@ import {
             <!-- Evidence Gallery -->
             <div
               *ngIf="claim()!.photos && claim()!.photos!.length > 0"
-              class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 📸 Evidencia Fotográfica ({{ claim()!.photos!.length }})
@@ -180,7 +180,7 @@ import {
             <!-- Resolution Notes -->
             <div
               *ngIf="claim()!.resolution_notes"
-              class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Notas de Resolución
@@ -196,7 +196,7 @@ import {
             <!-- Actions Card -->
             <div
               *ngIf="canResolve()"
-              class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Acciones de Admin
@@ -224,7 +224,7 @@ import {
                     *ngIf="claim()!.status === 'reported'"
                     (click)="updateStatus('under_review')"
                     [disabled]="submitting()"
-                    class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-medium transition-colors"
+                    class="w-full px-4 py-2 bg-sky-600 hover:bg-sky-700 disabled:bg-sky-400 text-white rounded-lg font-medium transition-colors"
                   >
                     <span *ngIf="!submitting()">Poner en Revisión</span>
                     <span *ngIf="submitting()">Procesando...</span>
@@ -281,7 +281,7 @@ import {
 
             <!-- Status Info -->
             <div
-              class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Estado Actual
@@ -463,7 +463,7 @@ export class AdminClaimDetailPage implements OnInit {
   getStatusBadgeClass(status: ClaimStatus): string {
     const classes = {
       reported: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200',
-      under_review: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200',
+      under_review: 'bg-sky-100 text-sky-600 dark:bg-sky-700/40 dark:text-sky-200',
       approved: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',
       paid: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',

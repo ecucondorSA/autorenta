@@ -26,7 +26,7 @@
       <button
         (click)="retryPendingPayments()"
         [disabled]="loading()"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        class="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
       >
         <svg
           *ngIf="!loading()"
@@ -82,12 +82,12 @@
         </p>
       </div>
 
-      <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg shadow p-6">
+      <div class="bg-beige-50 dark:bg-yellow-900/20 rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-yellow-700 dark:text-yellow-400">Pendientes</p>
+          <p class="text-sm font-medium text-beige-500 dark:text-beige-400">Pendientes</p>
           <span class="text-2xl">⏳</span>
         </div>
-        <p class="text-3xl font-bold text-yellow-900 dark:text-yellow-100">{{ stats().pending }}</p>
+        <p class="text-3xl font-bold text-beige-500 dark:text-beige-100">{{ stats().pending }}</p>
       </div>
 
       <div class="bg-red-50 dark:bg-red-900/20 rounded-lg shadow p-6">
@@ -106,27 +106,27 @@
         <nav class="flex gap-4 px-6" aria-label="Tabs">
           <button
             (click)="selectedTab.set('pending')"
-            [class.border-blue-500]="selectedTab() === 'pending'"
-            [class.text-blue-600]="selectedTab() === 'pending'"
-            [class.dark:text-blue-400]="selectedTab() === 'pending'"
+            [class.border-sky-500]="selectedTab() === 'pending'"
+            [class.text-sky-600]="selectedTab() === 'pending'"
+            [class.dark:text-sky-400]="selectedTab() === 'pending'"
             class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             ⏳ Pendientes ({{ pendingDeposits().length }})
           </button>
           <button
             (click)="selectedTab.set('recent')"
-            [class.border-blue-500]="selectedTab() === 'recent'"
-            [class.text-blue-600]="selectedTab() === 'recent'"
-            [class.dark:text-blue-400]="selectedTab() === 'recent'"
+            [class.border-sky-500]="selectedTab() === 'recent'"
+            [class.text-sky-600]="selectedTab() === 'recent'"
+            [class.dark:text-sky-400]="selectedTab() === 'recent'"
             class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             ✅ Recientes ({{ recentDeposits().length }})
           </button>
           <button
             (click)="selectedTab.set('failed')"
-            [class.border-blue-500]="selectedTab() === 'failed'"
-            [class.text-blue-600]="selectedTab() === 'failed'"
-            [class.dark:text-blue-400]="selectedTab() === 'failed'"
+            [class.border-sky-500]="selectedTab() === 'failed'"
+            [class.text-sky-600]="selectedTab() === 'failed'"
+            [class.dark:text-sky-400]="selectedTab() === 'failed'"
             class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             ❌ Fallidos ({{ failedDeposits().length }})
@@ -145,7 +145,7 @@
         <div *ngIf="pendingDeposits().length > 0" class="space-y-4">
           <div
             *ngFor="let deposit of pendingDeposits()"
-            class="border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 bg-yellow-50 dark:bg-yellow-900/10"
+            class="border border-beige-200 dark:border-yellow-800 rounded-lg p-4 bg-beige-50 dark:bg-yellow-900/10"
           >
             <div class="flex justify-between items-start">
               <div>
@@ -160,7 +160,7 @@
                 </p>
               </div>
               <span
-                class="px-3 py-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 text-xs font-medium rounded-full"
+                class="px-3 py-1 bg-beige-100 dark:bg-yellow-800 text-beige-500 dark:text-beige-100 text-xs font-medium rounded-full"
               >
                 Pendiente
               </span>

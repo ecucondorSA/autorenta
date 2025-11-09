@@ -131,7 +131,7 @@ describe('PaymentSummaryPanelComponent - Escenario 1 & 2', () => {
 
     it('debería mostrar sección de garantía con fondo azul', () => {
       // Assert
-      const guaranteeSection = fixture.nativeElement.querySelector('.bg-blue-50');
+      const guaranteeSection = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(guaranteeSection).toBeTruthy();
     });
 
@@ -169,7 +169,7 @@ describe('PaymentSummaryPanelComponent - Escenario 1 & 2', () => {
 
     it('debería mostrar sección de garantía con fondo morado', () => {
       // Assert
-      const guaranteeSection = fixture.nativeElement.querySelector('.bg-purple-50');
+      const guaranteeSection = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(guaranteeSection).toBeTruthy();
     });
 
@@ -251,7 +251,7 @@ describe('PaymentSummaryPanelComponent - Escenario 1 & 2', () => {
       // Arrange - Iniciar con tarjeta
       component.paymentMode = 'card';
       fixture.detectChanges();
-      let blueSection = fixture.nativeElement.querySelector('.bg-blue-50');
+      let blueSection = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(blueSection).toBeTruthy();
 
       // Act - Cambiar a wallet
@@ -259,9 +259,9 @@ describe('PaymentSummaryPanelComponent - Escenario 1 & 2', () => {
       fixture.detectChanges();
 
       // Assert - Verificar cambio a sección morada
-      const purpleSection = fixture.nativeElement.querySelector('.bg-purple-50');
+      const purpleSection = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(purpleSection).toBeTruthy();
-      blueSection = fixture.nativeElement.querySelector('.bg-blue-50');
+      blueSection = fixture.nativeElement.querySelector('.bg-sky-50');
       expect(blueSection).toBeFalsy();
     });
 

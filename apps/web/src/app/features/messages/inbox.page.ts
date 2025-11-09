@@ -127,7 +127,7 @@ interface Conversation {
                       </div>
                       @if (conv.unreadCount > 0) {
                         <span
-                          class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white"
+                          class="flex h-6 w-6 items-center justify-center rounded-full bg-sky-500 text-xs font-bold text-white"
                         >
                           {{ conv.unreadCount }}
                         </span>

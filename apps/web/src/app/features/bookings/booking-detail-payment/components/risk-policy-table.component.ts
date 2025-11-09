@@ -18,45 +18,45 @@ import {
   imports: [CommonModule],
   template: `
     <div
-      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
+      class="rounded-xl border border-gray-200/60 bg-white shadow p-6 dark:border-neutral-800/70 dark:bg-gray-800 transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-50 mb-4">
         Detalles de protección
       </h3>
 
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-800">
-          <thead class="bg-gray-50 dark:bg-slate-deep/50">
+          <thead class="bg-gray-50 dark:bg-gray-700/50">
             <tr>
               <th
                 scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-pearl-light/60 uppercase tracking-wider"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-beige-200/60 uppercase tracking-wider"
               >
                 Tipo de protección
               </th>
               <th
                 scope="col"
-                class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-pearl-light/60 uppercase tracking-wider"
+                class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-beige-200/60 uppercase tracking-wider"
               >
                 Límite (USD)
               </th>
               <th
                 scope="col"
-                class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-pearl-light/60 uppercase tracking-wider"
+                class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-beige-200/60 uppercase tracking-wider"
               >
                 Límite (ARS)
               </th>
             </tr>
           </thead>
           <tbody
-            class="bg-white-pure dark:bg-anthracite divide-y divide-gray-200 dark:divide-neutral-800"
+            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-neutral-800"
           >
             <!-- Row 1: Preautorización / Crédito de Seguridad -->
             <tr>
               <td class="px-4 py-4 text-sm">
                 <div class="flex items-start space-x-2">
                   <svg
-                    class="w-5 h-5 text-blue-500 dark:text-info-300 flex-shrink-0 mt-0.5"
+                    class="w-5 h-5 text-sky-500 dark:text-info-300 flex-shrink-0 mt-0.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -69,12 +69,12 @@ import {
                     />
                   </svg>
                   <div>
-                    <p class="font-medium text-smoke-black dark:text-ivory-luminous">
+                    <p class="font-medium text-gray-900 dark:text-ivory-50">
                       {{
                         paymentMode === 'card' ? 'Protección con tarjeta' : 'Protección con wallet'
                       }}
                     </p>
-                    <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                    <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
                       {{
                         paymentMode === 'card'
                           ? 'Se libera automáticamente si no hay problemas'
@@ -85,7 +85,7 @@ import {
                 </div>
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-medium text-smoke-black dark:text-ivory-luminous"
+                class="px-4 py-4 text-sm text-right font-medium text-gray-900 dark:text-ivory-50"
               >
                 {{
                   formatUsd(
@@ -96,14 +96,14 @@ import {
                 }}
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-medium text-smoke-black dark:text-ivory-luminous"
+                class="px-4 py-4 text-sm text-right font-medium text-gray-900 dark:text-ivory-50"
               >
                 {{ paymentMode === 'card' ? formatArs(riskSnapshot.holdEstimatedArs) : '—' }}
               </td>
             </tr>
 
             <!-- Row 2: Franquicia Daño/Robo -->
-            <tr class="bg-gray-50 dark:bg-slate-deep/40">
+            <tr class="bg-gray-50 dark:bg-gray-700/40">
               <td class="px-4 py-4 text-sm">
                 <div class="flex items-start space-x-2">
                   <svg
@@ -120,10 +120,10 @@ import {
                     />
                   </svg>
                   <div>
-                    <p class="font-medium text-smoke-black dark:text-ivory-luminous">
+                    <p class="font-medium text-gray-900 dark:text-ivory-50">
                       Cobertura por daños o robo
                     </p>
-                    <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                    <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
                       Lo máximo que podrías pagar si hay daños o robo del vehículo
                     </p>
                   </div>
@@ -159,11 +159,11 @@ import {
                     />
                   </svg>
                   <div>
-                    <p class="font-medium text-smoke-black dark:text-ivory-luminous">
+                    <p class="font-medium text-gray-900 dark:text-ivory-50">
                       Cobertura por vuelco
                       <span class="text-red-600 dark:text-error-300">(límite mayor)</span>
                     </p>
-                    <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+                    <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
                       Límite más alto si el auto se da vuelta (situaciones más graves)
                     </p>
                   </div>
@@ -186,15 +186,15 @@ import {
 
       <!-- Cómo funciona la protección -->
       <div
-        class="mt-4 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg p-4 transition-colors duration-300"
+        class="mt-4 bg-sky-50 border border-sky-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg p-4 transition-colors duration-300"
       >
-        <h4 class="text-sm font-semibold text-blue-900 dark:text-info-100 mb-2 flex items-center gap-2">
+        <h4 class="text-sm font-semibold text-sky-700 dark:text-info-100 mb-2 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
           Cómo funciona
         </h4>
-        <div class="text-xs text-blue-800 dark:text-info-200 space-y-2">
+        <div class="text-xs text-sky-600 dark:text-info-200 space-y-2">
           <div *ngIf="paymentMode === 'card'" class="bg-white/50 dark:bg-gray-800/30 rounded p-3">
             <p class="font-medium mb-1">Con tarjeta:</p>
             <p>• Si hay un daño menor, solo se cobra lo necesario (hasta el límite de protección).</p>

@@ -77,9 +77,9 @@ export class DistanceRiskTierBadgeComponent {
     regional: {
       icon: '🚗',
       label: 'Distancia Media',
-      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
-      textColor: 'text-yellow-700 dark:text-yellow-300',
-      borderColor: 'border-yellow-200 dark:border-yellow-700',
+      bgColor: 'bg-beige-50 dark:bg-yellow-900/20',
+      textColor: 'text-beige-500 dark:text-beige-300',
+      borderColor: 'border-beige-200 dark:border-yellow-700',
       tooltip: 'Auto a distancia media (50-200 km)',
       guaranteeMultiplier: 1.15,
     },

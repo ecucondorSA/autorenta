@@ -63,9 +63,9 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       <!-- Capture State -->
       <div *ngIf="!status().isVerified && !status().requiresLevel2" class="space-y-4">
         <!-- Instructions -->
-        <div *ngIf="!isRecording() && !hasVideo()" class="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2">
-          <p class="text-sm font-medium text-blue-900">Instrucciones:</p>
-          <ul class="text-sm text-blue-800 space-y-1 ml-4 list-disc">
+        <div *ngIf="!isRecording() && !hasVideo()" class="p-4 bg-sky-50 border border-sky-200 rounded-lg space-y-2">
+          <p class="text-sm font-medium text-sky-700">Instrucciones:</p>
+          <ul class="text-sm text-sky-600 space-y-1 ml-4 list-disc">
             <li>Asegúrate de estar en un lugar bien iluminado</li>
             <li>Mira directamente a la cámara</li>
             <li>Mantén tu rostro centrado en el recuadro</li>
@@ -113,7 +113,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             type="button"
             (click)="startRecording()"
             [disabled]="processing()"
-            class="flex-grow px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            class="flex-grow px-6 py-3 bg-sky-600 text-white rounded-lg font-medium hover:bg-sky-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             <span class="flex items-center justify-center gap-2">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -150,12 +150,12 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         </div>
 
         <!-- Processing State -->
-        <div *ngIf="processing()" class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div *ngIf="processing()" class="p-4 bg-sky-50 border border-sky-200 rounded-lg">
           <div class="flex items-center gap-3">
-            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-sky-600"></div>
             <div class="flex-grow">
-              <p class="text-sm font-medium text-blue-900">Procesando verificación facial...</p>
-              <p class="text-xs text-blue-700 mt-1">Esto puede tardar unos segundos</p>
+              <p class="text-sm font-medium text-sky-700">Procesando verificación facial...</p>
+              <p class="text-xs text-sky-700 mt-1">Esto puede tardar unos segundos</p>
             </div>
           </div>
         </div>
@@ -337,7 +337,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   getStatusBadgeClass(): string {
     return this.status().isVerified
       ? 'bg-green-100 text-green-600'
-      : 'bg-purple-100 text-purple-600';
+      : 'bg-sky-100 text-sky-600';
   }
 
   getStatusLabel(): string {
@@ -347,6 +347,6 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   getStatusLabelClass(): string {
     return this.status().isVerified
       ? 'bg-green-100 text-green-800'
-      : 'bg-purple-100 text-purple-800';
+      : 'bg-sky-100 text-sky-800';
   }
 }

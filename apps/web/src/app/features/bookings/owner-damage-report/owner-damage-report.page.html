@@ -11,33 +11,33 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="text-center py-16">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
-    <p class="mt-4 text-charcoal-medium">Cargando reserva...</p>
+    <p class="mt-4 text-gray-600">Cargando reserva...</p>
   </div>
 
   <!-- Damage Report Form -->
   <div *ngIf="!loading() && booking()" class="max-w-2xl mx-auto">
     <!-- Booking Info Card -->
     <div class="card-premium p-6 mb-6">
-      <h2 class="text-xl font-bold text-smoke-black mb-4">Información de la Reserva</h2>
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Información de la Reserva</h2>
 
       <div class="space-y-3">
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Auto:</span>
+          <span class="text-gray-600">Auto:</span>
           <span class="font-semibold">{{ booking()?.car?.title }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Locatario:</span>
+          <span class="text-gray-600">Locatario:</span>
           <span class="font-semibold">{{ booking()?.renter_id || 'N/A' }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Período:</span>
+          <span class="text-gray-600">Período:</span>
           <span class="font-semibold">
             {{ booking()?.start_at | date:'dd/MM/yyyy' }} - {{ booking()?.end_at | date:'dd/MM/yyyy' }}
           </span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Depósito de garantía:</span>
-          <span class="font-semibold text-accent-petrol">{{ maxFormattedAmount }}</span>
+          <span class="text-gray-600">Depósito de garantía:</span>
+          <span class="font-semibold text-sky-600">{{ maxFormattedAmount }}</span>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@
     <form class="space-y-6">
       <!-- Damage Description -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">1. Descripción del Daño *</h3>
+        <h3 class="font-bold text-gray-900 mb-4">1. Descripción del Daño *</h3>
         <ion-item>
           <ion-label position="stacked">Describe el daño en detalle</ion-label>
           <ion-textarea
@@ -86,7 +86,7 @@
 
       <!-- Damage Amount -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">2. Monto del Daño (USD) *</h3>
+        <h3 class="font-bold text-gray-900 mb-4">2. Monto del Daño (USD) *</h3>
         <ion-item>
           <ion-label position="stacked">Costo estimado de reparación</ion-label>
           <ion-input
@@ -100,10 +100,10 @@
           ></ion-input>
           <ion-note slot="helper">Máximo: {{ maxFormattedAmount }}</ion-note>
         </ion-item>
-        <div class="mt-3 p-3 bg-blue-50 rounded-lg">
+        <div class="mt-3 p-3 bg-sky-50 rounded-lg">
           <div class="flex justify-between items-center">
-            <span class="text-sm text-blue-700">Monto a deducir del depósito:</span>
-            <span class="font-bold text-blue-900">{{ formattedAmount }}</span>
+            <span class="text-sm text-sky-700">Monto a deducir del depósito:</span>
+            <span class="font-bold text-sky-700">{{ formattedAmount }}</span>
           </div>
         </div>
         <div *ngIf="damageAmount() > maxDepositAmount()" class="mt-2 p-3 bg-red-50 rounded-lg">
@@ -115,8 +115,8 @@
 
       <!-- Photos Upload -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">3. Fotos de Evidencia (1-10 fotos) *</h3>
-        <p class="text-sm text-charcoal-medium mb-4">
+        <h3 class="font-bold text-gray-900 mb-4">3. Fotos de Evidencia (1-10 fotos) *</h3>
+        <p class="text-sm text-gray-600 mb-4">
           Sube fotos claras del daño. Las fotos deben mostrar claramente el daño y su ubicación en el vehículo.
         </p>
 
@@ -133,10 +133,10 @@
           type="button"
           (click)="fileInput.click()"
           [disabled]="uploadedFiles().length >= 10"
-          class="w-full px-4 py-3 border-2 border-dashed border-pearl-gray rounded-lg hover:border-accent-petrol transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full px-4 py-3 border-2 border-dashed border-gray-200 rounded-lg hover:border-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <ion-icon name="camera" class="text-2xl text-accent-petrol"></ion-icon>
-          <p class="text-sm text-charcoal-medium mt-2">
+          <ion-icon name="camera" class="text-2xl text-sky-600"></ion-icon>
+          <p class="text-sm text-gray-600 mt-2">
             {{ uploadedFiles().length >= 10 ? 'Límite de 10 fotos alcanzado' : 'Click para subir fotos' }}
           </p>
         </button>
@@ -155,7 +155,7 @@
               </button>
             </div>
           </div>
-          <p class="text-sm text-charcoal-medium mt-3">
+          <p class="text-sm text-gray-600 mt-3">
             {{ uploadedFiles().length }} foto(s) subida(s) • Máx 5MB por foto
           </p>
         </div>
@@ -168,23 +168,23 @@
       </div>
 
       <!-- Summary -->
-      <div class="card-premium p-6 bg-gradient-to-br from-accent-petrol/5 to-accent-warm/5">
-        <h3 class="font-bold text-smoke-black mb-4">Resumen del Reporte</h3>
+      <div class="card-premium p-6 bg-gradient-to-br from-sky-600/5 to-beige-400/5">
+        <h3 class="font-bold text-gray-900 mb-4">Resumen del Reporte</h3>
         <div class="space-y-2 text-sm">
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Descripción:</span>
+            <span class="text-gray-600">Descripción:</span>
             <span class="font-semibold" [class.text-red-600]="descriptionCharCount() < 20" [class.text-green-600]="descriptionCharCount() >= 20">
               {{ descriptionCharCount() >= 20 ? '✓ Completa' : '✗ Incompleta' }}
             </span>
           </div>
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Monto del daño:</span>
+            <span class="text-gray-600">Monto del daño:</span>
             <span class="font-semibold" [class.text-red-600]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()" [class.text-green-600]="damageAmount() > 0 && damageAmount() <= maxDepositAmount()">
               {{ formattedAmount }}
             </span>
           </div>
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Fotos de evidencia:</span>
+            <span class="text-gray-600">Fotos de evidencia:</span>
             <span class="font-semibold" [class.text-red-600]="uploadedFiles().length === 0" [class.text-green-600]="uploadedFiles().length > 0">
               {{ uploadedFiles().length }} foto(s)
             </span>
@@ -211,7 +211,7 @@
         <button
           type="button"
           (click)="cancel()"
-          class="flex-1 px-6 py-3 rounded-xl border-2 border-pearl-gray text-charcoal-medium font-semibold hover:bg-sand-light transition-all"
+          class="flex-1 px-6 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold hover:bg-beige-100 transition-all"
           [disabled]="submitting()"
         >
           Cancelar
@@ -220,7 +220,7 @@
           type="button"
           (click)="submitDamageReport()"
           [disabled]="!canSubmit() || submitting()"
-          class="flex-1 px-6 py-3 rounded-xl bg-red-600 text-white-pure font-semibold hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          class="flex-1 px-6 py-3 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ion-spinner *ngIf="submitting()" name="crescent" class="mr-2"></ion-spinner>
           {{ submitting() ? 'Enviando reporte...' : 'Enviar Reporte de Daños' }}

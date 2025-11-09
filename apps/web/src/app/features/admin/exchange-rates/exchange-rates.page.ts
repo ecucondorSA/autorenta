@@ -171,7 +171,7 @@ export class ExchangeRatesPage implements OnInit {
   getVolatilityClass(volatility: number | null): string {
     if (volatility === null) return 'text-gray-500';
     if (volatility < 1) return 'text-green-600';
-    if (volatility < 3) return 'text-yellow-600';
+    if (volatility < 3) return 'text-beige-500';
     if (volatility < 5) return 'text-orange-600';
     return 'text-red-600';
   }

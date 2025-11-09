@@ -98,7 +98,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
               <div class="space-y-3">
                 @for (msg of pendingMessages(); track msg.id) {
                   <div
-                    class="rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-900/20"
+                    class="rounded-lg border border-beige-200 bg-beige-50 p-3 dark:border-yellow-800 dark:bg-yellow-900/20"
                   >
                     <div class="mb-2 flex items-start justify-between">
                       <div class="flex-1">
@@ -109,7 +109,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                           {{ formatTimestamp(msg.timestamp) }}
                         </p>
                         @if (msg.retries > 0) {
-                          <p class="mt-1 text-xs text-yellow-700 dark:text-yellow-300">
+                          <p class="mt-1 text-xs text-beige-500 dark:text-beige-300">
                             Reintentos: {{ msg.retries }}/5
                           </p>
                         }

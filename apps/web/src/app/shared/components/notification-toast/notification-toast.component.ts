@@ -108,9 +108,9 @@ export class NotificationToastComponent {
       case 'error':
         return `${baseClass} border-red-500`;
       case 'warning':
-        return `${baseClass} border-yellow-500`;
+        return `${baseClass} border-beige-500`;
       case 'info':
-        return `${baseClass} border-blue-500`;
+        return `${baseClass} border-sky-500`;
     }
   }
 
@@ -121,9 +121,9 @@ export class NotificationToastComponent {
       case 'error':
         return 'bg-red-100 text-red-600';
       case 'warning':
-        return 'bg-yellow-100 text-yellow-600';
+        return 'bg-beige-100 text-beige-500';
       case 'info':
-        return 'bg-blue-100 text-blue-600';
+        return 'bg-sky-100 text-sky-600';
     }
   }
 
@@ -134,9 +134,9 @@ export class NotificationToastComponent {
       case 'error':
         return 'bg-red-500';
       case 'warning':
-        return 'bg-yellow-500';
+        return 'bg-beige-500';
       case 'info':
-        return 'bg-blue-500';
+        return 'bg-sky-500';
     }
   }
 }

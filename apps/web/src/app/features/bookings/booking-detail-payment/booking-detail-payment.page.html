@@ -1,15 +1,15 @@
-<div class="min-h-screen bg-ivory-soft dark:bg-graphite-dark transition-colors duration-300">
+<div class="min-h-screen bg-ivory-100 dark:bg-gray-900 transition-colors duration-300">
   <!-- Header con Breadcrumbs -->
   <div
-    class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 border-b border-gray-200 dark:border-neutral-800/60 transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       <nav
-        class="flex items-center space-x-2 text-sm text-charcoal-medium dark:text-pearl-light/70"
+        class="flex items-center space-x-2 text-sm text-gray-600 dark:text-beige-200/70"
       >
         <a
           href="/cars"
-          class="hover:text-gray-700 dark:text-pearl-light/80 dark:hover:text-ivory-luminous"
+          class="hover:text-gray-700 dark:text-beige-200/80 dark:hover:text-ivory-50"
           >Vehículos</a
         >
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -19,9 +19,9 @@
             clip-rule="evenodd"
           />
         </svg>
-        <span class="text-smoke-black dark:text-ivory-luminous font-medium">Detalle & Pago</span>
+        <span class="text-gray-900 dark:text-ivory-50 font-medium">Detalle & Pago</span>
         <span
-          class="ml-auto text-xs bg-primary-100 text-primary-700 dark:bg-accent-petrol/20 dark:text-accent-petrol/80 px-2 py-1 rounded transition-colors"
+          class="ml-auto text-xs bg-primary-100 text-primary-700 dark:bg-sky-600/20 dark:text-sky-600/80 px-2 py-1 rounded transition-colors"
           >3/3</span
         >
       </nav>
@@ -32,7 +32,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
-          <h1 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-ivory-50">
             ¡Último paso!
           </h1>
         </div>
@@ -110,7 +110,7 @@
     @if (loadingFx() || loadingRisk() || loadingPricing()) {
       <div class="flex flex-col items-center justify-center py-16">
         <svg
-          class="animate-spin h-12 w-12 text-primary-600 dark:text-accent-petrol"
+          class="animate-spin h-12 w-12 text-primary-600 dark:text-sky-600"
           fill="none"
           viewBox="0 0 24 24"
         >
@@ -128,7 +128,7 @@
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <p class="mt-4 text-sm text-charcoal-medium dark:text-pearl-light/70">
+        <p class="mt-4 text-sm text-gray-600 dark:text-beige-200/70">
           Calculando tu reserva...
         </p>
       </div>
@@ -157,7 +157,7 @@
             <button
               type="button"
               (click)="retryInitialization()"
-              class="mt-3 inline-flex items-center px-3 py-1.5 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white dark:bg-slate-deep hover:bg-red-50 dark:bg-error-900/50 dark:border-error-700 dark:text-error-200 dark:hover:bg-error-900/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+              class="mt-3 inline-flex items-center px-3 py-1.5 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white dark:bg-gray-700 hover:bg-red-50 dark:bg-error-900/50 dark:border-error-700 dark:text-error-200 dark:hover:bg-error-900/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
             >
               <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -176,47 +176,47 @@
     ) {
       <section class="mb-6">
         <div
-          class="rounded-2xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-6 shadow-soft grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          class="rounded-2xl border border-gray-200 dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-6 shadow-soft grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
         >
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+              class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
             >
               Vehículo
             </p>
             <p
-              class="mt-1 text-lg font-semibold text-smoke-black dark:text-ivory-luminous truncate"
+              class="mt-1 text-lg font-semibold text-gray-900 dark:text-ivory-50 truncate"
             >
               {{ car()?.model || 'Vehículo confirmado' }}
             </p>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-sm text-gray-600 dark:text-beige-200/70">
               {{ car()?.location_city || 'Argentina' }}
             </p>
           </div>
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+              class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
             >
               Fechas
             </p>
-            <p class="mt-1 font-semibold text-smoke-black dark:text-ivory-luminous">
+            <p class="mt-1 font-semibold text-gray-900 dark:text-ivory-50">
               {{ dates.startDate | date: 'dd/MM HH:mm' }} →
               {{ dates.endDate | date: 'dd/MM HH:mm' }}
             </p>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-sm text-gray-600 dark:text-beige-200/70">
               {{ dates.totalDays }} {{ dates.totalDays === 1 ? 'día' : 'días' }}
             </p>
           </div>
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+              class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
             >
               Modalidad
             </p>
-            <p class="mt-1 font-semibold text-smoke-black dark:text-ivory-luminous">
+            <p class="mt-1 font-semibold text-gray-900 dark:text-ivory-50">
               {{ paymentMode() === 'card' ? 'Con tarjeta' : 'Crédito de seguridad' }}
             </p>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-sm text-gray-600 dark:text-beige-200/70">
               @if (paymentMode() === 'card') {
                 Hold reembolsable hasta
                 {{ riskSnapshot()?.holdEstimatedUsd || 0 | number: '1.0-0' }} USD
@@ -228,14 +228,14 @@
           </div>
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+              class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
             >
               Total estimado
             </p>
-            <p class="mt-1 text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+            <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-ivory-50">
               $ {{ priceBreakdown()?.totalArs | number: '1.0-0' }}
             </p>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-sm text-gray-600 dark:text-beige-200/70">
               ≈ {{ priceBreakdown()?.totalUsd | currency: 'USD' : 'symbol' : '1.2-2' }}
             </p>
           </div>
@@ -255,19 +255,19 @@
 
           <!-- Payment Mode Toggle -->
           <section
-            class="rounded-2xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-6 shadow-soft"
+            class="rounded-2xl border border-gray-200 dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-6 shadow-soft"
           >
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p
-                  class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
                 >
                   Método de pago y garantía
                 </p>
-                <h2 class="mt-1 text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+                <h2 class="mt-1 text-xl font-semibold text-gray-900 dark:text-ivory-50">
                   ¿Cómo querés pagar y garantizar tu reserva?
                 </h2>
-                <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+                <p class="text-sm text-gray-600 dark:text-beige-200/70">
                   Tenés dos opciones seguras para reservar. Elegí la que más te convenga.
                 </p>
               </div>
@@ -299,30 +299,30 @@
 
           <!-- Protección y cobertura -->
           <section
-            class="rounded-2xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-6 shadow-soft"
+            class="rounded-2xl border border-gray-200 dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-6 shadow-soft"
           >
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p
-                  class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
                 >
                   Protección incluida
                 </p>
-                <h3 class="mt-1 text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+                <h3 class="mt-1 text-lg font-semibold text-gray-900 dark:text-ivory-50">
                   Tu reserva está completamente protegida
                 </h3>
-                <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+                <p class="text-sm text-gray-600 dark:text-beige-200/70">
                   Conocé los límites de protección y qué cubrimos en caso de daños o problemas.
                 </p>
               </div>
               <div class="text-right">
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60">
+                <p class="text-xs text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60">
                   Monto protegido
                 </p>
-                <p class="font-semibold text-smoke-black dark:text-ivory-luminous">
+                <p class="font-semibold text-gray-900 dark:text-ivory-50">
                   $ {{ riskSnapshot()?.holdEstimatedArs | number: '1.0-0' }}
                 </p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60">
+                <p class="text-xs text-gray-600 dark:text-beige-200/60">
                   ≈ {{ riskSnapshot()?.holdEstimatedUsd | currency: 'USD' : 'symbol' : '1.0-0' }}
                 </p>
               </div>
@@ -351,7 +351,7 @@
 
             <details class="mt-4 group">
               <summary
-                class="flex items-center gap-2 text-sm font-semibold text-primary-700 dark:text-accent-petrol cursor-pointer list-none"
+                class="flex items-center gap-2 text-sm font-semibold text-primary-700 dark:text-sky-600 cursor-pointer list-none"
               >
                 <span class="group-open:rotate-90 transition-transform">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -378,27 +378,27 @@
 
           <!-- Cobertura opcional -->
           <section
-            class="rounded-2xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-6 shadow-soft"
+            class="rounded-2xl border border-gray-200 dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-6 shadow-soft"
           >
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p
-                  class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
                 >
                   Cobertura extra (opcional)
                 </p>
-                <h3 class="mt-1 text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+                <h3 class="mt-1 text-lg font-semibold text-gray-900 dark:text-ivory-50">
                   ¿Querés más tranquilidad?
                 </h3>
-                <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+                <p class="text-sm text-gray-600 dark:text-beige-200/70">
                   Reducí aún más tu responsabilidad en caso de daños o accidentes.
                 </p>
               </div>
               <div class="text-right">
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60">
+                <p class="text-xs text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60">
                   Opción elegida
                 </p>
-                <p class="font-semibold text-smoke-black dark:text-ivory-luminous">
+                <p class="font-semibold text-gray-900 dark:text-ivory-50">
                   @if (coverageUpgrade() === 'standard') {
                     Protección estándar
                   } @else if (coverageUpgrade() === 'premium50') {
@@ -411,16 +411,16 @@
             </div>
 
             <!-- Beneficio destacado -->
-            <div class="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800/60 rounded-lg">
+            <div class="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-sky-200 dark:border-blue-800/60 rounded-lg">
               <div class="flex items-start gap-3">
-                <svg class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-sky-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
                 <div>
-                  <p class="font-medium text-blue-800 dark:text-blue-200 mb-1">
+                  <p class="font-medium text-sky-600 dark:text-sky-200 mb-1">
                     Menos preocupaciones, más viaje
                   </p>
-                  <p class="text-sm text-blue-700 dark:text-blue-300">
+                  <p class="text-sm text-sky-700 dark:text-sky-300">
                     Elegí cuánto querés reducir tu responsabilidad máxima en caso de problemas con el auto.
                   </p>
                 </div>
@@ -434,12 +434,12 @@
               />
             </div>
 
-            <div class="mt-4 p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg">
+            <div class="mt-4 p-3 bg-gray-50 dark:bg-gray-700/40 rounded-lg">
               <div class="flex items-center justify-between">
-                <span class="text-sm text-charcoal-medium dark:text-pearl-light/80">
+                <span class="text-sm text-gray-600 dark:text-beige-200/80">
                   Costo adicional por esta cobertura
                 </span>
-                <span class="font-semibold text-primary-600 dark:text-accent-petrol">
+                <span class="font-semibold text-primary-600 dark:text-sky-600">
                   @if (coverageUpgrade() === 'standard') {
                     Incluido
                   } @else if (coverageUpgrade() === 'premium50') {
@@ -455,20 +455,20 @@
           <!-- Card Hold Panel (solo si paymentMode === 'card') -->
           @if (paymentMode() === 'card') {
             <section
-              class="rounded-2xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-6 shadow-soft"
+              class="rounded-2xl border border-gray-200 dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-6 shadow-soft"
             >
               <div class="flex items-center justify-between gap-3">
                 <div>
                   <p
-                    class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+                    class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
                   >
                     Preautorización
                   </p>
-                  <h3 class="mt-1 text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+                  <h3 class="mt-1 text-lg font-semibold text-gray-900 dark:text-ivory-50">
                     Monto a autorizar antes del viaje
                   </h3>
                 </div>
-                <span class="text-sm font-semibold text-primary-700 dark:text-accent-petrol">
+                <span class="text-sm font-semibold text-primary-700 dark:text-sky-600">
                   $ {{ riskSnapshot()?.holdEstimatedArs | number: '1.0-0' }}
                 </span>
               </div>
@@ -489,20 +489,20 @@
           <!-- Credit Security Panel (solo si paymentMode === 'wallet') -->
           @if (paymentMode() === 'wallet') {
             <section
-              class="rounded-2xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-6 shadow-soft"
+              class="rounded-2xl border border-gray-200 dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-6 shadow-soft"
             >
               <div class="flex items-center justify-between gap-3">
                 <div>
                   <p
-                    class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+                    class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
                   >
                     Crédito de seguridad
                   </p>
-                  <h3 class="mt-1 text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+                  <h3 class="mt-1 text-lg font-semibold text-gray-900 dark:text-ivory-50">
                     Bloqueo temporal en tu wallet
                   </h3>
                 </div>
-                <span class="text-sm font-semibold text-primary-700 dark:text-accent-petrol">
+                <span class="text-sm font-semibold text-primary-700 dark:text-sky-600">
                   {{ riskSnapshot()?.creditSecurityUsd | currency: 'USD' : 'symbol' : '1.0-0' }}
                 </span>
               </div>
@@ -522,19 +522,19 @@
 
           <!-- Terms & Consents -->
           <section
-            class="rounded-2xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-slate-deep-pure dark:bg-anthracite p-6 shadow-soft"
+            class="rounded-2xl border border-gray-200 dark:border-gray-600/60 dark:border-neutral-800/60 bg-white dark:bg-gray-700-pure dark:bg-gray-800 p-6 shadow-soft"
           >
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p
-                  class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+                  class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
                 >
                   Consentimientos obligatorios
                 </p>
-                <h3 class="mt-1 text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+                <h3 class="mt-1 text-lg font-semibold text-gray-900 dark:text-ivory-50">
                   Aceptá Términos y políticas
                 </h3>
-                <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+                <p class="text-sm text-gray-600 dark:text-beige-200/70">
                   Necesitamos tu confirmación para proceder con el cargo y almacenar tu tarjeta
                   según políticas.
                 </p>
@@ -552,11 +552,11 @@
           <!-- Validation Errors -->
           @if (validationErrors().length > 0) {
             <div
-              class="bg-yellow-50 border border-yellow-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg p-4 transition-colors duration-300"
+              class="bg-beige-50 border border-beige-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg p-4 transition-colors duration-300"
             >
               <div class="flex items-start space-x-3">
                 <svg
-                  class="w-5 h-5 text-yellow-600 dark:text-warning-200 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-beige-500 dark:text-warning-200 flex-shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -567,11 +567,11 @@
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-yellow-900 dark:text-warning-50">
+                  <p class="text-sm font-medium text-beige-500 dark:text-warning-50">
                     Completa los requisitos:
                   </p>
                   <ul
-                    class="mt-2 text-sm text-yellow-700 dark:text-warning-200 list-disc list-inside space-y-1"
+                    class="mt-2 text-sm text-beige-500 dark:text-warning-200 list-disc list-inside space-y-1"
                   >
                     @for (error of validationErrors(); track error.code) {
                       <li>{{ error.message }}</li>
@@ -605,7 +605,7 @@
               <!-- Estado 1: Creando reserva -->
               @if (loading() && !processingFinalPayment()) {
                 <svg
-                  class="animate-spin -ml-1 mr-3 h-6 w-6 text-white dark:text-ivory-luminous"
+                  class="animate-spin -ml-1 mr-3 h-6 w-6 text-white dark:text-ivory-50"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -628,7 +628,7 @@
               <!-- Estado 2: Procesando pago -->
               @else if (processingFinalPayment()) {
                 <svg
-                  class="animate-spin -ml-1 mr-3 h-6 w-6 text-white dark:text-ivory-luminous"
+                  class="animate-spin -ml-1 mr-3 h-6 w-6 text-white dark:text-ivory-50"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -675,7 +675,7 @@
             </div>
 
             <!-- Subtexto FX -->
-            <p class="mt-3 text-xs text-center text-charcoal-medium dark:text-pearl-light/70">
+            <p class="mt-3 text-xs text-center text-gray-600 dark:text-beige-200/70">
               Tipo de cambio válido hasta {{ fxSnapshot()!.expiresAt | date: 'dd/MM/yyyy HH:mm' }}
             </p>
           </app-booking-summary-card>
@@ -684,19 +684,19 @@
 
       <!-- Sticky CTA móvil -->
       <div
-        class="lg:hidden fixed bottom-0 inset-x-0 bg-white dark:bg-slate-deep/95 dark:bg-anthracite/95 border-t border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 backdrop-blur z-30 px-4 py-3"
+        class="lg:hidden fixed bottom-0 inset-x-0 bg-white dark:bg-gray-700/95 dark:bg-gray-800/95 border-t border-gray-200 dark:border-gray-600/70 dark:border-neutral-800/70 backdrop-blur z-30 px-4 py-3"
       >
         <div class="flex items-center justify-between gap-4">
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+              class="text-xs uppercase tracking-wide text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60"
             >
               Total
             </p>
-            <p class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+            <p class="text-lg font-semibold text-gray-900 dark:text-ivory-50">
               $ {{ priceBreakdown()?.totalArs | number: '1.0-0' }}
             </p>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-xs text-gray-600 dark:text-beige-200/70">
               ≈ {{ priceBreakdown()?.totalUsd | currency: 'USD' : 'symbol' : '1.0-2' }}
             </p>
           </div>
@@ -704,7 +704,7 @@
             type="button"
             (click)="onConfirm()"
             [disabled]="!canProceed() || loading() || processingFinalPayment()"
-            class="flex-1 inline-flex justify-center items-center px-4 py-3 rounded-xl text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 dark:bg-accent-petrol dark:hover:bg-accent-petrol/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
+            class="flex-1 inline-flex justify-center items-center px-4 py-3 rounded-xl text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 dark:bg-sky-600 dark:hover:bg-sky-600/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
           >
             @if (processingFinalPayment()) {
               <svg
@@ -754,7 +754,7 @@
             <div class="hidden md:flex items-center gap-2">
               <button
                 (click)="toggleConversionMode()"
-                class="text-xs px-3 py-1 bg-white dark:bg-slate-deep/80 dark:bg-gray-800/80 rounded-full border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 transition-colors"
+                class="text-xs px-3 py-1 bg-white dark:bg-gray-700/80 dark:bg-gray-800/80 rounded-full border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 transition-colors"
               >
                 Vista detallada
               </button>
@@ -767,7 +767,7 @@
           <!-- Auto y fechas -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
             <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
               </svg>
               Tu reserva
@@ -856,7 +856,7 @@
                     class="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 peer-checked:border-green-500 peer-checked:bg-green-50 dark:peer-checked:bg-green-900/20 transition-all"
                   >
                     <div class="flex items-center gap-3 flex-1">
-                      <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
+                      <div class="w-10 h-10 bg-beige-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
                         <span class="text-lg">💰</span>
                       </div>
                       <div>
@@ -865,7 +865,7 @@
                       </div>
                     </div>
                     <div class="w-4 h-4 border-2 border-gray-300 dark:border-gray-600 rounded-full peer-checked:border-green-500 peer-checked:bg-green-500 flex items-center justify-center">
-                      <div class="w-2 h-2 bg-white dark:bg-slate-deep rounded-full opacity-0 peer-checked:opacity-100"></div>
+                      <div class="w-2 h-2 bg-white dark:bg-gray-700 rounded-full opacity-0 peer-checked:opacity-100"></div>
                     </div>
                   </label>
                 </div>
@@ -885,7 +885,7 @@
                     class="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 peer-checked:border-green-500 peer-checked:bg-green-50 dark:peer-checked:bg-green-900/20 transition-all"
                   >
                     <div class="flex items-center gap-3 flex-1">
-                      <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                      <div class="w-10 h-10 bg-sky-100 dark:bg-sky-700/30 rounded-full flex items-center justify-center">
                         <span class="text-lg">💳</span>
                       </div>
                       <div>
@@ -894,21 +894,21 @@
                       </div>
                     </div>
                     <div class="w-4 h-4 border-2 border-gray-300 dark:border-gray-600 rounded-full peer-checked:border-green-500 peer-checked:bg-green-500 flex items-center justify-center">
-                      <div class="w-2 h-2 bg-white dark:bg-slate-deep rounded-full opacity-0 peer-checked:opacity-100"></div>
+                      <div class="w-2 h-2 bg-white dark:bg-gray-700 rounded-full opacity-0 peer-checked:opacity-100"></div>
                     </div>
                   </label>
                 </div>
               </div>
 
               <!-- Garantía simplificada -->
-              <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-lg p-4">
+              <div class="bg-sky-50 dark:bg-sky-700/20 border border-sky-200 dark:border-blue-800/60 rounded-lg p-4">
                 <div class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                   </svg>
                   <div>
-                    <p class="font-medium text-blue-800 dark:text-blue-200">Reserva protegida</p>
-                    <p class="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                    <p class="font-medium text-sky-600 dark:text-sky-200">Reserva protegida</p>
+                    <p class="text-sm text-sky-700 dark:text-sky-300 mt-1">
                       Depósito de garantía reembolsable. Máxima protección para tu alquiler.
                     </p>
                   </div>
@@ -925,7 +925,7 @@
                     class="mt-1 w-4 h-4 text-green-600 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label for="terms-optimized" class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-                    Acepto los <a href="/terminos" target="_blank" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline">términos y condiciones</a>
+                    Acepto los <a href="/terminos" target="_blank" class="text-sky-600 hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300 underline">términos y condiciones</a>
                   </label>
                 </div>
 
@@ -937,7 +937,7 @@
                     class="mt-1 w-4 h-4 text-green-600 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label for="privacy-optimized" class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-                    Acepto la <a href="/privacidad" target="_blank" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline">política de privacidad</a>
+                    Acepto la <a href="/privacidad" target="_blank" class="text-sky-600 hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300 underline">política de privacidad</a>
                   </label>
                 </div>
 

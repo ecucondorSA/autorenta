@@ -105,11 +105,11 @@ nav button:hover::after {
 .input-premium:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(44, 74, 82, 0.1);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
 }
 
 select.input-premium:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(44, 74, 82, 0.1);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
 }

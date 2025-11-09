@@ -22,11 +22,11 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
               @if (p.canImprove) {
                 <div class="mb-2 flex items-center justify-between">
                   <span class="text-sm text-gray-600">Próxima Clase</span>
-                  <span class="text-sm font-medium text-blue-600">Clase {{ p.nextClass }}</span>
+                  <span class="text-sm font-medium text-sky-600">Clase {{ p.nextClass }}</span>
                 </div>
                 <div class="h-2 w-full rounded-full bg-gray-200">
                   <div
-                    class="h-2 rounded-full bg-blue-500"
+                    class="h-2 rounded-full bg-sky-500"
                     [style.width.%]="50"
                   ></div>
                 </div>
@@ -46,7 +46,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
         <h3 class="mb-4 text-lg font-semibold text-gray-900">Beneficios por Clase</h3>
         @if (loadingBenefits()) {
           <div class="flex items-center justify-center py-8">
-            <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+            <div class="h-6 w-6 animate-spin rounded-full border-2 border-sky-500 border-t-transparent"></div>
           </div>
         } @else if (allBenefits().length > 0) {
           <div class="space-y-3">
@@ -116,9 +116,9 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
             </label>
           </div>
           @if (impact(); as i) {
-            <div class="rounded-lg bg-yellow-50 p-4">
-              <p class="text-sm font-medium text-yellow-800">Impacto Estimado:</p>
-              <p class="mt-1 text-sm text-yellow-700">
+            <div class="rounded-lg bg-beige-50 p-4">
+              <p class="text-sm font-medium text-beige-500">Impacto Estimado:</p>
+              <p class="mt-1 text-sm text-beige-500">
                 Clase actual: {{ i.currentClass }} → Nueva clase: {{ i.newClass }}
               </p>
               @if (i.classIncrease > 0) {
@@ -135,8 +135,8 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
 
       <!-- Mensaje motivacional -->
       @if (scoreMessage()) {
-        <div class="rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <p class="text-sm font-medium text-blue-800">{{ scoreMessage() }}</p>
+        <div class="rounded-lg border border-sky-200 bg-sky-50 p-4">
+          <p class="text-sm font-medium text-sky-600">{{ scoreMessage() }}</p>
         </div>
       }
     </div>

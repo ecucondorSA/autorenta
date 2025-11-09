@@ -115,7 +115,7 @@ export class ReviewCardComponent {
     const status = this.review.moderation_status || 'pending';
 
     const classes: Record<string, string> = {
-      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300',
+      pending: 'bg-beige-100 text-beige-500 dark:bg-beige-500/20 dark:text-beige-300',
       approved: 'bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300',
     };
