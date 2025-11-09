@@ -1256,31 +1256,27 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;
 
-    try {
-      // Crear intención de pago
-      const intent = await this.paymentsService.createIntent(bookingId);
+    // Crear intención de pago
+    const intent = await this.paymentsService.createIntent(bookingId);
 
-      // Actualizar booking con método de pago
-      await this.bookingsService.updateBooking(bookingId, {
-        payment_method: 'credit_card',
-        wallet_amount_cents: 0,
-        deposit_amount_cents: Math.round(depositUsd * 100),
-      });
+    // Actualizar booking con método de pago
+    await this.bookingsService.updateBooking(bookingId, {
+      payment_method: 'credit_card',
+      wallet_amount_cents: 0,
+      deposit_amount_cents: Math.round(depositUsd * 100),
+    });
 
-      // Recalcular pricing
-      await this.bookingsService.recalculatePricing(bookingId);
+    // Recalcular pricing
+    await this.bookingsService.recalculatePricing(bookingId);
 
-      // Crear preferencia de MercadoPago
-      const preference = await this.createPreferenceWithOnboardingGuard(bookingId);
+    // Crear preferencia de MercadoPago
+    const preference = await this.createPreferenceWithOnboardingGuard(bookingId);
 
-      // Redirigir a MercadoPago
-      if (preference.initPoint) {
-        window.location.href = preference.initPoint;
-      } else {
-        throw new Error('No se pudo crear preferencia de pago');
-      }
-    } catch (error: unknown) {
-      throw error;
+    // Redirigir a MercadoPago
+    if (preference.initPoint) {
+      window.location.href = preference.initPoint;
+    } else {
+      throw new Error('No se pudo crear preferencia de pago');
     }
   }
 

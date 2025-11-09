@@ -20905,3 +20905,2492 @@ Application bundle generation failed. [3.597 seconds] - 2025-11-09T21:34:31.139Z
           ╵                           ~~~~~~
 
 
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.722 seconds] - 2025-11-09T21:34:42.518Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'onDamagesDetected' does not exist on type 'DamageComparisonComponent'. Did you mean 'damagesDetected'? [plugin angular-compiler]
+
+    src/app/shared/components/damage-comparison/damage-comparison.component.ts:79:13:
+      79 │         this.onDamagesDetected.emit(detectedDamages);
+         ╵              ~~~~~~~~~~~~~~~~~
+
+  'damagesDetected' is declared here.
+
+    src/app/shared/components/damage-comparison/damage-comparison.component.ts:25:11:
+      25 │   readonly damagesDetected = output<DamageItem[]>();
+         ╵            ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.295 seconds] - 2025-11-09T21:34:48.632Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.807 seconds] - 2025-11-09T21:35:02.007Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'onReserveClick' does not exist on type 'MapDrawerComponent'. Did you mean 'reserveClick'? [plugin angular-compiler]
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:117:9:
+      117 │     this.onReserveClick.emit({
+          ╵          ~~~~~~~~~~~~~~
+
+  'reserveClick' is declared here.
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:45:21:
+      45 │   @Output() readonly reserveClick = new EventEmitter<{
+         ╵                      ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'onReserveClick' does not exist on type 'MapDrawerComponent'. Did you mean 'reserveClick'? [plugin angular-compiler]
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:178:9:
+      178 │     this.onReserveClick.emit({
+          ╵          ~~~~~~~~~~~~~~
+
+  'reserveClick' is declared here.
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:45:21:
+      45 │   @Output() readonly reserveClick = new EventEmitter<{
+         ╵                      ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [5.669 seconds] - 2025-11-09T21:35:09.111Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'onChatClick' does not exist on type 'MapDrawerComponent'. Did you mean 'chatClick'? [plugin angular-compiler]
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:100:11:
+      100 │       this.onChatClick.emit(this.selectedCar.carId);
+          ╵            ~~~~~~~~~~~
+
+  'chatClick' is declared here.
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:50:21:
+      50 │   @Output() readonly chatClick = new EventEmitter<string>();
+         ╵                      ~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'onReserveClick' does not exist on type 'MapDrawerComponent'. Did you mean 'reserveClick'? [plugin angular-compiler]
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:117:9:
+      117 │     this.onReserveClick.emit({
+          ╵          ~~~~~~~~~~~~~~
+
+  'reserveClick' is declared here.
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:45:21:
+      45 │   @Output() readonly reserveClick = new EventEmitter<{
+         ╵                      ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'onReserveClick' does not exist on type 'MapDrawerComponent'. Did you mean 'reserveClick'? [plugin angular-compiler]
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:178:9:
+      178 │     this.onReserveClick.emit({
+          ╵          ~~~~~~~~~~~~~~
+
+  'reserveClick' is declared here.
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:45:21:
+      45 │   @Output() readonly reserveClick = new EventEmitter<{
+         ╵                      ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.869 seconds] - 2025-11-09T21:35:14.683Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'onReserveClick' does not exist on type 'MapDrawerComponent'. Did you mean 'reserveClick'? [plugin angular-compiler]
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:178:9:
+      178 │     this.onReserveClick.emit({
+          ╵          ~~~~~~~~~~~~~~
+
+  'reserveClick' is declared here.
+
+    src/app/shared/components/map-drawer/map-drawer.component.ts:45:21:
+      45 │   @Output() readonly reserveClick = new EventEmitter<{
+         ╵                      ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.749 seconds] - 2025-11-09T21:35:20.687Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.721 seconds] - 2025-11-09T21:35:32.862Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.049 seconds] - 2025-11-09T21:35:38.722Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.527 seconds] - 2025-11-09T21:35:49.073Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [4.540 seconds] - 2025-11-09T21:35:55.478Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.855 seconds] - 2025-11-09T21:37:25.099Z
+
+▲ [WARNING] Duplicate member "cars" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:71:8:
+      71 │     set cars(value) {
+         ╵         ~~~~
+
+  The original member "cars" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:70:4:
+      70 │     cars = this._cars.asReadonly();
+         ╵     ~~~~
+
+
+▲ [WARNING] Duplicate member "isOpen" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:75:8:
+      75 │     set isOpen(value) {
+         ╵         ~~~~~~
+
+  The original member "isOpen" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:74:4:
+      74 │     isOpen = this._isOpen.asReadonly();
+         ╵     ~~~~~~
+
+
+▲ [WARNING] Duplicate member "selectedCarId" in class body [duplicate-class-member]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:79:8:
+      79 │     set selectedCarId(value) {
+         ╵         ~~~~~~~~~~~~~
+
+  The original member "selectedCarId" is here:
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:78:4:
+      78 │     selectedCarId = this._selectedCarId.asReadonly();
+         ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:160:11:
+      160 │           },
+          ╵            ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/core/services/realtime-pricing.service.ts:161:8:
+      161 │         )
+          ╵         ^
+
+
+✘ [ERROR] NG2012: Component imports must be standalone components, directives, pipes, or must be NgModules. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/review-management.component.ts:20:26:
+      20 │   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+         ╵                           ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'cars' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:7:
+      45 │       [cars]="premiumCars()"
+         ╵        ~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'isOpen' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:46:7:
+      46 │       [isOpen]="drawerOpen()"
+         ╵        ~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2540: Cannot assign to 'selectedCarId' because it is a read-only property. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:47:7:
+      47 │       [selectedCarId]="selectedCarId()"
+         ╵        ~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:74:15:
+      74 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2349: This expression is not callable.
+  Type 'OutputEmitterRef<void>' has no call signatures. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54:11:
+      54 │   readonly cancel = output<void>();
+         ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cancel'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:407:2:
+      407 │   cancel(): void {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:292:11:
+      292 │   readonly cars = this._cars.asReadonly();
+          ╵            ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'cars'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:295:6:
+      295 │   set cars(value: CarWithDistance[]) {
+          ╵       ~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:299:11:
+      299 │   readonly isOpen = this._isOpen.asReadonly();
+          ╵            ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'isOpen'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:302:6:
+      302 │   set isOpen(value: boolean) {
+          ╵       ~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:306:11:
+      306 │   readonly selectedCarId = this._selectedCarId.asReadonly();
+          ╵            ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2300: Duplicate identifier 'selectedCarId'. [plugin angular-compiler]
+
+    src/app/shared/components/cars-drawer/cars-drawer.component.ts:309:6:
+      309 │   set selectedCarId(value: string | null) {
+          ╵       ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+

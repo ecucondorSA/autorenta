@@ -22,7 +22,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class DamageComparisonComponent implements OnInit {
   readonly bookingId = input.required<string>();
-  readonly onDamagesDetected = output<DamageItem[]>();
+  readonly damagesDetected = output<DamageItem[]>();
 
   private readonly settlementService = inject(SettlementService);
   private readonly fgoV1_1Service = inject(FgoV1_1Service);
@@ -76,7 +76,7 @@ export class DamageComparisonComponent implements OnInit {
       if (detectedDamages.length === 0) {
         this.error.set('No se detectaron daños nuevos. El auto está en buen estado.');
       } else {
-        this.onDamagesDetected.emit(detectedDamages);
+        this.damagesDetected.emit(detectedDamages);
       }
     } catch (err) {
       console.error('Error comparing damages:', err);
