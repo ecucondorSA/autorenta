@@ -1,14 +1,14 @@
 import { Injectable, signal, inject } from '@angular/core';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import { injectSupabase } from './supabase-client.service';
-import { RealtimeConnectionService, ConnectionStatus } from './realtime-connection.service';
-import { OfflineMessagesService } from './offline-messages.service';
 import {
   MessagesRepository,
   ConversationDTO,
   ConversationListOptions,
   PaginatedConversations,
 } from '../repositories/messages.repository';
+import { injectSupabase } from './supabase-client.service';
+import { RealtimeConnectionService, ConnectionStatus } from './realtime-connection.service';
+import { OfflineMessagesService } from './offline-messages.service';
 
 export interface Message {
   id: string;

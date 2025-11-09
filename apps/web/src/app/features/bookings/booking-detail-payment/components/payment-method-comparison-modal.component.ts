@@ -340,7 +340,7 @@ export class PaymentMethodComparisonModalComponent {
   @Input({ required: true }) riskSnapshot!: RiskSnapshot;
   @Input({ required: true }) fxSnapshot!: FxSnapshot;
 
-  @Output() close = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>();
 
   // Computed values
   protected creditSecurityArs = computed(() => {
@@ -386,7 +386,7 @@ export class PaymentMethodComparisonModalComponent {
   formatUsd = formatUsd;
 
   protected onClose(): void {
-    this.close.emit();
+    this.closeModal.emit();
   }
 
   protected onBackdropClick(event: MouseEvent): void {

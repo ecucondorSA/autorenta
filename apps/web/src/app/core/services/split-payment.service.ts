@@ -345,50 +345,46 @@ export class SplitPaymentService {
    * Private method: Create wallet transaction for split
    */
   private async createWalletTransaction(split: PaymentSplit): Promise<PaymentSplit> {
-    try {
-      // Crear transacción de billetera
-      const { error: txError } = await this.supabase
-        .getClient()
-        .from('wallet_transactions')
-        .insert({
-          user_id: split.collectorId,
-          type: 'payout',
-          status: 'pending',
-          amount: split.netAmount,
-          currency: 'ARS',
-          reference_type: 'payment_split',
-          reference_id: split.id,
-          provider: 'mercadopago_split',
-          created_at: new Date().toISOString(),
-        });
+    // Crear transacción de billetera
+    const { error: txError } = await this.supabase
+      .getClient()
+      .from('wallet_transactions')
+      .insert({
+        user_id: split.collectorId,
+        type: 'payout',
+        status: 'pending',
+        amount: split.netAmount,
+        currency: 'ARS',
+        reference_type: 'payment_split',
+        reference_id: split.id,
+        provider: 'mercadopago_split',
+        created_at: new Date().toISOString(),
+      });
 
-      if (txError) {
-        throw txError;
-      }
-
-      // Crear entrada en wallet_ledger para auditoría
-      await this.supabase
-        .getClient()
-        .from('wallet_ledger')
-        .insert({
-          user_id: split.collectorId,
-          kind: 'split_payment',
-          amount: split.netAmount,
-          currency: 'ARS',
-          transaction_id: split.id,
-          booking_id: split.bookingId,
-          meta: {
-            split_id: split.id,
-            payment_id: split.paymentId,
-            platform_fee: split.platformFee,
-          },
-          ts: new Date().toISOString(),
-        });
-
-      return split;
-    } catch (_error) {
-      throw _error;
+    if (txError) {
+      throw txError;
     }
+
+    // Crear entrada en wallet_ledger para auditoría
+    await this.supabase
+      .getClient()
+      .from('wallet_ledger')
+      .insert({
+        user_id: split.collectorId,
+        kind: 'split_payment',
+        amount: split.netAmount,
+        currency: 'ARS',
+        transaction_id: split.id,
+        booking_id: split.bookingId,
+        meta: {
+          split_id: split.id,
+          payment_id: split.paymentId,
+          platform_fee: split.platformFee,
+        },
+        ts: new Date().toISOString(),
+      });
+
+    return split;
   }
 
   /**

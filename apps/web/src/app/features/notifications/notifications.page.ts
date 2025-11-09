@@ -694,16 +694,18 @@ export class NotificationsPage implements OnInit {
         return metadata['sender_name'] ? `De: ${metadata['sender_name']}` : '';
 
       case 'payment_successful':
-      case 'payout_successful':
+      case 'payout_successful': {
         if (metadata['amount'] && metadata['currency']) {
           const amount = Number(metadata['amount']).toLocaleString('es-AR');
           return `Monto: ${metadata['currency']} ${amount}`;
         }
         return '';
+      }
 
-      case 'inspection_reminder':
+      case 'inspection_reminder': {
         const inspectionType = metadata['inspectionType'] === 'pickup' ? 'Recogida' : 'Devolución';
         return `Tipo: ${inspectionType} • Auto: ${metadata['carTitle'] || 'N/A'}`;
+      }
 
       case 'generic_announcement':
       default:

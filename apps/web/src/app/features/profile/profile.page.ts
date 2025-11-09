@@ -318,6 +318,7 @@ export class ProfilePage implements OnInit {
       this.reviewsAsOwner.set(reviewsAsOwner);
       this.reviewsAsRenter.set(reviewsAsRenter);
     } catch (__error) {
+      console.error('Error loading reviews and stats:', __error);
     } finally {
       this.reviewsLoading.set(false);
     }

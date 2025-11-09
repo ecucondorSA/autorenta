@@ -214,6 +214,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.loadBookings();
       await this.presentToast('Alquiler iniciado correctamente');
     } catch (__error) {
+      console.error('Error starting rental:', __error);
       await this.presentToast('Error al iniciar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -234,6 +235,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.loadBookings();
       await this.presentToast('Alquiler finalizado correctamente');
     } catch (__error) {
+      console.error('Error completing rental:', __error);
       await this.presentToast('Error al finalizar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -255,6 +257,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.loadBookings();
       await this.presentToast('Reserva cancelada');
     } catch (__error) {
+      console.error('Error cancelling booking:', __error);
       await this.presentToast('Error al cancelar la reserva', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -344,7 +347,9 @@ export class OwnerBookingsPage implements OnInit {
             if (contact.success) {
               participantName = contact.name || contact.email || null;
             }
-          } catch (_err) {}
+          } catch (_err) {
+            // Silently ignore error, participant name is optional
+          }
 
           return {
             ...lead,
@@ -355,6 +360,7 @@ export class OwnerBookingsPage implements OnInit {
 
       this.carLeads.set(enriched);
     } catch (__error) {
+      console.error('Error loading car leads:', __error);
     } finally {
       this.leadsLoading.set(false);
     }
@@ -398,6 +404,7 @@ export class OwnerBookingsPage implements OnInit {
               phone: contact.phone,
             };
           } else {
+            // No action needed if contact is not found
           }
         } catch (__error) {
           // Silently ignore errors

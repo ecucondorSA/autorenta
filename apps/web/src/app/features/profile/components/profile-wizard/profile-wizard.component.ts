@@ -51,8 +51,8 @@ export class ProfileWizardComponent implements OnInit {
 
   // Inputs
   readonly initialData = input<UpdateProfileData | null>(null);
-  readonly onCancel = output<void>();
-  readonly onComplete = output<void>();
+  readonly cancel = output<void>();
+  readonly complete = output<void>();
 
   // Step management
   readonly currentStep = signal<WizardStep>('general');
@@ -333,7 +333,7 @@ export class ProfileWizardComponent implements OnInit {
         this.nextStep();
       } else {
         // Last step completed
-        this.onComplete.emit();
+        this.complete.emit();
       }
     } catch (err) {
       // Rollback on error
@@ -407,7 +407,7 @@ export class ProfileWizardComponent implements OnInit {
   cancel(): void {
     // Restore original profile
     void this.profileStore.refresh();
-    this.onCancel.emit();
+    this.cancel.emit();
   }
 
   /**

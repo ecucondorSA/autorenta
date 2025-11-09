@@ -26,6 +26,7 @@ export class SettlementSimulatorComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // Cargar monto inicial si existe
+    // Intentionally left empty - component uses signals for reactive state
   }
 
   formatCurrency(amount: number): string {

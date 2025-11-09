@@ -108,7 +108,7 @@ export class EmailService {
     startDate: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: result, error } = await this.supabase.functions.invoke(
+      const { error } = await this.supabase.functions.invoke(
         'send-booking-reminder-email',
         {
           body: {
