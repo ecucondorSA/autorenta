@@ -6,6 +6,11 @@ export interface GeocodingResult {
   longitude: number;
   fullAddress: string;
   placeName: string;
+  // Aliases for template compatibility
+  lat: number;
+  lng: number;
+  address: string;
+  city?: string;
 }
 
 export interface ReverseGeocodingResult {
@@ -73,11 +78,22 @@ export class GeocodingService {
       const feature = data.features[0];
       const [longitude, latitude] = feature.center; // Mapbox returns [lng, lat]
 
+      // Extract city from context if available
+      const cityContext = feature.context?.find((ctx: MapboxContextItem) => 
+        ctx.id.startsWith('place') || ctx.id.startsWith('locality')
+      );
+      const city = cityContext?.text;
+
       return {
         latitude,
         longitude,
         fullAddress: feature.place_name,
         placeName: feature.text,
+        // Aliases for template compatibility
+        lat: latitude,
+        lng: longitude,
+        address: feature.place_name,
+        city: city,
       };
     } catch (_error) {
       if (_error instanceof Error) {

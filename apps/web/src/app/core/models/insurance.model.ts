@@ -7,8 +7,8 @@ export type PolicyType = 'platform_floating' | 'owner_byoi';
 export type Insurer = 'rio_uruguay' | 'sancor' | 'federacion_patronal' | 'other';
 export type DeductibleType = 'percentage' | 'fixed';
 export type PolicyStatus = 'active' | 'expired' | 'cancelled' | 'pending_verification';
-export type ClaimType = 'collision' | 'theft' | 'fire' | 'vandalism' | 'misappropriation' | 'other';
-export type ClaimStatus = 'reported' | 'under_review' | 'approved' | 'rejected' | 'paid' | 'closed';
+export type ClaimType = 'collision' | 'theft' | 'fire' | 'vandalism' | 'misappropriation' | 'other' | 'natural_disaster' | 'glass_damage';
+export type ClaimStatus = 'reported' | 'under_review' | 'approved' | 'rejected' | 'paid' | 'closed' | 'pending' | 'investigating';
 export type InspectionType = 'pre_rental' | 'post_rental';
 export type AddonType =
   | 'rc_ampliada'
@@ -303,6 +303,8 @@ export const CLAIM_TYPE_LABELS: Record<ClaimType, string> = {
   vandalism: 'Vandalismo',
   misappropriation: 'Apropiación Indebida',
   other: 'Otro',
+  natural_disaster: 'Desastre Natural',
+  glass_damage: 'Daño de Cristales',
 };
 
 /**
@@ -315,6 +317,8 @@ export const CLAIM_STATUS_LABELS: Record<ClaimStatus, string> = {
   rejected: 'Rechazado',
   paid: 'Pagado',
   closed: 'Cerrado',
+  pending: 'Pendiente',
+  investigating: 'En Investigación',
 };
 
 /**
@@ -327,4 +331,6 @@ export const CLAIM_STATUS_COLORS: Record<ClaimStatus, string> = {
   rejected: 'danger',
   paid: 'success',
   closed: 'medium',
+  pending: 'warning',
+  investigating: 'info',
 };
