@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, inject, signal } from '@angular/core';
 import { SettlementService } from '../../../core/services/settlement.service';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -10,7 +10,7 @@ import { ToastService } from '../../../core/services/toast.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './settlement-simulator.component.html',
 })
-export class SettlementSimulatorComponent implements OnInit {
+export class SettlementSimulatorComponent {
   @Input({ required: true }) bookingId!: string;
 
   private readonly settlementService = inject(SettlementService);
@@ -23,10 +23,6 @@ export class SettlementSimulatorComponent implements OnInit {
     estimatedBreakdown: any;
   } | null>(null);
   readonly error = signal<string | null>(null);
-
-  async ngOnInit(): Promise<void> {
-    // Cargar monto inicial si existe
-  }
 
   async simulate(): Promise<void> {
     this.simulating.set(true);
