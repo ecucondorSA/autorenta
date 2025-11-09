@@ -179,7 +179,7 @@ export class MarketplaceOnboardingService {
         completedAt: data?.mp_onboarding_completed_at || undefined,
         hasActiveTokens,
       };
-    } catch (__error) {
+    } catch {
       return {
         isApproved: false,
         hasActiveTokens: false,
@@ -206,7 +206,7 @@ export class MarketplaceOnboardingService {
       }
 
       return data === true;
-    } catch (__error) {
+    } catch {
       return false;
     }
   }
@@ -375,7 +375,7 @@ export class MarketplaceOnboardingService {
 
       const tokenData: MpTokenResponse = await response.json();
       return tokenData;
-    } catch (__error) {
+    } catch {
       throw new Error('No se pudo completar la autorización con Mercado Pago');
     }
   }
