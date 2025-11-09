@@ -152,6 +152,7 @@ export class MyClaimsPage {
       vandalism: 'Vandalismo',
       natural_disaster: 'Desastre Natural',
       fire: 'Incendio',
+      misappropriation: 'Apropiación Indebida',
       glass_damage: 'Daño de Cristales',
       other: 'Otro',
     };
@@ -165,6 +166,7 @@ export class MyClaimsPage {
       vandalism: '🔨',
       natural_disaster: '🌪️',
       fire: '🔥',
+      misappropriation: '🚨',
       glass_damage: '🪟',
       other: '📋',
     };

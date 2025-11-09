@@ -121,7 +121,7 @@
         </label>
 
         <!-- Delivery Fee Display -->
-        @if (deliveryRequired && deliveryFeeCents() > 0) {
+        @if (deliveryRequired() && deliveryFeeCents() > 0) {
           <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div class="text-lg font-semibold text-gray-900 dark:text-white">
               Tarifa de delivery: ARS ${{ (deliveryFeeCents() / 100) | number: '1.2-2' }}
