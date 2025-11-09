@@ -71,10 +71,10 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                       </p>
                     } @else if (benefit.fee_multiplier > 1) {
                       <p class="text-sm font-medium text-red-600">
-                        +{{ Math.round((benefit.fee_multiplier - 1) * 100) }}% fee
+                        +{{ roundPercent((benefit.fee_multiplier - 1) * 100) }}% fee
                       </p>
                       <p class="text-xs text-red-600">
-                        +{{ Math.round((benefit.guarantee_multiplier - 1) * 100) }}% garantía
+                        +{{ roundPercent((benefit.guarantee_multiplier - 1) * 100) }}% garantía
                       </p>
                     } @else {
                       <p class="text-sm font-medium text-gray-600">Sin ajustes</p>
@@ -193,5 +193,9 @@ export class DriverProfileAdvancedComponent implements OnInit {
   async loadScoreMessage(): Promise<void> {
     const message = this.driverProfileService.getScoreMessage();
     this.scoreMessage.set(message);
+  }
+
+  roundPercent(value: number): number {
+    return Math.round(value);
   }
 }
