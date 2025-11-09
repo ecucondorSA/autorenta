@@ -105,7 +105,7 @@ describe('BonusProtectorService', () => {
     });
 
     it('should handle user with no active protector', (done) => {
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [mockNoProtector], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [mockNoProtector], error: null });
 
       service.getActiveProtector('user-123').subscribe({
         next: (protector) => {
@@ -120,7 +120,7 @@ describe('BonusProtectorService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Database error');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.getActiveProtector('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
@@ -253,7 +253,7 @@ describe('BonusProtectorService', () => {
 
     it('should not refresh if purchase failed', (done) => {
       const failedResult = { ...mockPurchaseResult, success: false };
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [failedResult], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [failedResult], error: null });
 
       service.purchaseProtector('user-123', 2).subscribe({
         next: (result) => {
@@ -268,7 +268,7 @@ describe('BonusProtectorService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Purchase failed');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.purchaseProtector('user-123', 2).subscribe({
         next: () => done.fail('Should have thrown error'),

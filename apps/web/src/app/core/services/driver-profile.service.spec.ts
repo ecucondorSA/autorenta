@@ -122,7 +122,7 @@ describe('DriverProfileService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Database error');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.getProfile('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
@@ -225,7 +225,7 @@ describe('DriverProfileService', () => {
 
   describe('getClassBenefits', () => {
     it('should fetch class benefits', (done) => {
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [mockClassBenefits], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [mockClassBenefits], error: null });
 
       service.getClassBenefits('user-123').subscribe({
         next: (benefits) => {
@@ -240,7 +240,7 @@ describe('DriverProfileService', () => {
     });
 
     it('should handle empty data', (done) => {
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [], error: null });
 
       service.getClassBenefits('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),

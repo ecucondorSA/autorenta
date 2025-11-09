@@ -4,6 +4,7 @@ import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';
 import type { PaymentPreferenceResponse } from '../interfaces/payment-gateway.interface';
 import { PayPalBookingGatewayService } from './paypal-booking-gateway.service';
 import { SupabaseClientService } from './supabase-client.service';
+import type {PaymentProvider} from '../types/database.types';
 
 describe('PayPalBookingGatewayService', () => {
   let service: PayPalBookingGatewayService;

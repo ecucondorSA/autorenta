@@ -80,7 +80,7 @@ describe('AutorentarCreditService', () => {
     });
 
     it('should return default info when no data', (done) => {
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [], error: null });
 
       service.getCreditInfo().subscribe({
         next: (info) => {
@@ -94,7 +94,7 @@ describe('AutorentarCreditService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Database error');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.getCreditInfo().subscribe({
         next: () => done.fail('Should have thrown error'),
@@ -189,7 +189,7 @@ describe('AutorentarCreditService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Issuance failed');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.issueCredit('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
@@ -290,7 +290,7 @@ describe('AutorentarCreditService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Consumption failed');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service
         .consumeCredit({
@@ -354,7 +354,7 @@ describe('AutorentarCreditService', () => {
 
     it('should not refresh if renewal failed', (done) => {
       const failedRenewal = { ...mockRenewalResult, success: false, renewed: false };
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [failedRenewal], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [failedRenewal], error: null });
 
       service.extendCredit('user-123').subscribe({
         next: (result) => {
@@ -369,7 +369,7 @@ describe('AutorentarCreditService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Renewal failed');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.extendCredit('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
@@ -415,7 +415,7 @@ describe('AutorentarCreditService', () => {
         expires_at: null,
       };
 
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [mockRenewalResult], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [mockRenewalResult], error: null });
 
       service.checkRenewalEligibility('user-123').subscribe({
         next: (eligible) => {
@@ -428,7 +428,7 @@ describe('AutorentarCreditService', () => {
 
     it('should return false on error', (done) => {
       const error = new Error('Check failed');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.checkRenewalEligibility('user-123').subscribe({
         next: (eligible) => {
@@ -483,7 +483,7 @@ describe('AutorentarCreditService', () => {
 
     it('should not refresh if breakage failed', (done) => {
       const failedBreakage = { ...mockBreakageResult, success: false };
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [failedBreakage], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [failedBreakage], error: null });
 
       service.recognizeBreakage('user-123').subscribe({
         next: (result) => {
@@ -497,7 +497,7 @@ describe('AutorentarCreditService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Breakage failed');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.recognizeBreakage('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),

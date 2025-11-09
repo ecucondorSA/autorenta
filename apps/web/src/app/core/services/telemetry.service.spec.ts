@@ -168,7 +168,7 @@ describe('TelemetryService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Recording failed');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service
         .recordTelemetry({
@@ -231,7 +231,7 @@ describe('TelemetryService', () => {
     });
 
     it('should return default summary when no data', (done) => {
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [], error: null });
 
       service.getSummary('user-123').subscribe({
         next: (summary) => {
@@ -245,7 +245,7 @@ describe('TelemetryService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Database error');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.getSummary('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
@@ -260,7 +260,7 @@ describe('TelemetryService', () => {
 
   describe('getHistory', () => {
     it('should fetch and set telemetry history', (done) => {
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: mockHistory, error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: mockHistory, error: null });
 
       service.getHistory('user-123', 20).subscribe({
         next: (history) => {
@@ -277,7 +277,7 @@ describe('TelemetryService', () => {
     });
 
     it('should use default limit value', (done) => {
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: mockHistory, error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: mockHistory, error: null });
 
       service.getHistory('user-123').subscribe({
         next: () => {
@@ -292,7 +292,7 @@ describe('TelemetryService', () => {
     });
 
     it('should handle empty history', (done) => {
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [], error: null }));
+      supabaseMock.rpc.and.resolveTo({ data: [], error: null });
 
       service.getHistory('user-123').subscribe({
         next: (history) => {
@@ -306,7 +306,7 @@ describe('TelemetryService', () => {
 
     it('should handle errors', (done) => {
       const error = new Error('Database error');
-      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
+      supabaseMock.rpc.and.resolveTo({ data: null, error });
 
       service.getHistory('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),

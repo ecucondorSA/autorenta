@@ -243,6 +243,88 @@ def fix_snake_case_to_pascal_case():
     return fixed_count
 
 
+def fix_rpc_mock_errors():
+    """Corrige errores TS2345: Promise pasado a rpc() en lugar de usar callFake/resolveTo."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    for test_file in test_files:
+        content = test_file.read_text(encoding='utf-8')
+        original_content = content
+
+        # Patrón 1: .rpc.and.returnValue(Promise.resolve(...))
+        # Cambiar a .rpc.and.resolveTo(...)
+        pattern1 = r'\.rpc\.and\.returnValue\s*\(\s*Promise\.resolve\s*\(([^)]+)\)\s*\)'
+        matches = list(re.finditer(pattern1, content))
+        for match in reversed(matches):  # Reversed para no afectar índices
+            promise_content = match.group(1)
+            replacement = f'.rpc.and.resolveTo({promise_content})'
+            content = content[:match.start()] + replacement + content[match.end():]
+
+        # Patrón 2: .rpc.and.returnValue(Promise.reject(...))
+        # Cambiar a .rpc.and.rejectWith(...)
+        pattern2 = r'\.rpc\.and\.returnValue\s*\(\s*Promise\.reject\s*\(([^)]+)\)\s*\)'
+        matches = list(re.finditer(pattern2, content))
+        for match in reversed(matches):
+            reject_content = match.group(1)
+            replacement = f'.rpc.and.rejectWith({reject_content})'
+            content = content[:match.start()] + replacement + content[match.end():]
+
+        if content != original_content:
+            test_file.write_text(content, encoding='utf-8')
+            fixed_count += 1
+            print_success(f"Corregido RPC mock en: {test_file.relative_to(PROJECT_ROOT)}")
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con errores de RPC mock")
+    return fixed_count
+
+
+def fix_missing_booking_type():
+    """Corrige errores TS2304: 'Booking' no encontrado."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    for test_file in test_files:
+        content = test_file.read_text(encoding='utf-8')
+        original_content = content
+
+        # Buscar usos de 'Booking' sin import
+        if re.search(r'\bBooking\b', content) and not re.search(r'import.*Booking.*from', content):
+            # Verificar si hay imports de database.types
+            db_import = re.search(
+                r"import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['\"]([^'\"]*database\.types[^'\"]*)['\"]",
+                content
+            )
+            if db_import:
+                # Agregar Booking al import existente
+                imports = db_import.group(1)
+                if 'Booking' not in imports:
+                    new_imports = imports.rstrip() + ', Booking'
+                    content = content.replace(
+                        db_import.group(0),
+                        f"import type {{{new_imports}}} from {db_import.group(2)!r}"
+                    )
+            else:
+                # Crear nuevo import
+                import_line = "import type { Booking } from '../types/database.types';\n"
+                import_section = re.search(r'(^import\s+.*?;\n)+', content, re.MULTILINE)
+                if import_section:
+                    insert_pos = import_section.end()
+                    content = content[:insert_pos] + import_line + content[insert_pos:]
+                else:
+                    content = import_line + content
+
+        if content != original_content:
+            test_file.write_text(content, encoding='utf-8')
+            fixed_count += 1
+            print_success(f"Corregido Booking type en: {test_file.relative_to(PROJECT_ROOT)}")
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con Booking type faltante")
+    return fixed_count
+
+
 def main():
     """Función principal."""
     print(f"{BLUE}╔══════════════════════════════════════════════════════════╗{NC}")
@@ -266,6 +348,18 @@ def main():
     # Paso 3: Corregir snake_case a PascalCase
     print(f"{BLUE}📋 Paso 3: Corregir snake_case a PascalCase{NC}")
     if fix_snake_case_to_pascal_case() > 0:
+        changes_made = True
+    print()
+
+    # Paso 4: Corregir errores de RPC mocks (TS2345)
+    print(f"{BLUE}📋 Paso 4: Corregir errores de RPC mocks (TS2345){NC}")
+    if fix_rpc_mock_errors() > 0:
+        changes_made = True
+    print()
+
+    # Paso 5: Corregir Booking type faltante (TS2304)
+    print(f"{BLUE}📋 Paso 5: Corregir Booking type faltante (TS2304){NC}")
+    if fix_missing_booking_type() > 0:
         changes_made = True
     print()
 
