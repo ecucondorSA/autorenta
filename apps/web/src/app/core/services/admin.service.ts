@@ -41,8 +41,8 @@ import {
   Car,
   Booking,
 } from '../models';
-import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
+import { injectSupabase } from './supabase-client.service';
 
 // Import ADMIN_PERMISSIONS constant
 const PERMISSIONS_MATRIX: Record<AdminRole, AdminPermission[]> = {

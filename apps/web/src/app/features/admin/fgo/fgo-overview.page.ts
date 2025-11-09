@@ -115,7 +115,9 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       )
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
+          // Placeholder for any logic to run on successful subscription
         } else if (status === 'CHANNEL_ERROR') {
+          // Placeholder for handling channel errors, e.g., by logging
         }
       });
   }
@@ -218,7 +220,9 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
             this.refreshData();
           }
         },
-        error: (error: unknown) => {},
+        error: (error: unknown) => {
+          console.error('Error recalculating metrics:', error);
+        },
       });
   }
 

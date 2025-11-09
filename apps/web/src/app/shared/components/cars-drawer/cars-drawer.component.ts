@@ -291,27 +291,27 @@ export class CarsDrawerComponent {
 
   readonly cars = this._cars.asReadonly();
 
-  @Input('cars')
-  set carsInput(value: CarWithDistance[]) {
+  @Input()
+  set cars(value: CarWithDistance[]) {
     this._cars.set(value);
   }
 
   readonly isOpen = this._isOpen.asReadonly();
 
-  @Input('isOpen')
-  set isOpenInput(value: boolean) {
+  @Input()
+  set isOpen(value: boolean) {
     this._isOpen.set(value);
   }
 
   readonly selectedCarId = this._selectedCarId.asReadonly();
 
-  @Input('selectedCarId')
-  set selectedCarIdInput(value: string | null) {
+  @Input()
+  set selectedCarId(value: string | null) {
     this._selectedCarId.set(value);
   }
 
   @Output() readonly carSelected = new EventEmitter<string>();
-  @Output() readonly close = new EventEmitter<void>();
+  @Output() readonly closeDrawer = new EventEmitter<void>();
   @Output() readonly reserveClick = new EventEmitter<string>();
 
   readonly selectedCar = computed(() => {
@@ -325,7 +325,7 @@ export class CarsDrawerComponent {
   }
 
   onClose(): void {
-    this.close.emit();
+    this.closeDrawer.emit();
   }
 
   onReserveClick(): void {

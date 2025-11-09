@@ -562,7 +562,7 @@ export class ProfileExpandedPage {
         case 'address':
           payload = this.addressForm.getRawValue();
           break;
-        case 'notifications':
+        case 'notifications': {
           const notifValues = this.notificationsForm.getRawValue();
           payload = {
             notif_prefs: {
@@ -581,6 +581,7 @@ export class ProfileExpandedPage {
             },
           };
           break;
+        }
         case 'preferences':
           payload = this.preferencesForm.getRawValue();
           break;
