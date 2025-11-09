@@ -27,8 +27,7 @@
         *ngIf="statusCounts()[filter] > 0"
         class="ml-2 px-2 py-0.5 rounded-full text-xs"
         [class.bg-surface-raised dark:bg-surface-secondary/20]="statusFilter() === filter"
-        [class.bg-cta-default/10]="statusFilter() !== filter"
-      >
+        [class.bg-cta-default/10]="statusFilter() !== filter">
         {{ statusCounts()[filter] }}
       </span>
     </button>

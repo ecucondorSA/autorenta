@@ -21,15 +21,27 @@
           class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
           aria-label="Cerrar"
         >
-          <svg class="w-6 h-6 text-text-secondary dark:text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            class="w-6 h-6 text-text-secondary dark:text-text-secondary"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
 
       <!-- Progress Bar -->
       <div class="progress-bar-wrapper">
-        <div class="progress-bar bg-surface-secondary dark:bg-charcoal-medium rounded-full h-2 overflow-hidden">
+        <div
+          class="progress-bar bg-surface-secondary dark:bg-charcoal-medium rounded-full h-2 overflow-hidden"
+        >
           <div
             class="progress-bar-fill bg-cta-default h-full transition-all duration-300 ease-out"
             [style.width.%]="progressPercentage()"
@@ -52,7 +64,9 @@
         </h3>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
+            >
               Nombre completo
             </label>
             <input
@@ -63,7 +77,9 @@
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
+            >
               Número de licencia
             </label>
             <input
@@ -74,7 +90,9 @@
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
+            >
               Selfie (opcional)
             </label>
             <button
@@ -95,7 +113,9 @@
         <div class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
+              <label
+                class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
+              >
                 Fecha inicio
               </label>
               <input
@@ -106,7 +126,9 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
+              <label
+                class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
+              >
                 Fecha fin
               </label>
               <input
@@ -118,11 +140,15 @@
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
+            >
               Modo de entrega
             </label>
             <div class="space-y-2">
-              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
+              <label
+                class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
+              >
                 <input
                   type="radio"
                   [value]="'airport'"
@@ -131,7 +157,9 @@
                 />
                 <span class="text-text-primary dark:text-text-secondary">Aeropuerto</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
+              <label
+                class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
+              >
                 <input
                   type="radio"
                   [value]="'home'"
@@ -140,7 +168,9 @@
                 />
                 <span class="text-text-primary dark:text-text-secondary">Domicilio</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
+              <label
+                class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
+              >
                 <input
                   type="radio"
                   [value]="'meet'"
@@ -161,37 +191,52 @@
         </h3>
         <div class="space-y-4">
           <!-- Info Banner -->
-          <div class="bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default rounded-lg p-4">
+          <div
+            class="bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default rounded-lg p-4"
+          >
             <p class="text-sm text-cta-default dark:text-cta-default">
-              💳 <strong>Tarjeta no requerida</strong> - Puedes pagar con transferencia, efectivo o wallet
+              💳 <strong>Tarjeta no requerida</strong> - Puedes pagar con transferencia, efectivo o
+              wallet
             </p>
           </div>
 
           <!-- Payment Options -->
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
+            >
               Método de pago
             </label>
             <div class="space-y-2">
-              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
+              <label
+                class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
+              >
                 <input
                   type="radio"
                   value="transfer"
                   [(ngModel)]="step3Data().paymentMethod"
                   class="w-4 h-4 text-cta-default"
                 />
-                <span class="text-text-primary dark:text-text-secondary">Transferencia bancaria</span>
+                <span class="text-text-primary dark:text-text-secondary"
+                  >Transferencia bancaria</span
+                >
               </label>
-              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
+              <label
+                class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
+              >
                 <input
                   type="radio"
                   value="cash"
                   [(ngModel)]="step3Data().paymentMethod"
                   class="w-4 h-4 text-cta-default"
                 />
-                <span class="text-text-primary dark:text-text-secondary">Pago en efectivo al recibir</span>
+                <span class="text-text-primary dark:text-text-secondary"
+                  >Pago en efectivo al recibir</span
+                >
               </label>
-              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
+              <label
+                class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
+              >
                 <input
                   type="radio"
                   value="wallet"
@@ -206,9 +251,11 @@
           <!-- Total Price -->
           <div class="border-t border-border-default dark:border-gray-600 pt-4">
             <div class="flex justify-between items-center">
-              <span class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure">Total:</span>
+              <span class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure"
+                >Total:</span
+              >
               <span class="text-2xl font-bold text-cta-default">
-                ${{ totalPrice() | number:'1.0-0' }} {{ car?.currency || 'ARS' }}
+                ${{ totalPrice() | number: '1.0-0' }} {{ car?.currency || 'ARS' }}
               </span>
             </div>
           </div>
@@ -217,7 +264,9 @@
     </div>
 
     <!-- Footer Actions -->
-    <div class="stepper-footer px-6 py-4 border-t border-border-default dark:border-gray-600 flex items-center justify-between gap-4">
+    <div
+      class="stepper-footer px-6 py-4 border-t border-border-default dark:border-gray-600 flex items-center justify-between gap-4"
+    >
       <button
         *ngIf="currentStep() > 1"
         type="button"
@@ -239,7 +288,10 @@
           *ngIf="currentStep() < 3"
           type="button"
           (click)="currentStep() === 1 ? onStep1Next() : onStep2Next()"
-          [disabled]="currentStep() === 1 && !canProceedStep1() || currentStep() === 2 && !canProceedStep2()"
+          [disabled]="
+            (currentStep() === 1 && !canProceedStep1()) ||
+            (currentStep() === 2 && !canProceedStep2())
+          "
           class="px-6 py-2 text-sm font-semibold text-cta-text bg-cta-default hover:bg-cta-default/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Continuar →
@@ -256,6 +308,3 @@
     </div>
   </div>
 </div>
-
-
-

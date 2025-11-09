@@ -22,5 +22,3 @@ export class StatsStripComponent {
     { label: 'Usuarios activos', value: '+500', icon: '👥' },
   ];
 }
-
-

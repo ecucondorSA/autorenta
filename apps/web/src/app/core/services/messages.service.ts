@@ -260,8 +260,7 @@ export class MessagesService {
   ): Promise<void> {
     try {
       // Determinar el nombre del canal según el tipo
-      const channelName =
-        type === 'car' ? `presence-car-${contextId}` : `presence-${contextId}`;
+      const channelName = type === 'car' ? `presence-car-${contextId}` : `presence-${contextId}`;
 
       const channel = this.supabase.channel(channelName, {
         config: {

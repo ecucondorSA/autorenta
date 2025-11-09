@@ -21,7 +21,9 @@
 <app-pwa-titlebar />
 
 <!-- Región principal: split 60/40 desktop, tabs mobile -->
-<div class="marketplace-container flex flex-col lg:flex-row h-[calc(100vh-64px)] overflow-hidden pt-16">
+<div
+  class="marketplace-container flex flex-col lg:flex-row h-[calc(100vh-64px)] overflow-hidden pt-16"
+>
   <!-- Mapa (60% desktop, full mobile) -->
   <div class="map-section flex-1 lg:w-[60%] relative">
     <app-cars-map
@@ -49,7 +51,10 @@
     </div>
 
     <!-- Urgent rental banner flotante -->
-    <div *ngIf="selectedCar() && selectedCar()!.region_id && expressMode()" class="absolute top-4 right-4 z-10 max-w-sm">
+    <div
+      *ngIf="selectedCar() && selectedCar()!.region_id && expressMode()"
+      class="absolute top-4 right-4 z-10 max-w-sm"
+    >
       <app-urgent-rental-banner
         [carId]="selectedCar()!.id"
         [regionId]="selectedCar()!.region_id!"
@@ -87,13 +92,19 @@
     [class.hidden]="isMobile() && !drawerOpen()"
   >
     <!-- Drawer header -->
-    <div class="drawer-header flex items-center justify-between p-4 border-b border-border-default dark:border-gray-600 flex-shrink-0">
+    <div
+      class="drawer-header flex items-center justify-between p-4 border-b border-border-default dark:border-gray-600 flex-shrink-0"
+    >
       <div>
         <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure">
           Autos disponibles
         </h2>
-        <p *ngIf="carsWithDistance().length > 0" class="text-sm text-text-secondary dark:text-text-secondary">
-          {{ carsWithDistance().length }} {{ carsWithDistance().length === 1 ? 'auto encontrado' : 'autos encontrados' }}
+        <p
+          *ngIf="carsWithDistance().length > 0"
+          class="text-sm text-text-secondary dark:text-text-secondary"
+        >
+          {{ carsWithDistance().length }}
+          {{ carsWithDistance().length === 1 ? 'auto encontrado' : 'autos encontrados' }}
         </p>
       </div>
       <button
@@ -103,8 +114,18 @@
         class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
         aria-label="Cerrar panel"
       >
-        <svg class="w-6 h-6 text-text-secondary dark:text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <svg
+          class="w-6 h-6 text-text-secondary dark:text-text-secondary"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
@@ -117,7 +138,10 @@
       </div>
 
       <!-- Empty state -->
-      <div *ngIf="!loading() && carsWithDistance().length === 0" class="flex flex-col items-center justify-center py-12 text-center">
+      <div
+        *ngIf="!loading() && carsWithDistance().length === 0"
+        class="flex flex-col items-center justify-center py-12 text-center"
+      >
         <svg
           class="w-16 h-16 text-text-secondary dark:text-text-secondary/50 mb-4"
           fill="none"
@@ -171,7 +195,10 @@
     </div>
 
     <!-- Drawer footer con CTA (desktop) -->
-    <div *ngIf="selectedCar() && !isMobile()" class="drawer-footer p-4 border-t border-border-default dark:border-gray-600 flex-shrink-0">
+    <div
+      *ngIf="selectedCar() && !isMobile()"
+      class="drawer-footer p-4 border-t border-border-default dark:border-gray-600 flex-shrink-0"
+    >
       <app-sticky-cta-mobile
         [pricePerDay]="selectedCar()!.price_per_day"
         [ctaText]="'Reservar sin tarjeta'"

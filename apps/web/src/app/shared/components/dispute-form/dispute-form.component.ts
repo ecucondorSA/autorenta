@@ -20,7 +20,9 @@ import { ToastService } from '../../../core/services/toast.service';
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">Crear Disputa</h2>
+          <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">
+            Crear Disputa
+          </h2>
           <button
             type="button"
             (click)="close()"
@@ -47,7 +49,9 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Dispute Kind Selector -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Tipo de Disputa *
             </label>
             <select
@@ -64,7 +68,9 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Description -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Descripción *
             </label>
             <textarea
@@ -197,6 +203,3 @@ export class DisputeFormComponent {
     this.error.set(null);
   }
 }
-
-
-

@@ -170,7 +170,8 @@ export class TransactionHistoryComponent implements OnInit {
       bonus: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
       rental_payment_lock:
         'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
-      rental_payment_transfer: 'bg-cta-default/20 text-cta-default dark:bg-cta-default/20 dark:text-cta-default',
+      rental_payment_transfer:
+        'bg-cta-default/20 text-cta-default dark:bg-cta-default/20 dark:text-cta-default',
       security_deposit_lock:
         'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
       security_deposit_release:

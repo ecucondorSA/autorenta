@@ -41,7 +41,9 @@ import {
 
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">Gestión de Siniestros</h1>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+              Gestión de Siniestros
+            </h1>
             <p class="text-gray-600 dark:text-gray-300 mt-1">
               Administra y resuelve los siniestros reportados
             </p>
@@ -179,7 +181,9 @@ import {
                 </span>
               </div>
 
-              <h3 class="text-sm font-semibold text-gray-900 dark:text-text-inverse mb-1 line-clamp-2">
+              <h3
+                class="text-sm font-semibold text-gray-900 dark:text-text-inverse mb-1 line-clamp-2"
+              >
                 {{ claim.description }}
               </h3>
 
@@ -310,12 +314,14 @@ export class AdminClaimsPage implements OnInit {
 
   getStatusBadgeClass(status: ClaimStatus): string {
     const classes: Record<ClaimStatus, string> = {
-      reported: 'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
+      reported:
+        'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
       pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200',
-      investigating:
-        'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
-      under_review: 'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
-      approved: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
+      investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
+      under_review:
+        'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
+      approved:
+        'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',
       paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       closed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-200',

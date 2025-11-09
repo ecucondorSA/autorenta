@@ -45,7 +45,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -58,6 +59,3 @@
 .radius-control {
   min-width: 200px;
 }
-
-
-

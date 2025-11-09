@@ -214,6 +214,3 @@ export class AuditLogsPage implements OnInit {
     }
   }
 }
-
-
-

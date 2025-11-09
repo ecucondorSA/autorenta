@@ -1,6 +1,9 @@
 import { Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BaseChatComponent, ChatContext } from '../../../shared/components/base-chat/base-chat.component';
+import {
+  BaseChatComponent,
+  ChatContext,
+} from '../../../shared/components/base-chat/base-chat.component';
 
 /**
  * Componente de chat para consultas sobre un auto (sin reserva todavía)

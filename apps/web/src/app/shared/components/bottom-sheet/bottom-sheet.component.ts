@@ -31,8 +31,8 @@ export class BottomSheetComponent implements OnInit, OnDestroy {
   @Input() showDragHandle = true;
   @Input() peekHeight = '180px'; // Height showing 1.5 cards
 
-  @Output() heightChange = new EventEmitter<BottomSheetHeight>();
-  @Output() close = new EventEmitter<void>();
+  @Output() sheetHeightChange = new EventEmitter<BottomSheetHeight>();
+  @Output() closeSheet = new EventEmitter<void>();
 
   @ViewChild('sheet', { static: false }) sheetRef?: ElementRef<HTMLDivElement>;
 
@@ -123,7 +123,7 @@ export class BottomSheetComponent implements OnInit, OnDestroy {
       } else if (this.currentHeight() === 'half') {
         this.setHeight('peek');
       } else {
-        this.close.emit();
+        this.closeSheet.emit();
       }
     }
 
@@ -133,11 +133,11 @@ export class BottomSheetComponent implements OnInit, OnDestroy {
 
   setHeight(height: BottomSheetHeight): void {
     this.currentHeight.set(height);
-    this.heightChange.emit(height);
+    this.sheetHeightChange.emit(height);
   }
 
   onClose(): void {
-    this.close.emit();
+    this.closeSheet.emit();
   }
 
   getTransform(): string {
@@ -146,6 +146,3 @@ export class BottomSheetComponent implements OnInit, OnDestroy {
     return `translateY(${deltaY}px)`;
   }
 }
-
-
-

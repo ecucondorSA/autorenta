@@ -64,7 +64,9 @@ export interface BlockDateRequest {
         <div class="space-y-4">
           <!-- Date Range Picker -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Rango de Fechas *
             </label>
             <input
@@ -81,7 +83,9 @@ export interface BlockDateRequest {
 
           <!-- Reason Selector -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Motivo *
             </label>
             <select
@@ -98,7 +102,9 @@ export interface BlockDateRequest {
 
           <!-- Notes (Optional) -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Notas (opcional)
             </label>
             <textarea

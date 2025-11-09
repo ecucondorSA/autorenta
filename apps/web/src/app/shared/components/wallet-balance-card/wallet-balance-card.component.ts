@@ -199,15 +199,13 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
     // Crear effect dentro del contexto de inyección
     runInInjectionContext(this.injector, () => {
-      this.pendingWatcher = effect(
-        () => {
-          const newCount = this.walletService.pendingDepositsCount();
-          if (newCount > 0 && newCount > this.previousPendingCount) {
-            this.showPendingNotification();
-          }
-          this.previousPendingCount = newCount;
-        },
-      );
+      this.pendingWatcher = effect(() => {
+        const newCount = this.walletService.pendingDepositsCount();
+        if (newCount > 0 && newCount > this.previousPendingCount) {
+          this.showPendingNotification();
+        }
+        this.previousPendingCount = newCount;
+      });
     });
   }
 

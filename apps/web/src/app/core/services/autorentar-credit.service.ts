@@ -284,7 +284,12 @@ export class AutorentarCreditService {
   }
 
   private handleError(error: unknown, defaultMessage: string): void {
-    const message = error instanceof Error ? error.message : (typeof error === 'object' && error !== null && 'message' in error ? String((error as { message: unknown }).message) : defaultMessage);
+    const message =
+      error instanceof Error
+        ? error.message
+        : typeof error === 'object' && error !== null && 'message' in error
+          ? String((error as { message: unknown }).message)
+          : defaultMessage;
     this.error.set({ message });
     this.loading.set(false);
     this.logger.error(defaultMessage, error instanceof Error ? error.message : String(error));

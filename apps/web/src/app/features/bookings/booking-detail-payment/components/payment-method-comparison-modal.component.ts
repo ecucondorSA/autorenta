@@ -92,13 +92,17 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                       d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                     />
                   </svg>
-                  <h3 class="text-lg font-bold text-cta-default dark:text-cta-default">Con Tarjeta</h3>
+                  <h3 class="text-lg font-bold text-cta-default dark:text-cta-default">
+                    Con Tarjeta
+                  </h3>
                 </div>
               </div>
 
               <!-- Pago Inmediato -->
               <div class="mb-4">
-                <p class="text-xs uppercase font-semibold text-cta-default dark:text-cta-default mb-1">
+                <p
+                  class="text-xs uppercase font-semibold text-cta-default dark:text-cta-default mb-1"
+                >
                   Pago inmediato
                 </p>
                 <p class="text-sm text-gray-700 dark:text-text-secondary/80">Total del alquiler</p>
@@ -109,7 +113,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
               <!-- Garantía -->
               <div class="mb-4 pb-4 border-b border-cta-default/40 dark:border-cta-default">
-                <p class="text-xs uppercase font-semibold text-cta-default dark:text-cta-default mb-1">
+                <p
+                  class="text-xs uppercase font-semibold text-cta-default dark:text-cta-default mb-1"
+                >
                   Garantía
                 </p>
                 <p class="text-sm text-gray-700 dark:text-text-secondary/80 mb-2">
@@ -126,7 +132,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
               <!-- Total Bloqueado -->
               <div class="mb-4">
-                <p class="text-xs uppercase font-semibold text-cta-default dark:text-cta-default mb-1">
+                <p
+                  class="text-xs uppercase font-semibold text-cta-default dark:text-cta-default mb-1"
+                >
                   Total bloqueado en tarjeta
                 </p>
                 <p class="text-2xl font-bold text-cta-default dark:text-cta-default">

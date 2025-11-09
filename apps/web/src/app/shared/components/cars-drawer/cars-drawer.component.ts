@@ -292,21 +292,21 @@ export class CarsDrawerComponent {
   readonly cars = this._cars.asReadonly();
 
   @Input()
-  set cars(value: CarWithDistance[]) {
+  set carsInput(value: CarWithDistance[]) {
     this._cars.set(value);
   }
 
   readonly isOpen = this._isOpen.asReadonly();
 
   @Input()
-  set isOpen(value: boolean) {
+  set isOpenInput(value: boolean) {
     this._isOpen.set(value);
   }
 
   readonly selectedCarId = this._selectedCarId.asReadonly();
 
   @Input()
-  set selectedCarId(value: string | null) {
+  set selectedCarIdInput(value: string | null) {
     this._selectedCarId.set(value);
   }
 
@@ -339,4 +339,3 @@ export class CarsDrawerComponent {
     return car.id;
   }
 }
-

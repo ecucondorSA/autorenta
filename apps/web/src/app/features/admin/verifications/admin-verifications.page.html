@@ -266,8 +266,7 @@
                     [class.bg-cta-default/20]="getVerificationLevel(verification) === 2"
                     [class.text-cta-default]="getVerificationLevel(verification) === 2"
                     [class.bg-purple-100]="getVerificationLevel(verification) === 3"
-                    [class.text-purple-800]="getVerificationLevel(verification) === 3"
-                  >
+                    [class.text-purple-800]="getVerificationLevel(verification) === 3">
                     {{ getVerificationLevelName(verification) }}
                   </span>
                   @if (isSuspicious(verification)) {

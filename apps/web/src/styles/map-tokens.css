@@ -7,7 +7,7 @@
 
 :root {
   /* ===== Map Marker Tokens ===== */
-  
+
   /* Photo Mode Tokens (browsing/exploration) */
   --map-marker-photo-size: 70px;
   --map-marker-photo-border: 2.5px;
@@ -15,7 +15,7 @@
   --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   --map-marker-photo-hover-scale: 1.12;
   --map-marker-photo-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  
+
   /* Price Mode Tokens (price comparison) */
   --map-marker-price-size: 50px;
   --map-marker-price-border: 3px;
@@ -25,13 +25,13 @@
   --map-marker-price-shadow: 0 4px 12px rgba(79, 70, 229, 0.5);
   --map-marker-price-hover-scale: 1.2;
   --map-marker-price-hover-shadow: 0 6px 20px rgba(79, 70, 229, 0.7);
-  
+
   /* Instant Booking Indicator */
   --map-marker-instant-booking-color: #10b981;
   --map-marker-instant-booking-border: 2px;
   --map-marker-instant-booking-indicator-size: 12px;
   --map-marker-instant-booking-pulse-opacity: 0.4;
-  
+
   /* Availability Status Colors */
   --map-marker-available-color: #10b981;
   --map-marker-available-shadow: rgba(16, 185, 129, 0.2);
@@ -41,25 +41,25 @@
   --map-marker-in-use-shadow: rgba(99, 102, 241, 0.2);
   --map-marker-unavailable-color: #ef4444;
   --map-marker-unavailable-shadow: rgba(239, 68, 68, 0.2);
-  
+
   /* Map Controls */
   --map-control-bg: rgba(255, 255, 255, 0.95);
   --map-control-border: rgba(0, 0, 0, 0.1);
   --map-control-text: #1f2937;
   --map-control-hover-bg: rgba(0, 0, 0, 0.05);
   --map-control-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  
+
   /* Map Popup/Tooltip */
   --map-popup-bg: #ffffff;
   --map-popup-text: #1f2937;
   --map-popup-border: rgba(0, 0, 0, 0.1);
   --map-popup-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  
+
   /* User Location Marker */
   --map-user-location-color: #3b82f6;
   --map-user-location-border: 4px;
   --map-user-location-halo-color: rgba(59, 130, 246, 0.2);
-  
+
   /* Map Canvas Filters */
   --map-canvas-brightness: 1;
   --map-canvas-contrast: 1;
@@ -73,25 +73,25 @@
     --map-marker-photo-border-color: #1f2937;
     --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     --map-marker-photo-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-    
+
     /* Price Mode - Dark */
     --map-marker-price-border-color: #1f2937;
     --map-marker-price-shadow: 0 4px 12px rgba(79, 70, 229, 0.6);
     --map-marker-price-hover-shadow: 0 6px 20px rgba(79, 70, 229, 0.8);
-    
+
     /* Map Controls - Dark */
     --map-control-bg: rgba(20, 20, 20, 0.85);
     --map-control-border: rgba(255, 255, 255, 0.1);
     --map-control-text: #f0f0f0;
     --map-control-hover-bg: rgba(255, 255, 255, 0.1);
     --map-control-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    
+
     /* Map Popup - Dark */
     --map-popup-bg: rgba(20, 20, 20, 0.95);
     --map-popup-text: #f0f0f0;
     --map-popup-border: rgba(255, 255, 255, 0.1);
     --map-popup-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    
+
     /* Map Canvas - Dark */
     --map-canvas-brightness: 0.95;
     --map-canvas-contrast: 1.1;
@@ -104,25 +104,25 @@
   --map-marker-photo-border-color: #1f2937;
   --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   --map-marker-photo-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-  
+
   /* Price Mode - Dark */
   --map-marker-price-border-color: #1f2937;
   --map-marker-price-shadow: 0 4px 12px rgba(79, 70, 229, 0.6);
   --map-marker-price-hover-shadow: 0 6px 20px rgba(79, 70, 229, 0.8);
-  
+
   /* Map Controls - Dark */
   --map-control-bg: rgba(20, 20, 20, 0.85);
   --map-control-border: rgba(255, 255, 255, 0.1);
   --map-control-text: #f0f0f0;
   --map-control-hover-bg: rgba(255, 255, 255, 0.1);
   --map-control-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  
+
   /* Map Popup - Dark */
   --map-popup-bg: rgba(20, 20, 20, 0.95);
   --map-popup-text: #f0f0f0;
   --map-popup-border: rgba(255, 255, 255, 0.1);
   --map-popup-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  
+
   /* Map Canvas - Dark */
   --map-canvas-brightness: 0.95;
   --map-canvas-contrast: 1.1;
@@ -166,4 +166,3 @@
     --map-marker-price-size: 56px;
   }
 }
-

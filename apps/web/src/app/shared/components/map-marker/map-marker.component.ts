@@ -1,4 +1,3 @@
-
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/car-locations.service';
@@ -8,7 +7,7 @@ import { CarMapLocation } from '@core/services/car-locations.service';
   templateUrl: './map-marker.component.html',
   styleUrls: ['./map-marker.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class MapMarkerComponent {
   @Input() car!: CarMapLocation;

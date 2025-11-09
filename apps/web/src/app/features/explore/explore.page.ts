@@ -1,4 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, signal, computed } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +25,10 @@ import { addIcons } from 'ionicons';
 import { optionsOutline, locateOutline } from 'ionicons/icons';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
-import { MapFiltersComponent, FilterState } from '../../shared/components/map-filters/map-filters.component';
+import {
+  MapFiltersComponent,
+  FilterState,
+} from '../../shared/components/map-filters/map-filters.component';
 import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
 import { StickyCtaMobileComponent } from '../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
@@ -211,7 +223,11 @@ export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
   /**
    * 🎯 Handle reserve click from drawer
    */
-  onReserveClick(data: { carId: string; paymentMethod: string; dates?: { start: Date; end: Date } }) {
+  onReserveClick(data: {
+    carId: string;
+    paymentMethod: string;
+    dates?: { start: Date; end: Date };
+  }) {
     // Navigate to booking checkout with car ID and payment method
     this.router.navigate(['/bookings/checkout'], {
       queryParams: {

@@ -39,7 +39,9 @@
   class="radius-control fixed bottom-20 right-4 z-40 bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-lg p-4 border border-border-default dark:border-gray-600"
 >
   <div class="flex items-center justify-between mb-3">
-    <span class="text-sm font-medium text-text-primary dark:text-text-secondary">Radio de búsqueda</span>
+    <span class="text-sm font-medium text-text-primary dark:text-text-secondary"
+      >Radio de búsqueda</span
+    >
     <button
       type="button"
       (click)="toggleRadiusControl()"
@@ -47,7 +49,12 @@
       aria-label="Cerrar"
     >
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
       </svg>
     </button>
   </div>
@@ -75,6 +82,3 @@
     Autos en tu zona: <span class="font-semibold">{{ radiusKm() }} km</span>
   </p>
 </div>
-
-
-

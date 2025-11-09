@@ -49,8 +49,8 @@ export class StepperModalComponent {
   @Input() isOpen = signal(false);
   @Input() userLocation?: { lat: number; lng: number };
 
-  @Output() confirm = new EventEmitter<QuickRentData>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() confirmStep = new EventEmitter<QuickRentData>();
+  @Output() cancelStep = new EventEmitter<void>();
 
   readonly currentStep = signal<1 | 2 | 3>(1);
   readonly step1Data = signal<QuickRentStep1Data>({
@@ -114,7 +114,7 @@ export class StepperModalComponent {
 
   onStep3Confirm(): void {
     if (!this.car) return;
-    this.confirm.emit({
+    this.confirmStep.emit({
       carId: this.car.id,
       step1: this.step1Data(),
       step2: this.step2Data(),
@@ -129,7 +129,7 @@ export class StepperModalComponent {
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelStep.emit();
     this.reset();
   }
 
@@ -161,6 +161,3 @@ export class StepperModalComponent {
     this.step3Data.set({ paymentMethod: 'wallet', totalPrice: 0 });
   }
 }
-
-
-

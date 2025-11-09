@@ -95,6 +95,3 @@ export class PendingReviewsListComponent implements OnInit {
     }
   }
 }
-
-
-

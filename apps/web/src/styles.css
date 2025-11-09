@@ -41,33 +41,33 @@
      ───────────────────────────────────────────────────────────── */
   :root {
     /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #F3E8D8; /* Marfil cálido - Fondo principal */
-    --surface-raised: #FFFCF8; /* Blanco cálido - Tarjetas, modales */
-    --surface-secondary: #E3D2BE; /* Beige tostado - Paneles secundarios */
-    --surface-elevated: #FAF3EA; /* Superficies elevadas */
+    --surface-base: #f3e8d8; /* Marfil cálido - Fondo principal */
+    --surface-raised: #fffcf8; /* Blanco cálido - Tarjetas, modales */
+    --surface-secondary: #e3d2be; /* Beige tostado - Paneles secundarios */
+    --surface-elevated: #faf3ea; /* Superficies elevadas */
 
     /* ─── Textos ─── */
-    --text-primary: #2B1D14; /* Espresso - Texto principal */
-    --text-secondary: #5C4736; /* Cacao - Texto secundario */
-    --text-muted: #8C7765; /* Arena ahumada - Texto deshabilitado */
-    --text-inverse: #FFFBF5; /* Marfil puro - Texto sobre fondos oscuros */
+    --text-primary: #2b1d14; /* Espresso - Texto principal */
+    --text-secondary: #5c4736; /* Cacao - Texto secundario */
+    --text-muted: #8c7765; /* Arena ahumada - Texto deshabilitado */
+    --text-inverse: #fffbf5; /* Marfil puro - Texto sobre fondos oscuros */
 
     /* ─── Bordes ─── */
-    --border-default: #D7C4B2; /* Bordes por defecto */
-    --border-muted: #E9DED0; /* Bordes sutiles */
-    --border-focus: #3B6E8F; /* Borde de focus (accesibilidad) */
+    --border-default: #d7c4b2; /* Bordes por defecto */
+    --border-muted: #e9ded0; /* Bordes sutiles */
+    --border-focus: #3b6e8f; /* Borde de focus (accesibilidad) */
 
     /* ─── CTAs y Acciones ─── */
-    --cta-default: #A7D8F4; /* Azul pastel principal */
-    --cta-hover: #8EC9EC; /* Azul pastel hover */
+    --cta-default: #a7d8f4; /* Azul pastel principal */
+    --cta-hover: #8ec9ec; /* Azul pastel hover */
     --cta-text: #050505; /* Negro - Texto sobre CTAs */
 
     /* ─── Estados y Feedback ─── */
-    --info-light: #A7D8F4; /* Azul pastel para info */
-    --info-dark: #6BA8D4; /* Azul más saturado para dark mode */
-    --success-light: #9DB38B; /* Verde oliva suave */
-    --warning-light: #C4A882; /* Beige cálido */
-    --error-light: #B25E5E; /* Rojo óxido suave */
+    --info-light: #a7d8f4; /* Azul pastel para info */
+    --info-dark: #6ba8d4; /* Azul más saturado para dark mode */
+    --success-light: #9db38b; /* Verde oliva suave */
+    --warning-light: #c4a882; /* Beige cálido */
+    --error-light: #b25e5e; /* Rojo óxido suave */
 
     /* ─── Overlays ─── */
     --overlay-dark: rgba(43, 29, 20, 0.75); /* Overlay oscuro tonal */
@@ -83,7 +83,7 @@
     --text-disabled: var(--text-muted);
     --border-color: var(--border-default);
     --accent-primary: var(--cta-default);
-    --accent-warm: #B08968; /* Mantener para compatibilidad */
+    --accent-warm: #b08968; /* Mantener para compatibilidad */
 
     /* ─── Sistema de Espaciados ─── */
     --spacing-xs: 0.25rem; /* 4px */
@@ -120,33 +120,33 @@
   /* ─── Dark Mode Variables ─── */
   .dark {
     /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #0F0F0F; /* Fondo principal oscuro */
+    --surface-base: #0f0f0f; /* Fondo principal oscuro */
     --surface-raised: #111111; /* G100 - Tarjetas, modales */
     --surface-secondary: rgba(48, 55, 59, 0.65); /* Paneles secundarios con transparencia */
-    --surface-elevated: #2B2B2B; /* G80 - Superficies elevadas */
+    --surface-elevated: #2b2b2b; /* G80 - Superficies elevadas */
 
     /* ─── Textos ─── */
-    --text-primary: #F8F4EC; /* Marfil - Texto principal */
-    --text-secondary: #BCBCBC; /* G20 - Texto secundario */
-    --text-muted: #7B7B7B; /* G40 - Texto deshabilitado */
+    --text-primary: #f8f4ec; /* Marfil - Texto principal */
+    --text-secondary: #bcbcbc; /* G20 - Texto secundario */
+    --text-muted: #7b7b7b; /* G40 - Texto deshabilitado */
     --text-inverse: #050505; /* Negro - Texto sobre fondos claros */
 
     /* ─── Bordes ─── */
-    --border-default: #4E4E4E; /* G60 - Bordes por defecto */
-    --border-muted: #7B7B7B; /* G40 - Bordes sutiles */
-    --border-focus: #6BA8D4; /* Borde de focus ajustado para dark */
+    --border-default: #4e4e4e; /* G60 - Bordes por defecto */
+    --border-muted: #7b7b7b; /* G40 - Bordes sutiles */
+    --border-focus: #6ba8d4; /* Borde de focus ajustado para dark */
 
     /* ─── CTAs y Acciones (mantener azul pastel) ─── */
-    --cta-default: #A7D8F4;
-    --cta-hover: #8EC9EC;
+    --cta-default: #a7d8f4;
+    --cta-hover: #8ec9ec;
     --cta-text: #050505; /* Negro para contraste */
 
     /* ─── Estados y Feedback ─── */
-    --info-light: #A7D8F4;
-    --info-dark: #6BA8D4;
-    --success-light: #9DB38B;
-    --warning-light: #C4A882;
-    --error-light: #B25E5E;
+    --info-light: #a7d8f4;
+    --info-dark: #6ba8d4;
+    --success-light: #9db38b;
+    --warning-light: #c4a882;
+    --error-light: #b25e5e;
 
     /* ─── Overlays ─── */
     --overlay-dark: rgba(5, 5, 5, 0.85); /* Overlay más oscuro */
@@ -484,15 +484,15 @@
     @apply dark:bg-surface-secondary dark:text-text-primary;
     @apply dark:hover:bg-surface-raised;
   }
-  
+
   .btn-secondary:hover {
     border-color: var(--text-secondary);
   }
-  
+
   .dark .btn-secondary {
     border-color: var(--text-secondary);
   }
-  
+
   .dark .btn-secondary:hover {
     border-color: var(--text-secondary);
   }
@@ -503,11 +503,11 @@
     background-color: var(--cta-default);
     color: var(--cta-text);
   }
-  
+
   .btn-accent:hover {
     background-color: var(--cta-hover);
   }
-  
+
   .btn-accent:focus-visible {
     @apply ring-2 ring-offset-2;
     --tw-ring-color: var(--cta-default);
@@ -801,8 +801,8 @@
     background-image: linear-gradient(
       to right,
       var(--surface-secondary),
-      rgba(227, 227, 227, 0.3), /* border-default con opacidad */
-      var(--surface-secondary)
+      rgba(227, 227, 227, 0.3),
+      /* border-default con opacidad */ var(--surface-secondary)
     );
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s ease-in-out infinite;
@@ -865,7 +865,7 @@
     @apply text-text-secondary dark:text-text-secondary;
     @apply hover:bg-surface-secondary/70 dark:hover:bg-surface-secondary/70;
   }
-  
+
   .nav-link:hover {
     color: var(--cta-default);
   }
@@ -879,7 +879,7 @@
     color: var(--cta-default);
     box-shadow: 0 4px 14px rgba(167, 216, 244, 0.12);
   }
-  
+
   .nav-link-primary:hover {
     background-color: rgba(167, 216, 244, 0.15); /* cta-default/15 */
     color: var(--cta-default);
@@ -911,7 +911,7 @@
     @apply h-px;
     background-color: var(--border-default);
   }
-  
+
   .dark .divider-horizontal {
     background-color: var(--border-default);
   }
@@ -920,7 +920,7 @@
     @apply w-px;
     background-color: var(--border-default);
   }
-  
+
   .dark .divider-vertical {
     background-color: var(--border-default);
   }

@@ -104,7 +104,7 @@
 }
 
 @media (min-width: 768px) {
-.map-controls__sort {
+  .map-controls__sort {
     display: flex;
   }
 }
@@ -1405,7 +1405,7 @@
     flex-direction: column;
     height: calc(100vh - 60px - 70px); /* Restar titlebar + bottom nav */
   }
-  
+
   .map-section {
     flex: 1 1 auto;
     height: 40vh;

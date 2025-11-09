@@ -22,7 +22,9 @@ import { ToastService } from '../../../core/services/toast.service';
             type="button"
             (click)="method.set('stock-photos')"
             [class]="
-              method() === 'stock-photos' ? 'bg-cta-default text-cta-text' : 'bg-gray-200 text-gray-700'
+              method() === 'stock-photos'
+                ? 'bg-cta-default text-cta-text'
+                : 'bg-gray-200 text-gray-700'
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
@@ -32,7 +34,9 @@ import { ToastService } from '../../../core/services/toast.service';
             type="button"
             (click)="method.set('cloudflare-ai')"
             [class]="
-              method() === 'cloudflare-ai' ? 'bg-cta-default text-cta-text' : 'bg-gray-200 text-gray-700'
+              method() === 'cloudflare-ai'
+                ? 'bg-cta-default text-cta-text'
+                : 'bg-gray-200 text-gray-700'
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >

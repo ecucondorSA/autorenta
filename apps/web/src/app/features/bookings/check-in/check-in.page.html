@@ -99,8 +99,7 @@
               [class.bg-cta-default/20]="booking()?.status === 'confirmed'"
               [class.text-cta-default]="booking()?.status === 'confirmed'"
               [class.bg-success-light/20]="booking()?.status === 'in_progress'"
-              [class.text-success-light]="booking()?.status === 'in_progress'"
-            >
+              [class.text-success-light]="booking()?.status === 'in_progress'">
               {{ booking()?.status === 'confirmed' ? 'Confirmada' : 'En progreso' }}
             </span>
           </div>

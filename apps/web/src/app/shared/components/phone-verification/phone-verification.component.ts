@@ -40,7 +40,10 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
       </div>
 
       <!-- Verified State -->
-      <div *ngIf="status().isVerified" class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
+      <div
+        *ngIf="status().isVerified"
+        class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
+      >
         <div class="flex items-center gap-2 text-success-light">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -161,7 +164,9 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         <!-- OTP Input (if OTP sent) -->
         <div *ngIf="status().otpSent" class="space-y-4">
           <div class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
-            <p class="text-sm text-cta-default font-medium">Código enviado a {{ status().value }}</p>
+            <p class="text-sm text-cta-default font-medium">
+              Código enviado a {{ status().value }}
+            </p>
             <p class="text-xs text-cta-default mt-1">
               Ingresa el código de 6 dígitos que recibiste por SMS
             </p>

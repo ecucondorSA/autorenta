@@ -231,7 +231,8 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                                 'bg-yellow-100 dark:bg-yellow-900/30':
                                   notification.type === 'warning',
                                 'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
-                                'bg-cta-default/20 dark:bg-cta-default/30': notification.type === 'info',
+                                'bg-cta-default/20 dark:bg-cta-default/30':
+                                  notification.type === 'info',
                               }"
                             >
                               {{ getNotificationIcon(notification.type) }}
@@ -336,7 +337,8 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                                 'bg-yellow-100 dark:bg-yellow-900/30':
                                   notification.type === 'warning',
                                 'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
-                                'bg-cta-default/20 dark:bg-cta-default/30': notification.type === 'info',
+                                'bg-cta-default/20 dark:bg-cta-default/30':
+                                  notification.type === 'info',
                               }"
                             >
                               {{ getNotificationIcon(notification.type) }}
@@ -422,10 +424,12 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                         <div
                           class="flex h-10 w-10 items-center justify-center rounded-full text-2xl"
                           [ngClass]="{
-                            'bg-success-light/20 dark:bg-success-light/30': notification.type === 'success',
+                            'bg-success-light/20 dark:bg-success-light/30':
+                              notification.type === 'success',
                             'bg-yellow-100 dark:bg-yellow-900/30': notification.type === 'warning',
                             'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
-                            'bg-cta-default/20 dark:bg-cta-default/30': notification.type === 'info',
+                            'bg-cta-default/20 dark:bg-cta-default/30':
+                              notification.type === 'info',
                           }"
                         >
                           {{ getNotificationIcon(notification.type) }}

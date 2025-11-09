@@ -3,7 +3,9 @@
     <!-- Header -->
     <div class="mb-8 flex justify-between items-center">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">Gestión de Reembolsos</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+          Gestión de Reembolsos
+        </h1>
         <p class="mt-2 text-gray-600 dark:text-gray-300">
           Procesa reembolsos de forma segura y con trazabilidad completa
         </p>
@@ -29,7 +31,12 @@
       <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-            <svg class="h-6 w-6 text-text-inverse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -40,7 +47,9 @@
           </div>
           <div class="ml-4">
             <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Pendientes</p>
-            <p class="text-2xl font-semibold text-gray-900 dark:text-text-inverse">{{ pendingCount() }}</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-text-inverse">
+              {{ pendingCount() }}
+            </p>
           </div>
         </div>
       </div>
@@ -48,7 +57,12 @@
       <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0 bg-success-light rounded-md p-3">
-            <svg class="h-6 w-6 text-text-inverse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -69,7 +83,12 @@
       <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0 bg-cta-default rounded-md p-3">
-            <svg class="h-6 w-6 text-text-inverse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -176,7 +195,9 @@
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-text-inverse">No hay reembolsos</h3>
+          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-text-inverse">
+            No hay reembolsos
+          </h3>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
             Comienza procesando un nuevo reembolso
           </p>
@@ -228,7 +249,9 @@
             >
               @for (refund of refundRequests(); track refund.id) {
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-text-inverse">
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-text-inverse"
+                  >
                     {{ formatDate(refund.created_at) }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
@@ -290,7 +313,9 @@
       <div
         class="sticky top-0 bg-surface-raised dark:bg-surface-secondary border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center"
       >
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">Detalle del Reembolso</h2>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">
+          Detalle del Reembolso
+        </h2>
         <button
           (click)="closeDetailModal()"
           class="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200"
@@ -399,7 +424,9 @@
         }
         @if (selectedRefund()!.admin_notes) {
           <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h3 class="text-sm font-medium text-gray-900 dark:text-text-inverse mb-2">Notas del Admin</h3>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-text-inverse mb-2">
+              Notas del Admin
+            </h3>
             <p class="text-sm text-gray-700 dark:text-gray-300">
               {{ selectedRefund()!.admin_notes }}
             </p>
@@ -449,7 +476,9 @@
       <div class="px-6 py-4 space-y-6">
         <!-- Step 1: Search Booking -->
         <div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-text-inverse mb-4">1. Buscar Booking</h3>
+          <h3 class="text-lg font-medium text-gray-900 dark:text-text-inverse mb-4">
+            1. Buscar Booking
+          </h3>
           <div class="flex gap-2">
             <input
               type="text"

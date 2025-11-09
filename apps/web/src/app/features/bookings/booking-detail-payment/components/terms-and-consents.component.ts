@@ -67,7 +67,9 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
               class="mt-1 h-4 w-4 text-success-light focus:ring-success-light dark:focus:ring-success-light border-success-light/50 dark:border-success-light rounded bg-surface-raised dark:bg-surface-secondary/60 transition-colors"
             />
             <div class="flex-1">
-              <span class="text-sm font-medium text-success-light dark:text-success-light mb-1 block">
+              <span
+                class="text-sm font-medium text-success-light dark:text-success-light mb-1 block"
+              >
                 Autorizo guardar mi tarjeta de forma segura
               </span>
               <span class="text-sm text-success-light dark:text-success-light">

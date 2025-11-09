@@ -485,7 +485,7 @@ export class RequestPayoutModalComponent {
   @Input() userId!: string;
   @Input() maxAmount!: number;
   @Input() defaultBankAccount!: BankAccount | null;
-  @Output() close = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>();
   @Output() payoutRequested = new EventEmitter<void>();
 
   private readonly payoutService = inject(PayoutService);
@@ -519,7 +519,7 @@ export class RequestPayoutModalComponent {
 
   onClose(): void {
     if (!this.submitting()) {
-      this.close.emit();
+      this.closeModal.emit();
     }
   }
 

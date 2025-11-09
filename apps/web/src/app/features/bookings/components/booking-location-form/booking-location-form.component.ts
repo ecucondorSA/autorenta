@@ -1,4 +1,13 @@
-import { Component, Output, EventEmitter, Input, signal, inject, computed, effect } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  Input,
+  signal,
+  inject,
+  computed,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -35,22 +44,20 @@ export interface BookingLocationData {
 @Component({
   selector: 'app-booking-location-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TranslateModule,
-  ],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './booking-location-form.component.html',
-  styles: [`
-    .booking-location-form {
-      max-width: 600px;
-      margin: 0 auto;
-    }
+  styles: [
+    `
+      .booking-location-form {
+        max-width: 600px;
+        margin: 0 auto;
+      }
 
-    .location-input-group {
-      position: relative;
-    }
-  `],
+      .location-input-group {
+        position: relative;
+      }
+    `,
+  ],
 })
 export class BookingLocationFormComponent {
   private readonly locationService = inject(LocationService);
@@ -71,12 +78,16 @@ export class BookingLocationFormComponent {
   // Pickup location
   pickupAddress = signal('');
   pickupCoordinates = signal<{ lat: number; lng: number } | null>(null);
-  pickupSuggestions = signal<Array<{ address: string; city: string; lat: number; lng: number }>>([]);
+  pickupSuggestions = signal<Array<{ address: string; city: string; lat: number; lng: number }>>(
+    [],
+  );
 
   // Dropoff location
   dropoffAddress = signal('');
   dropoffCoordinates = signal<{ lat: number; lng: number } | null>(null);
-  dropoffSuggestions = signal<Array<{ address: string; city: string; lat: number; lng: number }>>([]);
+  dropoffSuggestions = signal<Array<{ address: string; city: string; lat: number; lng: number }>>(
+    [],
+  );
 
   // Delivery
   deliveryRequired = signal(false);
@@ -182,7 +193,12 @@ export class BookingLocationFormComponent {
   /**
    * Select pickup suggestion
    */
-  selectPickupSuggestion(suggestion: { address: string; city: string; lat: number; lng: number }): void {
+  selectPickupSuggestion(suggestion: {
+    address: string;
+    city: string;
+    lat: number;
+    lng: number;
+  }): void {
     this.pickupAddress.set(suggestion.address);
     this.pickupCoordinates.set({ lat: suggestion.lat, lng: suggestion.lng });
     this.pickupSuggestions.set([]);
@@ -191,7 +207,12 @@ export class BookingLocationFormComponent {
   /**
    * Select dropoff suggestion
    */
-  selectDropoffSuggestion(suggestion: { address: string; city: string; lat: number; lng: number }): void {
+  selectDropoffSuggestion(suggestion: {
+    address: string;
+    city: string;
+    lat: number;
+    lng: number;
+  }): void {
     this.dropoffAddress.set(suggestion.address);
     this.dropoffCoordinates.set({ lat: suggestion.lat, lng: suggestion.lng });
     this.dropoffSuggestions.set([]);
@@ -202,14 +223,14 @@ export class BookingLocationFormComponent {
    */
   private calculateDistance(
     pickup: { lat: number; lng: number },
-    dropoff: { lat: number; lng: number }
+    dropoff: { lat: number; lng: number },
   ): void {
     try {
       const distance = this.distanceCalculator.calculateDistance(
         pickup.lat,
         pickup.lng,
         dropoff.lat,
-        dropoff.lng
+        dropoff.lng,
       );
 
       this.distanceKm.set(distance);

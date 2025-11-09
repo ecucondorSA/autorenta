@@ -113,7 +113,10 @@
               <p class="text-sm font-semibold">
                 Aumento: +{{ simulationResult()!.withProtector.increase }} clase(s)
               </p>
-              <p *ngIf="simulationResult()!.withProtector.protected" class="text-sm text-success-light">
+              <p
+                *ngIf="simulationResult()!.withProtector.protected"
+                class="text-sm text-success-light"
+              >
                 ✓ Protegido
               </p>
             </div>

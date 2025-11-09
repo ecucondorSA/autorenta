@@ -77,6 +77,3 @@ export class UtilityBarComponent implements OnInit, OnDestroy {
     this.quickFilterClick.emit(filterId);
   }
 }
-
-
-

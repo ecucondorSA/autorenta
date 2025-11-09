@@ -72,16 +72,13 @@ export class EmailService {
     recipientName: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await this.supabase.functions.invoke(
-        'send-booking-cancellation-email',
-        {
-          body: {
-            bookingId,
-            recipientEmail,
-            recipientName,
-          },
+      const { error } = await this.supabase.functions.invoke('send-booking-cancellation-email', {
+        body: {
+          bookingId,
+          recipientEmail,
+          recipientName,
         },
-      );
+      });
 
       if (error) {
         console.error('Error sending cancellation email:', error);
@@ -108,17 +105,14 @@ export class EmailService {
     startDate: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await this.supabase.functions.invoke(
-        'send-booking-reminder-email',
-        {
-          body: {
-            bookingId,
-            recipientEmail,
-            recipientName,
-            startDate,
-          },
+      const { error } = await this.supabase.functions.invoke('send-booking-reminder-email', {
+        body: {
+          bookingId,
+          recipientEmail,
+          recipientName,
+          startDate,
         },
-      );
+      });
 
       if (error) {
         console.error('Error sending reminder email:', error);

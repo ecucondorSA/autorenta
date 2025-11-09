@@ -1,5 +1,8 @@
-
-<div class="cars-map-container" [class.map-variant-photo]="markerVariant === 'photo'" [class.map-variant-price]="markerVariant === 'price'">
+<div
+  class="cars-map-container"
+  [class.map-variant-photo]="markerVariant === 'photo'"
+  [class.map-variant-price]="markerVariant === 'price'"
+>
   <div *ngIf="loading()" class="map-overlay loading-overlay">
     <div class="spinner"></div>
     <p>Cargando mapa de autos disponibles...</p>
@@ -22,15 +25,14 @@
   <div #mapContainer class="map-canvas"></div>
 
   <!-- Details Panel -->
-  <div class="absolute top-0 left-0 h-full w-96 p-4 z-10 transition-transform duration-300 ease-in-out"
-       [class.translate-x-0]="selectedCar()"
-       [class.-translate-x-full]="!selectedCar()">
-    <app-map-details-panel
-      [carLocation]="selectedCar()"
-      (close)="onDetailsPanelClose()">
+  <div
+    class="absolute top-0 left-0 h-full w-96 p-4 z-10 transition-transform duration-300 ease-in-out"
+    [class.translate-x-0]="selectedCar()"
+    [class.-translate-x-full]="!selectedCar()"
+  >
+    <app-map-details-panel [carLocation]="selectedCar()" (close)="onDetailsPanelClose()">
     </app-map-details-panel>
   </div>
-
 
   <!-- Controles de mapa -->
   <div class="map-controls-container" *ngIf="!loading() && !error()">
@@ -90,7 +92,10 @@
   </div>
 
   <!-- Control de radio de búsqueda -->
-  <div class="search-radius-control" *ngIf="showSearchRadius && !loading() && !error() && userLocation">
+  <div
+    class="search-radius-control"
+    *ngIf="showSearchRadius && !loading() && !error() && userLocation"
+  >
     <div class="search-radius-label">Radio de búsqueda</div>
     <input
       type="range"
@@ -114,4 +119,3 @@
     (close)="onBookingPanelClose()"
   />
 </div>
-

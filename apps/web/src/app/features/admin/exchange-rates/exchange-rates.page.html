@@ -211,7 +211,12 @@
     @if (stats().last_sync) {
       <div class="bg-cta-default/10 border border-cta-default/40 rounded-lg p-4 mb-6">
         <div class="flex items-center gap-3">
-          <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="w-5 h-5 text-cta-default"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -414,7 +419,8 @@
                         <span
                           class="px-2 py-1 text-xs font-medium rounded-full"
                           [ngClass]="{
-                            'bg-success-light/20 text-success-light': (rate.volatility_24h || 0) < 1,
+                            'bg-success-light/20 text-success-light':
+                              (rate.volatility_24h || 0) < 1,
                             'bg-yellow-100 text-yellow-800':
                               (rate.volatility_24h || 0) >= 1 && (rate.volatility_24h || 0) < 3,
                             'bg-warning-light/20 text-warning-light':

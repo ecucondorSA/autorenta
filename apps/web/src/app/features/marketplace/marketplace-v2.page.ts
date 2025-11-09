@@ -25,10 +25,22 @@ import { SocialProofIndicatorsComponent } from '../../shared/components/social-p
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { MobileBottomNavComponent } from '../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
-import { UtilityBarComponent, QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
-import { FloatingActionFabComponent, FabAction } from '../../shared/components/floating-action-fab/floating-action-fab.component';
-import { NotificationToastComponent, ToastType } from '../../shared/components/notification-toast/notification-toast.component';
-import { StatsStripComponent, Stat } from '../../shared/components/stats-strip/stats-strip.component';
+import {
+  UtilityBarComponent,
+  QuickFilter,
+} from '../../shared/components/utility-bar/utility-bar.component';
+import {
+  FloatingActionFabComponent,
+  FabAction,
+} from '../../shared/components/floating-action-fab/floating-action-fab.component';
+import {
+  NotificationToastComponent,
+  ToastType,
+} from '../../shared/components/notification-toast/notification-toast.component';
+import {
+  StatsStripComponent,
+  Stat,
+} from '../../shared/components/stats-strip/stats-strip.component';
 import { DateRange } from '../../shared/components/date-range-picker/date-range-picker.component';
 import {
   QuickBookingModalComponent,
@@ -218,17 +230,17 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     // Only switch to 'price' when user is actively filtering/comparing
     const filters = this.mapFilters();
     const dateRange = this.dateRange();
-    
+
     // Switch to 'price' mode ONLY when:
     // 1. User has active price filters AND date range (serious comparison)
     const hasPriceFilter = filters.priceRange !== null;
     const hasDateRange = dateRange.from !== null && dateRange.to !== null;
-    
+
     // Only use price mode when both price filter AND date range are active
     if (hasPriceFilter && hasDateRange) {
       return 'price'; // Price comparison mode
     }
-    
+
     // Default to photo mode for better marketplace experience
     return 'photo'; // Browsing/exploration mode (default - more visual)
   });

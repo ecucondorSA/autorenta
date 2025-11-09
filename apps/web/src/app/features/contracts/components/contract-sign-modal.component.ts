@@ -487,7 +487,7 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 })
 export class ContractSignModalComponent implements OnInit {
   @Input() bookingId!: string;
-  @Output() close = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>();
   @Output() signed = new EventEmitter<void>();
 
   private readonly contractsService = inject(ContractsService);
@@ -547,7 +547,7 @@ export class ContractSignModalComponent implements OnInit {
 
   onClose(): void {
     if (!this.signing()) {
-      this.close.emit();
+      this.closeModal.emit();
     }
   }
 }

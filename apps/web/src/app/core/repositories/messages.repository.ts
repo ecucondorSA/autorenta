@@ -190,7 +190,10 @@ export class MessagesRepository {
   /**
    * Obtiene una conversación específica por ID
    */
-  async getConversationById(conversationId: string, userId: string): Promise<ConversationDTO | null> {
+  async getConversationById(
+    conversationId: string,
+    userId: string,
+  ): Promise<ConversationDTO | null> {
     const [contextId, otherUserId] = conversationId.split('_');
     if (!contextId || !otherUserId) {
       return null;
@@ -215,4 +218,3 @@ export class MessagesRepository {
     return result.conversations.find((c) => c.otherUserId === otherUserId) || null;
   }
 }
-

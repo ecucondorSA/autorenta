@@ -273,9 +273,7 @@ export function createMockQueryBuilder<T = any>(
     .and.resolveTo({ data: defaultData, error: null });
 
   // Soporte para await directo
-  builder.then = (
-    onFulfilled?: ((value: { data: T | T[] | null; error: null }) => any) | null,
-  ) => {
+  builder.then = (onFulfilled?: ((value: { data: T | T[] | null; error: null }) => any) | null) => {
     return Promise.resolve({ data: defaultData, error: null }).then(onFulfilled as any);
   };
 

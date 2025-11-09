@@ -20,7 +20,9 @@ import { ToastService } from '../../../core/services/toast.service';
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">Reportar Reseña</h2>
+          <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">
+            Reportar Reseña
+          </h2>
           <button
             type="button"
             (click)="close()"
@@ -47,7 +49,9 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Reason Selector -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Motivo *
             </label>
             <select
@@ -66,7 +70,9 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Additional Details -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Detalles adicionales (opcional)
             </label>
             <textarea
@@ -195,6 +201,3 @@ export class FlagReviewModalComponent {
     this.error.set(null);
   }
 }
-
-
-

@@ -85,7 +85,8 @@
               <p
                 class="text-sm font-semibold"
                 [ngClass]="{
-                  'text-text-primary dark:text-text-inverse': isStepCompleted(i) || isStepCurrent(i),
+                  'text-text-primary dark:text-text-inverse':
+                    isStepCompleted(i) || isStepCurrent(i),
                   'text-text-muted dark:text-text-secondary/60': isStepUpcoming(i),
                 }"
               >
@@ -275,7 +276,7 @@
                           >Tarifa de delivery</span
                         >
                         <span class="font-semibold text-gray-900 dark:text-text-inverse">
-                          ARS ${{ ((booking()?.delivery_fee_cents ?? 0) / 100) | number: '1.2-2' }}
+                          ARS ${{ (booking()?.delivery_fee_cents ?? 0) / 100 | number: '1.2-2' }}
                         </span>
                       </div>
                     </div>

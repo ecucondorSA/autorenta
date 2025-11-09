@@ -31,7 +31,9 @@
   </div>
 
   <!-- Header -->
-  <div class="bottom-sheet-header px-4 pb-3 border-b border-border-default dark:border-gray-600 flex-shrink-0">
+  <div
+    class="bottom-sheet-header px-4 pb-3 border-b border-border-default dark:border-gray-600 flex-shrink-0"
+  >
     <div class="flex items-center justify-between">
       <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure">
         <ng-content select="[slot=header]"></ng-content>
@@ -42,8 +44,18 @@
         class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
         aria-label="Cerrar"
       >
-        <svg class="w-6 h-6 text-text-secondary dark:text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <svg
+          class="w-6 h-6 text-text-secondary dark:text-text-secondary"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
@@ -55,10 +67,10 @@
   </div>
 
   <!-- Footer (optional) -->
-  <div *ngIf="currentHeight() !== 'full'" class="bottom-sheet-footer px-4 py-3 border-t border-border-default dark:border-gray-600 flex-shrink-0">
+  <div
+    *ngIf="currentHeight() !== 'full'"
+    class="bottom-sheet-footer px-4 py-3 border-t border-border-default dark:border-gray-600 flex-shrink-0"
+  >
     <ng-content select="[slot=footer]"></ng-content>
   </div>
 </div>
-
-
-

@@ -22,14 +22,30 @@
   animation: fadeInUp 0.6s ease-out backwards;
 }
 
-.car-card-enhanced:nth-child(1) { animation-delay: 0.1s; }
-.car-card-enhanced:nth-child(2) { animation-delay: 0.15s; }
-.car-card-enhanced:nth-child(3) { animation-delay: 0.2s; }
-.car-card-enhanced:nth-child(4) { animation-delay: 0.25s; }
-.car-card-enhanced:nth-child(5) { animation-delay: 0.3s; }
-.car-card-enhanced:nth-child(6) { animation-delay: 0.35s; }
-.car-card-enhanced:nth-child(7) { animation-delay: 0.4s; }
-.car-card-enhanced:nth-child(8) { animation-delay: 0.45s; }
+.car-card-enhanced:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.car-card-enhanced:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.car-card-enhanced:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.car-card-enhanced:nth-child(4) {
+  animation-delay: 0.25s;
+}
+.car-card-enhanced:nth-child(5) {
+  animation-delay: 0.3s;
+}
+.car-card-enhanced:nth-child(6) {
+  animation-delay: 0.35s;
+}
+.car-card-enhanced:nth-child(7) {
+  animation-delay: 0.4s;
+}
+.car-card-enhanced:nth-child(8) {
+  animation-delay: 0.45s;
+}
 
 @keyframes fadeInUp {
   from {
@@ -56,13 +72,14 @@
 }
 
 /* Badge Animations */
-.car-card-enhanced [class*="bg-success-light"],
-.car-card-enhanced [class*="bg-warning-light"] {
+.car-card-enhanced [class*='bg-success-light'],
+.car-card-enhanced [class*='bg-warning-light'] {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -71,15 +88,15 @@
 }
 
 /* Favorite Button */
-.car-card-enhanced button[class*="favorite"] {
+.car-card-enhanced button[class*='favorite'] {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.car-card-enhanced button[class*="favorite"]:hover {
+.car-card-enhanced button[class*='favorite']:hover {
   transform: scale(1.1);
 }
 
-.car-card-enhanced button[class*="favorite"]:active {
+.car-card-enhanced button[class*='favorite']:active {
   transform: scale(0.95);
 }
 
@@ -89,7 +106,8 @@
 }
 
 @keyframes priceGlow {
-  0%, 100% {
+  0%,
+  100% {
     text-shadow: 0 0 10px rgba(167, 216, 244, 0.3); /* cta-default con opacidad */
   }
   50% {
@@ -184,10 +202,18 @@ input:focus {
   animation: fadeIn 0.6s ease-out backwards;
 }
 
-.trust-badge:nth-child(1) { animation-delay: 0.1s; }
-.trust-badge:nth-child(2) { animation-delay: 0.2s; }
-.trust-badge:nth-child(3) { animation-delay: 0.3s; }
-.trust-badge:nth-child(4) { animation-delay: 0.4s; }
+.trust-badge:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.trust-badge:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.trust-badge:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.trust-badge:nth-child(4) {
+  animation-delay: 0.4s;
+}
 
 @keyframes fadeIn {
   from {
@@ -273,12 +299,20 @@ html {
 
 /* Dark Mode Transitions */
 * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 /* Gradient Text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--cta-default) 0%, var(--success-light) 50%, var(--success-light) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--cta-default) 0%,
+    var(--success-light) 50%,
+    var(--success-light) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -298,7 +332,8 @@ html {
 }
 
 @keyframes floating {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -319,12 +354,7 @@ html {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: left 0.5s;
 }
 

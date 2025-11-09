@@ -2,7 +2,11 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
 import type { AdminAuditLog } from '../models';
-import type { AdminRole, AdminUser, AdminAuditLog as AdminAuditLogType } from '../types/admin.types';
+import type {
+  AdminRole,
+  AdminUser,
+  AdminAuditLog as AdminAuditLogType,
+} from '../types/admin.types';
 
 /**
  * RBAC Service - Role-Based Access Control

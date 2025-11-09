@@ -148,7 +148,8 @@ export class SimpleCheckoutComponent {
     const stepIndex = this.currentStep();
 
     switch (stepIndex) {
-      case 0: { // Fechas
+      case 0: {
+        // Fechas
         if (!this.startDate() || !this.endDate()) {
           this.error.set('Por favor selecciona las fechas de alquiler');
           return false;

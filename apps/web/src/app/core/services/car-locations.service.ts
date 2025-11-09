@@ -87,10 +87,10 @@ export class CarLocationsService {
 
     const edgeData = await this.tryEdgeFunction();
     const data = edgeData ?? (await this.fetchFromDatabase(options));
-    
+
     // Enrich with availability if requested
     const enriched = includeAvailability ? await this.enrichWithAvailability(data, options) : data;
-    
+
     this.cache = {
       data: enriched,
       expiresAt: now + this.cacheTtlMs,
@@ -348,7 +348,10 @@ export class CarLocationsService {
     const dLon = this.toRad(lon2 - lon1);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(this.toRad(lat1)) *
+        Math.cos(this.toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
@@ -533,34 +536,40 @@ export class CarLocationsService {
     // Get photo URL with fallback logic
     // La vista v_cars_with_main_photo ahora incluye photo_gallery como JSONB array
     const photoUrlRaw = car.main_photo_url ?? record.main_photo_url ?? record.photo_url ?? null;
-    let photoUrl = typeof photoUrlRaw === 'string' && photoUrlRaw.trim() ? photoUrlRaw.trim() : null;
-    
+    let photoUrl =
+      typeof photoUrlRaw === 'string' && photoUrlRaw.trim() ? photoUrlRaw.trim() : null;
+
     // Get photo_gallery from view (comes as JSONB, Supabase converts to array automatically)
-    const photoGalleryRaw = car.photo_gallery ?? record.photo_gallery ?? record.photoGallery ?? null;
+    const photoGalleryRaw =
+      car.photo_gallery ?? record.photo_gallery ?? record.photoGallery ?? null;
     let photoGallery: string[] | null = null;
-    
+
     if (photoGalleryRaw) {
       if (Array.isArray(photoGalleryRaw)) {
         // Supabase convierte JSONB automáticamente a array
-        photoGallery = photoGalleryRaw.filter((url): url is string => typeof url === 'string' && url.trim().length > 0);
+        photoGallery = photoGalleryRaw.filter(
+          (url): url is string => typeof url === 'string' && url.trim().length > 0,
+        );
       } else if (typeof photoGalleryRaw === 'string') {
         // Fallback: si viene como string JSON (de edge function o payload)
         try {
           const parsed = JSON.parse(photoGalleryRaw);
           if (Array.isArray(parsed)) {
-            photoGallery = parsed.filter((url): url is string => typeof url === 'string' && url.trim().length > 0);
+            photoGallery = parsed.filter(
+              (url): url is string => typeof url === 'string' && url.trim().length > 0,
+            );
           }
         } catch {
           // Invalid JSON, ignore
         }
       }
     }
-    
+
     // Use first photo from gallery as fallback if main_photo_url is missing
     if (!photoUrl && photoGallery && photoGallery.length > 0) {
       photoUrl = photoGallery[0];
     }
-    
+
     // If still no photo, photoUrl remains null (will use initials fallback in UI)
 
     const descriptionRaw =
@@ -571,22 +580,51 @@ export class CarLocationsService {
 
     // Extract instant booking and rental terms
     const autoApprovalRaw = car.auto_approval ?? record.auto_approval ?? meta.auto_approval ?? null;
-    const instantBooking = typeof autoApprovalRaw === 'boolean' ? autoApprovalRaw : autoApprovalRaw === 'true' || autoApprovalRaw === true;
+    const instantBooking =
+      typeof autoApprovalRaw === 'boolean'
+        ? autoApprovalRaw
+        : autoApprovalRaw === 'true' || autoApprovalRaw === true;
 
-    const minRentalDaysRaw = car.min_rental_days ?? record.min_rental_days ?? meta.min_rental_days ?? null;
-    const minRentalDays = typeof minRentalDaysRaw === 'number' ? minRentalDaysRaw : typeof minRentalDaysRaw === 'string' ? Number.parseInt(minRentalDaysRaw, 10) : undefined;
+    const minRentalDaysRaw =
+      car.min_rental_days ?? record.min_rental_days ?? meta.min_rental_days ?? null;
+    const minRentalDays =
+      typeof minRentalDaysRaw === 'number'
+        ? minRentalDaysRaw
+        : typeof minRentalDaysRaw === 'string'
+          ? Number.parseInt(minRentalDaysRaw, 10)
+          : undefined;
 
-    const maxRentalDaysRaw = car.max_rental_days ?? record.max_rental_days ?? meta.max_rental_days ?? null;
-    const maxRentalDays = typeof maxRentalDaysRaw === 'number' ? maxRentalDaysRaw : typeof maxRentalDaysRaw === 'string' ? Number.parseInt(maxRentalDaysRaw, 10) : undefined;
+    const maxRentalDaysRaw =
+      car.max_rental_days ?? record.max_rental_days ?? meta.max_rental_days ?? null;
+    const maxRentalDays =
+      typeof maxRentalDaysRaw === 'number'
+        ? maxRentalDaysRaw
+        : typeof maxRentalDaysRaw === 'string'
+          ? Number.parseInt(maxRentalDaysRaw, 10)
+          : undefined;
 
-    const depositRequiredRaw = car.deposit_required ?? record.deposit_required ?? meta.deposit_required ?? null;
-    const depositRequired = typeof depositRequiredRaw === 'boolean' ? depositRequiredRaw : depositRequiredRaw === 'true' || depositRequiredRaw === true;
+    const depositRequiredRaw =
+      car.deposit_required ?? record.deposit_required ?? meta.deposit_required ?? null;
+    const depositRequired =
+      typeof depositRequiredRaw === 'boolean'
+        ? depositRequiredRaw
+        : depositRequiredRaw === 'true' || depositRequiredRaw === true;
 
-    const depositAmountRaw = car.deposit_amount ?? record.deposit_amount ?? meta.deposit_amount ?? null;
-    const depositAmount = typeof depositAmountRaw === 'number' ? depositAmountRaw : typeof depositAmountRaw === 'string' ? Number.parseFloat(depositAmountRaw) : undefined;
+    const depositAmountRaw =
+      car.deposit_amount ?? record.deposit_amount ?? meta.deposit_amount ?? null;
+    const depositAmount =
+      typeof depositAmountRaw === 'number'
+        ? depositAmountRaw
+        : typeof depositAmountRaw === 'string'
+          ? Number.parseFloat(depositAmountRaw)
+          : undefined;
 
-    const insuranceIncludedRaw = car.insurance_included ?? record.insurance_included ?? meta.insurance_included ?? null;
-    const insuranceIncluded = typeof insuranceIncludedRaw === 'boolean' ? insuranceIncludedRaw : insuranceIncludedRaw === 'true' || insuranceIncludedRaw === true;
+    const insuranceIncludedRaw =
+      car.insurance_included ?? record.insurance_included ?? meta.insurance_included ?? null;
+    const insuranceIncluded =
+      typeof insuranceIncludedRaw === 'boolean'
+        ? insuranceIncludedRaw
+        : insuranceIncludedRaw === 'true' || insuranceIncludedRaw === true;
 
     return {
       carId,

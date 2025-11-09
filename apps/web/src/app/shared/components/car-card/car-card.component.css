@@ -20,9 +20,9 @@
   border-width: 2px;
   transform: scale(1.02) translateY(-2px);
   box-shadow:
-    0 0 0 3px rgba(167, 216, 244, 0.15), /* cta-default glow */
-    0 0 0 6px rgba(196, 168, 130, 0.08), /* warning-light glow */
-    0 12px 32px rgba(167, 216, 244, 0.2); /* cta-default shadow */
+    0 0 0 3px rgba(167, 216, 244, 0.15),
+    /* cta-default glow */ 0 0 0 6px rgba(196, 168, 130, 0.08),
+    /* warning-light glow */ 0 12px 32px rgba(167, 216, 244, 0.2); /* cta-default shadow */
   z-index: 10;
   position: relative;
 }
@@ -31,14 +31,18 @@
 .card-premium.selected:hover {
   transform: scale(1.02) translateY(-2px);
   box-shadow:
-    0 0 0 3px rgba(167, 216, 244, 0.2), /* cta-default glow */
-    0 0 0 6px rgba(196, 168, 130, 0.12), /* warning-light glow */
-    0 14px 36px rgba(167, 216, 244, 0.25); /* cta-default shadow */
+    0 0 0 3px rgba(167, 216, 244, 0.2),
+    /* cta-default glow */ 0 0 0 6px rgba(196, 168, 130, 0.12),
+    /* warning-light glow */ 0 14px 36px rgba(167, 216, 244, 0.25); /* cta-default shadow */
 }
 
 /* Animación sutil para el fallback sin foto */
 .card-premium:hover .absolute.inset-0:has(svg) {
-  background: linear-gradient(135deg, rgba(196, 168, 130, 0.15) 0%, rgba(167, 216, 244, 0.15) 100%); /* warning-light y cta-default */
+  background: linear-gradient(
+    135deg,
+    rgba(196, 168, 130, 0.15) 0%,
+    rgba(167, 216, 244, 0.15) 100%
+  ); /* warning-light y cta-default */
 }
 
 /* Mejora la transición del badge de distancia */

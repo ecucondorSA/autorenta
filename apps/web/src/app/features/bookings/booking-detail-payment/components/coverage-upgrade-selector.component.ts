@@ -37,7 +37,9 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
               <span class="text-sm font-medium text-text-primary dark:text-text-primary"
                 >Protección estándar</span
               >
-              <span class="text-sm font-semibold text-success-light dark:text-success-light">Incluido</span>
+              <span class="text-sm font-semibold text-success-light dark:text-success-light"
+                >Incluido</span
+              >
             </div>
             <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
               Protección básica incluida con tu reserva
@@ -80,9 +82,7 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
               <span class="text-sm font-medium text-text-primary dark:text-text-primary"
                 >Cobertura Premium</span
               >
-              <span class="text-sm font-semibold text-primary-600 dark:text-cta-default"
-                >+10%</span
-              >
+              <span class="text-sm font-semibold text-primary-600 dark:text-cta-default">+10%</span>
             </div>
             <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
               Reduce a la mitad lo máximo que podrías pagar por daños
@@ -125,9 +125,7 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
               <span class="text-sm font-medium text-text-primary dark:text-text-primary"
                 >Máxima protección</span
               >
-              <span class="text-sm font-semibold text-primary-600 dark:text-cta-default"
-                >+20%</span
-              >
+              <span class="text-sm font-semibold text-primary-600 dark:text-cta-default">+20%</span>
             </div>
             <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
               Cero responsabilidad por daños (nosotros nos encargamos)

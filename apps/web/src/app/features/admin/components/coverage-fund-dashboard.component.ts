@@ -35,7 +35,9 @@ interface WalletLedgerEntry {
     <div class="max-w-6xl mx-auto p-6">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse mb-2">📊 Fondo de Cobertura</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse mb-2">
+          📊 Fondo de Cobertura
+        </h1>
         <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
           Administración del fondo de franquicias para incidentes
         </p>

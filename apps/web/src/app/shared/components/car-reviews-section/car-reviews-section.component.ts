@@ -36,6 +36,3 @@ export class CarReviewsSectionComponent implements OnInit {
       .map((_, index) => (index < rounded ? 'filled' : 'empty'));
   }
 }
-
-
-

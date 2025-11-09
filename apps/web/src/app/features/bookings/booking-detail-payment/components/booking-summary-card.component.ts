@@ -171,7 +171,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <div
             class="flex justify-between text-sm pt-2 border-t border-gray-100 dark:border-neutral-800/80"
           >
-            <span class="text-gray-700 dark:text-text-secondary/80 font-medium">Subtotal (USD)</span>
+            <span class="text-gray-700 dark:text-text-secondary/80 font-medium"
+              >Subtotal (USD)</span
+            >
             <span class="font-semibold text-gray-900 dark:text-text-primary">
               {{ formatUsd(priceBreakdown.totalUsd) }}
             </span>

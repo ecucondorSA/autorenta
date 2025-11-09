@@ -202,14 +202,20 @@ import {
           Cómo funciona
         </h4>
         <div class="text-xs text-cta-default dark:text-cta-default space-y-2">
-          <div *ngIf="paymentMode === 'card'" class="bg-surface-raised/50 dark:bg-gray-800/30 rounded p-3">
+          <div
+            *ngIf="paymentMode === 'card'"
+            class="bg-surface-raised/50 dark:bg-gray-800/30 rounded p-3"
+          >
             <p class="font-medium mb-1">Con tarjeta:</p>
             <p>
               • Si hay un daño menor, solo se cobra lo necesario (hasta el límite de protección).
             </p>
             <p>• Si no hay problemas, se libera todo automáticamente al devolver el auto.</p>
           </div>
-          <div *ngIf="paymentMode === 'wallet'" class="bg-surface-raised/50 dark:bg-gray-800/30 rounded p-3">
+          <div
+            *ngIf="paymentMode === 'wallet'"
+            class="bg-surface-raised/50 dark:bg-gray-800/30 rounded p-3"
+          >
             <p class="font-medium mb-1">Con wallet:</p>
             <p>• Solo se usa tu saldo bloqueado si hay gastos o daños.</p>
             <p>• Si hay problemas grandes, te ayudamos a resolverlo.</p>
@@ -217,7 +223,9 @@ import {
           <div
             class="bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/60 rounded p-3"
           >
-            <p class="font-medium text-success-light dark:text-success-light mb-1">¿Qué está cubierto?</p>
+            <p class="font-medium text-success-light dark:text-success-light mb-1">
+              ¿Qué está cubierto?
+            </p>
             <p class="text-success-light dark:text-success-light">
               Daños al vehículo, robo, combustible faltante, multas y peajes.
             </p>

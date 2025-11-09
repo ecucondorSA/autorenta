@@ -5,7 +5,10 @@ import { MessagesService, Message } from '../../core/services/messages.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UnreadMessagesService } from '../../core/services/unread-messages.service';
 import { OfflineMessagesIndicatorComponent } from '../../shared/components/offline-messages-indicator/offline-messages-indicator.component';
-import { RealtimeConnectionService, ConnectionStatus } from '../../core/services/realtime-connection.service';
+import {
+  RealtimeConnectionService,
+  ConnectionStatus,
+} from '../../core/services/realtime-connection.service';
 import type { ConversationDTO } from '../../core/repositories/messages.repository';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -67,7 +70,9 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
                 d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">No hay mensajes</h3>
+            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
+              No hay mensajes
+            </h3>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
               Cuando alguien te escriba, aparecerá aquí
             </p>
