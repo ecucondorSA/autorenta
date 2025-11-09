@@ -743,14 +743,21 @@ def fix_expect_matcher_errors():
         ]
         
         for pattern, replacement in patterns:
-            if re.search(pattern, content):
-                # Verificar si ya se usa objectContaining (evitar doble wrap)
-                if 'jasmine.objectContaining' not in content or 'objectContaining' not in content:
-                    # Reemplazar
-                    content = re.sub(pattern, replacement, content)
-                else:
-                    # Ya tiene objectContaining, solo ajustar si es necesario
-                    pass
+            matches = list(re.finditer(pattern, content))
+            for match in reversed(matches):
+                # Verificar si ya tiene objectContaining en esta línea específica
+                match_start = match.start()
+                match_end = match.end()
+                match_line_start = content.rfind('\n', 0, match_start) + 1
+                match_line_end = content.find('\n', match_end)
+                if match_line_end == -1:
+                    match_line_end = len(content)
+                match_line = content[match_line_start:match_line_end]
+                
+                # Solo reemplazar si no tiene objectContaining ya
+                if 'objectContaining' not in match_line:
+                    content = content[:match.start()] + re.sub(pattern, replacement, match.group(0)) + content[match.end():]
+                    break  # Solo reemplazar el primero encontrado por patrón
 
         if content != original_content:
             test_file.write_text(content, encoding='utf-8')
