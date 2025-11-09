@@ -56,10 +56,19 @@ def fix_rpc_postgrest_response():
         original_content = content
 
         # Buscar .resolveTo({ data: ..., error: ... }) sin count, status, statusText
-        # Patrón: .resolveTo({ data: X, error: Y })
+        # Patrón: .resolveTo({ data: X, error: Y }) - pero NO si ya tiene count/status
         pattern = r'\.resolveTo\s*\(\s*\{\s*data:\s*([^,}]+),\s*error:\s*([^}]+)\s*\}\s*\)'
         
         def replace_with_full_response(match):
+            # Verificar si ya tiene count, status o statusText (evitar duplicados)
+            match_start = match.start()
+            match_end = match.end()
+            match_text = match.group(0)
+            
+            # Si ya tiene count, status o statusText, no modificar
+            if 'count:' in match_text or 'status:' in match_text or 'statusText:' in match_text:
+                return match_text
+            
             data = match.group(1).strip()
             error = match.group(2).strip()
             
