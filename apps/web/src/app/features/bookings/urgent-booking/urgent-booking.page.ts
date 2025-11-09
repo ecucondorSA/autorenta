@@ -113,7 +113,7 @@ export class UrgentBookingPage implements OnInit {
       );
 
       if (result.success && result.bookingId) {
-        this.toastService.success('Reserva urgente creada correctamente');
+        this.toastService.success('Reserva creada', 'La reserva urgente ha sido creada correctamente');
         await this.router.navigate(['/bookings', result.bookingId]);
       } else {
         this.error.set(result.error || 'Error al crear la reserva');

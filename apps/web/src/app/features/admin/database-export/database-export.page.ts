@@ -104,11 +104,11 @@ export class DatabaseExportPage {
       URL.revokeObjectURL(url);
 
       this.lastExport.set(new Date().toLocaleString());
-      this.toastService.success(`Exportación completada: ${filename}`);
+      this.toastService.success('Exportación completada', `El archivo ${filename} se ha generado exitosamente`);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error desconocido';
       this.error.set(errorMsg);
-      this.toastService.error(`Error al exportar: ${errorMsg}`);
+      this.toastService.error('Error al exportar', errorMsg);
     } finally {
       this.exporting.set(false);
     }

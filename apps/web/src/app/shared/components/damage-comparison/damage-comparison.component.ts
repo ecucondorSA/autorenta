@@ -112,4 +112,8 @@ export class DamageComparisonComponent implements OnInit {
         return 'medium';
     }
   }
+
+  getTotalEstimatedCost(): number {
+    return this.damages().reduce((sum, d) => sum + d.estimatedCostUsd, 0);
+  }
 }

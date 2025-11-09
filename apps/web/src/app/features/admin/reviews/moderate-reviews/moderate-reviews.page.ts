@@ -154,7 +154,7 @@ export class ModerateReviewsPage implements OnInit {
       const reviews = await this.reviewsService.getFlaggedReviews(status);
       this.flaggedReviews.set(reviews);
     } catch (err) {
-      this.toastService.error(err instanceof Error ? err.message : 'Error al cargar reviews');
+      this.toastService.error('Error al cargar', err instanceof Error ? err.message : 'No se pudieron cargar las reviews');
     } finally {
       this.loading.set(false);
     }
@@ -166,13 +166,13 @@ export class ModerateReviewsPage implements OnInit {
     try {
       const result = await this.reviewsService.moderateReview(reviewId, action);
       if (result.success) {
-        this.toastService.success(`Review ${action === 'approved' ? 'aprobada' : 'rechazada'}`);
+        this.toastService.success('Review moderada', `La review ha sido ${action === 'approved' ? 'aprobada' : 'rechazada'} exitosamente`);
         await this.loadFlaggedReviews(this.filterStatus() || undefined);
       } else {
-        this.toastService.error(result.error || 'Error al moderar');
+        this.toastService.error('Error al moderar', result.error || 'No se pudo completar la moderación');
       }
     } catch (err) {
-      this.toastService.error(err instanceof Error ? err.message : 'Error al moderar review');
+      this.toastService.error('Error al moderar', err instanceof Error ? err.message : 'No se pudo moderar la review');
     } finally {
       this.moderating.set(false);
     }

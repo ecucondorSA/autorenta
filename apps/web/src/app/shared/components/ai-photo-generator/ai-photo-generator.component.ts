@@ -185,7 +185,7 @@ export class AiPhotoGeneratorComponent {
 
   async generatePhotos(): Promise<void> {
     if (!this.canGenerate()) {
-      this.toastService.error('Por favor ingresa marca y modelo');
+      this.toastService.error('Datos incompletos', 'Por favor ingresa marca y modelo');
       return;
     }
 
@@ -205,13 +205,13 @@ export class AiPhotoGeneratorComponent {
       this.generatedPhotos.set(photos);
 
       if (photos.length === 0) {
-        this.toastService.info('No se pudieron generar fotos. Intenta con otros parámetros.');
+        this.toastService.info('Sin resultados', 'No se pudieron generar fotos. Intenta con otros parámetros.');
       } else {
-        this.toastService.success(`✅ ${photos.length} foto(s) generada(s) exitosamente`);
+        this.toastService.success('Fotos generadas', `${photos.length} foto(s) generada(s) exitosamente`);
       }
     } catch (error) {
       console.error('Error generating photos:', error);
-      this.toastService.error('Error al generar fotos. Intenta nuevamente.');
+      this.toastService.error('Error al generar', 'No se pudieron generar las fotos. Intenta nuevamente.');
     } finally {
       this.generating.set(false);
     }
@@ -228,6 +228,6 @@ export class AiPhotoGeneratorComponent {
     // Cleanup previews
     this.aiPhotoService.cleanupPreviews(photos);
     this.generatedPhotos.set([]);
-    this.toastService.success('Fotos agregadas al formulario');
+    this.toastService.success('Fotos agregadas', 'Las fotos han sido agregadas al formulario');
   }
 }

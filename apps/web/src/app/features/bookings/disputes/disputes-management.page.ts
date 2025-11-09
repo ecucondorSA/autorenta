@@ -112,7 +112,7 @@ export class DisputesManagementPage implements OnInit {
         await this.uploadEvidenceFiles(dispute.id);
       }
 
-      this.toastService.success('Disputa creada exitosamente');
+      this.toastService.success('Disputa creada', 'La disputa ha sido creada exitosamente');
       this.closeCreateModal();
       await this.loadDisputes();
     } catch (err) {
@@ -186,7 +186,7 @@ export class DisputesManagementPage implements OnInit {
         );
       }
 
-      this.toastService.success('Evidencias subidas exitosamente');
+      this.toastService.success('Evidencias subidas', 'Las evidencias han sido subidas exitosamente');
       this.evidenceFiles.set([]);
       this.evidenceNote.set('');
       await this.loadDisputes();

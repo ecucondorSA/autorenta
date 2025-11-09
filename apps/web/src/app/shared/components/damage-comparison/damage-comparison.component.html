@@ -93,7 +93,7 @@
           <div class="flex justify-between items-center">
             <span class="font-bold text-lg">Total Estimado:</span>
             <span class="font-bold text-xl">
-              ${{ damages().reduce((sum, d) => sum + d.estimatedCostUsd, 0).toFixed(2) }} USD
+              ${{ getTotalEstimatedCost().toFixed(2) }} USD
             </span>
           </div>
         </ion-card-content>
