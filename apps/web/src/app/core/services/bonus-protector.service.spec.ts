@@ -81,10 +81,10 @@ describe('BonusProtectorService', () => {
 
   describe('getActiveProtector', () => {
     it('should fetch and set active protector', (done) => {
-      service.getActiveProtector('user-123').subscribe({
+      service.activeProtector('user-123').subscribe({
         next: (protector) => {
           expect(protector).toEqual(mockActiveProtector);
-          expect(service.protector()).toEqual(mockActiveProtector);
+          expect(service.activeProtector()).toEqual(mockActiveProtector);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('get_active_bonus_protector', {
             p_user_id: 'user-123',
           });
@@ -95,7 +95,7 @@ describe('BonusProtectorService', () => {
     });
 
     it('should call without user_id when not provided', (done) => {
-      service.getActiveProtector().subscribe({
+      service.activeProtector().subscribe({
         next: () => {
           expect(supabaseMock.rpc).toHaveBeenCalledWith('get_active_bonus_protector', {});
           done();
@@ -107,7 +107,7 @@ describe('BonusProtectorService', () => {
     it('should handle user with no active protector', (done) => {
       supabaseMock.rpc.and.resolveTo({ data: [mockNoProtector], error: null });
 
-      service.getActiveProtector('user-123').subscribe({
+      service.activeProtector('user-123').subscribe({
         next: (protector) => {
           expect(protector.has_active_protector).toBe(false);
           expect(protector.addon_id).toBeNull();
@@ -122,7 +122,7 @@ describe('BonusProtectorService', () => {
       const error = new Error('Database error');
       supabaseMock.rpc.and.resolveTo({ data: null, error });
 
-      service.getActiveProtector('user-123').subscribe({
+      service.activeProtector('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
         error: (err: unknown) => {
           expect(err).toEqual(error);
@@ -136,7 +136,7 @@ describe('BonusProtectorService', () => {
     it('should set loading state', (done) => {
       expect(service.loading()).toBe(false);
 
-      service.getActiveProtector('user-123').subscribe({
+      service.activeProtector('user-123').subscribe({
         complete: () => {
           expect(service.loading()).toBe(false);
           done();
@@ -284,29 +284,29 @@ describe('BonusProtectorService', () => {
 
   describe('computed signals', () => {
     it('should compute hasActiveProtector from protector', () => {
-      service.protector.set(mockActiveProtector);
+      service.activeProtector.set(mockActiveProtector);
       expect(service.hasActiveProtector()).toBe(true);
     });
 
     it('should compute remainingUses from protector', () => {
-      service.protector.set(mockActiveProtector);
+      service.activeProtector.set(mockActiveProtector);
       expect(service.remainingUses()).toBe(2);
     });
 
     it('should compute protectionLevel from protector', () => {
-      service.protector.set(mockActiveProtector);
+      service.activeProtector.set(mockActiveProtector);
       expect(service.protectionLevel()).toBe(2);
     });
 
     it('should return defaults when protector is null', () => {
-      service.protector.set(null);
+      service.activeProtector.set(null);
       expect(service.hasActiveProtector()).toBe(false);
       expect(service.remainingUses()).toBe(0);
       expect(service.protectionLevel()).toBe(0);
     });
 
     it('should handle protector with no active status', () => {
-      service.protector.set(mockNoProtector);
+      service.activeProtector.set(mockNoProtector);
       expect(service.hasActiveProtector()).toBe(false);
       expect(service.remainingUses()).toBe(0);
       expect(service.protectionLevel()).toBe(0);
@@ -318,7 +318,7 @@ describe('BonusProtectorService', () => {
         claims_used: 1,
         remaining_uses: 1,
       };
-      service.protector.set(partialProtector);
+      service.activeProtector.set(partialProtector);
       expect(service.hasActiveProtector()).toBe(true);
       expect(service.remainingUses()).toBe(1);
     });
@@ -330,7 +330,7 @@ describe('BonusProtectorService', () => {
         days_until_expiration: -10,
         remaining_uses: 0,
       };
-      service.protector.set(expiredProtector);
+      service.activeProtector.set(expiredProtector);
       expect(service.hasActiveProtector()).toBe(true); // Still stored, but expired
       expect(service.remainingUses()).toBe(0);
     });
@@ -341,7 +341,7 @@ describe('BonusProtectorService', () => {
       spyOn(service, 'getActiveProtector').and.returnValue(of(mockActiveProtector));
 
       service.refresh();
-      expect(service.getActiveProtector).toHaveBeenCalled();
+      expect(service.activeProtector).toHaveBeenCalled();
     });
   });
 

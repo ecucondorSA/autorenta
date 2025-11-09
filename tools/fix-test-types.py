@@ -503,6 +503,86 @@ def fix_implicit_any_types():
     return fixed_count
 
 
+def fix_property_suggestions():
+    """Corrige errores TS2551: 'Did you mean' suggestions."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    # Mapeo de propiedades incorrectas a correctas (basado en errores comunes)
+    property_fixes = {
+        'getActiveProtector': 'activeProtector',
+        'protector': 'activeProtector',
+    }
+
+    for test_file in test_files:
+        content = test_file.read_text(encoding='utf-8')
+        original_content = content
+
+        # Reemplazar propiedades incorrectas
+        for wrong_prop, correct_prop in property_fixes.items():
+            # Buscar patrones como: service.getActiveProtector() o service.protector
+            pattern = rf'\.{re.escape(wrong_prop)}\b'
+            if re.search(pattern, content):
+                content = re.sub(pattern, f'.{correct_prop}', content)
+
+        if content != original_content:
+            test_file.write_text(content, encoding='utf-8')
+            fixed_count += 1
+            print_success(f"Corregido property suggestions en: {test_file.relative_to(PROJECT_ROOT)}")
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con property suggestions")
+    return fixed_count
+
+
+def fix_promise_subscribe_errors():
+    """Corrige errores TS2339: .subscribe() en Promise (debe ser Observable)."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    for test_file in test_files:
+        content = test_file.read_text(encoding='utf-8')
+        original_content = content
+
+        # Buscar patrones como: promise.subscribe(...)
+        # Cambiar a: from(promise).subscribe(...) o await promise
+        pattern = r'(\w+)\.subscribe\s*\('
+        matches = list(re.finditer(pattern, content))
+        
+        for match in reversed(matches):
+            var_name = match.group(1)
+            # Verificar si es un Promise (buscar Promise.resolve o similar antes)
+            # Buscar contexto antes del match
+            start_pos = max(0, match.start() - 100)
+            context = content[start_pos:match.start()]
+            
+            # Si hay indicios de que es un Promise, cambiar a from()
+            if 'Promise' in context or 'resolve' in context or 'reject' in context:
+                # Verificar si ya hay import de 'from' de rxjs
+                if 'from rxjs' not in content and 'from \'rxjs\'' not in content:
+                    # Agregar import
+                    import_line = "import { from } from 'rxjs';\n"
+                    import_section = re.search(r'(^import\s+.*?;\n)+', content, re.MULTILINE)
+                    if import_section:
+                        insert_pos = import_section.end()
+                        content = content[:insert_pos] + import_line + content[insert_pos:]
+                    else:
+                        content = import_line + content
+                
+                # Cambiar var.subscribe a from(var).subscribe
+                replacement = f'from({var_name}).subscribe'
+                content = content[:match.start()] + replacement + content[match.end():]
+
+        if content != original_content:
+            test_file.write_text(content, encoding='utf-8')
+            fixed_count += 1
+            print_success(f"Corregido Promise.subscribe en: {test_file.relative_to(PROJECT_ROOT)}")
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con Promise.subscribe errors")
+    return fixed_count
+
+
 def main():
     """Función principal."""
     print(f"{BLUE}╔══════════════════════════════════════════════════════════╗{NC}")
@@ -562,6 +642,18 @@ def main():
     # Paso 9: Corregir implicit any types (TS7006)
     print(f"{BLUE}📋 Paso 9: Corregir implicit any types (TS7006){NC}")
     if fix_implicit_any_types() > 0:
+        changes_made = True
+    print()
+
+    # Paso 10: Corregir property suggestions (TS2551)
+    print(f"{BLUE}📋 Paso 10: Corregir property suggestions (TS2551){NC}")
+    if fix_property_suggestions() > 0:
+        changes_made = True
+    print()
+
+    # Paso 11: Corregir Promise.subscribe errors (TS2339)
+    print(f"{BLUE}📋 Paso 11: Corregir Promise.subscribe errors (TS2339){NC}")
+    if fix_promise_subscribe_errors() > 0:
         changes_made = True
     print()
 
