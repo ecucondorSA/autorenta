@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { AccountingService } from '../../../../core/services/accounting.service';
+import { AccountingService, IncomeStatement } from '../../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-income-statement',
@@ -215,19 +215,19 @@ export class IncomeStatementPage implements OnInit {
   selectedPeriod: string | null = null;
 
   readonly incomeItems = computed(() =>
-    this.incomeStatement().filter((item) => item.account_type === 'INCOME'),
+    this.incomeStatement().filter((item: IncomeStatement) => item.account_type === 'INCOME'),
   );
 
   readonly expenseItems = computed(() =>
-    this.incomeStatement().filter((item) => item.account_type === 'EXPENSE'),
+    this.incomeStatement().filter((item: IncomeStatement) => item.account_type === 'EXPENSE'),
   );
 
   readonly totalIncome = computed(() =>
-    this.incomeItems().reduce((sum, item) => sum + item.amount, 0),
+    this.incomeItems().reduce((sum: number, item: IncomeStatement) => sum + item.amount, 0),
   );
 
   readonly totalExpenses = computed(() =>
-    this.expenseItems().reduce((sum, item) => sum + item.amount, 0),
+    this.expenseItems().reduce((sum: number, item: IncomeStatement) => sum + item.amount, 0),
   );
 
   readonly netProfit = computed(() => this.totalIncome() - this.totalExpenses());
@@ -238,7 +238,7 @@ export class IncomeStatementPage implements OnInit {
   });
 
   readonly availablePeriods = computed(() => {
-    const periods = new Set(this.incomeStatement().map((item) => item.period));
+    const periods = new Set(this.incomeStatement().map((item: IncomeStatement) => item.period));
     return Array.from(periods).sort().reverse();
   });
 
@@ -248,7 +248,7 @@ export class IncomeStatementPage implements OnInit {
 
   loadData(): void {
     this.accountingService.getIncomeStatement(this.selectedPeriod || undefined).subscribe({
-      error: (err) => console.error('Error loading income statement:', err),
+      error: (err: unknown) => console.error('Error loading income statement:', err),
     });
   }
 

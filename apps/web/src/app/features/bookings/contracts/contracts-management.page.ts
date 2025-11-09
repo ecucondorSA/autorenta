@@ -55,7 +55,7 @@ export class ContractsManagementPage implements OnInit {
       }
 
       const contractsWithBookings = await Promise.all(
-        bookings.map(async (booking) => {
+        bookings.map(async (booking: Booking) => {
           try {
             const contract = await this.contractsService.getContractByBooking(booking.id);
             return contract ? { ...contract, booking } : null;
@@ -66,7 +66,7 @@ export class ContractsManagementPage implements OnInit {
       );
 
       this.contracts.set(
-        contractsWithBookings.filter((c) => c !== null) as Array<
+        contractsWithBookings.filter((c: unknown) => c !== null) as Array<
           BookingContract & { booking?: Booking }
         >,
       );

@@ -179,7 +179,7 @@ export function AuditRejection(resourceType: string) {
 export function AuditCreation(resourceType: string) {
   return AuditLog(`create_${resourceType}`, resourceType, {
     includeParams: true,
-    getResourceId: (_args, result) => (typeof result === 'string' ? result : undefined),
+    getResourceId: (_args: unknown[], result: unknown) => (typeof result === 'string' ? result : undefined),
   });
 }
 

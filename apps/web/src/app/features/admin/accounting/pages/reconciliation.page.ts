@@ -43,7 +43,7 @@ export class ReconciliationPage implements OnInit {
 
   ngOnInit() {
     this.accountingService.getWalletReconciliation().subscribe({
-      next: (data) => this.reconciliation.set(data),
+      next: (data: WalletReconciliation[]) => this.reconciliation.set(data),
     });
   }
 

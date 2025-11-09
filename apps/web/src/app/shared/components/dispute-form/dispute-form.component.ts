@@ -178,7 +178,7 @@ export class DisputeFormComponent {
         description: this.description.trim(),
       });
 
-      this.toastService.success('Disputa creada exitosamente. Nuestro equipo la revisará pronto.');
+      this.toastService.success('Disputa creada', 'Nuestro equipo la revisará pronto');
       this.disputeCreated.emit();
       this.close();
     } catch (err) {

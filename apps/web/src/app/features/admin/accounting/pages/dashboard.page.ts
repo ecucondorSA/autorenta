@@ -47,14 +47,14 @@ export class AccountingDashboardPage implements OnInit {
 
   loadDashboard(): void {
     this.accountingService.getDashboard().subscribe({
-      error: (err) => console.error('Error loading dashboard:', err),
+      error: (err: unknown) => console.error('Error loading dashboard:', err),
     });
   }
 
   checkHealth(): void {
     this.accountingService.checkFinancialHealth().subscribe({
-      next: (health) => this.healthCheck.set(health),
-      error: (err) => console.error('Error checking health:', err),
+      next: (health: unknown) => this.healthCheck.set(health),
+      error: (err: unknown) => console.error('Error checking health:', err),
     });
   }
 
@@ -64,7 +64,7 @@ export class AccountingDashboardPage implements OnInit {
         this.loadDashboard();
         this.checkHealth();
       },
-      error: (err) => console.error('Error refreshing balances:', err),
+      error: (err: unknown) => console.error('Error refreshing balances:', err),
     });
   }
 

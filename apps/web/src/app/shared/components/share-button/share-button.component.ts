@@ -124,11 +124,11 @@ export class ShareButtonComponent {
       }
 
       if (success) {
-        this.toastService.success('¡Compartido exitosamente!');
+        this.toastService.success('Compartido', '¡Compartido exitosamente!');
       }
     } catch (error) {
       console.error('Error sharing:', error);
-      this.toastService.error('No se pudo compartir. Intenta nuevamente.');
+      this.toastService.error('Error al compartir', 'No se pudo compartir. Intenta nuevamente.');
     } finally {
       this.sharing.set(false);
     }

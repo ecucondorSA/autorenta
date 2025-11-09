@@ -176,7 +176,7 @@ export class FlagReviewModalComponent {
       const success = await this.reviewsService.flagReview(this.reviewId(), reason);
 
       if (success) {
-        this.toastService.success('Reseña reportada. Nuestro equipo la revisará pronto.');
+        this.toastService.success('Reseña reportada', 'Nuestro equipo la revisará pronto');
         this.flagged.emit();
         this.close();
       } else {

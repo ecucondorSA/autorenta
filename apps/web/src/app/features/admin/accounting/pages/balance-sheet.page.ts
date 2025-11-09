@@ -188,24 +188,24 @@ export class BalanceSheetPage implements OnInit {
   readonly loading = this.accountingService.loading;
 
   readonly assets = computed(() =>
-    this.balanceSheet().filter((item) => item.account_type === 'ASSET'),
+    this.balanceSheet().filter((item: BalanceSheet) => item.account_type === 'ASSET'),
   );
 
   readonly liabilities = computed(() =>
-    this.balanceSheet().filter((item) => item.account_type === 'LIABILITY'),
+    this.balanceSheet().filter((item: BalanceSheet) => item.account_type === 'LIABILITY'),
   );
 
   readonly equity = computed(() =>
-    this.balanceSheet().filter((item) => item.account_type === 'EQUITY'),
+    this.balanceSheet().filter((item: BalanceSheet) => item.account_type === 'EQUITY'),
   );
 
-  readonly totalAssets = computed(() => this.assets().reduce((sum, item) => sum + item.balance, 0));
+  readonly totalAssets = computed(() => this.assets().reduce((sum: number, item: BalanceSheet) => sum + item.balance, 0));
 
   readonly totalLiabilities = computed(() =>
-    this.liabilities().reduce((sum, item) => sum + item.balance, 0),
+    this.liabilities().reduce((sum: number, item: BalanceSheet) => sum + item.balance, 0),
   );
 
-  readonly totalEquity = computed(() => this.equity().reduce((sum, item) => sum + item.balance, 0));
+  readonly totalEquity = computed(() => this.equity().reduce((sum: number, item: BalanceSheet) => sum + item.balance, 0));
 
   readonly isBalanced = computed(
     () => Math.abs(this.totalAssets() - (this.totalLiabilities() + this.totalEquity())) < 0.01,
@@ -217,14 +217,14 @@ export class BalanceSheetPage implements OnInit {
 
   loadData(): void {
     this.accountingService.getBalanceSheet().subscribe({
-      error: (err) => console.error('Error loading balance sheet:', err),
+      error: (err: unknown) => console.error('Error loading balance sheet:', err),
     });
   }
 
   refresh(): void {
     this.accountingService.refreshBalances().subscribe({
       next: () => this.loadData(),
-      error: (err) => console.error('Error refreshing:', err),
+      error: (err: unknown) => console.error('Error refreshing:', err),
     });
   }
 

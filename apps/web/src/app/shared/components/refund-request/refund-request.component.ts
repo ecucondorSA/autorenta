@@ -227,7 +227,8 @@ export class RefundRequestComponent {
       });
 
       this.toastService.success(
-        'Solicitud de reembolso enviada. Nuestro equipo la revisará pronto.',
+        'Solicitud enviada',
+        'Nuestro equipo revisará tu solicitud de reembolso pronto'
       );
       this.refundRequested.emit();
       this.close();

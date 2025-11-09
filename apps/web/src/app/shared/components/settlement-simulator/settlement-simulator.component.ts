@@ -41,7 +41,7 @@ export class SettlementSimulatorComponent implements OnInit {
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error al simular';
       this.error.set(errorMsg);
-      this.toastService.error(errorMsg);
+      this.toastService.error('Error de simulación', errorMsg);
     } finally {
       this.simulating.set(false);
     }

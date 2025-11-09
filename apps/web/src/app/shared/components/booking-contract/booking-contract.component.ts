@@ -145,9 +145,9 @@ export class BookingContractComponent implements OnInit {
     try {
       await this.contractsService.acceptContract(contract.id);
       await this.loadContract();
-      this.toastService.success('Contrato aceptado correctamente');
+      this.toastService.success('Contrato aceptado', 'El contrato ha sido aceptado correctamente');
     } catch (err) {
-      this.toastService.error(err instanceof Error ? err.message : 'Error al aceptar el contrato');
+      this.toastService.error('Error al aceptar', err instanceof Error ? err.message : 'Error al aceptar el contrato');
     } finally {
       this.accepting.set(false);
     }
