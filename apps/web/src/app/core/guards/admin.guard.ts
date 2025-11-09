@@ -36,7 +36,7 @@
  */
 
 import { inject } from '@angular/core';
-import { CanMatchFn, Router, Route } from '@angular/router';
+import { CanMatchFn, Router, Route, UrlSegment, type GuardResult } from '@angular/router';
 import { AdminService } from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
 import { LoggerService } from '../services/logger.service';
@@ -50,7 +50,7 @@ import type { AdminRole, AdminPermission } from '../types/admin.types';
  * 2. data.requiredRole: User must have specific role
  * 3. data.requiredPermission: User must have specific permission
  */
-export const AdminGuard: CanMatchFn = async (route: Route) => {
+export const AdminGuard: CanMatchFn = async (route: Route, segments: UrlSegment[]) => {
   const auth = inject(AuthService);
   const adminService = inject(AdminService);
   const router = inject(Router);
@@ -142,7 +142,7 @@ export function createAdminGuard(
   requiredRole?: AdminRole,
   requiredPermission?: AdminPermission,
 ): CanMatchFn {
-  return async (route: Route) => {
+  return async (route: Route, segments: UrlSegment[]): Promise<GuardResult> => {
     // Override route data with specified requirements
     const modifiedRoute = {
       ...route,
@@ -153,7 +153,8 @@ export function createAdminGuard(
       },
     };
 
-    return AdminGuard(modifiedRoute);
+    const result = await AdminGuard(modifiedRoute, segments);
+    return result as GuardResult;
   };
 }
 
