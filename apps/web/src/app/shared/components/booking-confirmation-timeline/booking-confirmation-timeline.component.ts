@@ -260,7 +260,14 @@ export class BookingConfirmationTimelineComponent {
    */
   readonly currentStepIndex = computed(() => {
     const steps = this.timelineSteps();
-    const lastCompletedIndex = steps.findLastIndex((step) => step.completed);
+    // Find last completed step (findLastIndex alternative for ES2022)
+    let lastCompletedIndex = -1;
+    for (let i = steps.length - 1; i >= 0; i--) {
+      if (steps[i].completed) {
+        lastCompletedIndex = i;
+        break;
+      }
+    }
     return lastCompletedIndex + 1; // Next step is current
   });
 

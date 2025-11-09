@@ -146,9 +146,11 @@
                   ? 'Activo'
                   : car.status === 'suspended'
                     ? 'Suspendido'
-                    : car.status === 'maintenance'
-                      ? 'Mantenimiento'
-                      : 'Borrador'
+                    : car.status === 'pending'
+                      ? 'Pendiente'
+                      : car.status === 'deleted'
+                        ? 'Eliminado'
+                        : 'Borrador'
               }}
             </span>
           </div>
