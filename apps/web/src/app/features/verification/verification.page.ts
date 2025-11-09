@@ -247,7 +247,12 @@ export class VerificationPage implements OnInit {
 
   readonly verificationStatus = this.verificationService.statuses;
   readonly isVerifying = signal(false);
-  readonly missingDocs = computed(() => this.verificationStatus()?.missing_docs || []);
+  readonly missingDocs = computed(() => {
+    const statuses = this.verificationStatus();
+    if (!statuses || statuses.length === 0) return [];
+    // Get missing_docs from all statuses and flatten
+    return statuses.flatMap(status => status.missing_docs || []);
+  });
 
   ngOnInit() {
     this.verificationService.loadStatuses();
