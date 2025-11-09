@@ -33350,3 +33350,1575 @@ Application bundle generation failed. [11.323 seconds] - 2025-11-09T22:51:56.915
 
 
 ❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [4.580 seconds] - 2025-11-09T22:56:48.014Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.823 seconds] - 2025-11-09T22:58:15.930Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.351 seconds] - 2025-11-09T22:58:18.298Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.378 seconds] - 2025-11-09T22:58:24.631Z
+
+✘ [ERROR] TS2554: Expected 1 arguments, but got 2. [plugin angular-compiler]
+
+    src/app/core/services/phone-verification.service.ts:144:51:
+      144 │       if (!this.isValidPhoneNumber(formattedPhone, countryCode)) {
+          ╵                                                    ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getPhoneFormatHint' does not exist on type 'PhoneVerificationService'. [plugin angular-compiler]
+
+    src/app/core/services/phone-verification.service.ts:145:32:
+      145 │         const formatHint = this.getPhoneFormatHint(countryCode);
+          ╵                                 ~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.815 seconds] - 2025-11-09T22:58:28.458Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.147 seconds] - 2025-11-09T22:58:31.206Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.463 seconds] - 2025-11-09T22:58:51.336Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.094 seconds] - 2025-11-09T23:01:18.495Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.119 seconds] - 2025-11-09T23:01:31.159Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.449 seconds] - 2025-11-09T23:01:39.325Z
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.688 seconds] - 2025-11-09T23:03:14.026Z
+
+✘ [ERROR] TS2552: Cannot find name '__error'. Did you mean 'Error'? [plugin angular-compiler]
+
+    src/app/features/bookings/owner-bookings/owner-bookings.page.ts:217:46:
+      217 │       console.error('Error starting rental:', __error);
+          ╵                                               ~~~~~~~
+
+  'Error' is declared here.
+
+    node_modules/typescript/lib/lib.es5.d.ts:1087:12:
+      1087 │ declare var Error: ErrorConstructor;
+           ╵             ~~~~~
+
+
+✘ [ERROR] TS2552: Cannot find name '__error'. Did you mean 'Error'? [plugin angular-compiler]
+
+    src/app/features/bookings/owner-bookings/owner-bookings.page.ts:238:48:
+      238 │       console.error('Error completing rental:', __error);
+          ╵                                                 ~~~~~~~
+
+  'Error' is declared here.
+
+    node_modules/typescript/lib/lib.es5.d.ts:1087:12:
+      1087 │ declare var Error: ErrorConstructor;
+           ╵             ~~~~~
+
+
+✘ [ERROR] TS2552: Cannot find name '__error'. Did you mean 'Error'? [plugin angular-compiler]
+
+    src/app/features/bookings/owner-bookings/owner-bookings.page.ts:260:49:
+      260 │       console.error('Error cancelling booking:', __error);
+          ╵                                                  ~~~~~~~
+
+  'Error' is declared here.
+
+    node_modules/typescript/lib/lib.es5.d.ts:1087:12:
+      1087 │ declare var Error: ErrorConstructor;
+           ╵             ~~~~~
+
+
+✘ [ERROR] TS2552: Cannot find name '__error'. Did you mean 'Error'? [plugin angular-compiler]
+
+    src/app/features/bookings/owner-bookings/owner-bookings.page.ts:363:48:
+      363 │       console.error('Error loading car leads:', __error);
+          ╵                                                 ~~~~~~~
+
+  'Error' is declared here.
+
+    node_modules/typescript/lib/lib.es5.d.ts:1087:12:
+      1087 │ declare var Error: ErrorConstructor;
+           ╵             ~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'cars' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'cars' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:43:6:
+      43 │       [cars]="premiumCars()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'isOpen' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:44:6:
+      44 │       [isOpen]="drawerOpen()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'selectedCarId' since it isn't a known property of 'app-cars-drawer'.
+1. If 'app-cars-drawer' is an Angular component and it has 'selectedCarId' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-cars-drawer' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/cars/list/cars-list.page.html:45:6:
+      45 │       [selectedCarId]="selectedCarId()"
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarsListPage.
+
+    src/app/features/cars/list/cars-list.page.ts:75:15:
+      75 │   templateUrl: './cars-list.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }'.
+  Type 'Event' is missing the following properties from type '{ carId: string; paymentMethod: string; dates?: { start: Date; end: Date; } | undefined; }': carId, paymentMethod [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:74:39:
+      74 │       (onReserveClick)="onReserveClick($event)"
+         ╵                                        ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/features/explore/explore.page.html:75:33:
+      75 │       (onChatClick)="onChatClick($event)"
+         ╵                                  ~~~~~~
+
+  Error occurs in the template of component ExplorePage.
+
+    src/app/features/explore/explore.page.ts:41:15:
+      41 │   templateUrl: './explore.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace-v2.page.html:516:35:
+      516 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:15:
+      73 │   templateUrl: './marketplace-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Event' is not assignable to parameter of type 'QuickBookingData'.
+  Type 'Event' is missing the following properties from type 'QuickBookingData': carId, startDate, endDate, paymentMethod, and 2 more. [plugin angular-compiler]
+
+    src/app/features/marketplace/marketplace.page.html:228:35:
+      228 │   (confirm)="onQuickBookingConfirm($event)"
+          ╵                                    ~~~~~~
+
+  Error occurs in the template of component MarketplacePage.
+
+    src/app/features/marketplace/marketplace.page.ts:86:15:
+      86 │   templateUrl: './marketplace.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cancel' does not exist on type 'ProfileWizardComponent'. [plugin angular-compiler]
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.html:299:17:
+      299 │         (click)="cancel()"
+          ╵                  ~~~~~~
+
+  Error occurs in the template of component ProfileWizardComponent.
+
+    src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42:15:
+      42 │   templateUrl: './profile-wizard.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:302:31:
+      302 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:424:26:
+      424 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
