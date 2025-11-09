@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService } from '../../../../core/services/accounting.service';
+import { AccountingService, Provision } from '../../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-provisions',
@@ -34,10 +34,15 @@ import { AccountingService } from '../../../../core/services/accounting.service'
 })
 export class ProvisionsPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
-  provisions = this.accountingService.provisions;
+  provisions = signal<Provision[]>([]);
 
-  ngOnInit() {
-    this.accountingService.getAllProvisions().subscribe();
+  async ngOnInit(): Promise<void> {
+    try {
+      const data = await this.accountingService.getActiveProvisions();
+      this.provisions.set(data);
+    } catch (err: unknown) {
+      console.error('Error loading provisions:', err);
+    }
   }
 
   formatCurrency(amount: number) {

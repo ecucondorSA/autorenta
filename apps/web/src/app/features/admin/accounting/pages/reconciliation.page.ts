@@ -41,10 +41,13 @@ export class ReconciliationPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
   reconciliation = signal<WalletReconciliation[]>([]);
 
-  ngOnInit() {
-    this.accountingService.getWalletReconciliation().subscribe({
-      next: (data: WalletReconciliation[]) => this.reconciliation.set(data),
-    });
+  async ngOnInit(): Promise<void> {
+    try {
+      const data = await this.accountingService.getWalletReconciliation();
+      this.reconciliation.set(data);
+    } catch (err: unknown) {
+      console.error('Error loading reconciliation:', err);
+    }
   }
 
   getColor(item: WalletReconciliation) {

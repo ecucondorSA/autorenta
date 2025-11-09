@@ -209,8 +209,8 @@ import { AccountingService, IncomeStatement } from '../../../../core/services/ac
 export class IncomeStatementPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
 
-  readonly incomeStatement = this.accountingService.incomeStatement;
-  readonly loading = this.accountingService.loading;
+  readonly incomeStatement = signal<IncomeStatement[]>([]);
+  readonly loading = signal<boolean>(false);
 
   selectedPeriod: string | null = null;
 
@@ -246,10 +246,16 @@ export class IncomeStatementPage implements OnInit {
     this.loadData();
   }
 
-  loadData(): void {
-    this.accountingService.getIncomeStatement(this.selectedPeriod || undefined).subscribe({
-      error: (err: unknown) => console.error('Error loading income statement:', err),
-    });
+  async loadData(): Promise<void> {
+    this.loading.set(true);
+    try {
+      const data = await this.accountingService.getIncomeStatement(this.selectedPeriod || undefined);
+      this.incomeStatement.set(data);
+    } catch (err: unknown) {
+      console.error('Error loading income statement:', err);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   formatCurrency(amount: number): string {

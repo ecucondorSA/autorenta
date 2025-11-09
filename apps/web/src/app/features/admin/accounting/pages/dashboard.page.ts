@@ -20,9 +20,9 @@ export class AccountingDashboardPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
 
   // Signals
-  readonly dashboard = this.accountingService.dashboard;
-  readonly loading = this.accountingService.loading;
-  readonly error = this.accountingService.error;
+  readonly dashboard = signal<AccountingDashboard | null>(null);
+  readonly loading = signal<boolean>(false);
+  readonly error = signal<string | null>(null);
   readonly healthCheck = signal<FinancialHealth | null>(null);
 
   // Computed values
@@ -45,27 +45,37 @@ export class AccountingDashboardPage implements OnInit {
     this.checkHealth();
   }
 
-  loadDashboard(): void {
-    this.accountingService.getDashboard().subscribe({
-      error: (err: unknown) => console.error('Error loading dashboard:', err),
-    });
+  async loadDashboard(): Promise<void> {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      const data = await this.accountingService.getDashboard();
+      this.dashboard.set(data);
+    } catch (err: unknown) {
+      console.error('Error loading dashboard:', err);
+      this.error.set(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      this.loading.set(false);
+    }
   }
 
-  checkHealth(): void {
-    this.accountingService.checkFinancialHealth().subscribe({
-      next: (health: unknown) => this.healthCheck.set(health),
-      error: (err: unknown) => console.error('Error checking health:', err),
-    });
+  async checkHealth(): Promise<void> {
+    try {
+      const health = await this.accountingService.checkFinancialHealth();
+      this.healthCheck.set(health);
+    } catch (err: unknown) {
+      console.error('Error checking health:', err);
+    }
   }
 
-  refresh(): void {
-    this.accountingService.refreshBalances().subscribe({
-      next: () => {
-        this.loadDashboard();
-        this.checkHealth();
-      },
-      error: (err: unknown) => console.error('Error refreshing balances:', err),
-    });
+  async refresh(): Promise<void> {
+    try {
+      await this.accountingService.refreshBalances();
+      await this.loadDashboard();
+      await this.checkHealth();
+    } catch (err: unknown) {
+      console.error('Error refreshing balances:', err);
+    }
   }
 
   getHealthColor(profitability?: string): string {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, BalanceSheet } from '../../../../core/services/accounting.service';
@@ -184,8 +184,8 @@ import { AccountingService, BalanceSheet } from '../../../../core/services/accou
 export class BalanceSheetPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
 
-  readonly balanceSheet = this.accountingService.balanceSheet;
-  readonly loading = this.accountingService.loading;
+  readonly balanceSheet = signal<BalanceSheet[]>([]);
+  readonly loading = signal<boolean>(false);
 
   readonly assets = computed(() =>
     this.balanceSheet().filter((item: BalanceSheet) => item.account_type === 'ASSET'),
@@ -215,17 +215,25 @@ export class BalanceSheetPage implements OnInit {
     this.loadData();
   }
 
-  loadData(): void {
-    this.accountingService.getBalanceSheet().subscribe({
-      error: (err: unknown) => console.error('Error loading balance sheet:', err),
-    });
+  async loadData(): Promise<void> {
+    this.loading.set(true);
+    try {
+      const data = await this.accountingService.getBalanceSheet();
+      this.balanceSheet.set(data);
+    } catch (err: unknown) {
+      console.error('Error loading balance sheet:', err);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
-  refresh(): void {
-    this.accountingService.refreshBalances().subscribe({
-      next: () => this.loadData(),
-      error: (err: unknown) => console.error('Error refreshing:', err),
-    });
+  async refresh(): Promise<void> {
+    try {
+      await this.accountingService.refreshBalances();
+      await this.loadData();
+    } catch (err: unknown) {
+      console.error('Error refreshing:', err);
+    }
   }
 
   formatCurrency(amount: number): string {

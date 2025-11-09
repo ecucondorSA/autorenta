@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService } from '../../../../core/services/accounting.service';
+import { AccountingService, JournalEntry } from '../../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-journal-entries',
@@ -36,9 +36,14 @@ import { AccountingService } from '../../../../core/services/accounting.service'
 })
 export class JournalEntriesPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
-  entries = this.accountingService.journalEntries;
+  entries = signal<JournalEntry[]>([]);
 
-  ngOnInit() {
-    this.accountingService.getJournalEntries({ limit: 100 }).subscribe();
+  async ngOnInit(): Promise<void> {
+    try {
+      const data = await this.accountingService.getLedger({ limit: 100 });
+      this.entries.set(data as JournalEntry[]);
+    } catch (err: unknown) {
+      console.error('Error loading journal entries:', err);
+    }
   }
 }
