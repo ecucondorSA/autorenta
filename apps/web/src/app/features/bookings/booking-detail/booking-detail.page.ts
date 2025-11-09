@@ -27,6 +27,8 @@ import { RefundRequestComponent } from '../../../shared/components/refund-reques
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
 import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
 import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
+import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
+import { DistanceRiskTierBadgeComponent } from '../../../shared/components/distance-risk-tier-badge/distance-risk-tier-badge.component';
 
 /**
  * BookingDetailPage
@@ -59,6 +61,8 @@ import { ShareButtonComponent } from '../../../shared/components/share-button/sh
     BookingContractComponent,
     RefundStatusComponent,
     ShareButtonComponent,
+    BookingConfirmationTimelineComponent,
+    DistanceRiskTierBadgeComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -518,5 +522,12 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   handleConfirmationError(errorMessage: string): void {
     alert(`❌ Error: ${errorMessage}`);
+  }
+
+  handleTimelineAction(event: { action: string; bookingId: string }): void {
+    // Handle timeline action events from BookingConfirmationTimelineComponent
+    // This can trigger confirmation flows or other actions
+    console.log('Timeline action requested:', event);
+    // You can add specific handling logic here if needed
   }
 }

@@ -46,7 +46,7 @@ export interface AuditLogOptions {
    * Custom function to extract resource ID from parameters
    * Default: uses first parameter
    */
-  getResourceId?: (args: unknown[]) => string | undefined;
+  getResourceId?: (args: unknown[], result?: unknown) => string | undefined;
 
   /**
    * Custom function to build audit details

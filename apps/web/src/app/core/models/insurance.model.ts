@@ -137,9 +137,11 @@ export interface InsuranceClaim {
   claim_type: ClaimType;
   description: string;
   location?: string;
+  incident_location?: string; // Alias for location for template compatibility
   incident_date: string;
 
   photos?: string[];
+  evidence_photos?: string[]; // Alias for photos for template compatibility
   police_report_number?: string;
   police_report_url?: string;
 

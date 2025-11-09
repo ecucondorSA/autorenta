@@ -42,7 +42,8 @@ export class WithdrawalsAdminPage implements OnInit {
       this.withdrawals.set(requests);
     } catch (err) {
       this.toastService.error(
-        err instanceof Error ? err.message : 'Error al cargar retiros',
+        'Error al cargar retiros',
+        err instanceof Error ? err.message : 'No se pudieron cargar los retiros',
       );
     } finally {
       this.loading.set(false);
@@ -61,7 +62,8 @@ export class WithdrawalsAdminPage implements OnInit {
       await this.loadWithdrawals(this.filterStatus() || undefined);
     } catch (err) {
       this.toastService.error(
-        err instanceof Error ? err.message : 'Error al aprobar retiro',
+        'Error al aprobar retiro',
+        err instanceof Error ? err.message : 'No se pudo aprobar el retiro',
       );
     } finally {
       this.processing.set(false);
@@ -94,7 +96,8 @@ export class WithdrawalsAdminPage implements OnInit {
       await this.loadWithdrawals(this.filterStatus() || undefined);
     } catch (err) {
       this.toastService.error(
-        err instanceof Error ? err.message : 'Error al rechazar retiro',
+        'Error al rechazar retiro',
+        err instanceof Error ? err.message : 'No se pudo rechazar el retiro',
       );
     } finally {
       this.processing.set(false);
