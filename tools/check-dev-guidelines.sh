@@ -45,8 +45,9 @@ echo -e "${BLUE}╚════════════════════�
 
 # Check 1: Toast Service calls con 1 parámetro
 echo -e "${BLUE}📋 Check 1: Toast Service API (debe tener 2-3 parámetros)${NC}"
-TOAST_ERRORS=$(grep -rn "toastService\.\(success\|error\|warning\|info\)('[^,]*');" apps/web/src --include="*.ts" 2>/dev/null | wc -l || echo "0")
-if [ "$TOAST_ERRORS" -gt 0 ]; then
+TOAST_ERRORS=$(grep -rn "toastService\.\(success\|error\|warning\|info\)('[^,]*');" apps/web/src --include="*.ts" 2>/dev/null | wc -l 2>/dev/null || echo "0")
+TOAST_ERRORS=${TOAST_ERRORS// /}  # Remove spaces
+if [ "${TOAST_ERRORS:-0}" -gt 0 ]; then
   echo -e "${RED}❌ Encontrados $TOAST_ERRORS toast calls con 1 parámetro${NC}"
   grep -rn "toastService\.\(success\|error\|warning\|info\)('[^,]*');" apps/web/src --include="*.ts" 2>/dev/null | head -5
   ERRORS=$((ERRORS + TOAST_ERRORS))
@@ -83,8 +84,9 @@ echo ""
 
 # Check 3: Imports a módulos inexistentes (supabase.service)
 echo -e "${BLUE}📋 Check 3: Imports a módulos inexistentes${NC}"
-BAD_IMPORTS=$(grep -rn "from.*supabase\.service" apps/web/src --include="*.ts" 2>/dev/null | wc -l || echo "0")
-if [ "$BAD_IMPORTS" -gt 0 ]; then
+BAD_IMPORTS=$(grep -rn "from.*supabase\.service" apps/web/src --include="*.ts" 2>/dev/null | wc -l 2>/dev/null || echo "0")
+BAD_IMPORTS=${BAD_IMPORTS// /}  # Remove spaces
+if [ "${BAD_IMPORTS:-0}" -gt 0 ]; then
   echo -e "${RED}❌ Encontrados $BAD_IMPORTS imports a 'supabase.service' (debe ser 'supabase-client.service')${NC}"
   grep -rn "from.*supabase\.service" apps/web/src --include="*.ts" 2>/dev/null
   ERRORS=$((ERRORS + BAD_IMPORTS))
