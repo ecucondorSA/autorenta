@@ -1,3 +1,4 @@
+
 import {
   Component,
   Input,
@@ -22,7 +23,11 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
 import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
+import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel.component';
 import { environment } from '../../../../environments/environment';
+import { MapDetailsPanelComponent } from '../map-details-panel/map-details-panel.component';
+import { MapMarkerComponent } from '../map-marker/map-marker.component';
+import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
 
 type MapboxGL = typeof import('mapbox-gl').default;
 type MapboxMap = import('mapbox-gl').Map;
@@ -32,7 +37,7 @@ type MapboxPopup = import('mapbox-gl').Popup;
 @Component({
   selector: 'app-cars-map',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MapBookingPanelComponent, MapDetailsPanelComponent],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
 })
@@ -42,10 +47,22 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input() cars: CarMapLocation[] = [];
   @Input() selectedCarId: string | null = null;
   @Input() userLocation: { lat: number; lng: number } | null = null;
+  @Input() locationMode: 'searching' | 'booking-confirmed' | 'default' = 'default';
+  @Input() searchRadiusKm: number = 5;
+  @Input() showSearchRadius: boolean = true;
+  @Input() followUserLocation: boolean = false;
+  @Input() lockZoomRotation: boolean = false;
+  @Input() locationAccuracy?: number; // Precisión GPS en metros
+  @Input() lastLocationUpdate?: Date; // Última actualización de ubicación
+  @Input() markerVariant: 'photo' | 'price' = 'photo'; // Change default to 'photo'
 
   @Output() readonly carSelected = new EventEmitter<string>();
   @Output() readonly userLocationChange = new EventEmitter<{ lat: number; lng: number }>();
   @Output() readonly quickBook = new EventEmitter<string>();
+  @Output() readonly searchRadiusChange = new EventEmitter<number>();
+  @Output() readonly followLocationToggle = new EventEmitter<boolean>();
+  @Output() readonly lockToggle = new EventEmitter<boolean>();
+  @Output() readonly bookingConfirmed = new EventEmitter<{ carId: string; bookingData: BookingFormData }>();
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -54,6 +71,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly bookingPanelOpen = signal(false);
+  readonly selectedCarForBooking = signal<CarMapLocation | null>(null);
+  readonly selectedCar = signal<CarMapLocation | null>(null);
 
   // Expose map instance for external components
   get mapInstance(): MapboxMap | null {
@@ -62,7 +82,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private mapboxgl: MapboxGL | null = null;
   private map: MapboxMap | null = null;
-  private carMarkers = new Map<string, MapboxMarker>();
+  private carMarkers = new Map<string, { marker: MapboxMarker, componentRef: ComponentRef<MapMarkerComponent> }>();
   private userLocationMarker: MapboxMarker | null = null;
   private tooltipPopups = new Map<string, MapboxPopup>();
   private tooltipComponents = new Map<string, ComponentRef<EnhancedMapTooltipComponent>>();
@@ -71,11 +91,76 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private clusterSourceId = 'cars-cluster-source';
   private clusterLayerId = 'cars-cluster-layer';
   private clusterCountLayerId = 'cars-cluster-count';
+  
+  // User location tracking
+  private searchRadiusSourceId = 'search-radius-source';
+  private searchRadiusLayerId = 'search-radius-layer';
+  private followLocationInterval: ReturnType<typeof setInterval> | null = null;
+  private isDarkMode = signal(false);
+  private circleSizeMultiplier = signal(1.0); // Para ajustar tamaño del círculo
 
   ngOnInit(): void {
     if (!this.isBrowser) {
       this.loading.set(false);
       return;
+    }
+    
+    // Detectar modo oscuro
+    this.detectDarkMode();
+    
+    // Escuchar cambios de tema
+    if (this.isBrowser) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      mediaQuery.addEventListener('change', () => this.detectDarkMode());
+    }
+  }
+  
+  private detectDarkMode(): void {
+    if (!this.isBrowser) return;
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches ||
+                   document.documentElement.classList.contains('dark');
+    this.isDarkMode.set(isDark);
+    this.updateMarkerStyles();
+    this.updateMapTheme();
+  }
+
+  /**
+   * Update map theme based on dark mode and marker variant
+   * Synchronizes CSS tokens with prefers-color-scheme and markerVariant
+   */
+  private updateMapTheme(): void {
+    if (!this.isBrowser) return;
+    
+    const isDark = this.isDarkMode();
+    const variant = this.markerVariant;
+    
+    // Apply theme class to map container (already handled in template with [class] binding)
+    // But we also need to update the map canvas filter if map is initialized
+    if (this.map) {
+      const canvas = this.map.getCanvas();
+      if (canvas) {
+        // Update canvas filter based on dark mode tokens
+        const brightness = isDark ? '0.95' : '1';
+        const contrast = isDark ? '1.1' : '1';
+        const saturate = isDark ? '0.95' : '1';
+        canvas.style.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturate})`;
+      }
+    }
+    
+    // Ensure container has correct classes (template binding handles this, but we verify)
+    const container = this.mapContainer?.nativeElement?.parentElement;
+    if (container) {
+      // Remove old variant classes
+      container.classList.remove('map-variant-photo', 'map-variant-price');
+      // Add current variant class
+      container.classList.add(`map-variant-${variant}`);
+      
+      // Apply dark mode class if needed
+      if (isDark) {
+        container.classList.add('dark');
+      } else {
+        container.classList.remove('dark');
+      }
     }
   }
 
@@ -126,12 +211,18 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       // Wait for map to load
       this.map.on('load', () => {
         this.loading.set(false);
+        this.updateMapTheme(); // Apply theme on load
         if (this.useClustering && this.cars.length > 10) {
           this.setupClustering();
         } else {
           this.renderCarMarkers();
         }
         this.addUserLocationMarker();
+        if (this.showSearchRadius) {
+          this.addSearchRadiusLayer();
+        }
+        this.setupFollowLocation();
+        this.setupLockControls();
       });
 
       // Handle map errors
@@ -169,6 +260,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         pricePerDay: car.pricePerDay,
         currency: car.currency || 'ARS',
         photoUrl: car.photoUrl,
+        availabilityStatus: car.availabilityStatus || 'available',
       },
     }));
 
@@ -206,23 +298,26 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           'circle-color': [
             'step',
             ['get', 'point_count'],
-            '#3A6D7C',
-            10,
-            '#4F7C72',
-            30,
-            '#5A8A7F',
+            '#10b981', // Green for available
+            5,
+            '#f59e0b', // Amber for medium clusters
+            20,
+            '#6366f1', // Indigo for large clusters
           ],
           'circle-radius': [
             'step',
             ['get', 'point_count'],
             20,
-            10,
-            25,
+            5,
             30,
-            30,
+            20,
+            40,
+            50,
+            50,
           ],
           'circle-stroke-width': 2,
           'circle-stroke-color': '#fff',
+          'circle-opacity': 0.8,
         },
       });
     }
@@ -253,10 +348,25 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         source: this.clusterSourceId,
         filter: ['!', ['has', 'point_count']],
         paint: {
-          'circle-color': '#3A6D7C',
+          'circle-color': [
+            'case',
+            ['==', ['get', 'availabilityStatus'], 'available'],
+            '#10b981',
+            ['==', ['get', 'availabilityStatus'], 'soon_available'],
+            '#f59e0b',
+            ['==', ['get', 'availabilityStatus'], 'in_use'],
+            '#6366f1',
+            '#ef4444', // unavailable
+          ],
           'circle-radius': 8,
           'circle-stroke-width': 2,
           'circle-stroke-color': '#fff',
+          'circle-opacity': [
+            'case',
+            ['==', ['get', 'availabilityStatus'], 'unavailable'],
+            0.5,
+            1,
+          ],
         },
       });
     }
@@ -282,6 +392,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       const carId = (e.features?.[0]?.properties as any)?.carId;
       if (carId) {
         this.carSelected.emit(carId);
+        const car = this.cars.find(c => c.carId === carId);
+        if (car) {
+          this.selectedCar.set(car);
+        }
       }
     });
 
@@ -312,9 +426,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Create markers for each car
     groupedCars.forEach((car) => {
-      const marker = this.createCarMarker(car);
-      if (marker) {
-        this.carMarkers.set(car.carId, marker);
+      const markerData = this.createCarMarker(car);
+      if (markerData) {
+        this.carMarkers.set(car.carId, markerData);
       }
     });
 
@@ -326,26 +440,84 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   /**
    * Group cars by availability (immediate vs scheduled)
+   * Prioritizes cars available today with instant booking
    */
   private groupCarsByAvailability(): CarMapLocation[] {
-    // For now, return cars as-is
-    // TODO: Implement grouping logic based on availability
-    return [...this.cars];
+    const now = new Date();
+    const cars = [...this.cars];
+
+    // Group cars by priority:
+    // 1. Available today + instant booking (highest priority)
+    // 2. Available today (no instant booking)
+    // 3. Available tomorrow + instant booking
+    // 4. Available tomorrow
+    // 5. Soon available (within 7 days)
+    // 6. Unavailable or unknown status
+
+    const groups = {
+      immediateInstant: [] as CarMapLocation[],
+      immediate: [] as CarMapLocation[],
+      tomorrowInstant: [] as CarMapLocation[],
+      tomorrow: [] as CarMapLocation[],
+      soonAvailable: [] as CarMapLocation[],
+      unavailable: [] as CarMapLocation[],
+    };
+
+    cars.forEach((car) => {
+      const status = car.availabilityStatus || 'unavailable';
+      const isInstant = car.instantBooking === true;
+      const availableToday = car.availableToday === true;
+      const availableTomorrow = car.availableTomorrow === true;
+
+      if (status === 'available' && availableToday && isInstant) {
+        groups.immediateInstant.push(car);
+      } else if (status === 'available' && availableToday) {
+        groups.immediate.push(car);
+      } else if (status === 'available' && availableTomorrow && isInstant) {
+        groups.tomorrowInstant.push(car);
+      } else if (status === 'available' && availableTomorrow) {
+        groups.tomorrow.push(car);
+      } else if (status === 'soon_available') {
+        groups.soonAvailable.push(car);
+      } else {
+        groups.unavailable.push(car);
+      }
+    });
+
+    // Return prioritized list
+    return [
+      ...groups.immediateInstant,
+      ...groups.immediate,
+      ...groups.tomorrowInstant,
+      ...groups.tomorrow,
+      ...groups.soonAvailable,
+      ...groups.unavailable,
+    ];
   }
 
   /**
    * Create a car marker with custom tooltip
    */
-  private createCarMarker(car: CarMapLocation): MapboxMarker | null {
+  private createCarMarker(car: CarMapLocation): { marker: MapboxMarker, componentRef: ComponentRef<MapMarkerComponent> } | null {
     if (!this.map || !this.mapboxgl) return null;
 
-    // Create marker element
-    const markerElement = this.createMarkerElement(car);
+    // Create Angular component for the marker
+    const componentRef = createComponent(MapMarkerComponent, {
+      environmentInjector: this.injector,
+    });
+
+    // Set inputs
+    componentRef.setInput('car', car);
+    componentRef.setInput('isSelected', this.selectedCarId === car.carId);
+
+    // Attach component to application to enable change detection
+    this.applicationRef.attachView(componentRef.hostView);
+    const markerElement = componentRef.location.nativeElement;
 
     // Create marker
     const marker = new this.mapboxgl.Marker({
       element: markerElement,
-      anchor: 'bottom',
+      anchor: 'center',
     })
       .setLngLat([car.lng, car.lat])
       .addTo(this.map);
@@ -379,48 +551,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     // Handle click
     markerElement.addEventListener('click', () => {
       this.carSelected.emit(car.carId);
+      this.selectedCar.set(car);
     });
 
-    return marker;
-  }
-
-  /**
-   * Create marker DOM element
-   */
-  private createMarkerElement(car: CarMapLocation): HTMLDivElement {
-    const el = document.createElement('div');
-    el.className = 'car-marker-simple';
-    el.setAttribute('data-car-id', car.carId);
-    el.setAttribute('data-title', car.title);
-    el.style.cursor = 'pointer';
-
-    // Marker content - simple circular marker with price
-    el.innerHTML = `
-      <div class="marker-circle">
-        <div class="marker-price-simple">${this.formatPriceShort(car.pricePerDay, car.currency)}</div>
-      </div>
-    `;
-
-    return el;
-  }
-
-  /**
-   * Format price for marker (short version)
-   */
-  private formatPriceShort(price: number, currency: string): string {
-    if (currency === 'ARS') {
-      // Show price in thousands if > 1000
-      if (price >= 1000) {
-        return `$${Math.round(price / 1000)}k`;
-      }
-      return `$${Math.round(price)}`;
-    }
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
+    return { marker, componentRef };
   }
 
   /**
@@ -478,14 +612,29 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
-   * Add user location marker with custom styling
+   * Add user location marker with custom styling and animations
    */
   private addUserLocationMarker(): void {
     if (!this.map || !this.mapboxgl || !this.userLocation) return;
 
-    // Create custom marker element
+    // Save previous location before removing marker
+    let previousLocation: { lat: number; lng: number } | null = null;
+    if (this.userLocationMarker) {
+      const prevLngLat = this.userLocationMarker.getLngLat();
+      previousLocation = { lat: prevLngLat.lat, lng: prevLngLat.lng };
+      this.userLocationMarker.remove();
+    }
+
+    // Create custom marker element with contextual classes
     const el = document.createElement('div');
-    el.className = 'user-location-marker';
+    el.className = `user-location-marker user-location-marker--${this.locationMode}`;
+    if (this.isDarkMode()) {
+      el.classList.add('user-location-marker--dark');
+    }
+    
+    const circleSize = 20 * this.circleSizeMultiplier();
+    el.style.setProperty('--circle-size', `${circleSize}px`);
+    
     el.innerHTML = `
       <div class="user-marker-halo"></div>
       <div class="user-marker-circle"></div>
@@ -499,32 +648,393 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       .setLngLat([this.userLocation.lng, this.userLocation.lat])
       .addTo(this.map);
 
-    // Create popup with contextual message
-    const popup = new this.mapboxgl.Popup({ offset: 25 })
-      .setHTML(`
-        <div class="user-location-popup">
-          <p class="font-semibold text-smoke-black">Estás aquí</p>
-          <p class="text-xs text-charcoal-medium">Verifica autos cerca</p>
-        </div>
-      `);
+    // Animate marker movement if location changed
+    if (previousLocation) {
+      const distance = this.calculateDistance(
+        previousLocation.lat,
+        previousLocation.lng,
+        this.userLocation.lat,
+        this.userLocation.lng
+      );
+      
+      if (distance > 10) { // Solo animar si se movió más de 10 metros
+        this.animateMarkerUpdate();
+      } else {
+        // Trigger pulse even for small movements
+        this.triggerLocationPulse();
+      }
+    }
 
+    // Create enhanced popup with contextual information
+    const popup = this.createUserLocationPopup();
     this.userLocationMarker.setPopup(popup);
 
-    // Show popup initially
-    setTimeout(() => {
-      this.userLocationMarker?.togglePopup();
-    }, 1000);
+    // Show popup initially with pulse animation (only if it's the first time)
+    if (!previousLocation) {
+      setTimeout(() => {
+        this.userLocationMarker?.togglePopup();
+        this.triggerLocationPulse();
+      }, 1000);
+    }
+  }
+  
+  /**
+   * Create enhanced popup with contextual information
+   */
+  private createUserLocationPopup(): MapboxPopup {
+    if (!this.mapboxgl) {
+      throw new Error('Mapbox GL not initialized');
+    }
+
+    const accuracyText = this.locationAccuracy 
+      ? `Precisión: ±${Math.round(this.locationAccuracy)}m`
+      : 'Precisión: Desconocida';
+    
+    const updateTime = this.lastLocationUpdate
+      ? this.formatUpdateTime(this.lastLocationUpdate)
+      : 'Actualizado ahora';
+
+    const modeText = this.locationMode === 'searching' 
+      ? 'Buscando autos cerca'
+      : this.locationMode === 'booking-confirmed'
+      ? 'Reserva confirmada'
+      : 'Tu ubicación';
+
+    const popupHTML = `
+      <div class="user-location-popup">
+        <p class="font-semibold text-text-primary">${modeText}</p>
+        <p class="text-xs text-text-secondary">${accuracyText}</p>
+        <p class="text-xs text-text-tertiary">${updateTime}</p>
+        <div class="user-location-popup-actions">
+          <button class="user-location-cta" data-action="search-nearby">
+            Buscar autos cerca
+          </button>
+          <button class="user-location-cta" data-action="view-routes">
+            Ver rutas
+          </button>
+        </div>
+      </div>
+    `;
+
+    const popup = new this.mapboxgl.Popup({ 
+      offset: 25,
+      closeButton: true,
+      closeOnClick: false,
+    }).setHTML(popupHTML);
+
+    // Attach event listeners after popup is created
+    popup.on('open', () => {
+      const searchBtn = popup.getElement()?.querySelector('[data-action="search-nearby"]');
+      const routesBtn = popup.getElement()?.querySelector('[data-action="view-routes"]');
+      
+      searchBtn?.addEventListener('click', () => {
+        this.carSelected.emit('nearby-search');
+      });
+      
+      routesBtn?.addEventListener('click', () => {
+        // Emit event for routes view
+        console.log('View routes clicked');
+      });
+    });
+
+    return popup;
+  }
+  
+  /**
+   * Format update time for display
+   */
+  private formatUpdateTime(date: Date): string {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    
+    if (diffSec < 10) return 'Actualizado ahora';
+    if (diffSec < 60) return `Actualizado hace ${diffSec}s`;
+    if (diffMin < 60) return `Actualizado hace ${diffMin}min`;
+    return `Actualizado ${date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`;
+  }
+  
+  /**
+   * Animate marker update with smooth transitions
+   */
+  private animateMarkerUpdate(): void {
+    if (!this.map || !this.userLocation) return;
+
+    // Smooth camera transition
+    this.map.easeTo({
+      center: [this.userLocation.lng, this.userLocation.lat],
+      duration: 800,
+      easing: (t: number) => t * (2 - t), // ease-out
+    });
+
+    // Add pulse animation to marker
+    this.triggerLocationPulse();
+  }
+  
+  /**
+   * Trigger pulse animation on location update
+   */
+  private triggerLocationPulse(): void {
+    if (!this.userLocationMarker) return;
+    
+    const element = this.userLocationMarker.getElement();
+    if (element) {
+      element.classList.add('user-location-marker--pulse');
+      setTimeout(() => {
+        element.classList.remove('user-location-marker--pulse');
+      }, 1000);
+    }
+  }
+  
+  /**
+   * Calculate distance between two coordinates (Haversine formula)
+   */
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371e3; // Earth radius in meters
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c;
+  }
+  
+  /**
+   * Update marker styles based on mode and theme
+   */
+  private updateMarkerStyles(): void {
+    if (!this.userLocationMarker) return;
+    
+    const element = this.userLocationMarker.getElement();
+    if (element) {
+      element.className = `user-location-marker user-location-marker--${this.locationMode}`;
+      if (this.isDarkMode()) {
+        element.classList.add('user-location-marker--dark');
+      } else {
+        element.classList.remove('user-location-marker--dark');
+      }
+    }
+  }
+  
+  /**
+   * Add search radius layer (circle around user location)
+   */
+  private addSearchRadiusLayer(): void {
+    if (!this.map || !this.mapboxgl || !this.userLocation) return;
+
+    // Convert radius from km to meters
+    const radiusMeters = this.searchRadiusKm * 1000;
+
+    // Create circle geometry
+    const circle = this.createCircleGeometry(
+      this.userLocation.lat,
+      this.userLocation.lng,
+      radiusMeters
+    );
+
+    // Add or update source
+    const feature: GeoJSON.Feature<GeoJSON.Polygon> = {
+      type: 'Feature',
+      geometry: circle,
+      properties: {},
+    };
+
+    if (this.map.getSource(this.searchRadiusSourceId)) {
+      (this.map.getSource(this.searchRadiusSourceId) as any).setData(feature);
+    } else {
+      this.map.addSource(this.searchRadiusSourceId, {
+        type: 'geojson',
+        data: feature,
+      });
+    }
+
+    // Add or update layer
+    const fillColor = this.isDarkMode() ? 'rgba(167, 216, 244, 0.1)' : 'rgba(167, 216, 244, 0.15)';
+    const outlineColor = this.isDarkMode() ? 'rgba(167, 216, 244, 0.4)' : 'rgba(167, 216, 244, 0.5)';
+    
+    if (!this.map.getLayer(this.searchRadiusLayerId)) {
+      this.map.addLayer({
+        id: this.searchRadiusLayerId,
+        type: 'fill',
+        source: this.searchRadiusSourceId,
+        paint: {
+          'fill-color': fillColor,
+          'fill-outline-color': outlineColor,
+        },
+      });
+    } else {
+      // Update paint properties with smooth transitions
+      // Mapbox GL JS handles transitions automatically when properties change
+      this.map.setPaintProperty(this.searchRadiusLayerId, 'fill-color', fillColor);
+      this.map.setPaintProperty(this.searchRadiusLayerId, 'fill-outline-color', outlineColor);
+    }
+  }
+  
+  /**
+   * Create circle geometry for search radius
+   */
+  private createCircleGeometry(lat: number, lng: number, radiusMeters: number): GeoJSON.Polygon {
+    const points = 64;
+    const coordinates: [number, number][] = [];
+    
+    for (let i = 0; i <= points; i++) {
+      const angle = (i * 360) / points;
+      const point = this.destinationPoint(lat, lng, radiusMeters, angle);
+      coordinates.push([point.lng, point.lat]);
+    }
+    
+    return {
+      type: 'Polygon',
+      coordinates: [coordinates],
+    };
+  }
+  
+  /**
+   * Calculate destination point given start point, distance and bearing
+   */
+  private destinationPoint(lat: number, lng: number, distanceMeters: number, bearingDegrees: number): { lat: number; lng: number } {
+    const R = 6371e3; // Earth radius in meters
+    const bearing = bearingDegrees * Math.PI / 180;
+    const lat1 = lat * Math.PI / 180;
+    const lng1 = lng * Math.PI / 180;
+    
+    const lat2 = Math.asin(
+      Math.sin(lat1) * Math.cos(distanceMeters / R) +
+      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing)
+    );
+    
+    const lng2 = lng1 + Math.atan2(
+      Math.sin(bearing) * Math.sin(distanceMeters / R) * Math.cos(lat1),
+      Math.cos(distanceMeters / R) - Math.sin(lat1) * Math.sin(lat2)
+    );
+    
+    return {
+      lat: lat2 * 180 / Math.PI,
+      lng: lng2 * 180 / Math.PI,
+    };
+  }
+  
+  /**
+   * Setup follow user location functionality
+   */
+  private setupFollowLocation(): void {
+    if (this.followUserLocation) {
+      this.startFollowingLocation();
+    }
+  }
+  
+  /**
+   * Start following user location
+   */
+  startFollowingLocation(): void {
+    if (!this.map || !this.userLocation || this.followLocationInterval) return;
+    
+    this.followUserLocation = true;
+    this.followLocationToggle.emit(true);
+    
+    // Fly to user location initially
+    this.map.flyTo({
+      center: [this.userLocation.lng, this.userLocation.lat],
+      zoom: 14,
+      duration: 1000,
+    });
+    
+    // Update position periodically
+    this.followLocationInterval = setInterval(() => {
+      if (this.userLocation && this.map) {
+        this.map.easeTo({
+          center: [this.userLocation.lng, this.userLocation.lat],
+          duration: 500,
+        });
+      }
+    }, 2000); // Update every 2 seconds
+  }
+  
+  /**
+   * Stop following user location
+   */
+  stopFollowingLocation(): void {
+    if (this.followLocationInterval) {
+      clearInterval(this.followLocationInterval);
+      this.followLocationInterval = null;
+    }
+    this.followUserLocation = false;
+    this.followLocationToggle.emit(false);
+  }
+  
+  /**
+   * Setup lock controls for zoom and rotation
+   */
+  private setupLockControls(): void {
+    if (!this.map) return;
+    
+    if (this.lockZoomRotation) {
+      // Disable zoom and rotation
+      this.map.boxZoom.disable();
+      this.map.scrollZoom.disable();
+      this.map.dragRotate.disable();
+      this.map.touchZoomRotate.disable();
+    } else {
+      // Enable zoom and rotation
+      this.map.boxZoom.enable();
+      this.map.scrollZoom.enable();
+      this.map.dragRotate.enable();
+      this.map.touchZoomRotate.enable();
+    }
+  }
+  
+  /**
+   * Toggle lock state
+   */
+  public toggleLock(): void {
+    this.lockZoomRotation = !this.lockZoomRotation;
+    this.lockToggle.emit(this.lockZoomRotation);
+    this.setupLockControls();
+  }
+  
+  /**
+   * Toggle follow location
+   */
+  public toggleFollowLocation(): void {
+    if (this.followUserLocation) {
+      this.stopFollowingLocation();
+    } else {
+      this.startFollowingLocation();
+    }
+  }
+  
+  /**
+   * Handle search radius slider change
+   */
+  public onSearchRadiusChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = parseFloat(target.value);
+    this.searchRadiusKm = value;
+    this.searchRadiusChange.emit(value);
+    
+    // Update radius layer with animation
+    if (this.showSearchRadius && this.map) {
+      this.addSearchRadiusLayer();
+    }
+
+    // Note: The parent component (marketplace.page.ts) should handle
+    // refetching cars with the new radius filter via searchRadiusChange output
   }
 
   /**
    * Highlight selected car marker
    */
   private highlightSelectedCar(carId: string): void {
-    const marker = this.carMarkers.get(carId);
-    if (!marker) return;
+    const markerData = this.carMarkers.get(carId);
+    if (!markerData) return;
 
-    const element = marker.getElement();
-    element.classList.add('car-marker--selected');
+    markerData.componentRef.instance.isSelected = true;
 
     // Fly to selected car
     const car = this.cars.find((c) => c.carId === carId);
@@ -540,6 +1050,22 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const componentRef = this.tooltipComponents.get(carId);
     if (componentRef) {
       componentRef.setInput('selected', true);
+    }
+  }
+
+  /**
+   * Remove highlight from car marker
+   */
+  private removeHighlightFromCar(carId: string): void {
+    const markerData = this.carMarkers.get(carId);
+    if (!markerData) return;
+
+    markerData.componentRef.instance.isSelected = false;
+
+    // Update tooltip component
+    const componentRef = this.tooltipComponents.get(carId);
+    if (componentRef) {
+      componentRef.setInput('selected', false);
     }
   }
 
@@ -564,18 +1090,39 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     });
     this.tooltipPopups.clear();
 
-    // Remove markers
-    this.carMarkers.forEach((marker) => {
-      marker.remove();
+    // Remove markers and destroy their components
+    this.carMarkers.forEach((markerData) => {
+      markerData.marker.remove();
+      this.applicationRef.detachView(markerData.componentRef.hostView);
+      markerData.componentRef.destroy();
     });
     this.carMarkers.clear();
   }
 
   /**
+   * Remove search radius layer
+   */
+  private removeSearchRadiusLayer(): void {
+    if (!this.map) return;
+    
+    try {
+      if (this.map.getLayer(this.searchRadiusLayerId)) {
+        this.map.removeLayer(this.searchRadiusLayerId);
+      }
+      if (this.map.getSource(this.searchRadiusSourceId)) {
+        this.map.removeSource(this.searchRadiusSourceId);
+      }
+    } catch {
+      // Layers may not exist
+    }
+  }
+  
+  /**
    * Cleanup on destroy
    */
   private cleanup(): void {
     this.clearMarkers();
+    this.stopFollowingLocation();
 
     // Remove clustering layers
     if (this.map) {
@@ -592,6 +1139,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         if (this.map.getSource(this.clusterSourceId)) {
           this.map.removeSource(this.clusterSourceId);
         }
+        this.removeSearchRadiusLayer();
       } catch {
         // Layers may not exist
       }
@@ -639,6 +1187,33 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
+   * Handle booking panel close
+   */
+  onBookingPanelClose(): void {
+    this.bookingPanelOpen.set(false);
+    this.selectedCarForBooking.set(null);
+  }
+
+  onDetailsPanelClose(): void {
+    this.selectedCar.set(null);
+    if (this.selectedCarId) {
+      this.removeHighlightFromCar(this.selectedCarId);
+    }
+  }
+
+  /**
+   * Handle booking confirmed
+   */
+  onBookingConfirmed(bookingData: BookingFormData): void {
+    const carId = this.selectedCarForBooking()?.carId;
+    if (carId) {
+      this.bookingConfirmed.emit({ carId, bookingData });
+    }
+    this.bookingPanelOpen.set(false);
+    this.selectedCarForBooking.set(null);
+  }
+
+  /**
    * Update markers when cars input changes
    */
   ngOnChanges(changes: SimpleChanges): void {
@@ -655,23 +1230,63 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       
       // Remove highlight from previous
       if (previousId) {
-        const prevMarker = this.carMarkers.get(previousId);
-        if (prevMarker) {
-          prevMarker.getElement().classList.remove('car-marker--selected');
-        }
-        const prevComponent = this.tooltipComponents.get(previousId);
-        if (prevComponent) {
-          prevComponent.setInput('selected', false);
-        }
+        this.removeHighlightFromCar(previousId);
       }
       
       // Highlight current
       if (currentId) {
         this.highlightSelectedCar(currentId);
+        const car = this.cars.find(c => c.carId === currentId);
+        if (car) {
+          this.selectedCar.set(car);
+        }
+      } else {
+        this.selectedCar.set(null);
       }
     }
     if (changes['userLocation'] && !changes['userLocation'].firstChange && this.map) {
       this.addUserLocationMarker();
+      if (this.showSearchRadius) {
+        this.addSearchRadiusLayer();
+      }
+    }
+    if (changes['locationMode'] && !changes['locationMode'].firstChange) {
+      this.updateMarkerStyles();
+    }
+    if (changes['markerVariant'] && !changes['markerVariant'].firstChange) {
+      this.updateMapTheme();
+      // Re-render markers with new variant
+      if (this.map) {
+        if (this.useClustering && this.cars.length > 10) {
+          this.setupClustering();
+        } else {
+          this.renderCarMarkers();
+        }
+      }
+    }
+    if (changes['searchRadiusKm'] && !changes['searchRadiusKm'].firstChange && this.map) {
+      if (this.showSearchRadius) {
+        this.addSearchRadiusLayer();
+      }
+      this.searchRadiusChange.emit(this.searchRadiusKm);
+    }
+    if (changes['showSearchRadius'] && !changes['showSearchRadius'].firstChange && this.map) {
+      if (this.showSearchRadius) {
+        this.addSearchRadiusLayer();
+      } else {
+        this.removeSearchRadiusLayer();
+      }
+    }
+    if (changes['followUserLocation'] && !changes['followUserLocation'].firstChange) {
+      if (this.followUserLocation) {
+        this.startFollowingLocation();
+      } else {
+        this.stopFollowingLocation();
+      }
+    }
+    if (changes['lockZoomRotation'] && !changes['lockZoomRotation'].firstChange) {
+      this.setupLockControls();
     }
   }
 }
+

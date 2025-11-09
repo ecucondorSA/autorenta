@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BlockedDateRange } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { injectSupabase } from './supabase-client.service';
-import { CarBlockingService, BlockedDateRange as ManualBlock } from './car-blocking.service';
+import { CarBlockingService } from './car-blocking.service';
 
 /**
  * Blocked date range from database

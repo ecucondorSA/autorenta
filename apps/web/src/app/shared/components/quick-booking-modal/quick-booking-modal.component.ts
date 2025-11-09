@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { WalletService } from '../../../core/services/wallet.service';
@@ -57,11 +58,11 @@ interface DurationOption {
       (click)="handleBackdropClick($event)"
     >
       <div
-        class="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+        class="bg-surface-raised rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
         (click)="$event.stopPropagation()"
       >
         <!-- Header -->
-        <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+        <div class="sticky top-0 bg-surface-raised border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
           <h2 class="text-xl font-bold text-gray-900">Reserva rápida</h2>
           <button
             type="button"
@@ -111,8 +112,8 @@ interface DurationOption {
                 (click)="selectDuration(option.id)"
                 [class.ring-2]="selectedDuration() === option.id"
                 [class.ring-blue-600]="selectedDuration() === option.id"
-                [class.bg-blue-50]="selectedDuration() === option.id"
-                class="text-left p-3 rounded-lg border border-gray-200 hover:border-blue-300 transition-all"
+                [class.bg-cta-default/10]="selectedDuration() === option.id"
+                class="text-left p-3 rounded-lg border border-gray-200 hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center justify-between">
                   <div>
@@ -143,15 +144,15 @@ interface DurationOption {
                 [disabled]="!hasWalletBalance()"
                 [class.ring-2]="selectedPaymentMethod() === 'wallet'"
                 [class.ring-blue-600]="selectedPaymentMethod() === 'wallet'"
-                [class.bg-blue-50]="selectedPaymentMethod() === 'wallet'"
+                [class.bg-cta-default/10]="selectedPaymentMethod() === 'wallet'"
                 [class.opacity-50]="!hasWalletBalance()"
                 [class.cursor-not-allowed]="!hasWalletBalance()"
-                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-blue-300 transition-all"
+                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                      <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <div class="w-10 h-10 rounded-full bg-success-light/20 flex items-center justify-center">
+                      <svg class="w-5 h-5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"
                         />
@@ -171,7 +172,7 @@ interface DurationOption {
                   </div>
                   <svg
                     *ngIf="hasWalletBalance()"
-                    class="w-5 h-5 text-green-600"
+                    class="w-5 h-5 text-success-light"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -190,12 +191,12 @@ interface DurationOption {
                 (click)="selectPaymentMethod('cash')"
                 [class.ring-2]="selectedPaymentMethod() === 'cash'"
                 [class.ring-blue-600]="selectedPaymentMethod() === 'cash'"
-                [class.bg-blue-50]="selectedPaymentMethod() === 'cash'"
-                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-blue-300 transition-all"
+                [class.bg-cta-default/10]="selectedPaymentMethod() === 'cash'"
+                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <div class="w-10 h-10 rounded-full bg-cta-default/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-cta-default" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fill-rule="evenodd"
                         d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
@@ -210,26 +211,31 @@ interface DurationOption {
                 </div>
               </button>
 
-              <!-- Transfer -->
+              <!-- Credit Card -->
               <button
                 type="button"
                 (click)="selectPaymentMethod('transfer')"
                 [class.ring-2]="selectedPaymentMethod() === 'transfer'"
                 [class.ring-blue-600]="selectedPaymentMethod() === 'transfer'"
-                [class.bg-blue-50]="selectedPaymentMethod() === 'transfer'"
-                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-blue-300 transition-all"
+                [class.bg-cta-default/10]="selectedPaymentMethod() === 'transfer'"
+                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                  <div class="w-10 h-10 rounded-full bg-cta-default/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-cta-default" fill="currentColor" viewBox="0 0 20 20">
                       <path
-                        d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z"
+                        d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
+                        clip-rule="evenodd"
                       />
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm font-semibold text-gray-900">Transferencia</p>
-                    <p class="text-xs text-gray-600">Transferencia bancaria</p>
+                    <p class="text-sm font-semibold text-gray-900">Tarjeta de crédito</p>
+                    <p class="text-xs text-gray-600">Se preautoriza 600 USD</p>
                   </div>
                 </div>
               </button>
@@ -253,7 +259,7 @@ interface DurationOption {
             <div class="border-t border-gray-200 pt-2 mt-2">
               <div class="flex items-center justify-between">
                 <span class="text-base font-bold text-gray-900">Total</span>
-                <span class="text-2xl font-bold text-blue-600">
+                <span class="text-2xl font-bold text-cta-default">
                   {{ totalWithFees() | money: (car.currency || 'ARS') }}
                 </span>
               </div>
@@ -261,8 +267,8 @@ interface DurationOption {
           </div>
 
           <!-- No Credit Card Badge -->
-          <div class="flex items-center justify-center gap-2 text-sm text-gray-600 py-2 bg-green-50 rounded-lg">
-            <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <div class="flex items-center justify-center gap-2 text-sm text-gray-600 py-2 bg-success-light/10 rounded-lg">
+            <svg class="w-5 h-5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -282,7 +288,7 @@ interface DurationOption {
         </div>
 
         <!-- Footer -->
-        <div class="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4 flex gap-3">
+        <div class="sticky bottom-0 bg-surface-raised border-t border-gray-200 px-6 py-4 flex gap-3">
           <button
             type="button"
             (click)="handleCancel()"
@@ -296,7 +302,7 @@ interface DurationOption {
             [disabled]="!canConfirm() || loading()"
             [class.opacity-50]="!canConfirm() || loading()"
             [class.cursor-not-allowed]="!canConfirm() || loading()"
-            class="flex-1 py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+            class="flex-1 py-3 px-4 rounded-lg bg-cta-default hover:bg-cta-default text-cta-text font-semibold transition-colors shadow-sm hover:shadow-md flex items-center justify-center gap-2"
           >
             <svg
               *ngIf="loading()"
@@ -367,9 +373,10 @@ export class QuickBookingModalComponent implements OnInit {
   @Output() readonly cancel = new EventEmitter<void>();
 
   private readonly walletService = inject(WalletService);
+  private readonly router = inject(Router);
 
   readonly selectedDuration = signal<QuickDuration>('today_2h');
-  readonly selectedPaymentMethod = signal<'wallet' | 'cash' | 'transfer'>('cash');
+  readonly selectedPaymentMethod = signal<'wallet' | 'cash' | 'transfer'>('wallet');
   readonly walletBalance = signal<number>(0);
   readonly loading = signal(false);
   readonly errorMessage = signal<string>('');
@@ -484,6 +491,13 @@ export class QuickBookingModalComponent implements OnInit {
   }
 
   selectPaymentMethod(method: 'wallet' | 'cash' | 'transfer'): void {
+    // Si selecciona wallet o efectivo, navegar a la wallet
+    if (method === 'wallet' || method === 'cash') {
+      this.selectedPaymentMethod.set(method);
+      void this.router.navigate(['/wallet']);
+      return;
+    }
+    
     this.selectedPaymentMethod.set(method);
     this.errorMessage.set('');
   }

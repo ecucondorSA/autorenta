@@ -10,7 +10,6 @@ import {
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   provideRouter,
-  Router,
   withEnabledBlockingInitialNavigation,
   withInMemoryScrolling,
 } from '@angular/router';

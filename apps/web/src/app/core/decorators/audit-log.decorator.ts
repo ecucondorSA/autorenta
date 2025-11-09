@@ -46,7 +46,7 @@ export interface AuditLogOptions {
    * Custom function to extract resource ID from parameters
    * Default: uses first parameter
    */
-  getResourceId?: (args: unknown[], result: any) => string | undefined;
+  getResourceId?: (args: unknown[], result: unknown) => string | undefined;
 
   /**
    * Custom function to build audit details
@@ -179,7 +179,8 @@ export function AuditRejection(resourceType: string) {
 export function AuditCreation(resourceType: string) {
   return AuditLog(`create_${resourceType}`, resourceType, {
     includeParams: true,
-    getResourceId: (args: unknown[], result: any) => (typeof result === 'string' ? result : undefined),
+    getResourceId: (args: unknown[], result: unknown) =>
+      typeof result === 'string' ? result : undefined,
   });
 }
 

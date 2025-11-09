@@ -8,7 +8,7 @@
   <!-- Loading State -->
   <div *ngIf="isLoadingBalance()" class="py-8 text-center">
     <div
-      class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"
+      class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cta-default"
     ></div>
     <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">Cargando información del wallet...</p>
   </div>
@@ -18,8 +18,8 @@
     <!-- Option 1: Credit Card (Mercado Pago) -->
     <div
       class="payment-option border rounded-lg p-4 cursor-pointer transition-all"
-      [class.border-blue-600]="selectedMethod() === 'credit_card'"
-      [class.bg-blue-50]="selectedMethod() === 'credit_card'"
+      [class.border-cta-default]="selectedMethod() === 'credit_card'"
+      [class.bg-cta-default/10]="selectedMethod() === 'credit_card'"
       [class.border-gray-200]="selectedMethod() !== 'credit_card'"
       [class.hover:border-gray-300]="selectedMethod() !== 'credit_card'"
       (click)="selectMethod('credit_card')"
@@ -30,7 +30,7 @@
           name="paymentMethod"
           value="credit_card"
           [checked]="selectedMethod() === 'credit_card'"
-          class="mt-1 mr-3 text-blue-600 focus:ring-blue-500"
+          class="mt-1 mr-3 text-cta-default focus:ring-cta-default"
         />
         <div class="flex-1">
           <div class="flex items-center justify-between mb-1">
@@ -51,17 +51,17 @@
           </div>
           <p class="text-sm text-gray-600 dark:text-gray-300">Paga con Mercado Pago</p>
           <div class="mt-2 flex items-center gap-2">
-            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded">Mercado Pago</span>
+            <span class="text-xs px-2 py-1 bg-success-light/20 text-success-light rounded">Mercado Pago</span>
             <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded"
               >Todas las tarjetas</span
             >
           </div>
           <div
             *ngIf="selectedMethod() === 'credit_card'"
-            class="mt-3 p-3 bg-white rounded border border-blue-200"
+            class="mt-3 p-3 bg-surface-raised rounded border border-cta-default/40"
           >
             <p class="text-sm font-medium text-gray-900">Total a pagar:</p>
-            <p class="text-2xl font-bold text-blue-700">{{ formatCurrency(totalAmount) }}</p>
+            <p class="text-2xl font-bold text-cta-default">{{ formatCurrency(totalAmount) }}</p>
           </div>
         </div>
       </div>
@@ -71,8 +71,8 @@
     <div
       *ngIf="hasSufficientFunds()"
       class="payment-option border rounded-lg p-4 cursor-pointer transition-all"
-      [class.border-green-600]="selectedMethod() === 'wallet'"
-      [class.bg-green-50]="selectedMethod() === 'wallet'"
+      [class.border-success-light]="selectedMethod() === 'wallet'"
+      [class.bg-success-light/10]="selectedMethod() === 'wallet'"
       [class.border-gray-200]="selectedMethod() !== 'wallet'"
       [class.hover:border-gray-300]="selectedMethod() !== 'wallet'"
       (click)="selectMethod('wallet')"
@@ -83,7 +83,7 @@
           name="paymentMethod"
           value="wallet"
           [checked]="selectedMethod() === 'wallet'"
-          class="mt-1 mr-3 text-green-600 focus:ring-green-500"
+          class="mt-1 mr-3 text-success-light focus:ring-success-light"
         />
         <div class="flex-1">
           <div class="flex items-center justify-between mb-1">
@@ -105,7 +105,7 @@
           <p class="text-sm text-gray-600 dark:text-gray-300">Usa tu saldo disponible</p>
           <div class="mt-2 flex items-center gap-2">
             <span
-              class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded flex items-center gap-1"
+              class="text-xs px-2 py-1 bg-success-light/20 text-success-light rounded flex items-center gap-1"
             >
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -117,10 +117,10 @@
               </svg>
               Fondos suficientes
             </span>
-            <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded">Sin comisiones</span>
+            <span class="text-xs px-2 py-1 bg-cta-default/20 text-cta-default rounded">Sin comisiones</span>
           </div>
           <div *ngIf="selectedMethod() === 'wallet'" class="mt-3 space-y-2">
-            <div class="p-3 bg-white rounded border border-green-200">
+            <div class="p-3 bg-surface-raised rounded border border-success-light/40">
               <div class="flex justify-between items-center">
                 <span class="text-sm text-gray-600 dark:text-gray-300">Balance disponible:</span>
                 <span class="text-sm font-medium text-gray-900">{{
@@ -129,7 +129,7 @@
               </div>
               <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
                 <span class="text-sm font-medium text-gray-900">Se usará del wallet:</span>
-                <span class="text-2xl font-bold text-green-700">{{
+                <span class="text-2xl font-bold text-success-light">{{
                   formatCurrency(totalAmount)
                 }}</span>
               </div>
@@ -205,7 +205,7 @@
 
           <!-- Wallet Amount Adjuster (only when selected) -->
           <div *ngIf="selectedMethod() === 'partial_wallet'" class="mt-3 space-y-3">
-            <div class="p-3 bg-white rounded border border-purple-200">
+            <div class="p-3 bg-surface-raised rounded border border-purple-200">
               <label for="walletAmount" class="block text-sm font-medium text-gray-900 mb-2">
                 Monto a usar del wallet:
               </label>
@@ -228,7 +228,7 @@
                 <button
                   type="button"
                   (click)="useMaxWallet()"
-                  class="px-3 py-2 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap"
+                  class="px-3 py-2 text-sm bg-purple-600 text-text-inverse rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap"
                 >
                   Usar Máximo
                 </button>
@@ -250,7 +250,7 @@
             </div>
 
             <!-- Payment Breakdown -->
-            <div class="p-3 bg-white rounded border border-purple-200 space-y-2">
+            <div class="p-3 bg-surface-raised rounded border border-purple-200 space-y-2">
               <div class="flex justify-between items-center">
                 <span class="text-sm text-gray-600 dark:text-gray-300">Del wallet:</span>
                 <span class="text-sm font-medium text-purple-700">{{
@@ -259,7 +259,7 @@
               </div>
               <div class="flex justify-between items-center">
                 <span class="text-sm text-gray-600 dark:text-gray-300">Con tarjeta:</span>
-                <span class="text-sm font-medium text-blue-700">{{
+                <span class="text-sm font-medium text-cta-default">{{
                   formatCurrency(cardAmount())
                 }}</span>
               </div>
@@ -278,11 +278,11 @@
     <!-- No Funds Warning (only if no wallet funds) -->
     <div
       *ngIf="!hasSufficientFunds() && !hasPartialFunds()"
-      class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+      class="bg-cta-default/10 border border-cta-default/40 rounded-lg p-4"
     >
       <div class="flex items-start">
         <svg
-          class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"
+          class="w-5 h-5 text-cta-default mt-0.5 flex-shrink-0"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -295,10 +295,10 @@
           ></path>
         </svg>
         <div class="ml-3">
-          <h4 class="text-sm font-medium text-blue-900">Sin saldo en wallet</h4>
-          <p class="text-sm text-blue-700 mt-1">
+          <h4 class="text-sm font-medium text-cta-default">Sin saldo en wallet</h4>
+          <p class="text-sm text-cta-default mt-1">
             Deposita fondos en tu wallet para pagar sin tarjeta de crédito.
-            <a href="/wallet" class="underline hover:text-blue-800">Ir a Wallet</a>
+            <a href="/wallet" class="underline hover:text-cta-default">Ir a Wallet</a>
           </p>
         </div>
       </div>

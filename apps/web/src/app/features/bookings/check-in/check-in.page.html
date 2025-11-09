@@ -22,7 +22,7 @@
             <p class="text-red-700 dark:text-red-300">{{ error() }}</p>
             <button
               routerLink="/bookings"
-              class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              class="mt-4 px-4 py-2 bg-red-600 text-text-inverse rounded-lg hover:bg-red-700 transition-colors"
             >
               Volver a mis reservas
             </button>
@@ -51,9 +51,9 @@
         </button>
 
         <div
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+          class="bg-surface-raised dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
         >
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-text-inverse mb-2">
             🚗 Check-in del Vehículo
           </h1>
           <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
@@ -64,15 +64,15 @@
 
       <!-- Booking Info Card -->
       <div
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6"
+        class="bg-surface-raised dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6"
       >
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
           Información de la Reserva
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">Vehículo</p>
-            <p class="font-medium text-gray-900 dark:text-white">
+            <p class="font-medium text-gray-900 dark:text-text-inverse">
               {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
             </p>
           </div>
@@ -80,7 +80,7 @@
             <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">
               Inicio del alquiler
             </p>
-            <p class="font-medium text-gray-900 dark:text-white">
+            <p class="font-medium text-gray-900 dark:text-text-inverse">
               {{ formatDateTime(booking()!.start_at) }}
             </p>
           </div>
@@ -88,7 +88,7 @@
             <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">
               Fin del alquiler
             </p>
-            <p class="font-medium text-gray-900 dark:text-white">
+            <p class="font-medium text-gray-900 dark:text-text-inverse">
               {{ formatDateTime(booking()!.end_at) }}
             </p>
           </div>
@@ -96,10 +96,10 @@
             <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">Estado</p>
             <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-              [class.bg-blue-100]="booking()?.status === 'confirmed'"
-              [class.text-blue-800]="booking()?.status === 'confirmed'"
-              [class.bg-green-100]="booking()?.status === 'in_progress'"
-              [class.text-green-800]="booking()?.status === 'in_progress'"
+              [class.bg-cta-default/20]="booking()?.status === 'confirmed'"
+              [class.text-cta-default]="booking()?.status === 'confirmed'"
+              [class.bg-success-light/20]="booking()?.status === 'in_progress'"
+              [class.text-success-light]="booking()?.status === 'in_progress'"
             >
               {{ booking()?.status === 'confirmed' ? 'Confirmada' : 'En progreso' }}
             </span>
@@ -110,15 +110,15 @@
       <!-- Check-in Already Completed -->
       @if (inspectionCompleted() && existingInspection()) {
         <div
-          class="bg-green-50 border border-green-200 rounded-xl p-6 dark:bg-green-900/20 dark:border-green-800"
+          class="bg-success-light/10 border border-success-light/40 rounded-xl p-6 dark:bg-success-light/20 dark:border-success-light"
         >
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">✅</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
+              <h3 class="text-lg font-semibold text-success-light dark:text-success-light mb-2">
                 Check-in Completado
               </h3>
-              <p class="text-green-700 dark:text-green-300 mb-4">
+              <p class="text-success-light dark:text-success-light mb-4">
                 El check-in de este vehículo ya fue completado el
                 {{
                   existingInspection()?.signedAt
@@ -127,18 +127,18 @@
                 }}.
               </p>
               @if (existingInspection()?.odometer) {
-                <p class="text-sm text-green-600 dark:text-green-400 mb-2">
+                <p class="text-sm text-success-light dark:text-success-light mb-2">
                   <strong>Odómetro:</strong> {{ existingInspection()?.odometer }} km
                 </p>
               }
               @if (existingInspection()?.fuelLevel !== undefined) {
-                <p class="text-sm text-green-600 dark:text-green-400 mb-4">
+                <p class="text-sm text-success-light dark:text-success-light mb-4">
                   <strong>Combustible:</strong> {{ existingInspection()?.fuelLevel }}%
                 </p>
               }
               <button
                 (click)="goToBookingDetail()"
-                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                class="px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors"
               >
                 Ver Detalle de Reserva
               </button>
@@ -150,10 +150,10 @@
       <!-- Check-in Form -->
       @else if (canPerformCheckIn()) {
         <div
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+          class="bg-surface-raised dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
         >
           <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Instrucciones</h2>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-2">Instrucciones</h2>
             <ul
               class="list-disc list-inside space-y-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300"
             >
@@ -189,7 +189,7 @@
               </p>
               <button
                 (click)="goToBookingDetail()"
-                class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                class="px-4 py-2 bg-yellow-600 text-text-inverse rounded-lg hover:bg-yellow-700 transition-colors"
               >
                 Ver Detalle de Reserva
               </button>

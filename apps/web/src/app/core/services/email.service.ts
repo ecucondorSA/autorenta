@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
@@ -72,7 +72,7 @@ export class EmailService {
     recipientName: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: result, error } = await this.supabase.functions.invoke(
+      const { error } = await this.supabase.functions.invoke(
         'send-booking-cancellation-email',
         {
           body: {

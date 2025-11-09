@@ -18,14 +18,14 @@ import { environment } from '../../../../../environments/environment';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"></div>
         </div>
       } @else if (cashFlow().length === 0) {
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
           <p class="text-gray-600">No hay datos de flujo de caja disponibles.</p>
         </div>
       } @else {
-        <div class="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div class="overflow-x-auto rounded-lg border border-gray-200 bg-surface-raised shadow-sm">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
@@ -49,7 +49,7 @@ import { environment } from '../../../../../environments/environment';
                 </th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
+            <tbody class="divide-y divide-gray-200 bg-surface-raised">
               @for (entry of cashFlow(); track entry.id ?? $index) {
                 <tr>
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
@@ -61,7 +61,7 @@ import { environment } from '../../../../../environments/environment';
                   <td class="px-6 py-4 text-sm text-gray-600">
                     {{ entry.description || 'Sin descripción' }}
                   </td>
-                  <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-green-600">
+                  <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-success-light">
                     @if (entry.inflow || entry.debit) {
                       \${{ (entry.inflow || entry.debit) | number: '1.2-2' }}
                     } @else {

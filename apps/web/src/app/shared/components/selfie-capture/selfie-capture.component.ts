@@ -19,7 +19,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
   selector: 'app-selfie-capture',
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="bg-white rounded-lg border border-gray-200 p-6">
+    <div class="bg-surface-raised rounded-lg border border-gray-200 p-6">
       <!-- Header -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center gap-3">
@@ -42,8 +42,8 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       </div>
 
       <!-- Verified State -->
-      <div *ngIf="status().isVerified" class="p-4 bg-green-50 border border-green-200 rounded-lg">
-        <div class="flex items-center gap-2 text-green-800">
+      <div *ngIf="status().isVerified" class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
+        <div class="flex items-center gap-2 text-success-light">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"
@@ -54,17 +54,17 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           <span class="text-sm font-medium">Identidad verificada exitosamente</span>
         </div>
         <div class="mt-3 space-y-1 text-sm">
-          <p class="text-green-700">✓ Face Match: {{ status().faceMatchScore }}%</p>
-          <p class="text-green-700">✓ Liveness: {{ status().livenessScore }}%</p>
+          <p class="text-success-light">✓ Face Match: {{ status().faceMatchScore }}%</p>
+          <p class="text-success-light">✓ Liveness: {{ status().livenessScore }}%</p>
         </div>
       </div>
 
       <!-- Level 2 Required -->
       <div
         *ngIf="status().requiresLevel2"
-        class="p-4 bg-orange-50 border border-orange-200 rounded-lg"
+        class="p-4 bg-warning-light/10 border border-warning-light/40 rounded-lg"
       >
-        <p class="text-sm text-orange-800">
+        <p class="text-sm text-warning-light">
           ⚠️ Debes completar Level 2 (documentos) antes de verificar tu identidad con selfie.
         </p>
       </div>
@@ -74,10 +74,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         <!-- Instructions -->
         <div
           *ngIf="!isRecording() && !hasVideo()"
-          class="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2"
+          class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg space-y-2"
         >
-          <p class="text-sm font-medium text-blue-900">Instrucciones:</p>
-          <ul class="text-sm text-blue-800 space-y-1 ml-4 list-disc">
+          <p class="text-sm font-medium text-cta-default">Instrucciones:</p>
+          <ul class="text-sm text-cta-default space-y-1 ml-4 list-disc">
             <li>Asegúrate de estar en un lugar bien iluminado</li>
             <li>Mira directamente a la cámara</li>
             <li>Mantén tu rostro centrado en el recuadro</li>
@@ -100,9 +100,9 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           <!-- Recording Indicator -->
           <div
             *ngIf="isRecording()"
-            class="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-medium animate-pulse"
+            class="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-text-inverse px-3 py-2 rounded-full text-sm font-medium animate-pulse"
           >
-            <span class="w-2 h-2 bg-white rounded-full"></span>
+            <span class="w-2 h-2 bg-surface-raised rounded-full"></span>
             <span>REC {{ recordingSeconds() }}s</span>
           </div>
 
@@ -120,7 +120,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           <!-- Placeholder -->
           <div
             *ngIf="!isRecording() && !hasVideo()"
-            class="absolute inset-0 flex flex-col items-center justify-center text-white"
+            class="absolute inset-0 flex flex-col items-center justify-center text-text-inverse"
           >
             <svg
               class="w-20 h-20 mb-4 opacity-50"
@@ -147,7 +147,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             type="button"
             (click)="startRecording()"
             [disabled]="processing()"
-            class="flex-grow px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            class="flex-grow px-6 py-3 bg-cta-default text-cta-text rounded-lg font-medium hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             <span class="flex items-center justify-center gap-2">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -164,7 +164,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             *ngIf="hasVideo() && !processing()"
             type="button"
             (click)="submitVideo()"
-            class="flex-grow px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all"
+            class="flex-grow px-6 py-3 bg-success-light text-text-primary rounded-lg font-medium hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2 transition-all"
           >
             <span class="flex items-center justify-center gap-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,19 +184,19 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             *ngIf="hasVideo() && !processing()"
             type="button"
             (click)="retake()"
-            class="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+            class="px-6 py-3 bg-surface-raised border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 focus:ring-2 focus:ring-cta-default focus:ring-offset-2 transition-all"
           >
             Volver a Grabar
           </button>
         </div>
 
         <!-- Processing State -->
-        <div *ngIf="processing()" class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div *ngIf="processing()" class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
           <div class="flex items-center gap-3">
-            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-cta-default"></div>
             <div class="flex-grow">
-              <p class="text-sm font-medium text-blue-900">Procesando verificación facial...</p>
-              <p class="text-xs text-blue-700 mt-1">Esto puede tardar unos segundos</p>
+              <p class="text-sm font-medium text-cta-default">Procesando verificación facial...</p>
+              <p class="text-xs text-cta-default mt-1">Esto puede tardar unos segundos</p>
             </div>
           </div>
         </div>
@@ -204,7 +204,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         <!-- Success Message -->
         <div
           *ngIf="successMessage()"
-          class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800"
+          class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-light"
         >
           {{ successMessage() }}
         </div>
@@ -388,7 +388,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
 
   getStatusBadgeClass(): string {
     return this.status().isVerified
-      ? 'bg-green-100 text-green-600'
+      ? 'bg-success-light/20 text-success-light'
       : 'bg-purple-100 text-purple-600';
   }
 
@@ -398,7 +398,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
 
   getStatusLabelClass(): string {
     return this.status().isVerified
-      ? 'bg-green-100 text-green-800'
+      ? 'bg-success-light/20 text-success-light'
       : 'bg-purple-100 text-purple-800';
   }
 }

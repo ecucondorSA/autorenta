@@ -1,26 +1,26 @@
-<section class="space-y-6 text-smoke-black dark:text-pearl-light transition-colors duration-300">
+<section class="space-y-6 text-text-primary dark:text-text-secondary transition-colors duration-300">
   <header>
-    <h1 class="text-3xl font-semibold text-slate-900 dark:text-ivory-luminous">
+    <h1 class="text-3xl font-semibold text-slate-900 dark:text-text-primary">
       Panel de administración
     </h1>
-    <p class="text-sm text-slate-500 dark:text-pearl-light/70">
+    <p class="text-sm text-slate-500 dark:text-text-secondary/70">
       Aprobá vehículos y controlá las reservas recientes.
     </p>
   </header>
 
   <!-- Admin Navigation -->
   <nav
-    class="bg-white dark:bg-anthracite rounded-xl border border-slate-200 dark:border-slate-deep shadow-sm dark:shadow-card p-4 transition-colors"
+    class="bg-surface-raised dark:bg-surface-raised rounded-xl border border-slate-200 dark:border-slate-deep shadow-sm dark:shadow-card p-4 transition-colors"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <a
         routerLink="/admin"
-        routerLinkActive="bg-blue-50 border-blue-500"
+        routerLinkActive="bg-cta-default/10 border-cta-default"
         [routerLinkActiveOptions]="{ exact: true }"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
       >
-        <div class="flex-shrink-0 bg-blue-500 rounded-md p-3 shadow-sm shadow-blue-500/40">
-          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex-shrink-0 bg-cta-default rounded-md p-3 shadow-sm shadow-blue-500/40">
+          <svg class="h-6 w-6 text-text-inverse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -30,18 +30,18 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-ivory-luminous">Dashboard</h3>
-          <p class="text-sm text-slate-500 dark:text-pearl-light/70">Resumen general</p>
+          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Dashboard</h3>
+          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Resumen general</p>
         </div>
       </a>
 
       <a
         routerLink="/admin/withdrawals"
-        routerLinkActive="bg-green-50 border-green-500"
+        routerLinkActive="bg-success-light/10 border-success-light"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
       >
-        <div class="flex-shrink-0 bg-green-500 rounded-md p-3 shadow-sm shadow-success-500/40">
-          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex-shrink-0 bg-success-light rounded-md p-3 shadow-sm shadow-success-500/40">
+          <svg class="h-6 w-6 text-text-inverse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -51,8 +51,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-ivory-luminous">Retiros</h3>
-          <p class="text-sm text-slate-500 dark:text-pearl-light/70">Gestionar retiros de fondos</p>
+          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Retiros</h3>
+          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Gestionar retiros de fondos</p>
         </div>
       </a>
 
@@ -62,7 +62,7 @@
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
       >
         <div class="flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40">
-          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-6 w-6 text-text-inverse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -72,8 +72,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-ivory-luminous">Tipos de Cambio</h3>
-          <p class="text-sm text-slate-500 dark:text-pearl-light/70">Monitor de tasas</p>
+          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Tipos de Cambio</h3>
+          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Monitor de tasas</p>
         </div>
       </a>
 
@@ -83,7 +83,7 @@
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
       >
         <div class="flex-shrink-0 bg-red-500 rounded-md p-3 shadow-sm shadow-red-500/40">
-          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-6 w-6 text-text-inverse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -93,8 +93,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-ivory-luminous">Siniestros</h3>
-          <p class="text-sm text-slate-500 dark:text-pearl-light/70">Gestionar claims reportados</p>
+          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Siniestros</h3>
+          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Gestionar claims reportados</p>
         </div>
       </a>
 
@@ -104,7 +104,7 @@
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
       >
         <div class="flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40">
-          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-6 w-6 text-text-inverse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -114,8 +114,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-ivory-luminous">Reseñas</h3>
-          <p class="text-sm text-slate-500 dark:text-pearl-light/70">Moderar reseñas reportadas</p>
+          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Reseñas</h3>
+          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Moderar reseñas reportadas</p>
         </div>
       </a>
     </div>
@@ -123,20 +123,20 @@
 
   <div
     *ngIf="loading()"
-    class="rounded-xl border border-slate-200 dark:border-slate-deep bg-white dark:bg-anthracite p-5 text-sm text-slate-500 dark:text-pearl-light/70 shadow-sm dark:shadow-card"
+    class="rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 text-sm text-slate-500 dark:text-text-secondary/70 shadow-sm dark:shadow-card"
   >
     Cargando datos…
   </div>
 
   <section
-    class="space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-white dark:bg-anthracite p-5 shadow-sm dark:shadow-card transition-colors"
+    class="space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 shadow-sm dark:shadow-card transition-colors"
   >
     <header class="flex items-center justify-between">
       <div>
-        <h2 class="text-xl font-semibold text-slate-900 dark:text-ivory-luminous">
+        <h2 class="text-xl font-semibold text-slate-900 dark:text-text-primary">
           Autos pendientes
         </h2>
-        <p class="text-sm text-slate-500 dark:text-pearl-light/70">
+        <p class="text-sm text-slate-500 dark:text-text-secondary/70">
           Revisá y aprobá nuevos vehículos antes de que salgan al aire.
         </p>
       </div>
@@ -144,7 +144,7 @@
 
     <div
       *ngIf="pendingCars().length === 0"
-      class="rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-pearl-light/70"
+      class="rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-text-secondary/70"
     >
       No hay autos pendientes de aprobación.
     </div>
@@ -152,25 +152,25 @@
     <div class="grid gap-4 md:grid-cols-2">
       @for (car of pendingCars(); track car.id) {
         <article
-          class="space-y-2 rounded-xl border border-slate-200 dark:border-slate-deep p-4 shadow-sm dark:shadow-card bg-white dark:bg-slate-deep/90 transition-colors"
+          class="space-y-2 rounded-xl border border-slate-200 dark:border-slate-deep p-4 shadow-sm dark:shadow-card bg-surface-raised dark:bg-surface-secondary/90 transition-colors"
         >
           <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-ivory-luminous">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-text-primary">
               {{ car.title }}
             </h3>
-            <span class="text-sm font-semibold text-primary-600 dark:text-accent-petrol/80">{{
+            <span class="text-sm font-semibold text-primary-600 dark:text-cta-default/80">{{
               car.price_per_day | money
             }}</span>
           </div>
-          <p class="text-sm text-slate-500 dark:text-pearl-light/70">
+          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
             {{ car.brand }} • {{ car.model }} • {{ car.year }}
           </p>
-          <p class="text-sm text-slate-500 dark:text-pearl-light/70">
+          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
             {{ car.location_city }}, {{ car.location_province }}
           </p>
           <button
             type="button"
-            class="rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white hover:bg-primary-700 dark:hover:bg-primary-500/90 transition"
+            class="rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-text-inverse hover:bg-primary-700 dark:hover:bg-primary-500/90 transition"
             (click)="approveCar(car.id)"
           >
             Aprobar auto
@@ -181,17 +181,17 @@
   </section>
 
   <section
-    class="space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-white dark:bg-anthracite p-5 shadow-sm dark:shadow-card transition-colors"
+    class="space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 shadow-sm dark:shadow-card transition-colors"
   >
     <header>
-      <h2 class="text-xl font-semibold text-slate-900 dark:text-ivory-luminous">
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-text-primary">
         Reservas recientes
       </h2>
     </header>
 
     <div
       *ngIf="bookings().length === 0"
-      class="rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-pearl-light/70"
+      class="rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-text-secondary/70"
     >
       No hay reservas registradas aún.
     </div>
@@ -199,22 +199,22 @@
     <div class="space-y-3">
       @for (booking of bookings(); track booking.id) {
         <article
-          class="rounded-xl border border-slate-200 dark:border-slate-deep p-4 bg-white dark:bg-slate-deep/90 shadow-sm dark:shadow-card transition-colors"
+          class="rounded-xl border border-slate-200 dark:border-slate-deep p-4 bg-surface-raised dark:bg-surface-secondary/90 shadow-sm dark:shadow-card transition-colors"
         >
           <div
-            class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600 dark:text-pearl-light/70"
+            class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600 dark:text-text-secondary/70"
           >
-            <span class="font-semibold text-slate-700 dark:text-ivory-luminous"
+            <span class="font-semibold text-slate-700 dark:text-text-primary"
               >Reserva #{{ booking.id }}</span
             >
             <span
-              class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-500 dark:bg-slate-deep/80 dark:text-pearl-light/70"
+              class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-500 dark:bg-surface-secondary/80 dark:text-text-secondary/70"
             >
               {{ booking.status }}
             </span>
           </div>
           <div
-            class="mt-2 grid gap-2 text-xs text-slate-500 dark:text-pearl-light/60 md:grid-cols-3"
+            class="mt-2 grid gap-2 text-xs text-slate-500 dark:text-text-secondary/60 md:grid-cols-3"
           >
             <div>Inicio: {{ booking.start_at | date: 'dd/MM/yyyy' }}</div>
             <div>Fin: {{ booking.end_at | date: 'dd/MM/yyyy' }}</div>

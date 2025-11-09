@@ -31,9 +31,9 @@ export class AutorentarCreditCardComponent {
     const days = this.daysUntilExpiration();
     if (days === null) return 'text-gray-600 dark:text-gray-300';
     if (this.isExpired()) return 'text-red-600';
-    if (days <= 30) return 'text-orange-600';
+    if (days <= 30) return 'text-warning-light';
     if (days <= 90) return 'text-yellow-600';
-    return 'text-green-600';
+    return 'text-success-light';
   }
 
   getExpirationLabel(): string {
@@ -51,9 +51,9 @@ export class AutorentarCreditCardComponent {
   getBalanceColor(): string {
     const balance = this.balance();
     if (balance <= 0) return 'text-red-600';
-    if (balance < 100) return 'text-orange-600';
+    if (balance < 100) return 'text-warning-light';
     if (balance < 200) return 'text-yellow-600';
-    return 'text-green-600';
+    return 'text-success-light';
   }
 
   formatBalance(): string {

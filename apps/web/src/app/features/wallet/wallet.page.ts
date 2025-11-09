@@ -222,11 +222,11 @@ export class WalletPage implements AfterViewInit, OnInit {
     const status = this.protectedCreditStatus();
 
     if (status === 'pending') {
-      return 'bg-accent-petrol text-white hover:bg-accent-petrol/90';
+      return 'bg-cta-default text-cta-text hover:bg-cta-default/90';
     } else if (status === 'partial') {
-      return 'bg-warning-600 text-white hover:bg-warning-700';
+      return 'bg-warning-600 text-text-inverse hover:bg-warning-700';
     } else {
-      return 'bg-primary-600 text-white hover:bg-primary-700';
+      return 'bg-primary-600 text-text-inverse hover:bg-primary-700';
     }
   });
 

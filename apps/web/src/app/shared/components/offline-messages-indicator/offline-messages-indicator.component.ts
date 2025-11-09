@@ -32,7 +32,7 @@ import { OfflineMessagesPanelComponent } from '../offline-messages-panel/offline
           }}</span
         >
         <span
-          class="flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-xs font-bold text-white"
+          class="flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-xs font-bold text-text-inverse"
         >
           {{ pendingCount() }}
         </span>

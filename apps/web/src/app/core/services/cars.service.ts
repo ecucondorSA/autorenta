@@ -609,7 +609,7 @@ export class CarsService {
       }
 
       return data === true;
-    } catch (__error) {
+    } catch {
       return false;
     }
   }

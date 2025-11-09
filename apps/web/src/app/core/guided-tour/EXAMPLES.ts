@@ -375,11 +375,10 @@ export class ResponsiveFeatureComponent implements OnInit {
 export class AnalyticsDemoComponent implements OnInit {
   private guidedTour = inject(GuidedTourService);
 
-  ngOnInit() {
+  ngOnInit(): void {
     // All tour events are automatically tracked via TelemetryBridge
     // You can also access event history:
-
-    const _history = this.guidedTour.getEventHistory();
+    // const history = this.guidedTour.getEventHistory();
 
     // Events automatically sent:
     // - tour_started
@@ -388,6 +387,9 @@ export class AnalyticsDemoComponent implements OnInit {
     // - tour_completed
     // - tour_cancelled
     // - tour_error
+    
+    // This method intentionally left empty as it's a demo component
+    // showing how telemetry works automatically
   }
 }
 

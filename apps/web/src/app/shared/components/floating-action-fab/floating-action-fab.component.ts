@@ -53,9 +53,9 @@ export class FloatingActionFabComponent {
 
   getActionColorClass(action: FabAction): string {
     const colors = {
-      primary: 'bg-accent-petrol hover:bg-accent-petrol/90 text-white',
-      secondary: 'bg-charcoal-medium hover:bg-charcoal-dark text-white',
-      accent: 'bg-accent-warm hover:bg-accent-warm/90 text-white',
+      primary: 'bg-cta-default text-cta-text',
+      secondary: 'bg-charcoal-medium hover:bg-charcoal-dark text-text-inverse',
+      accent: 'bg-warning-light hover:bg-warning-light/90 text-text-inverse',
     };
     return colors[action.color || 'primary'];
   }

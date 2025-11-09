@@ -41,6 +41,9 @@ export * from './fgo.model';
 // Export Insurance models
 export * from './insurance.model';
 
+// Export ProfileService types
+export type { UpdateProfileData } from '../services/profile.service';
+
 // Nuevos tipos para perfil expandido
 export type KycStatus = 'not_started' | 'pending' | 'verified' | 'rejected';
 export type OnboardingStatus = 'incomplete' | 'complete';

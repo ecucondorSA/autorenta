@@ -362,7 +362,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         const ownerFullName = owner?.full_name || 'el anfitrión';
         this.carOwnerName.set(ownerFullName);
       }
-    } catch (__error) {}
+    } catch (__error) {
+      // Silently ignore errors loading owner name
+    }
   }
 
   private async loadInspections(): Promise<void> {

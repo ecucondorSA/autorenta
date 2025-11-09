@@ -29,12 +29,12 @@ export interface VerificationBlockingModalConfig {
         aria-labelledby="modal-title"
       >
         <div
-          class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-xl p-6 max-w-md w-full"
+          class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-xl p-6 max-w-md w-full"
         >
           <!-- Close Button -->
           <button
             (click)="close()"
-            class="float-right text-charcoal-medium dark:text-pearl-light/70 hover:text-smoke-black dark:hover:text-ivory-luminous"
+            class="float-right text-text-secondary dark:text-text-secondary/70 hover:text-text-primary dark:hover:text-ivory-luminous"
             aria-label="Cerrar modal"
           >
             ✕
@@ -48,13 +48,13 @@ export interface VerificationBlockingModalConfig {
           <!-- Title -->
           <h2
             id="modal-title"
-            class="text-xl font-bold text-smoke-black dark:text-ivory-luminous text-center mb-2"
+            class="text-xl font-bold text-text-primary dark:text-text-primary text-center mb-2"
           >
             {{ config.title }}
           </h2>
 
           <!-- Description -->
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 text-center mb-4">
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70 text-center mb-4">
             {{ config.description }}
           </p>
 
@@ -83,14 +83,14 @@ export interface VerificationBlockingModalConfig {
           <div class="flex gap-3 flex-col-reverse sm:flex-row">
             <button
               (click)="close()"
-              class="flex-1 px-4 py-2 border border-pearl-gray dark:border-neutral-700 text-smoke-black dark:text-ivory-luminous font-medium rounded-lg hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
+              class="flex-1 px-4 py-2 border border-border-default dark:border-neutral-700 text-text-primary dark:text-text-primary font-medium rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
             >
               Cancelar
             </button>
             <a
               routerLink="/verification"
               (click)="close()"
-              class="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors text-center"
+              class="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-text-inverse font-medium rounded-lg transition-colors text-center"
             >
               Verificar Ahora
             </a>

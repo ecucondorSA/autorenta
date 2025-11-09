@@ -19,13 +19,13 @@
     <ion-card>
       <ion-card-content>
         <p class="text-sm text-gray-500">En Revisión</p>
-        <p class="text-2xl font-bold text-blue-600">{{ getStatusCount('in_review') }}</p>
+        <p class="text-2xl font-bold text-cta-default">{{ getStatusCount('in_review') }}</p>
       </ion-card-content>
     </ion-card>
     <ion-card>
       <ion-card-content>
         <p class="text-sm text-gray-500">Resueltas</p>
-        <p class="text-2xl font-bold text-green-600">{{ getStatusCount('resolved') }}</p>
+        <p class="text-2xl font-bold text-success-light">{{ getStatusCount('resolved') }}</p>
       </ion-card-content>
     </ion-card>
     <ion-card>
@@ -185,7 +185,7 @@
                   <ion-icon name="document" class="text-4xl text-gray-400"></ion-icon>
                 </div>
                 <p *ngIf="item.note" class="text-xs text-gray-500 mt-2">{{ item.note }}</p>
-                <a [href]="item.path" target="_blank" class="text-xs text-blue-600 mt-1 block">
+                <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
                   Ver completo
                 </a>
               </div>

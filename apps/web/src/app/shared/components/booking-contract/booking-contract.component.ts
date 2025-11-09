@@ -8,14 +8,14 @@ import { ToastService } from '../../../core/services/toast.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
       <div class="mb-4 flex items-center justify-between">
         <h3 class="text-lg font-semibold text-gray-900">Contrato de Alquiler</h3>
         @if (contract(); as c) {
           <span
             class="rounded-full px-3 py-1 text-sm font-medium"
-            [class.bg-green-100]="c.accepted_by_renter"
-            [class.text-green-800]="c.accepted_by_renter"
+            [class.bg-success-light/20]="c.accepted_by_renter"
+            [class.text-success-light]="c.accepted_by_renter"
             [class.bg-yellow-100]="!c.accepted_by_renter"
             [class.text-yellow-800]="!c.accepted_by_renter"
           >
@@ -27,7 +27,7 @@ import { ToastService } from '../../../core/services/toast.service';
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
           <div
-            class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"
+            class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"
           ></div>
         </div>
       } @else if (error()) {
@@ -60,7 +60,7 @@ import { ToastService } from '../../../core/services/toast.service';
                 [href]="c.pdf_url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                class="inline-flex items-center gap-2 rounded-lg bg-cta-default text-cta-text hover:bg-cta-default"
               >
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -83,7 +83,7 @@ import { ToastService } from '../../../core/services/toast.service';
               <button
                 (click)="acceptContract()"
                 [disabled]="accepting()"
-                class="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-700 disabled:opacity-50"
+                class="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-yellow-700 disabled:opacity-50"
               >
                 @if (accepting()) {
                   <span class="flex items-center gap-2">

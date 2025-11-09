@@ -1,0 +1,19 @@
+
+<div class="relative cursor-pointer transition-transform duration-200 ease-in-out"
+     [class.transform]="isSelected"
+     [class.scale-110]="isSelected">
+  <div class="w-16 h-16 rounded-full bg-surface-raised dark:bg-surface-raised p-1 shadow-lg"
+       [class.ring-2]="isSelected"
+       [class.ring-offset-2]="isSelected"
+       [class.ring-border-focus]="isSelected"
+       [class.dark:ring-border-focus]="isSelected">
+    <img class="w-full h-full rounded-full object-cover"
+         [src]="car.photoUrl || 'assets/images/car-placeholder.png'"
+         [alt]="'Photo of ' + car.title">
+  </div>
+  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/4">
+    <div class="bg-surface-raised dark:bg-surface-raised text-text-primary dark:text-text-primary text-xs font-bold px-2 py-1 rounded-full shadow-md">
+      ${{ car.pricePerDay | number:'1.0-0' }}
+    </div>
+  </div>
+</div>

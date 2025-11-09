@@ -35,6 +35,8 @@ import { FloatingActionFabComponent, FabAction } from '../../shared/components/f
 import { PersonalizedLocationComponent } from '../../shared/components/personalized-location/personalized-location.component';
 import { NotificationToastComponent } from '../../shared/components/notification-toast/notification-toast.component';
 import { StatsStripComponent } from '../../shared/components/stats-strip/stats-strip.component';
+import { InfoBannerComponent } from '../../shared/components/info-banner/info-banner.component';
+import { AvailabilityAlertComponent } from '../../shared/components/availability-alert/availability-alert.component';
 import { DateRange } from '../../shared/components/date-range-picker/date-range-picker.component';
 import {
   QuickBookingModalComponent,
@@ -69,6 +71,8 @@ export interface CarWithDistance extends Car {
     PersonalizedLocationComponent,
     NotificationToastComponent,
     StatsStripComponent,
+    InfoBannerComponent,
+    AvailabilityAlertComponent,
   ],
   templateUrl: './marketplace.page.html',
   styleUrls: ['./marketplace.page.css'],
@@ -201,6 +205,30 @@ export class MarketplacePage implements OnInit, OnDestroy {
     }),
   );
 
+  /**
+   * Contextual marker variant:
+   * - 'photo' for browsing/exploration (default for marketplace)
+   * - 'price' when user is actively comparing prices (has filters or date range)
+   */
+  readonly contextualMarkerVariant = computed<'photo' | 'price'>(() => {
+    const filters = this.mapFilters();
+    const dateRange = this.dateRange();
+    
+    // Switch to 'price' mode when:
+    // 1. User has active price filters
+    // 2. User has selected date range (comparing availability/price)
+    // 3. User is searching (has search value)
+    const hasPriceFilter = filters.priceRange !== null;
+    const hasDateRange = dateRange.from !== null && dateRange.to !== null;
+    const hasSearch = this.searchValue().trim().length > 0;
+    
+    if (hasPriceFilter || hasDateRange || hasSearch) {
+      return 'price'; // Price comparison mode
+    }
+    
+    return 'photo'; // Browsing/exploration mode (default)
+  });
+
   // Realtime
   private realtimeChannel?: RealtimeChannel;
 
@@ -304,10 +332,21 @@ export class MarketplacePage implements OnInit, OnDestroy {
     this.selectedCarId.set(carId);
     this.drawerOpen.set(true);
 
+    // Scroll to selected car in drawer content
+    if (this.isBrowser) {
+      setTimeout(() => {
+        const drawerContent = document.querySelector('.drawer-content');
+        const carElement = document.querySelector(`[data-car-id="${carId}"]`);
+        if (drawerContent && carElement) {
+          carElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+
     // Track analytics event
     this.analyticsService.trackEvent('cta_clicked', {
       car_id: carId,
-      source: 'map_tooltip',
+      source: 'map_marker',
     });
 
     // Check urgent availability
@@ -454,6 +493,14 @@ export class MarketplacePage implements OnInit, OnDestroy {
    */
   onUserLocationChange(location: { lat: number; lng: number }): void {
     this.userLocation.set(location);
+    void this.loadCars();
+  }
+
+  /**
+   * Handle search radius change from map
+   */
+  onSearchRadiusChange(radiusKm: number): void {
+    this.radiusKm.set(radiusKm);
     void this.loadCars();
   }
 

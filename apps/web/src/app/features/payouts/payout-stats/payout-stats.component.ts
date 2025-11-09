@@ -8,24 +8,24 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
       <h3 class="mb-4 text-lg font-semibold text-gray-900">Estadísticas de Payouts</h3>
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
           <div
-            class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+            class="h-6 w-6 animate-spin rounded-full border-2 border-cta-default border-t-transparent"
           ></div>
         </div>
       } @else if (stats(); as s) {
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-          <div class="rounded-lg bg-blue-50 p-4">
-            <p class="text-sm font-medium text-blue-600">Total Payouts</p>
-            <p class="text-2xl font-bold text-blue-900">{{ s.totalPayouts }}</p>
+          <div class="rounded-lg bg-cta-default/10 p-4">
+            <p class="text-sm font-medium text-cta-default">Total Payouts</p>
+            <p class="text-2xl font-bold text-cta-default">{{ s.totalPayouts }}</p>
           </div>
-          <div class="rounded-lg bg-green-50 p-4">
-            <p class="text-sm font-medium text-green-600">Total Monto</p>
-            <p class="text-2xl font-bold text-green-900">
+          <div class="rounded-lg bg-success-light/10 p-4">
+            <p class="text-sm font-medium text-success-light">Total Monto</p>
+            <p class="text-2xl font-bold text-success-light">
               {{ formatCurrency(s.totalAmount) }}
             </p>
           </div>
@@ -43,9 +43,9 @@ import { AuthService } from '../../../core/services/auth.service';
               {{ formatCurrency(s.completedAmount) }}
             </p>
           </div>
-          <div class="rounded-lg bg-indigo-50 p-4">
-            <p class="text-sm font-medium text-indigo-600">Promedio</p>
-            <p class="text-2xl font-bold text-indigo-900">
+          <div class="rounded-lg bg-cta-default/10 p-4">
+            <p class="text-sm font-medium text-cta-default">Promedio</p>
+            <p class="text-2xl font-bold text-cta-default">
               {{ formatCurrency(s.averagePayoutAmount) }}
             </p>
           </div>

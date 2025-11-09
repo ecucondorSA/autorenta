@@ -10,13 +10,13 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
     <div class="space-y-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">
           Disputas ({{ disputes().length }})
         </h3>
         <button
           *ngIf="showCreateButton"
           (click)="createDispute.emit()"
-          class="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          class="text-sm px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default transition-colors"
         >
           + Crear Disputa
         </button>
@@ -25,7 +25,7 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
       <!-- Loading State -->
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"></div>
         </div>
       }
 
@@ -41,7 +41,7 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
         <div class="space-y-3">
           @for (dispute of disputes(); track dispute.id) {
             <div
-              class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
+              class="bg-surface-raised dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
             >
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
@@ -50,10 +50,10 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
                       class="px-2 py-1 rounded-full text-xs font-medium"
                       [class.bg-yellow-100]="dispute.status === 'open'"
                       [class.text-yellow-800]="dispute.status === 'open'"
-                      [class.bg-blue-100]="dispute.status === 'in_review'"
-                      [class.text-blue-800]="dispute.status === 'in_review'"
-                      [class.bg-green-100]="dispute.status === 'resolved'"
-                      [class.text-green-800]="dispute.status === 'resolved'"
+                      [class.bg-cta-default/20]="dispute.status === 'in_review'"
+                      [class.text-cta-default]="dispute.status === 'in_review'"
+                      [class.bg-success-light/20]="dispute.status === 'resolved'"
+                      [class.text-success-light]="dispute.status === 'resolved'"
                       [class.bg-red-100]="dispute.status === 'rejected'"
                       [class.text-red-800]="dispute.status === 'rejected'"
                     >

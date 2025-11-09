@@ -29,7 +29,7 @@ import { LanguageService, SupportedLanguage } from '../../../core/services/langu
       <button
         type="button"
         (click)="toggleDropdown()"
-        class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-charcoal-medium dark:text-pearl-light hover:bg-sand-light/50 dark:hover:bg-slate-deep/50 transition-base focus:outline-none focus:ring-2 focus:ring-accent-petrol/50"
+        class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary dark:text-text-secondary hover:bg-surface-secondary/50 dark:hover:bg-slate-deep/50 transition-base focus:outline-none focus:ring-2 focus:ring-cta-default/50"
         [attr.aria-expanded]="isOpen()"
         aria-label="Seleccionar idioma"
       >
@@ -50,7 +50,7 @@ import { LanguageService, SupportedLanguage } from '../../../core/services/langu
       <!-- Dropdown menu -->
       <div
         *ngIf="isOpen()"
-        class="absolute right-0 mt-2 w-48 bg-white-pure dark:bg-anthracite border border-pearl-gray dark:border-slate-deep rounded-xl shadow-elevated dark:shadow-card overflow-hidden z-50"
+        class="absolute right-0 mt-2 w-48 bg-surface-raised dark:bg-surface-raised border border-border-default dark:border-slate-deep rounded-xl shadow-elevated dark:shadow-card overflow-hidden z-50"
         role="menu"
         aria-orientation="vertical"
       >
@@ -58,8 +58,8 @@ import { LanguageService, SupportedLanguage } from '../../../core/services/langu
           *ngFor="let lang of languageService.availableLanguages"
           type="button"
           (click)="selectLanguage(lang.code)"
-          class="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal-medium dark:text-pearl-light hover:bg-sand-light dark:hover:bg-slate-deep transition-base"
-          [class.bg-accent-petrol/10]="lang.code === languageService.currentLanguage()"
+          class="w-full flex items-center gap-3 px-4 py-3 text-sm text-text-secondary dark:text-text-secondary hover:bg-surface-secondary dark:hover:bg-slate-deep transition-base"
+          [class.bg-cta-default/10]="lang.code === languageService.currentLanguage()"
           [class.font-semibold]="lang.code === languageService.currentLanguage()"
           role="menuitem"
         >
@@ -67,7 +67,7 @@ import { LanguageService, SupportedLanguage } from '../../../core/services/langu
           <span class="flex-1 text-left">{{ lang.name }}</span>
           <svg
             *ngIf="lang.code === languageService.currentLanguage()"
-            class="w-5 h-5 text-accent-petrol"
+            class="w-5 h-5 text-cta-default"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

@@ -10,13 +10,22 @@
 
 /* ===== Mapbox GL Overrides ===== */
 
-/* Neutral map controls */
+/* Neutral map controls - Using tokens */
 .mapboxgl-ctrl-group {
-  @apply shadow-lg border border-gray-200 bg-white rounded-lg overflow-hidden;
+  background-color: var(--map-control-bg, rgba(255, 255, 255, 0.95));
+  border: 1px solid var(--map-control-border, rgba(0, 0, 0, 0.1));
+  box-shadow: var(--map-control-shadow, 0 4px 12px rgba(0, 0, 0, 0.15));
+  @apply rounded-lg overflow-hidden;
 }
 
 .mapboxgl-ctrl-group button {
-  @apply bg-white hover:bg-gray-50 transition-colors;
+  background: var(--map-control-bg, white);
+  color: var(--map-control-text, #1f2937);
+  @apply transition-colors;
+}
+
+.mapboxgl-ctrl-group button:hover {
+  background: var(--map-control-hover-bg, rgba(0, 0, 0, 0.05));
 }
 
 .mapboxgl-ctrl-group button + button {
@@ -56,7 +65,7 @@
 
 /* ===== Custom Markers ===== */
 
-/* Simple circular markers with neutral teal gradient */
+/* Simple circular markers - Using tokens for consistency */
 .car-marker-simple {
   @apply cursor-pointer transition-transform duration-200;
   z-index: 1;
@@ -74,17 +83,23 @@
 .car-marker-simple.car-marker--selected .marker-circle {
   @apply scale-125;
   box-shadow:
-    0 0 0 4px rgba(44, 122, 123, 0.3),
-    0 4px 12px rgba(44, 122, 123, 0.6),
+    0 0 0 4px var(--map-marker-available-shadow, rgba(44, 122, 123, 0.3)),
+    0 4px 12px var(--map-marker-available-shadow, rgba(44, 122, 123, 0.6)),
     0 8px 24px rgba(0, 0, 0, 0.3);
   animation: pulse-marker 2s ease-in-out infinite;
 }
 
+/* Marketplace uses price mode tokens by default */
+.map-variant-price .marker-circle {
+  width: var(--map-marker-price-size, 50px);
+  height: var(--map-marker-price-size, 50px);
+  border: var(--map-marker-price-border, 3px) solid var(--map-marker-price-border-color, white);
+  box-shadow: var(--map-marker-price-shadow, 0 4px 12px rgba(44, 122, 123, 0.5));
+}
+
 .marker-circle {
-  @apply w-12 h-12 rounded-full flex items-center justify-center relative transition-all duration-200;
-  background: linear-gradient(135deg, #2c7a7b 0%, #4a9fa0 100%);
-  border: 3px solid white;
-  box-shadow: 0 4px 12px rgba(44, 122, 123, 0.5);
+  @apply rounded-full flex items-center justify-center relative transition-all duration-200;
+  background: linear-gradient(135deg, var(--map-marker-price-bg-start, #2c7a7b) 0%, var(--map-marker-price-bg-end, #4a9fa0) 100%);
   z-index: 10;
 }
 
@@ -93,8 +108,8 @@
 }
 
 .car-marker-simple:hover .marker-circle {
-  @apply scale-110;
-  box-shadow: 0 6px 20px rgba(44, 122, 123, 0.7);
+  transform: scale(var(--map-marker-price-hover-scale, 1.1));
+  box-shadow: var(--map-marker-price-hover-shadow, 0 6px 20px rgba(44, 122, 123, 0.7));
 }
 
 @keyframes pulse-marker {

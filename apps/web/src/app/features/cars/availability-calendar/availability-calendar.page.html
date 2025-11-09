@@ -1,18 +1,18 @@
-<div class="min-h-screen bg-pearl-light dark:bg-slate-deep">
+<div class="min-h-screen bg-surface-secondary dark:bg-surface-secondary">
   <!-- Header -->
   <div
-    class="bg-white dark:bg-slate-deep-pure border-b border-pearl-gray dark:border-gray-700 sticky top-0 z-10"
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-gray-700 sticky top-0 z-10"
   >
     <div class="max-w-6xl mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
           <button
             (click)="goBack()"
-            class="p-2 rounded-xl hover:bg-pearl-light dark:hover:bg-slate-deep transition-colors"
+            class="p-2 rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
             aria-label="Volver"
           >
             <svg
-              class="w-6 h-6 text-smoke-black dark:text-pearl-light"
+              class="w-6 h-6 text-text-primary dark:text-text-secondary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -26,10 +26,10 @@
             </svg>
           </button>
           <div>
-            <h1 class="text-2xl font-bold text-smoke-black dark:text-pearl-light">
+            <h1 class="text-2xl font-bold text-text-primary dark:text-text-secondary">
               Calendario de Disponibilidad
             </h1>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               Gestiona cuándo tu auto está disponible para alquilar
             </p>
           </div>
@@ -37,7 +37,7 @@
 
         <button
           (click)="showBlockModal.set(true)"
-          class="px-4 py-2 bg-accent-petrol text-white rounded-xl hover:bg-accent-petrol/90 transition-all font-medium flex items-center gap-2"
+          class="px-4 py-2 bg-cta-default text-cta-text rounded-xl hover:bg-cta-default/90 transition-all font-medium flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -58,9 +58,9 @@
     <div *ngIf="loading()" class="flex items-center justify-center py-20">
       <div class="text-center">
         <div
-          class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent-petrol border-t-transparent"
+          class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-cta-default border-t-transparent"
         ></div>
-        <p class="mt-4 text-charcoal-medium dark:text-pearl-light">Cargando calendario...</p>
+        <p class="mt-4 text-text-secondary dark:text-text-secondary">Cargando calendario...</p>
       </div>
     </div>
 
@@ -69,18 +69,18 @@
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
-          class="bg-white dark:bg-slate-deep-pure rounded-2xl p-6 border border-pearl-gray dark:border-gray-700"
+          class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-gray-700"
         >
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light">Reservas Confirmadas</p>
-              <p class="text-3xl font-bold text-green-600 mt-1">{{ stats().totalBookings }}</p>
+              <p class="text-sm text-text-secondary dark:text-text-secondary">Reservas Confirmadas</p>
+              <p class="text-3xl font-bold text-success-light mt-1">{{ stats().totalBookings }}</p>
             </div>
             <div
-              class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center"
+              class="w-12 h-12 rounded-full bg-success-light/20 dark:bg-success-light/30 flex items-center justify-center"
             >
               <svg
-                class="w-6 h-6 text-green-600"
+                class="w-6 h-6 text-success-light"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -97,11 +97,11 @@
         </div>
 
         <div
-          class="bg-white dark:bg-slate-deep-pure rounded-2xl p-6 border border-pearl-gray dark:border-gray-700"
+          class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-gray-700"
         >
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light">Bloqueos Manuales</p>
+              <p class="text-sm text-text-secondary dark:text-text-secondary">Bloqueos Manuales</p>
               <p class="text-3xl font-bold text-red-600 mt-1">{{ stats().manualBlocks }}</p>
             </div>
             <div
@@ -125,18 +125,18 @@
         </div>
 
         <div
-          class="bg-white dark:bg-slate-deep-pure rounded-2xl p-6 border border-pearl-gray dark:border-gray-700"
+          class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-gray-700"
         >
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light">Total Bloqueado</p>
-              <p class="text-3xl font-bold text-accent-petrol mt-1">{{ stats().totalBlocked }}</p>
+              <p class="text-sm text-text-secondary dark:text-text-secondary">Total Bloqueado</p>
+              <p class="text-3xl font-bold text-cta-default mt-1">{{ stats().totalBlocked }}</p>
             </div>
             <div
-              class="w-12 h-12 rounded-full bg-accent-petrol/10 flex items-center justify-center"
+              class="w-12 h-12 rounded-full bg-cta-default/10 flex items-center justify-center"
             >
               <svg
-                class="w-6 h-6 text-accent-petrol"
+                class="w-6 h-6 text-cta-default"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -155,21 +155,21 @@
 
       <!-- Calendar Section -->
       <div
-        class="bg-white dark:bg-slate-deep-pure rounded-2xl p-6 border border-pearl-gray dark:border-gray-700"
+        class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-gray-700"
       >
         <!-- Calendar Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-smoke-black dark:text-pearl-light capitalize">
+          <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary capitalize">
             {{ monthName() }}
           </h2>
           <div class="flex items-center gap-2">
             <button
               (click)="previousMonth()"
-              class="p-2 rounded-lg hover:bg-pearl-light dark:hover:bg-slate-deep transition-colors"
+              class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
               aria-label="Mes anterior"
             >
               <svg
-                class="w-5 h-5 text-smoke-black dark:text-pearl-light"
+                class="w-5 h-5 text-text-primary dark:text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -184,17 +184,17 @@
             </button>
             <button
               (click)="goToToday()"
-              class="px-4 py-2 text-sm font-medium text-accent-petrol hover:bg-accent-petrol/10 rounded-lg transition-colors"
+              class="px-4 py-2 text-sm font-medium text-cta-default hover:bg-cta-default/10 rounded-lg transition-colors"
             >
               Hoy
             </button>
             <button
               (click)="nextMonth()"
-              class="p-2 rounded-lg hover:bg-pearl-light dark:hover:bg-slate-deep transition-colors"
+              class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
               aria-label="Mes siguiente"
             >
               <svg
-                class="w-5 h-5 text-smoke-black dark:text-pearl-light"
+                class="w-5 h-5 text-text-primary dark:text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -214,35 +214,35 @@
         <div #calendarDiv class="calendar-container"></div>
 
         <!-- Legend -->
-        <div class="mt-6 pt-6 border-t border-pearl-gray dark:border-gray-700">
-          <p class="text-sm font-medium text-smoke-black dark:text-pearl-light mb-3">Leyenda:</p>
+        <div class="mt-6 pt-6 border-t border-border-default dark:border-gray-700">
+          <p class="text-sm font-medium text-text-primary dark:text-text-secondary mb-3">Leyenda:</p>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div class="flex items-center gap-2">
-              <div class="w-4 h-4 rounded bg-green-500"></div>
-              <span class="text-sm text-charcoal-medium dark:text-pearl-light"
+              <div class="w-4 h-4 rounded bg-success-light"></div>
+              <span class="text-sm text-text-secondary dark:text-text-secondary"
                 >Reserva confirmada</span
               >
             </div>
             <div class="flex items-center gap-2">
               <div class="w-4 h-4 rounded bg-red-500"></div>
-              <span class="text-sm text-charcoal-medium dark:text-pearl-light"
+              <span class="text-sm text-text-secondary dark:text-text-secondary"
                 >Bloqueado manualmente</span
               >
             </div>
             <div class="flex items-center gap-2">
               <div class="w-4 h-4 rounded bg-gray-300"></div>
-              <span class="text-sm text-charcoal-medium dark:text-pearl-light">Fecha pasada</span>
+              <span class="text-sm text-text-secondary dark:text-text-secondary">Fecha pasada</span>
             </div>
             <div class="flex items-center gap-2">
               <div class="w-4 h-4 rounded border-2 border-gray-300"></div>
-              <span class="text-sm text-charcoal-medium dark:text-pearl-light">Disponible</span>
+              <span class="text-sm text-text-secondary dark:text-text-secondary">Disponible</span>
             </div>
           </div>
         </div>
 
         <!-- Instructions -->
-        <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-          <p class="text-sm text-blue-700 dark:text-blue-400">
+        <div class="mt-4 p-4 bg-cta-default/10 dark:bg-cta-default/20 rounded-xl">
+          <p class="text-sm text-cta-default dark:text-cta-default">
             💡 <strong>Tip:</strong> Selecciona un rango de fechas en el calendario para bloquearlo.
             No puedes bloquear fechas con reservas confirmadas.
           </p>
@@ -252,10 +252,10 @@
       <!-- Manual Blocks List -->
       <div
         *ngIf="hasManualBlocks()"
-        class="bg-white dark:bg-slate-deep-pure rounded-2xl p-6 border border-pearl-gray dark:border-gray-700"
+        class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-gray-700"
       >
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold text-smoke-black dark:text-pearl-light">
+          <h3 class="text-lg font-bold text-text-primary dark:text-text-secondary">
             Bloqueos Manuales ({{ stats().manualBlocks }})
           </h3>
           <button
@@ -274,7 +274,7 @@
           >
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-1">
-                <span class="font-medium text-smoke-black dark:text-pearl-light">
+                <span class="font-medium text-text-primary dark:text-text-secondary">
                   {{ block.from | date: 'dd/MM/yyyy' }} - {{ block.to | date: 'dd/MM/yyyy' }}
                 </span>
                 <span
@@ -291,7 +291,7 @@
                   }}
                 </span>
               </div>
-              <p *ngIf="block.notes" class="text-sm text-charcoal-medium dark:text-pearl-light">
+              <p *ngIf="block.notes" class="text-sm text-text-secondary dark:text-text-secondary">
                 {{ block.notes }}
               </p>
             </div>

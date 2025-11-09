@@ -21,15 +21,15 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
 
     <!-- Panel -->
     <div
-      class="fixed right-0 top-0 z-50 h-full w-full max-w-md overflow-y-auto bg-white shadow-xl dark:bg-gray-800"
+      class="fixed right-0 top-0 z-50 h-full w-full max-w-md overflow-y-auto bg-surface-raised shadow-xl dark:bg-gray-800"
     >
       <!-- Header -->
       <div
-        class="sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-4 dark:border-gray-700 dark:bg-gray-800"
+        class="sticky top-0 z-10 border-b border-gray-200 bg-surface-raised px-4 py-4 dark:border-gray-700 dark:bg-gray-800"
       >
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Mensajes pendientes</h2>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">Mensajes pendientes</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">
               {{ pendingMessages().length }} pendiente{{
                 pendingMessages().length !== 1 ? 's' : ''
@@ -84,7 +84,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
               No hay mensajes pendientes
             </h3>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -105,7 +105,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                   >
                     <div class="mb-2 flex items-start justify-between">
                       <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">
+                        <p class="text-sm font-medium text-gray-900 dark:text-text-inverse">
                           {{ truncateMessage(msg.body, 50) }}
                         </p>
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -120,7 +120,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                       <button
                         (click)="retryMessage(msg)"
                         [disabled]="retrying().has(msg.id)"
-                        class="ml-2 rounded-lg bg-yellow-600 px-3 py-1 text-xs font-medium text-white hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        class="ml-2 rounded-lg bg-yellow-600 px-3 py-1 text-xs font-medium text-text-inverse hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-50"
                         type="button"
                       >
                         @if (retrying().has(msg.id)) {
@@ -157,7 +157,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                     class="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20"
                   >
                     <div class="mb-2">
-                      <p class="text-sm font-medium text-gray-900 dark:text-white">
+                      <p class="text-sm font-medium text-gray-900 dark:text-text-inverse">
                         {{ truncateMessage(msg.body, 50) }}
                       </p>
                       <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -171,7 +171,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                       <button
                         (click)="retryMessage(msg)"
                         [disabled]="retrying().has(msg.id)"
-                        class="flex-1 rounded-lg bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        class="flex-1 rounded-lg bg-red-600 px-3 py-1 text-xs font-medium text-text-inverse hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                         type="button"
                       >
                         @if (retrying().has(msg.id)) {

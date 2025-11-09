@@ -10,18 +10,18 @@ import { RefundService } from '../../../core/services/refund.service';
     @if (loading()) {
       <div class="flex items-center justify-center py-4">
         <div
-          class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+          class="h-6 w-6 animate-spin rounded-full border-2 border-cta-default border-t-transparent"
         ></div>
       </div>
     } @else if (refundStatus(); as status) {
       @if (status.has_refund) {
-        <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <div class="rounded-lg border border-gray-200 bg-surface-raised p-4 shadow-sm">
           <div class="mb-3 flex items-center justify-between">
             <h4 class="text-sm font-semibold text-gray-900">Estado del Reembolso</h4>
             <span
               class="rounded-full px-2 py-1 text-xs font-medium"
-              [class.bg-green-100]="status.refund_status === 'approved'"
-              [class.text-green-800]="status.refund_status === 'approved'"
+              [class.bg-success-light/20]="status.refund_status === 'approved'"
+              [class.text-success-light]="status.refund_status === 'approved'"
               [class.bg-yellow-100]="status.refund_status === 'pending'"
               [class.text-yellow-800]="status.refund_status === 'pending'"
               [class.bg-red-100]="status.refund_status === 'rejected'"

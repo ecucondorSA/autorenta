@@ -28,7 +28,7 @@ import { UserProfile } from '../../../core/models';
   template: `
     <div
       *ngIf="shouldShow()"
-      class="bg-gradient-to-r from-accent-warm to-accent-petrol text-white shadow-lg"
+      class="bg-gradient-to-r from-warning-light to-cta-default text-text-inverse shadow-lg"
       role="alert"
       aria-live="polite"
     >
@@ -41,7 +41,7 @@ import { UserProfile } from '../../../core/models';
               <div class="relative h-12 w-12">
                 <!-- Avatar Image or Placeholder -->
                 <div
-                  class="h-full w-full rounded-full overflow-hidden bg-white/20 border-2 border-white/40"
+                  class="h-full w-full rounded-full overflow-hidden bg-surface-raised/20 border-2 border-white/40"
                 >
                   <img
                     *ngIf="profile()?.avatar_url; else avatarPlaceholder"
@@ -51,8 +51,8 @@ import { UserProfile } from '../../../core/models';
                     loading="lazy"
                   />
                   <ng-template #avatarPlaceholder>
-                    <div class="h-full w-full flex items-center justify-center bg-white/30">
-                      <svg class="h-7 w-7 text-white/80" fill="currentColor" viewBox="0 0 24 24">
+                    <div class="h-full w-full flex items-center justify-center bg-surface-raised/30">
+                      <svg class="h-7 w-7 text-text-inverse/80" fill="currentColor" viewBox="0 0 24 24">
                         <path
                           d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
                         />
@@ -63,7 +63,7 @@ import { UserProfile } from '../../../core/models';
 
                 <!-- Status Icon Badge -->
                 <div
-                  class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-accent-warm to-accent-petrol border-2 border-white flex items-center justify-center"
+                  class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-warning-light to-cta-default border-2 border-white flex items-center justify-center"
                 >
                   <svg
                     *ngIf="verificationProgress() < 100"
@@ -82,7 +82,7 @@ import { UserProfile } from '../../../core/models';
                   </svg>
                   <svg
                     *ngIf="verificationProgress() === 100"
-                    class="h-3 w-3 text-green-300"
+                    class="h-3 w-3 text-success-light"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -114,9 +114,9 @@ import { UserProfile } from '../../../core/models';
                   <span>Progreso de verificación</span>
                   <span class="font-semibold">{{ verificationProgress() }}%</span>
                 </div>
-                <div class="w-full bg-white/20 rounded-full h-2 overflow-hidden">
+                <div class="w-full bg-surface-raised/20 rounded-full h-2 overflow-hidden">
                   <div
-                    class="bg-white h-full rounded-full transition-all duration-500"
+                    class="bg-surface-raised h-full rounded-full transition-all duration-500"
                     [style.width.%]="verificationProgress()"
                   ></div>
                 </div>
@@ -127,7 +127,7 @@ import { UserProfile } from '../../../core/models';
                 <a
                   routerLink="/profile"
                   [queryParams]="{ tab: 'verification' }"
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-white text-accent-petrol rounded-lg text-sm font-semibold hover:bg-ivory-luminous transition-colors shadow-md hover:shadow-lg"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-surface-raised text-cta-default rounded-lg text-sm font-semibold hover:bg-ivory-luminous transition-colors shadow-md hover:shadow-lg"
                 >
                   <svg
                     class="h-4 w-4"
@@ -150,7 +150,7 @@ import { UserProfile } from '../../../core/models';
                   *ngIf="!isWelcome()"
                   type="button"
                   (click)="viewBenefits()"
-                  class="inline-flex items-center gap-1 text-sm text-white/90 hover:text-white underline"
+                  class="inline-flex items-center gap-1 text-sm text-text-inverse/90 hover:text-text-inverse underline"
                 >
                   ¿Por qué verificar mi identidad?
                 </button>
@@ -162,7 +162,7 @@ import { UserProfile } from '../../../core/models';
           <button
             type="button"
             (click)="dismiss()"
-            class="flex-shrink-0 text-white/80 hover:text-white transition-colors"
+            class="flex-shrink-0 text-text-inverse/80 hover:text-text-inverse transition-colors"
             aria-label="Cerrar banner"
           >
             <svg
@@ -191,17 +191,17 @@ import { UserProfile } from '../../../core/models';
       (click)="closeBenefits()"
     >
       <div
-        class="bg-white dark:bg-graphite-light rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[80vh] overflow-y-auto"
+        class="bg-surface-raised dark:bg-graphite-light rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[80vh] overflow-y-auto"
         (click)="$event.stopPropagation()"
       >
         <div class="flex items-start justify-between mb-4">
-          <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary">
             ¿Por qué verificar tu identidad?
           </h2>
           <button
             type="button"
             (click)="closeBenefits()"
-            class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-white transition-colors"
+            class="text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-inverse transition-colors"
           >
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -214,13 +214,13 @@ import { UserProfile } from '../../../core/models';
           </button>
         </div>
 
-        <div class="space-y-4 text-smoke-black dark:text-pearl-light">
+        <div class="space-y-4 text-text-primary dark:text-text-secondary">
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-green-600 dark:text-green-400"
+                class="w-5 h-5 text-success-light dark:text-success-light"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -243,10 +243,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-blue-600 dark:text-blue-400"
+                class="w-5 h-5 text-cta-default dark:text-cta-default"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -326,7 +326,7 @@ import { UserProfile } from '../../../core/models';
           <button
             type="button"
             (click)="closeBenefits()"
-            class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:text-pearl-light dark:hover:text-white transition-colors"
+            class="px-4 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-secondary dark:hover:text-text-inverse transition-colors"
           >
             Cerrar
           </button>
@@ -334,7 +334,7 @@ import { UserProfile } from '../../../core/models';
             routerLink="/profile"
             [queryParams]="{ tab: 'verification' }"
             (click)="closeBenefits()"
-            class="px-4 py-2 bg-accent-petrol text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+            class="px-4 py-2 bg-cta-default text-cta-text rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Iniciar verificación
           </a>

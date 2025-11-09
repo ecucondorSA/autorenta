@@ -21,7 +21,9 @@
 }
 
 .mapboxgl-canvas {
-  filter: brightness(0.95) contrast(1.1) saturate(0.95);
+  filter: brightness(var(--map-canvas-brightness, 0.95)) 
+          contrast(var(--map-canvas-contrast, 1.1)) 
+          saturate(var(--map-canvas-saturate, 0.95));
 }
 
 /* ============================================================================
@@ -29,25 +31,23 @@
    ============================================================================ */
 
 .mapboxgl-control-container .mapboxgl-ctrl-group {
-  background-color: rgba(20, 20, 20, 0.85);
+  background-color: var(--map-control-bg, rgba(20, 20, 20, 0.85));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 12px;
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.3),
-    0 0 1px rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--map-control-shadow, 0 4px 12px rgba(0, 0, 0, 0.3));
+  border: 1px solid var(--map-control-border, rgba(255, 255, 255, 0.1));
 }
 
 .mapboxgl-ctrl-group button {
-  color: #f0f0f0;
+  color: var(--map-control-text, #f0f0f0);
   background: transparent;
   transition: all 0.2s ease;
 }
 
 .mapboxgl-ctrl-group button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: var(--map-control-hover-bg, rgba(255, 255, 255, 0.1));
+  color: var(--map-control-text, #ffffff);
 }
 
 .mapboxgl-ctrl-group button:active {
@@ -329,17 +329,15 @@
 }
 
 .mapboxgl-popup-content {
-  background: rgba(20, 20, 20, 0.95);
+  background: var(--map-popup-bg, rgba(20, 20, 20, 0.95));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: #f0f0f0;
+  color: var(--map-popup-text, #f0f0f0);
   font-size: 0.9rem;
   border-radius: 12px;
   padding: 12px 16px;
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.4),
-    0 0 1px rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--map-popup-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+  border: 1px solid var(--map-popup-border, rgba(255, 255, 255, 0.1));
   border-top: 3px solid #4f46e5;
 }
 
@@ -474,34 +472,37 @@
 
 @media (prefers-color-scheme: light) {
   .mapboxgl-canvas {
-    filter: brightness(1) contrast(1) saturate(1);
+    filter: brightness(var(--map-canvas-brightness, 1)) 
+            contrast(var(--map-canvas-contrast, 1)) 
+            saturate(var(--map-canvas-saturate, 1));
   }
 
   .mapboxgl-control-container .mapboxgl-ctrl-group {
-    background-color: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--map-control-bg, rgba(255, 255, 255, 0.95));
+    border: 1px solid var(--map-control-border, rgba(0, 0, 0, 0.1));
   }
 
   .mapboxgl-ctrl-group button {
-    color: #1f2937;
+    color: var(--map-control-text, #1f2937);
   }
 
   .mapboxgl-ctrl-group button:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--map-control-hover-bg, rgba(0, 0, 0, 0.05));
   }
 
   .mapboxgl-popup-content {
-    background: white;
-    color: #1f2937;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: var(--map-popup-bg, white);
+    color: var(--map-popup-text, #1f2937);
+    border: 1px solid var(--map-popup-border, rgba(0, 0, 0, 0.1));
   }
 
   .mapboxgl-popup-content h3 {
-    color: #111827;
+    color: var(--map-popup-text, #111827);
   }
 
   .mapboxgl-popup-content p {
-    color: #6b7280;
+    color: var(--map-popup-text, #6b7280);
+    opacity: 0.8;
   }
 }
 

@@ -80,7 +80,7 @@ export class ShareButtonComponent {
   @Input() customUrl?: string;
   @Input() label = 'Compartir';
   @Input() buttonClass =
-    'inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors';
+    'inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cta-default text-cta-text hover:bg-cta-default transition-colors';
   @Input() ariaLabel = 'Compartir';
 
   private readonly shareService = inject(ShareService);

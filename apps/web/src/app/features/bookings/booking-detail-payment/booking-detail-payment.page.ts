@@ -1260,7 +1260,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       try {
         await firstValueFrom(this.walletService.unlockFunds(bookingId));
       } catch (_unlockError) {
-        /* Silenced */
+        // Silently ignore unlock errors
       }
       throw error;
     }

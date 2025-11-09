@@ -3,11 +3,11 @@
 }
 
 .badge-success {
-  @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300;
+  @apply bg-success-light/20 text-success-light dark:bg-success-light/30 dark:text-success-light;
 }
 
 .badge-info {
-  @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300;
+  @apply bg-cta-default/20 text-cta-default dark:bg-cta-default/30 dark:text-cta-default;
 }
 
 .badge-neutral {

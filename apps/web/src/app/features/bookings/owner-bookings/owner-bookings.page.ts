@@ -399,7 +399,9 @@ export class OwnerBookingsPage implements OnInit {
             };
           } else {
           }
-        } catch (__error) {}
+        } catch (__error) {
+          // Silently ignore errors
+        }
       }),
     );
 

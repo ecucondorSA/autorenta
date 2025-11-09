@@ -7,10 +7,12 @@ import {
   computed,
   signal,
   OnInit,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
+import { CarLocationsService } from '../../../core/services/car-locations.service';
 
 /**
  * Enhanced Map Tooltip Component
@@ -30,7 +32,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
   imports: [CommonModule, MoneyPipe],
   template: `
     <div
-      class="enhanced-tooltip bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden max-w-[320px] transition-all duration-200 hover:shadow-3xl"
+      class="enhanced-tooltip bg-surface-raised rounded-xl shadow-2xl border border-gray-200 overflow-hidden max-w-[320px] transition-all duration-200 hover:shadow-3xl"
       [class.enhanced-tooltip--selected]="selected"
     >
       <!-- Car Image -->
@@ -64,15 +66,32 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
 
         <!-- Trust Badges (Top Right) -->
         <div class="absolute top-2 right-2 flex flex-col gap-1">
-          <!-- Verified Badge -->
+          <!-- Instant Booking Badge -->
           <span
-            *ngIf="isVerified()"
-            class="inline-flex items-center gap-1 rounded-full bg-green-500 text-white px-2.5 py-0.5 text-xs font-semibold shadow-sm"
+            *ngIf="showInstantBookingBadge()"
+            class="inline-flex items-center gap-1 rounded-full bg-success-light text-text-primary px-2.5 py-0.5 text-xs font-semibold shadow-sm"
+            title="Reserva instantánea disponible"
           >
             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>Instantáneo</span>
+          </span>
+
+          <!-- Verified Badge -->
+          <span
+            *ngIf="isVerified()"
+            class="inline-flex items-center gap-1 rounded-full bg-cta-default text-cta-text px-2.5 py-0.5 text-xs font-semibold shadow-sm"
+            title="Auto verificado"
+          >
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                 clip-rule="evenodd"
               />
             </svg>
@@ -82,7 +101,8 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
           <!-- Reviews Badge (if has reviews) -->
           <span
             *ngIf="hasReviews()"
-            class="inline-flex items-center gap-1 rounded-full bg-blue-500 text-white px-2.5 py-0.5 text-xs font-semibold shadow-sm"
+            class="inline-flex items-center gap-1 rounded-full bg-warning-light text-text-inverse px-2.5 py-0.5 text-xs font-semibold shadow-sm"
+            title="{{ reviewCount() }} {{ reviewCount() === 1 ? 'reseña' : 'reseñas' }}"
           >
             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
               <path
@@ -95,7 +115,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
 
         <!-- Distance Badge (Bottom Left) -->
         <div *ngIf="distanceKm() !== null" class="absolute bottom-2 left-2">
-          <span class="inline-flex items-center gap-1 rounded-full bg-white/95 backdrop-blur-sm text-gray-800 px-2.5 py-1 text-xs font-semibold shadow-md">
+          <span class="inline-flex items-center gap-1 rounded-full bg-surface-raised/95 backdrop-blur-sm text-gray-800 px-2.5 py-1 text-xs font-semibold shadow-md">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
@@ -149,7 +169,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
           <button
             type="button"
             (click)="handleQuickBook($event)"
-            class="w-full py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+            class="w-full py-3 px-4 rounded-lg bg-cta-default hover:bg-cta-default text-cta-text text-sm font-semibold transition-colors duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -174,7 +194,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
 
         <!-- P2P Badge -->
         <div class="flex items-center justify-center gap-1 text-xs text-gray-600 pt-1">
-          <svg class="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-3.5 h-3.5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -194,7 +214,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
       }
 
       .enhanced-tooltip--selected {
-        @apply ring-2 ring-blue-500;
+        @apply ring-2 ring-cta-default;
       }
 
       .line-clamp-1 {
@@ -231,17 +251,24 @@ export class EnhancedMapTooltipComponent implements OnInit {
   @Output() readonly quickBook = new EventEmitter<string>();
   @Output() readonly viewDetails = new EventEmitter<string>();
 
+  private readonly carLocationsService = inject(CarLocationsService);
+
   readonly distanceKm = signal<number | null>(null);
   readonly reviewCount = signal<number>(0);
+  readonly loadingReviews = signal(false);
 
   readonly isVerified = computed(() => {
-    // TODO: Integrate with real verification when available
-    // For now, consider cars with photos as "verified"
-    return !!this.car.photoUrl;
+    // Consider cars with photos and instant booking as "verified"
+    // In the future, this could check owner verification status
+    return !!(this.car.photoUrl && this.car.instantBooking);
   });
 
   readonly hasReviews = computed(() => {
     return this.reviewCount() > 0;
+  });
+
+  readonly showInstantBookingBadge = computed(() => {
+    return this.car.instantBooking === true;
   });
 
   ngOnInit(): void {
@@ -256,9 +283,22 @@ export class EnhancedMapTooltipComponent implements OnInit {
       this.distanceKm.set(dist);
     }
 
-    // TODO: Fetch review count from reviews service
-    // For now, set to 0
-    this.reviewCount.set(0);
+    // Fetch review count using cached service
+    void this.loadReviewCount();
+  }
+
+  private async loadReviewCount(): Promise<void> {
+    this.loadingReviews.set(true);
+    try {
+      // Use CarLocationsService cache to avoid multiple queries
+      const count = await this.carLocationsService.getReviewCount(this.car.carId);
+      this.reviewCount.set(count);
+    } catch (error) {
+      console.warn('Error loading review count for tooltip:', error);
+      // Keep default value of 0
+    } finally {
+      this.loadingReviews.set(false);
+    }
   }
 
   handleQuickBook(event: Event): void {

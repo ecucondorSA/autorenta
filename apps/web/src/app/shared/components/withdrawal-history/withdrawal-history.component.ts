@@ -36,8 +36,8 @@ export class WithdrawalHistoryComponent {
   getStatusClass(status: WithdrawalStatus): string {
     const classes: Record<WithdrawalStatus, string> = {
       pending: 'bg-warning-100 text-warning-900',
-      approved: 'bg-info-100 text-info-900',
-      processing: 'bg-info-100 text-info-900',
+      approved: 'bg-cta-default/20 text-cta-default',
+      processing: 'bg-cta-default/20 text-cta-default',
       completed: 'bg-success-100 text-success-900',
       failed: 'bg-error-100 text-error-900',
       rejected: 'bg-error-100 text-error-900',

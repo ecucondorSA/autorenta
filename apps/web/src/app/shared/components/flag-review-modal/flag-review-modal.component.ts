@@ -15,16 +15,16 @@ import { ToastService } from '../../../core/services/toast.service';
       (click)="onBackdropClick($event)"
     >
       <div
-        class="bg-white dark:bg-slate-deep-pure rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
+        class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
         (click)="$event.stopPropagation()"
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-smoke-black dark:text-pearl-light">Reportar Reseña</h2>
+          <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">Reportar Reseña</h2>
           <button
             type="button"
             (click)="close()"
-            class="text-charcoal-medium hover:text-smoke-black dark:hover:text-pearl-light transition-colors"
+            class="text-text-secondary hover:text-text-primary dark:hover:text-pearl-light transition-colors"
             aria-label="Cerrar"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,19 +40,19 @@ import { ToastService } from '../../../core/services/toast.service';
 
         <!-- Content -->
         <div class="space-y-4">
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+          <p class="text-sm text-text-secondary dark:text-text-secondary">
             ¿Por qué quieres reportar esta reseña? Tu reporte será revisado por nuestro equipo de
             moderación.
           </p>
 
           <!-- Reason Selector -->
           <div>
-            <label class="block text-sm font-medium text-smoke-black dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
               Motivo *
             </label>
             <select
               [(ngModel)]="selectedReason"
-              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
             >
               <option value="">-- Seleccionar motivo --</option>
               <option value="inappropriate_content">Contenido inapropiado</option>
@@ -66,14 +66,14 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Additional Details -->
           <div>
-            <label class="block text-sm font-medium text-smoke-black dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
               Detalles adicionales (opcional)
             </label>
             <textarea
               [(ngModel)]="additionalDetails"
               rows="4"
               placeholder="Proporciona más información sobre el problema..."
-              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all resize-none"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
             ></textarea>
           </div>
 
@@ -91,7 +91,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <button
             type="button"
             (click)="close()"
-            class="flex-1 px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 text-charcoal-medium hover:bg-gray-100 dark:hover:bg-slate-deep transition-all font-medium"
+            class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 text-text-secondary hover:bg-gray-100 dark:hover:bg-slate-deep transition-all font-medium"
           >
             Cancelar
           </button>
@@ -101,11 +101,11 @@ import { ToastService } from '../../../core/services/toast.service';
             [disabled]="!canSubmit() || loading()"
             [class.opacity-50]="!canSubmit() || loading()"
             [class.cursor-not-allowed]="!canSubmit() || loading()"
-            class="flex-1 px-4 py-3 rounded-xl bg-accent-petrol text-white hover:bg-accent-petrol/90 transition-all font-medium flex items-center justify-center gap-2"
+            class="flex-1 px-4 py-3 rounded-xl bg-cta-default text-cta-text hover:bg-cta-default/90 transition-all font-medium flex items-center justify-center gap-2"
           >
             <svg
               *ngIf="loading()"
-              class="animate-spin h-5 w-5 text-white"
+              class="animate-spin h-5 w-5 text-text-inverse"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"

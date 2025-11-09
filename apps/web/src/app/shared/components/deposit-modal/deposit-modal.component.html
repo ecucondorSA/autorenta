@@ -3,7 +3,7 @@
   (click)="onOverlayClick($event)"
 >
   <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md m-4"
+    class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md m-4"
     appFocusTrap
     (escape)="onClose()"
     data-testid="deposit-modal"
@@ -11,7 +11,7 @@
     <div
       class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center"
     >
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Depositar Fondos</h2>
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">Depositar Fondos</h2>
       <button
         (click)="onClose()"
         class="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
@@ -30,7 +30,7 @@
     <div class="p-6 space-y-6">
       <!-- Deposit Type Selector -->
       <div class="space-y-3">
-        <label class="block text-sm font-semibold text-gray-900 dark:text-white">
+        <label class="block text-sm font-semibold text-gray-900 dark:text-text-inverse">
           ¿Qué tipo de depósito deseas realizar?
         </label>
 
@@ -38,42 +38,42 @@
         <div
           (click)="depositType.set('protected_credit')"
           class="p-4 rounded-xl border-2 cursor-pointer transition-all"
-          [class.border-accent-petrol]="depositType() === 'protected_credit'"
-          [class.bg-accent-petrol/5]="depositType() === 'protected_credit'"
+          [class.border-cta-default]="depositType() === 'protected_credit'"
+          [class.bg-cta-default/5]="depositType() === 'protected_credit'"
           [class.border-gray-200]="depositType() !== 'protected_credit'"
-          [class.bg-white]="depositType() !== 'protected_credit'"
-          [class.dark:border-accent-petrol/50]="depositType() === 'protected_credit'"
-          [class.dark:bg-accent-petrol/10]="depositType() === 'protected_credit'"
+          [class.bg-surface-raised]="depositType() !== 'protected_credit'"
+          [class.dark:border-cta-default/50]="depositType() === 'protected_credit'"
+          [class.dark:bg-cta-default/10]="depositType() === 'protected_credit'"
           [class.dark:border-gray-600]="depositType() !== 'protected_credit'"
           [class.dark:bg-gray-700]="depositType() !== 'protected_credit'"
         >
           <div class="flex items-start gap-3">
             <div
               class="flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all"
-              [class.border-accent-petrol]="depositType() === 'protected_credit'"
-              [class.bg-accent-petrol]="depositType() === 'protected_credit'"
+              [class.border-cta-default]="depositType() === 'protected_credit'"
+              [class.bg-cta-default]="depositType() === 'protected_credit'"
               [class.border-gray-300]="depositType() !== 'protected_credit'"
               [class.dark:border-gray-500]="depositType() !== 'protected_credit'"
             >
               <div
                 *ngIf="depositType() === 'protected_credit'"
-                class="w-2.5 h-2.5 rounded-full bg-white"
+                class="w-2.5 h-2.5 rounded-full bg-surface-raised"
               ></div>
             </div>
             <div class="flex-1">
               <div class="flex items-center gap-2">
                 <p
                   class="text-base font-bold"
-                  [class.text-accent-petrol]="depositType() === 'protected_credit'"
+                  [class.text-cta-default]="depositType() === 'protected_credit'"
                   [class.text-gray-900]="depositType() !== 'protected_credit'"
-                  [class.dark:text-accent-petrol]="depositType() === 'protected_credit'"
-                  [class.dark:text-white]="depositType() !== 'protected_credit'"
+                  [class.dark:text-cta-default]="depositType() === 'protected_credit'"
+                  [class.dark:text-text-inverse]="depositType() !== 'protected_credit'"
                 >
                   Crédito Autorentar (No retirable)
                 </p>
                 <span
                   *ngIf="depositType() === 'protected_credit'"
-                  class="px-2 py-0.5 text-xs font-semibold rounded-full bg-accent-petrol text-white"
+                  class="px-2 py-0.5 text-xs font-semibold rounded-full bg-cta-default text-cta-text"
                 >
                   Seleccionado
                 </span>
@@ -113,7 +113,7 @@
           [class.border-primary-500]="depositType() === 'withdrawable'"
           [class.bg-primary-50]="depositType() === 'withdrawable'"
           [class.border-gray-200]="depositType() !== 'withdrawable'"
-          [class.bg-white]="depositType() !== 'withdrawable'"
+          [class.bg-surface-raised]="depositType() !== 'withdrawable'"
           [class.dark:border-primary-400]="depositType() === 'withdrawable'"
           [class.dark:bg-primary-500/10]="depositType() === 'withdrawable'"
           [class.dark:border-gray-600]="depositType() !== 'withdrawable'"
@@ -129,7 +129,7 @@
             >
               <div
                 *ngIf="depositType() === 'withdrawable'"
-                class="w-2.5 h-2.5 rounded-full bg-white"
+                class="w-2.5 h-2.5 rounded-full bg-surface-raised"
               ></div>
             </div>
             <div class="flex-1">
@@ -139,13 +139,13 @@
                   [class.text-primary-700]="depositType() === 'withdrawable'"
                   [class.text-gray-900]="depositType() !== 'withdrawable'"
                   [class.dark:text-primary-400]="depositType() === 'withdrawable'"
-                  [class.dark:text-white]="depositType() !== 'withdrawable'"
+                  [class.dark:text-text-inverse]="depositType() !== 'withdrawable'"
                 >
                   Fondos Retirables
                 </p>
                 <span
                   *ngIf="depositType() === 'withdrawable'"
-                  class="px-2 py-0.5 text-xs font-semibold rounded-full bg-primary-600 text-white"
+                  class="px-2 py-0.5 text-xs font-semibold rounded-full bg-primary-600 text-text-inverse"
                 >
                   Seleccionado
                 </span>
@@ -254,7 +254,7 @@
         *ngIf="provider() === 'bank_transfer'"
         class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
       >
-        <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+        <h3 class="font-semibold text-gray-900 dark:text-text-inverse mb-2">
           Datos para la Transferencia
         </h3>
         <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1">

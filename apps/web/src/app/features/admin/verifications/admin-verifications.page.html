@@ -11,7 +11,7 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
       <!-- Pending Reviews -->
-      <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="bg-surface-raised overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -34,7 +34,7 @@
       </div>
 
       <!-- Approved Today -->
-      <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="bg-surface-raised overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -43,7 +43,7 @@
             <div class="ml-5 w-0 flex-1">
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Aprobadas Hoy</dt>
-                <dd class="text-lg font-semibold text-green-600">
+                <dd class="text-lg font-semibold text-success-light">
                   @if (statsLoading()) {
                     <span class="text-gray-400">...</span>
                   } @else {
@@ -57,7 +57,7 @@
       </div>
 
       <!-- Rejected Today -->
-      <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="bg-surface-raised overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -66,7 +66,7 @@
             <div class="ml-5 w-0 flex-1">
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Rechazadas Hoy</dt>
-                <dd class="text-lg font-semibold text-orange-600">
+                <dd class="text-lg font-semibold text-warning-light">
                   @if (statsLoading()) {
                     <span class="text-gray-400">...</span>
                   } @else {
@@ -80,7 +80,7 @@
       </div>
 
       <!-- Total Users -->
-      <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="bg-surface-raised overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -104,7 +104,7 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <div class="bg-surface-raised shadow rounded-lg p-6 mb-6">
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <!-- Type Filter -->
         <div>
@@ -112,8 +112,8 @@
           <div class="flex space-x-2">
             <button
               (click)="filterByType('all')"
-              [class.bg-indigo-600]="filterType() === 'all'"
-              [class.text-white]="filterType() === 'all'"
+              [class.bg-cta-default]="filterType() === 'all'"
+              [class.text-text-inverse]="filterType() === 'all'"
               [class.bg-gray-200]="filterType() !== 'all'"
               [class.text-gray-700]="filterType() !== 'all'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
@@ -122,8 +122,8 @@
             </button>
             <button
               (click)="filterByType('level_2')"
-              [class.bg-indigo-600]="filterType() === 'level_2'"
-              [class.text-white]="filterType() === 'level_2'"
+              [class.bg-cta-default]="filterType() === 'level_2'"
+              [class.text-text-inverse]="filterType() === 'level_2'"
               [class.bg-gray-200]="filterType() !== 'level_2'"
               [class.text-gray-700]="filterType() !== 'level_2'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
@@ -132,8 +132,8 @@
             </button>
             <button
               (click)="filterByType('level_3')"
-              [class.bg-indigo-600]="filterType() === 'level_3'"
-              [class.text-white]="filterType() === 'level_3'"
+              [class.bg-cta-default]="filterType() === 'level_3'"
+              [class.text-text-inverse]="filterType() === 'level_3'"
               [class.bg-gray-200]="filterType() !== 'level_3'"
               [class.text-gray-700]="filterType() !== 'level_3'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
@@ -149,8 +149,8 @@
           <div class="flex space-x-2">
             <button
               (click)="filterByStatus('PENDING')"
-              [class.bg-indigo-600]="filterStatus() === 'PENDING'"
-              [class.text-white]="filterStatus() === 'PENDING'"
+              [class.bg-cta-default]="filterStatus() === 'PENDING'"
+              [class.text-text-inverse]="filterStatus() === 'PENDING'"
               [class.bg-gray-200]="filterStatus() !== 'PENDING'"
               [class.text-gray-700]="filterStatus() !== 'PENDING'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
@@ -159,8 +159,8 @@
             </button>
             <button
               (click)="filterByStatus('APPROVED')"
-              [class.bg-indigo-600]="filterStatus() === 'APPROVED'"
-              [class.text-white]="filterStatus() === 'APPROVED'"
+              [class.bg-cta-default]="filterStatus() === 'APPROVED'"
+              [class.text-text-inverse]="filterStatus() === 'APPROVED'"
               [class.bg-gray-200]="filterStatus() !== 'APPROVED'"
               [class.text-gray-700]="filterStatus() !== 'APPROVED'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
@@ -169,8 +169,8 @@
             </button>
             <button
               (click)="filterByStatus('REJECTED')"
-              [class.bg-indigo-600]="filterStatus() === 'REJECTED'"
-              [class.text-white]="filterStatus() === 'REJECTED'"
+              [class.bg-cta-default]="filterStatus() === 'REJECTED'"
+              [class.text-text-inverse]="filterStatus() === 'REJECTED'"
               [class.bg-gray-200]="filterStatus() !== 'REJECTED'"
               [class.text-gray-700]="filterStatus() !== 'REJECTED'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
@@ -179,8 +179,8 @@
             </button>
             <button
               (click)="filterByStatus('all')"
-              [class.bg-indigo-600]="filterStatus() === 'all'"
-              [class.text-white]="filterStatus() === 'all'"
+              [class.bg-cta-default]="filterStatus() === 'all'"
+              [class.text-text-inverse]="filterStatus() === 'all'"
               [class.bg-gray-200]="filterStatus() !== 'all'"
               [class.text-gray-700]="filterStatus() !== 'all'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
@@ -193,7 +193,7 @@
     </div>
 
     <!-- Verification Queue Table -->
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="bg-surface-raised shadow rounded-lg overflow-hidden">
       @if (loading()) {
         <div class="p-12 text-center">
           <div class="text-gray-400 text-lg">Cargando verificaciones...</div>
@@ -242,7 +242,7 @@
               </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="bg-surface-raised divide-y divide-gray-200">
             @for (verification of verifications(); track verification.user_id) {
               <tr class="hover:bg-gray-50 transition-colors">
                 <!-- User -->
@@ -263,8 +263,8 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span
                     class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
-                    [class.bg-blue-100]="getVerificationLevel(verification) === 2"
-                    [class.text-blue-800]="getVerificationLevel(verification) === 2"
+                    [class.bg-cta-default/20]="getVerificationLevel(verification) === 2"
+                    [class.text-cta-default]="getVerificationLevel(verification) === 2"
                     [class.bg-purple-100]="getVerificationLevel(verification) === 3"
                     [class.text-purple-800]="getVerificationLevel(verification) === 3"
                   >
@@ -318,7 +318,7 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                   @if (verification.manual_review_decision === 'APPROVED') {
                     <span
-                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-light/20 text-success-light"
                     >
                       ✅ Aprobada
                     </span>
@@ -341,7 +341,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
                     (click)="selectVerification(verification)"
-                    class="text-indigo-600 hover:text-indigo-900 transition-colors"
+                    class="text-cta-default hover:text-cta-default transition-colors"
                   >
                     Ver Detalles
                   </button>
@@ -356,7 +356,7 @@
           <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center">
             <button
               (click)="loadMore()"
-              class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+              class="px-4 py-2 bg-cta-default text-cta-text rounded-md hover:bg-cta-default transition-colors"
             >
               Cargar Más
             </button>
@@ -386,9 +386,9 @@
 
       <!-- Modal panel -->
       <div
-        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
+        class="inline-block align-bottom bg-surface-raised rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
       >
-        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="bg-surface-raised px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <!-- Header -->
           <div class="flex justify-between items-start mb-6">
             <div>
@@ -505,21 +505,21 @@
                 selectedVerification()!.extracted_full_name ||
                 selectedVerification()!.extracted_birth_date
               ) {
-                <div class="mt-4 p-3 bg-blue-50 rounded-lg">
-                  <p class="text-sm font-medium text-blue-900 mb-2">Datos Extraídos por AI:</p>
+                <div class="mt-4 p-3 bg-cta-default/10 rounded-lg">
+                  <p class="text-sm font-medium text-cta-default mb-2">Datos Extraídos por AI:</p>
                   <div class="grid grid-cols-2 gap-2 text-sm">
                     @if (selectedVerification()!.extracted_full_name) {
                       <div>
-                        <span class="text-blue-700">Nombre:</span>
-                        <span class="ml-2 font-medium text-blue-900">{{
+                        <span class="text-cta-default">Nombre:</span>
+                        <span class="ml-2 font-medium text-cta-default">{{
                           selectedVerification()!.extracted_full_name
                         }}</span>
                       </div>
                     }
                     @if (selectedVerification()!.extracted_birth_date) {
                       <div>
-                        <span class="text-blue-700">Fecha de Nac:</span>
-                        <span class="ml-2 font-medium text-blue-900">{{
+                        <span class="text-cta-default">Fecha de Nac:</span>
+                        <span class="ml-2 font-medium text-cta-default">{{
                           selectedVerification()!.extracted_birth_date
                         }}</span>
                       </div>
@@ -629,7 +629,7 @@
           @if (selectedVerification()!.manual_review_decision !== 'APPROVED') {
             <button
               (click)="approveVerification(selectedVerification()!)"
-              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-success-light text-text-primary hover:bg-success-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-success-light sm:ml-3 sm:w-auto sm:text-sm transition-colors"
             >
               ✅ Aprobar
             </button>
@@ -638,7 +638,7 @@
           @if (selectedVerification()!.manual_review_decision !== 'REJECTED') {
             <button
               (click)="rejectVerification(selectedVerification()!)"
-              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-text-inverse hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
             >
               ❌ Rechazar
             </button>
@@ -646,21 +646,21 @@
 
           <button
             (click)="requestAdditionalDocs(selectedVerification()!)"
-            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-surface-raised text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
           >
             📄 Solicitar Docs
           </button>
 
           <button
             (click)="flagSuspicious(selectedVerification()!)"
-            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-surface-raised text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
           >
             🚩 Marcar Sospechoso
           </button>
 
           <button
             (click)="closeModal()"
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-surface-raised text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
           >
             Cerrar
           </button>

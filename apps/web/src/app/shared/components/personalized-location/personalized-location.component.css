@@ -30,7 +30,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #3A6D7C;
+  background: var(--cta-default); /* Azul pastel del sistema */
   border: 3px solid white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   cursor: grab;
@@ -40,7 +40,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle, #4F7C72 0%, #3A6D7C 100%);
+  background: radial-gradient(circle, var(--success-light) 0%, var(--cta-default) 100%);
   animation: pulse 2s ease-in-out infinite;
 }
 

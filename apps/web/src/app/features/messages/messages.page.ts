@@ -20,7 +20,7 @@ import { CarChatComponent } from './components/car-chat.component';
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-white shadow dark:bg-gray-800">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-gray-800">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center gap-4">
             <!-- Back button -->
@@ -40,7 +40,7 @@ import { CarChatComponent } from './components/car-chat.component';
             </button>
 
             <div>
-              <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Mensajes</h1>
+              <h1 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">Mensajes</h1>
               <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
                 @if (bookingId()) {
                   Conversación sobre reserva
@@ -60,12 +60,12 @@ import { CarChatComponent } from './components/car-chat.component';
         <!-- Booking Context Card -->
         @if (hasBookingContext() && bookingContext()) {
           <div
-            class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20"
+            class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4 dark:border-cta-default dark:bg-cta-default/20"
           >
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
                 <svg
-                  class="h-6 w-6 text-blue-600 dark:text-blue-400"
+                  class="h-6 w-6 text-cta-default dark:text-cta-default"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -79,35 +79,35 @@ import { CarChatComponent } from './components/car-chat.component';
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
+                <h3 class="text-sm font-semibold text-cta-default dark:text-cta-default mb-1">
                   Reserva: {{ bookingContext()!.carTitle }}
                 </h3>
                 @if (bookingContext()!.dates) {
-                  <p class="text-xs text-blue-700 dark:text-blue-300 mb-2">
+                  <p class="text-xs text-cta-default dark:text-cta-default mb-2">
                     📅 {{ bookingContext()!.dates }}
                   </p>
                 }
                 <div class="flex items-center gap-2">
                   <span
                     class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                    [class.bg-blue-100]="
+                    [class.bg-cta-default/20]="
                       bookingContext()!.status === 'confirmed' ||
                       bookingContext()!.status === 'in_progress'
                     "
-                    [class.text-blue-800]="
+                    [class.text-cta-default]="
                       bookingContext()!.status === 'confirmed' ||
                       bookingContext()!.status === 'in_progress'
                     "
                     [class.bg-yellow-100]="bookingContext()!.status === 'pending'"
                     [class.text-yellow-800]="bookingContext()!.status === 'pending'"
-                    [class.bg-green-100]="bookingContext()!.status === 'completed'"
-                    [class.text-green-800]="bookingContext()!.status === 'completed'"
+                    [class.bg-success-light/20]="bookingContext()!.status === 'completed'"
+                    [class.text-success-light]="bookingContext()!.status === 'completed'"
                   >
                     {{ bookingContext()!.statusLabel }}
                   </span>
                   <a
                     [routerLink]="['/bookings', bookingId()]"
-                    class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
+                    class="text-xs text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default underline"
                   >
                     Ver detalle
                   </a>

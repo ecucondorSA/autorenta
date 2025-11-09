@@ -162,15 +162,15 @@ export class TransactionHistoryComponent implements OnInit {
     const colors: Record<TransactionType, string> = {
       all: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200',
       deposit: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
-      withdrawal: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      withdrawal: 'bg-cta-default/20 text-cta-default dark:bg-cta-default/20 dark:text-cta-default',
       lock: 'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
-      unlock: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      unlock: 'bg-cta-default/20 text-cta-default dark:bg-cta-default/20 dark:text-cta-default',
       charge: 'bg-error-100 text-error-900 dark:bg-error-500/20 dark:text-error-100',
       refund: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
       bonus: 'bg-success-100 text-success-900 dark:bg-success-500/20 dark:text-success-100',
       rental_payment_lock:
         'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
-      rental_payment_transfer: 'bg-info-100 text-info-900 dark:bg-info-500/20 dark:text-info-100',
+      rental_payment_transfer: 'bg-cta-default/20 text-cta-default dark:bg-cta-default/20 dark:text-cta-default',
       security_deposit_lock:
         'bg-warning-100 text-warning-900 dark:bg-warning-500/25 dark:text-warning-100',
       security_deposit_release:

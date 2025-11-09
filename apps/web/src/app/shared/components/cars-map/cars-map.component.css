@@ -74,6 +74,150 @@
   --pill-height: clamp(24px, 6vw, 34px);
 }
 
+/* Availability Status Styles - Using Tokens */
+.marker-availability--available {
+  border: 2px solid var(--map-marker-available-color, #10b981);
+  box-shadow: 0 0 0 2px var(--map-marker-available-shadow, rgba(16, 185, 129, 0.2));
+}
+
+.marker-availability--soon_available {
+  border: 2px solid var(--map-marker-soon-available-color, #f59e0b);
+  box-shadow: 0 0 0 2px var(--map-marker-soon-available-shadow, rgba(245, 158, 11, 0.2));
+  animation: pulse-amber 2s ease-in-out infinite;
+}
+
+.marker-availability--in_use {
+  border: 2px solid var(--map-marker-in-use-color, #6366f1);
+  box-shadow: 0 0 0 2px var(--map-marker-in-use-shadow, rgba(99, 102, 241, 0.2));
+  opacity: 0.7;
+}
+
+.marker-availability--unavailable {
+  border: 2px solid var(--map-marker-unavailable-color, #ef4444);
+  box-shadow: 0 0 0 2px var(--map-marker-unavailable-shadow, rgba(239, 68, 68, 0.2));
+  opacity: 0.5;
+  filter: grayscale(0.5);
+}
+
+/* Availability Badges - Enhanced for Marketplace */
+.marker-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  z-index: 15;
+  animation: badge-appear 0.3s ease-out;
+  border: 2px solid white;
+}
+
+.marker-badge--available {
+  background: var(--map-marker-available-color, #10b981);
+}
+
+.marker-badge--soon {
+  background: var(--map-marker-soon-available-color, #f59e0b);
+  font-size: 9px;
+}
+
+.marker-badge--in-use {
+  background: var(--map-marker-in-use-color, #6366f1);
+  font-size: 12px;
+}
+
+.marker-badge--unavailable {
+  background: var(--map-marker-unavailable-color, #ef4444);
+}
+
+/* Instant Booking Visual Indicator - Using Tokens */
+.marker-instant-booking {
+  position: relative;
+}
+
+.marker-instant-booking::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: var(--map-marker-instant-booking-border, 3px) solid var(--map-marker-instant-booking-color, #10b981);
+  border-radius: 50%;
+  animation: instant-booking-pulse 2s ease-in-out infinite;
+  z-index: -1;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.marker-instant-booking-indicator {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: var(--map-marker-instant-booking-indicator-size, 18px);
+  height: var(--map-marker-instant-booking-indicator-size, 18px);
+  background: var(--map-marker-instant-booking-color, #10b981);
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 20;
+  animation: instant-booking-glow 1.5s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker-instant-booking-indicator::after {
+  content: '⚡';
+  font-size: 10px;
+  line-height: 1;
+}
+
+@keyframes instant-booking-pulse {
+  0%, 100% {
+    opacity: var(--map-marker-instant-booking-pulse-opacity, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    opacity: calc(var(--map-marker-instant-booking-pulse-opacity, 0.4) * 1.75);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes instant-booking-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--map-marker-instant-booking-color, #10b981);
+    opacity: 0.7;
+  }
+  50% {
+    box-shadow: 0 0 0 4px transparent;
+    opacity: 0;
+  }
+}
+
+@keyframes badge-appear {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-amber {
+  0%, 100% {
+    box-shadow: 0 0 0 2px var(--map-marker-soon-available-shadow, rgba(245, 158, 11, 0.2));
+  }
+  50% {
+    box-shadow: 0 0 0 4px var(--map-marker-soon-available-shadow, rgba(245, 158, 11, 0.4));
+  }
+}
+
 .car-marker:hover {
   transform: translateY(-4px);
   z-index: 2000 !important;
@@ -113,226 +257,6 @@
   box-shadow: 0 14px 34px rgba(15, 23, 42, 0.25);
 }
 
-.car-marker-card {
-  width: var(--marker-width);
-  border-radius: 16px;
-  padding: 10px 12px;
-  background: rgba(9, 12, 15, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(12px);
-  position: relative;
-}
-
-.car-marker--dark .car-marker-card {
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.18);
-}
-
-.car-marker--light .car-marker-card {
-  background: rgba(15, 23, 42, 0.92);
-  border-color: rgba(148, 163, 184, 0.24);
-  box-shadow: 0 20px 44px rgba(2, 6, 23, 0.55);
-}
-
-.car-marker-card--nearby {
-  border-color: rgba(16, 185, 129, 0.45);
-  background: rgba(4, 120, 87, 0.85);
-  box-shadow: 0 22px 40px rgba(4, 120, 87, 0.4);
-}
-
-.car-marker-body {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.car-marker-avatar {
-  width: var(--avatar-size);
-  height: var(--avatar-size);
-  border-radius: 999px;
-  aspect-ratio: 1 / 1;
-  border: 2px solid transparent;
-  background-size: cover;
-  background-position: center;
-  flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.car-marker-avatar::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  padding: 2px;
-  background: linear-gradient(135deg, #f97316, #ea580c);
-  -webkit-mask:
-    linear-gradient(#fff 0 0) padding-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-
-.car-marker--light .car-marker-avatar::before {
-  background: linear-gradient(135deg, #facc15, #fb923c);
-}
-
-.car-marker--dark .car-marker-avatar::before {
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
-}
-
-.car-marker-avatar--empty {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(248, 250, 252, 0.9);
-  font-weight: 700;
-  letter-spacing: 0.6px;
-}
-
-.car-marker-avatar--empty::before {
-  background: linear-gradient(135deg, #64748b, #334155);
-}
-
-.car-marker--dark .car-marker-avatar--empty {
-  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-  color: #1f2937;
-}
-
-.car-marker--dark .car-marker-avatar--empty::before {
-  background: linear-gradient(135deg, #c084fc, #f472b6);
-}
-
-.car-marker-text {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.car-marker-title {
-  margin: 0;
-  font-size: var(--title-size);
-  font-weight: 700;
-  color: #f8fafc;
-  letter-spacing: -0.25px;
-}
-
-.car-marker--dark .car-marker-title {
-  color: #0f172a;
-}
-
-.car-marker-meta {
-  margin: 0;
-  font-size: var(--meta-size);
-  color: rgba(226, 232, 240, 0.75);
-}
-
-.car-marker-card--nearby .car-marker-meta {
-  color: rgba(240, 253, 250, 0.8);
-}
-
-.car-marker--dark .car-marker-meta {
-  color: rgba(71, 85, 105, 0.85);
-}
-
-.car-marker-pill {
-  position: absolute;
-  left: 50%;
-  bottom: calc(-1 * var(--pill-height) * 0.4);
-  transform: translateX(-50%);
-  min-width: clamp(70px, 18vw, 88px);
-  height: var(--pill-height);
-  padding: 0 14px;
-  border-radius: 999px;
-  font-size: var(--pill-font);
-  font-weight: 700;
-  background: #ffffff;
-  color: #0f172a;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.3);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.car-marker-pill-sub {
-  font-size: clamp(0.55rem, 1.3vw, 0.65rem);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: rgba(15, 23, 42, 0.6);
-}
-
-.car-marker-price {
-  color: inherit;
-}
-
-.car-marker-price--dynamic {
-  background: linear-gradient(120deg, #f97316, #ea580c);
-  color: #fff;
-  box-shadow: 0 12px 20px rgba(234, 88, 12, 0.35);
-}
-
-.car-marker-price--dynamic .car-marker-pill-sub {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.car-marker-price--fallback {
-  background: linear-gradient(120deg, #f97316, #ea580c);
-  color: #fff;
-  box-shadow: 0 12px 20px rgba(234, 88, 12, 0.35);
-}
-
-.car-marker-price--fallback .car-marker-pill-sub {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.car-marker-distance {
-  background: linear-gradient(120deg, #10b981, #047857);
-  color: #ffffff;
-}
-
-.car-marker--dark .car-marker-pill {
-  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.18);
-}
-
-.car-marker--light .car-marker-pill {
-  box-shadow: 0 18px 32px rgba(2, 6, 23, 0.55);
-}
-
-.car-marker:hover .car-marker-card,
-.car-marker--selected .car-marker-card {
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.35);
-}
-
-.car-marker--selected .car-marker-pill {
-  background: linear-gradient(120deg, #2c4a52, #102a34);
-  color: #f8fafc;
-}
-
-@media (max-width: 640px) {
-  .car-marker {
-    --marker-width: clamp(110px, 48vw, 150px);
-    --avatar-size: clamp(30px, 18vw, 40px);
-  }
-
-  .car-marker-pill {
-    min-width: clamp(62px, 32vw, 78px);
-    bottom: calc(-1 * var(--pill-height) * 0.35);
-  }
-}
-
-@media (min-width: 1024px) {
-  .car-marker {
-    --marker-width: clamp(140px, 16vw, 200px);
-    --avatar-size: clamp(40px, 4vw, 54px);
-  }
-}
-
 /* Bounce animation on load */
 @keyframes markerBounce {
   0%,
@@ -348,7 +272,6 @@
   animation: markerBounce 0.6s ease;
 }
 
-/* Enhanced active states */
 /* Enhanced active states */
 .car-marker.active.nearby .car-marker-content {
   background: linear-gradient(135deg, #dc2626, #b91c1c);
@@ -547,7 +470,7 @@ img.car-popup-image {
   margin: 0;
   font-size: 4px; /* Reducido 4x (antes 16px) */
   font-weight: 700;
-  color: #2c4a52 !important; /* Verde azulado oscuro para precio en light mode */
+  color: var(--cta-default) !important; /* Azul pastel del sistema */
   line-height: 1.4;
 }
 
@@ -736,245 +659,6 @@ img.car-popup-image {
   display: block;
 }
 
-/* === Marker redesign overrides (appended) === */
-.car-marker {
-  position: relative;
-  transform-origin: center bottom;
-  transition: transform 0.25s ease;
-}
-
-.car-marker:hover {
-  transform: translateY(-4px);
-}
-
-.car-marker::after {
-  content: attr(data-title);
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 6px);
-  transform: translateX(-50%) scale(0.9);
-  transform-origin: center bottom;
-  background: rgba(20, 23, 24, 0.92);
-  color: #fefefe;
-  padding: 6px 10px;
-  border-radius: 10px;
-  font-size: 0.72rem;
-  letter-spacing: -0.15px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-.car-marker:hover::after,
-.car-marker--selected::after {
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
-}
-
-.car-marker-card {
-  width: var(--marker-width);
-  min-width: var(--marker-width);
-  border-radius: 18px;
-  background: rgba(12, 15, 18, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  padding: 10px 12px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
-}
-
-.car-marker-card--nearby {
-  border-color: rgba(16, 185, 129, 0.5);
-  background: rgba(6, 78, 59, 0.8);
-  box-shadow: 0 24px 45px rgba(6, 78, 59, 0.4);
-}
-
-.car-marker-body {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.car-marker-avatar {
-  width: var(--avatar-size);
-  height: var(--avatar-size);
-  border-radius: 12px;
-  background-size: cover;
-  background-position: center;
-  flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.car-marker-avatar--empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: rgba(248, 250, 252, 0.9);
-  font-weight: 700;
-  letter-spacing: 0.6px;
-}
-
-.car-marker-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.car-marker-title {
-  margin: 0;
-  font-size: var(--title-size);
-  font-weight: 700;
-  color: #f8fafc;
-  letter-spacing: -0.25px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
-}
-
-.car-marker-card--nearby .car-marker-title {
-  color: #ecfeff;
-}
-
-.car-marker-meta {
-  margin: 0;
-  font-size: var(--meta-size);
-  color: rgba(226, 232, 240, 0.8);
-}
-
-.car-marker-pill {
-  position: absolute;
-  left: 50%;
-  bottom: -14px;
-  transform: translateX(-50%);
-  min-width: clamp(70px, 18vw, 88px);
-  height: var(--pill-height);
-  text-align: center;
-  padding: 0 14px;
-  border-radius: 999px;
-  font-size: var(--pill-font);
-  font-weight: 700;
-  color: #0f172a;
-  line-height: 1.1;
-  background: #ffffff;
-  box-shadow: 0 12px 20px rgba(15, 23, 42, 0.25);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.car-marker-pill-sub {
-  font-size: clamp(0.55rem, 1.3vw, 0.65rem);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: rgba(15, 23, 42, 0.6);
-}
-
-.car-marker-price {
-  color: inherit;
-}
-
-.car-marker-price--dynamic {
-  background: linear-gradient(120deg, #f97316, #ea580c);
-  color: #fff;
-  box-shadow: 0 10px 18px rgba(234, 88, 12, 0.35);
-}
-
-.car-marker-price--dynamic .car-marker-pill-sub {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.car-marker-price--fallback {
-  background: linear-gradient(120deg, #f97316, #ea580c);
-  color: #fff;
-  box-shadow: 0 12px 20px rgba(234, 88, 12, 0.35);
-}
-
-.car-marker-price--fallback .car-marker-pill-sub {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.car-marker-distance {
-  background: linear-gradient(120deg, #10b981, #047857);
-  color: #ffffff;
-}
-
-.car-marker:hover .car-marker-card,
-.car-marker--selected .car-marker-card {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.35);
-}
-
-.car-marker--selected .car-marker-pill {
-  background: linear-gradient(120deg, #2c4a52, #102a34);
-  color: #f8fafc;
-}
-
-@media (max-width: 640px) {
-  .car-marker-card {
-    --marker-width: clamp(105px, 46vw, 140px);
-  }
-
-  .car-marker-avatar {
-    --avatar-size: clamp(32px, 12vw, 40px);
-  }
-
-  .car-marker-pill {
-    min-width: clamp(60px, 28vw, 72px);
-    bottom: -12px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .car-marker-card {
-    --marker-width: clamp(120px, 12vw, 190px);
-  }
-
-  .car-marker-avatar {
-    --avatar-size: clamp(36px, 4vw, 52px);
-  }
-
-  .car-marker-pill {
-    bottom: -16px;
-  }
-}
-.car-marker-price {
-  color: inherit;
-}
-.car-marker--light .car-marker-card {
-  background: rgba(255, 255, 255, 0.96);
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2);
-}
-
-.car-marker--light .car-marker-title {
-  color: #0f172a;
-  text-shadow: none;
-}
-
-.car-marker--light .car-marker-meta {
-  color: rgba(15, 23, 42, 0.65);
-}
-
-.car-marker--light .car-marker-pill {
-  background: #0f172a;
-  color: #f8fafc;
-}
-
-.car-marker--light .car-marker-pill-sub {
-  color: rgba(248, 250, 252, 0.7);
-}
-
-.car-marker--light .car-marker-price--fallback {
-  background: linear-gradient(120deg, #f97316, #ea580c);
-  color: #fff;
-}
-
-
 /* 🎯 Simple Car Markers (Neutral Style) */
 .car-marker-simple {
   cursor: pointer;
@@ -989,38 +673,10 @@ img.car-popup-image {
 .car-marker-simple.car-marker--selected .marker-circle {
   transform: scale(1.2);
   box-shadow:
-    0 0 0 4px rgba(44, 122, 123, 0.3),
-    0 4px 12px rgba(44, 122, 123, 0.6),
+    0 0 0 4px rgba(167, 216, 244, 0.3), /* cta-default con opacidad */
+    0 4px 12px rgba(167, 216, 244, 0.6), /* cta-default con opacidad */
     0 8px 24px rgba(0, 0, 0, 0.3);
   animation: pulse-marker 2s ease-in-out infinite;
-}
-
-.marker-circle {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #2c7a7b 0%, #4a9fa0 100%);
-  border: 3px solid white;
-  box-shadow: 0 4px 12px rgba(44, 122, 123, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 10;
-  transition: all 0.2s ease;
-}
-
-.marker-price-simple {
-  color: white;
-  font-size: 11px;
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.2;
-}
-
-.car-marker-simple:hover .marker-circle {
-  transform: scale(1.2);
-  box-shadow: 0 6px 20px rgba(44, 122, 123, 0.7);
 }
 
 @keyframes pulse-marker {
@@ -1034,33 +690,221 @@ img.car-popup-image {
   }
 }
 
+/* 🎯 Photo Circular Marker - Enhanced for Marketplace */
+.marker-circle-photo {
+  width: var(--map-marker-photo-size, 80px);
+  height: var(--map-marker-photo-size, 80px);
+  border-radius: 50%;
+  border: var(--map-marker-photo-border, 3px) solid var(--map-marker-photo-border-color, white);
+  box-shadow: var(--map-marker-photo-shadow, 0 6px 20px rgba(0, 0, 0, 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  z-index: 10;
+  transition: all var(--duration-normal, 300ms) var(--easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+  background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 100%);
+  background-clip: padding-box;
+}
+
+.marker-circle-photo--has-image {
+  background: transparent;
+}
+
+.marker-circle-photo--no-image {
+  background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 100%);
+}
+
+.marker-photo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.marker-photo-fallback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  user-select: none;
+}
+
+.marker-circle-photo--has-image .marker-photo-fallback {
+  display: none;
+}
+
+.marker-circle-photo--no-image .marker-photo-fallback {
+  display: flex;
+}
+
+/* Price badge on photo marker - Marketplace style */
+.marker-photo-price-badge {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid white;
+  z-index: 15;
+  pointer-events: none;
+  letter-spacing: 0.3px;
+}
+
+.car-marker-simple:hover .marker-photo-price-badge {
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Hover effects for photo marker - Using Tokens */
+.car-marker-simple:hover .marker-circle-photo {
+  transform: scale(var(--map-marker-photo-hover-scale, 1.12));
+  box-shadow: var(--map-marker-photo-hover-shadow, 0 8px 16px rgba(0, 0, 0, 0.3));
+  border-width: calc(var(--map-marker-photo-border, 2.5px) * 1.6);
+}
+
+.car-marker-simple:hover .marker-photo-image {
+  transform: scale(1.05);
+}
+
+.car-marker-simple.car-marker--selected .marker-circle-photo {
+  transform: scale(1.2);
+  box-shadow:
+    0 0 0 4px rgba(167, 216, 244, 0.3),
+    0 4px 12px rgba(167, 216, 244, 0.6),
+    0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: pulse-marker-photo 2s ease-in-out infinite;
+  border-color: var(--cta-default);
+}
+
+.car-marker-simple.car-marker--selected .marker-photo-image {
+  transform: scale(1.1);
+}
+
+@keyframes pulse-marker-photo {
+  0%, 100% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 0.95;
+  }
+}
+
+/* Gradient border effect for photo marker */
+.marker-circle-photo::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--cta-default), var(--cta-hover));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.car-marker-simple:hover .marker-circle-photo::before,
+.car-marker-simple.car-marker--selected .marker-circle-photo::before {
+  opacity: 1;
+}
+
 /* 🎯 User Location Marker */
 .user-location-marker {
   position: relative;
-  width: 20px;
-  height: 20px;
+  width: var(--circle-size, 20px);
+  height: var(--circle-size, 20px);
+  transition: all 0.3s ease;
 }
 
 .user-marker-circle {
-  width: 20px;
-  height: 20px;
+  width: var(--circle-size, 20px);
+  height: var(--circle-size, 20px);
   border-radius: 50%;
-  background: #2c7a7b;
+  background: var(--cta-default); /* Azul pastel del sistema */
   border: 3px solid white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   position: relative;
   z-index: 2;
+  transition: all 0.3s ease;
 }
 
 .user-marker-halo {
   position: absolute;
-  top: -10px;
-  left: -10px;
-  width: 40px;
-  height: 40px;
+  top: calc(-1 * var(--circle-size, 20px) * 0.5);
+  left: calc(-1 * var(--circle-size, 20px) * 0.5);
+  width: calc(var(--circle-size, 20px) * 2);
+  height: calc(var(--circle-size, 20px) * 2);
   border-radius: 50%;
-  background: rgba(44, 122, 123, 0.2);
+  background: rgba(167, 216, 244, 0.2); /* cta-default con opacidad */
   animation: pulse-halo 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+/* Estados contextuales */
+.user-location-marker--searching .user-marker-circle {
+  background: #10b981; /* Verde para búsqueda activa */
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);
+}
+
+.user-location-marker--searching .user-marker-halo {
+  background: rgba(16, 185, 129, 0.25);
+}
+
+.user-location-marker--booking-confirmed .user-marker-circle {
+  background: #f59e0b; /* Naranja para reserva confirmada */
+  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.4);
+}
+
+.user-location-marker--booking-confirmed .user-marker-halo {
+  background: rgba(245, 158, 11, 0.25);
+}
+
+/* Modo oscuro */
+.user-location-marker--dark .user-marker-circle {
+  border-color: #1e293b;
+  box-shadow: 0 2px 12px rgba(167, 216, 244, 0.5);
+}
+
+.user-location-marker--dark.user-location-marker--searching .user-marker-circle {
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
+}
+
+.user-location-marker--dark.user-location-marker--booking-confirmed .user-marker-circle {
+  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.6);
+}
+
+/* Animación de pulso al actualizar */
+.user-location-marker--pulse .user-marker-circle {
+  animation: location-pulse-update 1s ease-out;
+}
+
+.user-location-marker--pulse .user-marker-halo {
+  animation: location-pulse-halo-update 1s ease-out;
 }
 
 @keyframes pulse-halo {
@@ -1074,16 +918,255 @@ img.car-popup-image {
   }
 }
 
+@keyframes location-pulse-update {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes location-pulse-halo-update {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+/* Popup mejorado */
 .user-location-popup {
-  padding: 8px 12px;
+  padding: 12px 16px;
+  min-width: 200px;
 }
 
 .user-location-popup p {
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
+}
+
+.user-location-popup .text-text-primary {
+  font-weight: 600;
+  font-size: 14px;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.user-location-popup .text-text-secondary {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.user-location-popup .text-text-tertiary {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.user-location-popup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.user-location-cta {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: var(--cta-default);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.user-location-cta:hover {
+  background: var(--cta-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(167, 216, 244, 0.3);
+}
+
+.user-location-cta:active {
+  transform: translateY(0);
+}
+
+/* Modo oscuro para popup */
+.dark .user-location-popup .text-text-primary {
+  color: #f8fafc;
+}
+
+.dark .user-location-popup .text-text-secondary {
+  color: #cbd5e1;
+}
+
+.dark .user-location-popup .text-text-tertiary {
+  color: #94a3b8;
+}
+
+.dark .user-location-cta {
+  background: rgba(167, 216, 244, 0.2);
+  color: #e0f2fe;
+}
+
+.dark .user-location-cta:hover {
+  background: rgba(167, 216, 244, 0.3);
 }
 
 /* 🎯 Tooltip Container */
 .map-tooltip-container {
   width: 100%;
+}
+
+/* Controles de mapa personalizados */
+.map-controls-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-control-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: white;
+  color: #0f172a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.map-control-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.map-control-button:active {
+  transform: scale(0.95);
+}
+
+.map-control-button.active {
+  background: var(--cta-default);
+  color: white;
+  border-color: var(--cta-default);
+}
+
+.map-control-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Modo oscuro para controles */
+.dark .map-control-button {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #f8fafc;
+}
+
+.dark .map-control-button:hover {
+  background: #334155;
+}
+
+.dark .map-control-button.active {
+  background: var(--cta-default);
+  color: white;
+}
+
+/* Slider de radio de búsqueda */
+.search-radius-control {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+}
+
+.dark .search-radius-control {
+  background: #1e293b;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.search-radius-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.dark .search-radius-label {
+  color: #f8fafc;
+}
+
+.search-radius-slider {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: #e2e8f0;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.dark .search-radius-slider {
+  background: #334155;
+}
+
+.search-radius-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cta-default);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.search-radius-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cta-default);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.search-radius-value {
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.dark .search-radius-value {
+  color: #94a3b8;
 }

@@ -1,7 +1,7 @@
-<div class="mx-auto max-w-4xl space-y-4 sm:space-y-6 text-smoke-black dark:text-pearl-light transition-colors duration-300">
-  <!-- Header -->
+<div class="mx-auto max-w-7xl space-y-4 sm:space-y-6 text-text-primary dark:text-text-secondary transition-colors duration-300">
+  <!-- ==================== HEADER ==================== -->
   <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-    <h1 class="h2 text-smoke-black dark:text-ivory-luminous">Mi Perfil</h1>
+    <h1 class="h2 text-text-primary dark:text-text-primary">Mi Perfil</h1>
     <button
       (click)="signOut()"
       class="btn-secondary px-4 py-2 text-sm"
@@ -10,46 +10,45 @@
     </button>
   </header>
 
-  <!-- Messages -->
+  <!-- ==================== MESSAGES ==================== -->
   <div *ngIf="message()" class="info-card-petrol p-4">
-    <p class="text-sm font-medium text-accent-petrol dark:text-ivory-luminous">{{ message() }}</p>
+    <p class="text-sm font-medium text-cta-default dark:text-text-primary">{{ message() }}</p>
   </div>
 
   <div *ngIf="error()" class="info-card-warm p-4">
-    <p class="text-sm font-medium text-accent-warm">{{ error() }}</p>
+    <p class="text-sm font-medium text-warning-light">{{ error() }}</p>
   </div>
 
-  <!-- Loading State -->
+  <!-- ==================== LOADING STATE ==================== -->
   <div
     *ngIf="loading()"
     class="card-premium p-6 sm:p-8 text-center shadow-soft"
   >
-    <p class="text-charcoal-medium dark:text-pearl-light/70">Cargando perfil...</p>
+    <p class="text-text-secondary dark:text-text-secondary/70">Cargando perfil...</p>
   </div>
 
-  <!-- Profile Content -->
+  <!-- ==================== PROFILE CONTENT ==================== -->
   <ng-container *ngIf="!loading() && profile()">
-    <div class="grid gap-4 sm:gap-6 lg:grid-cols-[300px_1fr]">
-      <!-- Avatar Section -->
-      <aside class="card-premium space-y-4 p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
-        <div class="flex flex-col items-center space-y-4">
-          <!-- Avatar Image -->
-          <div class="relative h-32 w-32">
+    <!-- ==================== SECTION 1: HERO (Ligero) ==================== -->
+    <section class="hero-section card-premium p-4 sm:p-6 shadow-soft">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+        <!-- Avatar -->
+        <div class="relative h-24 w-24 sm:h-32 sm:w-32 flex-shrink-0">
             <div
-              class="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-sand-light dark:bg-slate-deep/70 transition-colors"
+              class="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-surface-secondary dark:bg-surface-secondary/70 transition-colors"
             >
               <img
                 *ngIf="avatarUrl(); else placeholderAvatar"
                 [src]="avatarUrl()"
                 alt="Avatar"
-                loading="lazy"
+              loading="eager"
                 decoding="async"
                 width="128"
                 height="128"
                 class="h-full w-full object-cover"
               />
               <ng-template #placeholderAvatar>
-                <svg class="h-16 w-16 text-charcoal-medium dark:text-pearl-light/60" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="h-12 w-12 sm:h-16 sm:w-16 text-text-secondary dark:text-text-secondary/60" fill="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
                   />
@@ -63,7 +62,7 @@
               class="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50"
             >
               <svg
-                class="h-8 w-8 animate-spin text-white"
+              class="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-text-inverse"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -85,10 +84,19 @@
             </div>
           </div>
 
-          <!-- Avatar Actions -->
-          <div class="flex w-full flex-col gap-2">
+        <!-- Hero Info -->
+        <div class="flex-1 min-w-0">
+          <h2 class="text-xl sm:text-2xl font-bold text-text-primary dark:text-text-primary mb-1">
+            {{ profile()?.full_name }}
+          </h2>
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-3">
+            {{ userEmail() }}
+          </p>
+
+          <!-- Quick CTAs -->
+          <div class="flex flex-wrap gap-2">
             <label
-              class="btn-primary cursor-pointer px-4 py-2 text-center text-sm disabled:opacity-50"
+              class="btn-primary cursor-pointer px-3 py-1.5 text-xs sm:text-sm disabled:opacity-50"
               [class.pointer-events-none]="uploadingAvatar()"
             >
               <input
@@ -102,33 +110,49 @@
             </label>
 
             <button
-              *ngIf="avatarUrl()"
+              *ngIf="!editMode()"
+              (click)="toggleEditMode()"
+              class="btn-secondary px-3 py-1.5 text-xs sm:text-sm"
+            >
+              Editar perfil
+            </button>
+
+            <button
+              *ngIf="avatarUrl() && !editMode()"
               (click)="deleteAvatar()"
               [disabled]="uploadingAvatar()"
-              class="rounded-xl border-2 border-accent-warm px-4 py-2 text-sm font-semibold text-accent-warm hover:bg-accent-warm/10 disabled:cursor-not-allowed disabled:opacity-50 transition-base"
+              class="rounded-lg border border-warning-light px-3 py-1.5 text-xs sm:text-sm font-medium text-warning-light hover:bg-warning-light/10 disabled:cursor-not-allowed disabled:opacity-50 transition-base"
             >
               Eliminar foto
             </button>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <!-- User Info -->
-          <div class="w-full space-y-2 border-t border-pearl-gray dark:border-slate-deep/70 pt-4 text-sm">
-            <p class="text-charcoal-medium dark:text-pearl-light/70">
-              <span class="font-semibold">Email:</span><br />
-              {{ userEmail() }}
-            </p>
-            <p class="text-charcoal-medium dark:text-pearl-light/70">
-              <span class="font-semibold">Miembro desde:</span><br />
+    <!-- ==================== MAIN CONTENT GRID ==================== -->
+    <div class="grid gap-4 sm:gap-6 lg:grid-cols-[300px_1fr]">
+      <!-- ==================== SIDEBAR (Desktop) / Hidden on Mobile ==================== -->
+      <aside class="hidden lg:block space-y-4">
+        <!-- User Info Card -->
+        <div class="card-premium space-y-4 p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
+          <div class="space-y-3 text-sm">
+            <div>
+              <p class="text-xs font-semibold text-text-muted dark:text-text-secondary/70 uppercase tracking-wide mb-1">
+                Miembro desde
+              </p>
+              <p class="text-sm text-text-primary dark:text-text-primary">
               {{ profile()?.created_at | date: 'dd/MM/yyyy' }}
             </p>
+            </div>
 
             <!-- Wallet Account Number -->
-            <div *ngIf="profile()?.wallet_account_number" class="pt-2 border-t border-pearl-gray dark:border-slate-deep/70">
-              <p class="text-charcoal-medium dark:text-pearl-light/70 mb-2">
-                <span class="font-semibold">Número de Cuenta Wallet:</span>
+            <div *ngIf="profile()?.wallet_account_number" class="pt-3 border-t border-border-default dark:border-slate-deep/70">
+              <p class="text-xs font-semibold text-text-muted dark:text-text-secondary/70 uppercase tracking-wide mb-2">
+                Número de Cuenta Wallet
               </p>
-              <div class="bg-accent-petrol/5 dark:bg-accent-petrol/10 rounded-xl p-3 border border-accent-petrol/20 dark:border-accent-petrol/30">
-                <p class="text-base font-mono font-bold text-accent-petrol dark:text-ivory-luminous text-center mb-2">
+              <div class="bg-cta-default/5 dark:bg-cta-default/10 rounded-xl p-3 border border-cta-default/20 dark:border-cta-default/30">
+                <p class="text-sm font-mono font-bold text-cta-default dark:text-text-primary text-center mb-2 break-all">
                   {{ profile()?.wallet_account_number }}
                 </p>
                                                                                                 <button
@@ -138,14 +162,10 @@
                                                                                                   class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-base"
                                                                                                   [class.bg-success-100]="copiedWAN()"
                                                                                                   [class.text-success-700]="copiedWAN()"
-                                                                                                  [class.bg-accent-petrol]="!copiedWAN()"
-                                                                                                  [class.text-white]="!copiedWAN()"
-                                                                                                  [class.hover\:bg-accent-petrol\/90]="!copiedWAN()">
-                                                                                
-                                                                
-                                                
-                                
-                
+                                                                                                  [class.bg-cta-default]="!copiedWAN()"
+                                                                                                  [class.text-text-inverse]="!copiedWAN()"
+                  [class.hover\:bg-cta-default\/90]="!copiedWAN()"
+                >
                   @if (copiedWAN()) {
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -158,37 +178,87 @@
                     <span>Copiar</span>
                   }
                 </button>
-                <p class="mt-2 text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 text-center">
+                <p class="mt-2 text-xs text-text-secondary dark:text-text-secondary/70 text-center">
                   Para recibir transferencias
                 </p>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Quick Links Card -->
+        <div class="card-premium p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
+          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-3">Accesos rápidos</h3>
+          <div class="space-y-2">
+            <a
+              *ngIf="canPublishCars()"
+              routerLink="/cars/publish"
+              class="block rounded-lg border border-border-default dark:border-slate-deep/70 px-3 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary/80 hover:bg-surface-secondary dark:hover:bg-slate-deep/60 transition-base"
+            >
+              📝 Publicar auto
+            </a>
+            <a
+              *ngIf="canPublishCars()"
+              routerLink="/cars/mine"
+              class="block rounded-lg border border-border-default dark:border-slate-deep/70 px-3 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary/80 hover:bg-surface-secondary dark:hover:bg-slate-deep/60 transition-base"
+            >
+              🚗 Mis autos
+            </a>
+            <a
+              *ngIf="canBookCars()"
+              routerLink="/bookings"
+              class="block rounded-lg border border-border-default dark:border-slate-deep/70 px-3 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary/80 hover:bg-surface-secondary dark:hover:bg-slate-deep/60 transition-base"
+            >
+              📅 Mis reservas
+            </a>
+            <a
+              routerLink="/wallet"
+              class="block info-card-petrol px-3 py-2 transition-base"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-medium text-cta-default dark:text-text-primary">💳 Mi Wallet</span>
+                <span class="text-xs font-semibold text-cta-default dark:text-text-primary">
+                  ${{ availableBalance() | number:'1.2-2' }}
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
       </aside>
 
-      <!-- Profile Form Section -->
-      <section class="card-premium space-y-4 sm:space-y-6 p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
-        <!-- View Mode -->
-        <div *ngIf="!editMode()" class="space-y-4 sm:space-y-6">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <h2 class="h4">Información Personal</h2>
+      <!-- ==================== MAIN CONTENT ==================== -->
+      <main class="space-y-4 sm:space-y-6">
+        <!-- ==================== SECTION 2: IDENTIDAD/ROLES ==================== -->
+        <section class="card-premium p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+            <h2 class="h4 text-text-primary dark:text-text-primary">Identidad</h2>
             <button
+              *ngIf="!editMode()"
               (click)="toggleEditMode()"
               class="btn-primary px-4 py-2 text-sm w-full sm:w-auto"
             >
-              Editar perfil
+              Editar
             </button>
           </div>
 
-          <div class="space-y-4">
+          <!-- Wizard Mode -->
+          @if (editMode() && useWizard()) {
+            <app-profile-wizard
+              [initialData]="getProfileDataForWizard()"
+              (onCancel)="onWizardCancel()"
+              (onComplete)="onWizardComplete()"
+            />
+          }
+
+          <!-- View Mode -->
+          <div *ngIf="!editMode()" class="space-y-4">
             <div>
-              <p class="text-sm font-medium text-ash-gray dark:text-pearl-light/70">Nombre completo</p>
-              <p class="mt-1 text-base text-smoke-black dark:text-ivory-luminous">{{ profile()?.full_name }}</p>
+              <p class="text-sm font-medium text-text-muted dark:text-text-secondary/70">Nombre completo</p>
+              <p class="mt-1 text-base text-text-primary dark:text-text-primary">{{ profile()?.full_name }}</p>
             </div>
 
             <div>
-              <p class="text-sm font-medium text-ash-gray dark:text-pearl-light/70">Rol</p>
+              <p class="text-sm font-medium text-text-muted dark:text-text-secondary/70">Rol</p>
               <div class="mt-2">
                 <span class="badge-status badge-info">
                   {{
@@ -202,7 +272,7 @@
                   }}
                 </span>
               </div>
-              <p class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light/70">
+              <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary/70">
                 <ng-container *ngIf="profile()?.role === 'owner'">
                   Puedes publicar tus autos para alquilar
                 </ng-container>
@@ -212,21 +282,18 @@
                 <ng-container *ngIf="profile()?.role === 'both'">
                   Puedes publicar y reservar autos
                 </ng-container>
-                <ng-container *ngIf="profile()?.role === 'admin'">
-                  Acceso completo al sistema
-                </ng-container>
               </p>
             </div>
 
             <!-- Capabilities -->
-            <div class="rounded-xl bg-sand-light dark:bg-slate-deep/60 p-4 transition-colors">
-              <p class="mb-2 text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Permisos:</p>
-              <ul class="space-y-1 text-sm text-charcoal-medium dark:text-pearl-light/70">
+            <div class="rounded-xl bg-surface-secondary dark:bg-surface-secondary/60 p-4 transition-colors">
+              <p class="mb-2 text-sm font-semibold text-text-primary dark:text-text-primary">Permisos:</p>
+              <ul class="space-y-1 text-sm text-text-secondary dark:text-text-secondary/70">
                 <li class="flex items-center">
                   <svg
                     class="mr-2 h-5 w-5"
-                    [class.text-accent-petrol]="canPublishCars()"
-                    [class.text-ash-gray dark:text-pearl-light/70]="!canPublishCars()"
+                    [class.text-cta-default]="canPublishCars()"
+                    [class.text-text-muted dark:text-text-secondary/70]="!canPublishCars()"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -241,8 +308,8 @@
                 <li class="flex items-center">
                   <svg
                     class="mr-2 h-5 w-5"
-                    [class.text-accent-petrol]="canBookCars()"
-                    [class.text-ash-gray dark:text-pearl-light/70]="!canBookCars()"
+                    [class.text-cta-default]="canBookCars()"
+                    [class.text-text-muted dark:text-text-secondary/70]="!canBookCars()"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -255,160 +322,17 @@
                   Reservar autos
                 </li>
               </ul>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="space-y-3 pt-4 border-t border-pearl-gray dark:border-slate-deep/70">
-              <h3 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Contacto</h3>
-              <div *ngIf="profile()?.phone">
-                <p class="text-sm font-medium text-ash-gray dark:text-pearl-light/70">Teléfono</p>
-                <p class="mt-1 text-base text-smoke-black dark:text-ivory-luminous">{{ profile()?.phone }}</p>
-              </div>
-              <div *ngIf="profile()?.whatsapp">
-                <p class="text-sm font-medium text-ash-gray dark:text-pearl-light/70">WhatsApp</p>
-                <p class="mt-1 text-base text-smoke-black dark:text-ivory-luminous">{{ profile()?.whatsapp }}</p>
-              </div>
-              <div *ngIf="!profile()?.phone && !profile()?.whatsapp" class="text-sm text-ash-gray dark:text-pearl-light/60 italic">
-                No has agregado información de contacto
-              </div>
-            </div>
-
-            <!-- Driver License -->
-            <div class="space-y-3 pt-4 border-t border-pearl-gray dark:border-slate-deep/70">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Licencia de Conducir</h3>
-                <span
-                  *ngIf="profile()?.is_driver_verified"
-                  class="badge-status badge-success"
-                >
-                  <svg class="h-3 w-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  Verificada
-                </span>
-              </div>
-              <div *ngIf="profile()?.driver_license_number">
-                <p class="text-sm font-medium text-ash-gray dark:text-pearl-light/70">Número</p>
-                <p class="mt-1 text-base text-smoke-black dark:text-ivory-luminous">{{ profile()?.driver_license_number }}</p>
-              </div>
-              <div *ngIf="profile()?.driver_license_country" class="grid grid-cols-2 gap-4">
-                <div>
-                  <p class="text-sm font-medium text-ash-gray dark:text-pearl-light/70">País</p>
-                  <p class="mt-1 text-base text-smoke-black dark:text-ivory-luminous">{{ profile()?.driver_license_country }}</p>
-                </div>
-                <div *ngIf="profile()?.driver_license_expiry">
-                  <p class="text-sm font-medium text-ash-gray dark:text-pearl-light/70">Vencimiento</p>
-                  <p class="mt-1 text-base text-smoke-black dark:text-ivory-luminous">{{ profile()?.driver_license_expiry | date: 'dd/MM/yyyy' }}</p>
-                </div>
-              </div>
-              <div *ngIf="!profile()?.driver_license_number" class="text-sm text-ash-gray dark:text-pearl-light/60 italic">
-                No has agregado tu licencia de conducir
-              </div>
-            </div>
-
-            <!-- Address -->
-            <div class="space-y-3 pt-4 border-t border-pearl-gray dark:border-slate-deep/70">
-              <h3 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Dirección</h3>
-              <div *ngIf="profile()?.address_line1">
-                <p class="text-base text-smoke-black dark:text-ivory-luminous">{{ profile()?.address_line1 }}</p>
-                <p *ngIf="profile()?.address_line2" class="text-base text-smoke-black dark:text-ivory-luminous">{{ profile()?.address_line2 }}</p>
-                <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mt-1">
-                  {{ profile()?.city }}<span *ngIf="profile()?.state">, {{ profile()?.state }}</span>
-                  <span *ngIf="profile()?.postal_code"> - {{ profile()?.postal_code }}</span>
-                </p>
-                <p *ngIf="profile()?.country" class="text-sm text-charcoal-medium dark:text-pearl-light/70">{{ profile()?.country }}</p>
-              </div>
-              <div *ngIf="!profile()?.address_line1" class="text-sm text-ash-gray dark:text-pearl-light/60 italic">
-                No has agregado tu dirección
-              </div>
-            </div>
-
-            <!-- Verification Status -->
-            <div class="info-card-petrol p-4 mt-4">
-              <p class="mb-2 text-sm font-semibold text-accent-petrol">Estado de Verificación</p>
-              <ul class="space-y-1 text-sm">
-                <li class="flex items-center text-charcoal-medium dark:text-pearl-light/70">
-                  <svg
-                    class="mr-2 h-4 w-4"
-                    [class.text-accent-petrol]="profile()?.is_email_verified"
-                    [class.text-ash-gray dark:text-pearl-light/70]="!profile()?.is_email_verified"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  Email {{ profile()?.is_email_verified ? 'verificado' : 'sin verificar' }}
-                </li>
-                <li class="flex items-center text-charcoal-medium dark:text-pearl-light/70">
-                  <svg
-                    class="mr-2 h-4 w-4"
-                    [class.text-accent-petrol]="profile()?.is_phone_verified"
-                    [class.text-ash-gray dark:text-pearl-light/70]="!profile()?.is_phone_verified"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  Teléfono {{ profile()?.is_phone_verified ? 'verificado' : 'sin verificar' }}
-                </li>
-                <li class="flex items-center text-charcoal-medium dark:text-pearl-light/70">
-                  <svg
-                    class="mr-2 h-4 w-4"
-                    [class.text-accent-petrol]="profile()?.is_driver_verified"
-                    [class.text-ash-gray dark:text-pearl-light/70]="!profile()?.is_driver_verified"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  Licencia {{ profile()?.is_driver_verified ? 'verificada' : 'sin verificar' }}
-                </li>
-              </ul>
-            </div>
-
-            <!-- Badges Section -->
-            <div *ngIf="userStats()" class="space-y-3 pt-4 border-t border-pearl-gray dark:border-slate-deep/70">
-              <h3 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Insignias</h3>
-              <app-user-badges [userStats]="userStats()!" [showLabels]="true" [size]="'medium'"></app-user-badges>
-            </div>
-
-            <!-- Stats Summary -->
-            <div *ngIf="userStats()" class="space-y-3 pt-4 border-t border-pearl-gray dark:border-slate-deep/70">
-              <h3 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Estadísticas</h3>
-              <div class="grid grid-cols-2 gap-3 text-sm">
-                <!-- Owner Stats -->
-                <div *ngIf="canPublishCars()" class="info-card-petrol p-3">
-                  <p class="text-xs font-medium text-accent-petrol mb-1">Como Locador</p>
-                  <p class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">
-                    {{ userStats()!.owner_rating_avg || 0 | number:'1.1-1' }} ⭐
-                  </p>
-                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
-                    {{ userStats()!.owner_reviews_count || 0 }} reviews
-                  </p>
-                </div>
-                <!-- Renter Stats -->
-                <div *ngIf="canBookCars()" class="info-card-petrol p-3">
-                  <p class="text-xs font-medium text-accent-petrol mb-1">Como Locatario</p>
-                  <p class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">
-                    {{ userStats()!.renter_rating_avg || 0 | number:'1.1-1' }} ⭐
-                  </p>
-                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
-                    {{ userStats()!.renter_reviews_count || 0 }} reviews
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
-        <!-- Edit Mode -->
-        <form *ngIf="editMode()" [formGroup]="form" (ngSubmit)="saveProfile()" class="space-y-4 sm:space-y-6">
+          <!-- Edit Mode (Old Form - hidden when using wizard) -->
+          <form *ngIf="editMode() && !useWizard()" [formGroup]="form" (ngSubmit)="saveProfile()" class="space-y-4 sm:space-y-6">
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <h2 class="h4 text-smoke-black dark:text-ivory-luminous">Editar Información</h2>
+            <h2 class="h4 text-text-primary dark:text-text-primary">Editar Información</h2>
             <button
               type="button"
               (click)="toggleEditMode()"
-              class="text-sm text-charcoal-medium dark:text-pearl-light/70 hover:text-smoke-black dark:hover:text-ivory-luminous transition-base"
+              class="text-sm text-text-secondary dark:text-text-secondary/70 hover:text-text-primary dark:hover:text-ivory-luminous transition-base"
             >
               Cancelar
             </button>
@@ -416,13 +340,13 @@
 
           <!-- Full Name -->
           <div>
-            <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
               Nombre completo *
               <input
                 type="text"
                 formControlName="full_name"
                 class="input-premium mt-1 w-full"
-                [class.border-accent-warm]="
+                [class.border-warning-light]="
                   form.controls.full_name.touched && form.controls.full_name.invalid
                 "
               />
@@ -431,7 +355,7 @@
               *ngIf="
                 form.controls.full_name.touched && form.controls.full_name.errors?.['required']
               "
-              class="mt-1 text-xs text-accent-warm"
+              class="mt-1 text-xs text-warning-light"
             >
               El nombre es obligatorio.
             </p>
@@ -439,7 +363,7 @@
               *ngIf="
                 form.controls.full_name.touched && form.controls.full_name.errors?.['minlength']
               "
-              class="mt-1 text-xs text-accent-warm"
+              class="mt-1 text-xs text-warning-light"
             >
               El nombre debe tener al menos 3 caracteres.
             </p>
@@ -447,28 +371,28 @@
 
           <!-- Role Selection -->
           <div>
-            <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 mb-2"> Rol * </label>
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-2"> Rol * </label>
             <div class="space-y-3">
               <div
                 *ngFor="let roleOption of roles"
-                class="relative flex cursor-pointer rounded-xl border p-4 transition-base hover:bg-sand-light dark:hover:bg-slate-deep/60"
-                [class.border-accent-petrol]="form.value.role === roleOption.value"
-                [class.bg-accent-petrol/5]="form.value.role === roleOption.value"
-                [class.border-pearl-gray dark:border-gray-600]="form.value.role !== roleOption.value"
-                [class.dark:bg-slate-deep/80]="form.value.role === roleOption.value"
+                class="relative flex cursor-pointer rounded-xl border p-4 transition-base hover:bg-surface-secondary dark:hover:bg-slate-deep/60"
+                [class.border-cta-default]="form.value.role === roleOption.value"
+                [class.bg-cta-default/5]="form.value.role === roleOption.value"
+                [class.border-border-default dark:border-gray-600]="form.value.role !== roleOption.value"
+                [class.dark:bg-surface-secondary/80]="form.value.role === roleOption.value"
                 [class.dark:border-slate-deep/70]="form.value.role !== roleOption.value"
               >
                 <input
                   type="radio"
                   [value]="roleOption.value"
                   formControlName="role"
-                  class="mt-1 h-4 w-4 border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol"
+                  class="mt-1 h-4 w-4 border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default"
                 />
                 <label class="ml-3 flex flex-1 cursor-pointer flex-col">
-                  <span class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous">
+                  <span class="block text-sm font-medium text-text-primary dark:text-text-primary">
                     {{ roleOption.label }}
                   </span>
-                  <span class="block text-xs text-charcoal-medium dark:text-pearl-light/70">
+                  <span class="block text-xs text-text-secondary dark:text-text-secondary/70">
                     {{ roleOption.description }}
                   </span>
                 </label>
@@ -477,11 +401,11 @@
           </div>
 
           <!-- Contact Information Section -->
-          <div class="border-t border-pearl-gray dark:border-slate-deep/70 pt-6">
-            <h3 class="h5 mb-4 text-smoke-black dark:text-ivory-luminous">Información de Contacto</h3>
+          <div class="border-t border-border-default dark:border-slate-deep/70 pt-6">
+            <h3 class="h5 mb-4 text-text-primary dark:text-text-primary">Información de Contacto</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                   Teléfono
                   <input
                     type="tel"
@@ -492,7 +416,7 @@
                 </label>
               </div>
               <div>
-                <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                   WhatsApp
                   <input
                     type="tel"
@@ -506,11 +430,11 @@
           </div>
 
           <!-- Driver License Section -->
-          <div class="border-t border-pearl-gray dark:border-slate-deep/70 pt-6">
-            <h3 class="h5 mb-4 text-smoke-black dark:text-ivory-luminous">Licencia de Conducir</h3>
+          <div class="border-t border-border-default dark:border-slate-deep/70 pt-6">
+            <h3 class="h5 mb-4 text-text-primary dark:text-text-primary">Licencia de Conducir</h3>
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                   Número de Licencia
                   <input
                     type="text"
@@ -522,7 +446,7 @@
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                  <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                     País de Emisión
                     <input
                       type="text"
@@ -533,7 +457,7 @@
                   </label>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                  <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                     Fecha de Vencimiento
                     <input
                       type="date"
@@ -547,11 +471,11 @@
           </div>
 
           <!-- Address Section -->
-          <div class="border-t border-pearl-gray dark:border-slate-deep/70 pt-6">
-            <h3 class="h5 mb-4 text-smoke-black dark:text-ivory-luminous">Dirección</h3>
+          <div class="border-t border-border-default dark:border-slate-deep/70 pt-6">
+            <h3 class="h5 mb-4 text-text-primary dark:text-text-primary">Dirección</h3>
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                   Calle y Número
                   <input
                     type="text"
@@ -562,7 +486,7 @@
                 </label>
               </div>
               <div>
-                <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                   Apartamento, Suite, etc. (opcional)
                   <input
                     type="text"
@@ -574,7 +498,7 @@
               </div>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                  <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                     Ciudad
                     <input
                       type="text"
@@ -585,7 +509,7 @@
                   </label>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                  <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                     Departamento
                     <input
                       type="text"
@@ -596,7 +520,7 @@
                   </label>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                  <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                     Código Postal
                     <input
                       type="text"
@@ -608,7 +532,7 @@
                 </div>
               </div>
               <div>
-                <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light/80">
+                <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
                   País
                   <input
                     type="text"
@@ -640,88 +564,183 @@
             </button>
           </div>
         </form>
+        </section>
 
-        <!-- Quick Links -->
-        <div *ngIf="!editMode()" class="border-t border-pearl-gray dark:border-slate-deep/70 pt-6 transition-colors">
-          <h3 class="mb-3 text-sm font-semibold text-smoke-black dark:text-ivory-luminous">Accesos rápidos</h3>
-          <div class="grid gap-2 sm:grid-cols-2">
-            <a
-              *ngIf="canPublishCars()"
-              routerLink="/cars/publish"
-              class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
-            >
-              📝 Publicar auto
-            </a>
-            <a
-              *ngIf="canPublishCars()"
-              routerLink="/cars/mine"
-              class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
-            >
-              🚗 Mis autos
-            </a>
-            <a
-              *ngIf="canPublishCars()"
-              routerLink="/bookings/owner"
-              class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
-            >
-              📋 Reservas de mis autos
-            </a>
-            <a
-              *ngIf="canBookCars()"
-              routerLink="/bookings"
-              class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
-            >
-              📅 Mis reservas
-            </a>
-            <a
-              routerLink="/wallet"
-              class="info-card-petrol px-4 py-3 transition-base block"
-            >
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-accent-petrol dark:text-ivory-luminous">💳 Mi Wallet</span>
-                <span class="text-xs font-semibold text-accent-petrol dark:text-ivory-luminous">
-                  ${{ availableBalance() | number:'1.2-2' }}
+        <!-- ==================== SECTION 3: CONTACTO & DIRECCIÓN ==================== -->
+        <section *ngIf="!editMode()" class="card-premium p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
+          <h2 class="h4 mb-4 text-text-primary dark:text-text-primary">Contacto & Dirección</h2>
+
+          <!-- Contact Information -->
+          <div class="space-y-3 mb-6 pb-6 border-b border-border-default dark:border-slate-deep/70">
+            <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary">Contacto</h3>
+            <div *ngIf="profile()?.phone" class="flex items-start gap-2">
+              <svg class="h-5 w-5 text-text-muted dark:text-text-secondary/70 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <div>
+                <p class="text-sm font-medium text-text-muted dark:text-text-secondary/70">Teléfono</p>
+                <p class="mt-0.5 text-base text-text-primary dark:text-text-primary">{{ profile()?.phone }}</p>
+              </div>
+            </div>
+            <div *ngIf="profile()?.whatsapp" class="flex items-start gap-2">
+              <svg class="h-5 w-5 text-text-muted dark:text-text-secondary/70 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+              <div>
+                <p class="text-sm font-medium text-text-muted dark:text-text-secondary/70">WhatsApp</p>
+                <p class="mt-0.5 text-base text-text-primary dark:text-text-primary">{{ profile()?.whatsapp }}</p>
+              </div>
+            </div>
+            <div *ngIf="!profile()?.phone && !profile()?.whatsapp" class="text-sm text-text-muted dark:text-text-secondary/60 italic">
+              No has agregado información de contacto
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="space-y-3">
+            <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary">Dirección</h3>
+            <div *ngIf="profile()?.address_line1" class="space-y-1">
+              <p class="text-base text-text-primary dark:text-text-primary">{{ profile()?.address_line1 }}</p>
+              <p *ngIf="profile()?.address_line2" class="text-base text-text-primary dark:text-text-primary">{{ profile()?.address_line2 }}</p>
+              <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+                {{ profile()?.city }}<span *ngIf="profile()?.state">, {{ profile()?.state }}</span>
+                <span *ngIf="profile()?.postal_code"> - {{ profile()?.postal_code }}</span>
+              </p>
+              <p *ngIf="profile()?.country" class="text-sm text-text-secondary dark:text-text-secondary/70">{{ profile()?.country }}</p>
+            </div>
+            <div *ngIf="!profile()?.address_line1" class="text-sm text-text-muted dark:text-text-secondary/60 italic">
+              No has agregado tu dirección
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 4: LICENCIAS/DOCUMENTOS ==================== -->
+        <section *ngIf="!editMode()" class="card-premium p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
+          <h2 class="h4 mb-4 text-text-primary dark:text-text-primary">Licencias & Documentos</h2>
+
+          <!-- Driver License -->
+          <div class="space-y-3 mb-6 pb-6 border-b border-border-default dark:border-slate-deep/70">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary">Licencia de Conducir</h3>
+              <span
+                *ngIf="profile()?.is_driver_verified"
+                class="badge-status badge-success"
+              >
+                <svg class="h-3 w-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Verificada
                 </span>
+            </div>
+            <div *ngIf="profile()?.driver_license_number" class="space-y-2">
+              <div>
+                <p class="text-sm font-medium text-text-muted dark:text-text-secondary/70">Número</p>
+                <p class="mt-1 text-base text-text-primary dark:text-text-primary">{{ profile()?.driver_license_number }}</p>
               </div>
-              <div *ngIf="availableBalance() > 0" class="grid grid-cols-2 gap-2 text-xs">
-                <div class="bg-white dark:bg-slate-deep-pure dark:bg-slate-deep/50 rounded-lg px-2 py-1">
-                  <p class="text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60">Retirable</p>
-                  <p class="font-semibold text-accent-petrol dark:text-ivory-luminous">
-                    ${{ withdrawableBalance() | number:'1.2-2' }}
+              <div *ngIf="profile()?.driver_license_country" class="grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm font-medium text-text-muted dark:text-text-secondary/70">País</p>
+                  <p class="mt-1 text-base text-text-primary dark:text-text-primary">{{ profile()?.driver_license_country }}</p>
+                </div>
+                <div *ngIf="profile()?.driver_license_expiry">
+                  <p class="text-sm font-medium text-text-muted dark:text-text-secondary/70">Vencimiento</p>
+                  <p class="mt-1 text-base text-text-primary dark:text-text-primary">{{ profile()?.driver_license_expiry | date: 'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!profile()?.driver_license_number" class="text-sm text-text-muted dark:text-text-secondary/60 italic">
+              No has agregado tu licencia de conducir
+            </div>
+          </div>
+
+          <!-- Verification Status -->
+          <div class="info-card-petrol p-4">
+            <p class="mb-2 text-sm font-semibold text-cta-default">Estado de Verificación</p>
+            <ul class="space-y-1 text-sm">
+              <li class="flex items-center text-text-secondary dark:text-text-secondary/70">
+                <svg
+                  class="mr-2 h-4 w-4"
+                  [class.text-cta-default]="profile()?.is_email_verified"
+                  [class.text-text-muted dark:text-text-secondary/70]="!profile()?.is_email_verified"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Email {{ profile()?.is_email_verified ? 'verificado' : 'sin verificar' }}
+              </li>
+              <li class="flex items-center text-text-secondary dark:text-text-secondary/70">
+                <svg
+                  class="mr-2 h-4 w-4"
+                  [class.text-cta-default]="profile()?.is_phone_verified"
+                  [class.text-text-muted dark:text-text-secondary/70]="!profile()?.is_phone_verified"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Teléfono {{ profile()?.is_phone_verified ? 'verificado' : 'sin verificar' }}
+              </li>
+              <li class="flex items-center text-text-secondary dark:text-text-secondary/70">
+                <svg
+                  class="mr-2 h-4 w-4"
+                  [class.text-cta-default]="profile()?.is_driver_verified"
+                  [class.text-text-muted dark:text-text-secondary/70]="!profile()?.is_driver_verified"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Licencia {{ profile()?.is_driver_verified ? 'verificada' : 'sin verificar' }}
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 5: RESEÑAS Y MÉTRICAS (@defer) ==================== -->
+        @defer (on viewport) {
+          <section *ngIf="!editMode()" class="space-y-4 sm:space-y-6">
+            <!-- Stats Summary -->
+            <div *ngIf="userStats()" class="card-premium p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
+              <h2 class="h4 mb-4 text-text-primary dark:text-text-primary">Estadísticas</h2>
+              <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+                <!-- Owner Stats -->
+                <div *ngIf="canPublishCars()" class="info-card-petrol p-3">
+                  <p class="text-xs font-medium text-cta-default mb-1">Como Locador</p>
+                  <p class="text-lg font-bold text-text-primary dark:text-text-primary">
+                    {{ userStats()!.owner_rating_avg || 0 | number:'1.1-1' }} ⭐
+                  </p>
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                    {{ userStats()!.owner_reviews_count || 0 }} reviews
                   </p>
                 </div>
-                <div class="bg-amber-50 dark:bg-amber-500/10 rounded-lg px-2 py-1">
-                  <p class="text-charcoal-medium dark:text-pearl-light/70 dark:text-amber-200/70">Protegido</p>
-                  <p class="font-semibold text-accent-warm dark:text-amber-200">
-                    ${{ protectedCreditBalance() | number:'1.2-2' }}
+                <!-- Renter Stats -->
+                <div *ngIf="canBookCars()" class="info-card-petrol p-3">
+                  <p class="text-xs font-medium text-cta-default mb-1">Como Locatario</p>
+                  <p class="text-lg font-bold text-text-primary dark:text-text-primary">
+                    {{ userStats()!.renter_rating_avg || 0 | number:'1.1-1' }} ⭐
+                  </p>
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                    {{ userStats()!.renter_reviews_count || 0 }} reviews
                   </p>
                 </div>
               </div>
-            </a>
-            <a
-              routerLink="/cars"
-              class="rounded-xl border border-pearl-gray dark:border-slate-deep/70 px-4 py-3 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:bg-sand-light dark:hover:bg-slate-deep/60 transition-base"
-            >
-              🔍 Buscar autos
-            </a>
+
+              <!-- Badges Section -->
+              <div *ngIf="userStats()" class="pt-4 border-t border-border-default dark:border-slate-deep/70">
+                <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-3">Insignias</h3>
+                <app-user-badges [userStats]="userStats()!" [showLabels]="true" [size]="'medium'"></app-user-badges>
           </div>
         </div>
 
-        <!-- PWA Capabilities -->
-        <div *ngIf="!editMode()" class="border-t border-pearl-gray dark:border-slate-deep/70 pt-6">
-          <app-pwa-capabilities></app-pwa-capabilities>
-        </div>
-      </section>
-    </div>
-
-    <!-- Reviews Section (Full Width) -->
-    <section *ngIf="!editMode() && !reviewsLoading()" class="space-y-4 sm:space-y-6">
+            <!-- Reviews Section -->
+            <div *ngIf="!reviewsLoading()" class="space-y-4 sm:space-y-6">
       <!-- Reviews as Owner -->
       <div *ngIf="canPublishCars() && reviewsAsOwner().length > 0" class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="h4 text-smoke-black dark:text-ivory-luminous">
+          <h2 class="h4 text-text-primary dark:text-text-primary">
             Reviews recibidas como Locador
-            <span class="ml-2 text-base font-normal text-ash-gray dark:text-pearl-light/70">({{ reviewsAsOwner().length }})</span>
+            <span class="ml-2 text-base font-normal text-text-muted dark:text-text-secondary/70">({{ reviewsAsOwner().length }})</span>
           </h2>
         </div>
 
@@ -744,9 +763,9 @@
       <!-- Reviews as Renter -->
       <div *ngIf="canBookCars() && reviewsAsRenter().length > 0" class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="h4 text-smoke-black dark:text-ivory-luminous">
+          <h2 class="h4 text-text-primary dark:text-text-primary">
             Reviews recibidas como Locatario
-            <span class="ml-2 text-base font-normal text-ash-gray dark:text-pearl-light/70">({{ reviewsAsRenter().length }})</span>
+            <span class="ml-2 text-base font-normal text-text-muted dark:text-text-secondary/70">({{ reviewsAsRenter().length }})</span>
           </h2>
         </div>
 
@@ -768,14 +787,27 @@
 
       <!-- No Reviews State -->
       <div *ngIf="reviewsAsOwner().length === 0 && reviewsAsRenter().length === 0" class="card-premium rounded-2xl p-6 sm:p-8 text-center shadow-soft">
-        <p class="text-charcoal-medium dark:text-pearl-light/70">Aún no has recibido reviews</p>
-        <p class="mt-2 text-sm text-ash-gray dark:text-pearl-light/60">Completa tu primera transacción para recibir reviews de otros usuarios</p>
+        <p class="text-text-secondary dark:text-text-secondary/70">Aún no has recibido reviews</p>
+        <p class="mt-2 text-sm text-text-muted dark:text-text-secondary/60">Completa tu primera transacción para recibir reviews de otros usuarios</p>
       </div>
-    </section>
+            </div>
 
     <!-- Loading Reviews State -->
-    <section *ngIf="reviewsLoading()" class="card-premium rounded-2xl p-6 sm:p-8 text-center shadow-soft">
-      <p class="text-charcoal-medium dark:text-pearl-light/70">Cargando reviews...</p>
+            <div *ngIf="reviewsLoading()" class="card-premium rounded-2xl p-6 sm:p-8 text-center shadow-soft">
+      <p class="text-text-secondary dark:text-text-secondary/70">Cargando reviews...</p>
+            </div>
     </section>
+        } @placeholder {
+          <div class="card-premium p-6 sm:p-8 text-center shadow-soft">
+            <p class="text-text-secondary dark:text-text-secondary/70">Cargando reseñas y métricas...</p>
+          </div>
+        }
+
+        <!-- PWA Capabilities -->
+        <div *ngIf="!editMode()" class="card-premium p-4 sm:p-6 shadow-soft border border-transparent dark:border-slate-deep/70 transition-colors">
+          <app-pwa-capabilities></app-pwa-capabilities>
+        </div>
+      </main>
+    </div>
   </ng-container>
 </div>

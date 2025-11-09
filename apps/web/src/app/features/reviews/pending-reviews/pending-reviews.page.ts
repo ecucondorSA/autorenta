@@ -22,7 +22,7 @@ interface PendingReview {
       <div class="max-w-4xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Reseñas Pendientes</h1>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse mb-2">Reseñas Pendientes</h1>
           <p class="text-gray-600 dark:text-gray-300">
             Tienes {{ pendingReviews().length }}
             {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
@@ -32,7 +32,7 @@ interface PendingReview {
         <!-- Loading State -->
         @if (loading()) {
           <div class="flex items-center justify-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default"></div>
           </div>
         }
 
@@ -47,7 +47,7 @@ interface PendingReview {
 
         <!-- Empty State -->
         @if (!loading() && !error() && pendingReviews().length === 0) {
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
+          <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-8 text-center">
             <svg
               class="mx-auto h-12 w-12 text-gray-400"
               fill="none"
@@ -61,7 +61,7 @@ interface PendingReview {
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
               No tienes reseñas pendientes
             </h3>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
@@ -70,7 +70,7 @@ interface PendingReview {
             <div class="mt-6">
               <a
                 routerLink="/bookings"
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-cta-text bg-cta-default hover:bg-cta-default"
               >
                 Ver mis reservas
               </a>
@@ -83,11 +83,11 @@ interface PendingReview {
           <div class="space-y-4">
             @for (review of pendingReviews(); track review.booking_id) {
               <div
-                class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border-l-4 border-blue-500"
+                class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6 border-l-4 border-cta-default"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-2">
                       {{ review.car_title }}
                     </h3>
                     <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
@@ -99,10 +99,10 @@ interface PendingReview {
                         class="px-2 py-1 rounded-full text-xs font-medium"
                         [class.bg-yellow-100]="review.days_remaining > 7"
                         [class.text-yellow-800]="review.days_remaining > 7"
-                        [class.bg-orange-100]="
+                        [class.bg-warning-light/20]="
                           review.days_remaining <= 7 && review.days_remaining > 3
                         "
-                        [class.text-orange-800]="
+                        [class.text-warning-light]="
                           review.days_remaining <= 7 && review.days_remaining > 3
                         "
                         [class.bg-red-100]="review.days_remaining <= 3"
@@ -116,7 +116,7 @@ interface PendingReview {
                   <div>
                     <a
                       [routerLink]="['/bookings', review.booking_id]"
-                      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-cta-text bg-cta-default hover:bg-cta-default"
                     >
                       Dejar reseña
                     </a>
