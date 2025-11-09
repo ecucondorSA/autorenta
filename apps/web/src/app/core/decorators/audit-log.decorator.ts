@@ -97,7 +97,7 @@ export function AuditLog(action: string, resourceType: string, options: AuditLog
         // Build resource ID
         let resourceId: string | undefined;
         if (options.getResourceId) {
-          resourceId = options.getResourceId(args);
+          resourceId = options.getResourceId(args, result);
         } else if (args.length > 0 && typeof args[0] === 'string') {
           resourceId = args[0];
         }
