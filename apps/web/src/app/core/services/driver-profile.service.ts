@@ -47,6 +47,17 @@ export interface ClassBenefits {
   is_discount: boolean;
 }
 
+export interface ClassUpdateResult {
+  old_class: number;
+  new_class: number;
+  class_change: number;
+  reason: string;
+  fee_multiplier_old: number;
+  fee_multiplier_new: number;
+  guarantee_multiplier_old: number;
+  guarantee_multiplier_new: number;
+}
+
 interface DriverProfileState {
   profile: DriverProfile | null;
   loading: boolean;

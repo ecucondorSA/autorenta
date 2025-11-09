@@ -127,7 +127,7 @@ describe('TelemetryService', () => {
           telemetryData: mockTelemetryData,
         })
         .subscribe({
-          next: (result) => {
+          next: (result: unknown) => {
             expect(result).toEqual(mockRecordResult);
             expect(supabaseMock.rpc).toHaveBeenCalledWith('record_telemetry', {
               p_user_id: 'user-123',
@@ -178,7 +178,7 @@ describe('TelemetryService', () => {
         })
         .subscribe({
           next: () => done.fail('Should have thrown error'),
-          error: (err) => {
+          error: (err: unknown) => {
             expect(err).toEqual(error);
             expect(service.error()).toEqual({ message: 'Error al registrar telemetría' });
             expect(loggerServiceMock.error).toHaveBeenCalled();
@@ -249,7 +249,7 @@ describe('TelemetryService', () => {
 
       service.getSummary('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({ message: 'Error al obtener resumen de telemetría' });
           done();
@@ -310,7 +310,7 @@ describe('TelemetryService', () => {
 
       service.getHistory('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({ message: 'Error al obtener historial de telemetría' });
           done();

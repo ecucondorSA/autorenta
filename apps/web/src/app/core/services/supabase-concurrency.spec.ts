@@ -121,7 +121,7 @@ describe('SupabaseClientService - Multi-User Concurrency', () => {
 
         const results = await Promise.allSettled(queries);
 
-        results.forEach((result) => {
+        results.forEach((result: unknown) => {
           if (result.status === 'fulfilled') {
             completedQueries++;
           } else {

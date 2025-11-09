@@ -126,7 +126,7 @@ describe('DriverProfileService', () => {
 
       service.getProfile('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({ message: 'Error al obtener perfil de conductor' });
           expect(loggerServiceMock.error).toHaveBeenCalled();
@@ -178,7 +178,7 @@ describe('DriverProfileService', () => {
           claimSeverity: 0,
         })
         .subscribe({
-          next: (result) => {
+          next: (result: unknown) => {
             expect(result).toEqual(mockUpdateResult);
             expect(supabaseMock.rpc).toHaveBeenCalledWith('update_driver_class_on_event', {
               p_user_id: 'user-123',
@@ -213,7 +213,7 @@ describe('DriverProfileService', () => {
           claimSeverity: 2,
         })
         .subscribe({
-          next: (result) => {
+          next: (result: unknown) => {
             expect(result.new_class).toBe(7);
             expect(result.class_change).toBe(2);
             done();
@@ -244,7 +244,7 @@ describe('DriverProfileService', () => {
 
       service.getClassBenefits('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err.message).toBe('No se pudieron obtener beneficios de clase');
           done();
         },

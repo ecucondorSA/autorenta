@@ -25,7 +25,7 @@ NC = '\033[0m'  # No Color
 
 # Tipos que necesitamos agregar a database.types.ts
 MISSING_TYPES = {
-    'UserRole': "export type UserRole = 'locador' | 'locatario' | 'ambos' | 'admin';",
+    'UserRole': "export type UserRole = 'locador' | 'locatario' | 'ambos' | 'admin' | 'renter' | 'owner';",
     'CarStatus': "export type CarStatus = 'draft' | 'pending' | 'active' | 'suspended' | 'deleted';",
     'FuelType': "export type FuelType = 'nafta' | 'gasoil' | 'hibrido' | 'electrico';",
     'Transmission': "export type Transmission = 'manual' | 'automatic';",
@@ -325,6 +325,184 @@ def fix_missing_booking_type():
     return fixed_count
 
 
+def fix_userrole_type_mismatch():
+    """Corrige errores TS2322: 'renter'/'owner' no asignable a UserRole."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    # Mapeo de valores antiguos a nuevos
+    role_mapping = {
+        "'renter'": "'locatario'",
+        '"renter"': '"locatario"',
+        "'owner'": "'locador'",
+        '"owner"': '"locador"',
+    }
+
+    for test_file in test_files:
+        content = test_file.read_text(encoding='utf-8')
+        original_content = content
+
+        # Reemplazar valores de role antiguos
+        for old_val, new_val in role_mapping.items():
+            # Solo reemplazar en contextos de tipo UserRole
+            # Buscar patrones como: user_role: 'renter' o role: "owner"
+            pattern = rf'(\b(?:user_?role|role)\s*[:=]\s*){re.escape(old_val)}'
+            content = re.sub(pattern, rf'\1{new_val}', content)
+
+        if content != original_content:
+            test_file.write_text(content, encoding='utf-8')
+            fixed_count += 1
+            print_success(f"Corregido UserRole en: {test_file.relative_to(PROJECT_ROOT)}")
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con UserRole type mismatch")
+    return fixed_count
+
+
+def fix_class_update_result_export():
+    """Corrige errores TS2305: ClassUpdateResult no exportado."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    # Buscar el archivo del servicio para verificar si ClassUpdateResult está exportado
+    service_file = PROJECT_ROOT / 'apps/web/src/app/core/services/driver-profile.service.ts'
+    service_has_export = False
+    if service_file.exists():
+        service_content = service_file.read_text(encoding='utf-8')
+        # Verificar si ClassUpdateResult está exportado
+        if re.search(r'export\s+(?:interface|type)\s+ClassUpdateResult', service_content):
+            service_has_export = True
+
+    if service_has_export:
+        for test_file in test_files:
+            content = test_file.read_text(encoding='utf-8')
+            original_content = content
+
+            # Buscar imports de ClassUpdateResult sin export
+            if re.search(r'\bClassUpdateResult\b', content):
+                # Buscar import de driver-profile.service
+                import_pattern = r"import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['\"]([^'\"]*driver-profile\.service[^'\"]*)['\"]"
+                match = re.search(import_pattern, content)
+                if match:
+                    imports = match.group(1)
+                    if 'ClassUpdateResult' not in imports:
+                        new_imports = imports.rstrip() + ', ClassUpdateResult'
+                        content = content.replace(
+                            match.group(0),
+                            f"import {{{new_imports}}} from {match.group(2)!r}"
+                        )
+                else:
+                    # Crear nuevo import
+                    import_line = "import { ClassUpdateResult } from './driver-profile.service';\n"
+                    import_section = re.search(r'(^import\s+.*?;\n)+', content, re.MULTILINE)
+                    if import_section:
+                        insert_pos = import_section.end()
+                        content = content[:insert_pos] + import_line + content[insert_pos:]
+                    else:
+                        content = import_line + content
+
+            if content != original_content:
+                test_file.write_text(content, encoding='utf-8')
+                fixed_count += 1
+                print_success(f"Corregido ClassUpdateResult en: {test_file.relative_to(PROJECT_ROOT)}")
+    else:
+        print_warning("ClassUpdateResult no está exportado en driver-profile.service.ts. Agregando definición...")
+        # Agregar la definición al servicio
+        if service_file.exists():
+            service_content = service_file.read_text(encoding='utf-8')
+            # Buscar después de ClassBenefits
+            if 'export interface ClassBenefits' in service_content and 'export interface ClassUpdateResult' not in service_content:
+                pattern = r'(export interface ClassBenefits[^}]+}\n)'
+                match = re.search(pattern, service_content, re.DOTALL)
+                if match:
+                    insert_pos = match.end()
+                    class_update_result = """
+export interface ClassUpdateResult {
+  old_class: number;
+  new_class: number;
+  class_change: number;
+  reason: string;
+  fee_multiplier_old: number;
+  fee_multiplier_new: number;
+  guarantee_multiplier_old: number;
+  guarantee_multiplier_new: number;
+}
+
+"""
+                    service_content = service_content[:insert_pos] + class_update_result + service_content[insert_pos:]
+                    service_file.write_text(service_content, encoding='utf-8')
+                    print_success("Agregada definición de ClassUpdateResult a driver-profile.service.ts")
+                    # Ahora corregir los imports en los tests
+                    return fix_class_update_result_export()  # Recursivo para corregir imports
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con ClassUpdateResult")
+    return fixed_count
+
+
+def fix_parser_error_conversions():
+    """Corrige errores TS2352: ParserError conversion issues."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    for test_file in test_files:
+        content = test_file.read_text(encoding='utf-8')
+        original_content = content
+
+        # Buscar conversiones de ParserError a Record<string, unknown>
+        # Patrón: as Record<string, unknown> o as unknown as Record<string, unknown>
+        pattern = r'ParserError[^)]*\)\s*as\s+Record<string,\s*unknown>'
+        if re.search(pattern, content):
+            # Cambiar a: as unknown as Record<string, unknown>
+            content = re.sub(
+                r'(ParserError[^)]*\))\s*as\s+Record<string,\s*unknown>',
+                r'\1 as unknown as Record<string, unknown>',
+                content
+            )
+
+        if content != original_content:
+            test_file.write_text(content, encoding='utf-8')
+            fixed_count += 1
+            print_success(f"Corregido ParserError en: {test_file.relative_to(PROJECT_ROOT)}")
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con ParserError conversions")
+    return fixed_count
+
+
+def fix_implicit_any_types():
+    """Corrige errores TS7006: Parámetros con tipo 'any' implícito."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    for test_file in test_files:
+        content = test_file.read_text(encoding='utf-8')
+        original_content = content
+
+        # Buscar funciones arrow sin tipo en parámetros comunes
+        # Patrón: (item) => o (err) => o (data) =>
+        patterns = [
+            (r'\(item\)\s*=>', r'(item: unknown) =>'),
+            (r'\(err\)\s*=>', r'(err: unknown) =>'),
+            (r'\(error\)\s*=>', r'(error: unknown) =>'),
+            (r'\(data\)\s*=>', r'(data: unknown) =>'),
+            (r'\(result\)\s*=>', r'(result: unknown) =>'),
+        ]
+
+        for pattern, replacement in patterns:
+            if re.search(pattern, content):
+                content = re.sub(pattern, replacement, content)
+
+        if content != original_content:
+            test_file.write_text(content, encoding='utf-8')
+            fixed_count += 1
+            print_success(f"Corregido implicit any en: {test_file.relative_to(PROJECT_ROOT)}")
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con implicit any")
+    return fixed_count
+
+
 def main():
     """Función principal."""
     print(f"{BLUE}╔══════════════════════════════════════════════════════════╗{NC}")
@@ -360,6 +538,30 @@ def main():
     # Paso 5: Corregir Booking type faltante (TS2304)
     print(f"{BLUE}📋 Paso 5: Corregir Booking type faltante (TS2304){NC}")
     if fix_missing_booking_type() > 0:
+        changes_made = True
+    print()
+
+    # Paso 6: Corregir UserRole type mismatch (TS2322)
+    print(f"{BLUE}📋 Paso 6: Corregir UserRole type mismatch (TS2322){NC}")
+    if fix_userrole_type_mismatch() > 0:
+        changes_made = True
+    print()
+
+    # Paso 7: Corregir ClassUpdateResult export (TS2305)
+    print(f"{BLUE}📋 Paso 7: Corregir ClassUpdateResult export (TS2305){NC}")
+    if fix_class_update_result_export() > 0:
+        changes_made = True
+    print()
+
+    # Paso 8: Corregir ParserError conversions (TS2352)
+    print(f"{BLUE}📋 Paso 8: Corregir ParserError conversions (TS2352){NC}")
+    if fix_parser_error_conversions() > 0:
+        changes_made = True
+    print()
+
+    # Paso 9: Corregir implicit any types (TS7006)
+    print(f"{BLUE}📋 Paso 9: Corregir implicit any types (TS7006){NC}")
+    if fix_implicit_any_types() > 0:
         changes_made = True
     print()
 

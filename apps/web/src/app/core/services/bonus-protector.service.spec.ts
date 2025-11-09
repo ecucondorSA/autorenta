@@ -124,7 +124,7 @@ describe('BonusProtectorService', () => {
 
       service.getActiveProtector('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({ message: 'Error al obtener Protector de Bonus' });
           expect(loggerServiceMock.error).toHaveBeenCalled();
@@ -158,7 +158,7 @@ describe('BonusProtectorService', () => {
       );
 
       service.purchaseProtector('user-123', 1).subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result).toEqual(level1Result);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('purchase_bonus_protector', {
             p_user_id: 'user-123',
@@ -178,7 +178,7 @@ describe('BonusProtectorService', () => {
       );
 
       service.purchaseProtector('user-123', 2).subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result).toEqual(mockPurchaseResult);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('purchase_bonus_protector', {
             p_user_id: 'user-123',
@@ -199,7 +199,7 @@ describe('BonusProtectorService', () => {
       );
 
       service.purchaseProtector('user-123', 3).subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result).toEqual(level3Result);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('purchase_bonus_protector', {
             p_user_id: 'user-123',
@@ -220,7 +220,7 @@ describe('BonusProtectorService', () => {
       );
 
       service.purchaseProtector('user-123').subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(supabaseMock.rpc).toHaveBeenCalledWith('purchase_bonus_protector', {
             p_user_id: 'user-123',
             p_protection_level: 1,
@@ -256,7 +256,7 @@ describe('BonusProtectorService', () => {
       supabaseMock.rpc.and.resolveTo({ data: [failedResult], error: null });
 
       service.purchaseProtector('user-123', 2).subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result.success).toBe(false);
           // Should only call rpc once (no refresh)
           expect(supabaseMock.rpc).toHaveBeenCalledTimes(1);
@@ -272,7 +272,7 @@ describe('BonusProtectorService', () => {
 
       service.purchaseProtector('user-123', 2).subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({ message: 'Error al comprar Protector de Bonus' });
           expect(loggerServiceMock.error).toHaveBeenCalled();

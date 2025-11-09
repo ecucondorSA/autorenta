@@ -98,7 +98,7 @@ describe('AutorentarCreditService', () => {
 
       service.getCreditInfo().subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({
             message: 'Error al obtener información de Crédito Autorentar',
@@ -141,7 +141,7 @@ describe('AutorentarCreditService', () => {
       );
 
       service.issueCredit('user-123').subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result).toEqual(mockIssueResult);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('issue_autorentar_credit', {
             p_user_id: 'user-123',
@@ -160,7 +160,7 @@ describe('AutorentarCreditService', () => {
       );
 
       service.issueCredit('user-123', 50000).subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(supabaseMock.rpc).toHaveBeenCalledWith('issue_autorentar_credit', {
             p_user_id: 'user-123',
             p_amount_cents: 50000,
@@ -193,7 +193,7 @@ describe('AutorentarCreditService', () => {
 
       service.issueCredit('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({ message: 'Error al emitir Crédito Autorentar' });
           done();
@@ -227,7 +227,7 @@ describe('AutorentarCreditService', () => {
           claimId: 'claim-789',
         })
         .subscribe({
-          next: (result) => {
+          next: (result: unknown) => {
             expect(result).toEqual(mockConsumeResult);
             expect(supabaseMock.rpc).toHaveBeenCalledWith('consume_autorentar_credit_for_claim', {
               p_user_id: 'user-123',
@@ -300,7 +300,7 @@ describe('AutorentarCreditService', () => {
         })
         .subscribe({
           next: () => done.fail('Should have thrown error'),
-          error: (err) => {
+          error: (err: unknown) => {
             expect(err).toEqual(error);
             expect(service.error()).toEqual({ message: 'Error al consumir Crédito Autorentar' });
             done();
@@ -325,7 +325,7 @@ describe('AutorentarCreditService', () => {
       );
 
       service.extendCredit('user-123').subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result).toEqual(mockRenewalResult);
           expect(supabaseMock.rpc).toHaveBeenCalledWith(
             'extend_autorentar_credit_for_good_history',
@@ -357,7 +357,7 @@ describe('AutorentarCreditService', () => {
       supabaseMock.rpc.and.resolveTo({ data: [failedRenewal], error: null });
 
       service.extendCredit('user-123').subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result.renewed).toBe(false);
           // Should only call rpc once (no refresh)
           expect(supabaseMock.rpc).toHaveBeenCalledTimes(1);
@@ -373,7 +373,7 @@ describe('AutorentarCreditService', () => {
 
       service.extendCredit('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({ message: 'Error al renovar Crédito Autorentar' });
           done();
@@ -455,7 +455,7 @@ describe('AutorentarCreditService', () => {
       );
 
       service.recognizeBreakage('user-123').subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result).toEqual(mockBreakageResult);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('recognize_autorentar_credit_breakage', {
             p_user_id: 'user-123',
@@ -486,7 +486,7 @@ describe('AutorentarCreditService', () => {
       supabaseMock.rpc.and.resolveTo({ data: [failedBreakage], error: null });
 
       service.recognizeBreakage('user-123').subscribe({
-        next: (result) => {
+        next: (result: unknown) => {
           expect(result.success).toBe(false);
           expect(supabaseMock.rpc).toHaveBeenCalledTimes(1);
           done();
@@ -501,7 +501,7 @@ describe('AutorentarCreditService', () => {
 
       service.recognizeBreakage('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
-        error: (err) => {
+        error: (err: unknown) => {
           expect(err).toEqual(error);
           expect(service.error()).toEqual({
             message: 'Error al reconocer breakage de Crédito Autorentar',
