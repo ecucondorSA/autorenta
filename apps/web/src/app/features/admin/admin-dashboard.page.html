@@ -51,12 +51,15 @@
 
   <!-- Verification Statistics -->
   @if (verificationStats()) {
-    <div class="rounded-xl border border-orange-200 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-sm">
+    <div
+      class="rounded-xl border border-orange-200 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-sm"
+    >
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-semibold text-slate-900">🔍 Verificaciones de Identidad</h2>
         <a
           routerLink="/admin/verifications"
-          class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700">
+          class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+        >
           Ver Cola →
         </a>
       </div>
@@ -64,19 +67,27 @@
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div class="rounded-lg bg-white p-4 shadow-sm">
           <p class="text-xs font-medium text-slate-600">Pendientes de Revisión</p>
-          <p class="mt-2 text-2xl font-bold text-orange-600">{{ verificationStats()!.pending_reviews }}</p>
+          <p class="mt-2 text-2xl font-bold text-orange-600">
+            {{ verificationStats()!.pending_reviews }}
+          </p>
         </div>
         <div class="rounded-lg bg-white p-4 shadow-sm">
           <p class="text-xs font-medium text-slate-600">Aprobadas Hoy</p>
-          <p class="mt-2 text-2xl font-bold text-green-600">{{ verificationStats()!.approved_today }}</p>
+          <p class="mt-2 text-2xl font-bold text-green-600">
+            {{ verificationStats()!.approved_today }}
+          </p>
         </div>
         <div class="rounded-lg bg-white p-4 shadow-sm">
           <p class="text-xs font-medium text-slate-600">Rechazadas Hoy</p>
-          <p class="mt-2 text-2xl font-bold text-red-600">{{ verificationStats()!.rejected_today }}</p>
+          <p class="mt-2 text-2xl font-bold text-red-600">
+            {{ verificationStats()!.rejected_today }}
+          </p>
         </div>
         <div class="rounded-lg bg-white p-4 shadow-sm">
           <p class="text-xs font-medium text-slate-600">Total Usuarios</p>
-          <p class="mt-2 text-2xl font-bold text-slate-900">{{ verificationStats()!.total_users }}</p>
+          <p class="mt-2 text-2xl font-bold text-slate-900">
+            {{ verificationStats()!.total_users }}
+          </p>
         </div>
       </div>
 
@@ -91,7 +102,9 @@
         </div>
         <div class="flex items-center justify-between px-3 py-2 bg-white rounded-lg">
           <span class="text-slate-600">Nivel 3 (Verificado Full):</span>
-          <span class="font-semibold text-purple-600">{{ verificationStats()!.level_3_users }}</span>
+          <span class="font-semibold text-purple-600">{{
+            verificationStats()!.level_3_users
+          }}</span>
         </div>
       </div>
     </div>

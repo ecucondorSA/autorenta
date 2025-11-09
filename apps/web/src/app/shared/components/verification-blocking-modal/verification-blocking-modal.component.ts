@@ -19,11 +19,7 @@ export interface VerificationBlockingModalConfig {
   template: `
     <div class="verification-blocking-modal" [class.open]="isOpen()">
       <!-- Backdrop -->
-      <div
-        class="modal-backdrop"
-        (click)="onBackdropClick()"
-        [class.open]="isOpen()"
-      ></div>
+      <div class="modal-backdrop" (click)="onBackdropClick()" [class.open]="isOpen()"></div>
 
       <!-- Modal Content -->
       <div
@@ -64,7 +60,9 @@ export interface VerificationBlockingModalConfig {
 
           <!-- Missing Documents Info -->
           @if (config.requiredDocs && config.requiredDocs.length > 0) {
-            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 rounded-lg p-3 mb-6">
+            <div
+              class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 rounded-lg p-3 mb-6"
+            >
               <p class="text-xs font-semibold text-amber-900 dark:text-amber-200 mb-2">
                 Documentos requeridos:
               </p>

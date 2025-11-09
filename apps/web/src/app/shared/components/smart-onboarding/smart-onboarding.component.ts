@@ -311,7 +311,7 @@ export class SmartOnboardingComponent implements OnInit {
     }
 
     if (this.currentStep() < this.filteredQuestions().length - 1) {
-      this.currentStep.update(step => step + 1);
+      this.currentStep.update((step) => step + 1);
     } else {
       this.completeOnboarding();
     }
@@ -319,7 +319,7 @@ export class SmartOnboardingComponent implements OnInit {
 
   previousStep() {
     if (this.currentStep() > 0) {
-      this.currentStep.update(step => step - 1);
+      this.currentStep.update((step) => step - 1);
     }
   }
 
@@ -341,7 +341,7 @@ export class SmartOnboardingComponent implements OnInit {
       // Guardar datos de onboarding en metadata o en el perfil directamente
       // Por ahora solo marcamos como completo
       await this.profileService.completeOnboarding();
-      
+
       // TODO: Guardar onboarding_data en metadata del perfil si se necesita
 
       this.completed.emit(onboardingData);

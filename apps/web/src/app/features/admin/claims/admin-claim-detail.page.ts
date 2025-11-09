@@ -205,9 +205,7 @@ import {
               <div class="space-y-4">
                 <!-- Resolution Notes -->
                 <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Notas de resolución
                   </label>
                   <textarea
@@ -231,9 +229,7 @@ import {
                   </button>
 
                   <button
-                    *ngIf="
-                      claim()!.status === 'reported' || claim()!.status === 'under_review'
-                    "
+                    *ngIf="claim()!.status === 'reported' || claim()!.status === 'under_review'"
                     (click)="updateStatus('approved')"
                     [disabled]="submitting()"
                     class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-lg font-medium transition-colors"
@@ -243,9 +239,7 @@ import {
                   </button>
 
                   <button
-                    *ngIf="
-                      claim()!.status === 'reported' || claim()!.status === 'under_review'
-                    "
+                    *ngIf="claim()!.status === 'reported' || claim()!.status === 'under_review'"
                     (click)="updateStatus('rejected')"
                     [disabled]="submitting()"
                     class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg font-medium transition-colors"
@@ -265,9 +259,7 @@ import {
                   </button>
 
                   <button
-                    *ngIf="
-                      claim()!.status === 'paid' || claim()!.status === 'rejected'
-                    "
+                    *ngIf="claim()!.status === 'paid' || claim()!.status === 'rejected'"
                     (click)="updateStatus('closed')"
                     [disabled]="submitting()"
                     class="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors"

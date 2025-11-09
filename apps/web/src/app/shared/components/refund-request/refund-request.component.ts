@@ -43,7 +43,8 @@ import { ToastService } from '../../../core/services/toast.service';
         <!-- Content -->
         <div class="space-y-4">
           <p class="text-sm text-charcoal-medium dark:text-pearl-light">
-            Puedes solicitar un reembolso completo o parcial para esta reserva. Nuestro equipo revisará tu solicitud.
+            Puedes solicitar un reembolso completo o parcial para esta reserva. Nuestro equipo
+            revisará tu solicitud.
           </p>
 
           <!-- Refund Type Selector -->
@@ -52,9 +53,11 @@ import { ToastService } from '../../../core/services/toast.service';
               Tipo de Reembolso *
             </label>
             <div class="space-y-2">
-              <label class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              <label
+                class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 [class.border-blue-500]="refundType() === 'full'"
-                [class.border-gray-300]="refundType() !== 'full'">
+                [class.border-gray-300]="refundType() !== 'full'"
+              >
                 <input
                   type="radio"
                   [checked]="refundType() === 'full'"
@@ -63,12 +66,16 @@ import { ToastService } from '../../../core/services/toast.service';
                 />
                 <div class="flex-1">
                   <div class="font-medium text-gray-900 dark:text-white">Reembolso Completo</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Se reembolsará el monto total de la reserva</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    Se reembolsará el monto total de la reserva
+                  </div>
                 </div>
               </label>
-              <label class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              <label
+                class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 [class.border-blue-500]="refundType() === 'partial'"
-                [class.border-gray-300]="refundType() !== 'partial'">
+                [class.border-gray-300]="refundType() !== 'partial'"
+              >
                 <input
                   type="radio"
                   [checked]="refundType() === 'partial'"
@@ -77,7 +84,9 @@ import { ToastService } from '../../../core/services/toast.service';
                 />
                 <div class="flex-1">
                   <div class="font-medium text-gray-900 dark:text-white">Reembolso Parcial</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Especifica el monto a reembolsar</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    Especifica el monto a reembolsar
+                  </div>
                 </div>
               </label>
             </div>
@@ -147,7 +156,14 @@ import { ToastService } from '../../../core/services/toast.service';
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
               <path
                 class="opacity-75"
                 fill="currentColor"
@@ -210,13 +226,13 @@ export class RefundRequestComponent {
         reason: this.reason.trim(),
       });
 
-      this.toastService.success('Solicitud de reembolso enviada. Nuestro equipo la revisará pronto.');
+      this.toastService.success(
+        'Solicitud de reembolso enviada. Nuestro equipo la revisará pronto.',
+      );
       this.refundRequested.emit();
       this.close();
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al solicitar el reembolso'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al solicitar el reembolso');
     } finally {
       this.loading.set(false);
     }
@@ -229,4 +245,3 @@ export class RefundRequestComponent {
     this.error.set(null);
   }
 }
-

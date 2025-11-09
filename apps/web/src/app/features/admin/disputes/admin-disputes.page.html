@@ -107,7 +107,8 @@
             </ion-badge>
           </div>
           <ion-card-subtitle>
-            {{ getKindLabel(dispute.kind) }} • Booking: {{ dispute.booking_id.slice(0, 8) }} • {{ formatDate(dispute.created_at) }}
+            {{ getKindLabel(dispute.kind) }} • Booking: {{ dispute.booking_id.slice(0, 8) }} •
+            {{ formatDate(dispute.created_at) }}
           </ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
@@ -130,7 +131,10 @@
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
     (click)="closeDetailModal()"
   >
-    <ion-card class="max-w-4xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <ion-card
+      class="max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+      (click)="$event.stopPropagation()"
+    >
       <ion-card-header>
         <ion-card-title>Detalles de Disputa</ion-card-title>
         <ion-card-subtitle>#{{ selectedDispute()?.id.slice(0, 8) }}</ion-card-subtitle>
@@ -141,11 +145,22 @@
           <div>
             <h3 class="text-lg font-semibold mb-2">Información</h3>
             <div class="space-y-2">
-              <p class="text-sm"><strong>Booking ID:</strong> {{ selectedDispute()!.booking_id }}</p>
-              <p class="text-sm"><strong>Tipo:</strong> {{ getKindLabel(selectedDispute()!.kind) }}</p>
-              <p class="text-sm"><strong>Estado:</strong> {{ getStatusLabel(selectedDispute()!.status) }}</p>
-              <p class="text-sm"><strong>Descripción:</strong> {{ selectedDispute()!.description || 'Sin descripción' }}</p>
-              <p class="text-sm"><strong>Creada:</strong> {{ formatDate(selectedDispute()!.created_at) }}</p>
+              <p class="text-sm">
+                <strong>Booking ID:</strong> {{ selectedDispute()!.booking_id }}
+              </p>
+              <p class="text-sm">
+                <strong>Tipo:</strong> {{ getKindLabel(selectedDispute()!.kind) }}
+              </p>
+              <p class="text-sm">
+                <strong>Estado:</strong> {{ getStatusLabel(selectedDispute()!.status) }}
+              </p>
+              <p class="text-sm">
+                <strong>Descripción:</strong>
+                {{ selectedDispute()!.description || 'Sin descripción' }}
+              </p>
+              <p class="text-sm">
+                <strong>Creada:</strong> {{ formatDate(selectedDispute()!.created_at) }}
+              </p>
               <p *ngIf="selectedDispute()!.resolved_at" class="text-sm">
                 <strong>Resuelta:</strong> {{ formatDate(selectedDispute()!.resolved_at) }}
               </p>
@@ -163,7 +178,10 @@
                   [alt]="item.note || 'Evidencia'"
                   class="w-full h-48 object-cover rounded"
                 />
-                <div *ngIf="!isImage(item.path)" class="w-full h-48 bg-gray-100 rounded flex items-center justify-center">
+                <div
+                  *ngIf="!isImage(item.path)"
+                  class="w-full h-48 bg-gray-100 rounded flex items-center justify-center"
+                >
                   <ion-icon name="document" class="text-4xl text-gray-400"></ion-icon>
                 </div>
                 <p *ngIf="item.note" class="text-xs text-gray-500 mt-2">{{ item.note }}</p>

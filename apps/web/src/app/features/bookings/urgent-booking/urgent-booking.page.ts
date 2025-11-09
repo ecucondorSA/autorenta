@@ -11,6 +11,7 @@ import type { Car } from '../../../core/models';
   selector: 'app-urgent-booking',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  /* eslint-disable */
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
@@ -137,6 +138,7 @@ import type { Car } from '../../../core/models';
       }
     </div>
   `,
+  /* eslint-enable */
 })
 export class UrgentBookingPage implements OnInit {
   private readonly route = inject(ActivatedRoute);

@@ -1,5 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { PaymentGateway, PaymentProvider, WalletPaymentGateway } from '../interfaces/payment-gateway.interface';
+import {
+  PaymentGateway,
+  PaymentProvider,
+  WalletPaymentGateway,
+} from '../interfaces/payment-gateway.interface';
 import { MercadoPagoBookingGatewayService } from './mercadopago-booking-gateway.service';
 import { PayPalBookingGatewayService } from './paypal-booking-gateway.service';
 import { PayPalWalletGatewayService } from './paypal-wallet-gateway.service';

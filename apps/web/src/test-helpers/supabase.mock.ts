@@ -5,11 +5,7 @@
  * This function is kept for backward compatibility with existing tests.
  */
 
-import {
-  createMockSupabaseClient,
-  MockSupabaseClient,
-  TEST_CONSTANTS,
-} from './mock-types';
+import { createMockSupabaseClient, MockSupabaseClient, TEST_CONSTANTS } from './mock-types';
 
 /**
  * Creates a mock Supabase client

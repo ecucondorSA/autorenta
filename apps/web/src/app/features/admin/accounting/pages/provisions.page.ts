@@ -30,7 +30,7 @@ import { AccountingService } from '../../../../core/services/accounting.service'
         </ion-item>
       </ion-list>
     </ion-content>
-  `
+  `,
 })
 export class ProvisionsPage implements OnInit {
   private readonly accountingService = inject(AccountingService);

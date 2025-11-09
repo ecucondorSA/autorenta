@@ -36,17 +36,17 @@ import { IonicModule, ModalController } from '@ionic/angular';
       <div class="section">
         <h2>¿Qué es el Crédito de Protección?</h2>
         <p>
-          El <strong>Crédito de Protección (CP)</strong> es un saldo especial no retirable
-          que AutoRenta otorga a conductores responsables para cubrir costos de siniestros
-          (daños, robos, accidentes) durante sus reservas.
+          El <strong>Crédito de Protección (CP)</strong> es un saldo especial no retirable que
+          AutoRenta otorga a conductores responsables para cubrir costos de siniestros (daños,
+          robos, accidentes) durante sus reservas.
         </p>
         <ion-card class="info-card">
           <ion-card-content>
             <div class="info-content">
               <ion-icon name="information-circle-outline" color="primary"></ion-icon>
               <p>
-                El CP <strong>no se puede retirar</strong> a tu cuenta bancaria.
-                Solo se usa para cubrir siniestros.
+                El CP <strong>no se puede retirar</strong> a tu cuenta bancaria. Solo se usa para
+                cubrir siniestros.
               </p>
             </div>
           </ion-card-content>
@@ -56,13 +56,18 @@ import { IonicModule, ModalController } from '@ionic/angular';
       <!-- How it works -->
       <div class="section">
         <h2>¿Cómo funciona?</h2>
-        <p>Cuando ocurre un siniestro durante tu reserva, AutoRenta usa tus fondos en este orden:</p>
+        <p>
+          Cuando ocurre un siniestro durante tu reserva, AutoRenta usa tus fondos en este orden:
+        </p>
 
         <div class="waterfall-steps">
           <div class="waterfall-step">
             <div class="step-number">1</div>
             <div class="step-content">
-              <h3><ion-icon name="shield-checkmark-outline" color="primary"></ion-icon> Crédito de Protección (CP)</h3>
+              <h3>
+                <ion-icon name="shield-checkmark-outline" color="primary"></ion-icon> Crédito de
+                Protección (CP)
+              </h3>
               <p>Se usa primero tu CP disponible (no retirable)</p>
             </div>
           </div>
@@ -72,7 +77,9 @@ import { IonicModule, ModalController } from '@ionic/angular';
           <div class="waterfall-step">
             <div class="step-number">2</div>
             <div class="step-content">
-              <h3><ion-icon name="wallet-outline" color="success"></ion-icon> Wallet Regular (WR)</h3>
+              <h3>
+                <ion-icon name="wallet-outline" color="success"></ion-icon> Wallet Regular (WR)
+              </h3>
               <p>Si el CP no alcanza, se usa tu saldo retirable</p>
             </div>
           </div>
@@ -150,9 +157,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
                 <span class="value warning">$50 USD</span>
               </div>
             </div>
-            <p class="example-note">
-              ✅ Solo pagaste $50 en vez de $500 gracias al CP
-            </p>
+            <p class="example-note">✅ Solo pagaste $50 en vez de $500 gracias al CP</p>
           </ion-card-content>
         </ion-card>
       </div>
@@ -192,8 +197,8 @@ import { IonicModule, ModalController } from '@ionic/angular';
             </ion-item>
             <div slot="content" class="accordion-content">
               <p>
-                Si tu CP expira después de 1 año, sí. Pero si completas 10 reservas sin
-                siniestros antes de que expire, se renueva automáticamente.
+                Si tu CP expira después de 1 año, sí. Pero si completas 10 reservas sin siniestros
+                antes de que expire, se renueva automáticamente.
               </p>
             </div>
           </ion-accordion>
@@ -204,8 +209,8 @@ import { IonicModule, ModalController } from '@ionic/angular';
             </ion-item>
             <div slot="content" class="accordion-content">
               <p>
-                No. Solo puedes tener un CP activo a la vez. Cuando renuevas, se suma al
-                balance existente y se extiende la fecha de expiración.
+                No. Solo puedes tener un CP activo a la vez. Cuando renuevas, se suma al balance
+                existente y se extiende la fecha de expiración.
               </p>
             </div>
           </ion-accordion>
@@ -218,8 +223,8 @@ import { IonicModule, ModalController } from '@ionic/angular';
           <ion-card-content>
             <h3>💡 Consejo</h3>
             <p>
-              Mantén un historial limpio de reservas para seguir disfrutando de tu CP.
-              Cada renovación te da <strong>$300 USD</strong> adicionales de protección.
+              Mantén un historial limpio de reservas para seguir disfrutando de tu CP. Cada
+              renovación te da <strong>$300 USD</strong> adicionales de protección.
             </p>
           </ion-card-content>
         </ion-card>
@@ -228,9 +233,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 
     <ion-footer>
       <ion-toolbar>
-        <ion-button expand="block" (click)="dismiss()">
-          Entendido
-        </ion-button>
+        <ion-button expand="block" (click)="dismiss()"> Entendido </ion-button>
       </ion-toolbar>
     </ion-footer>
   `,
@@ -445,7 +448,11 @@ import { IonicModule, ModalController } from '@ionic/angular';
 
       /* CTA Card */
       .cta-card {
-        background: linear-gradient(135deg, var(--ion-color-primary-tint), var(--ion-color-secondary-tint));
+        background: linear-gradient(
+          135deg,
+          var(--ion-color-primary-tint),
+          var(--ion-color-secondary-tint)
+        );
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 

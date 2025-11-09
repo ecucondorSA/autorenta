@@ -65,7 +65,11 @@ export class ContractsManagementPage implements OnInit {
         }),
       );
 
-      this.contracts.set(contractsWithBookings.filter((c) => c !== null) as Array<BookingContract & { booking?: Booking }>);
+      this.contracts.set(
+        contractsWithBookings.filter((c) => c !== null) as Array<
+          BookingContract & { booking?: Booking }
+        >,
+      );
     } catch (err) {
       console.error('Error loading contracts:', err);
       this.error.set('Error al cargar contratos');

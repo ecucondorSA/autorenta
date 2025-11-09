@@ -187,7 +187,7 @@ export class VehicleDocumentsPage implements OnInit {
       console.error('Error uploading document:', error);
       this.toastService.showToast(
         error instanceof Error ? error.message : 'Error al subir documento',
-        'error'
+        'error',
       );
     } finally {
       this.uploading.set(false);
@@ -238,7 +238,7 @@ export class VehicleDocumentsPage implements OnInit {
 
   getMissingRequiredDocs(): VehicleDocumentKind[] {
     return this.requiredKinds.filter(
-      (kind) => !this.documents().some((doc) => doc.kind === kind && doc.status === 'verified')
+      (kind) => !this.documents().some((doc) => doc.kind === kind && doc.status === 'verified'),
     );
   }
 

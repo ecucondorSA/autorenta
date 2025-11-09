@@ -2,7 +2,11 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TelemetryService } from '../../../core/services/telemetry.service';
-import type { TelemetryHistory, TelemetryAverage, TelemetryInsights } from '../../../core/services/telemetry.service';
+import type {
+  TelemetryHistory,
+  TelemetryAverage,
+  TelemetryInsights,
+} from '../../../core/services/telemetry.service';
 import { ToastService } from '../../../core/services/toast.service';
 
 /**

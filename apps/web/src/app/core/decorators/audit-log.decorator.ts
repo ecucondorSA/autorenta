@@ -64,16 +64,8 @@ export interface AuditLogOptions {
  * @param resourceType - The type of resource being acted upon (e.g., 'user', 'booking')
  * @param options - Optional configuration for audit logging
  */
-export function AuditLog(
-  action: string,
-  resourceType: string,
-  options: AuditLogOptions = {},
-) {
-  return function (
-    target: object,
-    propertyKey: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) {
+export function AuditLog(action: string, resourceType: string, options: AuditLogOptions = {}) {
+  return function (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (this: { adminService?: AdminService }, ...args: unknown[]) {

@@ -50,7 +50,11 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly _urgentMode = signal<boolean>(false);
 
   readonly hourlyPrice = signal<number | null>(null);
-  readonly urgentAvailability = signal<{ available: boolean; distance?: number; eta?: number } | null>(null);
+  readonly urgentAvailability = signal<{
+    available: boolean;
+    distance?: number;
+    eta?: number;
+  } | null>(null);
 
   @Output() compareToggle = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();

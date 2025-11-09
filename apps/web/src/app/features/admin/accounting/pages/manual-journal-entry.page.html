@@ -144,12 +144,7 @@
           </div>
         </div>
 
-        <ion-button
-          fill="outline"
-          expand="block"
-          class="mt-4"
-          (click)="addEntryLine()"
-        >
+        <ion-button fill="outline" expand="block" class="mt-4" (click)="addEntryLine()">
           <ion-icon name="add" slot="start"></ion-icon>
           Agregar Línea
         </ion-button>
@@ -177,22 +172,14 @@
             <p class="text-xl">${{ getTotalCredit().toFixed(2) }}</p>
           </div>
         </div>
-        <div
-          *ngIf="!isBalanced()"
-          class="mt-3 text-center text-sm"
-        >
+        <div *ngIf="!isBalanced()" class="mt-3 text-center text-sm">
           Diferencia: ${{ Math.abs(getTotalDebit() - getTotalCredit()).toFixed(2) }}
         </div>
       </ion-card-content>
     </ion-card>
 
     <!-- Submit Button -->
-    <ion-button
-      expand="block"
-      type="submit"
-      [disabled]="loading() || !isBalanced()"
-      class="mb-4"
-    >
+    <ion-button expand="block" type="submit" [disabled]="loading() || !isBalanced()" class="mb-4">
       <ion-icon name="checkmark-circle" slot="start"></ion-icon>
       Crear Asiento Contable
     </ion-button>

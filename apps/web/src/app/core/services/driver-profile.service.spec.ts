@@ -1,6 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { DriverProfileService, DriverProfile, ClassBenefits, ClassUpdateResult } from './driver-profile.service';
+import {
+  DriverProfileService,
+  DriverProfile,
+  ClassBenefits,
+  ClassUpdateResult,
+} from './driver-profile.service';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
@@ -43,9 +48,9 @@ describe('DriverProfileService', () => {
   };
 
   beforeEach(() => {
-    const rpcSpy = jasmine.createSpy('rpc').and.returnValue(
-      Promise.resolve({ data: [mockProfile], error: null })
-    );
+    const rpcSpy = jasmine
+      .createSpy('rpc')
+      .and.returnValue(Promise.resolve({ data: [mockProfile], error: null }));
 
     supabaseMock = {
       rpc: rpcSpy,
@@ -77,7 +82,9 @@ describe('DriverProfileService', () => {
         next: (profile) => {
           expect(profile).toEqual(mockProfile);
           expect(service.profile()).toEqual(mockProfile);
-          expect(supabaseMock.rpc).toHaveBeenCalledWith('get_driver_profile', { p_user_id: 'user-123' });
+          expect(supabaseMock.rpc).toHaveBeenCalledWith('get_driver_profile', {
+            p_user_id: 'user-123',
+          });
           done();
         },
         error: done.fail,
@@ -98,13 +105,15 @@ describe('DriverProfileService', () => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [], error: null }), // First call returns empty (NO_PROFILE)
         Promise.resolve({ data: 'user-123', error: null }), // initialize_driver_profile
-        Promise.resolve({ data: [mockProfile], error: null }) // Second getProfile call
+        Promise.resolve({ data: [mockProfile], error: null }), // Second getProfile call
       );
 
       service.getProfile('user-123').subscribe({
         next: (profile) => {
           expect(profile).toEqual(mockProfile);
-          expect(supabaseMock.rpc).toHaveBeenCalledWith('initialize_driver_profile', { p_user_id: 'user-123' });
+          expect(supabaseMock.rpc).toHaveBeenCalledWith('initialize_driver_profile', {
+            p_user_id: 'user-123',
+          });
           done();
         },
         error: done.fail,
@@ -158,50 +167,59 @@ describe('DriverProfileService', () => {
     it('should update class after clean booking', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockUpdateResult], error: null }),
-        Promise.resolve({ data: [{ ...mockProfile, class: 4 }], error: null })
+        Promise.resolve({ data: [{ ...mockProfile, class: 4 }], error: null }),
       );
 
-      service.updateClassOnEvent({
-        userId: 'user-123',
-        bookingId: 'booking-456',
-        claimWithFault: false,
-        claimSeverity: 0,
-      }).subscribe({
-        next: (result) => {
-          expect(result).toEqual(mockUpdateResult);
-          expect(supabaseMock.rpc).toHaveBeenCalledWith('update_driver_class_on_event', {
-            p_user_id: 'user-123',
-            p_booking_id: 'booking-456',
-            p_claim_id: null,
-            p_claim_with_fault: false,
-            p_claim_severity: 0,
-          });
-          done();
-        },
-        error: done.fail,
-      });
+      service
+        .updateClassOnEvent({
+          userId: 'user-123',
+          bookingId: 'booking-456',
+          claimWithFault: false,
+          claimSeverity: 0,
+        })
+        .subscribe({
+          next: (result) => {
+            expect(result).toEqual(mockUpdateResult);
+            expect(supabaseMock.rpc).toHaveBeenCalledWith('update_driver_class_on_event', {
+              p_user_id: 'user-123',
+              p_booking_id: 'booking-456',
+              p_claim_id: null,
+              p_claim_with_fault: false,
+              p_claim_severity: 0,
+            });
+            done();
+          },
+          error: done.fail,
+        });
     });
 
     it('should update class after claim with fault', (done) => {
-      const claimUpdateResult = { ...mockUpdateResult, old_class: 5, new_class: 7, class_change: 2 };
+      const claimUpdateResult = {
+        ...mockUpdateResult,
+        old_class: 5,
+        new_class: 7,
+        class_change: 2,
+      };
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [claimUpdateResult], error: null }),
-        Promise.resolve({ data: [{ ...mockProfile, class: 7 }], error: null })
+        Promise.resolve({ data: [{ ...mockProfile, class: 7 }], error: null }),
       );
 
-      service.updateClassOnEvent({
-        userId: 'user-123',
-        claimId: 'claim-789',
-        claimWithFault: true,
-        claimSeverity: 2,
-      }).subscribe({
-        next: (result) => {
-          expect(result.new_class).toBe(7);
-          expect(result.class_change).toBe(2);
-          done();
-        },
-        error: done.fail,
-      });
+      service
+        .updateClassOnEvent({
+          userId: 'user-123',
+          claimId: 'claim-789',
+          claimWithFault: true,
+          claimSeverity: 2,
+        })
+        .subscribe({
+          next: (result) => {
+            expect(result.new_class).toBe(7);
+            expect(result.class_change).toBe(2);
+            done();
+          },
+          error: done.fail,
+        });
     });
   });
 
@@ -212,7 +230,9 @@ describe('DriverProfileService', () => {
       service.getClassBenefits('user-123').subscribe({
         next: (benefits) => {
           expect(benefits).toEqual(mockClassBenefits);
-          expect(supabaseMock.rpc).toHaveBeenCalledWith('get_user_class_benefits', { p_user_id: 'user-123' });
+          expect(supabaseMock.rpc).toHaveBeenCalledWith('get_user_class_benefits', {
+            p_user_id: 'user-123',
+          });
           done();
         },
         error: done.fail,
@@ -252,7 +272,7 @@ describe('DriverProfileService', () => {
         driver_score: 85,
         clean_percentage: 90,
         fee_multiplier: 0.97,
-        guarantee_multiplier: 0.90,
+        guarantee_multiplier: 0.9,
         class_description: 'Normal Plus',
       };
       service.profile.set(profile);
@@ -261,7 +281,7 @@ describe('DriverProfileService', () => {
       expect(service.driverScore()).toBe(85);
       expect(service.cleanPercentage()).toBe(90);
       expect(service.feeMultiplier()).toBe(0.97);
-      expect(service.guaranteeMultiplier()).toBe(0.90);
+      expect(service.guaranteeMultiplier()).toBe(0.9);
       expect(service.classDescription()).toBe('Normal Plus');
     });
   });

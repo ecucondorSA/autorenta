@@ -15,7 +15,12 @@
   </div>
   <button class="close-button" (click)="cancel()" [disabled]="loading()">
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"
+      />
     </svg>
   </button>
 </div>
@@ -34,21 +39,21 @@
     <div class="error-icon">⚠️</div>
     <h3>No disponible</h3>
     <p class="error-message">{{ error() }}</p>
-    
+
     <!-- Opción de Waitlist cuando hay conflicto de constraint -->
     <div *ngIf="canWaitlist()" class="waitlist-option">
       <div class="waitlist-info">
         <div class="waitlist-icon">📋</div>
         <div class="waitlist-text">
           <h4>¿Quieres que te notifiquemos cuando esté disponible?</h4>
-          <p>El auto está ocupado en esas fechas, pero puedes agregarte a la lista de espera. Te notificaremos automáticamente cuando otro usuario cancele o expire su reserva (generalmente en 30 minutos).</p>
+          <p>
+            El auto está ocupado en esas fechas, pero puedes agregarte a la lista de espera. Te
+            notificaremos automáticamente cuando otro usuario cancele o expire su reserva
+            (generalmente en 30 minutos).
+          </p>
         </div>
       </div>
-      <button 
-        class="waitlist-button" 
-        (click)="addToWaitlist()"
-        [disabled]="addingToWaitlist()"
-      >
+      <button class="waitlist-button" (click)="addToWaitlist()" [disabled]="addingToWaitlist()">
         <span *ngIf="!addingToWaitlist()">
           <span class="button-icon">🔔</span>
           Agregar a lista de espera
@@ -59,7 +64,7 @@
         </span>
       </button>
     </div>
-    
+
     <button class="retry-button" (click)="onRetry()">Intentar nuevamente</button>
   </div>
 
@@ -77,7 +82,7 @@
         <div class="car-info">
           <h3>{{ car.title }}</h3>
           <p>{{ car.location_city }}, {{ car.location_state }}</p>
-          <p class="price">{{ car.price_per_day | currency:'ARS':'symbol':'1.0-0' }}/día</p>
+          <p class="price">{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}/día</p>
         </div>
       </div>
 
@@ -123,11 +128,11 @@
         </div>
         <div class="summary-item">
           <span>Precio por día</span>
-          <span>{{ car.price_per_day | currency:'ARS':'symbol':'1.0-0' }}</span>
+          <span>{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
         </div>
         <div class="summary-total">
           <span>Total alquiler</span>
-          <span>{{ totalPrice() | currency:'ARS':'symbol':'1.0-0' }}</span>
+          <span>{{ totalPrice() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
         </div>
       </div>
     </div>
@@ -156,11 +161,11 @@
           <div class="date-summary">
             <div class="date-item">
               <span>Recogida</span>
-              <span>{{ startDate() | date:'EEEE dd/MM/yyyy' }}</span>
+              <span>{{ startDate() | date: 'EEEE dd/MM/yyyy' }}</span>
             </div>
             <div class="date-item">
               <span>Devolución</span>
-              <span>{{ endDate() | date:'EEEE dd/MM/yyyy' }}</span>
+              <span>{{ endDate() | date: 'EEEE dd/MM/yyyy' }}</span>
             </div>
             <div class="date-item total">
               <span>Total</span>
@@ -174,15 +179,15 @@
           <div class="cost-breakdown">
             <div class="cost-item">
               <span>Alquiler ({{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }})</span>
-              <span>{{ totalPrice() | currency:'ARS':'symbol':'1.0-0' }}</span>
+              <span>{{ totalPrice() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
             </div>
             <div class="cost-item">
               <span>Depósito de garantía</span>
-              <span>{{ depositAmount() | currency:'USD':'symbol':'1.0-0' }}</span>
+              <span>{{ depositAmount() | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
             </div>
             <div class="cost-total">
               <span>Total a pagar</span>
-              <span>{{ finalTotal() | currency:'ARS':'symbol':'1.0-0' }}</span>
+              <span>{{ finalTotal() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
             </div>
           </div>
         </div>
@@ -207,7 +212,7 @@
           <div class="payment-icon">💰</div>
           <div class="payment-info">
             <h4>Wallet AutoRenta</h4>
-            <p>Saldo disponible: {{ walletBalance() | currency:'ARS':'symbol':'1.0-0' }}</p>
+            <p>Saldo disponible: {{ walletBalance() | currency: 'ARS' : 'symbol' : '1.0-0' }}</p>
             <p class="payment-description">Pago instantáneo y sin comisiones</p>
           </div>
           <div class="payment-radio">
@@ -270,15 +275,15 @@
 
           <div class="confirmation-total">
             <span>Total</span>
-            <span>{{ finalTotal() | currency:'ARS':'symbol':'1.0-0' }}</span>
+            <span>{{ finalTotal() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
           </div>
         </div>
 
         <div class="terms-checkbox">
-          <input type="checkbox" id="terms" required>
+          <input type="checkbox" id="terms" required />
           <label for="terms">
-            Acepto los <a href="/terminos" target="_blank">términos y condiciones</a>
-            y las <a href="/politicas" target="_blank">políticas de alquiler</a>
+            Acepto los <a href="/terminos" target="_blank">términos y condiciones</a> y las
+            <a href="/politicas" target="_blank">políticas de alquiler</a>
           </label>
         </div>
       </div>
@@ -288,24 +293,12 @@
 
 <!-- Footer con navegación -->
 <div *ngIf="!loading() && !error()" class="checkout-footer">
-  <button
-    class="nav-button secondary"
-    (click)="previousStep()"
-    [disabled]="currentStep() === 0"
-  >
+  <button class="nav-button secondary" (click)="previousStep()" [disabled]="currentStep() === 0">
     ← Anterior
   </button>
 
-  <button
-    class="nav-button primary"
-    (click)="nextStep()"
-    [disabled]="!validateCurrentStep()"
-  >
-    <span *ngIf="currentStep() < steps.length - 1">
-      Continuar
-    </span>
-    <span *ngIf="currentStep() >= steps.length - 1">
-      Confirmar Reserva
-    </span>
+  <button class="nav-button primary" (click)="nextStep()" [disabled]="!validateCurrentStep()">
+    <span *ngIf="currentStep() < steps.length - 1"> Continuar </span>
+    <span *ngIf="currentStep() >= steps.length - 1"> Confirmar Reserva </span>
   </button>
 </div>

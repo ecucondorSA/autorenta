@@ -84,7 +84,10 @@ export class OwnerCheckInPage implements OnInit {
 
       // Validar estado
       if (booking.status !== 'confirmed') {
-        this.toastService.error('Error', `La reserva debe estar en estado "Confirmada". Estado actual: ${booking.status}`);
+        this.toastService.error(
+          'Error',
+          `La reserva debe estar en estado "Confirmada". Estado actual: ${booking.status}`,
+        );
         this.router.navigate(['/bookings/owner']);
         return;
       }
@@ -149,7 +152,10 @@ export class OwnerCheckInPage implements OnInit {
       this.router.navigate(['/bookings/detail', booking.id]);
     } catch (error) {
       console.error('Error en check-in:', error);
-      this.toastService.error('Error', error instanceof Error ? error.message : 'Error al completar check-in');
+      this.toastService.error(
+        'Error',
+        error instanceof Error ? error.message : 'Error al completar check-in',
+      );
     } finally {
       this.submitting.set(false);
     }

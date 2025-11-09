@@ -44,7 +44,7 @@ export class PayPalWalletGatewayService implements WalletPaymentGateway {
     return from(this._createDepositOrder(amountUSD, transactionId)).pipe(
       catchError((err) => {
         return throwError(() => new Error(this.formatError(err)));
-      })
+      }),
     );
   }
 
@@ -53,7 +53,7 @@ export class PayPalWalletGatewayService implements WalletPaymentGateway {
    */
   private async _createDepositOrder(
     amountUSD: number,
-    transactionId: string
+    transactionId: string,
   ): Promise<WalletDepositResponse> {
     // Validaciones
     if (amountUSD <= 0) {

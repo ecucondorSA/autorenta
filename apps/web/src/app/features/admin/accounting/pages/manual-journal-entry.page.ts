@@ -2,10 +2,7 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import {
-  AccountingService,
-  AccountingAccount,
-} from '../../../../core/services/accounting.service';
+import { AccountingService, AccountingAccount } from '../../../../core/services/accounting.service';
 import { SupabaseService } from '../../../../core/services/supabase.service';
 
 interface JournalEntryLine {
@@ -40,10 +37,7 @@ export class ManualJournalEntryPage implements OnInit {
 
   constructor() {
     const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
-    );
+    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
   }
 
   async ngOnInit(): Promise<void> {

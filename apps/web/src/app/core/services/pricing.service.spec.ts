@@ -47,8 +47,8 @@ describe('pricing', () => {
       nightly_cents: 80000,
       nights: 2,
       service_fee_pct: 0.1, // 10%
-      tax_pct: 0.21,        // 21%
-      coupon_pct: 0         // sin cupón
+      tax_pct: 0.21, // 21%
+      coupon_pct: 0, // sin cupón
     });
     expect(quote.total_cents).toBeGreaterThan(0);
 
@@ -60,7 +60,14 @@ describe('pricing', () => {
   });
 
   it('aplica cupón y respeta mínimos', () => {
-    const q = computeQuote({ nightly_cents: 50000, nights: 3, service_fee_pct: 0.1, tax_pct: 0.21, coupon_pct: 0.15, min_total_cents: 10000 });
+    const q = computeQuote({
+      nightly_cents: 50000,
+      nights: 3,
+      service_fee_pct: 0.1,
+      tax_pct: 0.21,
+      coupon_pct: 0.15,
+      min_total_cents: 10000,
+    });
     expect(q.total_cents).toBeGreaterThanOrEqual(10000);
   });
 });

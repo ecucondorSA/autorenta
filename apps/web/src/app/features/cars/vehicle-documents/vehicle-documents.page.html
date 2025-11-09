@@ -86,7 +86,11 @@
               </svg>
               <span>Vence: {{ formatDate(doc.expiry_date) }}</span>
               <span *ngIf="isExpired(doc.expiry_date)" class="expired-badge">Vencido</span>
-              <span *ngIf="!isExpired(doc.expiry_date) && isExpiring(doc.expiry_date)" class="expiring-badge">Por vencer</span>
+              <span
+                *ngIf="!isExpired(doc.expiry_date) && isExpiring(doc.expiry_date)"
+                class="expiring-badge"
+                >Por vencer</span
+              >
             </div>
 
             <div class="document-detail">
@@ -208,12 +212,7 @@
           <!-- Document Kind -->
           <div class="form-group">
             <label class="form-label">Tipo de Documento *</label>
-            <select
-              class="form-control"
-              [(ngModel)]="uploadForm().kind"
-              name="kind"
-              required
-            >
+            <select class="form-control" [(ngModel)]="uploadForm().kind" name="kind" required>
               <option *ngFor="let kind of documentKinds" [value]="kind">
                 {{ getDocumentKindIcon(kind) }} {{ getDocumentKindLabel(kind) }}
               </option>

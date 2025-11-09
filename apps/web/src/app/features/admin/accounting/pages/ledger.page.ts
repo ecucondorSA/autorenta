@@ -40,10 +40,7 @@ export class LedgerPage implements OnInit {
 
   constructor() {
     const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
-    );
+    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
   }
 
   async ngOnInit(): Promise<void> {

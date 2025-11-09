@@ -1,6 +1,9 @@
 import { Component, input, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RiskCalculatorService, RiskCalculation } from '../../../core/services/risk-calculator.service';
+import {
+  RiskCalculatorService,
+  RiskCalculation,
+} from '../../../core/services/risk-calculator.service';
 
 @Component({
   selector: 'app-risk-calculator-viewer',

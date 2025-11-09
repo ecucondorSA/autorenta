@@ -2,7 +2,12 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { DisputesService, Dispute, DisputeEvidence, DisputeStatus } from '../../../core/services/disputes.service';
+import {
+  DisputesService,
+  Dispute,
+  DisputeEvidence,
+  DisputeStatus,
+} from '../../../core/services/disputes.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
 @Component({
@@ -46,7 +51,9 @@ export class AdminDisputesPage implements OnInit {
         query = query.eq('kind', filter.kind);
       }
       if (filter.searchTerm) {
-        query = query.or(`description.ilike.%${filter.searchTerm}%,booking_id.ilike.%${filter.searchTerm}%`);
+        query = query.or(
+          `description.ilike.%${filter.searchTerm}%,booking_id.ilike.%${filter.searchTerm}%`,
+        );
       }
 
       const { data, error } = await query;
@@ -87,7 +94,8 @@ export class AdminDisputesPage implements OnInit {
         .from('disputes')
         .update({
           status: newStatus,
-          resolved_at: newStatus === 'resolved' || newStatus === 'rejected' ? new Date().toISOString() : null,
+          resolved_at:
+            newStatus === 'resolved' || newStatus === 'rejected' ? new Date().toISOString() : null,
         })
         .eq('id', disputeId);
 

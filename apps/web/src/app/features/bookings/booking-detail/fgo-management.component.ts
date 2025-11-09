@@ -348,7 +348,9 @@ export class FgoManagementComponent implements OnInit {
     try {
       const policy = await this.riskMatrixService.getRiskPolicy(carValue);
       this.riskPolicy.set(policy);
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   private async loadFgoData(): Promise<void> {
@@ -366,7 +368,9 @@ export class FgoManagementComponent implements OnInit {
 
       const inspections = await firstValueFrom(this.fgoService.getInspections(this.booking.id));
       this.inspections.set(inspections);
-    } catch (__error) { /* Silenced */ } finally {
+    } catch (__error) {
+      /* Silenced */
+    } finally {
       this.fgoLoading.set(false);
     }
   }

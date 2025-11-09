@@ -41,8 +41,19 @@ import { ToastService } from '../../../core/services/toast.service';
           @if (searching()) {
             <span class="flex items-center justify-center gap-2">
               <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Buscando...
             </span>
@@ -71,11 +82,17 @@ import { ToastService } from '../../../core/services/toast.service';
               @if (selectedPhotos().has(photo.id)) {
                 <div class="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
                   <svg class="h-8 w-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                 </div>
               }
-              <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1 truncate">
+              <div
+                class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1 truncate"
+              >
                 {{ photo.photographer }}
               </div>
             </div>
@@ -131,7 +148,7 @@ export class StockPhotosSelectorComponent {
 
   async searchPhotos(): Promise<void> {
     if (!this.canSearch()) {
-      this.toastService.error('Por favor ingresa marca y modelo');
+      this.toastService.error('Campo requerido', 'Por favor ingresa marca y modelo');
       return;
     }
 
@@ -149,11 +166,11 @@ export class StockPhotosSelectorComponent {
       this.photos.set(results);
 
       if (results.length === 0) {
-        this.toastService.info('No se encontraron fotos. Intenta con otros términos.');
+        this.toastService.info('Sin resultados', 'No se encontraron fotos. Intenta con otros términos.');
       }
     } catch (error) {
       console.error('Error searching stock photos:', error);
-      this.toastService.error('Error al buscar fotos. Verifica tu conexión.');
+      this.toastService.error('Error de búsqueda', 'Error al buscar fotos. Verifica tu conexión.');
     } finally {
       this.searching.set(false);
     }
@@ -191,17 +208,16 @@ export class StockPhotosSelectorComponent {
 
       if (files.length > 0) {
         this.photosSelected.emit(files);
-        this.toastService.success(`✅ ${files.length} foto(s) descargada(s) exitosamente`);
+        this.toastService.success('Éxito', `✅ ${files.length} foto(s) descargada(s) exitosamente`);
         this.selectedPhotos.set(new Set());
       } else {
-        this.toastService.error('No se pudieron descargar las fotos');
+        this.toastService.error('Error de descarga', 'No se pudieron descargar las fotos');
       }
     } catch (error) {
       console.error('Error downloading photos:', error);
-      this.toastService.error('Error al descargar fotos');
+      this.toastService.error('Error de descarga', 'Error al descargar fotos');
     } finally {
       this.downloading.set(false);
     }
   }
 }
-

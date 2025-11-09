@@ -13,7 +13,9 @@ import type { ReviewSummary } from '../../../core/models';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+          <div
+            class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+          ></div>
         </div>
       } @else if (summary(); as s) {
         <div class="space-y-6">
@@ -34,7 +36,9 @@ import type { ReviewSummary } from '../../../core/models';
           <!-- Distribución -->
           @if (s.rating_distribution) {
             <div>
-              <h4 class="mb-3 text-sm font-semibold text-gray-700">Distribución de Calificaciones</h4>
+              <h4 class="mb-3 text-sm font-semibold text-gray-700">
+                Distribución de Calificaciones
+              </h4>
               <div class="space-y-2">
                 @for (rating of [5, 4, 3, 2, 1]; track rating) {
                   <div class="flex items-center gap-3">
@@ -43,7 +47,9 @@ import type { ReviewSummary } from '../../../core/models';
                       <div class="h-4 w-full rounded-full bg-gray-200">
                         <div
                           class="h-4 rounded-full bg-blue-500"
-                          [style.width.%]="getPercentage(s.rating_distribution[rating], s.total_count)"
+                          [style.width.%]="
+                            getPercentage(s.rating_distribution[rating], s.total_count)
+                          "
                         ></div>
                       </div>
                     </div>
@@ -140,4 +146,3 @@ export class ReviewSummaryComponent implements OnInit {
     return (count / total) * 100;
   }
 }
-

@@ -17,7 +17,9 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
 
       <div class="space-y-4">
         <!-- Terms & Conditions -->
-        <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-lg">
+        <div
+          class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-lg"
+        >
           <label class="flex items-start space-x-3 cursor-pointer">
             <input
               type="checkbox"
@@ -53,7 +55,10 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
         </div>
 
         <!-- Card on File (only for card mode) -->
-        <div *ngIf="paymentMode === 'card'" class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/60 rounded-lg">
+        <div
+          *ngIf="paymentMode === 'card'"
+          class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/60 rounded-lg"
+        >
           <label class="flex items-start space-x-3 cursor-pointer">
             <input
               type="checkbox"
@@ -66,7 +71,8 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
                 Autorizo guardar mi tarjeta de forma segura
               </span>
               <span class="text-sm text-green-700 dark:text-green-300">
-                Permito que AutoRenta guarde mi tarjeta para futuros cargos por multas, peajes o daños según nuestros términos
+                Permito que AutoRenta guarde mi tarjeta para futuros cargos por multas, peajes o
+                daños según nuestros términos
                 <span class="text-red-500">*</span>
               </span>
             </div>
@@ -79,8 +85,18 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
         class="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/60 rounded-lg"
       >
         <div class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          <svg
+            class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
           </svg>
           <div>
             <p class="text-sm font-medium text-green-800 dark:text-green-200 mb-1">
@@ -88,7 +104,8 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
             </p>
             <p class="text-sm text-green-700 dark:text-green-300">
               @if (paymentMode === 'card') {
-                MercadoPago protege tu información de pago. Solo cobramos según nuestros términos acordados.
+                MercadoPago protege tu información de pago. Solo cobramos según nuestros términos
+                acordados.
               } @else {
                 Tu saldo en wallet está protegido y solo se usa según las reglas establecidas.
               }

@@ -23,27 +23,30 @@ export interface UnreadConversation {
 export class UnreadMessagesService {
   private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
-  
+
   private realtimeChannel?: RealtimeChannel;
-  
+
   // Signals for reactivity
   readonly unreadConversations = signal<UnreadConversation[]>([]);
-  readonly totalUnreadCount = computed(() => 
-    this.unreadConversations().reduce((sum, conv) => sum + conv.unreadCount, 0)
+  readonly totalUnreadCount = computed(() =>
+    this.unreadConversations().reduce((sum, conv) => sum + conv.unreadCount, 0),
   );
   readonly isLoading = signal(false);
 
   constructor() {
     const destroyRef = inject(DestroyRef);
 
-    effect(() => {
-      const session = this.authService.session$();
-      if (session?.user) {
-        this.initialize();
-      } else {
-        this.cleanup();
-      }
-    }, { injector: this.injector, allowSignalWrites: true });
+    effect(
+      () => {
+        const session = this.authService.session$();
+        if (session?.user) {
+          this.initialize();
+        } else {
+          this.cleanup();
+        }
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
   }
 
   private readonly injector = inject(Injector);
@@ -110,7 +113,7 @@ export class UnreadMessagesService {
 
         const conv = conversationsMap.get(key)!;
         conv.unreadCount++;
-        
+
         // Keep the most recent message
         if (new Date((message as any).created_at) > new Date(conv.lastMessageAt)) {
           conv.lastMessage = (message as any).body;
@@ -146,7 +149,7 @@ export class UnreadMessagesService {
         },
         (payload) => {
           this.handleNewMessage(payload.new);
-        }
+        },
       )
       .on(
         'postgres_changes',
@@ -158,7 +161,7 @@ export class UnreadMessagesService {
         },
         (payload) => {
           this.handleMessageUpdate(payload.new);
-        }
+        },
       )
       .subscribe();
   }
@@ -173,7 +176,7 @@ export class UnreadMessagesService {
     const type = (message as any).booking_id ? 'booking' : 'car';
     const conversations = [...this.unreadConversations()];
     const existingIndex = conversations.findIndex(
-      (c) => c.conversationId === conversationId && c.type === type
+      (c) => c.conversationId === conversationId && c.type === type,
     );
 
     if (existingIndex >= 0) {
@@ -197,7 +200,7 @@ export class UnreadMessagesService {
     }
 
     this.unreadConversations.set(conversations);
-    
+
     // Play notification sound
     this.playNotificationSound();
   }
@@ -214,7 +217,7 @@ export class UnreadMessagesService {
       const type = (message as any).booking_id ? 'booking' : 'car';
       const conversations = [...this.unreadConversations()];
       const existingIndex = conversations.findIndex(
-        (c) => c.conversationId === conversationId && c.type === type
+        (c) => c.conversationId === conversationId && c.type === type,
       );
 
       if (existingIndex >= 0) {
@@ -241,9 +244,8 @@ export class UnreadMessagesService {
     if (!user) return;
 
     try {
-      const filter = type === 'booking' 
-        ? { booking_id: conversationId }
-        : { car_id: conversationId };
+      const filter =
+        type === 'booking' ? { booking_id: conversationId } : { car_id: conversationId };
 
       const { error } = await this.supabase
         .from('messages')
@@ -256,7 +258,7 @@ export class UnreadMessagesService {
 
       // Update local state
       const conversations = this.unreadConversations().filter(
-        (c) => !(c.conversationId === conversationId && c.type === type)
+        (c) => !(c.conversationId === conversationId && c.type === type),
       );
       this.unreadConversations.set(conversations);
     } catch (_error) {

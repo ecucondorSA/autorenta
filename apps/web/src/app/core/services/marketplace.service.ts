@@ -215,13 +215,15 @@ export class MarketplaceService {
    */
   async getOnboardingStatus(): Promise<MarketplaceStatus> {
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
 
       if (!user) {
         return {
           status: 'not_started',
           canReceivePayments: false,
-          error: 'Usuario no autenticado'
+          error: 'Usuario no autenticado',
         };
       }
 
@@ -234,7 +236,7 @@ export class MarketplaceService {
       if (error || !data) {
         return {
           status: 'not_started',
-          canReceivePayments: false
+          canReceivePayments: false,
         };
       }
 
@@ -242,7 +244,7 @@ export class MarketplaceService {
         return {
           status: 'completed',
           canReceivePayments: true,
-          collectorId: data.mercadopago_collector_id
+          collectorId: data.mercadopago_collector_id,
         };
       }
 
@@ -250,19 +252,19 @@ export class MarketplaceService {
         return {
           status: 'pending',
           canReceivePayments: false,
-          onboardingUrl: data.mp_onboarding_url
+          onboardingUrl: data.mp_onboarding_url,
         };
       }
 
       return {
         status: 'not_started',
-        canReceivePayments: false
+        canReceivePayments: false,
       };
     } catch (error) {
       return {
         status: 'error',
         canReceivePayments: false,
-        error: error instanceof Error ? error.message : 'Error desconocido'
+        error: error instanceof Error ? error.message : 'Error desconocido',
       };
     }
   }
@@ -272,16 +274,21 @@ export class MarketplaceService {
    */
   async initiateOnboarding(): Promise<string | null> {
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
 
       if (!user) {
         throw new Error('Usuario no autenticado');
       }
 
       // Call Edge Function to initiate onboarding
-      const { data, error } = await this.supabase.functions.invoke('mercadopago-initiate-onboarding', {
-        body: { user_id: user.id }
-      });
+      const { data, error } = await this.supabase.functions.invoke(
+        'mercadopago-initiate-onboarding',
+        {
+          body: { user_id: user.id },
+        },
+      );
 
       if (error) {
         throw error;

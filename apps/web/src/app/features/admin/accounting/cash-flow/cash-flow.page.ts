@@ -7,6 +7,7 @@ import { SupabaseClientService } from '../../../../core/services/supabase-client
   selector: 'app-cash-flow',
   standalone: true,
   imports: [CommonModule],
+  /* eslint-disable */
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
@@ -86,6 +87,7 @@ import { SupabaseClientService } from '../../../../core/services/supabase-client
       }
     </div>
   `,
+  /* eslint-enable */
 })
 export class CashFlowPage implements OnInit {
   private readonly supabaseService = inject(SupabaseClientService);

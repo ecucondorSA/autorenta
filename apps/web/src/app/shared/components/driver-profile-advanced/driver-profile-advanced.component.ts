@@ -25,10 +25,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                   <span class="text-sm font-medium text-blue-600">Clase {{ p.nextClass }}</span>
                 </div>
                 <div class="h-2 w-full rounded-full bg-gray-200">
-                  <div
-                    class="h-2 rounded-full bg-blue-500"
-                    [style.width.%]="50"
-                  ></div>
+                  <div class="h-2 rounded-full bg-blue-500" [style.width.%]="50"></div>
                 </div>
                 <p class="mt-2 text-xs text-gray-500">
                   Necesitas {{ p.yearsNeeded }} año(s) sin siniestros para mejorar
@@ -46,7 +43,9 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
         <h3 class="mb-4 text-lg font-semibold text-gray-900">Beneficios por Clase</h3>
         @if (loadingBenefits()) {
           <div class="flex items-center justify-center py-8">
-            <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+            <div
+              class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+            ></div>
           </div>
         } @else if (allBenefits().length > 0) {
           <div class="space-y-3">
@@ -122,9 +121,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                 Clase actual: {{ i.currentClass }} → Nueva clase: {{ i.newClass }}
               </p>
               @if (i.classIncrease > 0) {
-                <p class="mt-1 text-sm text-red-600">
-                  Aumento de clase: +{{ i.classIncrease }}
-                </p>
+                <p class="mt-1 text-sm text-red-600">Aumento de clase: +{{ i.classIncrease }}</p>
               } @else {
                 <p class="mt-1 text-sm text-green-600">Sin cambio de clase</p>
               }
@@ -164,11 +161,7 @@ export class DriverProfileAdvancedComponent implements OnInit {
   withFault = false;
 
   async ngOnInit(): Promise<void> {
-    await Promise.all([
-      this.loadProgress(),
-      this.loadAllBenefits(),
-      this.loadScoreMessage(),
-    ]);
+    await Promise.all([this.loadProgress(), this.loadAllBenefits(), this.loadScoreMessage()]);
   }
 
   async loadProgress(): Promise<void> {
@@ -202,4 +195,3 @@ export class DriverProfileAdvancedComponent implements OnInit {
     this.scoreMessage.set(message);
   }
 }
-

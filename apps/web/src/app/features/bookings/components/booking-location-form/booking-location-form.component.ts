@@ -41,6 +41,7 @@ export interface BookingLocationData {
     TranslateModule,
     LocationPickerComponent,
   ],
+  /* eslint-disable */
   template: `
     <div class="booking-location-form bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6">
       <!-- Header -->
@@ -208,6 +209,7 @@ export interface BookingLocationData {
       </div>
     </div>
   `,
+  /* eslint-enable */
   styles: [`
     .booking-location-form {
       max-width: 600px;

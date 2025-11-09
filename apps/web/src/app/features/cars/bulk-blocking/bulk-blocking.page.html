@@ -67,9 +67,7 @@
         <div class="flex items-center justify-between">
           <ion-card-title>Seleccionar Autos</ion-card-title>
           <div class="flex gap-2">
-            <ion-button fill="outline" size="small" (click)="selectAllCars()">
-              Todos
-            </ion-button>
+            <ion-button fill="outline" size="small" (click)="selectAllCars()"> Todos </ion-button>
             <ion-button fill="outline" size="small" (click)="deselectAllCars()">
               Ninguno
             </ion-button>
@@ -113,22 +111,12 @@
         <div class="grid grid-cols-2 gap-4">
           <ion-item>
             <ion-label position="stacked">Fecha Inicio *</ion-label>
-            <ion-input
-              type="date"
-              [(ngModel)]="startDate"
-              name="startDate"
-              required
-            ></ion-input>
+            <ion-input type="date" [(ngModel)]="startDate" name="startDate" required></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label position="stacked">Fecha Fin *</ion-label>
-            <ion-input
-              type="date"
-              [(ngModel)]="endDate"
-              name="endDate"
-              required
-            ></ion-input>
+            <ion-input type="date" [(ngModel)]="endDate" name="endDate" required></ion-input>
           </ion-item>
         </div>
       </ion-card-content>

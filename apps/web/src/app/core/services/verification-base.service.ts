@@ -230,8 +230,7 @@ export abstract class VerificationBaseService<
     const cooldownRemaining = this.calculateCooldownRemaining();
     if (cooldownRemaining > 0) {
       throw new Error(
-        errorMessage ??
-          `Por favor espera ${cooldownRemaining} segundos antes de reintentar`,
+        errorMessage ?? `Por favor espera ${cooldownRemaining} segundos antes de reintentar`,
       );
     }
   }

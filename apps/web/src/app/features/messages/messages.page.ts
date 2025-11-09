@@ -59,11 +59,23 @@ import { CarChatComponent } from './components/car-chat.component';
       <div class="mx-auto max-w-4xl p-4">
         <!-- Booking Context Card -->
         @if (hasBookingContext() && bookingContext()) {
-          <div class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+          <div
+            class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20"
+          >
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                <svg
+                  class="h-6 w-6 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
                 </svg>
               </div>
               <div class="flex-1">
@@ -78,8 +90,14 @@ import { CarChatComponent } from './components/car-chat.component';
                 <div class="flex items-center gap-2">
                   <span
                     class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                    [class.bg-blue-100]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
-                    [class.text-blue-800]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
+                    [class.bg-blue-100]="
+                      bookingContext()!.status === 'confirmed' ||
+                      bookingContext()!.status === 'in_progress'
+                    "
+                    [class.text-blue-800]="
+                      bookingContext()!.status === 'confirmed' ||
+                      bookingContext()!.status === 'in_progress'
+                    "
                     [class.bg-yellow-100]="bookingContext()!.status === 'pending'"
                     [class.text-yellow-800]="bookingContext()!.status === 'pending'"
                     [class.bg-green-100]="bookingContext()!.status === 'completed'"
@@ -178,9 +196,10 @@ export class MessagesPage implements OnInit {
 
     return {
       carTitle: booking.car_title || `${booking.car_brand} ${booking.car_model}`,
-      dates: booking.start_at && booking.end_at
-        ? `${new Date(booking.start_at).toLocaleDateString('es-AR')} - ${new Date(booking.end_at).toLocaleDateString('es-AR')}`
-        : null,
+      dates:
+        booking.start_at && booking.end_at
+          ? `${new Date(booking.start_at).toLocaleDateString('es-AR')} - ${new Date(booking.end_at).toLocaleDateString('es-AR')}`
+          : null,
       status: booking.status,
       statusLabel: this.getStatusLabel(booking.status),
     };

@@ -15,7 +15,8 @@ export const routes: Routes = [
   },
   {
     path: 'onboarding',
-    loadComponent: () => import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),
+    loadComponent: () =>
+      import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),
   },
   {
     path: 'dashboard/owner',
@@ -128,9 +129,7 @@ export const routes: Routes = [
       {
         path: 'refunds',
         loadComponent: () =>
-          import('./features/admin/refunds/admin-refunds.page').then(
-            (m) => m.AdminRefundsPage,
-          ),
+          import('./features/admin/refunds/admin-refunds.page').then((m) => m.AdminRefundsPage),
       },
       {
         path: 'coverage-fund',
@@ -154,9 +153,7 @@ export const routes: Routes = [
       {
         path: 'disputes',
         loadComponent: () =>
-          import('./features/admin/disputes/admin-disputes.page').then(
-            (m) => m.AdminDisputesPage,
-          ),
+          import('./features/admin/disputes/admin-disputes.page').then((m) => m.AdminDisputesPage),
       },
       {
         path: 'accounting',
@@ -308,7 +305,8 @@ export const routes: Routes = [
       },
       {
         path: 'chat',
-        loadComponent: () => import('./features/messages/messages.page').then((m) => m.MessagesPage),
+        loadComponent: () =>
+          import('./features/messages/messages.page').then((m) => m.MessagesPage),
       },
     ],
   },

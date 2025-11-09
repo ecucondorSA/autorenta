@@ -8,12 +8,7 @@ import { WaitlistService } from '../../../core/services/waitlist.service';
   imports: [CommonModule],
   template: `
     <div class="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1">
-      <svg
-        class="h-4 w-4 text-blue-600"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg class="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -58,4 +53,3 @@ export class WaitlistCountComponent implements OnInit {
     }
   }
 }
-

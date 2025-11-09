@@ -43,18 +43,39 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- ✅ NEW: Distance Information -->
       @if (priceBreakdown.distanceKm !== undefined && priceBreakdown.distanceKm !== null) {
         <div class="mb-4">
-          <div class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/40">
+          <div
+            class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/40"
+          >
             <div class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <svg
+                class="w-5 h-5 text-blue-600 dark:text-blue-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
               <div>
                 <span class="text-sm font-medium text-blue-900 dark:text-blue-200">
                   Distancia al auto: {{ formatDistance(priceBreakdown.distanceKm) }}
                 </span>
                 @if (priceBreakdown.distanceTier) {
-                  <span class="ml-2 text-xs px-2 py-0.5 rounded-full {{ getDistanceTierClass(priceBreakdown.distanceTier) }}">
+                  <span
+                    class="ml-2 text-xs px-2 py-0.5 rounded-full {{
+                      getDistanceTierClass(priceBreakdown.distanceTier)
+                    }}"
+                  >
                     {{ getDistanceTierLabel(priceBreakdown.distanceTier) }}
                   </span>
                 }
@@ -74,7 +95,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             class="w-4 h-4 text-gray-400 dark:text-pearl-light/60 cursor-help"
             fill="currentColor"
             viewBox="0 0 20 20"
-            title="Incluye: tarifa diaria, aporte FGO, cargo de servicio, mejora de cobertura{{ priceBreakdown.deliveryFeeUsd ? ' y envío' : '' }}"
+            title="Incluye: tarifa diaria, aporte FGO, cargo de servicio, mejora de cobertura{{
+              priceBreakdown.deliveryFeeUsd ? ' y envío' : ''
+            }}"
           >
             <path
               fill-rule="evenodd"
@@ -86,11 +109,23 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
         <!-- ✅ NEW: Delivery Fee line item (if applicable) -->
         @if (priceBreakdown.deliveryFeeUsd && priceBreakdown.deliveryFeeUsd > 0) {
-          <div class="mb-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800/40">
+          <div
+            class="mb-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800/40"
+          >
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                <svg
+                  class="w-4 h-4 text-amber-600 dark:text-amber-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                  />
                 </svg>
                 <span class="text-xs font-medium text-amber-900 dark:text-amber-200">
                   Envío ({{ formatDistance(priceBreakdown.distanceKm || 0) }})
@@ -117,9 +152,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
             ≈ {{ formatUsd(priceBreakdown.totalUsd) }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-2">
-            Se cobra inmediatamente
-          </p>
+          <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-2">Se cobra inmediatamente</p>
         </div>
       </div>
 
@@ -231,8 +264,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 clip-rule="evenodd"
               />
             </svg>
-            <strong>Importante:</strong> El total del alquiler y la garantía se procesan por separado.
-            La garantía {{ paymentMode === 'card' ? 'se libera' : 'queda disponible' }} si no hay daños.
+            <strong>Importante:</strong> El total del alquiler y la garantía se procesan por
+            separado. La garantía {{ paymentMode === 'card' ? 'se libera' : 'queda disponible' }} si
+            no hay daños.
           </p>
         </div>
       </div>

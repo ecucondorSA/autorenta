@@ -108,10 +108,7 @@ export class MyClaimsPage {
   reportNewClaim() {
     // Navigate to booking selection or ask which booking
     this.router.navigate(['/bookings']);
-    this.toastService.showToast(
-      'Selecciona una reserva para reportar un siniestro',
-      'info'
-    );
+    this.toastService.showToast('Selecciona una reserva para reportar un siniestro', 'info');
   }
 
   getStatusColor(status: InsuranceClaim['status']): string {

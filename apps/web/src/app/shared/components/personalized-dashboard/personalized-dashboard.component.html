@@ -19,16 +19,20 @@
     <div class="welcome-actions">
       <button
         class="action-button primary"
-        (click)="navigateTo(userRole() === 'owner' || userRole() === 'both' ? '/cars/publish' : '/cars')"
+        (click)="
+          navigateTo(userRole() === 'owner' || userRole() === 'both' ? '/cars/publish' : '/cars')
+        "
       >
         {{ userRole() === 'owner' || userRole() === 'both' ? 'Publicar Auto' : 'Buscar Auto' }}
       </button>
-      <button
-        class="action-button secondary"
-        (click)="refreshDashboard()"
-      >
+      <button class="action-button secondary" (click)="refreshDashboard()">
         <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
         </svg>
         Actualizar
       </button>
@@ -44,9 +48,7 @@
         <div class="stat-value">${{ stats().walletBalance.toLocaleString() }}</div>
         <div class="stat-label">Saldo Wallet</div>
       </div>
-      <button class="stat-action" (click)="navigateTo('/wallet')">
-        Ver detalles →
-      </button>
+      <button class="stat-action" (click)="navigateTo('/wallet')">Ver detalles →</button>
     </div>
 
     <!-- Notifications -->
@@ -56,9 +58,7 @@
         <div class="stat-value">{{ stats().unreadNotifications }}</div>
         <div class="stat-label">Notificaciones</div>
       </div>
-      <button class="stat-action" (click)="navigateTo('/notifications')">
-        Ver todas →
-      </button>
+      <button class="stat-action" (click)="navigateTo('/notifications')">Ver todas →</button>
     </div>
 
     <!-- Role-specific stats -->
@@ -68,9 +68,7 @@
         <div class="stat-value">{{ stats().availableCars }}</div>
         <div class="stat-label">Autos Activos</div>
       </div>
-      <button class="stat-action" (click)="navigateTo('/cars/my')">
-        Gestionar →
-      </button>
+      <button class="stat-action" (click)="navigateTo('/cars/my')">Gestionar →</button>
     </div>
 
     <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card earnings">
@@ -79,9 +77,7 @@
         <div class="stat-value">${{ stats().totalEarnings.toLocaleString() }}</div>
         <div class="stat-label">Ganancias Totales</div>
       </div>
-      <button class="stat-action" (click)="navigateTo('/admin')">
-        Ver reporte →
-      </button>
+      <button class="stat-action" (click)="navigateTo('/admin')">Ver reporte →</button>
     </div>
 
     <div *ngIf="userRole() === 'renter' || userRole() === 'both'" class="stat-card bookings">
@@ -90,9 +86,7 @@
         <div class="stat-value">{{ stats().activeBookings }}</div>
         <div class="stat-label">Reservas Activas</div>
       </div>
-      <button class="stat-action" (click)="navigateTo('/bookings')">
-        Ver todas →
-      </button>
+      <button class="stat-action" (click)="navigateTo('/bookings')">Ver todas →</button>
     </div>
 
     <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card pending">
@@ -101,9 +95,7 @@
         <div class="stat-value">{{ stats().pendingBookings }}</div>
         <div class="stat-label">Reservas Pendientes</div>
       </div>
-      <button class="stat-action" (click)="navigateTo('/bookings/owner')">
-        Revisar →
-      </button>
+      <button class="stat-action" (click)="navigateTo('/bookings/owner')">Revisar →</button>
     </div>
   </div>
 
@@ -130,7 +122,10 @@
   <!-- Recent Activity -->
   <div class="recent-activity">
     <!-- Recent Cars (for owners) -->
-    <div *ngIf="(userRole() === 'owner' || userRole() === 'both') && recentCars().length > 0" class="activity-section">
+    <div
+      *ngIf="(userRole() === 'owner' || userRole() === 'both') && recentCars().length > 0"
+      class="activity-section"
+    >
       <div class="section-header">
         <h2>Mis Autos Recientes</h2>
         <button class="view-all" (click)="navigateTo('/cars/my')">Ver todos →</button>
@@ -146,7 +141,15 @@
             <h3>{{ car.title }}</h3>
             <p>{{ car.location_city }}</p>
             <span class="car-status" [class]="car.status">
-              {{ car.status === 'active' ? 'Activo' : car.status === 'suspended' ? 'Suspendido' : car.status === 'maintenance' ? 'Mantenimiento' : 'Borrador' }}
+              {{
+                car.status === 'active'
+                  ? 'Activo'
+                  : car.status === 'suspended'
+                    ? 'Suspendido'
+                    : car.status === 'maintenance'
+                      ? 'Mantenimiento'
+                      : 'Borrador'
+              }}
             </span>
           </div>
         </div>
@@ -154,7 +157,10 @@
     </div>
 
     <!-- Recent Bookings (for renters) -->
-    <div *ngIf="(userRole() === 'renter' || userRole() === 'both') && recentBookings().length > 0" class="activity-section">
+    <div
+      *ngIf="(userRole() === 'renter' || userRole() === 'both') && recentBookings().length > 0"
+      class="activity-section"
+    >
       <div class="section-header">
         <h2>Mis Reservas Recientes</h2>
         <button class="view-all" (click)="navigateTo('/bookings')">Ver todas →</button>
@@ -167,14 +173,21 @@
         >
           <div class="booking-info">
             <h3>{{ booking.car_title }}</h3>
-            <p>{{ booking.start_at | date:'dd/MM/yyyy' }} - {{ booking.end_at | date:'dd/MM/yyyy' }}</p>
+            <p>
+              {{ booking.start_at | date: 'dd/MM/yyyy' }} -
+              {{ booking.end_at | date: 'dd/MM/yyyy' }}
+            </p>
             <span class="booking-status" [class]="booking.status">
-              {{ booking.status === 'confirmed' ? 'Confirmada' : booking.status === 'pending' ? 'Pendiente' : booking.status }}
+              {{
+                booking.status === 'confirmed'
+                  ? 'Confirmada'
+                  : booking.status === 'pending'
+                    ? 'Pendiente'
+                    : booking.status
+              }}
             </span>
           </div>
-          <div class="booking-price">
-            ${{ booking.total_amount_cents / 100 | number:'1.0-0' }}
-          </div>
+          <div class="booking-price">${{ booking.total_amount_cents / 100 | number: '1.0-0' }}</div>
         </div>
       </div>
     </div>
@@ -186,9 +199,15 @@
       <p>¡Comienza publicando un auto o haciendo una reserva!</p>
       <button
         class="cta-button"
-        (click)="navigateTo(userRole() === 'owner' || userRole() === 'both' ? '/cars/publish' : '/cars')"
+        (click)="
+          navigateTo(userRole() === 'owner' || userRole() === 'both' ? '/cars/publish' : '/cars')
+        "
       >
-        {{ userRole() === 'owner' || userRole() === 'both' ? 'Publicar mi primer auto' : 'Buscar mi primer auto' }}
+        {{
+          userRole() === 'owner' || userRole() === 'both'
+            ? 'Publicar mi primer auto'
+            : 'Buscar mi primer auto'
+        }}
       </button>
     </div>
   </div>

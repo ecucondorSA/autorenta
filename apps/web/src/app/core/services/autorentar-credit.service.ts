@@ -79,9 +79,7 @@ export class AutorentarCreditService {
     this.loading.set(true);
     this.error.set(null);
 
-    return from(
-      this.supabase.rpc('wallet_get_autorentar_credit_info')
-    ).pipe(
+    return from(this.supabase.rpc('wallet_get_autorentar_credit_info')).pipe(
       map(({ data, error }) => {
         if (error) throw error;
         if (!data || data.length === 0) {
@@ -106,14 +104,17 @@ export class AutorentarCreditService {
         this.handleError(err, 'Error al obtener información de Crédito Autorentar');
         return throwError(() => err);
       }),
-      tap(() => this.loading.set(false))
+      tap(() => this.loading.set(false)),
     );
   }
 
   /**
    * Issue initial Autorentar Credit to user
    */
-  issueCredit(userId: string, amountCents: number = 30000): Observable<AutorentarCreditIssueResult> {
+  issueCredit(
+    userId: string,
+    amountCents: number = 30000,
+  ): Observable<AutorentarCreditIssueResult> {
     this.loading.set(true);
     this.error.set(null);
 
@@ -121,7 +122,7 @@ export class AutorentarCreditService {
       this.supabase.rpc('issue_autorentar_credit', {
         p_user_id: userId,
         p_amount_cents: amountCents,
-      })
+      }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
@@ -136,7 +137,7 @@ export class AutorentarCreditService {
         this.handleError(err, 'Error al emitir Crédito Autorentar');
         return throwError(() => err);
       }),
-      tap(() => this.loading.set(false))
+      tap(() => this.loading.set(false)),
     );
   }
 
@@ -158,7 +159,7 @@ export class AutorentarCreditService {
         p_claim_amount_cents: params.claimAmountCents,
         p_booking_id: params.bookingId,
         p_claim_id: params.claimId ?? null,
-      })
+      }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
@@ -173,7 +174,7 @@ export class AutorentarCreditService {
         this.handleError(err, 'Error al consumir Crédito Autorentar');
         return throwError(() => err);
       }),
-      tap(() => this.loading.set(false))
+      tap(() => this.loading.set(false)),
     );
   }
 
@@ -187,7 +188,7 @@ export class AutorentarCreditService {
     return from(
       this.supabase.rpc('extend_autorentar_credit_for_good_history', {
         p_user_id: userId,
-      })
+      }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
@@ -204,7 +205,7 @@ export class AutorentarCreditService {
         this.handleError(err, 'Error al renovar Crédito Autorentar');
         return throwError(() => err);
       }),
-      tap(() => this.loading.set(false))
+      tap(() => this.loading.set(false)),
     );
   }
 
@@ -214,7 +215,7 @@ export class AutorentarCreditService {
   checkRenewalEligibility(userId: string): Observable<boolean> {
     return this.extendCredit(userId).pipe(
       map((result) => result.success && result.renewed),
-      catchError(() => from([false]))
+      catchError(() => from([false])),
     );
   }
 
@@ -228,7 +229,7 @@ export class AutorentarCreditService {
     return from(
       this.supabase.rpc('recognize_autorentar_credit_breakage', {
         p_user_id: userId,
-      })
+      }),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
@@ -245,7 +246,7 @@ export class AutorentarCreditService {
         this.handleError(err, 'Error al reconocer breakage de Crédito Autorentar');
         return throwError(() => err);
       }),
-      tap(() => this.loading.set(false))
+      tap(() => this.loading.set(false)),
     );
   }
 

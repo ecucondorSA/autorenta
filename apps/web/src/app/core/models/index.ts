@@ -804,7 +804,13 @@ export interface BonusMalusDisplay {
 // REFUND MANAGEMENT SYSTEM
 // ============================================
 
-export type RefundStatus = 'pending' | 'approved' | 'processing' | 'completed' | 'failed' | 'rejected';
+export type RefundStatus =
+  | 'pending'
+  | 'approved'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'rejected';
 export type RefundDestination = 'wallet' | 'original_payment_method';
 
 export interface RefundRequest {

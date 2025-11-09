@@ -29,7 +29,7 @@ export class PwaInstallPromptComponent {
   readonly installing = signal(false);
   private readonly router = inject(Router);
   private readonly pwaService = inject(PwaService);
-  
+
   private currentRoute = signal<string>('');
   private showBenefitsFlag = signal<boolean>(true);
   private showSecurityBadgesFlag = signal<boolean>(true);

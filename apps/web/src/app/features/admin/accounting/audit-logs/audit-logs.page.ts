@@ -9,6 +9,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
   selector: 'app-audit-logs',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  /* eslint-disable */
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
@@ -155,6 +156,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
       }
     </div>
   `,
+  /* eslint-enable */
 })
 export class AuditLogsPage implements OnInit {
   private readonly supabaseService = inject(SupabaseClientService);

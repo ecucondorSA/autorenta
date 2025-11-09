@@ -54,11 +54,7 @@ export function initSentry(): void {
 
     // Performance Monitoring
     tracesSampleRate: environment.sentryTracesSampleRate,
-    tracePropagationTargets: [
-      'localhost',
-      environment.appUrl,
-      environment.supabaseUrl,
-    ],
+    tracePropagationTargets: ['localhost', environment.appUrl, environment.supabaseUrl],
 
     // Integrations
     integrations: [
@@ -87,7 +83,7 @@ export function initSentry(): void {
           const url = new URL(event.request.url);
           const sensitiveParams = ['token', 'key', 'password', 'secret', 'apikey'];
 
-          sensitiveParams.forEach(param => {
+          sensitiveParams.forEach((param) => {
             if (url.searchParams.has(param)) {
               url.searchParams.set(param, '[REDACTED]');
             }
@@ -102,7 +98,7 @@ export function initSentry(): void {
       // Remove sensitive headers
       if (event.request?.headers) {
         const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key'];
-        sensitiveHeaders.forEach(header => {
+        sensitiveHeaders.forEach((header) => {
           if (event.request?.headers?.[header]) {
             event.request.headers[header] = '[REDACTED]';
           }

@@ -30,7 +30,7 @@ describe('DistanceCalculatorService', () => {
 
     it('should calculate short distances correctly', () => {
       // CABA Palermo to CABA Recoleta (~2km)
-      const distance = service.calculateDistance(-34.5875, -58.4097, -34.5889, -58.3930);
+      const distance = service.calculateDistance(-34.5875, -58.4097, -34.5889, -58.393);
 
       expect(distance).toBeGreaterThan(1);
       expect(distance).toBeLessThan(3);
@@ -43,7 +43,7 @@ describe('DistanceCalculatorService', () => {
     });
 
     it('should handle negative coordinates', () => {
-      const distance = service.calculateDistance(-34.6037, -58.3816, 40.7128, -74.0060);
+      const distance = service.calculateDistance(-34.6037, -58.3816, 40.7128, -74.006);
 
       // BA to NYC: ~8500 km
       expect(distance).toBeGreaterThan(8000);
@@ -334,7 +334,7 @@ describe('DistanceCalculatorService', () => {
     it('should maintain consistency between tier classification and multiplier', () => {
       const distances = [5, 15, 25, 50, 75, 100, 150, 200];
 
-      distances.forEach(distance => {
+      distances.forEach((distance) => {
         const tier = service.getDistanceTier(distance);
         const multiplier = service.getGuaranteeMultiplier(tier);
 
@@ -428,7 +428,12 @@ describe('DistanceCalculatorService', () => {
       const northPole = { lat: 90, lng: 0 };
       const southPole = { lat: -90, lng: 0 };
 
-      const distance = service.calculateDistance(northPole.lat, northPole.lng, southPole.lat, southPole.lng);
+      const distance = service.calculateDistance(
+        northPole.lat,
+        northPole.lng,
+        southPole.lat,
+        southPole.lng,
+      );
 
       expect(distance).toBeGreaterThan(19000);
       expect(distance).toBeLessThan(21000);
@@ -438,7 +443,12 @@ describe('DistanceCalculatorService', () => {
       const tokyo = { lat: 35.6762, lng: 139.6503 };
       const sanFrancisco = { lat: 37.7749, lng: -122.4194 };
 
-      const distance = service.calculateDistance(tokyo.lat, tokyo.lng, sanFrancisco.lat, sanFrancisco.lng);
+      const distance = service.calculateDistance(
+        tokyo.lat,
+        tokyo.lng,
+        sanFrancisco.lat,
+        sanFrancisco.lng,
+      );
 
       // Should be approximately 8,300 km
       expect(distance).toBeGreaterThan(8000);

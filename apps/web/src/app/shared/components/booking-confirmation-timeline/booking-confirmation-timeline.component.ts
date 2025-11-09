@@ -142,7 +142,10 @@ export class BookingConfirmationTimelineComponent {
         key: 'car_delivered',
         label: 'Vehículo Entregado',
         description: 'Check-in completado, alquiler iniciado',
-        completed: booking.status === 'in_progress' || booking.status === 'completed' || !!booking.returned_at,
+        completed:
+          booking.status === 'in_progress' ||
+          booking.status === 'completed' ||
+          !!booking.returned_at,
         timestamp: booking.start_at,
         actor: 'Ambas partes',
         actorId: null,
@@ -155,7 +158,11 @@ export class BookingConfirmationTimelineComponent {
         description: 'Auto devuelto físicamente',
         completed: !!booking.returned_at,
         timestamp: booking.returned_at || null,
-        actor: booking.returned_at ? (this.isRenter() ? this.renterName() : this.ownerName()) : null,
+        actor: booking.returned_at
+          ? this.isRenter()
+            ? this.renterName()
+            : this.ownerName()
+          : null,
         actorId: booking.returned_at ? booking.renter_id : null,
         requiresAction: !booking.returned_at && booking.status === 'in_progress' && this.isRenter(),
         actionLabel: 'Marcar como devuelto',

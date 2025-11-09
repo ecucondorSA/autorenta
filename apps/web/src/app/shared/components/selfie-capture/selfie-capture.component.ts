@@ -31,7 +31,9 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           </div>
           <div>
             <h4 class="font-semibold text-gray-900">Verificación Facial (Level 3)</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Verifica tu identidad con un selfie en video</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              Verifica tu identidad con un selfie en video
+            </p>
           </div>
         </div>
         <span class="text-xs font-medium px-2 py-1 rounded-full" [class]="getStatusLabelClass()">
@@ -43,7 +45,11 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       <div *ngIf="status().isVerified" class="p-4 bg-green-50 border border-green-200 rounded-lg">
         <div class="flex items-center gap-2 text-green-800">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"
+            />
           </svg>
           <span class="text-sm font-medium">Identidad verificada exitosamente</span>
         </div>
@@ -54,7 +60,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       </div>
 
       <!-- Level 2 Required -->
-      <div *ngIf="status().requiresLevel2" class="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+      <div
+        *ngIf="status().requiresLevel2"
+        class="p-4 bg-orange-50 border border-orange-200 rounded-lg"
+      >
         <p class="text-sm text-orange-800">
           ⚠️ Debes completar Level 2 (documentos) antes de verificar tu identidad con selfie.
         </p>
@@ -63,7 +72,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       <!-- Capture State -->
       <div *ngIf="!status().isVerified && !status().requiresLevel2" class="space-y-4">
         <!-- Instructions -->
-        <div *ngIf="!isRecording() && !hasVideo()" class="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2">
+        <div
+          *ngIf="!isRecording() && !hasVideo()"
+          class="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2"
+        >
           <p class="text-sm font-medium text-blue-900">Instrucciones:</p>
           <ul class="text-sm text-blue-800 space-y-1 ml-4 list-disc">
             <li>Asegúrate de estar en un lugar bien iluminado</li>
@@ -86,20 +98,42 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           ></video>
 
           <!-- Recording Indicator -->
-          <div *ngIf="isRecording()" class="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-medium animate-pulse">
+          <div
+            *ngIf="isRecording()"
+            class="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-medium animate-pulse"
+          >
             <span class="w-2 h-2 bg-white rounded-full"></span>
             <span>REC {{ recordingSeconds() }}s</span>
           </div>
 
           <!-- Face Frame Overlay -->
-          <div *ngIf="isRecording()" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div class="border-4 border-white rounded-full" style="width: 200px; height: 250px;"></div>
+          <div
+            *ngIf="isRecording()"
+            class="absolute inset-0 flex items-center justify-center pointer-events-none"
+          >
+            <div
+              class="border-4 border-white rounded-full"
+              style="width: 200px; height: 250px;"
+            ></div>
           </div>
 
           <!-- Placeholder -->
-          <div *ngIf="!isRecording() && !hasVideo()" class="absolute inset-0 flex flex-col items-center justify-center text-white">
-            <svg class="w-20 h-20 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          <div
+            *ngIf="!isRecording() && !hasVideo()"
+            class="absolute inset-0 flex flex-col items-center justify-center text-white"
+          >
+            <svg
+              class="w-20 h-20 mb-4 opacity-50"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
             </svg>
             <p class="text-sm opacity-75">Cámara lista para grabar</p>
           </div>
@@ -117,7 +151,9 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           >
             <span class="flex items-center justify-center gap-2">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                <path
+                  d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
+                />
               </svg>
               <span>Iniciar Grabación</span>
             </span>
@@ -132,7 +168,12 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           >
             <span class="flex items-center justify-center gap-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               <span>Verificar Identidad</span>
             </span>
@@ -161,14 +202,25 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         </div>
 
         <!-- Success Message -->
-        <div *ngIf="successMessage()" class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
+        <div
+          *ngIf="successMessage()"
+          class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800"
+        >
           {{ successMessage() }}
         </div>
 
         <!-- Error Message -->
-        <div *ngIf="error()" class="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
+        <div
+          *ngIf="error()"
+          class="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800"
+        >
           {{ error() }}
-          <button *ngIf="hasVideo()" type="button" (click)="retake()" class="mt-2 text-sm font-medium underline">
+          <button
+            *ngIf="hasVideo()"
+            type="button"
+            (click)="retake()"
+            class="mt-2 text-sm font-medium underline"
+          >
             Intentar nuevamente
           </button>
         </div>

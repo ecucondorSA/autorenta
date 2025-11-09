@@ -140,13 +140,14 @@ export class PaymentAuthorizationService {
         if (!session?.access_token) throw new Error('No session token');
         return from(
           this.supabase.functions.invoke(functionName, {
-            body: (body as any),
+            body: body as any,
             headers: { Authorization: `Bearer ${session.access_token}` },
           }),
         );
       }),
       map((response: unknown) => {
-        if (!(response as any).data.success) throw new Error((response as any).data.error || 'Function call failed');
+        if (!(response as any).data.success)
+          throw new Error((response as any).data.error || 'Function call failed');
         return { ok: true };
       }),
       catchError((error) => of({ ok: false, error: error.message || 'Error desconocido' })),

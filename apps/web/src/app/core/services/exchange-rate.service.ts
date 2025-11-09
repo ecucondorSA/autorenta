@@ -69,7 +69,7 @@ export class ExchangeRateService {
         .limit(1)
         .single();
 
-      if ((error)) {
+      if (error) {
         throw new Error(`Database error: ${error.message}`);
       }
 

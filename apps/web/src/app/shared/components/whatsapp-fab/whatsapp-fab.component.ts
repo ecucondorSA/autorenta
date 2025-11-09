@@ -21,9 +21,7 @@ export class WhatsappFabComponent {
    * Construye el mensaje predefinido para WhatsApp
    */
   get whatsappMessage(): string {
-    const carInfo = this.car
-      ? `${this.car.brand} ${this.car.model} ${this.car.year}`
-      : 'el auto';
+    const carInfo = this.car ? `${this.car.brand} ${this.car.model} ${this.car.year}` : 'el auto';
 
     return encodeURIComponent(
       `Hola! Vi tu publicación de ${carInfo} en AutoRenta y me gustaría consultarte sobre disponibilidad y condiciones de alquiler.`,

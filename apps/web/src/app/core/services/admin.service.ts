@@ -23,11 +23,7 @@
  */
 
 import { Injectable, inject } from '@angular/core';
-import {
-  RefundRequest,
-  ProcessRefundParams,
-  ProcessRefundResult,
-} from '../models';
+import { RefundRequest, ProcessRefundParams, ProcessRefundResult } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 import type {
@@ -365,11 +361,7 @@ export class AdminService {
   /**
    * Grant admin role to user (super admin only)
    */
-  async grantAdminRole(
-    userId: string,
-    role: AdminRole,
-    notes?: string,
-  ): Promise<AdminUser | null> {
+  async grantAdminRole(userId: string, role: AdminRole, notes?: string): Promise<AdminUser | null> {
     try {
       // Check permission
       const hasPermission = await this.hasPermission('grant_admin_roles');
@@ -820,7 +812,10 @@ export class AdminService {
    * @param userId - User ID to flag
    * @param notes - Reason for flagging
    */
-  async flagVerificationSuspicious(userId: string, notes: string): Promise<AdminVerificationResponse> {
+  async flagVerificationSuspicious(
+    userId: string,
+    notes: string,
+  ): Promise<AdminVerificationResponse> {
     const { data, error } = await this.supabase.rpc('admin_flag_verification_suspicious', {
       p_user_id: userId,
       p_notes: notes,
@@ -987,8 +982,7 @@ export class AdminService {
       .limit(20);
 
     // If query looks like a UUID, search by ID
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (uuidRegex.test(query)) {
       bookingsQuery = bookingsQuery.eq('id', query);
     }

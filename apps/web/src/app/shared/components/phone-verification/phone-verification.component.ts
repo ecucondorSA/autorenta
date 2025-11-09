@@ -61,12 +61,24 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         <!-- Debug Panel (temporal) -->
         <div class="p-3 bg-yellow-100 border-2 border-yellow-500 rounded text-xs">
           <p class="font-bold mb-2">🐛 DEBUG - Estado del componente:</p>
-          <p>isVerified: <strong>{{ status().isVerified }}</strong></p>
-          <p>phone: <strong>{{ status().value || 'null' }}</strong></p>
-          <p>otpSent: <strong>{{ status().otpSent }}</strong></p>
-          <p>verifiedAt: <strong>{{ status().verifiedAt || 'null' }}</strong></p>
-          <p>canResend: <strong>{{ status().canResend }}</strong></p>
-          <p>cooldownSeconds: <strong>{{ status().cooldownSeconds }}</strong></p>
+          <p>
+            isVerified: <strong>{{ status().isVerified }}</strong>
+          </p>
+          <p>
+            phone: <strong>{{ status().value || 'null' }}</strong>
+          </p>
+          <p>
+            otpSent: <strong>{{ status().otpSent }}</strong>
+          </p>
+          <p>
+            verifiedAt: <strong>{{ status().verifiedAt || 'null' }}</strong>
+          </p>
+          <p>
+            canResend: <strong>{{ status().canResend }}</strong>
+          </p>
+          <p>
+            cooldownSeconds: <strong>{{ status().cooldownSeconds }}</strong>
+          </p>
         </div>
 
         <!-- Phone Input (if OTP not sent yet) -->
@@ -149,9 +161,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         <!-- OTP Input (if OTP sent) -->
         <div *ngIf="status().otpSent" class="space-y-4">
           <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p class="text-sm text-blue-800 font-medium">
-              Código enviado a {{ status().value }}
-            </p>
+            <p class="text-sm text-blue-800 font-medium">Código enviado a {{ status().value }}</p>
             <p class="text-xs text-blue-700 mt-1">
               Ingresa el código de 6 dígitos que recibiste por SMS
             </p>

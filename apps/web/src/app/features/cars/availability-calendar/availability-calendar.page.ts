@@ -15,7 +15,10 @@ import { Spanish } from 'flatpickr/dist/l10n/es';
 import type { Instance } from 'flatpickr/dist/types/instance';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { ToastService } from '../../../core/services/toast.service';
-import { CarAvailabilityService, DetailedBlockedRange } from '../../../core/services/car-availability.service';
+import {
+  CarAvailabilityService,
+  DetailedBlockedRange,
+} from '../../../core/services/car-availability.service';
 import { CarBlockingService } from '../../../core/services/car-blocking.service';
 import {
   BlockDateModalComponent,
@@ -89,7 +92,11 @@ export class AvailabilityCalendarPage implements AfterViewInit, OnDestroy {
       const startDate = format(startOfMonth(this.currentMonth()), 'yyyy-MM-dd');
       const endDate = format(endOfMonth(addMonths(this.currentMonth(), 2)), 'yyyy-MM-dd');
 
-      const ranges = await this.availabilityService.getBlockedRangesWithDetails(carId, startDate, endDate);
+      const ranges = await this.availabilityService.getBlockedRangesWithDetails(
+        carId,
+        startDate,
+        endDate,
+      );
 
       this.blockedRanges.set(ranges);
       this.initFlatpickr();
@@ -232,7 +239,11 @@ export class AvailabilityCalendarPage implements AfterViewInit, OnDestroy {
   }
 
   async clearAllBlocks(): Promise<void> {
-    if (!confirm('¿Estás seguro de que quieres eliminar TODOS los bloqueos manuales? Esta acción no se puede deshacer.')) {
+    if (
+      !confirm(
+        '¿Estás seguro de que quieres eliminar TODOS los bloqueos manuales? Esta acción no se puede deshacer.',
+      )
+    ) {
       return;
     }
 

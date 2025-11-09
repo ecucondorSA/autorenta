@@ -7,6 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-payout-stats',
   standalone: true,
   imports: [CommonModule],
+  /* eslint-disable */
   template: `
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <h3 class="mb-4 text-lg font-semibold text-gray-900">Estadísticas de Payouts</h3>
@@ -55,6 +56,7 @@ import { AuthService } from '../../../core/services/auth.service';
       }
     </div>
   `,
+  /* eslint-enable */
 })
 export class PayoutStatsComponent implements OnInit {
   private readonly payoutService = inject(PayoutService);

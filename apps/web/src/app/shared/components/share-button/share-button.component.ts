@@ -40,13 +40,7 @@ export type ShareType = 'car' | 'booking' | 'app' | 'custom';
         </svg>
         <span>Compartiendo...</span>
       } @else {
-        <svg
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -85,7 +79,8 @@ export class ShareButtonComponent {
   @Input() customText?: string;
   @Input() customUrl?: string;
   @Input() label = 'Compartir';
-  @Input() buttonClass = 'inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors';
+  @Input() buttonClass =
+    'inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors';
   @Input() ariaLabel = 'Compartir';
 
   private readonly shareService = inject(ShareService);
@@ -139,4 +134,3 @@ export class ShareButtonComponent {
     }
   }
 }
-

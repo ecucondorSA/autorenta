@@ -114,7 +114,10 @@ export class CarBlockingService {
         created_by: userData.user.id,
       }));
 
-      const { data, error } = await this.supabase.from('car_blocked_dates').insert(blocksData).select();
+      const { data, error } = await this.supabase
+        .from('car_blocked_dates')
+        .insert(blocksData)
+        .select();
 
       if (error) {
         errors.push(error.message);

@@ -85,9 +85,9 @@ describe('TelemetryService', () => {
   ];
 
   beforeEach(() => {
-    const rpcSpy = jasmine.createSpy('rpc').and.returnValue(
-      Promise.resolve({ data: [mockSummary], error: null })
-    );
+    const rpcSpy = jasmine
+      .createSpy('rpc')
+      .and.returnValue(Promise.resolve({ data: [mockSummary], error: null }));
 
     supabaseMock = {
       rpc: rpcSpy,
@@ -117,7 +117,7 @@ describe('TelemetryService', () => {
     it('should record telemetry data successfully', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockRecordResult], error: null }),
-        Promise.resolve({ data: [mockSummary], error: null })
+        Promise.resolve({ data: [mockSummary], error: null }),
       );
 
       service
@@ -143,7 +143,7 @@ describe('TelemetryService', () => {
     it('should refresh summary after recording', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockRecordResult], error: null }),
-        Promise.resolve({ data: [mockSummary], error: null })
+        Promise.resolve({ data: [mockSummary], error: null }),
       );
 
       service
@@ -504,7 +504,7 @@ describe('TelemetryService', () => {
     it('should set loading state during recordTelemetry', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockRecordResult], error: null }),
-        Promise.resolve({ data: [mockSummary], error: null })
+        Promise.resolve({ data: [mockSummary], error: null }),
       );
 
       expect(service.loading()).toBe(false);

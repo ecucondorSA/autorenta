@@ -103,7 +103,7 @@ export class NotificationsSettingsPage {
       } else {
         this.toastService.showToast(
           'No se pudo habilitar notificaciones push. Verifica los permisos del navegador.',
-          'error'
+          'error',
         );
       }
     }
@@ -148,7 +148,7 @@ export class NotificationsSettingsPage {
       'Para cambiar los permisos de notificaciones:\n\n' +
         '1. Chrome/Edge: Haz clic en el ícono de candado en la barra de direcciones\n' +
         '2. Firefox: Haz clic en el ícono de escudo\n' +
-        '3. Safari: Preferencias > Sitios web > Notificaciones'
+        '3. Safari: Preferencias > Sitios web > Notificaciones',
     );
   }
 }

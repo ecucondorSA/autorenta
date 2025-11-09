@@ -62,9 +62,7 @@
             >
               Comisión
             </p>
-            <p class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">
-              15-25%
-            </p>
+            <p class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">15-25%</p>
             <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
               Dependiendo de categoría
             </p>
@@ -93,8 +91,8 @@
               Datos autocompletados
             </p>
             <p class="text-xs text-accent-petrol/80 dark:text-pearl-light/80 mt-1">
-              Usamos tu última publicación para ahorrar tiempo. Revisá marca, modelo y fotos
-              antes de confirmar.
+              Usamos tu última publicación para ahorrar tiempo. Revisá marca, modelo y fotos antes
+              de confirmar.
             </p>
           </div>
         </div>
@@ -103,9 +101,7 @@
           *ngIf="mpStatusLoading()"
           class="mt-4 flex items-center gap-3 rounded-lg border border-pearl-gray/50 bg-white/70 p-3 text-sm text-charcoal-medium dark:border-neutral-700 dark:bg-anthracite/60 dark:text-pearl-light/80"
         >
-          <span
-            class="inline-flex h-2.5 w-2.5 animate-ping rounded-full bg-accent-petrol"
-          ></span>
+          <span class="inline-flex h-2.5 w-2.5 animate-ping rounded-full bg-accent-petrol"></span>
           Comprobando el estado de tu cuenta de Mercado Pago...
         </div>
 
@@ -119,8 +115,8 @@
               <div>
                 <p class="font-semibold">No pudimos verificar Mercado Pago</p>
                 <p class="text-xs md:text-sm">
-                  {{ mpStatusError() }}. Intentá nuevamente en unos minutos o volvé a vincular
-                  tu cuenta.
+                  {{ mpStatusError() }}. Intentá nuevamente en unos minutos o volvé a vincular tu
+                  cuenta.
                 </p>
               </div>
             </div>
@@ -144,8 +140,8 @@
               <div class="space-y-1">
                 <p class="text-base font-semibold">Conectá Mercado Pago y empezá a ganar</p>
                 <p class="text-xs md:text-sm md:max-w-xl">
-                  Conectá tu cuenta en 30 segundos y empezá a recibir reservas con pagos automáticos.
-                  Tu auto se guardará como borrador y podrás activarlo cuando quieras.
+                  Conectá tu cuenta en 30 segundos y empezá a recibir reservas con pagos
+                  automáticos. Tu auto se guardará como borrador y podrás activarlo cuando quieras.
                 </p>
               </div>
             </div>
@@ -221,16 +217,16 @@
             iluminación.
           </li>
           <li class="flex items-start gap-2">
-            <span class="text-accent-petrol mt-0.5">•</span>Ingresá el valor estimado para
-            calcular seguros y depósitos.
+            <span class="text-accent-petrol mt-0.5">•</span>Ingresá el valor estimado para calcular
+            seguros y depósitos.
           </li>
           <li class="flex items-start gap-2">
-            <span class="text-accent-petrol mt-0.5">•</span>Definí precios, mínimos y depósito
-            según tu disponibilidad.
+            <span class="text-accent-petrol mt-0.5">•</span>Definí precios, mínimos y depósito según
+            tu disponibilidad.
           </li>
           <li class="flex items-start gap-2">
-            <span class="text-accent-petrol mt-0.5">•</span>Completá dirección exacta para
-            habilitar mapa y retiro.
+            <span class="text-accent-petrol mt-0.5">•</span>Completá dirección exacta para habilitar
+            mapa y retiro.
           </li>
         </ul>
         <div
@@ -291,8 +287,7 @@
                   </option>
                 </select>
                 <p *ngIf="selectedModelInfo()" class="mt-1 text-xs text-gray-500">
-                  {{ selectedModelInfo()?.category }} •
-                  {{ selectedModelInfo()?.seats }} asientos •
+                  {{ selectedModelInfo()?.category }} • {{ selectedModelInfo()?.seats }} asientos •
                   {{ selectedModelInfo()?.doors }} puertas
                 </p>
               </div>
@@ -312,9 +307,7 @@
 
               <!-- Mileage -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Kilometraje *</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2">Kilometraje *</label>
                 <input
                   type="number"
                   formControlName="mileage"
@@ -337,9 +330,7 @@
 
               <!-- Transmission -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Transmisión *</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2">Transmisión *</label>
                 <select
                   formControlName="transmission"
                   class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol"
@@ -352,9 +343,7 @@
 
               <!-- Fuel -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Combustible *</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2">Combustible *</label>
                 <select
                   formControlName="fuel"
                   class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-accent-petrol"
@@ -413,17 +402,13 @@
                     (click)="setPricingStrategy('custom')"
                   >
                     <p class="text-sm font-semibold">Precio personalizado</p>
-                    <p class="text-xs text-gray-600 mt-1">
-                      Definí manualmente el valor diario.
-                    </p>
+                    <p class="text-xs text-gray-600 mt-1">Definí manualmente el valor diario.</p>
                   </button>
                 </div>
               </div>
 
               <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2"
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                   Precio por día *
                   <span class="text-xs text-gray-500" *ngIf="isDynamicPricing()"
                     >(AutoRenta lo ajustará automáticamente)</span
@@ -457,9 +442,7 @@
 
               <!-- ✅ NUEVO: Valor del Vehículo (USD) -->
               <div class="md:col-span-2">
-                <label
-                  class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2"
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                   Valor Estimado del Vehículo (USD) *
                   <span
                     class="text-xs text-gray-500 font-normal"
@@ -483,9 +466,7 @@
 
               <!-- Min rental days -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Días mínimos *</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2">Días mínimos *</label>
                 <input
                   type="number"
                   formControlName="min_rental_days"
@@ -671,9 +652,7 @@
                 </svg>
                 📍 Usar Mi Ubicación
               </button>
-              <div *ngIf="manualCoordinates()" class="text-xs text-smoke-black">
-                ✓ GPS activo
-              </div>
+              <div *ngIf="manualCoordinates()" class="text-xs text-smoke-black">✓ GPS activo</div>
             </div>
           </div>
 
@@ -758,16 +737,12 @@
                 >
                 <br />
                 <span class="text-purple-600 dark:text-pink-400 font-medium"
-                  >🤖 O genera fotos profesionales con IA seleccionando primero marca y
-                  modelo</span
+                  >🤖 O genera fotos profesionales con IA seleccionando primero marca y modelo</span
                 >
               </p>
             </div>
 
-            <div
-              *ngIf="uploadedPhotos().length > 0"
-              class="grid grid-cols-2 md:grid-cols-4 gap-4"
-            >
+            <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative group">
                 <img
                   [src]="photo.preview"
@@ -795,8 +770,8 @@
             <div
               class="mt-3 rounded-xl border border-dashed border-pearl-gray/70 dark:border-neutral-800/70 bg-gray-50/70 dark:bg-neutral-900/60 p-3 text-xs text-charcoal-medium dark:text-pearl-light/70"
             >
-              💡 Tip: combiná exteriores, interiores y tablero. La primera foto debe mostrar el
-              auto completo con buena iluminación.
+              💡 Tip: combiná exteriores, interiores y tablero. La primera foto debe mostrar el auto
+              completo con buena iluminación.
             </div>
 
             <div
@@ -815,8 +790,7 @@
             class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-200 dark:border-neutral-800/60"
           >
             <div class="text-xs text-gray-500 dark:text-pearl-light/60">
-              Al enviar, revisaremos la publicación y te avisaremos si necesitamos más
-              información.
+              Al enviar, revisaremos la publicación y te avisaremos si necesitamos más información.
             </div>
             <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
@@ -927,14 +901,21 @@
       >
         <div class="p-6">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">📸 Buscar Fotos de Stock</h2>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+              📸 Buscar Fotos de Stock
+            </h2>
             <button
               type="button"
               (click)="showStockPhotosModal.set(false)"
               class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -961,14 +942,21 @@
       >
         <div class="p-6">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">✨ Generar Fotos con IA</h2>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+              ✨ Generar Fotos con IA
+            </h2>
             <button
               type="button"
               (click)="showAIPhotosModal.set(false)"
               class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>

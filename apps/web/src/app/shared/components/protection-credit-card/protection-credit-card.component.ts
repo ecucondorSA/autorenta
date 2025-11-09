@@ -34,9 +34,7 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
           <ion-icon name="shield-checkmark-outline"></ion-icon>
           Crédito de Protección
         </ion-card-title>
-        <ion-card-subtitle>
-          Balance no retirable para siniestros
-        </ion-card-subtitle>
+        <ion-card-subtitle> Balance no retirable para siniestros </ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
@@ -53,7 +51,11 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
         </div>
 
         <!-- Balance Loaded -->
-        <div *ngIf="!protectionCreditService.loading() && !protectionCreditService.error() && balance()">
+        <div
+          *ngIf="
+            !protectionCreditService.loading() && !protectionCreditService.error() && balance()
+          "
+        >
           <!-- Balance Display -->
           <div class="balance-section">
             <div class="balance-header">
@@ -75,11 +77,11 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
             </div>
             <ion-progress-bar
               [value]="usagePercentage() / 100"
-              [color]="usagePercentage() > 75 ? 'danger' : usagePercentage() > 50 ? 'warning' : 'success'"
+              [color]="
+                usagePercentage() > 75 ? 'danger' : usagePercentage() > 50 ? 'warning' : 'success'
+              "
             ></ion-progress-bar>
-            <p class="usage-message">
-              {{ 100 - usagePercentage() }}% disponible para siniestros
-            </p>
+            <p class="usage-message">{{ 100 - usagePercentage() }}% disponible para siniestros</p>
           </div>
 
           <!-- Expiration Info -->
@@ -98,10 +100,7 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
               ></ion-icon>
               <div class="expiration-content">
                 <span class="expiration-label">Tiempo restante</span>
-                <span
-                  class="expiration-value"
-                  [class.warning]="isNearExpiry()"
-                >
+                <span class="expiration-value" [class.warning]="isNearExpiry()">
                   {{ daysRemainingText() }}
                 </span>
               </div>
@@ -136,7 +135,11 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
               ></ion-progress-bar>
               <p class="progress-message" [class.eligible]="renewalProgress()!.eligible">
                 <ion-icon
-                  [name]="renewalProgress()!.eligible ? 'checkmark-circle-outline' : 'information-circle-outline'"
+                  [name]="
+                    renewalProgress()!.eligible
+                      ? 'checkmark-circle-outline'
+                      : 'information-circle-outline'
+                  "
                   [color]="renewalProgress()!.eligible ? 'success' : 'medium'"
                 ></ion-icon>
                 {{ renewalProgress()!.message }}
@@ -229,7 +232,11 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
       .balance-section {
         margin-bottom: 24px;
         padding: 20px;
-        background: linear-gradient(135deg, var(--ion-color-primary-tint), var(--ion-color-secondary-tint));
+        background: linear-gradient(
+          135deg,
+          var(--ion-color-primary-tint),
+          var(--ion-color-secondary-tint)
+        );
         border-radius: 12px;
       }
 

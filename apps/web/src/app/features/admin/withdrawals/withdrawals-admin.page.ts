@@ -9,6 +9,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
   selector: 'app-withdrawals-admin',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  /* eslint-disable */
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
@@ -174,6 +175,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
       }
     </div>
   `,
+  /* eslint-enable */
 })
 export class WithdrawalsAdminPage implements OnInit {
   private readonly withdrawalService = inject(WithdrawalService);

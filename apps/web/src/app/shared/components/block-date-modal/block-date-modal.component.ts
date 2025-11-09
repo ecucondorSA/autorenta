@@ -110,14 +110,20 @@ export interface BlockDateRequest {
           </div>
 
           <!-- Apply to All Cars (only show if has multiple cars) -->
-          <div *ngIf="hasMultipleCars()" class="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
+          <div
+            *ngIf="hasMultipleCars()"
+            class="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl"
+          >
             <input
               type="checkbox"
               id="applyToAll"
               [(ngModel)]="applyToAllCars"
               class="mt-1 w-4 h-4 text-accent-petrol border-pearl-gray rounded focus:ring-accent-petrol"
             />
-            <label for="applyToAll" class="flex-1 text-sm text-smoke-black dark:text-pearl-light cursor-pointer">
+            <label
+              for="applyToAll"
+              class="flex-1 text-sm text-smoke-black dark:text-pearl-light cursor-pointer"
+            >
               <span class="font-semibold">Aplicar a todos mis autos</span>
               <p class="text-xs text-charcoal-medium dark:text-gray-400 mt-0.5">
                 Bloqueará estas fechas en todos tus vehículos
@@ -158,7 +164,14 @@ export interface BlockDateRequest {
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
               <path
                 class="opacity-75"
                 fill="currentColor"
@@ -245,7 +258,8 @@ export class BlockDateModalComponent implements AfterViewInit, OnDestroy {
           this.selectedEndDate = selectedDates[1];
 
           const days = Math.ceil(
-            (this.selectedEndDate!.getTime() - this.selectedStartDate!.getTime()) / (1000 * 60 * 60 * 24),
+            (this.selectedEndDate!.getTime() - this.selectedStartDate!.getTime()) /
+              (1000 * 60 * 60 * 24),
           );
 
           this.dateRangeText.set(

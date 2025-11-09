@@ -30,10 +30,7 @@ export class RevenueRecognitionPage implements OnInit {
 
   constructor() {
     const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
-    );
+    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
   }
 
   async ngOnInit(): Promise<void> {
@@ -45,7 +42,9 @@ export class RevenueRecognitionPage implements OnInit {
     try {
       const cleanFilters = {
         bookingId: this.filters().bookingId || undefined,
-        isRecognized: this.filters().isRecognized ? this.filters().isRecognized === 'true' : undefined,
+        isRecognized: this.filters().isRecognized
+          ? this.filters().isRecognized === 'true'
+          : undefined,
         startDate: this.filters().startDate || undefined,
         endDate: this.filters().endDate || undefined,
       };

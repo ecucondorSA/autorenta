@@ -27,7 +27,14 @@ interface CarLead {
 @Component({
   standalone: true,
   selector: 'app-owner-bookings-page',
-  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule, IonicModule, DepositStatusBadgeComponent],
+  imports: [
+    CommonModule,
+    MoneyPipe,
+    RouterLink,
+    TranslateModule,
+    IonicModule,
+    DepositStatusBadgeComponent,
+  ],
   templateUrl: './owner-bookings.page.html',
   styleUrl: './owner-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

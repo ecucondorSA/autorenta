@@ -39,7 +39,9 @@
     >
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-xs font-semibold uppercase tracking-wide text-ash-gray dark:text-pearl-light/70">
+          <p
+            class="text-xs font-semibold uppercase tracking-wide text-ash-gray dark:text-pearl-light/70"
+          >
             Estado del flujo
           </p>
           <p class="text-sm text-charcoal-medium dark:text-pearl-light/80">
@@ -57,8 +59,10 @@
             <div
               class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition-colors"
               [ngClass]="{
-                'bg-accent-petrol text-white border-accent-petrol shadow-md shadow-accent-petrol/30': isStepCompleted(i) || isStepCurrent(i),
-                'bg-white text-ash-gray border-ash-gray/40 dark:bg-slate-deep/60 dark:text-pearl-light/50 dark:border-pearl-light/20': isStepUpcoming(i)
+                'bg-accent-petrol text-white border-accent-petrol shadow-md shadow-accent-petrol/30':
+                  isStepCompleted(i) || isStepCurrent(i),
+                'bg-white text-ash-gray border-ash-gray/40 dark:bg-slate-deep/60 dark:text-pearl-light/50 dark:border-pearl-light/20':
+                  isStepUpcoming(i),
               }"
             >
               <svg
@@ -82,7 +86,7 @@
                 class="text-sm font-semibold"
                 [ngClass]="{
                   'text-smoke-black dark:text-white': isStepCompleted(i) || isStepCurrent(i),
-                  'text-ash-gray dark:text-pearl-light/60': isStepUpcoming(i)
+                  'text-ash-gray dark:text-pearl-light/60': isStepUpcoming(i),
                 }"
               >
                 {{ step.label }}
@@ -133,9 +137,14 @@
                     {{ booking()?.car_title }}
                   </h1>
                   <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
-                    {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
+                    {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{
+                      booking()?.car_year
+                    }})
                   </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300" *ngIf="booking()?.car_city">
+                  <p
+                    class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300"
+                    *ngIf="booking()?.car_city"
+                  >
                     📍 {{ booking()?.car_city }}
                   </p>
                 </div>
@@ -152,7 +161,9 @@
 
             <!-- ID Badge -->
             <div class="hidden sm:block">
-              <p class="text-xs text-gray-500 dark:text-gray-300 font-mono">ID: {{ booking()?.id | slice: 0 : 8 }}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-300 font-mono">
+                ID: {{ booking()?.id | slice: 0 : 8 }}
+              </p>
             </div>
           </div>
         </div>
@@ -191,14 +202,18 @@
 
             <!-- ✅ NEW: Distance and Delivery Card -->
             @if (booking()?.pickup_location_lat && booking()?.dropoff_location_lat) {
-              <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep p-3 shadow-sm">
+              <div
+                class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep p-3 shadow-sm"
+              >
                 <h3 class="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
                   📍 Ubicaciones de Retiro y Devolución
                 </h3>
 
                 <!-- Distance Info -->
                 @if (booking()?.delivery_distance_km) {
-                  <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <div
+                    class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700"
+                  >
                     <div class="flex items-center justify-between">
                       <span class="text-sm text-gray-700 dark:text-gray-300">Distancia</span>
                       <span class="font-semibold text-gray-900 dark:text-white">
@@ -210,13 +225,19 @@
                         Categoría:
                         @switch (booking()?.distance_risk_tier) {
                           @case ('local') {
-                            <span class="text-green-600 dark:text-green-400 font-medium">Local</span>
+                            <span class="text-green-600 dark:text-green-400 font-medium"
+                              >Local</span
+                            >
                           }
                           @case ('regional') {
-                            <span class="text-yellow-600 dark:text-yellow-400 font-medium">Regional</span>
+                            <span class="text-yellow-600 dark:text-yellow-400 font-medium"
+                              >Regional</span
+                            >
                           }
                           @case ('long_distance') {
-                            <span class="text-orange-600 dark:text-orange-400 font-medium">Larga distancia</span>
+                            <span class="text-orange-600 dark:text-orange-400 font-medium"
+                              >Larga distancia</span
+                            >
                           }
                         }
                       </div>
@@ -230,15 +251,19 @@
                   <div>
                     <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Retiro</p>
                     <p class="text-sm text-gray-900 dark:text-white">
-                      {{ booking()!.pickup_location_lat | number: '1.0-4' }}, {{ booking()!.pickup_location_lng | number: '1.0-4' }}
+                      {{ booking()!.pickup_location_lat | number: '1.0-4' }},
+                      {{ booking()!.pickup_location_lng | number: '1.0-4' }}
                     </p>
                   </div>
 
                   <!-- Dropoff Location -->
                   <div>
-                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Devolución</p>
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                      Devolución
+                    </p>
                     <p class="text-sm text-gray-900 dark:text-white">
-                      {{ booking()!.dropoff_location_lat | number: '1.0-4' }}, {{ booking()!.dropoff_location_lng | number: '1.0-4' }}
+                      {{ booking()!.dropoff_location_lat | number: '1.0-4' }},
+                      {{ booking()!.dropoff_location_lng | number: '1.0-4' }}
                     </p>
                   </div>
 
@@ -246,9 +271,11 @@
                   @if (booking()?.delivery_required && booking()?.delivery_fee_cents) {
                     <div class="pt-3 border-t border-gray-200 dark:border-gray-700">
                       <div class="flex items-center justify-between">
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Tarifa de delivery</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                          >Tarifa de delivery</span
+                        >
                         <span class="font-semibold text-gray-900 dark:text-white">
-                          ARS ${{ (booking()!.delivery_fee_cents / 100) | number: '1.2-2' }}
+                          ARS ${{ booking()!.delivery_fee_cents / 100 | number: '1.2-2' }}
                         </span>
                       </div>
                     </div>
@@ -460,7 +487,7 @@
               class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-accent-petrol/20"
             >
               <h3 class="h5 mb-4">Acciones del Alquiler</h3>
-              
+
               <!-- Check-in Button -->
               <div
                 *ngIf="canPerformCheckIn()"
@@ -468,23 +495,43 @@
               >
                 <div class="flex items-start gap-4">
                   <div class="flex-shrink-0">
-                    <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
-                      <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    <div
+                      class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                       </svg>
                     </div>
                   </div>
                   <div class="flex-1">
-                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Check-in del Vehículo</h4>
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
+                      Check-in del Vehículo
+                    </h4>
                     <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mb-3">
-                      Realizá la inspección inicial del vehículo antes de iniciar el alquiler. Necesitarás tomar fotos, registrar el odómetro y el nivel de combustible.
+                      Realizá la inspección inicial del vehículo antes de iniciar el alquiler.
+                      Necesitarás tomar fotos, registrar el odómetro y el nivel de combustible.
                     </p>
                     <a
                       [routerLink]="['/bookings', booking()?.id, 'check-in']"
                       class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-sm"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                       </svg>
                       Iniciar Check-in
                     </a>
@@ -499,23 +546,43 @@
               >
                 <div class="flex items-start gap-4">
                   <div class="flex-shrink-0">
-                    <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
-                      <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                    <div
+                      class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-green-600 dark:text-green-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                        />
                       </svg>
                     </div>
                   </div>
                   <div class="flex-1">
-                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Check-out del Vehículo</h4>
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
+                      Check-out del Vehículo
+                    </h4>
                     <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mb-3">
-                      Realizá la inspección final del vehículo al devolver el auto. Compará el estado con el check-in y reportá cualquier daño.
+                      Realizá la inspección final del vehículo al devolver el auto. Compará el
+                      estado con el check-in y reportá cualquier daño.
                     </p>
                     <a
                       [routerLink]="['/bookings', booking()?.id, 'check-out']"
                       class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors shadow-sm"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                        />
                       </svg>
                       Iniciar Check-out
                     </a>
@@ -535,19 +602,43 @@
                   *ngIf="hasCheckIn()"
                   class="flex items-center gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-900/20"
                 >
-                  <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  <svg
+                    class="w-5 h-5 text-green-600 dark:text-green-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
-                  <span class="text-sm font-medium text-green-800 dark:text-green-200">Check-in completado</span>
+                  <span class="text-sm font-medium text-green-800 dark:text-green-200"
+                    >Check-in completado</span
+                  >
                 </div>
                 <div
                   *ngIf="hasCheckOut()"
                   class="flex items-center gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-900/20"
                 >
-                  <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  <svg
+                    class="w-5 h-5 text-green-600 dark:text-green-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
-                  <span class="text-sm font-medium text-green-800 dark:text-green-200">Check-out completado</span>
+                  <span class="text-sm font-medium text-green-800 dark:text-green-200"
+                    >Check-out completado</span
+                  >
                 </div>
               </div>
             </div>
@@ -558,8 +649,18 @@
               class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-red-200/50 dark:border-red-900/30"
             >
               <h3 class="h5 mb-4 flex items-center gap-2">
-                <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                <svg
+                  class="w-6 h-6 text-red-600 dark:text-red-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
                 </svg>
                 Siniestros / Daños
               </h3>
@@ -571,23 +672,43 @@
               >
                 <div class="flex items-start gap-4">
                   <div class="flex-shrink-0">
-                    <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center">
-                      <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    <div
+                      class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-red-600 dark:text-red-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
                       </svg>
                     </div>
                   </div>
                   <div class="flex-1">
-                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Reportar Siniestro o Daño</h4>
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
+                      Reportar Siniestro o Daño
+                    </h4>
                     <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                      ¿Tuviste un accidente o detectaste un daño en el vehículo? Reportalo inmediatamente con fotos y detalles. La aseguradora se contactará contigo.
+                      ¿Tuviste un accidente o detectaste un daño en el vehículo? Reportalo
+                      inmediatamente con fotos y detalles. La aseguradora se contactará contigo.
                     </p>
                     <a
                       [routerLink]="['/bookings', booking()?.id, 'report-claim']"
                       class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors shadow-sm"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
                       </svg>
                       Reportar Siniestro
                     </a>
@@ -600,11 +721,16 @@
                 <div
                   class="p-4 rounded-xl border"
                   [ngClass]="{
-                    'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800': getClaimStatusColor(latestClaim()!.status) === 'orange',
-                    'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800': getClaimStatusColor(latestClaim()!.status) === 'blue',
-                    'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800': getClaimStatusColor(latestClaim()!.status) === 'green',
-                    'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800': getClaimStatusColor(latestClaim()!.status) === 'red',
-                    'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800': getClaimStatusColor(latestClaim()!.status) === 'gray'
+                    'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800':
+                      getClaimStatusColor(latestClaim()!.status) === 'orange',
+                    'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800':
+                      getClaimStatusColor(latestClaim()!.status) === 'blue',
+                    'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800':
+                      getClaimStatusColor(latestClaim()!.status) === 'green',
+                    'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800':
+                      getClaimStatusColor(latestClaim()!.status) === 'red',
+                    'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800':
+                      getClaimStatusColor(latestClaim()!.status) === 'gray',
                   }"
                 >
                   <div class="flex items-start justify-between gap-4">
@@ -613,11 +739,16 @@
                         <span
                           class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full"
                           [ngClass]="{
-                            'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200': getClaimStatusColor(latestClaim()!.status) === 'orange',
-                            'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200': getClaimStatusColor(latestClaim()!.status) === 'blue',
-                            'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200': getClaimStatusColor(latestClaim()!.status) === 'green',
-                            'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200': getClaimStatusColor(latestClaim()!.status) === 'red',
-                            'bg-gray-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-200': getClaimStatusColor(latestClaim()!.status) === 'gray'
+                            'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200':
+                              getClaimStatusColor(latestClaim()!.status) === 'orange',
+                            'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200':
+                              getClaimStatusColor(latestClaim()!.status) === 'blue',
+                            'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200':
+                              getClaimStatusColor(latestClaim()!.status) === 'green',
+                            'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200':
+                              getClaimStatusColor(latestClaim()!.status) === 'red',
+                            'bg-gray-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-200':
+                              getClaimStatusColor(latestClaim()!.status) === 'gray',
                           }"
                         >
                           {{ getClaimStatusLabel(latestClaim()!.status) }}
@@ -632,7 +763,10 @@
                       <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
                         {{ latestClaim()!.description }}
                       </p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-2" *ngIf="latestClaim()!.photos && latestClaim()!.photos!.length > 0">
+                      <p
+                        class="text-xs text-gray-500 dark:text-gray-400 mt-2"
+                        *ngIf="latestClaim()!.photos && latestClaim()!.photos!.length > 0"
+                      >
                         📸 {{ latestClaim()!.photos!.length }} foto(s) de evidencia
                       </p>
                     </div>
@@ -759,8 +893,8 @@
                 ¿Detectaste daños en el vehículo?
               </h3>
               <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-4">
-                Reporta cualquier daño detectado después de la devolución del vehículo.
-                El monto será deducido del depósito de garantía del locatario.
+                Reporta cualquier daño detectado después de la devolución del vehículo. El monto
+                será deducido del depósito de garantía del locatario.
               </p>
               <a
                 [routerLink]="['/bookings', booking()?.id, 'owner-damage-report']"
@@ -812,8 +946,13 @@
                     ${{ (booking()?.owner_damage_amount ?? 0) / 100 }} USD
                   </span>
                 </div>
-                <div *ngIf="booking()?.owner_damage_description" class="pt-2 border-t border-amber-200 dark:border-amber-700">
-                  <p class="text-xs text-amber-800 dark:text-amber-300 font-medium mb-1">Descripción:</p>
+                <div
+                  *ngIf="booking()?.owner_damage_description"
+                  class="pt-2 border-t border-amber-200 dark:border-amber-700"
+                >
+                  <p class="text-xs text-amber-800 dark:text-amber-300 font-medium mb-1">
+                    Descripción:
+                  </p>
                   <p class="text-sm text-amber-900 dark:text-amber-100">
                     {{ booking()?.owner_damage_description }}
                   </p>
@@ -826,7 +965,9 @@
         <!-- Bilateral Confirmation Section -->
         <div *ngIf="showConfirmationSection()" class="space-y-4">
           <!-- Timeline Component -->
-          <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep p-4 sm:p-6 shadow-sm">
+          <div
+            class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep p-4 sm:p-6 shadow-sm"
+          >
             <app-booking-confirmation-timeline
               [booking]="booking()!"
               [ownerName]="carOwnerName()"
@@ -909,13 +1050,16 @@
         <!-- End Left Column -->
 
         <!-- Right Column: Chat or Payment Reminder -->
-        <div
-          *ngIf="carOwnerId()"
-          id="tour-booking-chat"
-          class="lg:sticky lg:top-4 lg:self-start"
-        >
+        <div *ngIf="carOwnerId()" id="tour-booking-chat" class="lg:sticky lg:top-4 lg:self-start">
           <!-- ✅ Show chat for confirmed/active bookings -->
-          <div *ngIf="booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'pending' || showConfirmationSection()">
+          <div
+            *ngIf="
+              booking()?.status === 'confirmed' ||
+              booking()?.status === 'in_progress' ||
+              booking()?.status === 'pending' ||
+              showConfirmationSection()
+            "
+          >
             <h2 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-100">
               Chat con el anfitrión
             </h2>
@@ -928,24 +1072,42 @@
 
           <!-- ✅ Show payment reminder for pending payment -->
           <div *ngIf="booking()?.status === 'pending_payment'" class="space-y-4">
-            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-xl p-6">
+            <div
+              class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-xl p-6"
+            >
               <div class="flex items-start gap-3">
-                <svg class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <svg
+                  class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 <div>
                   <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
                     Reserva pendiente de pago
                   </h3>
                   <p class="text-sm text-blue-700 dark:text-blue-300 mb-4">
-                    Para poder chatear con el anfitrión, primero debés completar el pago de tu reserva.
+                    Para poder chatear con el anfitrión, primero debés completar el pago de tu
+                    reserva.
                   </p>
                   <a
                     [routerLink]="['/bookings', booking()?.id, 'payment']"
                     class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                      />
                     </svg>
                     Completar pago
                   </a>
@@ -954,22 +1116,36 @@
             </div>
 
             <!-- FAQ Section for Pending Payment -->
-            <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+            <div
+              class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4"
+            >
               <h4 class="font-medium text-gray-900 dark:text-gray-100 mb-3">
                 Preguntas frecuentes
               </h4>
               <div class="space-y-3 text-sm">
                 <div>
-                  <p class="font-medium text-gray-800 dark:text-gray-200">¿Cuánto tiempo tengo para pagar?</p>
-                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Tenés 24 horas para completar el pago antes de que expire la reserva.</p>
+                  <p class="font-medium text-gray-800 dark:text-gray-200">
+                    ¿Cuánto tiempo tengo para pagar?
+                  </p>
+                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                    Tenés 24 horas para completar el pago antes de que expire la reserva.
+                  </p>
                 </div>
                 <div>
-                  <p class="font-medium text-gray-800 dark:text-gray-200">¿Puedo hacer preguntas al anfitrión?</p>
-                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Sí, pero primero completá el pago para activar el chat.</p>
+                  <p class="font-medium text-gray-800 dark:text-gray-200">
+                    ¿Puedo hacer preguntas al anfitrión?
+                  </p>
+                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                    Sí, pero primero completá el pago para activar el chat.
+                  </p>
                 </div>
                 <div>
-                  <p class="font-medium text-gray-800 dark:text-gray-200">¿Qué métodos de pago aceptan?</p>
-                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Tarjeta de crédito/débito o saldo en tu wallet AutoRenta.</p>
+                  <p class="font-medium text-gray-800 dark:text-gray-200">
+                    ¿Qué métodos de pago aceptan?
+                  </p>
+                  <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                    Tarjeta de crédito/débito o saldo en tu wallet AutoRenta.
+                  </p>
                 </div>
               </div>
             </div>

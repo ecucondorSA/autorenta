@@ -120,7 +120,9 @@ export class IdentityLevelService {
 
   // Computed values
   readonly currentLevel = computed(() => this.identityLevel()?.current_level ?? 1);
-  readonly progressPercentage = computed(() => this.verificationProgress()?.progress_percentage ?? 0);
+  readonly progressPercentage = computed(
+    () => this.verificationProgress()?.progress_percentage ?? 0,
+  );
   readonly isLevel1Complete = computed(() => this.currentLevel() >= 1);
   readonly isLevel2Complete = computed(() => this.currentLevel() >= 2);
   readonly isLevel3Complete = computed(() => this.currentLevel() >= 3);

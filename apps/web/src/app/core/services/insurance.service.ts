@@ -325,12 +325,10 @@ export class InsuranceService {
     // Path: {userId}/claim-evidence/{bookingId}/{uuid}.{extension}
     const filePath = `${userId}/claim-evidence/${bookingId}/${uuidv4()}.${extension}`;
 
-    const { error } = await this.supabase.storage
-      .from('documents')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false,
-      });
+    const { error } = await this.supabase.storage.from('documents').upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
 
     if (error) throw error;
 

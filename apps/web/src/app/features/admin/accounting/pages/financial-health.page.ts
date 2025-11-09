@@ -1,10 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import {
-  AccountingService,
-  FinancialHealth,
-} from '../../../../core/services/accounting.service';
+import { AccountingService, FinancialHealth } from '../../../../core/services/accounting.service';
 import { SupabaseService } from '../../../../core/services/supabase.service';
 
 @Component({
@@ -24,10 +21,7 @@ export class FinancialHealthPage implements OnInit {
 
   constructor() {
     const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
-    );
+    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
   }
 
   async ngOnInit(): Promise<void> {

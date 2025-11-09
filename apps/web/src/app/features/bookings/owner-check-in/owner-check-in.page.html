@@ -32,7 +32,8 @@
         <div class="flex justify-between">
           <span class="text-charcoal-medium">Período:</span>
           <span class="font-semibold">
-            {{ booking()?.start_at | date:'dd/MM/yyyy' }} - {{ booking()?.end_at | date:'dd/MM/yyyy' }}
+            {{ booking()?.start_at | date: 'dd/MM/yyyy' }} -
+            {{ booking()?.end_at | date: 'dd/MM/yyyy' }}
           </span>
         </div>
       </div>
@@ -45,7 +46,8 @@
         <div>
           <h3 class="font-semibold text-blue-900 mb-1">Instrucciones de Check-In</h3>
           <p class="text-sm text-blue-700">
-            Registra el estado inicial del auto antes de entregarlo al locatario. Esta información se comparará con el check-out para identificar daños.
+            Registra el estado inicial del auto antes de entregarlo al locatario. Esta información
+            se comparará con el check-out para identificar daños.
           </p>
         </div>
       </div>
@@ -116,7 +118,7 @@
         </button>
         <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 gap-4 mt-4">
           <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative">
-            <img [src]="photo" alt="Foto {{i+1}}" class="w-full h-32 object-cover rounded-lg" />
+            <img [src]="photo" alt="Foto {{ i + 1 }}" class="w-full h-32 object-cover rounded-lg" />
           </div>
         </div>
         <p class="text-sm text-charcoal-medium mt-2">

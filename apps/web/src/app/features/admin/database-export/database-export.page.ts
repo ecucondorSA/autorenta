@@ -41,17 +41,14 @@ import { ToastService } from '../../../core/services/toast.service';
         >
           @if (exporting()) {
             <span class="flex items-center gap-2">
-              <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+              <span
+                class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+              ></span>
               Exportando...
             </span>
           } @else {
             <span class="flex items-center gap-2">
-              <svg
-                class="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -74,9 +71,7 @@ import { ToastService } from '../../../core/services/toast.service';
 
       @if (lastExport()) {
         <div class="mt-6 rounded-lg border border-green-200 bg-green-50 p-4">
-          <p class="text-sm font-medium text-green-800">
-            Última exportación: {{ lastExport() }}
-          </p>
+          <p class="text-sm font-medium text-green-800">Última exportación: {{ lastExport() }}</p>
         </div>
       }
     </div>
@@ -119,4 +114,3 @@ export class DatabaseExportPage {
     }
   }
 }
-

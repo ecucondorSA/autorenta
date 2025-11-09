@@ -51,9 +51,7 @@
           />
         </svg>
         <div class="flex-1">
-          <p class="text-sm font-semibold text-orange-900 dark:text-orange-100">
-            Acción requerida
-          </p>
+          <p class="text-sm font-semibold text-orange-900 dark:text-orange-100">Acción requerida</p>
           <p class="text-sm text-orange-800 dark:text-orange-200">
             {{ pendingActionMessage() }}
           </p>
@@ -235,11 +233,7 @@
 
             <!-- Action Button -->
             <div *ngIf="step.requiresAction" class="mt-4">
-              <button
-                (click)="handleAction(step)"
-                class="timeline-action-button"
-                type="button"
-              >
+              <button (click)="handleAction(step)" class="timeline-action-button" type="button">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
@@ -262,7 +256,9 @@
 
   <!-- Footer with Info -->
   <div class="timeline-footer">
-    <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+    <div
+      class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"
+    >
       <div class="flex items-start gap-3">
         <svg
           class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"

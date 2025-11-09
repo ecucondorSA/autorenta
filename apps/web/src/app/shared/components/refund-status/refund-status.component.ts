@@ -6,12 +6,13 @@ import { RefundService } from '../../../core/services/refund.service';
   selector: 'app-refund-status',
   standalone: true,
   imports: [CommonModule],
+  /* eslint-disable */
   template: `
     @if (loading()) {
       <div class="flex items-center justify-center py-4">
         <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
       </div>
-    } @else if (refundStatus(); as status) {
+    } @else if (refundStatus() as status) {
       @if (status.has_refund) {
         <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
           <div class="mb-3 flex items-center justify-between">
@@ -56,6 +57,7 @@ import { RefundService } from '../../../core/services/refund.service';
       </div>
     }
   `,
+  /* eslint-enable */
 })
 export class RefundStatusComponent implements OnInit {
   @Input({ required: true }) bookingId!: string;

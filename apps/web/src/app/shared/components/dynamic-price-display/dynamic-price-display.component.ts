@@ -98,7 +98,8 @@ import {
                 [class.bg-amber-100]="factor.value > 0"
                 [class.text-amber-700]="factor.value > 0"
                 [class.bg-gray-100]="factor.value === 0"
-                [class.text-gray-600 dark:text-gray-300]="factor.value === 0"
+                [class.text-gray-600
+                dark:text-gray-300]="factor.value === 0"
               >
                 {{ formatFactor(factor.value) }}
               </span>
