@@ -20,13 +20,13 @@ import {
     <div
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-luminous mb-4">
         Detalles de protección
       </h3>
 
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-800">
-          <thead class="bg-gray-50 dark:bg-slate-deep/50">
+          <thead class="bg-gray-50 dark:bg-gray-700/50">
             <tr>
               <th
                 scope="col"
@@ -69,7 +69,7 @@ import {
                     />
                   </svg>
                   <div>
-                    <p class="font-medium text-smoke-black dark:text-ivory-luminous">
+                    <p class="font-medium text-gray-900 dark:text-ivory-luminous">
                       {{
                         paymentMode === 'card' ? 'Protección con tarjeta' : 'Protección con wallet'
                       }}
@@ -85,7 +85,7 @@ import {
                 </div>
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-medium text-smoke-black dark:text-ivory-luminous"
+                class="px-4 py-4 text-sm text-right font-medium text-gray-900 dark:text-ivory-luminous"
               >
                 {{
                   formatUsd(
@@ -96,14 +96,14 @@ import {
                 }}
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-medium text-smoke-black dark:text-ivory-luminous"
+                class="px-4 py-4 text-sm text-right font-medium text-gray-900 dark:text-ivory-luminous"
               >
                 {{ paymentMode === 'card' ? formatArs(riskSnapshot.holdEstimatedArs) : '—' }}
               </td>
             </tr>
 
             <!-- Row 2: Franquicia Daño/Robo -->
-            <tr class="bg-gray-50 dark:bg-slate-deep/40">
+            <tr class="bg-gray-50 dark:bg-gray-700/40">
               <td class="px-4 py-4 text-sm">
                 <div class="flex items-start space-x-2">
                   <svg
@@ -120,7 +120,7 @@ import {
                     />
                   </svg>
                   <div>
-                    <p class="font-medium text-smoke-black dark:text-ivory-luminous">
+                    <p class="font-medium text-gray-900 dark:text-ivory-luminous">
                       Cobertura por daños o robo
                     </p>
                     <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
@@ -159,7 +159,7 @@ import {
                     />
                   </svg>
                   <div>
-                    <p class="font-medium text-smoke-black dark:text-ivory-luminous">
+                    <p class="font-medium text-gray-900 dark:text-ivory-luminous">
                       Cobertura por vuelco
                       <span class="text-red-600 dark:text-error-300">(límite mayor)</span>
                     </p>

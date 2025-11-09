@@ -26,7 +26,7 @@ import {
       <div class="mb-6">
         <button
           routerLink="/admin"
-          class="inline-flex items-center gap-2 text-sm font-medium text-accent-petrol hover:text-accent-warm transition-base mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-sky-600 hover:text-beige-400 transition-base mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -59,7 +59,7 @@ import {
 
       <!-- Filters -->
       <div
-        class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
+        class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
       >
         <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Filtros</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -157,7 +157,7 @@ import {
         <!-- Claims Cards -->
         <div
           *ngFor="let claim of filteredClaims()"
-          class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+          class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
           [routerLink]="['/admin/claims', claim.id]"
         >
           <div class="flex items-start justify-between gap-4">

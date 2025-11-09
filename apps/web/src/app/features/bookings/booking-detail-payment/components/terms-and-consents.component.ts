@@ -11,7 +11,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
     <div
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-luminous mb-4">
         Confirmación y autorizaciones
       </h3>
 
@@ -23,7 +23,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
               type="checkbox"
               [(ngModel)]="consents.termsAccepted"
               (ngModelChange)="onConsentsChange()"
-              class="mt-1 h-4 w-4 text-sky-600 focus:ring-blue-500 dark:focus:ring-blue-400 border-sky-300 dark:border-sky-600 rounded bg-white dark:bg-slate-deep/60 transition-colors"
+              class="mt-1 h-4 w-4 text-sky-600 focus:ring-blue-500 dark:focus:ring-blue-400 border-sky-300 dark:border-sky-600 rounded bg-white dark:bg-gray-700/60 transition-colors"
             />
             <div class="flex-1">
               <span class="text-sm font-medium text-sky-600 dark:text-sky-200 mb-1 block">
@@ -59,7 +59,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
               type="checkbox"
               [(ngModel)]="consents.cardOnFileAccepted"
               (ngModelChange)="onConsentsChange()"
-              class="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 dark:focus:ring-green-400 border-green-300 dark:border-green-600 rounded bg-white dark:bg-slate-deep/60 transition-colors"
+              class="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 dark:focus:ring-green-400 border-green-300 dark:border-green-600 rounded bg-white dark:bg-gray-700/60 transition-colors"
             />
             <div class="flex-1">
               <span class="text-sm font-medium text-green-800 dark:text-green-200 mb-1 block">

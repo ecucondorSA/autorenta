@@ -15,18 +15,18 @@ import { ToastService } from '../../../core/services/toast.service';
       (click)="onBackdropClick($event)"
     >
       <div
-        class="bg-white dark:bg-slate-deep-pure rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto"
+        class="bg-white dark:bg-gray-700-pure rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto"
         (click)="$event.stopPropagation()"
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-smoke-black dark:text-pearl-light">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-pearl-light">
             Solicitar Reembolso
           </h2>
           <button
             type="button"
             (click)="close()"
-            class="text-charcoal-medium hover:text-smoke-black dark:hover:text-pearl-light transition-colors"
+            class="text-charcoal-medium hover:text-gray-900 dark:hover:text-pearl-light transition-colors"
             aria-label="Cerrar"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Refund Type Selector -->
           <div>
-            <label class="block text-sm font-medium text-smoke-black dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-gray-900 dark:text-pearl-light mb-2">
               Tipo de Reembolso *
             </label>
             <div class="space-y-2">
@@ -86,7 +86,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <!-- Partial Amount Input -->
           @if (refundType() === 'partial') {
             <div>
-              <label class="block text-sm font-medium text-smoke-black dark:text-pearl-light mb-2">
+              <label class="block text-sm font-medium text-gray-900 dark:text-pearl-light mb-2">
                 Monto a Reembolsar (USD) *
               </label>
               <input
@@ -95,21 +95,21 @@ import { ToastService } from '../../../core/services/toast.service';
                 min="0.01"
                 step="0.01"
                 placeholder="0.00"
-                class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all"
+                class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all"
               />
             </div>
           }
 
           <!-- Reason -->
           <div>
-            <label class="block text-sm font-medium text-smoke-black dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-gray-900 dark:text-pearl-light mb-2">
               Motivo del Reembolso *
             </label>
             <textarea
               [(ngModel)]="reason"
               rows="4"
               placeholder="Explica el motivo del reembolso..."
-              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all resize-none"
+              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all resize-none"
               required
             ></textarea>
           </div>
@@ -128,7 +128,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <button
             type="button"
             (click)="close()"
-            class="flex-1 px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 text-charcoal-medium hover:bg-gray-100 dark:hover:bg-slate-deep transition-all font-medium"
+            class="flex-1 px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 text-charcoal-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-all font-medium"
           >
             Cancelar
           </button>
@@ -138,7 +138,7 @@ import { ToastService } from '../../../core/services/toast.service';
             [disabled]="!canSubmit() || loading()"
             [class.opacity-50]="!canSubmit() || loading()"
             [class.cursor-not-allowed]="!canSubmit() || loading()"
-            class="flex-1 px-4 py-3 rounded-xl bg-accent-petrol text-white hover:bg-accent-petrol/90 transition-all font-medium flex items-center justify-center gap-2"
+            class="flex-1 px-4 py-3 rounded-xl bg-sky-600 text-white hover:bg-sky-600/90 transition-all font-medium flex items-center justify-center gap-2"
           >
             <svg
               *ngIf="loading()"

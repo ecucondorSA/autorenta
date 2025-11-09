@@ -10,7 +10,7 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
     <div
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-luminous mb-4">
         Elegí tu método de pago
       </h3>
 
@@ -18,10 +18,10 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
         <!-- Con Tarjeta -->
         <button
           type="button"
-          class="relative p-4 border rounded-lg bg-white-pure dark:bg-slate-deep/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-soft dark:focus-visible:ring-offset-graphite-dark"
+          class="relative p-4 border rounded-lg bg-white-pure dark:bg-gray-700/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-soft dark:focus-visible:ring-offset-graphite-dark"
           [ngClass]="
             selectedMode === 'card'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-accent-petrol/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-sky-600/10 border-accent-petrol/60 shadow-card-hover'
               : ''
           "
           (click)="onModeChange('card')"
@@ -43,7 +43,7 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
               </svg>
             </div>
             <div>
-              <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Pagar con tarjeta</p>
+              <p class="font-semibold text-gray-900 dark:text-ivory-luminous">Pagar con tarjeta</p>
               <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
                 Crédito o débito • Liberación automática
               </p>
@@ -51,7 +51,7 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
           </div>
           <div *ngIf="selectedMode === 'card'" class="absolute top-2 right-2">
             <svg
-              class="w-5 h-5 text-primary-600 dark:text-accent-petrol"
+              class="w-5 h-5 text-primary-600 dark:text-sky-600"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -67,10 +67,10 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
         <!-- Con Wallet -->
         <button
           type="button"
-          class="relative p-4 border rounded-lg bg-white-pure dark:bg-slate-deep/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-soft dark:focus-visible:ring-offset-graphite-dark"
+          class="relative p-4 border rounded-lg bg-white-pure dark:bg-gray-700/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-soft dark:focus-visible:ring-offset-graphite-dark"
           [ngClass]="
             selectedMode === 'wallet'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-accent-petrol/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-sky-600/10 border-accent-petrol/60 shadow-card-hover'
               : ''
           "
           (click)="onModeChange('wallet')"
@@ -92,7 +92,7 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
               </svg>
             </div>
             <div>
-              <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Pagar con wallet</p>
+              <p class="font-semibold text-gray-900 dark:text-ivory-luminous">Pagar con wallet</p>
               <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
                 Usa tu saldo AutoRenta • Sin tarjeta
               </p>
@@ -100,7 +100,7 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
           </div>
           <div *ngIf="selectedMode === 'wallet'" class="absolute top-2 right-2">
             <svg
-              class="w-5 h-5 text-primary-600 dark:text-accent-petrol"
+              class="w-5 h-5 text-primary-600 dark:text-sky-600"
               fill="currentColor"
               viewBox="0 0 20 20"
             >

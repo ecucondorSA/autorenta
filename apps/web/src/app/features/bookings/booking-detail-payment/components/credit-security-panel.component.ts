@@ -48,7 +48,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
             />
           </svg>
-          <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-luminous">
             Garantía con Wallet
           </h3>
         </div>
@@ -107,7 +107,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
       <!-- Explanation -->
       <div
-        class="mb-4 p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300"
+        class="mb-4 p-3 bg-gray-50 dark:bg-gray-700/40 rounded-lg transition-colors duration-300"
       >
         <p class="text-sm text-gray-700 dark:text-pearl-light/80">
           <strong>¿Cómo funciona?</strong> Este monto queda como saldo de garantía en tu wallet
@@ -146,7 +146,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       } @else {
         <!-- Balance Info -->
         <div
-          class="mb-4 p-4 bg-gray-50 border border-gray-200 dark:bg-slate-deep/40 dark:border-neutral-700 rounded-lg transition-colors duration-300"
+          class="mb-4 p-4 bg-gray-50 border border-gray-200 dark:bg-gray-700/40 dark:border-neutral-700 rounded-lg transition-colors duration-300"
         >
           <div class="space-y-2">
             <div class="flex justify-between text-sm">
@@ -303,7 +303,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               </div>
               @if (currentLock(); as lock) {
                 <div
-                  class="p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300"
+                  class="p-3 bg-gray-50 dark:bg-gray-700/40 rounded-lg transition-colors duration-300"
                 >
                   <p class="text-xs text-gray-600 dark:text-pearl-light/70">
                     Lock ID: <span class="font-mono">{{ lock.lockId }}</span>
@@ -340,7 +340,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               <button
                 type="button"
                 (click)="onRetry()"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-neutral-700 text-sm font-medium rounded-md text-gray-700 dark:text-pearl-light bg-white dark:bg-slate-deep/60 hover:bg-gray-50 dark:hover:bg-slate-deep/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-neutral-700 text-sm font-medium rounded-md text-gray-700 dark:text-pearl-light bg-white dark:bg-gray-700/60 hover:bg-gray-50 dark:hover:bg-gray-700/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
               >
                 Reintentar
               </button>

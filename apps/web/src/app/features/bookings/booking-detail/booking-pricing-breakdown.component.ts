@@ -15,13 +15,13 @@ import { Booking } from '../../../core/models';
   template: `
     <div
       *ngIf="booking"
-      class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep shadow-sm"
+      class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 shadow-sm"
     >
       <!-- Header -->
       <div class="p-4 border-b border-gray-200 dark:border-gray-700">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
           <svg
-            class="w-5 h-5 text-accent-petrol"
+            class="w-5 h-5 text-sky-600"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -115,7 +115,7 @@ import { Booking } from '../../../core/models';
             <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
           </div>
           <div class="relative flex justify-center">
-            <span class="px-2 bg-white dark:bg-slate-deep text-xs text-gray-500 dark:text-gray-400">
+            <span class="px-2 bg-white dark:bg-gray-700 text-xs text-gray-500 dark:text-gray-400">
               +
             </span>
           </div>
@@ -212,7 +212,7 @@ import { Booking } from '../../../core/models';
             </p>
           </div>
           <div class="text-right">
-            <p class="text-xl font-bold text-accent-petrol dark:text-accent-warm">
+            <p class="text-xl font-bold text-sky-600 dark:text-beige-400">
               {{ formatCurrency(totalAmount, booking.currency) }}
             </p>
           </div>

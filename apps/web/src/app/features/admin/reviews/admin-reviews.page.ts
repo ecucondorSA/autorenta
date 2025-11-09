@@ -25,7 +25,7 @@ interface ModerationStatusOption {
       <div class="mb-6">
         <button
           routerLink="/admin"
-          class="inline-flex items-center gap-2 text-sm font-medium text-accent-petrol hover:text-accent-warm transition-base mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-sky-600 hover:text-beige-400 transition-base mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -58,7 +58,7 @@ interface ModerationStatusOption {
 
       <!-- Filters -->
       <div
-        class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
+        class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
       >
         <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Filtros</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -124,7 +124,7 @@ interface ModerationStatusOption {
         <!-- Empty State -->
         <div
           *ngIf="filteredReviews().length === 0"
-          class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center"
+          class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center"
         >
           <svg
             class="mx-auto h-12 w-12 text-gray-400"
@@ -150,7 +150,7 @@ interface ModerationStatusOption {
         <!-- Review Cards -->
         <div
           *ngFor="let review of filteredReviews()"
-          class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow"
+          class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow"
         >
           <!-- Header with Checkbox -->
           <div class="flex items-start gap-4">
@@ -291,7 +291,7 @@ interface ModerationStatusOption {
       (click)="closeModal()"
     >
       <div
-        class="bg-white dark:bg-slate-deep rounded-lg shadow-xl max-w-md w-full p-6"
+        class="bg-white dark:bg-gray-700 rounded-lg shadow-xl max-w-md w-full p-6"
         (click)="$event.stopPropagation()"
       >
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">

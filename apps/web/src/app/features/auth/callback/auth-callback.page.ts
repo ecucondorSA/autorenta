@@ -22,7 +22,7 @@ import { ProfileService } from '../../../core/services/profile.service';
   imports: [CommonModule, NgOptimizedImage],
   template: `
     <div
-      class="min-h-screen bg-ivory-soft dark:bg-graphite-dark flex items-center justify-center py-12 px-4"
+      class="min-h-screen bg-ivory-100 dark:bg-graphite-dark flex items-center justify-center py-12 px-4"
     >
       <div class="w-full max-w-md text-center">
         <!-- Loading State -->
@@ -40,7 +40,7 @@ import { ProfileService } from '../../../core/services/profile.service';
 
           <div class="flex justify-center">
             <svg
-              class="animate-spin h-12 w-12 text-accent-petrol"
+              class="animate-spin h-12 w-12 text-sky-600"
               fill="none"
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -62,7 +62,7 @@ import { ProfileService } from '../../../core/services/profile.service';
           </div>
 
           <div class="space-y-2">
-            <h1 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-ivory-luminous">
               Completando inicio de sesión...
             </h1>
             <p class="text-charcoal-medium dark:text-pearl-light">
@@ -84,7 +84,7 @@ import { ProfileService } from '../../../core/services/profile.service';
             </p>
             <button
               (click)="redirectToLogin()"
-              class="rounded-lg bg-accent-petrol px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition-all shadow-md"
+              class="rounded-lg bg-sky-600 px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition-all shadow-md"
             >
               Volver al inicio de sesión
             </button>

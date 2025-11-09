@@ -14,15 +14,15 @@ import {
     <div class="space-y-3">
       <!-- Loading State -->
       <div *ngIf="loading()" class="animate-pulse">
-        <div class="h-8 bg-pearl-gray dark:bg-slate-deep rounded w-32"></div>
-        <div class="h-4 bg-pearl-gray dark:bg-slate-deep rounded w-24 mt-2"></div>
+        <div class="h-8 bg-pearl-gray dark:bg-gray-700 rounded w-32"></div>
+        <div class="h-4 bg-pearl-gray dark:bg-gray-700 rounded w-24 mt-2"></div>
       </div>
 
       <!-- Price Display -->
       <div *ngIf="!loading() && pricing()" class="space-y-2">
         <!-- Main Price -->
         <div class="flex items-baseline gap-2">
-          <span class="text-3xl font-bold text-smoke-black dark:text-white-pure">
+          <span class="text-3xl font-bold text-gray-900 dark:text-white-pure">
             {{ formatPrice(pricing()!.price_per_hour, pricing()!.currency) }}
           </span>
           <span class="text-sm text-charcoal-medium dark:text-pearl-light">/hora</span>
@@ -53,7 +53,7 @@ import {
           *ngIf="showBreakdown"
           type="button"
           (click)="breakdownExpanded.set(!breakdownExpanded())"
-          class="text-sm text-accent-petrol dark:text-teal-bright hover:underline flex items-center gap-1"
+          class="text-sm text-sky-600 dark:text-teal-bright hover:underline flex items-center gap-1"
         >
           <span>Ver detalle</span>
           <svg
@@ -75,14 +75,14 @@ import {
         <!-- Breakdown Details -->
         <div
           *ngIf="showBreakdown && breakdownExpanded()"
-          class="mt-3 p-4 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30 space-y-2.5 text-sm"
+          class="mt-3 p-4 rounded-lg bg-sand-light/50 dark:bg-gray-700/30 space-y-2.5 text-sm"
         >
           <!-- Base Price -->
           <div
             class="flex justify-between items-center pb-2 border-b border-pearl-gray dark:border-charcoal-medium"
           >
             <span class="text-charcoal-medium dark:text-pearl-light">Tarifa base</span>
-            <span class="font-semibold text-smoke-black dark:text-white-pure">
+            <span class="font-semibold text-gray-900 dark:text-white-pure">
               {{ formatPrice(pricing()!.breakdown.base_price, pricing()!.currency) }}
             </span>
           </div>
@@ -112,12 +112,12 @@ import {
           <div
             class="flex justify-between items-center pt-2 border-t border-pearl-gray dark:border-charcoal-medium font-semibold"
           >
-            <span class="text-smoke-black dark:text-white-pure">Multiplicador total</span>
+            <span class="text-gray-900 dark:text-white-pure">Multiplicador total</span>
             <span
               class="text-lg"
               [class.text-green-600]="pricing()!.breakdown.total_multiplier < 1"
               [class.text-amber-600]="pricing()!.breakdown.total_multiplier > 1.1"
-              [class.text-smoke-black]="
+              [class.text-gray-900]="
                 pricing()!.breakdown.total_multiplier >= 1 &&
                 pricing()!.breakdown.total_multiplier <= 1.1
               "

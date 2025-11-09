@@ -15,7 +15,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
           <svg
-            class="w-6 h-6 text-accent-petrol animate-spin"
+            class="w-6 h-6 text-sky-600 animate-spin"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -27,10 +27,10 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
               d="M13 10V3L4 14h7v7l9-11h-7z"
             />
           </svg>
-          <h4 class="font-bold text-accent-petrol text-lg">🚀 Modo Express</h4>
+          <h4 class="font-bold text-sky-600 text-lg">🚀 Modo Express</h4>
         </div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-accent-petrol">
+          <div class="text-2xl font-bold text-sky-600">
             {{ quote()?.hourlyRate ? (quote()!.hourlyRate | currency:'ARS':'symbol':'1.0-0') : '...' }}
           </div>
           <div class="text-xs text-charcoal-medium dark:text-pearl-light">/hora</div>
@@ -44,7 +44,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
       >
         <span
           *ngIf="availability()!.distance"
-          class="flex items-center gap-1.5 text-accent-petrol font-semibold"
+          class="flex items-center gap-1.5 text-sky-600 font-semibold"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -57,7 +57,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
         </span>
         <span
           *ngIf="availability()!.eta"
-          class="flex items-center gap-1.5 text-accent-warm font-semibold"
+          class="flex items-center gap-1.5 text-beige-400 font-semibold"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path

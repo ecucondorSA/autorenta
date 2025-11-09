@@ -24,7 +24,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow-lg p-6 sticky top-4 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
     >
       <!-- Header -->
-      <h2 class="text-xl font-bold text-smoke-black dark:text-ivory-luminous mb-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-ivory-luminous mb-4">
         Resumen de Reserva
       </h2>
 
@@ -57,7 +57,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             </div>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous truncate">
+            <p class="text-sm font-medium text-gray-900 dark:text-ivory-luminous truncate">
               {{ carName }}
             </p>
             <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">{{ carLocation }}</p>
@@ -137,10 +137,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <!-- Coverage Upgrade -->
           <div class="flex justify-between text-sm" *ngIf="priceBreakdown.coverageUpgradeUsd > 0">
             <span
-              class="text-gray-600 dark:text-pearl-light/70 font-medium text-primary-600 dark:text-accent-petrol"
+              class="text-gray-600 dark:text-pearl-light/70 font-medium text-primary-600 dark:text-sky-600"
               >Upgrade de cobertura</span
             >
-            <span class="font-medium text-primary-600 dark:text-accent-petrol">
+            <span class="font-medium text-primary-600 dark:text-sky-600">
               {{ formatUsd(priceBreakdown.coverageUpgradeUsd) }}
             </span>
           </div>
@@ -180,7 +180,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- ✅ NUEVA SECCIÓN: Garantía -->
       <div *ngIf="riskSnapshot && fxSnapshot" class="mb-4">
         <div
-          class="bg-gray-50 dark:bg-slate-deep/40 border border-gray-200 dark:border-neutral-700 rounded-lg p-4 transition-colors duration-300"
+          class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-neutral-700 rounded-lg p-4 transition-colors duration-300"
         >
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm font-medium text-gray-700 dark:text-pearl-light/80">
@@ -279,7 +279,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               >Total del alquiler</span
             >
             <div class="text-right">
-              <p class="text-2xl font-bold text-primary-900 dark:text-accent-petrol">
+              <p class="text-2xl font-bold text-primary-900 dark:text-sky-600">
                 {{ formatArs(priceBreakdown.totalArs) }}
               </p>
               <p class="text-xs text-gray-600 dark:text-pearl-light/70 mt-1">

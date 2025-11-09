@@ -46,13 +46,13 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
           role="menu"
           aria-labelledby="help-center"
         >
-          <h3 class="text-sm font-semibold mb-3 text-smoke-black dark:text-ivory-luminous">
+          <h3 class="text-sm font-semibold mb-3 text-gray-900 dark:text-ivory-luminous">
             ¿Necesitás ayuda?
           </h3>
 
           <button
             (click)="showTour('welcome')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-gray-700 text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
             role="menuitem"
           >
             🎯 Ver tour de bienvenida
@@ -60,7 +60,7 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 
           <button
             (click)="showTour('renter')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-gray-700 text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
             role="menuitem"
           >
             🔍 Cómo buscar autos
@@ -68,7 +68,7 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 
           <button
             (click)="showTour('owner')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-gray-700 text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
             role="menuitem"
           >
             💸 Cómo publicar mi auto
@@ -78,7 +78,7 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 
           <a
             href="mailto:soporte@autorentar.com"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm flex items-center gap-2 transition-base text-charcoal-medium dark:text-pearl-light"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-gray-700 text-sm flex items-center gap-2 transition-base text-charcoal-medium dark:text-pearl-light"
             role="menuitem"
           >
             <svg

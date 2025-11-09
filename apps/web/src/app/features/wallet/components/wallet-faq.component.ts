@@ -12,10 +12,10 @@ interface FaqItem {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="bg-white dark:bg-slate-deep-pure rounded-xl shadow-sm border border-pearl-gray dark:border-gray-700 p-6">
+    <div class="bg-white dark:bg-gray-700-pure rounded-xl shadow-sm border border-pearl-gray dark:border-gray-700 p-6">
       <!-- Header -->
       <div class="mb-6">
-        <h2 class="text-2xl font-bold text-smoke-black dark:text-pearl-light mb-2">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-pearl-light mb-2">
           💡 Preguntas Frecuentes sobre Wallet AutoRenta
         </h2>
         <p class="text-sm text-charcoal-medium dark:text-pearl-light">
@@ -37,11 +37,11 @@ interface FaqItem {
             (click)="toggleItem(i)"
             class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-pearl-gray/20 dark:hover:bg-gray-800 transition-colors duration-200"
           >
-            <span class="font-semibold text-smoke-black dark:text-pearl-light pr-4">
+            <span class="font-semibold text-gray-900 dark:text-pearl-light pr-4">
               {{ item.question }}
             </span>
             <svg
-              class="w-5 h-5 text-accent-petrol flex-shrink-0 transition-transform duration-200"
+              class="w-5 h-5 text-sky-600 flex-shrink-0 transition-transform duration-200"
               [class.rotate-180]="item.expanded"
               fill="none"
               stroke="currentColor"

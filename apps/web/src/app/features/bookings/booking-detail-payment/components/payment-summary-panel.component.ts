@@ -20,7 +20,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
     >
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-bold text-smoke-black dark:text-ivory-luminous">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-ivory-luminous">
           Resumen de Pagos
         </h3>
         <button
@@ -193,7 +193,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <div class="h-px bg-gray-200 dark:bg-neutral-700 my-4"></div>
 
       <!-- Total Consolidado (Informativo) -->
-      <div class="bg-gray-50 dark:bg-slate-deep/40 rounded-lg p-4 transition-colors duration-300">
+      <div class="bg-gray-50 dark:bg-gray-700/40 rounded-lg p-4 transition-colors duration-300">
         <div class="flex items-start justify-between mb-2">
           <div class="flex-1">
             <span class="text-sm font-medium text-gray-700 dark:text-pearl-light/80">

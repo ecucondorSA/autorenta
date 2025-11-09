@@ -127,7 +127,7 @@ import { UserProfile } from '../../../core/models';
                 <a
                   routerLink="/profile"
                   [queryParams]="{ tab: 'verification' }"
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-white text-accent-petrol rounded-lg text-sm font-semibold hover:bg-ivory-luminous transition-colors shadow-md hover:shadow-lg"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-white text-sky-600 rounded-lg text-sm font-semibold hover:bg-ivory-luminous transition-colors shadow-md hover:shadow-lg"
                 >
                   <svg
                     class="h-4 w-4"
@@ -195,13 +195,13 @@ import { UserProfile } from '../../../core/models';
         (click)="$event.stopPropagation()"
       >
         <div class="flex items-start justify-between mb-4">
-          <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-ivory-luminous">
             ¿Por qué verificar tu identidad?
           </h2>
           <button
             type="button"
             (click)="closeBenefits()"
-            class="text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:hover:text-white transition-colors"
+            class="text-charcoal-medium dark:text-pearl-light hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -214,7 +214,7 @@ import { UserProfile } from '../../../core/models';
           </button>
         </div>
 
-        <div class="space-y-4 text-smoke-black dark:text-pearl-light">
+        <div class="space-y-4 text-gray-900 dark:text-pearl-light">
           <div class="flex items-start gap-3">
             <div
               class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center"
@@ -326,7 +326,7 @@ import { UserProfile } from '../../../core/models';
           <button
             type="button"
             (click)="closeBenefits()"
-            class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light hover:text-smoke-black dark:text-pearl-light dark:hover:text-white transition-colors"
+            class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light hover:text-gray-900 dark:text-pearl-light dark:hover:text-white transition-colors"
           >
             Cerrar
           </button>
@@ -334,7 +334,7 @@ import { UserProfile } from '../../../core/models';
             routerLink="/profile"
             [queryParams]="{ tab: 'verification' }"
             (click)="closeBenefits()"
-            class="px-4 py-2 bg-accent-petrol text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+            class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Iniciar verificación
           </a>

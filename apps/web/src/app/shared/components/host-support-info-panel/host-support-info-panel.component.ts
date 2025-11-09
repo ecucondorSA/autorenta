@@ -25,11 +25,11 @@ import { TranslateModule } from '@ngx-translate/core';
       <!-- Header -->
       <div class="flex items-start justify-between gap-4 mb-4">
         <div class="flex items-start gap-3 flex-1">
-          <div class="flex-shrink-0 w-10 h-10 bg-accent-petrol rounded-full flex items-center justify-center text-white text-xl">
+          <div class="flex-shrink-0 w-10 h-10 bg-sky-600 rounded-full flex items-center justify-center text-white text-xl">
             💡
           </div>
           <div class="flex-1">
-            <h3 class="text-lg font-bold text-smoke-black dark:text-ivory-luminous mb-1">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-ivory-luminous mb-1">
               Guía para Anfitriones
             </h3>
             <p class="text-sm text-charcoal-medium dark:text-pearl-light/75">
@@ -41,7 +41,7 @@ import { TranslateModule } from '@ngx-translate/core';
         <button
           type="button"
           (click)="togglePanel()"
-          class="flex-shrink-0 text-accent-petrol dark:text-accent-petrol/70 hover:text-accent-warm dark:hover:text-accent-warm transition-colors"
+          class="flex-shrink-0 text-sky-600 dark:text-sky-600/70 hover:text-beige-400 dark:hover:text-beige-400 transition-colors"
           [attr.aria-label]="isExpanded() ? 'Ocultar guía' : 'Mostrar guía'"
         >
           <svg class="w-6 h-6 transition-transform" [class.rotate-180]="isExpanded()" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -55,15 +55,15 @@ import { TranslateModule } from '@ngx-translate/core';
         <!-- Quick Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="bg-white-pure dark:bg-anthracite rounded-lg p-4 border border-pearl-gray dark:border-slate-deep">
-            <div class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">+40%</div>
+            <div class="text-2xl font-bold text-sky-600 dark:text-sky-600/80">+40%</div>
             <div class="text-xs text-charcoal-medium dark:text-pearl-light/75 mt-1">Más reservas con fotos de calidad</div>
           </div>
           <div class="bg-white-pure dark:bg-anthracite rounded-lg p-4 border border-pearl-gray dark:border-slate-deep">
-            <div class="text-2xl font-bold text-accent-warm dark:text-accent-warm/90">15-25%</div>
+            <div class="text-2xl font-bold text-beige-400 dark:text-beige-400/90">15-25%</div>
             <div class="text-xs text-charcoal-medium dark:text-pearl-light/75 mt-1">Comisión de la plataforma</div>
           </div>
           <div class="bg-white-pure dark:bg-anthracite rounded-lg p-4 border border-pearl-gray dark:border-slate-deep">
-            <div class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">24-48h</div>
+            <div class="text-2xl font-bold text-sky-600 dark:text-sky-600/80">24-48h</div>
             <div class="text-xs text-charcoal-medium dark:text-pearl-light/75 mt-1">Tiempo de revisión</div>
           </div>
         </div>
@@ -75,9 +75,9 @@ import { TranslateModule } from '@ngx-translate/core';
               type="button"
               (click)="activeTab.set('tips')"
               [class.border-accent-petrol]="activeTab() === 'tips'"
-              [class.text-accent-petrol]="activeTab() === 'tips'"
+              [class.text-sky-600]="activeTab() === 'tips'"
               [class.dark:border-accent-petrol/70]="activeTab() === 'tips'"
-              [class.dark:text-accent-petrol/70]="activeTab() === 'tips'"
+              [class.dark:text-sky-600/70]="activeTab() === 'tips'"
               [class.border-transparent]="activeTab() !== 'tips'"
               [class.text-ash-gray dark:text-pearl-light/70]="activeTab() !== 'tips'"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
@@ -88,9 +88,9 @@ import { TranslateModule } from '@ngx-translate/core';
               type="button"
               (click)="activeTab.set('calculator')"
               [class.border-accent-petrol]="activeTab() === 'calculator'"
-              [class.text-accent-petrol]="activeTab() === 'calculator'"
+              [class.text-sky-600]="activeTab() === 'calculator'"
               [class.dark:border-accent-petrol/70]="activeTab() === 'calculator'"
-              [class.dark:text-accent-petrol/70]="activeTab() === 'calculator'"
+              [class.dark:text-sky-600/70]="activeTab() === 'calculator'"
               [class.border-transparent]="activeTab() !== 'calculator'"
               [class.text-ash-gray dark:text-pearl-light/70]="activeTab() !== 'calculator'"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
@@ -101,9 +101,9 @@ import { TranslateModule } from '@ngx-translate/core';
               type="button"
               (click)="activeTab.set('pricing')"
               [class.border-accent-petrol]="activeTab() === 'pricing'"
-              [class.text-accent-petrol]="activeTab() === 'pricing'"
+              [class.text-sky-600]="activeTab() === 'pricing'"
               [class.dark:border-accent-petrol/70]="activeTab() === 'pricing'"
-              [class.dark:text-accent-petrol/70]="activeTab() === 'pricing'"
+              [class.dark:text-sky-600/70]="activeTab() === 'pricing'"
               [class.border-transparent]="activeTab() !== 'pricing'"
               [class.text-ash-gray dark:text-pearl-light/70]="activeTab() !== 'pricing'"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
@@ -186,12 +186,12 @@ import { TranslateModule } from '@ngx-translate/core';
               </button>
               <div *ngIf="openAccordion() === 'insurance'" class="p-4 pt-0 text-sm text-charcoal-medium dark:text-pearl-light space-y-2">
                 <div class="space-y-3">
-                  <div class="bg-accent-petrol/5 dark:bg-accent-petrol/10 p-3 rounded-lg border border-accent-petrol/20">
-                    <p class="font-semibold text-accent-petrol dark:text-accent-petrol/80 mb-1">Seguro Obligatorio</p>
+                  <div class="bg-sky-600/5 dark:bg-sky-600/10 p-3 rounded-lg border border-accent-petrol/20">
+                    <p class="font-semibold text-sky-600 dark:text-sky-600/80 mb-1">Seguro Obligatorio</p>
                     <p class="text-sm">Responsabilidad civil contra terceros con cobertura de alquiler a terceros explícita en la póliza.</p>
                   </div>
-                  <div class="bg-accent-warm/5 dark:bg-accent-warm/10 p-3 rounded-lg border border-accent-warm/20">
-                    <p class="font-semibold text-accent-warm dark:text-accent-warm/90 mb-1">Seguro Recomendado</p>
+                  <div class="bg-beige-400/5 dark:bg-beige-400/10 p-3 rounded-lg border border-accent-warm/20">
+                    <p class="font-semibold text-beige-400 dark:text-beige-400/90 mb-1">Seguro Recomendado</p>
                     <p class="text-sm">Todo riesgo con franquicia reducida. Protege tu inversión ante daños, robo o accidentes.</p>
                   </div>
                   <p class="text-xs italic text-charcoal-medium dark:text-pearl-light/70">💡 Tip: Incluir el costo del seguro en el precio diario aumenta la confianza del locatario.</p>
@@ -267,15 +267,15 @@ import { TranslateModule } from '@ngx-translate/core';
               <div class="border-t border-pearl-gray dark:border-slate-deep pt-4 space-y-2">
                 <div class="flex justify-between text-sm">
                   <span class="text-charcoal-medium dark:text-pearl-light">Ingresos brutos</span>
-                  <span class="font-semibold text-smoke-black dark:text-ivory-luminous">USD {{ grossIncome() }}</span>
+                  <span class="font-semibold text-gray-900 dark:text-ivory-luminous">USD {{ grossIncome() }}</span>
                 </div>
                 <div class="flex justify-between text-sm">
                   <span class="text-charcoal-medium dark:text-pearl-light">Comisión AutoRenta (20%)</span>
-                  <span class="font-semibold text-accent-warm dark:text-accent-warm/90">- USD {{ platformFee() }}</span>
+                  <span class="font-semibold text-beige-400 dark:text-beige-400/90">- USD {{ platformFee() }}</span>
                 </div>
                 <div class="flex justify-between text-sm border-t border-pearl-gray dark:border-slate-deep pt-2">
-                  <span class="font-semibold text-smoke-black dark:text-ivory-luminous">Ganancia neta</span>
-                  <span class="font-bold text-accent-petrol dark:text-accent-petrol/80 text-lg">USD {{ netIncome() }}</span>
+                  <span class="font-semibold text-gray-900 dark:text-ivory-luminous">Ganancia neta</span>
+                  <span class="font-bold text-sky-600 dark:text-sky-600/80 text-lg">USD {{ netIncome() }}</span>
                 </div>
                 <div class="flex justify-between text-xs text-ash-gray dark:text-pearl-light/60">
                   <span>Proyección anual</span>
@@ -283,7 +283,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 </div>
               </div>
 
-              <div class="bg-accent-warm/5 dark:bg-accent-warm/10 border border-accent-warm/20 rounded-lg p-3 text-xs text-accent-warm dark:text-accent-warm/90">
+              <div class="bg-beige-400/5 dark:bg-beige-400/10 border border-accent-warm/20 rounded-lg p-3 text-xs text-beige-400 dark:text-beige-400/90">
                 ⚠️ <strong>Nota:</strong> Estos cálculos son estimativos. No incluyen gastos de mantenimiento, combustible, seguro o impuestos.
               </div>
             </div>
@@ -299,46 +299,46 @@ import { TranslateModule } from '@ngx-translate/core';
               <div class="bg-white-pure dark:bg-anthracite rounded-lg p-4 border border-pearl-gray dark:border-slate-deep">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🚗</span>
-                  <h5 class="font-semibold text-smoke-black dark:text-ivory-luminous">Compacto/Económico</h5>
+                  <h5 class="font-semibold text-gray-900 dark:text-ivory-luminous">Compacto/Económico</h5>
                 </div>
                 <p class="text-xs text-ash-gray dark:text-pearl-light/60 mb-2">Ej: Chevrolet Onix, Fiat Cronos</p>
-                <div class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">$25-35</div>
+                <div class="text-2xl font-bold text-sky-600 dark:text-sky-600/80">$25-35</div>
                 <p class="text-xs text-charcoal-medium dark:text-pearl-light/75 mt-1">USD por día</p>
               </div>
 
               <div class="bg-white-pure dark:bg-anthracite rounded-lg p-4 border border-pearl-gray dark:border-slate-deep">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🚙</span>
-                  <h5 class="font-semibold text-smoke-black dark:text-ivory-luminous">Sedán Mediano</h5>
+                  <h5 class="font-semibold text-gray-900 dark:text-ivory-luminous">Sedán Mediano</h5>
                 </div>
                 <p class="text-xs text-ash-gray dark:text-pearl-light/60 mb-2">Ej: Toyota Corolla, Volkswagen Vento</p>
-                <div class="text-2xl font-bold text-accent-warm dark:text-accent-warm/90">$40-55</div>
+                <div class="text-2xl font-bold text-beige-400 dark:text-beige-400/90">$40-55</div>
                 <p class="text-xs text-charcoal-medium dark:text-pearl-light/75 mt-1">USD por día</p>
               </div>
 
               <div class="bg-white-pure dark:bg-anthracite rounded-lg p-4 border border-pearl-gray dark:border-slate-deep">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🚐</span>
-                  <h5 class="font-semibold text-smoke-black dark:text-ivory-luminous">SUV/Camioneta</h5>
+                  <h5 class="font-semibold text-gray-900 dark:text-ivory-luminous">SUV/Camioneta</h5>
                 </div>
                 <p class="text-xs text-ash-gray dark:text-pearl-light/60 mb-2">Ej: Ford Ranger, Chevrolet Tracker</p>
-                <div class="text-2xl font-bold text-accent-petrol dark:text-accent-petrol/80">$60-85</div>
+                <div class="text-2xl font-bold text-sky-600 dark:text-sky-600/80">$60-85</div>
                 <p class="text-xs text-charcoal-medium dark:text-pearl-light/75 mt-1">USD por día</p>
               </div>
 
               <div class="bg-white-pure dark:bg-anthracite rounded-lg p-4 border border-pearl-gray dark:border-slate-deep">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🏎️</span>
-                  <h5 class="font-semibold text-smoke-black dark:text-ivory-luminous">Premium/Lujo</h5>
+                  <h5 class="font-semibold text-gray-900 dark:text-ivory-luminous">Premium/Lujo</h5>
                 </div>
                 <p class="text-xs text-ash-gray dark:text-pearl-light/60 mb-2">Ej: Audi A4, BMW Serie 3</p>
-                <div class="text-2xl font-bold text-accent-warm dark:text-accent-warm/90">$90-150+</div>
+                <div class="text-2xl font-bold text-beige-400 dark:text-beige-400/90">$90-150+</div>
                 <p class="text-xs text-charcoal-medium dark:text-pearl-light/75 mt-1">USD por día</p>
               </div>
             </div>
 
-            <div class="bg-accent-petrol/5 dark:bg-accent-petrol/10 border border-accent-petrol/20 rounded-lg p-4 text-sm">
-              <p class="font-semibold text-accent-petrol dark:text-accent-petrol/80 mb-2">💡 Tips de Pricing:</p>
+            <div class="bg-sky-600/5 dark:bg-sky-600/10 border border-accent-petrol/20 rounded-lg p-4 text-sm">
+              <p class="font-semibold text-sky-600 dark:text-sky-600/80 mb-2">💡 Tips de Pricing:</p>
               <ul class="list-disc list-inside space-y-1 text-charcoal-medium dark:text-pearl-light text-xs">
                 <li>Precio competitivo: Revisar autos similares en tu ciudad</li>
                 <li>Descuentos por semana (5-10%) y mes (15-20%) atraen más clientes</li>

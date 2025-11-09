@@ -64,7 +64,7 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
     >
       <h3 class="h5 mb-4">📝 Tu Calificación</h3>
       <div class="info-card-warm p-4 mb-4">
-        <p class="text-sm font-semibold text-accent-warm">⏳ Review pendiente de publicación</p>
+        <p class="text-sm font-semibold text-beige-400">⏳ Review pendiente de publicación</p>
         <p class="text-xs text-charcoal-medium dark:text-pearl-light mt-1">
           Se publicará cuando ambas partes hayan calificado, o después de 14 días.
         </p>

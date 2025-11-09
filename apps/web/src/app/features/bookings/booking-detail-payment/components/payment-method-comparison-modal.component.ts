@@ -29,7 +29,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           class="sticky top-0 bg-white-pure dark:bg-anthracite border-b border-gray-200 dark:border-neutral-700 px-6 py-4 flex items-center justify-between z-10"
         >
           <div>
-            <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-ivory-luminous">
               Comparación de Métodos de Pago
             </h2>
             <p class="text-sm text-gray-600 dark:text-pearl-light/70 mt-1">
@@ -56,7 +56,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         <!-- Comparison Table -->
         <div class="p-6">
           <!-- Resumen de Alquiler (común a ambos) -->
-          <div class="mb-6 bg-gray-50 dark:bg-slate-deep/40 rounded-lg p-4">
+          <div class="mb-6 bg-gray-50 dark:bg-gray-700/40 rounded-lg p-4">
             <h3 class="text-sm font-semibold text-gray-700 dark:text-pearl-light/80 mb-2">
               Total del alquiler (igual para ambos métodos)
             </h3>
@@ -135,7 +135,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               </div>
 
               <!-- Ventajas -->
-              <div class="bg-white/80 dark:bg-slate-deep/60 rounded-lg p-3">
+              <div class="bg-white/80 dark:bg-gray-700/60 rounded-lg p-3">
                 <p class="text-xs font-semibold text-gray-700 dark:text-pearl-light/80 mb-2">
                   ✓ Ventajas
                 </p>
@@ -215,7 +215,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               </div>
 
               <!-- Ventajas -->
-              <div class="bg-white/80 dark:bg-slate-deep/60 rounded-lg p-3">
+              <div class="bg-white/80 dark:bg-gray-700/60 rounded-lg p-3">
                 <p class="text-xs font-semibold text-gray-700 dark:text-pearl-light/80 mb-2">
                   ✓ Ventajas
                 </p>
@@ -273,7 +273,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         </div>
 
         <!-- Footer -->
-        <div class="sticky bottom-0 bg-gray-50 dark:bg-slate-deep/60 border-t border-gray-200 dark:border-neutral-700 px-6 py-4">
+        <div class="sticky bottom-0 bg-gray-50 dark:bg-gray-700/60 border-t border-gray-200 dark:border-neutral-700 px-6 py-4">
           <button
             type="button"
             (click)="onClose()"
