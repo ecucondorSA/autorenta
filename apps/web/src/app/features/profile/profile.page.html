@@ -192,24 +192,24 @@
               <div class="mt-2">
                 <span class="badge-status badge-info">
                   {{
-                    profile()?.role === 'owner'
+                    profile()?.role === 'locador'
                       ? 'Locador'
-                      : profile()?.role === 'renter'
+                      : profile()?.role === 'locatario'
                         ? 'Locatario'
-                        : profile()?.role === 'both'
+                        : profile()?.role === 'ambos'
                           ? 'Ambos'
                           : 'Administrador'
                   }}
                 </span>
               </div>
               <p class="mt-2 text-sm text-gray-600 dark:text-beige-200/70">
-                <ng-container *ngIf="profile()?.role === 'owner'">
+                <ng-container *ngIf="profile()?.role === 'locador'">
                   Puedes publicar tus autos para alquilar
                 </ng-container>
-                <ng-container *ngIf="profile()?.role === 'renter'">
+                <ng-container *ngIf="profile()?.role === 'locatario'">
                   Puedes reservar autos de otros usuarios
                 </ng-container>
-                <ng-container *ngIf="profile()?.role === 'both'">
+                <ng-container *ngIf="profile()?.role === 'ambos'">
                   Puedes publicar y reservar autos
                 </ng-container>
                 <ng-container *ngIf="profile()?.role === 'admin'">

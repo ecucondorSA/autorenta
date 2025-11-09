@@ -95,7 +95,7 @@ export class PersonalizedDashboardComponent implements OnInit {
     ];
 
     // Acciones específicas por rol
-    if (role === 'owner' || role === 'both') {
+    if (role === 'locador' || role === 'ambos') {
       actions.push(
         {
           id: 'publish-car',
@@ -127,7 +127,7 @@ export class PersonalizedDashboardComponent implements OnInit {
       );
     }
 
-    if (role === 'renter' || role === 'both') {
+    if (role === 'locatario' || role === 'ambos') {
       actions.push(
         {
           id: 'find-car',
@@ -165,13 +165,13 @@ export class PersonalizedDashboardComponent implements OnInit {
     let roleMessage = '';
 
     switch (role) {
-      case 'owner':
+      case 'locador':
         roleMessage = '¿Listo para ganar dinero con tus autos?';
         break;
-      case 'renter':
+      case 'locatario':
         roleMessage = '¿Necesitas un auto hoy?';
         break;
-      case 'both':
+      case 'ambos':
         roleMessage = '¿Quieres alquilar o publicar un auto?';
         break;
       default:
@@ -191,8 +191,8 @@ export class PersonalizedDashboardComponent implements OnInit {
 
       // Cargar perfil del usuario
       const profile = await this.profileService.getMe();
-      const role = profile.role === 'admin' ? 'owner' : profile.role || 'renter';
-      this.userRole.set(role as 'owner' | 'renter' | 'both' | null);
+      const role = profile.role === 'admin' ? 'locador' : profile.role || 'locatario';
+      this.userRole.set(role as 'locador' | 'locatario' | 'ambos' | null);
       this.userName.set(profile.full_name?.split(' ')[0] || 'Usuario');
 
       // Cargar estadísticas
@@ -219,7 +219,7 @@ export class PersonalizedDashboardComponent implements OnInit {
         walletBalance: walletBalance.available_balance,
       }));
 
-      if (role === 'owner' || role === 'both') {
+      if (role === 'locador' || role === 'ambos') {
         // Autos del owner
         const cars = await this.carsService.listMyCars();
         const availableCars = cars.filter((car) => car.status === 'active').length;
@@ -241,7 +241,7 @@ export class PersonalizedDashboardComponent implements OnInit {
         }));
       }
 
-      if (role === 'renter' || role === 'both') {
+      if (role === 'locatario' || role === 'ambos') {
         // Reservas activas del renter
         const bookings = await this.bookingsService.getMyBookings();
         const activeBookings = bookings.filter(
@@ -262,13 +262,13 @@ export class PersonalizedDashboardComponent implements OnInit {
     const role = this.userRole();
 
     try {
-      if (role === 'owner' || role === 'both') {
+      if (role === 'locador' || role === 'ambos') {
         // Autos recientes del owner
         const cars = await this.carsService.listMyCars();
         this.recentCars.set(cars.slice(0, 3));
       }
 
-      if (role === 'renter' || role === 'both') {
+      if (role === 'locatario' || role === 'ambos') {
         // Reservas recientes del renter
         const bookings = await this.bookingsService.getMyBookings();
         this.recentBookings.set(bookings.slice(0, 3));

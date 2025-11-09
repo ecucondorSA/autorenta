@@ -104,7 +104,7 @@ export class ProfileExpandedPage {
   readonly canBookCars = computed(() => {
     // Basic role check - Level 1 allows booking, Level 3 for premium features
     const role = this.profile()?.role;
-    return role === 'renter' || role === 'both';
+    return role === 'locatario' || role === 'ambos';
   });
 
   // Verification status from RPC (replaces local document-based calculations)
@@ -164,12 +164,12 @@ export class ProfileExpandedPage {
 
   readonly showDriverFlow = computed(() => {
     const role = this.profile()?.role;
-    return role === 'renter' || role === 'both';
+    return role === 'locatario' || role === 'ambos';
   });
 
   readonly showOwnerFlow = computed(() => {
     const role = this.profile()?.role;
-    return role === 'owner' || role === 'both';
+    return role === 'locador' || role === 'ambos';
   });
 
   readonly driverVerification = computed(() => {

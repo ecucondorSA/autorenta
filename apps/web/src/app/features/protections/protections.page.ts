@@ -329,7 +329,7 @@ export class ProtectionsPage implements OnInit {
   }
 
   private updateMeta(): void {
-    this.metaService.updateTags({
+    this.metaService.updateMeta({
       title: 'Protecciones y Seguros - AutoRenta',
       description:
         'Protege tu clase de conductor y tu vehículo con nuestras opciones de cobertura.',

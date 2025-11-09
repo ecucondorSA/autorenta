@@ -36,18 +36,19 @@ import {
 
       <!-- Content -->
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        @if (verificationStatus(); as status) {
-          <!-- Status Summary -->
-          <div
-            class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8"
-          >
-            <div class="flex items-center justify-between mb-6">
-              <div>
-                <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-2">
-                  Estado de Verificación
-                </h2>
-                <div class="flex items-center gap-3">
-                  @switch (status.status) {
+        @if (verificationStatus().length > 0) {
+          @for (status of verificationStatus(); track status.role) {
+            <!-- Status Summary -->
+            <div
+              class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8"
+            >
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-2">
+                    Estado de Verificación - {{ status.role === 'locador' ? 'Locador' : 'Locatario' }}
+                  </h2>
+                  <div class="flex items-center gap-3">
+                    @switch (status.status) {
                     @case ('VERIFICADO') {
                       <span
                         class="inline-flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/40 text-green-900 dark:text-green-200 rounded-full font-medium text-sm"
@@ -154,8 +155,9 @@ import {
               </a>
             </div>
           }
+        }
 
-          <!-- Verification Help Section -->
+        <!-- Verification Help Section -->
           <div
             class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mt-8"
           >

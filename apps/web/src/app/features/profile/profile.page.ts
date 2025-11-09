@@ -63,11 +63,11 @@ export class ProfilePage implements OnInit {
   readonly avatarUrl = computed(() => this.profile()?.avatar_url ?? '');
   readonly canPublishCars = computed(() => {
     const role = this.profile()?.role;
-    return role === 'owner' || role === 'both';
+    return role === 'locador' || role === 'ambos';
   });
   readonly canBookCars = computed(() => {
     const role = this.profile()?.role;
-    return role === 'renter' || role === 'both';
+    return role === 'locatario' || role === 'ambos';
   });
 
   // Wallet state
@@ -112,17 +112,17 @@ export class ProfilePage implements OnInit {
 
   readonly roles: { value: Role; label: string; description: string }[] = [
     {
-      value: 'renter',
+      value: 'locatario',
       label: 'Locatario',
       description: 'Solo quiero reservar autos',
     },
     {
-      value: 'owner',
+      value: 'locador',
       label: 'Locador',
       description: 'Solo quiero publicar mis autos',
     },
     {
-      value: 'both',
+      value: 'ambos',
       label: 'Ambos',
       description: 'Quiero reservar y publicar autos',
     },
