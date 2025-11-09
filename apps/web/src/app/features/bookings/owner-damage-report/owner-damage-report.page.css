@@ -136,15 +136,15 @@ ion-note {
 }
 
 /* Color utilities */
-.text-charcoal-medium {
+.text-gray-600 {
   color: #6b7280;
 }
 
-.text-smoke-black {
+.text-gray-900 {
   color: #1f2937;
 }
 
-.text-accent-petrol {
+.text-sky-600 {
   color: #0ea5e9;
 }
 
@@ -240,15 +240,15 @@ ion-note {
   border-color: #e5e7eb;
 }
 
-.border-pearl-gray {
+.border-gray-200 {
   border-color: #d1d5db;
 }
 
-.hover\:border-accent-petrol:hover {
+.hover\:border-sky-600:hover {
   border-color: #0ea5e9;
 }
 
-.hover\:bg-sand-light:hover {
+.hover\:bg-beige-100:hover {
   background-color: #fef3c7;
 }
 

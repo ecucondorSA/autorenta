@@ -64,7 +64,7 @@
 }
 
 .timeline-line--completed {
-  @apply bg-accent-petrol dark:bg-accent-petrol;
+  @apply bg-sky-600 dark:bg-sky-600;
 }
 
 /* Timeline Marker (Circle) */
@@ -78,19 +78,19 @@
 }
 
 .timeline-marker--completed {
-  @apply bg-accent-petrol border-accent-petrol;
-  @apply shadow-md shadow-accent-petrol/30;
+  @apply bg-sky-600 border-sky-600;
+  @apply shadow-md shadow-sky-600/30;
 }
 
 .timeline-marker--current {
-  @apply bg-white dark:bg-slate-deep;
-  @apply border-accent-petrol;
-  @apply ring-4 ring-accent-petrol/20;
+  @apply bg-white dark:bg-gray-700;
+  @apply border-sky-600;
+  @apply ring-4 ring-sky-600/20;
   @apply animate-pulse;
 }
 
 .timeline-marker--pending {
-  @apply bg-white dark:bg-slate-deep;
+  @apply bg-white dark:bg-gray-700;
   @apply border-gray-300 dark:border-gray-600;
   @apply text-gray-500 dark:text-gray-400;
 }
@@ -147,12 +147,12 @@
 .timeline-action-button {
   @apply inline-flex items-center gap-2;
   @apply px-4 py-2;
-  @apply bg-accent-petrol hover:bg-accent-warm;
+  @apply bg-sky-600 hover:bg-beige-400;
   @apply text-white font-medium;
   @apply rounded-lg;
   @apply transition-all duration-200;
   @apply shadow-sm hover:shadow-md;
-  @apply focus:outline-none focus:ring-2 focus:ring-accent-petrol focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-offset-2;
   @apply active:scale-95;
 }
 
