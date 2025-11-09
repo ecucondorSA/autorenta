@@ -287,7 +287,7 @@ export class UnreadMessagesService {
 
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + 0.2);
-    } catch (__error) {
+    } catch {
       // Silently fail if audio context not supported
     }
   }

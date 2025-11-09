@@ -263,7 +263,7 @@ export class RealtimePricingService {
       if (data) {
         this.latestExchangeRate.set(data as ExchangeRateUpdate);
       }
-    } catch (__error) {}
+    } catch {}
   }
 
   private async loadInitialDemandSnapshots(): Promise<void> {
@@ -286,7 +286,7 @@ export class RealtimePricingService {
 
         this.demandByRegion.set(snapshotsByRegion);
       }
-    } catch (__error) {
+    } catch {
       // Silently ignore demand by region errors
     }
   }
@@ -306,7 +306,7 @@ export class RealtimePricingService {
       if (data) {
         this.activeEvents.set(data as SpecialEvent[]);
       }
-    } catch (__error) {
+    } catch {
       // Silently ignore active events errors
     }
   }

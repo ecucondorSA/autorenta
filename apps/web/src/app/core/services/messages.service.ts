@@ -278,7 +278,7 @@ export class MessagesService {
       } else {
         await channel.untrack();
       }
-    } catch (__error) {
+    } catch {
       // Don't throw - typing is not critical
     }
   }
@@ -328,7 +328,7 @@ export class MessagesService {
             .map((presence) => presence.user_id)
             .filter((id): id is string => typeof id === 'string');
           callback(typingUsers);
-        } catch (__error) {
+        } catch {
           // Silently ignore typing errors
         }
       })
@@ -373,7 +373,7 @@ export class MessagesService {
 
           // Success: remove from queue
           await this.offlineMessages.removeMessage(message.id);
-        } catch (__error) {
+        } catch {
           // Increment retry counter
           await this.offlineMessages.incrementRetry(message.id);
 
@@ -383,7 +383,7 @@ export class MessagesService {
           }
         }
       }
-    } catch (__error) {
+    } catch {
       // Silently ignore sync errors
     } finally {
       this.isSyncing.set(false);

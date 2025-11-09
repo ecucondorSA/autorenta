@@ -3732,3 +3732,67 @@ Application bundle generation failed. [3.022 seconds] - 2025-11-09T21:25:40.331Z
           ╵                           ~~~~~~
 
 
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.976 seconds] - 2025-11-09T21:28:03.888Z
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [2.524 seconds] - 2025-11-09T21:28:09.674Z
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [4.650 seconds] - 2025-11-09T21:28:26.139Z
+
+✘ [ERROR] TS2345: Argument of type 'Booking' is not assignable to parameter of type '{ [key: string]: unknown; id: string; }'.
+  Index signature for type 'string' is missing in type 'Booking'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:301:31:
+      301 │       this.bookingCreated.emit(booking);
+          ╵                                ~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[] | undefined' is not assignable to parameter of type '{ url: string; }[] | undefined'.
+  Type 'unknown[]' is not assignable to type '{ url: string; }[]'.
+    Type 'unknown' is not assignable to type '{ url: string; }'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:423:26:
+      423 │     return getCarImageUrl(photos, {
+          ╵                           ~~~~~~
+
+
+❯ Changes detected. Rebuilding...
