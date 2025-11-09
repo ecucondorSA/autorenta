@@ -25,6 +25,7 @@ import { FxService } from '../../../core/services/fx.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
+import { CarAvailabilityService } from '../../../core/services/car-availability.service';
 
 // Models
 import { Car, Review, CarStats, CarPhoto } from '../../../core/models';
