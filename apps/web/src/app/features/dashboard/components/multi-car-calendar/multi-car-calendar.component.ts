@@ -6,6 +6,7 @@ import { format, addDays, startOfMonth, endOfMonth, addMonths, eachDayOfInterval
 import { Spanish } from 'date-fns/locale';
 import { ToastService } from '../../../../core/services/toast.service';
 import { CarsService } from '../../../../core/services/cars.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import {
   CarAvailabilityService,
   DetailedBlockedRange,
@@ -87,7 +88,12 @@ export class MultiCarCalendarComponent implements OnInit {
 
     try {
       // Get owner's active cars
-      const ownerCars = await this.carsService.getOwnerCars();
+      const session = await this.authService.ensureSession();
+      const userId = session?.user?.id;
+      if (!userId) {
+        throw new Error('Usuario no autenticado');
+      }
+      const ownerCars = await this.carsService.getCarsByOwner(userId);
       const activeCars = ownerCars.filter((car) => car.status === 'active');
 
       if (activeCars.length === 0) {

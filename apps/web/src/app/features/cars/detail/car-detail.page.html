@@ -1308,7 +1308,7 @@
         <app-booking-location-form
           [carOwnerLat]="car()?.location_lat"
           [carOwnerLng]="car()?.location_lng"
-          [carOwnerAddress]="car()?.location_address"
+          [carOwnerAddress]="car()?.location_formatted_address || (car()?.location_street ? `${car()?.location_street} ${car()?.location_street_number || ''}, ${car()?.location_city || ''}` : undefined)"
           (locationSelected)="onLocationFormSubmit($event)"
           (cancelled)="onLocationFormCancelled()"
         ></app-booking-location-form>

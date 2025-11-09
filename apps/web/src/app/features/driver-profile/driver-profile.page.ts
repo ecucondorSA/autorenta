@@ -197,7 +197,7 @@ export class DriverProfilePage implements OnInit {
   }
 
   private updateMeta(): void {
-    this.metaService.updateTags({
+    this.metaService.updateMeta({
       title: 'Mi Perfil de Conductor - AutoRenta',
       description:
         'Revisa tu clase de conductor, beneficios y descuentos en el sistema Bonus-Malus.',

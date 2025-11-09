@@ -313,4 +313,47 @@ export class PublishCarV2Page implements OnInit {
   async goBack(): Promise<void> {
     await this.router.navigate(['/cars/my-cars']);
   }
+
+  /**
+   * Get current brand from form
+   */
+  getCurrentBrand(): string {
+    const brandId = this.publishForm?.get('brand_id')?.value;
+    if (!brandId) return '';
+    const brand = this.brands().find((b) => b.id === brandId);
+    return brand?.name || '';
+  }
+
+  /**
+   * Get current model from form
+   */
+  getCurrentModel(): string {
+    const modelId = this.publishForm?.get('model_id')?.value;
+    if (!modelId) return '';
+    const model = this.models().find((m) => m.id === modelId);
+    return model?.name || '';
+  }
+
+  /**
+   * Get current year from form
+   */
+  getCurrentYear(): number | null {
+    return this.publishForm?.get('year')?.value || null;
+  }
+
+  /**
+   * Handle stock photos selection
+   */
+  async onStockPhotosSelected(photos: string[]): Promise<void> {
+    await this.photoService.addStockPhotos(photos);
+    this.showStockPhotosModal.set(false);
+  }
+
+  /**
+   * Handle AI photos generation
+   */
+  async onAIPhotosGenerated(photos: string[]): Promise<void> {
+    await this.photoService.addAIPhotos(photos);
+    this.showAIPhotosModal.set(false);
+  }
 }
