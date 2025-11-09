@@ -886,3 +886,28 @@ export interface ProcessRefundResult {
   wallet_transaction_id?: string | null;
   message: string;
 }
+
+// ============================================
+// ADMIN SYSTEM
+// ============================================
+
+// Export all admin types
+export type {
+  AdminRole,
+  AdminUser,
+  AdminUserInsert,
+  AdminUserUpdate,
+  AdminAuditLog as AdminAuditLogType,
+  AdminAuditLogInsert,
+  AdminPermission,
+  AdminActionContext,
+  AdminUserWithProfile,
+} from '../types/admin.types';
+
+// Export admin constants
+export { ADMIN_PERMISSIONS } from '../types/admin.types';
+
+// Type aliases for backward compatibility
+export type AdminRoleType = import('../types/admin.types').AdminRole;
+export type AdminUserRole = import('../types/admin.types').AdminUser;
+export type AdminActionType = string; // Actions are strings in the audit log
