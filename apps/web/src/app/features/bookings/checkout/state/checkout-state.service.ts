@@ -204,7 +204,7 @@ export class CheckoutStateService {
       if (booking.payment_method) {
         this.paymentMethod.set(booking.payment_method);
       }
-    } catch (__error) {
+    } catch {
       this.message.set('No pudimos cargar la reserva.');
     } finally {
       this.loading.set(false);
@@ -220,7 +220,7 @@ export class CheckoutStateService {
       const bucket = this.franchiseTable.determineBucket(booking);
       const params = await firstValueFrom(this.fgoService.getParameters('AR', bucket));
       this.fgoParams.set(params);
-    } catch (__error) {
+    } catch {
       this.fgoParams.set(null);
     } finally {
       this.fgoLoading.set(false);
@@ -238,7 +238,7 @@ export class CheckoutStateService {
       this.fxLoading.set(true);
       const rate = await this.exchangeRates.getPlatformRate();
       this.exchangeRate.set(rate);
-    } catch (__error) {
+    } catch {
       this.exchangeRate.set(1);
     } finally {
       this.fxLoading.set(false);

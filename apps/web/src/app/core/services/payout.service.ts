@@ -149,7 +149,7 @@ export class PayoutService {
         .single(),
     ).pipe(
       map(({ data }) => data as BankAccount),
-      catchError(() => {
+      catchError((error) => {
         return throwError(() => new Error('Failed to add bank account'));
       }),
     );
@@ -169,7 +169,7 @@ export class PayoutService {
         this.supabase.getClient().from('bank_accounts').select('*').eq('id', accountId).single(),
       ),
       map(({ data }) => data as BankAccount),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to set default bank account'));
       }),
     );
@@ -183,7 +183,7 @@ export class PayoutService {
       switchMap(() => this.getPayoutStatus(payoutId)),
       filter((payout) => payout.status !== 'processing'),
       take(1),
-      catchError(() => {
+      catchError((error) => {
         return throwError(() => new Error('Failed to monitor payout status'));
       }),
     );
@@ -219,7 +219,7 @@ export class PayoutService {
               : 0,
         };
       }),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to calculate payout statistics'));
       }),
     );
