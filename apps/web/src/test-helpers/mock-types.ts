@@ -165,7 +165,7 @@ export interface MockAuth {
     }) => Promise<MockSupabaseResponse<{ session: MockSession | null; user: MockUser }>>
   >;
 
-  signOut: jasmine.Spy<() => Promise<MockSupabaseResponse<{}>>>;
+  signOut: jasmine.Spy<() => Promise<MockSupabaseResponse<Record<string, never>>>>;
 
   onAuthStateChange: jasmine.Spy<
     (callback: (event: string, session: MockSession | null) => void) => {

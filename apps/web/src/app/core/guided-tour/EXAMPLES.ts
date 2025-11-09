@@ -372,7 +372,7 @@ export class ResponsiveFeatureComponent implements OnInit {
   selector: 'app-analytics-demo',
   template: `<div>Analytics Demo</div>`,
 })
-export class AnalyticsDemoComponent implements OnInit {
+export class AnalyticsDemoComponent {
   private guidedTour = inject(GuidedTourService);
 
   ngOnInit(): void {

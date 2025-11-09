@@ -42,12 +42,12 @@ export class MapDrawerComponent {
   @Input() isMobile = false;
 
   @Output() readonly closeDrawer = new EventEmitter<void>();
-  @Output() readonly onReserveClick = new EventEmitter<{
+  @Output() readonly reserveClick = new EventEmitter<{
     carId: string;
     paymentMethod: string;
     dates?: { start: Date; end: Date };
   }>();
-  @Output() readonly onChatClick = new EventEmitter<string>();
+  @Output() readonly chatClick = new EventEmitter<string>();
 
   // UI State
   readonly showChat = signal(false);
@@ -97,7 +97,7 @@ export class MapDrawerComponent {
   toggleChat(): void {
     this.showChat.set(!this.showChat());
     if (this.showChat() && this.selectedCar?.carId) {
-      this.onChatClick.emit(this.selectedCar.carId);
+      this.chatClick.emit(this.selectedCar.carId);
     }
   }
 
@@ -114,7 +114,7 @@ export class MapDrawerComponent {
     this.selectedPaymentMethod.set(data.paymentMethod);
 
     // Emit reserve event with payment method
-    this.onReserveClick.emit({
+    this.reserveClick.emit({
       carId: this.selectedCar.carId,
       paymentMethod: data.paymentMethod,
       dates: data.dates,
@@ -175,7 +175,7 @@ export class MapDrawerComponent {
    */
   navigateToCheckout(): void {
     if (!this.selectedCar) return;
-    this.onReserveClick.emit({
+    this.reserveClick.emit({
       carId: this.selectedCar.carId,
       paymentMethod: 'wallet', // Default method
     });

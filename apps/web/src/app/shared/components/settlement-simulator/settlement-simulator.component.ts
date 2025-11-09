@@ -10,7 +10,7 @@ import { ToastService } from '../../../core/services/toast.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './settlement-simulator.component.html',
 })
-export class SettlementSimulatorComponent implements OnInit {
+export class SettlementSimulatorComponent {
   @Input({ required: true }) bookingId!: string;
 
   private readonly settlementService = inject(SettlementService);
@@ -23,11 +23,6 @@ export class SettlementSimulatorComponent implements OnInit {
     estimatedBreakdown: any;
   } | null>(null);
   readonly error = signal<string | null>(null);
-
-  async ngOnInit(): Promise<void> {
-    // Cargar monto inicial si existe
-    // Intentionally left empty - component uses signals for reactive state
-  }
 
   formatCurrency(amount: number): string {
     return amount.toFixed(2);
