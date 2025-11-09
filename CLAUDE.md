@@ -308,6 +308,24 @@ SELECT (storage.foldername('user-uuid/file.jpg'))[1] = 'user-uuid';
 npm run sync:types
 ```
 
+### 5. Common Development Errors
+
+**⭐ NUEVO:** Ver guía completa de errores comunes y cómo prevenirlos:
+
+- **[DEVELOPMENT_GUIDELINES.md](./DEVELOPMENT_GUIDELINES.md)** - Patrones de errores + soluciones
+- **[ci-build-errors-troubleshooting.md](./docs/runbooks/ci-build-errors-troubleshooting.md)** - Fix rápido de CI
+
+**Errores más comunes prevenibles:**
+
+- Templates inline grandes (>50 líneas) → usar `.html` externo
+- Toast service con 1 parámetro → usar 2-3 parámetros `(title, message)`
+- Parámetros sin tipo → agregar tipos explícitos
+- Imports a módulos inexistentes → verificar paths
+- IonicModule faltante → importar en componentes standalone
+- Tipos de Supabase desactualizados → sincronizar después de migrations
+
+**Ver documentación completa para ejemplos y fixes automáticos.**
+
 ## Environment Variables
 
 ### Angular (`.env.development.local`)
@@ -379,6 +397,8 @@ AutoRenta usa servidores MCP de Cloudflare para workflows mejorados:
 | **MCP** | [CLAUDE_MCP.md](./CLAUDE_MCP.md) | Model Context Protocol |
 | **Deployment** | [docs/deployment-guide.md](./docs/deployment-guide.md) | Deployment procedures |
 | **Troubleshooting** | [docs/runbooks/troubleshooting.md](./docs/runbooks/troubleshooting.md) | Problem solving |
+| **Dev Guidelines** | [DEVELOPMENT_GUIDELINES.md](./DEVELOPMENT_GUIDELINES.md) | Prevención de errores comunes ⭐ NEW |
+| **CI Build Errors** | [docs/runbooks/ci-build-errors-troubleshooting.md](./docs/runbooks/ci-build-errors-troubleshooting.md) | Troubleshooting de errores de CI ⭐ NEW |
 
 ### Feature Guides
 
@@ -386,6 +406,12 @@ AutoRenta usa servidores MCP de Cloudflare para workflows mejorados:
 - **Cash Deposits**: `CASH_DEPOSITS_NON_WITHDRAWABLE_FIX.md`
 - **MercadoPago Features**: `docs/guides/features/MERCADOPAGO_*.md`
 - **Testing Plan**: `docs/testing/TESTING_PLAN.md`
+
+### CI/CD & Quality
+
+- **CI Fix Progress**: `CI_FIX_PROGRESS.md` (2,411 → 211 errores, 91.2% reducción)
+- **Development Guidelines**: `DEVELOPMENT_GUIDELINES.md` (Errores comunes y cómo evitarlos)
+- **CI Troubleshooting**: `docs/runbooks/ci-build-errors-troubleshooting.md` (Guía rápida de fixes)
 
 ### Skills & Optimization
 
