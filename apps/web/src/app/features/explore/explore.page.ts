@@ -143,7 +143,7 @@ export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
       const cars = await this.carsService.listActiveCars({});
       this.cars = cars;
       this.filteredCars = this.cars;
-    } catch (__error) {
+    } catch {
       /* Silenced */
     } finally {
       this.loading = false;
@@ -157,7 +157,7 @@ export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       });
-    } catch (__error) {
+    } catch {
       /* Silenced */
     }
   }

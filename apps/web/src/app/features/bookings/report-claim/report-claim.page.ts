@@ -492,7 +492,7 @@ export class ReportClaimPage implements OnInit {
       this.claimData.location = `Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}`;
 
       await this.showToast('Ubicación obtenida', 'success');
-    } catch (__error) {
+    } catch {
       await this.showToast('No se pudo obtener la ubicación', 'danger');
     } finally {
       this.gettingLocation = false;

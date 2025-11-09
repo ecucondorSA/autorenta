@@ -347,7 +347,7 @@ export class ProfilePage implements OnInit {
       setTimeout(() => {
         this.copiedWAN.set(false);
       }, 2000);
-    } catch (__error) {
+    } catch {
       this.error.set('Error al copiar el número de cuenta');
     }
   }
