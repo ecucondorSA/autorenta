@@ -8,19 +8,19 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
   imports: [CommonModule],
   template: `
     <div
-      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
+      class="rounded-xl border border-border-default/60 bg-surface-raised shadow p-6 dark:border-neutral-800/70 dark:bg-surface-raised transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
         Elegí tu nivel de protección
       </h3>
 
       <div class="space-y-3">
         <!-- Standard -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white-pure dark:bg-slate-deep/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'standard'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-accent-petrol/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-cta-default/60 bg-primary-50 dark:bg-cta-default/10 border-cta-default/60 shadow-card-hover'
               : ''
           "
         >
@@ -34,18 +34,18 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           />
           <div class="flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-smoke-black dark:text-ivory-luminous"
+              <span class="text-sm font-medium text-text-primary dark:text-text-primary"
                 >Protección estándar</span
               >
-              <span class="text-sm font-semibold text-green-600 dark:text-green-400">Incluido</span>
+              <span class="text-sm font-semibold text-success-light dark:text-success-light">Incluido</span>
             </div>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
               Protección básica incluida con tu reserva
             </p>
           </div>
           <div *ngIf="selectedUpgrade === 'standard'" class="ml-3">
             <svg
-              class="w-5 h-5 text-primary-600 dark:text-accent-petrol"
+              class="w-5 h-5 text-primary-600 dark:text-cta-default"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -60,10 +60,10 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
 
         <!-- Premium 50 -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white-pure dark:bg-slate-deep/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'premium50'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-accent-petrol/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-cta-default/60 bg-primary-50 dark:bg-cta-default/10 border-cta-default/60 shadow-card-hover'
               : ''
           "
         >
@@ -77,20 +77,20 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           />
           <div class="flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-smoke-black dark:text-ivory-luminous"
+              <span class="text-sm font-medium text-text-primary dark:text-text-primary"
                 >Cobertura Premium</span
               >
-              <span class="text-sm font-semibold text-primary-600 dark:text-accent-petrol"
+              <span class="text-sm font-semibold text-primary-600 dark:text-cta-default"
                 >+10%</span
               >
             </div>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
               Reduce a la mitad lo máximo que podrías pagar por daños
             </p>
           </div>
           <div *ngIf="selectedUpgrade === 'premium50'" class="ml-3">
             <svg
-              class="w-5 h-5 text-primary-600 dark:text-accent-petrol"
+              class="w-5 h-5 text-primary-600 dark:text-cta-default"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -105,10 +105,10 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
 
         <!-- Zero -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white-pure dark:bg-slate-deep/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'zero'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-accent-petrol/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-cta-default/60 bg-primary-50 dark:bg-cta-default/10 border-cta-default/60 shadow-card-hover'
               : ''
           "
         >
@@ -122,20 +122,20 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           />
           <div class="flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-smoke-black dark:text-ivory-luminous"
+              <span class="text-sm font-medium text-text-primary dark:text-text-primary"
                 >Máxima protección</span
               >
-              <span class="text-sm font-semibold text-primary-600 dark:text-accent-petrol"
+              <span class="text-sm font-semibold text-primary-600 dark:text-cta-default"
                 >+20%</span
               >
             </div>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
               Cero responsabilidad por daños (nosotros nos encargamos)
             </p>
           </div>
           <div *ngIf="selectedUpgrade === 'zero'" class="ml-3">
             <svg
-              class="w-5 h-5 text-primary-600 dark:text-accent-petrol"
+              class="w-5 h-5 text-primary-600 dark:text-cta-default"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -150,11 +150,11 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
       </div>
 
       <div
-        class="mt-4 p-3 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
+        class="mt-4 p-3 bg-cta-default/10 border border-cta-default/30 dark:bg-cta-default/25 dark:border-cta-default/40 rounded-lg transition-colors duration-300"
       >
         <div class="flex items-start gap-2">
           <svg
-            class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"
+            class="w-4 h-4 text-cta-default mt-0.5 flex-shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -166,7 +166,7 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p class="text-xs text-blue-800 dark:text-info-200">
+          <p class="text-xs text-cta-default dark:text-cta-default">
             El costo adicional se suma automáticamente al precio total de tu reserva.
           </p>
         </div>

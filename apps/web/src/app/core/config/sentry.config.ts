@@ -91,7 +91,10 @@ export function initializeSentry(): void {
     ],
 
     // Configure what data to send
-    beforeSend(event: ErrorEvent, hint: EventHint): ErrorEvent | PromiseLike<ErrorEvent | null> | null {
+    beforeSend(
+      event: ErrorEvent,
+      hint: EventHint,
+    ): ErrorEvent | PromiseLike<ErrorEvent | null> | null {
       // Don't send errors in development unless explicitly testing
       if (!environment.production && !localStorage.getItem('sentry-test-mode')) {
         console.warn('🚫 Sentry error blocked in development:', hint.originalException);

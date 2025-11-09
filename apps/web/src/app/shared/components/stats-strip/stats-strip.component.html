@@ -1,10 +1,10 @@
-<div class="stats-strip bg-white dark:bg-slate-deep border-t border-b border-pearl-gray dark:border-gray-600 py-4">
+<div class="stats-strip bg-surface-raised dark:bg-surface-secondary border-t border-b border-border-default dark:border-gray-600 py-4">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-3 gap-4">
       <div *ngFor="let stat of stats" class="text-center">
         <div class="text-2xl mb-1">{{ stat.icon }}</div>
-        <div class="text-lg font-bold text-smoke-black dark:text-white-pure">{{ stat.value }}</div>
-        <div class="text-xs text-charcoal-medium dark:text-pearl-light">{{ stat.label }}</div>
+        <div class="text-lg font-bold text-text-primary dark:text-text-primary">{{ stat.value }}</div>
+        <div class="text-xs text-text-secondary dark:text-text-secondary">{{ stat.label }}</div>
       </div>
     </div>
   </div>

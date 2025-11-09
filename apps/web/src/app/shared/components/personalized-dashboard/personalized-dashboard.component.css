@@ -275,51 +275,51 @@
   box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
 }
 
-.action-card.bg-indigo-500 {
+.action-card.bg-cta-default {
   background: linear-gradient(135deg, #6366f1, #4f46e5);
 }
 
-.action-card.bg-indigo-500:hover {
+.action-card.bg-cta-default:hover {
   box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
-.action-card.bg-orange-500 {
+.action-card.bg-warning-light {
   background: linear-gradient(135deg, #f97316, #ea580c);
 }
 
-.action-card.bg-orange-500:hover {
+.action-card.bg-warning-light:hover {
   box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
 }
 
-.action-card.bg-blue-600 {
+.action-card.bg-cta-default {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
-.action-card.bg-blue-600:hover {
+.action-card.bg-cta-default:hover {
   box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
 }
 
-.action-card.bg-teal-500 {
+.action-card.bg-success-light {
   background: linear-gradient(135deg, #14b8a6, #0f766e);
 }
 
-.action-card.bg-teal-500:hover {
+.action-card.bg-success-light:hover {
   box-shadow: 0 8px 25px rgba(20, 184, 166, 0.3);
 }
 
-.action-card.bg-green-500 {
+.action-card.bg-success-light {
   background: linear-gradient(135deg, #10b981, #059669);
 }
 
-.action-card.bg-green-500:hover {
+.action-card.bg-success-light:hover {
   box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
 
-.action-card.bg-blue-500 {
+.action-card.bg-cta-default {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
-.action-card.bg-blue-500:hover {
+.action-card.bg-cta-default:hover {
   box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
 }
 

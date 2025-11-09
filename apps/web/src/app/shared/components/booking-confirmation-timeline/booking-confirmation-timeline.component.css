@@ -64,7 +64,11 @@
 }
 
 .timeline-line--completed {
-  @apply bg-accent-petrol dark:bg-accent-petrol;
+  background-color: var(--cta-default);
+}
+
+.dark .timeline-line--completed {
+  background-color: var(--cta-default);
 }
 
 /* Timeline Marker (Circle) */
@@ -78,19 +82,21 @@
 }
 
 .timeline-marker--completed {
-  @apply bg-accent-petrol border-accent-petrol;
-  @apply shadow-md shadow-accent-petrol/30;
+  background-color: var(--cta-default);
+  border-color: var(--cta-default);
+  @apply shadow-md;
+  box-shadow: 0 4px 6px -1px rgba(167, 216, 244, 0.3);
 }
 
 .timeline-marker--current {
-  @apply bg-white dark:bg-slate-deep;
-  @apply border-accent-petrol;
-  @apply ring-4 ring-accent-petrol/20;
-  @apply animate-pulse;
+  @apply bg-surface-raised dark:bg-surface-secondary;
+  @apply ring-4 animate-pulse;
+  border-color: var(--cta-default);
+  --tw-ring-color: rgba(167, 216, 244, 0.2);
 }
 
 .timeline-marker--pending {
-  @apply bg-white dark:bg-slate-deep;
+  @apply bg-surface-raised dark:bg-surface-secondary;
   @apply border-gray-300 dark:border-gray-600;
   @apply text-gray-500 dark:text-gray-400;
 }
@@ -120,13 +126,13 @@
 }
 
 .timeline-step-badge--completed {
-  @apply bg-green-100 text-green-800;
-  @apply dark:bg-green-900/40 dark:text-green-200;
+  @apply bg-success-light/20 text-success-light;
+  @apply dark:bg-success-light/20 dark:text-success-light;
 }
 
 .timeline-step-badge--pending {
-  @apply bg-orange-100 text-orange-800;
-  @apply dark:bg-orange-900/40 dark:text-orange-200;
+  @apply bg-warning-light/20 text-warning-light;
+  @apply dark:bg-warning-light/20 dark:text-warning-light;
 }
 
 .timeline-step-description {
@@ -147,13 +153,18 @@
 .timeline-action-button {
   @apply inline-flex items-center gap-2;
   @apply px-4 py-2;
-  @apply bg-accent-petrol hover:bg-accent-warm;
-  @apply text-white font-medium;
+  @apply text-text-inverse font-medium;
   @apply rounded-lg;
   @apply transition-all duration-200;
   @apply shadow-sm hover:shadow-md;
-  @apply focus:outline-none focus:ring-2 focus:ring-accent-petrol focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
   @apply active:scale-95;
+  background-color: var(--cta-default);
+  --tw-ring-color: var(--cta-default);
+}
+
+.timeline-action-button:hover {
+  background-color: var(--warning-light);
 }
 
 .timeline-action-button:disabled {

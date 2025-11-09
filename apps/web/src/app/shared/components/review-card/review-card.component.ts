@@ -116,7 +116,7 @@ export class ReviewCardComponent {
 
     const classes: Record<string, string> = {
       pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300',
-      approved: 'bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300',
+      approved: 'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300',
     };
 

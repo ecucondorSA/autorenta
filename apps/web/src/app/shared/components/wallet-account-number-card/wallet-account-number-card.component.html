@@ -1,9 +1,9 @@
 <div
-  class="bg-gradient-to-br from-accent-petrol/10 to-white-pure dark:from-accent-petrol/20 dark:to-anthracite rounded-2xl shadow-soft dark:shadow-card border border-accent-petrol/20 dark:border-accent-petrol/30 p-6"
+  class="bg-gradient-to-br from-cta-default/10 to-white-pure dark:from-cta-default/20 dark:to-anthracite rounded-2xl shadow-soft dark:shadow-card border border-cta-default/20 dark:border-cta-default/30 p-6"
 >
   <div class="flex items-center gap-2 mb-3">
     <svg
-      class="w-5 h-5 text-accent-petrol dark:text-ivory-luminous"
+      class="w-5 h-5 text-cta-default dark:text-text-primary"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -15,16 +15,16 @@
         d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
       ></path>
     </svg>
-    <h3 class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">
+    <h3 class="text-sm font-semibold text-text-secondary dark:text-text-secondary">
       Tu Número de Cuenta Wallet
     </h3>
   </div>
 
   <div
-    class="bg-white-pure dark:bg-slate-deep rounded-xl p-4 mb-3 border border-pearl-gray/50 dark:border-slate-deep"
+    class="bg-surface-raised dark:bg-surface-secondary rounded-xl p-4 mb-3 border border-border-default/50 dark:border-slate-deep"
   >
     <p
-      class="text-2xl font-mono font-bold text-accent-petrol dark:text-ivory-luminous tracking-wider text-center"
+      class="text-2xl font-mono font-bold text-cta-default dark:text-text-primary tracking-wider text-center"
     >
       {{ walletAccountNumber }}
     </p>
@@ -39,10 +39,10 @@
       [class.bg-success-50]="copied"
       [class.border-success-500]="copied"
       [class.text-success-700]="copied"
-      [class.bg-accent-petrol]="!copied"
-      [class.border-accent-petrol]="!copied"
-      [class.text-white]="!copied"
-      [class.hover:bg-accent-petrol/90]="!copied"
+      [class.bg-cta-default]="!copied"
+      [class.border-cta-default]="!copied"
+      [class.text-text-inverse]="!copied"
+      [class.hover:bg-cta-default/90]="!copied"
     >
       <ng-container *ngIf="copied; else notCopied">
         <svg
@@ -80,7 +80,7 @@
   </div>
 
   <p
-    class="mt-3 text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 text-center"
+    class="mt-3 text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60 text-center"
   >
     Comparte este número para recibir transferencias de otros usuarios
   </p>

@@ -147,7 +147,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
           <!-- Callout de beneficio -->
           <div
-            class="mt-4 p-4 bg-white dark:bg-slate-800 rounded-lg border border-amber-200 dark:border-amber-700"
+            class="mt-4 p-4 bg-surface-raised dark:bg-surface-raised rounded-lg border border-amber-200 dark:border-amber-700"
           >
             <p class="text-sm font-medium text-slate-700 dark:text-slate-300">
               💡 <strong>Beneficio principal:</strong> Este sistema está diseñado para usuarios

@@ -1,16 +1,16 @@
 <div
-  class="wallet-balance-card bg-white-pure dark:bg-anthracite border border-pearl-gray/70 dark:border-slate-deep rounded-xl shadow-soft dark:shadow-card p-6 transition-colors duration-300"
+  class="wallet-balance-card bg-surface-raised dark:bg-surface-raised border border-border-default/70 dark:border-slate-deep rounded-xl shadow-soft dark:shadow-card p-6 transition-colors duration-300"
 >
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
-    <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous">Mi Wallet</h2>
+    <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary">Mi Wallet</h2>
 
     <!-- Refresh Button -->
     <button
       type="button"
       (click)="loadBalance()"
       [disabled]="isLoadingBalance()"
-      class="text-accent-petrol hover:text-accent-petrol/80 disabled:text-ash-gray dark:text-pearl-light dark:hover:text-ivory-luminous dark:disabled:text-neutral-500 transition-colors"
+      class="text-cta-default hover:text-cta-default/80 disabled:text-text-muted dark:text-text-secondary dark:hover:text-ivory-luminous dark:disabled:text-neutral-500 transition-colors"
       aria-label="Refrescar balance"
     >
       <svg
@@ -96,9 +96,9 @@
   <!-- Loading State -->
   <div *ngIf="isLoadingBalance()" class="text-center py-8">
     <div
-      class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-petrol dark:border-pearl-light"
+      class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cta-default dark:border-pearl-light"
     ></div>
-    <p class="text-charcoal-medium dark:text-pearl-light/80 mt-4">Cargando balance...</p>
+    <p class="text-text-secondary dark:text-text-secondary/80 mt-4">Cargando balance...</p>
   </div>
 
   <!-- Error State -->
@@ -136,13 +136,13 @@
   <div *ngIf="balance() && !isLoadingBalance()" class="space-y-4">
     <!-- Total Balance -->
     <div
-      class="bg-white-pure dark:bg-slate-deep rounded-xl p-6 border-2 border-accent-petrol/30 dark:border-accent-petrol/40 shadow-soft hover:border-accent-petrol/50 dark:hover:border-accent-petrol/60 transition-all"
+      class="bg-surface-raised dark:bg-surface-secondary rounded-xl p-6 border-2 border-cta-default/30 dark:border-cta-default/40 shadow-soft hover:border-cta-default/50 dark:hover:border-cta-default/60 transition-all"
     >
-      <p class="text-sm text-charcoal-medium dark:text-pearl-light/90 font-medium mb-1">
+      <p class="text-sm text-text-secondary dark:text-text-secondary/90 font-medium mb-1">
         Balance Total
       </p>
       <p
-        class="text-4xl font-bold text-smoke-black dark:text-ivory-luminous"
+        class="text-4xl font-bold text-text-primary dark:text-text-primary"
         data-testid="wallet-balance"
       >
         {{ formatCurrency(totalBalance()) }}
@@ -193,7 +193,7 @@
 
           @if (nonWithdrawableBalance() > 0) {
             <div
-              class="flex items-start justify-between text-xs text-info-700 dark:text-info-100"
+              class="flex items-start justify-between text-xs text-cta-default dark:text-cta-default"
               data-testid="non-withdrawable-balance"
             >
               <span class="flex items-center gap-1">
@@ -266,11 +266,11 @@
     </button>
 
     <!-- Bank Transfer Information -->
-    <div class="border border-pearl-gray dark:border-slate-deep rounded-xl overflow-hidden">
+    <div class="border border-border-default dark:border-slate-deep rounded-xl overflow-hidden">
       <button
         type="button"
         (click)="showBankInfo.set(!showBankInfo())"
-        class="w-full px-4 py-3 bg-sand-light dark:bg-anthracite text-smoke-black dark:text-pearl-light font-medium flex items-center justify-between hover:bg-pearl-gray dark:hover:bg-slate-deep transition-colors rounded-t-xl"
+        class="w-full px-4 py-3 bg-surface-secondary dark:bg-surface-raised text-text-primary dark:text-text-secondary font-medium flex items-center justify-between hover:bg-border-default dark:hover:bg-slate-deep transition-colors rounded-t-xl"
       >
         <span class="text-sm">Ver datos para transferencia bancaria</span>
         <svg
@@ -291,30 +291,30 @@
 
       <div
         *ngIf="showBankInfo()"
-        class="p-4 bg-white-pure dark:bg-slate-deep space-y-3 text-sm border-t border-pearl-gray dark:border-slate-deep"
+        class="p-4 bg-surface-raised dark:bg-surface-secondary space-y-3 text-sm border-t border-border-default dark:border-slate-deep"
       >
         <div class="flex items-center justify-between">
-          <span class="text-charcoal-medium dark:text-pearl-light/70">Titular:</span>
-          <span class="font-semibold text-smoke-black dark:text-ivory-luminous">{{
+          <span class="text-text-secondary dark:text-text-secondary/70">Titular:</span>
+          <span class="font-semibold text-text-primary dark:text-text-primary">{{
             bankDetails.accountName
           }}</span>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-charcoal-medium dark:text-pearl-light/70">Banco:</span>
-          <span class="font-semibold text-smoke-black dark:text-ivory-luminous">{{
+          <span class="text-text-secondary dark:text-text-secondary/70">Banco:</span>
+          <span class="font-semibold text-text-primary dark:text-text-primary">{{
             bankDetails.bank
           }}</span>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-charcoal-medium dark:text-pearl-light/70">Alias:</span>
+          <span class="text-text-secondary dark:text-text-secondary/70">Alias:</span>
           <div class="flex items-center gap-2">
-            <span class="font-semibold text-smoke-black dark:text-ivory-luminous font-mono">{{
+            <span class="font-semibold text-text-primary dark:text-text-primary font-mono">{{
               bankDetails.alias
             }}</span>
             <button
               type="button"
               (click)="copyToClipboard(bankDetails.alias)"
-              class="text-accent-petrol hover:text-accent-petrol/80 dark:text-pearl-light dark:hover:text-ivory-luminous transition-colors"
+              class="text-cta-default hover:text-cta-default/80 dark:text-text-secondary dark:hover:text-ivory-luminous transition-colors"
               aria-label="Copiar alias"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -329,16 +329,16 @@
           </div>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-charcoal-medium dark:text-pearl-light/70">CBU:</span>
+          <span class="text-text-secondary dark:text-text-secondary/70">CBU:</span>
           <div class="flex items-center gap-2">
             <span
-              class="font-semibold text-smoke-black dark:text-ivory-luminous font-mono text-xs"
+              class="font-semibold text-text-primary dark:text-text-primary font-mono text-xs"
               >{{ bankDetails.cbu }}</span
             >
             <button
               type="button"
               (click)="copyToClipboard(bankDetails.cbu)"
-              class="text-accent-petrol hover:text-accent-petrol/80 dark:text-pearl-light dark:hover:text-ivory-luminous transition-colors"
+              class="text-cta-default hover:text-cta-default/80 dark:text-text-secondary dark:hover:text-ivory-luminous transition-colors"
               aria-label="Copiar CBU"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -374,7 +374,7 @@
     <div class="info-card">
       <div class="flex items-start">
         <svg
-          class="w-5 h-5 text-charcoal-medium dark:text-pearl-light mt-0.5 flex-shrink-0"
+          class="w-5 h-5 text-text-secondary dark:text-text-secondary mt-0.5 flex-shrink-0"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -387,16 +387,16 @@
           ></path>
         </svg>
         <div class="ml-2 space-y-1">
-          <p class="text-xs text-charcoal-medium dark:text-pearl-light/80">
+          <p class="text-xs text-text-secondary dark:text-text-secondary/80">
             Los fondos bloqueados se liberan automáticamente al finalizar tus reservas.
           </p>
           @if (nonWithdrawableBalance() > 0) {
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70">
               Tu crédito Autorentar se mantiene disponible para nuevas reservas y no puede retirarse
               como efectivo.
               <a
                 href="/politica-credito-autorentar"
-                class="underline font-semibold hover:text-smoke-black dark:hover:text-ivory-luminous"
+                class="underline font-semibold hover:text-text-primary dark:hover:text-ivory-luminous"
                 target="_blank"
               >
                 Consultar política

@@ -1,26 +1,13 @@
-import { Component, OnInit, inject, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { MessagesService } from '../../core/services/messages.service';
+import { MessagesService, Message } from '../../core/services/messages.service';
 import { AuthService } from '../../core/services/auth.service';
-import { injectSupabase } from '../../core/services/supabase-client.service';
 import { UnreadMessagesService } from '../../core/services/unread-messages.service';
 import { OfflineMessagesIndicatorComponent } from '../../shared/components/offline-messages-indicator/offline-messages-indicator.component';
-
-interface Conversation {
-  id: string;
-  carId?: string;
-  bookingId?: string;
-  otherUserId: string;
-  otherUserName: string;
-  otherUserAvatar?: string;
-  lastMessage: string;
-  lastMessageAt: Date;
-  unreadCount: number;
-  carBrand?: string;
-  carModel?: string;
-  carYear?: number;
-}
+import { RealtimeConnectionService, ConnectionStatus } from '../../core/services/realtime-connection.service';
+import type { ConversationDTO } from '../../core/repositories/messages.repository';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 /**
  * 📬 Bandeja de entrada de mensajes
@@ -33,11 +20,11 @@ interface Conversation {
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-white shadow dark:bg-gray-800">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-gray-800">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center justify-between">
             <div>
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mensajes</h1>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-text-inverse">Mensajes</h1>
               <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
                 {{ conversations().length }} conversaciones
               </p>
@@ -80,7 +67,7 @@ interface Conversation {
                 d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">No hay mensajes</h3>
+            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">No hay mensajes</h3>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
               Cuando alguien te escriba, aparecerá aquí
             </p>
@@ -91,7 +78,7 @@ interface Conversation {
             @for (conv of conversations(); track conv.id) {
               <button
                 (click)="openConversation(conv)"
-                class="group w-full rounded-lg border border-gray-200 bg-white p-4 text-left transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                class="group w-full rounded-lg border border-gray-200 bg-surface-raised p-4 text-left transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
                 type="button"
               >
                 <div class="flex items-start gap-4">
@@ -105,7 +92,7 @@ interface Conversation {
                       />
                     } @else {
                       <div
-                        class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold"
+                        class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-cta-default to-purple-600 text-text-inverse font-semibold"
                       >
                         {{ conv.otherUserName.charAt(0).toUpperCase() }}
                       </div>
@@ -116,7 +103,7 @@ interface Conversation {
                   <div class="min-w-0 flex-1">
                     <div class="mb-1 flex items-start justify-between gap-2">
                       <div>
-                        <p class="font-semibold text-gray-900 dark:text-white">
+                        <p class="font-semibold text-gray-900 dark:text-text-inverse">
                           {{ conv.otherUserName }}
                         </p>
                         @if (conv.carBrand) {
@@ -127,7 +114,7 @@ interface Conversation {
                       </div>
                       @if (conv.unreadCount > 0) {
                         <span
-                          class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white"
+                          class="flex h-6 w-6 items-center justify-center rounded-full bg-cta-default text-cta-text"
                         >
                           {{ conv.unreadCount }}
                         </span>
@@ -137,7 +124,7 @@ interface Conversation {
                       class="truncate text-sm"
                       [class.font-semibold]="conv.unreadCount > 0"
                       [class.text-gray-900]="conv.unreadCount > 0"
-                      [class.dark:text-white]="conv.unreadCount > 0"
+                      [class.dark:text-text-inverse]="conv.unreadCount > 0"
                       [class.text-gray-600
                       dark:text-gray-300]="conv.unreadCount === 0"
                       [class.dark:text-gray-400
@@ -158,16 +145,19 @@ interface Conversation {
     </div>
   `,
 })
-export class InboxPage implements OnInit {
+export class InboxPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly messagesService = inject(MessagesService);
   private readonly authService = inject(AuthService);
-  private readonly supabase = injectSupabase();
   private readonly unreadMessagesService = inject(UnreadMessagesService);
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
-  readonly conversations = signal<Conversation[]>([]);
+  readonly conversations = signal<ConversationDTO[]>([]);
+  readonly connectionStatus = signal<ConnectionStatus>('disconnected');
+
+  private realtimeChannel?: RealtimeChannel;
 
   async ngOnInit(): Promise<void> {
     const session = this.authService.session$();
@@ -177,6 +167,96 @@ export class InboxPage implements OnInit {
     }
 
     await this.loadConversations();
+    this.subscribeToConversations(session.user.id);
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar ambos canales
+    this.realtimeConnection.unsubscribe('inbox-conversations-sender');
+    this.realtimeConnection.unsubscribe('inbox-conversations-recipient');
+  }
+
+  /**
+   * Suscribe a cambios en tiempo real de mensajes
+   * Actualiza solo la conversación afectada en lugar de refetch completo
+   * Usa dos canales separados para sender y recipient porque Supabase Realtime
+   * no soporta OR en filtros directamente
+   */
+  private subscribeToConversations(userId: string): void {
+    // Canal para mensajes donde el usuario es el remitente
+    const senderChannel = this.realtimeConnection.subscribeWithRetry<Message>(
+      'inbox-conversations-sender',
+      {
+        event: '*', // INSERT, UPDATE
+        schema: 'public',
+        table: 'messages',
+        filter: `sender_id=eq.${userId}`,
+      },
+      async (payload) => {
+        await this.handleMessageChange(payload.new as Message, userId);
+      },
+      (status) => {
+        this.connectionStatus.set(status);
+      },
+    );
+
+    // Canal para mensajes donde el usuario es el destinatario
+    const recipientChannel = this.realtimeConnection.subscribeWithRetry<Message>(
+      'inbox-conversations-recipient',
+      {
+        event: '*', // INSERT, UPDATE
+        schema: 'public',
+        table: 'messages',
+        filter: `recipient_id=eq.${userId}`,
+      },
+      async (payload) => {
+        await this.handleMessageChange(payload.new as Message, userId);
+      },
+      (status) => {
+        this.connectionStatus.set(status);
+      },
+    );
+
+    // Guardar referencia al primer canal para cleanup (ambos se limpian igual)
+    this.realtimeChannel = senderChannel;
+  }
+
+  /**
+   * Maneja cambios en mensajes recibidos via realtime
+   * Recalcula solo la conversación afectada
+   */
+  private async handleMessageChange(message: Message, userId: string): Promise<void> {
+    const conversationId = message.car_id || message.booking_id;
+    if (!conversationId) return;
+
+    const otherUserId = message.sender_id === userId ? message.recipient_id : message.sender_id;
+    const conversationKey = `${conversationId}_${otherUserId}`;
+
+    // Obtener conversación actualizada desde el repository
+    const updatedConversation = await this.messagesService.listConversations(userId, {
+      limit: 1,
+      offset: 0,
+      carId: message.car_id || undefined,
+      bookingId: message.booking_id || undefined,
+    });
+
+    const conv = updatedConversation.conversations.find((c) => c.id === conversationKey);
+    if (!conv) return;
+
+    // Actualizar solo esta conversación en el array
+    this.conversations.update((convs) => {
+      const index = convs.findIndex((c) => c.id === conversationKey);
+      if (index >= 0) {
+        // Reemplazar conversación existente
+        const updated = [...convs];
+        updated[index] = conv;
+        // Reordenar por fecha de último mensaje
+        return updated.sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime());
+      } else {
+        // Nueva conversación, agregar al inicio
+        return [conv, ...convs];
+      }
+    });
   }
 
   private async loadConversations(): Promise<void> {
@@ -185,87 +265,14 @@ export class InboxPage implements OnInit {
       const userId = this.authService.session$()?.user.id;
       if (!userId) return;
 
-      // Obtener mensajes agrupados por conversación
-      const { data: messages, error } = await this.supabase
-        .from('messages')
-        .select(
-          `
-          id,
-          car_id,
-          booking_id,
-          sender_id,
-          recipient_id,
-          body,
-          read_at,
-          created_at,
-          cars!car_id (id, brand, model, year)
-        `,
-        )
-        .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`)
-        .order('created_at', { ascending: false });
+      // Usar MessagesService que ahora usa MessagesRepository
+      const result = await this.messagesService.listConversations(userId, {
+        limit: 50,
+        offset: 0,
+        archived: false,
+      });
 
-      if (error) {
-        console.error('Error loading conversations:', error);
-        this.error.set('Error al cargar conversaciones');
-        return;
-      }
-
-      // Agrupar por conversación y recopilar IDs de usuarios únicos
-      const conversationsMap = new Map<string, Conversation>();
-      const userIds = new Set<string>();
-
-      for (const msg of messages || []) {
-        const otherUserId = msg.sender_id === userId ? msg.recipient_id : msg.sender_id;
-        userIds.add(otherUserId);
-        const carData = Array.isArray(msg.cars) ? msg.cars[0] : msg.cars;
-        const key = `${msg.car_id || msg.booking_id}_${otherUserId}`;
-
-        if (!conversationsMap.has(key)) {
-          conversationsMap.set(key, {
-            id: key,
-            carId: msg.car_id,
-            bookingId: msg.booking_id,
-            otherUserId,
-            otherUserName: 'Usuario',
-            otherUserAvatar: undefined,
-            lastMessage: msg.body,
-            lastMessageAt: new Date(msg.created_at),
-            unreadCount: 0,
-            carBrand: carData?.brand,
-            carModel: carData?.model,
-            carYear: carData?.year,
-          });
-        }
-
-        // Contar no leídos
-        if (msg.recipient_id === userId && !msg.read_at) {
-          const conv = conversationsMap.get(key)!;
-          conv.unreadCount++;
-        }
-      }
-
-      // Fetch user profiles for all participants
-      if (userIds.size > 0) {
-        const { data: profiles } = await this.supabase
-          .from('profiles')
-          .select('id, full_name, avatar_url')
-          .in('id', Array.from(userIds));
-
-        if (profiles) {
-          const profilesMap = new Map(profiles.map((p) => [p.id, p]));
-
-          // Update conversations with user data
-          conversationsMap.forEach((conv) => {
-            const profile = profilesMap.get(conv.otherUserId);
-            if (profile) {
-              conv.otherUserName = profile.full_name || 'Usuario';
-              conv.otherUserAvatar = profile.avatar_url || undefined;
-            }
-          });
-        }
-      }
-
-      this.conversations.set(Array.from(conversationsMap.values()));
+      this.conversations.set(result.conversations);
     } catch (err) {
       console.error('Error loading conversations:', err);
       this.error.set('Error inesperado');
@@ -274,7 +281,7 @@ export class InboxPage implements OnInit {
     }
   }
 
-  openConversation(conv: Conversation): void {
+  openConversation(conv: ConversationDTO): void {
     const params: any = {
       userId: conv.otherUserId,
       userName: conv.otherUserName,
@@ -297,17 +304,7 @@ export class InboxPage implements OnInit {
   }
 
   formatDate(date: Date): string {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-
-    if (minutes < 1) return 'Ahora';
-    if (minutes < 60) return `Hace ${minutes}m`;
-    if (hours < 24) return `Hace ${hours}h`;
-    if (days < 7) return `Hace ${days}d`;
-
-    return date.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+    // Usar método del servicio para formateo consistente
+    return this.messagesService.formatRelativeDate(date);
   }
 }

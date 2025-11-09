@@ -15,7 +15,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
   selector: 'app-verification-progress',
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div class="bg-surface-raised rounded-lg shadow-sm border border-gray-200 p-6">
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
         <div>
@@ -25,7 +25,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           </p>
         </div>
         <div class="text-right">
-          <div class="text-3xl font-bold text-blue-600">{{ progressPercentage() }}%</div>
+          <div class="text-3xl font-bold text-cta-default">{{ progressPercentage() }}%</div>
           <div class="text-xs text-gray-500 dark:text-gray-300">Completado</div>
         </div>
       </div>
@@ -104,7 +104,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             </div>
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
               Sube tus documentos de identidad
-              <span *ngIf="!canAccessLevel2()" class="text-orange-600 font-medium">
+              <span *ngIf="!canAccessLevel2()" class="text-warning-light font-medium">
                 (Requiere Level 1)
               </span>
             </p>
@@ -160,7 +160,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             </div>
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
               Verifica tu identidad con selfie video
-              <span *ngIf="!canAccessLevel3()" class="text-orange-600 font-medium">
+              <span *ngIf="!canAccessLevel3()" class="text-warning-light font-medium">
                 (Requiere Level 2)
               </span>
             </p>
@@ -185,11 +185,11 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       <!-- Missing Requirements Alert -->
       <div
         *ngIf="missingRequirements().length > 0"
-        class="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg"
+        class="mt-6 p-4 bg-warning-light/10 border border-warning-light/40 rounded-lg"
       >
-        <h4 class="text-sm font-semibold text-orange-900 mb-2">Requisitos pendientes:</h4>
+        <h4 class="text-sm font-semibold text-warning-light mb-2">Requisitos pendientes:</h4>
         <ul class="space-y-1">
-          <li *ngFor="let req of missingRequirements()" class="text-sm text-orange-800">
+          <li *ngFor="let req of missingRequirements()" class="text-sm text-warning-light">
             • {{ req.label }}
           </li>
         </ul>
@@ -197,7 +197,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
 
       <!-- Loading State -->
       <div *ngIf="loading()" class="mt-4 flex items-center justify-center py-4">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"></div>
       </div>
 
       <!-- Error State -->
@@ -244,10 +244,10 @@ export class VerificationProgressComponent implements OnInit {
     const isCurrent = this.currentLevel() === level - 1;
 
     if (isComplete) {
-      return 'bg-green-500 text-white shadow-lg';
+      return 'bg-success-light text-text-primary shadow-lg';
     }
     if (isCurrent) {
-      return 'bg-blue-500 text-white shadow-md animate-pulse';
+      return 'bg-cta-default text-cta-text shadow-md animate-pulse';
     }
     return 'bg-gray-200 text-gray-500 dark:text-gray-300';
   }
@@ -256,10 +256,10 @@ export class VerificationProgressComponent implements OnInit {
     const isComplete = this.isLevelComplete(level);
 
     if (isComplete) {
-      return 'bg-green-100 text-green-800';
+      return 'bg-success-light/20 text-success-light';
     }
     if (this.currentLevel() === level - 1) {
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-cta-default/20 text-cta-default';
     }
     return 'bg-gray-100 text-gray-600 dark:text-gray-300';
   }
@@ -277,21 +277,21 @@ export class VerificationProgressComponent implements OnInit {
   }
 
   getCheckmarkClass(isComplete: boolean | undefined): string {
-    return isComplete ? 'text-green-600 font-bold' : 'text-gray-400 dark:text-gray-300';
+    return isComplete ? 'text-success-light font-bold' : 'text-gray-400 dark:text-gray-300';
   }
 
   getProgressBarClass(): string {
     const progress = this.progressPercentage();
 
     if (progress === 100) {
-      return 'bg-gradient-to-r from-green-500 to-green-600';
+      return 'bg-gradient-to-r from-success-light to-success-light';
     }
     if (progress >= 66) {
-      return 'bg-gradient-to-r from-blue-500 to-blue-600';
+      return 'bg-gradient-to-r from-cta-default to-cta-default';
     }
     if (progress >= 33) {
-      return 'bg-gradient-to-r from-yellow-500 to-yellow-600';
+      return 'bg-gradient-to-r from-warning-light to-warning-light';
     }
-    return 'bg-gradient-to-r from-orange-500 to-orange-600';
+    return 'bg-gradient-to-r from-warning-light to-warning-light';
   }
 }

@@ -424,7 +424,7 @@ export class BookingsService {
           booking_id: result.booking_id,
           addon_ids: [],
         });
-      } catch (_insuranceError) {
+      } catch {
         // Don't block booking if insurance fails
       }
 

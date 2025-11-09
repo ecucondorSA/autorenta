@@ -803,7 +803,7 @@ export class BookingsService {
 
       // Verificar si el error tiene la propiedad canWaitlist (pasado desde requestBooking)
       if (error && typeof error === 'object' && 'canWaitlist' in error) {
-        canWaitlist = Boolean((error as any).canWaitlist);
+        canWaitlist = Boolean((error as { canWaitlist?: boolean }).canWaitlist);
       }
 
       // Detectar errores que deben activar waitlist

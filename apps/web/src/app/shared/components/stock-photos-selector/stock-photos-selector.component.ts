@@ -17,26 +17,26 @@ import { ToastService } from '../../../core/services/toast.service';
             type="text"
             [(ngModel)]="brand"
             placeholder="Marca (ej: Toyota)"
-            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="model"
             placeholder="Modelo (ej: Corolla)"
-            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="number"
             [(ngModel)]="year"
             placeholder="Año"
-            class="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <button
           type="button"
           (click)="searchPhotos()"
           [disabled]="searching() || !canSearch()"
-          class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 disabled:cursor-not-allowed"
         >
           @if (searching()) {
             <span class="flex items-center justify-center gap-2">
@@ -69,7 +69,7 @@ import { ToastService } from '../../../core/services/toast.service';
           @for (photo of photos(); track photo.id) {
             <div
               class="relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all"
-              [class.border-blue-500]="selectedPhotos().has(photo.id)"
+              [class.border-cta-default]="selectedPhotos().has(photo.id)"
               [class.border-gray-200]="!selectedPhotos().has(photo.id)"
               (click)="togglePhoto(photo)"
             >
@@ -80,8 +80,8 @@ import { ToastService } from '../../../core/services/toast.service';
                 loading="lazy"
               />
               @if (selectedPhotos().has(photo.id)) {
-                <div class="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
-                  <svg class="h-8 w-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <div class="absolute inset-0 bg-cta-default/20 flex items-center justify-center">
+                  <svg class="h-8 w-8 text-cta-default" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fill-rule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -91,7 +91,7 @@ import { ToastService } from '../../../core/services/toast.service';
                 </div>
               }
               <div
-                class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1 truncate"
+                class="absolute bottom-0 left-0 right-0 bg-black/50 text-text-inverse text-xs p-1 truncate"
               >
                 {{ photo.photographer }}
               </div>
@@ -103,7 +103,7 @@ import { ToastService } from '../../../core/services/toast.service';
           type="button"
           (click)="downloadSelected()"
           [disabled]="selectedPhotos().size === 0 || downloading()"
-          class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+          class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light disabled:opacity-50"
         >
           @if (downloading()) {
             Descargando {{ selectedPhotos().size }} foto(s)...

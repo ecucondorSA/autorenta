@@ -22,7 +22,7 @@ import { ToastService } from '../../../core/services/toast.service';
             type="button"
             (click)="method.set('stock-photos')"
             [class]="
-              method() === 'stock-photos' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
+              method() === 'stock-photos' ? 'bg-cta-default text-cta-text' : 'bg-gray-200 text-gray-700'
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
@@ -32,7 +32,7 @@ import { ToastService } from '../../../core/services/toast.service';
             type="button"
             (click)="method.set('cloudflare-ai')"
             [class]="
-              method() === 'cloudflare-ai' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
+              method() === 'cloudflare-ai' ? 'bg-cta-default text-cta-text' : 'bg-gray-200 text-gray-700'
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
@@ -55,13 +55,13 @@ import { ToastService } from '../../../core/services/toast.service';
             type="text"
             [(ngModel)]="brand"
             placeholder="Marca"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="model"
             placeholder="Modelo"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <div class="grid grid-cols-2 gap-2">
@@ -69,13 +69,13 @@ import { ToastService } from '../../../core/services/toast.service';
             type="number"
             [(ngModel)]="year"
             placeholder="Año (opcional)"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="color"
             placeholder="Color (opcional)"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <input
@@ -84,7 +84,7 @@ import { ToastService } from '../../../core/services/toast.service';
           placeholder="Cantidad de fotos (1-5)"
           min="1"
           max="5"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
         />
       </div>
 
@@ -93,7 +93,7 @@ import { ToastService } from '../../../core/services/toast.service';
         type="button"
         (click)="generatePhotos()"
         [disabled]="generating() || !canGenerate()"
-        class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+        class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-text-inverse rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
       >
         @if (generating()) {
           <span class="flex items-center justify-center gap-2">
@@ -138,7 +138,7 @@ import { ToastService } from '../../../core/services/toast.service';
                   class="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
                 />
                 <div
-                  class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+                  class="absolute top-2 right-2 bg-black/70 text-text-inverse text-xs px-2 py-1 rounded"
                 >
                   {{ photo.source === 'cloudflare-ai' ? '🤖 IA' : '📸 Stock' }}
                 </div>
@@ -148,7 +148,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <button
             type="button"
             (click)="useGeneratedPhotos()"
-            class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light"
           >
             ✅ Usar estas fotos ({{ generatedPhotos().length }})
           </button>

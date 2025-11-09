@@ -80,7 +80,7 @@ export class PersonalizedDashboardComponent implements OnInit {
         description: `${this.stats().unreadNotifications} sin leer`,
         icon: '🔔',
         route: '/notifications',
-        color: 'bg-blue-500',
+        color: 'bg-cta-default',
         priority: 1,
       },
       {
@@ -89,7 +89,7 @@ export class PersonalizedDashboardComponent implements OnInit {
         description: `$${this.stats().walletBalance.toLocaleString()} ARS`,
         icon: '💰',
         route: '/wallet',
-        color: 'bg-green-500',
+        color: 'bg-success-light',
         priority: 2,
       },
     ];
@@ -112,7 +112,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           description: `${this.stats().availableCars} publicados`,
           icon: '🏢',
           route: '/cars/my',
-          color: 'bg-indigo-500',
+          color: 'bg-cta-default',
           priority: 4,
         },
         {
@@ -121,7 +121,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           description: `${this.stats().pendingBookings} pendientes`,
           icon: '📅',
           route: '/bookings/owner',
-          color: 'bg-orange-500',
+          color: 'bg-warning-light',
           priority: 5,
         },
       );
@@ -135,7 +135,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           description: 'Encuentra el ideal',
           icon: '🔍',
           route: '/cars',
-          color: 'bg-blue-600',
+          color: 'bg-cta-default',
           priority: 3,
         },
         {
@@ -144,7 +144,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           description: `${this.stats().activeBookings} activas`,
           icon: '📋',
           route: '/bookings',
-          color: 'bg-teal-500',
+          color: 'bg-success-light',
           priority: 4,
         },
       );

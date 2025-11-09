@@ -38,7 +38,7 @@
       <div class="space-y-2">
         <div
           *ngFor="let review of pendingReviews().slice(0, 2)"
-          class="flex items-center justify-between text-sm bg-white rounded-lg p-2 shadow-sm"
+          class="flex items-center justify-between text-sm bg-surface-raised rounded-lg p-2 shadow-sm"
         >
           <div class="flex-1">
             <p class="font-medium text-gray-900">{{ review.car_title }}</p>
@@ -55,7 +55,7 @@
             </p>
             <a
               [routerLink]="['/bookings', review.booking_id]"
-              class="text-xs text-info-600 hover:text-info-800 underline"
+              class="text-xs text-cta-default hover:text-cta-default underline"
             >
               Calificar →
             </a>
@@ -72,13 +72,13 @@
       <div class="mt-3 flex gap-2">
         <a
           routerLink="/reviews/pending"
-          class="inline-flex items-center px-4 py-2 bg-warning-600 text-white text-sm font-medium rounded-lg hover:bg-warning-700 transition-colors"
+          class="inline-flex items-center px-4 py-2 bg-warning-600 text-text-inverse text-sm font-medium rounded-lg hover:bg-warning-700 transition-colors"
         >
           Ver todas las reseñas pendientes
         </a>
         <a
           routerLink="/bookings"
-          class="inline-flex items-center px-4 py-2 bg-white text-warning-600 text-sm font-medium rounded-lg border border-warning-600 hover:bg-warning-50 transition-colors"
+          class="inline-flex items-center px-4 py-2 bg-surface-raised text-warning-600 text-sm font-medium rounded-lg border border-warning-600 hover:bg-warning-50 transition-colors"
         >
           Ver mis reservas
         </a>

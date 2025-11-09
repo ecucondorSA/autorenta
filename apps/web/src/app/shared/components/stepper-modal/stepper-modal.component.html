@@ -6,22 +6,22 @@
 >
   <!-- Modal Content -->
   <div
-    class="stepper-modal-content bg-white dark:bg-slate-deep rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+    class="stepper-modal-content bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
     (click)="$event.stopPropagation()"
   >
     <!-- Header with Progress -->
-    <div class="stepper-header px-6 py-4 border-b border-pearl-gray dark:border-gray-600">
+    <div class="stepper-header px-6 py-4 border-b border-border-default dark:border-gray-600">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold text-smoke-black dark:text-white-pure">
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-inverse-pure">
           Reservar en 3 pasos
         </h2>
         <button
           type="button"
           (click)="onCancel()"
-          class="p-2 rounded-lg hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-colors"
+          class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
           aria-label="Cerrar"
         >
-          <svg class="w-6 h-6 text-charcoal-medium dark:text-pearl-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-text-secondary dark:text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -29,13 +29,13 @@
 
       <!-- Progress Bar -->
       <div class="progress-bar-wrapper">
-        <div class="progress-bar bg-pearl-light dark:bg-charcoal-medium rounded-full h-2 overflow-hidden">
+        <div class="progress-bar bg-surface-secondary dark:bg-charcoal-medium rounded-full h-2 overflow-hidden">
           <div
-            class="progress-bar-fill bg-accent-petrol h-full transition-all duration-300 ease-out"
+            class="progress-bar-fill bg-cta-default h-full transition-all duration-300 ease-out"
             [style.width.%]="progressPercentage()"
           ></div>
         </div>
-        <div class="flex justify-between mt-2 text-xs text-charcoal-medium dark:text-pearl-light">
+        <div class="flex justify-between mt-2 text-xs text-text-secondary dark:text-text-secondary">
           <span [class.font-semibold]="currentStep() >= 1">Paso 1</span>
           <span [class.font-semibold]="currentStep() >= 2">Paso 2</span>
           <span [class.font-semibold]="currentStep() >= 3">Paso 3</span>
@@ -47,39 +47,39 @@
     <div class="stepper-content flex-1 overflow-y-auto px-6 py-6">
       <!-- Step 1: Verify Profile -->
       <div *ngIf="currentStep() === 1" class="step-content">
-        <h3 class="text-lg font-semibold text-smoke-black dark:text-white-pure mb-4">
+        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-4">
           Verifica tu perfil
         </h3>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
               Nombre completo
             </label>
             <input
               type="text"
               [(ngModel)]="step1Data().name"
               placeholder="Ingresa tu nombre"
-              class="w-full px-4 py-2 border border-pearl-gray dark:border-gray-600 rounded-lg bg-white dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:outline-none focus:ring-2 focus:ring-accent-petrol"
+              class="w-full px-4 py-2 border border-border-default dark:border-gray-600 rounded-lg bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
               Número de licencia
             </label>
             <input
               type="text"
               [(ngModel)]="step1Data().license"
               placeholder="Ej: ABC123456"
-              class="w-full px-4 py-2 border border-pearl-gray dark:border-gray-600 rounded-lg bg-white dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:outline-none focus:ring-2 focus:ring-accent-petrol"
+              class="w-full px-4 py-2 border border-border-default dark:border-gray-600 rounded-lg bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
               Selfie (opcional)
             </label>
             <button
               type="button"
-              class="w-full px-4 py-3 border-2 border-dashed border-pearl-gray dark:border-gray-600 rounded-lg hover:border-accent-petrol transition-colors text-charcoal-medium dark:text-pearl-light"
+              class="w-full px-4 py-3 border-2 border-dashed border-border-default dark:border-gray-600 rounded-lg hover:border-cta-default transition-colors text-text-secondary dark:text-text-secondary"
             >
               📷 Tomar selfie
             </button>
@@ -89,65 +89,65 @@
 
       <!-- Step 2: Choose Schedule & Delivery -->
       <div *ngIf="currentStep() === 2" class="step-content">
-        <h3 class="text-lg font-semibold text-smoke-black dark:text-white-pure mb-4">
+        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-4">
           Elige horario y entrega
         </h3>
         <div class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
+              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
                 Fecha inicio
               </label>
               <input
                 type="date"
                 [value]="step2Data().startDate.toISOString().split('T')[0]"
                 (change)="onStartDateChange($event)"
-                class="w-full px-4 py-2 border border-pearl-gray dark:border-gray-600 rounded-lg bg-white dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:outline-none focus:ring-2 focus:ring-accent-petrol"
+                class="w-full px-4 py-2 border border-border-default dark:border-gray-600 rounded-lg bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
+              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
                 Fecha fin
               </label>
               <input
                 type="date"
                 [value]="step2Data().endDate.toISOString().split('T')[0]"
                 (change)="onEndDateChange($event)"
-                class="w-full px-4 py-2 border border-pearl-gray dark:border-gray-600 rounded-lg bg-white dark:bg-slate-deep text-smoke-black dark:text-pearl-light focus:outline-none focus:ring-2 focus:ring-accent-petrol"
+                class="w-full px-4 py-2 border border-border-default dark:border-gray-600 rounded-lg bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
               />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
               Modo de entrega
             </label>
             <div class="space-y-2">
-              <label class="flex items-center gap-3 p-3 border border-pearl-gray dark:border-gray-600 rounded-lg cursor-pointer hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
                 <input
                   type="radio"
                   [value]="'airport'"
                   [(ngModel)]="step2Data().pickupMode"
-                  class="w-4 h-4 text-accent-petrol"
+                  class="w-4 h-4 text-cta-default"
                 />
-                <span class="text-smoke-black dark:text-pearl-light">Aeropuerto</span>
+                <span class="text-text-primary dark:text-text-secondary">Aeropuerto</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-pearl-gray dark:border-gray-600 rounded-lg cursor-pointer hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
                 <input
                   type="radio"
                   [value]="'home'"
                   [(ngModel)]="step2Data().pickupMode"
-                  class="w-4 h-4 text-accent-petrol"
+                  class="w-4 h-4 text-cta-default"
                 />
-                <span class="text-smoke-black dark:text-pearl-light">Domicilio</span>
+                <span class="text-text-primary dark:text-text-secondary">Domicilio</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-pearl-gray dark:border-gray-600 rounded-lg cursor-pointer hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
                 <input
                   type="radio"
                   [value]="'meet'"
                   [(ngModel)]="step2Data().pickupMode"
-                  class="w-4 h-4 text-accent-petrol"
+                  class="w-4 h-4 text-cta-default"
                 />
-                <span class="text-smoke-black dark:text-pearl-light">Punto de encuentro</span>
+                <span class="text-text-primary dark:text-text-secondary">Punto de encuentro</span>
               </label>
             </div>
           </div>
@@ -156,58 +156,58 @@
 
       <!-- Step 3: Confirm & Payment -->
       <div *ngIf="currentStep() === 3" class="step-content">
-        <h3 class="text-lg font-semibold text-smoke-black dark:text-white-pure mb-4">
+        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-4">
           Confirma y pacta el pago
         </h3>
         <div class="space-y-4">
           <!-- Info Banner -->
-          <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-            <p class="text-sm text-blue-800 dark:text-blue-200">
+          <div class="bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default rounded-lg p-4">
+            <p class="text-sm text-cta-default dark:text-cta-default">
               💳 <strong>Tarjeta no requerida</strong> - Puedes pagar con transferencia, efectivo o wallet
             </p>
           </div>
 
           <!-- Payment Options -->
           <div>
-            <label class="block text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">
               Método de pago
             </label>
             <div class="space-y-2">
-              <label class="flex items-center gap-3 p-3 border border-pearl-gray dark:border-gray-600 rounded-lg cursor-pointer hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
                 <input
                   type="radio"
                   value="transfer"
                   [(ngModel)]="step3Data().paymentMethod"
-                  class="w-4 h-4 text-accent-petrol"
+                  class="w-4 h-4 text-cta-default"
                 />
-                <span class="text-smoke-black dark:text-pearl-light">Transferencia bancaria</span>
+                <span class="text-text-primary dark:text-text-secondary">Transferencia bancaria</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-pearl-gray dark:border-gray-600 rounded-lg cursor-pointer hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
                 <input
                   type="radio"
                   value="cash"
                   [(ngModel)]="step3Data().paymentMethod"
-                  class="w-4 h-4 text-accent-petrol"
+                  class="w-4 h-4 text-cta-default"
                 />
-                <span class="text-smoke-black dark:text-pearl-light">Pago en efectivo al recibir</span>
+                <span class="text-text-primary dark:text-text-secondary">Pago en efectivo al recibir</span>
               </label>
-              <label class="flex items-center gap-3 p-3 border border-pearl-gray dark:border-gray-600 rounded-lg cursor-pointer hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-colors">
+              <label class="flex items-center gap-3 p-3 border border-border-default dark:border-gray-600 rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors">
                 <input
                   type="radio"
                   value="wallet"
                   [(ngModel)]="step3Data().paymentMethod"
-                  class="w-4 h-4 text-accent-petrol"
+                  class="w-4 h-4 text-cta-default"
                 />
-                <span class="text-smoke-black dark:text-pearl-light">Wallet AutoRenta</span>
+                <span class="text-text-primary dark:text-text-secondary">Wallet AutoRenta</span>
               </label>
             </div>
           </div>
 
           <!-- Total Price -->
-          <div class="border-t border-pearl-gray dark:border-gray-600 pt-4">
+          <div class="border-t border-border-default dark:border-gray-600 pt-4">
             <div class="flex justify-between items-center">
-              <span class="text-lg font-semibold text-smoke-black dark:text-white-pure">Total:</span>
-              <span class="text-2xl font-bold text-accent-petrol">
+              <span class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure">Total:</span>
+              <span class="text-2xl font-bold text-cta-default">
                 ${{ totalPrice() | number:'1.0-0' }} {{ car?.currency || 'ARS' }}
               </span>
             </div>
@@ -217,12 +217,12 @@
     </div>
 
     <!-- Footer Actions -->
-    <div class="stepper-footer px-6 py-4 border-t border-pearl-gray dark:border-gray-600 flex items-center justify-between gap-4">
+    <div class="stepper-footer px-6 py-4 border-t border-border-default dark:border-gray-600 flex items-center justify-between gap-4">
       <button
         *ngIf="currentStep() > 1"
         type="button"
         (click)="onBack()"
-        class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light hover:text-accent-petrol transition-colors"
+        class="px-4 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary hover:text-cta-default transition-colors"
       >
         ← Atrás
       </button>
@@ -231,7 +231,7 @@
         <button
           type="button"
           (click)="onCancel()"
-          class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light hover:bg-pearl-light dark:hover:bg-charcoal-medium rounded-lg transition-colors"
+          class="px-4 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary hover:bg-surface-secondary dark:hover:bg-charcoal-medium rounded-lg transition-colors"
         >
           Cancelar
         </button>
@@ -240,7 +240,7 @@
           type="button"
           (click)="currentStep() === 1 ? onStep1Next() : onStep2Next()"
           [disabled]="currentStep() === 1 && !canProceedStep1() || currentStep() === 2 && !canProceedStep2()"
-          class="px-6 py-2 text-sm font-semibold text-white bg-accent-petrol hover:bg-accent-petrol/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-6 py-2 text-sm font-semibold text-cta-text bg-cta-default hover:bg-cta-default/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Continuar →
         </button>
@@ -248,7 +248,7 @@
           *ngIf="currentStep() === 3"
           type="button"
           (click)="onStep3Confirm()"
-          class="px-6 py-2 text-sm font-semibold text-white bg-accent-petrol hover:bg-accent-petrol/90 rounded-lg transition-colors"
+          class="px-6 py-2 text-sm font-semibold text-cta-text bg-cta-default hover:bg-cta-default/90 rounded-lg transition-colors"
         >
           Confirmar reserva
         </button>

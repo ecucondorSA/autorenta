@@ -1,0 +1,6 @@
+
+:host {
+  display: block;
+  width: 64px; /* Corresponds to w-16 in Tailwind */
+  height: 64px; /* Corresponds to h-16 in Tailwind */
+}

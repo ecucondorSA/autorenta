@@ -23,10 +23,10 @@
   <!-- Recent Bookings Indicator -->
   <div
     *ngIf="showBookings && socialProof().totalBookings > 0"
-    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-sm"
+    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-success-light/10 border border-success-light/40 text-sm"
   >
     <svg
-      class="h-4 w-4 text-green-600 flex-shrink-0"
+      class="h-4 w-4 text-success-light flex-shrink-0"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -38,7 +38,7 @@
         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
       />
     </svg>
-    <span class="text-green-800 font-medium">
+    <span class="text-success-light font-medium">
       <ng-container *ngIf="isPopularRental">⚡ </ng-container>
       Reservado <span class="font-bold">{{ socialProof().totalBookings }}</span>
       {{ socialProof().totalBookings === 1 ? 'vez' : 'veces' }} en los últimos 30 días
@@ -72,7 +72,7 @@
   <!-- Popular Rental Badge -->
   <div
     *ngIf="isPopularRental"
-    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold"
+    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-text-inverse text-xs font-bold"
   >
     <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
       <path
@@ -85,7 +85,7 @@
   <!-- High Demand Badge -->
   <div
     *ngIf="isHighDemand && !isPopularRental"
-    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold"
+    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-warning-light to-red-500 text-text-inverse text-xs font-bold"
   >
     <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
       <path

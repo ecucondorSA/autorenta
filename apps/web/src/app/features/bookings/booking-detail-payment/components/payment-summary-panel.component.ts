@@ -16,11 +16,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
   imports: [CommonModule, ReembolsabilityBadgeComponent],
   template: `
     <div
-      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow-md p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
+      class="rounded-xl border border-border-default/60 bg-surface-raised shadow-md p-6 dark:border-neutral-800/70 dark:bg-surface-raised transition-colors duration-300"
     >
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-bold text-smoke-black dark:text-ivory-luminous">
+        <h3 class="text-xl font-bold text-text-primary dark:text-text-primary">
           Resumen de Pagos
         </h3>
         <button
@@ -44,11 +44,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       @if (priceBreakdown.distanceKm !== undefined && priceBreakdown.distanceKm !== null) {
         <div class="mb-4">
           <div
-            class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/40"
+            class="flex items-center justify-between p-3 bg-cta-default/10 dark:bg-cta-default/20 rounded-lg border border-cta-default/40 dark:border-cta-default/40"
           >
             <div class="flex items-center gap-2">
               <svg
-                class="w-5 h-5 text-blue-600 dark:text-blue-400"
+                class="w-5 h-5 text-cta-default dark:text-cta-default"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -67,7 +67,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 />
               </svg>
               <div>
-                <span class="text-sm font-medium text-blue-900 dark:text-blue-200">
+                <span class="text-sm font-medium text-cta-default dark:text-cta-default">
                   Distancia al auto: {{ formatDistance(priceBreakdown.distanceKm) }}
                 </span>
                 @if (priceBreakdown.distanceTier) {
@@ -88,11 +88,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- Total del Alquiler -->
       <div class="mb-4">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium text-gray-700 dark:text-pearl-light/80">
+          <span class="text-sm font-medium text-gray-700 dark:text-text-secondary/80">
             Total del alquiler
           </span>
           <svg
-            class="w-4 h-4 text-gray-400 dark:text-pearl-light/60 cursor-help"
+            class="w-4 h-4 text-gray-400 dark:text-text-secondary/60 cursor-help"
             fill="currentColor"
             viewBox="0 0 20 20"
             title="Incluye: tarifa diaria, aporte FGO, cargo de servicio, mejora de cobertura{{
@@ -149,10 +149,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <p class="text-3xl font-bold text-primary-900 dark:text-primary-200">
             {{ formatArs(priceBreakdown.totalArs) }}
           </p>
-          <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
+          <p class="text-xs text-gray-600 dark:text-text-secondary/60 mt-1">
             ≈ {{ formatUsd(priceBreakdown.totalUsd) }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-2">Se cobra inmediatamente</p>
+          <p class="text-xs text-gray-500 dark:text-text-secondary/50 mt-2">Se cobra inmediatamente</p>
         </div>
       </div>
 
@@ -162,7 +162,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- Garantía según método -->
       <div class="mb-4">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium text-gray-700 dark:text-pearl-light/80">
+          <span class="text-sm font-medium text-gray-700 dark:text-text-secondary/80">
             Garantía {{ paymentMode === 'card' ? '(Hold)' : '(Crédito)' }}
           </span>
         </div>
@@ -170,14 +170,14 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         @if (paymentMode === 'card') {
           <!-- Card Hold -->
           <div
-            class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-deep/80 dark:to-slate-deep/50 rounded-lg p-4 transition-colors duration-300"
+            class="bg-gradient-to-r from-cta-default/10 to-cta-default/20 dark:from-surface-secondary/80 dark:to-surface-secondary/50 rounded-lg p-4 transition-colors duration-300"
           >
             <div class="flex items-start justify-between mb-3">
               <div>
-                <p class="text-2xl font-bold text-blue-900 dark:text-info-200">
+                <p class="text-2xl font-bold text-cta-default dark:text-cta-default">
                   {{ formatArs(riskSnapshot.holdEstimatedArs) }}
                 </p>
-                <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
+                <p class="text-xs text-gray-600 dark:text-text-secondary/60 mt-1">
                   ≈ {{ formatUsd(riskSnapshot.holdEstimatedUsd) }}
                 </p>
               </div>
@@ -186,7 +186,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               type="reembolsable"
               customTooltip="Bloqueo temporal. Se libera automáticamente al devolver el auto sin daños."
             ></app-reembolsability-badge>
-            <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-2">
+            <p class="text-xs text-gray-500 dark:text-text-secondary/50 mt-2">
               Se bloquea en tu tarjeta (no se cobra)
             </p>
           </div>
@@ -200,7 +200,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 <p class="text-2xl font-bold text-purple-900 dark:text-purple-200">
                   {{ formatArs(creditSecurityArs()) }}
                 </p>
-                <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
+                <p class="text-xs text-gray-600 dark:text-text-secondary/60 mt-1">
                   ≈ {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
                 </p>
               </div>
@@ -215,7 +215,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 customTooltip="Disponible para futuras reservas si no se usa."
               ></app-reembolsability-badge>
             </div>
-            <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-2">
+            <p class="text-xs text-gray-500 dark:text-text-secondary/50 mt-2">
               Se bloquea de tu saldo wallet
             </p>
           </div>
@@ -226,16 +226,16 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <div class="h-px bg-gray-200 dark:bg-neutral-700 my-4"></div>
 
       <!-- Total Consolidado (Informativo) -->
-      <div class="bg-gray-50 dark:bg-slate-deep/40 rounded-lg p-4 transition-colors duration-300">
+      <div class="bg-gray-50 dark:bg-surface-secondary/40 rounded-lg p-4 transition-colors duration-300">
         <div class="flex items-start justify-between mb-2">
           <div class="flex-1">
-            <span class="text-sm font-medium text-gray-700 dark:text-pearl-light/80">
+            <span class="text-sm font-medium text-gray-700 dark:text-text-secondary/80">
               Total bloqueado
-              <span class="text-xs text-gray-500 dark:text-pearl-light/50">(informativo)</span>
+              <span class="text-xs text-gray-500 dark:text-text-secondary/50">(informativo)</span>
             </span>
           </div>
           <svg
-            class="w-4 h-4 text-gray-400 dark:text-pearl-light/60 cursor-help flex-shrink-0 ml-2"
+            class="w-4 h-4 text-gray-400 dark:text-text-secondary/60 cursor-help flex-shrink-0 ml-2"
             fill="currentColor"
             viewBox="0 0 20 20"
             title="Este total es solo informativo. El alquiler se cobra inmediatamente y la garantía se bloquea por separado."
@@ -247,16 +247,16 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             />
           </svg>
         </div>
-        <p class="text-2xl font-bold text-gray-900 dark:text-ivory-luminous">
+        <p class="text-2xl font-bold text-gray-900 dark:text-text-primary">
           {{ formatArs(totalConsolidatedArs()) }}
         </p>
-        <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
+        <p class="text-xs text-gray-600 dark:text-text-secondary/60 mt-1">
           ≈ {{ formatUsd(totalConsolidatedUsd()) }}
         </p>
 
         <!-- Aclaración -->
         <div class="mt-3 pt-3 border-t border-gray-200 dark:border-neutral-700">
-          <p class="text-xs text-gray-600 dark:text-pearl-light/70">
+          <p class="text-xs text-gray-600 dark:text-text-secondary/70">
             <svg class="w-3 h-3 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
@@ -340,9 +340,9 @@ export class PaymentSummaryPanelComponent {
 
   protected getDistanceTierClass(tier: 'local' | 'regional' | 'long_distance'): string {
     const classes = {
-      local: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      local: 'bg-success-light/20 text-success-light dark:bg-success-light/30 dark:text-success-light',
       regional: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-      long_distance: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+      long_distance: 'bg-warning-light/20 text-warning-light dark:bg-warning-light/30 dark:text-warning-light',
     };
     return classes[tier];
   }

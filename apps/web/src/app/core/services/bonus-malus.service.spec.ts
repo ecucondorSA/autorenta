@@ -186,7 +186,7 @@ describe('BonusMalusService', () => {
       expect(display.percentage).toBe(8);
       expect(display.message).toContain('8% de descuento');
       expect(display.icon).toBe('🎉');
-      expect(display.color).toBe('text-green-600');
+      expect(display.color).toBe('text-success-light');
       expect(display.tips?.length).toBeGreaterThan(0);
     });
 
@@ -196,7 +196,7 @@ describe('BonusMalusService', () => {
       expect(display.type).toBe('BONUS');
       expect(display.percentage).toBe(3);
       expect(display.icon).toBe('✨');
-      expect(display.color).toBe('text-green-500');
+      expect(display.color).toBe('text-success-light');
     });
 
     it('should format NEUTRAL correctly', () => {
@@ -216,7 +216,7 @@ describe('BonusMalusService', () => {
       expect(display.percentage).toBe(3);
       expect(display.message).toContain('3% de recargo');
       expect(display.icon).toBe('⚠️');
-      expect(display.color).toBe('text-orange-500');
+      expect(display.color).toBe('text-warning-light');
     });
 
     it('should format significant MALUS correctly', () => {

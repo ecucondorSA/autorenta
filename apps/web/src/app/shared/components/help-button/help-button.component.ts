@@ -46,13 +46,13 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
           role="menu"
           aria-labelledby="help-center"
         >
-          <h3 class="text-sm font-semibold mb-3 text-smoke-black dark:text-ivory-luminous">
+          <h3 class="text-sm font-semibold mb-3 text-text-primary dark:text-text-primary">
             ¿Necesitás ayuda?
           </h3>
 
           <button
             (click)="showTour('welcome')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary"
             role="menuitem"
           >
             🎯 Ver tour de bienvenida
@@ -60,7 +60,7 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 
           <button
             (click)="showTour('renter')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary"
             role="menuitem"
           >
             🔍 Cómo buscar autos
@@ -68,17 +68,17 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 
           <button
             (click)="showTour('owner')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm mb-2 transition-base text-charcoal-medium dark:text-pearl-light"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary"
             role="menuitem"
           >
             💸 Cómo publicar mi auto
           </button>
 
-          <hr class="my-2 border-pearl-gray/40 dark:border-white/10" />
+          <hr class="my-2 border-border-default/40 dark:border-white/10" />
 
           <a
             href="mailto:soporte@autorentar.com"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep text-sm flex items-center gap-2 transition-base text-charcoal-medium dark:text-pearl-light"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm flex items-center gap-2 transition-base text-text-secondary dark:text-text-secondary"
             role="menuitem"
           >
             <svg

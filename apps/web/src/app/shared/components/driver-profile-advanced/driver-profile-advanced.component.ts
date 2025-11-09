@@ -10,7 +10,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
   template: `
     <div class="space-y-6">
       <!-- Progreso hacia siguiente clase -->
-      <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
         <h3 class="mb-4 text-lg font-semibold text-gray-900">Progreso de Clase</h3>
         @if (progress(); as p) {
           <div class="space-y-4">
@@ -22,16 +22,16 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
               @if (p.canImprove) {
                 <div class="mb-2 flex items-center justify-between">
                   <span class="text-sm text-gray-600">Próxima Clase</span>
-                  <span class="text-sm font-medium text-blue-600">Clase {{ p.nextClass }}</span>
+                  <span class="text-sm font-medium text-cta-default">Clase {{ p.nextClass }}</span>
                 </div>
                 <div class="h-2 w-full rounded-full bg-gray-200">
-                  <div class="h-2 rounded-full bg-blue-500" [style.width.%]="50"></div>
+                  <div class="h-2 rounded-full bg-cta-default" [style.width.%]="50"></div>
                 </div>
                 <p class="mt-2 text-xs text-gray-500">
                   Necesitas {{ p.yearsNeeded }} año(s) sin siniestros para mejorar
                 </p>
               } @else {
-                <p class="text-sm text-green-600">¡Ya estás en la mejor clase!</p>
+                <p class="text-sm text-success-light">¡Ya estás en la mejor clase!</p>
               }
             </div>
           </div>
@@ -39,12 +39,12 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
       </div>
 
       <!-- Beneficios de todas las clases -->
-      <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
         <h3 class="mb-4 text-lg font-semibold text-gray-900">Beneficios por Clase</h3>
         @if (loadingBenefits()) {
           <div class="flex items-center justify-center py-8">
             <div
-              class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+              class="h-6 w-6 animate-spin rounded-full border-2 border-cta-default border-t-transparent"
             ></div>
           </div>
         } @else if (allBenefits().length > 0) {
@@ -52,7 +52,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
             @for (benefit of allBenefits(); track benefit.class) {
               <div
                 class="rounded-lg border p-4"
-                [class.bg-green-50]="benefit.is_discount"
+                [class.bg-success-light/10]="benefit.is_discount"
                 [class.bg-red-50]="!benefit.is_discount && benefit.fee_multiplier > 1"
                 [class.bg-gray-50]="benefit.fee_multiplier === 1"
               >
@@ -63,10 +63,10 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                   </div>
                   <div class="text-right">
                     @if (benefit.is_discount) {
-                      <p class="text-sm font-medium text-green-600">
+                      <p class="text-sm font-medium text-success-light">
                         -{{ benefit.fee_discount_pct }}% fee
                       </p>
-                      <p class="text-xs text-green-600">
+                      <p class="text-xs text-success-light">
                         -{{ benefit.guarantee_discount_pct }}% garantía
                       </p>
                     } @else if (benefit.fee_multiplier > 1) {
@@ -88,7 +88,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
       </div>
 
       <!-- Impacto de siniestro -->
-      <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
         <h3 class="mb-4 text-lg font-semibold text-gray-900">Simulador de Impacto</h3>
         <div class="space-y-4">
           <div>
@@ -123,7 +123,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
               @if (i.classIncrease > 0) {
                 <p class="mt-1 text-sm text-red-600">Aumento de clase: +{{ i.classIncrease }}</p>
               } @else {
-                <p class="mt-1 text-sm text-green-600">Sin cambio de clase</p>
+                <p class="mt-1 text-sm text-success-light">Sin cambio de clase</p>
               }
             </div>
           }
@@ -132,8 +132,8 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
 
       <!-- Mensaje motivacional -->
       @if (scoreMessage()) {
-        <div class="rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <p class="text-sm font-medium text-blue-800">{{ scoreMessage() }}</p>
+        <div class="rounded-lg border border-cta-default/40 bg-cta-default/10 p-4">
+          <p class="text-sm font-medium text-cta-default">{{ scoreMessage() }}</p>
         </div>
       }
     </div>

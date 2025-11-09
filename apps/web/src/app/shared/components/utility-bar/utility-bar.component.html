@@ -1,5 +1,5 @@
 <div
-  class="utility-bar fixed top-0 left-0 right-0 z-40 bg-white dark:bg-slate-deep border-b border-pearl-gray dark:border-gray-600 transition-all duration-300 shadow-md"
+  class="utility-bar fixed top-0 left-0 right-0 z-40 bg-surface-raised dark:bg-surface-secondary border-b border-border-default dark:border-gray-600 transition-all duration-300 shadow-md"
   [class.utility-bar--visible]="isVisible()"
   [class.utility-bar--hidden]="!isVisible()"
 >
@@ -13,10 +13,10 @@
           (input)="onSearchInput($any($event.target).value)"
           (keydown.enter)="onSearchSubmit(searchInputValue())"
           placeholder="Buscar autos..."
-          class="w-full h-9 pl-9 pr-3 rounded-lg border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep text-sm text-smoke-black dark:text-pearl-light placeholder:text-ash-gray focus:outline-none focus:ring-2 focus:ring-accent-petrol focus:border-transparent transition-all"
+          class="w-full h-9 pl-9 pr-3 rounded-lg border border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary text-sm text-text-primary dark:text-text-secondary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
         />
         <svg
-          class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-ash-gray pointer-events-none"
+          class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -38,7 +38,7 @@
         *ngFor="let filter of quickFilters"
         type="button"
         (click)="onQuickFilterClick(filter.id)"
-        class="px-3 py-1.5 text-xs font-medium rounded-full border border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep text-charcoal-medium dark:text-pearl-light hover:bg-pearl-light dark:hover:bg-charcoal-medium hover:border-accent-petrol transition-all whitespace-nowrap flex items-center gap-1.5"
+        class="px-3 py-1.5 text-xs font-medium rounded-full border border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary text-text-secondary dark:text-text-secondary hover:bg-surface-secondary dark:hover:bg-charcoal-medium hover:border-cta-default transition-all whitespace-nowrap flex items-center gap-1.5"
       >
         <span *ngIf="filter.icon" class="text-sm">{{ filter.icon }}</span>
         <span>{{ filter.label }}</span>

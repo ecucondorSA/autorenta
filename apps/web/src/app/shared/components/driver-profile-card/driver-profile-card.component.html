@@ -1,7 +1,7 @@
-<div class="bg-white rounded-lg shadow-md p-6" [class.p-4]="compact">
+<div class="bg-surface-raised rounded-lg shadow-md p-6" [class.p-4]="compact">
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex items-center justify-center py-8">
-    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"></div>
   </div>
 
   <!-- Error State -->
@@ -21,7 +21,7 @@
           [class]="getClassBadgeColor(driverClass())"
           class="w-12 h-12 rounded-full flex items-center justify-center"
         >
-          <span class="text-white text-xl font-bold">{{ driverClass() }}</span>
+          <span class="text-text-inverse text-xl font-bold">{{ driverClass() }}</span>
         </div>
         <div>
           <h3 class="text-lg font-semibold text-gray-900" [class.text-base]="compact">
@@ -35,7 +35,7 @@
       <button
         *ngIf="!compact"
         (click)="onViewBenefits()"
-        class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+        class="text-cta-default hover:text-cta-default text-sm font-medium"
       >
         Ver beneficios
       </button>
@@ -75,7 +75,7 @@
       <div class="bg-gray-50 rounded-lg p-3">
         <div class="flex items-center justify-between">
           <span class="text-xs text-gray-600 dark:text-gray-300">Reservas Sin Daños</span>
-          <span class="text-sm font-semibold text-green-600"> {{ cleanPercentage() }}% </span>
+          <span class="text-sm font-semibold text-success-light"> {{ cleanPercentage() }}% </span>
         </div>
         <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
           {{ profile()?.clean_bookings || 0 }} de {{ profile()?.total_bookings || 0 }} reservas
@@ -89,7 +89,7 @@
           <span
             [class]="
               feeMultiplier() < 1
-                ? 'text-green-600'
+                ? 'text-success-light'
                 : feeMultiplier() > 1
                   ? 'text-red-600'
                   : 'text-gray-600 dark:text-gray-300'
@@ -111,7 +111,7 @@
           <span
             [class]="
               guaranteeMultiplier() < 1
-                ? 'text-green-600'
+                ? 'text-success-light'
                 : guaranteeMultiplier() > 1
                   ? 'text-red-600'
                   : 'text-gray-600 dark:text-gray-300'
@@ -134,16 +134,16 @@
         <span [class]="getScoreColor(driverScore())" class="font-semibold">{{
           driverScore()
         }}</span>
-        • Clean: <span class="font-semibold text-green-600">{{ cleanPercentage() }}%</span>
+        • Clean: <span class="font-semibold text-success-light">{{ cleanPercentage() }}%</span>
       </p>
     </div>
 
     <!-- Call to Action -->
     <div
       *ngIf="!compact && driverClass() > 2"
-      class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3"
+      class="mt-4 bg-cta-default/10 border border-cta-default/40 rounded-lg p-3"
     >
-      <p class="text-sm text-blue-800">
+      <p class="text-sm text-cta-default">
         <strong>¡Mejora tu clase!</strong> Completa reservas sin daños para obtener mejores tarifas
         y garantías más bajas.
       </p>

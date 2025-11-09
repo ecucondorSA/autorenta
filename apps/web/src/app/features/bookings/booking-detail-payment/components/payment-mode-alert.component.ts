@@ -16,11 +16,11 @@ import {
     @if (paymentMode === 'card') {
       <!-- Alerta para Tarjeta -->
       <div
-        class="bg-blue-50 dark:bg-info-900/20 border-l-4 border-blue-500 dark:border-info-500 rounded-lg p-4 animate-slide-down transition-colors duration-300"
+        class="bg-cta-default/10 dark:bg-cta-default/20 border-l-4 border-cta-default dark:border-cta-default rounded-lg p-4 animate-slide-down transition-colors duration-300"
       >
         <div class="flex items-start gap-3">
           <svg
-            class="w-6 h-6 text-blue-600 dark:text-info-300 flex-shrink-0"
+            class="w-6 h-6 text-cta-default dark:text-cta-default flex-shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -33,15 +33,15 @@ import {
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-semibold text-blue-900 dark:text-info-100">Pago con Tarjeta</p>
-            <p class="text-sm text-blue-800 dark:text-info-200 mt-1">
+            <p class="text-sm font-semibold text-cta-default dark:text-cta-default">Pago con Tarjeta</p>
+            <p class="text-sm text-cta-default dark:text-cta-default mt-1">
               Se bloqueará <strong>{{ formatArs(holdAmountArs()) }}</strong> en tu tarjeta como
               garantía. Si todo está bien al devolver el auto,
               <strong>se libera automáticamente</strong>.
             </p>
             <div class="mt-2 flex flex-wrap gap-2">
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-info-900/40 dark:text-info-200"
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default"
               >
                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -53,7 +53,7 @@ import {
                 Reembolsable
               </span>
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-info-900/40 dark:text-info-200"
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default"
               >
                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path

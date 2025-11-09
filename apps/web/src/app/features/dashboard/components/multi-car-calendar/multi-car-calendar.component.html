@@ -2,14 +2,14 @@
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-2xl font-bold text-smoke-black dark:text-pearl-light">
+      <h2 class="text-2xl font-bold text-text-primary dark:text-text-secondary">
         Calendario Multi-Auto
       </h2>
       <div class="flex items-center gap-2">
         <button
           *ngIf="selectedCars().length > 0"
           (click)="showBlockModal.set(true)"
-          class="px-4 py-2 bg-accent-petrol text-white rounded-xl hover:bg-accent-petrol/90 transition-all font-medium flex items-center gap-2"
+          class="px-4 py-2 bg-cta-default text-cta-text rounded-xl hover:bg-cta-default/90 transition-all font-medium flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -27,49 +27,49 @@
     <!-- Stats -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <div
-        class="bg-white dark:bg-slate-deep-pure rounded-xl p-4 border border-pearl-gray dark:border-gray-700"
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-gray-700"
       >
-        <p class="text-sm text-charcoal-medium dark:text-pearl-light">Total Autos</p>
-        <p class="text-2xl font-bold text-accent-petrol mt-1">{{ stats().total }}</p>
+        <p class="text-sm text-text-secondary dark:text-text-secondary">Total Autos</p>
+        <p class="text-2xl font-bold text-cta-default mt-1">{{ stats().total }}</p>
       </div>
       <div
-        class="bg-white dark:bg-slate-deep-pure rounded-xl p-4 border border-pearl-gray dark:border-gray-700"
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-gray-700"
       >
-        <p class="text-sm text-charcoal-medium dark:text-pearl-light">Con Reservas</p>
-        <p class="text-2xl font-bold text-green-600 mt-1">{{ stats().withBookings }}</p>
+        <p class="text-sm text-text-secondary dark:text-text-secondary">Con Reservas</p>
+        <p class="text-2xl font-bold text-success-light mt-1">{{ stats().withBookings }}</p>
       </div>
       <div
-        class="bg-white dark:bg-slate-deep-pure rounded-xl p-4 border border-pearl-gray dark:border-gray-700"
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-gray-700"
       >
-        <p class="text-sm text-charcoal-medium dark:text-pearl-light">Con Bloqueos</p>
+        <p class="text-sm text-text-secondary dark:text-text-secondary">Con Bloqueos</p>
         <p class="text-2xl font-bold text-red-600 mt-1">{{ stats().withBlocks }}</p>
       </div>
       <div
-        class="bg-white dark:bg-slate-deep-pure rounded-xl p-4 border border-pearl-gray dark:border-gray-700"
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-gray-700"
       >
-        <p class="text-sm text-charcoal-medium dark:text-pearl-light">Totalmente Disponibles</p>
-        <p class="text-2xl font-bold text-blue-600 mt-1">{{ stats().fullyAvailable }}</p>
+        <p class="text-sm text-text-secondary dark:text-text-secondary">Totalmente Disponibles</p>
+        <p class="text-2xl font-bold text-cta-default mt-1">{{ stats().fullyAvailable }}</p>
       </div>
     </div>
 
     <!-- Selection Controls -->
     <div
-      class="flex items-center justify-between p-4 bg-white dark:bg-slate-deep-pure rounded-xl border border-pearl-gray dark:border-gray-700"
+      class="flex items-center justify-between p-4 bg-surface-raised dark:bg-surface-raised rounded-xl border border-border-default dark:border-gray-700"
     >
       <div class="flex items-center gap-4">
-        <span class="text-sm text-charcoal-medium dark:text-pearl-light">
+        <span class="text-sm text-text-secondary dark:text-text-secondary">
           {{ selectedCars().length }} de {{ cars().length }} seleccionados
         </span>
         <button
           (click)="selectAllCars()"
-          class="text-sm text-accent-petrol hover:underline font-medium"
+          class="text-sm text-cta-default hover:underline font-medium"
         >
           Seleccionar Todos
         </button>
         <button
           *ngIf="selectedCars().length > 0"
           (click)="deselectAllCars()"
-          class="text-sm text-charcoal-medium hover:underline"
+          class="text-sm text-text-secondary hover:underline"
         >
           Deseleccionar Todos
         </button>
@@ -79,11 +79,11 @@
       <div class="flex items-center gap-2">
         <button
           (click)="previousMonth()"
-          class="p-2 rounded-lg hover:bg-pearl-light dark:hover:bg-slate-deep transition-colors"
+          class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
           aria-label="Mes anterior"
         >
           <svg
-            class="w-5 h-5 text-smoke-black dark:text-pearl-light"
+            class="w-5 h-5 text-text-primary dark:text-text-secondary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -97,17 +97,17 @@
           </svg>
         </button>
         <span
-          class="text-sm font-medium text-smoke-black dark:text-pearl-light capitalize min-w-[120px] text-center"
+          class="text-sm font-medium text-text-primary dark:text-text-secondary capitalize min-w-[120px] text-center"
         >
           {{ monthName() }}
         </span>
         <button
           (click)="nextMonth()"
-          class="p-2 rounded-lg hover:bg-pearl-light dark:hover:bg-slate-deep transition-colors"
+          class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
           aria-label="Mes siguiente"
         >
           <svg
-            class="w-5 h-5 text-smoke-black dark:text-pearl-light"
+            class="w-5 h-5 text-text-primary dark:text-text-secondary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -122,7 +122,7 @@
         </button>
         <button
           (click)="goToToday()"
-          class="ml-2 px-3 py-1.5 text-sm font-medium text-accent-petrol hover:bg-accent-petrol/10 rounded-lg transition-colors"
+          class="ml-2 px-3 py-1.5 text-sm font-medium text-cta-default hover:bg-cta-default/10 rounded-lg transition-colors"
         >
           Hoy
         </button>
@@ -134,9 +134,9 @@
   <div *ngIf="loading()" class="flex items-center justify-center py-20">
     <div class="text-center">
       <div
-        class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent-petrol border-t-transparent"
+        class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-cta-default border-t-transparent"
       ></div>
-      <p class="mt-4 text-charcoal-medium dark:text-pearl-light">Cargando calendarios...</p>
+      <p class="mt-4 text-text-secondary dark:text-text-secondary">Cargando calendarios...</p>
     </div>
   </div>
 
@@ -144,40 +144,40 @@
   <div *ngIf="!loading()" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
     <div
       *ngFor="let car of cars()"
-      class="bg-white dark:bg-slate-deep-pure rounded-2xl border-2 transition-all"
-      [class.border-accent-petrol]="car.selected"
-      [class.border-pearl-gray]="!car.selected"
+      class="bg-surface-raised dark:bg-surface-raised rounded-2xl border-2 transition-all"
+      [class.border-cta-default]="car.selected"
+      [class.border-border-default]="!car.selected"
       [class.dark:border-gray-700]="!car.selected"
     >
       <!-- Car Header -->
-      <div class="p-4 border-b border-pearl-gray dark:border-gray-700">
+      <div class="p-4 border-b border-border-default dark:border-gray-700">
         <div class="flex items-start gap-3">
           <input
             type="checkbox"
             [checked]="car.selected"
             (change)="toggleCarSelection(car.carId)"
-            class="mt-1 w-5 h-5 text-accent-petrol border-pearl-gray rounded focus:ring-accent-petrol cursor-pointer"
+            class="mt-1 w-5 h-5 text-cta-default border-border-default rounded focus:ring-cta-default cursor-pointer"
           />
           <div class="flex-1 min-w-0">
-            <h3 class="font-semibold text-smoke-black dark:text-pearl-light truncate">
+            <h3 class="font-semibold text-text-primary dark:text-text-secondary truncate">
               {{ car.carTitle }}
             </h3>
             <div
-              class="flex items-center gap-2 mt-1 text-xs text-charcoal-medium dark:text-pearl-light"
+              class="flex items-center gap-2 mt-1 text-xs text-text-secondary dark:text-text-secondary"
             >
               <span class="flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                {{ getBookingCount(car) }} reservas
+                <span class="w-2 h-2 rounded-full bg-success-light"></span>
+                {{ getBookingsCount(car) }} reservas
               </span>
               <span class="flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                {{ getManualBlockCount(car) }} bloqueos
+                {{ getManualBlocksCount(car) }} bloqueos
               </span>
             </div>
           </div>
           <button
             (click)="goToCarCalendar(car.carId)"
-            class="text-accent-petrol hover:bg-accent-petrol/10 p-2 rounded-lg transition-colors"
+            class="text-cta-default hover:bg-cta-default/10 p-2 rounded-lg transition-colors"
             title="Ver calendario completo"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,7 +203,7 @@
         <div class="grid grid-cols-7 gap-1 mb-2">
           <div
             *ngFor="let day of ['D', 'L', 'M', 'M', 'J', 'V', 'S']"
-            class="text-center text-xs font-semibold text-charcoal-medium dark:text-pearl-light"
+            class="text-center text-xs font-semibold text-text-secondary dark:text-text-secondary"
           >
             {{ day }}
           </div>
@@ -214,10 +214,10 @@
             *ngFor="let day of monthDays()"
             class="aspect-square flex items-center justify-center text-xs rounded-lg transition-all"
             [ngClass]="{
-              'bg-green-500 text-white font-medium': getDayStatus(car, day) === 'booked',
-              'bg-red-500 text-white font-medium': getDayStatus(car, day) === 'blocked',
+              'bg-success-light text-text-primary font-medium': getDayStatus(car, day) === 'booked',
+              'bg-red-500 text-text-inverse font-medium': getDayStatus(car, day) === 'blocked',
               'bg-gray-200 dark:bg-gray-700 text-gray-400': getDayStatus(car, day) === 'past',
-              'hover:bg-pearl-light dark:hover:bg-slate-deep':
+              'hover:bg-surface-secondary dark:hover:bg-slate-deep':
                 getDayStatus(car, day) === 'available',
             }"
           >
@@ -231,7 +231,7 @@
   <!-- Empty State -->
   <div *ngIf="!loading() && cars().length === 0" class="text-center py-20">
     <svg
-      class="w-16 h-16 mx-auto text-charcoal-medium opacity-50"
+      class="w-16 h-16 mx-auto text-text-secondary opacity-50"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -243,10 +243,10 @@
         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
       />
     </svg>
-    <h3 class="mt-4 text-xl font-semibold text-smoke-black dark:text-pearl-light">
+    <h3 class="mt-4 text-xl font-semibold text-text-primary dark:text-text-secondary">
       No tienes autos activos
     </h3>
-    <p class="mt-2 text-charcoal-medium dark:text-pearl-light">
+    <p class="mt-2 text-text-secondary dark:text-text-secondary">
       Publica un auto para empezar a gestionar su disponibilidad
     </p>
   </div>

@@ -8,26 +8,26 @@ import type { ReviewSummary } from '../../../core/models';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
       <h3 class="mb-4 text-lg font-semibold text-gray-900">Resumen de Reviews</h3>
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
           <div
-            class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+            class="h-6 w-6 animate-spin rounded-full border-2 border-cta-default border-t-transparent"
           ></div>
         </div>
       } @else if (summary(); as s) {
         <div class="space-y-6">
           <!-- Total y Promedio -->
           <div class="grid grid-cols-2 gap-4">
-            <div class="rounded-lg bg-blue-50 p-4">
-              <p class="text-sm font-medium text-blue-600">Total de Reviews</p>
-              <p class="text-2xl font-bold text-blue-900">{{ s.total_count }}</p>
+            <div class="rounded-lg bg-cta-default/10 p-4">
+              <p class="text-sm font-medium text-cta-default">Total de Reviews</p>
+              <p class="text-2xl font-bold text-cta-default">{{ s.total_count }}</p>
             </div>
-            <div class="rounded-lg bg-green-50 p-4">
-              <p class="text-sm font-medium text-green-600">Promedio</p>
-              <p class="text-2xl font-bold text-green-900">
+            <div class="rounded-lg bg-success-light/10 p-4">
+              <p class="text-sm font-medium text-success-light">Promedio</p>
+              <p class="text-2xl font-bold text-success-light">
                 {{ formatRating(s.average_rating) }} ⭐
               </p>
             </div>
@@ -46,7 +46,7 @@ import type { ReviewSummary } from '../../../core/models';
                     <div class="flex-1">
                       <div class="h-4 w-full rounded-full bg-gray-200">
                         <div
-                          class="h-4 rounded-full bg-blue-500"
+                          class="h-4 rounded-full bg-cta-default"
                           [style.width.%]="
                             getPercentage(
                               getRatingCount(s.rating_distribution, rating),

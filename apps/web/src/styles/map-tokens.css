@@ -1,0 +1,169 @@
+/**
+ * Map Tokens - Sistema Centralizado de Tokens para Mapas
+ * 
+ * Consolida todos los tokens de estilo para mapas, marcadores y controles
+ * Sincronizado con prefers-color-scheme y markerVariant (photo/price)
+ */
+
+:root {
+  /* ===== Map Marker Tokens ===== */
+  
+  /* Photo Mode Tokens (browsing/exploration) */
+  --map-marker-photo-size: 70px;
+  --map-marker-photo-border: 2.5px;
+  --map-marker-photo-border-color: #ffffff;
+  --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  --map-marker-photo-hover-scale: 1.12;
+  --map-marker-photo-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  
+  /* Price Mode Tokens (price comparison) */
+  --map-marker-price-size: 50px;
+  --map-marker-price-border: 3px;
+  --map-marker-price-border-color: #ffffff;
+  --map-marker-price-bg-start: #4f46e5;
+  --map-marker-price-bg-end: #6366f1;
+  --map-marker-price-shadow: 0 4px 12px rgba(79, 70, 229, 0.5);
+  --map-marker-price-hover-scale: 1.2;
+  --map-marker-price-hover-shadow: 0 6px 20px rgba(79, 70, 229, 0.7);
+  
+  /* Instant Booking Indicator */
+  --map-marker-instant-booking-color: #10b981;
+  --map-marker-instant-booking-border: 2px;
+  --map-marker-instant-booking-indicator-size: 12px;
+  --map-marker-instant-booking-pulse-opacity: 0.4;
+  
+  /* Availability Status Colors */
+  --map-marker-available-color: #10b981;
+  --map-marker-available-shadow: rgba(16, 185, 129, 0.2);
+  --map-marker-soon-available-color: #f59e0b;
+  --map-marker-soon-available-shadow: rgba(245, 158, 11, 0.2);
+  --map-marker-in-use-color: #6366f1;
+  --map-marker-in-use-shadow: rgba(99, 102, 241, 0.2);
+  --map-marker-unavailable-color: #ef4444;
+  --map-marker-unavailable-shadow: rgba(239, 68, 68, 0.2);
+  
+  /* Map Controls */
+  --map-control-bg: rgba(255, 255, 255, 0.95);
+  --map-control-border: rgba(0, 0, 0, 0.1);
+  --map-control-text: #1f2937;
+  --map-control-hover-bg: rgba(0, 0, 0, 0.05);
+  --map-control-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+  /* Map Popup/Tooltip */
+  --map-popup-bg: #ffffff;
+  --map-popup-text: #1f2937;
+  --map-popup-border: rgba(0, 0, 0, 0.1);
+  --map-popup-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+  /* User Location Marker */
+  --map-user-location-color: #3b82f6;
+  --map-user-location-border: 4px;
+  --map-user-location-halo-color: rgba(59, 130, 246, 0.2);
+  
+  /* Map Canvas Filters */
+  --map-canvas-brightness: 1;
+  --map-canvas-contrast: 1;
+  --map-canvas-saturate: 1;
+}
+
+/* Dark Mode Tokens */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Photo Mode - Dark */
+    --map-marker-photo-border-color: #1f2937;
+    --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    --map-marker-photo-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    
+    /* Price Mode - Dark */
+    --map-marker-price-border-color: #1f2937;
+    --map-marker-price-shadow: 0 4px 12px rgba(79, 70, 229, 0.6);
+    --map-marker-price-hover-shadow: 0 6px 20px rgba(79, 70, 229, 0.8);
+    
+    /* Map Controls - Dark */
+    --map-control-bg: rgba(20, 20, 20, 0.85);
+    --map-control-border: rgba(255, 255, 255, 0.1);
+    --map-control-text: #f0f0f0;
+    --map-control-hover-bg: rgba(255, 255, 255, 0.1);
+    --map-control-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    
+    /* Map Popup - Dark */
+    --map-popup-bg: rgba(20, 20, 20, 0.95);
+    --map-popup-text: #f0f0f0;
+    --map-popup-border: rgba(255, 255, 255, 0.1);
+    --map-popup-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    
+    /* Map Canvas - Dark */
+    --map-canvas-brightness: 0.95;
+    --map-canvas-contrast: 1.1;
+    --map-canvas-saturate: 0.95;
+  }
+}
+
+.dark {
+  /* Photo Mode - Dark (class-based override) */
+  --map-marker-photo-border-color: #1f2937;
+  --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --map-marker-photo-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  
+  /* Price Mode - Dark */
+  --map-marker-price-border-color: #1f2937;
+  --map-marker-price-shadow: 0 4px 12px rgba(79, 70, 229, 0.6);
+  --map-marker-price-hover-shadow: 0 6px 20px rgba(79, 70, 229, 0.8);
+  
+  /* Map Controls - Dark */
+  --map-control-bg: rgba(20, 20, 20, 0.85);
+  --map-control-border: rgba(255, 255, 255, 0.1);
+  --map-control-text: #f0f0f0;
+  --map-control-hover-bg: rgba(255, 255, 255, 0.1);
+  --map-control-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+  /* Map Popup - Dark */
+  --map-popup-bg: rgba(20, 20, 20, 0.95);
+  --map-popup-text: #f0f0f0;
+  --map-popup-border: rgba(255, 255, 255, 0.1);
+  --map-popup-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+  /* Map Canvas - Dark */
+  --map-canvas-brightness: 0.95;
+  --map-canvas-contrast: 1.1;
+  --map-canvas-saturate: 0.95;
+}
+
+/* Marker Variant Context Classes */
+.map-variant-photo {
+  /* Photo mode specific overrides */
+  --map-marker-active-size: var(--map-marker-photo-size);
+  --map-marker-active-border: var(--map-marker-photo-border);
+  --map-marker-active-border-color: var(--map-marker-photo-border-color);
+  --map-marker-active-shadow: var(--map-marker-photo-shadow);
+  --map-marker-active-hover-scale: var(--map-marker-photo-hover-scale);
+  --map-marker-active-hover-shadow: var(--map-marker-photo-hover-shadow);
+}
+
+.map-variant-price {
+  /* Price mode specific overrides */
+  --map-marker-active-size: var(--map-marker-price-size);
+  --map-marker-active-border: var(--map-marker-price-border);
+  --map-marker-active-border-color: var(--map-marker-price-border-color);
+  --map-marker-active-shadow: var(--map-marker-price-shadow);
+  --map-marker-active-hover-scale: var(--map-marker-price-hover-scale);
+  --map-marker-active-hover-shadow: var(--map-marker-price-hover-shadow);
+}
+
+/* Mobile Responsive Tokens */
+@media (max-width: 767px) {
+  :root {
+    --map-marker-photo-size: 60px;
+    --map-marker-price-size: 44px;
+    --map-marker-instant-booking-indicator-size: 10px;
+  }
+}
+
+/* Desktop Enhanced Tokens */
+@media (min-width: 1024px) {
+  :root {
+    --map-marker-photo-size: 80px;
+    --map-marker-price-size: 56px;
+  }
+}
+

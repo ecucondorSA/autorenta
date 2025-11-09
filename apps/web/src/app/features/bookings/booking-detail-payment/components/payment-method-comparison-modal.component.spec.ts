@@ -110,7 +110,7 @@ describe('PaymentMethodComparisonModalComponent - Escenario 4', () => {
       fixture.detectChanges();
 
       // Act
-      const modalContent = fixture.nativeElement.querySelector('.bg-white');
+      const modalContent = fixture.nativeElement.querySelector('.bg-surface-raised');
       const clickEvent = new MouseEvent('click', { bubbles: false });
       modalContent.dispatchEvent(clickEvent);
 

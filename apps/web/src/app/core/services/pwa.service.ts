@@ -145,7 +145,9 @@ export class PwaService {
       this.updateAvailable.set(false);
       // Reload the page to load the new version
       document.location.reload();
-    } catch (__error) {}
+    } catch (__error) {
+      // Silently ignore activation errors
+    }
   }
 
   /**
@@ -167,8 +169,7 @@ export class PwaService {
       await navigator.share(data);
       return true;
     } catch (__error) {
-      if ((__error as Error).name !== 'AbortError') {
-      }
+      // Only return false, don't log AbortError (user cancelled)
       return false;
     }
   }
@@ -254,7 +255,9 @@ export class PwaService {
 
     try {
       await nav.setAppBadge(count);
-    } catch (__error) {}
+    } catch (__error) {
+      // Silently ignore badge errors
+    }
   }
 
   /**
@@ -268,7 +271,9 @@ export class PwaService {
 
     try {
       await nav.clearAppBadge();
-    } catch (__error) {}
+    } catch (__error) {
+      // Silently ignore badge errors
+    }
   }
 
   /**
@@ -289,8 +294,7 @@ export class PwaService {
       });
       return contacts;
     } catch (__error) {
-      if ((__error as Error).name !== 'AbortError') {
-      }
+      // Return null on any error (including user cancellation)
       return null;
     }
   }

@@ -1,6 +1,6 @@
 <!-- Fixed bottom CTA bar for mobile only -->
 <div
-  class="fixed bottom-0 left-0 right-0 z-fixed lg:hidden bg-white border-t border-pearl-gray shadow-lg backdrop-blur-lg"
+  class="fixed bottom-0 left-0 right-0 z-fixed lg:hidden bg-surface-raised border-t border-border-default shadow-lg backdrop-blur-lg"
   style="padding-bottom: env(safe-area-inset-bottom)"
 >
   <div class="px-4 py-3 flex items-center justify-between gap-3">
@@ -8,9 +8,9 @@
     <div *ngIf="showPrice" class="flex-shrink-0">
       <!-- Has dates selected - show total -->
       <div *ngIf="totalPrice !== null && daysCount > 0" class="flex flex-col">
-        <p class="text-xs text-charcoal-medium dark:text-pearl-light">Total</p>
-        <p class="text-lg font-bold text-smoke-black">{{ totalPrice | money }}</p>
-        <p class="text-[10px] text-charcoal-medium dark:text-pearl-light -mt-0.5">
+        <p class="text-xs text-text-secondary dark:text-text-secondary">Total</p>
+        <p class="text-lg font-bold text-text-primary">{{ totalPrice | money }}</p>
+        <p class="text-[10px] text-text-secondary dark:text-text-secondary -mt-0.5">
           {{ daysCount }} {{ daysCount === 1 ? 'día' : 'días' }}
         </p>
       </div>
@@ -20,9 +20,9 @@
         *ngIf="(totalPrice === null || daysCount === 0) && pricePerDay !== null"
         class="flex flex-col"
       >
-        <p class="text-xs text-charcoal-medium dark:text-pearl-light">Desde</p>
-        <p class="text-lg font-bold text-smoke-black">{{ pricePerDay | money }}</p>
-        <p class="text-[10px] text-charcoal-medium dark:text-pearl-light -mt-0.5">por día</p>
+        <p class="text-xs text-text-secondary dark:text-text-secondary">Desde</p>
+        <p class="text-lg font-bold text-text-primary">{{ pricePerDay | money }}</p>
+        <p class="text-[10px] text-text-secondary dark:text-text-secondary -mt-0.5">por día</p>
       </div>
     </div>
 
@@ -35,9 +35,9 @@
       class="flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 min-h-[44px]"
       [class.btn-primary]="!expressMode"
       [class.bg-gradient-to-r]="expressMode"
-      [class.from-accent-petrol]="expressMode"
-      [class.to-accent-warm]="expressMode"
-      [class.text-white]="expressMode"
+      [class.from-cta-default]="expressMode"
+      [class.to-warning-light]="expressMode"
+      [class.text-text-inverse]="expressMode"
       [class.shadow-md]="!disabled && !loading"
       [class.hover:shadow-lg]="!disabled && !loading"
       [class.animate-pulse]="!disabled && !loading && totalPrice !== null"

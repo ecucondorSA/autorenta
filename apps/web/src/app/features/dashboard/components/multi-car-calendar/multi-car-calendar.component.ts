@@ -6,6 +6,8 @@ import { format, addDays, startOfMonth, endOfMonth, addMonths, eachDayOfInterval
 import { es } from 'date-fns/locale';
 import { ToastService } from '../../../../core/services/toast.service';
 import { CarsService } from '../../../../core/services/cars.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 import {
   CarAvailabilityService,
   DetailedBlockedRange,
@@ -15,6 +17,7 @@ import {
   BlockDateModalComponent,
   BlockDateRequest,
 } from '../../../../shared/components/block-date-modal/block-date-modal.component';
+import { Car } from '../../../../core/models';
 
 interface CarCalendarData {
   carId: string;
@@ -38,6 +41,8 @@ export class MultiCarCalendarComponent implements OnInit {
   private readonly availabilityService = inject(CarAvailabilityService);
   private readonly blockingService = inject(CarBlockingService);
   private readonly toastService = inject(ToastService);
+  private readonly authService = inject(AuthService);
+  private readonly supabase = inject(SupabaseClientService).getClient();
 
   readonly cars = signal<CarCalendarData[]>([]);
   readonly loading = signal(true);
@@ -87,8 +92,12 @@ export class MultiCarCalendarComponent implements OnInit {
 
     try {
       // Get owner's active cars
-      const ownerCars = await this.carsService.listMyCars();
-      const activeCars = ownerCars.filter((car: any) => car.status === 'active');
+      const user = await this.authService.getCurrentUser();
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+      const ownerCars = await this.carsService.getCarsByOwner(user.id);
+      const activeCars = ownerCars.filter((car: Car) => car.status === 'active');
 
       if (activeCars.length === 0) {
         this.toastService.info('Sin autos', 'No tienes autos activos para mostrar');
@@ -97,14 +106,20 @@ export class MultiCarCalendarComponent implements OnInit {
       }
 
       // Initialize car calendar data
-      const carData: CarCalendarData[] = activeCars.map((car: any) => ({
-        carId: car.id,
-        carTitle: `${car.brand} ${car.model} (${car.year})`,
-        imageUrl: car.thumbnail_url || car.image_urls?.[0],
-        blockedRanges: [],
-        selected: false,
-        loading: true,
-      }));
+      const carData: CarCalendarData[] = activeCars.map((car: Car) => {
+        // ✅ FIX: Use photos array instead of thumbnail_url/image_urls
+        const firstPhoto = car.photos?.[0] || car.car_photos?.[0];
+        const imageUrl = firstPhoto?.url || null;
+        
+        return {
+          carId: car.id,
+          carTitle: `${car.brand_text_backup || car.brand || ''} ${car.model_text_backup || car.model || ''} (${car.year})`.trim(),
+          imageUrl: imageUrl ?? undefined,
+          blockedRanges: [],
+          selected: false,
+          loading: true,
+        };
+      });
 
       this.cars.set(carData);
 
@@ -260,14 +275,16 @@ export class MultiCarCalendarComponent implements OnInit {
     return 'available';
   }
 
-  goToCarCalendar(carId: string): void {
-    void this.router.navigate(['/cars', carId, 'availability']);
-  }
-  getBookingCount(car: any): number {
-    return car.blockedRanges?.filter((r: any) => r.type === 'booking').length || 0;
+  // Helper methods for template
+  getBookingsCount(car: CarCalendarData): number {
+    return car.blockedRanges.filter((r) => r.type === 'booking').length;
   }
 
-  getManualBlockCount(car: any): number {
-    return car.blockedRanges?.filter((r: any) => r.type === 'manual_block').length || 0;
+  getManualBlocksCount(car: CarCalendarData): number {
+    return car.blockedRanges.filter((r) => r.type === 'manual_block').length;
+  }
+
+  goToCarCalendar(carId: string): void {
+    void this.router.navigate(['/cars', carId, 'availability']);
   }
 }

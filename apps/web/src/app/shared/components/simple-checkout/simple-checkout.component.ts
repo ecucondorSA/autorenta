@@ -36,7 +36,7 @@ interface CheckoutStep {
 })
 export class SimpleCheckoutComponent {
   @Input() car!: Car;
-  @Output() bookingCreated = new EventEmitter<any>();
+  @Output() bookingCreated = new EventEmitter<{ id: string; [key: string]: unknown }>();
   @Output() cancelled = new EventEmitter<void>();
 
   private readonly router = inject(Router);
@@ -148,7 +148,7 @@ export class SimpleCheckoutComponent {
     const stepIndex = this.currentStep();
 
     switch (stepIndex) {
-      case 0: // Fechas
+      case 0: { // Fechas
         if (!this.startDate() || !this.endDate()) {
           this.error.set('Por favor selecciona las fechas de alquiler');
           return false;
@@ -164,6 +164,7 @@ export class SimpleCheckoutComponent {
           return false;
         }
         return true;
+      }
 
       case 2: // Pago
         if (this.paymentMethod() === 'wallet' && this.finalTotal() > this.walletBalance()) {
@@ -418,7 +419,7 @@ export class SimpleCheckoutComponent {
   }
 
   getCarPhotoUrl(): string {
-    const photos = this.car.photos || (this.car as any).car_photos;
+    const photos = this.car.photos || (this.car as { car_photos?: unknown[] }).car_photos;
     return getCarImageUrl(photos, {
       brand: this.car.brand || this.car.brand_name || '',
       model: this.car.model || this.car.model_name || '',

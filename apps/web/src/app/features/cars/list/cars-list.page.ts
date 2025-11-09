@@ -631,7 +631,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     // Show simple notification banner (usando createElement para evitar XSS)
     const banner = document.createElement('div');
     banner.className =
-      'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
+      'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-success-light text-text-primary px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
 
     // Crear elementos de forma segura (sin innerHTML)
     const messageSpan = document.createElement('span');

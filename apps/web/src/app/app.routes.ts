@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
-import { MercadoPagoGuard } from './core/guards/mercadopago.guard';
-import { VerificationGuard } from './core/guards/verification.guard';
 
 export const routes: Routes = [
   {
     path: '',
     data: { layout: 'full-bleed' },
-    loadComponent: () => import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
+    loadComponent: () =>
+      import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),
   },
   {
     path: 'marketplace',
     data: { layout: 'full-bleed' },
-    loadComponent: () => import('./features/marketplace/marketplace.page').then((m) => m.MarketplacePage),
+    loadComponent: () =>
+      import('./features/marketplace/marketplace.page').then((m) => m.MarketplacePage),
   },
   {
     path: 'auth',
@@ -20,7 +20,8 @@ export const routes: Routes = [
   },
   {
     path: 'onboarding',
-    loadComponent: () => import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),
+    loadComponent: () =>
+      import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),
   },
   {
     path: 'cars',
@@ -38,7 +39,7 @@ export const routes: Routes = [
       },
       {
         path: 'publish',
-        canMatch: [AuthGuard, VerificationGuard],
+        canMatch: [AuthGuard],
         loadComponent: () =>
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },
@@ -90,9 +91,7 @@ export const routes: Routes = [
       {
         path: 'refunds',
         loadComponent: () =>
-          import('./features/admin/refunds/admin-refunds.page').then(
-            (m) => m.AdminRefundsPage,
-          ),
+          import('./features/admin/refunds/admin-refunds.page').then((m) => m.AdminRefundsPage),
       },
       {
         path: 'coverage-fund',
@@ -228,7 +227,8 @@ export const routes: Routes = [
       },
       {
         path: 'chat',
-        loadComponent: () => import('./features/messages/messages.page').then((m) => m.MessagesPage),
+        loadComponent: () =>
+          import('./features/messages/messages.page').then((m) => m.MessagesPage),
       },
     ],
   },

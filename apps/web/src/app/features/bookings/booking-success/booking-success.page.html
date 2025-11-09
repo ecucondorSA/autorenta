@@ -97,7 +97,7 @@
       </div>
 
       <!-- Main Message -->
-      <h1 class="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+      <h1 class="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-text-inverse">
         ¡Tu reserva está confirmada!
       </h1>
 
@@ -159,7 +159,7 @@
                 <ion-icon name="cash-outline"></ion-icon>
                 Total Pagado:
               </span>
-              <span class="value font-bold text-green-600">
+              <span class="value font-bold text-success-light">
                 {{ bkg.total_amount | currency: 'ARS' : 'symbol' : '1.0-0' }}
               </span>
             </div>

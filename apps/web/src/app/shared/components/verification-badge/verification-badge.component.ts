@@ -91,7 +91,7 @@ export class VerificationBadgeComponent implements OnInit {
   getBadgeClass(status: VerificationStatus): string {
     switch (status) {
       case 'VERIFICADO':
-        return 'bg-green-100 text-green-800 border border-green-200';
+        return 'bg-success-light/20 text-success-light border border-success-light/40';
       case 'RECHAZADO':
         return 'bg-red-100 text-red-800 border border-red-200';
       default:

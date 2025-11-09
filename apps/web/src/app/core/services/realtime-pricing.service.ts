@@ -286,7 +286,9 @@ export class RealtimePricingService {
 
         this.demandByRegion.set(snapshotsByRegion);
       }
-    } catch (__error) {}
+    } catch (__error) {
+      // Silently ignore demand by region errors
+    }
   }
 
   private async loadActiveEvents(): Promise<void> {
@@ -304,7 +306,9 @@ export class RealtimePricingService {
       if (data) {
         this.activeEvents.set(data as SpecialEvent[]);
       }
-    } catch (__error) {}
+    } catch (__error) {
+      // Silently ignore active events errors
+    }
   }
 
   /**

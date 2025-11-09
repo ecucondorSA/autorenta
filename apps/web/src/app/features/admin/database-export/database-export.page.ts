@@ -17,7 +17,7 @@ import { ToastService } from '../../../core/services/toast.service';
         </p>
       </div>
 
-      <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700">
             Límite de registros por tabla
@@ -27,7 +27,7 @@ import { ToastService } from '../../../core/services/toast.service';
             [(ngModel)]="limit"
             min="1"
             max="100"
-            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-cta-default focus:outline-none focus:ring-cta-default"
           />
           <p class="mt-1 text-xs text-gray-500">
             Número de registros de muestra a incluir por tabla (1-100)
@@ -37,7 +37,7 @@ import { ToastService } from '../../../core/services/toast.service';
         <button
           (click)="exportSnapshot()"
           [disabled]="exporting()"
-          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          class="rounded-lg bg-cta-default text-cta-text hover:bg-cta-default disabled:opacity-50"
         >
           @if (exporting()) {
             <span class="flex items-center gap-2">
@@ -70,8 +70,8 @@ import { ToastService } from '../../../core/services/toast.service';
       </div>
 
       @if (lastExport()) {
-        <div class="mt-6 rounded-lg border border-green-200 bg-green-50 p-4">
-          <p class="text-sm font-medium text-green-800">Última exportación: {{ lastExport() }}</p>
+        <div class="mt-6 rounded-lg border border-success-light/40 bg-success-light/10 p-4">
+          <p class="text-sm font-medium text-success-light">Última exportación: {{ lastExport() }}</p>
         </div>
       }
     </div>

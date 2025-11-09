@@ -15,13 +15,13 @@ import { Booking } from '../../../core/models';
   template: `
     <div
       *ngIf="booking"
-      class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-deep shadow-sm"
+      class="rounded-lg border border-gray-200 dark:border-gray-700 bg-surface-raised dark:bg-surface-secondary shadow-sm"
     >
       <!-- Header -->
       <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse flex items-center gap-2">
           <svg
-            class="w-5 h-5 text-accent-petrol"
+            class="w-5 h-5 text-cta-default"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -43,7 +43,7 @@ import { Booking } from '../../../core/models';
           <div class="flex items-start justify-between">
             <div class="flex-1">
               <div class="flex items-center gap-2">
-                <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-text-inverse">
                   Cargos del Alquiler
                 </h4>
                 <button
@@ -65,7 +65,7 @@ import { Booking } from '../../../core/models';
                   </svg>
                   <!-- Tooltip -->
                   <div
-                    class="absolute left-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
+                    class="absolute left-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-text-inverse text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
                   >
                     {{ rentalTooltipText }}
                     <div
@@ -79,7 +79,7 @@ import { Booking } from '../../../core/models';
               </p>
             </div>
             <div class="text-right">
-              <p class="text-lg font-bold text-gray-900 dark:text-white">
+              <p class="text-lg font-bold text-gray-900 dark:text-text-inverse">
                 {{ formatCurrency(rentalAmount, booking.currency) }}
               </p>
             </div>
@@ -115,7 +115,7 @@ import { Booking } from '../../../core/models';
             <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
           </div>
           <div class="relative flex justify-center">
-            <span class="px-2 bg-white dark:bg-slate-deep text-xs text-gray-500 dark:text-gray-400">
+            <span class="px-2 bg-surface-raised dark:bg-surface-secondary text-xs text-gray-500 dark:text-gray-400">
               +
             </span>
           </div>
@@ -124,15 +124,15 @@ import { Booking } from '../../../core/models';
         <!-- Security Deposit Section -->
         <div class="space-y-3">
           <div
-            class="flex items-start justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/40"
+            class="flex items-start justify-between p-3 rounded-lg bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default/40"
           >
             <div class="flex-1">
               <div class="flex items-center gap-2">
-                <h4 class="text-sm font-semibold text-blue-900 dark:text-blue-200">
+                <h4 class="text-sm font-semibold text-cta-default dark:text-cta-default">
                   Depósito de Garantía
                 </h4>
                 <span
-                  class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200"
+                  class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light"
                 >
                   <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path
@@ -150,7 +150,7 @@ import { Booking } from '../../../core/models';
                   aria-label="Información sobre depósito de garantía"
                 >
                   <svg
-                    class="w-4 h-4 text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 cursor-help"
+                    class="w-4 h-4 text-cta-default hover:text-cta-default dark:hover:text-cta-default cursor-help"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -162,7 +162,7 @@ import { Booking } from '../../../core/models';
                   </svg>
                   <!-- Tooltip -->
                   <div
-                    class="absolute left-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
+                    class="absolute left-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-text-inverse text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
                   >
                     {{ depositTooltipText }}
                     <div
@@ -171,12 +171,12 @@ import { Booking } from '../../../core/models';
                   </div>
                 </button>
               </div>
-              <p class="text-xs text-blue-700 dark:text-blue-300 mt-1">
+              <p class="text-xs text-cta-default dark:text-cta-default mt-1">
                 Se devuelve al finalizar el alquiler sin daños
               </p>
             </div>
             <div class="text-right">
-              <p class="text-lg font-bold text-blue-900 dark:text-blue-200">
+              <p class="text-lg font-bold text-cta-default dark:text-cta-default">
                 {{ formatCurrency(depositAmount, booking.currency) }}
               </p>
             </div>
@@ -206,13 +206,13 @@ import { Booking } from '../../../core/models';
         <!-- Total Amount -->
         <div class="flex items-center justify-between pt-2">
           <div>
-            <h4 class="text-base font-semibold text-gray-900 dark:text-white">Total Bloqueado</h4>
+            <h4 class="text-base font-semibold text-gray-900 dark:text-text-inverse">Total Bloqueado</h4>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
               Incluye alquiler + depósito de garantía
             </p>
           </div>
           <div class="text-right">
-            <p class="text-xl font-bold text-accent-petrol dark:text-accent-warm">
+            <p class="text-xl font-bold text-cta-default dark:text-warning-light">
               {{ formatCurrency(totalAmount, booking.currency) }}
             </p>
           </div>

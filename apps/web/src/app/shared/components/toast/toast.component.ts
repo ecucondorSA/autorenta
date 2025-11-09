@@ -61,7 +61,7 @@ export class ToastComponent {
         'bg-error-50 border-error-500 text-error-700 dark:bg-error-900/30 dark:border-error-700 dark:text-error-100',
       warning:
         'bg-warning-50 border-warning-500 text-warning-700 dark:bg-warning-900/30 dark:border-warning-700 dark:text-warning-100',
-      info: 'bg-info-50 border-info-500 text-info-700 dark:bg-info-900/30 dark:border-info-700 dark:text-info-100',
+      info: 'bg-cta-default/10 border-cta-default text-cta-default dark:bg-cta-default/30 dark:border-cta-default dark:text-cta-default',
     };
     return classes[type as keyof typeof classes] || classes.info;
   }

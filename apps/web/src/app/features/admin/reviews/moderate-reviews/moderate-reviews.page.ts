@@ -21,8 +21,8 @@ import type { Review } from '../../../../core/models';
         <button
           (click)="loadFlaggedReviews('pending')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'pending'"
-          [class.text-white]="filterStatus() === 'pending'"
+          [class.bg-cta-default]="filterStatus() === 'pending'"
+          [class.text-text-inverse]="filterStatus() === 'pending'"
           [class.bg-gray-200]="filterStatus() !== 'pending'"
           [class.text-gray-700]="filterStatus() !== 'pending'"
         >
@@ -31,8 +31,8 @@ import type { Review } from '../../../../core/models';
         <button
           (click)="loadFlaggedReviews('approved')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'approved'"
-          [class.text-white]="filterStatus() === 'approved'"
+          [class.bg-cta-default]="filterStatus() === 'approved'"
+          [class.text-text-inverse]="filterStatus() === 'approved'"
           [class.bg-gray-200]="filterStatus() !== 'approved'"
           [class.text-gray-700]="filterStatus() !== 'approved'"
         >
@@ -41,8 +41,8 @@ import type { Review } from '../../../../core/models';
         <button
           (click)="loadFlaggedReviews('rejected')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'rejected'"
-          [class.text-white]="filterStatus() === 'rejected'"
+          [class.bg-cta-default]="filterStatus() === 'rejected'"
+          [class.text-text-inverse]="filterStatus() === 'rejected'"
           [class.bg-gray-200]="filterStatus() !== 'rejected'"
           [class.text-gray-700]="filterStatus() !== 'rejected'"
         >
@@ -51,8 +51,8 @@ import type { Review } from '../../../../core/models';
         <button
           (click)="loadFlaggedReviews()"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === null"
-          [class.text-white]="filterStatus() === null"
+          [class.bg-cta-default]="filterStatus() === null"
+          [class.text-text-inverse]="filterStatus() === null"
           [class.bg-gray-200]="filterStatus() !== null"
           [class.text-gray-700]="filterStatus() !== null"
         >
@@ -63,7 +63,7 @@ import type { Review } from '../../../../core/models';
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
           <div
-            class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"
+            class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"
           ></div>
         </div>
       } @else if (flaggedReviews().length === 0) {
@@ -73,7 +73,7 @@ import type { Review } from '../../../../core/models';
       } @else {
         <div class="space-y-4">
           @for (review of flaggedReviews(); track review.id) {
-            <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
               <div class="mb-4 flex items-start justify-between">
                 <div>
                   <h3 class="font-semibold text-gray-900">Review #{{ review.id }}</h3>
@@ -84,14 +84,14 @@ import type { Review } from '../../../../core/models';
                 </div>
                 <span
                   class="rounded-full px-3 py-1 text-xs font-medium"
-                  [class.bg-yellow-100]="review.flag_status === 'pending'"
-                  [class.text-yellow-800]="review.flag_status === 'pending'"
-                  [class.bg-green-100]="review.flag_status === 'approved'"
-                  [class.text-green-800]="review.flag_status === 'approved'"
-                  [class.bg-red-100]="review.flag_status === 'rejected'"
-                  [class.text-red-800]="review.flag_status === 'rejected'"
+                  [class.bg-yellow-100]="review.moderation_status === 'pending'"
+                  [class.text-yellow-800]="review.moderation_status === 'pending'"
+                  [class.bg-success-light/20]="review.moderation_status === 'approved'"
+                  [class.text-success-light]="review.moderation_status === 'approved'"
+                  [class.bg-red-100]="review.moderation_status === 'rejected'"
+                  [class.text-red-800]="review.moderation_status === 'rejected'"
                 >
-                  {{ review.flag_status || 'pending' }}
+                  {{ review.moderation_status || 'pending' }}
                 </span>
               </div>
 
@@ -108,19 +108,19 @@ import type { Review } from '../../../../core/models';
                 </div>
               }
 
-              @if (review.flag_status === 'pending') {
+              @if (review.moderation_status === 'pending') {
                 <div class="flex gap-2">
                   <button
                     (click)="moderateReview(review.id, 'approved')"
                     [disabled]="moderating()"
-                    class="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                    class="rounded-lg bg-success-light px-4 py-2 text-sm font-medium text-text-primary hover:bg-success-light disabled:opacity-50"
                   >
                     Aprobar
                   </button>
                   <button
                     (click)="moderateReview(review.id, 'rejected')"
                     [disabled]="moderating()"
-                    class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                    class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-red-700 disabled:opacity-50"
                   >
                     Rechazar
                   </button>
@@ -154,10 +154,7 @@ export class ModerateReviewsPage implements OnInit {
       const reviews = await this.reviewsService.getFlaggedReviews(status);
       this.flaggedReviews.set(reviews);
     } catch (err) {
-      this.toastService.error(
-        'Moderación',
-        err instanceof Error ? err.message : 'Error al cargar reviews',
-      );
+      this.toastService.error('Error al cargar', err instanceof Error ? err.message : 'No se pudieron cargar las reviews');
     } finally {
       this.loading.set(false);
     }
@@ -169,24 +166,15 @@ export class ModerateReviewsPage implements OnInit {
     try {
       const result = await this.reviewsService.moderateReview(reviewId, action);
       if (result.success) {
-        this.toastService.success(
-          'Moderación',
-          `Review ${action === 'approved' ? 'aprobada' : 'rechazada'}`,
-        );
+        this.toastService.success('Review moderada', `La review ha sido ${action === 'approved' ? 'aprobada' : 'rechazada'} exitosamente`);
         await this.loadFlaggedReviews(this.filterStatus() || undefined);
       } else {
-        this.toastService.error('Moderación', result.error || 'Error al moderar');
+        this.toastService.error('Error al moderar', result.error || 'No se pudo completar la moderación');
       }
     } catch (err) {
-      this.toastService.error(
-        'Moderación',
-        err instanceof Error ? err.message : 'Error al moderar review',
-      );
+      this.toastService.error('Error al moderar', err instanceof Error ? err.message : 'No se pudo moderar la review');
     } finally {
       this.moderating.set(false);
     }
   }
 }
-
-
-

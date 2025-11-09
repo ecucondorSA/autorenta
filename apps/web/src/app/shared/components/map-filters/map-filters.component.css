@@ -4,7 +4,7 @@
   --chip-bg: #ffffff;
   --chip-border: #e8e6e1;
   --chip-text: #141718;
-  --chip-active-bg: #2c4a52;
+  --chip-active-bg: var(--cta-default); /* Azul pastel del sistema */
   --chip-active-text: #ffffff;
 }
 
@@ -163,7 +163,7 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 18px;
   height: 18px;
-  background: #2c4a52;
+  background: var(--cta-default); /* Azul pastel del sistema */
   cursor: pointer;
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -172,13 +172,13 @@ input[type="range"]::-webkit-slider-thumb {
 
 input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(44, 74, 82, 0.3);
+  box-shadow: 0 4px 8px rgba(167, 216, 244, 0.3); /* cta-default con opacidad */
 }
 
 input[type="range"]::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  background: #2c4a52;
+  background: var(--cta-default); /* Azul pastel del sistema */
   cursor: pointer;
   border-radius: 50%;
   border: none;
@@ -188,13 +188,13 @@ input[type="range"]::-moz-range-thumb {
 
 input[type="range"]::-moz-range-thumb:hover {
   transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(44, 74, 82, 0.3);
+  box-shadow: 0 4px 8px rgba(167, 216, 244, 0.3); /* cta-default con opacidad */
 }
 
 /* Checkbox Styling */
 input[type="checkbox"] {
   cursor: pointer;
-  accent-color: #2c4a52;
+  accent-color: var(--cta-default); /* Azul pastel del sistema */
 }
 
 /* Responsive Typography */

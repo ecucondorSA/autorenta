@@ -84,7 +84,7 @@ export interface PaymentGateway {
    * @param orderId - Provider's order ID
    * @returns Observable with capture result
    */
-  captureOrder?(orderId: string): Observable<any>;
+  captureOrder?(orderId: string): Observable<{ success: boolean; transactionId?: string; error?: string }>;
 }
 
 /**

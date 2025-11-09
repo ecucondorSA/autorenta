@@ -12,6 +12,7 @@ import {
   inject,
   PLATFORM_ID,
   ChangeDetectionStrategy,
+  WritableSignal,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import type { Map } from 'mapbox-gl';
@@ -32,7 +33,7 @@ export interface LocationCircle {
 export class PersonalizedLocationComponent implements OnInit, OnDestroy {
   @Input() map?: Map;
   @Input() userLocation?: { lat: number; lng: number };
-  @Input() radiusKm = signal(5); // Default radius in km
+  @Input() radiusKm: WritableSignal<number> = signal(5); // Default radius in km
   @Input() showRadiusSlider = true;
 
   @Output() locationChange = new EventEmitter<LocationCircle>();
@@ -156,7 +157,7 @@ export class PersonalizedLocationComponent implements OnInit, OnDestroy {
       type: 'fill',
       source: this.circleSourceId,
       paint: {
-        'fill-color': '#3A6D7C',
+        'fill-color': '#A7D8F4', // cta-default (azul pastel)
         'fill-opacity': 0.1,
       },
     });
@@ -167,7 +168,7 @@ export class PersonalizedLocationComponent implements OnInit, OnDestroy {
       type: 'line',
       source: this.circleSourceId,
       paint: {
-        'line-color': '#3A6D7C',
+        'line-color': '#A7D8F4', // cta-default (azul pastel)
         'line-width': 2,
         'line-opacity': 0.3,
       },

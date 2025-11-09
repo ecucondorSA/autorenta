@@ -23,6 +23,16 @@
  */
 
 import { Injectable, inject } from '@angular/core';
+import type {
+  AdminRole,
+  AdminUser,
+  AdminUserInsert,
+  AdminUserUpdate,
+  AdminAuditLog,
+  AdminPermission,
+  AdminActionContext,
+  AdminUserWithProfile,
+} from '../types/admin.types';
 import {
   RefundRequest,
   ProcessRefundParams,
@@ -33,18 +43,6 @@ import {
 } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
-import type {
-  AdminRole,
-  AdminUser,
-  AdminUserInsert,
-  AdminUserUpdate,
-  AdminAuditLog,
-  AdminAuditLogInsert,
-  AdminPermission,
-  AdminActionContext,
-  AdminUserWithProfile,
-  ADMIN_PERMISSIONS,
-} from '../types/admin.types';
 
 // Import ADMIN_PERMISSIONS constant
 const PERMISSIONS_MATRIX: Record<AdminRole, AdminPermission[]> = {

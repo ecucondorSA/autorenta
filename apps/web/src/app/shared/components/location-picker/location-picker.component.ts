@@ -101,17 +101,17 @@ export interface LocationSelection {
 
       <!-- Selected Location Display -->
       @if (selectedLocation()) {
-        <div class="selected-location mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+        <div class="selected-location mt-4 p-3 bg-success-light/10 border border-success-light/40 rounded-lg">
           <div class="flex items-start">
-            <span class="text-green-600 mr-2">✅</span>
+            <span class="text-success-light mr-2">✅</span>
             <div class="flex-1">
-              <p class="text-sm font-medium text-green-800">Ubicación seleccionada</p>
+              <p class="text-sm font-medium text-success-light">Ubicación seleccionada</p>
               @if (selectedLocation()!.address) {
-                <p class="text-xs text-green-700 mt-1">
+                <p class="text-xs text-success-light mt-1">
                   {{ selectedLocation()!.address }}
                 </p>
               }
-              <p class="text-xs text-green-600 mt-1">
+              <p class="text-xs text-success-light mt-1">
                 {{ selectedLocation()!.lat.toFixed(6) }},
                 {{ selectedLocation()!.lng.toFixed(6) }}
               </p>

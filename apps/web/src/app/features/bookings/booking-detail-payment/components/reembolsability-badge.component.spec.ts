@@ -91,8 +91,8 @@ describe('ReembolsabilityBadgeComponent', () => {
       expect(badge).toBeTruthy();
       expect(badge.textContent).toContain('♻️');
       expect(badge.textContent).toContain('Reutilizable');
-      expect(badge.className).toContain('bg-info-50');
-      expect(badge.className).toContain('text-info-700');
+      expect(badge.className).toContain('bg-cta-default/10');
+      expect(badge.className).toContain('text-cta-default');
     });
 
     it('debería mostrar tooltip "Disponible para futuras reservas..." para reutilizable', () => {

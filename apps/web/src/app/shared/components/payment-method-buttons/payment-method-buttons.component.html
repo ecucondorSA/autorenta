@@ -5,14 +5,14 @@
     (click)="selectMethod('credit_card')"
     [disabled]="disabled"
     [class.ring-2]="isSelected('credit_card')"
-    [class.ring-accent-petrol]="isSelected('credit_card')"
-    [class.bg-accent-petrol/5]="isSelected('credit_card')"
-    class="w-full p-4 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure hover:border-accent-petrol hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
+    [class.ring-cta-default]="isSelected('credit_card')"
+    [class.bg-cta-default/5]="isSelected('credit_card')"
+    class="w-full p-4 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
   >
     <!-- Recommended Badge -->
     <div
       *ngIf="isRecommended('credit_card')"
-      class="absolute -top-2 left-4 px-2 py-0.5 bg-accent-warm text-white text-xs font-semibold rounded-full"
+      class="absolute -top-2 left-4 px-2 py-0.5 bg-warning-light text-text-inverse text-xs font-semibold rounded-full"
     >
       ⭐ Recomendado
     </div>
@@ -21,13 +21,13 @@
       <!-- Icon -->
       <div
         class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
-        [class.bg-accent-petrol]="isSelected('credit_card')"
-        [class.bg-accent-petrol/10]="!isSelected('credit_card')"
+        [class.bg-cta-default]="isSelected('credit_card')"
+        [class.bg-cta-default/10]="!isSelected('credit_card')"
       >
         <svg
           class="w-6 h-6"
-          [class.text-white]="isSelected('credit_card')"
-          [class.text-accent-petrol]="!isSelected('credit_card')"
+          [class.text-text-inverse]="isSelected('credit_card')"
+          [class.text-cta-default]="!isSelected('credit_card')"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -43,10 +43,10 @@
 
       <!-- Content -->
       <div class="flex-1">
-        <h3 class="font-semibold text-smoke-black dark:text-pearl-light mb-1">
+        <h3 class="font-semibold text-text-primary dark:text-text-secondary mb-1">
           💳 Tarjeta de Crédito/Débito
         </h3>
-        <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+        <p class="text-sm text-text-secondary dark:text-text-secondary">
           Pre-autorización segura con MercadoPago
         </p>
       </div>
@@ -54,11 +54,11 @@
       <!-- Radio indicator -->
       <div
         class="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center"
-        [class.border-accent-petrol]="isSelected('credit_card')"
-        [class.bg-accent-petrol]="isSelected('credit_card')"
-        [class.border-pearl-gray]="!isSelected('credit_card')"
+        [class.border-cta-default]="isSelected('credit_card')"
+        [class.bg-cta-default]="isSelected('credit_card')"
+        [class.border-border-default]="!isSelected('credit_card')"
       >
-        <div *ngIf="isSelected('credit_card')" class="w-3 h-3 bg-white rounded-full"></div>
+        <div *ngIf="isSelected('credit_card')" class="w-3 h-3 bg-surface-raised rounded-full"></div>
       </div>
     </div>
   </button>
@@ -69,14 +69,14 @@
     (click)="selectMethod('wallet')"
     [disabled]="disabled || !hasSufficientFunds()"
     [class.ring-2]="isSelected('wallet')"
-    [class.ring-accent-petrol]="isSelected('wallet')"
-    [class.bg-accent-petrol/5]="isSelected('wallet')"
-    class="w-full p-4 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep-pure hover:border-accent-petrol hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
+    [class.ring-cta-default]="isSelected('wallet')"
+    [class.bg-cta-default/5]="isSelected('wallet')"
+    class="w-full p-4 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
   >
     <!-- Recommended Badge -->
     <div
       *ngIf="isRecommended('wallet')"
-      class="absolute -top-2 left-4 px-2 py-0.5 bg-accent-warm text-white text-xs font-semibold rounded-full"
+      class="absolute -top-2 left-4 px-2 py-0.5 bg-warning-light text-text-inverse text-xs font-semibold rounded-full"
     >
       ⭐ Recomendado
     </div>
@@ -85,13 +85,13 @@
       <!-- Icon -->
       <div
         class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
-        [class.bg-accent-petrol]="isSelected('wallet')"
-        [class.bg-accent-petrol/10]="!isSelected('wallet')"
+        [class.bg-cta-default]="isSelected('wallet')"
+        [class.bg-cta-default/10]="!isSelected('wallet')"
       >
         <svg
           class="w-6 h-6"
-          [class.text-white]="isSelected('wallet')"
-          [class.text-accent-petrol]="!isSelected('wallet')"
+          [class.text-text-inverse]="isSelected('wallet')"
+          [class.text-cta-default]="!isSelected('wallet')"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -107,29 +107,29 @@
 
       <!-- Content -->
       <div class="flex-1">
-        <h3 class="font-semibold text-smoke-black dark:text-pearl-light mb-1">
+        <h3 class="font-semibold text-text-primary dark:text-text-secondary mb-1">
           🏦 Wallet AutoRenta
         </h3>
-        <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-2">
+        <p class="text-sm text-text-secondary dark:text-text-secondary mb-2">
           Pago instantáneo • Sin comisiones • Ideal para locadores y usuarios frecuentes
         </p>
 
         <!-- Wallet Benefits -->
         <div class="mb-2 space-y-1">
-          <div class="flex items-center gap-1 text-xs text-charcoal-medium dark:text-pearl-light">
-            <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
+            <svg class="w-3 h-3 text-success-light" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
             <span>Recibe tus pagos como locador directamente aquí</span>
           </div>
-          <div class="flex items-center gap-1 text-xs text-charcoal-medium dark:text-pearl-light">
-            <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
+            <svg class="w-3 h-3 text-success-light" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
             <span>Garantía reutilizable en futuras reservas</span>
           </div>
-          <div class="flex items-center gap-1 text-xs text-charcoal-medium dark:text-pearl-light">
-            <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
+            <svg class="w-3 h-3 text-success-light" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
             <span>Carga saldo con MercadoPago, transferencia o efectivo</span>
@@ -141,12 +141,12 @@
           <!-- Balance Display -->
           <div
             class="flex items-center gap-2 px-3 py-2 rounded-lg"
-            [class.bg-green-50]="hasSufficientFunds()"
+            [class.bg-success-light/10]="hasSufficientFunds()"
             [class.bg-red-50]="!hasSufficientFunds()"
           >
             <svg
               class="w-4 h-4"
-              [class.text-green-600]="hasSufficientFunds()"
+              [class.text-success-light]="hasSufficientFunds()"
               [class.text-red-600]="!hasSufficientFunds()"
               fill="none"
               stroke="currentColor"
@@ -169,7 +169,7 @@
             </svg>
             <span
               class="text-xs font-medium"
-              [class.text-green-700]="hasSufficientFunds()"
+              [class.text-success-light]="hasSufficientFunds()"
               [class.text-red-700]="!hasSufficientFunds()"
             >
               Balance disponible: <strong>{{ walletBalance() | money }}</strong>
@@ -177,7 +177,7 @@
           </div>
 
           <!-- Price Breakdown (if sufficient funds) -->
-          <div *ngIf="hasSufficientFunds()" class="text-xs text-charcoal-medium dark:text-pearl-light space-y-0.5">
+          <div *ngIf="hasSufficientFunds()" class="text-xs text-text-secondary dark:text-text-secondary space-y-0.5">
             <div class="flex justify-between">
               <span>Bloqueo de alquiler:</span>
               <span class="font-semibold">{{ rentalAmount | money }}</span>
@@ -186,9 +186,9 @@
               <span>Bloqueo de garantía:</span>
               <span class="font-semibold">{{ depositAmount | money }}</span>
             </div>
-            <div class="flex justify-between pt-1 border-t border-pearl-gray dark:border-gray-600">
+            <div class="flex justify-between pt-1 border-t border-border-default dark:border-gray-600">
               <span class="font-semibold">Total bloqueado:</span>
-              <span class="font-bold text-accent-petrol">{{ totalRequired() | money }}</span>
+              <span class="font-bold text-cta-default">{{ totalRequired() | money }}</span>
             </div>
           </div>
 
@@ -211,7 +211,7 @@
           </div>
 
           <!-- Success Badge (if sufficient funds) -->
-          <div *ngIf="hasSufficientFunds()" class="flex items-center gap-1 text-xs text-green-600">
+          <div *ngIf="hasSufficientFunds()" class="flex items-center gap-1 text-xs text-success-light">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
@@ -236,11 +236,11 @@
       <!-- Radio indicator -->
       <div
         class="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center"
-        [class.border-accent-petrol]="isSelected('wallet')"
-        [class.bg-accent-petrol]="isSelected('wallet')"
-        [class.border-pearl-gray]="!isSelected('wallet')"
+        [class.border-cta-default]="isSelected('wallet')"
+        [class.bg-cta-default]="isSelected('wallet')"
+        [class.border-border-default]="!isSelected('wallet')"
       >
-        <div *ngIf="isSelected('wallet')" class="w-3 h-3 bg-white rounded-full"></div>
+        <div *ngIf="isSelected('wallet')" class="w-3 h-3 bg-surface-raised rounded-full"></div>
       </div>
     </div>
   </button>

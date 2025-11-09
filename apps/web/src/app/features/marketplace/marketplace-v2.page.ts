@@ -21,22 +21,14 @@ import { DistanceCalculatorService } from '../../core/services/distance-calculat
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { Car } from '../../core/models';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
-import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
 import { SocialProofIndicatorsComponent } from '../../shared/components/social-proof-indicators/social-proof-indicators.component';
-import { MapFiltersComponent, FilterState } from '../../shared/components/map-filters/map-filters.component';
-import { StickyCtaMobileComponent } from '../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
-import { UrgentRentalBannerComponent } from '../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
+import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
-import { PwaTitlebarComponent } from '../../shared/components/pwa-titlebar/pwa-titlebar.component';
 import { MobileBottomNavComponent } from '../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
-import { AppHeaderComponent } from '../../shared/components/app-header/app-header.component';
 import { UtilityBarComponent, QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
 import { FloatingActionFabComponent, FabAction } from '../../shared/components/floating-action-fab/floating-action-fab.component';
-import { PersonalizedLocationComponent } from '../../shared/components/personalized-location/personalized-location.component';
 import { NotificationToastComponent, ToastType } from '../../shared/components/notification-toast/notification-toast.component';
-import { StatsStripComponent } from '../../shared/components/stats-strip/stats-strip.component';
-import { InfoBannerComponent } from '../../shared/components/info-banner/info-banner.component';
-import { AvailabilityAlertComponent } from '../../shared/components/availability-alert/availability-alert.component';
+import { StatsStripComponent, Stat } from '../../shared/components/stats-strip/stats-strip.component';
 import { DateRange } from '../../shared/components/date-range-picker/date-range-picker.component';
 import {
   QuickBookingModalComponent,
@@ -58,23 +50,13 @@ export type ViewMode = 'grid' | 'list' | 'map';
   imports: [
     CommonModule,
     CarsMapComponent,
-    CarCardComponent,
     SocialProofIndicatorsComponent,
-    MapFiltersComponent,
-    StickyCtaMobileComponent,
-    UrgentRentalBannerComponent,
     WhatsappFabComponent,
-    PwaTitlebarComponent,
     MobileBottomNavComponent,
     QuickBookingModalComponent,
-    AppHeaderComponent,
-    UtilityBarComponent,
     FloatingActionFabComponent,
-    PersonalizedLocationComponent,
     NotificationToastComponent,
     StatsStripComponent,
-    InfoBannerComponent,
-    AvailabilityAlertComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -124,6 +106,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly toastMessage = signal('');
   readonly toastType = signal<ToastType>('info');
   readonly toastVisible = signal(false);
+  readonly radiusKm = signal(5); // Search radius in kilometers
 
   // Computed
   readonly isMobile = computed(() => {
@@ -209,6 +192,46 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       };
     }),
   );
+
+  readonly statsStripData = computed<Stat[]>(() => {
+    const totalCars = this.carsWithDistance().length;
+    const availableNow = this.carsWithDistance().filter((c) => c.distance && c.distance < 5).length;
+    const avgPrice = this.calculateAveragePrice();
+    return [
+      { label: 'Autos disponibles', value: totalCars, icon: '🚗' },
+      { label: 'Cerca de ti', value: availableNow, icon: '📍' },
+      { label: 'Precio promedio', value: `$${avgPrice}`, icon: '💰' },
+    ];
+  });
+
+  readonly availableNowCount = computed(() => {
+    return this.carsWithDistance().filter((c) => c.distance && c.distance < 5).length;
+  });
+
+  /**
+   * Contextual marker variant:
+   * - 'photo' for browsing/exploration (default for marketplace - more visual)
+   * - 'price' when user is actively comparing prices (has filters or date range)
+   */
+  readonly contextualMarkerVariant = computed<'photo' | 'price'>(() => {
+    // Default to 'photo' for marketplace - more visual and marketplace-like
+    // Only switch to 'price' when user is actively filtering/comparing
+    const filters = this.mapFilters();
+    const dateRange = this.dateRange();
+    
+    // Switch to 'price' mode ONLY when:
+    // 1. User has active price filters AND date range (serious comparison)
+    const hasPriceFilter = filters.priceRange !== null;
+    const hasDateRange = dateRange.from !== null && dateRange.to !== null;
+    
+    // Only use price mode when both price filter AND date range are active
+    if (hasPriceFilter && hasDateRange) {
+      return 'price'; // Price comparison mode
+    }
+    
+    // Default to photo mode for better marketplace experience
+    return 'photo'; // Browsing/exploration mode (default - more visual)
+  });
 
   // Realtime
   private realtimeChannel?: RealtimeChannel;
@@ -523,6 +546,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return Math.round(sum / cars.length);
   }
 
+  getCarInstantBooking(car: CarWithDistance): boolean {
+    // Check if car has auto_approval enabled (closest equivalent to instant booking)
+    return car.auto_approval === true;
+  }
+
   showToast(message: string, type: ToastType = 'info'): void {
     this.toastMessage.set(message);
     this.toastType.set(type);
@@ -531,5 +559,14 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     setTimeout(() => {
       this.toastVisible.set(false);
     }, 3000);
+  }
+
+  /**
+   * Handle search radius change from map
+   */
+  onSearchRadiusChange(radiusKm: number): void {
+    this.radiusKm.set(radiusKm);
+    // Reload cars with new radius filter
+    void this.loadCars();
   }
 }

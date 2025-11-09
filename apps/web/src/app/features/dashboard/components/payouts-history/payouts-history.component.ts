@@ -12,11 +12,11 @@ import { firstValueFrom } from 'rxjs';
     <div class="space-y-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Historial de Ingresos</h3>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">Historial de Ingresos</h3>
         <button
           (click)="loadPayouts()"
           [disabled]="loading()"
-          class="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          class="text-sm px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 transition-colors"
         >
           {{ loading() ? 'Cargando...' : 'Actualizar' }}
         </button>
@@ -25,7 +25,7 @@ import { firstValueFrom } from 'rxjs';
       <!-- Loading State -->
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"></div>
         </div>
       }
 
@@ -54,7 +54,7 @@ import { firstValueFrom } from 'rxjs';
               d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+          <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
             No hay ingresos registrados
           </h3>
           <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
@@ -68,7 +68,7 @@ import { firstValueFrom } from 'rxjs';
         <div class="space-y-3">
           @for (payout of payouts(); track payout.id) {
             <div
-              class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
+              class="bg-surface-raised dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
             >
               <div class="flex items-start justify-between">
                 <div class="flex-1">
@@ -77,10 +77,10 @@ import { firstValueFrom } from 'rxjs';
                       class="px-2 py-1 rounded-full text-xs font-medium"
                       [class.bg-yellow-100]="payout.status === 'pending'"
                       [class.text-yellow-800]="payout.status === 'pending'"
-                      [class.bg-blue-100]="payout.status === 'processing'"
-                      [class.text-blue-800]="payout.status === 'processing'"
-                      [class.bg-green-100]="payout.status === 'completed'"
-                      [class.text-green-800]="payout.status === 'completed'"
+                      [class.bg-cta-default/20]="payout.status === 'processing'"
+                      [class.text-cta-default]="payout.status === 'processing'"
+                      [class.bg-success-light/20]="payout.status === 'completed'"
+                      [class.text-success-light]="payout.status === 'completed'"
                       [class.bg-red-100]="payout.status === 'failed'"
                       [class.text-red-800]="payout.status === 'failed'"
                       [class.bg-gray-100]="payout.status === 'cancelled'"
@@ -93,7 +93,7 @@ import { firstValueFrom } from 'rxjs';
                     </span>
                   </div>
                   <div class="mb-2">
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
                       {{ formatCurrency(payout.amount, payout.currency) }}
                     </p>
                     @if (payout.splitId) {
@@ -122,7 +122,7 @@ import { firstValueFrom } from 'rxjs';
                   @if (payout.status === 'completed') {
                     <button
                       (click)="downloadReceipt(payout)"
-                      class="text-xs px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      class="text-xs px-3 py-1 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default transition-colors"
                     >
                       Descargar
                     </button>
@@ -135,15 +135,15 @@ import { firstValueFrom } from 'rxjs';
 
         <!-- Summary Stats -->
         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-            <p class="text-sm text-blue-600 dark:text-blue-400 mb-1">Total Ingresos</p>
-            <p class="text-2xl font-bold text-blue-900 dark:text-blue-200">
+          <div class="bg-cta-default/10 dark:bg-cta-default/20 rounded-lg p-4">
+            <p class="text-sm text-cta-default dark:text-cta-default mb-1">Total Ingresos</p>
+            <p class="text-2xl font-bold text-cta-default dark:text-cta-default">
               {{ formatCurrency(totalAmount(), 'ARS') }}
             </p>
           </div>
-          <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-            <p class="text-sm text-green-600 dark:text-green-400 mb-1">Completados</p>
-            <p class="text-2xl font-bold text-green-900 dark:text-green-200">
+          <div class="bg-success-light/10 dark:bg-success-light/20 rounded-lg p-4">
+            <p class="text-sm text-success-light dark:text-success-light mb-1">Completados</p>
+            <p class="text-2xl font-bold text-success-light dark:text-success-light">
               {{ completedCount() }}
             </p>
           </div>

@@ -23,11 +23,11 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
   ],
   template: `
     <div
-      class="map-tooltip-card bg-white dark:bg-slate-deep rounded-lg shadow-xl border border-pearl-gray dark:border-gray-600 overflow-hidden max-w-[280px] transition-all duration-200"
+      class="map-tooltip-card bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl border border-border-default dark:border-gray-600 overflow-hidden max-w-[280px] transition-all duration-200"
       [class.map-tooltip-card--selected]="selected"
     >
       <!-- Imagen del auto -->
-      <div class="relative w-full aspect-[4/3] bg-sand-light overflow-hidden">
+      <div class="relative w-full aspect-[4/3] bg-surface-secondary overflow-hidden">
         <img
           *ngIf="car.photoUrl"
           [src]="car.photoUrl"
@@ -36,10 +36,10 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
         />
         <div
           *ngIf="!car.photoUrl"
-          class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent-warm/10 to-accent-petrol/10"
+          class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-warning-light/10 to-cta-default/10"
         >
           <svg
-            class="w-12 h-12 text-accent-petrol/40"
+            class="w-12 h-12 text-cta-default/40"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
 
         <!-- Badge de confianza (si aplica) -->
         <div *ngIf="isVerified()" class="absolute top-2 right-2">
-          <span class="inline-flex items-center gap-1 rounded-full bg-green-100 text-green-800 border border-green-200 px-2 py-0.5 text-xs font-semibold">
+          <span class="inline-flex items-center gap-1 rounded-full bg-success-light/20 text-success-light border border-success-light/40 px-2 py-0.5 text-xs font-semibold">
             <span>✓</span>
             <span>Verificado</span>
           </span>
@@ -66,20 +66,20 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
       <div class="p-3 space-y-2">
         <!-- Título y ubicación -->
         <div>
-          <h3 class="text-sm font-semibold text-smoke-black dark:text-white-pure line-clamp-1">
+          <h3 class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure line-clamp-1">
             {{ car.title }}
           </h3>
-          <p class="text-xs text-charcoal-medium dark:text-pearl-light mt-0.5">
+          <p class="text-xs text-text-secondary dark:text-text-secondary mt-0.5">
             {{ car.locationLabel }}
           </p>
         </div>
 
         <!-- Precio -->
         <div class="flex items-baseline gap-1">
-          <span class="text-xl font-bold text-accent-petrol">
+          <span class="text-xl font-bold text-cta-default">
             {{ car.pricePerDay | money: (car.currency || 'ARS') }}
           </span>
-          <span class="text-xs text-charcoal-medium dark:text-pearl-light">/día</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary">/día</span>
         </div>
 
         <!-- Badge de distancia (si está disponible) -->
@@ -91,7 +91,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
         <button
           type="button"
           (click)="onViewDetails()"
-          class="w-full py-2 px-3 rounded-lg bg-accent-petrol text-white text-sm font-semibold hover:bg-accent-petrol/90 transition-colors duration-200"
+          class="w-full py-2 px-3 rounded-lg bg-cta-default text-cta-text text-sm font-semibold hover:bg-cta-default/90 transition-colors duration-200"
         >
           Ver detalles rápidos
         </button>

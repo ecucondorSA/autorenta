@@ -50,9 +50,9 @@ export class BookingStatusComponent {
       case 'pending_payment':
         return 'bg-yellow-100 text-yellow-800';
       case 'confirmed':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-light/20 text-success-light';
       case 'in_progress':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-cta-default/20 text-cta-default';
       case 'completed':
         return 'bg-gray-100 text-gray-800';
       case 'cancelled':

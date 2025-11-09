@@ -42,7 +42,7 @@ interface TierConfig {
 
       <!-- Tooltip with distance and guarantee info -->
       <div
-        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
+        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-text-inverse text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
       >
         {{ config.tooltip }}
         <div class="text-xs mt-1 font-medium text-gray-300">
@@ -70,9 +70,9 @@ export class DistanceRiskTierBadgeComponent {
     local: {
       icon: '📍',
       label: 'Cercano',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
-      textColor: 'text-green-700 dark:text-green-300',
-      borderColor: 'border-green-200 dark:border-green-700',
+      bgColor: 'bg-success-light/10 dark:bg-success-light/20',
+      textColor: 'text-success-light dark:text-success-light',
+      borderColor: 'border-success-light/40 dark:border-success-light',
       tooltip: 'Auto disponible en zona cercana (< 50 km)',
       guaranteeMultiplier: 1.0,
     },
@@ -88,9 +88,9 @@ export class DistanceRiskTierBadgeComponent {
     long_distance: {
       icon: '🛣️',
       label: 'Larga Distancia',
-      bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-      textColor: 'text-orange-700 dark:text-orange-300',
-      borderColor: 'border-orange-200 dark:border-orange-700',
+      bgColor: 'bg-warning-light/10 dark:bg-warning-light/20',
+      textColor: 'text-warning-light dark:text-warning-light',
+      borderColor: 'border-warning-light/40 dark:border-warning-light',
       tooltip: 'Auto disponible a larga distancia (> 200 km)',
       guaranteeMultiplier: 1.3,
     },

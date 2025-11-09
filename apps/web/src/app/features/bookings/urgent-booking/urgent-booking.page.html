@@ -9,13 +9,13 @@
   @if (loading()) {
     <div class="flex items-center justify-center py-12">
       <div
-        class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"
+        class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"
       ></div>
     </div>
   } @else if (car(); as c) {
     <div class="space-y-6">
       <!-- Información del auto -->
-      <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
         <h2 class="mb-4 text-xl font-semibold text-gray-900">{{ c.brand }} {{ c.model }}</h2>
         <div class="grid grid-cols-2 gap-4 text-sm">
           <div>
@@ -39,12 +39,12 @@
       @if (availability(); as a) {
         <div
           class="rounded-lg border p-4"
-          [class.bg-green-50]="a.available"
+          [class.bg-success-light/10]="a.available"
           [class.bg-red-50]="!a.available"
         >
           @if (a.available) {
             <div class="flex items-center gap-2">
-              <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="h-5 w-5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -52,14 +52,14 @@
                 />
               </svg>
               <div>
-                <p class="font-medium text-green-800">Disponible ahora</p>
+                <p class="font-medium text-success-light">Disponible ahora</p>
                 @if (a.distance) {
-                  <p class="text-sm text-green-700">
+                  <p class="text-sm text-success-light">
                     A {{ a.distance | number: '1.1-1' }} km de tu ubicación
                   </p>
                 }
                 @if (a.eta) {
-                  <p class="text-sm text-green-700">ETA: {{ a.eta }} minutos</p>
+                  <p class="text-sm text-success-light">ETA: {{ a.eta }} minutos</p>
                 }
               </div>
             </div>
@@ -70,7 +70,7 @@
       }
 
       <!-- Configuración de alquiler -->
-      <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
         <h3 class="mb-4 text-lg font-semibold text-gray-900">Configuración</h3>
         <div class="space-y-4">
           <div>
@@ -81,21 +81,21 @@
               min="1"
               max="24"
               (change)="updateQuote()"
-              class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-cta-default focus:outline-none focus:ring-cta-default"
             />
           </div>
 
           <!-- Cotización -->
           @if (quote(); as q) {
-            <div class="rounded-lg bg-blue-50 p-4">
+            <div class="rounded-lg bg-cta-default/10 p-4">
               <div class="mb-2 flex items-center justify-between">
-                <span class="text-sm font-medium text-blue-900">Total</span>
-                <span class="text-xl font-bold text-blue-900">
+                <span class="text-sm font-medium text-cta-default">Total</span>
+                <span class="text-xl font-bold text-cta-default">
                   ${{ q.totalPrice | number: '1.2-2' }}
                 </span>
               </div>
               @if (q.surgeFactor && q.surgeFactor > 1) {
-                <p class="text-xs text-blue-700">
+                <p class="text-xs text-cta-default">
                   Incluye recargo por demanda: {{ (q.surgeFactor - 1) * 100 | number: '1.0-0' }}%
                 </p>
               }
@@ -108,7 +108,7 @@
       <button
         (click)="createBooking()"
         [disabled]="!canCreateBooking() || creating()"
-        class="w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+        class="w-full rounded-lg bg-cta-default text-cta-text hover:bg-cta-default disabled:opacity-50"
       >
         @if (creating()) {
           <span class="flex items-center justify-center gap-2">

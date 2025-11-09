@@ -59,7 +59,7 @@ export interface CarWithDistance extends Car {
         <!-- Empty state -->
         <div *ngIf="cars().length === 0" class="drawer-empty">
           <svg
-            class="w-16 h-16 text-charcoal-medium dark:text-pearl-light/50 mb-4"
+            class="w-16 h-16 text-text-secondary dark:text-text-secondary/50 mb-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -71,8 +71,8 @@ export interface CarWithDistance extends Car {
               d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
             />
           </svg>
-          <p class="text-charcoal-medium dark:text-pearl-light">No hay autos disponibles</p>
-          <p class="text-sm text-charcoal-light dark:text-pearl-light/70 mt-2">
+          <p class="text-text-secondary dark:text-text-secondary">No hay autos disponibles</p>
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-2">
             Intenta ajustar los filtros
           </p>
         </div>
