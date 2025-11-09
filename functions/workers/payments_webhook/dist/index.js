@@ -1,5 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 import { withSentry, captureError, addBreadcrumb } from './sentry';
+// Default console logger
+const createLogger = () => ({
+    info: (message, data) => {
+        console.log(`[INFO] ${message}`, data ? JSON.stringify(data) : '');
+    },
+    error: (message, data) => {
+        console.error(`[ERROR] ${message}`, data ? JSON.stringify(data) : '');
+    },
+    warn: (message, data) => {
+        console.warn(`[WARN] ${message}`, data ? JSON.stringify(data) : '');
+    },
+});
 const jsonResponse = (data, init = {}) => new Response(JSON.stringify(data), {
     headers: {
         'content-type': 'application/json; charset=UTF-8',
@@ -396,6 +408,7 @@ const worker = {
                     payload = {};
                 }
             }
+            const log = createLogger();
             try {
                 // Rutear según el provider
                 if (payload?.provider === 'mock') {
@@ -404,7 +417,7 @@ const worker = {
                     if (!payload.booking_id || !payload.status) {
                         return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
                     }
-                    return await processMockWebhook(payload, supabase, env);
+                    return await processMockWebhook(payload, supabase, env, log);
                 }
                 addBreadcrumb('Processing MercadoPago webhook', 'webhook', {
                     paymentId: payload?.data?.id,
@@ -414,7 +427,7 @@ const worker = {
                     requestId: request.headers.get('x-request-id'),
                     rawBody,
                     query: url.searchParams,
-                });
+                }, log);
             }
             catch (error) {
                 console.error('Error processing webhook:', error);

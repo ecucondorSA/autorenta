@@ -103,11 +103,11 @@
       <div class="booking-details">
         <div class="detail-row">
           <span class="detail-label">Fecha de Inicio:</span>
-          <span class="detail-value">{{ booking()!.start_at | date: 'dd/MM/yyyy' }}</span>
+          <span class="detail-value">{{ booking()!.start_date | date: 'dd/MM/yyyy' }}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Fecha de Fin:</span>
-          <span class="detail-value">{{ booking()!.end_at | date: 'dd/MM/yyyy' }}</span>
+          <span class="detail-value">{{ booking()!.end_date | date: 'dd/MM/yyyy' }}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Precio Total:</span>
@@ -125,7 +125,7 @@
     <!-- PDF Viewer -->
     <div class="pdf-section" *ngIf="contract()!.pdf_url">
       <h3 class="section-title">Documento del Contrato</h3>
-      <app-contract-pdf-viewer [pdfUrl]="contract()!.pdf_url"></app-contract-pdf-viewer>
+      <app-contract-pdf-viewer [pdfUrl]="contract()!.pdf_url!"></app-contract-pdf-viewer>
     </div>
 
     <!-- No PDF Notice -->

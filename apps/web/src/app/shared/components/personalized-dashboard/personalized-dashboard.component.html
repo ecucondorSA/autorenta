@@ -11,19 +11,19 @@
     <div class="welcome-content">
       <h1 class="welcome-title">{{ welcomeMessage() }}</h1>
       <p class="welcome-subtitle">
-        <span *ngIf="userRole() === 'owner'">Gestiona tus autos y maximiza tus ganancias</span>
-        <span *ngIf="userRole() === 'renter'">Encuentra el auto perfecto para tus necesidades</span>
-        <span *ngIf="userRole() === 'both'">Administra tus autos y encuentra lo que necesitas</span>
+        <span *ngIf="userRole() === 'locador'">Gestiona tus autos y maximiza tus ganancias</span>
+        <span *ngIf="userRole() === 'locatario'">Encuentra el auto perfecto para tus necesidades</span>
+        <span *ngIf="userRole() === 'ambos'">Administra tus autos y encuentra lo que necesitas</span>
       </p>
     </div>
     <div class="welcome-actions">
       <button
         class="action-button primary"
         (click)="
-          navigateTo(userRole() === 'owner' || userRole() === 'both' ? '/cars/publish' : '/cars')
+          navigateTo(userRole() === 'locador' || userRole() === 'ambos' ? '/cars/publish' : '/cars')
         "
       >
-        {{ userRole() === 'owner' || userRole() === 'both' ? 'Publicar Auto' : 'Buscar Auto' }}
+        {{ userRole() === 'locador' || userRole() === 'ambos' ? 'Publicar Auto' : 'Buscar Auto' }}
       </button>
       <button class="action-button secondary" (click)="refreshDashboard()">
         <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,7 +62,7 @@
     </div>
 
     <!-- Role-specific stats -->
-    <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card cars">
+    <div *ngIf="userRole() === 'locador' || userRole() === 'ambos'" class="stat-card cars">
       <div class="stat-icon">🚗</div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().availableCars }}</div>
@@ -71,7 +71,7 @@
       <button class="stat-action" (click)="navigateTo('/cars/my')">Gestionar →</button>
     </div>
 
-    <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card earnings">
+    <div *ngIf="userRole() === 'locador' || userRole() === 'ambos'" class="stat-card earnings">
       <div class="stat-icon">📈</div>
       <div class="stat-content">
         <div class="stat-value">${{ stats().totalEarnings.toLocaleString() }}</div>
@@ -80,7 +80,7 @@
       <button class="stat-action" (click)="navigateTo('/admin')">Ver reporte →</button>
     </div>
 
-    <div *ngIf="userRole() === 'renter' || userRole() === 'both'" class="stat-card bookings">
+    <div *ngIf="userRole() === 'locatario' || userRole() === 'ambos'" class="stat-card bookings">
       <div class="stat-icon">📅</div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().activeBookings }}</div>
@@ -89,7 +89,7 @@
       <button class="stat-action" (click)="navigateTo('/bookings')">Ver todas →</button>
     </div>
 
-    <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card pending">
+    <div *ngIf="userRole() === 'locador' || userRole() === 'ambos'" class="stat-card pending">
       <div class="stat-icon">⏳</div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().pendingBookings }}</div>
@@ -123,7 +123,7 @@
   <div class="recent-activity">
     <!-- Recent Cars (for owners) -->
     <div
-      *ngIf="(userRole() === 'owner' || userRole() === 'both') && recentCars().length > 0"
+      *ngIf="(userRole() === 'locador' || userRole() === 'ambos') && recentCars().length > 0"
       class="activity-section"
     >
       <div class="section-header">
@@ -160,7 +160,7 @@
 
     <!-- Recent Bookings (for renters) -->
     <div
-      *ngIf="(userRole() === 'renter' || userRole() === 'both') && recentBookings().length > 0"
+      *ngIf="(userRole() === 'locatario' || userRole() === 'ambos') && recentBookings().length > 0"
       class="activity-section"
     >
       <div class="section-header">
@@ -202,11 +202,11 @@
       <button
         class="cta-button"
         (click)="
-          navigateTo(userRole() === 'owner' || userRole() === 'both' ? '/cars/publish' : '/cars')
+          navigateTo(userRole() === 'locador' || userRole() === 'ambos' ? '/cars/publish' : '/cars')
         "
       >
         {{
-          userRole() === 'owner' || userRole() === 'both'
+          userRole() === 'locador' || userRole() === 'ambos'
             ? 'Publicar mi primer auto'
             : 'Buscar mi primer auto'
         }}

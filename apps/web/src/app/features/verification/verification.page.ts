@@ -45,7 +45,7 @@ import {
               <div class="flex items-center justify-between mb-6">
                 <div>
                   <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-2">
-                    Estado de Verificación - {{ status.role === 'locador' ? 'Locador' : 'Locatario' }}
+                    Estado de Verificación - {{ status.role === 'owner' ? 'Locador' : 'Conductor' }}
                   </h2>
                   <div class="flex items-center gap-3">
                     @switch (status.status) {

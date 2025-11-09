@@ -23,7 +23,7 @@
  * };
  * ```
  */
-import { toucan } from '@sentry/cloudflare';
+import { Toucan } from '@sentry/cloudflare';
 let sentryInstance = null;
 /**
  * Initialize Sentry for Cloudflare Worker
@@ -42,7 +42,7 @@ export function initSentry(request, env, ctx) {
         console.warn('⚠️  Sentry DSN not configured - error tracking disabled');
         return null;
     }
-    sentryInstance = toucan({
+    sentryInstance = new Toucan({
         dsn: sentryDsn,
         environment,
         context: ctx,

@@ -23,7 +23,7 @@
  * };
  * ```
  */
-import { toucan } from '@sentry/cloudflare';
+import { Toucan } from '@sentry/cloudflare';
 export interface SentryEnv {
     SENTRY_DSN?: string;
     ENVIRONMENT?: string;
@@ -35,11 +35,11 @@ export interface SentryEnv {
  * @param env Worker environment
  * @param ctx Execution context
  */
-export declare function initSentry(request: Request, env: SentryEnv, ctx: ExecutionContext): ReturnType<typeof toucan> | null;
+export declare function initSentry(request: Request, env: SentryEnv, ctx: ExecutionContext): Toucan | null;
 /**
  * Get current Sentry instance
  */
-export declare function getSentry(): ReturnType<typeof toucan> | null;
+export declare function getSentry(): Toucan | null;
 /**
  * Capture an error to Sentry
  *

@@ -291,7 +291,7 @@ import {
                 <div *ngIf="claim()!.closed_at">
                   <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Fecha de cierre</p>
                   <p class="text-sm text-gray-900 dark:text-white">
-                    {{ formatDateTime(claim()!.closed_at) }}
+                    {{ formatDateTime(claim()!.closed_at!) }}
                   </p>
                 </div>
               </div>

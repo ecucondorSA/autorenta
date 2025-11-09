@@ -10,6 +10,26 @@ interface Env extends SentryEnv {
   ENVIRONMENT?: string;
 }
 
+// Logger interface for structured logging
+interface Logger {
+  info(message: string, data?: Record<string, unknown>): void;
+  error(message: string, data?: Record<string, unknown>): void;
+  warn(message: string, data?: Record<string, unknown>): void;
+}
+
+// Default console logger
+const createLogger = (): Logger => ({
+  info: (message: string, data?: Record<string, unknown>) => {
+    console.log(`[INFO] ${message}`, data ? JSON.stringify(data) : '');
+  },
+  error: (message: string, data?: Record<string, unknown>) => {
+    console.error(`[ERROR] ${message}`, data ? JSON.stringify(data) : '');
+  },
+  warn: (message: string, data?: Record<string, unknown>) => {
+    console.warn(`[WARN] ${message}`, data ? JSON.stringify(data) : '');
+  },
+});
+
 // Payload para mock
 interface MockPaymentWebhookPayload {
   provider: 'mock';
@@ -556,6 +576,8 @@ const worker = {
         }
       }
 
+      const log = createLogger();
+
       try {
         // Rutear según el provider
         if (payload?.provider === 'mock') {
@@ -564,7 +586,7 @@ const worker = {
           if (!payload.booking_id || !payload.status) {
             return jsonResponse({ message: 'Missing required fields for mock' }, { status: 400 });
           }
-          return await processMockWebhook(payload, supabase, env);
+          return await processMockWebhook(payload, supabase, env, log);
         }
 
         addBreadcrumb('Processing MercadoPago webhook', 'webhook', {
@@ -575,7 +597,7 @@ const worker = {
           requestId: request.headers.get('x-request-id'),
           rawBody,
           query: url.searchParams,
-        });
+        }, log);
       } catch (error) {
         console.error('Error processing webhook:', error);
         captureError(error, {

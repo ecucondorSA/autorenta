@@ -512,7 +512,7 @@ export class AdminService {
   /**
    * List pending car approvals
    */
-  async listPendingCars(): Promise<unknown[]> {
+  async listPendingCars(): Promise<Car[]> {
     // Check permission
     const hasPermission = await this.hasPermission('view_cars');
     if (!hasPermission) {
@@ -532,7 +532,7 @@ export class AdminService {
   /**
    * List recent bookings
    */
-  async listRecentBookings(limit = 20): Promise<unknown[]> {
+  async listRecentBookings(limit = 20): Promise<Booking[]> {
     // Check permission
     const hasPermission = await this.hasPermission('view_bookings');
     if (!hasPermission) {

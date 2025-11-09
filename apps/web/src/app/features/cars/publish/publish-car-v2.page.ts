@@ -344,16 +344,20 @@ export class PublishCarV2Page implements OnInit {
   /**
    * Handle stock photos selection
    */
-  async onStockPhotosSelected(photos: string[]): Promise<void> {
-    await this.photoService.addStockPhotos(photos);
+  async onStockPhotosSelected(photos: File[]): Promise<void> {
+    // TODO: Implement addStockPhotos method in PublishCarPhotoService
+    // await this.photoService.addStockPhotos(photos);
+    console.log('Stock photos selected:', photos.length);
     this.showStockPhotosModal.set(false);
   }
 
   /**
    * Handle AI photos generation
    */
-  async onAIPhotosGenerated(photos: string[]): Promise<void> {
-    await this.photoService.addAIPhotos(photos);
+  async onAIPhotosGenerated(photos: File[]): Promise<void> {
+    // TODO: Implement addAIPhotos method in PublishCarPhotoService
+    // await this.photoService.addAIPhotos(photos);
+    console.log('AI photos generated:', photos.length);
     this.showAIPhotosModal.set(false);
   }
 }

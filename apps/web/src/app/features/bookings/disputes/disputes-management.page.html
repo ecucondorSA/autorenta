@@ -23,8 +23,8 @@
         <strong>Auto:</strong> {{ booking()!.car?.brand }} {{ booking()!.car?.model }}
       </p>
       <p class="text-sm">
-        <strong>Período:</strong> {{ booking()!.start_date | date: 'short' }} -
-        {{ booking()!.end_date | date: 'short' }}
+        <strong>Período:</strong> {{ booking()!.start_at | date: 'short' }} -
+        {{ booking()!.end_at | date: 'short' }}
       </p>
     </ion-card-content>
   </ion-card>
