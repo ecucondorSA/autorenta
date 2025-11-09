@@ -127,18 +127,24 @@ export class OwnerCheckInPage implements OnInit {
 
     try {
       // 1. Crear registro FGO (Fine-Grained Observation) para check-in
-      // TODO: Implementar cuando FGO service esté listo
-      const fgoData = {
-        booking_id: booking.id,
-        event_type: 'check_in_owner',
-        initiated_by: this.currentUserId()!,
-        odometer_reading: this.odometer()!,
-        fuel_level: this.fuelLevel(),
-        damage_notes: this.damagesNotes() || null,
-        photo_urls: this.uploadedPhotos(),
-        signature_data_url: this.signatureDataUrl()!,
-      };
-      console.log('FGO Check-in data:', fgoData);
+      const photos = this.uploadedPhotos().map((url, index) => ({
+        url,
+        type: (index === 0 ? 'odometer' : 'exterior') as 'exterior' | 'interior' | 'odometer' | 'damage' | 'other',
+        timestamp: new Date().toISOString(),
+      }));
+
+      const inspectionResult = await this.fgoService.createInspection({
+        bookingId: booking.id,
+        stage: 'check_in',
+        inspectorId: this.currentUserId()!,
+        photos,
+        odometer: this.odometer()!,
+        fuelLevel: this.fuelLevel(),
+      }).toPromise();
+
+      if (!inspectionResult) {
+        throw new Error('No se pudo crear la inspección de check-in');
+      }
 
       // 2. Iniciar alquiler (confirmed → in_progress)
       await this.bookingsService.updateBooking(booking.id, { status: 'in_progress' });

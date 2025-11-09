@@ -114,8 +114,20 @@ export class OwnerCheckOutPage implements OnInit {
       this.booking.set(booking);
 
       // Cargar datos del check-in
-      // TODO: Implementar cuando FGO service esté listo
-      this.checkInData.set({ odometer_reading: 0, fuel_level: 100 });
+      const checkInInspection = await this.fgoService
+        .getInspectionByStage(bookingId, 'check_in')
+        .toPromise();
+
+      if (!checkInInspection) {
+        this.toastService.error('Error', 'No se encontró el check-in previo. El auto debe pasar por check-in primero.');
+        this.router.navigate(['/bookings/owner']);
+        return;
+      }
+
+      this.checkInData.set({
+        odometer_reading: checkInInspection.odometer || 0,
+        fuel_level: checkInInspection.fuelLevel || 100,
+      });
     } catch (error) {
       this.toastService.error('Error', 'No se pudo cargar la reserva');
       this.router.navigate(['/bookings/owner']);
@@ -161,20 +173,25 @@ export class OwnerCheckOutPage implements OnInit {
 
     try {
       // 1. Crear registro FGO para check-out
-      // TODO: Implementar cuando FGO service esté listo
-      const fgoData = {
-        booking_id: booking.id,
-        event_type: 'check_out_owner',
-        initiated_by: this.currentUserId()!,
-        odometer_reading: this.odometer()!,
-        fuel_level: this.fuelLevel(),
-        damage_notes: this.damagesNotes() || null,
-        photo_urls: this.uploadedPhotos(),
-        signature_data_url: this.signatureDataUrl()!,
-        has_damages: this.hasDamages(),
-        damage_amount: this.damageAmount(),
-      };
-      console.log('FGO Check-out data:', fgoData);
+      const photos = this.uploadedPhotos().map((url, index) => ({
+        url,
+        type: (this.hasDamages() ? 'damage' : index === 0 ? 'odometer' : 'exterior') as 'exterior' | 'interior' | 'odometer' | 'damage' | 'other',
+        caption: this.hasDamages() ? this.damagesNotes() : undefined,
+        timestamp: new Date().toISOString(),
+      }));
+
+      const inspectionResult = await this.fgoService.createInspection({
+        bookingId: booking.id,
+        stage: 'check_out',
+        inspectorId: this.currentUserId()!,
+        photos,
+        odometer: this.odometer()!,
+        fuelLevel: this.fuelLevel(),
+      }).toPromise();
+
+      if (!inspectionResult) {
+        throw new Error('No se pudo crear la inspección de check-out');
+      }
 
       // 2. Marcar como devuelto (in_progress → returned)
       await this.confirmationService.markAsReturned({
