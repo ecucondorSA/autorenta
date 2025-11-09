@@ -25,16 +25,6 @@ export default [
       'tmp/**/*',
       'src/**/*.html', // Ignore HTML files to avoid parsing errors
       'src/index.html',
-      // Ignore files with inline Angular templates (parsing issues with number pipes)
-      'src/app/features/admin/accounting/audit-logs/audit-logs.page.ts',
-      'src/app/features/admin/accounting/cash-flow/cash-flow.page.ts',
-      'src/app/features/admin/settlements/components/waterfall-simulator.component.ts',
-      'src/app/features/admin/withdrawals/withdrawals-admin.page.ts',
-      'src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts',
-      'src/app/features/bookings/urgent-booking/urgent-booking.page.ts',
-      'src/app/features/payouts/payout-stats/payout-stats.component.ts',
-      'src/app/shared/components/refund-status/refund-status.component.ts',
-      'src/app/shared/components/settlement-simulator/settlement-simulator.component.ts',
     ],
   },
   js.configs.recommended,

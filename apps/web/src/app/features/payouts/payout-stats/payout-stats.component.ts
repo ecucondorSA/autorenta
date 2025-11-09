@@ -7,56 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-payout-stats',
   standalone: true,
   imports: [CommonModule],
-  /* eslint-disable */
-  template: `
-    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-      <h3 class="mb-4 text-lg font-semibold text-gray-900">Estadísticas de Payouts</h3>
-
-      @if (loading()) {
-        <div class="flex items-center justify-center py-8">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
-        </div>
-      } @else if (stats(); as s) {
-        <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-          <div class="rounded-lg bg-blue-50 p-4">
-            <p class="text-sm font-medium text-blue-600">Total Payouts</p>
-            <p class="text-2xl font-bold text-blue-900">{{ s.totalPayouts }}</p>
-          </div>
-          <div class="rounded-lg bg-green-50 p-4">
-            <p class="text-sm font-medium text-green-600">Total Monto</p>
-            <p class="text-2xl font-bold text-green-900">
-              ${{ s.totalAmount | number: '1.2-2' }}
-            </p>
-          </div>
-          <div class="rounded-lg bg-yellow-50 p-4">
-            <p class="text-sm font-medium text-yellow-600">Pendientes</p>
-            <p class="text-2xl font-bold text-yellow-900">{{ s.pendingPayouts }}</p>
-            <p class="text-xs text-yellow-700">
-              ${{ s.pendingAmount | number: '1.2-2' }}
-            </p>
-          </div>
-          <div class="rounded-lg bg-purple-50 p-4">
-            <p class="text-sm font-medium text-purple-600">Completados</p>
-            <p class="text-2xl font-bold text-purple-900">{{ s.completedPayouts }}</p>
-            <p class="text-xs text-purple-700">
-              ${{ s.completedAmount | number: '1.2-2' }}
-            </p>
-          </div>
-          <div class="rounded-lg bg-indigo-50 p-4">
-            <p class="text-sm font-medium text-indigo-600">Promedio</p>
-            <p class="text-2xl font-bold text-indigo-900">
-              ${{ s.averagePayoutAmount | number: '1.2-2' }}
-            </p>
-          </div>
-        </div>
-      } @else {
-        <div class="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-600">
-          No hay estadísticas disponibles.
-        </div>
-      }
-    </div>
-  `,
-  /* eslint-enable */
+  templateUrl: './payout-stats.component.html',
 })
 export class PayoutStatsComponent implements OnInit {
   private readonly payoutService = inject(PayoutService);

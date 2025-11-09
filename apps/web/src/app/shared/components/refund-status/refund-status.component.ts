@@ -6,58 +6,7 @@ import { RefundService } from '../../../core/services/refund.service';
   selector: 'app-refund-status',
   standalone: true,
   imports: [CommonModule],
-  /* eslint-disable */
-  template: `
-    @if (loading()) {
-      <div class="flex items-center justify-center py-4">
-        <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
-      </div>
-    } @else if (refundStatus() as status) {
-      @if (status.has_refund) {
-        <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          <div class="mb-3 flex items-center justify-between">
-            <h4 class="text-sm font-semibold text-gray-900">Estado del Reembolso</h4>
-            <span
-              class="rounded-full px-2 py-1 text-xs font-medium"
-              [class.bg-green-100]="status.refund_status === 'approved'"
-              [class.text-green-800]="status.refund_status === 'approved'"
-              [class.bg-yellow-100]="status.refund_status === 'pending'"
-              [class.text-yellow-800]="status.refund_status === 'pending'"
-              [class.bg-red-100]="status.refund_status === 'rejected'"
-              [class.text-red-800]="status.refund_status === 'rejected'"
-            >
-              {{ getStatusLabel(status.refund_status || 'pending') }}
-            </span>
-          </div>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between">
-              <span class="text-gray-600">ID de Reembolso:</span>
-              <span class="font-mono text-gray-900">{{ status.refund_id }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">Monto:</span>
-              <span class="font-semibold text-gray-900">${{ status.refund_amount | number: '1.2-2' }}</span>
-            </div>
-            @if (status.refund_date) {
-              <div class="flex justify-between">
-                <span class="text-gray-600">Fecha:</span>
-                <span class="text-gray-900">{{ status.refund_date | date: 'short' }}</span>
-              </div>
-            }
-          </div>
-        </div>
-      } @else {
-        <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-sm text-gray-600">
-          No hay reembolso registrado para esta reserva.
-        </div>
-      }
-    } @else if (error()) {
-      <div class="rounded-lg bg-red-50 p-4 text-sm text-red-800">
-        {{ error() }}
-      </div>
-    }
-  `,
-  /* eslint-enable */
+  templateUrl: './refund-status.component.html',
 })
 export class RefundStatusComponent implements OnInit {
   @Input({ required: true }) bookingId!: string;
