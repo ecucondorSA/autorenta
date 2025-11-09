@@ -44,6 +44,9 @@ export class AdminRefundsPage implements OnInit {
   private readonly searchingSignal = signal<boolean>(false);
   private readonly processingSignal = signal<boolean>(false);
 
+  // Expose parseFloat for template
+  readonly parseFloat = Number.parseFloat;
+
   // Form state
   private readonly showNewRefundModalSignal = signal<boolean>(false);
   private readonly refundFormSignal = signal<RefundFormData>({

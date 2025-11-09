@@ -43,6 +43,15 @@ export class AdminDashboardPage implements OnInit {
   readonly message = signal<string | null>(null);
   readonly exporting = signal(false);
   readonly exportMessage = signal<string | null>(null);
+  readonly verificationStats = signal<{
+    pending_reviews: number;
+    approved_today: number;
+    rejected_today: number;
+    total_users: number;
+    level_1_users: number;
+    level_2_users: number;
+    level_3_users: number;
+  } | null>(null);
 
   constructor(
     private readonly adminService: AdminService,

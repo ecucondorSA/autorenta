@@ -52,7 +52,7 @@ export class PersonalizedDashboardComponent implements OnInit {
   private readonly notificationsService = inject(NotificationsService);
 
   // Estado reactivo
-  readonly userRole = signal<'owner' | 'renter' | 'both' | null>(null);
+  readonly userRole = signal<'locador' | 'locatario' | 'ambos' | null>(null);
   readonly userName = signal<string>('');
   readonly loading = signal(true);
   readonly stats = signal<DashboardStats>({

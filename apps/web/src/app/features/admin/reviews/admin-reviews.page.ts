@@ -239,7 +239,7 @@ interface ModerationStatusOption {
                 </p>
                 <p class="text-sm text-red-900 dark:text-red-200">{{ review.flag_reason }}</p>
                 <p class="text-xs text-red-600 dark:text-red-400 mt-1">
-                  Reportado por: {{ review.flagged_by_name }} el
+                  Reportado por: {{ review.flagged_by || 'Usuario' }} el
                   {{ review.flagged_at | date: 'short' }}
                 </p>
               </div>
@@ -256,7 +256,7 @@ interface ModerationStatusOption {
                   {{ review.moderation_notes }}
                 </p>
                 <p class="text-xs text-sky-600 dark:text-sky-400 mt-1">
-                  Moderado por: {{ review.moderated_by_name }} el
+                  Moderado por: {{ review.moderated_by || 'Admin' }} el
                   {{ review.moderated_at | date: 'short' }}
                 </p>
               </div>

@@ -84,14 +84,14 @@ import type { Review } from '../../../../core/models';
                 </div>
                 <span
                   class="rounded-full px-3 py-1 text-xs font-medium"
-                  [class.bg-yellow-100]="review.flag_status === 'pending'"
-                  [class.text-yellow-800]="review.flag_status === 'pending'"
-                  [class.bg-green-100]="review.flag_status === 'approved'"
-                  [class.text-green-800]="review.flag_status === 'approved'"
-                  [class.bg-red-100]="review.flag_status === 'rejected'"
-                  [class.text-red-800]="review.flag_status === 'rejected'"
+                  [class.bg-yellow-100]="review.moderation_status === 'pending'"
+                  [class.text-yellow-800]="review.moderation_status === 'pending'"
+                  [class.bg-green-100]="review.moderation_status === 'approved'"
+                  [class.text-green-800]="review.moderation_status === 'approved'"
+                  [class.bg-red-100]="review.moderation_status === 'rejected'"
+                  [class.text-red-800]="review.moderation_status === 'rejected'"
                 >
-                  {{ review.flag_status || 'pending' }}
+                  {{ review.moderation_status || 'pending' }}
                 </span>
               </div>
 
@@ -108,7 +108,7 @@ import type { Review } from '../../../../core/models';
                 </div>
               }
 
-              @if (review.flag_status === 'pending') {
+              @if (review.moderation_status === 'pending') {
                 <div class="flex gap-2">
                   <button
                     (click)="moderateReview(review.id, 'approved')"

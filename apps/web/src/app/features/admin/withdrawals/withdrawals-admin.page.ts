@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { WithdrawalService } from '../../../../core/services/withdrawal.service';
-import { ToastService } from '../../../../core/services/toast.service';
-import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
+import { WithdrawalService } from '@core/services/withdrawal.service';
+import { ToastService } from '@core/services/toast.service';
+import type { WithdrawalRequest } from '@core/models';
 
 @Component({
   selector: 'app-withdrawals-admin',
