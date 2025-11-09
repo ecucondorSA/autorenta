@@ -19,7 +19,7 @@ import {
   WalletReconciliation,
   PaginatedResult,
 } from '@core/services/accounting.service';
-import { SupabaseService } from '@core/services/supabase.service';
+import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -34,7 +34,7 @@ type ActiveTab = 'ledger' | 'provisions' | 'closures' | 'audit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountingAdminPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly supabaseService = inject(SupabaseClientService);
   private readonly accountingService: AccountingService;
 
   // Tab management

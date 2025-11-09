@@ -6,7 +6,7 @@ import {
   AccountingService,
   RevenueRecognition,
 } from '../../../../core/services/accounting.service';
-import { SupabaseService } from '../../../../core/services/supabase.service';
+import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 
 @Component({
   selector: 'app-revenue-recognition',
@@ -16,7 +16,7 @@ import { SupabaseService } from '../../../../core/services/supabase.service';
   styleUrls: ['./revenue-recognition.page.scss'],
 })
 export class RevenueRecognitionPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly supabaseService = inject(SupabaseClientService);
   private readonly accountingService: AccountingService;
 
   readonly loading = signal(false);
