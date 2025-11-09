@@ -293,6 +293,15 @@ export class AvailabilityCalendarPage implements AfterViewInit, OnDestroy {
     return dates;
   }
 
+  // Helper methods for template
+  hasManualBlocks(): boolean {
+    return this.blockedRanges().filter((r) => r.type === 'manual_block').length > 0;
+  }
+
+  getManualBlocks(): DetailedBlockedRange[] {
+    return this.blockedRanges().filter((r) => r.type === 'manual_block');
+  }
+
   goBack(): void {
     void this.router.navigate(['/dashboard']);
   }

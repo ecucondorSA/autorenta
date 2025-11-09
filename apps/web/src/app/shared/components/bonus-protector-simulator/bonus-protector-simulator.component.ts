@@ -1,12 +1,13 @@
 import { Component, input, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
 
 @Component({
   selector: 'app-bonus-protector-simulator',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IonicModule],
   templateUrl: './bonus-protector-simulator.component.html',
   styleUrls: ['./bonus-protector-simulator.component.scss'],
 })

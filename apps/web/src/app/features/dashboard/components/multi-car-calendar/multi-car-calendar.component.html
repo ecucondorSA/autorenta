@@ -167,11 +167,11 @@
             >
               <span class="flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                {{ car.blockedRanges.filter(r => r.type === 'booking').length }} reservas
+                {{ getBookingsCount(car) }} reservas
               </span>
               <span class="flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                {{ car.blockedRanges.filter(r => r.type === 'manual_block').length }} bloqueos
+                {{ getManualBlocksCount(car) }} bloqueos
               </span>
             </div>
           </div>

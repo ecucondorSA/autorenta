@@ -1,5 +1,6 @@
 import { Component, input, output, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 import { SettlementService, DamageItem } from '../../../core/services/settlement.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { firstValueFrom } from 'rxjs';
@@ -7,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-damage-comparison',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IonicModule],
   templateUrl: './damage-comparison.component.html',
   styleUrls: ['./damage-comparison.component.scss'],
 })

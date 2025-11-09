@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, inject, signal, computed } from '@angular/core';
 import { RefundService } from '../../../core/services/refund.service';
 
 @Component({
@@ -22,6 +22,13 @@ export class RefundStatusComponent implements OnInit {
   } | null>(null);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+
+  // Computed signal for template usage
+  readonly displayStatus = computed(() => {
+    if (this.loading()) return null;
+    if (this.error()) return null;
+    return this.refundStatus();
+  });
 
   async ngOnInit(): Promise<void> {
     await this.loadStatus();

@@ -242,6 +242,12 @@ export class VehicleDocumentsPage implements OnInit {
     );
   }
 
+  getMissingRequiredDocsLabels(): string {
+    return this.getMissingRequiredDocs()
+      .map((k) => this.getDocumentKindLabel(k))
+      .join(', ');
+  }
+
   getStatusColor(status: VehicleDocument['status']): string {
     const colors = {
       pending: 'status-pending',

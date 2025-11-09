@@ -260,6 +260,15 @@ export class MultiCarCalendarComponent implements OnInit {
     return 'available';
   }
 
+  // Helper methods for template
+  getBookingsCount(car: CarCalendarData): number {
+    return car.blockedRanges.filter((r) => r.type === 'booking').length;
+  }
+
+  getManualBlocksCount(car: CarCalendarData): number {
+    return car.blockedRanges.filter((r) => r.type === 'manual_block').length;
+  }
+
   goToCarCalendar(carId: string): void {
     void this.router.navigate(['/cars', carId, 'availability']);
   }

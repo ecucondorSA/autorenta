@@ -251,7 +251,7 @@
 
       <!-- Manual Blocks List -->
       <div
-        *ngIf="blockedRanges().filter(r => r.type === 'manual_block').length > 0"
+        *ngIf="hasManualBlocks()"
         class="bg-white dark:bg-slate-deep-pure rounded-2xl p-6 border border-pearl-gray dark:border-gray-700"
       >
         <div class="flex items-center justify-between mb-4">
@@ -269,7 +269,7 @@
 
         <div class="space-y-3">
           <div
-            *ngFor="let block of blockedRanges().filter(r => r.type === 'manual_block')"
+            *ngFor="let block of getManualBlocks()"
             class="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl"
           >
             <div class="flex-1">
