@@ -57,7 +57,7 @@ export class WithdrawalsAdminPage implements OnInit {
         request_id: requestId,
         admin_notes: this.adminNotes[requestId] || null,
       });
-      this.toastService.success('Retiro aprobado correctamente');
+      this.toastService.success('Retiro aprobado', 'El retiro fue aprobado correctamente');
       await this.loadWithdrawals(this.filterStatus() || undefined);
     } catch (err) {
       this.toastService.error(
@@ -89,7 +89,7 @@ export class WithdrawalsAdminPage implements OnInit {
         request_id: requestId,
         rejection_reason: this.rejectionReason,
       });
-      this.toastService.success('Retiro rechazado');
+      this.toastService.success('Retiro rechazado', 'El retiro fue rechazado correctamente');
       this.cancelReject();
       await this.loadWithdrawals(this.filterStatus() || undefined);
     } catch (err) {

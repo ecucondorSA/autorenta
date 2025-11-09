@@ -48,6 +48,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check Development Guidelines
+        run: ./tools/check-dev-guidelines.sh
+        continue-on-error: false
+
       - name: Lint
         run: pnpm lint
 
