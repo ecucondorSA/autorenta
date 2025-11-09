@@ -76,7 +76,7 @@ export class OwnerBookingsPage implements OnInit {
       } else {
         this.marketplaceStatus.set(null);
       }
-    } catch (__error) {
+    } catch {
       this.currentUserId = null;
       this.marketplaceStatus.set(null);
     } finally {
@@ -213,7 +213,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.updateBooking(bookingId, { status: 'in_progress' });
       await this.loadBookings();
       await this.presentToast('Alquiler iniciado correctamente');
-    } catch (__error) {
+    } catch {
       console.error('Error starting rental:', __error);
       await this.presentToast('Error al iniciar el alquiler', 'danger');
     } finally {
@@ -234,7 +234,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.updateBooking(bookingId, { status: 'completed' });
       await this.loadBookings();
       await this.presentToast('Alquiler finalizado correctamente');
-    } catch (__error) {
+    } catch {
       console.error('Error completing rental:', __error);
       await this.presentToast('Error al finalizar el alquiler', 'danger');
     } finally {
@@ -256,7 +256,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.cancelBooking(bookingId, false);
       await this.loadBookings();
       await this.presentToast('Reserva cancelada');
-    } catch (__error) {
+    } catch {
       console.error('Error cancelling booking:', __error);
       await this.presentToast('Error al cancelar la reserva', 'danger');
     } finally {
@@ -359,7 +359,7 @@ export class OwnerBookingsPage implements OnInit {
       );
 
       this.carLeads.set(enriched);
-    } catch (__error) {
+    } catch {
       console.error('Error loading car leads:', __error);
     } finally {
       this.leadsLoading.set(false);
@@ -381,7 +381,7 @@ export class OwnerBookingsPage implements OnInit {
     try {
       const status = await this.marketplaceService.getMarketplaceStatus(userId);
       this.marketplaceStatus.set(status);
-    } catch (__error) {
+    } catch {
       this.marketplaceStatus.set(null);
     }
   }
@@ -406,7 +406,7 @@ export class OwnerBookingsPage implements OnInit {
           } else {
             // No action needed if contact is not found
           }
-        } catch (__error) {
+        } catch {
           // Silently ignore errors
         }
       }),

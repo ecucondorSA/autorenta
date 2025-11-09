@@ -217,7 +217,7 @@ export class MyBookingsPage implements OnInit {
 
       alert('✅ Reserva cancelada exitosamente');
       await this.loadBookings(); // Recargar lista
-    } catch (__error) {
+    } catch {
       alert('❌ Error inesperado al cancelar la reserva');
     } finally {
       this.loading.set(false);
@@ -270,7 +270,7 @@ export class MyBookingsPage implements OnInit {
 
       const whatsappUrl = `https://wa.me/${contact.phone}?text=${message}`;
       window.open(whatsappUrl, '_blank');
-    } catch (__error) {
+    } catch {
       alert('❌ Error al obtener información de contacto');
     } finally {
       this.loading.set(false);
