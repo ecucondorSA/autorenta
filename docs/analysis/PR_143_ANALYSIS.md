@@ -314,3 +314,4 @@ import type { AdminRole, AdminUser, AdminAuditLogType } from '../models';
 **Autor del análisis**: Claude Code  
 **Próximos pasos**: Merge y verificación post-merge
 
+

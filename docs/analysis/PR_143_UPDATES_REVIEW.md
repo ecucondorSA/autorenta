@@ -375,3 +375,4 @@ this.toastService.error('Error al guardar', 'No se pudo guardar la configuració
 **Autor**: Claude Code  
 **Próximos pasos**: Merge y verificación post-merge
 
+
