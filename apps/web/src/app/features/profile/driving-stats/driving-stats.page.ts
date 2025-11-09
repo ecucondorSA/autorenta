@@ -115,7 +115,7 @@ export class DrivingStatsPage implements OnInit {
       }
     } catch (error) {
       console.error('Error loading driving data:', error);
-      this.toastService.showToast('Error al cargar estadísticas de conducción', 'error');
+      this.toastService.error('Error de carga', 'No se pudieron cargar las estadísticas de conducción. Intenta nuevamente.');
     } finally {
       this.loading.set(false);
     }

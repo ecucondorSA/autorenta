@@ -90,13 +90,13 @@ export class VehicleDocumentsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error loading documents:', error);
-          this.toastService.showToast('Error al cargar documentos', 'error');
+          this.toastService.error('Error de carga', 'No se pudieron cargar los documentos. Intenta nuevamente.');
           this.loading.set(false);
         },
       });
     } catch (error) {
       console.error('Error loading documents:', error);
-      this.toastService.showToast('Error al cargar documentos', 'error');
+      this.toastService.error('Error de carga', 'No se pudieron cargar los documentos. Intenta nuevamente.');
       this.loading.set(false);
     }
   }
@@ -146,13 +146,13 @@ export class VehicleDocumentsPage implements OnInit {
     // Validate file type (PDF, images)
     const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!validTypes.includes(file.type)) {
-      this.toastService.showToast('Solo se permiten archivos PDF o imágenes', 'error');
+      this.toastService.error('Formato inválido', 'Solo se permiten archivos PDF o imágenes');
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      this.toastService.showToast('El archivo no puede superar 5MB', 'error');
+      this.toastService.error('Archivo muy grande', 'El archivo no puede superar 5MB');
       return;
     }
 
@@ -163,7 +163,7 @@ export class VehicleDocumentsPage implements OnInit {
     const form = this.uploadForm();
 
     if (!form.file) {
-      this.toastService.showToast('Selecciona un archivo', 'error');
+      this.toastService.error('Archivo requerido', 'Selecciona un archivo para continuar');
       return;
     }
 
@@ -180,14 +180,14 @@ export class VehicleDocumentsPage implements OnInit {
 
       await this.documentsService.uploadDocument(params);
 
-      this.toastService.showToast('Documento subido exitosamente', 'success');
+      this.toastService.success('Documento subido', 'El documento ha sido cargado exitosamente');
       this.closeUploadModal();
       await this.loadDocuments();
     } catch (error) {
       console.error('Error uploading document:', error);
-      this.toastService.showToast(
-        error instanceof Error ? error.message : 'Error al subir documento',
-        'error',
+      this.toastService.error(
+        'Error al subir',
+        error instanceof Error ? error.message : 'No se pudo subir el documento. Intenta nuevamente.',
       );
     } finally {
       this.uploading.set(false);
@@ -196,7 +196,7 @@ export class VehicleDocumentsPage implements OnInit {
 
   async deleteDocument(doc: VehicleDocument) {
     if (doc.status !== 'pending') {
-      this.toastService.showToast('Solo puedes eliminar documentos pendientes', 'error');
+      this.toastService.error('Acción no permitida', 'Solo puedes eliminar documentos pendientes');
       return;
     }
 
@@ -206,11 +206,11 @@ export class VehicleDocumentsPage implements OnInit {
 
     try {
       await this.documentsService.deleteDocument(doc.id);
-      this.toastService.showToast('Documento eliminado', 'success');
+      this.toastService.success('Documento eliminado', 'El documento ha sido eliminado correctamente');
       await this.loadDocuments();
     } catch (error) {
       console.error('Error deleting document:', error);
-      this.toastService.showToast('Error al eliminar documento', 'error');
+      this.toastService.error('Error al eliminar', 'No se pudo eliminar el documento. Intenta nuevamente.');
     }
   }
 
@@ -220,7 +220,7 @@ export class VehicleDocumentsPage implements OnInit {
       window.open(url, '_blank');
     } catch (error) {
       console.error('Error viewing document:', error);
-      this.toastService.showToast('Error al abrir documento', 'error');
+      this.toastService.error('Error al abrir', 'No se pudo abrir el documento. Intenta nuevamente.');
     }
   }
 
