@@ -181,7 +181,7 @@ export class PublicProfilePage {
     if (this.profile()?.is_email_verified && this.profile()?.is_phone_verified) {
       return 'bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-200 border-green-200 dark:border-green-400/40';
     }
-    return 'bg-ash-gray/20 dark:bg-gray-700/40 text-charcoal-medium dark:text-pearl-light/60 border-ash-gray/30 dark:border-slate-deep/60';
+    return 'bg-gray-400/20 dark:bg-gray-700/40 text-gray-600 dark:text-beige-200/60 border-ash-gray/30 dark:border-gray-700/60';
   }
 
   getRatingStars(rating: number): string[] {

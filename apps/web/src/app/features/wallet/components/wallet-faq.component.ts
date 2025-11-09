@@ -12,13 +12,13 @@ interface FaqItem {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="bg-white dark:bg-gray-700-pure rounded-xl shadow-sm border border-pearl-gray dark:border-gray-700 p-6">
+    <div class="bg-white dark:bg-gray-700-pure rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
       <!-- Header -->
       <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-pearl-light mb-2">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-beige-200 mb-2">
           💡 Preguntas Frecuentes sobre Wallet AutoRenta
         </h2>
-        <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+        <p class="text-sm text-gray-600 dark:text-beige-200">
           Todo lo que necesitás saber sobre cómo funciona tu billetera virtual
         </p>
       </div>
@@ -27,17 +27,17 @@ interface FaqItem {
       <div class="space-y-3">
         <div
           *ngFor="let item of faqItems(); let i = index"
-          class="border border-pearl-gray dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-200"
+          class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-200"
           [class.ring-2]="item.expanded"
-          [class.ring-accent-petrol]="item.expanded"
+          [class.ring-sky-600]="item.expanded"
         >
           <!-- Question -->
           <button
             type="button"
             (click)="toggleItem(i)"
-            class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-pearl-gray/20 dark:hover:bg-gray-800 transition-colors duration-200"
+            class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-200/20 dark:hover:bg-gray-800 transition-colors duration-200"
           >
-            <span class="font-semibold text-gray-900 dark:text-pearl-light pr-4">
+            <span class="font-semibold text-gray-900 dark:text-beige-200 pr-4">
               {{ item.question }}
             </span>
             <svg
@@ -54,9 +54,9 @@ interface FaqItem {
           <!-- Answer -->
           <div
             *ngIf="item.expanded"
-            class="px-4 pb-4 pt-2 bg-pearl-gray/10 dark:bg-gray-800/50 border-t border-pearl-gray dark:border-gray-700"
+            class="px-4 pb-4 pt-2 bg-gray-200/10 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700"
           >
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light leading-relaxed" [innerHTML]="item.answer"></p>
+            <p class="text-sm text-gray-600 dark:text-beige-200 leading-relaxed" [innerHTML]="item.answer"></p>
           </div>
         </div>
       </div>
@@ -164,32 +164,32 @@ export class WalletFaqComponent {
       answer: `
         <table class="w-full text-xs mt-2 border-collapse">
           <thead>
-            <tr class="bg-pearl-gray/30 dark:bg-gray-800">
-              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-left">Característica</th>
-              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">Wallet</th>
-              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">Tarjeta</th>
+            <tr class="bg-gray-200/30 dark:bg-gray-800">
+              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-left">Característica</th>
+              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">Wallet</th>
+              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">Tarjeta</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1"><strong>Confirmación</strong></td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">⚡ Instantánea</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">⏱️ 1-2 min</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1"><strong>Confirmación</strong></td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">⚡ Instantánea</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">⏱️ 1-2 min</td>
             </tr>
-            <tr class="bg-pearl-gray/10 dark:bg-gray-800/30">
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1"><strong>Comisiones</strong></td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">✅ Sin comisiones</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">➖ Según tu banco</td>
+            <tr class="bg-gray-200/10 dark:bg-gray-800/30">
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1"><strong>Comisiones</strong></td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">✅ Sin comisiones</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">➖ Según tu banco</td>
             </tr>
             <tr>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1"><strong>Garantía</strong></td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">♻️ Reutilizable</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">🔒 Se libera post-alquiler</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1"><strong>Garantía</strong></td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">♻️ Reutilizable</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">🔒 Se libera post-alquiler</td>
             </tr>
-            <tr class="bg-pearl-gray/10 dark:bg-gray-800/30">
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1"><strong>Requisito</strong></td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">💰 Saldo previo</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">💳 Tarjeta válida</td>
+            <tr class="bg-gray-200/10 dark:bg-gray-800/30">
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1"><strong>Requisito</strong></td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">💰 Saldo previo</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">💳 Tarjeta válida</td>
             </tr>
           </tbody>
         </table>
@@ -283,31 +283,31 @@ export class WalletFaqComponent {
         <p class="mt-2"><strong>💰 Consumo del Crédito:</strong></p>
         <table class="w-full text-xs mt-2 border-collapse">
           <thead>
-            <tr class="bg-pearl-gray/30 dark:bg-gray-800">
-              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">Daño</th>
-              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">CP Usado</th>
-              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">CP Restante</th>
-              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">Pagás de tu bolsillo</th>
+            <tr class="bg-gray-200/30 dark:bg-gray-800">
+              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">Daño</th>
+              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">CP Usado</th>
+              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">CP Restante</th>
+              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">Pagás de tu bolsillo</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$100</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$100</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-green-700">✅ $200</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-green-700">$0</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$100</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$100</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-green-700">✅ $200</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-green-700">$0</td>
             </tr>
-            <tr class="bg-pearl-gray/10 dark:bg-gray-800/30">
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$250</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$250</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-amber-700">⚠️ $50</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-green-700">$0</td>
+            <tr class="bg-gray-200/10 dark:bg-gray-800/30">
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$250</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$250</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-amber-700">⚠️ $50</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-green-700">$0</td>
             </tr>
             <tr>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$400</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$300</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-red-700">❌ $0</td>
-              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-red-700">$100</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$400</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$300</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-red-700">❌ $0</td>
+              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-red-700">$100</td>
             </tr>
           </tbody>
         </table>

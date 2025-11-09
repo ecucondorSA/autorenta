@@ -8,9 +8,9 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
   imports: [CommonModule],
   template: `
     <div
-      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
+      class="rounded-xl border border-gray-200/60 bg-white shadow p-6 dark:border-neutral-800/70 dark:bg-gray-800 transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-50 mb-4">
         Elegí tu método de pago
       </h3>
 
@@ -18,10 +18,10 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
         <!-- Con Tarjeta -->
         <button
           type="button"
-          class="relative p-4 border rounded-lg bg-white-pure dark:bg-gray-700/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-soft dark:focus-visible:ring-offset-graphite-dark"
+          class="relative p-4 border rounded-lg bg-white dark:bg-gray-700/60 border-gray-200/70 dark:border-neutral-700 hover:border-sky-600/60 dark:hover:border-sky-600/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-600/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-100 dark:focus-visible:ring-offset-gray-900"
           [ngClass]="
             selectedMode === 'card'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-sky-600/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-sky-600/60 bg-primary-50 dark:bg-sky-600/10 border-sky-600/60 shadow-card-hover'
               : ''
           "
           (click)="onModeChange('card')"
@@ -43,8 +43,8 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
               </svg>
             </div>
             <div>
-              <p class="font-semibold text-gray-900 dark:text-ivory-luminous">Pagar con tarjeta</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+              <p class="font-semibold text-gray-900 dark:text-ivory-50">Pagar con tarjeta</p>
+              <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
                 Crédito o débito • Liberación automática
               </p>
             </div>
@@ -67,10 +67,10 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
         <!-- Con Wallet -->
         <button
           type="button"
-          class="relative p-4 border rounded-lg bg-white-pure dark:bg-gray-700/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-petrol/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-soft dark:focus-visible:ring-offset-graphite-dark"
+          class="relative p-4 border rounded-lg bg-white dark:bg-gray-700/60 border-gray-200/70 dark:border-neutral-700 hover:border-sky-600/60 dark:hover:border-sky-600/60 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-600/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory-100 dark:focus-visible:ring-offset-gray-900"
           [ngClass]="
             selectedMode === 'wallet'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-sky-600/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-sky-600/60 bg-primary-50 dark:bg-sky-600/10 border-sky-600/60 shadow-card-hover'
               : ''
           "
           (click)="onModeChange('wallet')"
@@ -92,8 +92,8 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
               </svg>
             </div>
             <div>
-              <p class="font-semibold text-gray-900 dark:text-ivory-luminous">Pagar con wallet</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+              <p class="font-semibold text-gray-900 dark:text-ivory-50">Pagar con wallet</p>
+              <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
                 Usa tu saldo AutoRenta • Sin tarjeta
               </p>
             </div>

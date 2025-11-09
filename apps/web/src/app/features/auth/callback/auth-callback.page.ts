@@ -22,7 +22,7 @@ import { ProfileService } from '../../../core/services/profile.service';
   imports: [CommonModule, NgOptimizedImage],
   template: `
     <div
-      class="min-h-screen bg-ivory-100 dark:bg-graphite-dark flex items-center justify-center py-12 px-4"
+      class="min-h-screen bg-ivory-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4"
     >
       <div class="w-full max-w-md text-center">
         <!-- Loading State -->
@@ -62,10 +62,10 @@ import { ProfileService } from '../../../core/services/profile.service';
           </div>
 
           <div class="space-y-2">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-ivory-luminous">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-ivory-50">
               Completando inicio de sesión...
             </h1>
-            <p class="text-charcoal-medium dark:text-pearl-light">
+            <p class="text-gray-600 dark:text-beige-200">
               Por favor esperá mientras procesamos tu autenticación
             </p>
           </div>

@@ -9,9 +9,9 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
   imports: [CommonModule, FormsModule],
   template: `
     <div
-      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
+      class="rounded-xl border border-gray-200/60 bg-white shadow p-6 dark:border-neutral-800/70 dark:bg-gray-800 transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-50 mb-4">
         Confirmación y autorizaciones
       </h3>
 

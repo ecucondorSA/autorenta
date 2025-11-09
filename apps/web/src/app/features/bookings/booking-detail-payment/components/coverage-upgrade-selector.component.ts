@@ -8,19 +8,19 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
   imports: [CommonModule],
   template: `
     <div
-      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
+      class="rounded-xl border border-gray-200/60 bg-white shadow p-6 dark:border-neutral-800/70 dark:bg-gray-800 transition-colors duration-300"
     >
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-luminous mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-50 mb-4">
         Elegí tu nivel de protección
       </h3>
 
       <div class="space-y-3">
         <!-- Standard -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white-pure dark:bg-gray-700/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white dark:bg-gray-700/60 border-gray-200/70 dark:border-neutral-700 hover:border-sky-600/60 dark:hover:border-sky-600/60 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'standard'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-sky-600/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-sky-600/60 bg-primary-50 dark:bg-sky-600/10 border-sky-600/60 shadow-card-hover'
               : ''
           "
         >
@@ -34,14 +34,14 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           />
           <div class="flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-900 dark:text-ivory-luminous"
+              <span class="text-sm font-medium text-gray-900 dark:text-ivory-50"
                 >Protección estándar</span
               >
               <span class="text-sm font-semibold text-green-600 dark:text-green-400"
                 >Incluido</span
               >
             </div>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+            <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
               Protección básica incluida con tu reserva
             </p>
           </div>
@@ -62,10 +62,10 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
 
         <!-- Premium 50 -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white-pure dark:bg-gray-700/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white dark:bg-gray-700/60 border-gray-200/70 dark:border-neutral-700 hover:border-sky-600/60 dark:hover:border-sky-600/60 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'premium50'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-sky-600/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-sky-600/60 bg-primary-50 dark:bg-sky-600/10 border-sky-600/60 shadow-card-hover'
               : ''
           "
         >
@@ -79,14 +79,14 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           />
           <div class="flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-900 dark:text-ivory-luminous"
+              <span class="text-sm font-medium text-gray-900 dark:text-ivory-50"
                 >Cobertura Premium</span
               >
               <span class="text-sm font-semibold text-primary-600 dark:text-sky-600"
                 >+10%</span
               >
             </div>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+            <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
               Reduce a la mitad lo máximo que podrías pagar por daños
             </p>
           </div>
@@ -107,10 +107,10 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
 
         <!-- Zero -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white-pure dark:bg-gray-700/60 border-pearl-gray/70 dark:border-neutral-700 hover:border-accent-petrol/60 dark:hover:border-accent-petrol/60 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-white dark:bg-gray-700/60 border-gray-200/70 dark:border-neutral-700 hover:border-sky-600/60 dark:hover:border-sky-600/60 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'zero'
-              ? 'ring-2 ring-accent-petrol/60 bg-primary-50 dark:bg-sky-600/10 border-accent-petrol/60 shadow-card-hover'
+              ? 'ring-2 ring-sky-600/60 bg-primary-50 dark:bg-sky-600/10 border-sky-600/60 shadow-card-hover'
               : ''
           "
         >
@@ -124,14 +124,14 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
           />
           <div class="flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-900 dark:text-ivory-luminous"
+              <span class="text-sm font-medium text-gray-900 dark:text-ivory-50"
                 >Máxima protección</span
               >
               <span class="text-sm font-semibold text-primary-600 dark:text-sky-600"
                 >+20%</span
               >
             </div>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+            <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
               Cero responsabilidad por daños (nosotros nos encargamos)
             </p>
           </div>

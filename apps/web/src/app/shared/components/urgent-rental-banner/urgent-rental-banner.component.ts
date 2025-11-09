@@ -10,7 +10,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
   template: `
     <div
       *ngIf="expressMode() && availability()"
-      class="bg-gradient-to-r from-accent-petrol/10 via-accent-warm/10 to-accent-petrol/10 border-2 border-accent-petrol/30 rounded-xl p-4 mb-4 animate-pulse-subtle"
+      class="bg-gradient-to-r from-sky-600/10 via-beige-400/10 to-sky-600/10 border-2 border-sky-600/30 rounded-xl p-4 mb-4 animate-pulse-subtle"
     >
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
@@ -33,7 +33,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
           <div class="text-2xl font-bold text-sky-600">
             {{ quote()?.hourlyRate ? (quote()!.hourlyRate | currency:'ARS':'symbol':'1.0-0') : '...' }}
           </div>
-          <div class="text-xs text-charcoal-medium dark:text-pearl-light">/hora</div>
+          <div class="text-xs text-gray-600 dark:text-beige-200">/hora</div>
         </div>
       </div>
 
@@ -93,7 +93,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
       </div>
 
       <!-- Loading state -->
-      <div *ngIf="loading()" class="flex items-center gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+      <div *ngIf="loading()" class="flex items-center gap-2 text-sm text-gray-600 dark:text-beige-200">
         <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
           <circle
             class="opacity-25"

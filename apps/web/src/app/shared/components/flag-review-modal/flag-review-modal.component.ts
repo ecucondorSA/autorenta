@@ -20,13 +20,13 @@ import { ToastService } from '../../../core/services/toast.service';
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-gray-900 dark:text-pearl-light">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-beige-200">
             Reportar Reseña
           </h2>
           <button
             type="button"
             (click)="close()"
-            class="text-charcoal-medium hover:text-gray-900 dark:hover:text-pearl-light transition-colors"
+            class="text-gray-600 hover:text-gray-900 dark:hover:text-beige-200 transition-colors"
             aria-label="Cerrar"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,18 +42,18 @@ import { ToastService } from '../../../core/services/toast.service';
 
         <!-- Content -->
         <div class="space-y-4">
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+          <p class="text-sm text-gray-600 dark:text-beige-200">
             ¿Por qué quieres reportar esta reseña? Tu reporte será revisado por nuestro equipo de moderación.
           </p>
 
           <!-- Reason Selector -->
           <div>
-            <label class="block text-sm font-medium text-gray-900 dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-gray-900 dark:text-beige-200 mb-2">
               Motivo *
             </label>
             <select
               [(ngModel)]="selectedReason"
-              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all"
+              class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-sky-600 focus:ring-2 focus:ring-sky-600/20 transition-all"
             >
               <option value="">-- Seleccionar motivo --</option>
               <option value="inappropriate_content">Contenido inapropiado</option>
@@ -67,14 +67,14 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Additional Details -->
           <div>
-            <label class="block text-sm font-medium text-gray-900 dark:text-pearl-light mb-2">
+            <label class="block text-sm font-medium text-gray-900 dark:text-beige-200 mb-2">
               Detalles adicionales (opcional)
             </label>
             <textarea
               [(ngModel)]="additionalDetails"
               rows="4"
               placeholder="Proporciona más información sobre el problema..."
-              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all resize-none"
+              class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-sky-600 focus:ring-2 focus:ring-sky-600/20 transition-all resize-none"
             ></textarea>
           </div>
 
@@ -92,7 +92,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <button
             type="button"
             (click)="close()"
-            class="flex-1 px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 text-charcoal-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-all font-medium"
+            class="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all font-medium"
           >
             Cancelar
           </button>

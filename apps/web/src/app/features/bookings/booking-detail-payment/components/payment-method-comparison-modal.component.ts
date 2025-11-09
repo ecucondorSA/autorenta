@@ -21,25 +21,25 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
     >
       <!-- Modal Content -->
       <div
-        class="bg-white-pure dark:bg-anthracite rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300"
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300"
         (click)="$event.stopPropagation()"
       >
         <!-- Header -->
         <div
-          class="sticky top-0 bg-white-pure dark:bg-anthracite border-b border-gray-200 dark:border-neutral-700 px-6 py-4 flex items-center justify-between z-10"
+          class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-neutral-700 px-6 py-4 flex items-center justify-between z-10"
         >
           <div>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-ivory-luminous">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-ivory-50">
               Comparación de Métodos de Pago
             </h2>
-            <p class="text-sm text-gray-600 dark:text-pearl-light/70 mt-1">
+            <p class="text-sm text-gray-600 dark:text-beige-200/70 mt-1">
               Elegí la opción que más te convenga
             </p>
           </div>
           <button
             type="button"
             (click)="onClose()"
-            class="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:text-pearl-light/60 dark:hover:text-pearl-light transition-colors"
+            class="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:text-beige-200/60 dark:hover:text-beige-200 transition-colors"
             aria-label="Cerrar modal"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,16 +57,16 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         <div class="p-6">
           <!-- Resumen de Alquiler (común a ambos) -->
           <div class="mb-6 bg-gray-50 dark:bg-gray-700/40 rounded-lg p-4">
-            <h3 class="text-sm font-semibold text-gray-700 dark:text-pearl-light/80 mb-2">
+            <h3 class="text-sm font-semibold text-gray-700 dark:text-beige-200/80 mb-2">
               Total del alquiler (igual para ambos métodos)
             </h3>
-            <p class="text-2xl font-bold text-gray-900 dark:text-ivory-luminous">
+            <p class="text-2xl font-bold text-gray-900 dark:text-ivory-50">
               {{ formatArs(priceBreakdown.totalArs) }}
             </p>
-            <p class="text-sm text-gray-600 dark:text-pearl-light/60 mt-1">
+            <p class="text-sm text-gray-600 dark:text-beige-200/60 mt-1">
               ≈ {{ formatUsd(priceBreakdown.totalUsd) }}
             </p>
-            <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-2">
+            <p class="text-xs text-gray-500 dark:text-beige-200/50 mt-2">
               Se cobra inmediatamente en ambos casos
             </p>
           </div>
@@ -96,7 +96,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 <p class="text-xs uppercase font-semibold text-sky-700 dark:text-info-300 mb-1">
                   Pago inmediato
                 </p>
-                <p class="text-sm text-gray-700 dark:text-pearl-light/80">
+                <p class="text-sm text-gray-700 dark:text-beige-200/80">
                   Total del alquiler
                 </p>
                 <p class="text-lg font-bold text-sky-700 dark:text-info-200">
@@ -109,7 +109,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 <p class="text-xs uppercase font-semibold text-sky-700 dark:text-info-300 mb-1">
                   Garantía
                 </p>
-                <p class="text-sm text-gray-700 dark:text-pearl-light/80 mb-2">
+                <p class="text-sm text-gray-700 dark:text-beige-200/80 mb-2">
                   Hold temporal en tarjeta
                 </p>
                 <p class="text-lg font-bold text-sky-700 dark:text-info-200 mb-2">
@@ -129,17 +129,17 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 <p class="text-2xl font-bold text-sky-700 dark:text-info-200">
                   {{ formatArs(totalCardArs()) }}
                 </p>
-                <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
+                <p class="text-xs text-gray-600 dark:text-beige-200/60 mt-1">
                   ≈ {{ formatUsd(totalCardUsd()) }}
                 </p>
               </div>
 
               <!-- Ventajas -->
               <div class="bg-white/80 dark:bg-gray-700/60 rounded-lg p-3">
-                <p class="text-xs font-semibold text-gray-700 dark:text-pearl-light/80 mb-2">
+                <p class="text-xs font-semibold text-gray-700 dark:text-beige-200/80 mb-2">
                   ✓ Ventajas
                 </p>
-                <ul class="text-xs text-gray-600 dark:text-pearl-light/70 space-y-1">
+                <ul class="text-xs text-gray-600 dark:text-beige-200/70 space-y-1">
                   <li>• No necesitas saldo en wallet</li>
                   <li>• Garantía se libera automáticamente</li>
                   <li>• Pago protegido por MercadoPago</li>
@@ -170,7 +170,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 <p class="text-xs uppercase font-semibold text-sky-700 dark:text-sky-300 mb-1">
                   Pago inmediato
                 </p>
-                <p class="text-sm text-gray-700 dark:text-pearl-light/80">
+                <p class="text-sm text-gray-700 dark:text-beige-200/80">
                   Total del alquiler (de saldo)
                 </p>
                 <p class="text-lg font-bold text-sky-900 dark:text-sky-200">
@@ -183,7 +183,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 <p class="text-xs uppercase font-semibold text-sky-700 dark:text-sky-300 mb-1">
                   Garantía
                 </p>
-                <p class="text-sm text-gray-700 dark:text-pearl-light/80 mb-2">
+                <p class="text-sm text-gray-700 dark:text-beige-200/80 mb-2">
                   Crédito de seguridad
                 </p>
                 <p class="text-lg font-bold text-sky-900 dark:text-sky-200 mb-2">
@@ -209,17 +209,17 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 <p class="text-2xl font-bold text-sky-900 dark:text-sky-200">
                   {{ formatArs(totalWalletArs()) }}
                 </p>
-                <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
+                <p class="text-xs text-gray-600 dark:text-beige-200/60 mt-1">
                   ≈ {{ formatUsd(totalWalletUsd()) }}
                 </p>
               </div>
 
               <!-- Ventajas -->
               <div class="bg-white/80 dark:bg-gray-700/60 rounded-lg p-3">
-                <p class="text-xs font-semibold text-gray-700 dark:text-pearl-light/80 mb-2">
+                <p class="text-xs font-semibold text-gray-700 dark:text-beige-200/80 mb-2">
                   ✓ Ventajas
                 </p>
-                <ul class="text-xs text-gray-600 dark:text-pearl-light/70 space-y-1">
+                <ul class="text-xs text-gray-600 dark:text-beige-200/70 space-y-1">
                   <li>• Sin límite de tarjeta de crédito</li>
                   <li>• {{ savingsText() }}</li>
                   <li>• Crédito queda para futuras reservas</li>

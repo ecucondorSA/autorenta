@@ -14,22 +14,22 @@ import {
     <div class="space-y-3">
       <!-- Loading State -->
       <div *ngIf="loading()" class="animate-pulse">
-        <div class="h-8 bg-pearl-gray dark:bg-gray-700 rounded w-32"></div>
-        <div class="h-4 bg-pearl-gray dark:bg-gray-700 rounded w-24 mt-2"></div>
+        <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 mt-2"></div>
       </div>
 
       <!-- Price Display -->
       <div *ngIf="!loading() && pricing()" class="space-y-2">
         <!-- Main Price -->
         <div class="flex items-baseline gap-2">
-          <span class="text-3xl font-bold text-gray-900 dark:text-white-pure">
+          <span class="text-3xl font-bold text-gray-900 dark:text-white">
             {{ formatPrice(pricing()!.price_per_hour, pricing()!.currency) }}
           </span>
-          <span class="text-sm text-charcoal-medium dark:text-pearl-light">/hora</span>
+          <span class="text-sm text-gray-600 dark:text-beige-200">/hora</span>
         </div>
 
         <!-- Total Price -->
-        <div *ngIf="showTotal" class="text-sm text-charcoal-medium dark:text-pearl-light">
+        <div *ngIf="showTotal" class="text-sm text-gray-600 dark:text-beige-200">
           Total:
           <span class="font-semibold">{{
             formatPrice(pricing()!.total_price, pricing()!.currency)
@@ -75,14 +75,14 @@ import {
         <!-- Breakdown Details -->
         <div
           *ngIf="showBreakdown && breakdownExpanded()"
-          class="mt-3 p-4 rounded-lg bg-sand-light/50 dark:bg-gray-700/30 space-y-2.5 text-sm"
+          class="mt-3 p-4 rounded-lg bg-beige-100/50 dark:bg-gray-700/30 space-y-2.5 text-sm"
         >
           <!-- Base Price -->
           <div
-            class="flex justify-between items-center pb-2 border-b border-pearl-gray dark:border-charcoal-medium"
+            class="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-charcoal-medium"
           >
-            <span class="text-charcoal-medium dark:text-pearl-light">Tarifa base</span>
-            <span class="font-semibold text-gray-900 dark:text-white-pure">
+            <span class="text-gray-600 dark:text-beige-200">Tarifa base</span>
+            <span class="font-semibold text-gray-900 dark:text-white">
               {{ formatPrice(pricing()!.breakdown.base_price, pricing()!.currency) }}
             </span>
           </div>
@@ -90,7 +90,7 @@ import {
           <!-- Factors -->
           <div *ngFor="let factor of getVisibleFactors()" class="flex justify-between items-center">
             <div class="flex items-center gap-2">
-              <span class="text-charcoal-medium dark:text-pearl-light">{{ factor.label }}</span>
+              <span class="text-gray-600 dark:text-beige-200">{{ factor.label }}</span>
               <span
                 class="text-xs px-2 py-0.5 rounded"
                 [class.bg-green-100]="factor.value < 0"
@@ -103,16 +103,16 @@ import {
                 {{ formatFactor(factor.value) }}
               </span>
             </div>
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">{{
+            <span class="text-sm text-gray-600 dark:text-beige-200">{{
               factor.description
             }}</span>
           </div>
 
           <!-- Total Multiplier -->
           <div
-            class="flex justify-between items-center pt-2 border-t border-pearl-gray dark:border-charcoal-medium font-semibold"
+            class="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-charcoal-medium font-semibold"
           >
-            <span class="text-gray-900 dark:text-white-pure">Multiplicador total</span>
+            <span class="text-gray-900 dark:text-white">Multiplicador total</span>
             <span
               class="text-lg"
               [class.text-green-600]="pricing()!.breakdown.total_multiplier < 1"
@@ -121,7 +121,7 @@ import {
                 pricing()!.breakdown.total_multiplier >= 1 &&
                 pricing()!.breakdown.total_multiplier <= 1.1
               "
-              [class.dark:text-white-pure]="
+              [class.dark:text-white]="
                 pricing()!.breakdown.total_multiplier >= 1 &&
                 pricing()!.breakdown.total_multiplier <= 1.1
               "
@@ -132,7 +132,7 @@ import {
 
           <!-- Context Info -->
           <div
-            class="mt-3 pt-3 border-t border-pearl-gray dark:border-charcoal-medium text-xs text-charcoal-medium dark:text-pearl-light/70"
+            class="mt-3 pt-3 border-t border-gray-200 dark:border-charcoal-medium text-xs text-gray-600 dark:text-beige-200/70"
           >
             <p>
               {{ getDayName(pricing()!.details.day_of_week) }} •

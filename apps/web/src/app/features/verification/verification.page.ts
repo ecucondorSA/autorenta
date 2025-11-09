@@ -14,19 +14,19 @@ import {
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
-    <div class="verification-page bg-ivory-100 dark:bg-graphite-dark min-h-screen transition-colors duration-300">
+    <div class="verification-page bg-ivory-100 dark:bg-gray-900 min-h-screen transition-colors duration-300">
       <!-- Header -->
       <div
-        class="bg-white dark:bg-gray-700-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300"
+        class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 border-b border-gray-200 dark:border-neutral-800/60 transition-colors duration-300"
       >
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div class="flex items-center gap-3 mb-2">
             <a routerLink="/" class="text-primary-600 hover:text-primary-700">← Atrás</a>
           </div>
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-luminous">
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-50">
             Verificación de Cuenta
           </h1>
-          <p class="mt-2 text-charcoal-medium dark:text-pearl-light/70">
+          <p class="mt-2 text-gray-600 dark:text-beige-200/70">
             Completa tu verificación para publicar autos y recibir reservas
           </p>
         </div>
@@ -37,11 +37,11 @@ import {
         @if (verificationStatus(); as status) {
           <!-- Status Summary -->
           <div
-            class="bg-white dark:bg-gray-700-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8"
+            class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6 mb-8"
           >
             <div class="flex items-center justify-between mb-6">
               <div>
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-luminous mb-2">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-50 mb-2">
                   Estado de Verificación
                 </h2>
                 <div class="flex items-center gap-3">
@@ -94,9 +94,9 @@ import {
           <!-- Missing Documents Section -->
           @if (missingDocs().length > 0) {
             <div
-              class="bg-white dark:bg-gray-700-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8"
+              class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6 mb-8"
             >
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-luminous mb-6">
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-50 mb-6">
                 📋 Documentos Faltantes ({{ missingDocs().length }})
               </h2>
 
@@ -153,21 +153,21 @@ import {
 
           <!-- Verification Help Section -->
           <div
-            class="bg-white dark:bg-gray-700-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mt-8"
+            class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6 mt-8"
           >
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-luminous mb-4">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-50 mb-4">
               ❓ Preguntas Frecuentes
             </h2>
 
             <div class="space-y-4">
               <details
-                class="group border border-pearl-gray dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-100 dark:hover:bg-graphite-dark transition-colors"
+                class="group border border-gray-200 dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-100 dark:hover:bg-gray-900 transition-colors"
               >
-                <summary class="font-medium text-gray-900 dark:text-ivory-luminous flex items-center justify-between">
+                <summary class="font-medium text-gray-900 dark:text-ivory-50 flex items-center justify-between">
                   ¿Por qué necesito verificarme?
                   <span class="text-lg group-open:rotate-180 transition-transform">▼</span>
                 </summary>
-                <p class="mt-3 text-charcoal-medium dark:text-pearl-light/70 text-sm">
+                <p class="mt-3 text-gray-600 dark:text-beige-200/70 text-sm">
                   La verificación es obligatoria para proteger a los usuarios de AutoRenta. Nos
                   permite confirmar tu identidad y asegurar que todos en nuestra plataforma sean
                   personas confiables.
@@ -175,26 +175,26 @@ import {
               </details>
 
               <details
-                class="group border border-pearl-gray dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-100 dark:hover:bg-graphite-dark transition-colors"
+                class="group border border-gray-200 dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-100 dark:hover:bg-gray-900 transition-colors"
               >
-                <summary class="font-medium text-gray-900 dark:text-ivory-luminous flex items-center justify-between">
+                <summary class="font-medium text-gray-900 dark:text-ivory-50 flex items-center justify-between">
                   ¿Cuánto tiempo toma la verificación?
                   <span class="text-lg group-open:rotate-180 transition-transform">▼</span>
                 </summary>
-                <p class="mt-3 text-charcoal-medium dark:text-pearl-light/70 text-sm">
+                <p class="mt-3 text-gray-600 dark:text-beige-200/70 text-sm">
                   La mayoría de las verificaciones se completan en 24-48 horas. Algunos casos pueden
                   requerir revisión manual adicional.
                 </p>
               </details>
 
               <details
-                class="group border border-pearl-gray dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-100 dark:hover:bg-graphite-dark transition-colors"
+                class="group border border-gray-200 dark:border-neutral-700 rounded-lg p-4 cursor-pointer hover:bg-ivory-100 dark:hover:bg-gray-900 transition-colors"
               >
-                <summary class="font-medium text-gray-900 dark:text-ivory-luminous flex items-center justify-between">
+                <summary class="font-medium text-gray-900 dark:text-ivory-50 flex items-center justify-between">
                   ¿Es seguro compartir mis documentos?
                   <span class="text-lg group-open:rotate-180 transition-transform">▼</span>
                 </summary>
-                <p class="mt-3 text-charcoal-medium dark:text-pearl-light/70 text-sm">
+                <p class="mt-3 text-gray-600 dark:text-beige-200/70 text-sm">
                   Sí. Todos tus documentos se almacenan en servidores seguros con encriptación de
                   punta a punta. Solo nuestro equipo de verificación tiene acceso a ellos.
                 </p>

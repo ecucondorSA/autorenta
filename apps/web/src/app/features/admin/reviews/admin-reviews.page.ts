@@ -100,7 +100,7 @@ interface ModerationStatusOption {
       <!-- Loading State -->
       <div *ngIf="loading()" class="text-center py-12">
         <div
-          class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-accent-petrol border-r-transparent"
+          class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-sky-600 border-r-transparent"
         ></div>
         <p class="mt-4 text-gray-600 dark:text-gray-400">Cargando reseñas...</p>
       </div>
