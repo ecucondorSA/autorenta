@@ -37,6 +37,8 @@
     "lint:fix": "./tools/run.sh lint:fix",
     "format": "./tools/run.sh format",
     "check:guidelines": "./tools/check-dev-guidelines.sh",
+    "tmux:dev": "./tools/tmux-dev-monitor.sh",
+    "tmux:monitor": "./tools/tmux-monitor-only.sh",
     "_comment_utils": "=== UTILITIES ===",
     "install": "./tools/run.sh install",
     "install:all": "./tools/run.sh install",
