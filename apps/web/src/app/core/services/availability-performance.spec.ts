@@ -192,7 +192,7 @@ describe('Availability Performance Tests', () => {
     //     created_at: new Date().toISOString(),
     //   },
     // ];
-    // supabase.rpc.and.resolveTo({ data: mockCars, error: null });
+    // supabase.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
     // let photoCallCount = 0;
     // supabase.from.and.returnValue({
     //   select: () => ({
@@ -225,7 +225,7 @@ describe('Availability Performance Tests', () => {
     // const mockCarsPage1 = generateMockCars(50);
     // const mockCarsPage2 = generateMockCars(50);
     // // Primera página
-    // supabase.rpc.and.resolveTo({ data: mockCarsPage1, error: null });
+    // supabase.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
     // supabase.from.and.returnValue({
     //   select: () => ({
     //     eq: () => ({
@@ -241,7 +241,7 @@ describe('Availability Performance Tests', () => {
     // );
     // const page1Duration = performance.now() - startTimePage1;
     // // Segunda página
-    // supabase.rpc.and.resolveTo({ data: mockCarsPage2, error: null });
+    // supabase.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
     // const startTimePage2 = performance.now();
     // await service.getAvailableCars(
     //   '2025-11-01T10:00:00Z',

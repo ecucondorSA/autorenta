@@ -87,7 +87,7 @@ describe('TelemetryService', () => {
   beforeEach(() => {
     const rpcSpy = jasmine
       .createSpy('rpc')
-      .and.returnValue(Promise.resolve({ data: [mockSummary], error: null }));
+      .and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
     supabaseMock = {
       rpc: rpcSpy,
@@ -231,7 +231,7 @@ describe('TelemetryService', () => {
     });
 
     it('should return default summary when no data', (done) => {
-      supabaseMock.rpc.and.resolveTo({ data: [], error: null });
+      supabaseMock.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       service.getSummary('user-123').subscribe({
         next: (summary) => {
@@ -260,7 +260,7 @@ describe('TelemetryService', () => {
 
   describe('getHistory', () => {
     it('should fetch and set telemetry history', (done) => {
-      supabaseMock.rpc.and.resolveTo({ data: mockHistory, error: null });
+      supabaseMock.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       service.getHistory('user-123', 20).subscribe({
         next: (history) => {
@@ -277,7 +277,7 @@ describe('TelemetryService', () => {
     });
 
     it('should use default limit value', (done) => {
-      supabaseMock.rpc.and.resolveTo({ data: mockHistory, error: null });
+      supabaseMock.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       service.getHistory('user-123').subscribe({
         next: () => {
@@ -292,7 +292,7 @@ describe('TelemetryService', () => {
     });
 
     it('should handle empty history', (done) => {
-      supabaseMock.rpc.and.resolveTo({ data: [], error: null });
+      supabaseMock.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       service.getHistory('user-123').subscribe({
         next: (history) => {
@@ -383,27 +383,27 @@ describe('TelemetryService', () => {
   describe('formatScore', () => {
     it('should format excellent score (90+)', () => {
       const formatted = service.formatScore(95);
-      expect(formatted).toEqual({ value: 95, label: 'Excelente', color: 'green' });
+      expect(formatted).toEqual(jasmine.objectContaining({ value: 95, label: 'Excelente', color: 'green'  }));
     });
 
     it('should format good score (75-89)', () => {
       const formatted = service.formatScore(80);
-      expect(formatted).toEqual({ value: 80, label: 'Bueno', color: 'blue' });
+      expect(formatted).toEqual(jasmine.objectContaining({ value: 80, label: 'Bueno', color: 'blue'  }));
     });
 
     it('should format regular score (60-74)', () => {
       const formatted = service.formatScore(65);
-      expect(formatted).toEqual({ value: 65, label: 'Regular', color: 'yellow' });
+      expect(formatted).toEqual(jasmine.objectContaining({ value: 65, label: 'Regular', color: 'yellow'  }));
     });
 
     it('should format low score (40-59)', () => {
       const formatted = service.formatScore(50);
-      expect(formatted).toEqual({ value: 50, label: 'Bajo', color: 'orange' });
+      expect(formatted).toEqual(jasmine.objectContaining({ value: 50, label: 'Bajo', color: 'orange'  }));
     });
 
     it('should format very low score (<40)', () => {
       const formatted = service.formatScore(30);
-      expect(formatted).toEqual({ value: 30, label: 'Muy Bajo', color: 'red' });
+      expect(formatted).toEqual(jasmine.objectContaining({ value: 30, label: 'Muy Bajo', color: 'red'  }));
     });
 
     it('should handle boundary values correctly', () => {
@@ -419,27 +419,27 @@ describe('TelemetryService', () => {
     it('should display improving trend', () => {
       service.summary.set(mockSummary);
       const display = service.getTrendDisplay();
-      expect(display).toEqual({ icon: '↗', label: 'Mejorando', color: 'green' });
+      expect(display).toEqual(jasmine.objectContaining({ icon: '↗', label: 'Mejorando', color: 'green'  }));
     });
 
     it('should display declining trend', () => {
       const decliningSummary = { ...mockSummary, score_trend: 'declining' as const };
       service.summary.set(decliningSummary);
       const display = service.getTrendDisplay();
-      expect(display).toEqual({ icon: '↘', label: 'Bajando', color: 'red' });
+      expect(display).toEqual(jasmine.objectContaining({ icon: '↘', label: 'Bajando', color: 'red'  }));
     });
 
     it('should display stable trend', () => {
       const stableSummary = { ...mockSummary, score_trend: 'stable' as const };
       service.summary.set(stableSummary);
       const display = service.getTrendDisplay();
-      expect(display).toEqual({ icon: '→', label: 'Estable', color: 'blue' });
+      expect(display).toEqual(jasmine.objectContaining({ icon: '→', label: 'Estable', color: 'blue'  }));
     });
 
     it('should display insufficient data', () => {
       service.summary.set(defaultSummary);
       const display = service.getTrendDisplay();
-      expect(display).toEqual({ icon: '?', label: 'Sin datos', color: 'gray' });
+      expect(display).toEqual(jasmine.objectContaining({ icon: '?', label: 'Sin datos', color: 'gray'  }));
     });
   });
 

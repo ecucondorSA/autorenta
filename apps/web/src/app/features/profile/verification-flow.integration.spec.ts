@@ -163,10 +163,7 @@ describe('Verification Flow Integration', () => {
           }),
         }),
         update: jasmine.createSpy('update').and.returnValue({
-          eq: jasmine.createSpy('eq').and.resolveTo({
-            data: null,
-            error: null,
-          }),
+          eq: jasmine.createSpy('eq').and.resolveTo({ data: null, error: null, count: null, status: 400, statusText: 'Bad Request' }),
         }),
       }),
       rpc: jasmine.createSpy('rpc').and.callFake((fnName: string) => {

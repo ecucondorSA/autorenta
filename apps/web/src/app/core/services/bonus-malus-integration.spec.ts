@@ -74,7 +74,7 @@ describe('Bonus-Malus Integration Tests', () => {
     // Cleanup: Delete test user and related data
     try {
       await supabaseClient.auth.admin.deleteUser(testUserId);
-    } catch (_error) {
+    } catch (_error: unknown) {
       console.error('Cleanup error:', error);
     }
   });

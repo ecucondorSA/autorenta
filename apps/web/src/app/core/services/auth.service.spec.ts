@@ -144,7 +144,7 @@ describe('AuthService', () => {
   it('maps network errors to a friendly message on sign in', async () => {
     const service = await initService();
     const networkError = new Error('Failed to fetch datos');
-    supabaseAuthMock.signInWithPassword.and.resolveTo({ data: null, error: networkError });
+    supabaseAuthMock.signInWithPassword.and.resolveTo({ data: null, error: networkError, count: null, status: 400, statusText: 'Bad Request' });
 
     await expectAsync(service.signIn('user@autorenta.test', 'pass123')).toBeRejectedWithError(
       'No se pudo contactar con Supabase. Verifica tu conexión y las variables NG_APP_SUPABASE_URL / NG_APP_SUPABASE_ANON_KEY.',

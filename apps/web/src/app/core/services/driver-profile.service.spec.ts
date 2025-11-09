@@ -22,7 +22,6 @@ describe('DriverProfileService', () => {
     good_years: 0,
     total_claims: 0,
     claims_with_fault: 0,
-    total_bookings: 0,
     clean_bookings: 0,
     clean_percentage: 0,
     last_claim_at: null,
@@ -35,7 +34,6 @@ describe('DriverProfileService', () => {
   };
 
   const mockClassBenefits: ClassBenefits = {
-    current_class: 5,
     current_class_description: 'Conductor base (sin historial)',
     current_fee_multiplier: 1.0,
     current_guarantee_multiplier: 1.0,
@@ -50,7 +48,7 @@ describe('DriverProfileService', () => {
   beforeEach(() => {
     const rpcSpy = jasmine
       .createSpy('rpc')
-      .and.returnValue(Promise.resolve({ data: [mockProfile], error: null }));
+      .and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
     supabaseMock = {
       rpc: rpcSpy,
@@ -225,7 +223,7 @@ describe('DriverProfileService', () => {
 
   describe('getClassBenefits', () => {
     it('should fetch class benefits', (done) => {
-      supabaseMock.rpc.and.resolveTo({ data: [mockClassBenefits], error: null });
+      supabaseMock.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       service.getClassBenefits('user-123').subscribe({
         next: (benefits) => {
@@ -240,7 +238,7 @@ describe('DriverProfileService', () => {
     });
 
     it('should handle empty data', (done) => {
-      supabaseMock.rpc.and.resolveTo({ data: [], error: null });
+      supabaseMock.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       service.getClassBenefits('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),

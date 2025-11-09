@@ -27,8 +27,8 @@ describe('WalletService', () => {
   };
 
   beforeEach(() => {
-    originalSupabaseUrl = environment.supabaseUrl;
-    environment.supabaseUrl = 'https://example-project.supabase.co';
+    originalSupabaseUrl = (environment as any).supabaseUrl;
+    (environment as any).supabaseUrl = 'https://example-project.supabase.co';
 
     rpcHandlers = {};
 
@@ -59,7 +59,7 @@ describe('WalletService', () => {
   });
 
   afterEach(() => {
-    environment.supabaseUrl = originalSupabaseUrl;
+    (environment as any).supabaseUrl = originalSupabaseUrl;
     if (originalFetch) {
       globalThis.fetch = originalFetch;
     } else {

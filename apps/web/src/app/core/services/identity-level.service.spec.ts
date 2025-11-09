@@ -92,39 +92,24 @@ describe('IdentityLevelService', () => {
       from: jasmine.createSpy('from').and.returnValue({
         select: jasmine.createSpy('select').and.returnValue({
           eq: jasmine.createSpy('eq').and.returnValue({
-            single: jasmine.createSpy('single').and.resolveTo({
-              data: mockIdentityLevel,
-              error: null,
-            }),
+            single: jasmine.createSpy('single').and.resolveTo({ data: null, error: null, count: null, status: 400, statusText: 'Bad Request' }),
           }),
         }),
         insert: jasmine.createSpy('insert').and.returnValue({
           select: jasmine.createSpy('select').and.returnValue({
-            single: jasmine.createSpy('single').and.resolveTo({
-              data: mockIdentityLevel,
-              error: null,
-            }),
+            single: jasmine.createSpy('single').and.resolveTo({ data: null, error: null, count: null, status: 400, statusText: 'Bad Request' }),
           }),
         }),
         update: jasmine.createSpy('update').and.returnValue({
-          eq: jasmine.createSpy('eq').and.resolveTo({
-            data: mockIdentityLevel,
-            error: null,
-          }),
+          eq: jasmine.createSpy('eq').and.resolveTo({ data: null, error: null, count: null, status: 400, statusText: 'Bad Request' }),
         }),
         upsert: jasmine.createSpy('upsert').and.returnValue({
           select: jasmine.createSpy('select').and.returnValue({
-            single: jasmine.createSpy('single').and.resolveTo({
-              data: mockIdentityLevel,
-              error: null,
-            }),
+            single: jasmine.createSpy('single').and.resolveTo({ data: null, error: null, count: null, status: 400, statusText: 'Bad Request' }),
           }),
         }),
       }),
-      rpc: jasmine.createSpy('rpc').and.resolveTo({
-        data: mockVerificationProgress,
-        error: null,
-      }),
+      rpc: jasmine.createSpy('rpc').and.resolveTo({ data: null, error: null, count: null, status: 400, statusText: 'Bad Request' }),
     };
 
     TestBed.configureTestingModule({

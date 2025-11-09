@@ -53,7 +53,7 @@ describe('BonusProtectorService', () => {
   beforeEach(() => {
     const rpcSpy = jasmine
       .createSpy('rpc')
-      .and.returnValue(Promise.resolve({ data: [mockActiveProtector], error: null }));
+      .and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
     supabaseMock = {
       rpc: rpcSpy,
@@ -105,7 +105,7 @@ describe('BonusProtectorService', () => {
     });
 
     it('should handle user with no active protector', (done) => {
-      supabaseMock.rpc.and.resolveTo({ data: [mockNoProtector], error: null });
+      supabaseMock.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       service.activeProtector('user-123').subscribe({
         next: (protector) => {
@@ -253,7 +253,7 @@ describe('BonusProtectorService', () => {
 
     it('should not refresh if purchase failed', (done) => {
       const failedResult = { ...mockPurchaseResult, success: false };
-      supabaseMock.rpc.and.resolveTo({ data: [failedResult], error: null });
+      supabaseMock.rpc.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       service.purchaseProtector('user-123', 2).subscribe({
         next: (result: unknown) => {
@@ -290,7 +290,7 @@ describe('BonusProtectorService', () => {
 
     it('should compute remainingUses from protector', () => {
       service.activeProtector.set(mockActiveProtector);
-      expect(service.remainingUses()).toBe(2);
+      expect(service.remaining_uses()).toBe(2);
     });
 
     it('should compute protectionLevel from protector', () => {
@@ -301,14 +301,14 @@ describe('BonusProtectorService', () => {
     it('should return defaults when protector is null', () => {
       service.activeProtector.set(null);
       expect(service.hasActiveProtector()).toBe(false);
-      expect(service.remainingUses()).toBe(0);
+      expect(service.remaining_uses()).toBe(0);
       expect(service.protectionLevel()).toBe(0);
     });
 
     it('should handle protector with no active status', () => {
       service.activeProtector.set(mockNoProtector);
       expect(service.hasActiveProtector()).toBe(false);
-      expect(service.remainingUses()).toBe(0);
+      expect(service.remaining_uses()).toBe(0);
       expect(service.protectionLevel()).toBe(0);
     });
 
@@ -320,7 +320,7 @@ describe('BonusProtectorService', () => {
       };
       service.activeProtector.set(partialProtector);
       expect(service.hasActiveProtector()).toBe(true);
-      expect(service.remainingUses()).toBe(1);
+      expect(service.remaining_uses()).toBe(1);
     });
 
     it('should handle expired protector', () => {
@@ -332,7 +332,7 @@ describe('BonusProtectorService', () => {
       };
       service.activeProtector.set(expiredProtector);
       expect(service.hasActiveProtector()).toBe(true); // Still stored, but expired
-      expect(service.remainingUses()).toBe(0);
+      expect(service.remaining_uses()).toBe(0);
     });
   });
 

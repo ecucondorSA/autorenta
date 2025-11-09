@@ -89,7 +89,7 @@ describe('BonusMalusService', () => {
           eq: jasmine.createSpy('eq').and.returnValue({
             maybeSingle: jasmine
               .createSpy('maybeSingle')
-              .and.returnValue(Promise.resolve({ data: mockUserBonusMalus, error: null })),
+              .and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' }),
           }),
         }),
       });
@@ -130,7 +130,7 @@ describe('BonusMalusService', () => {
 
       mockSupabase.rpc = jasmine
         .createSpy('rpc')
-        .and.returnValue(Promise.resolve({ data: mockCalculation, error: null }));
+        .and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       const result = await service.calculateBonusMalus();
 
@@ -152,7 +152,7 @@ describe('BonusMalusService', () => {
 
       mockSupabase.rpc = jasmine
         .createSpy('rpc')
-        .and.returnValue(Promise.resolve({ data: null, error: new Error('RPC failed') }));
+        .and.resolveTo({ data: null, error: new Error('RPC failed'), count: null, status: 400, statusText: 'Bad Request' });
 
       const result = await service.calculateBonusMalus();
 
@@ -402,7 +402,7 @@ describe('BonusMalusService', () => {
       const mockFrom = jasmine.createSpy('from').and.returnValue({
         select: jasmine
           .createSpy('select')
-          .and.returnValue(Promise.resolve({ data: mockStats, error: null })),
+          .and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' }),
       });
       mockSupabase.from = mockFrom;
 
@@ -421,7 +421,7 @@ describe('BonusMalusService', () => {
     it('should call RPC function', async () => {
       mockSupabase.rpc = jasmine
         .createSpy('rpc')
-        .and.returnValue(Promise.resolve({ data: 42, error: null }));
+        .and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
       const result = await service.recalculateAllBonusMalus();
 
@@ -433,7 +433,7 @@ describe('BonusMalusService', () => {
     it('should handle errors', async () => {
       mockSupabase.rpc = jasmine
         .createSpy('rpc')
-        .and.returnValue(Promise.resolve({ data: null, error: new Error('RPC failed') }));
+        .and.resolveTo({ data: null, error: new Error('RPC failed'), count: null, status: 400, statusText: 'Bad Request' });
 
       const result = await service.recalculateAllBonusMalus();
 

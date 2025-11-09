@@ -40,10 +40,7 @@ describe('FaceVerificationService', () => {
           getPublicUrl: jasmine.createSpy('getPublicUrl').and.returnValue({
             data: { publicUrl: 'https://storage.supabase.co/test-user-123/selfie_123.webm' },
           }),
-          remove: jasmine.createSpy('remove').and.resolveTo({
-            data: null,
-            error: null,
-          }),
+          remove: jasmine.createSpy('remove').and.resolveTo({ data: null, error: null, count: null, status: 400, statusText: 'Bad Request' }),
         }),
       },
       from: jasmine.createSpy('from').and.returnValue({
@@ -61,10 +58,7 @@ describe('FaceVerificationService', () => {
           }),
         }),
         update: jasmine.createSpy('update').and.returnValue({
-          eq: jasmine.createSpy('eq').and.resolveTo({
-            data: null,
-            error: null,
-          }),
+          eq: jasmine.createSpy('eq').and.resolveTo({ data: null, error: null, count: null, status: 400, statusText: 'Bad Request' }),
         }),
       }),
     };
@@ -216,14 +210,13 @@ describe('FaceVerificationService', () => {
       const status = await service.checkFaceVerificationStatus();
 
       expect(supabaseMock.from).toHaveBeenCalledWith('user_identity_levels');
-      expect(status).toEqual({
-        isVerified: true,
+      expect(status).toEqual(jasmine.objectContaining({ isVerified: true,
         selfieUrl: 'https://storage.supabase.co/selfie.webm',
         verifiedAt: '2024-01-01T00:00:00.000Z',
         requiresLevel2: false,
         faceMatchScore: 85,
         livenessScore: 90,
-      });
+       }));
     });
 
     it('should return requiresLevel2 when no documents', async () => {

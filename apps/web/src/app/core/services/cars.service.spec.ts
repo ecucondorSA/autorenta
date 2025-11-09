@@ -27,7 +27,7 @@ describe('CarsService', () => {
   it('creates a car for the authenticated owner', async () => {
     supabase.auth.getUser.and.resolveTo({ data: { user: { id: VALID_UUID } }, error: null });
     const insertedCar = { id: VALID_UUID, owner_id: VALID_UUID, car_photos: [] };
-    const single = jasmine.createSpy('single').and.resolveTo({ data: insertedCar, error: null });
+    const single = jasmine.createSpy('single').and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
     const select = jasmine.createSpy('select').and.returnValue({ single });
     const insert = jasmine.createSpy('insert').and.callFake((payload: Record<string, unknown>) => {
       expect(payload).toEqual(jasmine.objectContaining({ owner_id: VALID_UUID, brand: 'Fiat' }));

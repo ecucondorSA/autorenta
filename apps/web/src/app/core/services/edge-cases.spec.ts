@@ -52,8 +52,8 @@ describe('Sprint 5.2 - Edge Cases', () => {
     queryBuilder.neq.and.returnValue(queryBuilder);
     queryBuilder.gte.and.returnValue(queryBuilder);
     queryBuilder.lte.and.returnValue(queryBuilder);
-    queryBuilder.order.and.returnValue(Promise.resolve({ data: [], error: null }));
-    queryBuilder.single.and.returnValue(Promise.resolve({ data: null, error: null }));
+    queryBuilder.order.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
+    queryBuilder.single.and.resolveTo({ data: null, error: null, count: null, status: 200, statusText: 'OK' });
 
     fromSpy = jasmine.createSpy('from').and.returnValue(queryBuilder);
 
@@ -350,7 +350,7 @@ describe('Sprint 5.2 - Edge Cases', () => {
           const cars = await carsService.listActiveCars({ city });
           expect(cars).toBeDefined();
           // No debería causar SQL injection ni XSS
-        } catch (_error) {
+        } catch (_error: unknown) {
           // Es aceptable que falle, pero no debe comprometer seguridad
         }
       }

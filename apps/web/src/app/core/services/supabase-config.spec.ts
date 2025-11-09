@@ -17,7 +17,7 @@ describe('SupabaseClientService - Configuration & Pooling', () => {
   beforeEach(() => {
     // Asegurar que el entorno de pruebas tenga valores placeholder y no dependamos de credenciales reales
     (environment as Record<string, unknown>).supabaseUrl =
-      environment.supabaseUrl || 'https://example-project.supabase.co';
+      (environment as any).supabaseUrl || 'https://example-project.supabase.co';
     (environment as Record<string, unknown>).supabaseAnonKey =
       environment.supabaseAnonKey || 'test-anon-key';
 
@@ -34,8 +34,8 @@ describe('SupabaseClientService - Configuration & Pooling', () => {
     });
 
     it('debe tener configurado Supabase URL válido', () => {
-      expect(environment.supabaseUrl).toBeTruthy();
-      expect(environment.supabaseUrl).toContain('supabase.co');
+      expect((environment as any).supabaseUrl).toBeTruthy();
+      expect((environment as any).supabaseUrl).toContain('supabase.co');
     });
 
     it('debe tener configurado anon key válido', () => {
