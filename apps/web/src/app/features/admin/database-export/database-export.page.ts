@@ -27,7 +27,7 @@ import { ToastService } from '../../../core/services/toast.service';
             [(ngModel)]="limit"
             min="1"
             max="100"
-            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-blue-500"
           />
           <p class="mt-1 text-xs text-gray-500">
             Número de registros de muestra a incluir por tabla (1-100)
@@ -37,7 +37,7 @@ import { ToastService } from '../../../core/services/toast.service';
         <button
           (click)="exportSnapshot()"
           [disabled]="exporting()"
-          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          class="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
         >
           @if (exporting()) {
             <span class="flex items-center gap-2">

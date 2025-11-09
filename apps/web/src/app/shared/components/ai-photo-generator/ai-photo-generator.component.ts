@@ -17,7 +17,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <button
             type="button"
             (click)="method.set('stock-photos')"
-            [class]="method() === 'stock-photos' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'"
+            [class]="method() === 'stock-photos' ? 'bg-sky-600 text-white' : 'bg-gray-200 text-gray-700'"
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
             📸 Stock Photos (Rápido)
@@ -25,7 +25,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <button
             type="button"
             (click)="method.set('cloudflare-ai')"
-            [class]="method() === 'cloudflare-ai' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'"
+            [class]="method() === 'cloudflare-ai' ? 'bg-sky-600 text-white' : 'bg-gray-200 text-gray-700'"
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
             🤖 Cloudflare AI (Lento)

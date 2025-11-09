@@ -48,11 +48,11 @@ export class BookingStatusComponent {
     switch (status) {
       case 'pending':
       case 'pending_payment':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-beige-100 text-beige-500';
       case 'confirmed':
         return 'bg-green-100 text-green-800';
       case 'in_progress':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-sky-100 text-sky-600';
       case 'completed':
         return 'bg-gray-100 text-gray-800';
       case 'cancelled':

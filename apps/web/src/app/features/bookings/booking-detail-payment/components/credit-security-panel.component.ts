@@ -36,7 +36,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center space-x-2">
           <svg
-            class="w-6 h-6 text-purple-600 dark:text-purple-300"
+            class="w-6 h-6 text-sky-600 dark:text-sky-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -77,7 +77,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         </p>
         <div class="flex items-baseline justify-between mb-3">
           <div>
-            <p class="text-3xl font-bold text-purple-900 dark:text-purple-200">
+            <p class="text-3xl font-bold text-sky-900 dark:text-sky-200">
               {{ formatArs(creditSecurityArs()) }}
             </p>
             <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
@@ -121,7 +121,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         <!-- Loading Balance -->
         <div class="flex items-center justify-center py-8">
           <svg
-            class="animate-spin h-8 w-8 text-purple-600 dark:text-purple-300"
+            class="animate-spin h-8 w-8 text-sky-600 dark:text-sky-300"
             fill="none"
             viewBox="0 0 24 24"
           >
@@ -188,7 +188,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               type="button"
               (click)="onLockFunds()"
               [disabled]="isLoading()"
-              class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               @if (isLoading()) {
                 <svg
@@ -254,7 +254,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               <button
                 type="button"
                 (click)="onLoadCredit()"
-                class="w-full px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
+                class="w-full px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
               >
                 <svg
                   class="w-5 h-5 inline-block mr-2"
@@ -351,11 +351,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
       <!-- Info adicional -->
       <div
-        class="mt-4 p-3 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
+        class="mt-4 p-3 bg-sky-50 border border-sky-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
       >
         <div class="flex space-x-2">
           <svg
-            class="w-5 h-5 text-blue-600 dark:text-info-200 flex-shrink-0"
+            class="w-5 h-5 text-sky-600 dark:text-info-200 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -366,7 +366,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             />
           </svg>
           <div class="flex-1">
-            <p class="text-xs text-blue-800 dark:text-info-100">
+            <p class="text-xs text-sky-600 dark:text-info-100">
               <strong>Waterfall de cobro:</strong> Si hay daños/consumos, cobramos en este orden: 1)
               Crédito de Seguridad, 2) Top-up adicional, 3) FGO (hasta $800), 4) Recupero.
             </p>

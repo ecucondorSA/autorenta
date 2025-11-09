@@ -49,8 +49,8 @@ input[type='radio'] {
 }
 
 /* Progress bar animation */
-.bg-blue-600,
+.bg-sky-600,
 .bg-green-600,
-.bg-purple-600 {
+.bg-sky-600 {
   transition: width 0.3s ease-in-out;
 }

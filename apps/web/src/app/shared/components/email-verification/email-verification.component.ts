@@ -55,8 +55,8 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
 
       <!-- Pending State -->
       <div *ngIf="!status().isVerified" class="space-y-4">
-        <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p class="text-sm text-yellow-800">
+        <div class="p-4 bg-beige-50 border border-beige-200 rounded-lg">
+          <p class="text-sm text-beige-500">
             Te enviamos un email de verificación a
             <strong>{{ status().value }}</strong
             >. Por favor revisa tu bandeja de entrada y haz click en el link de confirmación.
@@ -72,7 +72,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
             class="flex-grow px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             [class]="
               canResend()
-                ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                ? 'bg-sky-600 text-white hover:bg-sky-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
                 : 'bg-gray-200 text-gray-500 dark:text-gray-300 cursor-not-allowed'
             "
           >
@@ -200,7 +200,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
   getStatusBadgeClass(): string {
     return this.status().isVerified
       ? 'bg-green-100 text-green-600'
-      : 'bg-yellow-100 text-yellow-600';
+      : 'bg-beige-100 text-beige-500';
   }
 
   getStatusLabel(): string {
@@ -210,7 +210,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
   getStatusLabelClass(): string {
     return this.status().isVerified
       ? 'bg-green-100 text-green-800'
-      : 'bg-yellow-100 text-yellow-800';
+      : 'bg-beige-100 text-beige-500';
   }
 
   formatDate(dateStr: string | null | undefined): string {

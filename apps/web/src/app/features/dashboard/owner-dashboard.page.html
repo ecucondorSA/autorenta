@@ -1,17 +1,17 @@
 <div
-  class="owner-dashboard bg-ivory-soft dark:bg-graphite-dark min-h-screen transition-colors duration-300"
+  class="owner-dashboard bg-ivory-100 dark:bg-gray-900 min-h-screen transition-colors duration-300"
 >
   <!-- Header -->
   <div
-    class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite border-b border-pearl-gray dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 border-b border-gray-200 dark:border-neutral-800/60 transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-50">
             Panel del Locador
           </h1>
-          <p class="mt-2 text-charcoal-medium dark:text-pearl-light/70">
+          <p class="mt-2 text-gray-600 dark:text-beige-200/70">
             Gestiona tus autos y ganancias
           </p>
         </div>
@@ -69,79 +69,79 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Balance Disponible -->
         <div
-          class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+          class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
         >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-sm font-medium text-gray-600 dark:text-beige-200/70">
               Balance Disponible
             </p>
             <span class="text-2xl">💵</span>
           </div>
-          <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <p class="text-3xl font-bold text-gray-900 dark:text-ivory-50">
             {{ availableBalance() | money }}
           </p>
-          <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+          <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
             Listo para retirar
           </p>
         </div>
 
         <!-- Balance Pendiente -->
         <div
-          class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+          class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
         >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-sm font-medium text-gray-600 dark:text-beige-200/70">
               Balance Pendiente
             </p>
             <span class="text-2xl">⏳</span>
           </div>
-          <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <p class="text-3xl font-bold text-gray-900 dark:text-ivory-50">
             {{ pendingBalance() | money }}
           </p>
-          <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">
+          <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">
             De reservas en curso
           </p>
         </div>
 
         <!-- Total Ganado -->
         <div
-          class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+          class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
         >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light/70">
+            <p class="text-sm font-medium text-gray-600 dark:text-beige-200/70">
               Total Ganado
             </p>
             <span class="text-2xl">💰</span>
           </div>
-          <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <p class="text-3xl font-bold text-gray-900 dark:text-ivory-50">
             {{ totalEarnings() | money }}
           </p>
-          <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-1">Histórico total</p>
+          <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-1">Histórico total</p>
         </div>
       </div>
 
       <!-- Earnings by Month -->
       <div
-        class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6 mb-8"
       >
-        <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-50 mb-4">
           📊 Ganancias Mensuales
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mb-1">Este Mes</p>
-            <p class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+            <p class="text-sm text-gray-600 dark:text-beige-200/70 mb-1">Este Mes</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-ivory-50">
               {{ earnings().thisMonth | money }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mb-1">Mes Anterior</p>
-            <p class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+            <p class="text-sm text-gray-600 dark:text-beige-200/70 mb-1">Mes Anterior</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-ivory-50">
               {{ earnings().lastMonth | money }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mb-1">Crecimiento</p>
+            <p class="text-sm text-gray-600 dark:text-beige-200/70 mb-1">Crecimiento</p>
             <p
               class="text-2xl font-bold"
               [class.text-green-600]="isGrowthPositive"
@@ -155,7 +155,7 @@
 
       <!-- Payouts History -->
       <div
-        class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6 mb-8"
       >
         <app-payouts-history></app-payouts-history>
       </div>
@@ -164,12 +164,12 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Cars -->
         <div
-          class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+          class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
         >
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">Mis Autos</p>
-              <p class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous mt-1">
+              <p class="text-sm text-gray-600 dark:text-beige-200/70">Mis Autos</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-ivory-50 mt-1">
                 {{ totalCars() }}
               </p>
             </div>
@@ -185,30 +185,30 @@
 
         <!-- Active Cars -->
         <div
-          class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+          class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
         >
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">Activos</p>
+              <p class="text-sm text-gray-600 dark:text-beige-200/70">Activos</p>
               <p class="text-3xl font-bold text-green-600 mt-1">
                 {{ activeCars() }}
               </p>
             </div>
             <span class="text-4xl">✅</span>
           </div>
-          <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-2">
+          <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-2">
             Disponibles para alquilar
           </p>
         </div>
 
         <!-- Upcoming Bookings -->
         <div
-          class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+          class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
         >
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">Próximas</p>
-              <p class="text-3xl font-bold text-blue-600 mt-1">
+              <p class="text-sm text-gray-600 dark:text-beige-200/70">Próximas</p>
+              <p class="text-3xl font-bold text-sky-600 mt-1">
                 {{ upcomingBookings() }}
               </p>
             </div>
@@ -224,18 +224,18 @@
 
         <!-- Active Rentals -->
         <div
-          class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+          class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
         >
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">En Curso</p>
+              <p class="text-sm text-gray-600 dark:text-beige-200/70">En Curso</p>
               <p class="text-3xl font-bold text-orange-600 mt-1">
                 {{ activeBookings() }}
               </p>
             </div>
             <span class="text-4xl">🏁</span>
           </div>
-          <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-2">
+          <p class="text-xs text-gray-600 dark:text-beige-200/70 mt-2">
             Alquileres activos
           </p>
         </div>
@@ -243,20 +243,20 @@
 
       <!-- Quick Actions -->
       <div
-        class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+        class="bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
       >
-        <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-50 mb-4">
           ⚡ Acciones Rápidas
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <a
             routerLink="/cars/publish"
-            class="flex items-center gap-3 p-4 border border-pearl-gray dark:border-neutral-700 rounded-lg hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-gray-200 dark:border-neutral-700 rounded-lg hover:bg-ivory-100 dark:hover:bg-gray-900 transition-colors"
           >
             <span class="text-2xl">➕</span>
             <div>
-              <p class="font-medium text-smoke-black dark:text-ivory-luminous">Publicar Auto</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+              <p class="font-medium text-gray-900 dark:text-ivory-50">Publicar Auto</p>
+              <p class="text-xs text-gray-600 dark:text-beige-200/70">
                 Añade un nuevo vehículo
               </p>
             </div>
@@ -264,12 +264,12 @@
 
           <a
             routerLink="/bookings/owner"
-            class="flex items-center gap-3 p-4 border border-pearl-gray dark:border-neutral-700 rounded-lg hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-gray-200 dark:border-neutral-700 rounded-lg hover:bg-ivory-100 dark:hover:bg-gray-900 transition-colors"
           >
             <span class="text-2xl">📋</span>
             <div>
-              <p class="font-medium text-smoke-black dark:text-ivory-luminous">Mis Reservas</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+              <p class="font-medium text-gray-900 dark:text-ivory-50">Mis Reservas</p>
+              <p class="text-xs text-gray-600 dark:text-beige-200/70">
                 Gestiona alquileres
               </p>
             </div>
@@ -277,12 +277,12 @@
 
           <button
             (click)="toggleCalendar()"
-            class="flex items-center gap-3 p-4 border border-pearl-gray dark:border-neutral-700 rounded-lg hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors text-left w-full"
+            class="flex items-center gap-3 p-4 border border-gray-200 dark:border-neutral-700 rounded-lg hover:bg-ivory-100 dark:hover:bg-gray-900 transition-colors text-left w-full"
           >
             <span class="text-2xl">📅</span>
             <div>
-              <p class="font-medium text-smoke-black dark:text-ivory-luminous">Calendario</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+              <p class="font-medium text-gray-900 dark:text-ivory-50">Calendario</p>
+              <p class="text-xs text-gray-600 dark:text-beige-200/70">
                 Gestiona disponibilidad
               </p>
             </div>
@@ -290,12 +290,12 @@
 
           <a
             routerLink="/wallet"
-            class="flex items-center gap-3 p-4 border border-pearl-gray dark:border-neutral-700 rounded-lg hover:bg-ivory-soft dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-gray-200 dark:border-neutral-700 rounded-lg hover:bg-ivory-100 dark:hover:bg-gray-900 transition-colors"
           >
             <span class="text-2xl">💸</span>
             <div>
-              <p class="font-medium text-smoke-black dark:text-ivory-luminous">Retirar Dinero</p>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">Solicitar retiro</p>
+              <p class="font-medium text-gray-900 dark:text-ivory-50">Retirar Dinero</p>
+              <p class="text-xs text-gray-600 dark:text-beige-200/70">Solicitar retiro</p>
             </div>
           </a>
         </div>
@@ -304,15 +304,15 @@
       <!-- Multi-Car Calendar Section (Expandable) -->
       @if (showCalendar()) {
         <div
-          class="mt-8 bg-white dark:bg-slate-deep-pure dark:bg-anthracite rounded-lg shadow-sm border border-pearl-gray dark:border-neutral-800/60 p-6"
+          class="mt-8 bg-white dark:bg-gray-700-pure dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800/60 p-6"
         >
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-semibold text-smoke-black dark:text-ivory-luminous">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-ivory-50">
               📅 Calendario de Disponibilidad
             </h2>
             <button
               (click)="toggleCalendar()"
-              class="text-sm text-charcoal-medium hover:text-smoke-black dark:hover:text-pearl-light transition-colors"
+              class="text-sm text-gray-600 hover:text-gray-900 dark:hover:text-beige-200 transition-colors"
             >
               Ocultar
             </button>

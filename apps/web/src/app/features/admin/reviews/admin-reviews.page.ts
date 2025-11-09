@@ -197,7 +197,7 @@ interface ModerationStatusOption {
                 <div class="flex gap-0.5">
                   <svg
                     *ngFor="let _ of [1, 2, 3, 4, 5]"
-                    class="h-4 w-4 text-yellow-400"
+                    class="h-4 w-4 text-beige-400"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -249,15 +249,15 @@ interface ModerationStatusOption {
               <!-- Moderation Notes (if moderated) -->
               <div
                 *ngIf="review.moderation_notes"
-                class="bg-blue-50 dark:bg-blue-500/10 rounded-lg p-3 mb-4"
+                class="bg-sky-50 dark:bg-sky-500/10 rounded-lg p-3 mb-4"
               >
-                <p class="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+                <p class="text-sm font-medium text-sky-700 dark:text-sky-300 mb-1">
                   Notas de Moderación:
                 </p>
-                <p class="text-sm text-blue-900 dark:text-blue-200">
+                <p class="text-sm text-sky-700 dark:text-sky-200">
                   {{ review.moderation_notes }}
                 </p>
-                <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                <p class="text-xs text-sky-600 dark:text-sky-400 mt-1">
                   Moderado por: {{ review.moderated_by_name }} el
                   {{ review.moderated_at | date : 'short' }}
                 </p>
@@ -526,7 +526,7 @@ export class AdminReviewsPage implements OnInit {
 
   getModerationBadgeClass(status: string): string {
     const classes: Record<string, string> = {
-      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300',
+      pending: 'bg-beige-100 text-beige-500 dark:bg-beige-500/20 dark:text-beige-300',
       approved: 'bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300',
     };

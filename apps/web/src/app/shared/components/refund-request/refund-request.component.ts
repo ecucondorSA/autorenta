@@ -53,7 +53,7 @@ import { ToastService } from '../../../core/services/toast.service';
             </label>
             <div class="space-y-2">
               <label class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                [class.border-blue-500]="refundType() === 'full'"
+                [class.border-sky-500]="refundType() === 'full'"
                 [class.border-gray-300]="refundType() !== 'full'">
                 <input
                   type="radio"
@@ -67,7 +67,7 @@ import { ToastService } from '../../../core/services/toast.service';
                 </div>
               </label>
               <label class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                [class.border-blue-500]="refundType() === 'partial'"
+                [class.border-sky-500]="refundType() === 'partial'"
                 [class.border-gray-300]="refundType() !== 'partial'">
                 <input
                   type="radio"

@@ -47,7 +47,7 @@ import { PwaInstallService } from '../../../core/services/pwa-install.service';
       right: 16px;
       max-width: 400px;
       margin: 0 auto;
-      background: linear-gradient(135deg, #2c4a52 0%, #1e3238 100%);
+      background: linear-gradient(135deg, #0284C7 0%, #1e3238 100%);
       color: white;
       border-radius: 16px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -98,7 +98,7 @@ import { PwaInstallService } from '../../../core/services/pwa-install.service';
 
     .install-btn {
       background: white;
-      color: #2c4a52;
+      color: #0284C7;
       border: none;
       padding: 10px 20px;
       border-radius: 24px;

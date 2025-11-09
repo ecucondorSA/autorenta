@@ -224,7 +224,7 @@ import {
                     *ngIf="claim()!.status === 'reported'"
                     (click)="updateStatus('under_review')"
                     [disabled]="submitting()"
-                    class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-medium transition-colors"
+                    class="w-full px-4 py-2 bg-sky-600 hover:bg-sky-700 disabled:bg-sky-400 text-white rounded-lg font-medium transition-colors"
                   >
                     <span *ngIf="!submitting()">Poner en Revisión</span>
                     <span *ngIf="submitting()">Procesando...</span>
@@ -463,7 +463,7 @@ export class AdminClaimDetailPage implements OnInit {
   getStatusBadgeClass(status: ClaimStatus): string {
     const classes = {
       reported: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200',
-      under_review: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200',
+      under_review: 'bg-sky-100 text-sky-600 dark:bg-sky-700/40 dark:text-sky-200',
       approved: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',
       paid: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',

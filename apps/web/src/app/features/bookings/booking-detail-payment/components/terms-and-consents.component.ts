@@ -17,24 +17,24 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
 
       <div class="space-y-4">
         <!-- Terms & Conditions -->
-        <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-lg">
+        <div class="p-4 bg-sky-50 dark:bg-sky-700/20 border border-sky-200 dark:border-blue-800/60 rounded-lg">
           <label class="flex items-start space-x-3 cursor-pointer">
             <input
               type="checkbox"
               [(ngModel)]="consents.termsAccepted"
               (ngModelChange)="onConsentsChange()"
-              class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 border-blue-300 dark:border-blue-600 rounded bg-white dark:bg-slate-deep/60 transition-colors"
+              class="mt-1 h-4 w-4 text-sky-600 focus:ring-blue-500 dark:focus:ring-blue-400 border-sky-300 dark:border-sky-600 rounded bg-white dark:bg-slate-deep/60 transition-colors"
             />
             <div class="flex-1">
-              <span class="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1 block">
+              <span class="text-sm font-medium text-sky-600 dark:text-sky-200 mb-1 block">
                 Acepto los términos del servicio
               </span>
-              <span class="text-sm text-blue-700 dark:text-blue-300">
+              <span class="text-sm text-sky-700 dark:text-sky-300">
                 He leído y acepto los
                 <a
                   href="/terminos-y-condiciones"
                   target="_blank"
-                  class="font-medium underline hover:text-blue-800 dark:hover:text-blue-100"
+                  class="font-medium underline hover:text-sky-600 dark:hover:text-sky-100"
                 >
                   Términos y Condiciones
                 </a>
@@ -42,7 +42,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
                 <a
                   href="/politica-privacidad"
                   target="_blank"
-                  class="font-medium underline hover:text-blue-800 dark:hover:text-blue-100"
+                  class="font-medium underline hover:text-sky-600 dark:hover:text-sky-100"
                 >
                   Política de Privacidad
                 </a>
@@ -100,11 +100,11 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
       <!-- Validation Errors -->
       <div
         *ngIf="!consents.termsAccepted || (paymentMode === 'card' && !consents.cardOnFileAccepted)"
-        class="mt-4 p-3 bg-yellow-50 border border-yellow-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg transition-colors duration-300"
+        class="mt-4 p-3 bg-beige-50 border border-beige-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg transition-colors duration-300"
       >
         <div class="flex space-x-2">
           <svg
-            class="w-5 h-5 text-yellow-600 dark:text-warning-200 flex-shrink-0"
+            class="w-5 h-5 text-beige-500 dark:text-warning-200 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -114,7 +114,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
               clip-rule="evenodd"
             />
           </svg>
-          <p class="text-sm text-yellow-800 dark:text-warning-100">
+          <p class="text-sm text-beige-500 dark:text-warning-100">
             Debes aceptar todos los consentimientos obligatorios para continuar
           </p>
         </div>

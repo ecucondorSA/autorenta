@@ -67,7 +67,7 @@ import { UserProfile } from '../../../core/models';
                 >
                   <svg
                     *ngIf="verificationProgress() < 100"
-                    class="h-3 w-3 text-yellow-300 animate-pulse"
+                    class="h-3 w-3 text-beige-300 animate-pulse"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -243,10 +243,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-sky-100 dark:bg-sky-700/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-blue-600 dark:text-blue-400"
+                class="w-5 h-5 text-sky-600 dark:text-sky-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -269,10 +269,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-purple-600 dark:text-purple-400"
+                class="w-5 h-5 text-sky-600 dark:text-sky-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -296,10 +296,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-beige-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-yellow-600 dark:text-yellow-400"
+                class="w-5 h-5 text-beige-500 dark:text-beige-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

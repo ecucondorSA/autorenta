@@ -43,14 +43,14 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- ✅ NEW: Distance Information -->
       @if (priceBreakdown.distanceKm !== undefined && priceBreakdown.distanceKm !== null) {
         <div class="mb-4">
-          <div class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/40">
+          <div class="flex items-center justify-between p-3 bg-sky-50 dark:bg-sky-700/20 rounded-lg border border-sky-200 dark:border-blue-800/40">
             <div class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
               <div>
-                <span class="text-sm font-medium text-blue-900 dark:text-blue-200">
+                <span class="text-sm font-medium text-sky-700 dark:text-sky-200">
                   Distancia al auto: {{ formatDistance(priceBreakdown.distanceKm) }}
                 </span>
                 @if (priceBreakdown.distanceTier) {
@@ -141,7 +141,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           >
             <div class="flex items-start justify-between mb-3">
               <div>
-                <p class="text-2xl font-bold text-blue-900 dark:text-info-200">
+                <p class="text-2xl font-bold text-sky-700 dark:text-info-200">
                   {{ formatArs(riskSnapshot.holdEstimatedArs) }}
                 </p>
                 <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
@@ -164,7 +164,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           >
             <div class="flex items-start justify-between mb-3">
               <div>
-                <p class="text-2xl font-bold text-purple-900 dark:text-purple-200">
+                <p class="text-2xl font-bold text-sky-900 dark:text-sky-200">
                   {{ formatArs(creditSecurityArs()) }}
                 </p>
                 <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
@@ -307,7 +307,7 @@ export class PaymentSummaryPanelComponent {
   protected getDistanceTierClass(tier: 'local' | 'regional' | 'long_distance'): string {
     const classes = {
       local: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-      regional: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+      regional: 'bg-beige-100 text-beige-500 dark:bg-yellow-900/30 dark:text-beige-300',
       long_distance: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
     };
     return classes[tier];

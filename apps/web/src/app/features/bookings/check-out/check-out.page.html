@@ -93,27 +93,27 @@
 
       <!-- Comparison with Check-in -->
       @if (checkInInspection() && !inspectionCompleted()) {
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6 dark:bg-blue-900/20 dark:border-blue-800">
-          <h3 class="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-4">
+        <div class="bg-sky-50 border border-sky-200 rounded-xl p-6 mb-6 dark:bg-sky-700/20 dark:border-blue-800">
+          <h3 class="text-lg font-semibold text-sky-700 dark:text-sky-200 mb-4">
             📊 Comparación con Check-in
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p class="text-sm text-blue-700 dark:text-blue-300 mb-1">Odómetro al inicio</p>
-              <p class="text-lg font-bold text-blue-900 dark:text-blue-100">
+              <p class="text-sm text-sky-700 dark:text-sky-300 mb-1">Odómetro al inicio</p>
+              <p class="text-lg font-bold text-sky-700 dark:text-sky-100">
                 {{ checkInInspection()?.odometer }} km
               </p>
             </div>
             <div>
-              <p class="text-sm text-blue-700 dark:text-blue-300 mb-1">Combustible al inicio</p>
-              <p class="text-lg font-bold text-blue-900 dark:text-blue-100">
+              <p class="text-sm text-sky-700 dark:text-sky-300 mb-1">Combustible al inicio</p>
+              <p class="text-lg font-bold text-sky-700 dark:text-sky-100">
                 {{ checkInInspection()?.fuelLevel }}%
               </p>
             </div>
           </div>
           @if (checkInInspection()?.fuelLevel !== undefined) {
             <div class="mt-4 p-3 bg-white dark:bg-gray-800 rounded-lg">
-              <p class="text-sm text-blue-600 dark:text-blue-400">
+              <p class="text-sm text-sky-600 dark:text-sky-400">
                 💡 <strong>Recordatorio:</strong> Dejá el vehículo con el mismo nivel de combustible que al inicio
                 ({{ checkInInspection()?.fuelLevel }}%) o pagarás la diferencia.
               </p>
@@ -202,14 +202,14 @@
 
       <!-- Cannot Perform Check-out -->
       @else {
-        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 dark:bg-yellow-900/20 dark:border-yellow-800">
+        <div class="bg-beige-50 border border-beige-200 rounded-xl p-6 dark:bg-yellow-900/20 dark:border-yellow-800">
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">⚠️</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+              <h3 class="text-lg font-semibold text-beige-500 dark:text-beige-200 mb-2">
                 No se puede realizar el check-out
               </h3>
-              <p class="text-yellow-700 dark:text-yellow-300 mb-4">
+              <p class="text-beige-500 dark:text-beige-300 mb-4">
                 @if (!checkInInspection()) {
                   El check-out no está disponible porque no se completó el check-in.
                 } @else {

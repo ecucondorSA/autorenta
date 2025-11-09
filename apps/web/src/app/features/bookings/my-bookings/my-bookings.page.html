@@ -1,7 +1,7 @@
 <section class="space-y-6">
   <header>
     <h1 class="h2">Mis reservas</h1>
-    <p class="text-body text-charcoal-medium dark:text-pearl-light/80">
+    <p class="text-body text-gray-600 dark:text-beige-200/80">
       Seguimiento de tus pedidos y su estado actual.
     </p>
   </header>
@@ -14,20 +14,20 @@
     <button
       *ngFor="let filter of statusFilters"
       (click)="setStatusFilter(filter)"
-      [class.bg-accent-petrol]="statusFilter() === filter"
+      [class.bg-sky-600]="statusFilter() === filter"
       [class.text-white]="statusFilter() === filter"
-      [class.bg-white dark:bg-slate-deep]="statusFilter() !== filter"
-      [class.text-accent-petrol]="statusFilter() !== filter"
-      [class.dark:bg-slate-deep]="statusFilter() !== filter"
-      [class.dark:text-accent-warm]="statusFilter() !== filter"
-      class="px-4 py-2 rounded-lg border-2 border-accent-petrol/30 dark:border-accent-petrol/50 font-medium text-sm transition-colors hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20"
+      [class.bg-white dark:bg-gray-700]="statusFilter() !== filter"
+      [class.text-sky-600]="statusFilter() !== filter"
+      [class.dark:bg-gray-700]="statusFilter() !== filter"
+      [class.dark:text-beige-400]="statusFilter() !== filter"
+      class="px-4 py-2 rounded-lg border-2 border-sky-600/30 dark:border-sky-600/50 font-medium text-sm transition-colors hover:bg-sky-600/10 dark:hover:bg-sky-600/20"
     >
       {{ getFilterLabel(filter) }}
       <span
         *ngIf="statusCounts()[filter] > 0"
         class="ml-2 px-2 py-0.5 rounded-full text-xs"
-        [class.bg-white dark:bg-slate-deep/20]="statusFilter() === filter"
-        [class.bg-accent-petrol/10]="statusFilter() !== filter"
+        [class.bg-white dark:bg-gray-700/20]="statusFilter() === filter"
+        [class.bg-sky-600/10]="statusFilter() !== filter"
       >
         {{ statusCounts()[filter] }}
       </span>
@@ -36,11 +36,11 @@
 
   <!-- Error message -->
   <div *ngIf="error()" class="info-card-warm">
-    <p class="font-semibold text-smoke-black dark:text-pearl-light">Error al cargar reservas</p>
-    <p class="mt-1 text-charcoal-medium dark:text-pearl-light/80">{{ error() }}</p>
+    <p class="font-semibold text-gray-900 dark:text-beige-200">Error al cargar reservas</p>
+    <p class="mt-1 text-gray-600 dark:text-beige-200/80">{{ error() }}</p>
     <button
       (click)="loadBookings()"
-      class="mt-3 px-3 py-2 bg-accent-warm text-white rounded-xl text-xs font-semibold hover:bg-accent-petrol transition-base"
+      class="mt-3 px-3 py-2 bg-beige-400 text-white rounded-xl text-xs font-semibold hover:bg-sky-600 transition-base"
     >
       Reintentar
     </button>
@@ -49,7 +49,7 @@
   <!-- Loading state -->
   <div
     *ngIf="loading() && !error()"
-    class="text-center text-sm text-charcoal-medium dark:text-pearl-light/70"
+    class="text-center text-sm text-gray-600 dark:text-beige-200/70"
   >
     Cargando reservas...
   </div>
@@ -77,14 +77,14 @@
             />
             <!-- Dark Overlay -->
             <div
-              class="absolute inset-0 bg-gradient-to-b from-smoke-black/60 via-smoke-black/40 to-smoke-black/70"
+              class="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/40 to-gray-900/70"
             ></div>
           </div>
 
           <!-- Default Hero (no image) -->
           <ng-template #defaultBookingHero>
             <div
-              class="absolute inset-0 bg-gradient-to-br from-accent-petrol via-accent-petrol/90 to-accent-warm"
+              class="absolute inset-0 bg-gradient-to-br from-sky-600 via-sky-600/90 to-beige-400"
             >
               <!-- Decorative Pattern -->
               <div
@@ -141,7 +141,7 @@
 
         <!-- Action Buttons by Status -->
         <div
-          class="p-4 sm:p-5 bg-white dark:bg-slate-deep-pure dark:bg-slate-deep/90 transition-base"
+          class="p-4 sm:p-5 bg-white dark:bg-gray-700-pure dark:bg-gray-700/90 transition-base"
           *ngIf="booking.status === 'pending' || booking.status === 'confirmed'"
           [attr.data-tour-step]="'booking-actions-' + booking.status"
         >
@@ -174,7 +174,7 @@
                 [queryParams]="{ bookingId: booking.id }"
                 (click)="$event.stopPropagation()"
                 data-tour-step="complete-payment-btn"
-                class="flex-1 px-4 py-3 bg-gradient-to-r from-accent-petrol to-accent-warm text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 order-1"
+                class="flex-1 px-4 py-3 bg-gradient-to-r from-sky-600 to-beige-400 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 order-1"
               >
                 💳 Completar Pago
               </button>
@@ -184,7 +184,7 @@
                 [routerLink]="['/bookings', booking.id]"
                 (click)="$event.stopPropagation()"
                 data-tour-step="view-detail-btn"
-                class="px-4 py-3 border-2 border-accent-petrol/30 dark:border-accent-petrol/50 text-accent-petrol dark:text-accent-warm rounded-xl font-semibold hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base order-2 sm:flex-none sm:w-auto"
+                class="px-4 py-3 border-2 border-sky-600/30 dark:border-sky-600/50 text-sky-600 dark:text-beige-400 rounded-xl font-semibold hover:bg-sky-600/10 dark:hover:bg-sky-600/20 transition-base order-2 sm:flex-none sm:w-auto"
               >
                 📄 Ver Detalle
               </button>
@@ -192,7 +192,7 @@
               <!-- Cancelar (siempre visible) -->
               <button
                 (click)="$event.preventDefault(); cancelBooking(booking.id)"
-                class="px-4 py-3 border-2 border-pearl-gray dark:border-gray-600/60 dark:border-neutral-700 text-charcoal-medium dark:text-pearl-light rounded-xl font-semibold hover:bg-pearl-gray/20 dark:hover:bg-neutral-800 transition-base order-3 sm:flex-none sm:w-auto"
+                class="px-4 py-3 border-2 border-gray-200 dark:border-gray-600/60 dark:border-neutral-700 text-gray-600 dark:text-beige-200 rounded-xl font-semibold hover:bg-gray-200/20 dark:hover:bg-neutral-800 transition-base order-3 sm:flex-none sm:w-auto"
               >
                 🗑️ Cancelar
               </button>
@@ -201,7 +201,7 @@
 
           <!-- Confirmed: Show Next Steps -->
           <div *ngIf="booking.status === 'confirmed'" class="space-y-3">
-            <p class="text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2">
+            <p class="text-sm font-medium text-gray-900 dark:text-ivory-50 mb-2">
               📋 Próximos pasos:
             </p>
 
@@ -211,10 +211,10 @@
               <button
                 [routerLink]="['/bookings', booking.id]"
                 data-tour-step="view-detail-confirmed-btn"
-                class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-accent-petrol/30 dark:border-accent-petrol/50 bg-accent-petrol/5 dark:bg-accent-petrol/10 hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-sky-600/30 dark:border-sky-600/50 bg-sky-600/5 dark:bg-sky-600/10 hover:bg-sky-600/10 dark:hover:bg-sky-600/20 transition-base"
               >
                 <span class="text-2xl">📄</span>
-                <span class="text-xs font-medium text-accent-petrol dark:text-accent-warm"
+                <span class="text-xs font-medium text-sky-600 dark:text-beige-400"
                   >Ver Detalle</span
                 >
               </button>
@@ -222,30 +222,30 @@
               <button
                 (click)="$event.preventDefault(); showInstructions(booking)"
                 data-tour-step="view-instructions-btn"
-                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-pearl-gray dark:border-gray-600/40 dark:border-neutral-700 hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-gray-200 dark:border-gray-600/40 dark:border-neutral-700 hover:bg-sky-600/10 dark:hover:bg-sky-600/20 transition-base"
               >
                 <span class="text-2xl">📋</span>
-                <span class="text-xs font-medium text-charcoal-medium dark:text-pearl-light"
+                <span class="text-xs font-medium text-gray-600 dark:text-beige-200"
                   >Instrucciones</span
                 >
               </button>
               <button
                 (click)="$event.preventDefault(); openChat(booking)"
                 data-tour-step="chat-btn"
-                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-pearl-gray dark:border-gray-600/40 dark:border-neutral-700 hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-gray-200 dark:border-gray-600/40 dark:border-neutral-700 hover:bg-sky-600/10 dark:hover:bg-sky-600/20 transition-base"
               >
                 <span class="text-2xl">💬</span>
-                <span class="text-xs font-medium text-charcoal-medium dark:text-pearl-light"
+                <span class="text-xs font-medium text-gray-600 dark:text-beige-200"
                   >Chat</span
                 >
               </button>
               <button
                 (click)="$event.preventDefault(); showMap(booking)"
                 data-tour-step="map-btn"
-                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-pearl-gray dark:border-gray-600/40 dark:border-neutral-700 hover:bg-accent-petrol/10 dark:hover:bg-accent-petrol/20 transition-base"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-gray-200 dark:border-gray-600/40 dark:border-neutral-700 hover:bg-sky-600/10 dark:hover:bg-sky-600/20 transition-base"
               >
                 <span class="text-2xl">🗺️</span>
-                <span class="text-xs font-medium text-charcoal-medium dark:text-pearl-light"
+                <span class="text-xs font-medium text-gray-600 dark:text-beige-200"
                   >Mapa</span
                 >
               </button>
@@ -255,17 +255,17 @@
 
         <!-- Card Footer with Price and Action -->
         <div
-          class="p-4 sm:p-5 bg-white dark:bg-slate-deep-pure dark:bg-slate-deep/90 border-t border-pearl-gray dark:border-gray-600/40 dark:border-slate-deep/60 transition-base"
+          class="p-4 sm:p-5 bg-white dark:bg-gray-700-pure dark:bg-gray-700/90 border-t border-gray-200 dark:border-gray-600/40 dark:border-gray-700/60 transition-base"
         >
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70 mb-1">Total</p>
-              <p class="text-lg sm:text-xl font-bold text-smoke-black dark:text-ivory-luminous">
+              <p class="text-xs text-gray-400 dark:text-beige-200/70 mb-1">Total</p>
+              <p class="text-lg sm:text-xl font-bold text-gray-900 dark:text-ivory-50">
                 {{ booking.total_amount | money }}
               </p>
             </div>
             <div
-              class="flex items-center gap-2 text-accent-petrol dark:text-ivory-luminous font-semibold text-sm hover:text-accent-warm dark:hover:text-amber-200 transition-base"
+              class="flex items-center gap-2 text-sky-600 dark:text-ivory-50 font-semibold text-sm hover:text-beige-400 dark:hover:text-amber-200 transition-base"
             >
               Ver detalle
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -285,7 +285,7 @@
 
   <!-- Empty state -->
   <div *ngIf="!loading() && !error() && bookings().length === 0">
-    <p class="text-caption text-center py-8 text-charcoal-medium dark:text-pearl-light/70">
+    <p class="text-caption text-center py-8 text-gray-600 dark:text-beige-200/70">
       No tenés reservas todavía.
     </p>
   </div>
@@ -295,12 +295,12 @@
     *ngIf="!loading() && !error() && bookings().length > 0 && filteredBookings().length === 0"
     class="text-center py-12"
   >
-    <p class="text-lg font-medium text-charcoal-medium dark:text-pearl-light/80 mb-2">
+    <p class="text-lg font-medium text-gray-600 dark:text-beige-200/80 mb-2">
       No hay reservas con el estado "{{ getFilterLabel(statusFilter()) }}"
     </p>
     <button
       (click)="setStatusFilter('all')"
-      class="px-4 py-2 bg-accent-petrol text-white rounded-lg font-medium hover:bg-accent-warm transition-colors"
+      class="px-4 py-2 bg-sky-600 text-white rounded-lg font-medium hover:bg-beige-400 transition-colors"
     >
       Ver todas las reservas
     </button>

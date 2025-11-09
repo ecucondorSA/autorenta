@@ -32,7 +32,7 @@ export class AutorentarCreditCardComponent {
     if (days === null) return 'text-gray-600 dark:text-gray-300';
     if (this.isExpired()) return 'text-red-600';
     if (days <= 30) return 'text-orange-600';
-    if (days <= 90) return 'text-yellow-600';
+    if (days <= 90) return 'text-beige-500';
     return 'text-green-600';
   }
 
@@ -52,7 +52,7 @@ export class AutorentarCreditCardComponent {
     const balance = this.balance();
     if (balance <= 0) return 'text-red-600';
     if (balance < 100) return 'text-orange-600';
-    if (balance < 200) return 'text-yellow-600';
+    if (balance < 200) return 'text-beige-500';
     return 'text-green-600';
   }
 

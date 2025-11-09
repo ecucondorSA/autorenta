@@ -80,7 +80,7 @@ export class PersonalizedDashboardComponent implements OnInit {
         description: `${this.stats().unreadNotifications} sin leer`,
         icon: '🔔',
         route: '/notifications',
-        color: 'bg-blue-500',
+        color: 'bg-sky-500',
         priority: 1,
       },
       {
@@ -103,7 +103,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           description: 'Gana dinero alquilando',
           icon: '🚗',
           route: '/cars/publish',
-          color: 'bg-purple-500',
+          color: 'bg-sky-500',
           priority: 3,
         },
         {
@@ -112,7 +112,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           description: `${this.stats().availableCars} publicados`,
           icon: '🏢',
           route: '/cars/my',
-          color: 'bg-indigo-500',
+          color: 'bg-sky-500',
           priority: 4,
         },
         {
@@ -135,7 +135,7 @@ export class PersonalizedDashboardComponent implements OnInit {
           description: 'Encuentra el ideal',
           icon: '🔍',
           route: '/cars',
-          color: 'bg-blue-600',
+          color: 'bg-sky-600',
           priority: 3,
         },
         {

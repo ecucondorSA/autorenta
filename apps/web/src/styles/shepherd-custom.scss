@@ -2,7 +2,7 @@
  * Shepherd.js Custom Styles para AutoRenta
  *
  * ✅ 100% Alineado con Design System AutoRenta
- * - Accent petrol (#2C4A52) como color primario
+ * - Accent petrol (#0284C7) como color primario
  * - Tipografía Inter con escala modular
  * - Variables de dark mode del sistema
  * - Sombras premium sutiles
@@ -16,25 +16,25 @@
 // ══════════════════════════════════════════════════════════════════════
 
 // Colores Primarios
-$shepherd-primary: #2c4a52; // accent-petrol
+$shepherd-primary: #0284C7; // accent-petrol
 $shepherd-primary-hover: #234047; // Más oscuro para hover
-$shepherd-accent-warm: #8b7355; // accent-warm para highlights
+$shepherd-accent-warm: #DDCCA9; // accent-warm para highlights
 
 // Fondos Light Mode
 $shepherd-bg-light: #ffffff; // white-pure
-$shepherd-bg-secondary-light: #f8f6f3; // ivory-soft
+$shepherd-bg-secondary-light: #FDF9F3; // ivory-soft
 
 // Textos Light Mode
-$shepherd-text-dark: #1a1a1a; // smoke-black
-$shepherd-text-medium: #4b4b4b; // charcoal-medium
-$shepherd-text-light: #8e8e8e; // ash-gray
+$shepherd-text-dark: #171717; // smoke-black
+$shepherd-text-medium: #525252; // charcoal-medium
+$shepherd-text-light: #A3A3A3; // ash-gray
 
 // Bordes
-$shepherd-border-light: #d9d6d0; // pearl-gray
+$shepherd-border-light: #E5E5E5; // pearl-gray
 
 // Fondos Dark Mode
 $shepherd-bg-dark: #1e1e1e; // anthracite
-$shepherd-bg-secondary-dark: #2a2a2a; // slate-deep
+$shepherd-bg-secondary-dark: #404040; // slate-deep
 
 // Textos Dark Mode
 $shepherd-text-dark-mode: #faf9f6; // ivory-luminous
@@ -153,7 +153,7 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
   &:hover {
     background: $shepherd-primary-hover;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(44, 74, 82, 0.25); // accent-petrol shadow
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); // accent-petrol shadow
   }
 
   &:active {
@@ -316,7 +316,7 @@ $shepherd-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.12);
 // ══════════════════════════════════════════════════════════════════════
 
 .shepherd-target {
-  box-shadow: 0 0 0 4px rgba(44, 74, 82, 0.25) !important; // accent-petrol glow
+  box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.25) !important; // accent-petrol glow
   transition: box-shadow 0.3s ease;
   border-radius: 8px;
 }

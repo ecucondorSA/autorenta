@@ -13,7 +13,7 @@
       >
         <span
           *ngIf="exporting()"
-          class="inline-block h-2 w-2 animate-pulse rounded-full bg-white dark:bg-slate-deep"
+          class="inline-block h-2 w-2 animate-pulse rounded-full bg-white dark:bg-gray-700"
           aria-hidden="true"
         ></span>
         Exportar inspección Supabase
@@ -30,20 +30,20 @@
 
   <!-- Database Statistics -->
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white dark:bg-gray-700 p-5 shadow-sm">
       <p class="text-sm font-medium text-slate-600">Usuarios Registrados</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalProfiles }}</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white dark:bg-gray-700 p-5 shadow-sm">
       <p class="text-sm font-medium text-slate-600">Total de Autos</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalCars }}</p>
       <p class="mt-1 text-xs text-slate-500">{{ stats().activeCars }} activos</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white dark:bg-gray-700 p-5 shadow-sm">
       <p class="text-sm font-medium text-slate-600">Fotos de Autos</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalPhotos }}</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white dark:bg-gray-700 p-5 shadow-sm">
       <p class="text-sm font-medium text-slate-600">Reservas</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalBookings }}</p>
     </div>
@@ -56,7 +56,7 @@
         <h2 class="text-xl font-semibold text-slate-900">🔍 Verificaciones de Identidad</h2>
         <a
           routerLink="/admin/verifications"
-          class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700">
+          class="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
           Ver Cola →
         </a>
       </div>
@@ -87,11 +87,11 @@
         </div>
         <div class="flex items-center justify-between px-3 py-2 bg-white rounded-lg">
           <span class="text-slate-600">Nivel 2 (Participante):</span>
-          <span class="font-semibold text-blue-600">{{ verificationStats()!.level_2_users }}</span>
+          <span class="font-semibold text-sky-600">{{ verificationStats()!.level_2_users }}</span>
         </div>
         <div class="flex items-center justify-between px-3 py-2 bg-white rounded-lg">
           <span class="text-slate-600">Nivel 3 (Verificado Full):</span>
-          <span class="font-semibold text-purple-600">{{ verificationStats()!.level_3_users }}</span>
+          <span class="font-semibold text-sky-600">{{ verificationStats()!.level_3_users }}</span>
         </div>
       </div>
     </div>
@@ -124,5 +124,5 @@
   </div>
 
   <p *ngIf="loading()" class="text-center text-sm text-slate-500">Cargando datos...</p>
-  <p *ngIf="message()" class="rounded-lg bg-blue-50 p-3 text-sm text-blue-800">{{ message() }}</p>
+  <p *ngIf="message()" class="rounded-lg bg-sky-50 p-3 text-sm text-sky-600">{{ message() }}</p>
 </section>

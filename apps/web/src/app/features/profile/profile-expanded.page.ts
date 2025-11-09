@@ -350,7 +350,7 @@ export class ProfileExpandedPage {
   getKycStatusClass(status: KycStatus): string {
     const map: Record<KycStatus, string> = {
       'not_started': 'bg-gray-100 text-gray-800',
-      'pending': 'bg-yellow-100 text-yellow-800',
+      'pending': 'bg-beige-100 text-beige-500',
       'verified': 'bg-green-100 text-green-800',
       'rejected': 'bg-red-100 text-red-800',
     };
@@ -370,7 +370,7 @@ export class ProfileExpandedPage {
   getVerificationStatusClass(status: VerificationStatus): string {
     const map: Record<VerificationStatus, string> = {
       'VERIFICADO': 'bg-green-100 text-green-800',
-      'PENDIENTE': 'bg-yellow-100 text-yellow-800',
+      'PENDIENTE': 'bg-beige-100 text-beige-500',
       'RECHAZADO': 'bg-red-100 text-red-800',
     };
     return map[status];

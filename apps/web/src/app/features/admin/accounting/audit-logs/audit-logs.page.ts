@@ -62,7 +62,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
           <div class="flex items-end">
             <button
               (click)="loadLogs()"
-              class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              class="w-full rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
             >
               Filtrar
             </button>
@@ -72,7 +72,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent"></div>
         </div>
       } @else if (logs().data.length === 0) {
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -85,8 +85,8 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
               class="rounded-lg border p-4"
               [class.bg-red-50]="log.severity === 'critical'"
               [class.bg-orange-50]="log.severity === 'high'"
-              [class.bg-yellow-50]="log.severity === 'medium'"
-              [class.bg-blue-50]="log.severity === 'low'"
+              [class.bg-beige-50]="log.severity === 'medium'"
+              [class.bg-sky-50]="log.severity === 'low'"
             >
               <div class="flex items-start justify-between">
                 <div class="flex-1">
@@ -97,10 +97,10 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
                       [class.text-red-800]="log.severity === 'critical'"
                       [class.bg-orange-100]="log.severity === 'high'"
                       [class.text-orange-800]="log.severity === 'high'"
-                      [class.bg-yellow-100]="log.severity === 'medium'"
-                      [class.text-yellow-800]="log.severity === 'medium'"
-                      [class.bg-blue-100]="log.severity === 'low'"
-                      [class.text-blue-800]="log.severity === 'low'"
+                      [class.bg-beige-100]="log.severity === 'medium'"
+                      [class.text-beige-500]="log.severity === 'medium'"
+                      [class.bg-sky-100]="log.severity === 'low'"
+                      [class.text-sky-600]="log.severity === 'low'"
                     >
                       {{ log.severity }}
                     </span>

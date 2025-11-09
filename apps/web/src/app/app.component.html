@@ -15,15 +15,15 @@
 <div
   [class.opacity-0]="showSplash()"
   [class.pointer-events-none]="showSplash()"
-  class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-soft dark:bg-graphite-dark transition-opacity duration-500"
+  class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-ivory-100 dark:bg-gray-900 transition-opacity duration-500"
 >
   <!-- Header (oculto en móvil, visible en desktop) -->
   <header
     id="main-header"
-    class="hidden md:block sticky top-0 z-sticky border-b border-pearl-gray dark:border-gray-600/30 backdrop-blur-md bg-white dark:bg-slate-deep-pure/95 dark:bg-anthracite/95"
+    class="hidden md:block sticky top-0 z-sticky border-b border-gray-200 dark:border-gray-600/30 backdrop-blur-md bg-white dark:bg-gray-700-pure/95 dark:bg-gray-800/95"
   >
     <a
-      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-sand-light dark:bg-slate-deep"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-beige-100 dark:bg-gray-700"
       href="#main-content"
     >
       {{ 'common.skipToContent' | translate }}
@@ -71,12 +71,12 @@
         />
         <span class="flex flex-col leading-tight">
           <span
-            class="text-[1.05rem] font-semibold text-smoke-black dark:text-pearl-light group-hover:text-accent-petrol"
+            class="text-[1.05rem] font-semibold text-gray-900 dark:text-beige-200 group-hover:text-sky-600"
           >
             AutoRentar
           </span>
           <span
-            class="text-[0.68rem] uppercase tracking-[0.22em] text-ash-gray dark:text-pearl-light/65"
+            class="text-[0.68rem] uppercase tracking-[0.22em] text-gray-400 dark:text-beige-200/65"
           >
             Car Sharing
           </span>
@@ -202,8 +202,8 @@
         <a
           *ngIf="isAuthenticatedSig()"
           routerLink="/profile"
-          routerLinkActive="ring-2 ring-accent-petrol"
-          class="relative flex items-center justify-center h-10 w-10 rounded-full overflow-hidden bg-sand-light dark:bg-slate-deep hover:ring-2 hover:ring-accent-petrol/50 transition-all duration-200"
+          routerLinkActive="ring-2 ring-sky-600"
+          class="relative flex items-center justify-center h-10 w-10 rounded-full overflow-hidden bg-beige-100 dark:bg-gray-700 hover:ring-2 hover:ring-sky-600/50 transition-all duration-200"
           [attr.aria-label]="'nav.profile' | translate"
         >
           <img
@@ -215,7 +215,7 @@
           />
           <ng-template #profilePlaceholder>
             <svg
-              class="w-5 h-5 text-charcoal-medium dark:text-pearl-light"
+              class="w-5 h-5 text-gray-600 dark:text-beige-200"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -245,7 +245,7 @@
   <!-- Mobile Sidebar Overlay -->
   <div
     *ngIf="sidebarOpen()"
-    class="fixed inset-0 bg-smoke-black/50 z-modal-backdrop lg:hidden"
+    class="fixed inset-0 bg-gray-900/50 z-modal-backdrop lg:hidden"
     (click)="closeSidebar()"
     aria-hidden="true"
   ></div>
@@ -257,7 +257,7 @@
     [class.translate-x-0]="sidebarOpen()"
     [class.-translate-x-full]="!sidebarOpen()"
     [class.hidden]="!sidebarOpen()"
-    class="fixed left-0 top-0 h-full w-72 bg-white dark:bg-slate-deep-pure dark:bg-anthracite z-modal transform transition-smooth lg:hidden overflow-auto will-change-transform"
+    class="fixed left-0 top-0 h-full w-72 bg-white dark:bg-gray-700-pure dark:bg-gray-800 z-modal transform transition-smooth lg:hidden overflow-auto will-change-transform"
     role="dialog"
     aria-modal="true"
     aria-label="Menú"
@@ -298,7 +298,7 @@
         <a
           routerLink="/cars"
           (click)="closeSidebar()"
-          class="block px-4 py-3 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
+          class="block px-4 py-3 rounded-xl hover:bg-beige-100 dark:hover:bg-gray-700 transition-base font-medium"
         >
           {{ 'nav.cars' | translate }}
         </a>
@@ -306,7 +306,7 @@
           *ngIf="isAuthenticatedSig()"
           routerLink="/cars/publish"
           (click)="closeSidebar()"
-          class="block px-4 py-3 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
+          class="block px-4 py-3 rounded-xl hover:bg-beige-100 dark:hover:bg-gray-700 transition-base font-medium"
         >
           {{ 'nav.publish' | translate }}
         </a>
@@ -314,7 +314,7 @@
           *ngIf="isAuthenticatedSig()"
           routerLink="/bookings"
           (click)="closeSidebar()"
-          class="block px-4 py-3 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
+          class="block px-4 py-3 rounded-xl hover:bg-beige-100 dark:hover:bg-gray-700 transition-base font-medium"
         >
           {{ 'nav.bookings' | translate }}
         </a>
@@ -322,7 +322,7 @@
           *ngIf="isAuthenticatedSig()"
           routerLink="/wallet"
           (click)="closeSidebar()"
-          class="block px-4 py-3 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
+          class="block px-4 py-3 rounded-xl hover:bg-beige-100 dark:hover:bg-gray-700 transition-base font-medium"
         >
           {{ 'nav.wallet' | translate }}
         </a>
@@ -330,10 +330,10 @@
           *ngIf="isAuthenticatedSig()"
           routerLink="/profile"
           (click)="closeSidebar()"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sand-light dark:hover:bg-slate-deep transition-base font-medium"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-beige-100 dark:hover:bg-gray-700 transition-base font-medium"
         >
           <div
-            class="relative h-8 w-8 flex-shrink-0 rounded-full overflow-hidden bg-sand-light dark:bg-slate-deep/70"
+            class="relative h-8 w-8 flex-shrink-0 rounded-full overflow-hidden bg-beige-100 dark:bg-gray-700/70"
           >
             <img
               *ngIf="userProfile()?.avatar_url; else sidebarPlaceholder"
@@ -344,7 +344,7 @@
             />
             <ng-template #sidebarPlaceholder>
               <svg
-                class="h-full w-full p-1.5 text-charcoal-medium dark:text-pearl-light"
+                class="h-full w-full p-1.5 text-gray-600 dark:text-beige-200"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -386,7 +386,7 @@
   <a
     *ngIf="compareCountSig() > 0"
     routerLink="/cars/compare"
-    class="fixed bottom-24 right-6 md:bottom-6 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-accent-petrol text-white shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 animate-fade-in"
+    class="fixed bottom-24 right-6 md:bottom-6 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-sky-600 text-white shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 animate-fade-in"
     aria-label="Ver comparación de autos"
   >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -402,7 +402,7 @@
 
   <!-- Footer (oculto en móvil, visible en desktop) -->
   <footer
-    class="hidden md:block border-t border-pearl-gray dark:border-gray-600/40 dark:border-white/10 bg-gradient-to-b from-white-pure/98 via-white-pure to-white-pure dark:from-[#12171a] dark:via-[#141b1f] dark:to-[#161d22]"
+    class="hidden md:block border-t border-gray-200 dark:border-gray-600/40 dark:border-white/10 bg-gradient-to-b from-white/98 via-white to-white dark:from-[#12171a] dark:via-[#141b1f] dark:to-[#161d22]"
   >
     <div class="mx-auto max-w-7xl px-container py-section-sm">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
@@ -417,7 +417,7 @@
               class="h-full w-auto object-contain drop-shadow-lg"
             />
           </div>
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light/80 leading-relaxed max-w-xs">
+          <p class="text-sm text-gray-600 dark:text-beige-200/80 leading-relaxed max-w-xs">
             Alquiler de autos premium en Uruguay. Conectamos personas y experiencias con vehículos
             de anfitriones verificados.
           </p>
@@ -425,38 +425,38 @@
 
         <!-- Links -->
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-ivory-50 mb-4">
             Explorar
           </h4>
-          <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
+          <ul class="space-y-3 text-sm text-gray-600 dark:text-beige-200/80">
             <li>
-              <a routerLink="/cars" class="hover:text-accent-petrol transition-base"
+              <a routerLink="/cars" class="hover:text-sky-600 transition-base"
                 >Buscar autos</a
               >
             </li>
             <li>
-              <a routerLink="/cars/publish" class="hover:text-accent-petrol transition-base"
+              <a routerLink="/cars/publish" class="hover:text-sky-600 transition-base"
                 >Publicar auto</a
               >
             </li>
             <li>
-              <a routerLink="/wallet" class="hover:text-accent-petrol transition-base">Wallet</a>
+              <a routerLink="/wallet" class="hover:text-sky-600 transition-base">Wallet</a>
             </li>
           </ul>
         </div>
 
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-ivory-50 mb-4">
             Legal
           </h4>
-          <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
+          <ul class="space-y-3 text-sm text-gray-600 dark:text-beige-200/80">
             <li>
-              <a href="#" class="hover:text-accent-petrol transition-base"
+              <a href="#" class="hover:text-sky-600 transition-base"
                 >Términos y condiciones</a
               >
             </li>
             <li>
-              <a href="#" class="hover:text-accent-petrol transition-base"
+              <a href="#" class="hover:text-sky-600 transition-base"
                 >Política de privacidad</a
               >
             </li>
@@ -464,14 +464,14 @@
         </div>
 
         <div>
-          <h4 class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-4">
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-ivory-50 mb-4">
             Contacto
           </h4>
-          <ul class="space-y-3 text-sm text-charcoal-medium dark:text-pearl-light/80">
+          <ul class="space-y-3 text-sm text-gray-600 dark:text-beige-200/80">
             <li>
               <a
                 href="mailto:autorentardev&#64;gmail.com"
-                class="inline-flex items-center gap-2 hover:text-accent-petrol transition-base"
+                class="inline-flex items-center gap-2 hover:text-sky-600 transition-base"
               >
                 <svg
                   class="h-4 w-4"
@@ -490,7 +490,7 @@
             <li>
               <a
                 href="tel:+59899123456"
-                class="inline-flex items-center gap-2 hover:text-accent-petrol transition-base"
+                class="inline-flex items-center gap-2 hover:text-sky-600 transition-base"
               >
                 <svg
                   class="h-4 w-4"
@@ -513,7 +513,7 @@
 
           <div class="mt-5">
             <h5
-              class="text-xs font-semibold uppercase tracking-[0.2em] text-ash-gray dark:text-pearl-light/60 mb-3"
+              class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-beige-200/60 mb-3"
             >
               Síguenos
             </h5>
@@ -521,7 +521,7 @@
               <a
                 href="#"
                 aria-label="Instagram"
-                class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-pearl-gray dark:border-gray-600/50 bg-white dark:bg-slate-deep/80 text-accent-petrol shadow-sm transition transform hover:scale-105 dark:border-white/15 dark:bg-white dark:bg-slate-deep/5 dark:text-pearl-light"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 dark:border-gray-600/50 bg-white dark:bg-gray-700/80 text-sky-600 shadow-sm transition transform hover:scale-105 dark:border-white/15 dark:bg-white dark:bg-gray-700/5 dark:text-beige-200"
               >
                 <svg
                   class="h-4 w-4"
@@ -539,7 +539,7 @@
               <a
                 href="#"
                 aria-label="WhatsApp"
-                class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-pearl-gray dark:border-gray-600/50 bg-white dark:bg-slate-deep/80 text-accent-petrol shadow-sm transition transform hover:scale-105 dark:border-white/15 dark:bg-white dark:bg-slate-deep/5 dark:text-pearl-light"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 dark:border-gray-600/50 bg-white dark:bg-gray-700/80 text-sky-600 shadow-sm transition transform hover:scale-105 dark:border-white/15 dark:bg-white dark:bg-gray-700/5 dark:text-beige-200"
               >
                 <svg
                   class="h-4 w-4"
@@ -562,8 +562,8 @@
       </div>
 
       <!-- Copyright -->
-      <div class="pt-6 border-t border-pearl-gray dark:border-gray-600/30 dark:border-white/10">
-        <p class="text-xs text-ash-gray dark:text-pearl-light/70/90 dark:text-pearl-light/60 text-center">
+      <div class="pt-6 border-t border-gray-200 dark:border-gray-600/30 dark:border-white/10">
+        <p class="text-xs text-gray-400 dark:text-beige-200/70/90 dark:text-beige-200/60 text-center">
           © {{ year }} Autorentar. Todos los derechos reservados.
         </p>
       </div>

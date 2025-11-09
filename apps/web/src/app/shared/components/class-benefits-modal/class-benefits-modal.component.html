@@ -20,7 +20,7 @@
           </svg>
         </button>
       </div>
-      <p class="text-blue-100 mt-2">
+      <p class="text-sky-100 mt-2">
         Conduce responsablemente y mejora tu clase para obtener mejores tarifas y garantías.
       </p>
     </div>
@@ -29,7 +29,7 @@
     <div class="p-6">
       <!-- Loading State -->
       <div *ngIf="loading" class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600"></div>
       </div>
 
       <!-- Error State -->
@@ -74,7 +74,7 @@
             </div>
 
             <!-- Next Better Class -->
-            <div class="bg-white rounded-lg p-4 border-2 border-blue-200" *ngIf="benefits.can_improve">
+            <div class="bg-white rounded-lg p-4 border-2 border-sky-200" *ngIf="benefits.can_improve">
               <div class="flex items-center mb-2">
                 <div [class]="getClassBadgeColor(benefits.next_better_class)"
                      class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
@@ -113,44 +113,44 @@
         </div>
 
         <!-- Progress to Next Class -->
-        <div *ngIf="benefits.can_improve" class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 class="text-lg font-semibold text-blue-900 mb-4">¿Cómo Mejorar?</h3>
+        <div *ngIf="benefits.can_improve" class="bg-sky-50 border border-sky-200 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-sky-700 mb-4">¿Cómo Mejorar?</h3>
           <div class="space-y-3">
             <div class="flex items-start">
-              <svg class="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-6 h-6 text-sky-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
               </svg>
               <div>
-                <p class="text-sm font-medium text-blue-900">
+                <p class="text-sm font-medium text-sky-700">
                   Completa {{ benefits.clean_bookings_needed }} reservas más sin daños
                 </p>
-                <p class="text-xs text-blue-700 mt-1">
+                <p class="text-xs text-sky-700 mt-1">
                   Cada 5 reservas sin reclamos mejora tu clase en 1 nivel
                 </p>
               </div>
             </div>
             <div class="flex items-start">
-              <svg class="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-6 h-6 text-sky-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
               </svg>
               <div>
-                <p class="text-sm font-medium text-blue-900">
+                <p class="text-sm font-medium text-sky-700">
                   Evita daños y reclamos en tus alquileres
                 </p>
-                <p class="text-xs text-blue-700 mt-1">
+                <p class="text-xs text-sky-700 mt-1">
                   Los reclamos empeoran tu clase según severidad (menor/moderado/mayor)
                 </p>
               </div>
             </div>
             <div class="flex items-start">
-              <svg class="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-6 h-6 text-sky-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
               </svg>
               <div>
-                <p class="text-sm font-medium text-blue-900">
+                <p class="text-sm font-medium text-sky-700">
                   Mantén un buen score de conducción
                 </p>
-                <p class="text-xs text-blue-700 mt-1">
+                <p class="text-xs text-sky-700 mt-1">
                   Score 90+ = mejores tarifas • Score < 40 = recargos
                 </p>
               </div>
@@ -158,8 +158,8 @@
           </div>
 
           <!-- Savings Preview -->
-          <div class="mt-4 bg-white rounded-lg p-4 border border-blue-300">
-            <p class="text-sm font-medium text-blue-900 mb-2">💰 Ahorro Estimado al Mejorar</p>
+          <div class="mt-4 bg-white rounded-lg p-4 border border-sky-300">
+            <p class="text-sm font-medium text-sky-700 mb-2">💰 Ahorro Estimado al Mejorar</p>
             <p class="text-lg font-bold text-green-600">
               {{ getSavingsExample(benefits.next_better_fee_multiplier, benefits.next_better_guarantee_multiplier) }}
             </p>
@@ -185,13 +185,13 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                   <tr *ngFor="let class of [0,1,2,3,4,5,6,7,8,9,10]"
-                      [class.bg-blue-50]="class === benefits.current_class">
+                      [class.bg-sky-50]="class === benefits.current_class">
                     <td class="px-4 py-3 whitespace-nowrap">
                       <div class="flex items-center">
                         <div [class]="getClassBadgeColor(class)" class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
                           <span class="text-white text-sm font-bold">{{ class }}</span>
                         </div>
-                        <span *ngIf="class === benefits.current_class" class="text-xs font-medium text-blue-600">(Actual)</span>
+                        <span *ngIf="class === benefits.current_class" class="text-xs font-medium text-sky-600">(Actual)</span>
                       </div>
                     </td>
                     <td class="px-4 py-3 text-sm text-gray-900">
@@ -258,7 +258,7 @@
     <div class="bg-gray-50 px-6 py-4 rounded-b-lg border-t border-gray-200">
       <button
         (click)="onClose()"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+        class="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
       >
         Cerrar
       </button>

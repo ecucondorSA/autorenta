@@ -45,7 +45,7 @@ interface WalletLedgerEntry {
       @if (loading()) {
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
           <div
-            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto mb-4"
           ></div>
           <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando datos del fondo...</p>
         </div>
@@ -179,7 +179,7 @@ interface WalletLedgerEntry {
               <button
                 (click)="loadRecentActivity()"
                 [disabled]="loadingActivity()"
-                class="text-sm text-blue-600 hover:text-blue-700 disabled:opacity-50"
+                class="text-sm text-sky-600 hover:text-sky-700 disabled:opacity-50"
               >
                 {{ loadingActivity() ? 'Cargando...' : 'Actualizar' }}
               </button>
@@ -188,7 +188,7 @@ interface WalletLedgerEntry {
             @if (loadingActivity()) {
               <div class="p-8 text-center">
                 <div
-                  class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
+                  class="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600 mx-auto"
                 ></div>
               </div>
             } @else if (recentActivity().length === 0) {
@@ -241,15 +241,15 @@ interface WalletLedgerEntry {
 
           <!-- Action Buttons (Admin Only) -->
           <div
-            class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6"
+            class="bg-beige-50 dark:bg-yellow-900/20 border border-beige-200 dark:border-yellow-800 rounded-lg p-6"
           >
-            <h3 class="text-lg font-semibold text-yellow-900 dark:text-yellow-100 mb-4">
+            <h3 class="text-lg font-semibold text-beige-500 dark:text-beige-100 mb-4">
               ⚠️ Acciones Administrativas
             </h3>
             <div class="flex flex-wrap gap-3">
               <button
                 (click)="refreshAll()"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
+                class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700
                        disabled:opacity-50 disabled:cursor-not-allowed"
                 [disabled]="loading()"
               >

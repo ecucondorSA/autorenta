@@ -1,5 +1,5 @@
 <div
-  class="min-h-screen bg-ivory-soft dark:bg-graphite-dark flex items-center justify-center py-12 px-4"
+  class="min-h-screen bg-ivory-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4"
 >
   <div class="w-full max-w-md">
     <!-- Logo -->
@@ -11,10 +11,10 @@
           class="h-full w-auto object-contain scale-[2]"
         />
       </div>
-      <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous mb-2">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-50 mb-2">
         Crear cuenta
       </h1>
-      <p class="text-charcoal-medium dark:text-pearl-light">Unite a la comunidad de Autorentar</p>
+      <p class="text-gray-600 dark:text-beige-200">Unite a la comunidad de Autorentar</p>
     </div>
 
     <!-- Card -->
@@ -24,7 +24,7 @@
         type="button"
         (click)="signUpWithGoogle()"
         [disabled]="loading()"
-        class="w-full flex items-center justify-center gap-3 rounded-lg border-2 border-pearl-gray dark:border-charcoal-medium bg-white dark:bg-graphite-light px-6 py-3 text-sm font-semibold text-smoke-black dark:text-ivory-luminous hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+        class="w-full flex items-center justify-center gap-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-graphite-light px-6 py-3 text-sm font-semibold text-gray-900 dark:text-ivory-50 hover:bg-beige-200 dark:hover:bg-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
       >
         <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -51,11 +51,11 @@
       <!-- Divider -->
       <div class="relative my-6">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-pearl-gray dark:border-charcoal-medium"></div>
+          <div class="w-full border-t border-gray-200 dark:border-gray-600"></div>
         </div>
         <div class="relative flex justify-center text-sm">
           <span
-            class="px-4 bg-white dark:bg-graphite-light text-charcoal-medium dark:text-pearl-light"
+            class="px-4 bg-white dark:bg-graphite-light text-gray-600 dark:text-beige-200"
             >O registrarse con email</span
           >
         </div>
@@ -66,7 +66,7 @@
         <div>
           <label
             for="register-fullname"
-            class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2"
+            class="block text-sm font-medium text-gray-900 dark:text-ivory-50 mb-2"
           >
             Nombre completo<span aria-hidden="true"> *</span>
           </label>
@@ -87,16 +87,16 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
-            [class.border-pearl-gray dark:border-gray-600]="
+            [class.border-gray-200 dark:border-gray-600]="
               !form.controls.fullName.touched || !form.controls.fullName.invalid
             "
             [class.border-red-500]="
               form.controls.fullName.touched && form.controls.fullName.invalid
             "
-            [class.focus:ring-accent-petrol]="
+            [class.focus:ring-sky-600]="
               !form.controls.fullName.touched || !form.controls.fullName.invalid
             "
-            [class.focus:border-accent-petrol]="
+            [class.focus:border-sky-600]="
               !form.controls.fullName.touched || !form.controls.fullName.invalid
             "
           />
@@ -122,7 +122,7 @@
         <div>
           <label
             for="register-email"
-            class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2"
+            class="block text-sm font-medium text-gray-900 dark:text-ivory-50 mb-2"
           >
             Email<span aria-hidden="true"> *</span>
           </label>
@@ -143,12 +143,12 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
-            [class.border-pearl-gray dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.border-gray-200 dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
             [class.border-red-500]="form.controls.email.touched && form.controls.email.invalid"
-            [class.focus:ring-accent-petrol]="
+            [class.focus:ring-sky-600]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
-            [class.focus:border-accent-petrol]="
+            [class.focus:border-sky-600]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
           />
@@ -174,7 +174,7 @@
         <div>
           <label
             for="register-password"
-            class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2"
+            class="block text-sm font-medium text-gray-900 dark:text-ivory-50 mb-2"
           >
             Contraseña<span aria-hidden="true"> *</span>
           </label>
@@ -195,16 +195,16 @@
                 : 'register-password-hint'
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
-            [class.border-pearl-gray dark:border-gray-600]="
+            [class.border-gray-200 dark:border-gray-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
             [class.border-red-500]="
               form.controls.password.touched && form.controls.password.invalid
             "
-            [class.focus:ring-accent-petrol]="
+            [class.focus:ring-sky-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
-            [class.focus:border-accent-petrol]="
+            [class.focus:border-sky-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
           />
@@ -226,7 +226,7 @@
           </p>
           <p
             id="register-password-hint"
-            class="mt-2 text-xs text-charcoal-medium dark:text-pearl-light"
+            class="mt-2 text-xs text-gray-600 dark:text-beige-200"
           >
             Usá al menos 8 caracteres con mayúsculas, minúsculas y números
           </p>
@@ -264,7 +264,7 @@
         <!-- Submit Button -->
         <button
           type="submit"
-          class="w-full rounded-lg bg-accent-petrol px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+          class="w-full rounded-lg bg-sky-600 px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
           [disabled]="form.invalid || loading()"
         >
           <span *ngIf="!loading()">Crear cuenta</span>
@@ -290,8 +290,8 @@
 
         <!-- Login Link -->
         <div class="text-center text-sm pt-2">
-          <span class="text-charcoal-medium dark:text-pearl-light">¿Ya tenés cuenta?</span>
-          <a routerLink="/auth/login" class="text-accent-petrol hover:underline font-medium ml-1">
+          <span class="text-gray-600 dark:text-beige-200">¿Ya tenés cuenta?</span>
+          <a routerLink="/auth/login" class="text-sky-600 hover:underline font-medium ml-1">
             Ingresar
           </a>
         </div>
@@ -299,7 +299,7 @@
     </div>
 
     <!-- Footer Info -->
-    <p class="text-center text-xs text-ash-gray dark:text-charcoal-medium dark:text-pearl-light mt-6">
+    <p class="text-center text-xs text-gray-400 dark:text-gray-600 dark:text-beige-200 mt-6">
       Al crear tu cuenta, aceptás nuestros Términos y Condiciones y Política de Privacidad
     </p>
   </div>

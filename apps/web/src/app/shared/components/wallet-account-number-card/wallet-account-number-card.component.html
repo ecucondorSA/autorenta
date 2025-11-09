@@ -1,13 +1,13 @@
-<div class="bg-gradient-to-br from-accent-petrol/10 to-white-pure dark:from-accent-petrol/20 dark:to-anthracite rounded-2xl shadow-soft dark:shadow-card border border-accent-petrol/20 dark:border-accent-petrol/30 p-6">
+<div class="bg-gradient-to-br from-sky-600/10 to-white dark:from-sky-600/20 dark:to-gray-800 rounded-2xl shadow-soft dark:shadow-card border border-sky-600/20 dark:border-sky-600/30 p-6">
   <div class="flex items-center gap-2 mb-3">
-    <svg class="w-5 h-5 text-accent-petrol dark:text-ivory-luminous" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg class="w-5 h-5 text-sky-600 dark:text-ivory-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
     </svg>
-    <h3 class="text-sm font-semibold text-charcoal-medium dark:text-pearl-light">Tu Número de Cuenta Wallet</h3>
+    <h3 class="text-sm font-semibold text-gray-600 dark:text-beige-200">Tu Número de Cuenta Wallet</h3>
   </div>
 
-  <div class="bg-white-pure dark:bg-slate-deep rounded-xl p-4 mb-3 border border-pearl-gray/50 dark:border-slate-deep">
-    <p class="text-2xl font-mono font-bold text-accent-petrol dark:text-ivory-luminous tracking-wider text-center">
+  <div class="bg-white dark:bg-gray-700 rounded-xl p-4 mb-3 border border-gray-200/50 dark:border-gray-700">
+    <p class="text-2xl font-mono font-bold text-sky-600 dark:text-ivory-50 tracking-wider text-center">
       {{ walletAccountNumber }}
     </p>
   </div>
@@ -21,10 +21,10 @@
                   [class.bg-success-50]="copied"
                   [class.border-success-500]="copied"
                   [class.text-success-700]="copied"
-                  [class.bg-accent-petrol]="!copied"
-                  [class.border-accent-petrol]="!copied"
+                  [class.bg-sky-600]="!copied"
+                  [class.border-sky-600]="!copied"
                   [class.text-white]="!copied"
-                  [class.hover:bg-accent-petrol/90]="!copied">
+                  [class.hover:bg-sky-600/90]="!copied">
             
         
     
@@ -44,7 +44,7 @@
     </button>
   </div>
 
-  <p class="mt-3 text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 text-center">
+  <p class="mt-3 text-xs text-gray-600 dark:text-beige-200/70 dark:text-beige-200/60 text-center">
     Comparte este número para recibir transferencias de otros usuarios
   </p>
 </div>

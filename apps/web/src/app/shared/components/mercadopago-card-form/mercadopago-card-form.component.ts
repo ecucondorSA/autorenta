@@ -151,8 +151,8 @@ interface CardToken {
         </div>
       }
 
-      <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-        <p class="text-xs text-blue-700">
+      <div class="mt-4 p-3 bg-sky-50 border border-sky-200 rounded-md">
+        <p class="text-xs text-sky-700">
           🔒 Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu
           tarjeta.
         </p>

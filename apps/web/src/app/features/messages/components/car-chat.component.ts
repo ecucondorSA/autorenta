@@ -187,7 +187,7 @@ import { NotificationSoundService } from '../../../core/services/notification-so
                 <!-- Double check blue (read) -->
                 <svg
                   *ngIf="getMessageStatus(message) === 'read'"
-                  class="h-4 w-4 text-blue-500"
+                  class="h-4 w-4 text-sky-500"
                   fill="currentColor"
                   viewBox="0 0 16 15"
                 >

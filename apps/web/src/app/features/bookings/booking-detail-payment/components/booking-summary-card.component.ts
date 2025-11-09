@@ -244,11 +244,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <div *ngIf="priceBreakdown && fxSnapshot" class="space-y-3">
         <!-- FX Rate Info -->
         <div
-          class="bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg p-3 transition-colors duration-300"
+          class="bg-sky-50 border border-sky-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg p-3 transition-colors duration-300"
         >
           <div class="flex items-start space-x-2">
             <svg
-              class="w-4 h-4 text-blue-600 dark:text-info-200 mt-0.5"
+              class="w-4 h-4 text-sky-600 dark:text-info-200 mt-0.5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -259,11 +259,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               />
             </svg>
             <div class="flex-1">
-              <p class="text-xs text-blue-800 dark:text-info-100">
+              <p class="text-xs text-sky-600 dark:text-info-100">
                 Tipo de cambio:
                 <span class="font-semibold">{{ formatFxRate(fxSnapshot.rate) }}</span>
               </p>
-              <p class="text-xs text-blue-600 dark:text-info-200 mt-1">
+              <p class="text-xs text-sky-600 dark:text-info-200 mt-1">
                 Actualizado: {{ fxSnapshot.timestamp | date: 'dd/MM HH:mm' }}
               </p>
             </div>
@@ -293,11 +293,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- FX Expiration Warning -->
       <div
         *ngIf="fxSnapshot && fxSnapshot.isExpired"
-        class="mt-4 bg-yellow-50 border border-yellow-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg p-3 transition-colors duration-300"
+        class="mt-4 bg-beige-50 border border-beige-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg p-3 transition-colors duration-300"
       >
         <div class="flex space-x-2">
           <svg
-            class="w-5 h-5 text-yellow-600 dark:text-warning-200 flex-shrink-0"
+            class="w-5 h-5 text-beige-500 dark:text-warning-200 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -308,10 +308,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-yellow-800 dark:text-warning-50">
+            <p class="text-sm font-medium text-beige-500 dark:text-warning-50">
               Tipo de cambio vencido
             </p>
-            <p class="text-xs text-yellow-700 dark:text-warning-200 mt-1">
+            <p class="text-xs text-beige-500 dark:text-warning-200 mt-1">
               Se actualizará antes de confirmar la reserva
             </p>
           </div>

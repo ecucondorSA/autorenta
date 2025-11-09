@@ -1,5 +1,5 @@
 <div
-  class="min-h-screen bg-ivory-soft dark:bg-graphite-dark flex items-center justify-center py-12 px-4"
+  class="min-h-screen bg-ivory-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4"
 >
   <div class="w-full max-w-md">
     <!-- Logo -->
@@ -14,20 +14,20 @@
           class="h-full w-auto object-contain"
         />
       </div>
-      <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous mb-2">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-ivory-50 mb-2">
         Bienvenido de vuelta
       </h1>
-      <p class="text-charcoal-medium dark:text-pearl-light">Ingresá a tu cuenta de Autorentar</p>
+      <p class="text-gray-600 dark:text-beige-200">Ingresá a tu cuenta de Autorentar</p>
     </div>
 
     <!-- Card -->
-    <div class="card-premium p-8 bg-white dark:bg-anthracite">
+    <div class="card-premium p-8 bg-white dark:bg-gray-800">
       <!-- Google Sign In Button -->
       <button
         type="button"
         (click)="signInWithGoogle()"
         [disabled]="loading()"
-        class="w-full flex items-center justify-center gap-3 rounded-lg border-2 border-pearl-gray dark:border-slate-deep bg-white dark:bg-slate-deep px-6 py-3 text-sm font-semibold text-smoke-black dark:text-white hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+        class="w-full flex items-center justify-center gap-3 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 px-6 py-3 text-sm font-semibold text-gray-900 dark:text-white hover:bg-beige-200 dark:hover:bg-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
       >
         <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -54,10 +54,10 @@
       <!-- Divider -->
       <div class="relative my-6">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-pearl-gray dark:border-charcoal-medium"></div>
+          <div class="w-full border-t border-gray-200 dark:border-gray-600"></div>
         </div>
         <div class="relative flex justify-center text-sm">
-          <span class="px-4 bg-white dark:bg-anthracite text-charcoal-medium dark:text-pearl-light"
+          <span class="px-4 bg-white dark:bg-gray-800 text-gray-600 dark:text-beige-200"
             >O continuar con email</span
           >
         </div>
@@ -68,7 +68,7 @@
         <div>
           <label
             for="login-email"
-            class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2"
+            class="block text-sm font-medium text-gray-900 dark:text-ivory-50 mb-2"
           >
             Email<span aria-hidden="true"> *</span>
           </label>
@@ -89,16 +89,16 @@
                 ? 'login-email-error'
                 : null
             "
-            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-white dark:bg-slate-deep text-smoke-black dark:text-ivory-luminous"
-            [class.border-pearl-gray dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
-            [class.dark:border-charcoal-medium]="
+            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-ivory-50"
+            [class.border-gray-200 dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.dark:border-gray-600]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
             [class.border-red-500]="form.controls.email.touched && form.controls.email.invalid"
-            [class.focus:ring-accent-petrol]="
+            [class.focus:ring-sky-600]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
-            [class.focus:border-accent-petrol]="
+            [class.focus:border-sky-600]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
           />
@@ -124,7 +124,7 @@
         <div>
           <label
             for="login-password"
-            class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2"
+            class="block text-sm font-medium text-gray-900 dark:text-ivory-50 mb-2"
           >
             Contraseña<span aria-hidden="true"> *</span>
           </label>
@@ -145,20 +145,20 @@
                 ? 'login-password-error'
                 : null
             "
-            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-white dark:bg-slate-deep text-smoke-black dark:text-ivory-luminous"
-            [class.border-pearl-gray dark:border-gray-600]="
+            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-ivory-50"
+            [class.border-gray-200 dark:border-gray-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
-            [class.dark:border-charcoal-medium]="
+            [class.dark:border-gray-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
             [class.border-red-500]="
               form.controls.password.touched && form.controls.password.invalid
             "
-            [class.focus:ring-accent-petrol]="
+            [class.focus:ring-sky-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
-            [class.focus:border-accent-petrol]="
+            [class.focus:border-sky-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
           />
@@ -193,7 +193,7 @@
         <!-- Submit Button -->
         <button
           type="submit"
-          class="w-full rounded-lg bg-accent-petrol px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+          class="w-full rounded-lg bg-sky-600 px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
           [disabled]="form.invalid || loading()"
         >
           <span *ngIf="!loading()">Ingresar</span>
@@ -219,12 +219,12 @@
 
         <!-- Links -->
         <div class="flex justify-between items-center text-sm pt-2">
-          <a routerLink="/auth/register" class="text-accent-petrol hover:underline font-medium">
+          <a routerLink="/auth/register" class="text-sky-600 hover:underline font-medium">
             Crear cuenta
           </a>
           <a
             routerLink="/auth/reset-password"
-            class="text-charcoal-medium dark:text-pearl-light hover:text-accent-petrol transition-colors"
+            class="text-gray-600 dark:text-beige-200 hover:text-sky-600 transition-colors"
           >
             ¿Olvidaste tu contraseña?
           </a>
@@ -233,7 +233,7 @@
     </div>
 
     <!-- Footer Info -->
-    <p class="text-center text-xs text-ash-gray dark:text-charcoal-medium dark:text-pearl-light mt-6">
+    <p class="text-center text-xs text-gray-400 dark:text-gray-600 dark:text-beige-200 mt-6">
       Al ingresar, aceptás nuestros Términos y Condiciones
     </p>
   </div>

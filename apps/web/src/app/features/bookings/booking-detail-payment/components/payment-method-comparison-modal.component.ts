@@ -75,11 +75,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <div class="grid md:grid-cols-2 gap-4">
             <!-- TARJETA -->
             <div
-              class="border-2 border-blue-200 dark:border-blue-800 rounded-xl p-5 bg-blue-50/50 dark:bg-blue-900/10 transition-colors duration-300"
+              class="border-2 border-sky-200 dark:border-blue-800 rounded-xl p-5 bg-sky-50/50 dark:bg-sky-700/10 transition-colors duration-300"
             >
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
-                  <svg class="w-6 h-6 text-blue-600 dark:text-info-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-6 h-6 text-sky-600 dark:text-info-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -87,32 +87,32 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                       d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                     />
                   </svg>
-                  <h3 class="text-lg font-bold text-blue-900 dark:text-info-200">Con Tarjeta</h3>
+                  <h3 class="text-lg font-bold text-sky-700 dark:text-info-200">Con Tarjeta</h3>
                 </div>
               </div>
 
               <!-- Pago Inmediato -->
               <div class="mb-4">
-                <p class="text-xs uppercase font-semibold text-blue-700 dark:text-info-300 mb-1">
+                <p class="text-xs uppercase font-semibold text-sky-700 dark:text-info-300 mb-1">
                   Pago inmediato
                 </p>
                 <p class="text-sm text-gray-700 dark:text-pearl-light/80">
                   Total del alquiler
                 </p>
-                <p class="text-lg font-bold text-blue-900 dark:text-info-200">
+                <p class="text-lg font-bold text-sky-700 dark:text-info-200">
                   {{ formatArs(priceBreakdown.totalArs) }}
                 </p>
               </div>
 
               <!-- Garantía -->
-              <div class="mb-4 pb-4 border-b border-blue-200 dark:border-blue-800">
-                <p class="text-xs uppercase font-semibold text-blue-700 dark:text-info-300 mb-1">
+              <div class="mb-4 pb-4 border-b border-sky-200 dark:border-blue-800">
+                <p class="text-xs uppercase font-semibold text-sky-700 dark:text-info-300 mb-1">
                   Garantía
                 </p>
                 <p class="text-sm text-gray-700 dark:text-pearl-light/80 mb-2">
                   Hold temporal en tarjeta
                 </p>
-                <p class="text-lg font-bold text-blue-900 dark:text-info-200 mb-2">
+                <p class="text-lg font-bold text-sky-700 dark:text-info-200 mb-2">
                   {{ formatArs(riskSnapshot.holdEstimatedArs) }}
                 </p>
                 <app-reembolsability-badge
@@ -123,10 +123,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
               <!-- Total Bloqueado -->
               <div class="mb-4">
-                <p class="text-xs uppercase font-semibold text-blue-700 dark:text-info-300 mb-1">
+                <p class="text-xs uppercase font-semibold text-sky-700 dark:text-info-300 mb-1">
                   Total bloqueado en tarjeta
                 </p>
-                <p class="text-2xl font-bold text-blue-900 dark:text-info-200">
+                <p class="text-2xl font-bold text-sky-700 dark:text-info-200">
                   {{ formatArs(totalCardArs()) }}
                 </p>
                 <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
@@ -149,11 +149,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
             <!-- WALLET -->
             <div
-              class="border-2 border-purple-200 dark:border-purple-800 rounded-xl p-5 bg-purple-50/50 dark:bg-purple-900/10 transition-colors duration-300"
+              class="border-2 border-sky-200 dark:border-sky-800 rounded-xl p-5 bg-sky-50/50 dark:bg-sky-900/10 transition-colors duration-300"
             >
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
-                  <svg class="w-6 h-6 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-6 h-6 text-sky-600 dark:text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -161,32 +161,32 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                       d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
-                  <h3 class="text-lg font-bold text-purple-900 dark:text-purple-200">Con Wallet</h3>
+                  <h3 class="text-lg font-bold text-sky-900 dark:text-sky-200">Con Wallet</h3>
                 </div>
               </div>
 
               <!-- Pago Inmediato -->
               <div class="mb-4">
-                <p class="text-xs uppercase font-semibold text-purple-700 dark:text-purple-300 mb-1">
+                <p class="text-xs uppercase font-semibold text-sky-700 dark:text-sky-300 mb-1">
                   Pago inmediato
                 </p>
                 <p class="text-sm text-gray-700 dark:text-pearl-light/80">
                   Total del alquiler (de saldo)
                 </p>
-                <p class="text-lg font-bold text-purple-900 dark:text-purple-200">
+                <p class="text-lg font-bold text-sky-900 dark:text-sky-200">
                   {{ formatArs(priceBreakdown.totalArs) }}
                 </p>
               </div>
 
               <!-- Garantía -->
-              <div class="mb-4 pb-4 border-b border-purple-200 dark:border-purple-800">
-                <p class="text-xs uppercase font-semibold text-purple-700 dark:text-purple-300 mb-1">
+              <div class="mb-4 pb-4 border-b border-sky-200 dark:border-sky-800">
+                <p class="text-xs uppercase font-semibold text-sky-700 dark:text-sky-300 mb-1">
                   Garantía
                 </p>
                 <p class="text-sm text-gray-700 dark:text-pearl-light/80 mb-2">
                   Crédito de seguridad
                 </p>
-                <p class="text-lg font-bold text-purple-900 dark:text-purple-200 mb-2">
+                <p class="text-lg font-bold text-sky-900 dark:text-sky-200 mb-2">
                   {{ formatArs(creditSecurityArs()) }}
                 </p>
                 <div class="flex flex-col gap-2">
@@ -203,10 +203,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
               <!-- Total Bloqueado -->
               <div class="mb-4">
-                <p class="text-xs uppercase font-semibold text-purple-700 dark:text-purple-300 mb-1">
+                <p class="text-xs uppercase font-semibold text-sky-700 dark:text-sky-300 mb-1">
                   Total bloqueado en wallet
                 </p>
-                <p class="text-2xl font-bold text-purple-900 dark:text-purple-200">
+                <p class="text-2xl font-bold text-sky-900 dark:text-sky-200">
                   {{ formatArs(totalWalletArs()) }}
                 </p>
                 <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
@@ -254,16 +254,16 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           }
 
           <!-- Nota Final -->
-          <div class="mt-6 bg-blue-50 dark:bg-info-900/20 border border-blue-200 dark:border-info-700 rounded-lg p-4">
+          <div class="mt-6 bg-sky-50 dark:bg-info-900/20 border border-sky-200 dark:border-info-700 rounded-lg p-4">
             <div class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-blue-600 dark:text-info-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5 text-sky-600 dark:text-info-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fill-rule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                   clip-rule="evenodd"
                 />
               </svg>
-              <p class="text-xs text-blue-800 dark:text-info-200">
+              <p class="text-xs text-sky-600 dark:text-info-200">
                 <strong>Importante:</strong> Ambos métodos son igualmente seguros. La diferencia está en cómo
                 se maneja la garantía: con tarjeta se libera automáticamente, con wallet queda disponible
                 para futuras reservas.

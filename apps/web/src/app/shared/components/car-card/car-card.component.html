@@ -4,19 +4,19 @@
   [class.selected]="selected"
   [class.urgent-mode]="urgentMode"
   [class.bg-gradient-to-br]="urgentMode"
-  [class.from-white-pure]="urgentMode"
-  [class.via-accent-petrol/5]="urgentMode"
-  [class.to-accent-warm/5]="urgentMode"
+  [class.from-white]="urgentMode"
+  [class.via-sky-600/5]="urgentMode"
+  [class.to-beige-400/5]="urgentMode"
   [class.border-2]="urgentMode"
-  [class.border-accent-petrol/20]="urgentMode">
+  [class.border-sky-600/20]="urgentMode">
   <!-- Badge de urgencia -->
   <div
     *ngIf="urgentMode && urgentAvailability()?.available"
-    class="absolute -top-3 left-4 z-10 bg-gradient-to-r from-red-500 to-accent-warm text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg animate-pulse">
+    class="absolute -top-3 left-4 z-10 bg-gradient-to-r from-red-500 to-beige-400 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg animate-pulse">
     🚨 DISPONIBLE AHORA
   </div>
   <!-- Imagen del auto con aspect ratio consistente -->
-  <div class="relative w-full aspect-[4/3] bg-sand-light overflow-hidden">
+  <div class="relative w-full aspect-[4/3] bg-beige-100 overflow-hidden">
     <!-- Imagen real del auto -->
     <img
       *ngIf="displayImage()"
@@ -30,11 +30,11 @@
     <!-- Fallback premium cuando no hay foto -->
     <div
       *ngIf="!displayImage()"
-      class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-accent-warm/10 to-accent-petrol/10"
+      class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-beige-400/10 to-sky-600/10"
     >
       <!-- Ícono de auto -->
       <svg
-        class="w-24 h-24 text-accent-warm/40 mb-4"
+        class="w-24 h-24 text-beige-400/40 mb-4"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -58,8 +58,8 @@
 
       <!-- Texto elegante -->
       <div class="text-center px-4">
-        <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light">Sin foto</p>
-        <p class="text-xs text-ash-gray dark:text-pearl-light/70 mt-1">Imagen no disponible</p>
+        <p class="text-sm font-medium text-gray-600 dark:text-beige-200">Sin foto</p>
+        <p class="text-xs text-gray-400 dark:text-beige-200/70 mt-1">Imagen no disponible</p>
       </div>
 
       <!-- Pattern decorativo sutil -->
@@ -67,28 +67,28 @@
     </div>
 
     <!-- Badge de estado -->
-    <div class="absolute top-4 right-4 bg-smoke-black/90 backdrop-blur-sm px-4 py-1.5 rounded-full">
-      <span class="text-xs font-semibold text-ivory-soft">Disponible</span>
+    <div class="absolute top-4 right-4 bg-gray-900/90 backdrop-blur-sm px-4 py-1.5 rounded-full">
+      <span class="text-xs font-semibold text-ivory-100">Disponible</span>
     </div>
 
     <!-- Barra de disponibilidad urgente -->
     <div
       *ngIf="urgentMode && urgentAvailability()?.available"
-      class="absolute bottom-0 left-0 right-0 bg-accent-petrol/20 backdrop-blur-sm px-4 py-2"
+      class="absolute bottom-0 left-0 right-0 bg-sky-600/20 backdrop-blur-sm px-4 py-2"
     >
-      <div class="w-full bg-pearl-gray rounded-full h-1.5 mb-1">
+      <div class="w-full bg-gray-200 rounded-full h-1.5 mb-1">
         <div
-          class="bg-gradient-to-r from-accent-petrol to-accent-warm h-1.5 rounded-full animate-pulse"
+          class="bg-gradient-to-r from-sky-600 to-beige-400 h-1.5 rounded-full animate-pulse"
           [style.width.%]="urgentAvailability()?.eta ? Math.max(30, 100 - (urgentAvailability()!.eta! / 60) * 100) : 70"
         ></div>
       </div>
       <div class="flex items-center justify-between text-xs">
-        <span class="text-accent-petrol font-semibold">
+        <span class="text-sky-600 font-semibold">
           ⏰ Disponible por {{ urgentAvailability()?.eta ? urgentAvailability()!.eta + ' min' : 'ahora' }}
         </span>
         <span
           *ngIf="urgentAvailability()?.distance"
-          class="text-charcoal-medium dark:text-pearl-light"
+          class="text-gray-600 dark:text-beige-200"
         >
           📍 {{ formatDistance(urgentAvailability()!.distance!) }}
         </span>
@@ -99,7 +99,7 @@
   <!-- Contenido del card con padding uniforme -->
   <div class="flex flex-1 flex-col gap-4 p-6">
     <!-- Título premium con sistema tipográfico -->
-    <h3 class="text-xl font-semibold text-smoke-black group-hover:text-charcoal-medium dark:text-pearl-light transition-base">
+    <h3 class="text-xl font-semibold text-gray-900 group-hover:text-gray-600 dark:text-beige-200 transition-base">
       {{ car.title }}
     </h3>
 
@@ -108,32 +108,32 @@
       <div class="flex items-center gap-0.5">
         <svg *ngFor="let star of [1,2,3,4,5]"
              class="w-4 h-4"
-             [class.text-accent-warm]="star <= car.rating_avg"
-             [class.text-pearl-gray]="star > car.rating_avg"
+             [class.text-beige-400]="star <= car.rating_avg"
+             [class.text-gray-200]="star > car.rating_avg"
              fill="currentColor"
              viewBox="0 0 20 20"
              aria-hidden="true">
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
         </svg>
       </div>
-      <span class="text-sm font-medium text-smoke-black">
+      <span class="text-sm font-medium text-gray-900">
         {{ car.rating_avg | number:'1.1-1' }}
       </span>
-      <span class="text-xs text-ash-gray dark:text-pearl-light/70">
+      <span class="text-xs text-gray-400 dark:text-beige-200/70">
         ({{ car.rating_count }} {{ car.rating_count === 1 ? 'reseña' : 'reseñas' }})
       </span>
     </div>
 
     <!-- Specs: Asientos y Puertas -->
     <div class="flex items-center gap-4">
-      <div class="flex items-center gap-2 text-charcoal-medium dark:text-pearl-light">
+      <div class="flex items-center gap-2 text-gray-600 dark:text-beige-200">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
         </svg>
         <span class="text-sm font-medium">{{ car.seats }} asientos</span>
       </div>
-      <span class="w-1.5 h-1.5 rounded-full bg-pearl-gray"></span>
-      <div class="flex items-center gap-2 text-charcoal-medium dark:text-pearl-light">
+      <span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span>
+      <div class="flex items-center gap-2 text-gray-600 dark:text-beige-200">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
         </svg>
@@ -142,7 +142,7 @@
     </div>
 
     <!-- Ubicación con icono minimalista -->
-    <div class="flex items-start gap-2 text-charcoal-medium dark:text-pearl-light">
+    <div class="flex items-start gap-2 text-gray-600 dark:text-beige-200">
       <svg
         class="w-5 h-5 mt-0.5 flex-shrink-0"
         fill="none"
@@ -172,7 +172,7 @@
     </div>
 
     <!-- Badge de distancia (cuando está disponible) -->
-    <div *ngIf="distance" class="flex items-center gap-1.5 text-accent-petrol mt-1">
+    <div *ngIf="distance" class="flex items-center gap-1.5 text-sky-600 mt-1">
       <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path
           stroke-linecap="round"
@@ -185,9 +185,9 @@
     </div>
 
     <!-- Especificaciones con separador elegante -->
-    <div class="flex items-center gap-3 text-xs text-ash-gray dark:text-pearl-light/70 font-medium">
+    <div class="flex items-center gap-3 text-xs text-gray-400 dark:text-beige-200/70 font-medium">
       <span>{{ car.transmission | titlecase }}</span>
-      <span class="w-1 h-1 rounded-full bg-pearl-gray"></span>
+      <span class="w-1 h-1 rounded-full bg-gray-200"></span>
       <span>{{ car.fuel_type | titlecase }}</span>
     </div>
 
@@ -204,7 +204,7 @@
 
       <!-- Top features (máximo 3) -->
       <ng-container *ngFor="let feature of topFeatures()">
-        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-accent-petrol/10 text-accent-petrol border border-accent-petrol/20">
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-sky-600/10 text-sky-600 border border-sky-600/20">
           {{ feature }}
         </span>
       </ng-container>
@@ -219,12 +219,12 @@
         <!-- Modo Urgente: Precio por hora -->
         <ng-container *ngIf="urgentMode && hourlyPrice()">
           <div class="flex items-center gap-3">
-            <div class="text-4xl font-black text-accent-petrol tracking-tight">
+            <div class="text-4xl font-black text-sky-600 tracking-tight">
               $ {{ hourlyPrice() | number:'1.0-0' }}
             </div>
             <div class="flex flex-col">
-              <span class="text-lg font-semibold text-smoke-black">por hora</span>
-              <span class="text-sm text-charcoal-medium dark:text-pearl-light line-through">$ {{ displayPrice() | number:'1.0-0' }}</span>
+              <span class="text-lg font-semibold text-gray-900">por hora</span>
+              <span class="text-sm text-gray-600 dark:text-beige-200 line-through">$ {{ displayPrice() | number:'1.0-0' }}</span>
             </div>
           </div>
         </ng-container>
@@ -233,13 +233,13 @@
         <ng-container *ngIf="!urgentMode || !hourlyPrice()">
           <!-- Skeleton loader mientras carga precio dinámico -->
           <div *ngIf="showPriceLoader()" class="animate-pulse">
-            <div class="h-8 sm:h-10 bg-pearl-gray dark:bg-slate-deep rounded w-28 mb-1"></div>
-            <div class="h-4 bg-pearl-gray dark:bg-slate-deep rounded w-16"></div>
+            <div class="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-28 mb-1"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
           </div>
           
           <!-- Precio (dinámico o estático) -->
           <div *ngIf="!showPriceLoader()" class="flex items-baseline gap-2">
-            <p class="text-2xl sm:text-3xl font-bold text-smoke-black tracking-tight leading-none">
+            <p class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight leading-none">
               {{ displayPrice() | money }}
             </p>
             <!-- Icono de surge pricing -->
@@ -249,7 +249,7 @@
               {{ priceSurgeIcon() }}
             </span>
           </div>
-          <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mt-1">por día</p>
+          <p class="text-sm font-medium text-gray-600 dark:text-beige-200 mt-1">por día</p>
         </ng-container>
       </div>
 
@@ -278,7 +278,7 @@
           <button
             (click)="onEdit($event)"
             aria-label="Editar auto"
-            class="flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-accent-warm text-accent-warm hover:bg-accent-warm/10 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]"
+            class="flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-beige-400 text-beige-400 hover:bg-beige-400/10 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]"
             title="Editar auto"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -326,12 +326,12 @@
                                                               [disabled]="compareDisabled && !isComparing"
                                                               [class.btn-disabled]="compareDisabled && !isComparing"
                                                               class="flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 transition-base focus-ring flex items-center justify-center gap-2 min-h-[44px]"
-                                                              [class.border-accent-petrol]="!isComparing"
-                                                              [class.text-accent-petrol]="!isComparing"
-                                                              [class.hover:bg-accent-petrol/10]="!isComparing && !compareDisabled"
-                                                              [class.bg-accent-petrol]="isComparing"
+                                                              [class.border-sky-600]="!isComparing"
+                                                              [class.text-sky-600]="!isComparing"
+                                                              [class.hover:bg-sky-600/10]="!isComparing && !compareDisabled"
+                                                              [class.bg-sky-600]="isComparing"
                                                               [class.text-white]="isComparing"
-                                                              [class.border-accent-petrol]="isComparing"
+                                                              [class.border-sky-600]="isComparing"
                                                               [title]="isComparing ? 'Quitar de comparación' : (compareDisabled ? 'Máximo 3 autos' : 'Agregar a comparación')">
                                                   
                                         
@@ -351,7 +351,7 @@
             *ngIf="urgentMode && urgentAvailability()?.available && hourlyPrice()"
             [routerLink]="['/cars', car.id]"
             [queryParams]="{ urgent: 'true' }"
-            class="w-full sm:w-auto bg-gradient-to-r from-accent-petrol to-accent-warm hover:from-accent-petrol/90 hover:to-accent-warm/90 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 group/btn min-h-[44px]"
+            class="w-full sm:w-auto bg-gradient-to-r from-sky-600 to-beige-400 hover:from-sky-600/90 hover:to-beige-400/90 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 group/btn min-h-[44px]"
           >
             <span>🚗 ALQUILAR AHORA</span>
             <span *ngIf="urgentAvailability()?.eta" class="text-xs opacity-90">

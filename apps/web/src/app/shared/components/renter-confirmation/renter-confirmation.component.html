@@ -101,24 +101,24 @@
   </div>
 
   <!-- Información importante -->
-  <div *ngIf="!renterConfirmed" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-    <h4 class="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-2">
+  <div *ngIf="!renterConfirmed" class="mb-6 p-4 bg-sky-50 dark:bg-sky-700/20 border border-sky-200 dark:border-blue-800 rounded-lg">
+    <h4 class="text-sm font-semibold text-sky-700 dark:text-sky-200 mb-2 flex items-center gap-2">
       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
       </svg>
       Importante
     </h4>
-    <ul class="text-xs text-blue-800 dark:text-blue-300 space-y-2">
+    <ul class="text-xs text-sky-600 dark:text-sky-300 space-y-2">
       <li class="flex items-start gap-2">
-        <span class="text-blue-600 dark:text-blue-400">•</span>
+        <span class="text-sky-600 dark:text-sky-400">•</span>
         <span>Al confirmar, autorizas la transferencia del pago del alquiler al propietario</span>
       </li>
       <li class="flex items-start gap-2">
-        <span class="text-blue-600 dark:text-blue-400">•</span>
+        <span class="text-sky-600 dark:text-sky-400">•</span>
         <span>Tu garantía{{ damageAmount ? ' (menos daños)' : '' }} se devolverá a tu <strong>wallet</strong>, no a tu cuenta bancaria</span>
       </li>
       <li class="flex items-start gap-2">
-        <span class="text-blue-600 dark:text-blue-400">•</span>
+        <span class="text-sky-600 dark:text-sky-400">•</span>
         <span>Podrás usar los fondos del wallet para futuros alquileres</span>
       </li>
       <li *ngIf="ownerConfirmed" class="flex items-start gap-2">

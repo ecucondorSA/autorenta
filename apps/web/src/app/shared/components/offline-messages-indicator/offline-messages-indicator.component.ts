@@ -15,7 +15,7 @@ import { OfflineMessagesPanelComponent } from '../offline-messages-panel/offline
     @if (pendingCount() > 0) {
       <button
         (click)="showPanel.set(true)"
-        class="relative flex items-center gap-2 rounded-lg bg-yellow-50 px-3 py-2 text-sm font-medium text-yellow-800 transition-colors hover:bg-yellow-100 dark:bg-yellow-900/20 dark:text-yellow-200 dark:hover:bg-yellow-900/30"
+        class="relative flex items-center gap-2 rounded-lg bg-beige-50 px-3 py-2 text-sm font-medium text-beige-500 transition-colors hover:bg-beige-100 dark:bg-yellow-900/20 dark:text-beige-200 dark:hover:bg-yellow-900/30"
         type="button"
       >
         <svg
@@ -33,7 +33,7 @@ import { OfflineMessagesPanelComponent } from '../offline-messages-panel/offline
         </svg>
         <span>{{ pendingCount() }} mensaje{{ pendingCount() > 1 ? 's' : '' }} pendiente{{ pendingCount() > 1 ? 's' : '' }}</span>
         <span
-          class="flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-xs font-bold text-white"
+          class="flex h-5 w-5 items-center justify-center rounded-full bg-beige-500 text-xs font-bold text-white"
         >
           {{ pendingCount() }}
         </span>

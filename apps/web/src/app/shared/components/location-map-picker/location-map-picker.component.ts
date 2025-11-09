@@ -36,7 +36,7 @@ export interface LocationCoordinates {
       <!-- Info panel -->
       <div class="info-panel">
         <div class="flex items-start gap-2">
-          <span class="text-blue-600 text-lg">ℹ️</span>
+          <span class="text-sky-600 text-lg">ℹ️</span>
           <div class="flex-1">
             <p class="text-sm font-medium text-gray-800">
               {{ isLoading() ? 'Cargando mapa...' : 'Ajusta la ubicación' }}

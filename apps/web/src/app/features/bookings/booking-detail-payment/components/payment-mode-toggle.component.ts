@@ -27,9 +27,9 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
           (click)="onModeChange('card')"
         >
           <div class="flex flex-col items-center text-center space-y-3">
-            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+            <div class="w-12 h-12 bg-sky-100 dark:bg-sky-700/30 rounded-full flex items-center justify-center">
               <svg
-                class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                class="w-6 h-6 text-sky-600 dark:text-sky-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -131,14 +131,14 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
             }
           </p>
         </div>
-        <div class="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 rounded-lg">
+        <div class="p-3 bg-sky-50 dark:bg-sky-700/20 border border-sky-200 dark:border-blue-800/60 rounded-lg">
           <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
             </svg>
-            <span class="text-sm font-medium text-blue-800 dark:text-blue-200">Garantía incluida</span>
+            <span class="text-sm font-medium text-sky-600 dark:text-sky-200">Garantía incluida</span>
           </div>
-          <p class="text-xs text-blue-700 dark:text-blue-300 mt-1">
+          <p class="text-xs text-sky-700 dark:text-sky-300 mt-1">
             @if (selectedMode === 'card') {
               Liberación automática al devolver
             } @else {

@@ -78,7 +78,7 @@ import { CommonModule } from '@angular/common';
     .refresh-icon {
       width: 24px;
       height: 24px;
-      fill: #2c4a52;
+      fill: #0284C7;
       transition: transform 0.3s ease;
     }
 
@@ -98,7 +98,7 @@ import { CommonModule } from '@angular/common';
     .refresh-text {
       font-size: 14px;
       font-weight: 500;
-      color: #2c4a52;
+      color: #0284C7;
     }
 
     :host-context(.dark) .refresh-text {

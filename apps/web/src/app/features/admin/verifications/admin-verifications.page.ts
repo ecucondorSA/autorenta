@@ -270,7 +270,7 @@ export class AdminVerificationsPage implements OnInit {
   getScoreColor(score: number | undefined): string {
     if (!score) return 'text-gray-500';
     if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
+    if (score >= 60) return 'text-beige-500';
     return 'text-red-600';
   }
 

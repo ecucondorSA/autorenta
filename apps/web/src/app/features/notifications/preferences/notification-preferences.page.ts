@@ -62,7 +62,7 @@ interface NotificationPreference {
           <div class="mb-6 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-2xl dark:bg-blue-900/30">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-2xl dark:bg-sky-700/30">
                   🔔
                 </div>
                 <div>
@@ -77,7 +77,7 @@ interface NotificationPreference {
               <button
                 (click)="toggleBrowserNotifications()"
                 [disabled]="browserNotificationsPermission() === 'denied'"
-                [class.bg-blue-600]="browserNotificationsEnabled()"
+                [class.bg-sky-600]="browserNotificationsEnabled()"
                 [class.bg-gray-300]="!browserNotificationsEnabled()"
                 class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 type="button"
@@ -90,8 +90,8 @@ interface NotificationPreference {
               </button>
             </div>
             @if (browserNotificationsPermission() === 'denied') {
-              <div class="mt-3 rounded-lg bg-yellow-50 p-3 dark:bg-yellow-900/20">
-                <p class="text-sm text-yellow-800 dark:text-yellow-200">
+              <div class="mt-3 rounded-lg bg-beige-50 p-3 dark:bg-yellow-900/20">
+                <p class="text-sm text-beige-500 dark:text-beige-200">
                   ⚠️ Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la configuración de tu navegador.
                 </p>
               </div>
@@ -102,7 +102,7 @@ interface NotificationPreference {
           <div class="mb-6 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-2xl dark:bg-purple-900/30">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-2xl dark:bg-sky-900/30">
                   🔊
                 </div>
                 <div>
@@ -116,7 +116,7 @@ interface NotificationPreference {
               </div>
               <button
                 (click)="toggleSound()"
-                [class.bg-purple-600]="soundEnabled()"
+                [class.bg-sky-600]="soundEnabled()"
                 [class.bg-gray-300]="!soundEnabled()"
                 class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                 type="button"
@@ -157,7 +157,7 @@ interface NotificationPreference {
                   </div>
                   <button
                     (click)="togglePreference(pref)"
-                    [class.bg-blue-600]="pref.enabled"
+                    [class.bg-sky-600]="pref.enabled"
                     [class.bg-gray-300]="!pref.enabled"
                     class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     type="button"
@@ -185,7 +185,7 @@ interface NotificationPreference {
             <button
               (click)="savePreferences()"
               [disabled]="saving()"
-              class="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              class="rounded-lg bg-sky-600 px-6 py-3 font-medium text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-50"
               type="button"
             >
               @if (saving()) {

@@ -1,5 +1,5 @@
 <div class="bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
-  <h2 class="text-2xl font-bold text-smoke-black mb-6">Agregar Cuenta Bancaria</h2>
+  <h2 class="text-2xl font-bold text-gray-900 mb-6">Agregar Cuenta Bancaria</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
     <!-- Tipo de cuenta -->
@@ -11,8 +11,8 @@
         @for (type of accountTypes; track type.value) {
                                                             <label
                                                               class="relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all"
-                                                              [class.border-accent-petrol]="selectedType() === type.value"
-                                                              [class.bg-accent-petrol/5]="selectedType() === type.value"
+                                                              [class.border-sky-600]="selectedType() === type.value"
+                                                              [class.bg-sky-600/5]="selectedType() === type.value"
                                                               [class.border-gray-300]="selectedType() !== type.value">
                                                   
                                         
@@ -28,7 +28,7 @@
             />
             <span
               class="text-sm font-semibold"
-              [class.text-accent-petrol]="selectedType() === type.value"
+              [class.text-sky-600]="selectedType() === type.value"
               [class.text-gray-700]="selectedType() !== type.value"
             >
               {{ type.label }}
@@ -48,7 +48,7 @@
         type="text"
         formControlName="account_number"
         [placeholder]="selectedAccountTypeInfo()?.placeholder || ''"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-600 focus:border-transparent"
         [class.border-red-500]="form.get('account_number')?.invalid && form.get('account_number')?.touched"
       />
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
@@ -69,7 +69,7 @@
         type="text"
         formControlName="account_holder_name"
         placeholder="Juan Pérez"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-600 focus:border-transparent"
         [class.border-red-500]="form.get('account_holder_name')?.invalid && form.get('account_holder_name')?.touched"
       />
       @if (getErrorMessage('account_holder_name')) {
@@ -87,7 +87,7 @@
         type="text"
         formControlName="account_holder_document"
         placeholder="20123456789"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-600 focus:border-transparent"
         [class.border-red-500]="form.get('account_holder_document')?.invalid && form.get('account_holder_document')?.touched"
       />
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
@@ -108,7 +108,7 @@
         type="text"
         formControlName="bank_name"
         placeholder="Ej: Banco Galicia, Mercado Pago"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-petrol focus:border-transparent"
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-600 focus:border-transparent"
       />
     </div>
 
@@ -117,7 +117,7 @@
       <button
         type="submit"
         [disabled]="submitting() || form.invalid"
-        class="flex-1 px-6 py-3 bg-accent-petrol text-white font-semibold rounded-xl hover:bg-accent-petrol/90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        class="flex-1 px-6 py-3 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-600/90 disabled:opacity-50 disabled:cursor-not-allowed transition"
       >
         {{ submitting() ? 'Guardando...' : 'Agregar Cuenta' }}
       </button>

@@ -22,14 +22,14 @@ import { ToastService } from '../../../core/services/toast.service';
             [(ngModel)]="claimAmountUsd"
             min="0"
             step="0.01"
-            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-blue-500"
           />
         </div>
 
         <button
           (click)="simulate()"
           [disabled]="simulating()"
-          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          class="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
         >
           @if (simulating()) {
             <span class="flex items-center gap-2">

@@ -22,7 +22,7 @@ import type { Car } from '../../../core/models';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent"></div>
         </div>
       } @else if (car(); as c) {
         <div class="space-y-6">
@@ -89,21 +89,21 @@ import type { Car } from '../../../core/models';
                   min="1"
                   max="24"
                   (change)="updateQuote()"
-                  class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-blue-500"
                 />
               </div>
 
               <!-- Cotización -->
               @if (quote(); as q) {
-                <div class="rounded-lg bg-blue-50 p-4">
+                <div class="rounded-lg bg-sky-50 p-4">
                   <div class="mb-2 flex items-center justify-between">
-                    <span class="text-sm font-medium text-blue-900">Total</span>
-                    <span class="text-xl font-bold text-blue-900">
+                    <span class="text-sm font-medium text-sky-700">Total</span>
+                    <span class="text-xl font-bold text-sky-700">
                       ${{ q.totalPrice | number: '1.2-2' }}
                     </span>
                   </div>
                   @if (q.surgeFactor && q.surgeFactor > 1) {
-                    <p class="text-xs text-blue-700">
+                    <p class="text-xs text-sky-700">
                       Incluye recargo por demanda: {{ (q.surgeFactor - 1) * 100 | number: '1.0-0' }}%
                     </p>
                   }
@@ -116,7 +116,7 @@ import type { Car } from '../../../core/models';
           <button
             (click)="createBooking()"
             [disabled]="!canCreateBooking() || creating()"
-            class="w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+            class="w-full rounded-lg bg-sky-600 px-6 py-3 text-lg font-semibold text-white hover:bg-sky-700 disabled:opacity-50"
           >
             @if (creating()) {
               <span class="flex items-center justify-center gap-2">

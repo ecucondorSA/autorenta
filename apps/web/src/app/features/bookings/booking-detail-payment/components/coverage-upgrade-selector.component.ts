@@ -152,13 +152,13 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
       </div>
 
       <div
-        class="mt-4 p-3 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
+        class="mt-4 p-3 bg-sky-50 border border-sky-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
       >
         <div class="flex items-start gap-2">
-          <svg class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-sky-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
-          <p class="text-xs text-blue-800 dark:text-info-200">
+          <p class="text-xs text-sky-600 dark:text-info-200">
             El costo adicional se suma automáticamente al precio total de tu reserva.
           </p>
         </div>

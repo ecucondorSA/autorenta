@@ -13,13 +13,13 @@ import { AuthService } from '../../../core/services/auth.service';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+          <div class="h-6 w-6 animate-spin rounded-full border-2 border-sky-500 border-t-transparent"></div>
         </div>
       } @else if (stats(); as s) {
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-          <div class="rounded-lg bg-blue-50 p-4">
-            <p class="text-sm font-medium text-blue-600">Total Payouts</p>
-            <p class="text-2xl font-bold text-blue-900">{{ s.totalPayouts }}</p>
+          <div class="rounded-lg bg-sky-50 p-4">
+            <p class="text-sm font-medium text-sky-600">Total Payouts</p>
+            <p class="text-2xl font-bold text-sky-700">{{ s.totalPayouts }}</p>
           </div>
           <div class="rounded-lg bg-green-50 p-4">
             <p class="text-sm font-medium text-green-600">Total Monto</p>
@@ -27,23 +27,23 @@ import { AuthService } from '../../../core/services/auth.service';
               ${{ s.totalAmount | number: '1.2-2' }}
             </p>
           </div>
-          <div class="rounded-lg bg-yellow-50 p-4">
-            <p class="text-sm font-medium text-yellow-600">Pendientes</p>
-            <p class="text-2xl font-bold text-yellow-900">{{ s.pendingPayouts }}</p>
-            <p class="text-xs text-yellow-700">
+          <div class="rounded-lg bg-beige-50 p-4">
+            <p class="text-sm font-medium text-beige-500">Pendientes</p>
+            <p class="text-2xl font-bold text-beige-500">{{ s.pendingPayouts }}</p>
+            <p class="text-xs text-beige-500">
               ${{ s.pendingAmount | number: '1.2-2' }}
             </p>
           </div>
-          <div class="rounded-lg bg-purple-50 p-4">
-            <p class="text-sm font-medium text-purple-600">Completados</p>
-            <p class="text-2xl font-bold text-purple-900">{{ s.completedPayouts }}</p>
-            <p class="text-xs text-purple-700">
+          <div class="rounded-lg bg-sky-50 p-4">
+            <p class="text-sm font-medium text-sky-600">Completados</p>
+            <p class="text-2xl font-bold text-sky-900">{{ s.completedPayouts }}</p>
+            <p class="text-xs text-sky-700">
               ${{ s.completedAmount | number: '1.2-2' }}
             </p>
           </div>
-          <div class="rounded-lg bg-indigo-50 p-4">
-            <p class="text-sm font-medium text-indigo-600">Promedio</p>
-            <p class="text-2xl font-bold text-indigo-900">
+          <div class="rounded-lg bg-sky-50 p-4">
+            <p class="text-sm font-medium text-sky-600">Promedio</p>
+            <p class="text-2xl font-bold text-sky-900">
               ${{ s.averagePayoutAmount | number: '1.2-2' }}
             </p>
           </div>

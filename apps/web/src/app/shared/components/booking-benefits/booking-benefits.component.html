@@ -8,7 +8,7 @@
     <svg
       class="h-5 w-5 flex-shrink-0 mt-0.5"
       [class.text-green-600]="benefit.highlight"
-      [class.text-accent-petrol]="!benefit.highlight"
+      [class.text-sky-600]="!benefit.highlight"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -21,10 +21,10 @@
       />
     </svg>
     <div>
-      <p class="text-smoke-black" [class.text-green-800]="benefit.highlight">
+      <p class="text-gray-900" [class.text-green-800]="benefit.highlight">
         {{ benefit.title }}
       </p>
-      <p class="text-xs text-charcoal-medium dark:text-pearl-light mt-0.5">{{ benefit.description }}</p>
+      <p class="text-xs text-gray-600 dark:text-beige-200 mt-0.5">{{ benefit.description }}</p>
     </div>
   </div>
 </div>
@@ -36,8 +36,8 @@
     class="relative p-4 rounded-xl border transition-all duration-200 hover:shadow-md"
     [class.bg-green-50]="benefit.highlight"
     [class.border-green-200]="benefit.highlight"
-    [class.bg-white dark:bg-slate-deep]="!benefit.highlight"
-    [class.border-pearl-gray dark:border-gray-600]="!benefit.highlight"
+    [class.bg-white dark:bg-gray-700]="!benefit.highlight"
+    [class.border-gray-200 dark:border-gray-600]="!benefit.highlight"
   >
     <!-- Highlight Badge -->
     <div
@@ -52,12 +52,12 @@
       <div
         class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
         [class.bg-green-100]="benefit.highlight"
-        [class.bg-accent-petrol/10]="!benefit.highlight"
+        [class.bg-sky-600/10]="!benefit.highlight"
       >
         <svg
           class="h-6 w-6"
           [class.text-green-600]="benefit.highlight"
-          [class.text-accent-petrol]="!benefit.highlight"
+          [class.text-sky-600]="!benefit.highlight"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -76,14 +76,14 @@
         <h4
           class="text-sm font-bold mb-1"
           [class.text-green-900]="benefit.highlight"
-          [class.text-smoke-black]="!benefit.highlight"
+          [class.text-gray-900]="!benefit.highlight"
         >
           {{ benefit.title }}
         </h4>
         <p
           class="text-xs"
           [class.text-green-700]="benefit.highlight"
-          [class.text-charcoal-medium dark:text-pearl-light]="!benefit.highlight"
+          [class.text-gray-600 dark:text-beige-200]="!benefit.highlight"
         >
           {{ benefit.description }}
         </p>

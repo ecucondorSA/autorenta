@@ -13,7 +13,7 @@ import { ReviewsService } from '../../../core/services/reviews.service';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+          <div class="h-6 w-6 animate-spin rounded-full border-2 border-sky-500 border-t-transparent"></div>
         </div>
       } @else if (pendingReviews().length === 0) {
         <div class="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-600">
@@ -36,8 +36,8 @@ import { ReviewsService } from '../../../core/services/reviews.service';
                 <div class="ml-4 text-right">
                   <div
                     class="rounded-full px-3 py-1 text-xs font-medium"
-                    [class.bg-yellow-100]="review.days_remaining > 7"
-                    [class.text-yellow-800]="review.days_remaining > 7"
+                    [class.bg-beige-100]="review.days_remaining > 7"
+                    [class.text-beige-500]="review.days_remaining > 7"
                     [class.bg-orange-100]="review.days_remaining <= 7 && review.days_remaining > 3"
                     [class.text-orange-800]="review.days_remaining <= 7 && review.days_remaining > 3"
                     [class.bg-red-100]="review.days_remaining <= 3"
@@ -50,7 +50,7 @@ import { ReviewsService } from '../../../core/services/reviews.service';
               <div class="mt-3">
                 <a
                   [routerLink]="['/bookings', review.booking_id]"
-                  class="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  class="inline-block rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
                 >
                   Escribir Review
                 </a>

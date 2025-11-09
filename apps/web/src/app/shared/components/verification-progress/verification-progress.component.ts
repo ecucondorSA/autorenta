@@ -18,7 +18,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           </p>
         </div>
         <div class="text-right">
-          <div class="text-3xl font-bold text-blue-600">{{ progressPercentage() }}%</div>
+          <div class="text-3xl font-bold text-sky-600">{{ progressPercentage() }}%</div>
           <div class="text-xs text-gray-500 dark:text-gray-300">Completado</div>
         </div>
       </div>
@@ -190,7 +190,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
 
       <!-- Loading State -->
       <div *ngIf="loading()" class="mt-4 flex items-center justify-center py-4">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
       </div>
 
       <!-- Error State -->
@@ -240,7 +240,7 @@ export class VerificationProgressComponent implements OnInit {
       return 'bg-green-500 text-white shadow-lg';
     }
     if (isCurrent) {
-      return 'bg-blue-500 text-white shadow-md animate-pulse';
+      return 'bg-sky-500 text-white shadow-md animate-pulse';
     }
     return 'bg-gray-200 text-gray-500 dark:text-gray-300';
   }
@@ -252,7 +252,7 @@ export class VerificationProgressComponent implements OnInit {
       return 'bg-green-100 text-green-800';
     }
     if (this.currentLevel() === level - 1) {
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-sky-100 text-sky-600';
     }
     return 'bg-gray-100 text-gray-600 dark:text-gray-300';
   }

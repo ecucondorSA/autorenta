@@ -33,7 +33,7 @@ interface PendingReview {
         <!-- Loading State -->
         @if (loading()) {
           <div class="flex items-center justify-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500"></div>
           </div>
         }
 
@@ -69,7 +69,7 @@ interface PendingReview {
             <div class="mt-6">
               <a
                 routerLink="/bookings"
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700"
               >
                 Ver mis reservas
               </a>
@@ -82,7 +82,7 @@ interface PendingReview {
           <div class="space-y-4">
             @for (review of pendingReviews(); track review.booking_id) {
               <div
-                class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border-l-4 border-blue-500"
+                class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border-l-4 border-sky-500"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
@@ -98,8 +98,8 @@ interface PendingReview {
                       </span>
                       <span
                         class="px-2 py-1 rounded-full text-xs font-medium"
-                        [class.bg-yellow-100]="review.days_remaining > 7"
-                        [class.text-yellow-800]="review.days_remaining > 7"
+                        [class.bg-beige-100]="review.days_remaining > 7"
+                        [class.text-beige-500]="review.days_remaining > 7"
                         [class.bg-orange-100]="review.days_remaining <= 7 && review.days_remaining > 3"
                         [class.text-orange-800]="review.days_remaining <= 7 && review.days_remaining > 3"
                         [class.bg-red-100]="review.days_remaining <= 3"
@@ -112,7 +112,7 @@ interface PendingReview {
                   <div>
                     <a
                       [routerLink]="['/bookings', review.booking_id]"
-                      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700"
                     >
                       Dejar reseña
                     </a>

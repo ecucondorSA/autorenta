@@ -5,7 +5,7 @@ button,
 .hover\:bg-gray-50,
 .hover\:bg-gray-900,
 .hover\:text-gray-900,
-.hover\:bg-blue-700 {
+.hover\:bg-sky-700 {
   transition: all 0.2s ease-in-out;
 }
 

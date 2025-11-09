@@ -50,7 +50,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                   Notificaciones
                   @if (unreadCount() > 0) {
-                    <span class="ml-2 text-lg text-blue-600 dark:text-blue-400">({{ unreadCount() }})</span>
+                    <span class="ml-2 text-lg text-sky-600 dark:text-sky-400">({{ unreadCount() }})</span>
                   }
                 </h1>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -81,7 +81,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                 id="typeFilter"
                 [(ngModel)]="selectedType"
                 (ngModelChange)="onFilterChange()"
-                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="all">Todas</option>
                 <option value="new_booking_for_owner">Nuevas reservas</option>
@@ -101,7 +101,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                 type="checkbox"
                 [(ngModel)]="showOnlyUnread"
                 (ngModelChange)="toggleUnreadFilter()"
-                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                class="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
               />
               <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Solo no leídas
@@ -113,7 +113,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
               @if (unreadCount() > 0) {
                 <button
                   (click)="markAllAsRead()"
-                  class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  class="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
                   type="button"
                 >
                   Marcar todas como leídas
@@ -176,16 +176,16 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                   </h2>
                   <div class="space-y-3">
                     @for (notification of unreadNotifications(); track notification.id) {
-                      <div class="notification-card group relative rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4 shadow transition-all hover:shadow-md dark:bg-blue-900/20">
+                      <div class="notification-card group relative rounded-lg border-l-4 border-sky-500 bg-sky-50 p-4 shadow transition-all hover:shadow-md dark:bg-sky-700/20">
                         <div class="flex gap-4">
                           <!-- Icon -->
                           <div class="flex-shrink-0">
                             <div class="flex h-10 w-10 items-center justify-center rounded-full text-2xl"
                               [ngClass]="{
                                 'bg-green-100 dark:bg-green-900/30': notification.type === 'success',
-                                'bg-yellow-100 dark:bg-yellow-900/30': notification.type === 'warning',
+                                'bg-beige-100 dark:bg-yellow-900/30': notification.type === 'warning',
                                 'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
-                                'bg-blue-100 dark:bg-blue-900/30': notification.type === 'info'
+                                'bg-sky-100 dark:bg-sky-700/30': notification.type === 'info'
                               }"
                             >
                               {{ getNotificationIcon(notification.type) }}
@@ -222,7 +222,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               @if (notification.actionUrl) {
                                 <button
                                   (click)="handleNotificationClick(notification)"
-                                  class="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+                                  class="rounded-lg bg-sky-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-sky-700"
                                   type="button"
                                 >
                                   Ver detalles
@@ -271,9 +271,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                             <div class="flex h-10 w-10 items-center justify-center rounded-full text-2xl opacity-60"
                               [ngClass]="{
                                 'bg-green-100 dark:bg-green-900/30': notification.type === 'success',
-                                'bg-yellow-100 dark:bg-yellow-900/30': notification.type === 'warning',
+                                'bg-beige-100 dark:bg-yellow-900/30': notification.type === 'warning',
                                 'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
-                                'bg-blue-100 dark:bg-blue-900/30': notification.type === 'info'
+                                'bg-sky-100 dark:bg-sky-700/30': notification.type === 'info'
                               }"
                             >
                               {{ getNotificationIcon(notification.type) }}
@@ -340,16 +340,16 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
               <!-- Only unread notifications (when filter is active) -->
               <div class="space-y-3">
                 @for (notification of unreadNotifications(); track notification.id) {
-                  <div class="notification-card group relative rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4 shadow transition-all hover:shadow-md dark:bg-blue-900/20">
+                  <div class="notification-card group relative rounded-lg border-l-4 border-sky-500 bg-sky-50 p-4 shadow transition-all hover:shadow-md dark:bg-sky-700/20">
                     <div class="flex gap-4">
                       <!-- Icon -->
                       <div class="flex-shrink-0">
                         <div class="flex h-10 w-10 items-center justify-center rounded-full text-2xl"
                           [ngClass]="{
                             'bg-green-100 dark:bg-green-900/30': notification.type === 'success',
-                            'bg-yellow-100 dark:bg-yellow-900/30': notification.type === 'warning',
+                            'bg-beige-100 dark:bg-yellow-900/30': notification.type === 'warning',
                             'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
-                            'bg-blue-100 dark:bg-blue-900/30': notification.type === 'info'
+                            'bg-sky-100 dark:bg-sky-700/30': notification.type === 'info'
                           }"
                         >
                           {{ getNotificationIcon(notification.type) }}
@@ -386,7 +386,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           @if (notification.actionUrl) {
                             <button
                               (click)="handleNotificationClick(notification)"
-                              class="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+                              class="rounded-lg bg-sky-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-sky-700"
                               type="button"
                             >
                               Ver detalles

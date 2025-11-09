@@ -124,11 +124,11 @@ import { Booking } from '../../../core/models';
         <!-- Security Deposit Section -->
         <div class="space-y-3">
           <div
-            class="flex items-start justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/40"
+            class="flex items-start justify-between p-3 rounded-lg bg-sky-50 dark:bg-sky-700/20 border border-sky-200 dark:border-blue-800/40"
           >
             <div class="flex-1">
               <div class="flex items-center gap-2">
-                <h4 class="text-sm font-semibold text-blue-900 dark:text-blue-200">
+                <h4 class="text-sm font-semibold text-sky-700 dark:text-sky-200">
                   Depósito de Garantía
                 </h4>
                 <span
@@ -150,7 +150,7 @@ import { Booking } from '../../../core/models';
                   aria-label="Información sobre depósito de garantía"
                 >
                   <svg
-                    class="w-4 h-4 text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 cursor-help"
+                    class="w-4 h-4 text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 cursor-help"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -171,12 +171,12 @@ import { Booking } from '../../../core/models';
                   </div>
                 </button>
               </div>
-              <p class="text-xs text-blue-700 dark:text-blue-300 mt-1">
+              <p class="text-xs text-sky-700 dark:text-sky-300 mt-1">
                 Se devuelve al finalizar el alquiler sin daños
               </p>
             </div>
             <div class="text-right">
-              <p class="text-lg font-bold text-blue-900 dark:text-blue-200">
+              <p class="text-lg font-bold text-sky-700 dark:text-sky-200">
                 {{ formatCurrency(depositAmount, booking.currency) }}
               </p>
             </div>
