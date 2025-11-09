@@ -40,7 +40,9 @@ interface ModerationStatusOption {
 
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">Moderación de Reseñas</h1>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+              Moderación de Reseñas
+            </h1>
             <p class="text-gray-600 dark:text-gray-300 mt-1">
               Gestiona reseñas reportadas por usuarios
             </p>
@@ -525,7 +527,8 @@ export class AdminReviewsPage implements OnInit {
   getModerationBadgeClass(status: string): string {
     const classes: Record<string, string> = {
       pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300',
-      approved: 'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light',
+      approved:
+        'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300',
     };
     return classes[status] || 'bg-gray-100 text-gray-800';

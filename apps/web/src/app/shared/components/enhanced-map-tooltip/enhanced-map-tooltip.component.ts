@@ -115,7 +115,9 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
 
         <!-- Distance Badge (Bottom Left) -->
         <div *ngIf="distanceKm() !== null" class="absolute bottom-2 left-2">
-          <span class="inline-flex items-center gap-1 rounded-full bg-surface-raised/95 backdrop-blur-sm text-gray-800 px-2.5 py-1 text-xs font-semibold shadow-md">
+          <span
+            class="inline-flex items-center gap-1 rounded-full bg-surface-raised/95 backdrop-blur-sm text-gray-800 px-2.5 py-1 text-xs font-semibold shadow-md"
+          >
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
@@ -158,7 +160,7 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
         <!-- Price -->
         <div class="flex items-baseline gap-1.5">
           <span class="text-2xl font-bold text-gray-900">
-            {{ car.pricePerDay | money: (car.currency || 'ARS') }}
+            {{ car.pricePerDay | money: car.currency || 'ARS' }}
           </span>
           <span class="text-sm text-gray-600 font-medium">/día</span>
         </div>

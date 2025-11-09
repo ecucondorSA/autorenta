@@ -17,7 +17,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
   imports: [CommonModule],
   template: `
     <!-- Backdrop -->
-    <div (click)="close.emit()" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"></div>
+    <div (click)="closePanel.emit()" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"></div>
 
     <!-- Panel -->
     <div
@@ -29,7 +29,9 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
       >
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">Mensajes pendientes</h2>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">
+              Mensajes pendientes
+            </h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">
               {{ pendingMessages().length }} pendiente{{
                 pendingMessages().length !== 1 ? 's' : ''
@@ -39,7 +41,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
             </p>
           </div>
           <button
-            (click)="close.emit()"
+            (click)="closePanel.emit()"
             class="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
             type="button"
           >
@@ -203,7 +205,7 @@ export class OfflineMessagesPanelComponent implements OnInit, OnDestroy {
   private readonly messagesService = inject(MessagesService);
   private readonly supabase = injectSupabase();
 
-  readonly close = output<void>();
+  readonly closePanel = output<void>();
 
   readonly loading = signal(true);
   readonly pendingMessages = signal<OfflineMessage[]>([]);

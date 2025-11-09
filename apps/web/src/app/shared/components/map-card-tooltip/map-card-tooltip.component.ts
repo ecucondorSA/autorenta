@@ -16,11 +16,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
 @Component({
   selector: 'app-map-card-tooltip',
   standalone: true,
-  imports: [
-    CommonModule,
-    MoneyPipe,
-    DistanceBadgeComponent,
-  ],
+  imports: [CommonModule, MoneyPipe, DistanceBadgeComponent],
   template: `
     <div
       class="map-tooltip-card bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl border border-border-default dark:border-gray-600 overflow-hidden max-w-[280px] transition-all duration-200"
@@ -55,7 +51,9 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
 
         <!-- Badge de confianza (si aplica) -->
         <div *ngIf="isVerified()" class="absolute top-2 right-2">
-          <span class="inline-flex items-center gap-1 rounded-full bg-success-light/20 text-success-light border border-success-light/40 px-2 py-0.5 text-xs font-semibold">
+          <span
+            class="inline-flex items-center gap-1 rounded-full bg-success-light/20 text-success-light border border-success-light/40 px-2 py-0.5 text-xs font-semibold"
+          >
             <span>✓</span>
             <span>Verificado</span>
           </span>
@@ -66,7 +64,9 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
       <div class="p-3 space-y-2">
         <!-- Título y ubicación -->
         <div>
-          <h3 class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure line-clamp-1">
+          <h3
+            class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure line-clamp-1"
+          >
             {{ car.title }}
           </h3>
           <p class="text-xs text-text-secondary dark:text-text-secondary mt-0.5">
@@ -77,7 +77,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
         <!-- Precio -->
         <div class="flex items-baseline gap-1">
           <span class="text-xl font-bold text-cta-default">
-            {{ car.pricePerDay | money: (car.currency || 'ARS') }}
+            {{ car.pricePerDay | money: car.currency || 'ARS' }}
           </span>
           <span class="text-xs text-text-secondary dark:text-text-secondary">/día</span>
         </div>
@@ -168,6 +168,4 @@ export class MapCardTooltipComponent implements OnInit {
   private toRad(degrees: number): number {
     return degrees * (Math.PI / 180);
   }
-
 }
-

@@ -168,10 +168,7 @@ export type ThemeMode = 'light' | 'dark';
 /**
  * Obtiene un token de color según el tema
  */
-export function getThemeColor(
-  key: ThemeColorKey,
-  mode: ThemeMode = 'light'
-): ColorValue {
+export function getThemeColor(key: ThemeColorKey, mode: ThemeMode = 'light'): ColorValue {
   return themeColors[mode][key];
 }
 
@@ -288,9 +285,8 @@ export const tailwindColors = {
 /**
  * Nota: La validación automática se ejecuta mediante el script
  * `npm run validate:colors` que usa tools/validate-colors.mjs
- * 
+ *
  * Para validar manualmente en desarrollo:
  * import { validateThemeColors } from '@/config/theme/colors';
  * validateThemeColors(); // Debe retornar true
  */
-

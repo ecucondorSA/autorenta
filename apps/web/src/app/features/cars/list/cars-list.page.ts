@@ -24,12 +24,13 @@ import { DistanceCalculatorService } from '../../../core/services/distance-calcu
 import { LocationService } from '../../../core/services/location.service';
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { Car } from '../../../core/models';
-import {
-  DateRange,
-} from '../../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
-import { MapFiltersComponent, FilterState } from '../../../shared/components/map-filters/map-filters.component';
+import {
+  MapFiltersComponent,
+  FilterState,
+} from '../../../shared/components/map-filters/map-filters.component';
 import { CarsDrawerComponent } from '../../../shared/components/cars-drawer/cars-drawer.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';

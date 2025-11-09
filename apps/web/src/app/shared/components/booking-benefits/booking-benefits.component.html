@@ -37,12 +37,11 @@
     [class.bg-success-light/10]="benefit.highlight"
     [class.border-success-light/40]="benefit.highlight"
     [class.bg-surface-raised dark:bg-surface-secondary]="!benefit.highlight"
-    [class.border-border-default dark:border-gray-600]="!benefit.highlight"
-  >
+    [class.border-border-default dark:border-gray-600]="!benefit.highlight">
     <!-- Highlight Badge -->
     <div
       *ngIf="benefit.highlight"
-      class="absolute -top-2 -right-2 bg-success-light text-text-primary text-[10px] font-bold px-2 py-1 rounded-full"
+      class="absolute -top-2 -right-2 bg-success-light text-text-inverse text-[10px] font-bold px-2 py-1 rounded-full"
     >
       ⭐ DESTACADO
     </div>

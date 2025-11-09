@@ -92,7 +92,8 @@ export class MobileBottomNavComponent {
   getIcon(iconName: string): string {
     const icons: Record<string, string> = {
       // Icono innovador de exploración/búsqueda con ondas
-      search: 'M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z M10.5 7.5v6m3-3h-6',
+      search:
+        'M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z M10.5 7.5v6m3-3h-6',
       // Icono de publicar con efecto de subida/upload
       plus: 'M12 4.5v15m7.5-7.5h-15 M12 4.5a7.5 7.5 0 100 15 7.5 7.5 0 000-15z',
       // Icono de mensajes moderno con burbujas de chat

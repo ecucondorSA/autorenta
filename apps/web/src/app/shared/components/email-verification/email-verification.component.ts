@@ -39,7 +39,10 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
       </div>
 
       <!-- Verified State -->
-      <div *ngIf="status().isVerified" class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
+      <div
+        *ngIf="status().isVerified"
+        class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
+      >
         <div class="flex items-center gap-2 text-success-light">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path

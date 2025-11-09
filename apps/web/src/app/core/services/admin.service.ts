@@ -703,7 +703,7 @@ export class AdminService {
     if (error) throw error;
 
     return (data ?? []).map((item) => {
-      const typedItem = (item as unknown) as WithdrawalRequest & {
+      const typedItem = item as unknown as WithdrawalRequest & {
         user?: { full_name?: string | null; email?: Array<{ email: string }> };
       };
       const { user, ...rest } = typedItem;
@@ -957,7 +957,7 @@ export class AdminService {
     }
 
     // Flatten nested data
-    const typedData = (data as unknown) as Record<string, unknown>;
+    const typedData = data as unknown as Record<string, unknown>;
     const user = typedData.user as Record<string, unknown>;
     const booking = typedData.booking as Record<string, unknown>;
     const car = booking?.car as Record<string, unknown>;

@@ -268,6 +268,3 @@ export class WithdrawalsAdminPage implements OnInit {
     }
   }
 }
-
-
-

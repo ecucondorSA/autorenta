@@ -60,6 +60,3 @@ export class FloatingActionFabComponent {
     return colors[action.color || 'primary'];
   }
 }
-
-
-

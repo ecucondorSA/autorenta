@@ -459,11 +459,14 @@ export class AdminClaimDetailPage implements OnInit {
 
   getStatusBadgeClass(status: ClaimStatus): string {
     const classes: Record<ClaimStatus, string> = {
-      reported: 'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
+      reported:
+        'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
       pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200',
       investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
-      under_review: 'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
-      approved: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
+      under_review:
+        'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
+      approved:
+        'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',
       paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       closed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-200',

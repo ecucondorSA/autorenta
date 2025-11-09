@@ -56,7 +56,6 @@
 }
 
 /* Step navigation buttons */
-button[type="button"]:not(:disabled):hover {
+button[type='button']:not(:disabled):hover {
   @apply opacity-80;
 }
-

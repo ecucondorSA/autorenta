@@ -14,5 +14,3 @@ export class AvailabilityAlertComponent {
   @Input() zone = 'tu zona';
   @Output() expandRadius = new EventEmitter<void>();
 }
-
-

@@ -42,7 +42,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       </div>
 
       <!-- Verified State -->
-      <div *ngIf="status().isVerified" class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
+      <div
+        *ngIf="status().isVerified"
+        class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
+      >
         <div class="flex items-center gap-2 text-success-light">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -191,7 +194,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         </div>
 
         <!-- Processing State -->
-        <div *ngIf="processing()" class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
+        <div
+          *ngIf="processing()"
+          class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg"
+        >
           <div class="flex items-center gap-3">
             <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-cta-default"></div>
             <div class="flex-grow">

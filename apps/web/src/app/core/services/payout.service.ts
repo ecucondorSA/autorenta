@@ -122,7 +122,7 @@ export class PayoutService {
         .order('is_default', { ascending: false }),
     ).pipe(
       map(({ data }) => data as BankAccount[]),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch bank accounts'));
       }),
     );
@@ -149,7 +149,7 @@ export class PayoutService {
         .single(),
     ).pipe(
       map(({ data }) => data as BankAccount),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to add bank account'));
       }),
     );
@@ -183,7 +183,7 @@ export class PayoutService {
       switchMap(() => this.getPayoutStatus(payoutId)),
       filter((payout) => payout.status !== 'processing'),
       take(1),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to monitor payout status'));
       }),
     );

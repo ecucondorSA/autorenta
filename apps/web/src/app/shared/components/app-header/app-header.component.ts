@@ -93,4 +93,3 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.router.navigate(['/how-it-works']);
   }
 }
-

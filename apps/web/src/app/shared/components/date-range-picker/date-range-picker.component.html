@@ -126,7 +126,10 @@
               >
                 -{{ suggestion.discount }}% OFF
               </span>
-              <span *ngIf="suggestion.savings" class="text-xs text-success-light dark:text-success-light">
+              <span
+                *ngIf="suggestion.savings"
+                class="text-xs text-success-light dark:text-success-light"
+              >
                 (Ahorrás ${{ suggestion.savings | number: '1.0-0' }})
               </span>
             </div>

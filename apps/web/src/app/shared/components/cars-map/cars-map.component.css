@@ -146,7 +146,8 @@
   content: '';
   position: absolute;
   inset: -4px;
-  border: var(--map-marker-instant-booking-border, 3px) solid var(--map-marker-instant-booking-color, #10b981);
+  border: var(--map-marker-instant-booking-border, 3px) solid
+    var(--map-marker-instant-booking-color, #10b981);
   border-radius: 50%;
   animation: instant-booking-pulse 2s ease-in-out infinite;
   z-index: -1;
@@ -177,7 +178,8 @@
 }
 
 @keyframes instant-booking-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: var(--map-marker-instant-booking-pulse-opacity, 0.4);
     transform: scale(1);
   }
@@ -188,7 +190,8 @@
 }
 
 @keyframes instant-booking-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 var(--map-marker-instant-booking-color, #10b981);
     opacity: 0.7;
   }
@@ -210,7 +213,8 @@
 }
 
 @keyframes pulse-amber {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 2px var(--map-marker-soon-available-shadow, rgba(245, 158, 11, 0.2));
   }
   50% {
@@ -673,14 +677,15 @@ img.car-popup-image {
 .car-marker-simple.car-marker--selected .marker-circle {
   transform: scale(1.2);
   box-shadow:
-    0 0 0 4px rgba(167, 216, 244, 0.3), /* cta-default con opacidad */
-    0 4px 12px rgba(167, 216, 244, 0.6), /* cta-default con opacidad */
-    0 8px 24px rgba(0, 0, 0, 0.3);
+    0 0 0 4px rgba(167, 216, 244, 0.3),
+    /* cta-default con opacidad */ 0 4px 12px rgba(167, 216, 244, 0.6),
+    /* cta-default con opacidad */ 0 8px 24px rgba(0, 0, 0, 0.3);
   animation: pulse-marker 2s ease-in-out infinite;
 }
 
 @keyframes pulse-marker {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1.2);
     opacity: 1;
   }
@@ -802,7 +807,8 @@ img.car-popup-image {
 }
 
 @keyframes pulse-marker-photo {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1.2);
     opacity: 1;
   }
@@ -820,7 +826,9 @@ img.car-popup-image {
   border-radius: 50%;
   padding: 3px;
   background: linear-gradient(135deg, var(--cta-default), var(--cta-hover));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   z-index: -1;
@@ -908,7 +916,8 @@ img.car-popup-image {
 }
 
 @keyframes pulse-halo {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.7;
   }

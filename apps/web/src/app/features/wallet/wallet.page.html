@@ -68,8 +68,7 @@
                 [class.bg-success-light/10]="protectedCreditStatus() === 'active'"
                 [class.text-success-light]="protectedCreditStatus() === 'active'"
                 [class.bg-amber-50]="protectedCreditStatus() !== 'active'"
-                [class.text-amber-700]="protectedCreditStatus() !== 'active'"
-              >
+                [class.text-amber-700]="protectedCreditStatus() !== 'active'">
                 {{
                   protectedCreditStatus() === 'active'
                     ? 'Crédito protegido listo'

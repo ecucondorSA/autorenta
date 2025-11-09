@@ -71,7 +71,9 @@ import { ToastService } from '../../../core/services/toast.service';
 
       @if (lastExport()) {
         <div class="mt-6 rounded-lg border border-success-light/40 bg-success-light/10 p-4">
-          <p class="text-sm font-medium text-success-light">Última exportación: {{ lastExport() }}</p>
+          <p class="text-sm font-medium text-success-light">
+            Última exportación: {{ lastExport() }}
+          </p>
         </div>
       }
     </div>

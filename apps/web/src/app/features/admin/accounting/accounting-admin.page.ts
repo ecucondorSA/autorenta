@@ -167,7 +167,15 @@ export class AccountingAdminPage implements OnInit {
     }
   }
 
-  updateLedgerFilters(updates: Partial<{ startDate: string; endDate: string; accountCode: string; referenceType: string; searchTerm: string }>): void {
+  updateLedgerFilters(
+    updates: Partial<{
+      startDate: string;
+      endDate: string;
+      accountCode: string;
+      referenceType: string;
+      searchTerm: string;
+    }>,
+  ): void {
     this.ledgerFilters.update((current) => ({ ...current, ...updates }));
   }
 
@@ -275,7 +283,9 @@ export class AccountingAdminPage implements OnInit {
     }
   }
 
-  updateClosuresFilters(updates: Partial<{ periodType: string; status: string; startDate: string; endDate: string }>): void {
+  updateClosuresFilters(
+    updates: Partial<{ periodType: string; status: string; startDate: string; endDate: string }>,
+  ): void {
     this.closuresFilters.update((current) => ({ ...current, ...updates }));
   }
 
@@ -381,7 +391,15 @@ export class AccountingAdminPage implements OnInit {
     }
   }
 
-  updateAuditLogsFilters(updates: Partial<{ severity: string; auditType: string; resolutionStatus: string; startDate: string; endDate: string }>): void {
+  updateAuditLogsFilters(
+    updates: Partial<{
+      severity: string;
+      auditType: string;
+      resolutionStatus: string;
+      startDate: string;
+      endDate: string;
+    }>,
+  ): void {
     this.auditLogsFilters.update((current) => ({ ...current, ...updates }));
   }
 

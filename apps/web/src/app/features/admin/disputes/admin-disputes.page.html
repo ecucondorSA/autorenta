@@ -158,12 +158,12 @@
                 <strong>Descripción:</strong>
                 {{ selectedDispute()!.description || 'Sin descripción' }}
               </p>
-            <p class="text-sm">
-              <strong>Creada:</strong> {{ formatDate(selectedDispute()?.created_at ?? null) }}
-            </p>
-            <p *ngIf="selectedDispute()?.resolved_at" class="text-sm">
-              <strong>Resuelta:</strong> {{ formatDate(selectedDispute()?.resolved_at ?? null) }}
-            </p>
+              <p class="text-sm">
+                <strong>Creada:</strong> {{ formatDate(selectedDispute()?.created_at ?? null) }}
+              </p>
+              <p *ngIf="selectedDispute()?.resolved_at" class="text-sm">
+                <strong>Resuelta:</strong> {{ formatDate(selectedDispute()?.resolved_at ?? null) }}
+              </p>
             </div>
           </div>
 

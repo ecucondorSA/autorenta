@@ -110,10 +110,11 @@ export class MultiCarCalendarComponent implements OnInit {
         // ✅ FIX: Use photos array instead of thumbnail_url/image_urls
         const firstPhoto = car.photos?.[0] || car.car_photos?.[0];
         const imageUrl = firstPhoto?.url || null;
-        
+
         return {
           carId: car.id,
-          carTitle: `${car.brand_text_backup || car.brand || ''} ${car.model_text_backup || car.model || ''} (${car.year})`.trim(),
+          carTitle:
+            `${car.brand_text_backup || car.brand || ''} ${car.model_text_backup || car.model || ''} (${car.year})`.trim(),
           imageUrl: imageUrl ?? undefined,
           blockedRanges: [],
           selected: false,

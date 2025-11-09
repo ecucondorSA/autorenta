@@ -11,8 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class InfoBannerComponent {
   @Input() title = 'Marketplace P2P verificado';
-  @Input() description = 'Conectamos personas con autos verificados. Sin intermediarios, sin tarjetas.';
+  @Input() description =
+    'Conectamos personas con autos verificados. Sin intermediarios, sin tarjetas.';
   @Input() variant: 'info' | 'success' | 'warning' = 'info';
 }
-
-

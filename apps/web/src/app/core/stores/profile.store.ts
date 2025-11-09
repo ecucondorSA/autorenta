@@ -316,4 +316,3 @@ export class ProfileStore {
     return Date.now() - this.cacheTimestamp < this.CACHE_DURATION_MS;
   }
 }
-

@@ -20,9 +20,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
     >
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-bold text-text-primary dark:text-text-primary">
-          Resumen de Pagos
-        </h3>
+        <h3 class="text-xl font-bold text-text-primary dark:text-text-primary">Resumen de Pagos</h3>
         <button
           type="button"
           (click)="onCompareMethodsClick()"
@@ -152,7 +150,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <p class="text-xs text-gray-600 dark:text-text-secondary/60 mt-1">
             ≈ {{ formatUsd(priceBreakdown.totalUsd) }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-text-secondary/50 mt-2">Se cobra inmediatamente</p>
+          <p class="text-xs text-gray-500 dark:text-text-secondary/50 mt-2">
+            Se cobra inmediatamente
+          </p>
         </div>
       </div>
 
@@ -226,7 +226,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <div class="h-px bg-gray-200 dark:bg-neutral-700 my-4"></div>
 
       <!-- Total Consolidado (Informativo) -->
-      <div class="bg-gray-50 dark:bg-surface-secondary/40 rounded-lg p-4 transition-colors duration-300">
+      <div
+        class="bg-gray-50 dark:bg-surface-secondary/40 rounded-lg p-4 transition-colors duration-300"
+      >
         <div class="flex items-start justify-between mb-2">
           <div class="flex-1">
             <span class="text-sm font-medium text-gray-700 dark:text-text-secondary/80">
@@ -340,9 +342,11 @@ export class PaymentSummaryPanelComponent {
 
   protected getDistanceTierClass(tier: 'local' | 'regional' | 'long_distance'): string {
     const classes = {
-      local: 'bg-success-light/20 text-success-light dark:bg-success-light/30 dark:text-success-light',
+      local:
+        'bg-success-light/20 text-success-light dark:bg-success-light/30 dark:text-success-light',
       regional: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-      long_distance: 'bg-warning-light/20 text-warning-light dark:bg-warning-light/30 dark:text-warning-light',
+      long_distance:
+        'bg-warning-light/20 text-warning-light dark:bg-warning-light/30 dark:text-warning-light',
     };
     return classes[tier];
   }

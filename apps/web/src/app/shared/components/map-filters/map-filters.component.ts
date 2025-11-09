@@ -40,11 +40,7 @@ export interface FilterState {
 @Component({
   selector: 'app-map-filters',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DateRangePickerComponent,
-  ],
+  imports: [CommonModule, FormsModule, DateRangePickerComponent],
   templateUrl: './map-filters.component.html',
   styleUrls: ['./map-filters.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -269,10 +265,12 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
     try {
       const serialized = {
         ...filter,
-        dateRange: filter.dateRange ? {
-          start: filter.dateRange.start.toISOString(),
-          end: filter.dateRange.end.toISOString(),
-        } : null,
+        dateRange: filter.dateRange
+          ? {
+              start: filter.dateRange.start.toISOString(),
+              end: filter.dateRange.end.toISOString(),
+            }
+          : null,
       };
       sessionStorage.setItem('mapFilters', JSON.stringify(serialized));
     } catch (e) {

@@ -161,6 +161,3 @@ export class CheckInPage implements OnInit {
     });
   }
 }
-
-
-

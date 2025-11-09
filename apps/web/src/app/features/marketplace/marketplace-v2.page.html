@@ -1,17 +1,23 @@
 <!-- 🎨 MARKETPLACE V2 - PREMIUM DESIGN -->
 
 <!-- Hero Header with Search -->
-<div class="hero-header relative bg-gradient-to-br from-cta-default via-cta-default to-success-light text-text-primary overflow-hidden">
+<div
+  class="hero-header relative bg-gradient-to-br from-cta-default via-cta-default to-success-light text-text-primary overflow-hidden"
+>
   <!-- Animated background pattern -->
   <div class="absolute inset-0 opacity-10">
-    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"></div>
+    <div
+      class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"
+    ></div>
   </div>
 
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Top bar with logo and user -->
     <div class="flex items-center justify-between mb-8">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-surface-raised/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+        <div
+          class="w-10 h-10 bg-surface-raised/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+        >
           <span class="text-2xl">🚗</span>
         </div>
         <div>
@@ -23,11 +29,15 @@
       <div class="flex items-center gap-3">
         <!-- Quick stats -->
         <div class="hidden md:flex items-center gap-4 text-sm">
-          <div class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-gray-900 shadow-md">
+          <div
+            class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-gray-900 shadow-md"
+          >
             <span class="text-lg">⚡</span>
-            <span class="font-medium">{{carsWithDistance().length}} autos disponibles</span>
+            <span class="font-medium">{{ carsWithDistance().length }} autos disponibles</span>
           </div>
-          <div class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-gray-900 shadow-md">
+          <div
+            class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-gray-900 shadow-md"
+          >
             <span class="text-lg">✓</span>
             <span class="font-medium">Reserva en 2 minutos</span>
           </div>
@@ -57,7 +67,11 @@
             <input
               type="text"
               placeholder="Selecciona fechas"
-              value="{{dateRange().from && dateRange().to ? (dateRange().from + ' - ' + dateRange().to) : 'Cuando lo necesitas?'}}"
+              value="{{
+                dateRange().from && dateRange().to
+                  ? dateRange().from + ' - ' + dateRange().to
+                  : 'Cuando lo necesitas?'
+              }}"
               class="w-full px-4 py-3 bg-surface-secondary/50 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-cta-default text-text-primary placeholder:text-text-muted cursor-pointer"
               readonly
             />
@@ -82,8 +96,8 @@
             (click)="onQuickFilterClick(filter.id)"
             class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-800 hover:bg-cta-default hover:text-cta-text hover:border-cta-default transition-all duration-200 flex-shrink-0 shadow-sm"
           >
-            <span>{{filter.icon}}</span>
-            <span>{{filter.label}}</span>
+            <span>{{ filter.icon }}</span>
+            <span>{{ filter.label }}</span>
           </button>
         </div>
       </div>
@@ -92,8 +106,12 @@
 
   <!-- Wave separator -->
   <div class="absolute bottom-0 left-0 right-0">
-      <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-12">
-      <path d="M0 48H1440V0C1440 0 1080 48 720 48C360 48 0 0 0 0V48Z" fill="currentColor" class="text-text-primary dark:text-slate-deep"/>
+    <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-12">
+      <path
+        d="M0 48H1440V0C1440 0 1080 48 720 48C360 48 0 0 0 0V48Z"
+        fill="currentColor"
+        class="text-text-primary dark:text-slate-deep"
+      />
     </svg>
   </div>
 </div>
@@ -101,7 +119,6 @@
 <!-- Main Content Area -->
 <div class="marketplace-content bg-surface-secondary/30 dark:bg-surface-secondary min-h-screen">
   <div class="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
     <!-- Stats Strip -->
     <div class="mb-6">
       <app-stats-strip [stats]="statsStripData()" />
@@ -109,8 +126,12 @@
 
     <!-- Trust Badges -->
     <div class="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3">
-        <div class="w-10 h-10 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center">
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3"
+      >
+        <div
+          class="w-10 h-10 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
+        >
           <span class="text-xl">✓</span>
         </div>
         <div>
@@ -119,8 +140,12 @@
         </div>
       </div>
 
-      <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3">
-        <div class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center">
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3"
+      >
+        <div
+          class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
+        >
           <span class="text-xl">🛡️</span>
         </div>
         <div>
@@ -129,8 +154,12 @@
         </div>
       </div>
 
-      <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3">
-        <div class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center">
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3"
+      >
+        <div
+          class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
+        >
           <span class="text-xl">💳</span>
         </div>
         <div>
@@ -139,8 +168,12 @@
         </div>
       </div>
 
-      <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3">
-        <div class="w-10 h-10 bg-warning-light/20 dark:bg-warning-light/30 rounded-full flex items-center justify-center">
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3"
+      >
+        <div
+          class="w-10 h-10 bg-warning-light/20 dark:bg-warning-light/30 rounded-full flex items-center justify-center"
+        >
           <span class="text-xl">⚡</span>
         </div>
         <div>
@@ -154,7 +187,9 @@
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary">
         Autos cerca de ti
-        <span class="text-base font-normal text-text-secondary ml-2">({{carsWithDistance().length}} resultados)</span>
+        <span class="text-base font-normal text-text-secondary ml-2"
+          >({{ carsWithDistance().length }} resultados)</span
+        >
       </h2>
 
       <div class="flex items-center gap-2">
@@ -202,14 +237,19 @@
     </div>
 
     <!-- Grid View -->
-    <div *ngIf="viewMode() === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div
+      *ngIf="viewMode() === 'grid'"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+    >
       <div
         *ngFor="let car of carsWithDistance(); trackBy: trackByCarId"
         class="car-card-enhanced group"
         (click)="onCarSelected(car.id)"
       >
         <!-- Enhanced Car Card -->
-        <div class="bg-surface-raised dark:bg-surface-raised text-text-primary rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-[1.02]">
+        <div
+          class="bg-surface-raised dark:bg-surface-raised text-text-primary rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-[1.02]"
+        >
           <!-- Image Container with Badge -->
           <div class="relative aspect-[4/3] overflow-hidden">
             <img
@@ -220,36 +260,50 @@
             />
 
             <!-- Gradient overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+            ></div>
 
             <!-- Top badges -->
             <div class="absolute top-3 left-3 flex flex-col gap-2">
-              <span *ngIf="car.distance && car.distance < 5" class="bg-success-light text-text-primary text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm">
+              <span
+                *ngIf="car.distance && car.distance < 5"
+                class="bg-success-light text-text-primary text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm"
+              >
                 ⚡ Cerca de ti
               </span>
-              <span *ngIf="getCarInstantBooking(car)" class="bg-warning-light text-text-primary text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm">
+              <span
+                *ngIf="getCarInstantBooking(car)"
+                class="bg-warning-light text-text-primary text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm"
+              >
                 🔥 Reserva instantánea
               </span>
             </div>
 
             <!-- Favorite button -->
-            <button class="absolute top-3 right-3 w-9 h-9 bg-surface-raised/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-surface-raised transition-colors shadow-lg">
+            <button
+              class="absolute top-3 right-3 w-9 h-9 bg-surface-raised/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-surface-raised transition-colors shadow-lg"
+            >
               <span class="text-lg">♡</span>
             </button>
 
             <!-- Distance badge at bottom -->
             <div *ngIf="car.distanceText" class="absolute bottom-3 left-3">
-              <span class="bg-surface-raised/95 backdrop-blur-sm text-text-primary text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+              <span
+                class="bg-surface-raised/95 backdrop-blur-sm text-text-primary text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5"
+              >
                 <span>📍</span>
-                <span>{{car.distanceText}}</span>
+                <span>{{ car.distanceText }}</span>
               </span>
             </div>
 
             <!-- Photo counter -->
             <div class="absolute bottom-3 right-3">
-              <span class="bg-black/70 backdrop-blur-sm text-text-inverse text-xs px-2 py-1 rounded-full flex items-center gap-1">
+              <span
+                class="bg-black/70 backdrop-blur-sm text-text-inverse text-xs px-2 py-1 rounded-full flex items-center gap-1"
+              >
                 <span>📷</span>
-                <span>{{extractPhotoGallery(car).length}}</span>
+                <span>{{ extractPhotoGallery(car).length }}</span>
               </span>
             </div>
           </div>
@@ -259,7 +313,7 @@
             <!-- Title and Rating -->
             <div class="mb-3">
               <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-1 truncate">
-                {{car.brand_text_backup}} {{car.model_text_backup}}
+                {{ car.brand_text_backup }} {{ car.model_text_backup }}
               </h3>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-1 text-xs text-text-secondary">
@@ -267,7 +321,7 @@
                   <span class="font-semibold">4.8</span>
                   <span>(124 viajes)</span>
                 </div>
-                <span class="text-xs text-text-secondary">{{car.location_city}}</span>
+                <span class="text-xs text-text-secondary">{{ car.location_city }}</span>
               </div>
             </div>
 
@@ -275,24 +329,26 @@
             <div class="flex items-center gap-3 mb-4 text-xs text-text-secondary">
               <div class="flex items-center gap-1">
                 <span>⚙️</span>
-                <span>{{car.transmission || 'Manual'}}</span>
+                <span>{{ car.transmission || 'Manual' }}</span>
               </div>
               <div class="flex items-center gap-1">
                 <span>👥</span>
-                <span>{{car.seats || 5}} asientos</span>
+                <span>{{ car.seats || 5 }} asientos</span>
               </div>
               <div class="flex items-center gap-1">
                 <span>⛽</span>
-                <span>{{car.fuel_type || 'Nafta'}}</span>
+                <span>{{ car.fuel_type || 'Nafta' }}</span>
               </div>
             </div>
 
             <!-- Price and CTA -->
-            <div class="flex items-center justify-between pt-3 border-t border-border-default dark:border-gray-700">
+            <div
+              class="flex items-center justify-between pt-3 border-t border-border-default dark:border-gray-700"
+            >
               <div>
                 <p class="text-xs text-text-secondary">Desde</p>
                 <p class="text-2xl font-bold text-cta-default">
-                  ${{car.price_per_day | number:'1.0-0'}}
+                  ${{ car.price_per_day | number: '1.0-0' }}
                   <span class="text-sm font-normal text-text-secondary">/día</span>
                 </p>
               </div>
@@ -315,7 +371,9 @@
       <!-- Loading skeleton -->
       <div *ngIf="loading()" class="col-span-full flex items-center justify-center py-12">
         <div class="flex flex-col items-center gap-4">
-          <div class="animate-spin rounded-full h-12 w-12 border-4 border-cta-default border-t-transparent"></div>
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-4 border-cta-default border-t-transparent"
+          ></div>
           <p class="text-text-secondary">Cargando autos increíbles...</p>
         </div>
       </div>
@@ -323,7 +381,9 @@
       <!-- Empty state -->
       <div *ngIf="!loading() && carsWithDistance().length === 0" class="col-span-full">
         <div class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-12 text-center">
-          <div class="w-24 h-24 bg-surface-secondary dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div
+            class="w-24 h-24 bg-surface-secondary dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
             <span class="text-5xl">🔍</span>
           </div>
           <h3 class="text-xl font-bold text-text-primary dark:text-text-primary mb-2">
@@ -332,7 +392,9 @@
           <p class="text-text-secondary mb-6">
             Intenta ajustar los filtros o buscar en otra ubicación
           </p>
-          <button class="px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors">
+          <button
+            class="px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors"
+          >
             Limpiar filtros
           </button>
         </div>
@@ -363,7 +425,7 @@
               <div class="flex items-start justify-between mb-3">
                 <div>
                   <h3 class="text-xl font-bold text-text-primary dark:text-text-primary mb-1">
-                    {{car.brand_text_backup}} {{car.model_text_backup}}
+                    {{ car.brand_text_backup }} {{ car.model_text_backup }}
                   </h3>
                   <div class="flex items-center gap-3 text-sm text-text-secondary">
                     <span class="flex items-center gap-1">
@@ -371,35 +433,35 @@
                       <span class="font-semibold">4.8</span>
                     </span>
                     <span>•</span>
-                    <span>📍 {{car.distanceText}}</span>
+                    <span>📍 {{ car.distanceText }}</span>
                     <span>•</span>
-                    <span>{{car.location_city}}</span>
+                    <span>{{ car.location_city }}</span>
                   </div>
                 </div>
                 <div class="text-right">
                   <p class="text-3xl font-bold text-cta-default">
-                    ${{car.price_per_day | number:'1.0-0'}}
+                    ${{ car.price_per_day | number: '1.0-0' }}
                   </p>
                   <p class="text-sm text-text-secondary">por día</p>
                 </div>
               </div>
 
               <p *ngIf="car.description" class="text-text-secondary text-sm mb-4 line-clamp-2">
-                {{car.description}}
+                {{ car.description }}
               </p>
 
               <div class="flex items-center gap-4 mb-4">
                 <span class="flex items-center gap-1.5 text-sm text-text-secondary">
                   <span>⚙️</span>
-                  <span>{{car.transmission || 'Manual'}}</span>
+                  <span>{{ car.transmission || 'Manual' }}</span>
                 </span>
                 <span class="flex items-center gap-1.5 text-sm text-text-secondary">
                   <span>👥</span>
-                  <span>{{car.seats || 5}} asientos</span>
+                  <span>{{ car.seats || 5 }} asientos</span>
                 </span>
                 <span class="flex items-center gap-1.5 text-sm text-text-secondary">
                   <span>⛽</span>
-                  <span>{{car.fuel_type || 'Nafta'}}</span>
+                  <span>{{ car.fuel_type || 'Nafta' }}</span>
                 </span>
               </div>
             </div>
@@ -424,7 +486,10 @@
     </div>
 
     <!-- Map View -->
-    <div *ngIf="viewMode() === 'map'" class="relative h-[calc(100vh-400px)] min-h-[600px] rounded-2xl overflow-hidden shadow-2xl">
+    <div
+      *ngIf="viewMode() === 'map'"
+      class="relative h-[calc(100vh-400px)] min-h-[600px] rounded-2xl overflow-hidden shadow-2xl"
+    >
       <app-cars-map
         [cars]="carMapLocations()"
         [selectedCarId]="selectedCarId()"
@@ -439,7 +504,6 @@
         class="w-full h-full"
       />
     </div>
-
   </div>
 </div>
 

@@ -369,8 +369,8 @@ export class QuickBookingModalComponent implements OnInit {
   @Input() userLocation?: { lat: number; lng: number };
   @Input() isOpen = false;
 
-  @Output() readonly confirm = new EventEmitter<QuickBookingData>();
-  @Output() readonly cancel = new EventEmitter<void>();
+  @Output() readonly confirmBooking = new EventEmitter<QuickBookingData>();
+  @Output() readonly cancelBooking = new EventEmitter<void>();
 
   private readonly walletService = inject(WalletService);
   private readonly router = inject(Router);
@@ -389,7 +389,7 @@ export class QuickBookingModalComponent implements OnInit {
     const photos = this.car.photos ?? this.car.car_photos ?? [];
     if (Array.isArray(photos) && photos.length > 0) {
       const firstPhoto = photos[0];
-      return typeof firstPhoto === 'string' ? firstPhoto : (firstPhoto as any)?.url ?? null;
+      return typeof firstPhoto === 'string' ? firstPhoto : ((firstPhoto as any)?.url ?? null);
     }
     return null;
   });
@@ -467,8 +467,7 @@ export class QuickBookingModalComponent implements OnInit {
   readonly canConfirm = computed(() => {
     const hasPaymentMethod = !!this.selectedPaymentMethod();
     const hasDuration = !!this.selectedDuration();
-    const hasValidPayment =
-      this.selectedPaymentMethod() !== 'wallet' || this.hasWalletBalance();
+    const hasValidPayment = this.selectedPaymentMethod() !== 'wallet' || this.hasWalletBalance();
 
     return hasPaymentMethod && hasDuration && hasValidPayment;
   });
@@ -497,7 +496,7 @@ export class QuickBookingModalComponent implements OnInit {
       void this.router.navigate(['/wallet']);
       return;
     }
-    
+
     this.selectedPaymentMethod.set(method);
     this.errorMessage.set('');
   }
@@ -515,7 +514,7 @@ export class QuickBookingModalComponent implements OnInit {
   }
 
   handleCancel(): void {
-    this.cancel.emit();
+    this.cancelBooking.emit();
   }
 
   async handleConfirm(): Promise<void> {
@@ -525,7 +524,9 @@ export class QuickBookingModalComponent implements OnInit {
     this.errorMessage.set('');
 
     try {
-      const option = this.durationOptions().find((o: DurationOption) => o.id === this.selectedDuration());
+      const option = this.durationOptions().find(
+        (o: DurationOption) => o.id === this.selectedDuration(),
+      );
       if (!option) {
         throw new Error('Duración no seleccionada');
       }
@@ -539,7 +540,7 @@ export class QuickBookingModalComponent implements OnInit {
         currency: this.car.currency || 'ARS',
       };
 
-      this.confirm.emit(bookingData);
+      this.confirmBooking.emit(bookingData);
     } catch (error) {
       console.error('Error confirming booking:', error);
       this.errorMessage.set(

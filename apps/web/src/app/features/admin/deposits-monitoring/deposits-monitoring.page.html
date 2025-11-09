@@ -17,7 +17,9 @@
           </svg>
           Volver al Dashboard
         </button>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">💰 Monitoreo de Depósitos</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+          💰 Monitoreo de Depósitos
+        </h1>
         <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300 mt-2">
           Vista en tiempo real del sistema de depósitos
         </p>
@@ -70,7 +72,9 @@
           </p>
           <span class="text-2xl">📊</span>
         </div>
-        <p class="text-3xl font-bold text-gray-900 dark:text-text-inverse">{{ stats().total_deposits }}</p>
+        <p class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+          {{ stats().total_deposits }}
+        </p>
       </div>
 
       <div class="bg-success-light/10 dark:bg-success-light/20 rounded-lg shadow p-6">
@@ -78,7 +82,9 @@
           <p class="text-sm font-medium text-success-light dark:text-success-light">Completados</p>
           <span class="text-2xl">✅</span>
         </div>
-        <p class="text-3xl font-bold text-success-light dark:text-success-light">{{ stats().completed }}</p>
+        <p class="text-3xl font-bold text-success-light dark:text-success-light">
+          {{ stats().completed }}
+        </p>
         <p class="text-sm text-success-light dark:text-success-light mt-1">
           {{ successRate() }}% tasa éxito
         </p>

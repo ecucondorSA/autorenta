@@ -229,8 +229,7 @@
         <div
           class="mt-4 p-3 rounded-lg"
           [class.bg-success-light/10]="canSubmit()"
-          [class.bg-gray-50]="!canSubmit()"
-        >
+          [class.bg-gray-50]="!canSubmit()">
           <div class="flex items-center gap-2">
             <ion-icon
               [name]="canSubmit() ? 'checkmark-circle' : 'alert-circle'"

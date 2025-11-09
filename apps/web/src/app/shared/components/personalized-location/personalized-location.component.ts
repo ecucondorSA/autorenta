@@ -134,7 +134,9 @@ export class PersonalizedLocationComponent implements OnInit, OnDestroy {
     for (let i = 0; i <= points; i++) {
       const angle = (i / points) * 2 * Math.PI;
       const lat = center.lat + (radiusMeters / 111320) * Math.cos(angle);
-      const lng = center.lng + (radiusMeters / (111320 * Math.cos((center.lat * Math.PI) / 180))) * Math.sin(angle);
+      const lng =
+        center.lng +
+        (radiusMeters / (111320 * Math.cos((center.lat * Math.PI) / 180))) * Math.sin(angle);
       coordinates.push([lng, lat]);
     }
 
@@ -219,7 +221,7 @@ export class PersonalizedLocationComponent implements OnInit, OnDestroy {
       const marker = new Marker({ element: el, draggable: true })
         .setLngLat([center.lng, center.lat])
         .addTo(this.map!);
-      
+
       marker.on('dragend', () => {
         const lngLat = marker.getLngLat();
         this.userLocation = { lat: lngLat.lat, lng: lngLat.lng };
@@ -263,4 +265,3 @@ export class PersonalizedLocationComponent implements OnInit, OnDestroy {
     this.showPermissionModal.set(false);
   }
 }
-

@@ -101,7 +101,9 @@ export interface LocationSelection {
 
       <!-- Selected Location Display -->
       @if (selectedLocation()) {
-        <div class="selected-location mt-4 p-3 bg-success-light/10 border border-success-light/40 rounded-lg">
+        <div
+          class="selected-location mt-4 p-3 bg-success-light/10 border border-success-light/40 rounded-lg"
+        >
           <div class="flex items-start">
             <span class="text-success-light mr-2">✅</span>
             <div class="flex-1">

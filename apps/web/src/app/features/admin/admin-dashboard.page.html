@@ -30,20 +30,28 @@
 
   <!-- Database Statistics -->
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm">
+    <div
+      class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm"
+    >
       <p class="text-sm font-medium text-slate-600">Usuarios Registrados</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalProfiles }}</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm">
+    <div
+      class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm"
+    >
       <p class="text-sm font-medium text-slate-600">Total de Autos</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalCars }}</p>
       <p class="mt-1 text-xs text-slate-500">{{ stats().activeCars }} activos</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm">
+    <div
+      class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm"
+    >
       <p class="text-sm font-medium text-slate-600">Fotos de Autos</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalPhotos }}</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm">
+    <div
+      class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm"
+    >
       <p class="text-sm font-medium text-slate-600">Reservas</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalBookings }}</p>
     </div>
@@ -98,7 +106,9 @@
         </div>
         <div class="flex items-center justify-between px-3 py-2 bg-surface-raised rounded-lg">
           <span class="text-slate-600">Nivel 2 (Participante):</span>
-          <span class="font-semibold text-cta-default">{{ verificationStats()!.level_2_users }}</span>
+          <span class="font-semibold text-cta-default">{{
+            verificationStats()!.level_2_users
+          }}</span>
         </div>
         <div class="flex items-center justify-between px-3 py-2 bg-surface-raised rounded-lg">
           <span class="text-slate-600">Nivel 3 (Verificado Full):</span>
@@ -137,5 +147,7 @@
   </div>
 
   <p *ngIf="loading()" class="text-center text-sm text-slate-500">Cargando datos...</p>
-  <p *ngIf="message()" class="rounded-lg bg-cta-default/10 p-3 text-sm text-cta-default">{{ message() }}</p>
+  <p *ngIf="message()" class="rounded-lg bg-cta-default/10 p-3 text-sm text-cta-default">
+    {{ message() }}
+  </p>
 </section>

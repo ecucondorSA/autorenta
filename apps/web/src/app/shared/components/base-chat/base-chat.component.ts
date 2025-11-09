@@ -501,9 +501,11 @@ export class BaseChatComponent implements OnInit, OnDestroy {
 
     // Set typing status
     const ctx = this.context();
-    this.messagesService.setTyping(ctx.contextId, this.currentUserId()!, true, ctx.type).catch(() => {
-      // Typing is not critical
-    });
+    this.messagesService
+      .setTyping(ctx.contextId, this.currentUserId()!, true, ctx.type)
+      .catch(() => {
+        // Typing is not critical
+      });
 
     // Clear previous timeout
     if (this.typingTimeout) {
@@ -522,9 +524,11 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   protected stopTyping(): void {
     if (this.currentUserId()) {
       const ctx = this.context();
-      this.messagesService.setTyping(ctx.contextId, this.currentUserId()!, false, ctx.type).catch(() => {
-        // Ignore errors
-      });
+      this.messagesService
+        .setTyping(ctx.contextId, this.currentUserId()!, false, ctx.type)
+        .catch(() => {
+          // Ignore errors
+        });
     }
   }
 
@@ -584,9 +588,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
    */
   protected getEmptyStateTitle(): string {
     const ctx = this.context();
-    return ctx.type === 'booking'
-      ? 'No hay mensajes todavía'
-      : 'Inicia la conversación';
+    return ctx.type === 'booking' ? 'No hay mensajes todavía' : 'Inicia la conversación';
   }
 
   /**
@@ -606,4 +608,3 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     this.menuClicked.emit();
   }
 }
-

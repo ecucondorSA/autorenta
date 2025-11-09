@@ -98,9 +98,7 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
               </svg>
             </div>
             <div>
-              <p class="font-semibold text-text-primary dark:text-text-primary">
-                Pagar con wallet
-              </p>
+              <p class="font-semibold text-text-primary dark:text-text-primary">Pagar con wallet</p>
               <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
                 Usa tu saldo AutoRenta • Sin tarjeta
               </p>
@@ -141,7 +139,9 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span class="text-sm font-medium text-success-light dark:text-success-light">Pago seguro</span>
+            <span class="text-sm font-medium text-success-light dark:text-success-light"
+              >Pago seguro</span
+            >
           </div>
           <p class="text-xs text-success-light dark:text-success-light mt-1">
             @if (selectedMode === 'card') {

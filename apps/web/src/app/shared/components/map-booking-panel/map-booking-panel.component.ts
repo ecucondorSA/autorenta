@@ -71,7 +71,7 @@ export interface BookingFormData {
             <p class="text-sm text-text-secondary">{{ car.locationLabel }}</p>
             <div class="flex items-baseline gap-1 mt-1">
               <span class="text-lg font-bold text-cta-default">
-                {{ car.pricePerDay | money: (car.currency || 'ARS') }}
+                {{ car.pricePerDay | money: car.currency || 'ARS' }}
               </span>
               <span class="text-xs text-text-secondary">/día</span>
             </div>
@@ -118,7 +118,9 @@ export interface BookingFormData {
             Verificando disponibilidad...
           </div>
           <div
-            *ngIf="!isCheckingAvailability() && startDate() && endDate() && availabilityStatus() !== null"
+            *ngIf="
+              !isCheckingAvailability() && startDate() && endDate() && availabilityStatus() !== null
+            "
             class="mt-2"
           >
             <div
@@ -158,19 +160,19 @@ export interface BookingFormData {
               {{ priceBreakdown()!.days }} día{{ priceBreakdown()!.days !== 1 ? 's' : '' }}
             </span>
             <span class="text-text-primary font-medium">
-              {{ priceBreakdown()!.subtotal | money: (car?.currency || 'ARS') }}
+              {{ priceBreakdown()!.subtotal | money: car?.currency || 'ARS' }}
             </span>
           </div>
           <div *ngIf="priceBreakdown()!.fees > 0" class="flex justify-between text-sm">
             <span class="text-text-secondary">Comisión</span>
             <span class="text-text-primary font-medium">
-              {{ priceBreakdown()!.fees | money: (car?.currency || 'ARS') }}
+              {{ priceBreakdown()!.fees | money: car?.currency || 'ARS' }}
             </span>
           </div>
           <div class="border-t border-border-default pt-2 flex justify-between">
             <span class="font-semibold text-text-primary">Total</span>
             <span class="text-xl font-bold text-cta-default">
-              {{ priceBreakdown()!.total | money: (car?.currency || 'ARS') }}
+              {{ priceBreakdown()!.total | money: car?.currency || 'ARS' }}
             </span>
           </div>
         </div>
@@ -179,7 +181,9 @@ export interface BookingFormData {
         <div>
           <label class="block text-sm font-medium text-text-primary mb-2">Método de pago</label>
           <div class="space-y-2">
-            <label class="flex items-center gap-3 p-3 border border-border-default rounded-lg cursor-pointer hover:bg-surface-secondary transition-colors">
+            <label
+              class="flex items-center gap-3 p-3 border border-border-default rounded-lg cursor-pointer hover:bg-surface-secondary transition-colors"
+            >
               <input
                 type="radio"
                 name="paymentMethod"
@@ -192,7 +196,9 @@ export interface BookingFormData {
                 <div class="text-xs text-text-secondary">Pago rápido sin tarjeta</div>
               </div>
             </label>
-            <label class="flex items-center gap-3 p-3 border border-border-default rounded-lg cursor-pointer hover:bg-surface-secondary transition-colors">
+            <label
+              class="flex items-center gap-3 p-3 border border-border-default rounded-lg cursor-pointer hover:bg-surface-secondary transition-colors"
+            >
               <input
                 type="radio"
                 name="paymentMethod"
@@ -220,12 +226,7 @@ export interface BookingFormData {
           [disabled]="!canBook() || isProcessing()"
           class="w-full py-3 px-4 rounded-lg bg-cta-default hover:bg-cta-hover text-cta-text font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          <svg
-            *ngIf="isProcessing()"
-            class="animate-spin w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
+          <svg *ngIf="isProcessing()" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
             <circle
               class="opacity-25"
               cx="12"
@@ -281,7 +282,7 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
   @Input() userLocation?: { lat: number; lng: number };
 
   @Output() readonly bookingConfirmed = new EventEmitter<BookingFormData>();
-  @Output() readonly close = new EventEmitter<void>();
+  @Output() readonly closePanel = new EventEmitter<void>();
 
   private readonly availabilityService = inject(CarAvailabilityService);
   private readonly bookingsService = inject(BookingsService);
@@ -479,7 +480,6 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
 
   onClose(): void {
     this.isOpen.set(false);
-    this.close.emit();
+    this.closePanel.emit();
   }
 }
-

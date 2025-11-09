@@ -28,9 +28,7 @@ import { SimpleCheckoutComponent } from '../simple-checkout/simple-checkout.comp
 @Component({
   selector: 'app-map-drawer',
   standalone: true,
-  imports: [
-    CommonModule,
-  ],
+  imports: [CommonModule],
   templateUrl: './map-drawer.component.html',
   styleUrls: ['./map-drawer.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -104,10 +102,7 @@ export class MapDrawerComponent {
   /**
    * Handle checkout submission
    */
-  onCheckoutSubmit(data: {
-    paymentMethod: string;
-    dates?: { start: Date; end: Date };
-  }): void {
+  onCheckoutSubmit(data: { paymentMethod: string; dates?: { start: Date; end: Date } }): void {
     if (!this.selectedCar?.carId) return;
 
     this.isCheckoutLoading.set(true);

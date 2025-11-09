@@ -99,9 +99,7 @@ export class MercadoPagoOAuthService {
     const response = data as OAuthCallbackResponse;
 
     if (!response?.success) {
-      throw new Error(
-        response?.error || response?.error_description || 'Error en la autorización',
-      );
+      throw new Error(response?.error || response?.error_description || 'Error en la autorización');
     }
 
     return true;

@@ -99,7 +99,11 @@
 
 .marker-circle {
   @apply rounded-full flex items-center justify-center relative transition-all duration-200;
-  background: linear-gradient(135deg, var(--map-marker-price-bg-start, #2c7a7b) 0%, var(--map-marker-price-bg-end, #4a9fa0) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--map-marker-price-bg-start, #2c7a7b) 0%,
+    var(--map-marker-price-bg-end, #4a9fa0) 100%
+  );
   z-index: 10;
 }
 

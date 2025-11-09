@@ -53,6 +53,3 @@ export class WaitlistCountComponent implements OnInit {
     }
   }
 }
-
-
-

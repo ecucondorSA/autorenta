@@ -105,8 +105,7 @@
           *ngIf="fuelDifference() !== null"
           class="mt-3 p-3 rounded-lg"
           [class.bg-success-light/10]="fuelDifference()! >= 0"
-          [class.bg-red-50]="fuelDifference()! < 0"
-        >
+          [class.bg-red-50]="fuelDifference()! < 0">
           <div class="flex justify-between items-center">
             <span class="text-sm">Diferencia de combustible:</span>
             <span

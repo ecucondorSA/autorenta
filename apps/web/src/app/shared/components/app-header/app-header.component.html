@@ -15,17 +15,15 @@
         class="h-8 w-auto object-contain"
         loading="eager"
       />
-      <span class="hidden sm:block text-lg font-semibold text-text-primary dark:text-text-secondary">
+      <span
+        class="hidden sm:block text-lg font-semibold text-text-primary dark:text-text-secondary"
+      >
         AutoRenta
       </span>
     </a>
 
     <!-- Search Input (compact when compact=true) -->
-    <div
-      *ngIf="showSearch"
-      class="flex-1 max-w-md mx-4"
-      [class.max-w-xs]="compact"
-    >
+    <div *ngIf="showSearch" class="flex-1 max-w-md mx-4" [class.max-w-xs]="compact">
       <div class="relative">
         <input
           type="text"
@@ -74,6 +72,3 @@
     </div>
   </div>
 </header>
-
-
-

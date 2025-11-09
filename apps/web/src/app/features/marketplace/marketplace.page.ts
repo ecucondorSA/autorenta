@@ -23,15 +23,24 @@ import { Car } from '../../core/models';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
 import { SocialProofIndicatorsComponent } from '../../shared/components/social-proof-indicators/social-proof-indicators.component';
-import { MapFiltersComponent, FilterState } from '../../shared/components/map-filters/map-filters.component';
+import {
+  MapFiltersComponent,
+  FilterState,
+} from '../../shared/components/map-filters/map-filters.component';
 import { StickyCtaMobileComponent } from '../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { UrgentRentalBannerComponent } from '../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { PwaTitlebarComponent } from '../../shared/components/pwa-titlebar/pwa-titlebar.component';
 import { MobileBottomNavComponent } from '../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 import { AppHeaderComponent } from '../../shared/components/app-header/app-header.component';
-import { UtilityBarComponent, QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
-import { FloatingActionFabComponent, FabAction } from '../../shared/components/floating-action-fab/floating-action-fab.component';
+import {
+  UtilityBarComponent,
+  QuickFilter,
+} from '../../shared/components/utility-bar/utility-bar.component';
+import {
+  FloatingActionFabComponent,
+  FabAction,
+} from '../../shared/components/floating-action-fab/floating-action-fab.component';
 import { PersonalizedLocationComponent } from '../../shared/components/personalized-location/personalized-location.component';
 import { NotificationToastComponent } from '../../shared/components/notification-toast/notification-toast.component';
 import { StatsStripComponent } from '../../shared/components/stats-strip/stats-strip.component';
@@ -213,7 +222,7 @@ export class MarketplacePage implements OnInit, OnDestroy {
   readonly contextualMarkerVariant = computed<'photo' | 'price'>(() => {
     const filters = this.mapFilters();
     const dateRange = this.dateRange();
-    
+
     // Switch to 'price' mode when:
     // 1. User has active price filters
     // 2. User has selected date range (comparing availability/price)
@@ -221,11 +230,11 @@ export class MarketplacePage implements OnInit, OnDestroy {
     const hasPriceFilter = filters.priceRange !== null;
     const hasDateRange = dateRange.from !== null && dateRange.to !== null;
     const hasSearch = this.searchValue().trim().length > 0;
-    
+
     if (hasPriceFilter || hasDateRange || hasSearch) {
       return 'price'; // Price comparison mode
     }
-    
+
     return 'photo'; // Browsing/exploration mode (default)
   });
 

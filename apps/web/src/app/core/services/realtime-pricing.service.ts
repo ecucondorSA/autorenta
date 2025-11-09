@@ -157,8 +157,9 @@ export class RealtimePricingService {
             });
 
             onChange?.(snapshot.region_id);
-          },
-        )
+          }
+        },
+      )
       .subscribe((status) => {
         // Status handled by isConnected and connectionStatus signals
         // No specific action needed here

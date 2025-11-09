@@ -49,7 +49,9 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Refund Type Selector -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Tipo de Reembolso *
             </label>
             <div class="space-y-2">
@@ -65,7 +67,9 @@ import { ToastService } from '../../../core/services/toast.service';
                   class="mr-3"
                 />
                 <div class="flex-1">
-                  <div class="font-medium text-gray-900 dark:text-text-inverse">Reembolso Completo</div>
+                  <div class="font-medium text-gray-900 dark:text-text-inverse">
+                    Reembolso Completo
+                  </div>
                   <div class="text-xs text-gray-500 dark:text-gray-400">
                     Se reembolsará el monto total de la reserva
                   </div>
@@ -83,7 +87,9 @@ import { ToastService } from '../../../core/services/toast.service';
                   class="mr-3"
                 />
                 <div class="flex-1">
-                  <div class="font-medium text-gray-900 dark:text-text-inverse">Reembolso Parcial</div>
+                  <div class="font-medium text-gray-900 dark:text-text-inverse">
+                    Reembolso Parcial
+                  </div>
                   <div class="text-xs text-gray-500 dark:text-gray-400">
                     Especifica el monto a reembolsar
                   </div>
@@ -95,7 +101,9 @@ import { ToastService } from '../../../core/services/toast.service';
           <!-- Partial Amount Input -->
           @if (refundType() === 'partial') {
             <div>
-              <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+              <label
+                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+              >
                 Monto a Reembolsar (USD) *
               </label>
               <input
@@ -111,7 +119,9 @@ import { ToastService } from '../../../core/services/toast.service';
 
           <!-- Reason -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+            >
               Motivo del Reembolso *
             </label>
             <textarea

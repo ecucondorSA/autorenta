@@ -346,20 +346,17 @@ export class SplitPaymentService {
    */
   private async createWalletTransaction(split: PaymentSplit): Promise<PaymentSplit> {
     // Crear transacción de billetera
-    const { error: txError } = await this.supabase
-      .getClient()
-      .from('wallet_transactions')
-      .insert({
-        user_id: split.collectorId,
-        type: 'payout',
-        status: 'pending',
-        amount: split.netAmount,
-        currency: 'ARS',
-        reference_type: 'payment_split',
-        reference_id: split.id,
-        provider: 'mercadopago_split',
-        created_at: new Date().toISOString(),
-      });
+    const { error: txError } = await this.supabase.getClient().from('wallet_transactions').insert({
+      user_id: split.collectorId,
+      type: 'payout',
+      status: 'pending',
+      amount: split.netAmount,
+      currency: 'ARS',
+      reference_type: 'payment_split',
+      reference_id: split.id,
+      provider: 'mercadopago_split',
+      created_at: new Date().toISOString(),
+    });
 
     if (txError) {
       throw txError;

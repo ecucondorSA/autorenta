@@ -374,21 +374,6 @@ export class ResponsiveFeatureComponent implements OnInit {
 })
 export class AnalyticsDemoComponent {
   private guidedTour = inject(GuidedTourService);
-
-  ngOnInit(): void {
-    // This method is intentionally left empty.
-    // It serves as a demonstration that all tour-related analytics events
-    // are automatically tracked by the TelemetryBridge without needing
-    // any specific implementation here.
-    //
-    // Events automatically sent include:
-    // - tour_started
-    // - tour_step_shown
-    // - tour_step_completed
-    // - tour_completed
-    // - tour_cancelled
-    // - tour_error
-  }
 }
 
 // ============================================================================
