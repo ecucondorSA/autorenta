@@ -79,9 +79,7 @@ export class BookingContractPage implements OnInit {
 
       this.contract.set(contract);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar el contrato'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar el contrato');
     } finally {
       this.loading.set(false);
     }

@@ -86,13 +86,13 @@ export class MyClaimsPage {
         },
         error: (error) => {
           console.error('Error loading claims:', error);
-          this.toastService.showToast('Error al cargar siniestros', 'error');
+          this.toastService.error('Error de carga', 'No se pudieron cargar los siniestros. Intenta nuevamente.');
           this.loading.set(false);
         },
       });
     } catch (error) {
       console.error('Error loading claims:', error);
-      this.toastService.showToast('Error al cargar siniestros', 'error');
+      this.toastService.error('Error de carga', 'No se pudieron cargar los siniestros. Intenta nuevamente.');
       this.loading.set(false);
     }
   }
@@ -108,10 +108,7 @@ export class MyClaimsPage {
   reportNewClaim() {
     // Navigate to booking selection or ask which booking
     this.router.navigate(['/bookings']);
-    this.toastService.showToast(
-      'Selecciona una reserva para reportar un siniestro',
-      'info'
-    );
+    this.toastService.info('Selecciona una reserva', 'Elige una reserva activa para reportar un siniestro');
   }
 
   getStatusColor(status: InsuranceClaim['status']): string {

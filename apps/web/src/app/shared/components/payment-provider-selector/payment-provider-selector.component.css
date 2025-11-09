@@ -17,7 +17,7 @@
 }
 
 /* Radio Button Styling */
-input[type="radio"] {
+input[type='radio'] {
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -32,8 +32,12 @@ input[type="radio"] {
 
 /* Loading Spinner */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin {
@@ -91,7 +95,7 @@ input[type="radio"] {
   outline-offset: 2px;
 }
 
-input[type="radio"]:focus {
+input[type='radio']:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }

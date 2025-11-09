@@ -1,11 +1,8 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import {
-  AccountingService,
-  FinancialHealth,
-} from '../../../../core/services/accounting.service';
-import { SupabaseService } from '../../../../core/services/supabase.service';
+import { AccountingService, FinancialHealth } from '../../../../core/services/accounting.service';
+import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 
 @Component({
   selector: 'app-financial-health',
@@ -15,7 +12,7 @@ import { SupabaseService } from '../../../../core/services/supabase.service';
   styleUrls: ['./financial-health.page.scss'],
 })
 export class FinancialHealthPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly supabaseService = inject(SupabaseClientService);
   private readonly accountingService: AccountingService;
 
   readonly loading = signal(false);
@@ -24,10 +21,7 @@ export class FinancialHealthPage implements OnInit {
 
   constructor() {
     const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
-    );
+    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
   }
 
   async ngOnInit(): Promise<void> {

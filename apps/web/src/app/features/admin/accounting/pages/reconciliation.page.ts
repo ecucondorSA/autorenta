@@ -1,7 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService, WalletReconciliation } from '../../../../core/services/accounting.service';
+import {
+  AccountingService,
+  WalletReconciliation,
+} from '../../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-reconciliation',
@@ -32,7 +35,7 @@ import { AccountingService, WalletReconciliation } from '../../../../core/servic
         </ion-list>
       </ion-card>
     </ion-content>
-  `
+  `,
 })
 export class ReconciliationPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
@@ -40,7 +43,7 @@ export class ReconciliationPage implements OnInit {
 
   ngOnInit() {
     this.accountingService.getWalletReconciliation().subscribe({
-      next: (data) => this.reconciliation.set(data),
+      next: (data: WalletReconciliation[]) => this.reconciliation.set(data),
     });
   }
 

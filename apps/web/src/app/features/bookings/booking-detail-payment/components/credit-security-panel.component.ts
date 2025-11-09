@@ -30,13 +30,13 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
   imports: [CommonModule, ReembolsabilityBadgeComponent],
   template: `
     <div
-      class="rounded-xl border border-gray-200/60 bg-white shadow p-6 dark:border-neutral-800/70 dark:bg-gray-800 transition-colors duration-300"
+      class="rounded-xl border border-pearl-gray/60 bg-white-pure shadow p-6 dark:border-neutral-800/70 dark:bg-anthracite transition-colors duration-300"
     >
       <!-- Header -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center space-x-2">
           <svg
-            class="w-6 h-6 text-sky-600 dark:text-sky-300"
+            class="w-6 h-6 text-purple-600 dark:text-purple-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -48,7 +48,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
             />
           </svg>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-ivory-50">
+          <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
             Garantía con Wallet
           </h3>
         </div>
@@ -72,24 +72,24 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <div
         class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/10 rounded-lg p-4 mb-4 transition-colors duration-300"
       >
-        <p class="text-sm text-gray-700 dark:text-beige-200/70 mb-2">
+        <p class="text-sm text-gray-700 dark:text-pearl-light/70 mb-2">
           Garantía con Wallet requerida
         </p>
         <div class="flex items-baseline justify-between mb-3">
           <div>
-            <p class="text-3xl font-bold text-sky-900 dark:text-sky-200">
+            <p class="text-3xl font-bold text-purple-900 dark:text-purple-200">
               {{ formatArs(creditSecurityArs()) }}
             </p>
-            <p class="text-xs text-gray-600 dark:text-beige-200/60 mt-1">
+            <p class="text-xs text-gray-600 dark:text-pearl-light/60 mt-1">
               ≈ {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
             </p>
           </div>
           <div class="text-right">
-            <p class="text-xs text-gray-600 dark:text-beige-200/60">
+            <p class="text-xs text-gray-600 dark:text-pearl-light/60">
               {{ riskSnapshot.vehicleValueUsd <= 20000 ? 'Autos ≤ $20k' : 'Autos > $20k' }}
             </p>
-            <p class="text-xs text-gray-500 dark:text-beige-200/50 mt-1">
-              TC: {{ fxSnapshot.rate | number:'1.2-2' }} ARS/USD
+            <p class="text-xs text-gray-500 dark:text-pearl-light/50 mt-1">
+              TC: {{ fxSnapshot.rate | number: '1.2-2' }} ARS/USD
             </p>
           </div>
         </div>
@@ -107,12 +107,13 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
       <!-- Explanation -->
       <div
-        class="mb-4 p-3 bg-gray-50 dark:bg-gray-700/40 rounded-lg transition-colors duration-300"
+        class="mb-4 p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300"
       >
-        <p class="text-sm text-gray-700 dark:text-beige-200/80">
-          <strong>¿Cómo funciona?</strong> Este monto queda como saldo de garantía en tu wallet
-          (no puedes retirarlo a tu banco, pero puedes usarlo en futuras reservas). Si hay daños, se
-          descuenta automáticamente. Si no hay daños, el saldo queda disponible para tu próxima reserva.
+        <p class="text-sm text-gray-700 dark:text-pearl-light/80">
+          <strong>¿Cómo funciona?</strong> Este monto queda como saldo de garantía en tu wallet (no
+          puedes retirarlo a tu banco, pero puedes usarlo en futuras reservas). Si hay daños, se
+          descuenta automáticamente. Si no hay daños, el saldo queda disponible para tu próxima
+          reserva.
         </p>
       </div>
 
@@ -121,7 +122,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         <!-- Loading Balance -->
         <div class="flex items-center justify-center py-8">
           <svg
-            class="animate-spin h-8 w-8 text-sky-600 dark:text-sky-300"
+            class="animate-spin h-8 w-8 text-purple-600 dark:text-purple-300"
             fill="none"
             viewBox="0 0 24 24"
           >
@@ -139,31 +140,31 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          <span class="ml-3 text-sm text-gray-600 dark:text-beige-200/70"
+          <span class="ml-3 text-sm text-gray-600 dark:text-pearl-light/70"
             >Verificando saldo...</span
           >
         </div>
       } @else {
         <!-- Balance Info -->
         <div
-          class="mb-4 p-4 bg-gray-50 border border-gray-200 dark:bg-gray-700/40 dark:border-neutral-700 rounded-lg transition-colors duration-300"
+          class="mb-4 p-4 bg-gray-50 border border-gray-200 dark:bg-slate-deep/40 dark:border-neutral-700 rounded-lg transition-colors duration-300"
         >
           <div class="space-y-2">
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600 dark:text-beige-200/70">Crédito disponible:</span>
-              <span class="font-semibold text-gray-900 dark:text-ivory-50">
+              <span class="text-gray-600 dark:text-pearl-light/70">Crédito disponible:</span>
+              <span class="font-semibold text-gray-900 dark:text-ivory-luminous">
                 {{ formatUsd(currentProtectedCredit()) }}
               </span>
             </div>
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600 dark:text-beige-200/70">Crédito requerido:</span>
-              <span class="font-semibold text-gray-900 dark:text-ivory-50">
+              <span class="text-gray-600 dark:text-pearl-light/70">Crédito requerido:</span>
+              <span class="font-semibold text-gray-900 dark:text-ivory-luminous">
                 {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
               </span>
             </div>
             <div class="h-px bg-gray-300 dark:bg-neutral-700"></div>
             <div class="flex justify-between text-sm">
-              <span class="text-gray-700 dark:text-beige-200/80 font-medium">
+              <span class="text-gray-700 dark:text-pearl-light/80 font-medium">
                 {{ creditDifference() >= 0 ? 'Te sobra:' : 'Te falta:' }}
               </span>
               <span
@@ -188,11 +189,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               type="button"
               (click)="onLockFunds()"
               [disabled]="isLoading()"
-              class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-100 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               @if (isLoading()) {
                 <svg
-                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-white dark:text-ivory-50"
+                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-white dark:text-ivory-luminous"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -254,7 +255,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               <button
                 type="button"
                 (click)="onLoadCredit()"
-                class="w-full px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-100 dark:focus:ring-offset-gray-900 transition-colors"
+                class="w-full px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
               >
                 <svg
                   class="w-5 h-5 inline-block mr-2"
@@ -303,9 +304,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               </div>
               @if (currentLock(); as lock) {
                 <div
-                  class="p-3 bg-gray-50 dark:bg-gray-700/40 rounded-lg transition-colors duration-300"
+                  class="p-3 bg-gray-50 dark:bg-slate-deep/40 rounded-lg transition-colors duration-300"
                 >
-                  <p class="text-xs text-gray-600 dark:text-beige-200/70">
+                  <p class="text-xs text-gray-600 dark:text-pearl-light/70">
                     Lock ID: <span class="font-mono">{{ lock.lockId }}</span>
                   </p>
                 </div>
@@ -340,7 +341,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               <button
                 type="button"
                 (click)="onRetry()"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-neutral-700 text-sm font-medium rounded-md text-gray-700 dark:text-beige-200 bg-white dark:bg-gray-700/60 hover:bg-gray-50 dark:hover:bg-gray-700/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-100 dark:focus:ring-offset-gray-900 transition-colors"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-neutral-700 text-sm font-medium rounded-md text-gray-700 dark:text-pearl-light bg-white dark:bg-slate-deep/60 hover:bg-gray-50 dark:hover:bg-slate-deep/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
               >
                 Reintentar
               </button>
@@ -351,11 +352,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
       <!-- Info adicional -->
       <div
-        class="mt-4 p-3 bg-sky-50 border border-sky-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
+        class="mt-4 p-3 bg-blue-50 border border-blue-100 dark:bg-info-900/25 dark:border-info-700/40 rounded-lg transition-colors duration-300"
       >
         <div class="flex space-x-2">
           <svg
-            class="w-5 h-5 text-sky-600 dark:text-info-200 flex-shrink-0"
+            class="w-5 h-5 text-blue-600 dark:text-info-200 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -366,7 +367,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             />
           </svg>
           <div class="flex-1">
-            <p class="text-xs text-sky-600 dark:text-info-100">
+            <p class="text-xs text-blue-800 dark:text-info-100">
               <strong>Waterfall de cobro:</strong> Si hay daños/consumos, cobramos en este orden: 1)
               Crédito de Seguridad, 2) Top-up adicional, 3) FGO (hasta $800), 4) Recupero.
             </p>

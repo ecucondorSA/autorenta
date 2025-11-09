@@ -7,13 +7,8 @@ import { WaitlistService } from '../../../core/services/waitlist.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1">
-      <svg
-        class="h-4 w-4 text-sky-600"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+    <div class="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1">
+      <svg class="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -21,7 +16,7 @@ import { WaitlistService } from '../../../core/services/waitlist.service';
           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>
-      <span class="text-sm font-medium text-sky-600">
+      <span class="text-sm font-medium text-blue-800">
         {{ count() }} {{ count() === 1 ? 'persona' : 'personas' }} en lista de espera
       </span>
     </div>
@@ -58,4 +53,3 @@ export class WaitlistCountComponent implements OnInit {
     }
   }
 }
-

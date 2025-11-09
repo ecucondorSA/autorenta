@@ -289,7 +289,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   async loadPendingDeposits(): Promise<void> {
     try {
       await this.walletService.refreshPendingDepositsCount();
-    } catch (_err) {}
+    } catch (_err) {
+      // Silently fail - non-critical operation
+    }
   }
 
   /**

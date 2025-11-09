@@ -77,7 +77,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
 
   constructor(
     private carsService: CarsService,
-    private router: Router
+    private router: Router,
   ) {
     addIcons({ optionsOutline, locateOutline });
   }
@@ -99,7 +99,9 @@ export class ExplorePage implements OnInit, AfterViewInit {
       const cars = await this.carsService.listActiveCars({});
       this.cars = cars;
       this.filteredCars = this.cars;
-    } catch (__error) { /* Silenced */ } finally {
+    } catch (__error) {
+      /* Silenced */
+    } finally {
       this.loading = false;
     }
   }
@@ -111,20 +113,22 @@ export class ExplorePage implements OnInit, AfterViewInit {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   // 🎯 Click en marker del mapa
   onMapCarSelected(carId: string) {
     const previousCarId = this.selectedCarId;
     this.selectedCarId = carId;
-    
+
     // Si es el mismo auto (doble click), navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
       return;
     }
-    
+
     // Primera selección: scroll + highlight en carousel
     this.scrollToCarInCarousel(carId);
   }
@@ -133,13 +137,13 @@ export class ExplorePage implements OnInit, AfterViewInit {
   onCarouselCardSelected(carId: string) {
     const previousCarId = this.selectedCarId;
     this.selectedCarId = carId;
-    
+
     // Si es el mismo auto (doble click), navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
       return;
     }
-    
+
     // Primera selección: fly-to en mapa
     if (this.carsMap) {
       this.carsMap.flyToCarLocation(carId);
@@ -166,13 +170,13 @@ export class ExplorePage implements OnInit, AfterViewInit {
 
     const carousel = this.carouselContainer.nativeElement;
     const scrollContainer = carousel.querySelector('.map-carousel-scroll') as HTMLElement;
-    
+
     if (!scrollContainer) {
       return;
     }
 
     const card = scrollContainer.querySelector(`[data-car-id="${carId}"]`) as HTMLElement;
-    
+
     if (!card) {
       console.warn('⚠️ Car card not found in carousel:', carId);
       return;
@@ -182,11 +186,11 @@ export class ExplorePage implements OnInit, AfterViewInit {
     const cardLeft = card.offsetLeft;
     const cardWidth = card.offsetWidth;
     const scrollWidth = scrollContainer.offsetWidth;
-    const scrollPosition = cardLeft - (scrollWidth / 2) + (cardWidth / 2);
+    const scrollPosition = cardLeft - scrollWidth / 2 + cardWidth / 2;
 
     scrollContainer.scrollTo({
       left: Math.max(0, scrollPosition),
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
 
     // Highlight temporal
@@ -221,7 +225,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       });
       return;
     }
-    
+
     if (this.carsMap) {
       this.carsMap.flyToLocation(this.userLocation.lat, this.userLocation.lng);
     }
@@ -233,7 +237,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       return [];
     }
     return rawPhotos
-      .map((photo) => (typeof photo === 'string' ? photo : photo?.url ?? null))
+      .map((photo) => (typeof photo === 'string' ? photo : (photo?.url ?? null)))
       .filter((url): url is string => typeof url === 'string' && url.length > 0);
   }
 }

@@ -49,7 +49,7 @@ describe('Booking Logic Integration', () => {
 
     it('should create a booking when the car is available', async () => {
       const newBookingId = 'new-booking-123';
-    const mockBooking: Booking = {
+      const mockBooking: Booking = {
         id: newBookingId,
         car_id: carId,
         status: 'pending',
@@ -60,7 +60,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-    } as unknown as Booking;
+      } as unknown as Booking;
 
       // Mock RPC calls
       supabase.rpc.and.callFake(async (method: string, params: unknown) => {

@@ -1,0 +1,2015 @@
+ WARN  Unsupported engine: wanted: {"node":">=20.0.0 <=22.0.0"} (current: {"node":"v22.21.1","pnpm":"9.0.0"})
+
+> autorenta-web@0.1.0 prebuild /home/user/autorenta/apps/web
+> node scripts/generate-env.js
+
+[dotenv@17.2.3] injecting env (0) from .env.development.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+✅ Generated public/env.js with environment configuration
+Environment variables:
+  - NG_APP_SUPABASE_URL: (empty)
+  - NG_APP_SUPABASE_ANON_KEY: (empty)
+  - NG_APP_DEFAULT_CURRENCY: ARS
+  - NG_APP_PAYMENTS_WEBHOOK_URL: (empty)
+  - NG_APP_MAPBOX_ACCESS_TOKEN: (empty)
+  - NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: (empty)
+  - NG_APP_MERCADOPAGO_PUBLIC_KEY: (empty)
+  - NG_APP_CLOUDFLARE_WORKER_URL: https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev
+
+> autorenta-web@0.1.0 build /home/user/autorenta/apps/web
+> node_modules/.bin/ng build
+
+❯ Building...
+✔ Building...
+Application bundle generation failed. [41.224 seconds] - 2025-11-09T09:11:39.614Z
+
+▲ [WARNING] The glob pattern import("./**/*.entry.js*") did not match any files [empty-glob]
+
+    node_modules/@stencil/core/internal/client/index.js:169:2:
+      169 │   `./${bundleId}.entry.js${BUILD5.hotModuleReplacement && hmrVers...
+          ╵   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8113: LocationPickerComponent is not used within the template of BookingLocationFormComponent [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:42:4:
+      42 │     LocationPickerComponent,
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8113: RouterLink is not used within the template of PayoutsHistoryComponent [plugin angular-compiler]
+
+    src/app/features/dashboard/components/payouts-history/payouts-history.component.ts:11:26:
+      11 │   imports: [CommonModule, RouterLink],
+         ╵                           ~~~~~~~~~~
+
+
+▲ [WARNING] NG8113: RouterLink is not used within the template of NotificationPreferencesPage [plugin angular-compiler]
+
+    src/app/features/notifications/preferences/notification-preferences.page.ts:23:39:
+      23 │   imports: [CommonModule, FormsModule, RouterLink],
+         ╵                                        ~~~~~~~~~~
+
+
+▲ [WARNING] NG8113: ReviewCardComponent is not used within the template of PendingReviewsPage [plugin angular-compiler]
+
+    src/app/features/reviews/pending-reviews/pending-reviews.page.ts:19:38:
+      19 │   imports: [CommonModule, RouterLink, ReviewCardComponent],
+         ╵                                       ~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8113: RouterLink is not used within the template of BookingConfirmationTimelineComponent [plugin angular-compiler]
+
+    src/app/shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component.ts:51:26:
+      51 │   imports: [CommonModule, RouterLink, TranslateModule],
+         ╵                           ~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/shared/components/missing-documents-widget/missing-documents-widget.component.ts:61:42:
+      61 │         } @else if (verificationStatus()?.status === 'VERIFICADO') {
+         ╵                                           ~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/shared/components/missing-documents-widget/missing-documents-widget.component.ts:78:42:
+      78 │         } @else if (verificationStatus()?.status === 'RECHAZADO') {
+         ╵                                           ~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/shared/components/missing-documents-widget/missing-documents-widget.component.ts:91:42:
+      91 │                     verificationStatus()?.notes ||
+         ╵                                           ~~~~~
+
+
+✘ [ERROR] TS2304: Cannot find name 'Sentry'. [plugin angular-compiler]
+
+    src/app/app.config.ts:47:16:
+      47 │       useValue: Sentry.createErrorHandler({
+         ╵                 ~~~~~~
+
+
+✘ [ERROR] TS2304: Cannot find name 'Sentry'. [plugin angular-compiler]
+
+    src/app/app.config.ts:54:15:
+      54 │       provide: Sentry.TraceService,
+         ╵                ~~~~~~
+
+
+✘ [ERROR] TS2304: Cannot find name 'Sentry'. [plugin angular-compiler]
+
+    src/app/app.config.ts:60:13:
+      60 │       deps: [Sentry.TraceService],
+         ╵              ~~~~~~
+
+
+✘ [ERROR] TS2322: Type '(_args: unknown[], result: unknown) => string | undefined' is not assignable to type '(args: unknown[]) => string | undefined'.
+  Target signature provides too few arguments. Expected 2 or more, but got 1. [plugin angular-compiler]
+
+    src/app/core/decorators/audit-log.decorator.ts:182:4:
+      182 │     getResourceId: (_args: unknown[], result: unknown) => (typeof...
+          ╵     ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2322: Type '(route: Route) => Promise<GuardResult | Observable<GuardResult>>' is not assignable to type 'CanMatchFn'.
+  Type 'Promise<GuardResult | Observable<GuardResult>>' is not assignable to type 'MaybeAsync<GuardResult>'.
+    Type 'Promise<GuardResult | Observable<GuardResult>>' is not assignable to type 'Promise<GuardResult>'.
+      Type 'GuardResult | Observable<GuardResult>' is not assignable to type 'GuardResult'.
+        Type 'Observable<GuardResult>' is not assignable to type 'GuardResult'. [plugin angular-compiler]
+
+    src/app/core/guards/admin.guard.ts:145:2:
+      145 │   return async (route: Route) => {
+          ╵   ~~~~~~
+
+
+✘ [ERROR] TS2554: Expected 2 arguments, but got 1. [plugin angular-compiler]
+
+    src/app/core/guards/admin.guard.ts:156:11:
+      156 │     return AdminGuard(modifiedRoute);
+          ╵            ~~~~~~~~~~
+
+  An argument for 'segments' was not provided.
+
+    node_modules/@angular/router/router_module.d.d.ts:1326:33:
+      1326 │ ...Fn = (route: Route, segments: UrlSegment[]) => MaybeAsync<Gua...
+           ╵                        ~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'status' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/core/guards/verification.guard.ts:23:16:
+      23 │     if (status?.status === 'VERIFICADO') {
+         ╵                 ~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'missing_docs' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/core/guards/verification.guard.ts:46:20:
+      46 │     return (status?.missing_docs?.length ?? 0) > 0;
+         ╵                     ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2352: Conversion of type 'ParserError<"Unable to parse renamed field at `user:profiles!withdrawal_requests_user_id_fkey(full_name, email:auth.users(email)),\n        bank_account:bank_accounts(*)\n      `">' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type '{ error: true; } & String'. [plugin angular-compiler]
+
+    src/app/core/services/admin.service.ts:701:24:
+      701 │       const typedItem = item as Record<string, unknown>;
+          ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2352: Conversion of type 'ParserError<"Unable to parse renamed field at `user:profiles!refund_requests_user_id_fkey(full_name, email:auth.users(email)),\n        booking:bookings(total_amount, total_cents, currency, car:cars(title))\n      `">' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type '{ error: true; } & String'. [plugin angular-compiler]
+
+    src/app/core/services/admin.service.ts:953:22:
+      953 │     const typedData = data as Record<string, unknown>;
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2304: Cannot find name 'Booking'. [plugin angular-compiler]
+
+    src/app/core/services/admin.service.ts:969:19:
+      969 │   ): Promise<Array<Booking & { can_refund: boolean; refund_eligib...
+          ╵                    ~~~~~~~
+
+
+✘ [ERROR] TS2304: Cannot find name 'Booking'. [plugin angular-compiler]
+
+    src/app/core/services/admin.service.ts:1015:11:
+      1015 │       } as Booking & { can_refund: boolean; refund_eligible_amou...
+           ╵            ~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'setMeasurement' does not exist on type 'Scope'. [plugin angular-compiler]
+
+    src/app/core/services/performance-monitoring.service.ts:82:37:
+      82 │ ...Sentry.getCurrentScope().setMeasurement('lcp', lcp, 'millisecon...
+         ╵                             ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'setMeasurement' does not exist on type 'Scope'. [plugin angular-compiler]
+
+    src/app/core/services/performance-monitoring.service.ts:112:39:
+      112 │ ...entry.getCurrentScope().setMeasurement('fid', fid, 'millisecon...
+          ╵                            ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'setMeasurement' does not exist on type 'Scope'. [plugin angular-compiler]
+
+    src/app/core/services/performance-monitoring.service.ts:145:41:
+      145 │ ...Sentry.getCurrentScope().setMeasurement('cls', clsScore, 'none');
+          ╵                             ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'setMeasurement' does not exist on type 'Scope'. [plugin angular-compiler]
+
+    src/app/core/services/performance-monitoring.service.ts:213:33:
+      213 │         Sentry.getCurrentScope().setMeasurement(
+          ╵                                  ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"startDate"' does not exist in type 'Partial<WritableSignal<{ startDate: string; endDate: string; accountCode: string; referenceType: string; searchTerm: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:67:56:
+      67 │ ...t)="updateLedgerFilters({ startDate: $any($event.target).value })"
+         ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"endDate"' does not exist in type 'Partial<WritableSignal<{ startDate: string; endDate: string; accountCode: string; referenceType: string; searchTerm: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:77:54:
+      77 │ ...put)="updateLedgerFilters({ endDate: $any($event.target).value })"
+         ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"accountCode"' does not exist in type 'Partial<WritableSignal<{ startDate: string; endDate: string; accountCode: string; referenceType: string; searchTerm: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:88:58:
+      88 │ ...="updateLedgerFilters({ accountCode: $any($event.target).value })"
+         ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"referenceType"' does not exist in type 'Partial<WritableSignal<{ startDate: string; endDate: string; accountCode: string; referenceType: string; searchTerm: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:97:61:
+      97 │ ...updateLedgerFilters({ referenceType: $any($event.target).value })"
+         ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"searchTerm"' does not exist in type 'Partial<WritableSignal<{ startDate: string; endDate: string; accountCode: string; referenceType: string; searchTerm: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:115:57:
+      115 │ ...="updateLedgerFilters({ searchTerm: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"status"' does not exist in type 'Partial<WritableSignal<{ status: string; provisionType: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:221:58:
+      221 │ ...="updateProvisionsFilters({ status: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"provisionType"' does not exist in type 'Partial<WritableSignal<{ status: string; provisionType: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:236:65:
+      236 │ ...eProvisionsFilters({ provisionType: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"periodType"' does not exist in type 'Partial<WritableSignal<{ periodType: string; status: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:328:60:
+      328 │ ...updateClosuresFilters({ periodType: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"status"' does not exist in type 'Partial<WritableSignal<{ periodType: string; status: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:342:56:
+      342 │ ...e)="updateClosuresFilters({ status: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"startDate"' does not exist in type 'Partial<WritableSignal<{ periodType: string; status: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:357:58:
+      357 │ ..."updateClosuresFilters({ startDate: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"endDate"' does not exist in type 'Partial<WritableSignal<{ periodType: string; status: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:367:56:
+      367 │ ...)="updateClosuresFilters({ endDate: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"severity"' does not exist in type 'Partial<WritableSignal<{ severity: string; auditType: string; resolutionStatus: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:453:59:
+      453 │ ..."updateAuditLogsFilters({ severity: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"auditType"' does not exist in type 'Partial<WritableSignal<{ severity: string; auditType: string; resolutionStatus: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:468:60:
+      468 │ ...updateAuditLogsFilters({ auditType: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"resolutionStatus"' does not exist in type 'Partial<WritableSignal<{ severity: string; auditType: string; resolutionStatus: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:482:67:
+      482 │ ...uditLogsFilters({ resolutionStatus: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"startDate"' does not exist in type 'Partial<WritableSignal<{ severity: string; auditType: string; resolutionStatus: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:497:59:
+      497 │ ...updateAuditLogsFilters({ startDate: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and '"endDate"' does not exist in type 'Partial<WritableSignal<{ severity: string; auditType: string; resolutionStatus: string; startDate: string; endDate: string; }>>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.html:507:57:
+      507 │ ...="updateAuditLogsFilters({ endDate: $any($event.target).value })"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AccountingAdminPage.
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:32:15:
+      32 │   templateUrl: './accounting-admin.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module '../../../../core/services/supabase-client.service' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:22:38:
+      22 │ ...ervice } from '../../../../core/services/supabase-client.service';
+         ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/accounting-admin.page.ts:117:21:
+      117 │     const supabase = this.supabaseService.getClient();
+          ╵                      ~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseUrl' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/audit-logs/audit-logs.page.ts:36:25:
+      36 │     const url = supabase.supabaseUrl;
+         ╵                          ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseUrl' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/cash-flow/cash-flow.page.ts:21:25:
+      21 │     const url = supabase.supabaseUrl;
+         ╵                          ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'balanceSheet' does not exist on type 'AccountingService'. Did you mean 'getBalanceSheet'? [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/balance-sheet.page.ts:187:49:
+      187 │   readonly balanceSheet = this.accountingService.balanceSheet;
+          ╵                                                  ~~~~~~~~~~~~
+
+  'getBalanceSheet' is declared here.
+
+    src/app/core/services/accounting.service.ts:207:8:
+      207 │   async getBalanceSheet(): Promise<BalanceSheet[]> {
+          ╵         ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'loading' does not exist on type 'AccountingService'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/balance-sheet.page.ts:188:44:
+      188 │   readonly loading = this.accountingService.loading;
+          ╵                                             ~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'subscribe' does not exist on type 'Promise<BalanceSheet[]>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/balance-sheet.page.ts:219:45:
+      219 │     this.accountingService.getBalanceSheet().subscribe({
+          ╵                                              ~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'subscribe' does not exist on type 'Promise<boolean>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/balance-sheet.page.ts:225:45:
+      225 │     this.accountingService.refreshBalances().subscribe({
+          ╵                                              ~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'dashboard' does not exist on type 'AccountingService'. Did you mean 'getDashboard'? [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/dashboard.page.ts:23:46:
+      23 │   readonly dashboard = this.accountingService.dashboard;
+         ╵                                               ~~~~~~~~~
+
+  'getDashboard' is declared here.
+
+    src/app/core/services/accounting.service.ts:194:8:
+      194 │   async getDashboard(): Promise<AccountingDashboard | null> {
+          ╵         ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'loading' does not exist on type 'AccountingService'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/dashboard.page.ts:24:44:
+      24 │   readonly loading = this.accountingService.loading;
+         ╵                                             ~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'error' does not exist on type 'AccountingService'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/dashboard.page.ts:25:42:
+      25 │   readonly error = this.accountingService.error;
+         ╵                                           ~~~~~
+
+
+✘ [ERROR] TS2339: Property 'subscribe' does not exist on type 'Promise<AccountingDashboard | null>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/dashboard.page.ts:49:42:
+      49 │     this.accountingService.getDashboard().subscribe({
+         ╵                                           ~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'subscribe' does not exist on type 'Promise<FinancialHealth>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/dashboard.page.ts:55:50:
+      55 │     this.accountingService.checkFinancialHealth().subscribe({
+         ╵                                                   ~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown' is not assignable to parameter of type 'FinancialHealth | null'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/dashboard.page.ts:56:54:
+      56 │       next: (health: unknown) => this.healthCheck.set(health),
+         ╵                                                       ~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'subscribe' does not exist on type 'Promise<boolean>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/dashboard.page.ts:62:45:
+      62 │     this.accountingService.refreshBalances().subscribe({
+         ╵                                              ~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseUrl' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/financial-health.page.ts:24:60:
+      24 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                   ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseKey' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/financial-health.page.ts:24:82:
+      24 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                                         ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'incomeStatement' does not exist on type 'AccountingService'. Did you mean 'getIncomeStatement'? [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/income-statement.page.ts:212:52:
+      212 │   readonly incomeStatement = this.accountingService.incomeStatement;
+          ╵                                                     ~~~~~~~~~~~~~~~
+
+  'getIncomeStatement' is declared here.
+
+    src/app/core/services/accounting.service.ts:224:8:
+      224 │   async getIncomeStatement(period?: string): Promise<IncomeStatem...
+          ╵         ~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'loading' does not exist on type 'AccountingService'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/income-statement.page.ts:213:44:
+      213 │   readonly loading = this.accountingService.loading;
+          ╵                                             ~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'subscribe' does not exist on type 'Promise<IncomeStatement[]>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/income-statement.page.ts:250:80:
+      250 │ ....getIncomeStatement(this.selectedPeriod || undefined).subscribe({
+          ╵                                                          ~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'journalEntries' does not exist on type 'AccountingService'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/journal-entries.page.ts:39:35:
+      39 │   entries = this.accountingService.journalEntries;
+         ╵                                    ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getJournalEntries' does not exist on type 'AccountingService'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/journal-entries.page.ts:42:27:
+      42 │ ...this.accountingService.getJournalEntries({ limit: 100 }).subscr...
+         ╵                           ~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseUrl' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/ledger.page.ts:43:60:
+      43 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                   ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseKey' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/ledger.page.ts:43:82:
+      43 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                                         ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'Math' does not exist on type 'ManualJournalEntryPage'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/manual-journal-entry.page.html:176:26:
+      176 │           Diferencia: ${{ Math.abs(getTotalDebit() - getTotalCred...
+          ╵                           ~~~~
+
+  Error occurs in the template of component ManualJournalEntryPage.
+
+    src/app/features/admin/accounting/pages/manual-journal-entry.page.ts:20:15:
+      20 │   templateUrl: './manual-journal-entry.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseUrl' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/manual-journal-entry.page.ts:40:60:
+      40 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                   ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseKey' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/manual-journal-entry.page.ts:40:82:
+      40 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                                         ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseUrl' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/period-closures.page.ts:35:60:
+      35 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                   ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseKey' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/period-closures.page.ts:35:82:
+      35 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                                         ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'provisions' does not exist on type 'AccountingService'. Did you mean 'getProvisions'? [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/provisions.page.ts:37:38:
+      37 │   provisions = this.accountingService.provisions;
+         ╵                                       ~~~~~~~~~~
+
+  'getProvisions' is declared here.
+
+    src/app/core/services/accounting.service.ts:528:8:
+      528 │   async getProvisions(filters?: {
+          ╵         ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'getAllProvisions' does not exist on type 'AccountingService'. Did you mean 'getProvisions'? [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/provisions.page.ts:40:27:
+      40 │     this.accountingService.getAllProvisions().subscribe();
+         ╵                            ~~~~~~~~~~~~~~~~
+
+  'getProvisions' is declared here.
+
+    src/app/core/services/accounting.service.ts:528:8:
+      528 │   async getProvisions(filters?: {
+          ╵         ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'subscribe' does not exist on type 'Promise<WalletReconciliation[]>'. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/reconciliation.page.ts:45:53:
+      45 │     this.accountingService.getWalletReconciliation().subscribe({
+         ╵                                                      ~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseUrl' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/revenue-recognition.page.ts:33:60:
+      33 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                   ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseKey' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/accounting/pages/revenue-recognition.page.ts:33:82:
+      33 │ ...new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+         ╵                                                         ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'verificationStats' does not exist on type 'AdminDashboardPage'. [plugin angular-compiler]
+
+    src/app/features/admin/admin-dashboard.page.html:53:7:
+      53 │   @if (verificationStats()) {
+         ╵        ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDashboardPage.
+
+    src/app/features/admin/admin-dashboard.page.ts:26:15:
+      26 │   templateUrl: './admin-dashboard.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'verificationStats' does not exist on type 'AdminDashboardPage'. [plugin angular-compiler]
+
+    src/app/features/admin/admin-dashboard.page.html:71:15:
+      71 │             {{ verificationStats()!.pending_reviews }}
+         ╵                ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDashboardPage.
+
+    src/app/features/admin/admin-dashboard.page.ts:26:15:
+      26 │   templateUrl: './admin-dashboard.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'verificationStats' does not exist on type 'AdminDashboardPage'. [plugin angular-compiler]
+
+    src/app/features/admin/admin-dashboard.page.html:77:15:
+      77 │             {{ verificationStats()!.approved_today }}
+         ╵                ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDashboardPage.
+
+    src/app/features/admin/admin-dashboard.page.ts:26:15:
+      26 │   templateUrl: './admin-dashboard.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'verificationStats' does not exist on type 'AdminDashboardPage'. [plugin angular-compiler]
+
+    src/app/features/admin/admin-dashboard.page.html:83:15:
+      83 │             {{ verificationStats()!.rejected_today }}
+         ╵                ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDashboardPage.
+
+    src/app/features/admin/admin-dashboard.page.ts:26:15:
+      26 │   templateUrl: './admin-dashboard.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'verificationStats' does not exist on type 'AdminDashboardPage'. [plugin angular-compiler]
+
+    src/app/features/admin/admin-dashboard.page.html:89:15:
+      89 │             {{ verificationStats()!.total_users }}
+         ╵                ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDashboardPage.
+
+    src/app/features/admin/admin-dashboard.page.ts:26:15:
+      26 │   templateUrl: './admin-dashboard.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'verificationStats' does not exist on type 'AdminDashboardPage'. [plugin angular-compiler]
+
+    src/app/features/admin/admin-dashboard.page.html:97:56:
+      97 │ ...old text-slate-900">{{ verificationStats()!.level_1_users }}</s...
+         ╵                           ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDashboardPage.
+
+    src/app/features/admin/admin-dashboard.page.ts:26:15:
+      26 │   templateUrl: './admin-dashboard.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'verificationStats' does not exist on type 'AdminDashboardPage'. [plugin angular-compiler]
+
+    src/app/features/admin/admin-dashboard.page.html:101:55:
+      101 │ ...bold text-blue-600">{{ verificationStats()!.level_2_users }}</...
+          ╵                           ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDashboardPage.
+
+    src/app/features/admin/admin-dashboard.page.ts:26:15:
+      26 │   templateUrl: './admin-dashboard.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'verificationStats' does not exist on type 'AdminDashboardPage'. [plugin angular-compiler]
+
+    src/app/features/admin/admin-dashboard.page.html:106:12:
+      106 │             verificationStats()!.level_3_users
+          ╵             ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDashboardPage.
+
+    src/app/features/admin/admin-dashboard.page.ts:26:15:
+      26 │   templateUrl: './admin-dashboard.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/features/admin/claims/admin-claim-detail.page.ts:294:47:
+      294 │                     {{ formatDateTime(claim()!.closed_at) }}
+          ╵                                                ~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[]' is not assignable to parameter of type 'Car[]'.
+  Type 'unknown' is not assignable to type 'Car'. [plugin angular-compiler]
+
+    src/app/features/admin/dashboard/admin-dashboard.page.ts:59:33:
+      59 │       this.pendingCarsSignal.set(cars);
+         ╵                                  ~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[]' is not assignable to parameter of type 'Booking[]'.
+  Type 'unknown' is not assignable to type 'Booking'. [plugin angular-compiler]
+
+    src/app/features/admin/dashboard/admin-dashboard.page.ts:60:30:
+      60 │       this.bookingsSignal.set(bookings);
+         ╵                               ~~~~~~~~
+
+
+✘ [ERROR] TS2532: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/features/admin/disputes/admin-disputes.page.html:140:53:
+      140 │ ...itle>#{{ selectedDispute()?.id.slice(0, 8) }}</ion-card-subtitle>
+          ╵                                   ~~~~~
+
+  Error occurs in the template of component AdminDisputesPage.
+
+    src/app/features/admin/disputes/admin-disputes.page.ts:17:15:
+      17 │   templateUrl: './admin-disputes.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/features/admin/disputes/admin-disputes.page.html:165:76:
+      165 │ ...suelta:</strong> {{ formatDate(selectedDispute()!.resolved_at) }}
+          ╵                                                      ~~~~~~~~~~~
+
+  Error occurs in the template of component AdminDisputesPage.
+
+    src/app/features/admin/disputes/admin-disputes.page.ts:17:15:
+      17 │   templateUrl: './admin-disputes.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/features/admin/exchange-rates/exchange-rates.page.html:224:67:
+      224 │ ...tima sincronización: {{ formatRelativeTime(stats().last_sync) }}
+          ╵                                                     ~~~~~~~~~
+
+  Error occurs in the template of component ExchangeRatesPage.
+
+    src/app/features/admin/exchange-rates/exchange-rates.page.ts:33:15:
+      33 │   templateUrl: './exchange-rates.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/features/admin/exchange-rates/exchange-rates.page.html:227:40:
+      227 │               {{ formatDateTime(stats().last_sync) }}
+          ╵                                         ~~~~~~~~~
+
+  Error occurs in the template of component ExchangeRatesPage.
+
+    src/app/features/admin/exchange-rates/exchange-rates.page.ts:33:15:
+      33 │   templateUrl: './exchange-rates.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2445: Property 'supabaseUrl' is protected and only accessible within class 'SupabaseClient<Database, SchemaNameOrClientOptions, SchemaName, Schema, ClientOptions>' and its subclasses. [plugin angular-compiler]
+
+    src/app/features/admin/exchange-rates/exchange-rates.page.ts:253:52:
+      253 │       const supabaseUrl = this.supabase.getClient().supabaseUrl;
+          ╵                                                     ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'parseFloat' does not exist on type 'AdminRefundsPage'. [plugin angular-compiler]
+
+    src/app/features/admin/refunds/admin-refunds.page.html:540:46:
+      540 │ ...nput)="updateRefundAmount(parseFloat($any($event.target).value))"
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component AdminRefundsPage.
+
+    src/app/features/admin/refunds/admin-refunds.page.ts:28:15:
+      28 │   templateUrl: './admin-refunds.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'flagged_by_name' does not exist on type 'Review'. Did you mean 'flagged_by'? [plugin angular-compiler]
+
+    src/app/features/admin/reviews/admin-reviews.page.ts:242:43:
+      242 │                   Reportado por: {{ review.flagged_by_name }} el
+          ╵                                            ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'moderated_by_name' does not exist on type 'Review'. Did you mean 'moderated_by'? [plugin angular-compiler]
+
+    src/app/features/admin/reviews/admin-reviews.page.ts:259:42:
+      259 │                   Moderado por: {{ review.moderated_by_name }} el
+          ╵                                           ~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'flag_status' does not exist on type 'Review'. [plugin angular-compiler]
+
+    src/app/features/admin/reviews/moderate-reviews/moderate-reviews.page.ts:87:48:
+      87 │ ...          [class.bg-yellow-100]="review.flag_status === 'pending'"
+         ╵                                            ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'flag_status' does not exist on type 'Review'. [plugin angular-compiler]
+
+    src/app/features/admin/reviews/moderate-reviews/moderate-reviews.page.ts:88:50:
+      88 │ ...        [class.text-yellow-800]="review.flag_status === 'pending'"
+         ╵                                            ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'flag_status' does not exist on type 'Review'. [plugin angular-compiler]
+
+    src/app/features/admin/reviews/moderate-reviews/moderate-reviews.page.ts:89:47:
+      89 │ ...          [class.bg-green-100]="review.flag_status === 'approved'"
+         ╵                                           ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'flag_status' does not exist on type 'Review'. [plugin angular-compiler]
+
+    src/app/features/admin/reviews/moderate-reviews/moderate-reviews.page.ts:90:49:
+      90 │ ...        [class.text-green-800]="review.flag_status === 'approved'"
+         ╵                                           ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'flag_status' does not exist on type 'Review'. [plugin angular-compiler]
+
+    src/app/features/admin/reviews/moderate-reviews/moderate-reviews.page.ts:91:45:
+      91 │ ...            [class.bg-red-100]="review.flag_status === 'rejected'"
+         ╵                                           ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'flag_status' does not exist on type 'Review'. [plugin angular-compiler]
+
+    src/app/features/admin/reviews/moderate-reviews/moderate-reviews.page.ts:92:47:
+      92 │ ...          [class.text-red-800]="review.flag_status === 'rejected'"
+         ╵                                           ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'flag_status' does not exist on type 'Review'. [plugin angular-compiler]
+
+    src/app/features/admin/reviews/moderate-reviews/moderate-reviews.page.ts:94:28:
+      94 │                   {{ review.flag_status || 'pending' }}
+         ╵                             ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'flag_status' does not exist on type 'Review'. [plugin angular-compiler]
+
+    src/app/features/admin/reviews/moderate-reviews/moderate-reviews.page.ts:111:26:
+      111 │               @if (review.flag_status === 'pending') {
+          ╵                           ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'unknown[]' is not assignable to parameter of type 'WithdrawalRequest[]'.
+  Type 'unknown' is not assignable to type 'WithdrawalRequest'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/admin-withdrawals.page.ts:72:33:
+      72 │       this.withdrawalsSignal.set(withdrawals);
+         ╵                                  ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module '../../../../core/services/withdrawal.service' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:4:34:
+      4 │ ...rawalService } from '../../../../core/services/withdrawal.service';
+        ╵                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module '../../../../core/services/toast.service' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:5:29:
+      5 │ ...rt { ToastService } from '../../../../core/services/toast.service';
+        ╵                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module '../../../../core/models/wallet.model' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:6:39:
+      6 │ ... { WithdrawalRequest } from '../../../../core/models/wallet.model';
+        ╵                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:39:29:
+      39 │ ...nst requests = await this.withdrawalService.getWithdrawalReques...
+         ╵                         ~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:44:6:
+      44 │       this.toastService.error(
+         ╵       ~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:56:12:
+      56 │       await this.withdrawalService.approveWithdrawal({
+         ╵             ~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:60:6:
+      60 │       this.toastService.success('Retiro aprobado correctamente');
+         ╵       ~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:63:6:
+      63 │       this.toastService.error(
+         ╵       ~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:88:12:
+      88 │       await this.withdrawalService.rejectWithdrawal({
+         ╵             ~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:92:6:
+      92 │       this.toastService.success('Retiro rechazado');
+         ╵       ~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2571: Object is of type 'unknown'. [plugin angular-compiler]
+
+    src/app/features/admin/withdrawals/withdrawals-admin.page.ts:96:6:
+      96 │       this.toastService.error(
+         ╵       ~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8001: 'app-distance-risk-tier-badge' is not a known element:
+1. If 'app-distance-risk-tier-badge' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-distance-risk-tier-badge' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/booking-detail.page.html:127:12:
+      127 │             <app-distance-risk-tier-badge
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingDetailPage.
+
+    src/app/features/bookings/booking-detail/booking-detail.page.ts:63:15:
+      63 │   templateUrl: './booking-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'tier' since it isn't a known property of 'app-distance-risk-tier-badge'.
+1. If 'app-distance-risk-tier-badge' is an Angular component and it has 'tier' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-distance-risk-tier-badge' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/booking-detail.page.html:129:14:
+      129 │               [tier]="booking()!.distance_risk_tier!"
+          ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingDetailPage.
+
+    src/app/features/bookings/booking-detail/booking-detail.page.ts:63:15:
+      63 │   templateUrl: './booking-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2533: Object is possibly 'null' or 'undefined'. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/booking-detail.page.html:278:34:
+      278 │ ...      ARS ${{ booking()!.delivery_fee_cents / 100 | number: '1...
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingDetailPage.
+
+    src/app/features/bookings/booking-detail/booking-detail.page.ts:63:15:
+      63 │   templateUrl: './booking-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8001: 'app-booking-confirmation-timeline' is not a known element:
+1. If 'app-booking-confirmation-timeline' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-booking-confirmation-timeline' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/booking-detail.page.html:971:12:
+      971 │             <app-booking-confirmation-timeline
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingDetailPage.
+
+    src/app/features/bookings/booking-detail/booking-detail.page.ts:63:15:
+      63 │   templateUrl: './booking-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'booking' since it isn't a known property of 'app-booking-confirmation-timeline'.
+1. If 'app-booking-confirmation-timeline' is an Angular component and it has 'booking' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-booking-confirmation-timeline' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/booking-detail.page.html:972:14:
+      972 │               [booking]="booking()!"
+          ╵               ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingDetailPage.
+
+    src/app/features/bookings/booking-detail/booking-detail.page.ts:63:15:
+      63 │   templateUrl: './booking-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'ownerName' since it isn't a known property of 'app-booking-confirmation-timeline'.
+1. If 'app-booking-confirmation-timeline' is an Angular component and it has 'ownerName' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-booking-confirmation-timeline' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/booking-detail.page.html:973:14:
+      973 │               [ownerName]="carOwnerName()"
+          ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingDetailPage.
+
+    src/app/features/bookings/booking-detail/booking-detail.page.ts:63:15:
+      63 │   templateUrl: './booking-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG8002: Can't bind to 'renterName' since it isn't a known property of 'app-booking-confirmation-timeline'.
+1. If 'app-booking-confirmation-timeline' is an Angular component and it has 'renterName' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-booking-confirmation-timeline' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/booking-detail.page.html:974:14:
+      974 │ ...          [renterName]="booking()?.renter_name ?? 'el locatario'"
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingDetailPage.
+
+    src/app/features/bookings/booking-detail/booking-detail.page.ts:63:15:
+      63 │   templateUrl: './booking-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'handleTimelineAction' does not exist on type 'BookingDetailPage'. [plugin angular-compiler]
+
+    src/app/features/bookings/booking-detail/booking-detail.page.html:975:39:
+      975 │               (confirmationRequested)="handleTimelineAction($event)"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingDetailPage.
+
+    src/app/features/bookings/booking-detail/booking-detail.page.ts:63:15:
+      63 │   templateUrl: './booking-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type '"pending" | "rejected" | "approved" | "all" | "closed" | "investigating"' is not assignable to parameter of type '"all" | ClaimStatus'.
+  Type '"pending"' is not assignable to type '"all" | ClaimStatus'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.html:66:34:
+      66 │         (click)="setFilter(filter.value)"
+         ╵                                   ~~~~~
+
+  Error occurs in the template of component MyClaimsPage.
+
+    src/app/features/bookings/claims/my-claims.page.ts:26:15:
+      26 │   templateUrl: './my-claims.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'incident_location' does not exist on type 'InsuranceClaim'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.html:148:51:
+      148 │ ...       <div class="claim-detail" *ngIf="claim.incident_location">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MyClaimsPage.
+
+    src/app/features/bookings/claims/my-claims.page.ts:26:15:
+      26 │   templateUrl: './my-claims.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'incident_location' does not exist on type 'InsuranceClaim'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.html:163:29:
+      163 │               <span>{{ claim.incident_location }}</span>
+          ╵                              ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MyClaimsPage.
+
+    src/app/features/bookings/claims/my-claims.page.ts:26:15:
+      26 │   templateUrl: './my-claims.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'evidence_photos' does not exist on type 'InsuranceClaim'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.html:181:25:
+      181 │             *ngIf="claim.evidence_photos && claim.evidence_photos...
+          ╵                          ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MyClaimsPage.
+
+    src/app/features/bookings/claims/my-claims.page.ts:26:15:
+      26 │   templateUrl: './my-claims.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'evidence_photos' does not exist on type 'InsuranceClaim'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.html:181:50:
+      181 │ ...*ngIf="claim.evidence_photos && claim.evidence_photos.length > 0"
+          ╵                                          ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MyClaimsPage.
+
+    src/app/features/bookings/claims/my-claims.page.ts:26:15:
+      26 │   templateUrl: './my-claims.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'evidence_photos' does not exist on type 'InsuranceClaim'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.html:184:50:
+      184 │ ...otos-label">📸 {{ claim.evidence_photos.length }} foto(s)</div>
+          ╵                         ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MyClaimsPage.
+
+    src/app/features/bookings/claims/my-claims.page.ts:26:15:
+      26 │   templateUrl: './my-claims.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2367: This comparison appears to be unintentional because the types 'ClaimStatus' and '"pending"' have no overlap. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.ts:57:39:
+      57 │ ...  pending: allClaims.filter((c) => c.status === 'pending').length,
+         ╵                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2367: This comparison appears to be unintentional because the types 'ClaimStatus' and '"investigating"' have no overlap. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.ts:58:45:
+      58 │ ...ing: allClaims.filter((c) => c.status === 'investigating').length,
+         ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2678: Type '"pending"' is not comparable to type 'ClaimStatus'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.ts:116:11:
+      116 │       case 'pending':
+          ╵            ~~~~~~~~~
+
+
+✘ [ERROR] TS2678: Type '"investigating"' is not comparable to type 'ClaimStatus'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.ts:118:11:
+      118 │       case 'investigating':
+          ╵            ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2678: Type '"pending"' is not comparable to type 'ClaimStatus'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.ts:133:11:
+      133 │       case 'pending':
+          ╵            ~~~~~~~~~
+
+
+✘ [ERROR] TS2678: Type '"investigating"' is not comparable to type 'ClaimStatus'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.ts:135:11:
+      135 │       case 'investigating':
+          ╵            ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and 'natural_disaster' does not exist in type 'Record<ClaimType, string>'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.ts:153:6:
+      153 │       natural_disaster: 'Desastre Natural',
+          ╵       ~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and 'natural_disaster' does not exist in type 'Record<ClaimType, string>'. [plugin angular-compiler]
+
+    src/app/features/bookings/claims/my-claims.page.ts:166:6:
+      166 │       natural_disaster: '🌪️',
+          ╵       ~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2774: This condition will always return true since this function is always defined. Did you mean to call it instead? [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.html:124:13:
+      124 │         @if (deliveryRequired && deliveryFeeCents() > 0) {
+          ╵              ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component BookingLocationFormComponent.
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:44:15:
+      44 │   templateUrl: './booking-location-form.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'address' does not exist on type 'GeocodingResult'. [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:139:29:
+      139 │             address: results.address || address,
+          ╵                              ~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'city' does not exist on type 'GeocodingResult'. [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:140:26:
+      140 │             city: results.city || 'Argentina',
+          ╵                           ~~~~
+
+
+✘ [ERROR] TS2339: Property 'lat' does not exist on type 'GeocodingResult'. [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:141:25:
+      141 │             lat: results.lat,
+          ╵                          ~~~
+
+
+✘ [ERROR] TS2339: Property 'lng' does not exist on type 'GeocodingResult'. [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:142:25:
+      142 │             lng: results.lng,
+          ╵                          ~~~
+
+
+✘ [ERROR] TS2339: Property 'address' does not exist on type 'GeocodingResult'. [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:169:29:
+      169 │             address: results.address || address,
+          ╵                              ~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'city' does not exist on type 'GeocodingResult'. [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:170:26:
+      170 │             city: results.city || 'Argentina',
+          ╵                           ~~~~
+
+
+✘ [ERROR] TS2339: Property 'lat' does not exist on type 'GeocodingResult'. [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:171:25:
+      171 │             lat: results.lat,
+          ╵                          ~~~
+
+
+✘ [ERROR] TS2339: Property 'lng' does not exist on type 'GeocodingResult'. [plugin angular-compiler]
+
+    src/app/features/bookings/components/booking-location-form/booking-location-form.component.ts:172:25:
+      172 │             lng: results.lng,
+          ╵                          ~~~
+
+
+✘ [ERROR] TS2551: Property 'getBookings' does not exist on type 'BookingsService'. Did you mean 'getMyBookings'? [plugin angular-compiler]
+
+    src/app/features/bookings/contracts/contracts-management.page.ts:51:60:
+      51 │ ...nst { data: bookings } = await this.bookingsService.getBookings();
+         ╵                                                        ~~~~~~~~~~~
+
+  'getMyBookings' is declared here.
+
+    src/app/core/services/bookings.service.ts:196:8:
+      196 │   async getMyBookings(): Promise<Booking[]> {
+          ╵         ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2322: Type 'Booking | null' is not assignable to type 'Booking | undefined'.
+  Type 'null' is not assignable to type 'Booking | undefined'. [plugin angular-compiler]
+
+    src/app/features/bookings/contracts/contracts-management.page.ts:89:43:
+      89 │         this.contracts.set([{ ...contract, booking }]);
+         ╵                                            ~~~~~~~
+
+  The expected type comes from property 'booking' which is declared here on type 'BookingContract & { booking?: Booking | undefined; }'
+
+    src/app/features/bookings/contracts/contracts-management.page.ts:23:56:
+      23 │ ...acts = signal<Array<BookingContract & { booking?: Booking }>>([]);
+         ╵                                            ~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'start_date' does not exist on type 'Booking'. Did you mean 'start_at'? [plugin angular-compiler]
+
+    src/app/features/bookings/disputes/disputes-management.page.html:26:48:
+      26 │ ...g>Período:</strong> {{ booking()!.start_date | date: 'short' }} -
+         ╵                                     ~~~~~~~~~~
+
+  Error occurs in the template of component DisputesManagementPage.
+
+    src/app/features/bookings/disputes/disputes-management.page.ts:21:15:
+      21 │   templateUrl: './disputes-management.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'end_date' does not exist on type 'Booking'. Did you mean 'end_at'? [plugin angular-compiler]
+
+    src/app/features/bookings/disputes/disputes-management.page.html:27:22:
+      27 │         {{ booking()!.end_date | date: 'short' }}
+         ╵                       ~~~~~~~~
+
+  Error occurs in the template of component DisputesManagementPage.
+
+    src/app/features/bookings/disputes/disputes-management.page.ts:21:15:
+      21 │   templateUrl: './disputes-management.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2532: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/features/bookings/disputes/disputes-management.page.html:159:58:
+      159 │ ... Disputa #{{ selectedDispute()?.id.slice(0, 8) }}</ion-card-title
+          ╵                                       ~~~~~
+
+  Error occurs in the template of component DisputesManagementPage.
+
+    src/app/features/bookings/disputes/disputes-management.page.ts:21:15:
+      21 │   templateUrl: './disputes-management.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2872: This kind of expression is always truthy. [plugin angular-compiler]
+
+    src/app/features/bookings/urgent-booking/urgent-booking.page.html:25:87:
+      25 │ ...ray-900">${{ quote()?.hourlyRate | number: '1.2-2' || '...' }}</p>
+         ╵                                               ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component UrgentBookingPage.
+
+    src/app/features/bookings/urgent-booking/urgent-booking.page.ts:14:15:
+      14 │   templateUrl: './urgent-booking.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] Could not resolve "flatpickr"
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:4:22:
+      4 │ import flatpickr from 'flatpickr';
+        ╵                       ~~~~~~~~~~~
+
+  You can mark the path "flatpickr" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] Could not resolve "flatpickr/dist/l10n/es"
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:5:24:
+      5 │ import { Spanish } from 'flatpickr/dist/l10n/es';
+        ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "flatpickr/dist/l10n/es" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module 'flatpickr' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:13:22:
+      13 │ import flatpickr from 'flatpickr';
+         ╵                       ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module 'flatpickr/dist/l10n/es' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:14:24:
+      14 │ import { Spanish } from 'flatpickr/dist/l10n/es';
+         ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module 'flatpickr/dist/types/instance' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:15:30:
+      15 │ import type { Instance } from 'flatpickr/dist/types/instance';
+         ╵                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'dObj' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:133:20:
+      133 │       onDayCreate: (dObj, dStr, fp, dayElem) => {
+          ╵                     ~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'dStr' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:133:26:
+      133 │       onDayCreate: (dObj, dStr, fp, dayElem) => {
+          ╵                           ~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'fp' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:133:32:
+      133 │       onDayCreate: (dObj, dStr, fp, dayElem) => {
+          ╵                                 ~~
+
+
+✘ [ERROR] TS7006: Parameter 'dayElem' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:133:36:
+      133 │       onDayCreate: (dObj, dStr, fp, dayElem) => {
+          ╵                                     ~~~~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'selectedDates' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/features/cars/availability-calendar/availability-calendar.page.ts:153:17:
+      153 │       onChange: (selectedDates) => {
+          ╵                  ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'license_plate' does not exist on type 'Car'. [plugin angular-compiler]
+
+    src/app/features/cars/bulk-blocking/bulk-blocking.page.html:98:24:
+      98 │               <p>{{ car.license_plate }}</p>
+         ╵                         ~~~~~~~~~~~~~
+
+  Error occurs in the template of component BulkBlockingPage.
+
+    src/app/features/cars/bulk-blocking/bulk-blocking.page.ts:13:15:
+      13 │   templateUrl: './bulk-blocking.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getMyCars' does not exist on type 'CarsService'. [plugin angular-compiler]
+
+    src/app/features/cars/bulk-blocking/bulk-blocking.page.ts:38:44:
+      38 │       const myCars = await this.carsService.getMyCars();
+         ╵                                             ~~~~~~~~~
+
+
+✘ [ERROR] TS2322: Type 'number | null | undefined' is not assignable to type 'number | undefined'.
+  Type 'null' is not assignable to type 'number | undefined'. [plugin angular-compiler]
+
+    src/app/features/cars/detail/car-detail.page.html:1309:11:
+      1309 │           [carOwnerLat]="car()?.location_lat"
+           ╵            ~~~~~~~~~~~
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:94:15:
+      94 │   templateUrl: './car-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2322: Type 'number | null | undefined' is not assignable to type 'number | undefined'.
+  Type 'null' is not assignable to type 'number | undefined'. [plugin angular-compiler]
+
+    src/app/features/cars/detail/car-detail.page.html:1310:11:
+      1310 │           [carOwnerLng]="car()?.location_lng"
+           ╵            ~~~~~~~~~~~
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:94:15:
+      94 │   templateUrl: './car-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'location_address' does not exist on type 'Car'. [plugin angular-compiler]
+
+    src/app/features/cars/detail/car-detail.page.html:1311:36:
+      1311 │           [carOwnerAddress]="car()?.location_address"
+           ╵                                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component CarDetailPage.
+
+    src/app/features/cars/detail/car-detail.page.ts:94:15:
+      94 │   templateUrl: './car-detail.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getBlockedDateRanges' does not exist on type 'CarsService'. [plugin angular-compiler]
+
+    src/app/features/cars/detail/car-detail.page.ts:1050:44:
+      1050 │ ...nst ranges = await this.carsService.getBlockedDateRanges(carId);
+           ╵                                        ~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'range' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/features/cars/detail/car-detail.page.ts:1056:22:
+      1056 │       ranges.forEach((range) => {
+           ╵                       ~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getCurrentBrand' does not exist on type 'PublishCarV2Page'. [plugin angular-compiler]
+
+    src/app/features/cars/publish/publish-car-v2.page.html:923:21:
+      923 │             [brand]="getCurrentBrand()"
+          ╵                      ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PublishCarV2Page.
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:43:15:
+      43 │   templateUrl: './publish-car-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getCurrentModel' does not exist on type 'PublishCarV2Page'. [plugin angular-compiler]
+
+    src/app/features/cars/publish/publish-car-v2.page.html:924:21:
+      924 │             [model]="getCurrentModel()"
+          ╵                      ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PublishCarV2Page.
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:43:15:
+      43 │   templateUrl: './publish-car-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getCurrentYear' does not exist on type 'PublishCarV2Page'. [plugin angular-compiler]
+
+    src/app/features/cars/publish/publish-car-v2.page.html:925:20:
+      925 │             [year]="getCurrentYear()"
+          ╵                     ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PublishCarV2Page.
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:43:15:
+      43 │   templateUrl: './publish-car-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'onStockPhotosSelected' does not exist on type 'PublishCarV2Page'. Did you mean 'onPhotoSelected'? [plugin angular-compiler]
+
+    src/app/features/cars/publish/publish-car-v2.page.html:926:30:
+      926 │             (photosSelected)="onStockPhotosSelected($event)"
+          ╵                               ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PublishCarV2Page.
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:43:15:
+      43 │   templateUrl: './publish-car-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getCurrentBrand' does not exist on type 'PublishCarV2Page'. [plugin angular-compiler]
+
+    src/app/features/cars/publish/publish-car-v2.page.html:964:21:
+      964 │             [brand]="getCurrentBrand()"
+          ╵                      ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PublishCarV2Page.
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:43:15:
+      43 │   templateUrl: './publish-car-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getCurrentModel' does not exist on type 'PublishCarV2Page'. [plugin angular-compiler]
+
+    src/app/features/cars/publish/publish-car-v2.page.html:965:21:
+      965 │             [model]="getCurrentModel()"
+          ╵                      ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PublishCarV2Page.
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:43:15:
+      43 │   templateUrl: './publish-car-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getCurrentYear' does not exist on type 'PublishCarV2Page'. [plugin angular-compiler]
+
+    src/app/features/cars/publish/publish-car-v2.page.html:966:20:
+      966 │             [year]="getCurrentYear()"
+          ╵                     ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PublishCarV2Page.
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:43:15:
+      43 │   templateUrl: './publish-car-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'onAIPhotosGenerated' does not exist on type 'PublishCarV2Page'. [plugin angular-compiler]
+
+    src/app/features/cars/publish/publish-car-v2.page.html:967:31:
+      967 │             (photosGenerated)="onAIPhotosGenerated($event)"
+          ╵                                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PublishCarV2Page.
+
+    src/app/features/cars/publish/publish-car-v2.page.ts:43:15:
+      43 │   templateUrl: './publish-car-v2.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/features/contracts/booking-contract.page.html:128:32:
+      128 │ ...  <app-contract-pdf-viewer [pdfUrl]="contract()!.pdf_url"></ap...
+          ╵                                ~~~~~~
+
+  Error occurs in the template of component BookingContractPage.
+
+    src/app/features/contracts/booking-contract.page.ts:31:15:
+      31 │   templateUrl: './booking-contract.page.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2305: Module '"date-fns/locale"' has no exported member 'Spanish'. [plugin angular-compiler]
+
+    src/app/features/dashboard/components/multi-car-calendar/multi-car-calendar.component.ts:6:9:
+      6 │ import { Spanish } from 'date-fns/locale';
+        ╵          ~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getOwnerCars' does not exist on type 'CarsService'. [plugin angular-compiler]
+
+    src/app/features/dashboard/components/multi-car-calendar/multi-car-calendar.component.ts:90:47:
+      90 │       const ownerCars = await this.carsService.getOwnerCars();
+         ╵                                                ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'car' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/features/dashboard/components/multi-car-calendar/multi-car-calendar.component.ts:91:43:
+      91 │ ...t activeCars = ownerCars.filter((car) => car.status === 'active');
+         ╵                                     ~~~
+
+
+✘ [ERROR] TS7006: Parameter 'car' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/features/dashboard/components/multi-car-calendar/multi-car-calendar.component.ts:100:57:
+      100 │       const carData: CarCalendarData[] = activeCars.map((car) => ({
+          ╵                                                          ~~~
+
+
+✘ [ERROR] TS2551: Property 'updateTags' does not exist on type 'MetaService'. Did you mean 'updateMeta'? [plugin angular-compiler]
+
+    src/app/features/driver-profile/driver-profile.page.ts:200:21:
+      200 │     this.metaService.updateTags({
+          ╵                      ~~~~~~~~~~
+
+  'updateMeta' is declared here.
+
+    src/app/core/services/meta.service.ts:57:2:
+      57 │   updateMeta(config: MetaConfig): void {
+         ╵   ~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getClient' does not exist on type 'SupabaseClient<any, "public", "public", any, any>'. [plugin angular-compiler]
+
+    src/app/features/payouts/payouts.page.ts:79:56:
+      79 │ ...= await this.walletService['supabase'].getClient().auth.getUser();
+         ╵                                           ~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getWallet' does not exist on type 'WalletService'. [plugin angular-compiler]
+
+    src/app/features/payouts/payouts.page.ts:88:46:
+      88 │ ... = await this.walletService.getWallet().pipe(take(1)).toPromise();
+         ╵                                ~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and 'preferred_search_radius_km' does not exist in type 'UpdateProfileData'. [plugin angular-compiler]
+
+    src/app/features/profile/location-settings.page.ts:253:8:
+      253 │         preferred_search_radius_km: radiusValue,
+          ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'updateTags' does not exist on type 'MetaService'. Did you mean 'updateMeta'? [plugin angular-compiler]
+
+    src/app/features/protections/protections.page.ts:332:21:
+      332 │     this.metaService.updateTags({
+          ╵                      ~~~~~~~~~~
+
+  'updateMeta' is declared here.
+
+    src/app/core/services/meta.service.ts:57:2:
+      57 │   updateMeta(config: MetaConfig): void {
+         ╵   ~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'status' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/features/verification/verification.page.ts:50:34:
+      50 │                   @switch (status.status) {
+         ╵                                   ~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'status' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/features/verification/verification.page.ts:78:26:
+      78 │               @if (status.status !== 'VERIFICADO') {
+         ╵                           ~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'notes' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/features/verification/verification.page.ts:89:24:
+      89 │             @if (status.notes) {
+         ╵                         ~~~~~
+
+
+✘ [ERROR] TS2339: Property 'notes' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/features/verification/verification.page.ts:93:26:
+      93 │                 {{ status.notes }}
+         ╵                           ~~~~~
+
+
+✘ [ERROR] TS2339: Property 'status' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/features/verification/verification.page.ts:136:29:
+      136 │           } @else if (status.status === 'VERIFICADO') {
+          ╵                              ~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'missing_docs' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/features/verification/verification.page.ts:250:67:
+      250 │ ... = computed(() => this.verificationStatus()?.missing_docs || []);
+          ╵                                                 ~~~~~~~~~~~~
+
+
+✘ [ERROR] Could not resolve "flatpickr"
+
+    src/app/shared/components/block-date-modal/block-date-modal.component.ts:4:22:
+      4 │ import flatpickr from 'flatpickr';
+        ╵                       ~~~~~~~~~~~
+
+  You can mark the path "flatpickr" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] Could not resolve "flatpickr/dist/l10n/es"
+
+    src/app/shared/components/block-date-modal/block-date-modal.component.ts:5:24:
+      5 │ import { Spanish } from 'flatpickr/dist/l10n/es';
+        ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "flatpickr/dist/l10n/es" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module 'flatpickr' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/shared/components/block-date-modal/block-date-modal.component.ts:14:22:
+      14 │ import flatpickr from 'flatpickr';
+         ╵                       ~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module 'flatpickr/dist/l10n/es' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/shared/components/block-date-modal/block-date-modal.component.ts:15:24:
+      15 │ import { Spanish } from 'flatpickr/dist/l10n/es';
+         ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module 'flatpickr/dist/types/instance' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/shared/components/block-date-modal/block-date-modal.component.ts:16:30:
+      16 │ import type { Instance } from 'flatpickr/dist/types/instance';
+         ╵                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'selectedDates' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/shared/components/block-date-modal/block-date-modal.component.ts:255:17:
+      255 │       onChange: (selectedDates) => {
+          ╵                  ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2550: Property 'findLastIndex' does not exist on type 'TimelineStep[]'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2023' or later. [plugin angular-compiler]
+
+    src/app/shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component.ts:263:37:
+      263 │ ...stCompletedIndex = steps.findLastIndex((step) => step.completed);
+          ╵                             ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'step' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component.ts:263:52:
+      263 │ ...stCompletedIndex = steps.findLastIndex((step) => step.completed);
+          ╵                                            ~~~~
+
+
+✘ [ERROR] TS2345: Argument of type '"alternative_dates_suggested"' is not assignable to parameter of type 'ConversionEventType'. [plugin angular-compiler]
+
+    src/app/shared/components/date-range-picker/date-range-picker.component.ts:312:32:
+      312 │       this.analytics.trackEvent('alternative_dates_suggested', {
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type '"alternative_date_applied"' is not assignable to parameter of type 'ConversionEventType'. [plugin angular-compiler]
+
+    src/app/shared/components/date-range-picker/date-range-picker.component.ts:340:30:
+      340 │     this.analytics.trackEvent('alternative_date_applied', {
+          ╵                               ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'Math' does not exist on type 'DriverProfileAdvancedComponent'. [plugin angular-compiler]
+
+    src/app/shared/components/driver-profile-advanced/driver-profile-advanced.component.ts:74:28:
+      74 │                         +{{ Math.round((benefit.fee_multiplier - 1...
+         ╵                             ~~~~
+
+
+✘ [ERROR] TS2339: Property 'Math' does not exist on type 'DriverProfileAdvancedComponent'. [plugin angular-compiler]
+
+    src/app/shared/components/driver-profile-advanced/driver-profile-advanced.component.ts:77:28:
+      77 │                         +{{ Math.round((benefit.guarantee_multipli...
+         ╵                             ~~~~
+
+
+✘ [ERROR] TS2339: Property 'remaining_protected_claims' does not exist on type 'ActiveBonusProtector'. [plugin angular-compiler]
+
+    src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:659:22:
+      659 │     return protector?.remaining_protected_claims ?? 0;
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'status' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/shared/components/missing-documents-widget/missing-documents-widget.component.ts:61:42:
+      61 │         } @else if (verificationStatus()?.status === 'VERIFICADO') {
+         ╵                                           ~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'status' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/shared/components/missing-documents-widget/missing-documents-widget.component.ts:78:42:
+      78 │         } @else if (verificationStatus()?.status === 'RECHAZADO') {
+         ╵                                           ~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'notes' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/shared/components/missing-documents-widget/missing-documents-widget.component.ts:91:42:
+      91 │                     verificationStatus()?.notes ||
+         ╵                                           ~~~~~
+
+
+✘ [ERROR] TS2339: Property 'missing_docs' does not exist on type 'UserVerificationStatus[]'. [plugin angular-compiler]
+
+    src/app/shared/components/missing-documents-widget/missing-documents-widget.component.ts:120:67:
+      120 │ ... = computed(() => this.verificationStatus()?.missing_docs || []);
+          ╵                                                 ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'has' does not exist on type 'WritableSignal<Set<string>>'. [plugin angular-compiler]
+
+    src/app/shared/components/offline-messages-panel/offline-messages-panel.component.ts:122:45:
+      122 │                         [disabled]="retrying.has(msg.id)"
+          ╵                                              ~~~
+
+
+✘ [ERROR] TS2339: Property 'has' does not exist on type 'WritableSignal<Set<string>>'. [plugin angular-compiler]
+
+    src/app/shared/components/offline-messages-panel/offline-messages-panel.component.ts:126:38:
+      126 │                         @if (retrying.has(msg.id)) {
+          ╵                                       ~~~
+
+
+✘ [ERROR] TS2339: Property 'has' does not exist on type 'WritableSignal<Set<string>>'. [plugin angular-compiler]
+
+    src/app/shared/components/offline-messages-panel/offline-messages-panel.component.ts:173:45:
+      173 │                         [disabled]="retrying.has(msg.id)"
+          ╵                                              ~~~
+
+
+✘ [ERROR] TS2339: Property 'has' does not exist on type 'WritableSignal<Set<string>>'. [plugin angular-compiler]
+
+    src/app/shared/components/offline-messages-panel/offline-messages-panel.component.ts:177:38:
+      177 │                         @if (retrying.has(msg.id)) {
+          ╵                                       ~~~
+
+
+✘ [ERROR] TS7053: Element implicitly has an 'any' type because expression of type 'number' can't be used to index type '{ 5: number; 4: number; 3: number; 2: number; 1: number; }'.
+  No index signature with a parameter of type 'number' was found on type '{ 5: number; 4: number; 3: number; 2: number; 1: number; }'. [plugin angular-compiler]
+
+    src/app/shared/components/review-summary/review-summary.component.ts:51:42:
+      51 │ ...       getPercentage(s.rating_distribution[rating], s.total_count)
+         ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS7053: Element implicitly has an 'any' type because expression of type 'number' can't be used to index type '{ 5: number; 4: number; 3: number; 2: number; 1: number; }'.
+  No index signature with a parameter of type 'number' was found on type '{ 5: number; 4: number; 3: number; 2: number; 1: number; }'. [plugin angular-compiler]
+
+    src/app/shared/components/review-summary/review-summary.component.ts:57:25:
+      57 │                       {{ s.rating_distribution[rating] }}
+         ╵                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'notifyBookingCreated' does not exist on type 'NotificationsService'. [plugin angular-compiler]
+
+    src/app/shared/components/simple-checkout/simple-checkout.component.ts:298:38:
+      298 │ ...notificationsService.notifyBookingCreated(booking.id, this.car...
+          ╵                         ~~~~~~~~~~~~~~~~~~~~
+
+
+ ELIFECYCLE  Command failed with exit code 1.

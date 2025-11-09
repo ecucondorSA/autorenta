@@ -206,7 +206,7 @@ export class PublishCarV2Page implements OnInit {
       // Reverse geocode to get address
       const address = await this.locationService.reverseGeocode(
         location.latitude,
-        location.longitude
+        location.longitude,
       );
 
       if (address) {

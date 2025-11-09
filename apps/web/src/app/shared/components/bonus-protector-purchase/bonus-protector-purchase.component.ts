@@ -39,9 +39,7 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
           <ion-icon name="shield-half-outline"></ion-icon>
           Protector de Bonus
         </ion-card-title>
-        <ion-card-subtitle>
-          Protege tu clase de conductor tras siniestros
-        </ion-card-subtitle>
+        <ion-card-subtitle> Protege tu clase de conductor tras siniestros </ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
@@ -97,7 +95,8 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
                   <p class="recommendation-title">Recomendado para ti</p>
                   <p class="recommendation-text">
                     Basado en tu clase actual ({{ driverClass() }}), recomendamos el
-                    <strong>Nivel {{ recommendedLevel() }}</strong>.
+                    <strong>Nivel {{ recommendedLevel() }}</strong
+                    >.
                   </p>
                 </div>
               </div>
@@ -131,15 +130,30 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
                 <div class="capacity-grid">
                   <div class="capacity-item">
                     <ion-icon name="fitness-outline" color="success"></ion-icon>
-                    <span>{{ getCapacity(option.protection_level).leve }} Leve{{ getCapacity(option.protection_level).leve > 1 ? 's' : '' }}</span>
+                    <span
+                      >{{ getCapacity(option.protection_level).leve }} Leve{{
+                        getCapacity(option.protection_level).leve > 1 ? 's' : ''
+                      }}</span
+                    >
                   </div>
-                  <div class="capacity-item" *ngIf="getCapacity(option.protection_level).moderado > 0">
+                  <div
+                    class="capacity-item"
+                    *ngIf="getCapacity(option.protection_level).moderado > 0"
+                  >
                     <ion-icon name="warning-outline" color="warning"></ion-icon>
-                    <span>{{ getCapacity(option.protection_level).moderado }} Moderado{{ getCapacity(option.protection_level).moderado > 1 ? 's' : '' }}</span>
+                    <span
+                      >{{ getCapacity(option.protection_level).moderado }} Moderado{{
+                        getCapacity(option.protection_level).moderado > 1 ? 's' : ''
+                      }}</span
+                    >
                   </div>
                   <div class="capacity-item" *ngIf="getCapacity(option.protection_level).grave > 0">
                     <ion-icon name="alert-outline" color="danger"></ion-icon>
-                    <span>{{ getCapacity(option.protection_level).grave }} Grave{{ getCapacity(option.protection_level).grave > 1 ? 's' : '' }}</span>
+                    <span
+                      >{{ getCapacity(option.protection_level).grave }} Grave{{
+                        getCapacity(option.protection_level).grave > 1 ? 's' : ''
+                      }}</span
+                    >
                   </div>
                 </div>
               </div>
@@ -148,15 +162,30 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
               <div class="savings-section" *ngIf="showSavings()">
                 <p class="savings-title">Ahorro Estimado Anual:</p>
                 <div class="savings-amount">
-                  <span class="savings-value">\${{ calculateSavings(option.protection_level).totalSavings }}</span>
+                  <span class="savings-value"
+                    >\${{ calculateSavings(option.protection_level).totalSavings }}</span
+                  >
                   <span class="savings-label">USD</span>
                 </div>
-                <p class="savings-roi" [class.positive]="calculateSavings(option.protection_level).isWorthIt">
+                <p
+                  class="savings-roi"
+                  [class.positive]="calculateSavings(option.protection_level).isWorthIt"
+                >
                   <ion-icon
-                    [name]="calculateSavings(option.protection_level).isWorthIt ? 'trending-up-outline' : 'trending-down-outline'"
-                    [color]="calculateSavings(option.protection_level).isWorthIt ? 'success' : 'medium'"
+                    [name]="
+                      calculateSavings(option.protection_level).isWorthIt
+                        ? 'trending-up-outline'
+                        : 'trending-down-outline'
+                    "
+                    [color]="
+                      calculateSavings(option.protection_level).isWorthIt ? 'success' : 'medium'
+                    "
                   ></ion-icon>
-                  {{ calculateSavings(option.protection_level).isWorthIt ? 'Buena inversión' : 'ROI bajo' }}
+                  {{
+                    calculateSavings(option.protection_level).isWorthIt
+                      ? 'Buena inversión'
+                      : 'ROI bajo'
+                  }}
                 </p>
               </div>
 
@@ -202,7 +231,11 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
                   <ion-icon name="arrow-forward-outline"></ion-icon>
                   <span class="new-class danger">Clase {{ simulateWithout().newClass }}</span>
                 </div>
-                <p class="result-impact">Aumento: +{{ simulateWithout().increase }} clase{{ simulateWithout().increase > 1 ? 's' : '' }}</p>
+                <p class="result-impact">
+                  Aumento: +{{ simulateWithout().increase }} clase{{
+                    simulateWithout().increase > 1 ? 's' : ''
+                  }}
+                </p>
               </div>
 
               <div class="simulation-result">
@@ -216,7 +249,11 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
                 </div>
                 <p class="result-impact" [class.protected]="simulateWith().protected">
                   {{ simulateWith().protected ? '✅ Protegido' : 'Aumento reducido' }}:
-                  {{ simulateWith().increase === 0 ? 'Sin cambio' : '+' + simulateWith().increase + ' clase(s)' }}
+                  {{
+                    simulateWith().increase === 0
+                      ? 'Sin cambio'
+                      : '+' + simulateWith().increase + ' clase(s)'
+                  }}
                 </p>
               </div>
             </div>
@@ -689,7 +726,7 @@ export class BonusProtectorPurchaseComponent implements OnInit {
   readonly simulateWithout = computed(() => {
     const impact = this.bonusProtectorService.simulateClaimImpact(
       this.driverClass(),
-      this.simulationSeverity
+      this.simulationSeverity,
     );
     return impact.withoutProtector;
   });
@@ -697,7 +734,7 @@ export class BonusProtectorPurchaseComponent implements OnInit {
   readonly simulateWith = computed(() => {
     const impact = this.bonusProtectorService.simulateClaimImpact(
       this.driverClass(),
-      this.simulationSeverity
+      this.simulationSeverity,
     );
     return impact.withProtector;
   });
@@ -727,7 +764,12 @@ export class BonusProtectorPurchaseComponent implements OnInit {
     return this.bonusProtectorService.getLevelIcon(this.protectionLevel());
   }
 
-  getCapacity(level: number): { leve: number; moderado: number; grave: number; description: string } {
+  getCapacity(level: number): {
+    leve: number;
+    moderado: number;
+    grave: number;
+    description: string;
+  } {
     return this.bonusProtectorService.getProtectionCapacity(level);
   }
 
@@ -745,7 +787,7 @@ export class BonusProtectorPurchaseComponent implements OnInit {
       level,
       this.driverClass(),
       baseFeeUsd,
-      baseGuaranteeUsd
+      baseGuaranteeUsd,
     );
   }
 
@@ -766,7 +808,7 @@ export class BonusProtectorPurchaseComponent implements OnInit {
 
       // Confirm purchase
       const confirmed = confirm(
-        `¿Confirmas la compra del Protector de Bonus Nivel ${level} por $${this.options().find((o) => o.protection_level === level)?.price_usd} USD?\n\nEste monto se deducirá de tu wallet.`
+        `¿Confirmas la compra del Protector de Bonus Nivel ${level} por $${this.options().find((o) => o.protection_level === level)?.price_usd} USD?\n\nEste monto se deducirá de tu wallet.`,
       );
 
       if (!confirmed) return;
@@ -780,7 +822,9 @@ export class BonusProtectorPurchaseComponent implements OnInit {
       await this.loadActiveProtector();
     } catch (_error) {
       console.error('[BonusProtectorPurchase] Error al comprar:', _error);
-      alert('Error al comprar Protector de Bonus. Verifica que tengas fondos suficientes en tu wallet.');
+      alert(
+        'Error al comprar Protector de Bonus. Verifica que tengas fondos suficientes en tu wallet.',
+      );
     } finally {
       this.purchasing.set(false);
     }

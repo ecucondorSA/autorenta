@@ -38,13 +38,9 @@ describe('BookingConfirmationPage', () => {
         },
       },
     };
-    mockBookingsService = jasmine.createSpyObj('BookingsService', [
-      'getBookingById',
-    ]);
+    mockBookingsService = jasmine.createSpyObj('BookingsService', ['getBookingById']);
 
-    mockBookingsService.getBookingById.and.returnValue(
-      Promise.resolve(mockBooking)
-    );
+    mockBookingsService.getBookingById.and.returnValue(Promise.resolve(mockBooking));
 
     await TestBed.configureTestingModule({
       imports: [BookingConfirmationPage],
@@ -89,9 +85,7 @@ describe('BookingConfirmationPage', () => {
       await component.ngOnInit();
 
       expect(component.status()).toBe('error');
-      expect(component.errorMessage()).toBe(
-        'Proveedor de pago no especificado'
-      );
+      expect(component.errorMessage()).toBe('Proveedor de pago no especificado');
     });
   });
 
@@ -135,7 +129,7 @@ describe('BookingConfirmationPage', () => {
         orderId: 'ORDER-123',
       };
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'pending' })
+        Promise.resolve({ ...mockBooking, status: 'pending' }),
       );
 
       await component.ngOnInit();
@@ -159,7 +153,7 @@ describe('BookingConfirmationPage', () => {
   describe('loadBookingAndVerifyPayment', () => {
     it('should set success status when booking is confirmed', async () => {
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'confirmed' })
+        Promise.resolve({ ...mockBooking, status: 'confirmed' }),
       );
 
       await component.ngOnInit();
@@ -170,7 +164,7 @@ describe('BookingConfirmationPage', () => {
 
     it('should set pending status and start polling when booking is pending', async () => {
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'pending' })
+        Promise.resolve({ ...mockBooking, status: 'pending' }),
       );
 
       spyOn<any>(component, 'startPollingBookingStatus');
@@ -183,7 +177,7 @@ describe('BookingConfirmationPage', () => {
 
     it('should set error status when booking is rejected', async () => {
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'rejected' })
+        Promise.resolve({ ...mockBooking, status: 'rejected' }),
       );
 
       await component.ngOnInit();
@@ -193,9 +187,7 @@ describe('BookingConfirmationPage', () => {
     });
 
     it('should throw error if booking not found', async () => {
-      mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve(null)
-      );
+      mockBookingsService.getBookingById.and.returnValue(Promise.resolve(null));
 
       await component.ngOnInit();
 
@@ -208,7 +200,7 @@ describe('BookingConfirmationPage', () => {
     it('should update status when booking becomes confirmed', fakeAsync(() => {
       // Initial state: pending
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'pending' })
+        Promise.resolve({ ...mockBooking, status: 'pending' }),
       );
 
       component.bookingId.set('booking-123');
@@ -223,7 +215,7 @@ describe('BookingConfirmationPage', () => {
 
       // Second poll: confirmed
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'confirmed' })
+        Promise.resolve({ ...mockBooking, status: 'confirmed' }),
       );
 
       tick(3000);
@@ -232,7 +224,7 @@ describe('BookingConfirmationPage', () => {
 
     it('should stop polling after max attempts', fakeAsync(() => {
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'pending' })
+        Promise.resolve({ ...mockBooking, status: 'pending' }),
       );
 
       component.bookingId.set('booking-123');
@@ -328,10 +320,7 @@ describe('BookingConfirmationPage', () => {
     it('viewBookingDetails should navigate to booking details', () => {
       component.viewBookingDetails();
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith([
-        '/bookings',
-        'booking-123',
-      ]);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/bookings', 'booking-123']);
     });
 
     it('goToHome should navigate to home', () => {
@@ -357,7 +346,7 @@ describe('BookingConfirmationPage', () => {
       component.errorMessage.set('Previous error');
 
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'confirmed' })
+        Promise.resolve({ ...mockBooking, status: 'confirmed' }),
       );
 
       await component.retry();
@@ -369,7 +358,7 @@ describe('BookingConfirmationPage', () => {
 
     it('should handle error during retry', async () => {
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.reject(new Error('Network error'))
+        Promise.reject(new Error('Network error')),
       );
 
       await component.retry();
@@ -418,7 +407,7 @@ describe('BookingConfirmationPage', () => {
       component.downloadReceipt();
 
       expect(window.alert).toHaveBeenCalledWith(
-        'Funcionalidad de descarga de recibo en desarrollo'
+        'Funcionalidad de descarga de recibo en desarrollo',
       );
     });
   });

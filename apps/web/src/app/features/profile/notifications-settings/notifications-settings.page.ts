@@ -87,7 +87,7 @@ export class NotificationsSettingsPage {
       // Deshabilitar
       this.settings.update((s) => ({ ...s, browserPushEnabled: false }));
       this.saveSettings();
-      this.toastService.showToast('Notificaciones push deshabilitadas', 'info');
+      this.toastService.info('Notificaciones deshabilitadas', 'Las notificaciones push han sido deshabilitadas');
     } else {
       // Solicitar permiso
       const granted = await this.notificationsService.requestNotificationPermission();
@@ -99,11 +99,11 @@ export class NotificationsSettingsPage {
           browserPushPermission: 'granted',
         }));
         this.saveSettings();
-        this.toastService.showToast('Notificaciones push habilitadas', 'success');
+        this.toastService.success('Notificaciones habilitadas', 'Las notificaciones push han sido activadas correctamente');
       } else {
-        this.toastService.showToast(
+        this.toastService.error(
+          'Error al habilitar',
           'No se pudo habilitar notificaciones push. Verifica los permisos del navegador.',
-          'error'
         );
       }
     }
@@ -129,10 +129,10 @@ export class NotificationsSettingsPage {
       // await this.notificationsService.updateSettings(settings);
 
       await new Promise((resolve) => setTimeout(resolve, 300)); // Simulate API call
-      this.toastService.showToast('Configuración guardada', 'success');
+      this.toastService.success('Configuración guardada', 'Tus preferencias han sido actualizadas exitosamente');
     } catch (error) {
       console.error('Error saving settings', error);
-      this.toastService.showToast('Error al guardar configuración', 'error');
+      this.toastService.error('Error al guardar', 'No se pudo guardar la configuración. Intenta nuevamente.');
     } finally {
       this.saving.set(false);
     }
@@ -148,7 +148,7 @@ export class NotificationsSettingsPage {
       'Para cambiar los permisos de notificaciones:\n\n' +
         '1. Chrome/Edge: Haz clic en el ícono de candado en la barra de direcciones\n' +
         '2. Firefox: Haz clic en el ícono de escudo\n' +
-        '3. Safari: Preferencias > Sitios web > Notificaciones'
+        '3. Safari: Preferencias > Sitios web > Notificaciones',
     );
   }
 }

@@ -41,9 +41,7 @@ import {
 
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-              Gestión de Siniestros
-            </h1>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Gestión de Siniestros</h1>
             <p class="text-gray-600 dark:text-gray-300 mt-1">
               Administra y resuelve los siniestros reportados
             </p>
@@ -119,10 +117,7 @@ import {
       </div>
 
       <!-- Error State -->
-      <div
-        *ngIf="error() && !loading()"
-        class="bg-red-50 border border-red-200 rounded-xl p-6"
-      >
+      <div *ngIf="error() && !loading()" class="bg-red-50 border border-red-200 rounded-xl p-6">
         <p class="text-red-800">{{ error() }}</p>
       </div>
 
@@ -172,7 +167,9 @@ import {
                 </span>
 
                 <!-- Type Badge -->
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                >
                   {{ CLAIM_TYPE_LABELS[claim.claim_type] }}
                 </span>
 

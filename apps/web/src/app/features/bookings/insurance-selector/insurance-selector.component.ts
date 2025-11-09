@@ -459,7 +459,9 @@ export class InsuranceSelectorComponent implements OnInit {
 
       // Emitir costo inicial
       this.totalCostChange.emit(this.totalInsuranceCost);
-    } catch (__error) { /* Silenced */ } finally {
+    } catch (__error) {
+      /* Silenced */
+    } finally {
       this.loading = false;
     }
   }

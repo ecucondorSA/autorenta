@@ -31,11 +31,11 @@ button:disabled {
 }
 
 /* Radio button custom styling */
-input[type="radio"] {
+input[type='radio'] {
   cursor: pointer;
 }
 
-input[type="radio"]:checked {
+input[type='radio']:checked {
   background-color: #9333ea;
   border-color: #9333ea;
 }

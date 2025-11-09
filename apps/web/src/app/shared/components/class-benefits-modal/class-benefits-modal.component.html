@@ -5,7 +5,10 @@
   class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
 >
   <!-- Modal Content -->
-  <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full my-8" (click)="$event.stopPropagation()">
+  <div
+    class="bg-white rounded-lg shadow-xl max-w-2xl w-full my-8"
+    (click)="$event.stopPropagation()"
+  >
     <!-- Header -->
     <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-lg">
       <div class="flex items-center justify-between">
@@ -16,11 +19,16 @@
           aria-label="Cerrar"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
           </svg>
         </button>
       </div>
-      <p class="text-sky-100 mt-2">
+      <p class="text-blue-100 mt-2">
         Conduce responsablemente y mejora tu clase para obtener mejores tarifas y garantías.
       </p>
     </div>
@@ -29,7 +37,7 @@
     <div class="p-6">
       <!-- Loading State -->
       <div *ngIf="loading" class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
 
       <!-- Error State -->
@@ -46,62 +54,90 @@
       <!-- Benefits Content -->
       <div *ngIf="benefits && !loading" class="space-y-6">
         <!-- Current Status -->
-        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6 border border-gray-200">
+        <div
+          class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6 border border-gray-200"
+        >
           <h3 class="text-lg font-semibold text-gray-900 mb-4">Tu Clase Actual</h3>
           <div class="grid grid-cols-2 gap-4">
             <!-- Current Class -->
             <div class="bg-white rounded-lg p-4">
               <div class="flex items-center mb-2">
-                <div [class]="getClassBadgeColor(benefits.current_class)"
-                     class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                <div
+                  [class]="getClassBadgeColor(benefits.current_class)"
+                  class="w-10 h-10 rounded-full flex items-center justify-center mr-3"
+                >
                   <span class="text-white text-lg font-bold">{{ benefits.current_class }}</span>
                 </div>
                 <div>
                   <p class="text-xs text-gray-600 dark:text-gray-300">Clase Actual</p>
-                  <p class="text-sm font-medium text-gray-900">{{ benefits.current_class_description }}</p>
+                  <p class="text-sm font-medium text-gray-900">
+                    {{ benefits.current_class_description }}
+                  </p>
                 </div>
               </div>
               <div class="mt-3 space-y-1">
                 <div class="flex justify-between text-xs">
                   <span class="text-gray-600 dark:text-gray-300">Tarifa:</span>
-                  <span class="font-medium">{{ getFeeDiscountLabel(benefits.current_fee_multiplier) }}</span>
+                  <span class="font-medium">{{
+                    getFeeDiscountLabel(benefits.current_fee_multiplier)
+                  }}</span>
                 </div>
                 <div class="flex justify-between text-xs">
                   <span class="text-gray-600 dark:text-gray-300">Garantía:</span>
-                  <span class="font-medium">{{ getGuaranteeDiscountLabel(benefits.current_guarantee_multiplier) }}</span>
+                  <span class="font-medium">{{
+                    getGuaranteeDiscountLabel(benefits.current_guarantee_multiplier)
+                  }}</span>
                 </div>
               </div>
             </div>
 
             <!-- Next Better Class -->
-            <div class="bg-white rounded-lg p-4 border-2 border-sky-200" *ngIf="benefits.can_improve">
+            <div
+              class="bg-white rounded-lg p-4 border-2 border-blue-200"
+              *ngIf="benefits.can_improve"
+            >
               <div class="flex items-center mb-2">
-                <div [class]="getClassBadgeColor(benefits.next_better_class)"
-                     class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                <div
+                  [class]="getClassBadgeColor(benefits.next_better_class)"
+                  class="w-10 h-10 rounded-full flex items-center justify-center mr-3"
+                >
                   <span class="text-white text-lg font-bold">{{ benefits.next_better_class }}</span>
                 </div>
                 <div>
                   <p class="text-xs text-gray-600 dark:text-gray-300">Siguiente Clase</p>
-                  <p class="text-sm font-medium text-gray-900">{{ benefits.next_better_description }}</p>
+                  <p class="text-sm font-medium text-gray-900">
+                    {{ benefits.next_better_description }}
+                  </p>
                 </div>
               </div>
               <div class="mt-3 space-y-1">
                 <div class="flex justify-between text-xs">
                   <span class="text-gray-600 dark:text-gray-300">Tarifa:</span>
-                  <span class="font-medium text-green-600">{{ getFeeDiscountLabel(benefits.next_better_fee_multiplier) }}</span>
+                  <span class="font-medium text-green-600">{{
+                    getFeeDiscountLabel(benefits.next_better_fee_multiplier)
+                  }}</span>
                 </div>
                 <div class="flex justify-between text-xs">
                   <span class="text-gray-600 dark:text-gray-300">Garantía:</span>
-                  <span class="font-medium text-green-600">{{ getGuaranteeDiscountLabel(benefits.next_better_guarantee_multiplier) }}</span>
+                  <span class="font-medium text-green-600">{{
+                    getGuaranteeDiscountLabel(benefits.next_better_guarantee_multiplier)
+                  }}</span>
                 </div>
               </div>
             </div>
 
             <!-- Already Best Class -->
-            <div class="bg-green-50 rounded-lg p-4 border-2 border-green-200" *ngIf="!benefits.can_improve">
+            <div
+              class="bg-green-50 rounded-lg p-4 border-2 border-green-200"
+              *ngIf="!benefits.can_improve"
+            >
               <div class="flex items-center">
                 <svg class="w-8 h-8 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  ></path>
                 </svg>
                 <div>
                   <p class="text-sm font-semibold text-green-800">¡Clase Máxima!</p>
@@ -113,44 +149,66 @@
         </div>
 
         <!-- Progress to Next Class -->
-        <div *ngIf="benefits.can_improve" class="bg-sky-50 border border-sky-200 rounded-lg p-6">
-          <h3 class="text-lg font-semibold text-sky-700 mb-4">¿Cómo Mejorar?</h3>
+        <div *ngIf="benefits.can_improve" class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-blue-900 mb-4">¿Cómo Mejorar?</h3>
           <div class="space-y-3">
             <div class="flex items-start">
-              <svg class="w-6 h-6 text-sky-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              <svg
+                class="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                ></path>
               </svg>
               <div>
-                <p class="text-sm font-medium text-sky-700">
+                <p class="text-sm font-medium text-blue-900">
                   Completa {{ benefits.clean_bookings_needed }} reservas más sin daños
                 </p>
-                <p class="text-xs text-sky-700 mt-1">
+                <p class="text-xs text-blue-700 mt-1">
                   Cada 5 reservas sin reclamos mejora tu clase en 1 nivel
                 </p>
               </div>
             </div>
             <div class="flex items-start">
-              <svg class="w-6 h-6 text-sky-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              <svg
+                class="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                ></path>
               </svg>
               <div>
-                <p class="text-sm font-medium text-sky-700">
+                <p class="text-sm font-medium text-blue-900">
                   Evita daños y reclamos en tus alquileres
                 </p>
-                <p class="text-xs text-sky-700 mt-1">
+                <p class="text-xs text-blue-700 mt-1">
                   Los reclamos empeoran tu clase según severidad (menor/moderado/mayor)
                 </p>
               </div>
             </div>
             <div class="flex items-start">
-              <svg class="w-6 h-6 text-sky-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              <svg
+                class="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                ></path>
               </svg>
               <div>
-                <p class="text-sm font-medium text-sky-700">
-                  Mantén un buen score de conducción
-                </p>
-                <p class="text-xs text-sky-700 mt-1">
+                <p class="text-sm font-medium text-blue-900">Mantén un buen score de conducción</p>
+                <p class="text-xs text-blue-700 mt-1">
                   Score 90+ = mejores tarifas • Score < 40 = recargos
                 </p>
               </div>
@@ -158,10 +216,15 @@
           </div>
 
           <!-- Savings Preview -->
-          <div class="mt-4 bg-white rounded-lg p-4 border border-sky-300">
-            <p class="text-sm font-medium text-sky-700 mb-2">💰 Ahorro Estimado al Mejorar</p>
+          <div class="mt-4 bg-white rounded-lg p-4 border border-blue-300">
+            <p class="text-sm font-medium text-blue-900 mb-2">💰 Ahorro Estimado al Mejorar</p>
             <p class="text-lg font-bold text-green-600">
-              {{ getSavingsExample(benefits.next_better_fee_multiplier, benefits.next_better_guarantee_multiplier) }}
+              {{
+                getSavingsExample(
+                  benefits.next_better_fee_multiplier,
+                  benefits.next_better_guarantee_multiplier
+                )
+              }}
             </p>
             <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">
               Basado en reserva promedio de $50/día con garantía de $200
@@ -177,64 +240,141 @@
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-100">
                   <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Clase</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Descripción</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tarifa</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Garantía</th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    >
+                      Clase
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    >
+                      Descripción
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    >
+                      Tarifa
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    >
+                      Garantía
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr *ngFor="let class of [0,1,2,3,4,5,6,7,8,9,10]"
-                      [class.bg-sky-50]="class === benefits.current_class">
+                  <tr
+                    *ngFor="let class of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+                    [class.bg-blue-50]="class === benefits.current_class"
+                  >
                     <td class="px-4 py-3 whitespace-nowrap">
                       <div class="flex items-center">
-                        <div [class]="getClassBadgeColor(class)" class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                        <div
+                          [class]="getClassBadgeColor(class)"
+                          class="w-8 h-8 rounded-full flex items-center justify-center mr-2"
+                        >
                           <span class="text-white text-sm font-bold">{{ class }}</span>
                         </div>
-                        <span *ngIf="class === benefits.current_class" class="text-xs font-medium text-sky-600">(Actual)</span>
+                        <span
+                          *ngIf="class === benefits.current_class"
+                          class="text-xs font-medium text-blue-600"
+                          >(Actual)</span
+                        >
                       </div>
                     </td>
                     <td class="px-4 py-3 text-sm text-gray-900">
-                      {{ class === 0 ? 'Excelente (10+ años sin reclamos)' :
-                         class === 1 ? 'Muy Bueno (5-9 años sin reclamos)' :
-                         class === 2 ? 'Bueno (3-4 años sin reclamos)' :
-                         class === 3 ? 'Normal Plus (2 años sin reclamos)' :
-                         class === 4 ? 'Normal (1 año sin reclamos)' :
-                         class === 5 ? 'Base (sin historial)' :
-                         class === 6 ? 'Riesgo Bajo (1 reclamo menor)' :
-                         class === 7 ? 'Riesgo Medio (2 reclamos menores o 1 moderado)' :
-                         class === 8 ? 'Riesgo Alto (3+ reclamos o 1 mayor)' :
-                         class === 9 ? 'Riesgo Muy Alto (múltiples reclamos graves)' :
-                         'Riesgo Extremo (historial crítico)' }}
+                      {{
+                        class === 0
+                          ? 'Excelente (10+ años sin reclamos)'
+                          : class === 1
+                            ? 'Muy Bueno (5-9 años sin reclamos)'
+                            : class === 2
+                              ? 'Bueno (3-4 años sin reclamos)'
+                              : class === 3
+                                ? 'Normal Plus (2 años sin reclamos)'
+                                : class === 4
+                                  ? 'Normal (1 año sin reclamos)'
+                                  : class === 5
+                                    ? 'Base (sin historial)'
+                                    : class === 6
+                                      ? 'Riesgo Bajo (1 reclamo menor)'
+                                      : class === 7
+                                        ? 'Riesgo Medio (2 reclamos menores o 1 moderado)'
+                                        : class === 8
+                                          ? 'Riesgo Alto (3+ reclamos o 1 mayor)'
+                                          : class === 9
+                                            ? 'Riesgo Muy Alto (múltiples reclamos graves)'
+                                            : 'Riesgo Extremo (historial crítico)'
+                      }}
                     </td>
                     <td class="px-4 py-3 text-sm">
-                      <span [class]="class < 5 ? 'text-green-600 font-medium' : class > 5 ? 'text-red-600 font-medium' : 'text-gray-900'">
-                        {{ class === 0 ? '-15%' :
-                           class === 1 ? '-10%' :
-                           class === 2 ? '-5%' :
-                           class === 3 ? '-3%' :
-                           class === 4 ? '-1%' :
-                           class === 5 ? '±0%' :
-                           class === 6 ? '+2%' :
-                           class === 7 ? '+4%' :
-                           class === 8 ? '+8%' :
-                           class === 9 ? '+12%' :
-                           '+20%' }}
+                      <span
+                        [class]="
+                          class < 5
+                            ? 'text-green-600 font-medium'
+                            : class > 5
+                              ? 'text-red-600 font-medium'
+                              : 'text-gray-900'
+                        "
+                      >
+                        {{
+                          class === 0
+                            ? '-15%'
+                            : class === 1
+                              ? '-10%'
+                              : class === 2
+                                ? '-5%'
+                                : class === 3
+                                  ? '-3%'
+                                  : class === 4
+                                    ? '-1%'
+                                    : class === 5
+                                      ? '±0%'
+                                      : class === 6
+                                        ? '+2%'
+                                        : class === 7
+                                          ? '+4%'
+                                          : class === 8
+                                            ? '+8%'
+                                            : class === 9
+                                              ? '+12%'
+                                              : '+20%'
+                        }}
                       </span>
                     </td>
                     <td class="px-4 py-3 text-sm">
-                      <span [class]="class < 5 ? 'text-green-600 font-medium' : class > 5 ? 'text-red-600 font-medium' : 'text-gray-900'">
-                        {{ class === 0 ? '-25%' :
-                           class === 1 ? '-20%' :
-                           class === 2 ? '-15%' :
-                           class === 3 ? '-10%' :
-                           class === 4 ? '-5%' :
-                           class === 5 ? '±0%' :
-                           class === 6 ? '+10%' :
-                           class === 7 ? '+20%' :
-                           class === 8 ? '+40%' :
-                           class === 9 ? '+60%' :
-                           '+80%' }}
+                      <span
+                        [class]="
+                          class < 5
+                            ? 'text-green-600 font-medium'
+                            : class > 5
+                              ? 'text-red-600 font-medium'
+                              : 'text-gray-900'
+                        "
+                      >
+                        {{
+                          class === 0
+                            ? '-25%'
+                            : class === 1
+                              ? '-20%'
+                              : class === 2
+                                ? '-15%'
+                                : class === 3
+                                  ? '-10%'
+                                  : class === 4
+                                    ? '-5%'
+                                    : class === 5
+                                      ? '±0%'
+                                      : class === 6
+                                        ? '+10%'
+                                        : class === 7
+                                          ? '+20%'
+                                          : class === 8
+                                            ? '+40%'
+                                            : class === 9
+                                              ? '+60%'
+                                              : '+80%'
+                        }}
                       </span>
                     </td>
                   </tr>
@@ -247,8 +387,8 @@
         <!-- Info Footer -->
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <p class="text-xs text-gray-600 dark:text-gray-300">
-            <strong>ℹ️ Nota:</strong> Los ajustes de tarifa y garantía se aplican automáticamente en cada reserva.
-            Tu clase se actualiza automáticamente después de cada reserva completada.
+            <strong>ℹ️ Nota:</strong> Los ajustes de tarifa y garantía se aplican automáticamente en
+            cada reserva. Tu clase se actualiza automáticamente después de cada reserva completada.
           </p>
         </div>
       </div>
@@ -258,7 +398,7 @@
     <div class="bg-gray-50 px-6 py-4 rounded-b-lg border-t border-gray-200">
       <button
         (click)="onClose()"
-        class="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
       >
         Cerrar
       </button>

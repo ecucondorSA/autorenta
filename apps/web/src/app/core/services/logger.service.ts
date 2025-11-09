@@ -279,19 +279,16 @@ export class LoggerService {
     }
 
     try {
-      const captureContext: Sentry.CaptureContext = {
+      const captureContext = {
         level: level as Sentry.SeverityLevel,
         extra: { data: this.sanitizeData(data) },
       };
 
-        if (level === 'error' || level === 'fatal') {
-          if (data instanceof Error) {
-            Sentry.captureException(data, captureContext);
-          } else {
-            Sentry.captureException(new Error(message), captureContext);
-          }
+      if (level === 'error' || level === 'fatal') {
+        if (data instanceof Error) {
+          Sentry.captureException(data, captureContext);
         } else {
-          Sentry.captureMessage(message, captureContext);
+          Sentry.captureException(new Error(message), captureContext);
         }
       } else {
         Sentry.captureMessage(message, captureContext);

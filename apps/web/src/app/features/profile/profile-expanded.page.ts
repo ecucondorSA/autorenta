@@ -77,14 +77,14 @@ export class ProfileExpandedPage {
     from(this.profileService.getMe()).pipe(
       tap((profile) => {
         if (profile) this.populateForms(profile);
-      })
+      }),
     ),
-    { initialValue: null }
+    { initialValue: null },
   );
-  
+
   private readonly documentsSubject = signal<UserDocument[]>([]);
   readonly documents = this.documentsSubject.asReadonly();
-  
+
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly message = signal<string | null>(null);
@@ -95,7 +95,7 @@ export class ProfileExpandedPage {
   readonly avatarUrl = computed(() => this.profile()?.avatar_url ?? null);
   readonly uploadingAvatar = signal(false);
   readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
-  
+
   readonly canPublishCars = computed(() => {
     // Use RPC data: can_access_level_2 indicates ability to publish
     return this.verificationStateService.verificationProgress()?.can_access_level_2 ?? false;
@@ -166,7 +166,7 @@ export class ProfileExpandedPage {
     const role = this.profile()?.role;
     return role === 'renter' || role === 'both';
   });
-  
+
   readonly showOwnerFlow = computed(() => {
     const role = this.profile()?.role;
     return role === 'owner' || role === 'both';
@@ -349,38 +349,38 @@ export class ProfileExpandedPage {
   // Helper methods
   getKycStatusClass(status: KycStatus): string {
     const map: Record<KycStatus, string> = {
-      'not_started': 'bg-gray-100 text-gray-800',
-      'pending': 'bg-beige-100 text-beige-500',
-      'verified': 'bg-green-100 text-green-800',
-      'rejected': 'bg-red-100 text-red-800',
+      not_started: 'bg-gray-100 text-gray-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      verified: 'bg-green-100 text-green-800',
+      rejected: 'bg-red-100 text-red-800',
     };
     return map[status] || map['not_started'];
   }
 
   getKycStatusLabel(status: KycStatus): string {
     const map: Record<KycStatus, string> = {
-      'not_started': 'No iniciado',
-      'pending': 'Pendiente',
-      'verified': 'Verificado',
-      'rejected': 'Rechazado',
+      not_started: 'No iniciado',
+      pending: 'Pendiente',
+      verified: 'Verificado',
+      rejected: 'Rechazado',
     };
     return map[status] || 'No iniciado';
   }
 
   getVerificationStatusClass(status: VerificationStatus): string {
     const map: Record<VerificationStatus, string> = {
-      'VERIFICADO': 'bg-green-100 text-green-800',
-      'PENDIENTE': 'bg-beige-100 text-beige-500',
-      'RECHAZADO': 'bg-red-100 text-red-800',
+      VERIFICADO: 'bg-green-100 text-green-800',
+      PENDIENTE: 'bg-yellow-100 text-yellow-800',
+      RECHAZADO: 'bg-red-100 text-red-800',
     };
     return map[status];
   }
 
   getVerificationStatusIcon(status: VerificationStatus): string {
     const map: Record<VerificationStatus, string> = {
-      'VERIFICADO': 'check-circle',
-      'PENDIENTE': 'clock',
-      'RECHAZADO': 'x-circle',
+      VERIFICADO: 'check-circle',
+      PENDIENTE: 'clock',
+      RECHAZADO: 'x-circle',
     };
     return map[status];
   }
@@ -403,10 +403,10 @@ export class ProfileExpandedPage {
 
   getMissingDocumentLabel(key: string): string {
     const labels: Record<string, string> = {
-      'email': 'Email',
-      'phone': 'Teléfono',
-      'driver_license': 'Licencia de conducir',
-      'vehicle': 'Registro de vehículo',
+      email: 'Email',
+      phone: 'Teléfono',
+      driver_license: 'Licencia de conducir',
+      vehicle: 'Registro de vehículo',
     };
     return labels[key] || key;
   }
@@ -490,7 +490,16 @@ export class ProfileExpandedPage {
 
   private isValidTab(tab: string | null): boolean {
     if (!tab) return false;
-    return ['general', 'contact', 'address', 'conductor', 'verification', 'notifications', 'preferences', 'security'].includes(tab);
+    return [
+      'general',
+      'contact',
+      'address',
+      'conductor',
+      'verification',
+      'notifications',
+      'preferences',
+      'security',
+    ].includes(tab);
   }
 
   private populateForms(profile: UserProfile): void {
@@ -551,7 +560,7 @@ export class ProfileExpandedPage {
     this.saving.set(true);
     this.error.set(null);
     this.message.set(null);
-    
+
     try {
       const tab = this.activeTab();
       let payload: any = {};
@@ -606,7 +615,7 @@ export class ProfileExpandedPage {
 
     this.uploadingAvatar.set(true);
     this.loading.set(true);
-    
+
     try {
       const newAvatarUrl = await this.profileService.uploadAvatar(file);
       await this.profileService.safeUpdateProfile({ avatar_url: newAvatarUrl });

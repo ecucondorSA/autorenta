@@ -76,9 +76,7 @@ export class PayoutsPage implements OnInit {
 
     try {
       // Get current user
-      const user = await this.walletService['supabase']
-        .getClient()
-        .auth.getUser();
+      const user = await this.walletService['supabase'].getClient().auth.getUser();
 
       if (!user.data.user) {
         throw new Error('Usuario no autenticado');
@@ -87,10 +85,7 @@ export class PayoutsPage implements OnInit {
       this.userId.set(user.data.user.id);
 
       // Load wallet balance
-      const wallet = await this.walletService
-        .getWallet()
-        .pipe(take(1))
-        .toPromise();
+      const wallet = await this.walletService.getWallet().pipe(take(1)).toPromise();
 
       if (wallet) {
         this.walletBalance.set(wallet.available_balance);
@@ -114,9 +109,7 @@ export class PayoutsPage implements OnInit {
 
       this.defaultBankAccount.set(bankAccount || null);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar datos'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar datos');
     } finally {
       this.loading.set(false);
     }

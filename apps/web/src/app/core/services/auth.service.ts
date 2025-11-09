@@ -69,15 +69,21 @@ export class AuthService implements OnDestroy {
       error,
     } = await this.supabase.auth.getSession();
     if (error) {
-      this.logger.error('Failed to load session', 'AuthService', error instanceof Error ? error : new Error(getErrorMessage(error)));
+      this.logger.error(
+        'Failed to load session',
+        'AuthService',
+        error instanceof Error ? error : new Error(getErrorMessage(error)),
+      );
     }
     this.state.set({ session: session ?? null, loading: false });
   }
 
   private listenToAuthChanges(): void {
-    this.authSubscription = this.supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
-      this.state.set({ session: session ?? null, loading: false });
-    });
+    this.authSubscription = this.supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+        this.state.set({ session: session ?? null, loading: false });
+      },
+    );
   }
 
   async signUp(email: string, password: string, fullName: string): Promise<void> {

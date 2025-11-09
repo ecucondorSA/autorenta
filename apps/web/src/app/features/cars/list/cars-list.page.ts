@@ -23,7 +23,10 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
 import { Car } from '../../../core/models';
-import { DateRange, DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
+import {
+  DateRange,
+  DateRangePickerComponent,
+} from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
@@ -100,12 +103,12 @@ export class CarsListPage implements OnInit, OnDestroy {
         pricePerDay: car.price_per_day,
         currency: car.currency || 'ARS',
         lat: car.location_lat || 0,
-      lng: car.location_lng || 0,
-      updatedAt: car.updated_at || new Date().toISOString(),
-      city: car.location_city,
-      state: car.location_state,
-      country: car.location_country,
-      locationLabel: car.location_city || 'Sin ubicación',
+        lng: car.location_lng || 0,
+        updatedAt: car.updated_at || new Date().toISOString(),
+        city: car.location_city,
+        state: car.location_state,
+        country: car.location_country,
+        locationLabel: car.location_city || 'Sin ubicación',
         photoUrl: gallery[0] ?? null,
         photoGallery: gallery,
         description: car.description,
@@ -354,15 +357,14 @@ export class CarsListPage implements OnInit, OnDestroy {
     }
 
     // Filtrar solo autos activos con al menos una reseña (o rating_avg > 0)
-    const eligibleCars = cars.filter(car =>
-      car.status === 'active' &&
-      (car.rating_avg > 0 || car.rating_count > 0)
+    const eligibleCars = cars.filter(
+      (car) => car.status === 'active' && (car.rating_avg > 0 || car.rating_count > 0),
     );
 
     if (!eligibleCars.length) {
       // Si no hay autos con reseñas, mostrar todos los activos
       return cars
-        .filter(car => car.status === 'active')
+        .filter((car) => car.status === 'active')
         .sort((a, b) => {
           // Primero por distancia (si hay ubicación del usuario)
           const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
@@ -525,7 +527,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       this.logger.error(
         'Error loading cars',
         'CarsListPage',
-        err instanceof Error ? err : new Error(getErrorMessage(err))
+        err instanceof Error ? err : new Error(getErrorMessage(err)),
       );
       // Mostrar mensaje al usuario en caso de error crítico
       if (err instanceof Error) {
@@ -564,7 +566,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       this.logger.error(
         'Error al refrescar autos',
         'CarsListPage',
-        _error instanceof Error ? _error : new Error(getErrorMessage(_error))
+        _error instanceof Error ? _error : new Error(getErrorMessage(_error)),
       );
       if (this.pullToRefresh) {
         this.pullToRefresh.completeRefresh();
@@ -743,10 +745,10 @@ export class CarsListPage implements OnInit, OnDestroy {
   onCarSelected(carId: string): void {
     const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
-    
+
     // Pausar auto-scroll del carousel por 8 segundos
     this.stopCarouselAutoScroll();
-    
+
     // Programar reanudación después de 8 segundos
     this.carouselAutoScrollResumeTimeout = setTimeout(() => {
       if (this.recommendedCars().length >= 3) {
@@ -754,13 +756,13 @@ export class CarsListPage implements OnInit, OnDestroy {
       }
       this.carouselAutoScrollResumeTimeout = undefined;
     }, 8000);
-    
+
     // Si es el mismo auto (doble click), navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
       return;
     }
-    
+
     // Primera selección: fly to location en el mapa
     if (this.carsMapComponent) {
       this.carsMapComponent.flyToCarLocation(carId);
@@ -770,10 +772,10 @@ export class CarsListPage implements OnInit, OnDestroy {
   onMapCarSelected(carId: string): void {
     const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
-    
+
     // Pausar auto-scroll del carousel por 8 segundos
     this.stopCarouselAutoScroll();
-    
+
     // Programar reanudación después de 8 segundos
     this.carouselAutoScrollResumeTimeout = setTimeout(() => {
       if (this.recommendedCars().length >= 3) {
@@ -781,13 +783,13 @@ export class CarsListPage implements OnInit, OnDestroy {
       }
       this.carouselAutoScrollResumeTimeout = undefined;
     }, 8000);
-    
+
     // Si es el mismo auto, navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
       return;
     }
-    
+
     // Primera selección: scroll + highlight
     this.scrollToCarInCarousel(carId);
   }
@@ -873,11 +875,11 @@ export class CarsListPage implements OnInit, OnDestroy {
     const cardLeft = card.offsetLeft;
     const cardWidth = card.offsetWidth;
     const carouselWidth = carousel.offsetWidth;
-    const scrollPosition = cardLeft - (carouselWidth / 2) + (cardWidth / 2);
+    const scrollPosition = cardLeft - carouselWidth / 2 + cardWidth / 2;
 
     carousel.scrollTo({
       left: Math.max(0, scrollPosition),
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
 
     // Highlight temporal
@@ -893,7 +895,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       return [];
     }
     return rawPhotos
-      .map((photo) => (typeof photo === 'string' ? photo : photo?.url ?? null))
+      .map((photo) => (typeof photo === 'string' ? photo : (photo?.url ?? null)))
       .filter((url): url is string => typeof url === 'string' && url.length > 0);
   }
 

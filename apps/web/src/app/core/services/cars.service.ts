@@ -552,7 +552,6 @@ export class CarsService {
     }
   }
 
-
   /**
    * ✅ NUEVO: Verifica si un auto tiene reservas activas
    * Usado antes de permitir eliminación del vehículo
@@ -683,7 +682,11 @@ export class CarsService {
       let attempts = 0;
       const maxAttempts = 100; // Evitar loops infinitos
 
-      while (alternatives.length < maxOptions && searchStart < maxSearchDate && attempts < maxAttempts) {
+      while (
+        alternatives.length < maxOptions &&
+        searchStart < maxSearchDate &&
+        attempts < maxAttempts
+      ) {
         attempts++;
 
         // Calcular end date propuesto

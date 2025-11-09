@@ -87,7 +87,10 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
                   Verificación Rechazada
                 </p>
                 <p class="text-sm text-red-800 dark:text-red-300 mb-3">
-                  {{ verificationStatus()?.notes || 'Tu verificación fue rechazada. Contacta con soporte para más información.' }}
+                  {{
+                    verificationStatus()?.notes ||
+                      'Tu verificación fue rechazada. Contacta con soporte para más información.'
+                  }}
                 </p>
                 <a
                   routerLink="/verification"

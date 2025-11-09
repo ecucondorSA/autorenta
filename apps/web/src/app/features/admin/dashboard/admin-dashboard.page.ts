@@ -43,7 +43,9 @@ export class AdminDashboardPage implements OnInit {
     try {
       await this.adminService.approveCar(carId);
       await this.loadData();
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   private async loadData(): Promise<void> {

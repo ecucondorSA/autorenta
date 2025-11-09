@@ -31,18 +31,18 @@ type LngLatLike = [number, number] | { lng: number; lat: number };
 
 /**
  * CarsMapComponent - Displays cars on an interactive map using Mapbox GL
- * 
+ *
  * IMPORTANT: Mapbox Token Configuration
  * =====================================
  * This component requires a Mapbox access token to function properly.
- * 
+ *
  * Development:
  * - Add to .env.local: NG_APP_MAPBOX_ACCESS_TOKEN=pk.ey...
- * 
+ *
  * Production:
  * - Set environment variable: NG_APP_MAPBOX_ACCESS_TOKEN=pk.ey...
  * - Or configure in your deployment platform (Cloudflare Pages, Vercel, etc.)
- * 
+ *
  * Without a valid token, the map will display an error message instructing
  * the administrator to configure it.
  */
@@ -85,7 +85,8 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   // Clustering & pricing cache
   private clusteringEnabled = false;
   private readonly CLUSTER_THRESHOLD = 30; // activar clustering a partir de 30 autos
-  private pricingCache: Map<string, { price: number; timestamp: number; currency: string }> = new Map();
+  private pricingCache: Map<string, { price: number; timestamp: number; currency: string }> =
+    new Map();
   private readonly PRICING_CACHE_TTL = 5 * 60 * 1000; // 5 minutos
   private loadingPrices = false; // Flag to prevent concurrent batch loads
 
@@ -123,18 +124,18 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Clean up all car markers
-    this.carMarkersMap.forEach(marker => marker.remove());
+    this.carMarkersMap.forEach((marker) => marker.remove());
     this.carMarkersMap.clear();
     this.clearAllPhotoRotations();
-    
+
     // Clean up user marker
     this.userMarker?.remove();
     this.userMarker = null;
-    
+
     // Clean up popup
     this.selectedPopup?.remove();
     this.selectedPopup = null;
-    
+
     // Clean up map
     this.map?.remove();
     this.map = null;
@@ -199,7 +200,9 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
       this.map.on('error', (e: unknown) => {
         console.error('❌ Error en el mapa:', e);
-        this.error.set('Error al cargar el mapa: ' + ((e as any).error?.message || 'Error desconocido'));
+        this.error.set(
+          'Error al cargar el mapa: ' + ((e as any).error?.message || 'Error desconocido'),
+        );
         this.loading.set(false);
       });
     } catch (err: unknown) {
@@ -220,8 +223,8 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.carCount.set(locations.length);
 
     // Crear Set de IDs actuales para comparar
-    const currentCarIds = new Set(locations.map(loc => loc.carId));
-    
+    const currentCarIds = new Set(locations.map((loc) => loc.carId));
+
     // Eliminar markers que ya no existen
     this.carMarkersMap.forEach((marker, carId) => {
       if (!currentCarIds.has(carId)) {
@@ -255,7 +258,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         lat: location.lat,
         lng: location.lng,
         photoUrl: location.photoUrl,
-        price: location.pricePerDay
+        price: location.pricePerDay,
       });
 
       if (!location.lat || !location.lng) {
@@ -271,9 +274,9 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
       // Create custom photo marker
       const el = this.createPhotoMarker(location);
-      
+
       console.log('✅ Marker creado para:', location.carId);
-      
+
       // Add click handler
       el.addEventListener('click', () => {
         this.carSelected.emit(location.carId);
@@ -287,7 +290,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         .setLngLat([location.lng, location.lat] as LngLatLike)
         .setPopup(popup)
         .addTo(map);
-      
+
       // Make popup image clickable to navigate to car detail
       popup.on('open', () => {
         const popupElement = popup.getElement();
@@ -312,13 +315,13 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
           }
         }
       });
-      
+
       console.log('✅ Marker agregado al mapa:', location.carId);
-      
+
       // Keep reference for cleanup using carId as key
       this.carMarkersMap.set(location.carId, marker);
     });
-    
+
     console.log('📍 Total markers en mapa:', this.carMarkersMap.size);
   }
 
@@ -406,16 +409,13 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         const clusterId = properties.cluster_id;
         const source = map.getSource('cars') as any;
         if (!source) return;
-        source.getClusterExpansionZoom(
-          clusterId,
-          (err: unknown, zoom: number) => {
-            if (err) return;
-            const coords = (clickedFeature.geometry as GeoJSON.Point).coordinates;
-            if (coords && coords.length >= 2) {
-              map.easeTo({ center: coords as [number, number], zoom });
-            }
-          },
-        );
+        source.getClusterExpansionZoom(clusterId, (err: unknown, zoom: number) => {
+          if (err) return;
+          const coords = (clickedFeature.geometry as GeoJSON.Point).coordinates;
+          if (coords && coords.length >= 2) {
+            map.easeTo({ center: coords as [number, number], zoom });
+          }
+        });
       });
 
       // Popup para puntos individuales
@@ -440,7 +440,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         } as any;
         const popup = this.buildPopup(carLocation);
         popup.setLngLat(coords as [number, number]).addTo(map);
-        
+
         // Make popup image clickable to navigate to car detail
         popup.on('open', () => {
           const popupElement = popup.getElement();
@@ -519,7 +519,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         // ✅ FIX: Solo considerar precios en caché si realmente existen (no usar estáticos)
         const cached = this.pricingCache.get(car.carId);
         const isCacheValid = cached && Date.now() - cached.timestamp < this.PRICING_CACHE_TTL;
-        
+
         // Si no hay precio dinámico en caché, agregarlo a la lista de carros que necesitan precios
         if (!isCacheValid && car.regionId) {
           carsNeedingPrices.push(car);
@@ -532,7 +532,10 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       }
 
       console.log('💰 [Pricing] Cars needing prices:', carsNeedingPrices.length);
-      console.log('💰 [Pricing] Sample car regionIds:', carsNeedingPrices.slice(0, 3).map(c => ({ carId: c.carId, regionId: c.regionId })));
+      console.log(
+        '💰 [Pricing] Sample car regionIds:',
+        carsNeedingPrices.slice(0, 3).map((c) => ({ carId: c.carId, regionId: c.regionId })),
+      );
 
       if (carsNeedingPrices.length === 0) {
         console.log('💰 [Pricing] All prices are cached with dynamic prices');
@@ -555,7 +558,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         regionIds,
         userId,
         new Date().toISOString(),
-        24 // 24 hours for daily price
+        24, // 24 hours for daily price
       );
       console.log('💰 [Pricing] Received prices for regions:', pricesMap.size);
 
@@ -566,7 +569,9 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
           const pricingResult = pricesMap.get(car.regionId);
 
           if (pricingResult) {
-            console.log(`💰 [Pricing] Updating car ${car.carId} with dynamic price: ${pricingResult.total_price} ${pricingResult.currency}`);
+            console.log(
+              `💰 [Pricing] Updating car ${car.carId} with dynamic price: ${pricingResult.total_price} ${pricingResult.currency}`,
+            );
 
             // Update cache
             this.pricingCache.set(car.carId, {
@@ -613,10 +618,14 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         maximumFractionDigits: 0,
       }).format(price);
 
-      console.log(`💰 [Pricing] Updating marker ${carId}: ${priceSpan.textContent} → ${formattedPrice}`);
+      console.log(
+        `💰 [Pricing] Updating marker ${carId}: ${priceSpan.textContent} → ${formattedPrice}`,
+      );
       priceSpan.textContent = formattedPrice;
     } else {
-      console.warn(`💰 [Pricing] Price span not found for car ${carId} (may be showing distance instead)`);
+      console.warn(
+        `💰 [Pricing] Price span not found for car ${carId} (may be showing distance instead)`,
+      );
     }
 
     // ✅ FIX: Also update the popup price if it's open
@@ -632,7 +641,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
           }).format(price);
-          
+
           popupPriceElement.textContent = `${formattedPrice}/día`;
           console.log(`💰 [Pricing] Updated popup price for car ${carId}`);
         }
@@ -641,7 +650,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     // ✅ FIX: Update popup content for next time it opens
     // Find the location data to rebuild popup
-    const location = this.cars.find(loc => loc.carId === carId);
+    const location = this.cars.find((loc) => loc.carId === carId);
     if (location) {
       // Create updated location with dynamic price
       const updatedLocation = { ...location, pricePerDay: price };
@@ -672,7 +681,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     const cachedPrice = this.getCachedDynamicPrice(location.carId);
     const fallbackPrice = location.pricePerDay ?? null;
     const fallbackCurrency = location.currency ?? 'ARS';
-    
+
     let formattedPrice: string;
     if (cachedPrice) {
       formattedPrice = new Intl.NumberFormat('es-AR', {
@@ -696,8 +705,8 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       <div class="car-popup-content">
         <div class="car-popup-image-wrapper">
           <img class="car-popup-image" src="${location.photoUrl || ''}" alt="${
-      location.title
-    }" onerror="this.style.display='none'; this.parentElement.style.background='#e5e7eb';" />
+            location.title
+          }" onerror="this.style.display='none'; this.parentElement.style.background='#e5e7eb';" />
         </div>
         <div class="car-popup-info">
           <h4 class="car-popup-title">${location.title}</h4>
@@ -710,12 +719,12 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     if (!this.mapboxgl) {
       throw new Error('Mapbox not loaded');
     }
-    const popup = new this.mapboxgl.Popup({ 
-      closeButton: false, 
+    const popup = new this.mapboxgl.Popup({
+      closeButton: false,
       className: 'car-popup',
-      maxWidth: '75px' // Reducido 4x (antes 300px)
+      maxWidth: '75px', // Reducido 4x (antes 300px)
     }).setHTML(html);
-    
+
     // Asegurar que el popup respete los límites del viewport SOLO en móvil
     if (typeof window !== 'undefined' && window.innerWidth <= 640) {
       popup.on('open', () => {
@@ -733,7 +742,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         }, 0);
       });
     }
-    
+
     return popup;
   }
 
@@ -755,7 +764,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     button.style.cursor = 'pointer';
     button.style.transition = 'all 0.2s ease';
     button.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
-    
+
     // Detectar dark mode y aplicar estilos
     const isDarkMode = document.documentElement.classList.contains('dark');
     if (isDarkMode) {
@@ -764,7 +773,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       button.style.color = '#ffffff';
       button.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.4)';
     }
-    
+
     // Observar cambios en dark mode
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains('dark');
@@ -780,14 +789,15 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         button.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
       }
     });
-    
+
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class'],
     });
-    
-    button.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="margin:8px"><circle cx="10" cy="10" r="2"/><path d="M10 2v6m0 4v6M2 10h6m4 0h6" stroke="currentColor" stroke-width="2"/></svg>';
-    
+
+    button.innerHTML =
+      '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="margin:8px"><circle cx="10" cy="10" r="2"/><path d="M10 2v6m0 4v6M2 10h6m4 0h6" stroke="currentColor" stroke-width="2"/></svg>';
+
     // Hover effects
     button.addEventListener('mouseenter', () => {
       const isDark = document.documentElement.classList.contains('dark');
@@ -798,7 +808,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         button.style.background = '#f8f9fa';
       }
     });
-    
+
     button.addEventListener('mouseleave', () => {
       const isDark = document.documentElement.classList.contains('dark');
       button.style.transform = 'scale(1)';
@@ -808,7 +818,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
         button.style.background = '#fff';
       }
     });
-    
+
     button.addEventListener('click', () => {
       const map = this.map;
       if (!map) return;
@@ -882,8 +892,8 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       displayText && displayClass
         ? `<div class="car-marker-pill ${displayClass}">
             ${displayText}${
-            displayClass.includes('price') ? '<span class="car-marker-pill-sub">/día</span>' : ''
-          }
+              displayClass.includes('price') ? '<span class="car-marker-pill-sub">/día</span>' : ''
+            }
           </div>`
         : '';
 
@@ -923,11 +933,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
     return location.photoUrl ? [location.photoUrl] : [];
   }
 
-  private startPhotoRotation(
-    carId: string,
-    avatarEl: HTMLElement | null,
-    gallery: string[],
-  ): void {
+  private startPhotoRotation(carId: string, avatarEl: HTMLElement | null, gallery: string[]): void {
     if (!avatarEl) {
       return;
     }
@@ -1015,9 +1021,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     const map = this.map;
     if (!map) return;
-    this.userMarker = new this.mapboxgl.Marker(el)
-      .setLngLat([lng, lat] as LngLatLike)
-      .addTo(map);
+    this.userMarker = new this.mapboxgl.Marker(el).setLngLat([lng, lat] as LngLatLike).addTo(map);
   }
 
   private zoomToUserLocation(lat: number, lng: number): void {
@@ -1040,8 +1044,10 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
-      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      Math.cos(this.toRadians(lat1)) *
+        Math.cos(this.toRadians(lat2)) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return this.EARTH_RADIUS_KM * c;
@@ -1074,7 +1080,7 @@ export class CarsMapComponent implements OnChanges, AfterViewInit, OnDestroy {
       this.userLocationForDistance.lat,
       this.userLocationForDistance.lng,
       carLat,
-      carLng
+      carLng,
     );
 
     return this.formatDistance(distance);

@@ -2,7 +2,11 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TelemetryService } from '../../../core/services/telemetry.service';
-import type { TelemetryHistory, TelemetryAverage, TelemetryInsights } from '../../../core/services/telemetry.service';
+import type {
+  TelemetryHistory,
+  TelemetryAverage,
+  TelemetryInsights,
+} from '../../../core/services/telemetry.service';
 import { ToastService } from '../../../core/services/toast.service';
 
 /**
@@ -111,7 +115,7 @@ export class DrivingStatsPage implements OnInit {
       }
     } catch (error) {
       console.error('Error loading driving data:', error);
-      this.toastService.showToast('Error al cargar estadísticas de conducción', 'error');
+      this.toastService.error('Error de carga', 'No se pudieron cargar las estadísticas de conducción. Intenta nuevamente.');
     } finally {
       this.loading.set(false);
     }

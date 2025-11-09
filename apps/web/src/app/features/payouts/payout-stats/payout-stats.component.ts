@@ -7,54 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-payout-stats',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-      <h3 class="mb-4 text-lg font-semibold text-gray-900">Estadísticas de Payouts</h3>
-
-      @if (loading()) {
-        <div class="flex items-center justify-center py-8">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-sky-500 border-t-transparent"></div>
-        </div>
-      } @else if (stats(); as s) {
-        <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-          <div class="rounded-lg bg-sky-50 p-4">
-            <p class="text-sm font-medium text-sky-600">Total Payouts</p>
-            <p class="text-2xl font-bold text-sky-700">{{ s.totalPayouts }}</p>
-          </div>
-          <div class="rounded-lg bg-green-50 p-4">
-            <p class="text-sm font-medium text-green-600">Total Monto</p>
-            <p class="text-2xl font-bold text-green-900">
-              ${{ s.totalAmount | number: '1.2-2' }}
-            </p>
-          </div>
-          <div class="rounded-lg bg-beige-50 p-4">
-            <p class="text-sm font-medium text-beige-500">Pendientes</p>
-            <p class="text-2xl font-bold text-beige-500">{{ s.pendingPayouts }}</p>
-            <p class="text-xs text-beige-500">
-              ${{ s.pendingAmount | number: '1.2-2' }}
-            </p>
-          </div>
-          <div class="rounded-lg bg-sky-50 p-4">
-            <p class="text-sm font-medium text-sky-600">Completados</p>
-            <p class="text-2xl font-bold text-sky-900">{{ s.completedPayouts }}</p>
-            <p class="text-xs text-sky-700">
-              ${{ s.completedAmount | number: '1.2-2' }}
-            </p>
-          </div>
-          <div class="rounded-lg bg-sky-50 p-4">
-            <p class="text-sm font-medium text-sky-600">Promedio</p>
-            <p class="text-2xl font-bold text-sky-900">
-              ${{ s.averagePayoutAmount | number: '1.2-2' }}
-            </p>
-          </div>
-        </div>
-      } @else {
-        <div class="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-600">
-          No hay estadísticas disponibles.
-        </div>
-      }
-    </div>
-  `,
+  templateUrl: './payout-stats.component.html',
 })
 export class PayoutStatsComponent implements OnInit {
   private readonly payoutService = inject(PayoutService);

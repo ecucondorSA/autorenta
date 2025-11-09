@@ -78,7 +78,9 @@ import { NotificationSoundService } from '../../../core/services/notification-so
             <div
               class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#075E54]"
             ></div>
-            <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando mensajes...</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+              Cargando mensajes...
+            </p>
           </div>
         </div>
 

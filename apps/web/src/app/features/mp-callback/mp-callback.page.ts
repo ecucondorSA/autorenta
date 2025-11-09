@@ -327,7 +327,7 @@ export class MpCallbackPage implements OnInit, OnDestroy {
       this.startCountdown();
     } catch (_error) {
       this.handleError(
-        (_error) instanceof Error
+        _error instanceof Error
           ? _error.message
           : 'Ocurrió un error al procesar la autorización. Por favor, intentá nuevamente.',
       );

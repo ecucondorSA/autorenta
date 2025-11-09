@@ -16,11 +16,11 @@ import {
     @if (paymentMode === 'card') {
       <!-- Alerta para Tarjeta -->
       <div
-        class="bg-sky-50 dark:bg-info-900/20 border-l-4 border-sky-500 dark:border-info-500 rounded-lg p-4 animate-slide-down transition-colors duration-300"
+        class="bg-blue-50 dark:bg-info-900/20 border-l-4 border-blue-500 dark:border-info-500 rounded-lg p-4 animate-slide-down transition-colors duration-300"
       >
         <div class="flex items-start gap-3">
           <svg
-            class="w-6 h-6 text-sky-600 dark:text-info-300 flex-shrink-0"
+            class="w-6 h-6 text-blue-600 dark:text-info-300 flex-shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -33,17 +33,15 @@ import {
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-semibold text-sky-700 dark:text-info-100">
-              Pago con Tarjeta
-            </p>
-            <p class="text-sm text-sky-600 dark:text-info-200 mt-1">
+            <p class="text-sm font-semibold text-blue-900 dark:text-info-100">Pago con Tarjeta</p>
+            <p class="text-sm text-blue-800 dark:text-info-200 mt-1">
               Se bloqueará <strong>{{ formatArs(holdAmountArs()) }}</strong> en tu tarjeta como
               garantía. Si todo está bien al devolver el auto,
               <strong>se libera automáticamente</strong>.
             </p>
             <div class="mt-2 flex flex-wrap gap-2">
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-sky-100 text-sky-600 dark:bg-info-900/40 dark:text-info-200"
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-info-900/40 dark:text-info-200"
               >
                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -55,7 +53,7 @@ import {
                 Reembolsable
               </span>
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-sky-100 text-sky-600 dark:bg-info-900/40 dark:text-info-200"
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-info-900/40 dark:text-info-200"
               >
                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -73,11 +71,11 @@ import {
     } @else {
       <!-- Alerta para Wallet -->
       <div
-        class="bg-sky-50 dark:bg-sky-900/20 border-l-4 border-sky-500 dark:border-sky-500 rounded-lg p-4 animate-slide-down transition-colors duration-300"
+        class="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 dark:border-purple-500 rounded-lg p-4 animate-slide-down transition-colors duration-300"
       >
         <div class="flex items-start gap-3">
           <svg
-            class="w-6 h-6 text-sky-600 dark:text-sky-300 flex-shrink-0"
+            class="w-6 h-6 text-purple-600 dark:text-purple-300 flex-shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -90,17 +88,17 @@ import {
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-semibold text-sky-900 dark:text-sky-100">
+            <p class="text-sm font-semibold text-purple-900 dark:text-purple-100">
               Pago con Wallet
             </p>
-            <p class="text-sm text-sky-800 dark:text-sky-200 mt-1">
+            <p class="text-sm text-purple-800 dark:text-purple-200 mt-1">
               Se bloqueará <strong>{{ formatArs(creditSecurityArs()) }}</strong> de tu wallet como
               garantía. Este monto <strong>NO es reembolsable</strong>, pero queda disponible para
               futuras reservas en AutoRenta.
             </p>
             <div class="mt-2 flex flex-wrap gap-2">
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-beige-100 text-beige-500 dark:bg-warning-900/40 dark:text-warning-200"
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-warning-900/40 dark:text-warning-200"
               >
                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -112,7 +110,7 @@ import {
                 No reembolsable
               </span>
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200"
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200"
               >
                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path

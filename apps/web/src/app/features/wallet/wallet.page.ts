@@ -265,7 +265,9 @@ export class WalletPage implements AfterViewInit, OnInit {
   async ngOnInit(): Promise<void> {
     try {
       await this.walletService.refreshPendingDepositsCount();
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   /**
@@ -364,7 +366,9 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       const balanceRefresh = this.balanceCard ? this.balanceCard.loadBalance() : Promise.resolve();
       await Promise.all([balanceRefresh, this.walletService.refreshPendingDepositsCount()]);
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   /**
@@ -376,7 +380,9 @@ export class WalletPage implements AfterViewInit, OnInit {
         this.withdrawalService.getBankAccounts(),
         this.withdrawalService.getWithdrawalRequests(),
       ]);
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   /**
@@ -459,7 +465,10 @@ export class WalletPage implements AfterViewInit, OnInit {
       this.toastService.success('Éxito', 'Solicitud de retiro cancelada');
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
-      this.toastService.error('Error', 'Error al cancelar: ' + (errorObj.message || 'Error desconocido'));
+      this.toastService.error(
+        'Error',
+        'Error al cancelar: ' + (errorObj.message || 'Error desconocido'),
+      );
     }
   }
 
@@ -469,7 +478,9 @@ export class WalletPage implements AfterViewInit, OnInit {
   async handleRefreshWithdrawals(): Promise<void> {
     try {
       await this.withdrawalService.getWithdrawalRequests();
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   /**
@@ -509,7 +520,9 @@ export class WalletPage implements AfterViewInit, OnInit {
       if (profile?.wallet_account_number) {
         this.walletAccountNumber.set(profile.wallet_account_number);
       }
-    } catch (__error) { /* Silenced */ }
+    } catch (__error) {
+      /* Silenced */
+    }
   }
 
   /**

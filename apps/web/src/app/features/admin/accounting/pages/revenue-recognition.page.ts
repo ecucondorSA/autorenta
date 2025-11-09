@@ -6,7 +6,7 @@ import {
   AccountingService,
   RevenueRecognition,
 } from '../../../../core/services/accounting.service';
-import { SupabaseService } from '../../../../core/services/supabase.service';
+import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 
 @Component({
   selector: 'app-revenue-recognition',
@@ -16,7 +16,7 @@ import { SupabaseService } from '../../../../core/services/supabase.service';
   styleUrls: ['./revenue-recognition.page.scss'],
 })
 export class RevenueRecognitionPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly supabaseService = inject(SupabaseClientService);
   private readonly accountingService: AccountingService;
 
   readonly loading = signal(false);
@@ -30,10 +30,7 @@ export class RevenueRecognitionPage implements OnInit {
 
   constructor() {
     const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
-    );
+    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
   }
 
   async ngOnInit(): Promise<void> {
@@ -45,7 +42,9 @@ export class RevenueRecognitionPage implements OnInit {
     try {
       const cleanFilters = {
         bookingId: this.filters().bookingId || undefined,
-        isRecognized: this.filters().isRecognized ? this.filters().isRecognized === 'true' : undefined,
+        isRecognized: this.filters().isRecognized
+          ? this.filters().isRecognized === 'true'
+          : undefined,
         startDate: this.filters().startDate || undefined,
         endDate: this.filters().endDate || undefined,
       };

@@ -112,29 +112,32 @@
           <div class="flex space-x-2">
             <button
               (click)="filterByType('all')"
-              [class.bg-sky-600]="filterType() === 'all'"
+              [class.bg-indigo-600]="filterType() === 'all'"
               [class.text-white]="filterType() === 'all'"
               [class.bg-gray-200]="filterType() !== 'all'"
               [class.text-gray-700]="filterType() !== 'all'"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Todas
             </button>
             <button
               (click)="filterByType('level_2')"
-              [class.bg-sky-600]="filterType() === 'level_2'"
+              [class.bg-indigo-600]="filterType() === 'level_2'"
               [class.text-white]="filterType() === 'level_2'"
               [class.bg-gray-200]="filterType() !== 'level_2'"
               [class.text-gray-700]="filterType() !== 'level_2'"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Nivel 2 (DNI)
             </button>
             <button
               (click)="filterByType('level_3')"
-              [class.bg-sky-600]="filterType() === 'level_3'"
+              [class.bg-indigo-600]="filterType() === 'level_3'"
               [class.text-white]="filterType() === 'level_3'"
               [class.bg-gray-200]="filterType() !== 'level_3'"
               [class.text-gray-700]="filterType() !== 'level_3'"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Nivel 3 (Selfie)
             </button>
           </div>
@@ -146,38 +149,42 @@
           <div class="flex space-x-2">
             <button
               (click)="filterByStatus('PENDING')"
-              [class.bg-sky-600]="filterStatus() === 'PENDING'"
+              [class.bg-indigo-600]="filterStatus() === 'PENDING'"
               [class.text-white]="filterStatus() === 'PENDING'"
               [class.bg-gray-200]="filterStatus() !== 'PENDING'"
               [class.text-gray-700]="filterStatus() !== 'PENDING'"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Pendientes
             </button>
             <button
               (click)="filterByStatus('APPROVED')"
-              [class.bg-sky-600]="filterStatus() === 'APPROVED'"
+              [class.bg-indigo-600]="filterStatus() === 'APPROVED'"
               [class.text-white]="filterStatus() === 'APPROVED'"
               [class.bg-gray-200]="filterStatus() !== 'APPROVED'"
               [class.text-gray-700]="filterStatus() !== 'APPROVED'"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Aprobadas
             </button>
             <button
               (click)="filterByStatus('REJECTED')"
-              [class.bg-sky-600]="filterStatus() === 'REJECTED'"
+              [class.bg-indigo-600]="filterStatus() === 'REJECTED'"
               [class.text-white]="filterStatus() === 'REJECTED'"
               [class.bg-gray-200]="filterStatus() !== 'REJECTED'"
               [class.text-gray-700]="filterStatus() !== 'REJECTED'"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Rechazadas
             </button>
             <button
               (click)="filterByStatus('all')"
-              [class.bg-sky-600]="filterStatus() === 'all'"
+              [class.bg-indigo-600]="filterStatus() === 'all'"
               [class.text-white]="filterStatus() === 'all'"
               [class.bg-gray-200]="filterStatus() !== 'all'"
               [class.text-gray-700]="filterStatus() !== 'all'"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Todas
             </button>
           </div>
@@ -194,28 +201,43 @@
       } @else if (verifications().length === 0) {
         <div class="p-12 text-center">
           <div class="text-6xl mb-4">🎉</div>
-          <div class="text-gray-600 text-lg">No hay verificaciones {{ filterStatus() === 'PENDING' ? 'pendientes' : 'en este estado' }}</div>
+          <div class="text-gray-600 text-lg">
+            No hay verificaciones
+            {{ filterStatus() === 'PENDING' ? 'pendientes' : 'en este estado' }}
+          </div>
         </div>
       } @else {
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Usuario
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Tipo
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Fecha Envío
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 AI Score
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Estado
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Acciones
               </th>
             </tr>
@@ -239,20 +261,26 @@
 
                 <!-- Type -->
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
-                        [class.bg-sky-100]="getVerificationLevel(verification) === 2"
-                        [class.text-sky-600]="getVerificationLevel(verification) === 2"
-                        [class.bg-sky-100]="getVerificationLevel(verification) === 3"
-                        [class.text-sky-800]="getVerificationLevel(verification) === 3">
+                  <span
+                    class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    [class.bg-blue-100]="getVerificationLevel(verification) === 2"
+                    [class.text-blue-800]="getVerificationLevel(verification) === 2"
+                    [class.bg-purple-100]="getVerificationLevel(verification) === 3"
+                    [class.text-purple-800]="getVerificationLevel(verification) === 3"
+                  >
                     {{ getVerificationLevelName(verification) }}
                   </span>
                   @if (isSuspicious(verification)) {
-                    <span class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                    <span
+                      class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
+                    >
                       🚩 Sospechoso
                     </span>
                   }
                   @if (needsAdditionalDocs(verification)) {
-                    <span class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-beige-100 text-beige-500">
+                    <span
+                      class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
+                    >
                       📄 Docs Requeridos
                     </span>
                   }
@@ -266,12 +294,18 @@
                 <!-- AI Score -->
                 <td class="px-6 py-4 whitespace-nowrap">
                   @if (verification.document_ai_score !== undefined) {
-                    <span class="text-sm font-medium" [ngClass]="getScoreColor(verification.document_ai_score)">
+                    <span
+                      class="text-sm font-medium"
+                      [ngClass]="getScoreColor(verification.document_ai_score)"
+                    >
                       📄 {{ getScoreBadge(verification.document_ai_score) }}
                     </span>
                   }
                   @if (verification.face_match_score !== undefined) {
-                    <div class="text-sm font-medium" [ngClass]="getScoreColor(verification.face_match_score)">
+                    <div
+                      class="text-sm font-medium"
+                      [ngClass]="getScoreColor(verification.face_match_score)"
+                    >
                       🤳 {{ getScoreBadge(verification.face_match_score) }}
                     </div>
                   }
@@ -283,15 +317,21 @@
                 <!-- Status -->
                 <td class="px-6 py-4 whitespace-nowrap">
                   @if (verification.manual_review_decision === 'APPROVED') {
-                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    <span
+                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                    >
                       ✅ Aprobada
                     </span>
                   } @else if (verification.manual_review_decision === 'REJECTED') {
-                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                    <span
+                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
+                    >
                       ❌ Rechazada
                     </span>
                   } @else {
-                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-beige-100 text-beige-500">
+                    <span
+                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
+                    >
                       ⏳ Pendiente
                     </span>
                   }
@@ -301,7 +341,8 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
                     (click)="selectVerification(verification)"
-                    class="text-sky-600 hover:text-sky-900 transition-colors">
+                    class="text-indigo-600 hover:text-indigo-900 transition-colors"
+                  >
                     Ver Detalles
                   </button>
                 </td>
@@ -315,7 +356,8 @@
           <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center">
             <button
               (click)="loadMore()"
-              class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition-colors">
+              class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+            >
               Cargar Más
             </button>
           </div>
@@ -327,13 +369,25 @@
 
 <!-- Verification Detail Modal -->
 @if (selectedVerification()) {
-  <div class="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+  <div
+    class="fixed z-50 inset-0 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
       <!-- Background overlay -->
-      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeModal()"></div>
+      <div
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+        (click)="closeModal()"
+      ></div>
 
       <!-- Modal panel -->
-      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+      <div
+        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
+      >
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <!-- Header -->
           <div class="flex justify-between items-start mb-6">
@@ -368,7 +422,9 @@
               </div>
               <div>
                 <span class="text-gray-600">Fecha de Envío:</span>
-                <span class="ml-2 font-medium">{{ formatDate(selectedVerification()!.updated_at) }}</span>
+                <span class="ml-2 font-medium">{{
+                  formatDate(selectedVerification()!.updated_at)
+                }}</span>
               </div>
             </div>
           </div>
@@ -381,11 +437,16 @@
                 <!-- Document Front -->
                 <div>
                   <p class="text-sm text-gray-600 mb-2">Frente del Documento</p>
-                  <a [href]="getDocumentUrl(selectedVerification()!.document_front_url)" target="_blank" class="block">
+                  <a
+                    [href]="getDocumentUrl(selectedVerification()!.document_front_url)"
+                    target="_blank"
+                    class="block"
+                  >
                     <img
                       [src]="getDocumentUrl(selectedVerification()!.document_front_url)"
                       alt="Frente del documento"
-                      class="w-full h-48 object-cover rounded-lg border border-gray-300 hover:opacity-75 transition-opacity cursor-pointer" />
+                      class="w-full h-48 object-cover rounded-lg border border-gray-300 hover:opacity-75 transition-opacity cursor-pointer"
+                    />
                   </a>
                 </div>
 
@@ -393,11 +454,16 @@
                 @if (selectedVerification()!.document_back_url) {
                   <div>
                     <p class="text-sm text-gray-600 mb-2">Dorso del Documento</p>
-                    <a [href]="getDocumentUrl(selectedVerification()!.document_back_url)" target="_blank" class="block">
+                    <a
+                      [href]="getDocumentUrl(selectedVerification()!.document_back_url)"
+                      target="_blank"
+                      class="block"
+                    >
                       <img
                         [src]="getDocumentUrl(selectedVerification()!.document_back_url)"
                         alt="Dorso del documento"
-                        class="w-full h-48 object-cover rounded-lg border border-gray-300 hover:opacity-75 transition-opacity cursor-pointer" />
+                        class="w-full h-48 object-cover rounded-lg border border-gray-300 hover:opacity-75 transition-opacity cursor-pointer"
+                      />
                     </a>
                   </div>
                 }
@@ -408,19 +474,26 @@
                 @if (selectedVerification()!.document_type) {
                   <div>
                     <span class="text-gray-600">Tipo:</span>
-                    <span class="ml-2 font-medium">{{ selectedVerification()!.document_type }}</span>
+                    <span class="ml-2 font-medium">{{
+                      selectedVerification()!.document_type
+                    }}</span>
                   </div>
                 }
                 @if (selectedVerification()!.document_number) {
                   <div>
                     <span class="text-gray-600">Número:</span>
-                    <span class="ml-2 font-medium">{{ selectedVerification()!.document_number }}</span>
+                    <span class="ml-2 font-medium">{{
+                      selectedVerification()!.document_number
+                    }}</span>
                   </div>
                 }
                 @if (selectedVerification()!.document_ai_score !== undefined) {
                   <div>
                     <span class="text-gray-600">AI Score:</span>
-                    <span class="ml-2 font-medium" [ngClass]="getScoreColor(selectedVerification()!.document_ai_score)">
+                    <span
+                      class="ml-2 font-medium"
+                      [ngClass]="getScoreColor(selectedVerification()!.document_ai_score)"
+                    >
                       {{ getScoreBadge(selectedVerification()!.document_ai_score) }}
                     </span>
                   </div>
@@ -428,20 +501,27 @@
               </div>
 
               <!-- Extracted Data -->
-              @if (selectedVerification()!.extracted_full_name || selectedVerification()!.extracted_birth_date) {
-                <div class="mt-4 p-3 bg-sky-50 rounded-lg">
-                  <p class="text-sm font-medium text-sky-700 mb-2">Datos Extraídos por AI:</p>
+              @if (
+                selectedVerification()!.extracted_full_name ||
+                selectedVerification()!.extracted_birth_date
+              ) {
+                <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                  <p class="text-sm font-medium text-blue-900 mb-2">Datos Extraídos por AI:</p>
                   <div class="grid grid-cols-2 gap-2 text-sm">
                     @if (selectedVerification()!.extracted_full_name) {
                       <div>
-                        <span class="text-sky-700">Nombre:</span>
-                        <span class="ml-2 font-medium text-sky-700">{{ selectedVerification()!.extracted_full_name }}</span>
+                        <span class="text-blue-700">Nombre:</span>
+                        <span class="ml-2 font-medium text-blue-900">{{
+                          selectedVerification()!.extracted_full_name
+                        }}</span>
                       </div>
                     }
                     @if (selectedVerification()!.extracted_birth_date) {
                       <div>
-                        <span class="text-sky-700">Fecha de Nac:</span>
-                        <span class="ml-2 font-medium text-sky-700">{{ selectedVerification()!.extracted_birth_date }}</span>
+                        <span class="text-blue-700">Fecha de Nac:</span>
+                        <span class="ml-2 font-medium text-blue-900">{{
+                          selectedVerification()!.extracted_birth_date
+                        }}</span>
                       </div>
                     }
                   </div>
@@ -455,11 +535,16 @@
             <div class="mb-6">
               <h4 class="font-medium text-gray-900 mb-3">Selfie con Documento (Nivel 3)</h4>
               <div class="max-w-md">
-                <a [href]="getDocumentUrl(selectedVerification()!.selfie_url)" target="_blank" class="block">
+                <a
+                  [href]="getDocumentUrl(selectedVerification()!.selfie_url)"
+                  target="_blank"
+                  class="block"
+                >
                   <img
                     [src]="getDocumentUrl(selectedVerification()!.selfie_url)"
                     alt="Selfie"
-                    class="w-full h-64 object-cover rounded-lg border border-gray-300 hover:opacity-75 transition-opacity cursor-pointer" />
+                    class="w-full h-64 object-cover rounded-lg border border-gray-300 hover:opacity-75 transition-opacity cursor-pointer"
+                  />
                 </a>
               </div>
 
@@ -468,7 +553,10 @@
                 @if (selectedVerification()!.face_match_score !== undefined) {
                   <div>
                     <span class="text-gray-600">Face Match Score:</span>
-                    <span class="ml-2 font-medium" [ngClass]="getScoreColor(selectedVerification()!.face_match_score)">
+                    <span
+                      class="ml-2 font-medium"
+                      [ngClass]="getScoreColor(selectedVerification()!.face_match_score)"
+                    >
                       {{ getScoreBadge(selectedVerification()!.face_match_score) }}
                     </span>
                   </div>
@@ -476,7 +564,10 @@
                 @if (selectedVerification()!.liveness_score !== undefined) {
                   <div>
                     <span class="text-gray-600">Liveness Score:</span>
-                    <span class="ml-2 font-medium" [ngClass]="getScoreColor(selectedVerification()!.liveness_score)">
+                    <span
+                      class="ml-2 font-medium"
+                      [ngClass]="getScoreColor(selectedVerification()!.liveness_score)"
+                    >
                       {{ getScoreBadge(selectedVerification()!.liveness_score) }}
                     </span>
                   </div>
@@ -487,11 +578,13 @@
 
           <!-- Previous Review Notes -->
           @if (selectedVerification()!.manual_review_notes) {
-            <div class="mb-6 p-4 bg-beige-50 rounded-lg">
-              <h4 class="font-medium text-beige-500 mb-2">Notas de Revisión Anterior</h4>
-              <p class="text-sm text-beige-500">{{ selectedVerification()!.manual_review_notes }}</p>
+            <div class="mb-6 p-4 bg-yellow-50 rounded-lg">
+              <h4 class="font-medium text-yellow-900 mb-2">Notas de Revisión Anterior</h4>
+              <p class="text-sm text-yellow-800">
+                {{ selectedVerification()!.manual_review_notes }}
+              </p>
               @if (selectedVerification()!.manual_reviewed_at) {
-                <p class="text-xs text-beige-500 mt-2">
+                <p class="text-xs text-yellow-600 mt-2">
                   {{ formatDate(selectedVerification()!.manual_reviewed_at) }}
                 </p>
               }
@@ -509,7 +602,8 @@
                 (input)="updateActionNotes($any($event.target).value)"
                 rows="3"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Agregar notas sobre la aprobación..."></textarea>
+                placeholder="Agregar notas sobre la aprobación..."
+              ></textarea>
             </div>
           }
 
@@ -524,7 +618,8 @@
                 (input)="updateRejectionReason($any($event.target).value)"
                 rows="3"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                placeholder="Explica el motivo del rechazo (ej: 'Documento borroso', 'No coincide el nombre', etc.)"></textarea>
+                placeholder="Explica el motivo del rechazo (ej: 'Documento borroso', 'No coincide el nombre', etc.)"
+              ></textarea>
             </div>
           }
         </div>
@@ -534,7 +629,8 @@
           @if (selectedVerification()!.manual_review_decision !== 'APPROVED') {
             <button
               (click)="approveVerification(selectedVerification()!)"
-              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+            >
               ✅ Aprobar
             </button>
           }
@@ -542,26 +638,30 @@
           @if (selectedVerification()!.manual_review_decision !== 'REJECTED') {
             <button
               (click)="rejectVerification(selectedVerification()!)"
-              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+            >
               ❌ Rechazar
             </button>
           }
 
           <button
             (click)="requestAdditionalDocs(selectedVerification()!)"
-            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+          >
             📄 Solicitar Docs
           </button>
 
           <button
             (click)="flagSuspicious(selectedVerification()!)"
-            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+          >
             🚩 Marcar Sospechoso
           </button>
 
           <button
             (click)="closeModal()"
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+          >
             Cerrar
           </button>
         </div>

@@ -259,8 +259,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const booking = this.booking();
     if (!booking || !this.isOwner()) return false;
     // Owner can report damage after vehicle return (completed status or returned_at is set)
-    const canReport = (booking.status === 'completed' || booking.returned_at !== null)
-                      && !booking.owner_reported_damages;
+    const canReport =
+      (booking.status === 'completed' || booking.returned_at !== null) &&
+      !booking.owner_reported_damages;
     return canReport;
   });
 
@@ -455,9 +456,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking) return 'Mi reserva en Autorentar';
 
     const carInfo = `${booking.car_brand} ${booking.car_model}`;
-    const dates = booking.start_at && booking.end_at
-      ? `${this.formatDateTime(booking.start_at)} - ${this.formatDateTime(booking.end_at)}`
-      : '';
+    const dates =
+      booking.start_at && booking.end_at
+        ? `${this.formatDateTime(booking.start_at)} - ${this.formatDateTime(booking.end_at)}`
+        : '';
 
     return `Reserva: ${carInfo}${dates ? ` (${dates})` : ''}`;
   }

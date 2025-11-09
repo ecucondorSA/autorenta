@@ -80,7 +80,9 @@ export class PublishCarPhotoService {
 
     // Check file size
     if (file.size > this.MAX_FILE_SIZE) {
-      throw new Error(`Archivo muy pesado: ${(file.size / 1024 / 1024).toFixed(1)}MB. Máximo 10MB.`);
+      throw new Error(
+        `Archivo muy pesado: ${(file.size / 1024 / 1024).toFixed(1)}MB. Máximo 10MB.`,
+      );
     }
   }
 
@@ -123,7 +125,7 @@ export class PublishCarPhotoService {
           year,
           angle: '3/4-front',
           style: 'showroom',
-          num_steps: 8
+          num_steps: 8,
         }),
       });
 
@@ -141,7 +143,9 @@ export class PublishCarPhotoService {
         bytes[i] = binaryData.charCodeAt(i);
       }
       const blob = new Blob([bytes], { type: 'image/png' });
-      const file = new File([blob], `ai-${brand}-${model}-${Date.now()}.png`, { type: 'image/png' });
+      const file = new File([blob], `ai-${brand}-${model}-${Date.now()}.png`, {
+        type: 'image/png',
+      });
       const preview = await this.createPreview(file);
 
       this.uploadedPhotos.set([...currentPhotos, { file, preview }]);
@@ -222,7 +226,9 @@ export class PublishCarPhotoService {
       // );
 
       // this.uploadedPhotos.set(previews);
-      console.warn('loadExistingPhotos not implemented - getCarPhotos method missing in CarsService');
+      console.warn(
+        'loadExistingPhotos not implemented - getCarPhotos method missing in CarsService',
+      );
     } catch (error) {
       console.error('Failed to load existing photos:', error);
     }

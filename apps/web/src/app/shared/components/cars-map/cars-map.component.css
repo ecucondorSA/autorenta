@@ -96,7 +96,9 @@
   opacity: 0;
   pointer-events: none;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .car-marker:hover::after,
@@ -166,7 +168,9 @@
   border-radius: inherit;
   padding: 2px;
   background: linear-gradient(135deg, #f97316, #ea580c);
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
@@ -263,7 +267,9 @@
   color: rgba(15, 23, 42, 0.6);
 }
 
-.car-marker-price { color: inherit; }
+.car-marker-price {
+  color: inherit;
+}
 
 .car-marker-price--dynamic {
   background: linear-gradient(120deg, #f97316, #ea580c);
@@ -271,14 +277,18 @@
   box-shadow: 0 12px 20px rgba(234, 88, 12, 0.35);
 }
 
-.car-marker-price--dynamic .car-marker-pill-sub { color: rgba(255,255,255,0.75); }
+.car-marker-price--dynamic .car-marker-pill-sub {
+  color: rgba(255, 255, 255, 0.75);
+}
 
 .car-marker-price--fallback {
   background: linear-gradient(120deg, #1f2937, #0f172a);
   color: #e2e8f0;
 }
 
-.car-marker-price--fallback .car-marker-pill-sub { color: rgba(226,232,240,0.65); }
+.car-marker-price--fallback .car-marker-pill-sub {
+  color: rgba(226, 232, 240, 0.65);
+}
 
 .car-marker-distance {
   background: linear-gradient(120deg, #10b981, #047857);
@@ -324,11 +334,18 @@
 
 /* Bounce animation on load */
 @keyframes markerBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-.car-marker.bounce { animation: markerBounce 0.6s ease; }
+.car-marker.bounce {
+  animation: markerBounce 0.6s ease;
+}
 
 /* Enhanced active states */
 /* Enhanced active states */
@@ -336,7 +353,9 @@
   background: linear-gradient(135deg, #dc2626, #b91c1c);
   border-color: #dc2626;
   transform: scale(1.2);
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3), 0 8px 24px rgba(220, 38, 38, 0.4);
+  box-shadow:
+    0 0 0 4px rgba(220, 38, 38, 0.3),
+    0 8px 24px rgba(220, 38, 38, 0.4);
 }
 
 /* User location marker */
@@ -423,7 +442,6 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8) !important; /* Sombra más intensa */
   border: 1px solid rgba(255, 255, 255, 0.15) !important; /* Borde sutil */
 }
-
 
 .car-popup-content {
   display: flex;
@@ -536,7 +554,6 @@ img.car-popup-image {
   color: #60a5fa !important; /* Azul claro para precio en dark mode */
 }
 
-
 /* Responsive: Mejorar contraste y tamaño en móvil - REDUCCIÓN AL 1/8 (8x más pequeño) */
 @media (max-width: 640px) {
   /* Limitar el ancho máximo del popup en móvil - 1/8 del tamaño original */
@@ -546,7 +563,7 @@ img.car-popup-image {
     padding: 1.5px 2px !important; /* Reducido 8x (antes 12px 16px) */
     box-sizing: border-box !important;
   }
-  
+
   /* Ajustar el contenido del popup en móvil - 1/8 del tamaño original */
   .car-popup-content {
     min-width: auto !important;
@@ -555,7 +572,7 @@ img.car-popup-image {
     flex-wrap: nowrap !important;
     box-sizing: border-box !important;
   }
-  
+
   /* Reducir tamaño de imagen en móvil - 1/8 del tamaño original */
   .car-popup-image-wrapper {
     width: 11px !important; /* Reducido 8x (antes 88px) */
@@ -566,7 +583,7 @@ img.car-popup-image {
     box-sizing: border-box !important;
     border-radius: 1.25px !important; /* Reducido 8x (antes 10px) */
   }
-  
+
   /* Aplicar tamaño reducido a todas las imágenes del popup en móvil - 1/8 */
   .car-popup .mapboxgl-popup-content img.car-popup-image,
   .car-popup .mapboxgl-popup-content .car-popup-image-wrapper img,
@@ -586,7 +603,7 @@ img.car-popup-image {
     border-radius: 1.25px !important; /* Reducido 8x */
     clip-path: inset(0 round 1.25px) !important;
   }
-  
+
   /* Ajustar información del popup en móvil - 1/8 del tamaño original */
   .car-popup-info {
     flex: 1 !important;
@@ -595,7 +612,7 @@ img.car-popup-image {
     overflow: hidden !important;
     box-sizing: border-box !important;
   }
-  
+
   .car-popup-info h4 {
     font-size: 1.75px !important; /* Reducido 8x (antes 14px) */
     font-weight: 700 !important;
@@ -606,13 +623,13 @@ img.car-popup-image {
     margin: 0 0 0.5px 0 !important; /* Reducido 8x */
     line-height: 1.2 !important;
   }
-  
+
   .car-popup-price {
     font-size: 2px !important; /* Reducido 8x (antes 16px) */
     margin: 0 !important;
     line-height: 1.3 !important;
   }
-  
+
   .car-popup-info p:not(.car-popup-price) {
     font-size: 1.625px !important; /* Reducido 8x (antes 13px) */
     white-space: nowrap !important;
@@ -643,27 +660,27 @@ img.car-popup-image {
     border-radius: 4.5px !important; /* Reducido 4x (antes 18px) */
     -webkit-border-radius: 4.5px !important;
   }
-  
+
   .dark .car-popup .mapboxgl-popup-content {
     background-color: #262626 !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9) !important; /* Reducido 4x */
   }
-  
+
   .car-popup-info h4,
   .car-popup-title {
     font-size: 3.75px; /* Reducido 4x (antes 15px) */
     font-weight: 700;
   }
-  
+
   .dark .car-popup-info h4,
   .dark .car-popup-title {
     color: #ffffff !important;
   }
-  
+
   .car-popup-price {
     font-size: 4.25px; /* Reducido 4x (antes 17px) */
   }
-  
+
   .dark .car-popup-price {
     color: #60a5fa !important;
   }
@@ -746,7 +763,9 @@ img.car-popup-image {
   opacity: 0;
   pointer-events: none;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .car-marker:hover::after,

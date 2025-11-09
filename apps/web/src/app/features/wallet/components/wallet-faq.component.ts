@@ -12,13 +12,15 @@ interface FaqItem {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="bg-white dark:bg-gray-700-pure rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <div
+      class="bg-white dark:bg-slate-deep-pure rounded-xl shadow-sm border border-pearl-gray dark:border-gray-700 p-6"
+    >
       <!-- Header -->
       <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-beige-200 mb-2">
+        <h2 class="text-2xl font-bold text-smoke-black dark:text-pearl-light mb-2">
           💡 Preguntas Frecuentes sobre Wallet AutoRenta
         </h2>
-        <p class="text-sm text-gray-600 dark:text-beige-200">
+        <p class="text-sm text-charcoal-medium dark:text-pearl-light">
           Todo lo que necesitás saber sobre cómo funciona tu billetera virtual
         </p>
       </div>
@@ -27,51 +29,73 @@ interface FaqItem {
       <div class="space-y-3">
         <div
           *ngFor="let item of faqItems(); let i = index"
-          class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-200"
+          class="border border-pearl-gray dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-200"
           [class.ring-2]="item.expanded"
-          [class.ring-sky-600]="item.expanded"
+          [class.ring-accent-petrol]="item.expanded"
         >
           <!-- Question -->
           <button
             type="button"
             (click)="toggleItem(i)"
-            class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-200/20 dark:hover:bg-gray-800 transition-colors duration-200"
+            class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-pearl-gray/20 dark:hover:bg-gray-800 transition-colors duration-200"
           >
-            <span class="font-semibold text-gray-900 dark:text-beige-200 pr-4">
+            <span class="font-semibold text-smoke-black dark:text-pearl-light pr-4">
               {{ item.question }}
             </span>
             <svg
-              class="w-5 h-5 text-sky-600 flex-shrink-0 transition-transform duration-200"
+              class="w-5 h-5 text-accent-petrol flex-shrink-0 transition-transform duration-200"
               [class.rotate-180]="item.expanded"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
 
           <!-- Answer -->
           <div
             *ngIf="item.expanded"
-            class="px-4 pb-4 pt-2 bg-gray-200/10 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700"
+            class="px-4 pb-4 pt-2 bg-pearl-gray/10 dark:bg-gray-800/50 border-t border-pearl-gray dark:border-gray-700"
           >
-            <p class="text-sm text-gray-600 dark:text-beige-200 leading-relaxed" [innerHTML]="item.answer"></p>
+            <p
+              class="text-sm text-charcoal-medium dark:text-pearl-light leading-relaxed"
+              [innerHTML]="item.answer"
+            ></p>
           </div>
         </div>
       </div>
 
       <!-- Additional Help -->
-      <div class="mt-6 p-4 bg-sky-50 dark:bg-sky-700/20 border border-sky-200 dark:border-blue-800 rounded-lg">
+      <div
+        class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
+      >
         <div class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-sky-600 dark:text-sky-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+          <svg
+            class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            />
           </svg>
           <div>
-            <h3 class="font-semibold text-sky-700 dark:text-sky-300 mb-1">¿Necesitás más ayuda?</h3>
-            <p class="text-sm text-sky-600 dark:text-sky-400">
+            <h3 class="font-semibold text-blue-900 dark:text-blue-300 mb-1">
+              ¿Necesitás más ayuda?
+            </h3>
+            <p class="text-sm text-blue-800 dark:text-blue-400">
               Contactá a nuestro equipo de soporte en
-              <a href="mailto:autorentardev@gmail.com" class="underline hover:text-sky-600">autorentardev&#64;gmail.com</a>
+              <a href="mailto:autorentardev@gmail.com" class="underline hover:text-blue-600"
+                >autorentardev&#64;gmail.com</a
+              >
             </p>
           </div>
         </div>
@@ -164,32 +188,32 @@ export class WalletFaqComponent {
       answer: `
         <table class="w-full text-xs mt-2 border-collapse">
           <thead>
-            <tr class="bg-gray-200/30 dark:bg-gray-800">
-              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-left">Característica</th>
-              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">Wallet</th>
-              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">Tarjeta</th>
+            <tr class="bg-pearl-gray/30 dark:bg-gray-800">
+              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-left">Característica</th>
+              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">Wallet</th>
+              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">Tarjeta</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1"><strong>Confirmación</strong></td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">⚡ Instantánea</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">⏱️ 1-2 min</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1"><strong>Confirmación</strong></td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">⚡ Instantánea</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">⏱️ 1-2 min</td>
             </tr>
-            <tr class="bg-gray-200/10 dark:bg-gray-800/30">
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1"><strong>Comisiones</strong></td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">✅ Sin comisiones</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">➖ Según tu banco</td>
+            <tr class="bg-pearl-gray/10 dark:bg-gray-800/30">
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1"><strong>Comisiones</strong></td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">✅ Sin comisiones</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">➖ Según tu banco</td>
             </tr>
             <tr>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1"><strong>Garantía</strong></td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">♻️ Reutilizable</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">🔒 Se libera post-alquiler</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1"><strong>Garantía</strong></td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">♻️ Reutilizable</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">🔒 Se libera post-alquiler</td>
             </tr>
-            <tr class="bg-gray-200/10 dark:bg-gray-800/30">
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1"><strong>Requisito</strong></td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">💰 Saldo previo</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">💳 Tarjeta válida</td>
+            <tr class="bg-pearl-gray/10 dark:bg-gray-800/30">
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1"><strong>Requisito</strong></td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">💰 Saldo previo</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">💳 Tarjeta válida</td>
             </tr>
           </tbody>
         </table>
@@ -216,7 +240,7 @@ export class WalletFaqComponent {
           <li><strong>Fondos regulares:</strong> Tus depósitos (MercadoPago, transferencia) NO vencen nunca</li>
           <li><strong>Garantía reutilizable ($600):</strong> Es parte de tus fondos regulares, NO vence</li>
         </ul>
-        <p class="mt-2 text-xs text-sky-700 dark:text-sky-500">💡 <strong>Tip:</strong> Mantener buen historial de conducción renueva automáticamente tu Crédito AutoRenta.</p>
+        <p class="mt-2 text-xs text-blue-700 dark:text-blue-500">💡 <strong>Tip:</strong> Mantener buen historial de conducción renueva automáticamente tu Crédito AutoRenta.</p>
         <p class="mt-2 text-xs text-amber-700 dark:text-amber-500">⚠️ <strong>Importante:</strong> Solo el Crédito AutoRenta (bonificación) vence. Tus depósitos regulares permanecen indefinidamente.</p>`,
       expanded: false,
     },
@@ -230,7 +254,7 @@ export class WalletFaqComponent {
           <li><strong>Grave</strong> (daño estructural): Clase +3 → Fee +15%, Garantía +40% (≈ +$55 USD)</li>
         </ul>
         <p class="mt-2"><strong>Siniestros SIN culpa tuya:</strong> NO afectan tu clase ni tus precios. ✅</p>
-        <p class="mt-2 text-xs text-sky-700 dark:text-sky-500">💡 <strong>Buena noticia:</strong> El siniestro se cubre primero con tu Crédito de Protección ($300 USD), luego tu wallet, y por último pago externo.</p>
+        <p class="mt-2 text-xs text-blue-700 dark:text-blue-500">💡 <strong>Buena noticia:</strong> El siniestro se cubre primero con tu Crédito de Protección ($300 USD), luego tu wallet, y por último pago externo.</p>
         <p class="mt-2 text-xs text-green-700 dark:text-green-500">🛡️ <strong>Protector de Bonus:</strong> Podés comprar un "Protector" ($15-$45) que previene el aumento de clase en 1-3 siniestros.</p>`,
       expanded: false,
     },
@@ -273,7 +297,7 @@ export class WalletFaqComponent {
           <li><strong>Protector de Bonus Nivel 2:</strong> $30 USD (protege 2 siniestros)</li>
           <li><strong>Protector de Bonus Nivel 3:</strong> $45 USD (protege 3 siniestros)</li>
         </ul>
-        <p class="mt-2 text-xs text-sky-700 dark:text-sky-500">💡 <strong>Ejemplo:</strong> Clase 0 + alquiler $100 = <strong>ahorros de $40 USD</strong> por viaje (fee -$15 + garantía -$25).</p>
+        <p class="mt-2 text-xs text-blue-700 dark:text-blue-500">💡 <strong>Ejemplo:</strong> Clase 0 + alquiler $100 = <strong>ahorros de $40 USD</strong> por viaje (fee -$15 + garantía -$25).</p>
         <p class="mt-2 text-xs text-green-700 dark:text-green-500">🏆 <strong>Gamificación:</strong> Badges visuales, mensajes motivacionales, y progreso visible hacia tu próxima mejora de clase.</p>`,
       expanded: false,
     },
@@ -283,31 +307,31 @@ export class WalletFaqComponent {
         <p class="mt-2"><strong>💰 Consumo del Crédito:</strong></p>
         <table class="w-full text-xs mt-2 border-collapse">
           <thead>
-            <tr class="bg-gray-200/30 dark:bg-gray-800">
-              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">Daño</th>
-              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">CP Usado</th>
-              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">CP Restante</th>
-              <th class="border border-gray-200 dark:border-gray-700 px-2 py-1">Pagás de tu bolsillo</th>
+            <tr class="bg-pearl-gray/30 dark:bg-gray-800">
+              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">Daño</th>
+              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">CP Usado</th>
+              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">CP Restante</th>
+              <th class="border border-pearl-gray dark:border-gray-700 px-2 py-1">Pagás de tu bolsillo</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$100</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$100</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-green-700">✅ $200</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-green-700">$0</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$100</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$100</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-green-700">✅ $200</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-green-700">$0</td>
             </tr>
-            <tr class="bg-gray-200/10 dark:bg-gray-800/30">
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$250</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$250</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-amber-700">⚠️ $50</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-green-700">$0</td>
+            <tr class="bg-pearl-gray/10 dark:bg-gray-800/30">
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$250</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$250</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-amber-700">⚠️ $50</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-green-700">$0</td>
             </tr>
             <tr>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$400</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center">$300</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-red-700">❌ $0</td>
-              <td class="border border-gray-200 dark:border-gray-700 px-2 py-1 text-center text-red-700">$100</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$400</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center">$300</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-red-700">❌ $0</td>
+              <td class="border border-pearl-gray dark:border-gray-700 px-2 py-1 text-center text-red-700">$100</td>
             </tr>
           </tbody>
         </table>
@@ -323,7 +347,7 @@ export class WalletFaqComponent {
           <li>Podés usarlo en futuros siniestros</li>
           <li>Tu wallet no se afecta</li>
         </ul>
-        <p class="mt-2 text-xs text-sky-700 dark:text-sky-500">💡 <strong>Tip:</strong> El costo REAL de un siniestro con culpa no es perder el CP, sino perder descuentos y renovación automática.</p>
+        <p class="mt-2 text-xs text-blue-700 dark:text-blue-500">💡 <strong>Tip:</strong> El costo REAL de un siniestro con culpa no es perder el CP, sino perder descuentos y renovación automática.</p>
         <p class="mt-2 text-xs text-green-700 dark:text-green-500">🛡️ <strong>Protector de Bonus:</strong> Compralo antes ($15-$45) para que tu clase NO aumente aunque tengas siniestro.</p>`,
       expanded: false,
     },
@@ -346,7 +370,7 @@ export class WalletFaqComponent {
       items.map((item, i) => ({
         ...item,
         expanded: i === index ? !item.expanded : item.expanded,
-      }))
+      })),
     );
   }
 }

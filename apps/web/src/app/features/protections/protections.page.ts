@@ -20,12 +20,7 @@ import { MetaService } from '../../core/services/meta.service';
 @Component({
   standalone: true,
   selector: 'app-protections-page',
-  imports: [
-    CommonModule,
-    IonicModule,
-    RouterLink,
-    BonusProtectorPurchaseComponent,
-  ],
+  imports: [CommonModule, IonicModule, RouterLink, BonusProtectorPurchaseComponent],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -53,8 +48,8 @@ import { MetaService } from '../../core/services/meta.service';
             Protector de Bonus
           </h2>
           <p class="section-description">
-            Protege tu clase de conductor de subir en caso de siniestros.
-            Ideal para mantener tus descuentos y evitar recargos.
+            Protege tu clase de conductor de subir en caso de siniestros. Ideal para mantener tus
+            descuentos y evitar recargos.
           </p>
         </div>
 
@@ -123,7 +118,7 @@ import { MetaService } from '../../core/services/meta.service';
             <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
           </ion-item>
 
-          <ion-item button [routerLink]="['/profile']" [queryParams]="{tab: 'conductor'}">
+          <ion-item button [routerLink]="['/profile']" [queryParams]="{ tab: 'conductor' }">
             <ion-icon slot="start" name="settings-outline" color="tertiary"></ion-icon>
             <ion-label>
               <h4>Configuración de Conductor</h4>
@@ -145,8 +140,8 @@ import { MetaService } from '../../core/services/meta.service';
           </ion-card-header>
           <ion-card-content>
             <p>
-              Si tienes dudas sobre nuestras protecciones o seguros, contacta a nuestro
-              equipo de soporte.
+              Si tienes dudas sobre nuestras protecciones o seguros, contacta a nuestro equipo de
+              soporte.
             </p>
             <ion-button expand="block" fill="outline" color="primary">
               <ion-icon slot="start" name="mail-outline"></ion-icon>
@@ -336,7 +331,8 @@ export class ProtectionsPage implements OnInit {
   private updateMeta(): void {
     this.metaService.updateTags({
       title: 'Protecciones y Seguros - AutoRenta',
-      description: 'Protege tu clase de conductor y tu vehículo con nuestras opciones de cobertura.',
+      description:
+        'Protege tu clase de conductor y tu vehículo con nuestras opciones de cobertura.',
       keywords: 'protecciones, seguros, bonus protector, seguro vehicular',
     });
   }

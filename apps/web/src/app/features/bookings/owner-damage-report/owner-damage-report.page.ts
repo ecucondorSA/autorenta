@@ -13,12 +13,12 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * Owner Damage Report Page
  *
- * Permite al dueño reportar daños después de completar el check-out
- * - Descripción detallada del daño
- * - Monto del daño (máx $250 USD o el depósito disponible)
+ * Permite al dueï¿½o reportar daï¿½os despuï¿½s de completar el check-out
+ * - Descripciï¿½n detallada del daï¿½o
+ * - Monto del daï¿½o (mï¿½x $250 USD o el depï¿½sito disponible)
  * - Fotos de evidencia (almacenadas en bucket 'documents')
- * - Envía notificación al locatario
- * - Se deshabilita después del envío
+ * - Envï¿½a notificaciï¿½n al locatario
+ * - Se deshabilita despuï¿½s del envï¿½o
  */
 @Component({
   selector: 'app-owner-damage-report',
@@ -69,7 +69,7 @@ export class OwnerDamageReportPage implements OnInit {
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
     if (!bookingId) {
-      this.toastService.error('Error', 'ID de reserva inválido');
+      this.toastService.error('Error', 'ID de reserva invï¿½lido');
       this.router.navigate(['/bookings/owner']);
       return;
     }
@@ -85,28 +85,28 @@ export class OwnerDamageReportPage implements OnInit {
         return;
       }
 
-      // Validar que es el dueño del auto
+      // Validar que es el dueï¿½o del auto
       const currentUserId = this.currentUserId();
       if (!booking.car?.owner_id || !currentUserId || booking.car.owner_id !== currentUserId) {
-        this.toastService.error('Error', 'No tienes permiso para reportar daños en esta reserva');
+        this.toastService.error('Error', 'No tienes permiso para reportar daï¿½os en esta reserva');
         this.router.navigate(['/bookings/owner']);
         return;
       }
 
-      // Validar que la reserva está en estado apropiado para reportar daños
-      // Puede reportar daños después del checkout (completed o returned)
+      // Validar que la reserva estï¿½ en estado apropiado para reportar daï¿½os
+      // Puede reportar daï¿½os despuï¿½s del checkout (completed o returned)
       if (booking.status !== 'completed' && booking.returned_at === null) {
         this.toastService.error(
           'Error',
-          'Solo puedes reportar daños después de completar el check-out del vehículo'
+          'Solo puedes reportar daï¿½os despuï¿½s de completar el check-out del vehï¿½culo',
         );
         this.router.navigate(['/bookings/owner']);
         return;
       }
 
-      // Validar que no haya reportado daños ya
+      // Validar que no haya reportado daï¿½os ya
       if (booking.owner_reported_damages) {
-        this.toastService.error('Error', 'Ya has reportado daños para esta reserva');
+        this.toastService.error('Error', 'Ya has reportado daï¿½os para esta reserva');
         this.router.navigate(['/bookings/detail', bookingId]);
         return;
       }
@@ -130,7 +130,7 @@ export class OwnerDamageReportPage implements OnInit {
 
     // Check max files limit (10 total)
     if (currentFiles.length + files.length > 10) {
-      this.toastService.error('Error', 'Puedes subir máximo 10 fotos');
+      this.toastService.error('Error', 'Puedes subir mï¿½ximo 10 fotos');
       return;
     }
 
@@ -141,13 +141,13 @@ export class OwnerDamageReportPage implements OnInit {
     files.forEach((file) => {
       // Check file type
       if (!file.type.startsWith('image/')) {
-        this.toastService.error('Error', `${file.name} no es una imagen válida`);
+        this.toastService.error('Error', `${file.name} no es una imagen vï¿½lida`);
         return;
       }
 
       // Check file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        this.toastService.error('Error', `${file.name} supera el tamaño máximo de 5MB`);
+        this.toastService.error('Error', `${file.name} supera el tamaï¿½o mï¿½ximo de 5MB`);
         return;
       }
 
@@ -240,7 +240,7 @@ export class OwnerDamageReportPage implements OnInit {
 
       this.toastService.success(
         'Reporte enviado',
-        'El reporte de daños ha sido enviado al locatario. Se deducirá del depósito de garantía.'
+        'El reporte de daï¿½os ha sido enviado al locatario. Se deducirï¿½ del depï¿½sito de garantï¿½a.',
       );
 
       // Navigate to booking detail
@@ -249,7 +249,7 @@ export class OwnerDamageReportPage implements OnInit {
       console.error('Error submitting damage report:', error);
       this.toastService.error(
         'Error',
-        error instanceof Error ? error.message : 'Error al enviar el reporte de daños'
+        error instanceof Error ? error.message : 'Error al enviar el reporte de daï¿½os',
       );
     } finally {
       this.submitting.set(false);
@@ -262,8 +262,8 @@ export class OwnerDamageReportPage implements OnInit {
     await this.supabase.from('notifications').insert({
       user_id: booking.renter_id,
       type: 'damage_reported',
-      title: 'Reporte de daños en tu reserva',
-      body: `El propietario ha reportado daños por $${damageAmountUsd} USD en el vehículo ${booking.car_title}. El monto será deducido de tu depósito de garantía.`,
+      title: 'Reporte de daï¿½os en tu reserva',
+      body: `El propietario ha reportado daï¿½os por $${damageAmountUsd} USD en el vehï¿½culo ${booking.car_title}. El monto serï¿½ deducido de tu depï¿½sito de garantï¿½a.`,
       cta_link: `/bookings/detail/${booking.id}`,
       metadata: {
         booking_id: booking.id,

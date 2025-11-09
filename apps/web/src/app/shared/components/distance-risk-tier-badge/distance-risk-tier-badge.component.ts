@@ -41,7 +41,9 @@ interface TierConfig {
       </span>
 
       <!-- Tooltip with distance and guarantee info -->
-      <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg">
+      <div
+        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
+      >
         {{ config.tooltip }}
         <div class="text-xs mt-1 font-medium text-gray-300">
           Garantía: +{{ (config.guaranteeMultiplier - 1) * 100 | number: '1.0-0' }}%

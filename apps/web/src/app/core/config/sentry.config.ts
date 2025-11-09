@@ -43,7 +43,7 @@ export function initializeSentry(): void {
 
       // Capture console errors
       Sentry.captureConsoleIntegration({
-        levels: ['error', 'assert']
+        levels: ['error', 'assert'],
       }),
 
       // Track HTTP errors

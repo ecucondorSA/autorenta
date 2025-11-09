@@ -22,7 +22,7 @@ import { AccountingService } from '../../../../core/services/accounting.service'
         <ion-item *ngFor="let entry of entries()">
           <ion-label>
             <h3>{{ entry.entry_number }} - {{ entry.description }}</h3>
-            <p>{{ entry.entry_date | date:'short' }} | {{ entry.transaction_type }}</p>
+            <p>{{ entry.entry_date | date: 'short' }} | {{ entry.transaction_type }}</p>
           </ion-label>
           <ion-note slot="end">
             <ion-badge [color]="entry.status === 'POSTED' ? 'success' : 'warning'">
@@ -32,7 +32,7 @@ import { AccountingService } from '../../../../core/services/accounting.service'
         </ion-item>
       </ion-list>
     </ion-content>
-  `
+  `,
 })
 export class JournalEntriesPage implements OnInit {
   private readonly accountingService = inject(AccountingService);

@@ -93,7 +93,7 @@ export interface MockQueryBuilder<T = any> {
   // Propiedad especial para permitir await directo
   then: (
     onFulfilled: (value: MockSupabaseResponse<T[] | T>) => any,
-    onRejected?: (reason: unknown) => any
+    onRejected?: (reason: unknown) => any,
   ) => Promise<any>;
 }
 
@@ -105,11 +105,13 @@ export interface MockQueryBuilder<T = any> {
  * Mock del Storage Bucket de Supabase
  */
 export interface MockStorageBucket {
-  upload: jasmine.Spy<(
-    path: string,
-    file: File | Blob,
-    options?: { cacheControl?: string; upsert?: boolean }
-  ) => Promise<MockSupabaseResponse<{ path: string; id?: string; fullPath?: string }>>>;
+  upload: jasmine.Spy<
+    (
+      path: string,
+      file: File | Blob,
+      options?: { cacheControl?: string; upsert?: boolean },
+    ) => Promise<MockSupabaseResponse<{ path: string; id?: string; fullPath?: string }>>
+  >;
 
   download: jasmine.Spy<(path: string) => Promise<MockSupabaseResponse<Blob>>>;
 
@@ -117,15 +119,16 @@ export interface MockStorageBucket {
 
   getPublicUrl: jasmine.Spy<(path: string) => { data: { publicUrl: string } }>;
 
-  createSignedUrl: jasmine.Spy<(
-    path: string,
-    expiresIn: number
-  ) => Promise<MockSupabaseResponse<{ signedUrl: string }>>>;
+  createSignedUrl: jasmine.Spy<
+    (path: string, expiresIn: number) => Promise<MockSupabaseResponse<{ signedUrl: string }>>
+  >;
 
-  list: jasmine.Spy<(
-    path?: string,
-    options?: { limit?: number; offset?: number }
-  ) => Promise<MockSupabaseResponse<Array<{ name: string; id?: string }>>>>;
+  list: jasmine.Spy<
+    (
+      path?: string,
+      options?: { limit?: number; offset?: number },
+    ) => Promise<MockSupabaseResponse<Array<{ name: string; id?: string }>>>
+  >;
 }
 
 /**
@@ -147,22 +150,28 @@ export interface MockAuth {
 
   getUser: jasmine.Spy<() => Promise<MockSupabaseResponse<{ user: MockUser | null }>>>;
 
-  signInWithPassword: jasmine.Spy<(credentials: {
-    email: string;
-    password: string;
-  }) => Promise<MockSupabaseResponse<{ session: MockSession; user: MockUser }>>>;
+  signInWithPassword: jasmine.Spy<
+    (credentials: {
+      email: string;
+      password: string;
+    }) => Promise<MockSupabaseResponse<{ session: MockSession; user: MockUser }>>
+  >;
 
-  signUp: jasmine.Spy<(credentials: {
-    email: string;
-    password: string;
-    options?: { data?: Record<string, any> };
-  }) => Promise<MockSupabaseResponse<{ session: MockSession | null; user: MockUser }>>>;
+  signUp: jasmine.Spy<
+    (credentials: {
+      email: string;
+      password: string;
+      options?: { data?: Record<string, any> };
+    }) => Promise<MockSupabaseResponse<{ session: MockSession | null; user: MockUser }>>
+  >;
 
-  signOut: jasmine.Spy<() => Promise<MockSupabaseResponse<{}>>>;
+  signOut: jasmine.Spy<() => Promise<MockSupabaseResponse<Record<string, never>>>>;
 
-  onAuthStateChange: jasmine.Spy<(
-    callback: (event: string, session: MockSession | null) => void
-  ) => { data: { subscription: { unsubscribe: () => void } } }>;
+  onAuthStateChange: jasmine.Spy<
+    (callback: (event: string, session: MockSession | null) => void) => {
+      data: { subscription: { unsubscribe: () => void } };
+    }
+  >;
 }
 
 // ============================================================================
@@ -181,10 +190,12 @@ export interface MockFunctionResponse<T = any> {
  * Mock de Functions de Supabase
  */
 export interface MockFunctions {
-  invoke: jasmine.Spy<(
-    functionName: string,
-    options?: { body?: unknown; headers?: Record<string, string> }
-  ) => Promise<MockFunctionResponse>>;
+  invoke: jasmine.Spy<
+    (
+      functionName: string,
+      options?: { body?: unknown; headers?: Record<string, string> },
+    ) => Promise<MockFunctionResponse>
+  >;
 }
 
 // ============================================================================
@@ -194,10 +205,9 @@ export interface MockFunctions {
 /**
  * Tipo para llamadas RPC
  */
-export type MockRpcCall = jasmine.Spy<(
-  functionName: string,
-  params?: Record<string, any>
-) => Promise<MockSupabaseResponse>>;
+export type MockRpcCall = jasmine.Spy<
+  (functionName: string, params?: Record<string, any>) => Promise<MockSupabaseResponse>
+>;
 
 // ============================================================================
 // SUPABASE CLIENT
@@ -227,7 +237,7 @@ export interface MockSupabaseClient {
  * @returns QueryBuilder mock configurado
  */
 export function createMockQueryBuilder<T = any>(
-  defaultData: T | T[] | null = null
+  defaultData: T | T[] | null = null,
 ): MockQueryBuilder<T> {
   const builder: any = {};
 
@@ -258,7 +268,9 @@ export function createMockQueryBuilder<T = any>(
 
   // Ejecución
   builder.single = jasmine.createSpy('single').and.resolveTo({ data: defaultData, error: null });
-  builder.maybeSingle = jasmine.createSpy('maybeSingle').and.resolveTo({ data: defaultData, error: null });
+  builder.maybeSingle = jasmine
+    .createSpy('maybeSingle')
+    .and.resolveTo({ data: defaultData, error: null });
 
   // Soporte para await directo
   builder.then = (onFulfilled: unknown) => {
@@ -404,11 +416,7 @@ export function createMockSupabaseClient(options?: {
  * @param errorMessage - Mensaje de error
  * @param errorCode - Código de error (opcional)
  */
-export function mockError(
-  spy: jasmine.Spy,
-  errorMessage: string,
-  errorCode?: string
-): void {
+export function mockError(spy: jasmine.Spy, errorMessage: string, errorCode?: string): void {
   spy.and.resolveTo({
     data: null,
     error: {

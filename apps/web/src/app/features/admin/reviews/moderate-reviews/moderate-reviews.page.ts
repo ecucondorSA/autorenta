@@ -21,7 +21,7 @@ import type { Review } from '../../../../core/models';
         <button
           (click)="loadFlaggedReviews('pending')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-sky-600]="filterStatus() === 'pending'"
+          [class.bg-blue-600]="filterStatus() === 'pending'"
           [class.text-white]="filterStatus() === 'pending'"
           [class.bg-gray-200]="filterStatus() !== 'pending'"
           [class.text-gray-700]="filterStatus() !== 'pending'"
@@ -31,7 +31,7 @@ import type { Review } from '../../../../core/models';
         <button
           (click)="loadFlaggedReviews('approved')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-sky-600]="filterStatus() === 'approved'"
+          [class.bg-blue-600]="filterStatus() === 'approved'"
           [class.text-white]="filterStatus() === 'approved'"
           [class.bg-gray-200]="filterStatus() !== 'approved'"
           [class.text-gray-700]="filterStatus() !== 'approved'"
@@ -41,7 +41,7 @@ import type { Review } from '../../../../core/models';
         <button
           (click)="loadFlaggedReviews('rejected')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-sky-600]="filterStatus() === 'rejected'"
+          [class.bg-blue-600]="filterStatus() === 'rejected'"
           [class.text-white]="filterStatus() === 'rejected'"
           [class.bg-gray-200]="filterStatus() !== 'rejected'"
           [class.text-gray-700]="filterStatus() !== 'rejected'"
@@ -51,7 +51,7 @@ import type { Review } from '../../../../core/models';
         <button
           (click)="loadFlaggedReviews()"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-sky-600]="filterStatus() === null"
+          [class.bg-blue-600]="filterStatus() === null"
           [class.text-white]="filterStatus() === null"
           [class.bg-gray-200]="filterStatus() !== null"
           [class.text-gray-700]="filterStatus() !== null"
@@ -62,7 +62,9 @@ import type { Review } from '../../../../core/models';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent"></div>
+          <div
+            class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"
+          ></div>
         </div>
       } @else if (flaggedReviews().length === 0) {
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -76,14 +78,14 @@ import type { Review } from '../../../../core/models';
                 <div>
                   <h3 class="font-semibold text-gray-900">Review #{{ review.id }}</h3>
                   <p class="text-sm text-gray-600">
-                    Por: {{ review.reviewer_name || 'Usuario' }} | 
-                    Auto: {{ review.car_title || 'N/A' }}
+                    Por: {{ review.reviewer_name || 'Usuario' }} | Auto:
+                    {{ review.car_title || 'N/A' }}
                   </p>
                 </div>
                 <span
                   class="rounded-full px-3 py-1 text-xs font-medium"
-                  [class.bg-beige-100]="review.flag_status === 'pending'"
-                  [class.text-beige-500]="review.flag_status === 'pending'"
+                  [class.bg-yellow-100]="review.flag_status === 'pending'"
+                  [class.text-yellow-800]="review.flag_status === 'pending'"
                   [class.bg-green-100]="review.flag_status === 'approved'"
                   [class.text-green-800]="review.flag_status === 'approved'"
                   [class.bg-red-100]="review.flag_status === 'rejected'"
@@ -94,13 +96,15 @@ import type { Review } from '../../../../core/models';
               </div>
 
               <div class="mb-4 rounded-lg bg-gray-50 p-4">
-                <p class="text-sm text-gray-700">{{ review.comment_public || 'Sin comentario público' }}</p>
+                <p class="text-sm text-gray-700">
+                  {{ review.comment_public || 'Sin comentario público' }}
+                </p>
               </div>
 
               @if (review.flag_reason) {
-                <div class="mb-4 rounded-lg bg-beige-50 p-3">
-                  <p class="text-xs font-medium text-beige-500">Razón del reporte:</p>
-                  <p class="text-sm text-beige-500">{{ review.flag_reason }}</p>
+                <div class="mb-4 rounded-lg bg-yellow-50 p-3">
+                  <p class="text-xs font-medium text-yellow-800">Razón del reporte:</p>
+                  <p class="text-sm text-yellow-700">{{ review.flag_reason }}</p>
                 </div>
               }
 
@@ -150,9 +154,7 @@ export class ModerateReviewsPage implements OnInit {
       const reviews = await this.reviewsService.getFlaggedReviews(status);
       this.flaggedReviews.set(reviews);
     } catch (err) {
-      this.toastService.error(
-        err instanceof Error ? err.message : 'Error al cargar reviews',
-      );
+      this.toastService.error('Error al cargar', err instanceof Error ? err.message : 'No se pudieron cargar las reviews');
     } finally {
       this.loading.set(false);
     }
@@ -164,18 +166,15 @@ export class ModerateReviewsPage implements OnInit {
     try {
       const result = await this.reviewsService.moderateReview(reviewId, action);
       if (result.success) {
-        this.toastService.success(`Review ${action === 'approved' ? 'aprobada' : 'rechazada'}`);
+        this.toastService.success('Review moderada', `La review ha sido ${action === 'approved' ? 'aprobada' : 'rechazada'} exitosamente`);
         await this.loadFlaggedReviews(this.filterStatus() || undefined);
       } else {
-        this.toastService.error(result.error || 'Error al moderar');
+        this.toastService.error('Error al moderar', result.error || 'No se pudo completar la moderación');
       }
     } catch (err) {
-      this.toastService.error(
-        err instanceof Error ? err.message : 'Error al moderar review',
-      );
+      this.toastService.error('Error al moderar', err instanceof Error ? err.message : 'No se pudo moderar la review');
     } finally {
       this.moderating.set(false);
     }
   }
 }
-

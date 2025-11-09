@@ -88,11 +88,7 @@ export interface ConversionEventData {
 // Declaración global para gtag (Google Analytics)
 declare global {
   interface Window {
-    gtag?: (
-      command: string,
-      eventName: string | Date,
-      params?: Record<string, unknown>,
-    ) => void;
+    gtag?: (command: string, eventName: string | Date, params?: Record<string, unknown>) => void;
     dataLayer?: unknown[];
   }
 }
@@ -164,7 +160,7 @@ export class AnalyticsService {
         created_at: new Date().toISOString(),
       });
 
-      if ((error)) {
+      if (error) {
         console.error('Error tracking Supabase event:', error);
       }
     } catch (error) {

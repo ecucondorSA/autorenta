@@ -21,12 +21,7 @@ import { MetaService } from '../../core/services/meta.service';
 @Component({
   standalone: true,
   selector: 'app-driver-profile-page',
-  imports: [
-    CommonModule,
-    IonicModule,
-    RouterLink,
-    DriverProfileCardComponent,
-  ],
+  imports: [CommonModule, IonicModule, RouterLink, DriverProfileCardComponent],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -204,7 +199,8 @@ export class DriverProfilePage implements OnInit {
   private updateMeta(): void {
     this.metaService.updateTags({
       title: 'Mi Perfil de Conductor - AutoRenta',
-      description: 'Revisa tu clase de conductor, beneficios y descuentos en el sistema Bonus-Malus.',
+      description:
+        'Revisa tu clase de conductor, beneficios y descuentos en el sistema Bonus-Malus.',
       keywords: 'perfil conductor, bonus malus, descuentos, clase conductor',
     });
   }

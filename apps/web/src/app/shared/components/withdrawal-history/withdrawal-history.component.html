@@ -23,7 +23,9 @@
 
   <!-- Empty State -->
   @if (!loading && requests.length === 0) {
-    <div class="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+    <div
+      class="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600"
+    >
       <svg
         class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-300"
         fill="none"
@@ -38,7 +40,9 @@
         ></path>
       </svg>
       <h3 class="mt-2 text-sm font-semibold text-gray-900">No hay retiros</h3>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">Todavía no has solicitado ningún retiro</p>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+        Todavía no has solicitado ningún retiro
+      </p>
     </div>
   }
 

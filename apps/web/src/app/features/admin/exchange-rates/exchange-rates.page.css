@@ -69,7 +69,8 @@ tr.hover\:bg-gray-50:hover {
 
 /* Alert icon pulse animation for outdated rates */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -77,6 +78,6 @@ tr.hover\:bg-gray-50:hover {
   }
 }
 
-svg[title*="Desactualizado"] {
+svg[title*='Desactualizado'] {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

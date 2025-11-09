@@ -62,17 +62,15 @@ export class PublicProfilePage {
                 switchMap((cars) => {
                   return from(this.reviewsService.getReviewsForOwner(userId)).pipe(
                     switchMap((ownerReviews) => {
-                      return from(this.reviewsService
-                        .getReviewsForRenter(userId))
-                        .pipe(
-                          map((renterReviews) => ({
-                            profile,
-                            stats,
-                            cars,
-                            ownerReviews,
-                            renterReviews,
-                          })),
-                        );
+                      return from(this.reviewsService.getReviewsForRenter(userId)).pipe(
+                        map((renterReviews) => ({
+                          profile,
+                          stats,
+                          cars,
+                          ownerReviews,
+                          renterReviews,
+                        })),
+                      );
                     }),
                   );
                 }),

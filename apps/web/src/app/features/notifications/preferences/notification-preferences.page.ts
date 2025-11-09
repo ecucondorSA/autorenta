@@ -32,12 +32,24 @@ interface NotificationPreference {
               class="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
               type="button"
             >
-              <svg class="h-6 w-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              <svg
+                class="h-6 w-6 text-gray-600 dark:text-gray-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
             <div>
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Preferencias de notificaciones</h1>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                Preferencias de notificaciones
+              </h1>
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 Personaliza qué notificaciones quieres recibir
               </p>
@@ -62,7 +74,9 @@ interface NotificationPreference {
           <div class="mb-6 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-2xl dark:bg-sky-700/30">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-2xl dark:bg-blue-900/30"
+                >
                   🔔
                 </div>
                 <div>
@@ -77,7 +91,7 @@ interface NotificationPreference {
               <button
                 (click)="toggleBrowserNotifications()"
                 [disabled]="browserNotificationsPermission() === 'denied'"
-                [class.bg-sky-600]="browserNotificationsEnabled()"
+                [class.bg-blue-600]="browserNotificationsEnabled()"
                 [class.bg-gray-300]="!browserNotificationsEnabled()"
                 class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 type="button"
@@ -90,9 +104,10 @@ interface NotificationPreference {
               </button>
             </div>
             @if (browserNotificationsPermission() === 'denied') {
-              <div class="mt-3 rounded-lg bg-beige-50 p-3 dark:bg-yellow-900/20">
-                <p class="text-sm text-beige-500 dark:text-beige-200">
-                  ⚠️ Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la configuración de tu navegador.
+              <div class="mt-3 rounded-lg bg-yellow-50 p-3 dark:bg-yellow-900/20">
+                <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                  ⚠️ Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la
+                  configuración de tu navegador.
                 </p>
               </div>
             }
@@ -102,7 +117,9 @@ interface NotificationPreference {
           <div class="mb-6 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-2xl dark:bg-sky-900/30">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-2xl dark:bg-purple-900/30"
+                >
                   🔊
                 </div>
                 <div>
@@ -116,7 +133,7 @@ interface NotificationPreference {
               </div>
               <button
                 (click)="toggleSound()"
-                [class.bg-sky-600]="soundEnabled()"
+                [class.bg-purple-600]="soundEnabled()"
                 [class.bg-gray-300]="!soundEnabled()"
                 class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                 type="button"
@@ -141,9 +158,13 @@ interface NotificationPreference {
 
             <div class="space-y-4">
               @for (pref of preferences(); track pref.type) {
-                <div class="flex items-center justify-between rounded-lg border border-gray-200 p-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700/50">
+                <div
+                  class="flex items-center justify-between rounded-lg border border-gray-200 p-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700/50"
+                >
                   <div class="flex items-center gap-4">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-xl dark:bg-gray-700">
+                    <div
+                      class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-xl dark:bg-gray-700"
+                    >
                       {{ pref.icon }}
                     </div>
                     <div class="flex-1">
@@ -157,7 +178,7 @@ interface NotificationPreference {
                   </div>
                   <button
                     (click)="togglePreference(pref)"
-                    [class.bg-sky-600]="pref.enabled"
+                    [class.bg-blue-600]="pref.enabled"
                     [class.bg-gray-300]="!pref.enabled"
                     class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     type="button"
@@ -185,7 +206,7 @@ interface NotificationPreference {
             <button
               (click)="savePreferences()"
               [disabled]="saving()"
-              class="rounded-lg bg-sky-600 px-6 py-3 font-medium text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-50"
+              class="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               type="button"
             >
               @if (saving()) {
@@ -286,7 +307,9 @@ export class NotificationPreferencesPage implements OnInit {
   async loadPreferences() {
     this.loading.set(true);
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) return;
 
       // Load sound state from NotificationSoundService
@@ -300,11 +323,11 @@ export class NotificationPreferencesPage implements OnInit {
         const parsed = JSON.parse(savedPrefs);
 
         // Update preferences
-        this.preferences.update(prefs =>
-          prefs.map(p => ({
+        this.preferences.update((prefs) =>
+          prefs.map((p) => ({
             ...p,
             enabled: parsed.types?.[p.type] ?? true,
-          }))
+          })),
         );
 
         // Sync sound state (service takes precedence)
@@ -337,7 +360,9 @@ export class NotificationPreferencesPage implements OnInit {
     }
 
     if (Notification.permission === 'denied') {
-      alert('Has bloqueado las notificaciones. Por favor, habilítalas en la configuración de tu navegador.');
+      alert(
+        'Has bloqueado las notificaciones. Por favor, habilítalas en la configuración de tu navegador.',
+      );
       return;
     }
 
@@ -347,7 +372,7 @@ export class NotificationPreferencesPage implements OnInit {
       this.browserNotificationsEnabled.set(permission === 'granted');
     } else {
       // Already granted, toggle the setting
-      this.browserNotificationsEnabled.update(v => !v);
+      this.browserNotificationsEnabled.update((v) => !v);
     }
   }
 
@@ -363,25 +388,30 @@ export class NotificationPreferencesPage implements OnInit {
   }
 
   togglePreference(pref: NotificationPreference) {
-    this.preferences.update(prefs =>
-      prefs.map(p => p.type === pref.type ? { ...p, enabled: !p.enabled } : p)
+    this.preferences.update((prefs) =>
+      prefs.map((p) => (p.type === pref.type ? { ...p, enabled: !p.enabled } : p)),
     );
   }
 
   async savePreferences() {
     this.saving.set(true);
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) return;
 
       // Save to localStorage for now
       const prefsToSave = {
         soundEnabled: this.soundEnabled(), // Already synced with service
         browserNotificationsEnabled: this.browserNotificationsEnabled(),
-        types: this.preferences().reduce((acc, p) => {
-          acc[p.type] = p.enabled;
-          return acc;
-        }, {} as Record<string, boolean>),
+        types: this.preferences().reduce(
+          (acc, p) => {
+            acc[p.type] = p.enabled;
+            return acc;
+          },
+          {} as Record<string, boolean>,
+        ),
       };
 
       localStorage.setItem(`notification_prefs_${user.id}`, JSON.stringify(prefsToSave));

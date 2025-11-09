@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  signal,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
@@ -178,9 +172,7 @@ export class BookingConfirmationPage implements OnInit {
       await this.loadBookingAndVerifyPayment();
     } catch (err) {
       this.status.set('error');
-      this.errorMessage.set(
-        err instanceof Error ? err.message : 'Error cargando la confirmación'
-      );
+      this.errorMessage.set(err instanceof Error ? err.message : 'Error cargando la confirmación');
     } finally {
       this.isLoading.set(false);
     }
@@ -236,9 +228,7 @@ export class BookingConfirmationPage implements OnInit {
    * Carga el booking y verifica el estado del pago
    */
   private async loadBookingAndVerifyPayment(): Promise<void> {
-    const bookingData = await this.bookingsService.getBookingById(
-      this.bookingId()
-    );
+    const bookingData = await this.bookingsService.getBookingById(this.bookingId());
 
     if (!bookingData) {
       throw new Error('Booking no encontrado');
@@ -256,9 +246,7 @@ export class BookingConfirmationPage implements OnInit {
       this.startPollingBookingStatus();
     } else if (bookingData.status === 'cancelled') {
       this.status.set('error');
-      this.errorMessage.set(
-        `El booking está en estado "${bookingData.status}"`
-      );
+      this.errorMessage.set(`El booking está en estado "${bookingData.status}"`);
     }
   }
 
@@ -274,9 +262,7 @@ export class BookingConfirmationPage implements OnInit {
       attempts++;
 
       try {
-        const bookingData = await this.bookingsService.getBookingById(
-          this.bookingId()
-        );
+        const bookingData = await this.bookingsService.getBookingById(this.bookingId());
 
         if (bookingData && bookingData.status === 'confirmed') {
           this.status.set('success');
@@ -349,7 +335,7 @@ export class BookingConfirmationPage implements OnInit {
     const confirmDate = this.formatDate(this.confirmedAt());
     const totalAmount = this.formatCurrency(
       (booking as any).total_price,
-      (booking as any).currency || 'ARS'
+      (booking as any).currency || 'ARS',
     );
 
     return `
@@ -535,9 +521,7 @@ export class BookingConfirmationPage implements OnInit {
     try {
       await this.loadBookingAndVerifyPayment();
     } catch (err) {
-      this.errorMessage.set(
-        err instanceof Error ? err.message : 'Error cargando la confirmación'
-      );
+      this.errorMessage.set(err instanceof Error ? err.message : 'Error cargando la confirmación');
     } finally {
       this.isLoading.set(false);
     }

@@ -182,7 +182,9 @@ export class AdminVerificationsPage implements OnInit {
     try {
       await this.adminService.rejectVerification(verification.user_id, level, reason);
 
-      alert('⚠️ Verificación rechazada. El usuario ha sido notificado por email con las instrucciones.');
+      alert(
+        '⚠️ Verificación rechazada. El usuario ha sido notificado por email con las instrucciones.',
+      );
 
       this.closeModal();
       await Promise.all([this.loadVerifications(), this.loadStats()]);

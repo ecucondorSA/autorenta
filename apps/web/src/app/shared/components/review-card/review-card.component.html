@@ -1,5 +1,5 @@
 <div
-  class="review-card bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
+  class="review-card bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
 >
   <!-- Header with user info and rating -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
@@ -40,7 +40,7 @@
       <div>
         <a
           [routerLink]="['/users', review.reviewer_id]"
-          class="font-semibold text-gray-900 hover:text-sky-600 transition-colors focus:outline-none focus:underline"
+          class="font-semibold text-gray-900 hover:text-blue-600 transition-colors focus:outline-none focus:underline"
         >
           {{ review.reviewer_name || 'Usuario' }}
         </a>
@@ -55,7 +55,10 @@
           </svg>
           {{ getTimeSince(review.created_at) }}
         </p>
-        <p *ngIf="showCarTitle && review.car_title" class="text-xs text-gray-400 dark:text-gray-300 mt-1">
+        <p
+          *ngIf="showCarTitle && review.car_title"
+          class="text-xs text-gray-400 dark:text-gray-300 mt-1"
+        >
           {{ review.car_title }}
         </p>
       </div>
@@ -69,7 +72,7 @@
           @for (star of getRatingStars(getOverallRating()); track $index) {
             <svg
               class="w-5 h-5"
-              [class.text-beige-400]="star === 'filled'"
+              [class.text-yellow-400]="star === 'filled'"
               [class.text-gray-300]="star === 'empty'"
               fill="currentColor"
               viewBox="0 0 20 20"
@@ -95,12 +98,17 @@
   </div>
 
   <!-- Public comment -->
-  <div *ngIf="review.comment_public" class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-l-4 border-sky-500">
+  <div
+    *ngIf="review.comment_public"
+    class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-l-4 border-blue-500"
+  >
     <p class="text-gray-700 leading-relaxed">{{ review.comment_public }}</p>
   </div>
 
   <!-- Category ratings -->
-  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+  <div
+    class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+  >
     <div class="category-rating" *ngIf="review.rating_cleanliness">
       <div class="flex items-center justify-between text-sm">
         <span class="text-gray-600 dark:text-gray-300">Limpieza</span>
@@ -108,7 +116,7 @@
           <svg
             *ngFor="let star of getRatingStars(review.rating_cleanliness)"
             class="w-4 h-4"
-            [class.text-beige-400]="star === 'filled'"
+            [class.text-yellow-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -128,7 +136,7 @@
           <svg
             *ngFor="let star of getRatingStars(review.rating_communication)"
             class="w-4 h-4"
-            [class.text-beige-400]="star === 'filled'"
+            [class.text-yellow-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -148,7 +156,7 @@
           <svg
             *ngFor="let star of getRatingStars(review.rating_accuracy)"
             class="w-4 h-4"
-            [class.text-beige-400]="star === 'filled'"
+            [class.text-yellow-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -168,7 +176,7 @@
           <svg
             *ngFor="let star of getRatingStars(review.rating_location)"
             class="w-4 h-4"
-            [class.text-beige-400]="star === 'filled'"
+            [class.text-yellow-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -188,7 +196,7 @@
           <svg
             *ngFor="let star of getRatingStars(review.rating_checkin)"
             class="w-4 h-4"
-            [class.text-beige-400]="star === 'filled'"
+            [class.text-yellow-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -208,7 +216,7 @@
           <svg
             *ngFor="let star of getRatingStars(review.rating_value)"
             class="w-4 h-4"
-            [class.text-beige-400]="star === 'filled'"
+            [class.text-yellow-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"

@@ -1,7 +1,7 @@
 <div class="transaction-history-container p-4" data-testid="transaction-history">
   <!-- Header -->
   <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-pearl-white">
+    <h2 class="text-2xl font-bold text-smoke-black dark:text-pearl-white">
       Historial de Transacciones
     </h2>
     <button
@@ -16,13 +16,13 @@
   <!-- Filters -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
     <div>
-      <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-beige-200">
+      <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-pearl-light">
         Filtrar por tipo
       </label>
       <select
         [value]="filterType()"
         (change)="onFilterTypeChange($any($event.target).value)"
-        class="w-full px-4 py-2 rounded-lg border border-gray-400 dark:border-gray-600 bg-white dark:bg-charcoal-dark text-gray-900 dark:text-pearl-white"
+        class="w-full px-4 py-2 rounded-lg border border-ash-gray dark:border-charcoal-medium bg-white dark:bg-charcoal-dark text-smoke-black dark:text-pearl-white"
       >
         <option *ngFor="let type of transactionTypes" [value]="type.value">
           {{ type.label }}
@@ -31,13 +31,13 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-beige-200">
+      <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-pearl-light">
         Filtrar por estado
       </label>
       <select
         [value]="filterStatus()"
         (change)="onFilterStatusChange($any($event.target).value)"
-        class="w-full px-4 py-2 rounded-lg border border-gray-400 dark:border-gray-600 bg-white dark:bg-charcoal-dark text-gray-900 dark:text-pearl-white"
+        class="w-full px-4 py-2 rounded-lg border border-ash-gray dark:border-charcoal-medium bg-white dark:bg-charcoal-dark text-smoke-black dark:text-pearl-white"
       >
         <option *ngFor="let status of transactionStatuses" [value]="status.value">
           {{ status.label }}
@@ -48,15 +48,22 @@
 
   <!-- Loading State -->
   <div *ngIf="isLoading()" class="text-center py-12">
-    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-ferrari-red border-t-transparent"></div>
-    <p class="mt-4 text-gray-600 dark:text-beige-200/70">Cargando transacciones...</p>
+    <div
+      class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-ferrari-red border-t-transparent"
+    ></div>
+    <p class="mt-4 text-charcoal-medium dark:text-pearl-light/70">Cargando transacciones...</p>
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error() && !isLoading()" class="bg-error-100 dark:bg-error-500/20 border border-error-300 dark:border-error-500/50 rounded-lg p-4 mb-4">
+  <div
+    *ngIf="error() && !isLoading()"
+    class="bg-error-100 dark:bg-error-500/20 border border-error-300 dark:border-error-500/50 rounded-lg p-4 mb-4"
+  >
     <div class="flex items-center justify-between">
       <div>
-        <h3 class="text-error-900 dark:text-error-100 font-semibold">Error al cargar transacciones</h3>
+        <h3 class="text-error-900 dark:text-error-100 font-semibold">
+          Error al cargar transacciones
+        </h3>
         <p class="text-error-700 dark:text-error-200 text-sm mt-1">{{ error()?.message }}</p>
       </div>
       <button
@@ -69,14 +76,28 @@
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!isLoading() && filteredTransactions().length === 0" class="text-center py-12" data-testid="empty-transactions">
-    <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-600 dark:text-beige-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  <div
+    *ngIf="!isLoading() && filteredTransactions().length === 0"
+    class="text-center py-12"
+    data-testid="empty-transactions"
+  >
+    <svg
+      class="mx-auto h-16 w-16 text-ash-gray dark:text-charcoal-medium dark:text-pearl-light"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+      />
     </svg>
-    <h3 class="mt-4 text-lg font-medium text-charcoal-dark dark:text-beige-200">
+    <h3 class="mt-4 text-lg font-medium text-charcoal-dark dark:text-pearl-light">
       No hay transacciones
     </h3>
-    <p class="mt-2 text-gray-600 dark:text-beige-200/70">
+    <p class="mt-2 text-charcoal-medium dark:text-pearl-light/70">
       No se encontraron transacciones con los filtros aplicados.
     </p>
   </div>
@@ -85,19 +106,16 @@
   <div *ngIf="!isLoading() && filteredTransactions().length > 0" class="space-y-4">
     <div
       *ngFor="let transaction of filteredTransactions(); trackBy: trackByTransactionId"
-      class="bg-white dark:bg-charcoal-dark rounded-lg border border-gray-400 dark:border-gray-600 hover:shadow-lg transition-shadow"
+      class="bg-white dark:bg-charcoal-dark rounded-lg border border-ash-gray dark:border-charcoal-medium hover:shadow-lg transition-shadow"
       data-testid="transaction-item"
     >
-      <div
-        class="p-4 cursor-pointer"
-        (click)="toggleTransactionDetails(transaction.id)"
-      >
+      <div class="p-4 cursor-pointer" (click)="toggleTransactionDetails(transaction.id)">
         <div class="flex items-center justify-between">
           <!-- Left: Type and Date -->
           <div class="flex-1">
             <div class="flex items-center gap-2 mb-1">
               <span class="text-2xl">{{ getTypeIcon(getTransactionType(transaction)) }}</span>
-              <span class="font-semibold text-gray-900 dark:text-pearl-white">
+              <span class="font-semibold text-smoke-black dark:text-pearl-white">
                 {{ translateType(getTransactionType(transaction)) }}
               </span>
               <span
@@ -107,17 +125,24 @@
                 {{ translateType(getTransactionType(transaction)) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 dark:text-beige-200/70">
+            <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
               {{ formatDate(transaction.transaction_date) }}
             </p>
           </div>
 
           <!-- Right: Amount and Status -->
           <div class="text-right">
-            <div class="text-lg font-bold" [ngClass]="{
-              'text-success-600 dark:text-success-400': !isOutgoingTransaction(getTransactionType(transaction)),
-              'text-error-600 dark:text-error-400': isOutgoingTransaction(getTransactionType(transaction))
-            }">
+            <div
+              class="text-lg font-bold"
+              [ngClass]="{
+                'text-success-600 dark:text-success-400': !isOutgoingTransaction(
+                  getTransactionType(transaction)
+                ),
+                'text-error-600 dark:text-error-400': isOutgoingTransaction(
+                  getTransactionType(transaction)
+                ),
+              }"
+            >
               {{ isOutgoingTransaction(getTransactionType(transaction)) ? '-' : '+' }}
               {{ formatCurrency(transaction.amount_cents, transaction.currency) }}
             </div>
@@ -131,7 +156,10 @@
         </div>
 
         <!-- Description -->
-        <div *ngIf="transaction.metadata?.['description']" class="mt-2 text-sm text-gray-600 dark:text-beige-200/70">
+        <div
+          *ngIf="transaction.metadata?.['description']"
+          class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light/70"
+        >
           {{ transaction.metadata['description'] }}
         </div>
       </div>
@@ -139,29 +167,35 @@
       <!-- Expanded Details -->
       <div
         *ngIf="expandedTransactionId() === transaction.id"
-        class="px-4 pb-4 border-t border-gray-400 dark:border-gray-600"
+        class="px-4 pb-4 border-t border-ash-gray dark:border-charcoal-medium"
       >
         <div class="mt-4 space-y-2 text-sm">
           <div class="flex justify-between">
-            <span class="text-gray-600 dark:text-beige-200/70">ID:</span>
-            <span class="font-mono text-xs text-gray-900 dark:text-pearl-white">{{ transaction.id }}</span>
+            <span class="text-charcoal-medium dark:text-pearl-light/70">ID:</span>
+            <span class="font-mono text-xs text-smoke-black dark:text-pearl-white">{{
+              transaction.id
+            }}</span>
           </div>
-          
+
           <div *ngIf="transaction.booking_id">
             <div class="flex justify-between items-center mb-2">
-              <span class="text-gray-600 dark:text-beige-200/70">Reserva:</span>
+              <span class="text-charcoal-medium dark:text-pearl-light/70">Reserva:</span>
               <a
                 [routerLink]="['/bookings', transaction.booking_id]"
-                class="font-mono text-xs text-sky-600 hover:text-beige-400 transition-colors underline"
+                class="font-mono text-xs text-accent-petrol hover:text-accent-warm transition-colors underline"
               >
-                {{ transaction.booking_id | slice: 0:8 }}...
+                {{ transaction.booking_id | slice: 0 : 8 }}...
               </a>
             </div>
             <div
-              *ngIf="isDepositRelatedTransaction(transaction) && getDepositStatus(transaction.booking_id)"
+              *ngIf="
+                isDepositRelatedTransaction(transaction) && getDepositStatus(transaction.booking_id)
+              "
               class="flex justify-between items-center"
             >
-              <span class="text-gray-600 dark:text-beige-200/70">Estado del depósito:</span>
+              <span class="text-charcoal-medium dark:text-pearl-light/70"
+                >Estado del depósito:</span
+              >
               <app-deposit-status-badge
                 [status]="getDepositStatus(transaction.booking_id)!"
               ></app-deposit-status-badge>
@@ -169,13 +203,17 @@
           </div>
 
           <div class="flex justify-between">
-            <span class="text-gray-600 dark:text-beige-200/70">Sistema:</span>
-            <span class="text-gray-900 dark:text-pearl-white">{{ transaction.source_system }}</span>
+            <span class="text-charcoal-medium dark:text-pearl-light/70">Sistema:</span>
+            <span class="text-smoke-black dark:text-pearl-white">{{
+              transaction.source_system
+            }}</span>
           </div>
 
           <div class="flex justify-between" *ngIf="transaction.metadata?.['provider']">
-            <span class="text-gray-600 dark:text-beige-200/70">Proveedor:</span>
-            <span class="text-gray-900 dark:text-pearl-white">{{ transaction.metadata['provider'] }}</span>
+            <span class="text-charcoal-medium dark:text-pearl-light/70">Proveedor:</span>
+            <span class="text-smoke-black dark:text-pearl-white">{{
+              transaction.metadata['provider']
+            }}</span>
           </div>
         </div>
       </div>

@@ -35,18 +35,18 @@ export interface BlockDateRequest {
       (click)="onBackdropClick($event)"
     >
       <div
-        class="bg-white dark:bg-gray-700-pure rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
+        class="bg-white dark:bg-slate-deep-pure rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
         (click)="$event.stopPropagation()"
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-gray-900 dark:text-beige-200">
+          <h2 class="text-xl font-bold text-smoke-black dark:text-pearl-light">
             {{ title() || 'Bloquear Fechas' }}
           </h2>
           <button
             type="button"
             (click)="close()"
-            class="text-gray-600 hover:text-gray-900 dark:hover:text-beige-200 transition-colors"
+            class="text-charcoal-medium hover:text-smoke-black dark:hover:text-pearl-light transition-colors"
             aria-label="Cerrar"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@ export interface BlockDateRequest {
         <div class="space-y-4">
           <!-- Date Range Picker -->
           <div>
-            <label class="block text-sm font-medium text-gray-900 dark:text-beige-200 mb-2">
+            <label class="block text-sm font-medium text-smoke-black dark:text-pearl-light mb-2">
               Rango de Fechas *
             </label>
             <input
@@ -72,21 +72,21 @@ export interface BlockDateRequest {
               type="text"
               placeholder="Seleccionar fechas"
               readonly
-              class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-sky-600 focus:ring-2 focus:ring-sky-600/20 transition-all cursor-pointer"
+              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all cursor-pointer"
             />
-            <p class="text-xs text-gray-600 dark:text-beige-200 mt-1">
+            <p class="text-xs text-charcoal-medium dark:text-pearl-light mt-1">
               {{ dateRangeText() }}
             </p>
           </div>
 
           <!-- Reason Selector -->
           <div>
-            <label class="block text-sm font-medium text-gray-900 dark:text-beige-200 mb-2">
+            <label class="block text-sm font-medium text-smoke-black dark:text-pearl-light mb-2">
               Motivo *
             </label>
             <select
               [(ngModel)]="selectedReason"
-              class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-sky-600 focus:ring-2 focus:ring-sky-600/20 transition-all"
+              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all"
             >
               <option value="">-- Seleccionar motivo --</option>
               <option value="maintenance">🔧 Mantenimiento</option>
@@ -98,28 +98,34 @@ export interface BlockDateRequest {
 
           <!-- Notes (Optional) -->
           <div>
-            <label class="block text-sm font-medium text-gray-900 dark:text-beige-200 mb-2">
+            <label class="block text-sm font-medium text-smoke-black dark:text-pearl-light mb-2">
               Notas (opcional)
             </label>
             <textarea
               [(ngModel)]="notes"
               rows="3"
               placeholder="Ej: Cambio de aceite programado, revisión técnica, etc."
-              class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-sky-600 focus:ring-2 focus:ring-sky-600/20 transition-all resize-none"
+              class="w-full px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 bg-white dark:bg-slate-deep focus:border-accent-petrol focus:ring-2 focus:ring-accent-petrol/20 transition-all resize-none"
             ></textarea>
           </div>
 
           <!-- Apply to All Cars (only show if has multiple cars) -->
-          <div *ngIf="hasMultipleCars()" class="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
+          <div
+            *ngIf="hasMultipleCars()"
+            class="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl"
+          >
             <input
               type="checkbox"
               id="applyToAll"
               [(ngModel)]="applyToAllCars"
-              class="mt-1 w-4 h-4 text-sky-600 border-gray-200 rounded focus:ring-sky-600"
+              class="mt-1 w-4 h-4 text-accent-petrol border-pearl-gray rounded focus:ring-accent-petrol"
             />
-            <label for="applyToAll" class="flex-1 text-sm text-gray-900 dark:text-beige-200 cursor-pointer">
+            <label
+              for="applyToAll"
+              class="flex-1 text-sm text-smoke-black dark:text-pearl-light cursor-pointer"
+            >
               <span class="font-semibold">Aplicar a todos mis autos</span>
-              <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+              <p class="text-xs text-charcoal-medium dark:text-gray-400 mt-0.5">
                 Bloqueará estas fechas en todos tus vehículos
               </p>
             </label>
@@ -139,7 +145,7 @@ export interface BlockDateRequest {
           <button
             type="button"
             (click)="close()"
-            class="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all font-medium"
+            class="flex-1 px-4 py-3 rounded-xl border-2 border-pearl-gray dark:border-gray-600 text-charcoal-medium hover:bg-gray-100 dark:hover:bg-slate-deep transition-all font-medium"
           >
             Cancelar
           </button>
@@ -149,7 +155,7 @@ export interface BlockDateRequest {
             [disabled]="!canSubmit() || loading()"
             [class.opacity-50]="!canSubmit() || loading()"
             [class.cursor-not-allowed]="!canSubmit() || loading()"
-            class="flex-1 px-4 py-3 rounded-xl bg-sky-600 text-white hover:bg-sky-600/90 transition-all font-medium flex items-center justify-center gap-2"
+            class="flex-1 px-4 py-3 rounded-xl bg-accent-petrol text-white hover:bg-accent-petrol/90 transition-all font-medium flex items-center justify-center gap-2"
           >
             <svg
               *ngIf="loading()"
@@ -158,7 +164,14 @@ export interface BlockDateRequest {
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
               <path
                 class="opacity-75"
                 fill="currentColor"
@@ -245,7 +258,8 @@ export class BlockDateModalComponent implements AfterViewInit, OnDestroy {
           this.selectedEndDate = selectedDates[1];
 
           const days = Math.ceil(
-            (this.selectedEndDate!.getTime() - this.selectedStartDate!.getTime()) / (1000 * 60 * 60 * 24),
+            (this.selectedEndDate!.getTime() - this.selectedStartDate!.getTime()) /
+              (1000 * 60 * 60 * 24),
           );
 
           this.dateRangeText.set(

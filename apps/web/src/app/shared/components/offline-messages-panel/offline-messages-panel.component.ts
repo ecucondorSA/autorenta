@@ -1,6 +1,9 @@
 import { Component, inject, signal, output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OfflineMessagesService, OfflineMessage } from '../../../core/services/offline-messages.service';
+import {
+  OfflineMessagesService,
+  OfflineMessage,
+} from '../../../core/services/offline-messages.service';
 import { MessagesService } from '../../../core/services/messages.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 
@@ -14,25 +17,25 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
   imports: [CommonModule],
   template: `
     <!-- Backdrop -->
-    <div
-      (click)="close.emit()"
-      class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-    ></div>
+    <div (click)="close.emit()" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"></div>
 
     <!-- Panel -->
     <div
       class="fixed right-0 top-0 z-50 h-full w-full max-w-md overflow-y-auto bg-white shadow-xl dark:bg-gray-800"
     >
       <!-- Header -->
-      <div class="sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-4 dark:border-gray-700 dark:bg-gray-800">
+      <div
+        class="sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-4 dark:border-gray-700 dark:bg-gray-800"
+      >
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Mensajes pendientes
-            </h2>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Mensajes pendientes</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-              {{ pendingMessages().length }} pendiente{{ pendingMessages().length !== 1 ? 's' : '' }},
-              {{ failedMessages().length }} fallido{{ failedMessages().length !== 1 ? 's' : '' }}
+              {{ pendingMessages().length }} pendiente{{
+                pendingMessages().length !== 1 ? 's' : ''
+              }}, {{ failedMessages().length }} fallido{{
+                failedMessages().length !== 1 ? 's' : ''
+              }}
             </p>
           </div>
           <button
@@ -210,7 +213,7 @@ export class OfflineMessagesPanelComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.loadMessages();
-    
+
     // Refresh every 3 seconds
     this.refreshInterval = setInterval(() => {
       this.loadMessages().catch(() => {
@@ -321,4 +324,3 @@ export class OfflineMessagesPanelComponent implements OnInit, OnDestroy {
     });
   }
 }
-

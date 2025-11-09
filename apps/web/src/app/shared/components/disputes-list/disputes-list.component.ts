@@ -32,9 +32,7 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
       <!-- Empty State -->
       @if (!loading() && disputes().length === 0) {
         <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
-          <p class="text-gray-600 dark:text-gray-300">
-            No hay disputas para esta reserva.
-          </p>
+          <p class="text-gray-600 dark:text-gray-300">No hay disputas para esta reserva.</p>
         </div>
       }
 
@@ -174,4 +172,3 @@ export class DisputesListComponent implements OnInit {
     });
   }
 }
-

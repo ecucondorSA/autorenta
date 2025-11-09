@@ -259,7 +259,7 @@ export class BonusProtectorService {
     level: number,
     currentClass: number,
     baseFeeUsd: number,
-    baseGuaranteeUsd: number
+    baseGuaranteeUsd: number,
   ): {
     feeIncrease: number;
     guaranteeIncrease: number;
@@ -376,7 +376,7 @@ export class BonusProtectorService {
    */
   simulateClaimImpact(
     currentClass: number,
-    claimSeverity: number
+    claimSeverity: number,
   ): {
     withoutProtector: { oldClass: number; newClass: number; increase: number };
     withProtector: { oldClass: number; newClass: number; increase: number; protected: boolean };
@@ -421,7 +421,8 @@ export class BonusProtectorService {
     const savings = {
       classIncrease: withoutProtector.increase - withProtector.increase,
       feeImpact: withProtector.increase === 0 ? 'Sin aumento' : `+${withProtector.increase * 5}%`,
-      guaranteeImpact: withProtector.increase === 0 ? 'Sin aumento' : `+${withProtector.increase * 10}%`,
+      guaranteeImpact:
+        withProtector.increase === 0 ? 'Sin aumento' : `+${withProtector.increase * 10}%`,
     };
 
     return {

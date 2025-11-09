@@ -19,7 +19,7 @@ import {
   WalletReconciliation,
   PaginatedResult,
 } from '@core/services/accounting.service';
-import { SupabaseService } from '@core/services/supabase.service';
+import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -34,7 +34,7 @@ type ActiveTab = 'ledger' | 'provisions' | 'closures' | 'audit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountingAdminPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly supabaseService = inject(SupabaseClientService);
   private readonly accountingService: AccountingService;
 
   // Tab management
@@ -115,10 +115,7 @@ export class AccountingAdminPage implements OnInit {
 
   constructor() {
     const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
-    );
+    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
   }
 
   async ngOnInit(): Promise<void> {
@@ -353,15 +350,7 @@ export class AccountingAdminPage implements OnInit {
         'balance_check',
         'closed_at',
       ],
-      [
-        'Período',
-        'Tipo',
-        'Estado',
-        'Total Débitos',
-        'Total Créditos',
-        'Balanceado',
-        'Cerrado',
-      ],
+      ['Período', 'Tipo', 'Estado', 'Total Débitos', 'Total Créditos', 'Balanceado', 'Cerrado'],
     );
     this.downloadCSV(csvContent, `closures-${new Date().toISOString()}.csv`);
   }
@@ -456,11 +445,7 @@ export class AccountingAdminPage implements OnInit {
   }
 
   // Utility methods
-  private convertToCSV(
-    data: any[],
-    fields: string[],
-    headers: string[],
-  ): string {
+  private convertToCSV(data: any[], fields: string[], headers: string[]): string {
     const csvRows: string[] = [];
 
     // Add headers

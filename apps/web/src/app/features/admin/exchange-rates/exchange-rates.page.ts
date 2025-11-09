@@ -77,10 +77,7 @@ export class ExchangeRatesPage implements OnInit {
     this.error.set(null);
 
     try {
-      await Promise.all([
-        this.loadCurrentRates(),
-        this.calculateStats(),
-      ]);
+      await Promise.all([this.loadCurrentRates(), this.calculateStats()]);
     } catch (err) {
       console.error('Error loading exchange rates:', err);
       this.error.set('Error al cargar tipos de cambio');
@@ -110,30 +107,30 @@ export class ExchangeRatesPage implements OnInit {
     const now = new Date();
     const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
 
-    const outdatedRates = rates.filter(r => {
+    const outdatedRates = rates.filter((r) => {
       const lastUpdate = new Date(r.last_updated);
       return lastUpdate < oneHourAgo;
     });
 
-    const avgMargin = rates.length > 0
-      ? rates.reduce((sum, r) => sum + r.margin_percent, 0) / rates.length
-      : 0;
+    const avgMargin =
+      rates.length > 0 ? rates.reduce((sum, r) => sum + r.margin_percent, 0) / rates.length : 0;
 
     const highestVolatility = rates.reduce((max, r) => {
       return Math.max(max, r.volatility_24h || 0);
     }, 0);
 
-    const lastSync = rates.length > 0
-      ? rates.reduce((latest, r) => {
-          const rateDate = new Date(r.last_updated);
-          const latestDate = latest ? new Date(latest) : new Date(0);
-          return rateDate > latestDate ? r.last_updated : latest;
-        }, '')
-      : null;
+    const lastSync =
+      rates.length > 0
+        ? rates.reduce((latest, r) => {
+            const rateDate = new Date(r.last_updated);
+            const latestDate = latest ? new Date(latest) : new Date(0);
+            return rateDate > latestDate ? r.last_updated : latest;
+          }, '')
+        : null;
 
     this.stats.set({
       total_pairs: rates.length,
-      active_pairs: rates.filter(r => r.is_active).length,
+      active_pairs: rates.filter((r) => r.is_active).length,
       outdated_pairs: outdatedRates.length,
       avg_margin_percent: avgMargin,
       highest_volatility: highestVolatility,
@@ -243,7 +240,9 @@ export class ExchangeRatesPage implements OnInit {
     try {
       this.loading.set(true);
 
-      const { data: { session } } = await this.supabase.getClient().auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.getClient().auth.getSession();
       const accessToken = session?.access_token;
 
       if (!accessToken) {
@@ -252,17 +251,14 @@ export class ExchangeRatesPage implements OnInit {
       }
 
       const supabaseUrl = this.supabase.getClient().supabaseUrl;
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/sync-binance-rates`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({}),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/sync-binance-rates`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({}),
+      });
 
       if (!response.ok) {
         throw new Error('Error al sincronizar tipos de cambio');

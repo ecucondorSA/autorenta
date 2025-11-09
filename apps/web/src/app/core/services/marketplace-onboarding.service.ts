@@ -85,32 +85,28 @@ export class MarketplaceOnboardingService {
    * @returns URL de autorización de Mercado Pago
    */
   async startOnboarding(userId: string): Promise<string> {
-    try {
-      // Generar state único para CSRF protection
-      const state = this.generateSecureState();
+    // Generar state único para CSRF protection
+    const state = this.generateSecureState();
 
-      // Calcular expiración (10 minutos)
-      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    // Calcular expiración (10 minutos)
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-      // Guardar state en BD
-      const { error: insertError } = await this.supabase.from('mp_onboarding_states').insert({
-        user_id: userId,
-        state,
-        redirect_uri: this.REDIRECT_URI,
-        expires_at: expiresAt,
-      });
+    // Guardar state en BD
+    const { error: insertError } = await this.supabase.from('mp_onboarding_states').insert({
+      user_id: userId,
+      state,
+      redirect_uri: this.REDIRECT_URI,
+      expires_at: expiresAt,
+    });
 
-      if (insertError) {
-        throw new Error('No se pudo iniciar el proceso de vinculación');
-      }
-
-      // Construir URL de autorización
-      const authUrl = this.buildAuthorizationUrl(state);
-
-      return authUrl;
-    } catch (error) {
-      throw error;
+    if (insertError) {
+      throw new Error('No se pudo iniciar el proceso de vinculación');
     }
+
+    // Construir URL de autorización
+    const authUrl = this.buildAuthorizationUrl(state);
+
+    return authUrl;
   }
 
   /**
@@ -166,7 +162,7 @@ export class MarketplaceOnboardingService {
         .eq('id', userId)
         .single();
 
-      if ((error)) {
+      if (error) {
         return {
           isApproved: false,
           hasActiveTokens: false,
@@ -174,7 +170,7 @@ export class MarketplaceOnboardingService {
       }
 
       const hasActiveTokens = data?.mp_token_expires_at
-        ? new Date(data?.mp_token_expires_at!) > new Date()
+        ? new Date(data.mp_token_expires_at) > new Date()
         : false;
 
       return {
@@ -205,7 +201,7 @@ export class MarketplaceOnboardingService {
         p_user_id: userId,
       });
 
-      if ((error)) {
+      if (error) {
         return false;
       }
 
@@ -222,26 +218,22 @@ export class MarketplaceOnboardingService {
    * @param userId ID del usuario
    */
   async unlinkAccount(userId: string): Promise<void> {
-    try {
-      // TODO: Revocar tokens en Mercado Pago API
-      // https://api.mercadopago.com/oauth/token/revoke
+    // TODO: Revocar tokens en Mercado Pago API
+    // https://api.mercadopago.com/oauth/token/revoke
 
-      // Limpiar datos locales
-      const { error } = await this.supabase
-        .from('users')
-        .update({
-          mercadopago_collector_id: null,
-          marketplace_approved: false,
-          mp_access_token_encrypted: null,
-          mp_refresh_token_encrypted: null,
-          mp_token_expires_at: null,
-        })
-        .eq('id', userId);
+    // Limpiar datos locales
+    const { error } = await this.supabase
+      .from('users')
+      .update({
+        mercadopago_collector_id: null,
+        marketplace_approved: false,
+        mp_access_token_encrypted: null,
+        mp_refresh_token_encrypted: null,
+        mp_token_expires_at: null,
+      })
+      .eq('id', userId);
 
-      if ((error)) throw error;
-    } catch (error) {
-      throw error;
-    }
+    if (error) throw error;
   }
 
   /**
@@ -401,9 +393,7 @@ export class MarketplaceOnboardingService {
 
     // ✅ ENCRIPTAR tokens antes de guardar
     const encryptedAccessToken = await this.encryptionService.encrypt(tokenResponse.access_token);
-    const encryptedRefreshToken = await this.encryptionService.encrypt(
-      tokenResponse.refresh_token,
-    );
+    const encryptedRefreshToken = await this.encryptionService.encrypt(tokenResponse.refresh_token);
 
     const { error } = await this.supabase
       .from('users')
@@ -417,7 +407,7 @@ export class MarketplaceOnboardingService {
       })
       .eq('id', userId);
 
-    if ((error)) {
+    if (error) {
       throw new Error('No se pudieron guardar las credenciales');
     }
   }
@@ -434,7 +424,7 @@ export class MarketplaceOnboardingService {
       })
       .eq('state', state);
 
-    if ((error)) {
+    if (error) {
       // No throw, esto no es crítico
     }
   }

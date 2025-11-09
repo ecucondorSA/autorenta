@@ -280,7 +280,9 @@ export class MessagesService {
             .map((presence) => presence.user_id)
             .filter((id): id is string => typeof id === 'string');
           callback(typingUsers);
-        } catch (__error) {}
+        } catch (__error) {
+          // Ignore errors in typing indicator updates
+        }
       })
       .subscribe();
 
@@ -334,6 +336,7 @@ export class MessagesService {
         }
       }
     } catch (__error) {
+      // Sync errors are logged elsewhere, no action needed here
     } finally {
       this.isSyncing.set(false);
     }

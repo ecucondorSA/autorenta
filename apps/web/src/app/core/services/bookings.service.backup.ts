@@ -30,7 +30,7 @@ export class BookingsService {
       p_start: start,
       p_end: end,
     });
-    
+
     if (error) {
       // Extraer mensaje de error de Supabase
       // Los errores de RPC pueden venir en diferentes formatos:
@@ -38,19 +38,22 @@ export class BookingsService {
       // - error.details: detalles adicionales
       // - error.hint: sugerencias
       const errorMessage = error.message || error.details || 'Error al crear la reserva';
-      
+
       // Log detallado para debugging
-      this.logger.error('request_booking RPC failed: ' + JSON.stringify({
-        error,
-        carId,
-        start,
-        end,
-        message: errorMessage,
-        code: error.code,
-        details: error.details,
-        hint: error.hint,
-      }));
-      
+      this.logger.error(
+        'request_booking RPC failed: ' +
+          JSON.stringify({
+            error,
+            carId,
+            start,
+            end,
+            message: errorMessage,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+          }),
+      );
+
       // Lanzar error con mensaje extraído
       throw new Error(errorMessage);
     }
@@ -67,7 +70,13 @@ export class BookingsService {
         addon_ids: [], // Sin add-ons por defecto, se agregan en checkout
       });
     } catch (insuranceError) {
-      this.logger.error('Insurance activation failed', 'BookingsService', insuranceError instanceof Error ? insuranceError : new Error(getErrorMessage(insuranceError)));
+      this.logger.error(
+        'Insurance activation failed',
+        'BookingsService',
+        insuranceError instanceof Error
+          ? insuranceError
+          : new Error(getErrorMessage(insuranceError)),
+      );
       // No bloqueamos la reserva si falla el seguro
       // El trigger de BD también lo activará al confirmar
     }
@@ -161,11 +170,21 @@ export class BookingsService {
         if (!carError && car) {
           (booking as Booking).car = car as Partial<import('../models').Car>; // Partial select, not full Car object
         } else if (carError) {
-          this.logger.error('Car query error', 'BookingsService', carError instanceof Error ? carError : new Error(getErrorMessage(carError)));
+          this.logger.error(
+            'Car query error',
+            'BookingsService',
+            carError instanceof Error ? carError : new Error(getErrorMessage(carError)),
+          );
         }
       } catch (carException) {
-        this.logger.error('Error loading car details', 'BookingsService', carException instanceof Error ? carException : new Error(getErrorMessage(carException)));
-        throw new Error(`Failed to load car details: ${carException instanceof Error ? carException.message : getErrorMessage(carException)}`);
+        this.logger.error(
+          'Error loading car details',
+          'BookingsService',
+          carException instanceof Error ? carException : new Error(getErrorMessage(carException)),
+        );
+        throw new Error(
+          `Failed to load car details: ${carException instanceof Error ? carException.message : getErrorMessage(carException)}`,
+        );
       }
     }
 
@@ -188,19 +207,39 @@ export class BookingsService {
             if (!policyError && policy) {
               (coverage as Record<string, unknown>)['policy'] = policy;
             } else if (policyError) {
-              this.logger.error('Policy query error', 'BookingsService', policyError instanceof Error ? policyError : new Error(getErrorMessage(policyError)));
+              this.logger.error(
+                'Policy query error',
+                'BookingsService',
+                policyError instanceof Error
+                  ? policyError
+                  : new Error(getErrorMessage(policyError)),
+              );
               throw new Error(`Failed to load policy: ${policyError.message}`);
             }
           }
 
           (booking as Booking).insurance_coverage = coverage;
         } else if (coverageError) {
-          this.logger.error('Coverage query error', 'BookingsService', coverageError instanceof Error ? coverageError : new Error(getErrorMessage(coverageError)));
+          this.logger.error(
+            'Coverage query error',
+            'BookingsService',
+            coverageError instanceof Error
+              ? coverageError
+              : new Error(getErrorMessage(coverageError)),
+          );
           throw new Error(`Failed to load coverage: ${coverageError.message}`);
         }
       } catch (coverageException) {
-        this.logger.error('Error loading coverage details', 'BookingsService', coverageException instanceof Error ? coverageException : new Error(getErrorMessage(coverageException)));
-        throw new Error(`Failed to load insurance coverage: ${coverageException instanceof Error ? coverageException.message : getErrorMessage(coverageException)}`);
+        this.logger.error(
+          'Error loading coverage details',
+          'BookingsService',
+          coverageException instanceof Error
+            ? coverageException
+            : new Error(getErrorMessage(coverageException)),
+        );
+        throw new Error(
+          `Failed to load insurance coverage: ${coverageException instanceof Error ? coverageException.message : getErrorMessage(coverageException)}`,
+        );
       }
     }
 
@@ -254,7 +293,11 @@ export class BookingsService {
           `Fondos desbloqueados por cancelación: ${reason ?? 'Cancelled by user'}`,
         );
       } catch (unlockError) {
-        this.logger.error('Failed to unlock funds', 'BookingsService', unlockError instanceof Error ? unlockError : new Error(getErrorMessage(unlockError)));
+        this.logger.error(
+          'Failed to unlock funds',
+          'BookingsService',
+          unlockError instanceof Error ? unlockError : new Error(getErrorMessage(unlockError)),
+        );
         // Continue with cancellation even if unlock fails
         // The unlock can be retried manually later
       }
@@ -434,11 +477,13 @@ export class BookingsService {
       }
 
       // Lock funds using wallet service
-      const lockResult = await firstValueFrom(this.walletService.lockFunds(
-        bookingId,
-        depositAmountCents,
-        description || `Garantía bloqueada - Reserva ${bookingId.substring(0, 8)}`
-      ));
+      const lockResult = await firstValueFrom(
+        this.walletService.lockFunds(
+          bookingId,
+          depositAmountCents,
+          description || `Garantía bloqueada - Reserva ${bookingId.substring(0, 8)}`,
+        ),
+      );
 
       if (!lockResult.success) {
         return { ok: false, error: lockResult.message };
@@ -479,10 +524,12 @@ export class BookingsService {
       }
 
       // Unlock funds
-      const unlockResult = await firstValueFrom(this.walletService.unlockFunds(
-        bookingId,
-        description || `Garantía liberada - Sin daños - Reserva ${bookingId.substring(0, 8)}`
-      ));
+      const unlockResult = await firstValueFrom(
+        this.walletService.unlockFunds(
+          bookingId,
+          description || `Garantía liberada - Sin daños - Reserva ${bookingId.substring(0, 8)}`,
+        ),
+      );
 
       if (!unlockResult.success) {
         return { ok: false, error: unlockResult.message };
@@ -740,48 +787,52 @@ export class BookingsService {
     } catch (error: unknown) {
       // Use ErrorHandlerService for consistent error handling
       this.errorHandler.handleBookingError(error, 'Create booking with validation', false); // Don't show toast, return error message instead
-      
+
       // Extraer mensaje de error de forma más robusta
       let errorMessage = 'Error al crear la reserva';
-      
+
       if (error instanceof Error) {
         errorMessage = error.message;
       } else if (error && typeof error === 'object' && 'message' in error) {
         errorMessage = String(error.message);
       }
-      
+
       // Mapear mensajes de error de Supabase a mensajes más amigables
       const errorLower = errorMessage.toLowerCase();
       let canWaitlist = false;
-      
+
       // Verificar si el error tiene la propiedad canWaitlist (pasado desde requestBooking)
       if (error && typeof error === 'object' && 'canWaitlist' in error) {
         canWaitlist = Boolean((error as any).canWaitlist);
       }
-      
+
       // Detectar errores que deben activar waitlist
       // El mensaje de request_booking cuando hay overlap es: "Auto no disponible en esas fechas"
       // También puede llegar como: "no disponible en esas fechas" o "auto no disponible"
-      const isUnavailableError = 
-        errorLower.includes('conflicting key') || 
-        errorLower.includes('exclusion constraint') || 
+      const isUnavailableError =
+        errorLower.includes('conflicting key') ||
+        errorLower.includes('exclusion constraint') ||
         errorLower.includes('bookings_no_overlap') ||
         errorLower.includes('no disponible en esas fechas') ||
         errorLower.includes('auto no disponible en esas fechas') ||
         errorLower.includes('auto no disponible');
-      
+
       if (isUnavailableError) {
-        errorMessage = 'El auto no está disponible para esas fechas. Otro usuario ya tiene una reserva en esas fechas.';
+        errorMessage =
+          'El auto no está disponible para esas fechas. Otro usuario ya tiene una reserva en esas fechas.';
         canWaitlist = true; // Permitir waitlist cuando hay conflicto de constraint o booking pending
-        
+
         // Log para debugging
-        this.logger.warn('Waitlist activated due to unavailable error: ' + JSON.stringify({
-          originalError: errorMessage,
-          errorLower,
-          carId,
-          startDate,
-          endDate,
-        }));
+        this.logger.warn(
+          'Waitlist activated due to unavailable error: ' +
+            JSON.stringify({
+              originalError: errorMessage,
+              errorLower,
+              carId,
+              startDate,
+              endDate,
+            }),
+        );
       } else if (errorLower.includes('no disponible') || errorLower.includes('not available')) {
         // Verificar si hay bookings pending que puedan causar el conflicto
         // Esto nos permite activar waitlist incluso si el mensaje genérico no lo indica
@@ -794,19 +845,25 @@ export class BookingsService {
             .eq('status', 'pending')
             .lte('start_at', endDate) // start_at <= endDate (overlap condition 1)
             .gte('end_at', startDate); // end_at >= startDate (overlap condition 2)
-          
+
           // Si hay bookings pending, activar waitlist
           if (pendingBookings && pendingBookings.length > 0) {
-            errorMessage = 'El auto no está disponible para esas fechas. Otro usuario ya tiene una reserva en esas fechas.';
+            errorMessage =
+              'El auto no está disponible para esas fechas. Otro usuario ya tiene una reserva en esas fechas.';
             canWaitlist = true;
           } else {
-            errorMessage = 'El auto no está disponible para esas fechas. Por favor elige otras fechas.';
+            errorMessage =
+              'El auto no está disponible para esas fechas. Por favor elige otras fechas.';
           }
         } catch {
           // Si falla la verificación, no activar waitlist
-          errorMessage = 'El auto no está disponible para esas fechas. Por favor elige otras fechas.';
+          errorMessage =
+            'El auto no está disponible para esas fechas. Por favor elige otras fechas.';
         }
-      } else if (errorLower.includes('no autenticado') || errorLower.includes('not authenticated')) {
+      } else if (
+        errorLower.includes('no autenticado') ||
+        errorLower.includes('not authenticated')
+      ) {
         errorMessage = 'Debes iniciar sesión para crear una reserva.';
       } else if (errorLower.includes('propio auto') || errorLower.includes('own car')) {
         errorMessage = 'No puedes reservar tu propio auto.';
@@ -815,7 +872,7 @@ export class BookingsService {
       } else if (errorLower.includes('fecha') || errorLower.includes('date')) {
         errorMessage = 'Las fechas seleccionadas no son válidas. Por favor verifica.';
       }
-      
+
       return {
         success: false,
         error: errorMessage,
@@ -905,10 +962,10 @@ export class BookingsService {
           const startDate = new Date(booking.start_at);
           const now = new Date();
           const hoursUntilStart = (startDate.getTime() - now.getTime()) / (1000 * 60 * 60);
-          
+
           let refundType: 'full' | 'partial' = 'full';
           let refundAmount: number | undefined;
-          
+
           // Calcular penalización (si aplica)
           if (hoursUntilStart < 24) {
             // Penalización del 25% si se cancela con menos de 24h
@@ -917,14 +974,16 @@ export class BookingsService {
             refundType = 'partial';
           } else if (hoursUntilStart < 48) {
             // Penalización del 10% si se cancela con menos de 48h
-            const cancellationFee = parseFloat(booking.total_amount?.toString() || '0') * 0.10;
+            const cancellationFee = parseFloat(booking.total_amount?.toString() || '0') * 0.1;
             refundAmount = parseFloat(booking.total_amount?.toString() || '0') - cancellationFee;
             refundType = 'partial';
           }
           // Si es más de 48h, reembolso completo (refundType = 'full')
 
           // Obtener token de autenticación
-          const { data: { session } } = await this.supabase.auth.getSession();
+          const {
+            data: { session },
+          } = await this.supabase.auth.getSession();
           if (!session?.access_token) {
             console.warn('No se pudo obtener token para procesar reembolso');
           } else {
@@ -934,7 +993,7 @@ export class BookingsService {
               {
                 method: 'POST',
                 headers: {
-                  'Authorization': `Bearer ${session.access_token}`,
+                  Authorization: `Bearer ${session.access_token}`,
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -944,7 +1003,7 @@ export class BookingsService {
                   ...(mercadopagoPaymentId && { mercadopago_payment_id: mercadopagoPaymentId }),
                   reason: 'Cancelación de reserva',
                 }),
-              }
+              },
             );
 
             if (!refundResponse.ok) {
@@ -1210,17 +1269,23 @@ export class BookingsService {
       if (booking.user_id) {
         try {
           await firstValueFrom(
-            from(this.driverProfileService.updateClassOnEvent({
-              eventType: 'booking_completed',
-              userId: booking.user_id,
-              claimWithFault: false,
-              claimSeverity: 0,
-            })).pipe(ignoreElements()),
+            from(
+              this.driverProfileService.updateClassOnEvent({
+                eventType: 'booking_completed',
+                userId: booking.user_id,
+                claimWithFault: false,
+                claimSeverity: 0,
+              }),
+            ).pipe(ignoreElements()),
           );
           this.logger.info(`Driver class updated for clean booking ${bookingId}`);
         } catch (classError) {
           // Don't fail the booking completion if class update fails
-          this.logger.error('Failed to update driver class', 'BookingsService', classError instanceof Error ? classError : new Error(getErrorMessage(classError)));
+          this.logger.error(
+            'Failed to update driver class',
+            'BookingsService',
+            classError instanceof Error ? classError : new Error(getErrorMessage(classError)),
+          );
         }
       }
 
@@ -1243,7 +1308,7 @@ export class BookingsService {
     bookingId: string,
     damageAmountCents: number,
     damageDescription: string,
-    claimSeverity: number = 1 // 1=minor, 2=moderate, 3=major
+    claimSeverity: number = 1, // 1=minor, 2=moderate, 3=major
   ): Promise<{ success: boolean; remaining_deposit?: number; error?: string }> {
     try {
       const booking = await this.getBookingById(bookingId);
@@ -1255,7 +1320,7 @@ export class BookingsService {
       const deductResult = await this.deductFromSecurityDeposit(
         bookingId,
         damageAmountCents,
-        damageDescription
+        damageDescription,
       );
 
       if (!deductResult.ok) {
@@ -1274,17 +1339,23 @@ export class BookingsService {
       if (booking.user_id) {
         try {
           await firstValueFrom(
-            from(this.driverProfileService.updateClassOnEvent({
-              eventType: 'booking_completed',
-              userId: booking.user_id,
-              claimWithFault: true,
-              claimSeverity: claimSeverity,
-            })).pipe(ignoreElements()),
+            from(
+              this.driverProfileService.updateClassOnEvent({
+                eventType: 'booking_completed',
+                userId: booking.user_id,
+                claimWithFault: true,
+                claimSeverity: claimSeverity,
+              }),
+            ).pipe(ignoreElements()),
           );
           this.logger.info(`Driver class updated for claim on booking ${bookingId}`);
         } catch (classError) {
           // Don't fail the booking completion if class update fails
-          this.logger.error('Failed to update driver class', 'BookingsService', classError instanceof Error ? classError : new Error(getErrorMessage(classError)));
+          this.logger.error(
+            'Failed to update driver class',
+            'BookingsService',
+            classError instanceof Error ? classError : new Error(getErrorMessage(classError)),
+          );
         }
       }
 

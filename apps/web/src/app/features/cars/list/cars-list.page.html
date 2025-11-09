@@ -1,7 +1,12 @@
 <section class="cars-map-page bg-ivory-100 dark:bg-gray-900 transition-colors duration-300">
   <!-- ✅ FIXED: Uso de app-car-card para precios dinámicos consistentes -->
   <ng-template #carouselCard let-car let-isTopRated="isTopRated">
-    <div class="map-carousel-card-wrapper" role="listitem" [attr.data-car-id]="car.id" [class.top-rated]="isTopRated">
+    <div
+      class="map-carousel-card-wrapper"
+      role="listitem"
+      [attr.data-car-id]="car.id"
+      [class.top-rated]="isTopRated"
+    >
       <app-car-card
         [car]="car"
         [selected]="isCarSelected(car.id)"
@@ -81,17 +86,17 @@
           >
             <!-- Skeletons mientras carga -->
             <ng-container *ngIf="loading(); else recommendedList">
-              <div *ngFor="let i of [1,2,3,4]" class="map-carousel-card" aria-hidden="true">
+              <div *ngFor="let i of [1, 2, 3, 4]" class="map-carousel-card" aria-hidden="true">
                 <app-skeleton-loader type="card"></app-skeleton-loader>
               </div>
             </ng-container>
             <ng-template #recommendedList>
-            <ng-container *ngFor="let car of recommendedCars(); trackBy: trackByCarId">
-              <ng-container
-                [ngTemplateOutlet]="carouselCard"
-                [ngTemplateOutletContext]="{ $implicit: car, isTopRated: isTopRated(car) }"
-              ></ng-container>
-            </ng-container>
+              <ng-container *ngFor="let car of recommendedCars(); trackBy: trackByCarId">
+                <ng-container
+                  [ngTemplateOutlet]="carouselCard"
+                  [ngTemplateOutletContext]="{ $implicit: car, isTopRated: isTopRated(car) }"
+                ></ng-container>
+              </ng-container>
             </ng-template>
           </div>
         </div>
