@@ -5,9 +5,10 @@ Fix TypeScript Test Errors - Advanced
 Script complementario para corregir errores avanzados de tipos en tests.
 
 Este script maneja errores que requieren análisis más profundo:
+- TS1117: Propiedades duplicadas en object literals ⭐ NEW
 - TS2345: RPC mocks con PostgrestSingleResponse completo
 - TS2367: Type comparison issues
-- TS2445: Private property access
+- TS2445: Private/protected property access
 - TS2322: Type assignment issues
 - TS2353: Object literal con propiedades inválidas
 - TS18046: Unknown types en catch blocks
@@ -46,6 +47,66 @@ def print_warning(msg: str):
     print(f"{YELLOW}⚠️  {msg}{NC}")
 
 
+def fix_duplicate_properties():
+    """Corrige errores TS1117: Propiedades duplicadas en object literals."""
+    test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
+    fixed_count = 0
+
+    for test_file in test_files:
+        content = test_file.read_text(encoding='utf-8')
+        original_content = content
+
+        # Buscar objetos con propiedades duplicadas
+        # Patrón: { ..., prop: value, ..., prop: value, ... }
+        # Buscar específicamente en resolveTo con duplicados
+        pattern = r'\.resolveTo\s*\(\s*\{([^}]+)\}\s*\)'
+        
+        def remove_duplicates(match):
+            obj_content = match.group(1)
+            # Dividir por comas y procesar propiedades
+            props = []
+            seen = set()
+            
+            # Extraer propiedades individuales
+            prop_pattern = r'(\w+):\s*([^,}]+)'
+            for prop_match in re.finditer(prop_pattern, obj_content):
+                prop_name = prop_match.group(1)
+                prop_value = prop_match.group(2).strip()
+                
+                # Solo agregar si no hemos visto esta propiedad antes
+                if prop_name not in seen:
+                    props.append(f'{prop_name}: {prop_value}')
+                    seen.add(prop_name)
+            
+            # Reconstruir objeto sin duplicados
+            return f".resolveTo({{ {', '.join(props)} }})"
+        
+        # Buscar y reemplazar objetos con duplicados
+        if re.search(pattern, content):
+            # Verificar si hay duplicados
+            matches = list(re.finditer(pattern, content))
+            for match in reversed(matches):
+                obj_content = match.group(1)
+                # Contar ocurrencias de cada propiedad
+                prop_counts = {}
+                for prop_match in re.finditer(r'(\w+):', obj_content):
+                    prop_name = prop_match.group(1)
+                    prop_counts[prop_name] = prop_counts.get(prop_name, 0) + 1
+                
+                # Si hay duplicados, limpiar
+                if any(count > 1 for count in prop_counts.values()):
+                    content = content[:match.start()] + remove_duplicates(match) + content[match.end():]
+
+        if content != original_content:
+            test_file.write_text(content, encoding='utf-8')
+            fixed_count += 1
+            print_success(f"Corregido duplicate properties en: {test_file.relative_to(PROJECT_ROOT)}")
+
+    if fixed_count > 0:
+        print_success(f"Corregidos {fixed_count} archivos con duplicate properties")
+    return fixed_count
+
+
 def fix_rpc_postgrest_response():
     """Corrige errores TS2345: RPC mocks con PostgrestSingleResponse incompleto."""
     test_files = list(PROJECT_ROOT.glob('apps/web/src/**/*.spec.ts'))
@@ -61,8 +122,6 @@ def fix_rpc_postgrest_response():
         
         def replace_with_full_response(match):
             # Verificar si ya tiene count, status o statusText (evitar duplicados)
-            match_start = match.start()
-            match_end = match.end()
             match_text = match.group(0)
             
             # Si ya tiene count, status o statusText, no modificar
@@ -344,6 +403,12 @@ def main():
     print(f"{YELLOW}⚠️  Ejecuta primero: python3 tools/fix-test-types.py{NC}\n")
 
     changes_made = False
+
+    # Paso 0: Corregir propiedades duplicadas primero (TS1117)
+    print(f"{BLUE}📋 Paso 0: Corregir propiedades duplicadas (TS1117){NC}")
+    if fix_duplicate_properties() > 0:
+        changes_made = True
+    print()
 
     # Paso 1: Corregir PostgrestResponse completo
     print(f"{BLUE}📋 Paso 1: Corregir PostgrestResponse completo (TS2345){NC}")
