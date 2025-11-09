@@ -39,6 +39,8 @@
     "check:guidelines": "./tools/check-dev-guidelines.sh",
     "tmux:dev": "./tools/tmux-dev-monitor.sh",
     "tmux:monitor": "./tools/tmux-monitor-only.sh",
+    "fix:test-types": "python3 tools/fix-test-types.py",
+    "fix:test-types:advanced": "python3 tools/fix-test-types-advanced.py",
     "_comment_utils": "=== UTILITIES ===",
     "install": "./tools/run.sh install",
     "install:all": "./tools/run.sh install",
