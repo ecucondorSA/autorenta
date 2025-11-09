@@ -50,7 +50,7 @@ import type { AdminRole, AdminPermission } from '../types/admin.types';
  * 2. data.requiredRole: User must have specific role
  * 3. data.requiredPermission: User must have specific permission
  */
-export const AdminGuard: CanMatchFn = async (route: Route, segments: UrlSegment[]) => {
+export const AdminGuard: CanMatchFn = async (route: Route, _segments: UrlSegment[]) => {
   const auth = inject(AuthService);
   const adminService = inject(AdminService);
   const router = inject(Router);
@@ -142,7 +142,7 @@ export function createAdminGuard(
   requiredRole?: AdminRole,
   requiredPermission?: AdminPermission,
 ): CanMatchFn {
-  return async (route: Route, segments: UrlSegment[]): Promise<GuardResult> => {
+  return async (route: Route, _segments: UrlSegment[]): Promise<GuardResult> => {
     // Override route data with specified requirements
     const modifiedRoute = {
       ...route,
@@ -153,7 +153,7 @@ export function createAdminGuard(
       },
     };
 
-    const result = await AdminGuard(modifiedRoute, segments);
+    const result = await AdminGuard(modifiedRoute, _segments);
     return result as GuardResult;
   };
 }

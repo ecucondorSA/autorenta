@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
-import { MercadoPagoGuard } from './core/guards/mercadopago.guard';
 import { VerificationGuard } from './core/guards/verification.guard';
 
 export const routes: Routes = [
@@ -91,7 +90,8 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
     loadComponent: () =>
       import('./features/bookings/urgent-booking/urgent-booking.page').then(
-        (m: any) => m.UrgentBookingPage,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (m: { UrgentBookingPage: any }) => m.UrgentBookingPage,
       ),
   },
   {
