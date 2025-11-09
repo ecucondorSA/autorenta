@@ -7,6 +7,7 @@ import {
   PaymentProvider,
 } from '../interfaces/payment-gateway.interface';
 import { SupabaseClientService } from './supabase-client.service';
+import { environment } from '../../../environments/environment';
 
 /**
  * PayPal Create Order Response
@@ -252,9 +253,7 @@ export class PayPalBookingGatewayService implements PaymentGateway {
    * Obtiene la URL base de Supabase desde variables de entorno
    */
   private getSupabaseUrl(): string {
-    const supabase = this.supabaseService.getClient();
-    // @ts-expect-error - Acceso interno al URL
-    return supabase.supabaseUrl || '';
+    return environment.supabaseUrl;
   }
 
   /**

@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { environment } from '../../../../environments/environment';
 
 interface ExchangeRate {
   id: string;
@@ -250,7 +251,7 @@ export class ExchangeRatesPage implements OnInit {
         return;
       }
 
-      const supabaseUrl = this.supabase.getClient().supabaseUrl;
+      const supabaseUrl = environment.supabaseUrl;
       const response = await fetch(`${supabaseUrl}/functions/v1/sync-binance-rates`, {
         method: 'POST',
         headers: {

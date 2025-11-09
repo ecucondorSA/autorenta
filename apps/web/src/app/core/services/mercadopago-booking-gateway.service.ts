@@ -3,6 +3,7 @@ import { Observable, from, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PaymentPreferenceResponse, PaymentGateway } from '../interfaces/payment-gateway.interface';
 import { SupabaseClientService } from './supabase-client.service';
+import { environment } from '../../../environments/environment';
 
 /**
  * Respuesta de creación de preferencia de MercadoPago
@@ -105,10 +106,7 @@ export class MercadoPagoBookingGatewayService implements PaymentGateway {
   private getSupabaseUrl(): string {
     // En Angular, las variables de entorno se acceden vía import
     // o se definen en environment.ts
-    // Por ahora, obtenemos del cliente Supabase
-    const supabase = this.supabaseService.getClient();
-    // @ts-expect-error - Acceso interno al URL
-    return supabase.supabaseUrl || '';
+    return environment.supabaseUrl;
   }
 
   /**

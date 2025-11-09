@@ -7,6 +7,7 @@ import {
   PaymentProvider,
 } from '../interfaces/payment-gateway.interface';
 import { SupabaseClientService } from './supabase-client.service';
+import { environment } from '../../../environments/environment';
 
 /**
  * PayPal Wallet Gateway Service
@@ -198,9 +199,7 @@ export class PayPalWalletGatewayService implements WalletPaymentGateway {
    * Obtiene la URL base de Supabase
    */
   private getSupabaseUrl(): string {
-    const supabase = this.supabaseService.getClient();
-    // @ts-expect-error - Acceso interno al URL
-    return supabase.supabaseUrl || '';
+    return environment.supabaseUrl;
   }
 
   /**
