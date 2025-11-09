@@ -53,14 +53,14 @@ export class WalletService {
       if (session?.user) {
         this.getBalance().subscribe({
           error: (err) => {
-            // Log error but don't block page - wallet page will show error state
-            console.warn('Failed to load wallet balance on init:', err);
+            // Failed to load wallet balance - error handled silently
+            // Wallet page will show error state to user
           }
         });
         this.getTransactions().subscribe({
           error: (err) => {
-            // Log error but don't block page - wallet page will show error state
-            console.warn('Failed to load wallet transactions on init:', err);
+            // Failed to load wallet transactions - error handled silently
+            // Wallet page will show error state to user
           }
         });
       }

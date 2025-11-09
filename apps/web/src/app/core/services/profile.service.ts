@@ -209,11 +209,7 @@ export class ProfileService {
       );
     }
 
-    console.log('✅ Perfil creado:', {
-      id: data?.id,
-      full_name: data?.full_name,
-    });
-
+    // ✅ Profile created successfully (removed console.log to avoid logging PII)
     return data as UserProfile;
   }
 
@@ -307,7 +303,8 @@ export class ProfileService {
         },
       });
     } catch (verificationError) {
-      console.warn('Document verification failed (non-blocking):', verificationError);
+      // Document verification failed (non-blocking) - removed console.warn to avoid logging document data
+      // Error is handled silently as verification is optional
     }
 
     return data as UserDocument;
