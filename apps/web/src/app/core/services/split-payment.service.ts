@@ -116,7 +116,7 @@ export class SplitPaymentService {
               : 0,
         };
       }),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to calculate payment statistics'));
       }),
     );
@@ -141,7 +141,7 @@ export class SplitPaymentService {
     ).pipe(
       map(({ data }) => data as PaymentSplit),
       switchMap((split) => this.createWalletTransaction(split)),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to complete payment split'));
       }),
     );
@@ -211,7 +211,7 @@ export class SplitPaymentService {
           },
         };
       }),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch payment breakdown'));
       }),
     );

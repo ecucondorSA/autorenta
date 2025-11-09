@@ -348,7 +348,7 @@ export class FgoManagementComponent implements OnInit {
     try {
       const policy = await this.riskMatrixService.getRiskPolicy(carValue);
       this.riskPolicy.set(policy);
-    } catch (__error) {
+    } catch {
       /* Silenced */
     }
   }
@@ -368,7 +368,7 @@ export class FgoManagementComponent implements OnInit {
 
       const inspections = await firstValueFrom(this.fgoService.getInspections(this.booking.id));
       this.inspections.set(inspections);
-    } catch (__error) {
+    } catch {
       /* Silenced */
     } finally {
       this.fgoLoading.set(false);
@@ -423,7 +423,7 @@ export class FgoManagementComponent implements OnInit {
       } else {
         alert(`Error al procesar claim: ${result.error}`);
       }
-    } catch (__error) {
+    } catch {
       alert('Error al procesar claim');
     } finally {
       this.claimProcessing.set(false);

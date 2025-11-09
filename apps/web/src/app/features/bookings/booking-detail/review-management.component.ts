@@ -128,7 +128,7 @@ export class ReviewManagementComponent implements OnInit {
         this.existingReview.set(review as Review);
         this.canReview.set(false);
       }
-    } catch (__error) {
+    } catch {
       /* Silenced */
     }
   }
@@ -157,7 +157,7 @@ export class ReviewManagementComponent implements OnInit {
       } else {
         alert(`Error al enviar la review: ${result.error}`);
       }
-    } catch (__error) {
+    } catch {
       alert('Error al enviar la review. Intentá nuevamente.');
     } finally {
       this.isSubmittingReview.set(false);
@@ -212,7 +212,7 @@ export class ReviewManagementComponent implements OnInit {
         carTitle: car.title || 'Vehículo',
         reviewType,
       });
-    } catch (__error) {
+    } catch {
       /* Silenced */
     }
   }

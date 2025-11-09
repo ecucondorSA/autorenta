@@ -92,7 +92,7 @@ export class AdminRefundsPage implements OnInit {
       const status = this.filterStatusSignal();
       const refunds = await this.adminService.listRefundRequests(status || undefined);
       this.refundRequestsSignal.set(refunds);
-    } catch (__error) {
+    } catch {
       this.refundRequestsSignal.set([]);
     } finally {
       this.loadingSignal.set(false);
