@@ -5,6 +5,7 @@ import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
 import { BookingCheckoutPage } from './booking-checkout.page';
+import type {PaymentProvider} from '../types/database.types';
 
 describe('BookingCheckoutPage', () => {
   let component: BookingCheckoutPage;

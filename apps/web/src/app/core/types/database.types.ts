@@ -3615,3 +3615,45 @@ export const tables = {
   withdrawal_requests,
   withdrawal_transactions,
 }
+
+
+
+// ============================================================================
+// MISSING TYPE EXPORTS (added by fix-test-types.py)
+// ============================================================================
+
+export type UserRole = 'locador' | 'locatario' | 'ambos' | 'admin';
+
+export type CarStatus = 'draft' | 'pending' | 'active' | 'suspended' | 'deleted';
+
+export type FuelType = 'nafta' | 'gasoil' | 'hibrido' | 'electrico';
+
+export type Transmission = 'manual' | 'automatic';
+
+export type CancelPolicy = 'flex' | 'moderate' | 'strict';
+
+export type BookingStatus =
+  | 'pending'
+  | 'pending_payment'
+  | 'confirmed'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
+  | 'no_show'
+  | 'expired';
+
+export type PaymentStatus =
+  | 'requires_payment'
+  | 'processing'
+  | 'succeeded'
+  | 'failed'
+  | 'refunded'
+  | 'partial_refund'
+  | 'chargeback'
+  | 'approved'
+  | 'cancelled'
+  | 'pending'
+  | 'rejected';
+
+export type PaymentProvider = 'mercadopago' | 'stripe' | 'mock' | 'otro';
+

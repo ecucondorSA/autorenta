@@ -307,7 +307,7 @@ describe('PayPalBookingGatewayService', () => {
                 Promise.resolve({
                   data: {
                     payment_preference_id: 'ORDER-123',
-                    payment_provider: 'paypal',
+                    PaymentProvider: 'paypal',
                     status: 'pending',
                   },
                   error: null,
@@ -331,7 +331,7 @@ describe('PayPalBookingGatewayService', () => {
                 Promise.resolve({
                   data: {
                     payment_preference_id: 'ORDER-123',
-                    payment_provider: 'paypal',
+                    PaymentProvider: 'paypal',
                     status: 'confirmed',
                   },
                   error: null,
@@ -504,7 +504,7 @@ describe('PayPalBookingGatewayService', () => {
                 Promise.resolve({
                   data: {
                     payment_preference_id: 'ORDER-INTEGRATION',
-                    payment_provider: 'paypal',
+                    PaymentProvider: 'paypal',
                     status: 'pending',
                   },
                   error: null,
