@@ -297,10 +297,10 @@ serve(async (req) => {
       }
     }
 
-    // Obtener información del usuario
+    // Obtener información del usuario (con PII desencriptado)
     const { data: authUser } = await supabase.auth.admin.getUserById(booking.renter_id);
     const { data: profile } = await supabase
-      .from('profiles')
+      .from('profiles_decrypted')
       .select('full_name, email, phone, dni, gov_id_number, gov_id_type, mercadopago_customer_id')
       .eq('id', booking.renter_id)
       .single();

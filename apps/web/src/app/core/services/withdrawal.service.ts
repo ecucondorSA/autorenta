@@ -107,7 +107,7 @@ export class WithdrawalService {
     try {
       const { data, error } = await this.supabase
         .getClient()
-        .from('bank_accounts')
+        .from('bank_accounts_decrypted')
         .select('*')
         .order('is_default', { ascending: false })
         .order('created_at', { ascending: false });
@@ -144,28 +144,44 @@ export class WithdrawalService {
         throw this.createError('INVALID_DOCUMENT', 'DNI/CUIT inválido');
       }
 
-      // Crear cuenta bancaria
-      const { data, error } = await this.supabase
+      // Crear cuenta bancaria usando RPC function para encriptación automática
+      const { data: accountId, error } = await this.supabase
         .getClient()
-        .from('bank_accounts')
-        .insert({
-          account_type: params.account_type,
-          account_number: params.account_number,
-          account_holder_name: params.account_holder_name,
-          account_holder_document: params.account_holder_document,
-          bank_name: params.bank_name,
-          is_active: true,
-          // Marcar como default si es la primera cuenta
-          is_default: this.bankAccounts().length === 0,
-        })
-        .select()
-        .single();
+        .rpc('add_bank_account_with_encryption', {
+          p_account_number: params.account_number,
+          p_account_holder_document: params.account_holder_document,
+          p_account_holder_name: params.account_holder_name,
+          p_account_type: params.account_type,
+          p_bank_name: params.bank_name,
+        });
 
       if (error) {
         throw this.createError('ADD_BANK_ACCOUNT_ERROR', error.message, error);
       }
 
-      const account = data as BankAccount;
+      if (!accountId) {
+        throw this.createError('ADD_BANK_ACCOUNT_ERROR', 'No account ID returned');
+      }
+
+      // Fetch the created account with decrypted data
+      const { data: accountData, error: fetchError } = await this.supabase
+        .getClient()
+        .from('bank_accounts_decrypted')
+        .select('*')
+        .eq('id', accountId)
+        .single();
+
+      if (fetchError) {
+        throw this.createError('FETCH_BANK_ACCOUNT_ERROR', fetchError.message, fetchError);
+      }
+
+      const account = accountData as BankAccount;
+
+      // Set as default if it's the first account
+      if (this.bankAccounts().length === 0) {
+        await this.setDefaultBankAccount(accountId);
+        account.is_default = true;
+      }
 
       // Actualizar lista de cuentas
       this.bankAccounts.update((accounts) => [account, ...accounts]);

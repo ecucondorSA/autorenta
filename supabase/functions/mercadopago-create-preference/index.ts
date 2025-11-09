@@ -208,10 +208,10 @@ serve(async (req) => {
       }
     }
 
-    // Obtener información del usuario (email desde auth.users, nombre desde profiles)
+    // Obtener información del usuario (email desde auth.users, nombre desde profiles con PII desencriptado)
     const { data: authUser } = await supabase.auth.admin.getUserById(transaction.user_id);
     const { data: profile } = await supabase
-      .from('profiles')
+      .from('profiles_decrypted')
       .select('full_name, email, phone, dni, gov_id_number, gov_id_type, mercadopago_customer_id')
       .eq('id', transaction.user_id)
       .single();

@@ -52,7 +52,7 @@ export class ProfileService {
     }
 
     const { data, error } = await this.supabase
-      .from('profiles')
+      .from('profiles_decrypted')
       .select('*')
       .eq('id', user.id)
       .single();
@@ -76,7 +76,7 @@ export class ProfileService {
 
   async getProfileById(userId: string): Promise<UserProfile | null> {
     const { data, error } = await this.supabase
-      .from('profiles')
+      .from('profiles_decrypted')
       .select('*')
       .eq('id', userId)
       .single();
@@ -106,18 +106,28 @@ export class ProfileService {
       delete payload.tos_accepted_at;
     }
 
-    const { data, error } = await this.supabase
-      .from('profiles')
-      .update(payload)
-      .eq('id', user.id)
-      .select()
-      .single();
+    // Use RPC function for encrypted updates
+    const { data, error } = await this.supabase.rpc('update_profile_with_encryption', {
+      p_user_id: user.id,
+      p_updates: payload,
+    });
 
     if (error) {
       throw error;
     }
 
-    return data as UserProfile;
+    // Verify success
+    if (!data || !(data as { success?: boolean }).success) {
+      throw new Error((data as { error?: string })?.error || 'Failed to update profile');
+    }
+
+    // Fetch and return updated profile
+    const updatedProfile = await this.getCurrentProfile();
+    if (!updatedProfile) {
+      throw new Error('Failed to fetch updated profile');
+    }
+
+    return updatedProfile;
   }
 
   async uploadAvatar(file: File): Promise<string> {

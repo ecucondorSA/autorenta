@@ -26,9 +26,9 @@ export async function createOrGetCustomer(
   mpAccessToken: string
 ): Promise<string | null> {
   try {
-    // 1. Verificar si ya tiene customer_id
+    // 1. Verificar si ya tiene customer_id (usa view con datos desencriptados)
     const { data: profile, error: profileError } = await supabase
-      .from('profiles')
+      .from('profiles_decrypted')
       .select('mercadopago_customer_id, email, full_name, phone, dni, gov_id_number, gov_id_type')
       .eq('id', userId)
       .single();

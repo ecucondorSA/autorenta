@@ -138,9 +138,9 @@ serve(async (req) => {
 
     const request = withdrawalRequest as unknown as WithdrawalRequest;
 
-    // Obtener datos de la cuenta bancaria
+    // Obtener datos de la cuenta bancaria (con datos desencriptados)
     const { data: bankAccount, error: baError } = await supabase
-      .from('bank_accounts')
+      .from('bank_accounts_decrypted')
       .select('*')
       .eq('id', request.bank_account_id)
       .single();
