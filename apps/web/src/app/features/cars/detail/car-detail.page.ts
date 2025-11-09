@@ -1047,7 +1047,10 @@ export class CarDetailPage implements OnInit {
    */
   private async loadBlockedDates(carId: string): Promise<void> {
     try {
-      const ranges = await this.carsService.getBlockedDateRanges(carId);
+      // Use CarAvailabilityService to get blocked dates
+      const { CarAvailabilityService } = await import('../../../core/services/car-availability.service');
+      const availabilityService = new CarAvailabilityService();
+      const ranges = await availabilityService.getBlockedDates(carId);
       this.blockedRanges.set(ranges);
 
       // DEPRECATED: Mantener blockedDates para compatibilidad con inline calendar

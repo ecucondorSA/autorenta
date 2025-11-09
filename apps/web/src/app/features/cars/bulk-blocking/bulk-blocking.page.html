@@ -95,7 +95,7 @@
             ></ion-checkbox>
             <ion-label>
               <h3>{{ getCarDisplayName(car) }}</h3>
-              <p>{{ car.license_plate }}</p>
+              <p>{{ car.plate || 'Sin patente' }}</p>
             </ion-label>
           </ion-item>
         </div>

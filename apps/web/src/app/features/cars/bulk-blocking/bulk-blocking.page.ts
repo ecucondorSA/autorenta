@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CarBlockingService, BlockDateParams } from '../../../core/services/car-blocking.service';
 import { CarsService } from '../../../core/services/cars.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Car } from '../../../core/models';
 
 @Component({
@@ -16,6 +17,7 @@ import { Car } from '../../../core/models';
 export class BulkBlockingPage implements OnInit {
   private readonly blockingService = inject(CarBlockingService);
   private readonly carsService = inject(CarsService);
+  private readonly authService = inject(AuthService);
 
   readonly loading = signal(false);
   readonly cars = signal<Car[]>([]);
@@ -35,7 +37,12 @@ export class BulkBlockingPage implements OnInit {
   async loadCars(): Promise<void> {
     this.loading.set(true);
     try {
-      const myCars = await this.carsService.getMyCars();
+      const session = await this.authService.ensureSession();
+      const userId = session?.user?.id;
+      if (!userId) {
+        throw new Error('Usuario no autenticado');
+      }
+      const myCars = await this.carsService.getCarsByOwner(userId);
       this.cars.set(myCars || []);
     } catch (err) {
       console.error('Error loading cars:', err);
