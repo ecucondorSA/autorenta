@@ -113,6 +113,7 @@ export class CarDetailPage implements OnInit {
   private readonly locationService = inject(LocationService);
   private readonly waitlistService = inject(WaitlistService);
   private readonly toastService = inject(ToastService);
+  private readonly availabilityService = inject(CarAvailabilityService);
 
   readonly expressMode = signal(false);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -1049,9 +1050,7 @@ export class CarDetailPage implements OnInit {
   private async loadBlockedDates(carId: string): Promise<void> {
     try {
       // Use CarAvailabilityService to get blocked dates
-      const { CarAvailabilityService } = await import('../../../core/services/car-availability.service');
-      const availabilityService = new CarAvailabilityService();
-      const ranges = await availabilityService.getBlockedDates(carId);
+      const ranges = await this.availabilityService.getBlockedDates(carId);
       this.blockedRanges.set(ranges);
 
       // DEPRECATED: Mantener blockedDates para compatibilidad con inline calendar
