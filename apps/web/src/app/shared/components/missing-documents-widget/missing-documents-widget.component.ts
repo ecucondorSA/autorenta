@@ -116,7 +116,8 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
 export class MissingDocumentsWidgetComponent implements OnInit {
   private readonly verificationService = inject(VerificationService);
 
-  readonly verificationStatus = this.verificationService.statuses;
+  readonly verificationStatuses = this.verificationService.statuses;
+  readonly verificationStatus = computed(() => this.verificationStatuses()[0] || null);
   readonly missingDocs = computed(() => this.verificationStatus()?.missing_docs || []);
   readonly missingDocsCount = computed(() => this.missingDocs().length);
   readonly hasVerificationStatus = computed(() => !!this.verificationStatus());

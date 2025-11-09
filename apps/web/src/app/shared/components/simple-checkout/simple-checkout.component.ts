@@ -294,8 +294,8 @@ export class SimpleCheckoutComponent {
         await this.processCardPayment(booking.id);
       }
 
-      // 4. Notificar al usuario
-      await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
+      // 4. Notificar al usuario (las notificaciones se crean automáticamente desde el backend)
+      // await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
 
       // 5. Emitir evento y redirigir
       this.bookingCreated.emit(booking);

@@ -48,13 +48,13 @@ import type { ReviewSummary } from '../../../core/models';
                         <div
                           class="h-4 rounded-full bg-blue-500"
                           [style.width.%]="
-                            getPercentage(s.rating_distribution[rating], s.total_count)
+                            getPercentage(getRatingCount(s, rating), s.total_count)
                           "
                         ></div>
                       </div>
                     </div>
                     <span class="w-12 text-right text-sm text-gray-600">
-                      {{ s.rating_distribution[rating] }}
+                      {{ getRatingCount(s, rating) }}
                     </span>
                   </div>
                 }
@@ -144,5 +144,12 @@ export class ReviewSummaryComponent implements OnInit {
   getPercentage(count: number, total: number): number {
     if (total === 0) return 0;
     return (count / total) * 100;
+  }
+
+  getRatingCount(summary: ReviewSummary, rating: number): number {
+    const distribution = summary.rating_distribution;
+    if (!distribution) return 0;
+    // Type-safe access to rating distribution
+    return distribution[rating as keyof typeof distribution] || 0;
   }
 }

@@ -119,11 +119,11 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                       </div>
                       <button
                         (click)="retryMessage(msg)"
-                        [disabled]="retrying.has(msg.id)"
+                        [disabled]="retrying().has(msg.id)"
                         class="ml-2 rounded-lg bg-yellow-600 px-3 py-1 text-xs font-medium text-white hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-50"
                         type="button"
                       >
-                        @if (retrying.has(msg.id)) {
+                        @if (retrying().has(msg.id)) {
                           Reintentando...
                         } @else {
                           Reintentar
@@ -170,11 +170,11 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                     <div class="flex gap-2">
                       <button
                         (click)="retryMessage(msg)"
-                        [disabled]="retrying.has(msg.id)"
+                        [disabled]="retrying().has(msg.id)"
                         class="flex-1 rounded-lg bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                         type="button"
                       >
-                        @if (retrying.has(msg.id)) {
+                        @if (retrying().has(msg.id)) {
                           Reintentando...
                         } @else {
                           Reintentar
