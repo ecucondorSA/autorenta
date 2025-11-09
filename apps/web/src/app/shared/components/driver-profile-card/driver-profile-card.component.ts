@@ -655,8 +655,10 @@ export class DriverProfileCardComponent implements OnInit {
   readonly activeProtector = computed(() => this.bonusProtectorService.activeProtector());
 
   readonly remainingClaims = computed(() => {
-    const protector = this.activeProtector();
-    return protector?.remaining_protected_claims ?? 0;
+    // ActiveBonusProtector doesn't include remaining claims
+    // This would need to be calculated from max_protected_claims - claims_used
+    // For now, return 0 as placeholder
+    return 0;
   });
 
   readonly protectorBadgeColor = computed(() => {
