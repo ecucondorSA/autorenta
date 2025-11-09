@@ -19,9 +19,9 @@ import {
   WalletReconciliation,
   PaginatedResult,
 } from '@core/services/accounting.service';
-import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { environment } from '../../../../environments/environment';
 
 type ActiveTab = 'ledger' | 'provisions' | 'closures' | 'audit';
 
@@ -34,7 +34,6 @@ type ActiveTab = 'ledger' | 'provisions' | 'closures' | 'audit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountingAdminPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseClientService);
   private readonly accountingService: AccountingService;
 
   // Tab management
@@ -114,8 +113,7 @@ export class AccountingAdminPage implements OnInit {
   );
 
   constructor() {
-    const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+    this.accountingService = new AccountingService(environment.supabaseUrl, environment.supabaseAnonKey);
   }
 
   async ngOnInit(): Promise<void> {
@@ -166,7 +164,13 @@ export class AccountingAdminPage implements OnInit {
     }
   }
 
-  updateLedgerFilters(updates: Partial<typeof this.ledgerFilters>): void {
+  updateLedgerFilters(updates: Partial<{
+    startDate: string;
+    endDate: string;
+    accountCode: string;
+    referenceType: string;
+    searchTerm: string;
+  }>): void {
     this.ledgerFilters.update((current) => ({ ...current, ...updates }));
   }
 
@@ -228,7 +232,10 @@ export class AccountingAdminPage implements OnInit {
     }
   }
 
-  updateProvisionsFilters(updates: Partial<typeof this.provisionsFilters>): void {
+  updateProvisionsFilters(updates: Partial<{
+    status: string;
+    provisionType: string;
+  }>): void {
     this.provisionsFilters.update((current) => ({ ...current, ...updates }));
   }
 
@@ -274,7 +281,12 @@ export class AccountingAdminPage implements OnInit {
     }
   }
 
-  updateClosuresFilters(updates: Partial<typeof this.closuresFilters>): void {
+  updateClosuresFilters(updates: Partial<{
+    periodType: string;
+    status: string;
+    startDate: string;
+    endDate: string;
+  }>): void {
     this.closuresFilters.update((current) => ({ ...current, ...updates }));
   }
 
@@ -380,7 +392,13 @@ export class AccountingAdminPage implements OnInit {
     }
   }
 
-  updateAuditLogsFilters(updates: Partial<typeof this.auditLogsFilters>): void {
+  updateAuditLogsFilters(updates: Partial<{
+    severity: string;
+    auditType: string;
+    resolutionStatus: string;
+    startDate: string;
+    endDate: string;
+  }>): void {
     this.auditLogsFilters.update((current) => ({ ...current, ...updates }));
   }
 

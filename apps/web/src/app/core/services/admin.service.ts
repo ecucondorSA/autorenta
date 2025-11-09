@@ -23,7 +23,7 @@
  */
 
 import { Injectable, inject } from '@angular/core';
-import { RefundRequest, ProcessRefundParams, ProcessRefundResult } from '../models';
+import { RefundRequest, ProcessRefundParams, ProcessRefundResult, Booking } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 import type {
@@ -684,7 +684,7 @@ export class AdminService {
       .select(
         `
         *,
-        user:profiles!withdrawal_requests_user_id_fkey(full_name, email:auth.users(email)),
+        user:profiles!withdrawal_requests_user_id_fkey(full_name, email),
         bank_account:bank_accounts(*)
       `,
       )
@@ -699,12 +699,11 @@ export class AdminService {
 
     return (data ?? []).map((item) => {
       const typedItem = item as Record<string, unknown>;
+      const user = typedItem.user as Record<string, unknown> | undefined;
       return {
         ...typedItem,
-        user_name: (typedItem.user as Record<string, unknown>)?.full_name,
-        user_email: (
-          (typedItem.user as Record<string, unknown>)?.email as Array<{ email: string }>
-        )?.[0]?.email,
+        user_name: user?.full_name as string | undefined,
+        user_email: user?.email as string | undefined,
       };
     });
   }
@@ -937,7 +936,7 @@ export class AdminService {
       .select(
         `
         *,
-        user:profiles!refund_requests_user_id_fkey(full_name, email:auth.users(email)),
+        user:profiles!refund_requests_user_id_fkey(full_name, email),
         booking:bookings(total_amount, total_cents, currency, car:cars(title))
       `,
       )
@@ -957,8 +956,8 @@ export class AdminService {
 
     return {
       ...typedData,
-      user_name: user?.full_name,
-      user_email: ((user?.email as Array<{ email: string }>) ?? [])[0]?.email,
+      user_name: user?.full_name as string | undefined,
+      user_email: user?.email as string | undefined,
       booking_total: booking?.total_amount ?? (booking?.total_cents as number) / 100,
       car_title: car?.title,
     } as RefundRequest;

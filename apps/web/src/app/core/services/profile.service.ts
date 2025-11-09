@@ -183,7 +183,7 @@ export class ProfileService {
     const newProfile: Partial<UserProfile> = {
       id: userId,
       full_name: email.split('@')[0],
-      role: 'renter',
+      role: 'locatario',
       country: 'AR',
     };
 
@@ -209,12 +209,12 @@ export class ProfileService {
 
   async canPublishCars(): Promise<boolean> {
     const profile = await this.getCurrentProfile();
-    return profile?.role === 'owner' || profile?.role === 'both';
+    return profile?.role === 'locador' || profile?.role === 'ambos';
   }
 
   async canBookCars(): Promise<boolean> {
     const profile = await this.getCurrentProfile();
-    return profile?.role === 'renter' || profile?.role === 'both';
+    return profile?.role === 'locatario' || profile?.role === 'ambos';
   }
 
   async getMe(): Promise<UserProfile> {

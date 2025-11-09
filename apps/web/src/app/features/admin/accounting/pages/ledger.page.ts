@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -7,7 +7,7 @@ import {
   LedgerEntry,
   PaginatedResult,
 } from '../../../../core/services/accounting.service';
-import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-ledger',
@@ -17,7 +17,6 @@ import { SupabaseClientService } from '../../../../core/services/supabase-client
   styleUrls: ['./ledger.page.scss'],
 })
 export class LedgerPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseClientService);
   private readonly accountingService: AccountingService;
 
   readonly loading = signal(false);
@@ -39,8 +38,7 @@ export class LedgerPage implements OnInit {
   readonly pageSize = signal(50);
 
   constructor() {
-    const supabase = this.supabaseService.getClient();
-    this.accountingService = new AccountingService(supabase.supabaseUrl, supabase.supabaseKey);
+    this.accountingService = new AccountingService(environment.supabaseUrl, environment.supabaseAnonKey);
   }
 
   async ngOnInit(): Promise<void> {
