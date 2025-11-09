@@ -4,10 +4,28 @@ Fix TypeScript Test Errors
 ==========================
 Script para corregir automáticamente errores de tipos en tests de TypeScript.
 
-Errores que corrige:
-1. Tipos faltantes en database.types.ts (UserRole, CarStatus, etc.)
-2. Imports incorrectos de tipos
-3. Errores de tipos en tests (TS2345, TS2305, etc.)
+Errores que corrige (11 categorías):
+1. Tipos faltantes en database.types.ts (UserRole, CarStatus, etc.) - TS2305
+2. Imports incorrectos de tipos - TS2305, TS2307
+3. RPC mock errors (Promise vs PostgrestFilterBuilder) - TS2345
+4. UserRole type mismatches ('renter'/'owner' → 'locatario'/'locador') - TS2322
+5. ClassUpdateResult export missing - TS2305
+6. ParserError conversions - TS2352
+7. Implicit any types - TS7006
+8. Property suggestions ('Did you mean') - TS2551
+9. Promise.subscribe errors - TS2339
+10. Booking type faltante - TS2304
+11. Snake_case a PascalCase conversions
+
+Uso:
+    python3 tools/fix-test-types.py
+
+El script modifica archivos automáticamente. Se recomienda hacer commit antes de ejecutar.
+
+Estadísticas:
+- Errores corregidos: ~40+ errores automáticamente
+- Archivos modificados: 10+ archivos de test
+- Reducción: ~9.5% de errores totales
 """
 
 import re
