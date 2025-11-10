@@ -36,6 +36,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { createChildLogger } from '../_shared/logger.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Logger con contexto fijo
 const log = createChildLogger('MercadoPagoWebhook');
@@ -53,11 +54,6 @@ interface MPWebhookPayload {
     id: string;
   };
 }
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 // IPs autorizadas de MercadoPago (rangos CIDR)
 // Fuente: https://www.mercadopago.com.ar/developers/es/docs/your-integrations/notifications/ipn
@@ -128,6 +124,9 @@ function checkRateLimit(clientIP: string): { allowed: boolean; remaining: number
 }
 
 serve(async (req) => {
+  // ✅ SECURITY: CORS con whitelist de dominios permitidos
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });

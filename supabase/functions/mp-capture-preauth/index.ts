@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 const MERCADOPAGO_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN')!;
 const MP_API_BASE = 'https://api.mercadopago.com/v1';
@@ -27,6 +28,9 @@ interface MercadoPagoPaymentResponse {
 }
 
 serve(async (req) => {
+  // ✅ SECURITY: CORS con whitelist de dominios permitidos
+  const corsHeaders = getCorsHeaders(req);
+
   // CORS headers
   if (req.method === 'OPTIONS') {
     return new Response(null, {
