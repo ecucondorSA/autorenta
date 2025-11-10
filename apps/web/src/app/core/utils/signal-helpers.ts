@@ -73,7 +73,7 @@ export function toSignalSafe<T>(
       ...options,
       // Ensure requireSync is properly set
       requireSync: options?.requireSync ?? false,
-    } as ToSignalOptions<T>);
+    });
   } catch (error) {
     console.error('[toSignalSafe] Error converting observable to signal:', error);
     throw new Error(
@@ -99,7 +99,7 @@ export function toSignalSafe<T>(
  * ```
  */
 export function toSignalWithDefault<T>(source$: Observable<T>, initialValue: T): Signal<T> {
-  return toSignalSafe(source$, { initialValue });
+  return toSignalSafe(source$, { initialValue }) as Signal<T>;
 }
 
 /**
@@ -118,7 +118,7 @@ export function toSignalWithDefault<T>(source$: Observable<T>, initialValue: T):
  * ```
  */
 export function toSignalOrNull<T>(source$: Observable<T>): Signal<T | null> {
-  return toSignalSafe(source$, { initialValue: null });
+  return toSignalSafe(source$, { initialValue: null as NoInfer<T | null> }) as Signal<T | null>;
 }
 
 /**
