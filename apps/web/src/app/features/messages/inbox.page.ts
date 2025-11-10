@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MessagesService, Message } from '../../core/services/messages.service';
@@ -150,12 +150,13 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
     </div>
   `,
 })
-export class InboxPage implements OnInit, OnDestroy {
+export class InboxPage implements OnInit {
   private readonly router = inject(Router);
   private readonly messagesService = inject(MessagesService);
   private readonly authService = inject(AuthService);
   private readonly unreadMessagesService = inject(UnreadMessagesService);
   private readonly realtimeConnection = inject(RealtimeConnectionService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -173,12 +174,12 @@ export class InboxPage implements OnInit, OnDestroy {
 
     await this.loadConversations();
     this.subscribeToConversations(session.user.id);
-  }
 
-  ngOnDestroy(): void {
-    // Limpiar ambos canales
-    this.realtimeConnection.unsubscribe('inbox-conversations-sender');
-    this.realtimeConnection.unsubscribe('inbox-conversations-recipient');
+    // Register cleanup with DestroyRef for automatic cleanup
+    this.destroyRef.onDestroy(() => {
+      this.realtimeConnection.unsubscribe('inbox-conversations-sender');
+      this.realtimeConnection.unsubscribe('inbox-conversations-recipient');
+    });
   }
 
   /**
