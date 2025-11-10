@@ -299,7 +299,7 @@ export class SimpleCheckoutComponent {
       // await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
 
       // 5. Emitir evento y redirigir
-      this.bookingCreated.emit(booking);
+      this.bookingCreated.emit(booking as unknown as { id: string; [key: string]: unknown });
       this.router.navigate(['/bookings/success', booking.id]);
     } catch (error: unknown) {
       // Use ErrorHandlerService for consistent error handling
@@ -421,7 +421,7 @@ export class SimpleCheckoutComponent {
 
   getCarPhotoUrl(): string {
     const photos = this.car.photos || (this.car as { car_photos?: unknown[] }).car_photos;
-    return getCarImageUrl(photos, {
+    return getCarImageUrl(photos as { url: string }[] | undefined, {
       brand: this.car.brand || this.car.brand_name || '',
       model: this.car.model || this.car.model_name || '',
       year: this.car.year,

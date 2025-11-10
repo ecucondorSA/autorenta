@@ -483,3 +483,5 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
     this.closePanel.emit();
   }
 }
+
+

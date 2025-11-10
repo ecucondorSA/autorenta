@@ -213,8 +213,8 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.updateBooking(bookingId, { status: 'in_progress' });
       await this.loadBookings();
       await this.presentToast('Alquiler iniciado correctamente');
-    } catch {
-      console.error('Error starting rental:', __error);
+    } catch (error) {
+      console.error('Error starting rental:', error);
       await this.presentToast('Error al iniciar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -234,8 +234,8 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.updateBooking(bookingId, { status: 'completed' });
       await this.loadBookings();
       await this.presentToast('Alquiler finalizado correctamente');
-    } catch {
-      console.error('Error completing rental:', __error);
+    } catch (error) {
+      console.error('Error completing rental:', error);
       await this.presentToast('Error al finalizar el alquiler', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -256,8 +256,8 @@ export class OwnerBookingsPage implements OnInit {
       await this.bookingsService.cancelBooking(bookingId, false);
       await this.loadBookings();
       await this.presentToast('Reserva cancelada');
-    } catch {
-      console.error('Error cancelling booking:', __error);
+    } catch (error) {
+      console.error('Error cancelling booking:', error);
       await this.presentToast('Error al cancelar la reserva', 'danger');
     } finally {
       this.processingAction.set(null);
@@ -359,8 +359,8 @@ export class OwnerBookingsPage implements OnInit {
       );
 
       this.carLeads.set(enriched);
-    } catch {
-      console.error('Error loading car leads:', __error);
+    } catch (error) {
+      console.error('Error loading car leads:', error);
     } finally {
       this.leadsLoading.set(false);
     }

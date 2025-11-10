@@ -214,3 +214,5 @@ Para cada componente que migres:
 **Próximo paso**: Migrar `app.component.html` como ejemplo piloto
 
 
+
+

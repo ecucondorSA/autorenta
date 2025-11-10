@@ -135,17 +135,6 @@ export class OwnerDashboardPage implements OnInit {
     }
   }
 
-  get growthPercentage(): number {
-    const current = this.earnings().thisMonth;
-    const previous = this.earnings().lastMonth;
-    if (previous === 0) return current > 0 ? 100 : 0;
-    return Math.round(((current - previous) / previous) * 100);
-  }
-
-  get isGrowthPositive(): boolean {
-    return this.growthPercentage >= 0;
-  }
-
   toggleCalendar(): void {
     this.showCalendar.set(!this.showCalendar());
   }
