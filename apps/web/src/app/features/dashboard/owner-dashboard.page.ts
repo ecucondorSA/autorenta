@@ -9,6 +9,8 @@ import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';
 import { PayoutsHistoryComponent } from './components/payouts-history/payouts-history.component';
+import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
+import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
 
 interface EarningsSummary {
   thisMonth: number;
@@ -27,6 +29,8 @@ interface EarningsSummary {
     MultiCarCalendarComponent,
     MissingDocumentsWidgetComponent,
     PayoutsHistoryComponent,
+    SkeletonLoaderComponent,
+    ErrorStateComponent,
   ],
   templateUrl: './owner-dashboard.page.html',
   styleUrls: ['./owner-dashboard.page.css'],
@@ -70,6 +74,14 @@ export class OwnerDashboardPage implements OnInit {
 
   async ngOnInit() {
     await this.loadDashboardData();
+  }
+
+  getRetryAction() {
+    return {
+      label: 'Reintentar',
+      handler: () => this.loadDashboardData(),
+      variant: 'primary' as const
+    };
   }
 
   async loadDashboardData() {
