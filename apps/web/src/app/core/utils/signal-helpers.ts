@@ -5,9 +5,12 @@
  * Provides type-safe wrappers and helpers for common reactive patterns.
  */
 
-import { Signal, NoInfer } from '@angular/core';
+import { Signal } from '@angular/core';
 import { toSignal, ToSignalOptions } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
+
+// NoInfer is a TypeScript utility type, not from Angular
+type NoInfer<T> = [T][T extends any ? 0 : never];
 
 /**
  * Extended options for toSignalSafe wrapper
