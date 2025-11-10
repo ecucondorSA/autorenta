@@ -1,8 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'avatar' | 'list-item' | 'table-row';
-type SkeletonSize = 'sm' | 'md' | 'lg';
+type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation' | 'table';
 
 /**
  * 💀 Skeleton Loader Component
@@ -21,7 +20,7 @@ type SkeletonSize = 'sm' | 'md' | 'lg';
   template: `
     <div class="skeleton-wrapper">
       <!-- Card Skeleton -->
-      <div *ngIf="type === 'card'" class="skeleton-card" [class.skeleton-card-sm]="size === 'sm'" [class.skeleton-card-lg]="size === 'lg'">
+      <div *ngIf="type === 'card'" class="skeleton-card">
         <div class="skeleton-image"></div>
         <div class="skeleton-content">
           <div class="skeleton-line skeleton-title"></div>
@@ -32,11 +31,11 @@ type SkeletonSize = 'sm' | 'md' | 'lg';
 
       <!-- Text Skeleton -->
       <div *ngIf="type === 'text'" class="skeleton-text-wrapper">
-        <div *ngFor="let _ of counter" class="skeleton-line" [class.skeleton-line-sm]="size === 'sm'" [class.skeleton-line-lg]="size === 'lg'"></div>
+        <div *ngFor="let _ of counter" class="skeleton-line"></div>
       </div>
 
       <!-- Circle Skeleton (para avatares) -->
-      <div *ngIf="type === 'circle' || type === 'avatar'" class="skeleton-circle" [class.skeleton-circle-sm]="size === 'sm'" [class.skeleton-circle-lg]="size === 'lg'"></div>
+      <div *ngIf="type === 'circle'" class="skeleton-circle"></div>
 
       <!-- Rectangle Skeleton -->
       <div
@@ -46,21 +45,37 @@ type SkeletonSize = 'sm' | 'md' | 'lg';
         [style.height.px]="height"
       ></div>
 
-      <!-- List Item Skeleton -->
-      <div *ngIf="type === 'list-item'" class="skeleton-list-item">
-        <div class="skeleton-circle skeleton-circle-sm"></div>
-        <div class="flex-1">
-          <div class="skeleton-line skeleton-title"></div>
-          <div class="skeleton-line skeleton-text short"></div>
+      <!-- List Skeleton (para listas de items) -->
+      <div *ngIf="type === 'list'" class="skeleton-list">
+        <div *ngFor="let _ of counter" class="skeleton-list-item">
+          <div class="skeleton-circle small"></div>
+          <div class="skeleton-list-content">
+            <div class="skeleton-line skeleton-title"></div>
+            <div class="skeleton-line skeleton-text short"></div>
+          </div>
         </div>
       </div>
 
-      <!-- Table Row Skeleton -->
-      <div *ngIf="type === 'table-row'" class="skeleton-table-row">
-        <div class="skeleton-line" style="width: 20%;"></div>
-        <div class="skeleton-line" style="width: 30%;"></div>
-        <div class="skeleton-line" style="width: 25%;"></div>
-        <div class="skeleton-line" style="width: 15%;"></div>
+      <!-- Conversation Skeleton (para lista de conversaciones) -->
+      <div *ngIf="type === 'conversation'" class="skeleton-conversation">
+        <div *ngFor="let _ of counter" class="skeleton-conversation-item">
+          <div class="skeleton-circle"></div>
+          <div class="skeleton-conversation-content">
+            <div class="skeleton-line skeleton-title"></div>
+            <div class="skeleton-line skeleton-text"></div>
+            <div class="skeleton-line skeleton-text short"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Skeleton (para tablas) -->
+      <div *ngIf="type === 'table'" class="skeleton-table">
+        <div class="skeleton-table-header">
+          <div class="skeleton-line"></div>
+        </div>
+        <div *ngFor="let _ of counter" class="skeleton-table-row">
+          <div class="skeleton-line"></div>
+        </div>
       </div>
     </div>
   `,
@@ -163,55 +178,100 @@ type SkeletonSize = 'sm' | 'md' | 'lg';
         gap: 8px;
       }
 
-      /* Size variants for cards */
-      .skeleton-card-sm .skeleton-image {
-        height: 120px;
+      .skeleton-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
       }
 
-      .skeleton-card-lg .skeleton-image {
-        height: 300px;
-      }
-
-      /* Size variants for text */
-      .skeleton-line-sm {
-        height: 8px;
-      }
-
-      .skeleton-line-lg {
-        height: 16px;
-      }
-
-      /* Size variants for circles */
-      .skeleton-circle-sm {
-        width: 32px;
-        height: 32px;
-      }
-
-      .skeleton-circle-lg {
-        width: 64px;
-        height: 64px;
-      }
-
-      /* List item variant */
       .skeleton-list-item {
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 12px;
-        background: white;
         border-radius: 8px;
+        background: white;
+        border: 1px solid #e5e7eb;
       }
 
       :host-context(.dark) .skeleton-list-item {
         background: #1a1a1a;
+        border-color: #374151;
       }
 
-      /* Table row variant */
-      .skeleton-table-row {
+      .skeleton-list-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .skeleton-circle.small {
+        width: 40px;
+        height: 40px;
+      }
+
+      .skeleton-conversation {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .skeleton-conversation-item {
         display: flex;
         gap: 16px;
-        padding: 12px;
-        align-items: center;
+        padding: 16px;
+        border-radius: 12px;
+        background: white;
+        border: 1px solid #e5e7eb;
+      }
+
+      :host-context(.dark) .skeleton-conversation-item {
+        background: #1a1a1a;
+        border-color: #374151;
+      }
+
+      .skeleton-conversation-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .skeleton-table {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+      }
+
+      :host-context(.dark) .skeleton-table {
+        border-color: #374151;
+      }
+
+      .skeleton-table-header {
+        padding: 12px 16px;
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      :host-context(.dark) .skeleton-table-header {
+        background: #1f2937;
+        border-bottom-color: #374151;
+      }
+
+      .skeleton-table-row {
+        padding: 12px 16px;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .skeleton-table-row:last-child {
+        border-bottom: none;
+      }
+
+      :host-context(.dark) .skeleton-table-row {
+        background: #1a1a1a;
+        border-bottom-color: #374151;
       }
     `,
   ],
@@ -219,11 +279,9 @@ type SkeletonSize = 'sm' | 'md' | 'lg';
 })
 export class SkeletonLoaderComponent {
   @Input() type: SkeletonType = 'text';
-  @Input() size: SkeletonSize = 'md';
   @Input() count = 1;
   @Input() width = 100;
   @Input() height = 100;
-  @Input() animated = true;
 
   get counter(): number[] {
     return Array(this.count).fill(0);
