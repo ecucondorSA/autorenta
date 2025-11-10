@@ -122,7 +122,7 @@ export class BonusMalusService {
       type = 'NEUTRAL';
       message = 'Precio estándar sin ajustes';
       icon = '➖';
-      color = 'text-gray-600 dark:text-gray-300';
+      color = 'text-text-secondary dark:text-text-secondary';
       tips.push('Completa reservas y obtén buenas calificaciones para recibir descuentos.');
       tips.push('Evita cancelaciones para no recibir recargos.');
     } else if (factor <= 0.05) {
@@ -138,7 +138,7 @@ export class BonusMalusService {
       type = 'MALUS';
       message = `Tienes un ${percentage.toFixed(0)}% de recargo`;
       icon = '⛔';
-      color = 'text-red-600';
+      color = 'text-error-600';
       tips.push('Tu historial necesita mejorar para reducir el recargo.');
       tips.push('Completa reservas sin incidentes y obtén mejores calificaciones.');
       tips.push('Verifica tu identidad para reducir el recargo.');

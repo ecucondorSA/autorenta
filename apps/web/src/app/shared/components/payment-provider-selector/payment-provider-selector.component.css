@@ -45,7 +45,7 @@ input[type='radio'] {
 }
 
 /* Info Banner */
-.bg-gray-50 {
+.bg-surface-base {
   background-color: #f9fafb;
 }
 
@@ -75,15 +75,15 @@ input[type='radio'] {
     background-color: #1e3a8a;
   }
 
-  .text-gray-900 {
+  .text-text-primary {
     color: #f9fafb;
   }
 
-  .text-gray-600 {
+  .text-text-secondary {
     color: #9ca3af;
   }
 
-  .bg-gray-50 {
+  .bg-surface-base {
     background-color: #1f2937;
     border-color: #374151;
   }

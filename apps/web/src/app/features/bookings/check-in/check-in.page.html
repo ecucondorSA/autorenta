@@ -1,28 +1,28 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+<div class="min-h-screen bg-surface-base dark:bg-surface-raised py-8">
   <div class="max-w-4xl mx-auto px-4">
     <!-- Loading State -->
     @if (loading()) {
       <div class="text-center py-12">
         <div
-          class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 dark:border-gray-600 border-t-blue-600"
+          class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle dark:border-border-default border-t-blue-600"
         ></div>
-        <p class="mt-4 text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando reserva...</p>
+        <p class="mt-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary">Cargando reserva...</p>
       </div>
     }
 
     <!-- Error State -->
     @else if (error()) {
       <div
-        class="bg-red-50 border border-red-200 rounded-xl p-6 dark:bg-red-900/20 dark:border-red-800"
+        class="bg-error-50 border border-error-200 rounded-xl p-6 dark:bg-error-900/20 dark:border-error-800"
       >
         <div class="flex items-start gap-3">
           <div class="flex-shrink-0 text-2xl">⚠️</div>
           <div class="flex-1">
-            <h3 class="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">Error</h3>
-            <p class="text-red-700 dark:text-red-300">{{ error() }}</p>
+            <h3 class="text-lg font-semibold text-error-800 dark:text-error-200 mb-2">Error</h3>
+            <p class="text-error-700 dark:text-error-300">{{ error() }}</p>
             <button
               routerLink="/bookings"
-              class="mt-4 px-4 py-2 bg-red-600 text-text-inverse rounded-lg hover:bg-red-700 transition-colors"
+              class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors"
             >
               Volver a mis reservas
             </button>
@@ -37,7 +37,7 @@
       <div class="mb-6">
         <button
           routerLink="/bookings"
-          class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-100 transition-colors mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -51,12 +51,12 @@
         </button>
 
         <div
-          class="bg-surface-raised dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-subtle p-6"
         >
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-text-inverse mb-2">
+          <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse mb-2">
             🚗 Check-in del Vehículo
           </h1>
-          <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+          <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
             Realizá la inspección inicial del vehículo antes de iniciar el alquiler
           </p>
         </div>
@@ -64,36 +64,36 @@
 
       <!-- Booking Info Card -->
       <div
-        class="bg-surface-raised dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6"
+        class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-subtle p-6 mb-6"
       >
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+        <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
           Información de la Reserva
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">Vehículo</p>
-            <p class="font-medium text-gray-900 dark:text-text-inverse">
+            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1">Vehículo</p>
+            <p class="font-medium text-text-primary dark:text-text-inverse">
               {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
             </p>
           </div>
           <div>
-            <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">
+            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1">
               Inicio del alquiler
             </p>
-            <p class="font-medium text-gray-900 dark:text-text-inverse">
+            <p class="font-medium text-text-primary dark:text-text-inverse">
               {{ formatDateTime(booking()!.start_at) }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">
+            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1">
               Fin del alquiler
             </p>
-            <p class="font-medium text-gray-900 dark:text-text-inverse">
+            <p class="font-medium text-text-primary dark:text-text-inverse">
               {{ formatDateTime(booking()!.end_at) }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mb-1">Estado</p>
+            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1">Estado</p>
             <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
               [class.bg-cta-default/20]="booking()?.status === 'confirmed'"
@@ -149,12 +149,12 @@
       <!-- Check-in Form -->
       @else if (canPerformCheckIn()) {
         <div
-          class="bg-surface-raised dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-subtle p-6"
         >
           <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-2">Instrucciones</h2>
+            <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">Instrucciones</h2>
             <ul
-              class="list-disc list-inside space-y-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300"
+              class="list-disc list-inside space-y-2 text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
             >
               <li>Tomá al menos 8 fotos claras del vehículo (exterior e interior)</li>
               <li>Registrá el kilometraje actual (odómetro)</li>
@@ -174,21 +174,21 @@
       <!-- Cannot Perform Check-in -->
       @else {
         <div
-          class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 dark:bg-yellow-900/20 dark:border-yellow-800"
+          class="bg-warning-50 border border-warning-200 rounded-xl p-6 dark:bg-warning-900/20 dark:border-warning-800"
         >
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">⚠️</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+              <h3 class="text-lg font-semibold text-warning-800 dark:text-warning-200 mb-2">
                 No se puede realizar el check-in
               </h3>
-              <p class="text-yellow-700 dark:text-yellow-300 mb-4">
+              <p class="text-warning-700 dark:text-warning-300 mb-4">
                 El check-in no está disponible en este momento. Verificá que la reserva esté
                 confirmada y que seas el locatario.
               </p>
               <button
                 (click)="goToBookingDetail()"
-                class="px-4 py-2 bg-yellow-600 text-text-inverse rounded-lg hover:bg-yellow-700 transition-colors"
+                class="px-4 py-2 bg-warning-600 text-text-inverse rounded-lg hover:bg-warning-700 transition-colors"
               >
                 Ver Detalle de Reserva
               </button>

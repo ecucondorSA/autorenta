@@ -6,7 +6,7 @@
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-800;
+  @apply bg-surface-raised dark:bg-surface-base;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
@@ -14,7 +14,7 @@
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-500 dark:bg-gray-500;
+  @apply bg-surface-base0 dark:bg-surface-base0;
 }
 
 /* Animation for modal entrance */

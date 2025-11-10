@@ -79,9 +79,9 @@ describe('BonusProtectorService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getActiveProtector', () => {
+  describe('activeProtector', () => {
     it('should fetch and set active protector', (done) => {
-      service.getActiveProtector('user-123').subscribe({
+      service.activeProtector('user-123').subscribe({
         next: (protector) => {
           expect(protector).toEqual(mockActiveProtector);
           expect(service.protector()).toEqual(mockActiveProtector);
@@ -95,7 +95,7 @@ describe('BonusProtectorService', () => {
     });
 
     it('should call without user_id when not provided', (done) => {
-      service.getActiveProtector().subscribe({
+      service.activeProtector().subscribe({
         next: () => {
           expect(supabaseMock.rpc).toHaveBeenCalledWith('get_active_bonus_protector', {});
           done();
@@ -107,7 +107,7 @@ describe('BonusProtectorService', () => {
     it('should handle user with no active protector', (done) => {
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [mockNoProtector], error: null }));
 
-      service.getActiveProtector('user-123').subscribe({
+      service.activeProtector('user-123').subscribe({
         next: (protector) => {
           expect(protector.has_active_protector).toBe(false);
           expect(protector.addon_id).toBeNull();
@@ -122,7 +122,7 @@ describe('BonusProtectorService', () => {
       const error = new Error('Database error');
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
 
-      service.getActiveProtector('user-123').subscribe({
+      service.activeProtector('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
         error: (err) => {
           expect(err).toEqual(error);
@@ -136,7 +136,7 @@ describe('BonusProtectorService', () => {
     it('should set loading state', (done) => {
       expect(service.loading()).toBe(false);
 
-      service.getActiveProtector('user-123').subscribe({
+      service.activeProtector('user-123').subscribe({
         complete: () => {
           expect(service.loading()).toBe(false);
           done();
@@ -157,7 +157,7 @@ describe('BonusProtectorService', () => {
         Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
-      service.purchaseProtector('user-123', 1).subscribe({
+      service.purchaseProtector(1).subscribe({
         next: (result) => {
           expect(result).toEqual(level1Result);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('purchase_bonus_protector', {
@@ -177,7 +177,7 @@ describe('BonusProtectorService', () => {
         Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
-      service.purchaseProtector('user-123', 2).subscribe({
+      service.purchaseProtector(2).subscribe({
         next: (result) => {
           expect(result).toEqual(mockPurchaseResult);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('purchase_bonus_protector', {
@@ -198,7 +198,7 @@ describe('BonusProtectorService', () => {
         Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
-      service.purchaseProtector('user-123', 3).subscribe({
+      service.purchaseProtector(3).subscribe({
         next: (result) => {
           expect(result).toEqual(level3Result);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('purchase_bonus_protector', {
@@ -238,9 +238,9 @@ describe('BonusProtectorService', () => {
         Promise.resolve({ data: [mockActiveProtector], error: null }),
       );
 
-      service.purchaseProtector('user-123', 2).subscribe({
+      service.purchaseProtector(2).subscribe({
         next: () => {
-          // Should call rpc twice: once for purchase, once for getActiveProtector
+          // Should call rpc twice: once for purchase, once for activeProtector
           expect(supabaseMock.rpc).toHaveBeenCalledTimes(2);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('get_active_bonus_protector', {
             p_user_id: 'user-123',
@@ -255,7 +255,7 @@ describe('BonusProtectorService', () => {
       const failedResult = { ...mockPurchaseResult, success: false };
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [failedResult], error: null }));
 
-      service.purchaseProtector('user-123', 2).subscribe({
+      service.purchaseProtector(2).subscribe({
         next: (result) => {
           expect(result.success).toBe(false);
           // Should only call rpc once (no refresh)
@@ -270,7 +270,7 @@ describe('BonusProtectorService', () => {
       const error = new Error('Purchase failed');
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
 
-      service.purchaseProtector('user-123', 2).subscribe({
+      service.purchaseProtector(2).subscribe({
         next: () => done.fail('Should have thrown error'),
         error: (err) => {
           expect(err).toEqual(error);
@@ -337,11 +337,11 @@ describe('BonusProtectorService', () => {
   });
 
   describe('refresh', () => {
-    it('should call getActiveProtector', () => {
-      spyOn(service, 'getActiveProtector').and.returnValue(of(mockActiveProtector));
+    it('should call activeProtector', () => {
+      spyOn(service, 'activeProtector').and.returnValue(of(mockActiveProtector));
 
       service.refresh();
-      expect(service.getActiveProtector).toHaveBeenCalled();
+      expect(service.activeProtector).toHaveBeenCalled();
     });
   });
 

@@ -66,6 +66,54 @@ module.exports = {
         ...themeColors,
 
         // ═══════════════════════════════════════════════════════════════
+        // Sistema de Tokens Refinado v2 - Mapped from CSS Variables
+        // Según docs/design-proposals.md - 100% WCAG AA Compliant
+        // ═══════════════════════════════════════════════════════════════
+
+        // Surface colors (backgrounds)
+        surface: {
+          base: 'var(--surface-base)',
+          raised: 'var(--surface-raised)',
+          secondary: 'var(--surface-secondary)',
+          elevated: 'var(--surface-elevated)',
+          hover: 'var(--surface-hover)',
+          pressed: 'var(--surface-pressed)',
+        },
+
+        // Text colors
+        text: {
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+          inverse: 'var(--text-inverse)',
+          link: 'var(--text-link)',
+          'link-hover': 'var(--text-link-hover)',
+          placeholder: 'var(--text-placeholder)',
+        },
+
+        // Border colors
+        border: {
+          default: 'var(--border-default)',
+          muted: 'var(--border-muted)',
+          focus: 'var(--border-focus)',
+          hover: 'var(--border-hover)',
+          error: 'var(--border-error)',
+          success: 'var(--border-success)',
+          warning: 'var(--border-warning)',
+        },
+
+        // CTA colors
+        cta: {
+          default: 'var(--cta-default)',
+          hover: 'var(--cta-hover)',
+          pressed: 'var(--cta-pressed)',
+          text: 'var(--cta-text)',
+          secondary: 'var(--cta-secondary)',
+          'secondary-hover': 'var(--cta-secondary-hover)',
+          'secondary-text': 'var(--cta-secondary-text)',
+        },
+
+        // ═══════════════════════════════════════════════════════════════
         // Colores Legacy - Mantener para compatibilidad durante migración
         // TODO: Migrar gradualmente a tokens semánticos
         // ═══════════════════════════════════════════════════════════════
@@ -104,64 +152,60 @@ module.exports = {
           'bg-input-dark': '#2A3942',
         },
 
-        // Semantic Colors - Success (Custom)
+        // Semantic Colors - Success (Verde Oliva) - WCAG AA Validated
         success: {
-          50: '#d1fae5',
-          100: '#a7f3d0',
-          200: '#6ee7b7',
-          300: '#34d399',
-          400: '#10b981',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#065f46',
-          950: '#022c22',
+          50: 'var(--success-50)',
+          100: 'var(--success-100)',
+          200: 'var(--success-200)',
+          300: 'var(--success-300)',
+          400: 'var(--success-400)',
+          500: 'var(--success-500)',
+          600: 'var(--success-600)',
+          700: 'var(--success-700)',
+          800: 'var(--success-800)',
+          900: 'var(--success-900)',
         },
 
-        // Semantic Colors - Warning (Custom)
+        // Semantic Colors - Warning (Beige Cálido) - WCAG AA Validated
         warning: {
-          50: '#fef3c7',
-          100: '#fde68a',
-          200: '#fcd34d',
-          300: '#fbbf24',
-          400: '#f59e0b',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#78350f',
-          900: '#92400e',
-          950: '#451a03',
+          50: 'var(--warning-50)',
+          100: 'var(--warning-100)',
+          200: 'var(--warning-200)',
+          300: 'var(--warning-300)',
+          400: 'var(--warning-400)',
+          500: 'var(--warning-500)',
+          600: 'var(--warning-600)',
+          700: 'var(--warning-700)',
+          800: 'var(--warning-800)',
+          900: 'var(--warning-900)',
         },
 
-        // Semantic Colors - Error (Custom)
+        // Semantic Colors - Error (Rojo Óxido) - WCAG AA Validated
         error: {
-          50: '#fee2e2',
-          100: '#fecaca',
-          200: '#fca5a5',
-          300: '#f87171',
-          400: '#ef4444',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#991b1b',
-          950: '#450a0a',
+          50: 'var(--error-50)',
+          100: 'var(--error-100)',
+          200: 'var(--error-200)',
+          300: 'var(--error-300)',
+          400: 'var(--error-400)',
+          500: 'var(--error-500)',
+          600: 'var(--error-600)',
+          700: 'var(--error-700)',
+          800: 'var(--error-800)',
+          900: 'var(--error-900)',
         },
 
-        // Semantic Colors - Info (Custom)
+        // Semantic Colors - Info (Azul Pastel) - WCAG AA Validated
         info: {
-          50: '#dbeafe',
-          100: '#bfdbfe',
-          200: '#93c5fd',
-          300: '#60a5fa',
-          400: '#3b82f6',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50: 'var(--info-50)',
+          100: 'var(--info-100)',
+          200: 'var(--info-200)',
+          300: 'var(--info-300)',
+          400: 'var(--info-400)',
+          500: 'var(--info-500)',
+          600: 'var(--info-600)',
+          700: 'var(--info-700)',
+          800: 'var(--info-800)',
+          900: 'var(--info-900)',
         },
 
         // Colores Estándar de Tailwind (Para compatibilidad)
@@ -266,9 +310,21 @@ module.exports = {
       },
 
       /* ─────────────────────────────────────────────────────────────
-         Sombras - Premium y Sutiles
+         Sombras - Elevation System + Legacy
          ───────────────────────────────────────────────────────────── */
       boxShadow: {
+        // Elevation System (Design Proposals v2)
+        'elevation-1': 'var(--elevation-1)',
+        'elevation-2': 'var(--elevation-2)',
+        'elevation-3': 'var(--elevation-3)',
+        'elevation-4': 'var(--elevation-4)',
+        'elevation-5': 'var(--elevation-5)',
+
+        // Focus Rings (Accessibility)
+        'ring-focus': 'var(--ring-focus)',
+        'ring-error': 'var(--ring-error)',
+
+        // Legacy shadows (mantener para compatibilidad)
         soft: '0 2px 8px rgba(0, 0, 0, 0.04)',
         medium: '0 4px 16px rgba(0, 0, 0, 0.08)',
         elevated: '0 8px 24px rgba(0, 0, 0, 0.12)',
@@ -287,33 +343,40 @@ module.exports = {
       },
 
       /* ─────────────────────────────────────────────────────────────
-         Border Radius Consistente
+         Border Radius - Token System
          ───────────────────────────────────────────────────────────── */
       borderRadius: {
-        sm: '0.5rem', // 8px
-        DEFAULT: '0.75rem', // 12px
-        md: '0.75rem', // 12px
-        lg: '1rem', // 16px
-        xl: '1.25rem', // 20px
-        '2xl': '1.5rem', // 24px
-        '3xl': '2rem', // 32px
+        none: '0',
+        sm: 'var(--radius-sm)', // 4px - Pills, badges
+        DEFAULT: 'var(--radius-md)', // 8px - Botones, inputs
+        md: 'var(--radius-md)', // 8px
+        lg: 'var(--radius-lg)', // 12px - Cards
+        xl: 'var(--radius-xl)', // 16px - Modales
+        '2xl': 'var(--radius-2xl)', // 24px - Hero sections
+        '3xl': '2rem', // 32px - Legacy
+        full: 'var(--radius-full)', // Circular
       },
 
       /* ─────────────────────────────────────────────────────────────
-         Sistema de Transiciones
+         Sistema de Transiciones - Refinado v2
          ───────────────────────────────────────────────────────────── */
       transitionDuration: {
-        instant: '100ms',
-        fast: '200ms',
-        normal: '300ms',
-        slow: '400ms',
-        slower: '600ms',
+        instant: '75ms',
+        fast: '150ms',
+        normal: '250ms',
+        slow: '350ms',
+        slower: '500ms',
       },
 
       transitionTimingFunction: {
-        standard: 'cubic-bezier(0.4, 0, 0.2, 1)',
-        decelerate: 'cubic-bezier(0, 0, 0.2, 1)',
-        accelerate: 'cubic-bezier(0.4, 0, 1, 1)',
+        default: 'var(--ease-default)', // cubic-bezier(0.4, 0, 0.2, 1)
+        in: 'var(--ease-in)',
+        out: 'var(--ease-out)',
+        bounce: 'var(--ease-bounce)',
+        // Legacy aliases
+        standard: 'var(--ease-default)',
+        decelerate: 'var(--ease-out)',
+        accelerate: 'var(--ease-in)',
         sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
       },
 

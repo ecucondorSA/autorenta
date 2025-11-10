@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-surface-base dark:bg-surface-base pb-20 transition-colors duration-300 text-text-primary dark:text-text-secondary">
   <!-- Header -->
-  <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-gray-600/30 dark:border-slate-deep/50 transition-colors">
+  <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-border-default/30 dark:border-slate-deep/50 transition-colors">
     <div class="mx-auto max-w-5xl px-6 py-8">
       <div class="flex items-start justify-between">
         <div>
@@ -32,8 +32,8 @@
       <p class="text-sm font-medium text-success-light dark:text-success-100">{{ message() }}</p>
     </div>
 
-    <div *ngIf="error()" class="mb-6 rounded-xl bg-red-50 border border-red-200 dark:bg-red-500/15 dark:border-red-400/40 p-4 transition-colors">
-      <p class="text-sm font-medium text-red-800 dark:text-red-100">{{ error() }}</p>
+    <div *ngIf="error()" class="mb-6 rounded-xl bg-error-50 border border-error-200 dark:bg-error-500/15 dark:border-error-400/40 p-4 transition-colors">
+      <p class="text-sm font-medium text-error-800 dark:text-error-100">{{ error() }}</p>
     </div>
 
     <!-- Hero Section -->
@@ -164,7 +164,7 @@
               </div>
 
               <!-- Document Status: Driver License -->
-              <div class="flex items-center justify-between pt-2 mt-2 border-t border-border-default dark:border-gray-600/30 dark:border-slate-deep/40">
+              <div class="flex items-center justify-between pt-2 mt-2 border-t border-border-default dark:border-border-default/30 dark:border-slate-deep/40">
                 <span class="text-xs">Licencia de conducir</span>
                 <span [class]="getKycStatusClass(driverLicenseStatus()) + ' text-xs'">
                   {{ getKycStatusLabel(driverLicenseStatus()) }}
@@ -266,16 +266,16 @@
 
       <a routerLink="/profile/verification" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
         <div class="flex items-center gap-4">
-          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-amber-100 flex items-center justify-center group-hover:bg-amber-500 group-hover:scale-110 transition-all">
-            <svg class="h-7 w-7 text-amber-600 group-hover:text-text-inverse-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-warning-100 flex items-center justify-center group-hover:bg-warning-500 group-hover:scale-110 transition-all">
+            <svg class="h-7 w-7 text-warning-600 group-hover:text-text-inverse-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-text-primary dark:text-text-primary group-hover:text-amber-600 transition-colors">Verificación</h3>
+            <h3 class="text-base font-bold text-text-primary dark:text-text-primary group-hover:text-warning-600 transition-colors">Verificación</h3>
             <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">Completa tu identidad</p>
           </div>
-          <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70 group-hover:text-amber-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70 group-hover:text-warning-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -314,7 +314,7 @@
               class="input-premium"
               placeholder="Ej: Juan Pérez"
             />
-            <p *ngIf="generalForm.get('full_name')?.invalid && generalForm.get('full_name')?.touched" class="mt-1 text-sm text-red-600">
+            <p *ngIf="generalForm.get('full_name')?.invalid && generalForm.get('full_name')?.touched" class="mt-1 text-sm text-error-600">
               El nombre debe tener al menos 3 caracteres
             </p>
           </div>
@@ -326,7 +326,7 @@
                                                                                       [class.border-cta-default]="generalForm.value.role === roleOption.value"
                                                                                       [class.bg-cta-default/5]="generalForm.value.role === roleOption.value"
                                                                                       [class.border-border-default]="generalForm.value.role !== roleOption.value"
-                                                                                      [class.dark:border-gray-600]="generalForm.value.role !== roleOption.value">
+                                                                                      [class.dark:border-border-default]="generalForm.value.role !== roleOption.value">
                                                                       
                                                         
                                           
@@ -480,10 +480,10 @@
 
           <a
             [routerLink]="['/protections']"
-            class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-amber-500/5 dark:from-amber-500/12 dark:to-transparent border border-amber-500/20 dark:border-amber-500/35 hover:border-amber-500/40 dark:hover:border-amber-500/50 transition-all"
+            class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-amber-500/5 dark:from-amber-500/12 dark:to-transparent border border-warning-500/20 dark:border-warning-500/35 hover:border-warning-500/40 dark:hover:border-warning-500/50 transition-all"
           >
             <div class="flex items-center gap-3">
-              <svg class="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-6 w-6 text-warning-600 dark:text-warning-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
               </svg>
@@ -551,11 +551,11 @@
             <h4 class="text-sm font-semibold text-text-primary mb-3">Email</h4>
             <div class="space-y-2">
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="email_bookings" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <input type="checkbox" formControlName="email_bookings" class="rounded border-border-default dark:border-border-default text-cta-default focus:ring-cta-default">
                 <span class="text-sm text-text-primary">Notificaciones de reservas</span>
               </label>
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="email_promotions" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <input type="checkbox" formControlName="email_promotions" class="rounded border-border-default dark:border-border-default text-cta-default focus:ring-cta-default">
                 <span class="text-sm text-text-primary">Promociones y novedades</span>
               </label>
             </div>
@@ -565,11 +565,11 @@
             <h4 class="text-sm font-semibold text-text-primary mb-3">Push</h4>
             <div class="space-y-2">
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="push_bookings" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <input type="checkbox" formControlName="push_bookings" class="rounded border-border-default dark:border-border-default text-cta-default focus:ring-cta-default">
                 <span class="text-sm text-text-primary">Notificaciones de reservas</span>
               </label>
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="push_promotions" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <input type="checkbox" formControlName="push_promotions" class="rounded border-border-default dark:border-border-default text-cta-default focus:ring-cta-default">
                 <span class="text-sm text-text-primary">Promociones y novedades</span>
               </label>
             </div>
@@ -579,11 +579,11 @@
             <h4 class="text-sm font-semibold text-text-primary mb-3">WhatsApp</h4>
             <div class="space-y-2">
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="whatsapp_bookings" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <input type="checkbox" formControlName="whatsapp_bookings" class="rounded border-border-default dark:border-border-default text-cta-default focus:ring-cta-default">
                 <span class="text-sm text-text-primary">Notificaciones de reservas</span>
               </label>
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="whatsapp_promotions" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <input type="checkbox" formControlName="whatsapp_promotions" class="rounded border-border-default dark:border-border-default text-cta-default focus:ring-cta-default">
                 <span class="text-sm text-text-primary">Promociones y novedades</span>
               </label>
             </div>
@@ -625,7 +625,7 @@
 
           <div>
             <label class="flex items-center gap-3">
-              <input type="checkbox" formControlName="marketing_opt_in" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+              <input type="checkbox" formControlName="marketing_opt_in" class="rounded border-border-default dark:border-border-default text-cta-default focus:ring-cta-default">
               <span class="text-sm text-text-primary">Deseo recibir ofertas y promociones especiales</span>
             </label>
           </div>
@@ -636,7 +636,7 @@
       <div *ngIf="activeTab() === 'security'">
         <h3 class="text-lg font-semibold text-text-primary mb-4">Seguridad y Privacidad</h3>
         <form [formGroup]="securityForm" class="space-y-4">
-          <div class="p-4 rounded-lg bg-surface-secondary border border-border-default dark:border-gray-600">
+          <div class="p-4 rounded-lg bg-surface-secondary border border-border-default dark:border-border-default">
             <h4 class="text-sm font-semibold text-text-primary mb-2">Estado de Verificación</h4>
             <div class="space-y-2 text-sm">
               <div class="flex items-center justify-between">
@@ -660,13 +660,13 @@
             </div>
           </div>
 
-          <div class="p-4 rounded-lg border border-border-default dark:border-gray-600">
+          <div class="p-4 rounded-lg border border-border-default dark:border-border-default">
             <label class="flex items-start gap-3">
               <input
                 type="checkbox"
                 formControlName="tos_accepted"
                 [disabled]="tosAccepted()"
-                class="mt-0.5 rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default"
+                class="mt-0.5 rounded border-border-default dark:border-border-default text-cta-default focus:ring-cta-default"
               />
               <div class="flex-1">
                 <span class="text-sm text-text-primary">
@@ -685,7 +685,7 @@
       </div>
 
       <!-- Save Button (bottom of all tabs) -->
-      <div class="mt-6 flex items-center justify-between border-t border-border-default dark:border-gray-600 pt-6">
+      <div class="mt-6 flex items-center justify-between border-t border-border-default dark:border-border-default pt-6">
         <a routerLink="/cars" class="text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary transition-colors">
           ← Volver al inicio
         </a>

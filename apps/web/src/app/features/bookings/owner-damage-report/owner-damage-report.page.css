@@ -150,11 +150,11 @@ ion-note {
   color: #0ea5e9;
 }
 
-.text-red-600 {
+.text-error-600 {
   color: #dc2626;
 }
 
-.text-red-800 {
+.text-error-800 {
   color: #991b1b;
 }
 
@@ -166,15 +166,15 @@ ion-note {
   color: #166534;
 }
 
-.text-amber-600 {
+.text-warning-600 {
   color: #d97706;
 }
 
-.text-amber-800 {
+.text-warning-800 {
   color: #92400e;
 }
 
-.text-amber-900 {
+.text-warning-900 {
   color: #78350f;
 }
 
@@ -186,15 +186,15 @@ ion-note {
   color: #1e3a8a;
 }
 
-.text-gray-400 {
+.text-text-muted {
   color: #9ca3af;
 }
 
-.text-gray-600 {
+.text-text-secondary {
   color: #4b5563;
 }
 
-.bg-amber-50 {
+.bg-warning-50 {
   background-color: #fffbeb;
 }
 
@@ -202,7 +202,7 @@ ion-note {
   background-color: #eff6ff;
 }
 
-.bg-red-50 {
+.bg-error-50 {
   background-color: #fef2f2;
 }
 
@@ -210,15 +210,15 @@ ion-note {
   background-color: #f0fdf4;
 }
 
-.bg-gray-50 {
+.bg-surface-base {
   background-color: #f9fafb;
 }
 
-.bg-red-600 {
+.bg-error-600 {
   background-color: #dc2626;
 }
 
-.bg-red-700 {
+.bg-error-700 {
   background-color: #b91c1c;
 }
 
@@ -234,11 +234,11 @@ ion-note {
   border-style: dashed;
 }
 
-.border-amber-200 {
+.border-warning-200 {
   border-color: #fde68a;
 }
 
-.border-gray-200 {
+.border-border-default {
   border-color: #e5e7eb;
 }
 
@@ -254,7 +254,7 @@ ion-note {
   background-color: #fef3c7;
 }
 
-.hover\:bg-red-700:hover {
+.hover\:bg-error-700:hover {
   background-color: #b91c1c;
 }
 

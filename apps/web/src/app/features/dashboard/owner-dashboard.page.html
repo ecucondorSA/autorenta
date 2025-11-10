@@ -30,29 +30,38 @@
     <!-- Missing Documents Widget -->
     <app-missing-documents-widget />
 
-    <!-- Loading State con Skeleton progresivo -->
+    <!-- Loading -->
     @if (loading()) {
-      <div class="space-y-8">
-        <!-- Balance Cards Skeleton -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <app-skeleton-loader type="card" size="sm" [count]="3"></app-skeleton-loader>
-        </div>
-
-        <!-- Stats Cards Skeleton -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <app-skeleton-loader type="card" size="sm" [count]="4"></app-skeleton-loader>
-        </div>
+      <div class="flex items-center justify-center py-16">
+        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
       </div>
     }
 
-    <!-- Error State -->
+    <!-- Error -->
     @if (error(); as errorMsg) {
-      <app-error-state
-        variant="default"
-        [title]="'Error al cargar dashboard'"
-        [message]="errorMsg"
-        [actions]="[getRetryAction()]"
-      ></app-error-state>
+      <div class="bg-error-50 border border-error-200 rounded-lg p-4 mb-6">
+        <p class="text-sm text-error-800">{{ errorMsg }}</p>
+        <button
+          (click)="loadDashboardData()"
+          class="mt-2 text-sm font-medium text-error-600 underline"
+        >
+          Reintentar
+        </button>
+      </div>
     }
 
     @if (!loading()) {
@@ -124,13 +133,13 @@
           <div>
             <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Este Mes</p>
             <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
-              {{ thisMonthEarnings() | money }}
+              {{ earnings().thisMonth | money }}
             </p>
           </div>
           <div>
             <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Mes Anterior</p>
             <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
-              {{ lastMonthEarnings() | money }}
+              {{ earnings().lastMonth | money }}
             </p>
           </div>
           <div>
@@ -138,7 +147,7 @@
             <p
               class="text-2xl font-bold"
               [class.text-success-light]="isGrowthPositive()"
-              [class.text-red-600]="!isGrowthPositive()"
+              [class.text-error-600]="!isGrowthPositive()"
             >
               {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
             </p>

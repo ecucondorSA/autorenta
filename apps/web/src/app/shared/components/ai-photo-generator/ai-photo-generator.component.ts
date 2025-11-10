@@ -16,7 +16,7 @@ import { ToastService } from '../../../core/services/toast.service';
     <div class="ai-photo-generator">
       <!-- Method Selector -->
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Método de generación:</label>
+        <label class="block text-sm font-medium text-text-primary mb-2">Método de generación:</label>
         <div class="flex gap-2">
           <button
             type="button"
@@ -24,7 +24,7 @@ import { ToastService } from '../../../core/services/toast.service';
             [class]="
               method() === 'stock-photos'
                 ? 'bg-cta-default text-cta-text'
-                : 'bg-gray-200 text-gray-700'
+                : 'bg-surface-hover text-text-primary'
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
@@ -36,14 +36,14 @@ import { ToastService } from '../../../core/services/toast.service';
             [class]="
               method() === 'cloudflare-ai'
                 ? 'bg-cta-default text-cta-text'
-                : 'bg-gray-200 text-gray-700'
+                : 'bg-surface-hover text-text-primary'
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
             🤖 Cloudflare AI (Lento)
           </button>
         </div>
-        <p class="text-xs text-gray-500 mt-2">
+        <p class="text-xs text-text-secondary mt-2">
           @if (method() === 'stock-photos') {
             Busca fotos reales de autos similares (más rápido, fotos reales)
           } @else {
@@ -59,13 +59,13 @@ import { ToastService } from '../../../core/services/toast.service';
             type="text"
             [(ngModel)]="brand"
             placeholder="Marca"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="model"
             placeholder="Modelo"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <div class="grid grid-cols-2 gap-2">
@@ -73,13 +73,13 @@ import { ToastService } from '../../../core/services/toast.service';
             type="number"
             [(ngModel)]="year"
             placeholder="Año (opcional)"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="color"
             placeholder="Color (opcional)"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <input
@@ -88,7 +88,7 @@ import { ToastService } from '../../../core/services/toast.service';
           placeholder="Cantidad de fotos (1-5)"
           min="1"
           max="5"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+          class="w-full px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
         />
       </div>
 
@@ -130,7 +130,7 @@ import { ToastService } from '../../../core/services/toast.service';
       <!-- Generated Photos Preview -->
       @if (generatedPhotos().length > 0) {
         <div class="mt-6">
-          <h3 class="text-sm font-semibold text-gray-700 mb-3">
+          <h3 class="text-sm font-semibold text-text-primary mb-3">
             Fotos generadas ({{ generatedPhotos().length }}):
           </h3>
           <div class="grid grid-cols-2 gap-3 mb-4">
@@ -139,10 +139,10 @@ import { ToastService } from '../../../core/services/toast.service';
                 <img
                   [src]="photo.preview"
                   alt="Foto generada"
-                  class="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                  class="w-full h-32 object-cover rounded-lg border-2 border-border-default"
                 />
                 <div
-                  class="absolute top-2 right-2 bg-black/70 text-text-inverse text-xs px-2 py-1 rounded"
+                  class="absolute top-2 right-2 bg-surface-overlay/70 text-text-inverse text-xs px-2 py-1 rounded"
                 >
                   {{ photo.source === 'cloudflare-ai' ? '🤖 IA' : '📸 Stock' }}
                 </div>

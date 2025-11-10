@@ -24,16 +24,16 @@ import { MetaService } from '../../../../core/services/meta.service';
     SelfieCaptureComponent,
   ],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->
       <div
-        class="bg-surface-raised dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
+        class="bg-surface-raised dark:bg-surface-base shadow-sm border-b border-border-default dark:border-border-subtle"
       >
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div class="flex items-center gap-3">
             <a
               routerLink="/profile"
-              class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              class="text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-300"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -45,10 +45,10 @@ import { MetaService } from '../../../../core/services/meta.service';
               </svg>
             </a>
             <div>
-              <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+              <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
                 Verificación de Identidad
               </h1>
-              <p class="text-gray-600 dark:text-gray-400 mt-1">
+              <p class="text-text-secondary dark:text-text-muted mt-1">
                 Completa tu verificación para desbloquear todas las funcionalidades de AutoRenta
               </p>
             </div>
@@ -68,9 +68,9 @@ import { MetaService } from '../../../../core/services/meta.service';
               <!-- Email Verification -->
               <div
                 *ngIf="showEmailVerification()"
-                class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-subtle p-6"
               >
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+                <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                   Verificar Email
                 </h3>
                 <app-email-verification></app-email-verification>
@@ -79,9 +79,9 @@ import { MetaService } from '../../../../core/services/meta.service';
               <!-- Phone Verification -->
               <div
                 *ngIf="showPhoneVerification()"
-                class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-subtle p-6"
               >
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+                <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                   Verificar Teléfono
                 </h3>
                 <app-phone-verification></app-phone-verification>
@@ -90,9 +90,9 @@ import { MetaService } from '../../../../core/services/meta.service';
               <!-- Selfie Capture -->
               <div
                 *ngIf="showSelfieCapture()"
-                class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-subtle p-6"
               >
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+                <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                   Verificación con Selfie
                 </h3>
                 <app-selfie-capture></app-selfie-capture>
@@ -104,10 +104,10 @@ import { MetaService } from '../../../../core/services/meta.service';
           <div class="lg:col-span-1">
             <!-- Current Level Badge -->
             <div
-              class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6"
+              class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-subtle p-6 mb-6"
             >
               <h3
-                class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-4"
+                class="text-sm font-semibold text-text-primary dark:text-text-secondary uppercase tracking-wide mb-4"
               >
                 Tu Nivel Actual
               </h3>
@@ -118,10 +118,10 @@ import { MetaService } from '../../../../core/services/meta.service';
                 >
                   {{ currentLevel() >= 3 ? '✓' : currentLevel() + 1 }}
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ getCurrentLevelName() }}
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                <p class="text-sm text-text-secondary dark:text-text-muted mt-2">
                   {{ progressPercentage() }}% completado
                 </p>
               </div>
@@ -309,6 +309,6 @@ export class VerificationPage implements OnInit {
     if (level >= 1) {
       return 'bg-cta-default text-cta-text';
     }
-    return 'bg-gray-300 text-gray-700';
+    return 'bg-surface-pressed text-text-primary';
   }
 }

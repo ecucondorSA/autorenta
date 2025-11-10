@@ -48,7 +48,7 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex flex-col items-center justify-center py-8">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-gray-500 text-sm">Validando inspecciones...</p>
+    <p class="mt-4 text-text-secondary text-sm">Validando inspecciones...</p>
   </div>
 
   <!-- Detected Damages -->
@@ -68,13 +68,13 @@
         </ion-card-header>
         <ion-card-content>
           <p class="text-sm mb-2">{{ damage.description }}</p>
-          <p class="text-sm font-semibold text-gray-600">
+          <p class="text-sm font-semibold text-text-secondary">
             Costo estimado: ${{ damage.estimatedCostUsd.toFixed(2) }} USD
           </p>
 
           <!-- Photos -->
           <div *ngIf="damage.photos.length > 0" class="mt-3">
-            <p class="text-xs text-gray-500 mb-2">Evidencia fotográfica:</p>
+            <p class="text-xs text-text-secondary mb-2">Evidencia fotográfica:</p>
             <div class="grid grid-cols-2 gap-2">
               <img
                 *ngFor="let photo of damage.photos"

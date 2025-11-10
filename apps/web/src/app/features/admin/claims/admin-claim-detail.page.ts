@@ -23,15 +23,15 @@ import {
     <div class="max-w-6xl mx-auto py-8 px-4">
       <!-- Loading State -->
       <div *ngIf="loading()" class="text-center py-12">
-        <p class="text-gray-600 dark:text-gray-300">Cargando siniestro...</p>
+        <p class="text-text-secondary dark:text-text-secondary">Cargando siniestro...</p>
       </div>
 
       <!-- Error State -->
-      <div *ngIf="error() && !loading()" class="bg-red-50 border border-red-200 rounded-xl p-6">
-        <p class="text-red-800">{{ error() }}</p>
+      <div *ngIf="error() && !loading()" class="bg-error-50 border border-error-200 rounded-xl p-6">
+        <p class="text-error-800">{{ error() }}</p>
         <button
           routerLink="/admin/claims"
-          class="mt-4 px-4 py-2 bg-red-600 text-text-inverse rounded-xl hover:bg-red-700"
+          class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-xl hover:bg-error-700"
         >
           Volver a Siniestros
         </button>
@@ -59,7 +59,7 @@ import {
           <div class="flex items-start justify-between gap-4">
             <div>
               <div class="flex items-center gap-3 mb-2">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+                <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
                   Detalle del Siniestro
                 </h1>
                 <span
@@ -69,7 +69,7 @@ import {
                   {{ CLAIM_STATUS_LABELS[claim()!.status] }}
                 </span>
               </div>
-              <p class="text-gray-600 dark:text-gray-300">
+              <p class="text-text-secondary dark:text-text-secondary">
                 ID: <span class="font-mono">{{ claim()!.id }}</span>
               </p>
             </div>
@@ -81,66 +81,66 @@ import {
           <div class="lg:col-span-2 space-y-6">
             <!-- Claim Info Card -->
             <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
             >
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 Información del Siniestro
               </h2>
 
               <dl class="space-y-3">
                 <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Tipo</dt>
-                  <dd class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
+                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">Tipo</dt>
+                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
                     {{ CLAIM_TYPE_LABELS[claim()!.claim_type] }}
                   </dd>
                 </div>
 
                 <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Descripción</dt>
-                  <dd class="mt-1 text-sm text-gray-900 dark:text-text-inverse whitespace-pre-wrap">
+                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">Descripción</dt>
+                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse whitespace-pre-wrap">
                     {{ claim()!.description }}
                   </dd>
                 </div>
 
                 <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
                     Fecha del Incidente
                   </dt>
-                  <dd class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
+                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
                     {{ formatDateTime(claim()!.incident_date) }}
                   </dd>
                 </div>
 
                 <div *ngIf="claim()!.location">
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Ubicación</dt>
-                  <dd class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
+                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">Ubicación</dt>
+                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
                     {{ claim()!.location }}
                   </dd>
                 </div>
 
                 <div *ngIf="claim()!.police_report_number">
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
                     N° Denuncia Policial
                   </dt>
-                  <dd class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
+                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
                     {{ claim()!.police_report_number }}
                   </dd>
                 </div>
 
                 <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
                     Reportado por
                   </dt>
-                  <dd class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
+                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
                     {{ claim()!.reporter_role === 'driver' ? 'Conductor' : 'Propietario' }}
                   </dd>
                 </div>
 
                 <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
                     Fecha de reporte
                   </dt>
-                  <dd class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
+                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
                     {{ formatDateTime(claim()!.created_at) }}
                   </dd>
                 </div>
@@ -150,16 +150,16 @@ import {
             <!-- Evidence Gallery -->
             <div
               *ngIf="claim()!.photos && claim()!.photos!.length > 0"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
             >
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 📸 Evidencia Fotográfica ({{ claim()!.photos!.length }})
               </h2>
 
               <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div
                   *ngFor="let photo of claim()!.photos; let i = index"
-                  class="relative aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer hover:opacity-90 transition-opacity"
+                  class="relative aspect-square rounded-lg overflow-hidden bg-surface-raised dark:bg-surface-base cursor-pointer hover:opacity-90 transition-opacity"
                   (click)="openPhotoModal(i)"
                 >
                   <img
@@ -169,7 +169,7 @@ import {
                     loading="lazy"
                   />
                   <div
-                    class="absolute bottom-2 right-2 bg-black/60 text-text-inverse text-xs px-2 py-1 rounded"
+                    class="absolute bottom-2 right-2 bg-surface-overlay/60 text-text-inverse text-xs px-2 py-1 rounded"
                   >
                     {{ i + 1 }}/{{ claim()!.photos!.length }}
                   </div>
@@ -180,12 +180,12 @@ import {
             <!-- Resolution Notes -->
             <div
               *ngIf="claim()!.resolution_notes"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
             >
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 Notas de Resolución
               </h2>
-              <p class="text-sm text-gray-900 dark:text-text-inverse whitespace-pre-wrap">
+              <p class="text-sm text-text-primary dark:text-text-inverse whitespace-pre-wrap">
                 {{ claim()!.resolution_notes }}
               </p>
             </div>
@@ -196,23 +196,23 @@ import {
             <!-- Actions Card -->
             <div
               *ngIf="canResolve()"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
             >
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 Acciones de Admin
               </h2>
 
               <div class="space-y-4">
                 <!-- Resolution Notes -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
                     Notas de resolución
                   </label>
                   <textarea
                     [(ngModel)]="resolutionNotes"
                     rows="4"
                     placeholder="Escribe notas sobre la resolución..."
-                    class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-surface-raised dark:bg-gray-800 px-3 py-2 text-sm"
+                    class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
                   ></textarea>
                 </div>
 
@@ -242,7 +242,7 @@ import {
                     *ngIf="claim()!.status === 'reported' || claim()!.status === 'under_review'"
                     (click)="updateStatus('rejected')"
                     [disabled]="submitting()"
-                    class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-text-inverse rounded-lg font-medium transition-colors"
+                    class="w-full px-4 py-2 bg-error-600 hover:bg-error-700 disabled:bg-error-400 text-text-inverse rounded-lg font-medium transition-colors"
                   >
                     <span *ngIf="!submitting()">✗ Rechazar Siniestro</span>
                     <span *ngIf="submitting()">Procesando...</span>
@@ -273,14 +273,14 @@ import {
 
             <!-- Status Info -->
             <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
             >
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 Estado Actual
               </h2>
               <div class="space-y-3">
                 <div>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Estado</p>
+                  <p class="text-xs text-text-secondary dark:text-text-muted mb-1">Estado</p>
                   <span
                     class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full"
                     [ngClass]="getStatusBadgeClass(claim()!.status)"
@@ -289,8 +289,8 @@ import {
                   </span>
                 </div>
                 <div *ngIf="claim()!.closed_at">
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Fecha de cierre</p>
-                  <p class="text-sm text-gray-900 dark:text-text-inverse">
+                  <p class="text-xs text-text-secondary dark:text-text-muted mb-1">Fecha de cierre</p>
+                  <p class="text-sm text-text-primary dark:text-text-inverse">
                     {{ formatDateTime(claim()!.closed_at) }}
                   </p>
                 </div>
@@ -304,7 +304,7 @@ import {
     <!-- Photo Modal (Simple lightbox) -->
     <div
       *ngIf="selectedPhotoIndex() !== null"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/90 p-4"
       (click)="closePhotoModal()"
     >
       <div class="relative max-w-6xl max-h-full">
@@ -461,15 +461,15 @@ export class AdminClaimDetailPage implements OnInit {
     const classes: Record<ClaimStatus, string> = {
       reported:
         'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
-      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200',
+      pending: 'bg-warning-100 text-warning-800 dark:bg-warning-900/40 dark:text-warning-200',
       investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
       under_review:
         'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
       approved:
         'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
-      rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',
+      rejected: 'bg-error-100 text-error-800 dark:bg-error-900/40 dark:text-error-200',
       paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
-      closed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-200',
+      closed: 'bg-surface-raised text-text-primary dark:bg-surface-raised/40 dark:text-text-primary',
     };
     return classes[status] || classes.closed;
   }

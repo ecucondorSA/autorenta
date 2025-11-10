@@ -166,11 +166,11 @@ export class ExchangeRatesPage implements OnInit {
   }
 
   getVolatilityClass(volatility: number | null): string {
-    if (volatility === null) return 'text-gray-500';
+    if (volatility === null) return 'text-text-secondary';
     if (volatility < 1) return 'text-success-light';
-    if (volatility < 3) return 'text-yellow-600';
+    if (volatility < 3) return 'text-warning-600';
     if (volatility < 5) return 'text-warning-light';
-    return 'text-red-600';
+    return 'text-error-600';
   }
 
   getVolatilityLabel(volatility: number | null): string {

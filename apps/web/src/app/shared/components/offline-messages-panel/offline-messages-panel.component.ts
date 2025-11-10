@@ -17,22 +17,22 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
   imports: [CommonModule],
   template: `
     <!-- Backdrop -->
-    <div (click)="closePanel.emit()" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"></div>
+    <div (click)="closePanel.emit()" class="fixed inset-0 z-50 bg-surface-overlay/50 backdrop-blur-sm"></div>
 
     <!-- Panel -->
     <div
-      class="fixed right-0 top-0 z-50 h-full w-full max-w-md overflow-y-auto bg-surface-raised shadow-xl dark:bg-gray-800"
+      class="fixed right-0 top-0 z-50 h-full w-full max-w-md overflow-y-auto bg-surface-raised shadow-xl dark:bg-surface-base"
     >
       <!-- Header -->
       <div
-        class="sticky top-0 z-10 border-b border-gray-200 bg-surface-raised px-4 py-4 dark:border-gray-700 dark:bg-gray-800"
+        class="sticky top-0 z-10 border-b border-border-default bg-surface-raised px-4 py-4 dark:border-border-subtle dark:bg-surface-base"
       >
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">
+            <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
               Mensajes pendientes
             </h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
+            <p class="text-sm text-text-secondary dark:text-text-muted">
               {{ pendingMessages().length }} pendiente{{
                 pendingMessages().length !== 1 ? 's' : ''
               }}, {{ failedMessages().length }} fallido{{
@@ -42,11 +42,11 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
           </div>
           <button
             (click)="closePanel.emit()"
-            class="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+            class="rounded-lg p-2 hover:bg-surface-raised dark:hover:bg-gray-700"
             type="button"
           >
             <svg
-              class="h-6 w-6 text-gray-500 dark:text-gray-400"
+              class="h-6 w-6 text-text-secondary dark:text-text-muted"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -67,14 +67,14 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
         @if (loading()) {
           <div class="flex items-center justify-center py-8">
             <div
-              class="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
+              class="h-8 w-8 animate-spin rounded-full border-4 border-border-subtle border-t-blue-500"
             ></div>
           </div>
         } @else if (pendingMessages().length === 0 && failedMessages().length === 0) {
           <!-- Empty state -->
           <div class="py-12 text-center">
             <svg
-              class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-300"
+              class="mx-auto h-16 w-16 text-text-muted dark:text-text-secondary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -86,10 +86,10 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
+            <h3 class="mt-4 text-lg font-medium text-text-primary dark:text-text-inverse">
               No hay mensajes pendientes
             </h3>
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            <p class="mt-2 text-sm text-text-secondary dark:text-text-muted">
               Todos tus mensajes se han enviado correctamente
             </p>
           </div>
@@ -97,24 +97,24 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
           <!-- Pending messages -->
           @if (pendingMessages().length > 0) {
             <div class="mb-6">
-              <h3 class="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <h3 class="mb-3 text-sm font-semibold text-text-primary dark:text-text-secondary">
                 Pendientes ({{ pendingMessages().length }})
               </h3>
               <div class="space-y-3">
                 @for (msg of pendingMessages(); track msg.id) {
                   <div
-                    class="rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-900/20"
+                    class="rounded-lg border border-warning-200 bg-warning-50 p-3 dark:border-warning-800 dark:bg-warning-900/20"
                   >
                     <div class="mb-2 flex items-start justify-between">
                       <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-900 dark:text-text-inverse">
+                        <p class="text-sm font-medium text-text-primary dark:text-text-inverse">
                           {{ truncateMessage(msg.body, 50) }}
                         </p>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        <p class="mt-1 text-xs text-text-secondary dark:text-text-muted">
                           {{ formatTimestamp(msg.timestamp) }}
                         </p>
                         @if (msg.retries > 0) {
-                          <p class="mt-1 text-xs text-yellow-700 dark:text-yellow-300">
+                          <p class="mt-1 text-xs text-warning-700 dark:text-warning-300">
                             Reintentos: {{ msg.retries }}/5
                           </p>
                         }
@@ -122,7 +122,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                       <button
                         (click)="retryMessage(msg)"
                         [disabled]="retrying().has(msg.id)"
-                        class="ml-2 rounded-lg bg-yellow-600 px-3 py-1 text-xs font-medium text-text-inverse hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        class="ml-2 rounded-lg bg-warning-600 px-3 py-1 text-xs font-medium text-text-inverse hover:bg-warning-700 disabled:cursor-not-allowed disabled:opacity-50"
                         type="button"
                       >
                         @if (retrying().has(msg.id)) {
@@ -142,12 +142,12 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
           @if (failedMessages().length > 0) {
             <div>
               <div class="mb-3 flex items-center justify-between">
-                <h3 class="text-sm font-semibold text-red-700 dark:text-red-400">
+                <h3 class="text-sm font-semibold text-error-700 dark:text-error-400">
                   Fallidos ({{ failedMessages().length }})
                 </h3>
                 <button
                   (click)="clearFailed()"
-                  class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                  class="text-xs text-error-600 hover:text-error-700 dark:text-error-400 dark:hover:text-error-300"
                   type="button"
                 >
                   Limpiar
@@ -156,16 +156,16 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
               <div class="space-y-3">
                 @for (msg of failedMessages(); track msg.id) {
                   <div
-                    class="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20"
+                    class="rounded-lg border border-error-200 bg-error-50 p-3 dark:border-error-800 dark:bg-error-900/20"
                   >
                     <div class="mb-2">
-                      <p class="text-sm font-medium text-gray-900 dark:text-text-inverse">
+                      <p class="text-sm font-medium text-text-primary dark:text-text-inverse">
                         {{ truncateMessage(msg.body, 50) }}
                       </p>
-                      <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      <p class="mt-1 text-xs text-text-secondary dark:text-text-muted">
                         {{ formatTimestamp(msg.timestamp) }}
                       </p>
-                      <p class="mt-1 text-xs text-red-700 dark:text-red-300">
+                      <p class="mt-1 text-xs text-error-700 dark:text-error-300">
                         Falló después de {{ msg.retries }} intentos
                       </p>
                     </div>
@@ -173,7 +173,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                       <button
                         (click)="retryMessage(msg)"
                         [disabled]="retrying().has(msg.id)"
-                        class="flex-1 rounded-lg bg-red-600 px-3 py-1 text-xs font-medium text-text-inverse hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        class="flex-1 rounded-lg bg-error-600 px-3 py-1 text-xs font-medium text-text-inverse hover:bg-error-700 disabled:cursor-not-allowed disabled:opacity-50"
                         type="button"
                       >
                         @if (retrying().has(msg.id)) {
@@ -184,7 +184,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
                       </button>
                       <button
                         (click)="removeMessage(msg.id)"
-                        class="rounded-lg border border-red-300 px-3 py-1 text-xs font-medium text-red-700 hover:bg-red-100 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/30"
+                        class="rounded-lg border border-error-300 px-3 py-1 text-xs font-medium text-error-700 hover:bg-error-100 dark:border-error-700 dark:text-error-400 dark:hover:bg-error-900/30"
                         type="button"
                       >
                         Eliminar

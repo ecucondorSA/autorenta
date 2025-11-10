@@ -11,7 +11,7 @@
         <ion-badge [color]="getBucketColor(riskCalculation()!.bucket)" class="text-lg">
           {{ getBucketLabel(riskCalculation()!.bucket) }}
         </ion-badge>
-        <p class="text-sm text-gray-500 mt-2">
+        <p class="text-sm text-text-secondary mt-2">
           Valor del auto: {{ formatCurrency(carValueUsd()) }}
         </p>
       </div>
@@ -24,16 +24,16 @@
             <p class="text-sm mb-3">{{ guaranteeCopy()!.description }}</p>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <p class="text-xs text-gray-500">Monto en ARS</p>
+                <p class="text-xs text-text-secondary">Monto en ARS</p>
                 <p class="text-lg font-bold">{{ guaranteeCopy()!.amountArs }}</p>
               </div>
               <div>
-                <p class="text-xs text-gray-500">Monto en USD</p>
+                <p class="text-xs text-text-secondary">Monto en USD</p>
                 <p class="text-lg font-bold">{{ guaranteeCopy()!.amountUsd }}</p>
               </div>
             </div>
-            <div *ngIf="guaranteeCopy()!.discountBadge" class="mt-3 p-2 bg-yellow-50 rounded">
-              <p class="text-sm text-yellow-800">{{ guaranteeCopy()!.discountBadge }}</p>
+            <div *ngIf="guaranteeCopy()!.discountBadge" class="mt-3 p-2 bg-warning-50 rounded">
+              <p class="text-sm text-warning-800">{{ guaranteeCopy()!.discountBadge }}</p>
             </div>
           </ion-card-content>
         </ion-card>
@@ -68,7 +68,7 @@
       <div class="mb-6">
         <h3 class="text-lg font-semibold mb-3">Detalles del Riesgo</h3>
         <div class="space-y-3">
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+          <div class="flex items-center justify-between p-3 bg-surface-base rounded">
             <span class="text-sm font-medium">Tipo de Garantía</span>
             <ion-badge
               [color]="riskCalculation()!.guaranteeType === 'hold' ? 'primary' : 'warning'"
@@ -81,7 +81,7 @@
             </ion-badge>
           </div>
 
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+          <div class="flex items-center justify-between p-3 bg-surface-base rounded">
             <span class="text-sm font-medium">Tiene Tarjeta</span>
             <ion-icon
               [name]="riskCalculation()!.hasCard ? 'checkmark-circle' : 'close-circle'"
@@ -89,7 +89,7 @@
             ></ion-icon>
           </div>
 
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+          <div class="flex items-center justify-between p-3 bg-surface-base rounded">
             <span class="text-sm font-medium">Requiere Revalidación</span>
             <ion-icon
               [name]="riskCalculation()!.requiresRevalidation ? 'warning' : 'checkmark-circle'"
@@ -98,7 +98,7 @@
           </div>
 
           <div
-            class="flex items-center justify-between p-3 bg-gray-50 rounded"
+            class="flex items-center justify-between p-3 bg-surface-base rounded"
             *ngIf="riskCalculation()!.driverClass !== undefined"
           >
             <span class="text-sm font-medium">Clase del Conductor</span>
@@ -108,7 +108,7 @@
           </div>
 
           <div
-            class="flex items-center justify-between p-3 bg-gray-50 rounded"
+            class="flex items-center justify-between p-3 bg-surface-base rounded"
             *ngIf="riskCalculation()!.guaranteeMultiplier !== undefined"
           >
             <span class="text-sm font-medium">Multiplicador de Garantía</span>

@@ -68,7 +68,7 @@
     <!-- Not available -->
     <div
       *ngIf="!isCheckingAvailability() && isAvailable() === false"
-      class="flex items-center gap-2 text-xs font-medium text-red-600"
+      class="flex items-center gap-2 text-xs font-medium text-error-600"
     >
       <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -205,7 +205,7 @@
       [class.text-text-secondary]="true"
       [class.dark:text-text-secondary]="true"
       [class.border-border-default]="true"
-      [class.dark:border-gray-600]="true"
+      [class.dark:border-border-default]="true"
       [class.hover:border-cta-default]="true"
       [class.hover:text-cta-default]="true"
     >

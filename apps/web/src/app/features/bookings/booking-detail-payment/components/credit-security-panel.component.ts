@@ -72,7 +72,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <div
         class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/10 rounded-lg p-4 mb-4 transition-colors duration-300"
       >
-        <p class="text-sm text-gray-700 dark:text-text-secondary/70 mb-2">
+        <p class="text-sm text-text-primary dark:text-text-secondary/70 mb-2">
           Garantía con Wallet requerida
         </p>
         <div class="flex items-baseline justify-between mb-3">
@@ -80,15 +80,15 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             <p class="text-3xl font-bold text-purple-900 dark:text-purple-200">
               {{ formatArs(creditSecurityArs()) }}
             </p>
-            <p class="text-xs text-gray-600 dark:text-text-secondary/60 mt-1">
+            <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">
               ≈ {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
             </p>
           </div>
           <div class="text-right">
-            <p class="text-xs text-gray-600 dark:text-text-secondary/60">
+            <p class="text-xs text-text-secondary dark:text-text-secondary/60">
               {{ riskSnapshot.vehicleValueUsd <= 20000 ? 'Autos ≤ $20k' : 'Autos > $20k' }}
             </p>
-            <p class="text-xs text-gray-500 dark:text-text-secondary/50 mt-1">
+            <p class="text-xs text-text-secondary dark:text-text-secondary/50 mt-1">
               TC: {{ fxSnapshot.rate | number: '1.2-2' }} ARS/USD
             </p>
           </div>
@@ -107,9 +107,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
       <!-- Explanation -->
       <div
-        class="mb-4 p-3 bg-gray-50 dark:bg-surface-secondary/40 rounded-lg transition-colors duration-300"
+        class="mb-4 p-3 bg-surface-base dark:bg-surface-secondary/40 rounded-lg transition-colors duration-300"
       >
-        <p class="text-sm text-gray-700 dark:text-text-secondary/80">
+        <p class="text-sm text-text-primary dark:text-text-secondary/80">
           <strong>¿Cómo funciona?</strong> Este monto queda como saldo de garantía en tu wallet (no
           puedes retirarlo a tu banco, pero puedes usarlo en futuras reservas). Si hay daños, se
           descuenta automáticamente. Si no hay daños, el saldo queda disponible para tu próxima
@@ -140,31 +140,31 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          <span class="ml-3 text-sm text-gray-600 dark:text-text-secondary/70"
+          <span class="ml-3 text-sm text-text-secondary dark:text-text-secondary/70"
             >Verificando saldo...</span
           >
         </div>
       } @else {
         <!-- Balance Info -->
         <div
-          class="mb-4 p-4 bg-gray-50 border border-gray-200 dark:bg-surface-secondary/40 dark:border-neutral-700 rounded-lg transition-colors duration-300"
+          class="mb-4 p-4 bg-surface-base border border-border-default dark:bg-surface-secondary/40 dark:border-neutral-700 rounded-lg transition-colors duration-300"
         >
           <div class="space-y-2">
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600 dark:text-text-secondary/70">Crédito disponible:</span>
-              <span class="font-semibold text-gray-900 dark:text-text-primary">
+              <span class="text-text-secondary dark:text-text-secondary/70">Crédito disponible:</span>
+              <span class="font-semibold text-text-primary dark:text-text-primary">
                 {{ formatUsd(currentProtectedCredit()) }}
               </span>
             </div>
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600 dark:text-text-secondary/70">Crédito requerido:</span>
-              <span class="font-semibold text-gray-900 dark:text-text-primary">
+              <span class="text-text-secondary dark:text-text-secondary/70">Crédito requerido:</span>
+              <span class="font-semibold text-text-primary dark:text-text-primary">
                 {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
               </span>
             </div>
-            <div class="h-px bg-gray-300 dark:bg-neutral-700"></div>
+            <div class="h-px bg-surface-pressed dark:bg-neutral-700"></div>
             <div class="flex justify-between text-sm">
-              <span class="text-gray-700 dark:text-text-secondary/80 font-medium">
+              <span class="text-text-primary dark:text-text-secondary/80 font-medium">
                 {{ creditDifference() >= 0 ? 'Te sobra:' : 'Te falta:' }}
               </span>
               <span
@@ -172,7 +172,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 [ngClass]="
                   creditDifference() >= 0
                     ? 'text-success-light dark:text-success-200'
-                    : 'text-red-600 dark:text-error-200'
+                    : 'text-error-600 dark:text-error-200'
                 "
               >
                 {{ formatUsd(Math.abs(creditDifference())) }}
@@ -230,10 +230,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           @case ('insufficient') {
             <div class="space-y-3">
               <div
-                class="flex items-start space-x-2 p-3 bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
+                class="flex items-start space-x-2 p-3 bg-error-50 border border-error-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
               >
                 <svg
-                  class="w-5 h-5 text-red-600 dark:text-error-300 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-600 dark:text-error-300 flex-shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -244,10 +244,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-red-900 dark:text-error-100">
+                  <p class="text-sm font-medium text-error-900 dark:text-error-100">
                     Crédito insuficiente
                   </p>
-                  <p class="text-xs text-red-700 dark:text-error-200 mt-1">
+                  <p class="text-xs text-error-700 dark:text-error-200 mt-1">
                     Necesitas cargar {{ formatUsd(Math.abs(creditDifference())) }} adicionales.
                   </p>
                 </div>
@@ -304,9 +304,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               </div>
               @if (currentLock(); as lock) {
                 <div
-                  class="p-3 bg-gray-50 dark:bg-surface-secondary/40 rounded-lg transition-colors duration-300"
+                  class="p-3 bg-surface-base dark:bg-surface-secondary/40 rounded-lg transition-colors duration-300"
                 >
-                  <p class="text-xs text-gray-600 dark:text-text-secondary/70">
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
                     Lock ID: <span class="font-mono">{{ lock.lockId }}</span>
                   </p>
                 </div>
@@ -318,10 +318,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           @case ('error') {
             <div class="space-y-3">
               <div
-                class="flex items-start space-x-2 p-3 bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
+                class="flex items-start space-x-2 p-3 bg-error-50 border border-error-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
               >
                 <svg
-                  class="w-5 h-5 text-red-600 dark:text-error-300 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-600 dark:text-error-300 flex-shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -332,8 +332,8 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-red-900 dark:text-error-100">Error</p>
-                  <p class="text-xs text-red-700 dark:text-error-200 mt-1">
+                  <p class="text-sm font-medium text-error-900 dark:text-error-100">Error</p>
+                  <p class="text-xs text-error-700 dark:text-error-200 mt-1">
                     {{ errorMessage() || 'Ocurrió un error. Intenta nuevamente.' }}
                   </p>
                 </div>
@@ -341,7 +341,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               <button
                 type="button"
                 (click)="onRetry()"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-neutral-700 text-sm font-medium rounded-md text-gray-700 dark:text-text-secondary bg-surface-raised dark:bg-surface-secondary/60 hover:bg-gray-50 dark:hover:bg-slate-deep/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
+                class="w-full px-4 py-2 border border-border-subtle dark:border-neutral-700 text-sm font-medium rounded-md text-text-primary dark:text-text-secondary bg-surface-raised dark:bg-surface-secondary/60 hover:bg-surface-base dark:hover:bg-slate-deep/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
               >
                 Reintentar
               </button>

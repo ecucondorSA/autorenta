@@ -5,9 +5,6 @@ import { MessagesService, Message } from '../../core/services/messages.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UnreadMessagesService } from '../../core/services/unread-messages.service';
 import { OfflineMessagesIndicatorComponent } from '../../shared/components/offline-messages-indicator/offline-messages-indicator.component';
-import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
-import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
-import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import {
   RealtimeConnectionService,
   ConnectionStatus,
@@ -22,22 +19,16 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 @Component({
   selector: 'app-inbox',
   standalone: true,
-  imports: [
-    CommonModule,
-    OfflineMessagesIndicatorComponent,
-    SkeletonLoaderComponent,
-    ErrorStateComponent,
-    EmptyStateComponent,
-  ],
+  imports: [CommonModule, OfflineMessagesIndicatorComponent],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-gray-800">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center justify-between">
             <div>
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-text-inverse">Mensajes</h1>
-              <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
+              <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">Mensajes</h1>
+              <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                 {{ conversations().length }} conversaciones
               </p>
             </div>
@@ -49,31 +40,50 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
       <!-- Content -->
       <div class="mx-auto max-w-4xl p-4">
         @if (loading()) {
-          <!-- Skeleton loader para conversaciones -->
-          <app-skeleton-loader type="conversation" [count]="5"></app-skeleton-loader>
+          <div class="flex h-96 items-center justify-center">
+            <div class="text-center">
+              <div
+                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle border-t-blue-500"
+              ></div>
+              <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                Cargando conversaciones...
+              </p>
+            </div>
+          </div>
         } @else if (error()) {
-          <!-- Error state mejorado -->
-          <app-error-state
-            title="Error al cargar mensajes"
-            [message]="error() || 'No pudimos cargar tus conversaciones'"
-            [retryable]="true"
-            (retry)="handleRetry()"
-          ></app-error-state>
+          <div class="rounded-lg bg-error-50 p-4 dark:bg-error-900/20">
+            <p class="text-sm text-error-800 dark:text-error-200">{{ error() }}</p>
+          </div>
         } @else if (conversations().length === 0) {
-          <!-- Empty state mejorado -->
-          <app-empty-state
-            icon="inbox"
-            iconColor="primary"
-            title="No hay mensajes"
-            message="Cuando alguien te escriba o consultes sobre un auto, aparecerá aquí"
-          ></app-empty-state>
+          <!-- Empty state -->
+          <div class="py-16 text-center">
+            <svg
+              class="mx-auto h-16 w-16 text-text-muted dark:text-text-secondary"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+              />
+            </svg>
+            <h3 class="mt-4 text-lg font-medium text-text-primary dark:text-text-inverse">
+              No hay mensajes
+            </h3>
+            <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+              Cuando alguien te escriba, aparecerá aquí
+            </p>
+          </div>
         } @else {
           <!-- Conversations list -->
           <div class="space-y-2">
             @for (conv of conversations(); track conv.id) {
               <button
                 (click)="openConversation(conv)"
-                class="group w-full rounded-lg border border-gray-200 bg-surface-raised p-4 text-left transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                class="group w-full rounded-lg border border-border-default bg-surface-raised p-4 text-left transition-all hover:shadow-md dark:border-border-subtle dark:bg-surface-base"
                 type="button"
               >
                 <div class="flex items-start gap-4">
@@ -98,11 +108,11 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
                   <div class="min-w-0 flex-1">
                     <div class="mb-1 flex items-start justify-between gap-2">
                       <div>
-                        <p class="font-semibold text-gray-900 dark:text-text-inverse">
+                        <p class="font-semibold text-text-primary dark:text-text-inverse">
                           {{ conv.otherUserName }}
                         </p>
                         @if (conv.carBrand) {
-                          <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                          <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                             {{ conv.carBrand }} {{ conv.carModel }} {{ conv.carYear }}
                           </p>
                         }
@@ -118,16 +128,16 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
                     <p
                       class="truncate text-sm"
                       [class.font-semibold]="conv.unreadCount > 0"
-                      [class.text-gray-900]="conv.unreadCount > 0"
+                      [class.text-text-primary]="conv.unreadCount > 0"
                       [class.dark:text-text-inverse]="conv.unreadCount > 0"
-                      [class.text-gray-600
-                      dark:text-gray-300]="conv.unreadCount === 0"
-                      [class.dark:text-gray-400
-                      dark:text-gray-300]="conv.unreadCount === 0"
+                      [class.text-text-secondary
+                      dark:text-text-secondary]="conv.unreadCount === 0"
+                      [class.dark:text-text-muted
+                      dark:text-text-secondary]="conv.unreadCount === 0"
                     >
                       {{ conv.lastMessage }}
                     </p>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                    <p class="mt-1 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                       {{ formatDate(conv.lastMessageAt) }}
                     </p>
                   </div>
@@ -187,8 +197,8 @@ export class InboxPage implements OnInit, OnDestroy {
         table: 'messages',
         filter: `sender_id=eq.${userId}`,
       },
-      async (payload) => {
-        await this.handleMessageChange(payload.new as Message, userId);
+      (payload) => {
+        this.handleMessageChange(payload.new as Message, userId);
       },
       (status) => {
         this.connectionStatus.set(status);
@@ -204,8 +214,8 @@ export class InboxPage implements OnInit, OnDestroy {
         table: 'messages',
         filter: `recipient_id=eq.${userId}`,
       },
-      async (payload) => {
-        await this.handleMessageChange(payload.new as Message, userId);
+      (payload) => {
+        this.handleMessageChange(payload.new as Message, userId);
       },
       (status) => {
         this.connectionStatus.set(status);
@@ -218,17 +228,16 @@ export class InboxPage implements OnInit, OnDestroy {
 
   /**
    * Maneja cambios en mensajes recibidos via realtime
-   * Actualiza solo la conversación afectada sin refetch completo
-   * Optimización: construye la actualización localmente para reducir queries en 60%
+   * Optimizado: actualiza solo los campos necesarios sin refetch completo
    */
-  private async handleMessageChange(message: Message, userId: string): Promise<void> {
+  private handleMessageChange(message: Message, userId: string): void {
     const conversationId = message.car_id || message.booking_id;
     if (!conversationId) return;
 
     const otherUserId = message.sender_id === userId ? message.recipient_id : message.sender_id;
     const conversationKey = `${conversationId}_${otherUserId}`;
 
-    // Actualizar conversación localmente sin refetch
+    // Actualizar solo los campos necesarios sin hacer refetch
     this.conversations.update((convs) => {
       const index = convs.findIndex((c) => c.id === conversationKey);
 
@@ -237,49 +246,54 @@ export class InboxPage implements OnInit, OnDestroy {
         const updated = [...convs];
         const existingConv = updated[index];
 
-        // Actualizar solo los campos necesarios
+        // Update only changed fields
         updated[index] = {
           ...existingConv,
           lastMessage: message.body,
           lastMessageAt: new Date(message.created_at),
-          // Incrementar unread solo si el mensaje es para nosotros
-          unreadCount: message.recipient_id === userId
-            ? existingConv.unreadCount + 1
-            : existingConv.unreadCount,
+          // Increment unread count if message is from other user and not read
+          unreadCount: message.sender_id !== userId ? existingConv.unreadCount + 1 : existingConv.unreadCount,
         };
 
         // Reordenar por fecha de último mensaje
         return updated.sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime());
       } else {
-        // Nueva conversación - en este caso sí necesitamos obtener los detalles completos
-        // pero esto es raro (solo ocurre al recibir primer mensaje de alguien nuevo)
-        this.loadSingleConversation(conversationKey, conversationId, message, userId);
+        // Nueva conversación - en este caso sí necesitamos hacer fetch
+        // pero lo hacemos en background sin bloquear
+        void this.fetchAndAddNewConversation(conversationKey, message, userId);
         return convs;
       }
     });
   }
 
   /**
-   * Carga una única conversación cuando es necesario (nueva conversación)
-   * Fallback solo para casos edge, no afecta el flujo normal
+   * Fetches and adds a new conversation (called only when a new conversation starts)
    */
-  private async loadSingleConversation(
+  private async fetchAndAddNewConversation(
     conversationKey: string,
-    conversationId: string,
     message: Message,
     userId: string
   ): Promise<void> {
-    const updatedConversation = await this.messagesService.listConversations(userId, {
-      limit: 1,
-      offset: 0,
-      carId: message.car_id || undefined,
-      bookingId: message.booking_id || undefined,
-    });
+    try {
+      const updatedConversation = await this.messagesService.listConversations(userId, {
+        limit: 1,
+        offset: 0,
+        carId: message.car_id || undefined,
+        bookingId: message.booking_id || undefined,
+      });
 
-    const conv = updatedConversation.conversations.find((c) => c.id === conversationKey);
-    if (!conv) return;
+      const conv = updatedConversation.conversations.find((c) => c.id === conversationKey);
+      if (!conv) return;
 
-    this.conversations.update((convs) => [conv, ...convs]);
+      // Add new conversation to the list
+      this.conversations.update((convs) => {
+        // Check if it was already added (race condition)
+        if (convs.some((c) => c.id === conversationKey)) return convs;
+        return [conv, ...convs].sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime());
+      });
+    } catch (error) {
+      console.error('Error fetching new conversation:', error);
+    }
   }
 
   private async loadConversations(): Promise<void> {
@@ -329,13 +343,5 @@ export class InboxPage implements OnInit, OnDestroy {
   formatDate(date: Date): string {
     // Usar método del servicio para formateo consistente
     return this.messagesService.formatRelativeDate(date);
-  }
-
-  /**
-   * Maneja reintentos después de error
-   */
-  handleRetry(): void {
-    this.error.set(null);
-    void this.loadConversations();
   }
 }

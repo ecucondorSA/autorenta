@@ -19,7 +19,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
   selector: 'app-selfie-capture',
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="bg-surface-raised rounded-lg border border-gray-200 p-6">
+    <div class="bg-surface-raised rounded-lg border border-border-default p-6">
       <!-- Header -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center gap-3">
@@ -30,8 +30,8 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             {{ getStatusIcon() }}
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900">Verificación Facial (Level 3)</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-300">
+            <h4 class="font-semibold text-text-primary">Verificación Facial (Level 3)</h4>
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               Verifica tu identidad con un selfie en video
             </p>
           </div>
@@ -89,7 +89,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         </div>
 
         <!-- Camera Preview / Video Preview -->
-        <div class="relative rounded-lg overflow-hidden bg-gray-900" style="aspect-ratio: 4/3;">
+        <div class="relative rounded-lg overflow-hidden bg-surface-raised" style="aspect-ratio: 4/3;">
           <video
             #videoPreview
             [hidden]="!isRecording() && !hasVideo()"
@@ -103,7 +103,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           <!-- Recording Indicator -->
           <div
             *ngIf="isRecording()"
-            class="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-text-inverse px-3 py-2 rounded-full text-sm font-medium animate-pulse"
+            class="absolute top-4 right-4 flex items-center gap-2 bg-error-600 text-text-inverse px-3 py-2 rounded-full text-sm font-medium animate-pulse"
           >
             <span class="w-2 h-2 bg-surface-raised rounded-full"></span>
             <span>REC {{ recordingSeconds() }}s</span>
@@ -187,7 +187,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             *ngIf="hasVideo() && !processing()"
             type="button"
             (click)="retake()"
-            class="px-6 py-3 bg-surface-raised border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 focus:ring-2 focus:ring-cta-default focus:ring-offset-2 transition-all"
+            class="px-6 py-3 bg-surface-raised border border-border-subtle text-text-primary rounded-lg font-medium hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 transition-all"
           >
             Volver a Grabar
           </button>
@@ -218,7 +218,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         <!-- Error Message -->
         <div
           *ngIf="error()"
-          class="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800"
+          class="p-4 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
         >
           {{ error() }}
           <button

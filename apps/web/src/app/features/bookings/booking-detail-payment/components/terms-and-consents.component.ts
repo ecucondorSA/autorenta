@@ -48,7 +48,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
                 >
                   Política de Privacidad
                 </a>
-                <span class="text-red-500">*</span>
+                <span class="text-error-500">*</span>
               </span>
             </div>
           </label>
@@ -75,7 +75,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
               <span class="text-sm text-success-light dark:text-success-light">
                 Permito que AutoRenta guarde mi tarjeta para futuros cargos por multas, peajes o
                 daños según nuestros términos
-                <span class="text-red-500">*</span>
+                <span class="text-error-500">*</span>
               </span>
             </div>
           </label>
@@ -119,11 +119,11 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
       <!-- Validation Errors -->
       <div
         *ngIf="!consents.termsAccepted || (paymentMode === 'card' && !consents.cardOnFileAccepted)"
-        class="mt-4 p-3 bg-yellow-50 border border-yellow-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg transition-colors duration-300"
+        class="mt-4 p-3 bg-warning-50 border border-warning-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg transition-colors duration-300"
       >
         <div class="flex space-x-2">
           <svg
-            class="w-5 h-5 text-yellow-600 dark:text-warning-200 flex-shrink-0"
+            class="w-5 h-5 text-warning-600 dark:text-warning-200 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -133,7 +133,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
               clip-rule="evenodd"
             />
           </svg>
-          <p class="text-sm text-yellow-800 dark:text-warning-100">
+          <p class="text-sm text-warning-800 dark:text-warning-100">
             Debes aceptar todos los consentimientos obligatorios para continuar
           </p>
         </div>

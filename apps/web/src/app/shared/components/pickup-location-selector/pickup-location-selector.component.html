@@ -57,7 +57,7 @@
         <p class="option-description" *ngIf="userHomeLocation">
           {{ userHomeLocation.address || 'Tu ubicación guardada' }}
         </p>
-        <p class="option-description text-gray-500" *ngIf="!userHomeLocation">
+        <p class="option-description text-text-secondary" *ngIf="!userHomeLocation">
           <a href="/profile/location" class="text-cta-default underline">Configurá tu ubicación</a>
           para usar delivery
         </p>

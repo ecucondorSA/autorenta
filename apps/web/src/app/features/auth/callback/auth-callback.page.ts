@@ -74,12 +74,12 @@ import { ProfileService } from '../../../core/services/profile.service';
         <!-- Error State -->
         <div *ngIf="error()" class="space-y-6">
           <div
-            class="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg p-6"
+            class="bg-error-50 dark:bg-error-900/20 border-2 border-error-200 dark:border-error-800 rounded-lg p-6"
           >
-            <h2 class="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
+            <h2 class="text-xl font-bold text-error-700 dark:text-error-400 mb-2">
               Error de autenticación
             </h2>
-            <p class="text-red-600 dark:text-red-300 mb-4">
+            <p class="text-error-600 dark:text-error-300 mb-4">
               {{ error() }}
             </p>
             <button

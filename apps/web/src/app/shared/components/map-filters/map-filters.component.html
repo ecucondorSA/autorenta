@@ -186,7 +186,7 @@
 <!-- Mobile: Inline Filters Under Searchbar -->
 <div
   *ngIf="isMobile()"
-  class="map-filters-mobile sticky top-safe-top z-15 bg-surface-raised dark:bg-surface-secondary shadow-sm border-b border-border-default dark:border-gray-600 p-3"
+  class="map-filters-mobile sticky top-safe-top z-15 bg-surface-raised dark:bg-surface-secondary shadow-sm border-b border-border-default dark:border-border-default p-3"
 >
   <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
     <!-- Dates Chip -->
@@ -246,7 +246,7 @@
   <!-- Inline Panels (Mobile) -->
   <div
     *ngIf="openPanel()"
-    class="mt-2 p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600"
+    class="mt-2 p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-border-default"
   >
     <!-- Dates Panel Mobile -->
     <div *ngIf="openPanel() === 'dates'">

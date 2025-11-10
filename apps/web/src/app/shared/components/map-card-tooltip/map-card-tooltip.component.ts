@@ -19,7 +19,7 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
   imports: [CommonModule, MoneyPipe, DistanceBadgeComponent],
   template: `
     <div
-      class="map-tooltip-card bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl border border-border-default dark:border-gray-600 overflow-hidden max-w-[280px] transition-all duration-200"
+      class="map-tooltip-card bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl border border-border-default dark:border-border-default overflow-hidden max-w-[280px] transition-all duration-200"
       [class.map-tooltip-card--selected]="selected"
     >
       <!-- Imagen del auto -->

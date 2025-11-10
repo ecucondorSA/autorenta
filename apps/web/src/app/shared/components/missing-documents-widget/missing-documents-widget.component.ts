@@ -15,17 +15,17 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
         @if (missingDocsCount() > 0) {
           <!-- Missing Documents Alert -->
           <div
-            class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 rounded-lg p-4 mb-6"
+            class="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0">
                 <span class="text-2xl">⚠️</span>
               </div>
               <div class="flex-1">
-                <h3 class="font-semibold text-amber-900 dark:text-amber-200 mb-2">
+                <h3 class="font-semibold text-warning-900 dark:text-warning-200 mb-2">
                   Documentos Faltantes
                 </h3>
-                <p class="text-sm text-amber-800 dark:text-amber-300 mb-3">
+                <p class="text-sm text-warning-800 dark:text-warning-300 mb-3">
                   Necesitas completar tu verificación para publicar autos y recibir reservas.
                 </p>
 
@@ -33,7 +33,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
                 <div class="flex flex-wrap gap-2 mb-4">
                   @for (doc of missingDocs(); track doc) {
                     <span
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 dark:bg-amber-800/40 text-amber-900 dark:text-amber-200 rounded-full text-sm font-medium"
+                      class="inline-flex items-center gap-1 px-3 py-1 bg-warning-100 dark:bg-warning-800/40 text-warning-900 dark:text-warning-200 rounded-full text-sm font-medium"
                     >
                       <span>{{ getDocumentEmoji(doc) }}</span>
                       <span>{{ getDocumentLabel(doc) }}</span>
@@ -44,14 +44,14 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
                 <!-- Action Button -->
                 <a
                   routerLink="/verification"
-                  class="inline-block px-4 py-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-text-inverse font-medium rounded-lg transition-colors text-sm"
+                  class="inline-block px-4 py-2 bg-warning-600 hover:bg-warning-700 dark:bg-warning-700 dark:hover:bg-warning-600 text-text-inverse font-medium rounded-lg transition-colors text-sm"
                 >
                   Completar Verificación →
                 </a>
               </div>
               <button
                 (click)="dismissAlert()"
-                class="flex-shrink-0 text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300"
+                class="flex-shrink-0 text-warning-600 dark:text-warning-400 hover:text-warning-700 dark:hover:text-warning-300"
                 aria-label="Cerrar alerta"
               >
                 ✕
@@ -78,15 +78,15 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
         } @else if (currentStatus()?.status === 'RECHAZADO') {
           <!-- Rejected Status -->
           <div
-            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded-lg p-4 mb-6"
+            class="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-start gap-4">
               <span class="text-2xl flex-shrink-0">❌</span>
               <div class="flex-1">
-                <p class="font-semibold text-red-900 dark:text-red-200 mb-2">
+                <p class="font-semibold text-error-900 dark:text-error-200 mb-2">
                   Verificación Rechazada
                 </p>
-                <p class="text-sm text-red-800 dark:text-red-300 mb-3">
+                <p class="text-sm text-error-800 dark:text-error-300 mb-3">
                   {{
                     currentStatus()?.notes ||
                       'Tu verificación fue rechazada. Contacta con soporte para más información.'
@@ -94,7 +94,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
                 </p>
                 <a
                   routerLink="/verification"
-                  class="inline-block px-4 py-2 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-text-inverse font-medium rounded-lg transition-colors text-sm"
+                  class="inline-block px-4 py-2 bg-error-600 hover:bg-error-700 dark:bg-error-700 dark:hover:bg-error-600 text-text-inverse font-medium rounded-lg transition-colors text-sm"
                 >
                   Reintentar Verificación →
                 </a>

@@ -2,15 +2,15 @@
 
 /* Smooth transitions for all interactive elements */
 button,
-.hover\:bg-gray-50,
-.hover\:bg-gray-900,
-.hover\:text-gray-900,
+.hover\:bg-surface-base,
+.hover\:bg-surface-raised,
+.hover\:text-text-primary,
 .hover\:bg-cta-default {
   transition: all 0.2s ease-in-out;
 }
 
 /* Table row hover effect */
-tr.hover\:bg-gray-50:hover {
+tr.hover\:bg-surface-base:hover {
   background-color: rgba(249, 250, 251, 0.8);
 }
 

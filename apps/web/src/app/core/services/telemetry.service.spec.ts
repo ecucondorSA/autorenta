@@ -154,7 +154,7 @@ describe('TelemetryService', () => {
         })
         .subscribe({
           next: () => {
-            // Should call rpc twice: once for record, once for getSummary
+            // Should call rpc twice: once for record, once for activeSummary
             expect(supabaseMock.rpc).toHaveBeenCalledTimes(2);
             expect(supabaseMock.rpc).toHaveBeenCalledWith('get_user_telemetry_summary', {
               p_user_id: null,
@@ -188,9 +188,9 @@ describe('TelemetryService', () => {
     });
   });
 
-  describe('getSummary', () => {
+  describe('activeSummary', () => {
     it('should fetch and set telemetry summary', (done) => {
-      service.getSummary('user-123', 6).subscribe({
+      service.activeSummary('user-123', 6).subscribe({
         next: (summary) => {
           expect(summary).toEqual(mockSummary);
           expect(service.summary()).toEqual(mockSummary);
@@ -205,7 +205,7 @@ describe('TelemetryService', () => {
     });
 
     it('should use default monthsBack value', (done) => {
-      service.getSummary('user-123').subscribe({
+      service.activeSummary('user-123').subscribe({
         next: () => {
           expect(supabaseMock.rpc).toHaveBeenCalledWith('get_user_telemetry_summary', {
             p_user_id: 'user-123',
@@ -218,7 +218,7 @@ describe('TelemetryService', () => {
     });
 
     it('should call without userId when not provided', (done) => {
-      service.getSummary().subscribe({
+      service.activeSummary().subscribe({
         next: () => {
           expect(supabaseMock.rpc).toHaveBeenCalledWith('get_user_telemetry_summary', {
             p_user_id: null,
@@ -233,7 +233,7 @@ describe('TelemetryService', () => {
     it('should return default summary when no data', (done) => {
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [], error: null }));
 
-      service.getSummary('user-123').subscribe({
+      service.activeSummary('user-123').subscribe({
         next: (summary) => {
           expect(summary).toEqual(defaultSummary);
           expect(service.summary()).toEqual(defaultSummary);
@@ -247,7 +247,7 @@ describe('TelemetryService', () => {
       const error = new Error('Database error');
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
 
-      service.getSummary('user-123').subscribe({
+      service.activeSummary('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
         error: (err) => {
           expect(err).toEqual(error);
@@ -258,11 +258,11 @@ describe('TelemetryService', () => {
     });
   });
 
-  describe('getHistory', () => {
+  describe('history', () => {
     it('should fetch and set telemetry history', (done) => {
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: mockHistory, error: null }));
 
-      service.getHistory('user-123', 20).subscribe({
+      service.history('user-123', 20).subscribe({
         next: (history) => {
           expect(history).toEqual(mockHistory);
           expect(service.history()).toEqual(mockHistory);
@@ -279,7 +279,7 @@ describe('TelemetryService', () => {
     it('should use default limit value', (done) => {
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: mockHistory, error: null }));
 
-      service.getHistory('user-123').subscribe({
+      service.history('user-123').subscribe({
         next: () => {
           expect(supabaseMock.rpc).toHaveBeenCalledWith('get_user_telemetry_history', {
             p_user_id: 'user-123',
@@ -294,7 +294,7 @@ describe('TelemetryService', () => {
     it('should handle empty history', (done) => {
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [], error: null }));
 
-      service.getHistory('user-123').subscribe({
+      service.history('user-123').subscribe({
         next: (history) => {
           expect(history).toEqual([]);
           expect(service.history()).toEqual([]);
@@ -308,7 +308,7 @@ describe('TelemetryService', () => {
       const error = new Error('Database error');
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
 
-      service.getHistory('user-123').subscribe({
+      service.history('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
         error: (err) => {
           expect(err).toEqual(error);
@@ -369,14 +369,14 @@ describe('TelemetryService', () => {
   });
 
   describe('refresh', () => {
-    it('should call getSummary and getHistory', () => {
-      spyOn(service, 'getSummary').and.returnValue(of(mockSummary));
-      spyOn(service, 'getHistory').and.returnValue(of(mockHistory));
+    it('should call activeSummary and history', () => {
+      spyOn(service, 'activeSummary').and.returnValue(of(mockSummary));
+      spyOn(service, 'history').and.returnValue(of(mockHistory));
 
       service.refresh(6, 20);
 
-      expect(service.getSummary).toHaveBeenCalledWith(undefined, 6);
-      expect(service.getHistory).toHaveBeenCalledWith(undefined, 20);
+      expect(service.activeSummary).toHaveBeenCalledWith(undefined, 6);
+      expect(service.history).toHaveBeenCalledWith(undefined, 20);
     });
   });
 
@@ -415,30 +415,30 @@ describe('TelemetryService', () => {
     });
   });
 
-  describe('getTrendDisplay', () => {
+  describe('trendDisplay', () => {
     it('should display improving trend', () => {
       service.summary.set(mockSummary);
-      const display = service.getTrendDisplay();
+      const display = service.trendDisplay();
       expect(display).toEqual({ icon: '↗', label: 'Mejorando', color: 'green' });
     });
 
     it('should display declining trend', () => {
       const decliningSummary = { ...mockSummary, score_trend: 'declining' as const };
       service.summary.set(decliningSummary);
-      const display = service.getTrendDisplay();
+      const display = service.trendDisplay();
       expect(display).toEqual({ icon: '↘', label: 'Bajando', color: 'red' });
     });
 
     it('should display stable trend', () => {
       const stableSummary = { ...mockSummary, score_trend: 'stable' as const };
       service.summary.set(stableSummary);
-      const display = service.getTrendDisplay();
+      const display = service.trendDisplay();
       expect(display).toEqual({ icon: '→', label: 'Estable', color: 'blue' });
     });
 
     it('should display insufficient data', () => {
       service.summary.set(defaultSummary);
-      const display = service.getTrendDisplay();
+      const display = service.trendDisplay();
       expect(display).toEqual({ icon: '?', label: 'Sin datos', color: 'gray' });
     });
   });
@@ -486,10 +486,10 @@ describe('TelemetryService', () => {
   });
 
   describe('loading states', () => {
-    it('should set loading state during getSummary', (done) => {
+    it('should set loading state during activeSummary', (done) => {
       expect(service.loading()).toBe(false);
 
-      service.getSummary().subscribe({
+      service.activeSummary().subscribe({
         complete: () => {
           expect(service.loading()).toBe(false);
           done();

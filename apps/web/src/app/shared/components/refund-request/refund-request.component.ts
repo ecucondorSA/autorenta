@@ -11,7 +11,7 @@ import { ToastService } from '../../../core/services/toast.service';
   template: `
     <div
       *ngIf="isOpen()"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
       (click)="onBackdropClick($event)"
     >
       <div
@@ -56,9 +56,9 @@ import { ToastService } from '../../../core/services/toast.service';
             </label>
             <div class="space-y-2">
               <label
-                class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-surface-base dark:hover:bg-surface-base transition-colors"
                 [class.border-cta-default]="refundType() === 'full'"
-                [class.border-gray-300]="refundType() !== 'full'"
+                [class.border-border-subtle]="refundType() !== 'full'"
               >
                 <input
                   type="radio"
@@ -67,18 +67,18 @@ import { ToastService } from '../../../core/services/toast.service';
                   class="mr-3"
                 />
                 <div class="flex-1">
-                  <div class="font-medium text-gray-900 dark:text-text-inverse">
+                  <div class="font-medium text-text-primary dark:text-text-inverse">
                     Reembolso Completo
                   </div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                  <div class="text-xs text-text-secondary dark:text-text-muted">
                     Se reembolsará el monto total de la reserva
                   </div>
                 </div>
               </label>
               <label
-                class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-surface-base dark:hover:bg-surface-base transition-colors"
                 [class.border-cta-default]="refundType() === 'partial'"
-                [class.border-gray-300]="refundType() !== 'partial'"
+                [class.border-border-subtle]="refundType() !== 'partial'"
               >
                 <input
                   type="radio"
@@ -87,10 +87,10 @@ import { ToastService } from '../../../core/services/toast.service';
                   class="mr-3"
                 />
                 <div class="flex-1">
-                  <div class="font-medium text-gray-900 dark:text-text-inverse">
+                  <div class="font-medium text-text-primary dark:text-text-inverse">
                     Reembolso Parcial
                   </div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                  <div class="text-xs text-text-secondary dark:text-text-muted">
                     Especifica el monto a reembolsar
                   </div>
                 </div>
@@ -112,7 +112,7 @@ import { ToastService } from '../../../core/services/toast.service';
                 min="0.01"
                 step="0.01"
                 placeholder="0.00"
-                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
               />
             </div>
           }
@@ -128,7 +128,7 @@ import { ToastService } from '../../../core/services/toast.service';
               [(ngModel)]="reason"
               rows="4"
               placeholder="Explica el motivo del reembolso..."
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
               required
             ></textarea>
           </div>
@@ -136,7 +136,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <!-- Error Message -->
           <div
             *ngIf="error()"
-            class="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-400"
+            class="p-3 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-xl text-sm text-error-700 dark:text-error-400"
           >
             {{ error() }}
           </div>
@@ -147,7 +147,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <button
             type="button"
             (click)="close()"
-            class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 text-text-secondary hover:bg-gray-100 dark:hover:bg-slate-deep transition-all font-medium"
+            class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
           >
             Cancelar
           </button>

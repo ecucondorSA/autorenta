@@ -12,26 +12,26 @@
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
     <ion-card>
       <ion-card-content>
-        <p class="text-sm text-gray-500">Abiertas</p>
-        <p class="text-2xl font-bold text-yellow-600">{{ getStatusCount('open') }}</p>
+        <p class="text-sm text-text-secondary">Abiertas</p>
+        <p class="text-2xl font-bold text-warning-600">{{ getStatusCount('open') }}</p>
       </ion-card-content>
     </ion-card>
     <ion-card>
       <ion-card-content>
-        <p class="text-sm text-gray-500">En Revisión</p>
+        <p class="text-sm text-text-secondary">En Revisión</p>
         <p class="text-2xl font-bold text-cta-default">{{ getStatusCount('in_review') }}</p>
       </ion-card-content>
     </ion-card>
     <ion-card>
       <ion-card-content>
-        <p class="text-sm text-gray-500">Resueltas</p>
+        <p class="text-sm text-text-secondary">Resueltas</p>
         <p class="text-2xl font-bold text-success-light">{{ getStatusCount('resolved') }}</p>
       </ion-card-content>
     </ion-card>
     <ion-card>
       <ion-card-content>
-        <p class="text-sm text-gray-500">Rechazadas</p>
-        <p class="text-2xl font-bold text-red-600">{{ getStatusCount('rejected') }}</p>
+        <p class="text-sm text-text-secondary">Rechazadas</p>
+        <p class="text-2xl font-bold text-error-600">{{ getStatusCount('rejected') }}</p>
       </ion-card-content>
     </ion-card>
   </div>
@@ -86,12 +86,12 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-gray-500">Cargando disputas...</p>
+    <p class="mt-4 text-text-secondary">Cargando disputas...</p>
   </div>
 
   <!-- Disputes List -->
   <div *ngIf="!loading()">
-    <div *ngIf="disputes().length === 0" class="text-center py-12 text-gray-500">
+    <div *ngIf="disputes().length === 0" class="text-center py-12 text-text-secondary">
       <p>No hay disputas que coincidan con los filtros</p>
     </div>
 
@@ -128,7 +128,7 @@
   <!-- Detail Modal -->
   <div
     *ngIf="showDetailModal()"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
     (click)="closeDetailModal()"
   >
     <ion-card
@@ -180,17 +180,17 @@
                 />
                 <div
                   *ngIf="!isImage(item.path)"
-                  class="w-full h-48 bg-gray-100 rounded flex items-center justify-center"
+                  class="w-full h-48 bg-surface-raised rounded flex items-center justify-center"
                 >
-                  <ion-icon name="document" class="text-4xl text-gray-400"></ion-icon>
+                  <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
                 </div>
-                <p *ngIf="item.note" class="text-xs text-gray-500 mt-2">{{ item.note }}</p>
+                <p *ngIf="item.note" class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
                 <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
                   Ver completo
                 </a>
               </div>
             </div>
-            <div *ngIf="evidence().length === 0" class="text-center py-8 text-gray-500">
+            <div *ngIf="evidence().length === 0" class="text-center py-8 text-text-secondary">
               <p>No hay evidencias</p>
             </div>
           </div>

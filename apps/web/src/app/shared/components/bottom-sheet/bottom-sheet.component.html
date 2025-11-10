@@ -1,7 +1,7 @@
 <!-- Backdrop -->
 <div
   *ngIf="isOpen()"
-  class="bottom-sheet-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+  class="bottom-sheet-backdrop fixed inset-0 bg-surface-overlay/50 backdrop-blur-sm z-40 transition-opacity duration-300"
   [class.opacity-0]="!isOpen()"
   [class.opacity-100]="isOpen()"
   (click)="onClose()"
@@ -32,7 +32,7 @@
 
   <!-- Header -->
   <div
-    class="bottom-sheet-header px-4 pb-3 border-b border-border-default dark:border-gray-600 flex-shrink-0"
+    class="bottom-sheet-header px-4 pb-3 border-b border-border-default dark:border-border-default flex-shrink-0"
   >
     <div class="flex items-center justify-between">
       <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure">
@@ -69,7 +69,7 @@
   <!-- Footer (optional) -->
   <div
     *ngIf="currentHeight() !== 'full'"
-    class="bottom-sheet-footer px-4 py-3 border-t border-border-default dark:border-gray-600 flex-shrink-0"
+    class="bottom-sheet-footer px-4 py-3 border-t border-border-default dark:border-border-default flex-shrink-0"
   >
     <ng-content select="[slot=footer]"></ng-content>
   </div>
