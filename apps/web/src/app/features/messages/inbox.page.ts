@@ -11,6 +11,9 @@ import {
 } from '../../core/services/realtime-connection.service';
 import type { ConversationDTO } from '../../core/repositories/messages.repository';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
+import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 /**
  * 📬 Bandeja de entrada de mensajes
@@ -19,7 +22,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 @Component({
   selector: 'app-inbox',
   standalone: true,
-  imports: [CommonModule, OfflineMessagesIndicatorComponent],
+  imports: [CommonModule, OfflineMessagesIndicatorComponent, SkeletonLoaderComponent, ErrorStateComponent, EmptyStateComponent],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <!-- Header -->
@@ -40,43 +43,25 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
       <!-- Content -->
       <div class="mx-auto max-w-4xl p-4">
         @if (loading()) {
-          <div class="flex h-96 items-center justify-center">
-            <div class="text-center">
-              <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
-              ></div>
-              <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
-                Cargando conversaciones...
-              </p>
-            </div>
+          <!-- Loading State con Skeleton -->
+          <div class="space-y-3">
+            <app-skeleton-loader type="list-item" [count]="6"></app-skeleton-loader>
           </div>
         } @else if (error()) {
-          <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-            <p class="text-sm text-red-800 dark:text-red-200">{{ error() }}</p>
-          </div>
+          <!-- Error State -->
+          <app-error-state
+            variant="default"
+            [title]="'Error al cargar mensajes'"
+            [message]="error() || 'No pudimos cargar tus conversaciones'"
+            [actions]="[getRetryAction()]"
+          ></app-error-state>
         } @else if (conversations().length === 0) {
-          <!-- Empty state -->
-          <div class="py-16 text-center">
-            <svg
-              class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              />
-            </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
-              No hay mensajes
-            </h3>
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
-              Cuando alguien te escriba, aparecerá aquí
-            </p>
-          </div>
+          <!-- Empty State -->
+          <app-empty-state
+            variant="inbox"
+            [title]="'No hay mensajes'"
+            [message]="'Cuando alguien te escriba, aparecerá aquí'"
+          ></app-empty-state>
         } @else {
           <!-- Conversations list -->
           <div class="space-y-2">
@@ -297,7 +282,7 @@ export class InboxPage implements OnInit {
     }
   }
 
-  private async loadConversations(): Promise<void> {
+  async loadConversations(): Promise<void> {
     try {
       this.loading.set(true);
       const userId = this.authService.session$()?.user.id;
@@ -317,6 +302,14 @@ export class InboxPage implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  getRetryAction() {
+    return {
+      label: 'Reintentar',
+      handler: () => this.loadConversations(),
+      variant: 'primary' as const
+    };
   }
 
   openConversation(conv: ConversationDTO): void {
