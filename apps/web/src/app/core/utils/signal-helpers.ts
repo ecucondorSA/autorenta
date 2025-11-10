@@ -69,19 +69,11 @@ export function toSignalSafe<T>(
   options?: ToSignalSafeOptions<T>
 ): Signal<T | undefined> {
   try {
-    // Build options object conditionally to satisfy TypeScript's strict typing
-    if (options?.requireSync === true) {
-      return toSignal(source$, {
-        ...options,
-        requireSync: true,
-      } as ToSignalOptions<T>);
-    }
-    
-    // Default case: requireSync is false or undefined
-    return toSignal(source$, {
-      ...options,
-      requireSync: false,
-    } as ToSignalOptions<T>);
+    // Use type assertion to bypass TypeScript's strict overload checking
+    // This is safe because we're wrapping Angular's toSignal which handles
+    // the type checking internally. The overloads above provide type safety
+    // at the function signature level.
+    return toSignal(source$, options as ToSignalOptions<T>);
   } catch (error) {
     console.error('[toSignalSafe] Error converting observable to signal:', error);
     throw new Error(
