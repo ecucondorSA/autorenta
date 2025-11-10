@@ -16,10 +16,16 @@
    - [1.2 Flujo de Publicación](#12-flujo-de-publicación)
    - [1.3 Flujo de Wallet](#13-flujo-de-wallet)
    - [1.4 Dashboard del Locador](#14-dashboard-del-locador)
-4. [Pain Points Identificados](#pain-points-identificados)
-5. [Hallazgos Prioritarios](#hallazgos-prioritarios)
-6. [Recomendaciones Generales](#recomendaciones-generales)
-7. [Próximos Pasos](#próximos-pasos)
+4. [Sección 2: Auditoría Visual](#sección-2-auditoría-visual)
+   - [2.1 Auditoría de Colores](#21-auditoría-de-colores)
+   - [2.2 Auditoría de Tipografía](#22-auditoría-de-tipografía)
+   - [2.3 Auditoría de Espaciados](#23-auditoría-de-espaciados)
+   - [2.4 Auditoría de Estados](#24-auditoría-de-estados)
+   - [2.5 Auditoría de Componentes Críticos](#25-auditoría-de-componentes-críticos)
+5. [Pain Points Identificados](#pain-points-identificados)
+6. [Hallazgos Prioritarios](#hallazgos-prioritarios)
+7. [Recomendaciones Generales](#recomendaciones-generales)
+8. [Próximos Pasos](#próximos-pasos)
 
 ---
 
@@ -969,6 +975,786 @@ Estado: Pagado ✓
 
 ---
 
+## Sección 2: Auditoría Visual
+
+**Completado**: 2025-11-10 (Issue #184)
+
+Esta sección documenta los hallazgos de la auditoría visual de colores, tipografía, espaciados y estados en la aplicación AutoRenta.
+
+---
+
+### 2.1 Auditoría de Colores
+
+#### 2.1.1 Metodología
+
+Se realizó un análisis automatizado del código fuente para identificar:
+1. Uso de colores Tailwind por defecto (prohibido según `COLOR_SYSTEM_GUIDE.md`)
+2. Uso de colores semánticos del sistema (success, warning, error, info)
+3. Uso de colores legacy en dark mode
+4. Consistencia en el uso de tokens de color
+
+**Herramientas**:
+- `grep -r` para buscar patrones de clases Tailwind
+- Análisis de archivos `.html` y `.ts` en `apps/web/src/app/features/`
+
+---
+
+#### 2.1.2 Hallazgos Críticos
+
+##### 🔴 CRÍTICO: Uso Masivo de Colores Tailwind Por Defecto
+
+**Problema**: La aplicación usa extensamente colores Tailwind por defecto, lo cual está **explícitamente prohibido** según `docs/COLOR_SYSTEM_GUIDE.md`.
+
+**Datos Cuantitativos**:
+```bash
+# Colores de background prohibidos
+bg-blue-* , bg-green-*, bg-red-*, bg-yellow-*:  185 usos
+bg-purple-*, bg-pink-*, bg-indigo-*:          (adicionales)
+
+# Colores de text prohibidos
+text-blue-*, text-green-*, text-red-*, text-yellow-*: 245 usos
+
+# Otros colores Tailwind prohibidos
+bg-emerald-*, bg-amber-*:                      51 usos
+
+TOTAL ESTIMADO: 480+ violaciones
+```
+
+**Ejemplos Específicos**:
+
+```html
+<!-- ❌ INCORRECTO - booking-detail.page.html:8 -->
+<div class="bg-red-50 border border-red-200 rounded-xl p-6">
+  <p class="text-red-800">Error message</p>
+</div>
+
+<!-- ❌ INCORRECTO - booking-detail.page.html:12 -->
+<button class="bg-red-600 text-white hover:bg-red-700">
+  Reintentar
+</button>
+
+<!-- ❌ INCORRECTO - booking-status.component.ts:46 -->
+return 'bg-red-100 text-red-800';  // Hardcoded Tailwind colors
+
+<!-- ❌ INCORRECTO - check-in.page.html:177 -->
+<div class="bg-yellow-50 border border-yellow-200">
+  Warning message
+</div>
+```
+
+**Impacto**:
+- ❌ Violación directa de las guías de diseño
+- ❌ Inconsistencia visual (diferentes tonos de rojo, verde, etc.)
+- ❌ Imposible cambiar paleta globalmente
+- ❌ No soporta dark mode correctamente
+- ❌ Contraste no verificado (puede violar WCAG AA)
+
+**Solución Requerida**: Migrar a colores semánticos:
+
+```html
+<!-- ✅ CORRECTO - Usar colores semánticos -->
+<div class="bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40">
+  <p class="text-error-900 dark:text-error-100">Error message</p>
+</div>
+
+<button class="bg-error-600 hover:bg-error-700 text-white">
+  Reintentar
+</button>
+
+<!-- O usar variables CSS -->
+<div class="bg-surface-raised border-border-default">
+  <p class="text-text-primary">Content</p>
+</div>
+```
+
+**Prioridad**: 🔴 Crítica
+**Estimación de trabajo**: 40-60 horas de refactorización
+**Archivos afectados**: ~50-70 archivos `.html` y `.ts`
+
+---
+
+##### 🟡 MEDIO: Uso de Gray en Dark Mode (Legacy)
+
+**Problema**: 239 usos de `dark:text-gray-*` y `dark:bg-gray-*` que deberían migrar a tokens neutrales del sistema.
+
+**Datos**:
+```bash
+dark:text-gray-* , dark:bg-gray-*:  239 usos
+```
+
+**Ejemplo**:
+```html
+<!-- ❌ Legacy -->
+<p class="text-gray-700 dark:text-gray-300">Descripción</p>
+
+<!-- ✅ Correcto -->
+<p class="text-text-primary dark:text-text-primary">Descripción</p>
+<!-- O -->
+<p class="text-text-secondary dark:text-text-secondary/70">Descripción</p>
+```
+
+**Impacto**: Medio
+- Funciona, pero no sigue el sistema unificado
+- Dificulta ajustes globales de dark mode
+
+**Prioridad**: 🟡 Media
+**Estimación**: 8-12 horas
+
+---
+
+#### 2.1.3 Hallazgos Positivos
+
+##### ✅ Uso Correcto de Colores Semánticos
+
+**Dato**: 105 usos de `bg-success-*`, `bg-warning-*`, `bg-error-*`, `bg-info-*`
+
+Estos usos SÍ siguen el sistema de diseño correctamente:
+
+```html
+<!-- ✅ CORRECTO -->
+<div class="bg-success-50 dark:bg-success-500/15 border border-success-500">
+  <p class="text-success-900 dark:text-success-100">Operación exitosa</p>
+</div>
+```
+
+**Recomendación**: Mantener este patrón y extenderlo al resto del código.
+
+---
+
+#### 2.1.4 Análisis de Contraste WCAG AA
+
+**Nota**: No se realizó análisis automatizado de contraste en esta fase. Se recomienda:
+
+1. **Herramientas a usar**:
+   - WebAIM Contrast Checker: https://webaim.org/resources/contrastchecker/
+   - Lighthouse (Chrome DevTools): Audit de accesibilidad
+   - axe DevTools: Extension para verificar WCAG
+
+2. **Componentes críticos a verificar**:
+   - Botones primarios (text sobre background)
+   - Error messages (debe cumplir 4.5:1)
+   - Success messages
+   - Warning alerts
+   - Disabled states
+
+3. **Guideline WCAG AA**:
+   - Texto normal: Mínimo 4.5:1
+   - Texto grande (18px+): Mínimo 3:1
+   - Elementos UI: Mínimo 3:1
+
+**Recomendación para Issue #185**: Incluir verificación de contraste en propuestas de diseño.
+
+---
+
+#### 2.1.5 Resumen de Colores
+
+| Categoría | Cantidad | Estado | Acción Requerida |
+|-----------|----------|--------|------------------|
+| **Colores Tailwind por defecto** | 480+ | 🔴 Crítico | Migrar a semánticos |
+| **Colores semánticos (correcto)** | 105 | ✅ OK | Mantener patrón |
+| **Gray legacy en dark mode** | 239 | 🟡 Medio | Migrar a tokens |
+| **Contraste WCAG** | N/A | ⚠️ Pendiente | Verificar en #185 |
+
+**Impacto Total**: 🔴 **Crítico** - Requiere refactorización masiva
+
+---
+
+### 2.2 Auditoría de Tipografía
+
+#### 2.2.1 Metodología
+
+Análisis de uso de la escala tipográfica definida en `tailwind.config.js`:
+
+```javascript
+fontSize: {
+  xs: ['0.75rem', { lineHeight: '1.4' }],    // 12px
+  sm: ['0.875rem', { lineHeight: '1.5' }],   // 14px
+  base: ['1rem', { lineHeight: '1.6' }],     // 16px
+  lg: ['1.125rem', { lineHeight: '1.5' }],   // 18px
+  xl: ['1.25rem', { lineHeight: '1.4' }],    // 20px
+  '2xl': ['1.5rem', { lineHeight: '1.3' }],  // 24px
+  '3xl': ['1.875rem', { lineHeight: '1.25' }], // 30px
+  // ...
+}
+```
+
+---
+
+#### 2.2.2 Hallazgos Positivos
+
+##### ✅ Uso Consistente de Escala Tipográfica
+
+**Dato**: Análisis de archivos muestra uso predominante de clases Tailwind predefinidas:
+- `text-xs`, `text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, etc.
+
+**Ejemplos**:
+```html
+<!-- ✅ CORRECTO - Uso de escala -->
+<h1 class="text-3xl font-bold">Título Principal</h1>
+<p class="text-base">Contenido principal</p>
+<span class="text-xs text-text-muted">Detalles pequeños</span>
+```
+
+**Conclusión**: ✅ La tipografía sigue el sistema de diseño correctamente.
+
+---
+
+##### ✅ Font-sizes Hardcoded Muy Bajo
+
+**Dato**: Solo **4 usos** de font-sizes hardcoded (`text-[...px]`, `text-[...rem]`)
+
+```bash
+# Búsqueda de hardcoded sizes
+text-[.*px] | text-[.*rem]:  4 usos
+```
+
+**Conclusión**: ✅ Casi no hay hardcoded sizes, excelente adherencia al sistema.
+
+---
+
+#### 2.2.3 Hallazgos de Mejora
+
+##### 🟡 MEDIO: Inconsistencia en Font-weights
+
+**Observación**: Se observan diferentes font-weights sin patrón claro:
+
+```html
+<!-- Ejemplo: Varios weights para títulos -->
+<h2 class="text-lg font-semibold">Título A</h2>
+<h2 class="text-lg font-bold">Título B</h2>
+<h2 class="text-lg font-medium">Título C</h2>
+```
+
+**Recomendación**: Definir jerarquía tipográfica clara:
+```
+h1: text-3xl font-bold
+h2: text-2xl font-semibold
+h3: text-xl font-semibold
+h4: text-lg font-medium
+Body: text-base font-normal
+Small: text-sm font-normal
+Tiny: text-xs font-medium
+```
+
+**Prioridad**: 🟡 Media
+**Estimación**: 4-6 horas para documentar + aplicar
+
+---
+
+##### 🟢 BAJO: Line-heights Inconsistentes
+
+**Problema**: Algunos componentes sobreescriben line-heights manualmente:
+
+```html
+<!-- ❌ Evitar override manual -->
+<p class="text-base leading-relaxed">...</p>
+<p class="text-base leading-tight">...</p>
+
+<!-- ✅ Usar defaults del sistema -->
+<p class="text-base">...</p>  <!-- Ya tiene lineHeight: 1.6 -->
+```
+
+**Recomendación**: Confiar en los line-heights definidos en `tailwind.config.js`.
+
+**Prioridad**: 🟢 Baja
+
+---
+
+#### 2.2.4 Resumen de Tipografía
+
+| Aspecto | Estado | Notas |
+|---------|--------|-------|
+| **Escala tipográfica** | ✅ Excelente | Uso consistente de text-xs, sm, base, lg, xl, etc. |
+| **Font-sizes hardcoded** | ✅ Muy bajo | Solo 4 usos, excelente |
+| **Font-weights** | 🟡 Mejorable | Falta jerarquía clara documentada |
+| **Line-heights** | 🟢 Bueno | Algunos overrides innecesarios |
+| **Font-family** | ✅ Correcto | Inter usado consistentemente |
+
+**Impacto Total**: ✅ **Bueno** - Mejoras menores requeridas
+
+---
+
+### 2.3 Auditoría de Espaciados
+
+#### 2.3.1 Metodología
+
+Búsqueda de spacing hardcoded vs uso de sistema de Tailwind:
+
+```bash
+# Buscar padding/margin hardcoded
+p-[.*px] | m-[.*px] | p-[.*rem] | m-[.*rem]
+```
+
+---
+
+#### 2.3.2 Hallazgo Principal
+
+##### ✅ EXCELENTE: Cero Espaciados Hardcoded
+
+**Dato**: **0 usos** de padding/margin hardcoded en templates HTML
+
+```bash
+p-[.*px] | m-[.*px]:  0 usos
+```
+
+**Conclusión**: ✅ Todo el spacing usa el sistema de Tailwind:
+- `p-1`, `p-2`, `p-4`, `p-6`, `p-8`, etc.
+- `m-1`, `m-2`, `m-4`, `m-6`, `m-8`, etc.
+- `gap-2`, `gap-4`, `space-x-4`, etc.
+
+**Ejemplos correctos**:
+```html
+<!-- ✅ Usa tokens de Tailwind -->
+<div class="p-6 mb-8 space-y-4">
+  <div class="flex gap-4">
+    <button class="px-4 py-2">Acción</button>
+  </div>
+</div>
+```
+
+---
+
+#### 2.3.3 Variables CSS de Spacing
+
+El sistema define variables CSS en `styles.css`:
+
+```css
+:root {
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 0.75rem;   /* 12px */
+  --spacing-base: 1rem;    /* 16px */
+  --spacing-lg: 1.25rem;   /* 20px */
+  --spacing-xl: 1.5rem;    /* 24px */
+  --spacing-2xl: 2rem;     /* 32px */
+  --spacing-3xl: 3rem;     /* 48px */
+}
+```
+
+**Recomendación**: Estas variables están definidas pero **no se usan** en el código.
+
+**Opciones**:
+1. **Opción A**: Remover variables (no aportan valor si Tailwind ya tiene sistema)
+2. **Opción B**: Migrar Tailwind spacing a estas variables (innecesario, Tailwind ya lo maneja)
+
+**Recomendación**: Opción A - Remover variables no usadas, confiar 100% en Tailwind.
+
+---
+
+#### 2.3.4 Resumen de Espaciados
+
+| Aspecto | Estado | Notas |
+|---------|--------|-------|
+| **Hardcoded spacing** | ✅ Excelente | 0 usos, perfecto |
+| **Uso de Tailwind spacing** | ✅ Excelente | Consistente en todo el código |
+| **Variables CSS spacing** | ⚠️ No usado | Definidas pero innecesarias |
+| **Responsive spacing** | ✅ Bueno | Uso de sm:, md:, lg: breakpoints |
+
+**Impacto Total**: ✅ **Excelente** - Sin problemas
+
+---
+
+### 2.4 Auditoría de Estados
+
+#### 2.4.1 Metodología
+
+Análisis de patrones de estados visuales:
+1. **Loading states**: Spinners, skeletons, progress indicators
+2. **Empty states**: Sin datos, sin resultados
+3. **Error states**: Validación, network errors, system errors
+4. **Success states**: Confirmaciones, feedback positivo
+5. **Disabled states**: Botones, inputs, acciones no disponibles
+
+---
+
+#### 2.4.2 Hallazgos
+
+##### 🟡 MEDIO: Alta Variación en Loading States
+
+**Dato**: **857 referencias** a loading states en el código
+
+```bash
+# Patrones encontrados
+animate-spin, loading(), isLoading(), skeleton:  857 usos
+```
+
+**Problema**: Hay múltiples patrones sin estandarización:
+
+**Patrón 1: Spinner Genérico**
+```html
+<div *ngIf="loading()" class="flex justify-center py-8">
+  <svg class="animate-spin h-8 w-8 text-primary-600">...</svg>
+</div>
+```
+
+**Patrón 2: Spinner con Mensaje**
+```html
+<div *ngIf="loading()" class="flex items-center gap-2">
+  <div class="animate-spin rounded-full h-4 w-4 border-b-2"></div>
+  <span>Cargando...</span>
+</div>
+```
+
+**Patrón 3: Skeleton Screen**
+```html
+<div class="animate-pulse space-y-4">
+  <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+  <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+</div>
+```
+
+**Patrón 4: Component-Level Loading**
+```typescript
+readonly loading = signal(true);
+
+@if (loading()) {
+  <div>Loading...</div>
+} @else {
+  <div>Content</div>
+}
+```
+
+**Impacto**:
+- Inconsistencia visual (diferentes spinners, tamaños, colores)
+- Usuario no tiene expectativa consistente de feedback
+- Difícil mantener y actualizar globalmente
+
+**Solución Requerida**: Crear componente `LoadingState` compartido:
+
+```typescript
+// shared/components/loading-state.component.ts
+@Component({
+  selector: 'app-loading-state',
+  template: `
+    @if (type() === 'spinner') {
+      <div class="loading-spinner">
+        <svg class="animate-spin h-8 w-8 text-primary-600">...</svg>
+        @if (message()) {
+          <p class="text-sm text-text-secondary mt-2">{{ message() }}</p>
+        }
+      </div>
+    } @else if (type() === 'skeleton') {
+      <div class="loading-skeleton animate-pulse">
+        <ng-content></ng-content>
+      </div>
+    }
+  `
+})
+export class LoadingStateComponent {
+  type = input<'spinner' | 'skeleton'>('spinner');
+  message = input<string>();
+}
+```
+
+**Prioridad**: 🟡 Media
+**Estimación**: 12-16 horas para crear componente + migrar
+
+---
+
+##### 🟢 BUENO: Empty States Presentes
+
+**Dato**: **64 empty states** identificados
+
+**Ejemplos encontrados**:
+```html
+<!-- Patrón common -->
+<div class="empty-state text-center py-12">
+  <svg class="mx-auto h-12 w-12 text-gray-400">...</svg>
+  <h3 class="mt-4 text-lg font-medium">No hay resultados</h3>
+  <p class="mt-2 text-sm text-gray-500">Intenta ajustar los filtros</p>
+  <button class="mt-4 btn-primary">Nueva Acción</button>
+</div>
+```
+
+**Observación**: Los empty states siguen un patrón razonablemente consistente:
+- Icon
+- Título
+- Descripción
+- CTA (opcional)
+
+**Recomendación**: Formalizar en componente compartido `EmptyState`:
+
+```typescript
+@Component({
+  selector: 'app-empty-state',
+  template: `
+    <div class="empty-state-container">
+      <div class="empty-state-icon">
+        <ng-content select="[icon]"></ng-content>
+      </div>
+      <h3 class="empty-state-title">{{ title() }}</h3>
+      <p class="empty-state-description">{{ description() }}</p>
+      @if (actionLabel()) {
+        <button class="empty-state-action" (click)="action.emit()">
+          {{ actionLabel() }}
+        </button>
+      }
+    </div>
+  `
+})
+```
+
+**Prioridad**: 🟢 Baja (funciona, pero mejorable)
+**Estimación**: 6-8 horas
+
+---
+
+##### 🔴 CRÍTICO: Error States Inconsistentes
+
+**Problema**: Múltiples patrones de error sin unificación
+
+**Patrón 1: Error Banner**
+```html
+<div class="bg-red-50 border border-red-200 p-4">
+  <p class="text-red-800">{{ error() }}</p>
+  <button (click)="retry()">Reintentar</button>
+</div>
+```
+
+**Patrón 2: Inline Validation Error**
+```html
+<input [class.border-red-500]="hasError()" />
+<p class="text-xs text-red-600">{{ errorMessage() }}</p>
+```
+
+**Patrón 3: Toast/Notification**
+```typescript
+this.toastService.error('Operación fallida');
+```
+
+**Patrón 4: Error Page/Component**
+```html
+<div *ngIf="error()">
+  <h2>Algo salió mal</h2>
+  <p>{{ error() }}</p>
+</div>
+```
+
+**Problema**: Sin unificación, además usa colores Tailwind prohibidos (bg-red-50, text-red-600)
+
+**Solución**: Crear sistema de error handling:
+
+```typescript
+// shared/components/error-state.component.ts
+@Component({
+  selector: 'app-error-state',
+  template: `
+    <div class="error-state bg-error-50 dark:bg-error-500/15 border border-error-500">
+      <div class="error-icon">⚠️</div>
+      <div class="error-content">
+        <h3 class="text-error-900 dark:text-error-100">{{ title() }}</h3>
+        <p class="text-error-700 dark:text-error-200">{{ message() }}</p>
+      </div>
+      @if (retryable()) {
+        <button class="btn-error" (click)="retry.emit()">Reintentar</button>
+      }
+    </div>
+  `
+})
+```
+
+**Prioridad**: 🔴 Alta (ligado a migración de colores)
+**Estimación**: 8-12 horas
+
+---
+
+#### 2.4.3 Resumen de Estados
+
+| Estado | Cantidad | Consistencia | Prioridad | Acción |
+|--------|----------|--------------|-----------|--------|
+| **Loading** | 857 usos | 🟡 Media | 🟡 Media | Crear LoadingState component |
+| **Empty** | 64 usos | 🟢 Buena | 🟢 Baja | Opcional: formalizar componente |
+| **Error** | ~200+ | 🔴 Baja | 🔴 Alta | Crear ErrorState component |
+| **Success** | ~100+ | 🟡 Media | 🟡 Media | Usar ToastService + SuccessState |
+| **Disabled** | N/A | ✅ OK | - | Nativo de Tailwind funciona |
+
+**Impacto Total**: 🟡 **Medio** - Requiere estandarización
+
+---
+
+### 2.5 Auditoría de Componentes Críticos
+
+#### 2.5.1 Componentes Compartidos
+
+**Dato**: **122 componentes** en `apps/web/src/app/shared/components/`
+
+**Observación**: Buena reutilización de componentes compartidos.
+
+**Componentes clave revisados**:
+- `deposit-modal`
+- `wallet-balance-card`
+- `payment-method-selector`
+- `date-range-picker`
+- `car-card`
+- `booking-card`
+- `upload-image`
+
+**Hallazgo General**: La mayoría de componentes siguen patrones consistentes, pero **heredan el problema de colores Tailwind por defecto**.
+
+---
+
+#### 2.5.2 Botones
+
+**Análisis**: Revisión de patrones de botones
+
+**Patrón Común**:
+```html
+<!-- Primary -->
+<button class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg">
+  Acción Principal
+</button>
+
+<!-- Secondary -->
+<button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg">
+  Acción Secundaria
+</button>
+
+<!-- Danger (❌ Usa Tailwind por defecto) -->
+<button class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">
+  Eliminar
+</button>
+```
+
+**Problema**: No hay componente `Button` unificado, cada página define botones inline.
+
+**Solución**: Crear `ButtonComponent`:
+
+```typescript
+@Component({
+  selector: 'app-button',
+  template: `
+    <button
+      [class]="buttonClasses()"
+      [disabled]="disabled()"
+      [type]="type()">
+      @if (loading()) {
+        <span class="spinner"></span>
+      }
+      <ng-content></ng-content>
+    </button>
+  `
+})
+export class ButtonComponent {
+  variant = input<'primary' | 'secondary' | 'danger' | 'ghost'>('primary');
+  size = input<'sm' | 'md' | 'lg'>('md');
+  loading = input(false);
+  disabled = input(false);
+  type = input<'button' | 'submit'>('button');
+
+  buttonClasses = computed(() => {
+    const base = 'btn transition-colors rounded-lg font-medium';
+    const variants = {
+      primary: 'bg-primary-600 hover:bg-primary-700 text-white',
+      secondary: 'bg-neutral-200 hover:bg-neutral-300 text-neutral-800',
+      danger: 'bg-error-600 hover:bg-error-700 text-white',
+      ghost: 'bg-transparent hover:bg-neutral-100 text-neutral-700'
+    };
+    const sizes = {
+      sm: 'px-3 py-1.5 text-sm',
+      md: 'px-4 py-2 text-base',
+      lg: 'px-6 py-3 text-lg'
+    };
+    return `${base} ${variants[this.variant()]} ${sizes[this.size()]}`;
+  });
+}
+```
+
+**Prioridad**: 🟡 Media
+**Estimación**: 8-10 horas para crear + migrar botones críticos
+
+---
+
+#### 2.5.3 Cards
+
+**Análisis**: Componentes tipo "card" están por toda la app
+
+**Patrón Común**:
+```html
+<div class="bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 p-6 shadow-sm">
+  <h3 class="text-lg font-semibold mb-2">Título</h3>
+  <p class="text-sm text-neutral-600">Contenido</p>
+</div>
+```
+
+**Observación**: Razonablemente consistente, usa tokens de color correctos (neutral-*).
+
+**Recomendación**: Formalizar en `CardComponent` para mayor consistencia.
+
+**Prioridad**: 🟢 Baja
+
+---
+
+#### 2.5.4 Forms & Inputs
+
+**Análisis**: Forms usan componentes nativos de Angular con clases Tailwind
+
+**Patrón Común**:
+```html
+<label class="block text-sm font-medium text-neutral-700 mb-1">
+  Campo
+</label>
+<input
+  type="text"
+  class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+  [class.border-red-500]="hasError()"
+/>
+<p class="text-xs text-red-600 mt-1" *ngIf="errorMessage()">
+  {{ errorMessage() }}
+</p>
+```
+
+**Problema**: Usa `text-red-600` para errores (Tailwind por defecto).
+
+**Solución**: Migrar a `text-error-600` o crear `InputComponent` con errores integrados.
+
+**Prioridad**: 🟡 Media
+
+---
+
+#### 2.5.5 Modales
+
+**Análisis**: Modales usan overlay + contenedor centrado
+
+**Patrón Común**:
+```html
+<div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+  <div class="bg-white dark:bg-neutral-800 rounded-lg max-w-md w-full mx-4 shadow-xl">
+    <div class="p-6">
+      <h2 class="text-xl font-bold mb-4">Título</h2>
+      <div class="modal-content">
+        <ng-content></ng-content>
+      </div>
+      <div class="flex gap-2 mt-6">
+        <button class="btn-secondary">Cancelar</button>
+        <button class="btn-primary">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+**Observación**: Patrón relativamente consistente.
+
+**Mejora**: Agregar `@HostListener('document:keydown.escape')` para cerrar con ESC (accesibilidad).
+
+**Prioridad**: 🟢 Baja
+
+---
+
+#### 2.5.6 Resumen de Componentes
+
+| Componente | Estado Actual | Prioridad | Acción |
+|------------|---------------|-----------|--------|
+| **Botones** | 🟡 Inline, sin componente | 🟡 Media | Crear ButtonComponent |
+| **Cards** | 🟢 Relativamente consistente | 🟢 Baja | Opcional: CardComponent |
+| **Forms/Inputs** | 🟡 Usa colores prohibidos en errores | 🟡 Media | Migrar a semantic colors |
+| **Modales** | 🟢 Patrón consistente | 🟢 Baja | Agregar keyboard handling |
+| **Loading States** | 🟡 Alta variación | 🟡 Media | Crear LoadingState component |
+| **Empty States** | 🟢 Patrón común | 🟢 Baja | Opcional: formalizar |
+| **Error States** | 🔴 Inconsistente | 🔴 Alta | Crear ErrorState component |
+
+---
+
 ## Pain Points Identificados
 
 ### Resumen por Prioridad
@@ -1288,5 +2074,5 @@ Validar las mejoras implementadas:
 
 **Última actualización**: 2025-11-10
 **Autor**: Claude Code
-**Estado**: Issue #183 completado ✅
-**Siguiente**: Issue #184 (Auditoría Visual)
+**Estado**: Issues #183 y #184 completados ✅
+**Siguiente**: Issue #185 (Propuestas de Diseño)
