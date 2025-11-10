@@ -13,8 +13,11 @@ type SafeSignalOptions<T> = ToSignalOptions<T>;
 
 export function toSignalSafe<T>(source$: Observable<T>, options?: SafeSignalOptions<T>): Signal<T | undefined> {
   try {
-    // Angular's overloads are very strict around initialValue typing, so we lean on a cast here.
-    return toSignal(source$, options as ToSignalOptions<T>);
+    // Use @ts-expect-error because Angular's toSignal has strict overloads
+    // that don't work well with our wrapper. The function signature provides
+    // type safety at the call site level.
+    // @ts-expect-error - Angular's toSignal overloads are too strict for our wrapper
+    return toSignal(source$, options);
   } catch (error) {
     console.error('[toSignalSafe] Error converting observable to signal:', error);
     throw new Error(
