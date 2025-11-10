@@ -33,6 +33,7 @@ scripts/temp/
 database/temp/
 docs/archived/logs/
 docs/archived/screenshots/
+.migration-backups/
 
 # Temporary root-level files
 /test-*.sh
