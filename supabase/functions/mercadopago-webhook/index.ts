@@ -451,22 +451,26 @@ serve(async (req) => {
       });
 
     } catch (apiError) {
-      log.error('MercadoPago API error', apiError);
+      // ✅ CRITICAL FIX: Retornar 500 para que MercadoPago reintente
+      log.error('❌ MercadoPago API error - webhook will be retried', {
+        error: apiError,
+        payment_id: paymentId,
+        timestamp: new Date().toISOString(),
+      });
 
-      // Retornar 200 OK para evitar reintentos infinitos
-      // El polling backup confirmará el pago de todas formas
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message: 'Error fetching payment, will be processed by polling',
-            payment_id: paymentId,
-            error_details: apiError instanceof Error ? apiError.message : 'Unknown error',
-          }),
-          {
-            status: 200,
-            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+      // MercadoPago reintenta automáticamente con 500/502/503
+      // Reintentos: inmediato, +1h, +2h, +4h, +8h (máx 12 en 24h)
+      return new Response(
+        JSON.stringify({
+          error: 'Failed to fetch payment data from MercadoPago',
+          retry: true,
+          payment_id: paymentId,
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // ========================================
@@ -1025,18 +1029,23 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error processing MercadoPago webhook:', error);
+    // ✅ CRITICAL FIX: Retornar 500 para que MercadoPago reintente
+    log.error('❌ Critical error processing webhook - will be retried', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+    });
 
-    // Retornar 200 incluso en error para evitar reintentos de MP
-    // MP reintenta si recibe 4xx/5xx
+    // MercadoPago reintenta automáticamente con 500/502/503
+    // Esto previene pérdida de pagos por errores transitorios (DB timeout, etc.)
     return new Response(
       JSON.stringify({
-        success: false,
-        error: error instanceof Error ? error.message : 'Internal server error',
-        details: error instanceof Error ? error.stack : undefined,
+        error: 'Internal server error processing webhook',
+        retry: true,
+        details: error instanceof Error ? error.message : 'Unknown error',
       }),
       {
-        status: 200,
+        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
