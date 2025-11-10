@@ -161,6 +161,9 @@ async function createCardTokenWithAccessToken(cardData: any): Promise<any> {
 }
 
 serve(async (req) => {
+  // ✅ SECURITY: CORS con whitelist de dominios permitidos
+  const corsHeaders = getCorsHeaders(req);
+
   // CORS - Permitir llamadas desde cualquier origen (testing)
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
