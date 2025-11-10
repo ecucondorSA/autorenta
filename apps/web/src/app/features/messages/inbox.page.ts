@@ -5,6 +5,9 @@ import { MessagesService, Message } from '../../core/services/messages.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UnreadMessagesService } from '../../core/services/unread-messages.service';
 import { OfflineMessagesIndicatorComponent } from '../../shared/components/offline-messages-indicator/offline-messages-indicator.component';
+import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
+import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import {
   RealtimeConnectionService,
   ConnectionStatus,
@@ -19,7 +22,13 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 @Component({
   selector: 'app-inbox',
   standalone: true,
-  imports: [CommonModule, OfflineMessagesIndicatorComponent],
+  imports: [
+    CommonModule,
+    OfflineMessagesIndicatorComponent,
+    SkeletonLoaderComponent,
+    ErrorStateComponent,
+    EmptyStateComponent,
+  ],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <!-- Header -->
@@ -40,43 +49,24 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
       <!-- Content -->
       <div class="mx-auto max-w-4xl p-4">
         @if (loading()) {
-          <div class="flex h-96 items-center justify-center">
-            <div class="text-center">
-              <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
-              ></div>
-              <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
-                Cargando conversaciones...
-              </p>
-            </div>
-          </div>
+          <!-- Skeleton loader para conversaciones -->
+          <app-skeleton-loader type="conversation" [count]="5"></app-skeleton-loader>
         } @else if (error()) {
-          <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-            <p class="text-sm text-red-800 dark:text-red-200">{{ error() }}</p>
-          </div>
+          <!-- Error state mejorado -->
+          <app-error-state
+            title="Error al cargar mensajes"
+            [message]="error() || 'No pudimos cargar tus conversaciones'"
+            [retryable]="true"
+            (retry)="handleRetry()"
+          ></app-error-state>
         } @else if (conversations().length === 0) {
-          <!-- Empty state -->
-          <div class="py-16 text-center">
-            <svg
-              class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              />
-            </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
-              No hay mensajes
-            </h3>
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
-              Cuando alguien te escriba, aparecerá aquí
-            </p>
-          </div>
+          <!-- Empty state mejorado -->
+          <app-empty-state
+            icon="inbox"
+            iconColor="primary"
+            title="No hay mensajes"
+            message="Cuando alguien te escriba o consultes sobre un auto, aparecerá aquí"
+          ></app-empty-state>
         } @else {
           <!-- Conversations list -->
           <div class="space-y-2">
@@ -339,5 +329,13 @@ export class InboxPage implements OnInit, OnDestroy {
   formatDate(date: Date): string {
     // Usar método del servicio para formateo consistente
     return this.messagesService.formatRelativeDate(date);
+  }
+
+  /**
+   * Maneja reintentos después de error
+   */
+  handleRetry(): void {
+    this.error.set(null);
+    void this.loadConversations();
   }
 }

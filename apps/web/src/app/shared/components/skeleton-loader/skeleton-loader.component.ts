@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-type SkeletonType = 'text' | 'circle' | 'rect' | 'card';
+type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation' | 'table';
 
 /**
  * 💀 Skeleton Loader Component
@@ -44,6 +44,39 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card';
         [style.width.px]="width"
         [style.height.px]="height"
       ></div>
+
+      <!-- List Skeleton (para listas de items) -->
+      <div *ngIf="type === 'list'" class="skeleton-list">
+        <div *ngFor="let _ of counter" class="skeleton-list-item">
+          <div class="skeleton-circle small"></div>
+          <div class="skeleton-list-content">
+            <div class="skeleton-line skeleton-title"></div>
+            <div class="skeleton-line skeleton-text short"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation Skeleton (para lista de conversaciones) -->
+      <div *ngIf="type === 'conversation'" class="skeleton-conversation">
+        <div *ngFor="let _ of counter" class="skeleton-conversation-item">
+          <div class="skeleton-circle"></div>
+          <div class="skeleton-conversation-content">
+            <div class="skeleton-line skeleton-title"></div>
+            <div class="skeleton-line skeleton-text"></div>
+            <div class="skeleton-line skeleton-text short"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Skeleton (para tablas) -->
+      <div *ngIf="type === 'table'" class="skeleton-table">
+        <div class="skeleton-table-header">
+          <div class="skeleton-line"></div>
+        </div>
+        <div *ngFor="let _ of counter" class="skeleton-table-row">
+          <div class="skeleton-line"></div>
+        </div>
+      </div>
     </div>
   `,
   styles: [
@@ -143,6 +176,102 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card';
         display: flex;
         flex-direction: column;
         gap: 8px;
+      }
+
+      .skeleton-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .skeleton-list-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 8px;
+        background: white;
+        border: 1px solid #e5e7eb;
+      }
+
+      :host-context(.dark) .skeleton-list-item {
+        background: #1a1a1a;
+        border-color: #374151;
+      }
+
+      .skeleton-list-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .skeleton-circle.small {
+        width: 40px;
+        height: 40px;
+      }
+
+      .skeleton-conversation {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .skeleton-conversation-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        border-radius: 12px;
+        background: white;
+        border: 1px solid #e5e7eb;
+      }
+
+      :host-context(.dark) .skeleton-conversation-item {
+        background: #1a1a1a;
+        border-color: #374151;
+      }
+
+      .skeleton-conversation-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .skeleton-table {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+      }
+
+      :host-context(.dark) .skeleton-table {
+        border-color: #374151;
+      }
+
+      .skeleton-table-header {
+        padding: 12px 16px;
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      :host-context(.dark) .skeleton-table-header {
+        background: #1f2937;
+        border-bottom-color: #374151;
+      }
+
+      .skeleton-table-row {
+        padding: 12px 16px;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .skeleton-table-row:last-child {
+        border-bottom: none;
+      }
+
+      :host-context(.dark) .skeleton-table-row {
+        background: #1a1a1a;
+        border-bottom-color: #374151;
       }
     `,
   ],
