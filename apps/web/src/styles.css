@@ -45,33 +45,138 @@
     --surface-raised: #fffcf8; /* Blanco cálido - Tarjetas, modales */
     --surface-secondary: #e3d2be; /* Beige tostado - Paneles secundarios */
     --surface-elevated: #faf3ea; /* Superficies elevadas */
+    --surface-hover: #e8dcc8; /* Hover sobre elementos interactivos */
+    --surface-pressed: #d9cdb9; /* Estado pressed */
 
     /* ─── Textos ─── */
     --text-primary: #2b1d14; /* Espresso - Texto principal */
     --text-secondary: #5c4736; /* Cacao - Texto secundario */
     --text-muted: #8c7765; /* Arena ahumada - Texto deshabilitado */
     --text-inverse: #fffbf5; /* Marfil puro - Texto sobre fondos oscuros */
+    --text-link: #3b6e8f; /* Links */
+    --text-link-hover: #2e5670; /* Links hover */
+    --text-placeholder: #a89784; /* Placeholders en inputs */
 
     /* ─── Bordes ─── */
     --border-default: #d7c4b2; /* Bordes por defecto */
     --border-muted: #e9ded0; /* Bordes sutiles */
     --border-focus: #3b6e8f; /* Borde de focus (accesibilidad) */
+    --border-hover: #c4b3a0; /* Hover sobre elementos con borde */
 
     /* ─── CTAs y Acciones ─── */
     --cta-default: #a7d8f4; /* Azul pastel principal */
     --cta-hover: #8ec9ec; /* Azul pastel hover */
+    --cta-pressed: #75bae4; /* Azul pastel pressed */
     --cta-text: #050505; /* Negro - Texto sobre CTAs */
+    --cta-secondary: #e3d2be; /* Beige tostado - CTA secundario */
+    --cta-secondary-hover: #d9cdb9; /* CTA secundario hover */
+    --cta-secondary-text: #2b1d14; /* Texto sobre CTA secundario */
 
-    /* ─── Estados y Feedback ─── */
-    --info-light: #a7d8f4; /* Azul pastel para info */
-    --info-dark: #6ba8d4; /* Azul más saturado para dark mode */
-    --success-light: #9db38b; /* Verde oliva suave */
-    --warning-light: #c4a882; /* Beige cálido */
-    --error-light: #b25e5e; /* Rojo óxido suave */
+    /* ─── Success (Verde Oliva) ─── */
+    --success-50: #f0f4ed;
+    --success-100: #d9e5cf;
+    --success-200: #b8cda8;
+    --success-300: #9db38b;
+    --success-400: #88a076;
+    --success-500: #6f8860;
+    --success-600: #5a6f4d;
+    --success-700: #495941;
+    --success-800: #3a4634;
+    --success-900: #2c3428;
+
+    /* ─── Warning (Beige Cálido) ─── */
+    --warning-50: #fef9f0;
+    --warning-100: #fcefd9;
+    --warning-200: #f7deb3;
+    --warning-300: #f0ca8d;
+    --warning-400: #e8b76b;
+    --warning-500: #c4a882;
+    --warning-600: #a58f6f;
+    --warning-700: #8a7659;
+    --warning-800: #6e5e47;
+    --warning-900: #544736;
+
+    /* ─── Error (Rojo Óxido) ─── */
+    --error-50: #fdf2f2;
+    --error-100: #f9e0e0;
+    --error-200: #f2c1c1;
+    --error-300: #ea9d9d;
+    --error-400: #d97878;
+    --error-500: #b25e5e;
+    --error-600: #984d4d;
+    --error-700: #7d3f3f;
+    --error-800: #633232;
+    --error-900: #4d2626;
+
+    /* ─── Info (Azul Pastel) ─── */
+    --info-50: #f0f8fc;
+    --info-100: #d9edf7;
+    --info-200: #b3ddf0;
+    --info-300: #8dcce8;
+    --info-400: #a7d8f4;
+    --info-500: #6ba8d4;
+    --info-600: #5a8fb8;
+    --info-700: #4a789c;
+    --info-800: #3b6080;
+    --info-900: #2d4a63;
+
+    /* ─── Semantic Border Colors ─── */
+    --border-error: var(--error-500);
+    --border-success: var(--success-500);
+    --border-warning: var(--warning-500);
 
     /* ─── Overlays ─── */
     --overlay-dark: rgba(43, 29, 20, 0.75); /* Overlay oscuro tonal */
     --overlay-light: rgba(252, 247, 240, 0.92); /* Overlay claro */
+    --surface-overlay: rgba(43, 29, 20, 0.75); /* Overlay para modales */
+
+    /* ─── Elevation System (Sombras) ─── */
+    --elevation-1: 0 1px 2px 0 rgba(43, 29, 20, 0.05);
+    --elevation-2: 0 2px 4px 0 rgba(43, 29, 20, 0.08);
+    --elevation-3: 0 4px 8px 0 rgba(43, 29, 20, 0.12);
+    --elevation-4: 0 8px 16px 0 rgba(43, 29, 20, 0.16);
+    --elevation-5: 0 16px 32px 0 rgba(43, 29, 20, 0.20);
+
+    /* ─── Focus Rings (Accesibilidad) ─── */
+    --ring-focus: 0 0 0 3px rgba(59, 110, 143, 0.3);
+    --ring-error: 0 0 0 3px rgba(178, 94, 94, 0.3);
+
+    /* ─── Typography Tokens ─── */
+    --text-xs: 0.75rem; /* 12px */
+    --text-sm: 0.875rem; /* 14px */
+    --text-base: 1rem; /* 16px */
+    --text-lg: 1.125rem; /* 18px */
+    --text-xl: 1.25rem; /* 20px */
+    --text-2xl: 1.5rem; /* 24px */
+    --text-3xl: 1.875rem; /* 30px */
+    --text-4xl: 2.25rem; /* 36px */
+
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
+
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    --font-extrabold: 800;
+
+    /* ─── Border Radius Tokens ─── */
+    --radius-sm: 0.25rem; /* 4px */
+    --radius-md: 0.5rem; /* 8px */
+    --radius-lg: 0.75rem; /* 12px */
+    --radius-xl: 1rem; /* 16px */
+    --radius-2xl: 1.5rem; /* 24px */
+    --radius-full: 9999px; /* Circular */
+
+    /* ─── Legacy Compatibility ─── */
+    --info-light: var(--info-400); /* Legacy */
+    --info-dark: var(--info-500); /* Legacy */
+    --success-light: var(--success-300); /* Legacy */
+    --warning-light: var(--warning-500); /* Legacy */
+    --error-light: var(--error-500); /* Legacy */
 
     /* ─── Variables Legacy (Compatibilidad) ─── */
     /* TODO: Migrar gradualmente a tokens semánticos */
@@ -100,15 +205,22 @@
     --spacing-section: 1.5rem; /* Mobile default */
 
     /* ─── Sistema de Animaciones ─── */
-    --duration-instant: 100ms;
-    --duration-fast: 200ms;
-    --duration-normal: 300ms;
-    --duration-slow: 400ms;
-    --duration-slower: 600ms;
+    --duration-instant: 75ms;
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 350ms;
+    --duration-slower: 500ms;
 
-    --easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
-    --easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
-    --easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+    /* Transition Timings */
+    --ease-default: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Legacy easing aliases */
+    --easing-standard: var(--ease-default);
+    --easing-decelerate: var(--ease-out);
+    --easing-accelerate: var(--ease-in);
     --easing-sharp: cubic-bezier(0.4, 0, 0.6, 1);
 
     /* ─── Alturas de Layout ─── */
@@ -120,45 +232,88 @@
   /* ─── Dark Mode Variables ─── */
   .dark {
     /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #0f0f0f; /* Fondo principal oscuro */
-    --surface-raised: #111111; /* G100 - Tarjetas, modales */
-    --surface-secondary: rgba(48, 55, 59, 0.65); /* Paneles secundarios con transparencia */
-    --surface-elevated: #2b2b2b; /* G80 - Superficies elevadas */
+    --surface-base: #1a1410; /* Fondo principal oscuro */
+    --surface-raised: #2b1d14; /* Tarjetas, modales */
+    --surface-secondary: #3d2a1e; /* Paneles secundarios */
+    --surface-elevated: #4a3628; /* Superficies elevadas */
+    --surface-hover: #5c4736; /* Hover sobre elementos */
+    --surface-pressed: #6e5845; /* Estado pressed */
 
     /* ─── Textos ─── */
-    --text-primary: #f8f4ec; /* Marfil - Texto principal */
-    --text-secondary: #bcbcbc; /* G20 - Texto secundario */
-    --text-muted: #7b7b7b; /* G40 - Texto deshabilitado */
-    --text-inverse: #050505; /* Negro - Texto sobre fondos claros */
+    --text-primary: #fffbf5; /* Marfil - Texto principal */
+    --text-secondary: #e5d2c1; /* Texto secundario */
+    --text-muted: #b08968; /* Texto deshabilitado */
+    --text-inverse: #2b1d14; /* Negro - Texto sobre fondos claros */
+    --text-link: #a7d8f4; /* Links en dark mode */
+    --text-link-hover: #c1e3f7; /* Links hover en dark mode */
+    --text-placeholder: #8c7765; /* Placeholders en inputs */
 
     /* ─── Bordes ─── */
-    --border-default: #4e4e4e; /* G60 - Bordes por defecto */
-    --border-muted: #7b7b7b; /* G40 - Bordes sutiles */
-    --border-focus: #6ba8d4; /* Borde de focus ajustado para dark */
+    --border-default: #5c4736; /* Bordes por defecto */
+    --border-muted: #4a3628; /* Bordes sutiles */
+    --border-focus: #a7d8f4; /* Borde de focus en dark mode */
+    --border-hover: #6e5845; /* Hover sobre elementos con borde */
 
-    /* ─── CTAs y Acciones (mantener azul pastel) ─── */
-    --cta-default: #a7d8f4;
-    --cta-hover: #8ec9ec;
+    /* ─── CTAs y Acciones ─── */
+    --cta-default: #a7d8f4; /* Azul pastel (same as light) */
+    --cta-hover: #8ec9ec; /* Azul pastel hover */
+    --cta-pressed: #75bae4; /* Azul pastel pressed */
     --cta-text: #050505; /* Negro para contraste */
+    --cta-secondary: #5c4736; /* CTA secundario en dark */
+    --cta-secondary-hover: #6e5845; /* CTA secundario hover */
+    --cta-secondary-text: #fffbf5; /* Texto sobre CTA secundario */
 
-    /* ─── Estados y Feedback ─── */
-    --info-light: #a7d8f4;
-    --info-dark: #6ba8d4;
-    --success-light: #9db38b;
-    --warning-light: #c4a882;
-    --error-light: #b25e5e;
+    /* ─── Success (Verde Oliva) ─── */
+    --success-50: rgba(157, 179, 139, 0.1);
+    --success-100: rgba(157, 179, 139, 0.15);
+    --success-500: #9db38b; /* Same as light */
+    --success-900: #f0f4ed; /* Inverted */
+
+    /* ─── Warning (Beige Cálido) ─── */
+    --warning-50: rgba(196, 168, 130, 0.1);
+    --warning-100: rgba(196, 168, 130, 0.15);
+    --warning-500: #f0ca8d; /* Más claro en dark */
+    --warning-900: #fef9f0; /* Inverted */
+
+    /* ─── Error (Rojo Óxido) ─── */
+    --error-50: rgba(178, 94, 94, 0.1);
+    --error-100: rgba(178, 94, 94, 0.15);
+    --error-500: #ea9d9d; /* Más claro en dark */
+    --error-900: #fdf2f2; /* Inverted */
+
+    /* ─── Info (Azul Pastel) ─── */
+    --info-50: rgba(167, 216, 244, 0.1);
+    --info-100: rgba(167, 216, 244, 0.15);
+    --info-500: #a7d8f4; /* Same as light */
+    --info-900: #f0f8fc; /* Inverted */
 
     /* ─── Overlays ─── */
     --overlay-dark: rgba(5, 5, 5, 0.85); /* Overlay más oscuro */
     --overlay-light: rgba(15, 15, 15, 0.9); /* Overlay claro en dark mode */
+    --surface-overlay: rgba(252, 247, 240, 0.1); /* Overlay para modales en dark */
+
+    /* ─── Elevation System (Sombras en dark mode) ─── */
+    --elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --elevation-2: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+    --elevation-3: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+    --elevation-4: 0 8px 16px 0 rgba(0, 0, 0, 0.6);
+    --elevation-5: 0 16px 32px 0 rgba(0, 0, 0, 0.7);
+
+    /* ─── Focus Rings en dark mode ─── */
+    --ring-focus: 0 0 0 3px rgba(167, 216, 244, 0.4);
+    --ring-error: 0 0 0 3px rgba(234, 157, 157, 0.4);
+
+    /* ─── Legacy Compatibility ─── */
+    --info-light: var(--info-500);
+    --info-dark: var(--info-700);
+    --success-light: var(--success-500);
+    --warning-light: var(--warning-500);
+    --error-light: var(--error-500);
 
     /* ─── Variables Legacy (Compatibilidad) ─── */
     --bg-primary: var(--surface-base);
     --bg-secondary: var(--surface-secondary);
     --bg-elevated: var(--surface-raised);
-    --text-primary: var(--text-primary);
-    --text-secondary: var(--text-secondary);
-    --text-disabled: var(--text-muted);
     --border-color: var(--border-default);
   }
 
