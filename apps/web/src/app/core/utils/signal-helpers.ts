@@ -69,11 +69,19 @@ export function toSignalSafe<T>(
   options?: ToSignalSafeOptions<T>
 ): Signal<T | undefined> {
   try {
+    // Build options object conditionally to satisfy TypeScript's strict typing
+    if (options?.requireSync === true) {
+      return toSignal(source$, {
+        ...options,
+        requireSync: true,
+      } as ToSignalOptions<T>);
+    }
+    
+    // Default case: requireSync is false or undefined
     return toSignal(source$, {
       ...options,
-      // Ensure requireSync is properly set
-      requireSync: options?.requireSync ?? false,
-    });
+      requireSync: false,
+    } as ToSignalOptions<T>);
   } catch (error) {
     console.error('[toSignalSafe] Error converting observable to signal:', error);
     throw new Error(
