@@ -33,13 +33,22 @@ AutoRenta es un marketplace de renta de autos MVP para Argentina construido con:
 # 1. Configurar autenticación CLI
 ./tools/setup-auth.sh    # GitHub, Supabase, Cloudflare
 
-# 2. Instalar dependencias
+# 2. Configurar secrets de desarrollo
+cp .env.local.example .env.local
+# Editar .env.local y llenar con tus credenciales:
+# - NG_APP_SUPABASE_ANON_KEY (obtener de Supabase Dashboard)
+# - NG_APP_MAPBOX_ACCESS_TOKEN (obtener de Mapbox)
+# - NG_APP_PAYPAL_CLIENT_ID (obtener de PayPal Developer)
+
+# 3. Instalar dependencias
 npm run install
 
-# 3. Verificar configuración
+# 4. Verificar configuración
 npm run check:auth
 npm run status
 ```
+
+**⚠️ IMPORTANTE**: Nunca commitear `.env.local` - está en `.gitignore` automáticamente.
 
 ### Desarrollo Diario
 

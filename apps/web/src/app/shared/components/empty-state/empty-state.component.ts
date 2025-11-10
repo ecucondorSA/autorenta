@@ -1,212 +1,235 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+export type EmptyStateVariant = 'default' | 'search' | 'inbox' | 'list' | 'bookings' | 'cars';
+
+export interface EmptyStateAction {
+  label: string;
+  handler: () => void;
+  variant?: 'primary' | 'secondary';
+  icon?: string;
+}
+
 /**
  * 📭 Empty State Component
  *
- * Componente reutilizable para mostrar estados vacíos consistentes.
- * Mejora la UX cuando no hay datos para mostrar.
+ * Componente reutilizable para mostrar estados vacíos con mensajes claros
+ * y acciones sugeridas.
  *
  * @example
+ * ```html
  * <app-empty-state
- *   icon="inbox"
- *   title="No hay mensajes"
- *   message="Cuando alguien te escriba, aparecerá aquí"
- *   actionText="Explorar autos"
- *   (action)="goToCars()">
- * </app-empty-state>
+ *   variant="cars"
+ *   title="No hay autos publicados"
+ *   message="Comienza publicando tu primer auto"
+ *   [actions]="[{ label: 'Publicar auto', handler: createCarFn, variant: 'primary' }]"
+ * ></app-empty-state>
+ * ```
  */
 @Component({
   selector: 'app-empty-state',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="empty-state-container">
+    <div
+      class="flex flex-col items-center justify-center px-4 py-12 text-center"
+      [class.min-h-[400px]]="fullHeight"
+    >
       <!-- Icon -->
-      <div class="empty-icon-wrapper">
+      <div
+        class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+      >
+        <!-- Default/List Icon -->
         <svg
-          class="empty-icon"
-          [class.empty-icon-primary]="iconColor === 'primary'"
-          [class.empty-icon-secondary]="iconColor === 'secondary'"
+          *ngIf="variant === 'default' || variant === 'list'"
+          class="h-10 w-10 text-gray-400 dark:text-gray-500"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <!-- Inbox Icon -->
           <path
-            *ngIf="icon === 'inbox'"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
           />
+        </svg>
 
-          <!-- Search Icon -->
+        <!-- Search Icon -->
+        <svg
+          *ngIf="variant === 'search'"
+          class="h-10 w-10 text-gray-400 dark:text-gray-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
-            *ngIf="icon === 'search'"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
           />
+        </svg>
 
-          <!-- Folder Icon -->
+        <!-- Inbox Icon -->
+        <svg
+          *ngIf="variant === 'inbox'"
+          class="h-10 w-10 text-gray-400 dark:text-gray-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
-            *ngIf="icon === 'folder'"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
           />
+        </svg>
 
-          <!-- List Icon -->
+        <!-- Bookings Icon -->
+        <svg
+          *ngIf="variant === 'bookings'"
+          class="h-10 w-10 text-gray-400 dark:text-gray-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
-            *ngIf="icon === 'list'"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
+        </svg>
 
-          <!-- Car Icon -->
+        <!-- Cars Icon -->
+        <svg
+          *ngIf="variant === 'cars'"
+          class="h-10 w-10 text-gray-400 dark:text-gray-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
-            *ngIf="icon === 'car'"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M8 7h8M5 10h14l-3 9H8l-3-9zM6 15h1m8 0h1"
-          />
-
-          <!-- Wallet Icon -->
-          <path
-            *ngIf="icon === 'wallet'"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-          />
-
-          <!-- Chart Icon -->
-          <path
-            *ngIf="icon === 'chart'"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
           />
         </svg>
       </div>
 
       <!-- Title -->
-      <h3 class="empty-title">{{ title }}</h3>
+      <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+        {{ title || getDefaultTitle() }}
+      </h3>
 
       <!-- Message -->
-      <p class="empty-message">{{ message }}</p>
+      <p class="mb-6 max-w-md text-sm text-gray-600 dark:text-gray-400">
+        {{ message || getDefaultMessage() }}
+      </p>
 
-      <!-- Action Button (optional) -->
+      <!-- Actions -->
+      <div *ngIf="actions && actions.length > 0" class="flex flex-wrap gap-3 justify-center">
+        <button
+          *ngFor="let action of actions"
+          type="button"
+          (click)="action.handler()"
+          class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+          [ngClass]="{
+            'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500':
+              action.variant === 'primary' || !action.variant,
+            'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600':
+              action.variant === 'secondary'
+          }"
+        >
+          <!-- Icon placeholder (if provided) -->
+          <svg
+            *ngIf="action.icon === 'plus'"
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          <svg
+            *ngIf="action.icon === 'refresh'"
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            />
+          </svg>
+          {{ action.label }}
+        </button>
+      </div>
+
+      <!-- CTA button (legacy support) -->
       <button
-        *ngIf="actionText"
-        (click)="action.emit()"
+        *ngIf="ctaLabel && (!actions || actions.length === 0)"
         type="button"
-        class="empty-action-btn"
+        (click)="onCta()"
+        class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
       >
-        {{ actionText }}
+        {{ ctaLabel }}
       </button>
     </div>
   `,
-  styles: [
-    `
-      .empty-state-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 3rem 1.5rem;
-        text-align: center;
-        min-height: 300px;
-      }
-
-      .empty-icon-wrapper {
-        margin-bottom: 1.5rem;
-        padding: 1rem;
-        border-radius: 50%;
-        background: #f3f4f6;
-      }
-
-      :host-context(.dark) .empty-icon-wrapper {
-        background: #374151;
-      }
-
-      .empty-icon {
-        width: 3rem;
-        height: 3rem;
-        color: #9ca3af;
-      }
-
-      .empty-icon-primary {
-        color: #3b82f6;
-      }
-
-      .empty-icon-secondary {
-        color: #8b5cf6;
-      }
-
-      :host-context(.dark) .empty-icon {
-        color: #6b7280;
-      }
-
-      .empty-title {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: #111827;
-        margin-bottom: 0.5rem;
-      }
-
-      :host-context(.dark) .empty-title {
-        color: #f9fafb;
-      }
-
-      .empty-message {
-        font-size: 0.875rem;
-        color: #6b7280;
-        margin-bottom: 1.5rem;
-        max-width: 24rem;
-        line-height: 1.5;
-      }
-
-      :host-context(.dark) .empty-message {
-        color: #9ca3af;
-      }
-
-      .empty-action-btn {
-        padding: 0.625rem 1.5rem;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        background: #3b82f6;
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-
-      .empty-action-btn:hover {
-        background: #2563eb;
-      }
-
-      .empty-action-btn:active {
-        background: #1d4ed8;
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyStateComponent {
-  @Input() icon: 'inbox' | 'search' | 'folder' | 'list' | 'car' | 'wallet' | 'chart' = 'inbox';
-  @Input() iconColor: 'default' | 'primary' | 'secondary' = 'default';
-  @Input() title = 'No hay datos';
-  @Input() message = 'Cuando haya información disponible, aparecerá aquí';
-  @Input() actionText?: string;
+  @Input() variant: EmptyStateVariant = 'default';
+  @Input() title?: string;
+  @Input() message?: string;
+  @Input() actions?: EmptyStateAction[];
+  @Input() ctaLabel?: string;
+  @Input() fullHeight = false;
 
-  @Output() action = new EventEmitter<void>();
+  @Output() cta = new EventEmitter<void>();
+
+  getDefaultTitle(): string {
+    switch (this.variant) {
+      case 'search':
+        return 'No se encontraron resultados';
+      case 'inbox':
+        return 'No hay mensajes';
+      case 'bookings':
+        return 'No hay reservas';
+      case 'cars':
+        return 'No hay autos';
+      case 'list':
+        return 'Lista vacía';
+      default:
+        return 'No hay contenido';
+    }
+  }
+
+  getDefaultMessage(): string {
+    switch (this.variant) {
+      case 'search':
+        return 'Intenta ajustar los filtros o buscar con otros términos.';
+      case 'inbox':
+        return 'Cuando alguien te escriba, aparecerá aquí.';
+      case 'bookings':
+        return 'Aún no tienes reservas. Comienza explorando autos disponibles.';
+      case 'cars':
+        return 'No hay autos disponibles en este momento.';
+      case 'list':
+        return 'No hay elementos para mostrar.';
+      default:
+        return 'No hay contenido disponible en este momento.';
+    }
+  }
+
+  onCta(): void {
+    this.cta.emit();
+  }
 }

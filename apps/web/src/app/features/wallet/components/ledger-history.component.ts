@@ -7,11 +7,14 @@ import {
   LedgerKind,
 } from '@app/core/services/wallet-ledger.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { SkeletonLoaderComponent } from '@app/shared/components/skeleton-loader/skeleton-loader.component';
+import { ErrorStateComponent } from '@app/shared/components/error-state/error-state.component';
+import { EmptyStateComponent } from '@app/shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-ledger-history',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonLoaderComponent, ErrorStateComponent, EmptyStateComponent],
   templateUrl: './ledger-history.component.html',
   styleUrls: ['./ledger-history.component.css'],
 })
@@ -33,6 +36,14 @@ export class LedgerHistoryComponent {
 
   refreshHistory(): void {
     this.ledgerService.loadLedgerHistory();
+  }
+
+  getRetryAction() {
+    return {
+      label: 'Reintentar',
+      handler: () => this.refreshHistory(),
+      variant: 'primary' as const
+    };
   }
 
   formatDate(timestamp: string): string {

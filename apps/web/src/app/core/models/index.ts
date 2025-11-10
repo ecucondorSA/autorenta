@@ -41,6 +41,9 @@ export * from './fgo.model';
 // Export Insurance models
 export * from './insurance.model';
 
+// Export Dashboard models
+export * from './dashboard.model';
+
 // Export ProfileService types
 export type { UpdateProfileData } from '../services/profile.service';
 

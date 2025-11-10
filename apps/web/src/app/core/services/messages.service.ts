@@ -135,7 +135,7 @@ export class MessagesService {
     body: string;
     bookingId?: string;
     carId?: string;
-  }): Promise<void> {
+  }): Promise<Message> {
     if (!params.bookingId && !params.carId) {
       throw new Error('Debes indicar bookingId o carId');
     }
@@ -149,15 +149,24 @@ export class MessagesService {
 
     // Try to send immediately
     try {
-      const { error } = await this.supabase.from('messages').insert({
-        booking_id: params.bookingId ?? null,
-        car_id: params.carId ?? null,
-        sender_id: user.id,
-        recipient_id: params.recipientId,
-        body: params.body,
-      });
+      const { data, error } = await this.supabase
+        .from('messages')
+        .insert({
+          booking_id: params.bookingId ?? null,
+          car_id: params.carId ?? null,
+          sender_id: user.id,
+          recipient_id: params.recipientId,
+          body: params.body,
+        })
+        .select('*')
+        .single<Message>();
 
       if (error) throw error;
+      if (!data) {
+        throw new Error('No se pudo obtener el mensaje enviado');
+      }
+
+      return data;
     } catch (_error) {
       // Queue for retry when connection is restored
       await this.offlineMessages.queueMessage({

@@ -91,8 +91,8 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-primary"
-            [class.border-border-default
-            dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.border-border-default]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
             [class.dark:border-charcoal-medium]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
@@ -148,8 +148,10 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-primary"
-            [class.border-border-default
-            dark:border-gray-600]="
+            [class.border-border-default]="
+              !form.controls.password.touched || !form.controls.password.invalid
+            "
+            [class.dark:border-gray-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
             [class.dark:border-charcoal-medium]="

@@ -290,18 +290,112 @@ npm run worker:deploy       # Deploy a Cloudflare
 
 ## Contexto Multi-Agente
 
-Eres parte de un sistema de 2 agentes:
+Eres parte de un sistema de 3 agentes coordinados:
 - **Cursor (TÚ)**: Desarrollo iterativo rápido
 - **Claude Code CLI**: Arquitectura y automatización
+- **Usuario**: Coordinador y tomador de decisiones
 
-Trabaja en colaboración:
+### Funciones de Cada Agente
+
+#### 🎯 Cursor (Este Agente) - Desarrollo Iterativo
+
+**Rol**: Agente de Desarrollo Iterativo
+
+**Especialización**:
+- ✅ Implementación rápida de código (1-3 archivos)
+- ✅ Edición inline con Cmd+K / Ctrl+K
+- ✅ Debugging visual en tiempo real
+- ✅ Autocompletado inteligente con contexto
+- ✅ Fixes rápidos de TypeScript/linting
+- ✅ Tests unitarios específicos
+- ✅ Refactoring local
+- ✅ Revisión de PRs y sugerencias de mejora
+- ✅ Limpieza de código (archivos extra, etc.)
+
+**Lo que NO haces** (delega a Claude Code CLI):
+- ❌ Análisis de arquitectura vertical completa (UI → Service → DB → RLS)
+- ❌ Refactoring de 5+ archivos simultáneos
+- ❌ Deployment y CI/CD automation
+- ❌ Generación de documentación técnica extensa
+- ❌ Auditorías de seguridad profundas
+- ❌ Setup de infraestructura (Supabase, Cloudflare)
+
+#### 🧠 Claude Code CLI - Arquitectura y Automatización
+
+**Rol**: Agente de Arquitectura & Automatización
+
+**Especialización**:
+- ✅ Análisis de arquitectura vertical completa
+- ✅ Refactoring de múltiples archivos (5+)
+- ✅ Deployment y CI/CD automation
+- ✅ Generación de documentación técnica
+- ✅ Auditorías de seguridad y performance
+- ✅ Setup de infraestructura
+- ✅ Diseño de schemas de base de datos
+- ✅ Creación de RLS policies
+- ✅ Generación de migrations SQL
+- ✅ Ejecución de pipelines CI/CD completos
+
+**Cómo se usa**:
+```bash
+$ claude
+> "Diseña sistema de reviews con schema, RLS, y services"
+> "Ejecuta npm run ci y despliega a staging"
+> "Analiza por qué falla el upload de avatares"
+```
+
+#### 👤 Usuario - Coordinador y Decision Maker
+
+**Rol**: Coordinador y Tomador de Decisiones
+
+**Especialización**:
+- ✅ Priorizar tareas y issues
+- ✅ Tomar decisiones arquitectónicas
+- ✅ Revisar y aprobar cambios
+- ✅ Coordinar entre agentes
+- ✅ Definir objetivos del proyecto
+- ✅ Configurar secrets y credenciales
+- ✅ Validar implementaciones finales
+
+### División de Trabajo
+
+| Tarea | Agente | Razón |
+|-------|--------|-------|
+| Crear componente Angular | Cursor | 1-2 archivos, edición rápida |
+| Arreglar error TypeScript | Cursor | Fix inmediato, debugging visual |
+| Diseñar schema de DB | Claude Code CLI | Arquitectura vertical completa |
+| Refactorizar 10 servicios | Claude Code CLI | Múltiples archivos, batch processing |
+| Revisar PR | Cursor | Análisis de código, sugerencias |
+| Deploy a producción | Claude Code CLI | CI/CD automation completa |
+| Mergear PRs | Cursor | Operación rápida, validación |
+| Configurar secrets | Usuario | Requiere credenciales reales |
+| Priorizar issues | Usuario | Decisión estratégica |
+| Aprobar cambios | Usuario | Control de calidad final |
+
+### Flujo de Trabajo Típico
+
+```
+1. Usuario: "Necesito resolver issues críticos"
+   ↓
+2. Claude Code CLI: Analiza, crea PRs, documenta
+   ↓
+3. Cursor: Revisa PRs, limpia archivos, sugiere mejoras
+   ↓
+4. Usuario: Aprueba y mergea
+   ↓
+5. Claude Code CLI: Configura post-merge (si es necesario)
+```
+
+### Trabajo en Colaboración
+
 1. Lee `CLAUDE.md` para entender arquitectura
-2. Implementa según planes de Claude Code
-3. Delega tareas complejas de vuelta a Claude Code
+2. Implementa según planes de Claude Code CLI
+3. Delega tareas complejas a Claude Code CLI
 4. Mantén consistencia con patterns existentes
+5. Coordina con el Usuario para decisiones importantes
 
 ---
 
-**Última actualización**: 2025-11-03
-**Versión**: 1.0.0
+**Última actualización**: 2025-11-10
+**Versión**: 1.1.0
 **Proyecto**: AutoRenta - Plataforma de alquiler de autos (Argentina)
