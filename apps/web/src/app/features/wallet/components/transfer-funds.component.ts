@@ -1,6 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { WalletLedgerService, TransferResponse } from '@app/core/services/wallet-ledger.service';
 import { WalletService } from '@app/core/services/wallet.service';
 import { WalletBalance } from '@app/core/models/wallet.model';
@@ -37,16 +38,18 @@ export class TransferFundsComponent {
   lastTransferAmount = signal(0);
 
   currentBalance = computed(() => this.walletService.balance()?.available_balance ?? 0);
-  currentUserId = signal<string | null>(null);
+
+  // Convert Observable to Signal to avoid memory leak
+  private readonly balanceSignal = toSignal(this.walletService.getBalance(), {
+    initialValue: null as WalletBalance | null
+  });
+
+  currentUserId = computed(() => this.balanceSignal()?.user_id ?? null);
 
   recentTransfers = this.ledgerService.transfers;
 
   constructor() {
-    this.walletService.getBalance().subscribe((balance: WalletBalance) => {
-      if (balance) {
-        this.currentUserId.set(balance.user_id);
-      }
-    });
+    // Load initial transfers
     this.ledgerService.loadTransfers(5);
   }
 
@@ -126,8 +129,12 @@ export class TransferFundsComponent {
         this.clearRecipient();
         this.amountInput.set(0);
         this.description.set('');
-        await this.walletService.getBalance();
-        await this.ledgerService.loadTransfers(5);
+
+        // Parallel loading for better performance
+        await Promise.all([
+          this.walletService.getBalance(),
+          this.ledgerService.loadTransfers(5)
+        ]);
       } else {
         this.error.set(result.error || 'Error al transferir fondos');
       }
