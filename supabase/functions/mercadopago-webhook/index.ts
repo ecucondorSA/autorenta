@@ -347,15 +347,67 @@ serve(async (req) => {
             console.log('✅ HMAC validation passed');
           }
         } catch (cryptoError) {
-          console.error('Error calculating HMAC:', cryptoError);
-          // No fallar por errores de crypto, solo loggear
+          // ✅ SECURITY: Si falla la validación HMAC, rechazar
+          console.error('❌ Webhook rejected: HMAC calculation error', {
+            error: cryptoError,
+            ip: clientIP,
+            timestamp: new Date().toISOString(),
+          });
+
+          return new Response(
+            JSON.stringify({
+              error: 'Webhook signature validation failed',
+              code: 'SIGNATURE_VALIDATION_ERROR',
+            }),
+            {
+              status: 500,
+              headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+            }
+          );
         }
       } else {
-        console.warn('x-signature present but missing ts or v1 parts');
+        // ✅ SECURITY: Rechazar firma malformada
+        console.error('❌ Webhook rejected: Invalid x-signature format (missing ts or v1)', {
+          ip: clientIP,
+          signatureFormat: xSignature,
+          timestamp: new Date().toISOString(),
+        });
+
+        return new Response(
+          JSON.stringify({
+            error: 'Invalid webhook signature format',
+            code: 'INVALID_SIGNATURE_FORMAT',
+          }),
+          {
+            status: 401,
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+          }
+        );
       }
     } else {
-      console.warn('⚠️ No x-signature header - webhook signature not validated');
-      // En producción deberíamos rechazar, por ahora solo loggeamos
+      // ✅ SECURITY: Rechazar webhooks sin firma HMAC o sin request ID
+      const missingHeaders = [];
+      if (!xSignature) missingHeaders.push('x-signature');
+      if (!xRequestId) missingHeaders.push('x-request-id');
+
+      console.error('❌ Webhook rejected: Missing required headers', {
+        ip: clientIP,
+        missingHeaders,
+        type: webhookPayload.type,
+        paymentId: webhookPayload.data?.id,
+        timestamp: new Date().toISOString(),
+      });
+
+      return new Response(
+        JSON.stringify({
+          error: `Missing required headers: ${missingHeaders.join(', ')}`,
+          code: 'MISSING_REQUIRED_HEADERS',
+        }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Solo procesar notificaciones de tipo 'payment'
