@@ -9,78 +9,12 @@ import { Signal } from '@angular/core';
 import { toSignal, ToSignalOptions } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 
-// NoInfer is a TypeScript utility type, not from Angular
-type NoInfer<T> = [T][T extends any ? 0 : never];
+type SafeSignalOptions<T> = ToSignalOptions<T>;
 
-/**
- * Extended options for toSignalSafe wrapper
- */
-export type ToSignalSafeOptions<T> = Omit<ToSignalOptions<T>, 'initialValue' | 'requireSync'> & {
-  /**
-   * Initial value for the signal. Overrides the Angular typing to ensure `T` is preserved.
-   */
-  initialValue?: T;
-  /**
-   * Whether to throw an error if the observable doesn't emit synchronously
-   * @default false
-   */
-  requireSync?: boolean;
-};
-
-/**
- * Type-safe wrapper for toSignal() that provides better defaults
- * and clearer error messages.
- *
- * Benefits:
- * - Automatic memory cleanup when component is destroyed
- * - Type-safe with better inference
- * - Consistent error handling
- *
- * @param source$ - Observable to convert to signal
- * @param options - Configuration options
- * @returns Signal that reflects the latest value from the observable
- *
- * @example
- * ```typescript
- * // Basic usage
- * const userSignal = toSignalSafe(this.userService.user$);
- *
- * // With initial value
- * const balanceSignal = toSignalSafe(this.walletService.balance$, {
- *   initialValue: null
- * });
- *
- * // Require sync emission (throws if no sync value)
- * const configSignal = toSignalSafe(this.config$, {
- *   requireSync: true
- * });
- * ```
- */
-export function toSignalSafe<T>(
-  source$: Observable<T>,
-  options?: ToSignalSafeOptions<T & undefined>
-): Signal<T | undefined>;
-
-export function toSignalSafe<T>(
-  source$: Observable<T>,
-  options: ToSignalSafeOptions<T> & { initialValue: T }
-): Signal<T>;
-
-export function toSignalSafe<T>(
-  source$: Observable<T>,
-  options: ToSignalSafeOptions<NoInfer<T | null>> & { initialValue: null }
-): Signal<T | null>;
-
-export function toSignalSafe<T>(
-  source$: Observable<T>,
-  options?: ToSignalSafeOptions<T>
-): Signal<T | undefined> {
+export function toSignalSafe<T>(source$: Observable<T>, options?: SafeSignalOptions<T>): Signal<T | undefined> {
   try {
-    // Use @ts-expect-error because Angular's toSignal has strict overloads
-    // that don't work well with our wrapper. The overloads above ensure
-    // type safety at the function signature level.
-    // @ts-expect-error - Angular's toSignal overloads are too strict for our wrapper
-    return toSignal(source$, options);
+    // Angular's overloads are very strict around initialValue typing, so we lean on a cast here.
+    return toSignal(source$, options as ToSignalOptions<T>);
   } catch (error) {
     console.error('[toSignalSafe] Error converting observable to signal:', error);
     throw new Error(
@@ -106,7 +40,7 @@ export function toSignalSafe<T>(
  * ```
  */
 export function toSignalWithDefault<T>(source$: Observable<T>, initialValue: T): Signal<T> {
-  return toSignalSafe(source$, { initialValue }) as Signal<T>;
+  return toSignalSafe<T>(source$, { initialValue } as SafeSignalOptions<T>) as Signal<T>;
 }
 
 /**
@@ -125,7 +59,7 @@ export function toSignalWithDefault<T>(source$: Observable<T>, initialValue: T):
  * ```
  */
 export function toSignalOrNull<T>(source$: Observable<T>): Signal<T | null> {
-  return toSignalSafe(source$, { initialValue: null as NoInfer<T | null> }) as Signal<T | null>;
+  return toSignalSafe<T | null>(source$, { initialValue: null } as SafeSignalOptions<T | null>) as Signal<T | null>;
 }
 
 /**
@@ -142,5 +76,5 @@ export function toSignalOrNull<T>(source$: Observable<T>): Signal<T | null> {
  * ```
  */
 export function toSignalOrUndefined<T>(source$: Observable<T>): Signal<T | undefined> {
-  return toSignalSafe(source$);
+  return toSignalSafe<T>(source$);
 }
