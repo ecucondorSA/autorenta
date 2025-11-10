@@ -145,8 +145,19 @@ export interface ChatContext {
 
         <!-- Messages -->
         <div *ngIf="!loading() && messages().length > 0" class="space-y-2 px-4 py-4">
+          <!-- Load more button -->
+          <div *ngIf="hasMoreMessages()" class="mb-4 flex justify-center">
+            <button
+              type="button"
+              (click)="loadMoreMessages()"
+              class="rounded-full bg-surface-raised px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+            >
+              Cargar mensajes anteriores ({{ messages().length - messagesLimit() }} más)
+            </button>
+          </div>
+
           <div
-            *ngFor="let message of messages()"
+            *ngFor="let message of visibleMessages()"
             [class.justify-end]="isOwnMessage(message)"
             [class.justify-start]="!isOwnMessage(message)"
             class="flex"
@@ -343,6 +354,16 @@ export class BaseChatComponent implements OnInit, OnDestroy {
 
   // Computed
   readonly currentUserId = signal<string | null>(null);
+  readonly messagesLimit = signal<number>(50);
+  readonly visibleMessages = computed(() => {
+    const allMessages = this.messages();
+    const limit = this.messagesLimit();
+    // Show last N messages (most recent)
+    return allMessages.slice(-limit);
+  });
+  readonly hasMoreMessages = computed(() => {
+    return this.messages().length > this.messagesLimit();
+  });
 
   protected notificationTimeout: ReturnType<typeof setTimeout> | null = null;
   protected typingTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -495,13 +516,23 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       });
 
       // Replace optimistic message with real message from server
-      this.messages.update((prev) =>
-        prev.map((msg) =>
-          msg.id === optimisticId
-            ? { ...sentMessage, created_at: sentMessage.created_at || optimisticMessage.created_at } as Message
-            : msg
-        )
-      );
+      // Preserve the optimistic created_at if server doesn't provide one
+      const realMessage: Message = {
+        ...sentMessage,
+        created_at: sentMessage.created_at || optimisticMessage.created_at,
+      };
+
+      this.messages.update((prev) => {
+        const index = prev.findIndex((msg) => msg.id === optimisticId);
+        if (index === -1) {
+          // Optimistic message not found (shouldn't happen), just append
+          return [...prev, realMessage];
+        }
+        // Replace optimistic message at the same position
+        const updated = [...prev];
+        updated[index] = realMessage;
+        return updated;
+      });
 
       this.messageSent.emit({ messageId: sentMessage.id, context: ctx });
     } catch (err) {
@@ -560,6 +591,13 @@ export class BaseChatComponent implements OnInit, OnDestroy {
           // Ignore errors
         });
     }
+  }
+
+  /**
+   * Carga más mensajes (incrementa el límite de visualización)
+   */
+  loadMoreMessages(): void {
+    this.messagesLimit.update((limit) => limit + 50);
   }
 
   /**
