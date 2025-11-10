@@ -78,6 +78,20 @@ export const BOOKINGS_ROUTES: Routes = [
       import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),
   },
   {
+    path: ':bookingId/checkout',
+    loadComponent: () =>
+      import('./pages/booking-checkout/booking-checkout.page').then((m) => m.BookingCheckoutPage),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':bookingId/checkout-wizard',
+    loadComponent: () =>
+      import('./pages/booking-checkout-wizard/booking-checkout-wizard.page').then(
+        (m) => m.BookingCheckoutWizardPage,
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
     path: ':bookingId/report-claim',
     loadComponent: () => import('./report-claim/report-claim.page').then((m) => m.ReportClaimPage),
     canActivate: [AuthGuard],
