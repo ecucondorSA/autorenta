@@ -287,10 +287,10 @@ export class BookingCheckoutWizardPage implements OnInit {
 
       // Initialize dates/location from booking data
       this.datesLocationData.set({
-        startDate: bookingData.start_date?.split('T')[0] || '',
-        endDate: bookingData.end_date?.split('T')[0] || '',
-        pickupLocation: bookingData.pickup_location || '',
-        dropoffLocation: bookingData.dropoff_location || '',
+        startDate: bookingData.start_at?.split('T')[0] || '',
+        endDate: bookingData.end_at?.split('T')[0] || '',
+        pickupLocation: bookingData.pickup_location_lat?.toString() || '',
+        dropoffLocation: bookingData.dropoff_location_lat?.toString() || '',
         pickupTime: '10:00',
         dropoffTime: '10:00'
       });

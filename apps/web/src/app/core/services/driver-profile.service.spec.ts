@@ -76,9 +76,9 @@ describe('DriverProfileService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getProfile', () => {
+  describe('profile', () => {
     it('should fetch and set driver profile', (done) => {
-      service.getProfile('user-123').subscribe({
+      service.profile('user-123').subscribe({
         next: (profile) => {
           expect(profile).toEqual(mockProfile);
           expect(service.profile()).toEqual(mockProfile);
@@ -92,7 +92,7 @@ describe('DriverProfileService', () => {
     });
 
     it('should call without user_id when not provided', (done) => {
-      service.getProfile().subscribe({
+      service.profile().subscribe({
         next: () => {
           expect(supabaseMock.rpc).toHaveBeenCalledWith('get_driver_profile', {});
           done();
@@ -105,10 +105,10 @@ describe('DriverProfileService', () => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [], error: null }), // First call returns empty (NO_PROFILE)
         Promise.resolve({ data: 'user-123', error: null }), // initialize_driver_profile
-        Promise.resolve({ data: [mockProfile], error: null }), // Second getProfile call
+        Promise.resolve({ data: [mockProfile], error: null }), // Second profile call
       );
 
-      service.getProfile('user-123').subscribe({
+      service.profile('user-123').subscribe({
         next: (profile) => {
           expect(profile).toEqual(mockProfile);
           expect(supabaseMock.rpc).toHaveBeenCalledWith('initialize_driver_profile', {
@@ -124,7 +124,7 @@ describe('DriverProfileService', () => {
       const error = new Error('Database error');
       supabaseMock.rpc.and.returnValue(Promise.resolve({ data: null, error }));
 
-      service.getProfile('user-123').subscribe({
+      service.profile('user-123').subscribe({
         next: () => done.fail('Should have thrown error'),
         error: (err) => {
           expect(err).toEqual(error);
@@ -138,7 +138,7 @@ describe('DriverProfileService', () => {
     it('should set loading state', (done) => {
       expect(service.loading()).toBe(false);
 
-      service.getProfile('user-123').subscribe({
+      service.profile('user-123').subscribe({
         complete: () => {
           expect(service.loading()).toBe(false);
           done();
@@ -287,10 +287,10 @@ describe('DriverProfileService', () => {
   });
 
   describe('refresh', () => {
-    it('should call getProfile', () => {
-      spyOn(service, 'getProfile').and.returnValue(of(mockProfile));
+    it('should call profile', () => {
+      spyOn(service, 'profile').and.returnValue(of(mockProfile));
       service.refresh();
-      expect(service.getProfile).toHaveBeenCalled();
+      expect(service.profile).toHaveBeenCalled();
     });
   });
 });
