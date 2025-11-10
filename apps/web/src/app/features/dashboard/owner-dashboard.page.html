@@ -146,10 +146,10 @@
             <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Crecimiento</p>
             <p
               class="text-2xl font-bold"
-              [class.text-success-light]="isGrowthPositive"
-              [class.text-red-600]="!isGrowthPositive"
+              [class.text-success-light]="isGrowthPositive()"
+              [class.text-red-600]="!isGrowthPositive()"
             >
-              {{ isGrowthPositive ? '+' : '' }}{{ growthPercentage }}%
+              {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
             </p>
           </div>
         </div>

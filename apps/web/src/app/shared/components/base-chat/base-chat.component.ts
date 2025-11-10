@@ -475,9 +475,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       sender_id: this.currentUserId()!,
       recipient_id: ctx.recipientId,
       body: text,
-      content: text, // Some APIs use 'content' instead of 'body'
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
       read_at: null,
       delivered_at: null,
       booking_id: ctx.type === 'booking' ? ctx.contextId : null,
@@ -500,7 +498,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       this.messages.update((prev) =>
         prev.map((msg) =>
           msg.id === optimisticId
-            ? { ...sentMessage, created_at: sentMessage.created_at || optimisticMessage.created_at }
+            ? { ...sentMessage, created_at: sentMessage.created_at || optimisticMessage.created_at } as Message
             : msg
         )
       );

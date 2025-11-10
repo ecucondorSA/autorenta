@@ -249,7 +249,7 @@ export class InboxPage implements OnInit, OnDestroy {
         // Update only changed fields
         updated[index] = {
           ...existingConv,
-          lastMessage: message.content,
+          lastMessage: message.body,
           lastMessageAt: new Date(message.created_at),
           // Increment unread count if message is from other user and not read
           unreadCount: message.sender_id !== userId ? existingConv.unreadCount + 1 : existingConv.unreadCount,
