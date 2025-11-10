@@ -44,6 +44,14 @@ export const routes: Routes = [
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },
       {
+        path: 'publish-wizard',
+        canMatch: [AuthGuard],
+        loadComponent: () =>
+          import('./features/cars/pages/publish-car-wizard/publish-car-wizard.page').then(
+            (m) => m.PublishCarWizardPage,
+          ),
+      },
+      {
         path: 'my',
         canMatch: [AuthGuard],
         loadComponent: () =>
