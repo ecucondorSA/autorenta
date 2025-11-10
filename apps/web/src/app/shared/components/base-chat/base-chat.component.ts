@@ -455,7 +455,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Envía un mensaje
+   * Envía un mensaje con optimistic update
    */
   async sendMessage(): Promise<void> {
     const text = this.newMessage().trim();
@@ -467,19 +467,51 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     // Stop typing
     this.stopTyping();
 
+    // Create optimistic message
+    const optimisticId = `temp-${Date.now()}`;
+    const ctx = this.context();
+    const optimisticMessage: Message = {
+      id: optimisticId,
+      sender_id: this.currentUserId()!,
+      recipient_id: ctx.recipientId,
+      body: text,
+      content: text, // Some APIs use 'content' instead of 'body'
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      read_at: null,
+      delivered_at: null,
+      booking_id: ctx.type === 'booking' ? ctx.contextId : null,
+      car_id: ctx.type === 'car' ? ctx.contextId : null,
+    };
+
+    // Optimistic update: add message immediately to UI
+    this.messages.update((prev) => [...prev, optimisticMessage]);
+    this.newMessage.set('');
+
     try {
-      const ctx = this.context();
-      await this.messagesService.sendMessage({
+      const sentMessage = await this.messagesService.sendMessage({
         recipientId: ctx.recipientId,
         body: text,
         bookingId: ctx.type === 'booking' ? ctx.contextId : undefined,
         carId: ctx.type === 'car' ? ctx.contextId : undefined,
       });
 
-      this.newMessage.set('');
-      this.messageSent.emit({ messageId: '', context: ctx }); // TODO: obtener ID real
-    } catch (_err) {
+      // Replace optimistic message with real message from server
+      this.messages.update((prev) =>
+        prev.map((msg) =>
+          msg.id === optimisticId
+            ? { ...sentMessage, created_at: sentMessage.created_at || optimisticMessage.created_at }
+            : msg
+        )
+      );
+
+      this.messageSent.emit({ messageId: sentMessage.id, context: ctx });
+    } catch (err) {
+      // Remove optimistic message on error
+      this.messages.update((prev) => prev.filter((msg) => msg.id !== optimisticId));
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
+      // Restore the message text so user can retry
+      this.newMessage.set(text);
     } finally {
       this.sending.set(false);
     }
