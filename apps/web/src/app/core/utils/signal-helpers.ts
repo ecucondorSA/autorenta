@@ -12,13 +12,17 @@ import { Observable } from 'rxjs';
 /**
  * Extended options for toSignalSafe wrapper
  */
-export interface ToSignalSafeOptions<T> extends Omit<ToSignalOptions<T>, 'requireSync'> {
+export type ToSignalSafeOptions<T> = Omit<ToSignalOptions<T>, 'initialValue' | 'requireSync'> & {
+  /**
+   * Initial value for the signal. Overrides the Angular typing to ensure `T` is preserved.
+   */
+  initialValue?: T;
   /**
    * Whether to throw an error if the observable doesn't emit synchronously
    * @default false
    */
   requireSync?: boolean;
-}
+};
 
 /**
  * Type-safe wrapper for toSignal() that provides better defaults
