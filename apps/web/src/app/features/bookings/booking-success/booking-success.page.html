@@ -97,7 +97,7 @@
       </div>
 
       <!-- Main Message -->
-      <h1 class="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+      <h1 class="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-text-inverse">
         ¡Tu reserva está confirmada!
       </h1>
 
@@ -122,7 +122,10 @@
               <div
                 class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center"
               >
-                <ion-icon name="car-outline" class="text-4xl text-gray-400 dark:text-gray-300"></ion-icon>
+                <ion-icon
+                  name="car-outline"
+                  class="text-4xl text-gray-400 dark:text-gray-300"
+                ></ion-icon>
               </div>
               <div>
                 <h3 class="font-semibold text-lg">{{ getCarName() }}</h3>
@@ -156,7 +159,7 @@
                 <ion-icon name="cash-outline"></ion-icon>
                 Total Pagado:
               </span>
-              <span class="value font-bold text-green-600">
+              <span class="value font-bold text-success-light">
                 {{ bkg.total_amount | currency: 'ARS' : 'symbol' : '1.0-0' }}
               </span>
             </div>

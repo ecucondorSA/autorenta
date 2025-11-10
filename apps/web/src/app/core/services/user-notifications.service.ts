@@ -30,7 +30,9 @@ export class NotificationsService {
 
   private async loadNotifications() {
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) return;
 
       const { data, error } = await this.supabase
@@ -62,7 +64,9 @@ export class NotificationsService {
   }
 
   private async subscribeToRealtime() {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
     const channel = this.supabase
@@ -77,7 +81,7 @@ export class NotificationsService {
         },
         (payload: unknown) => {
           this.addNotification((payload as any).new as any);
-        }
+        },
       )
       .subscribe();
   }
@@ -122,7 +126,7 @@ export class NotificationsService {
   }
 
   private updateUnreadCount() {
-    const unread = this.notifications().filter(n => !n.read).length;
+    const unread = this.notifications().filter((n) => !n.read).length;
     this.unreadCount.set(unread);
   }
 
@@ -137,9 +141,7 @@ export class NotificationsService {
 
       // Actualizar estado local
       const current = this.notifications();
-      const updated = current.map(n =>
-        n.id === notificationId ? { ...n, read: true } : n
-      );
+      const updated = current.map((n) => (n.id === notificationId ? { ...n, read: true } : n));
       this.notifications.set(updated);
       this.updateUnreadCount();
     } catch (_error) {
@@ -149,7 +151,9 @@ export class NotificationsService {
 
   async markAllAsRead() {
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) return;
 
       const { error } = await this.supabase
@@ -162,7 +166,7 @@ export class NotificationsService {
 
       // Actualizar estado local
       const current = this.notifications();
-      const updated = current.map(n => ({ ...n, read: true }));
+      const updated = current.map((n) => ({ ...n, read: true }));
       this.notifications.set(updated);
       this.unreadCount.set(0);
     } catch (_error) {
@@ -210,7 +214,11 @@ export class NotificationsService {
   }
 
   // Métodos para crear notificaciones (desde backend)
-  async createNotification(userId: string, notification: Omit<NotificationItem, 'id' | 'read' | 'createdAt'>, dbType: string) {
+  async createNotification(
+    userId: string,
+    notification: Omit<NotificationItem, 'id' | 'read' | 'createdAt'>,
+    dbType: string,
+  ) {
     try {
       const { data, error } = await this.supabase
         .from('notifications')
@@ -235,104 +243,153 @@ export class NotificationsService {
 
   // Notificaciones predefinidas
   async notifyNewBookingForOwner(bookingId: string, carTitle: string, renterName: string) {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    return this.createNotification(user.id, {
-      title: 'Nueva reserva recibida',
-      message: `${renterName} solicitó reservar tu ${carTitle}`,
-      type: 'success',
-      actionUrl: `/bookings/${bookingId}`,
-      metadata: { bookingId, renterName, carTitle },
-    }, 'new_booking_for_owner');
+    return this.createNotification(
+      user.id,
+      {
+        title: 'Nueva reserva recibida',
+        message: `${renterName} solicitó reservar tu ${carTitle}`,
+        type: 'success',
+        actionUrl: `/bookings/${bookingId}`,
+        metadata: { bookingId, renterName, carTitle },
+      },
+      'new_booking_for_owner',
+    );
   }
 
   async notifyBookingCancelledForOwner(bookingId: string, carTitle: string, renterName: string) {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    return this.createNotification(user.id, {
-      title: 'Reserva cancelada',
-      message: `${renterName} canceló la reserva de tu ${carTitle}`,
-      type: 'warning',
-      actionUrl: `/bookings/${bookingId}`,
-      metadata: { bookingId, renterName, carTitle },
-    }, 'booking_cancelled_for_owner');
+    return this.createNotification(
+      user.id,
+      {
+        title: 'Reserva cancelada',
+        message: `${renterName} canceló la reserva de tu ${carTitle}`,
+        type: 'warning',
+        actionUrl: `/bookings/${bookingId}`,
+        metadata: { bookingId, renterName, carTitle },
+      },
+      'booking_cancelled_for_owner',
+    );
   }
 
   async notifyBookingCancelledForRenter(bookingId: string, carTitle: string, ownerName: string) {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    return this.createNotification(user.id, {
-      title: 'Reserva cancelada',
-      message: `El anfitrión ${ownerName} canceló tu reserva para ${carTitle}`,
-      type: 'warning',
-      actionUrl: `/bookings/${bookingId}`,
-      metadata: { bookingId, ownerName, carTitle },
-    }, 'booking_cancelled_for_renter');
+    return this.createNotification(
+      user.id,
+      {
+        title: 'Reserva cancelada',
+        message: `El anfitrión ${ownerName} canceló tu reserva para ${carTitle}`,
+        type: 'warning',
+        actionUrl: `/bookings/${bookingId}`,
+        metadata: { bookingId, ownerName, carTitle },
+      },
+      'booking_cancelled_for_renter',
+    );
   }
 
   async notifyPaymentSuccessful(amount: number, currency: string = 'ARS', bookingId?: string) {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    return this.createNotification(user.id, {
-      title: 'Pago exitoso',
-      message: `Tu pago de ${amount.toLocaleString()} ${currency} fue procesado correctamente`,
-      type: 'success',
-      actionUrl: bookingId ? `/bookings/${bookingId}` : '/wallet',
-      metadata: { amount, currency, bookingId },
-    }, 'payment_successful');
+    return this.createNotification(
+      user.id,
+      {
+        title: 'Pago exitoso',
+        message: `Tu pago de ${amount.toLocaleString()} ${currency} fue procesado correctamente`,
+        type: 'success',
+        actionUrl: bookingId ? `/bookings/${bookingId}` : '/wallet',
+        metadata: { amount, currency, bookingId },
+      },
+      'payment_successful',
+    );
   }
 
   async notifyPayoutSuccessful(amount: number, currency: string = 'ARS') {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    return this.createNotification(user.id, {
-      title: 'Pago recibido',
-      message: `Se acreditaron ${amount.toLocaleString()} ${currency} en tu wallet`,
-      type: 'success',
-      actionUrl: '/wallet',
-      metadata: { amount, currency },
-    }, 'payout_successful');
+    return this.createNotification(
+      user.id,
+      {
+        title: 'Pago recibido',
+        message: `Se acreditaron ${amount.toLocaleString()} ${currency} en tu wallet`,
+        type: 'success',
+        actionUrl: '/wallet',
+        metadata: { amount, currency },
+      },
+      'payout_successful',
+    );
   }
 
-  async notifyInspectionReminder(bookingId: string, carTitle: string, inspectionType: 'pickup' | 'return') {
-    const { data: { user } } = await this.supabase.auth.getUser();
+  async notifyInspectionReminder(
+    bookingId: string,
+    carTitle: string,
+    inspectionType: 'pickup' | 'return',
+  ) {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    const message = inspectionType === 'pickup'
-      ? `Recuerda realizar la inspección de recogida para ${carTitle}`
-      : `Recuerda realizar la inspección de devolución para ${carTitle}`;
+    const message =
+      inspectionType === 'pickup'
+        ? `Recuerda realizar la inspección de recogida para ${carTitle}`
+        : `Recuerda realizar la inspección de devolución para ${carTitle}`;
 
-    return this.createNotification(user.id, {
-      title: 'Recordatorio de inspección',
-      message,
-      type: 'warning',
-      actionUrl: `/bookings/${bookingId}`,
-      metadata: { bookingId, carTitle, inspectionType },
-    }, 'inspection_reminder');
+    return this.createNotification(
+      user.id,
+      {
+        title: 'Recordatorio de inspección',
+        message,
+        type: 'warning',
+        actionUrl: `/bookings/${bookingId}`,
+        metadata: { bookingId, carTitle, inspectionType },
+      },
+      'inspection_reminder',
+    );
   }
 
   async notifyGenericAnnouncement(title: string, message: string, actionUrl?: string) {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    return this.createNotification(user.id, {
-      title,
-      message,
-      type: 'info',
-      actionUrl,
-      metadata: {},
-    }, 'generic_announcement');
+    return this.createNotification(
+      user.id,
+      {
+        title,
+        message,
+        type: 'info',
+        actionUrl,
+        metadata: {},
+      },
+      'generic_announcement',
+    );
   }
 
   // Additional methods for notifications page
   async loadAllNotifications(limit?: number, offset?: number) {
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) return [];
 
       let query = this.supabase
@@ -368,7 +425,9 @@ export class NotificationsService {
 
   async filterNotificationsByType(dbType?: string) {
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) return [];
 
       let query = this.supabase
@@ -405,16 +464,13 @@ export class NotificationsService {
 
   async deleteNotification(notificationId: string) {
     try {
-      const { error } = await this.supabase
-        .from('notifications')
-        .delete()
-        .eq('id', notificationId);
+      const { error } = await this.supabase.from('notifications').delete().eq('id', notificationId);
 
       if (error) throw error as Error;
 
       // Update local state
       const current = this.notifications();
-      const updated = current.filter(n => n.id !== notificationId);
+      const updated = current.filter((n) => n.id !== notificationId);
       this.notifications.set(updated);
       this.updateUnreadCount();
     } catch (_error) {
@@ -425,7 +481,9 @@ export class NotificationsService {
 
   async deleteAllRead() {
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) return;
 
       const { error } = await this.supabase
@@ -438,7 +496,7 @@ export class NotificationsService {
 
       // Update local state
       const current = this.notifications();
-      const updated = current.filter(n => !n.read);
+      const updated = current.filter((n) => !n.read);
       this.notifications.set(updated);
     } catch (_error) {
       console.error('Error deleting read notifications:', _error);

@@ -123,7 +123,7 @@ export class SettlementService {
         valid: missing.length === 0,
         missing,
       };
-    } catch (__error) {
+    } catch {
       return { valid: false, missing: ['check_in', 'check_out'] };
     }
   }
@@ -147,7 +147,7 @@ export class SettlementService {
       // En producción, se podría usar ML/CV para detectar diferencias
 
       return [];
-    } catch (__error) {
+    } catch {
       return [];
     }
   }
@@ -203,7 +203,7 @@ export class SettlementService {
 
       this.currentClaim.set(claim);
       return claim;
-    } catch (__error) {
+    } catch {
       this.error.set('Error al crear el claim');
       return null;
     } finally {
@@ -238,7 +238,7 @@ export class SettlementService {
       );
 
       return eligibility;
-    } catch (__error) {
+    } catch {
       this.error.set('Error al evaluar elegibilidad');
       return null;
     } finally {
@@ -463,7 +463,7 @@ export class SettlementService {
       breakdown.remainingUncovered = remaining;
 
       return { eligibility, estimatedBreakdown: breakdown };
-    } catch (__error) {
+    } catch {
       return { eligibility: null, estimatedBreakdown: null };
     }
   }

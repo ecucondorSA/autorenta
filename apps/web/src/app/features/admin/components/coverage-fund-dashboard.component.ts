@@ -35,7 +35,9 @@ interface WalletLedgerEntry {
     <div class="max-w-6xl mx-auto p-6">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">📊 Fondo de Cobertura</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse mb-2">
+          📊 Fondo de Cobertura
+        </h1>
         <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
           Administración del fondo de franquicias para incidentes
         </p>
@@ -43,11 +45,13 @@ interface WalletLedgerEntry {
 
       <!-- Loading State -->
       @if (loading()) {
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
+        <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-8 text-center">
           <div
-            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default mx-auto mb-4"
           ></div>
-          <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando datos del fondo...</p>
+          <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+            Cargando datos del fondo...
+          </p>
         </div>
       }
 
@@ -60,7 +64,7 @@ interface WalletLedgerEntry {
           <p class="text-red-700 dark:text-red-300">{{ error() }}</p>
           <button
             (click)="loadFundData()"
-            class="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            class="mt-4 px-4 py-2 bg-red-600 text-text-inverse rounded-md hover:bg-red-700"
           >
             Reintentar
           </button>
@@ -72,7 +76,7 @@ interface WalletLedgerEntry {
         <div class="space-y-6">
           <!-- Main Balance Card -->
           <div
-            class="bg-gradient-to-r from-green-600 to-green-700 rounded-lg shadow-lg p-8 text-white"
+            class="bg-gradient-to-r from-success-light to-green-700 rounded-lg shadow-lg p-8 text-text-inverse"
           >
             <div class="flex items-center justify-between">
               <div>
@@ -85,7 +89,7 @@ interface WalletLedgerEntry {
               <div class="text-6xl opacity-80">🛡️</div>
             </div>
 
-            <div class="mt-6 pt-6 border-t border-green-500/30">
+            <div class="mt-6 pt-6 border-t border-success-light/30">
               <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <p class="opacity-75">Última actualización</p>
@@ -103,60 +107,76 @@ interface WalletLedgerEntry {
           @if (stats()) {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <!-- Total Collected -->
-              <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Total Recaudado</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                    Total Recaudado
+                  </p>
                   <span class="text-2xl">📥</span>
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
                   {{ stats()!.total_franchises_collected }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">franquicias cobradas</p>
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                  franquicias cobradas
+                </p>
               </div>
 
               <!-- Total Disbursed -->
-              <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Total Desembolsado</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                    Total Desembolsado
+                  </p>
                   <span class="text-2xl">📤</span>
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
                   {{ stats()!.total_franchises_disbursed }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">franquicias pagadas</p>
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                  franquicias pagadas
+                </p>
               </div>
 
               <!-- Total Entries -->
-              <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Entradas en Ledger</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                    Entradas en Ledger
+                  </p>
                   <span class="text-2xl">📝</span>
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
                   {{ stats()!.total_ledger_entries }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">movimientos totales</p>
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                  movimientos totales
+                </p>
               </div>
 
               <!-- Average Amount -->
-              <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">Promedio Franquicia</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                    Promedio Franquicia
+                  </p>
                   <span class="text-2xl">💰</span>
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
                   {{ formatAmount(stats()!.avg_franchise_amount) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">por incidente</p>
+                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                  por incidente
+                </p>
               </div>
             </div>
           }
 
           <!-- Fund Metadata -->
           @if (fund()!.meta && Object.keys(fund()!.meta).length > 0) {
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow">
               <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">
                   Metadata del Fondo
                 </h2>
               </div>
@@ -169,17 +189,17 @@ interface WalletLedgerEntry {
           }
 
           <!-- Recent Activity -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+          <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow">
             <div
               class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between"
             >
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">
                 Actividad Reciente
               </h2>
               <button
                 (click)="loadRecentActivity()"
                 [disabled]="loadingActivity()"
-                class="text-sm text-blue-600 hover:text-blue-700 disabled:opacity-50"
+                class="text-sm text-cta-default hover:text-cta-default disabled:opacity-50"
               >
                 {{ loadingActivity() ? 'Cargando...' : 'Actualizar' }}
               </button>
@@ -188,12 +208,14 @@ interface WalletLedgerEntry {
             @if (loadingActivity()) {
               <div class="p-8 text-center">
                 <div
-                  class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
+                  class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default mx-auto"
                 ></div>
               </div>
             } @else if (recentActivity().length === 0) {
               <div class="p-8 text-center">
-                <p class="text-gray-500 dark:text-gray-300 dark:text-gray-300">No hay actividad reciente</p>
+                <p class="text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                  No hay actividad reciente
+                </p>
               </div>
             } @else {
               <div class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -205,15 +227,19 @@ interface WalletLedgerEntry {
                           {{ entry.kind === 'franchise_fund' ? '📥' : '📤' }}
                         </span>
                         <div>
-                          <p class="font-medium text-gray-900 dark:text-white">
+                          <p class="font-medium text-gray-900 dark:text-text-inverse">
                             {{ getKindLabel(entry.kind) }}
                           </p>
                           @if (entry.meta && entry.meta['description']) {
-                            <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mt-1">
+                            <p
+                              class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mt-1"
+                            >
                               {{ entry.meta!['description'] }}
                             </p>
                           }
-                          <div class="flex items-center space-x-4 mt-2 text-xs text-gray-500 dark:text-gray-300">
+                          <div
+                            class="flex items-center space-x-4 mt-2 text-xs text-gray-500 dark:text-gray-300"
+                          >
                             <span>Ref: {{ entry.ref }}</span>
                             @if (entry.booking_id) {
                               <span>Reserva: {{ entry.booking_id.substring(0, 8) }}...</span>
@@ -225,7 +251,7 @@ interface WalletLedgerEntry {
                       <div class="text-right">
                         <p
                           class="text-lg font-bold"
-                          [class.text-green-600]="entry.kind === 'franchise_fund'"
+                          [class.text-success-light]="entry.kind === 'franchise_fund'"
                           [class.text-red-600]="entry.kind === 'franchise_user'"
                         >
                           {{ entry.kind === 'franchise_fund' ? '+' : '-'
@@ -249,7 +275,7 @@ interface WalletLedgerEntry {
             <div class="flex flex-wrap gap-3">
               <button
                 (click)="refreshAll()"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
+                class="px-4 py-2 bg-cta-default text-cta-text rounded-md hover:bg-cta-default
                        disabled:opacity-50 disabled:cursor-not-allowed"
                 [disabled]="loading()"
               >
@@ -257,7 +283,7 @@ interface WalletLedgerEntry {
               </button>
 
               <button
-                class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                class="px-4 py-2 bg-gray-600 text-text-inverse rounded-md hover:bg-gray-700"
                 disabled
                 title="Próximamente: Ajustar balance manualmente"
               >
@@ -265,7 +291,7 @@ interface WalletLedgerEntry {
               </button>
 
               <button
-                class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                class="px-4 py-2 bg-gray-600 text-text-inverse rounded-md hover:bg-gray-700"
                 disabled
                 title="Próximamente: Exportar reporte completo"
               >
@@ -351,7 +377,9 @@ export class CoverageFundDashboardComponent implements OnInit {
         total_ledger_entries: entries.length,
         avg_franchise_amount: avgAmount,
       });
-    } catch (_err) { /* Silenced */ }
+    } catch (_err) {
+      /* Silenced */
+    }
   }
 
   async loadRecentActivity(): Promise<void> {
@@ -368,7 +396,9 @@ export class CoverageFundDashboardComponent implements OnInit {
       if (error) throw error;
 
       this.recentActivity.set(data || []);
-    } catch (_err) { /* Silenced */ } finally {
+    } catch (_err) {
+      /* Silenced */
+    } finally {
       this.loadingActivity.set(false);
     }
   }

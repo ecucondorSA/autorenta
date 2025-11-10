@@ -106,6 +106,11 @@ export class WalletPage implements AfterViewInit, OnInit {
   private bannerViewTracked = false;
 
   /**
+   * Controla si ya se cargaron los datos de retiros (lazy loading)
+   */
+  private withdrawalDataLoaded = false;
+
+  /**
    * Control de expansión de la sección de beneficios
    */
   readonly benefitsSectionExpanded = signal(false);
@@ -222,11 +227,11 @@ export class WalletPage implements AfterViewInit, OnInit {
     const status = this.protectedCreditStatus();
 
     if (status === 'pending') {
-      return 'bg-accent-petrol text-white hover:bg-accent-petrol/90';
+      return 'bg-cta-default text-cta-text hover:bg-cta-default/90';
     } else if (status === 'partial') {
-      return 'bg-warning-600 text-white hover:bg-warning-700';
+      return 'bg-warning-600 text-text-inverse hover:bg-warning-700';
     } else {
-      return 'bg-primary-600 text-white hover:bg-primary-700';
+      return 'bg-primary-600 text-text-inverse hover:bg-primary-700';
     }
   });
 
@@ -257,15 +262,21 @@ export class WalletPage implements AfterViewInit, OnInit {
       }
     });
 
-    // Cargar datos al iniciar
-    this.loadWithdrawalData();
-    this.loadWalletAccountNumber();
+    // Lazy load withdrawal data when switching to withdrawals tab
+    effect(() => {
+      if (this.activeTab() === 'withdrawals' && !this.withdrawalDataLoaded) {
+        this.withdrawalDataLoaded = true;
+        void this.loadWithdrawalData();
+      }
+    });
+
+    // Load initial data in parallel for better performance
+    void this.loadInitialData();
   }
 
   async ngOnInit(): Promise<void> {
-    try {
-      await this.walletService.refreshPendingDepositsCount();
-    } catch (__error) { /* Silenced */ }
+    // Additional async initialization if needed
+    // Initial data is already loaded in parallel via constructor
   }
 
   /**
@@ -364,7 +375,24 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       const balanceRefresh = this.balanceCard ? this.balanceCard.loadBalance() : Promise.resolve();
       await Promise.all([balanceRefresh, this.walletService.refreshPendingDepositsCount()]);
-    } catch (__error) { /* Silenced */ }
+    } catch {
+      /* Silenced */
+    }
+  }
+
+  /**
+   * Carga todos los datos iniciales en paralelo para mejor performance
+   */
+  private async loadInitialData(): Promise<void> {
+    try {
+      // Load all initial data in parallel (except withdrawal data which is lazy-loaded)
+      await Promise.all([
+        this.walletService.refreshPendingDepositsCount(),
+        this.loadWalletAccountNumber(),
+      ]);
+    } catch {
+      /* Silenced */
+    }
   }
 
   /**
@@ -376,7 +404,9 @@ export class WalletPage implements AfterViewInit, OnInit {
         this.withdrawalService.getBankAccounts(),
         this.withdrawalService.getWithdrawalRequests(),
       ]);
-    } catch (__error) { /* Silenced */ }
+    } catch {
+      /* Silenced */
+    }
   }
 
   /**
@@ -459,7 +489,10 @@ export class WalletPage implements AfterViewInit, OnInit {
       this.toastService.success('Éxito', 'Solicitud de retiro cancelada');
     } catch (error: unknown) {
       const errorObj = error as { message?: string };
-      this.toastService.error('Error', 'Error al cancelar: ' + (errorObj.message || 'Error desconocido'));
+      this.toastService.error(
+        'Error',
+        'Error al cancelar: ' + (errorObj.message || 'Error desconocido'),
+      );
     }
   }
 
@@ -469,7 +502,9 @@ export class WalletPage implements AfterViewInit, OnInit {
   async handleRefreshWithdrawals(): Promise<void> {
     try {
       await this.withdrawalService.getWithdrawalRequests();
-    } catch (__error) { /* Silenced */ }
+    } catch {
+      /* Silenced */
+    }
   }
 
   /**
@@ -509,7 +544,9 @@ export class WalletPage implements AfterViewInit, OnInit {
       if (profile?.wallet_account_number) {
         this.walletAccountNumber.set(profile.wallet_account_number);
       }
-    } catch (__error) { /* Silenced */ }
+    } catch {
+      /* Silenced */
+    }
   }
 
   /**
@@ -534,7 +571,7 @@ export class WalletPage implements AfterViewInit, OnInit {
       setTimeout(() => {
         this.copied.set(false);
       }, 2000);
-    } catch (__error) {
+    } catch {
       this.toastService.error('Error', 'Error al copiar el número de cuenta');
     }
   }

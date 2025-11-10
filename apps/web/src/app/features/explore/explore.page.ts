@@ -1,4 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,8 +25,16 @@ import { addIcons } from 'ionicons';
 import { optionsOutline, locateOutline } from 'ionicons/icons';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
+import {
+  MapFiltersComponent,
+  FilterState,
+} from '../../shared/components/map-filters/map-filters.component';
+import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
+import { StickyCtaMobileComponent } from '../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
+import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { CarsService } from '../../core/services/cars.service';
 import { Car } from '../../core/models';
+import type { CarMapLocation } from '../../core/services/car-locations.service';
 
 @Component({
   selector: 'app-explore',
@@ -36,19 +53,35 @@ import { Car } from '../../core/models';
     IonSearchbar,
     CarsMapComponent,
     CarCardComponent,
+    MapFiltersComponent,
+    MapDrawerComponent,
   ],
 })
-export class ExplorePage implements OnInit, AfterViewInit {
+export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
   @ViewChild('carouselContainer') carouselContainer?: ElementRef<HTMLDivElement>;
   @ViewChild(CarsMapComponent) carsMap?: CarsMapComponent;
 
+  // Data
   cars: Car[] = [];
   filteredCars: Car[] = [];
   loading = true;
-  selectedCarId: string | null = null;
+  searchQuery = '';
 
-  get carMapLocations() {
+  // State signals
+  readonly selectedCarId = signal<string | null>(null);
+  readonly isDrawerOpen = signal(false);
+  readonly isMobileView = signal(false);
+  readonly currentFilters = signal<FilterState | null>(null);
+  readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
+
+  // Computed
+  readonly selectedCar = computed<CarMapLocation | undefined>(() => {
+    const id = this.selectedCarId();
+    return id ? this.carMapLocations().find((c) => c.carId === id) : undefined;
+  });
+
+  readonly carMapLocations = computed(() => {
     return this.filteredCars.map((car) => {
       const gallery = this.extractPhotoGallery(car);
       return {
@@ -69,20 +102,20 @@ export class ExplorePage implements OnInit, AfterViewInit {
         description: car.description,
       };
     });
-  }
-  searchQuery = '';
+  });
 
-  userLocation: { lat: number; lng: number } | null = null;
   private carouselHovered = false;
 
   constructor(
     private carsService: CarsService,
-    private router: Router
+    private router: Router,
   ) {
     addIcons({ optionsOutline, locateOutline });
   }
 
   ngOnInit() {
+    this.detectMobileView();
+    window.addEventListener('resize', () => this.detectMobileView());
     this.loadCars();
     this.getUserLocation();
   }
@@ -93,13 +126,26 @@ export class ExplorePage implements OnInit, AfterViewInit {
     }
   }
 
+  ngOnDestroy() {
+    window.removeEventListener('resize', () => this.detectMobileView());
+  }
+
+  /**
+   * Detect mobile screen size
+   */
+  private detectMobileView(): void {
+    this.isMobileView.set(window.innerWidth < 768);
+  }
+
   async loadCars() {
     this.loading = true;
     try {
       const cars = await this.carsService.listActiveCars({});
       this.cars = cars;
       this.filteredCars = this.cars;
-    } catch (__error) { /* Silenced */ } finally {
+    } catch {
+      /* Silenced */
+    } finally {
       this.loading = false;
     }
   }
@@ -107,48 +153,103 @@ export class ExplorePage implements OnInit, AfterViewInit {
   async getUserLocation() {
     try {
       const position = await Geolocation.getCurrentPosition();
-      this.userLocation = {
+      this.userLocation.set({
         lat: position.coords.latitude,
         lng: position.coords.longitude,
-      };
-    } catch (__error) { /* Silenced */ }
+      });
+    } catch {
+      /* Silenced */
+    }
   }
 
-  // 🎯 Click en marker del mapa
+  /**
+   * 🎯 Handle map marker click
+   */
   onMapCarSelected(carId: string) {
-    const previousCarId = this.selectedCarId;
-    this.selectedCarId = carId;
-    
+    const previousCarId = this.selectedCarId();
+    this.selectedCarId.set(carId);
+
     // Si es el mismo auto (doble click), navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
       return;
     }
-    
-    // Primera selección: scroll + highlight en carousel
-    this.scrollToCarInCarousel(carId);
+
+    // Abrir drawer en desktop/mobile
+    this.isDrawerOpen.set(true);
+
+    // Scroll carousel en desktop si aplica
+    if (!this.isMobileView()) {
+      this.scrollToCarInCarousel(carId);
+    }
   }
 
-  // 🎯 Click en card del carousel
+  /**
+   * 🎯 Handle carousel card click
+   */
   onCarouselCardSelected(carId: string) {
-    const previousCarId = this.selectedCarId;
-    this.selectedCarId = carId;
-    
+    const previousCarId = this.selectedCarId();
+    this.selectedCarId.set(carId);
+
     // Si es el mismo auto (doble click), navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
       return;
     }
-    
-    // Primera selección: fly-to en mapa
+
+    // Fly-to en mapa
     if (this.carsMap) {
       this.carsMap.flyToCarLocation(carId);
     }
   }
 
-  // Deprecated - usar onMapCarSelected o onCarouselCardSelected
-  onCarSelected(carId: string) {
-    this.selectedCarId = carId;
+  /**
+   * 🎯 Handle filter change from map-filters
+   */
+  onFilterChange(filters: FilterState) {
+    this.currentFilters.set(filters);
+    // TODO: Aplicar filtros a los coches visibles
+    // Por ahora, mantener todos los autos. En producción:
+    // this.filteredCars = applyFilters(this.cars, filters);
+  }
+
+  /**
+   * 🎯 Close drawer
+   */
+  onCloseDrawer() {
+    this.isDrawerOpen.set(false);
+  }
+
+  /**
+   * 🎯 Handle reserve click from drawer
+   */
+  onReserveClick(data: {
+    carId: string;
+    paymentMethod: string;
+    dates?: { start: Date; end: Date };
+  }) {
+    // Navigate to booking checkout with car ID and payment method
+    this.router.navigate(['/bookings/checkout'], {
+      queryParams: {
+        carId: data.carId,
+        paymentMethod: data.paymentMethod,
+      },
+    });
+  }
+
+  /**
+   * 🎯 Handle chat click from drawer
+   */
+  onChatClick(carId: string) {
+    // TODO: Abrir chat con anfitrión
+    console.log('Chat requested for car:', carId);
+  }
+
+  /**
+   * 🎯 Handle sticky CTA click on mobile
+   */
+  onStickyCtaClick() {
+    this.isDrawerOpen.set(true);
   }
 
   onCarouselHover(isHovered: boolean) {
@@ -156,7 +257,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
   }
 
   onUserLocationChange(location: { lat: number; lng: number }) {
-    this.userLocation = location;
+    this.userLocation.set(location);
   }
 
   private scrollToCarInCarousel(carId: string) {
@@ -166,13 +267,13 @@ export class ExplorePage implements OnInit, AfterViewInit {
 
     const carousel = this.carouselContainer.nativeElement;
     const scrollContainer = carousel.querySelector('.map-carousel-scroll') as HTMLElement;
-    
+
     if (!scrollContainer) {
       return;
     }
 
     const card = scrollContainer.querySelector(`[data-car-id="${carId}"]`) as HTMLElement;
-    
+
     if (!card) {
       console.warn('⚠️ Car card not found in carousel:', carId);
       return;
@@ -182,11 +283,11 @@ export class ExplorePage implements OnInit, AfterViewInit {
     const cardLeft = card.offsetLeft;
     const cardWidth = card.offsetWidth;
     const scrollWidth = scrollContainer.offsetWidth;
-    const scrollPosition = cardLeft - (scrollWidth / 2) + (cardWidth / 2);
+    const scrollPosition = cardLeft - scrollWidth / 2 + cardWidth / 2;
 
     scrollContainer.scrollTo({
       left: Math.max(0, scrollPosition),
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
 
     // Highlight temporal
@@ -212,18 +313,20 @@ export class ExplorePage implements OnInit, AfterViewInit {
   }
 
   centerOnUser() {
-    if (!this.userLocation) {
+    const loc = this.userLocation();
+    if (!loc) {
       // Intentar obtener la ubicación nuevamente
       this.getUserLocation().then(() => {
-        if (this.userLocation && this.carsMap) {
-          this.carsMap.flyToLocation(this.userLocation.lat, this.userLocation.lng);
+        const newLoc = this.userLocation();
+        if (newLoc && this.carsMap) {
+          this.carsMap.flyToLocation(newLoc.lat, newLoc.lng);
         }
       });
       return;
     }
-    
+
     if (this.carsMap) {
-      this.carsMap.flyToLocation(this.userLocation.lat, this.userLocation.lng);
+      this.carsMap.flyToLocation(loc.lat, loc.lng);
     }
   }
 
@@ -233,7 +336,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       return [];
     }
     return rawPhotos
-      .map((photo) => (typeof photo === 'string' ? photo : photo?.url ?? null))
+      .map((photo) => (typeof photo === 'string' ? photo : (photo?.url ?? null)))
       .filter((url): url is string => typeof url === 'string' && url.length > 0);
   }
 }

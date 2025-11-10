@@ -1,5 +1,8 @@
 // Mock implementation for isAvailable for testing purposes
-const isAvailable = (existingBookings: { start: string; end: string }[], newBooking: { start: string; end: string }): boolean => {
+const isAvailable = (
+  existingBookings: { start: string; end: string }[],
+  newBooking: { start: string; end: string },
+): boolean => {
   const newStart = new Date(newBooking.start).getTime();
   const newEnd = new Date(newBooking.end).getTime();
 

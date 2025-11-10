@@ -14,13 +14,24 @@ import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
-import { ConfirmAndReleaseResponse } from '../../../core/services/booking-confirmation.service';
+import {
+  BookingConfirmationService,
+  ConfirmAndReleaseResponse,
+} from '../../../core/services/booking-confirmation.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { InsuranceService } from '../../../core/services/insurance.service';
 import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insurance.model';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
+import { DisputeFormComponent } from '../../../shared/components/dispute-form/dispute-form.component';
+import { DisputesListComponent } from '../../../shared/components/disputes-list/disputes-list.component';
+import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
+import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
+import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
+import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
+import { DistanceRiskTierBadgeComponent } from '../../../shared/components/distance-risk-tier-badge/distance-risk-tier-badge.component';
+import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 
 /**
  * BookingDetailPage
@@ -47,6 +58,14 @@ import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-
     BookingStatusComponent,
     ReviewManagementComponent,
     DepositStatusBadgeComponent,
+    DisputeFormComponent,
+    DisputesListComponent,
+    RefundRequestComponent,
+    BookingContractComponent,
+    RefundStatusComponent,
+    ShareButtonComponent,
+    DistanceRiskTierBadgeComponent,
+    BookingConfirmationTimelineComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -58,6 +77,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly paymentsService = inject(PaymentsService);
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
+  private readonly confirmationService = inject(BookingConfirmationService);
   private readonly metaService = inject(MetaService);
   private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly fgoService = inject(FgoV1_1Service);
@@ -192,6 +212,42 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return claims.length > 0 ? claims[0] : null;
   });
 
+  // Disputes and refunds
+  showDisputeForm = signal(false);
+  showRefundForm = signal(false);
+
+  readonly canCreateDispute = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    // Can create dispute for active or completed bookings
+    return booking.status === 'in_progress' || booking.status === 'completed';
+  });
+
+  readonly canRequestRefund = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    // Can request refund for completed or cancelled bookings
+    return booking.status === 'completed' || booking.status === 'cancelled';
+  });
+
+  onDisputeCreated(): void {
+    // Reload disputes if needed
+    this.showDisputeForm.set(false);
+  }
+
+  onRefundRequested(): void {
+    // Reload booking to get updated refund status
+    const bookingId = this.booking()?.id;
+    if (bookingId) {
+      this.bookingsService.getBookingById(bookingId).then((updated) => {
+        if (updated) {
+          this.booking.set(updated);
+        }
+      });
+    }
+    this.showRefundForm.set(false);
+  }
+
   // Computed properties para acciones de check-in/check-out
   readonly canPerformCheckIn = computed(() => {
     const booking = this.booking();
@@ -211,8 +267,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const booking = this.booking();
     if (!booking || !this.isOwner()) return false;
     // Owner can report damage after vehicle return (completed status or returned_at is set)
-    const canReport = (booking.status === 'completed' || booking.returned_at !== null)
-                      && !booking.owner_reported_damages;
+    const canReport =
+      (booking.status === 'completed' || booking.returned_at !== null) &&
+      !booking.owner_reported_damages;
     return canReport;
   });
 
@@ -305,7 +362,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         const ownerFullName = owner?.full_name || 'el anfitrión';
         this.carOwnerName.set(ownerFullName);
       }
-    } catch (__error) {}
+    } catch (__error) {
+      // Silently ignore errors loading owner name
+    }
   }
 
   private async loadInspections(): Promise<void> {
@@ -344,6 +403,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   getClaimStatusColor(status: InsuranceClaim['status']): string {
     const colorMap = {
       reported: 'orange',
+      pending: 'yellow',
+      investigating: 'purple',
       under_review: 'blue',
       approved: 'green',
       rejected: 'red',
@@ -402,6 +463,19 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     }).format(amount);
   }
 
+  getBookingDetailsText(): string {
+    const booking = this.booking();
+    if (!booking) return 'Mi reserva en Autorentar';
+
+    const carInfo = `${booking.car_brand} ${booking.car_model}`;
+    const dates =
+      booking.start_at && booking.end_at
+        ? `${this.formatDateTime(booking.start_at)} - ${this.formatDateTime(booking.end_at)}`
+        : '';
+
+    return `Reserva: ${carInfo}${dates ? ` (${dates})` : ''}`;
+  }
+
   private getTotalCents(booking: Booking): number {
     if (booking.breakdown?.total_cents) {
       return booking.breakdown.total_cents;
@@ -456,5 +530,61 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   handleConfirmationError(errorMessage: string): void {
     alert(`❌ Error: ${errorMessage}`);
+  }
+
+  async handleTimelineAction(event: {
+    action: 'owner_confirm' | 'renter_confirm' | 'mark_returned';
+    bookingId: string;
+  }): Promise<void> {
+    switch (event.action) {
+      case 'owner_confirm':
+        this.scrollToSection('owner-confirmation-section');
+        break;
+      case 'renter_confirm':
+        this.scrollToSection('renter-confirmation-section');
+        break;
+      case 'mark_returned':
+        await this.handleMarkAsReturned(event.bookingId);
+        break;
+      default:
+        console.warn('Acción de timeline desconocida', event);
+    }
+  }
+
+  private scrollToSection(elementId: string): void {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  private async handleMarkAsReturned(bookingId: string): Promise<void> {
+    const userId = this.authService.session$()?.user?.id;
+    if (!userId) {
+      alert('Necesitas iniciar sesión para continuar.');
+      return;
+    }
+
+    const confirmReturn = confirm('¿Confirmás que devolviste el vehículo al propietario?');
+    if (!confirmReturn) {
+      return;
+    }
+
+    try {
+      await this.confirmationService.markAsReturned({
+        booking_id: bookingId,
+        returned_by: userId,
+      });
+
+      const updatedBooking = await this.bookingsService.getBookingById(bookingId);
+      if (updatedBooking) {
+        this.booking.set(updatedBooking);
+      }
+
+      alert('Marcaste la reserva como devuelta. Gracias por completar este paso.');
+    } catch (error) {
+      console.error('Error al marcar la reserva como devuelta', error);
+      alert('No pudimos marcar la devolución. Intentalo nuevamente en unos minutos.');
+    }
   }
 }

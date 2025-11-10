@@ -12,7 +12,7 @@
   border-radius: 0;
   box-shadow: none;
   overflow: hidden;
-  
+
   /* Desktop: bordes redondeados */
   @media (min-width: 768px) {
     border-radius: 1rem;
@@ -21,7 +21,8 @@
 }
 
 .mapboxgl-canvas {
-  filter: brightness(0.95) contrast(1.1) saturate(0.95);
+  filter: brightness(var(--map-canvas-brightness, 0.95)) contrast(var(--map-canvas-contrast, 1.1))
+    saturate(var(--map-canvas-saturate, 0.95));
 }
 
 /* ============================================================================
@@ -29,23 +30,23 @@
    ============================================================================ */
 
 .mapboxgl-control-container .mapboxgl-ctrl-group {
-  background-color: rgba(20, 20, 20, 0.85);
+  background-color: var(--map-control-bg, rgba(20, 20, 20, 0.85));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 1px rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--map-control-shadow, 0 4px 12px rgba(0, 0, 0, 0.3));
+  border: 1px solid var(--map-control-border, rgba(255, 255, 255, 0.1));
 }
 
 .mapboxgl-ctrl-group button {
-  color: #f0f0f0;
+  color: var(--map-control-text, #f0f0f0);
   background: transparent;
   transition: all 0.2s ease;
 }
 
 .mapboxgl-ctrl-group button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: var(--map-control-hover-bg, rgba(255, 255, 255, 0.1));
+  color: var(--map-control-text, #ffffff);
 }
 
 .mapboxgl-ctrl-group button:active {
@@ -79,7 +80,7 @@
   border-radius: 50%;
   background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
   border: 3px solid white;
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(79, 70, 229, 0.4),
     0 8px 16px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -93,14 +94,14 @@
 
 .car-marker:hover {
   transform: scale(1.2);
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(79, 70, 229, 0.6),
     0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .car-marker--active {
   transform: scale(1.25);
-  box-shadow: 
+  box-shadow:
     0 0 0 4px rgba(79, 70, 229, 0.3),
     0 4px 12px rgba(79, 70, 229, 0.6),
     0 8px 24px rgba(0, 0, 0, 0.3);
@@ -168,12 +169,7 @@
 .marker-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(0, 0, 0, 0.4) 100%
-  );
+  background: linear-gradient(180deg, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
   pointer-events: none;
 }
 
@@ -191,23 +187,23 @@
 
 /* Bounce animation on selection */
 @keyframes marker-bounce {
-  0% { 
-    transform: translateY(0) scale(1); 
+  0% {
+    transform: translateY(0) scale(1);
   }
-  25% { 
-    transform: translateY(-20px) scale(1.25) rotate(3deg); 
+  25% {
+    transform: translateY(-20px) scale(1.25) rotate(3deg);
   }
-  40% { 
-    transform: translateY(-15px) scale(1.2) rotate(-3deg); 
+  40% {
+    transform: translateY(-15px) scale(1.2) rotate(-3deg);
   }
-  60% { 
-    transform: translateY(-22px) scale(1.3) rotate(2deg); 
+  60% {
+    transform: translateY(-22px) scale(1.3) rotate(2deg);
   }
-  80% { 
-    transform: translateY(-10px) scale(1.15) rotate(-1deg); 
+  80% {
+    transform: translateY(-10px) scale(1.15) rotate(-1deg);
   }
-  100% { 
-    transform: translateY(0) scale(1) rotate(0); 
+  100% {
+    transform: translateY(0) scale(1) rotate(0);
   }
 }
 
@@ -239,12 +235,12 @@
   .car-marker-photo {
     width: 60px;
   }
-  
+
   .marker-image {
     width: 60px;
     height: 48px;
   }
-  
+
   .marker-price {
     font-size: 11px;
     padding: 2px 6px;
@@ -252,13 +248,14 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
-    box-shadow: 
+  0%,
+  100% {
+    box-shadow:
       0 0 0 4px rgba(79, 70, 229, 0.3),
       0 4px 12px rgba(79, 70, 229, 0.6);
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 0 0 8px rgba(79, 70, 229, 0.2),
       0 4px 16px rgba(79, 70, 229, 0.8);
   }
@@ -269,7 +266,7 @@
   background: white;
   border-radius: 20px;
   padding: 6px 12px;
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.15),
     0 1px 3px rgba(0, 0, 0, 0.1);
   font-weight: 600;
@@ -281,7 +278,7 @@
 
 .car-marker-price:hover {
   border-color: #4f46e5;
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(79, 70, 229, 0.3),
     0 2px 6px rgba(0, 0, 0, 0.15);
   transform: scale(1.08);
@@ -301,20 +298,21 @@
   border-radius: 50%;
   background: #3b82f6;
   border: 4px solid white;
-  box-shadow: 
+  box-shadow:
     0 0 0 4px rgba(59, 130, 246, 0.2),
     0 2px 8px rgba(0, 0, 0, 0.2);
   animation: pulse-blue 2s ease-in-out infinite;
 }
 
 @keyframes pulse-blue {
-  0%, 100% {
-    box-shadow: 
+  0%,
+  100% {
+    box-shadow:
       0 0 0 4px rgba(59, 130, 246, 0.2),
       0 2px 8px rgba(0, 0, 0, 0.2);
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 0 0 8px rgba(59, 130, 246, 0.1),
       0 2px 12px rgba(0, 0, 0, 0.3);
   }
@@ -330,17 +328,15 @@
 }
 
 .mapboxgl-popup-content {
-  background: rgba(20, 20, 20, 0.95);
+  background: var(--map-popup-bg, rgba(20, 20, 20, 0.95));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: #f0f0f0;
+  color: var(--map-popup-text, #f0f0f0);
   font-size: 0.9rem;
   border-radius: 12px;
   padding: 12px 16px;
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.4),
-    0 0 1px rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--map-popup-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+  border: 1px solid var(--map-popup-border, rgba(255, 255, 255, 0.1));
   border-top: 3px solid #4f46e5;
 }
 
@@ -385,7 +381,7 @@
   background-color: rgba(40, 40, 40, 0.95) !important;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.3),
     0 0 1px rgba(255, 255, 255, 0.1) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -475,34 +471,36 @@
 
 @media (prefers-color-scheme: light) {
   .mapboxgl-canvas {
-    filter: brightness(1) contrast(1) saturate(1);
+    filter: brightness(var(--map-canvas-brightness, 1)) contrast(var(--map-canvas-contrast, 1))
+      saturate(var(--map-canvas-saturate, 1));
   }
-  
+
   .mapboxgl-control-container .mapboxgl-ctrl-group {
-    background-color: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--map-control-bg, rgba(255, 255, 255, 0.95));
+    border: 1px solid var(--map-control-border, rgba(0, 0, 0, 0.1));
   }
-  
+
   .mapboxgl-ctrl-group button {
-    color: #1f2937;
+    color: var(--map-control-text, #1f2937);
   }
-  
+
   .mapboxgl-ctrl-group button:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--map-control-hover-bg, rgba(0, 0, 0, 0.05));
   }
-  
+
   .mapboxgl-popup-content {
-    background: white;
-    color: #1f2937;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: var(--map-popup-bg, white);
+    color: var(--map-popup-text, #1f2937);
+    border: 1px solid var(--map-popup-border, rgba(0, 0, 0, 0.1));
   }
-  
+
   .mapboxgl-popup-content h3 {
-    color: #111827;
+    color: var(--map-popup-text, #111827);
   }
-  
+
   .mapboxgl-popup-content p {
-    color: #6b7280;
+    color: var(--map-popup-text, #6b7280);
+    opacity: 0.8;
   }
 }
 
@@ -515,31 +513,31 @@
     top: 70px; /* Below floating search */
     right: 12px;
   }
-  
+
   .mapboxgl-ctrl-group {
     border-radius: 10px;
   }
-  
+
   .mapboxgl-ctrl-group button {
     width: 36px;
     height: 36px;
   }
-  
+
   .car-marker {
     width: 36px;
     height: 36px;
     font-size: 10px;
   }
-  
+
   .car-marker-price {
     padding: 5px 10px;
     font-size: 12px;
   }
-  
+
   .mapboxgl-popup {
     max-width: 280px;
   }
-  
+
   .mapboxgl-popup-content {
     padding: 10px 14px;
     font-size: 0.85rem;
@@ -601,7 +599,7 @@
 }
 
 .map-carousel-heading__pill.recommended::before {
-  content: "🏆";
+  content: '🏆';
   font-size: 16px;
   margin-right: 4px;
 }
@@ -628,7 +626,7 @@
 }
 
 .map-carousel-container:has(.map-carousel-heading__pill.recommended) .map-carousel-card::before {
-  content: "⭐";
+  content: '⭐';
   position: absolute;
   top: 8px;
   right: 8px;
@@ -648,7 +646,9 @@
 
 /* Enhanced hover for recommended cards */
 .map-carousel-container:has(.map-carousel-heading__pill.recommended) .map-carousel-card:hover {
-  box-shadow: 0 12px 40px rgba(245, 158, 11, 0.3), 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 12px 40px rgba(245, 158, 11, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* Top Rated card enhancements */
@@ -659,7 +659,7 @@
 }
 
 .map-carousel-card-wrapper.top-rated .map-carousel-card::before {
-  content: "👑";
+  content: '👑';
   position: absolute;
   top: 8px;
   right: 8px;
@@ -684,6 +684,8 @@
 }
 
 .map-carousel-card-wrapper.top-rated:hover .map-carousel-card {
-  box-shadow: 0 16px 48px rgba(245, 158, 11, 0.5), 0 12px 40px rgba(0, 0, 0, 0.3) !important;
+  box-shadow:
+    0 16px 48px rgba(245, 158, 11, 0.5),
+    0 12px 40px rgba(0, 0, 0, 0.3) !important;
   transform: translateY(-6px) scale(1.03) !important;
 }

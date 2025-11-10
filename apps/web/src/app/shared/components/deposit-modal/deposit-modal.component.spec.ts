@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +15,9 @@ describe('DepositModalComponent', () => {
 
   beforeEach(async () => {
     mockWalletService = {
-      initiateDeposit: jasmine.createSpy('initiateDeposit').and.returnValue(of({ success: true, payment_url: 'http://success.com' })),
+      initiateDeposit: jasmine
+        .createSpy('initiateDeposit')
+        .and.returnValue(of({ success: true, payment_url: 'http://success.com' })),
     };
 
     mockExchangeRateService = {
@@ -79,7 +80,9 @@ describe('DepositModalComponent', () => {
     });
 
     it('should set formError on initiateDeposit failure', async () => {
-      mockWalletService.initiateDeposit.and.returnValue(of({ success: false, message: 'Error message' }));
+      mockWalletService.initiateDeposit.and.returnValue(
+        of({ success: false, message: 'Error message' }),
+      );
 
       component.arsAmount.set(5000);
 
@@ -94,7 +97,7 @@ describe('DepositModalComponent', () => {
 
     it('should handle MERCADOPAGO_ERROR and suggest bank transfer', async () => {
       mockWalletService.initiateDeposit.and.returnValue(
-        throwError(() => ({ code: 'MERCADOPAGO_ERROR' }))
+        throwError(() => ({ code: 'MERCADOPAGO_ERROR' })),
       );
 
       component.arsAmount.set(5000);

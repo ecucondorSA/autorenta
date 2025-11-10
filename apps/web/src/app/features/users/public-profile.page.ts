@@ -62,17 +62,15 @@ export class PublicProfilePage {
                 switchMap((cars) => {
                   return from(this.reviewsService.getReviewsForOwner(userId)).pipe(
                     switchMap((ownerReviews) => {
-                      return from(this.reviewsService
-                        .getReviewsForRenter(userId))
-                        .pipe(
-                          map((renterReviews) => ({
-                            profile,
-                            stats,
-                            cars,
-                            ownerReviews,
-                            renterReviews,
-                          })),
-                        );
+                      return from(this.reviewsService.getReviewsForRenter(userId)).pipe(
+                        map((renterReviews) => ({
+                          profile,
+                          stats,
+                          cars,
+                          ownerReviews,
+                          renterReviews,
+                        })),
+                      );
                     }),
                   );
                 }),
@@ -179,9 +177,9 @@ export class PublicProfilePage {
 
   getVerificationBadgeClass(): string {
     if (this.profile()?.is_email_verified && this.profile()?.is_phone_verified) {
-      return 'bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-200 border-green-200 dark:border-green-400/40';
+      return 'bg-success-light/20 dark:bg-success-light/20 text-success-light dark:text-success-light border-success-light/40 dark:border-success-light/40';
     }
-    return 'bg-ash-gray/20 dark:bg-slate-deep/40 text-charcoal-medium dark:text-pearl-light/60 border-ash-gray/30 dark:border-slate-deep/60';
+    return 'bg-ash-gray/20 dark:bg-surface-secondary/40 text-text-secondary dark:text-text-secondary/60 border-ash-gray/30 dark:border-slate-deep/60';
   }
 
   getRatingStars(rating: number): string[] {

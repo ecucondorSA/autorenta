@@ -1,0 +1,318 @@
+<!-- 🎯 MAP FILTERS - Desktop & Mobile Responsive -->
+
+<!-- Desktop: Floating Chips Top-Left -->
+<div
+  *ngIf="!isMobile()"
+  class="map-filters-desktop fixed top-safe-top left-4 z-20 flex gap-2 pt-16"
+>
+  <!-- Dates Chip -->
+  <button
+    (click)="togglePanel('dates')"
+    [class.active]="dateRange() !== null"
+    class="filter-chip"
+    type="button"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+      />
+    </svg>
+    <span class="text-xs font-semibold">Fechas</span>
+    <span *ngIf="dateRange()" class="badge">✓</span>
+  </button>
+
+  <!-- Price Chip -->
+  <button
+    (click)="togglePanel('price')"
+    [class.active]="priceRange() !== null"
+    class="filter-chip"
+    type="button"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <span class="text-xs font-semibold">Precio</span>
+    <span *ngIf="priceRange()" class="badge">✓</span>
+  </button>
+
+  <!-- Type Chip -->
+  <button
+    (click)="togglePanel('type')"
+    [class.active]="vehicleTypes().length > 0"
+    class="filter-chip"
+    type="button"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M16 17v-2m-4 0v-2m-4 0v-2m0 10h12a2 2 0 002-2V9a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2z"
+      />
+    </svg>
+    <span class="text-xs font-semibold">Tipo</span>
+    <span *ngIf="vehicleTypes().length > 0" class="badge">{{ vehicleTypes().length }}</span>
+  </button>
+
+  <!-- Immediate Availability Chip -->
+  <button
+    (click)="toggleImmediate()"
+    [class.active]="immediateOnly()"
+    class="filter-chip"
+    type="button"
+    title="Solo autos disponibles hoy"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M13 10V3L4 14h7v7l9-11h-7z"
+      />
+    </svg>
+    <span class="text-xs font-semibold">Hoy</span>
+  </button>
+
+  <!-- Clear Filters Button -->
+  <button
+    *ngIf="activeFilterCount() > 0"
+    (click)="clearAllFilters()"
+    class="filter-chip filter-chip--clear"
+    type="button"
+    title="Limpiar todos los filtros"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+</div>
+
+<!-- Popover Panels (Desktop) -->
+<div *ngIf="!isMobile() && openPanel()" class="fixed inset-0 z-30" (click)="closePanel()">
+  <!-- Dates Panel -->
+  <div *ngIf="openPanel() === 'dates'" class="filter-panel" (click)="$event.stopPropagation()">
+    <app-date-range-picker
+      [initialFrom]="dateRange()?.start ? dateRange()!.start.toISOString().split('T')[0] : null"
+      [initialTo]="dateRange()?.end ? dateRange()!.end.toISOString().split('T')[0] : null"
+      (rangeChange)="onDateRangePickerChange($event)"
+    ></app-date-range-picker>
+  </div>
+
+  <!-- Price Panel -->
+  <div *ngIf="openPanel() === 'price'" class="filter-panel" (click)="$event.stopPropagation()">
+    <div class="p-4 space-y-4">
+      <h3 class="text-sm font-semibold text-text-primary">Rango de precio</h3>
+
+      <div class="space-y-2">
+        <label class="block">
+          <span class="text-xs text-text-secondary">Mínimo</span>
+          <input
+            type="range"
+            [value]="priceRange()?.min || priceMin()"
+            [min]="priceMin()"
+            [max]="priceMax()"
+            class="w-full"
+            (change)="
+              onPriceRangeChange({
+                min: +$any($event.target).value,
+                max: priceRange()?.max || priceMax(),
+              })
+            "
+          />
+          <div class="text-sm font-semibold text-cta-default">
+            {{ formatPrice(priceRange()?.min || priceMin()) }}
+          </div>
+        </label>
+
+        <label class="block">
+          <span class="text-xs text-text-secondary">Máximo</span>
+          <input
+            type="range"
+            [value]="priceRange()?.max || priceMax()"
+            [min]="priceMin()"
+            [max]="priceMax()"
+            class="w-full"
+            (change)="
+              onPriceRangeChange({
+                min: priceRange()?.min || priceMin(),
+                max: +$any($event.target).value,
+              })
+            "
+          />
+          <div class="text-sm font-semibold text-cta-default">
+            {{ formatPrice(priceRange()?.max || priceMax()) }}
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle Type Panel -->
+  <div *ngIf="openPanel() === 'type'" class="filter-panel" (click)="$event.stopPropagation()">
+    <div class="p-4 space-y-3">
+      <h3 class="text-sm font-semibold text-text-primary">Tipo de vehículo</h3>
+
+      <div class="space-y-2">
+        <label
+          *ngFor="let option of vehicleTypeOptions"
+          class="flex items-center gap-2 cursor-pointer"
+        >
+          <input
+            type="checkbox"
+            [checked]="vehicleTypes().includes(option.id)"
+            (change)="toggleVehicleType(option.id)"
+            class="w-4 h-4 rounded"
+          />
+          <span class="text-sm text-text-primary">{{ option.label }}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile: Inline Filters Under Searchbar -->
+<div
+  *ngIf="isMobile()"
+  class="map-filters-mobile sticky top-safe-top z-15 bg-surface-raised dark:bg-surface-secondary shadow-sm border-b border-border-default dark:border-gray-600 p-3"
+>
+  <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+    <!-- Dates Chip -->
+    <button
+      (click)="togglePanel('dates')"
+      [class.active]="dateRange() !== null"
+      class="filter-chip filter-chip--mobile"
+      type="button"
+    >
+      <span class="text-xs font-semibold whitespace-nowrap">📅 Fechas</span>
+      <span *ngIf="dateRange()" class="badge">✓</span>
+    </button>
+
+    <!-- Price Chip -->
+    <button
+      (click)="togglePanel('price')"
+      [class.active]="priceRange() !== null"
+      class="filter-chip filter-chip--mobile"
+      type="button"
+    >
+      <span class="text-xs font-semibold whitespace-nowrap">💰 Precio</span>
+      <span *ngIf="priceRange()" class="badge">✓</span>
+    </button>
+
+    <!-- Type Chip -->
+    <button
+      (click)="togglePanel('type')"
+      [class.active]="vehicleTypes().length > 0"
+      class="filter-chip filter-chip--mobile"
+      type="button"
+    >
+      <span class="text-xs font-semibold whitespace-nowrap">🚗 Tipo</span>
+      <span *ngIf="vehicleTypes().length > 0" class="badge">{{ vehicleTypes().length }}</span>
+    </button>
+
+    <!-- Immediate Chip -->
+    <button
+      (click)="toggleImmediate()"
+      [class.active]="immediateOnly()"
+      class="filter-chip filter-chip--mobile"
+      type="button"
+    >
+      <span class="text-xs font-semibold whitespace-nowrap">⚡ Hoy</span>
+    </button>
+
+    <!-- Clear Button -->
+    <button
+      *ngIf="activeFilterCount() > 0"
+      (click)="clearAllFilters()"
+      class="filter-chip filter-chip--mobile filter-chip--clear"
+      type="button"
+    >
+      <span class="text-xs font-semibold whitespace-nowrap">Limpiar</span>
+    </button>
+  </div>
+
+  <!-- Inline Panels (Mobile) -->
+  <div
+    *ngIf="openPanel()"
+    class="mt-2 p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600"
+  >
+    <!-- Dates Panel Mobile -->
+    <div *ngIf="openPanel() === 'dates'">
+      <app-date-range-picker
+        [initialFrom]="dateRange()?.start ? dateRange()!.start.toISOString().split('T')[0] : null"
+        [initialTo]="dateRange()?.end ? dateRange()!.end.toISOString().split('T')[0] : null"
+        (rangeChange)="onDateRangePickerChange($event)"
+      ></app-date-range-picker>
+    </div>
+
+    <!-- Price Panel Mobile -->
+    <div *ngIf="openPanel() === 'price'" class="space-y-2">
+      <h4 class="text-xs font-semibold text-text-primary">Rango de precio</h4>
+      <label class="block">
+        <input
+          type="range"
+          [value]="priceRange()?.min || priceMin()"
+          [min]="priceMin()"
+          [max]="priceMax()"
+          class="w-full"
+          (change)="
+            onPriceRangeChange({
+              min: +$any($event.target).value,
+              max: priceRange()?.max || priceMax(),
+            })
+          "
+        />
+        <div class="text-xs font-semibold text-cta-default">
+          {{ formatPrice(priceRange()?.min || priceMin()) }}
+        </div>
+      </label>
+      <label class="block">
+        <input
+          type="range"
+          [value]="priceRange()?.max || priceMax()"
+          [min]="priceMin()"
+          [max]="priceMax()"
+          class="w-full"
+          (change)="
+            onPriceRangeChange({
+              min: priceRange()?.min || priceMin(),
+              max: +$any($event.target).value,
+            })
+          "
+        />
+        <div class="text-xs font-semibold text-cta-default">
+          {{ formatPrice(priceRange()?.max || priceMax()) }}
+        </div>
+      </label>
+    </div>
+
+    <!-- Vehicle Type Panel Mobile -->
+    <div *ngIf="openPanel() === 'type'" class="space-y-2">
+      <h4 class="text-xs font-semibold text-text-primary">Tipo de vehículo</h4>
+      <label
+        *ngFor="let option of vehicleTypeOptions"
+        class="flex items-center gap-2 cursor-pointer"
+      >
+        <input
+          type="checkbox"
+          [checked]="vehicleTypes().includes(option.id)"
+          (change)="toggleVehicleType(option.id)"
+          class="w-4 h-4 rounded"
+        />
+        <span class="text-xs text-text-primary">{{ option.label }}</span>
+      </label>
+    </div>
+  </div>
+</div>

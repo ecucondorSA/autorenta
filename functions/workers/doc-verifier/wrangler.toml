@@ -1,6 +1,7 @@
 name = "autorent-doc-verifier"
 main = "src/index.ts"
 compatibility_date = "2024-10-23"
+account_id = "5b448192fe4b369642b68ad8f53a7603"
 
 # AI binding para Cloudflare Workers AI
 [ai]

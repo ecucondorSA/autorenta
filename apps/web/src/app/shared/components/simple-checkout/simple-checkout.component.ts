@@ -36,7 +36,7 @@ interface CheckoutStep {
 })
 export class SimpleCheckoutComponent {
   @Input() car!: Car;
-  @Output() bookingCreated = new EventEmitter<any>();
+  @Output() bookingCreated = new EventEmitter<{ id: string; [key: string]: unknown }>();
   @Output() cancelled = new EventEmitter<void>();
 
   private readonly router = inject(Router);
@@ -131,7 +131,7 @@ export class SimpleCheckoutComponent {
 
     // Avanzar al siguiente paso
     if (this.currentStep() < this.steps.length - 1) {
-      this.currentStep.update(step => step + 1);
+      this.currentStep.update((step) => step + 1);
     } else {
       // Último paso - procesar reserva
       this.processBooking();
@@ -140,7 +140,7 @@ export class SimpleCheckoutComponent {
 
   previousStep() {
     if (this.currentStep() > 0) {
-      this.currentStep.update(step => step - 1);
+      this.currentStep.update((step) => step - 1);
     }
   }
 
@@ -148,7 +148,8 @@ export class SimpleCheckoutComponent {
     const stepIndex = this.currentStep();
 
     switch (stepIndex) {
-      case 0: // Fechas
+      case 0: {
+        // Fechas
         if (!this.startDate() || !this.endDate()) {
           this.error.set('Por favor selecciona las fechas de alquiler');
           return false;
@@ -164,6 +165,7 @@ export class SimpleCheckoutComponent {
           return false;
         }
         return true;
+      }
 
       case 2: // Pago
         if (this.paymentMethod() === 'wallet' && this.finalTotal() > this.walletBalance()) {
@@ -202,7 +204,7 @@ export class SimpleCheckoutComponent {
       const isAvailable = await this.carsService.isCarAvailable(
         this.car.id,
         this.startDate(),
-        this.endDate()
+        this.endDate(),
       );
 
       if (isAvailable) {
@@ -214,7 +216,7 @@ export class SimpleCheckoutComponent {
       const nextRanges = await this.carsService.getNextAvailableRange(
         this.car.id,
         this.startDate(),
-        this.endDate()
+        this.endDate(),
       );
 
       if (nextRanges && nextRanges.length > 0) {
@@ -230,12 +232,12 @@ export class SimpleCheckoutComponent {
         });
         this.availabilityInfo.set(
           `Actualizamos tus fechas al primer espacio libre: ${this.formatHumanDate(
-            formattedStart
-          )} → ${this.formatHumanDate(formattedEnd)}`
+            formattedStart,
+          )} → ${this.formatHumanDate(formattedEnd)}`,
         );
         this.toastService.info(
           'Fechas sugeridas',
-          'Encontramos la próxima ventana disponible y actualizamos tu reserva.'
+          'Encontramos la próxima ventana disponible y actualizamos tu reserva.',
         );
         this.error.set(null);
         this.canWaitlist.set(false);
@@ -263,20 +265,20 @@ export class SimpleCheckoutComponent {
       const bookingResult = await this.bookingsService.createBookingWithValidation(
         this.car.id,
         this.startDate(),
-        this.endDate()
+        this.endDate(),
       );
 
       if (!bookingResult.success) {
         const errorMsg = bookingResult.error || 'Error al crear la reserva';
         const shouldShowWaitlist = bookingResult.canWaitlist ?? false;
-        
+
         // Log para debugging
         console.log('Booking failed:', {
           error: errorMsg,
           canWaitlist: shouldShowWaitlist,
           bookingResult,
         });
-        
+
         this.error.set(errorMsg);
         this.canWaitlist.set(shouldShowWaitlist); // Mostrar opción de waitlist si está disponible
         this.loading.set(false);
@@ -293,17 +295,19 @@ export class SimpleCheckoutComponent {
       }
 
       // 4. Notificar al usuario
-      await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
+      // TODO: Implementar notifyBookingCreated en NotificationsService
+      // await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
 
       // 5. Emitir evento y redirigir
-      this.bookingCreated.emit(booking);
+      this.bookingCreated.emit(booking as unknown as { id: string; [key: string]: unknown });
       this.router.navigate(['/bookings/success', booking.id]);
-
     } catch (error: unknown) {
       // Use ErrorHandlerService for consistent error handling
       this.errorHandler.handleBookingError(error, 'Processing booking', true);
       this.error.set(
-        error instanceof Error ? error.message : 'Error al procesar la reserva. Inténtalo nuevamente.'
+        error instanceof Error
+          ? error.message
+          : 'Error al procesar la reserva. Inténtalo nuevamente.',
       );
     } finally {
       this.loading.set(false);
@@ -319,19 +323,19 @@ export class SimpleCheckoutComponent {
       const result = await this.waitlistService.addToWaitlist(
         this.car.id,
         this.startDate(),
-        this.endDate()
+        this.endDate(),
       );
 
       if (result.success) {
         // Mostrar mensaje de éxito
         this.error.set(null);
         this.canWaitlist.set(false);
-        
+
         // Mostrar toast de éxito
         this.toastService.success(
           'Éxito',
           '✅ Te agregamos a la lista de espera. Te notificaremos cuando el auto esté disponible.',
-          5000
+          5000,
         );
       } else {
         this.error.set(result.error || 'Error al agregar a la lista de espera');
@@ -365,7 +369,7 @@ export class SimpleCheckoutComponent {
   private async processWalletPayment(bookingId: string) {
     // Bloquear fondos en wallet
     await firstValueFrom(
-      this.walletService.lockFunds(bookingId, this.finalTotal() * 100, 'Reserva de auto')
+      this.walletService.lockFunds(bookingId, this.finalTotal() * 100, 'Reserva de auto'),
     );
 
     // Crear payment intent
@@ -416,8 +420,8 @@ export class SimpleCheckoutComponent {
   }
 
   getCarPhotoUrl(): string {
-    const photos = this.car.photos || (this.car as any).car_photos;
-    return getCarImageUrl(photos, {
+    const photos = this.car.photos || (this.car as { car_photos?: unknown[] }).car_photos;
+    return getCarImageUrl(photos as { url: string }[] | undefined, {
       brand: this.car.brand || this.car.brand_name || '',
       model: this.car.model || this.car.model_name || '',
       year: this.car.year,

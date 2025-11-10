@@ -95,7 +95,7 @@ describe('PayPalBookingGatewayService', () => {
             booking_id: 'booking-123',
             use_split_payment: false,
           }),
-        })
+        }),
       );
     });
 
@@ -125,7 +125,7 @@ describe('PayPalBookingGatewayService', () => {
             booking_id: 'booking-456',
             use_split_payment: true,
           }),
-        })
+        }),
       );
     });
 
@@ -245,7 +245,7 @@ describe('PayPalBookingGatewayService', () => {
             Authorization: 'Bearer mock-access-token',
           }),
           body: JSON.stringify({ order_id: 'ORDER-123' }),
-        })
+        }),
       );
     });
 
@@ -382,8 +382,7 @@ describe('PayPalBookingGatewayService', () => {
         select: () => ({
           eq: () => ({
             eq: () => ({
-              single: () =>
-                Promise.reject(new Error('Database connection failed')),
+              single: () => Promise.reject(new Error('Database connection failed')),
             }),
           }),
         }),
@@ -464,7 +463,9 @@ describe('PayPalBookingGatewayService', () => {
         await firstValueFrom(service.createBookingPreference('booking-123'));
         fail('Should have thrown error');
       } catch (error: any) {
-        expect(error.message).toBe('Error al procesar el pago con PayPal. Por favor intente nuevamente.');
+        expect(error.message).toBe(
+          'Error al procesar el pago con PayPal. Por favor intente nuevamente.',
+        );
       }
     });
   });
@@ -488,7 +489,7 @@ describe('PayPalBookingGatewayService', () => {
       } as Response);
 
       const preference = await firstValueFrom(
-        service.createBookingPreference('booking-integration', true)
+        service.createBookingPreference('booking-integration', true),
       );
 
       expect(preference.success).toBe(true);

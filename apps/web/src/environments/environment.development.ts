@@ -1,17 +1,36 @@
 import { buildEnvironment } from './environment.base';
 
+/**
+ * Development Environment Configuration
+ *
+ * ⚠️ SECURITY: NO hardcodear secrets en este archivo
+ *
+ * Secrets se leen de variables de entorno:
+ * - NG_APP_SUPABASE_ANON_KEY
+ * - NG_APP_MAPBOX_ACCESS_TOKEN
+ * - NG_APP_PAYPAL_CLIENT_ID
+ *
+ * Setup:
+ * 1. Copiar .env.local.example a .env.local
+ * 2. Llenar con tus credenciales reales
+ * 3. NUNCA commitear .env.local (está en .gitignore)
+ *
+ * Ver: CLAUDE.md para instrucciones completas
+ */
 export const environment = buildEnvironment({
   production: false,
   supabaseUrl: 'https://obxvffplochgeiclibng.supabase.co',
-  supabaseAnonKey:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU',
+  // ✅ Secrets se leen de .env.local (NO hardcodeados)
+  supabaseAnonKey: undefined, // Lee de NG_APP_SUPABASE_ANON_KEY
   defaultCurrency: 'ARS',
-  mapboxAccessToken: 'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg',
+  mapboxAccessToken: undefined, // Lee de NG_APP_MAPBOX_ACCESS_TOKEN
   paymentsWebhookUrl: 'http://localhost:8787/webhooks/payments',
   appUrl: 'http://localhost:4200',
   // PayPal Sandbox Credentials
-  // TODO: Reemplazar con tus credenciales de PayPal Sandbox
-  // Obtener en: https://developer.paypal.com/dashboard/applications/sandbox
-  paypalClientId: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
-  paypalClientSecret: '', // No se necesita en frontend (solo para backend)
+  paypalClientId: undefined, // Lee de NG_APP_PAYPAL_CLIENT_ID
+  paypalClientSecret: '', // No se necesita en frontend
+  // Sentry Configuration
+  sentryDsn: '', // Opcional: NG_APP_SENTRY_DSN
+  sentryEnvironment: 'development',
+  sentryTracesSampleRate: 0.1,
 });

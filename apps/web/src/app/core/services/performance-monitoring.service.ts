@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import * as Sentry from '@sentry/angular';
+import { environment } from '../../../environments/environment';
 
 /**
  * 📊 Performance Monitoring Service
- * 
+ *
  * Monitorea métricas clave de performance en móvil:
  * - FPS (Frames per second)
  * - Memory usage
@@ -10,12 +12,12 @@ import { Injectable } from '@angular/core';
  * - Core Web Vitals
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PerformanceMonitoringService {
   private fpsCounter = 0;
   private lastFrameTime = performance.now();
-  
+
   constructor() {
     if (typeof window !== 'undefined') {
       this.initMonitoring();
@@ -28,10 +30,10 @@ export class PerformanceMonitoringService {
   private initMonitoring(): void {
     // Monitorear FPS
     this.monitorFPS();
-    
+
     // Monitorear Core Web Vitals
     this.monitorWebVitals();
-    
+
     // Log inicial de device info
     this.logDeviceInfo();
   }
@@ -43,10 +45,10 @@ export class PerformanceMonitoringService {
     const measureFPS = (currentTime: number) => {
       const delta = currentTime - this.lastFrameTime;
       const fps = Math.round(1000 / delta);
-      
+
       this.lastFrameTime = currentTime;
       this.fpsCounter++;
-      
+
       // Log cada 60 frames (aprox 1 segundo a 60fps)
       if (this.fpsCounter >= 60) {
         if (fps < 50) {
@@ -54,10 +56,10 @@ export class PerformanceMonitoringService {
         }
         this.fpsCounter = 0;
       }
-      
+
       requestAnimationFrame(measureFPS);
     };
-    
+
     requestAnimationFrame(measureFPS);
   }
 
@@ -71,15 +73,30 @@ export class PerformanceMonitoringService {
         const lcpObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries();
           const lastEntry = entries[entries.length - 1] as any;
-          
+
           const lcp = lastEntry.renderTime || lastEntry.loadTime;
           console.log(`📊 LCP: ${lcp.toFixed(2)}ms`);
-          
+
+          // Send to Sentry as measurement
+          if (environment.sentryDsn) {
+            Sentry.getCurrentScope().setContext('performance', {
+              lcp: lcp,
+            });
+          }
+
           if (lcp > 2500) {
-            console.warn(`⚠️ LCP is above target (2.5s): ${(lcp/1000).toFixed(2)}s`);
+            console.warn(`⚠️ LCP is above target (2.5s): ${(lcp / 1000).toFixed(2)}s`);
+
+            // Send warning to Sentry
+            if (environment.sentryDsn && environment.production) {
+              Sentry.captureMessage(`Poor LCP: ${(lcp / 1000).toFixed(2)}s`, {
+                level: 'warning',
+                tags: { metric: 'lcp' },
+              });
+            }
           }
         });
-        
+
         lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
       } catch (_e) {
         // Browser doesn't support LCP
@@ -91,13 +108,28 @@ export class PerformanceMonitoringService {
           list.getEntries().forEach((entry: unknown) => {
             const fid = (entry as any).processingStart - (entry as any).startTime;
             console.log(`📊 FID: ${fid.toFixed(2)}ms`);
-            
+
+            // Send to Sentry as measurement
+            if (environment.sentryDsn) {
+              Sentry.getCurrentScope().setContext('performance', {
+                fid: fid,
+              });
+            }
+
             if (fid > 100) {
               console.warn(`⚠️ FID is above target (100ms): ${fid.toFixed(2)}ms`);
+
+              // Send warning to Sentry
+              if (environment.sentryDsn && environment.production) {
+                Sentry.captureMessage(`Poor FID: ${fid.toFixed(2)}ms`, {
+                  level: 'warning',
+                  tags: { metric: 'fid' },
+                });
+              }
             }
           });
         });
-        
+
         fidObserver.observe({ entryTypes: ['first-input'] });
       } catch (_e) {
         // Browser doesn't support FID
@@ -111,14 +143,29 @@ export class PerformanceMonitoringService {
             if (!(entry as any).hadRecentInput) {
               clsScore += (entry as any).value;
               console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
-              
+
+              // Send to Sentry as measurement
+              if (environment.sentryDsn) {
+                Sentry.getCurrentScope().setContext('performance', {
+                  cls: clsScore,
+                });
+              }
+
               if (clsScore > 0.1) {
                 console.warn(`⚠️ CLS is above target (0.1): ${clsScore.toFixed(4)}`);
+
+                // Send warning to Sentry
+                if (environment.sentryDsn && environment.production) {
+                  Sentry.captureMessage(`Poor CLS: ${clsScore.toFixed(4)}`, {
+                    level: 'warning',
+                    tags: { metric: 'cls' },
+                  });
+                }
               }
             }
           });
         });
-        
+
         clsObserver.observe({ entryTypes: ['layout-shift'] });
       } catch (_e) {
         // Browser doesn't support CLS
@@ -133,23 +180,27 @@ export class PerformanceMonitoringService {
     const info = {
       userAgent: navigator.userAgent,
       platform: navigator.platform,
-      memory: (performance as any).memory ? {
-        used: ((performance as any).memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
-        total: ((performance as any).memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
-        limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB'
-      } : 'Not available',
-      connection: (navigator as any).connection ? {
-        effectiveType: (navigator as any).connection.effectiveType,
-        downlink: (navigator as any).connection.downlink + ' Mbps',
-        rtt: (navigator as any).connection.rtt + ' ms'
-      } : 'Not available',
+      memory: (performance as any).memory
+        ? {
+            used: ((performance as any).memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
+            total: ((performance as any).memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
+            limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
+          }
+        : 'Not available',
+      connection: (navigator as any).connection
+        ? {
+            effectiveType: (navigator as any).connection.effectiveType,
+            downlink: (navigator as any).connection.downlink + ' Mbps',
+            rtt: (navigator as any).connection.rtt + ' ms',
+          }
+        : 'Not available',
       screen: {
         width: window.screen.width,
         height: window.screen.height,
-        pixelRatio: window.devicePixelRatio
-      }
+        pixelRatio: window.devicePixelRatio,
+      },
     };
-    
+
     console.log('📱 Device Info:', info);
   }
 
@@ -158,18 +209,36 @@ export class PerformanceMonitoringService {
    */
   measureOperation(name: string, operation: () => void | Promise<void>): void {
     const start = performance.now();
-    
+
     const finish = () => {
       const duration = performance.now() - start;
       console.log(`⏱️ ${name}: ${duration.toFixed(2)}ms`);
-      
+
+      // Send to Sentry as measurement
+      if (environment.sentryDsn) {
+        Sentry.getCurrentScope().setContext('performance', {
+          [name.toLowerCase().replace(/\s+/g, '_')]: duration,
+        });
+      }
+
       if (duration > 100) {
         console.warn(`⚠️ Slow operation detected: ${name} took ${duration.toFixed(2)}ms`);
+
+        // Send warning to Sentry
+        if (environment.sentryDsn && environment.production) {
+          Sentry.captureMessage(`Slow operation: ${name} took ${duration.toFixed(2)}ms`, {
+            level: 'warning',
+            tags: {
+              metric: 'operation_duration',
+              operation: name,
+            },
+          });
+        }
       }
     };
-    
+
     const result = operation();
-    
+
     if (result instanceof Promise) {
       result.then(finish).catch(finish);
     } else {
@@ -185,7 +254,7 @@ export class PerformanceMonitoringService {
       return {
         used: ((performance as any).memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
         total: ((performance as any).memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
-        limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB'
+        limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
       };
     }
     return null;

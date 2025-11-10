@@ -278,7 +278,7 @@ export class ProtectionCreditService {
    */
   calculatePaymentBreakdown(
     totalAmountCents: number,
-    walletBalanceCents: number
+    walletBalanceCents: number,
   ): {
     cpUsed: number;
     wrUsed: number;
@@ -300,9 +300,21 @@ export class ProtectionCreditService {
     const externalPayment = remaining;
 
     const breakdown = [
-      { source: 'Crédito de Protección', amount: cpUsed, percentage: (cpUsed / totalAmountCents) * 100 },
-      { source: 'Balance Retirable', amount: wrUsed, percentage: (wrUsed / totalAmountCents) * 100 },
-      { source: 'Pago Externo', amount: externalPayment, percentage: (externalPayment / totalAmountCents) * 100 },
+      {
+        source: 'Crédito de Protección',
+        amount: cpUsed,
+        percentage: (cpUsed / totalAmountCents) * 100,
+      },
+      {
+        source: 'Balance Retirable',
+        amount: wrUsed,
+        percentage: (wrUsed / totalAmountCents) * 100,
+      },
+      {
+        source: 'Pago Externo',
+        amount: externalPayment,
+        percentage: (externalPayment / totalAmountCents) * 100,
+      },
     ].filter((item) => item.amount > 0);
 
     return {

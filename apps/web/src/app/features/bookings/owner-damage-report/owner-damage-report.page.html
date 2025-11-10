@@ -11,33 +11,34 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="text-center py-16">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
-    <p class="mt-4 text-charcoal-medium">Cargando reserva...</p>
+    <p class="mt-4 text-text-secondary">Cargando reserva...</p>
   </div>
 
   <!-- Damage Report Form -->
   <div *ngIf="!loading() && booking()" class="max-w-2xl mx-auto">
     <!-- Booking Info Card -->
     <div class="card-premium p-6 mb-6">
-      <h2 class="text-xl font-bold text-smoke-black mb-4">Información de la Reserva</h2>
+      <h2 class="text-xl font-bold text-text-primary mb-4">Información de la Reserva</h2>
 
       <div class="space-y-3">
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Auto:</span>
+          <span class="text-text-secondary">Auto:</span>
           <span class="font-semibold">{{ booking()?.car?.title }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Locatario:</span>
+          <span class="text-text-secondary">Locatario:</span>
           <span class="font-semibold">{{ booking()?.renter_id || 'N/A' }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Período:</span>
+          <span class="text-text-secondary">Período:</span>
           <span class="font-semibold">
-            {{ booking()?.start_at | date:'dd/MM/yyyy' }} - {{ booking()?.end_at | date:'dd/MM/yyyy' }}
+            {{ booking()?.start_at | date: 'dd/MM/yyyy' }} -
+            {{ booking()?.end_at | date: 'dd/MM/yyyy' }}
           </span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Depósito de garantía:</span>
-          <span class="font-semibold text-accent-petrol">{{ maxFormattedAmount }}</span>
+          <span class="text-text-secondary">Depósito de garantía:</span>
+          <span class="font-semibold text-cta-default">{{ maxFormattedAmount }}</span>
         </div>
       </div>
     </div>
@@ -45,15 +46,25 @@
     <!-- Important Notice -->
     <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
       <div class="flex items-start gap-3">
-        <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        <svg
+          class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
         </svg>
         <div>
           <h3 class="font-semibold text-amber-900 mb-1">Importante</h3>
           <p class="text-sm text-amber-800">
-            El monto reportado será deducido del depósito de garantía del locatario (máximo {{ maxFormattedAmount }}).
-            Asegurate de incluir fotos claras del daño y una descripción detallada.
-            Una vez enviado, no podrás modificar este reporte.
+            El monto reportado será deducido del depósito de garantía del locatario (máximo
+            {{ maxFormattedAmount }}). Asegurate de incluir fotos claras del daño y una descripción
+            detallada. Una vez enviado, no podrás modificar este reporte.
           </p>
         </div>
       </div>
@@ -63,7 +74,7 @@
     <form class="space-y-6">
       <!-- Damage Description -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">1. Descripción del Daño *</h3>
+        <h3 class="font-bold text-text-primary mb-4">1. Descripción del Daño *</h3>
         <ion-item>
           <ion-label position="stacked">Describe el daño en detalle</ion-label>
           <ion-textarea
@@ -77,7 +88,10 @@
             {{ descriptionCharCount() }} / 1000 caracteres (mínimo 20)
           </ion-note>
         </ion-item>
-        <div *ngIf="descriptionCharCount() > 0 && descriptionCharCount() < 20" class="mt-2 p-3 bg-red-50 rounded-lg">
+        <div
+          *ngIf="descriptionCharCount() > 0 && descriptionCharCount() < 20"
+          class="mt-2 p-3 bg-red-50 rounded-lg"
+        >
           <p class="text-sm text-red-800">
             ⚠️ La descripción debe tener al menos 20 caracteres para ser válida
           </p>
@@ -86,7 +100,7 @@
 
       <!-- Damage Amount -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">2. Monto del Daño (USD) *</h3>
+        <h3 class="font-bold text-text-primary mb-4">2. Monto del Daño (USD) *</h3>
         <ion-item>
           <ion-label position="stacked">Costo estimado de reparación</ion-label>
           <ion-input
@@ -100,10 +114,10 @@
           ></ion-input>
           <ion-note slot="helper">Máximo: {{ maxFormattedAmount }}</ion-note>
         </ion-item>
-        <div class="mt-3 p-3 bg-blue-50 rounded-lg">
+        <div class="mt-3 p-3 bg-cta-default/10 rounded-lg">
           <div class="flex justify-between items-center">
-            <span class="text-sm text-blue-700">Monto a deducir del depósito:</span>
-            <span class="font-bold text-blue-900">{{ formattedAmount }}</span>
+            <span class="text-sm text-cta-default">Monto a deducir del depósito:</span>
+            <span class="font-bold text-cta-default">{{ formattedAmount }}</span>
           </div>
         </div>
         <div *ngIf="damageAmount() > maxDepositAmount()" class="mt-2 p-3 bg-red-50 rounded-lg">
@@ -115,9 +129,10 @@
 
       <!-- Photos Upload -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">3. Fotos de Evidencia (1-10 fotos) *</h3>
-        <p class="text-sm text-charcoal-medium mb-4">
-          Sube fotos claras del daño. Las fotos deben mostrar claramente el daño y su ubicación en el vehículo.
+        <h3 class="font-bold text-text-primary mb-4">3. Fotos de Evidencia (1-10 fotos) *</h3>
+        <p class="text-sm text-text-secondary mb-4">
+          Sube fotos claras del daño. Las fotos deben mostrar claramente el daño y su ubicación en
+          el vehículo.
         </p>
 
         <input
@@ -133,11 +148,15 @@
           type="button"
           (click)="fileInput.click()"
           [disabled]="uploadedFiles().length >= 10"
-          class="w-full px-4 py-3 border-2 border-dashed border-pearl-gray rounded-lg hover:border-accent-petrol transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full px-4 py-3 border-2 border-dashed border-border-default rounded-lg hover:border-cta-default transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <ion-icon name="camera" class="text-2xl text-accent-petrol"></ion-icon>
-          <p class="text-sm text-charcoal-medium mt-2">
-            {{ uploadedFiles().length >= 10 ? 'Límite de 10 fotos alcanzado' : 'Click para subir fotos' }}
+          <ion-icon name="camera" class="text-2xl text-cta-default"></ion-icon>
+          <p class="text-sm text-text-secondary mt-2">
+            {{
+              uploadedFiles().length >= 10
+                ? 'Límite de 10 fotos alcanzado'
+                : 'Click para subir fotos'
+            }}
           </p>
         </button>
 
@@ -145,17 +164,21 @@
         <div *ngIf="uploadedPreviews().length > 0" class="mt-4">
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div *ngFor="let preview of uploadedPreviews(); let i = index" class="relative">
-              <img [src]="preview" alt="Foto {{i+1}}" class="w-full h-32 object-cover rounded-lg" />
+              <img
+                [src]="preview"
+                alt="Foto {{ i + 1 }}"
+                class="w-full h-32 object-cover rounded-lg"
+              />
               <button
                 type="button"
                 (click)="removeFile(i)"
-                class="absolute -top-2 -right-2 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors"
+                class="absolute -top-2 -right-2 w-8 h-8 bg-red-600 text-text-inverse rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors"
               >
                 <ion-icon name="close" class="text-lg"></ion-icon>
               </button>
             </div>
           </div>
-          <p class="text-sm text-charcoal-medium mt-3">
+          <p class="text-sm text-text-secondary mt-3">
             {{ uploadedFiles().length }} foto(s) subida(s) • Máx 5MB por foto
           </p>
         </div>
@@ -168,38 +191,57 @@
       </div>
 
       <!-- Summary -->
-      <div class="card-premium p-6 bg-gradient-to-br from-accent-petrol/5 to-accent-warm/5">
-        <h3 class="font-bold text-smoke-black mb-4">Resumen del Reporte</h3>
+      <div class="card-premium p-6 bg-gradient-to-br from-cta-default/5 to-warning-light/5">
+        <h3 class="font-bold text-text-primary mb-4">Resumen del Reporte</h3>
         <div class="space-y-2 text-sm">
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Descripción:</span>
-            <span class="font-semibold" [class.text-red-600]="descriptionCharCount() < 20" [class.text-green-600]="descriptionCharCount() >= 20">
+            <span class="text-text-secondary">Descripción:</span>
+            <span
+              class="font-semibold"
+              [class.text-red-600]="descriptionCharCount() < 20"
+              [class.text-success-light]="descriptionCharCount() >= 20"
+            >
               {{ descriptionCharCount() >= 20 ? '✓ Completa' : '✗ Incompleta' }}
             </span>
           </div>
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Monto del daño:</span>
-            <span class="font-semibold" [class.text-red-600]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()" [class.text-green-600]="damageAmount() > 0 && damageAmount() <= maxDepositAmount()">
+            <span class="text-text-secondary">Monto del daño:</span>
+            <span
+              class="font-semibold"
+              [class.text-red-600]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()"
+              [class.text-success-light]="damageAmount() > 0 && damageAmount() <= maxDepositAmount()"
+            >
               {{ formattedAmount }}
             </span>
           </div>
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Fotos de evidencia:</span>
-            <span class="font-semibold" [class.text-red-600]="uploadedFiles().length === 0" [class.text-green-600]="uploadedFiles().length > 0">
+            <span class="text-text-secondary">Fotos de evidencia:</span>
+            <span
+              class="font-semibold"
+              [class.text-red-600]="uploadedFiles().length === 0"
+              [class.text-success-light]="uploadedFiles().length > 0"
+            >
               {{ uploadedFiles().length }} foto(s)
             </span>
           </div>
         </div>
 
-        <div class="mt-4 p-3 rounded-lg" [class.bg-green-50]="canSubmit()" [class.bg-gray-50]="!canSubmit()">
+        <div
+          class="mt-4 p-3 rounded-lg"
+          [class.bg-success-light-10]="canSubmit()"
+          [class.bg-gray-50]="!canSubmit()">
           <div class="flex items-center gap-2">
             <ion-icon
               [name]="canSubmit() ? 'checkmark-circle' : 'alert-circle'"
-              [class.text-green-600]="canSubmit()"
+              [class.text-success-light]="canSubmit()"
               [class.text-gray-400]="!canSubmit()"
               class="text-xl"
             ></ion-icon>
-            <span class="text-sm" [class.text-green-800]="canSubmit()" [class.text-gray-600]="!canSubmit()">
+            <span
+              class="text-sm"
+              [class.text-success-light]="canSubmit()"
+              [class.text-gray-600]="!canSubmit()"
+            >
               {{ canSubmit() ? 'Listo para enviar' : 'Completa todos los campos requeridos' }}
             </span>
           </div>
@@ -211,7 +253,7 @@
         <button
           type="button"
           (click)="cancel()"
-          class="flex-1 px-6 py-3 rounded-xl border-2 border-pearl-gray text-charcoal-medium font-semibold hover:bg-sand-light transition-all"
+          class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default text-text-secondary font-semibold hover:bg-surface-secondary transition-all"
           [disabled]="submitting()"
         >
           Cancelar
@@ -220,7 +262,7 @@
           type="button"
           (click)="submitDamageReport()"
           [disabled]="!canSubmit() || submitting()"
-          class="flex-1 px-6 py-3 rounded-xl bg-red-600 text-white-pure font-semibold hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          class="flex-1 px-6 py-3 rounded-xl bg-red-600 text-text-inverse-pure font-semibold hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ion-spinner *ngIf="submitting()" name="crescent" class="mr-2"></ion-spinner>
           {{ submitting() ? 'Enviando reporte...' : 'Enviar Reporte de Daños' }}
@@ -230,8 +272,9 @@
       <!-- Disclaimer -->
       <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <p class="text-xs text-gray-600">
-          Al enviar este reporte, confirmas que la información proporcionada es precisa y que el daño ocurrió durante el período de alquiler.
-          El locatario será notificado inmediatamente y podrá ver el reporte en el detalle de la reserva.
+          Al enviar este reporte, confirmas que la información proporcionada es precisa y que el
+          daño ocurrió durante el período de alquiler. El locatario será notificado inmediatamente y
+          podrá ver el reporte en el detalle de la reserva.
         </p>
       </div>
     </form>

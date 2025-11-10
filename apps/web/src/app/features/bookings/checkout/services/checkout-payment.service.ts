@@ -58,11 +58,9 @@ export class CheckoutPaymentService {
     const depositUsd = this.state.getDepositUsd();
     const rentalAmount = booking.total_amount;
 
-    const lock = await firstValueFrom(this.wallet.lockRentalAndDeposit(
-      bookingId,
-      rentalAmount,
-      depositUsd,
-    ));
+    const lock = await firstValueFrom(
+      this.wallet.lockRentalAndDeposit(bookingId, rentalAmount, depositUsd),
+    );
 
     if (!lock.success) {
       throw new Error(lock.message ?? 'No se pudo bloquear la garantía en wallet');
@@ -119,7 +117,10 @@ export class CheckoutPaymentService {
     this.state.setStatus('redirecting_to_mercadopago');
 
     this.scheduleRiskSnapshot(booking, 'credit_card').catch((err) => {
-      console.error('[CheckoutPaymentService] Failed to schedule risk snapshot (credit_card):', err);
+      console.error(
+        '[CheckoutPaymentService] Failed to schedule risk snapshot (credit_card):',
+        err,
+      );
     });
 
     return {
@@ -148,11 +149,13 @@ export class CheckoutPaymentService {
     let walletLocked = false;
 
     try {
-      const lockResult = await firstValueFrom(this.wallet.lockFunds(
-        bookingId,
-        walletAmount,
-        `Pago parcial Autorentar (${bookingId.slice(0, 8)})`,
-      ));
+      const lockResult = await firstValueFrom(
+        this.wallet.lockFunds(
+          bookingId,
+          walletAmount,
+          `Pago parcial Autorentar (${bookingId.slice(0, 8)})`,
+        ),
+      );
 
       if (!lockResult.success) {
         throw new Error(lockResult.message ?? 'No se pudo bloquear fondos en tu wallet.');
@@ -185,7 +188,9 @@ export class CheckoutPaymentService {
         `${walletText} bloqueados de tu wallet. Redirigiendo a Mercado Pago para pagar ${cardText}...`,
       );
 
-      this.scheduleRiskSnapshot(booking, 'partial_wallet').catch((err) => {});
+      this.scheduleRiskSnapshot(booking, 'partial_wallet').catch((err) => {
+        // Silently ignore risk snapshot errors
+      });
 
       return {
         kind: 'redirect_to_mercadopago',
@@ -207,7 +212,9 @@ export class CheckoutPaymentService {
           wallet_lock_transaction_id: booking.wallet_lock_transaction_id ?? undefined,
           payment_intent_id: booking.payment_intent_id ?? undefined,
         });
-      } catch (_rollbackError) {}
+      } catch (_rollbackError) {
+        // Silently ignore rollback errors
+      }
 
       throw _error instanceof Error
         ? _error
@@ -298,11 +305,10 @@ export class CheckoutPaymentService {
 
   private async safeUnlockWallet(bookingId: string, reason: string): Promise<void> {
     try {
-      await firstValueFrom(this.wallet.unlockFunds(
-        bookingId,
-        reason,
-      ));
-    } catch (_unlockError) {}
+      await firstValueFrom(this.wallet.unlockFunds(bookingId, reason));
+    } catch (_unlockError) {
+      // Silently ignore unlock errors
+    }
   }
 
   private formatUsd(amount: number): string {

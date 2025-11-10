@@ -1,6 +1,10 @@
 import { Component, Input, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UrgentRentalService, UrgentRentalAvailability, UrgentRentalQuote } from '../../../core/services/urgent-rental.service';
+import {
+  UrgentRentalService,
+  UrgentRentalAvailability,
+  UrgentRentalQuote,
+} from '../../../core/services/urgent-rental.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 
 @Component({
@@ -10,12 +14,12 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
   template: `
     <div
       *ngIf="expressMode() && availability()"
-      class="bg-gradient-to-r from-accent-petrol/10 via-accent-warm/10 to-accent-petrol/10 border-2 border-accent-petrol/30 rounded-xl p-4 mb-4 animate-pulse-subtle"
+      class="bg-gradient-to-r from-cta-default/10 via-warning-light/10 to-cta-default/10 border-2 border-cta-default/30 rounded-xl p-4 mb-4 animate-pulse-subtle"
     >
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
           <svg
-            class="w-6 h-6 text-accent-petrol animate-spin"
+            class="w-6 h-6 text-cta-default animate-spin"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -27,24 +31,25 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
               d="M13 10V3L4 14h7v7l9-11h-7z"
             />
           </svg>
-          <h4 class="font-bold text-accent-petrol text-lg">🚀 Modo Express</h4>
+          <h4 class="font-bold text-cta-default text-lg">🚀 Modo Express</h4>
         </div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-accent-petrol">
-            {{ quote()?.hourlyRate ? (quote()!.hourlyRate | currency:'ARS':'symbol':'1.0-0') : '...' }}
+          <div class="text-2xl font-bold text-cta-default">
+            {{
+              quote()?.hourlyRate
+                ? (quote()!.hourlyRate | currency: 'ARS' : 'symbol' : '1.0-0')
+                : '...'
+            }}
           </div>
-          <div class="text-xs text-charcoal-medium dark:text-pearl-light">/hora</div>
+          <div class="text-xs text-text-secondary dark:text-text-secondary">/hora</div>
         </div>
       </div>
 
       <!-- Estado de disponibilidad -->
-      <div
-        *ngIf="availability()?.available"
-        class="flex items-center gap-4 text-sm mb-3"
-      >
+      <div *ngIf="availability()?.available" class="flex items-center gap-4 text-sm mb-3">
         <span
           *ngIf="availability()!.distance"
-          class="flex items-center gap-1.5 text-accent-petrol font-semibold"
+          class="flex items-center gap-1.5 text-cta-default font-semibold"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -57,7 +62,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
         </span>
         <span
           *ngIf="availability()!.eta"
-          class="flex items-center gap-1.5 text-accent-warm font-semibold"
+          class="flex items-center gap-1.5 text-warning-light font-semibold"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -70,7 +75,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
         </span>
         <span
           *ngIf="availability()!.batteryLevel !== undefined"
-          class="flex items-center gap-1.5 text-green-600 font-semibold"
+          class="flex items-center gap-1.5 text-success-light font-semibold"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -93,7 +98,10 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
       </div>
 
       <!-- Loading state -->
-      <div *ngIf="loading()" class="flex items-center gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+      <div
+        *ngIf="loading()"
+        class="flex items-center gap-2 text-sm text-text-secondary dark:text-text-secondary"
+      >
         <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
           <circle
             class="opacity-25"
@@ -116,7 +124,8 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
   styles: [
     `
       @keyframes pulse-subtle {
-        0%, 100% {
+        0%,
+        100% {
           opacity: 1;
         }
         50% {
@@ -193,4 +202,3 @@ export class UrgentRentalBannerComponent implements OnInit, OnDestroy {
     return this.urgentRentalService.formatTime(minutes);
   }
 }
-

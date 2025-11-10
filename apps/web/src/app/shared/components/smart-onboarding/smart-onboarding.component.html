@@ -3,23 +3,14 @@
   <div class="onboarding-header">
     <div class="progress-container">
       <div class="progress-bar">
-        <div
-          class="progress-fill"
-          [style.width.%]="getProgressPercentage()"
-        ></div>
+        <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
       </div>
       <span class="progress-text">
         {{ currentStep() + 1 }} de {{ filteredQuestions().length }}
       </span>
     </div>
 
-    <button
-      class="skip-button"
-      (click)="skipOnboarding()"
-      [disabled]="loading()"
-    >
-      Omitir
-    </button>
+    <button class="skip-button" (click)="skipOnboarding()" [disabled]="loading()">Omitir</button>
   </div>
 
   <!-- Contenido principal -->
@@ -51,7 +42,9 @@
             <div class="option-icon">{{ option.icon }}</div>
             <div class="option-content">
               <div class="option-label">{{ option.label }}</div>
-              <div *ngIf="option.description" class="option-description">{{ option.description }}</div>
+              <div *ngIf="option.description" class="option-description">
+                {{ option.description }}
+              </div>
             </div>
           </button>
         </div>
@@ -67,11 +60,13 @@
             <div class="option-icon">{{ option.icon }}</div>
             <div class="option-content">
               <div class="option-label">{{ option.label }}</div>
-              <div *ngIf="option.description" class="option-description">{{ option.description }}</div>
+              <div *ngIf="option.description" class="option-description">
+                {{ option.description }}
+              </div>
             </div>
             <div class="checkmark" *ngIf="(answers()[question.id] || []).includes(option.value)">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
               </svg>
             </div>
           </button>
@@ -100,13 +95,9 @@
 
   <!-- Navigation footer -->
   <div *ngIf="!loading()" class="onboarding-footer">
-    <button
-      class="nav-button secondary"
-      (click)="previousStep()"
-      [disabled]="currentStep() === 0"
-    >
+    <button class="nav-button secondary" (click)="previousStep()" [disabled]="currentStep() === 0">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </svg>
       Anterior
     </button>
@@ -119,7 +110,7 @@
       <span *ngIf="currentStep() < filteredQuestions().length - 1">Siguiente</span>
       <span *ngIf="currentStep() >= filteredQuestions().length - 1">Completar</span>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
     </button>
   </div>

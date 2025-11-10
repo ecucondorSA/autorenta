@@ -75,3 +75,7 @@ echo "🔍 Verificar: curl -I https://$DOMAIN"
 
 
 
+
+
+
+

@@ -1,7 +1,9 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PwaService } from '../../../core/services/pwa.service';
+import { ShareService } from '../../../core/services/share.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-share-menu',
@@ -15,6 +17,9 @@ export class ShareMenuComponent {
   @Input() text = '';
   @Input() url = '';
 
+  private readonly shareService = inject(ShareService);
+  private readonly toastService = inject(ToastService);
+
   readonly menuOpen = signal(false);
   readonly sharing = signal(false);
 
@@ -27,7 +32,8 @@ export class ShareMenuComponent {
   async shareNative(): Promise<void> {
     this.sharing.set(true);
 
-    const success = await this.pwaService.share({
+    // Usar ShareService que tiene mejor fallback
+    const success = await this.shareService.share({
       title: this.title,
       text: this.text,
       url: this.url,
@@ -37,6 +43,7 @@ export class ShareMenuComponent {
 
     if (success) {
       this.menuOpen.set(false);
+      this.toastService.success('Éxito', '¡Compartido exitosamente!');
     }
   }
 
@@ -64,6 +71,7 @@ export class ShareMenuComponent {
 
     if (success) {
       this.menuOpen.set(false);
+      this.toastService.success('Éxito', 'Enlace copiado al portapapeles');
     }
   }
 }

@@ -157,9 +157,7 @@ export class SocialProofIndicatorsComponent implements OnInit, OnDestroy {
     let score = 50; // Base score
 
     // Factor 1: Rating promedio (0-25 puntos)
-    const rating = car.rating_count && car.rating_count > 0
-      ? (car.rating_avg ?? 0)
-      : 0;
+    const rating = car.rating_count && car.rating_count > 0 ? (car.rating_avg ?? 0) : 0;
     score += (rating / 5) * 25;
 
     // Factor 2: Cantidad de reviews (0-15 puntos)
@@ -168,9 +166,8 @@ export class SocialProofIndicatorsComponent implements OnInit, OnDestroy {
 
     // Factor 3: Precio competitivo (0-10 puntos)
     // Autos más baratos = más populares
-    const pricePerDay = typeof car.price_per_day === 'string'
-      ? parseFloat(car.price_per_day)
-      : car.price_per_day;
+    const pricePerDay =
+      typeof car.price_per_day === 'string' ? parseFloat(car.price_per_day) : car.price_per_day;
     if (pricePerDay < 20) score += 10;
     else if (pricePerDay < 30) score += 5;
 

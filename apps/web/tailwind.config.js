@@ -1,4 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+
+// Importar tokens centralizados de color
+const themeColors = require('./src/config/theme/tailwind-colors');
+
 module.exports = {
   darkMode: 'class', // Enable class-based dark mode
   content: ['./src/**/*.{html,ts}'],
@@ -49,54 +53,25 @@ module.exports = {
       },
 
       /* ─────────────────────────────────────────────────────────────
-         Paleta de Colores - Premium Neutra
+         Paleta de Colores - Sistema Unificado con Tokens Centralizados
+         ═══════════════════════════════════════════════════════════
+         Los colores ahora provienen de src/config/theme/colors.ts
+         Ver docs/brand-colors.md para documentación completa
          ───────────────────────────────────────────────────────────── */
       colors: {
-        // Colores Base (Tailwind Standard)
-        white: '#FFFFFF',
-        black: '#000000',
-        transparent: 'transparent',
-        current: 'currentColor',
+        // ═══════════════════════════════════════════════════════════════
+        // Tokens Centralizados - Sistema Unificado
+        // Ver: src/config/theme/colors.ts y docs/brand-colors.md
+        // ═══════════════════════════════════════════════════════════════
+        ...themeColors,
 
-        // Fondos Light Mode (Custom)
-        'ivory-soft': '#F8F6F3',
-        'sand-light': '#EDEAE3',
-        'white-pure': '#FFFFFF',
-
-        // Bordes y Divisores (Custom)
-        'pearl-gray': '#D9D6D0',
-
-        // Textos Light Mode (Custom)
-        'smoke-black': '#1A1A1A',
-        'charcoal-medium': '#4B4B4B',
-        'ash-gray': '#8E8E8E',
-
-        // Fondos Dark Mode (Custom)
-        'graphite-dark': '#121212',
-        'anthracite': '#1E1E1E',
-        'slate-deep': '#2A2A2A',
-
-        // Textos Dark Mode (Custom)
-        'ivory-luminous': '#FAF9F6',
-        'pearl-light': '#E5E3DD',
-
-        // Sistema de Grises Completo (Custom - preferir sobre gray standard)
-        neutral: {
-          50: '#FAFAF9',
-          100: '#F5F5F4',
-          200: '#E7E5E4',
-          300: '#D6D3D1',
-          400: '#A8A29E',
-          500: '#78716C',
-          600: '#57534E',
-          700: '#44403C',
-          800: '#292524',
-          900: '#1C1917',
-          950: '#0C0A09',
-        },
+        // ═══════════════════════════════════════════════════════════════
+        // Colores Legacy - Mantener para compatibilidad durante migración
+        // TODO: Migrar gradualmente a tokens semánticos
+        // ═══════════════════════════════════════════════════════════════
 
         // Grises Estándar de Tailwind (Para compatibilidad con código existente)
-        // TODO: Migrar gradualmente a 'neutral' colors
+        // TODO: Migrar gradualmente a tokens 'gray' del sistema unificado
         gray: {
           50: '#f9fafb',
           100: '#f3f4f6',
@@ -110,10 +85,6 @@ module.exports = {
           900: '#111827',
           950: '#030712',
         },
-
-        // Accents (Custom)
-        'accent-petrol': '#2C4A52',
-        'accent-warm': '#8B7355',
 
         // WhatsApp Brand Colors (Para componentes específicos)
         whatsapp: {

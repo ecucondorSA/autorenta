@@ -13,12 +13,12 @@
 }
 
 /* Hover effect for available days */
-.grid > div:not(.bg-green-500):not(.bg-red-500):not(.bg-gray-200):hover {
+.grid > div:not(.bg-success-light):not(.bg-red-500):not(.bg-gray-200):hover {
   transform: scale(1.1);
 }
 
 /* Selected car card highlight */
-.border-accent-petrol {
+.border-cta-default {
   box-shadow: 0 0 0 1px rgba(8, 145, 178, 0.2);
 }
 

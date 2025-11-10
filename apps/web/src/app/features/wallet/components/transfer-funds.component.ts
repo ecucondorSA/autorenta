@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { WalletLedgerService, TransferResponse } from '@app/core/services/wallet-ledger.service';
 import { WalletService } from '@app/core/services/wallet.service';
 import { WalletBalance } from '@app/core/models/wallet.model';
+import { toSignalOrNull } from '@app/core/utils/signal-helpers';
 
 interface UserSearchResult {
   id: string;
@@ -37,16 +38,16 @@ export class TransferFundsComponent {
   lastTransferAmount = signal(0);
 
   currentBalance = computed(() => this.walletService.balance()?.available_balance ?? 0);
-  currentUserId = signal<string | null>(null);
+
+  // Convert Observable to Signal to prevent memory leaks
+  private readonly balanceSignal = toSignalOrNull(this.walletService.getBalance());
+
+  currentUserId = computed(() => this.balanceSignal()?.user_id ?? null);
 
   recentTransfers = this.ledgerService.transfers;
 
   constructor() {
-    this.walletService.getBalance().subscribe((balance: WalletBalance) => {
-      if (balance) {
-        this.currentUserId.set(balance.user_id);
-      }
-    });
+    // Load recent transfers on component initialization
     this.ledgerService.loadTransfers(5);
   }
 

@@ -1,0 +1,74 @@
+import { Component, input, signal, inject, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  RiskCalculatorService,
+  RiskCalculation,
+} from '../../../core/services/risk-calculator.service';
+
+@Component({
+  selector: 'app-risk-calculator-viewer',
+  standalone: true,
+  imports: [CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  templateUrl: './risk-calculator-viewer.component.html',
+  styleUrls: ['./risk-calculator-viewer.component.scss'],
+})
+export class RiskCalculatorViewerComponent {
+  readonly riskCalculation = input<RiskCalculation | null>(null);
+  readonly carValueUsd = input<number>(0);
+
+  private readonly riskCalculatorService = inject(RiskCalculatorService);
+
+  readonly guaranteeCopy = computed(() => {
+    const risk = this.riskCalculation();
+    if (!risk) return null;
+    return this.riskCalculatorService.getGuaranteeCopy(risk);
+  });
+
+  readonly franchiseTable = computed(() => {
+    const risk = this.riskCalculation();
+    if (!risk) return null;
+    return this.riskCalculatorService.getFranchiseTable(risk);
+  });
+
+  getBucketLabel(bucket: string): string {
+    const labels: Record<string, string> = {
+      economy: 'Económico',
+      standard: 'Estándar',
+      premium: 'Premium',
+      luxury: 'Lujo',
+      'ultra-luxury': 'Ultra Lujo',
+    };
+    return labels[bucket] || bucket;
+  }
+
+  getBucketColor(bucket: string): string {
+    switch (bucket) {
+      case 'economy':
+        return 'success';
+      case 'standard':
+        return 'primary';
+      case 'premium':
+        return 'warning';
+      case 'luxury':
+        return 'danger';
+      case 'ultra-luxury':
+        return 'tertiary';
+      default:
+        return 'medium';
+    }
+  }
+
+  formatCurrency(amount: number, currency: 'USD' | 'ARS' = 'USD'): string {
+    if (currency === 'USD') {
+      return `$${amount.toFixed(2)} USD`;
+    }
+    return `$${amount.toLocaleString('es-AR')} ARS`;
+  }
+
+  getClassColor(classNum: number): string {
+    if (classNum <= 3) return 'success';
+    if (classNum <= 6) return 'warning';
+    return 'danger';
+  }
+}

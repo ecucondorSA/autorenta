@@ -1,0 +1,199 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin/accounting"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Asiento Contable Manual</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="mt-4 text-gray-500">Cargando...</p>
+  </div>
+
+  <!-- Error Message -->
+  <ion-card *ngIf="error()" color="danger" class="mb-4">
+    <ion-card-content>
+      <div class="flex items-center">
+        <ion-icon name="alert-circle" class="text-2xl mr-3"></ion-icon>
+        <div>
+          <strong>Error</strong>
+          <pre class="whitespace-pre-wrap text-sm mt-2">{{ error() }}</pre>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Success Message -->
+  <ion-card *ngIf="success()" color="success" class="mb-4">
+    <ion-card-content>
+      <div class="flex items-center">
+        <ion-icon name="checkmark-circle" class="text-2xl mr-3"></ion-icon>
+        <div>
+          <strong>Éxito</strong>
+          <p class="mt-2">{{ success() }}</p>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Form -->
+  <form *ngIf="!loading()" (ngSubmit)="createEntry()">
+    <!-- Transaction Type -->
+    <ion-item class="mb-4">
+      <ion-label position="stacked">Tipo de Transacción *</ion-label>
+      <ion-input
+        [(ngModel)]="transactionType"
+        name="transactionType"
+        placeholder="Ej: AJUSTE, CORRECCION, REVERSO"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <!-- Description -->
+    <ion-item class="mb-4">
+      <ion-label position="stacked">Descripción *</ion-label>
+      <ion-textarea
+        [(ngModel)]="description"
+        name="description"
+        placeholder="Descripción del asiento contable"
+        rows="3"
+        required
+      ></ion-textarea>
+    </ion-item>
+
+    <!-- Entry Lines -->
+    <ion-card class="mb-4">
+      <ion-card-header>
+        <ion-card-title>Líneas del Asiento</ion-card-title>
+        <ion-card-subtitle>Debe estar balanceado (Débito = Crédito)</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="space-y-4">
+          <div
+            *ngFor="let line of entryLines(); let i = index"
+            class="border rounded-lg p-4 bg-gray-50"
+          >
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-semibold">Línea {{ i + 1 }}</h3>
+              <ion-button
+                *ngIf="entryLines().length > 2"
+                fill="clear"
+                color="danger"
+                size="small"
+                (click)="removeEntryLine(i)"
+              >
+                <ion-icon name="trash" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+
+            <!-- Account Selection -->
+            <ion-item class="mb-2">
+              <ion-label position="stacked">Cuenta *</ion-label>
+              <ion-select
+                [(ngModel)]="line.account_code"
+                name="account_code_{{ i }}"
+                placeholder="Seleccionar cuenta"
+                required
+              >
+                <ion-select-option *ngFor="let account of accounts()" [value]="account.code">
+                  {{ account.code }} - {{ account.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <!-- Debit/Credit -->
+            <div class="grid grid-cols-2 gap-3 mb-2">
+              <ion-item>
+                <ion-label position="stacked">Débito</ion-label>
+                <ion-input
+                  type="number"
+                  [(ngModel)]="line.debit"
+                  name="debit_{{ i }}"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
+                ></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="stacked">Crédito</ion-label>
+                <ion-input
+                  type="number"
+                  [(ngModel)]="line.credit"
+                  name="credit_{{ i }}"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
+                ></ion-input>
+              </ion-item>
+            </div>
+
+            <!-- Description -->
+            <ion-item>
+              <ion-label position="stacked">Descripción</ion-label>
+              <ion-input
+                [(ngModel)]="line.description"
+                name="line_description_{{ i }}"
+                placeholder="Descripción de la línea"
+              ></ion-input>
+            </ion-item>
+          </div>
+        </div>
+
+        <ion-button fill="outline" expand="block" class="mt-4" (click)="addEntryLine()">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Agregar Línea
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Balance Summary -->
+    <ion-card [color]="isBalanced() ? 'success' : 'warning'" class="mb-4">
+      <ion-card-content>
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="font-semibold">Total Débito</p>
+            <p class="text-xl">${{ getTotalDebit().toFixed(2) }}</p>
+          </div>
+          <div class="text-center">
+            <ion-icon
+              [name]="isBalanced() ? 'checkmark-circle' : 'close-circle'"
+              [color]="isBalanced() ? 'success' : 'warning'"
+              class="text-3xl"
+            ></ion-icon>
+            <p class="text-sm mt-1">{{ isBalanced() ? 'Balanceado' : 'Desbalanceado' }}</p>
+          </div>
+          <div class="text-right">
+            <p class="font-semibold">Total Crédito</p>
+            <p class="text-xl">${{ getTotalCredit().toFixed(2) }}</p>
+          </div>
+        </div>
+        <div *ngIf="!isBalanced()" class="mt-3 text-center text-sm">
+          Diferencia: ${{ getDifference().toFixed(2) }}
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Submit Button -->
+    <ion-button expand="block" type="submit" [disabled]="loading() || !isBalanced()" class="mb-4">
+      <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+      Crear Asiento Contable
+    </ion-button>
+
+    <!-- Reset Button -->
+    <ion-button
+      expand="block"
+      fill="outline"
+      color="medium"
+      (click)="resetForm()"
+      [disabled]="loading()"
+    >
+      <ion-icon name="refresh" slot="start"></ion-icon>
+      Limpiar Formulario
+    </ion-button>
+  </form>
+</ion-content>

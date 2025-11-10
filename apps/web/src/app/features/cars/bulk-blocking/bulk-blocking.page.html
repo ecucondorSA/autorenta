@@ -1,0 +1,176 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Bloqueo Masivo de Fechas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="mt-4 text-gray-500">Cargando autos...</p>
+  </div>
+
+  <!-- Error Message -->
+  <ion-card *ngIf="error()" color="danger" class="mb-4">
+    <ion-card-content>
+      <div class="flex items-center">
+        <ion-icon name="alert-circle" class="text-xl mr-3"></ion-icon>
+        <div>
+          <strong>Error</strong>
+          <pre class="whitespace-pre-wrap text-sm mt-2">{{ error() }}</pre>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Success Message -->
+  <ion-card *ngIf="success()" color="success" class="mb-4">
+    <ion-card-content>
+      <div class="flex items-center">
+        <ion-icon name="checkmark-circle" class="text-xl mr-3"></ion-icon>
+        <div>
+          <strong>Éxito</strong>
+          <p class="mt-2">{{ success() }}</p>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Result Summary -->
+  <ion-card *ngIf="result()" class="mb-4">
+    <ion-card-header>
+      <ion-card-title>Resultado del Bloqueo</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm text-gray-500">Exitosos</p>
+          <p class="text-2xl font-bold text-success-light">{{ result()!.success }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Fallidos</p>
+          <p class="text-2xl font-bold text-red-600">{{ result()!.failed }}</p>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Form -->
+  <form *ngIf="!loading()" (ngSubmit)="bulkBlockDates()">
+    <!-- Car Selection -->
+    <ion-card class="mb-4">
+      <ion-card-header>
+        <div class="flex items-center justify-between">
+          <ion-card-title>Seleccionar Autos</ion-card-title>
+          <div class="flex gap-2">
+            <ion-button fill="outline" size="small" (click)="selectAllCars()"> Todos </ion-button>
+            <ion-button fill="outline" size="small" (click)="deselectAllCars()">
+              Ninguno
+            </ion-button>
+          </div>
+        </div>
+        <ion-card-subtitle>
+          Seleccionados: {{ selectedCarIds().length }} de {{ cars().length }}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngIf="cars().length === 0" class="text-center py-8 text-gray-500">
+          <p>No tienes autos registrados</p>
+        </div>
+        <div *ngIf="cars().length > 0" class="space-y-2">
+          <ion-item
+            *ngFor="let car of cars()"
+            button
+            (click)="toggleCarSelection(car.id)"
+            [class.selected]="isCarSelected(car.id)"
+          >
+            <ion-checkbox
+              slot="start"
+              [checked]="isCarSelected(car.id)"
+              (ionChange)="toggleCarSelection(car.id)"
+            ></ion-checkbox>
+            <ion-label>
+              <h3>{{ getCarDisplayName(car) }}</h3>
+              <p>{{ car.plate || 'Sin patente' }}</p>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Date Range -->
+    <ion-card class="mb-4">
+      <ion-card-header>
+        <ion-card-title>Rango de Fechas</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="grid grid-cols-2 gap-4">
+          <ion-item>
+            <ion-label position="stacked">Fecha Inicio *</ion-label>
+            <ion-input type="date" [(ngModel)]="startDate" name="startDate" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Fecha Fin *</ion-label>
+            <ion-input type="date" [(ngModel)]="endDate" name="endDate" required></ion-input>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Reason -->
+    <ion-card class="mb-4">
+      <ion-card-header>
+        <ion-card-title>Motivo del Bloqueo</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>Motivo</ion-label>
+          <ion-select [(ngModel)]="reason" name="reason">
+            <ion-select-option value="maintenance">Mantenimiento</ion-select-option>
+            <ion-select-option value="personal_use">Uso Personal</ion-select-option>
+            <ion-select-option value="vacation">Vacaciones</ion-select-option>
+            <ion-select-option value="other">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Notas (opcional)</ion-label>
+          <ion-textarea
+            [(ngModel)]="notes"
+            name="notes"
+            rows="3"
+            placeholder="Notas adicionales sobre el bloqueo"
+          ></ion-textarea>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Submit Button -->
+    <ion-button
+      expand="block"
+      type="submit"
+      [disabled]="loading() || selectedCarIds().length === 0 || !startDate() || !endDate()"
+      class="mb-4"
+    >
+      <ion-icon name="lock-closed" slot="start"></ion-icon>
+      Bloquear Fechas
+    </ion-button>
+
+    <!-- Reset Button -->
+    <ion-button
+      expand="block"
+      fill="outline"
+      color="medium"
+      (click)="resetForm()"
+      [disabled]="loading()"
+    >
+      <ion-icon name="refresh" slot="start"></ion-icon>
+      Limpiar Formulario
+    </ion-button>
+  </form>
+</ion-content>

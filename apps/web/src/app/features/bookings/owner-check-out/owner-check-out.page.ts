@@ -106,7 +106,10 @@ export class OwnerCheckOutPage implements OnInit {
 
       // Validar estado
       if (booking.status !== 'in_progress') {
-        this.toastService.error('Error', `La reserva debe estar en estado "En curso". Estado actual: ${booking.status}`);
+        this.toastService.error(
+          'Error',
+          `La reserva debe estar en estado "En curso". Estado actual: ${booking.status}`,
+        );
         this.router.navigate(['/bookings/owner']);
         return;
       }
@@ -194,12 +197,12 @@ export class OwnerCheckOutPage implements OnInit {
       if (confirmResult.funds_released) {
         this.toastService.success(
           'Éxito',
-          '✅ Check-out completado. Fondos liberados automáticamente.'
+          '✅ Check-out completado. Fondos liberados automáticamente.',
         );
       } else {
         this.toastService.success(
           'Éxito',
-          '✅ Check-out completado. Esperando confirmación del locatario para liberar fondos.'
+          '✅ Check-out completado. Esperando confirmación del locatario para liberar fondos.',
         );
       }
 
@@ -207,7 +210,10 @@ export class OwnerCheckOutPage implements OnInit {
       this.router.navigate(['/bookings/detail', booking.id]);
     } catch (error) {
       console.error('Error en check-out:', error);
-      this.toastService.error('Error', error instanceof Error ? error.message : 'Error al completar check-out');
+      this.toastService.error(
+        'Error',
+        error instanceof Error ? error.message : 'Error al completar check-out',
+      );
     } finally {
       this.submitting.set(false);
     }

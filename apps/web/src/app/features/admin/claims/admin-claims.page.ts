@@ -26,7 +26,7 @@ import {
       <div class="mb-6">
         <button
           routerLink="/admin"
-          class="inline-flex items-center gap-2 text-sm font-medium text-accent-petrol hover:text-accent-warm transition-base mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-light transition-base mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -41,7 +41,7 @@ import {
 
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
               Gestión de Siniestros
             </h1>
             <p class="text-gray-600 dark:text-gray-300 mt-1">
@@ -50,7 +50,7 @@ import {
           </div>
           <div class="text-right">
             <p class="text-sm text-gray-500 dark:text-gray-400">Total de siniestros</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">
+            <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
               {{ filteredClaims().length }}
             </p>
           </div>
@@ -59,7 +59,7 @@ import {
 
       <!-- Filters -->
       <div
-        class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
+        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
       >
         <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Filtros</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -71,7 +71,7 @@ import {
             <select
               [(ngModel)]="filterStatus"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-surface-raised dark:bg-gray-800 px-3 py-2 text-sm"
             >
               <option value="">Todos los estados</option>
               <option *ngFor="let status of claimStatuses" [value]="status.value">
@@ -88,7 +88,7 @@ import {
             <select
               [(ngModel)]="filterType"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-surface-raised dark:bg-gray-800 px-3 py-2 text-sm"
             >
               <option value="">Todos los tipos</option>
               <option *ngFor="let type of claimTypes" [value]="type.value">
@@ -107,7 +107,7 @@ import {
               [(ngModel)]="searchQuery"
               (ngModelChange)="onFilterChange()"
               placeholder="ID o descripción..."
-              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-surface-raised dark:bg-gray-800 px-3 py-2 text-sm"
             />
           </div>
         </div>
@@ -119,10 +119,7 @@ import {
       </div>
 
       <!-- Error State -->
-      <div
-        *ngIf="error() && !loading()"
-        class="bg-red-50 border border-red-200 rounded-xl p-6"
-      >
+      <div *ngIf="error() && !loading()" class="bg-red-50 border border-red-200 rounded-xl p-6">
         <p class="text-red-800">{{ error() }}</p>
       </div>
 
@@ -157,7 +154,7 @@ import {
         <!-- Claims Cards -->
         <div
           *ngFor="let claim of filteredClaims()"
-          class="bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
           [routerLink]="['/admin/claims', claim.id]"
         >
           <div class="flex items-start justify-between gap-4">
@@ -172,7 +169,9 @@ import {
                 </span>
 
                 <!-- Type Badge -->
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                >
                   {{ CLAIM_TYPE_LABELS[claim.claim_type] }}
                 </span>
 
@@ -182,7 +181,9 @@ import {
                 </span>
               </div>
 
-              <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1 line-clamp-2">
+              <h3
+                class="text-sm font-semibold text-gray-900 dark:text-text-inverse mb-1 line-clamp-2"
+              >
                 {{ claim.description }}
               </h3>
 
@@ -312,12 +313,17 @@ export class AdminClaimsPage implements OnInit {
   }
 
   getStatusBadgeClass(status: ClaimStatus): string {
-    const classes = {
-      reported: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200',
-      under_review: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200',
-      approved: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',
+    const classes: Record<ClaimStatus, string> = {
+      reported:
+        'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
+      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200',
+      investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
+      under_review:
+        'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
+      approved:
+        'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',
-      paid: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',
+      paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       closed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-200',
     };
     return classes[status] || classes.closed;

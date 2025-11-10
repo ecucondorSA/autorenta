@@ -268,7 +268,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         return;
       }
 
-      this.riskService.recalculateWithUpgrade(currentRisk, upgrade).then(newRisk => {
+      this.riskService.recalculateWithUpgrade(currentRisk, upgrade).then((newRisk) => {
         this.riskSnapshot.set(newRisk);
         // Recalcular pricing también
         this.calculatePricing();
@@ -360,7 +360,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
                 locationData.lat,
                 locationData.lng,
                 car.location_lat,
-                car.location_lng
+                car.location_lng,
               );
 
               this.distanceKm.set(distance);
@@ -425,7 +425,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           endDate: new Date(parsed.endDate),
         });
         return;
-      } catch (_e) { /* Silenced */ }
+      } catch (_e) {
+        /* Silenced */
+      }
     }
 
     // Si no, desde query params
@@ -711,8 +713,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       });
 
       this.riskSnapshot.set(snapshot);
-    } catch (err: unknown) {
-      throw err;
     } finally {
       this.loadingRisk.set(false);
     }
@@ -756,11 +756,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       // ✅ NEW: Delivery fee based on distance
       const deliveryFeeCents = this.deliveryFeeCents();
-      const deliveryFeeUsd = deliveryFeeCents > 0 ? this.fxService.convertReverse(deliveryFeeCents / 100, fx) : 0;
+      const deliveryFeeUsd =
+        deliveryFeeCents > 0 ? this.fxService.convertReverse(deliveryFeeCents / 100, fx) : 0;
 
       // Total USD
       const totalUsd =
-        subtotalUsd + fgoContributionUsd + platformFeeUsd + insuranceFeeUsd + coverageUpgradeUsd + deliveryFeeUsd;
+        subtotalUsd +
+        fgoContributionUsd +
+        platformFeeUsd +
+        insuranceFeeUsd +
+        coverageUpgradeUsd +
+        deliveryFeeUsd;
 
       // Total ARS
       const totalArs = this.fxService.convert(totalUsd, fx);
@@ -1018,7 +1024,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     // ✅ NUEVO: Guardar booking ID para procesamiento de pago
     this.lastCreatedBookingId.set(result.bookingId);
-    
+
     // ✅ Guardar booking ID en sessionStorage para redirect de MercadoPago
     sessionStorage.setItem('pending_booking_id', result.bookingId);
 
@@ -1062,54 +1068,47 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       return { ok: false, error: 'Faltan datos para crear reserva' };
     }
 
-    try {
-      // ✅ Usar método con validación de disponibilidad
-      const result = await this.bookingsService.createBookingWithValidation(
-        input.carId,
-        input.startDate.toISOString(),
-        input.endDate.toISOString(),
-      );
+    // ✅ Usar método con validación de disponibilidad
+    const result = await this.bookingsService.createBookingWithValidation(
+      input.carId,
+      input.startDate.toISOString(),
+      input.endDate.toISOString(),
+    );
 
-      if (!result.success || !result.booking?.id) {
-        return {
-          ok: false,
-          error: result.error || 'Error desconocido al crear reserva',
-        };
-      }
-
-      // ✅ Paso 2: Actualizar la reserva con los detalles del pago
-      try {
-        await this.bookingsService.updateBooking(result.booking.id, {
-          total_amount: pricing.totalArs, // Corregido a snake_case
-          currency: 'ARS',
-          payment_mode: this.paymentMode(), // Corregido a snake_case
-          coverage_upgrade: this.mapCoverageUpgrade(this.coverageUpgrade()), // Corregido a snake_case y tipo
-          authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId, // Corregido a snake_case
-          wallet_lock_id: this.walletLock()?.lockId, // Corregido a snake_case
-          status: 'pending',
-        });
-      } catch (updateError: unknown) {
-        const errorMessage =
-          updateError instanceof Error
-            ? updateError.message
-            : 'Error desconocido al actualizar la reserva';
-        // Opcional: Considerar cancelar la reserva si la actualización falla
-        return {
-          ok: false,
-          error: `La reserva se creó pero no se pudo actualizar: ${errorMessage}`,
-        };
-      }
-
-      return {
-        ok: true,
-        bookingId: result.booking!.id,
-      };
-    } catch (err: unknown) {
+    if (!result.success || !result.booking?.id) {
       return {
         ok: false,
-        error: err instanceof Error ? err.message : 'Error desconocido',
+        error: result.error || 'Error desconocido al crear reserva',
       };
     }
+
+    // ✅ Paso 2: Actualizar la reserva con los detalles del pago
+    try {
+      await this.bookingsService.updateBooking(result.booking.id, {
+        total_amount: pricing.totalArs, // Corregido a snake_case
+        currency: 'ARS',
+        payment_mode: this.paymentMode(), // Corregido a snake_case
+        coverage_upgrade: this.mapCoverageUpgrade(this.coverageUpgrade()), // Corregido a snake_case y tipo
+        authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId, // Corregido a snake_case
+        wallet_lock_id: this.walletLock()?.lockId, // Corregido a snake_case
+        status: 'pending',
+      });
+    } catch (updateError: unknown) {
+      const errorMessage =
+        updateError instanceof Error
+          ? updateError.message
+          : 'Error desconocido al actualizar la reserva';
+      // Opcional: Considerar cancelar la reserva si la actualización falla
+      return {
+        ok: false,
+        error: `La reserva se creó pero no se pudo actualizar: ${errorMessage}`,
+      };
+    }
+
+    return {
+      ok: true,
+      bookingId: result.booking!.id,
+    };
   }
 
   /**
@@ -1221,39 +1220,31 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;
 
-    try {
-      // Bloquear fondos en wallet
-      const lock = await firstValueFrom(
-        this.walletService.lockRentalAndDeposit(bookingId, rentalAmount, depositUsd),
-      );
+    // Bloquear fondos en wallet
+    const lock = await firstValueFrom(
+      this.walletService.lockRentalAndDeposit(bookingId, rentalAmount, depositUsd),
+    );
 
-      if (!lock.success) {
-        throw new Error(lock.message ?? 'No se pudo bloquear fondos en wallet');
-      }
-
-      // Actualizar booking a confirmado
-      await this.bookingsService.updateBooking(bookingId, {
-        payment_method: 'wallet',
-        rental_amount_cents: Math.round(rentalAmount * 100),
-        deposit_amount_cents: Math.round(depositUsd * 100),
-        rental_lock_transaction_id: lock.rental_lock_transaction_id,
-        deposit_lock_transaction_id: lock.deposit_lock_transaction_id,
-        deposit_status: 'locked',
-        status: 'confirmed',
-      });
-
-      // Recalcular pricing
-      await this.bookingsService.recalculatePricing(bookingId);
-
-      // Redirigir a página de éxito
-      this.router.navigate(['/bookings/success', bookingId]);
-    } catch (error: unknown) {
-      // Intentar desbloquear wallet si hubo error
-      try {
-        await firstValueFrom(this.walletService.unlockFunds(bookingId));
-      } catch (_unlockError) { /* Silenced */ }
-      throw error;
+    if (!lock.success) {
+      throw new Error(lock.message ?? 'No se pudo bloquear fondos en wallet');
     }
+
+    // Actualizar booking a confirmado
+    await this.bookingsService.updateBooking(bookingId, {
+      payment_method: 'wallet',
+      rental_amount_cents: Math.round(rentalAmount * 100),
+      deposit_amount_cents: Math.round(depositUsd * 100),
+      rental_lock_transaction_id: lock.rental_lock_transaction_id,
+      deposit_lock_transaction_id: lock.deposit_lock_transaction_id,
+      deposit_status: 'locked',
+      status: 'confirmed',
+    });
+
+    // Recalcular pricing
+    await this.bookingsService.recalculatePricing(bookingId);
+
+    // Redirigir a página de éxito
+    this.router.navigate(['/bookings/success', bookingId]);
   }
 
   /**
@@ -1265,31 +1256,27 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;
 
-    try {
-      // Crear intención de pago
-      const intent = await this.paymentsService.createIntent(bookingId);
+    // Crear intención de pago
+    const intent = await this.paymentsService.createIntent(bookingId);
 
-      // Actualizar booking con método de pago
-      await this.bookingsService.updateBooking(bookingId, {
-        payment_method: 'credit_card',
-        wallet_amount_cents: 0,
-        deposit_amount_cents: Math.round(depositUsd * 100),
-      });
+    // Actualizar booking con método de pago
+    await this.bookingsService.updateBooking(bookingId, {
+      payment_method: 'credit_card',
+      wallet_amount_cents: 0,
+      deposit_amount_cents: Math.round(depositUsd * 100),
+    });
 
-      // Recalcular pricing
-      await this.bookingsService.recalculatePricing(bookingId);
+    // Recalcular pricing
+    await this.bookingsService.recalculatePricing(bookingId);
 
-      // Crear preferencia de MercadoPago
-      const preference = await this.createPreferenceWithOnboardingGuard(bookingId);
+    // Crear preferencia de MercadoPago
+    const preference = await this.createPreferenceWithOnboardingGuard(bookingId);
 
-      // Redirigir a MercadoPago
-      if (preference.initPoint) {
-        window.location.href = preference.initPoint;
-      } else {
-        throw new Error('No se pudo crear preferencia de pago');
-      }
-    } catch (error: unknown) {
-      throw error;
+    // Redirigir a MercadoPago
+    if (preference.initPoint) {
+      window.location.href = preference.initPoint;
+    } else {
+      throw new Error('No se pudo crear preferencia de pago');
     }
   }
 
@@ -1335,7 +1322,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * Cambia entre vista estándar y optimizada
    */
   toggleConversionMode(): void {
-    this.conversionMode.update(mode => mode === 'optimized' ? 'standard' : 'optimized');
+    this.conversionMode.update((mode) => (mode === 'optimized' ? 'standard' : 'optimized'));
   }
 
   /**

@@ -51,10 +51,7 @@
       </ion-card-header>
       <ion-card-content>
         <ion-list lines="none" class="bg-transparent">
-          <ion-item
-            *ngFor="let alert of healthCheck()?.alerts"
-            class="bg-transparent"
-          >
+          <ion-item *ngFor="let alert of healthCheck()?.alerts" class="bg-transparent">
             <ion-icon name="alert-circle" slot="start"></ion-icon>
             <ion-label class="ion-text-wrap">{{ alert }}</ion-label>
           </ion-item>
@@ -72,13 +69,29 @@
         <ion-icon name="trending-up" slot="start"></ion-icon>
         P&L
       </ion-button>
-      <ion-button expand="block" fill="outline" routerLink="../journal-entries">
+      <ion-button expand="block" fill="outline" routerLink="../ledger">
         <ion-icon name="book" slot="start"></ion-icon>
-        Diario
+        Libro Mayor
       </ion-button>
       <ion-button expand="block" fill="outline" routerLink="../reconciliation">
         <ion-icon name="sync" slot="start"></ion-icon>
         Conciliación
+      </ion-button>
+      <ion-button expand="block" fill="outline" routerLink="../revenue-recognition">
+        <ion-icon name="cash" slot="start"></ion-icon>
+        Ingresos (NIIF 15)
+      </ion-button>
+      <ion-button expand="block" fill="outline" routerLink="../period-closures">
+        <ion-icon name="calendar" slot="start"></ion-icon>
+        Cierres
+      </ion-button>
+      <ion-button expand="block" fill="outline" routerLink="../financial-health">
+        <ion-icon name="heart" slot="start"></ion-icon>
+        Salud Financiera
+      </ion-button>
+      <ion-button expand="block" fill="outline" routerLink="../manual-entry">
+        <ion-icon name="create" slot="start"></ion-icon>
+        Asiento Manual
       </ion-button>
     </div>
 
@@ -144,7 +157,7 @@
         title="Utilidad Neta"
         [value]="dashboard()!.monthly_profit"
         icon="trending-up-outline"
-        [color]="(dashboard()!.monthly_profit ?? 0) >= 0 ? 'success' : 'danger'"
+        [color]="(dashboard()!.monthly_profit || 0) >= 0 ? 'success' : 'danger'"
       />
 
       <app-kpi-card
@@ -196,7 +209,11 @@
             <ion-label>
               <h3 class="font-semibold">Conciliación Wallet</h3>
               <p>
-                {{ healthCheck()?.walletReconciled ? 'OK - Sin diferencias' : 'Error - Verificar conciliación' }}
+                {{
+                  healthCheck()?.walletReconciled
+                    ? 'OK - Sin diferencias'
+                    : 'Error - Verificar conciliación'
+                }}
               </p>
             </ion-label>
           </ion-item>
@@ -210,7 +227,13 @@
             ></ion-icon>
             <ion-label>
               <h3 class="font-semibold">Provisión FGO</h3>
-              <p>{{ healthCheck()?.fgoAdequate ? 'Adecuada (≥5% de depósitos)' : 'Insuficiente - Revisar' }}</p>
+              <p>
+                {{
+                  healthCheck()?.fgoAdequate
+                    ? 'Adecuada (≥5% de depósitos)'
+                    : 'Insuficiente - Revisar'
+                }}
+              </p>
             </ion-label>
           </ion-item>
 

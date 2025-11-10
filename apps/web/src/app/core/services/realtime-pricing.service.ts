@@ -160,7 +160,10 @@ export class RealtimePricingService {
           }
         },
       )
-      .subscribe((status) => {});
+      .subscribe((status) => {
+        // Status handled by isConnected and connectionStatus signals
+        // No specific action needed here
+      });
 
     // Cargar snapshots iniciales
     void this.loadInitialDemandSnapshots();
@@ -191,7 +194,10 @@ export class RealtimePricingService {
           onChange?.();
         },
       )
-      .subscribe((status) => {});
+      .subscribe((status) => {
+        // Status handled by isConnected and connectionStatus signals
+        // No specific action needed here
+      });
 
     // Cargar eventos iniciales
     void this.loadActiveEvents();
@@ -263,7 +269,11 @@ export class RealtimePricingService {
       if (data) {
         this.latestExchangeRate.set(data as ExchangeRateUpdate);
       }
-    } catch (__error) {}
+    } catch (error) {
+      // Silently ignore error to prevent app crash if initial rate fails to load.
+      // The service will still attempt to connect to the real-time channel.
+      console.error('Failed to load initial exchange rate', error);
+    }
   }
 
   private async loadInitialDemandSnapshots(): Promise<void> {
@@ -286,7 +296,9 @@ export class RealtimePricingService {
 
         this.demandByRegion.set(snapshotsByRegion);
       }
-    } catch (__error) {}
+    } catch {
+      // Silently ignore demand by region errors
+    }
   }
 
   private async loadActiveEvents(): Promise<void> {
@@ -304,7 +316,9 @@ export class RealtimePricingService {
       if (data) {
         this.activeEvents.set(data as SpecialEvent[]);
       }
-    } catch (__error) {}
+    } catch {
+      // Silently ignore active events errors
+    }
   }
 
   /**

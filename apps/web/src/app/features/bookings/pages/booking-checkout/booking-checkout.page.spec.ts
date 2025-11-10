@@ -17,17 +17,21 @@ describe('BookingCheckoutPage', () => {
 
   const mockBooking = {
     id: 'booking-123',
-    total_price: 50000,
+    car_id: 'car-456',
+    user_id: 'user-789',
+    renter_id: 'user-789',
+    total_amount: 50000,
     currency: 'ARS',
     status: 'pending',
-    start_date: '2025-11-10',
-    end_date: '2025-11-15',
+    start_at: '2025-11-10',
+    end_at: '2025-11-15',
+    created_at: '2025-11-07T10:00:00Z',
     car: {
       id: 'car-456',
       brand: 'Toyota',
       model: 'Corolla',
     },
-  };
+  } as any;
 
   beforeEach(async () => {
     // Create mocks
@@ -39,34 +43,26 @@ describe('BookingCheckoutPage', () => {
         },
       },
     };
-    mockGatewayFactory = jasmine.createSpyObj('PaymentGatewayFactory', [
-      'createBookingGateway',
-    ]);
-    mockBookingsService = jasmine.createSpyObj('BookingsService', [
-      'getBookingById',
-    ]);
+    mockGatewayFactory = jasmine.createSpyObj('PaymentGatewayFactory', ['createBookingGateway']);
+    mockBookingsService = jasmine.createSpyObj('BookingsService', ['getBookingById']);
 
     // Mock payment gateway
     mockPaymentGateway = {
-      createBookingPreference: jasmine
-        .createSpy('createBookingPreference')
-        .and.returnValue(
-          of({
-            success: true,
-            preference_id: 'pref-123',
-            init_point: 'https://mercadopago.com/checkout/pref-123',
-            amount_ars: 50000,
-            currency: 'ARS',
-            provider: 'mercadopago' as PaymentProvider,
-          })
-        ),
+      createBookingPreference: jasmine.createSpy('createBookingPreference').and.returnValue(
+        of({
+          success: true,
+          preference_id: 'pref-123',
+          init_point: 'https://mercadopago.com/checkout/pref-123',
+          amount_ars: 50000,
+          currency: 'ARS',
+          provider: 'mercadopago' as PaymentProvider,
+        }),
+      ),
       redirectToCheckout: jasmine.createSpy('redirectToCheckout'),
     };
 
     mockGatewayFactory.createBookingGateway.and.returnValue(mockPaymentGateway);
-    mockBookingsService.getBookingById.and.returnValue(
-      Promise.resolve(mockBooking)
-    );
+    mockBookingsService.getBookingById.and.returnValue(Promise.resolve(mockBooking));
 
     await TestBed.configureTestingModule({
       imports: [BookingCheckoutPage],
@@ -105,9 +101,7 @@ describe('BookingCheckoutPage', () => {
     });
 
     it('should set error if booking not found', async () => {
-      mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve(null)
-      );
+      mockBookingsService.getBookingById.and.returnValue(Promise.resolve(null));
 
       await component.ngOnInit();
 
@@ -117,7 +111,7 @@ describe('BookingCheckoutPage', () => {
 
     it('should set error if booking is not in pending status', async () => {
       mockBookingsService.getBookingById.and.returnValue(
-        Promise.resolve({ ...mockBooking, status: 'confirmed' })
+        Promise.resolve({ ...mockBooking, status: 'confirmed' }),
       );
 
       await component.ngOnInit();
@@ -167,23 +161,18 @@ describe('BookingCheckoutPage', () => {
     it('should create preference and redirect to MercadoPago', async () => {
       await component.handleMercadoPagoPayment();
 
-      expect(mockGatewayFactory.createBookingGateway).toHaveBeenCalledWith(
-        'mercadopago'
-      );
-      expect(mockPaymentGateway.createBookingPreference).toHaveBeenCalledWith(
-        'booking-123',
-        true
-      );
+      expect(mockGatewayFactory.createBookingGateway).toHaveBeenCalledWith('mercadopago');
+      expect(mockPaymentGateway.createBookingPreference).toHaveBeenCalledWith('booking-123', true);
       expect(mockPaymentGateway.redirectToCheckout).toHaveBeenCalledWith(
         'https://mercadopago.com/checkout/pref-123',
-        false
+        false,
       );
       expect(component.mercadoPagoPreferenceId()).toBe('pref-123');
     });
 
     it('should set error if preference creation fails', async () => {
       mockPaymentGateway.createBookingPreference.and.returnValue(
-        throwError(() => new Error('Network error'))
+        throwError(() => new Error('Network error')),
       );
 
       await component.handleMercadoPagoPayment();
@@ -222,7 +211,7 @@ describe('BookingCheckoutPage', () => {
             orderId: 'ORDER-123',
             captureId: 'CAPTURE-456',
           },
-        }
+        },
       );
     });
   });
@@ -246,10 +235,7 @@ describe('BookingCheckoutPage', () => {
     it('should navigate back to booking details', () => {
       component.cancelPayment();
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith([
-        '/bookings',
-        'booking-123',
-      ]);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/bookings', 'booking-123']);
     });
   });
 

@@ -61,10 +61,7 @@
       </label>
     </div>
 
-    <div
-      *ngIf="settings().browserPushPermission === 'denied'"
-      class="alert alert-warning"
-    >
+    <div *ngIf="settings().browserPushPermission === 'denied'" class="alert alert-warning">
       <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
@@ -76,9 +73,7 @@
       <div>
         <p class="alert-text">
           Las notificaciones push están bloqueadas en tu navegador.
-          <button class="alert-link" (click)="openBrowserSettings()">
-            Ver cómo cambiar esto
-          </button>
+          <button class="alert-link" (click)="openBrowserSettings()">Ver cómo cambiar esto</button>
         </p>
       </div>
     </div>
@@ -102,11 +97,7 @@
         </div>
       </div>
       <label class="toggle-switch">
-        <input
-          type="checkbox"
-          [(ngModel)]="settings().bookingUpdates"
-          (change)="saveSettings()"
-        />
+        <input type="checkbox" [(ngModel)]="settings().bookingUpdates" (change)="saveSettings()" />
         <span class="toggle-slider"></span>
       </label>
     </div>
@@ -134,7 +125,9 @@
         <div class="setting-icon">💬</div>
         <div>
           <h3 class="setting-title">Mensajes nuevos</h3>
-          <p class="setting-description">Notificaciones cuando recibas mensajes de otros usuarios</p>
+          <p class="setting-description">
+            Notificaciones cuando recibas mensajes de otros usuarios
+          </p>
         </div>
       </div>
       <label class="toggle-switch">
@@ -174,11 +167,7 @@
         </div>
       </div>
       <label class="toggle-switch">
-        <input
-          type="checkbox"
-          [(ngModel)]="settings().systemUpdates"
-          (change)="saveSettings()"
-        />
+        <input type="checkbox" [(ngModel)]="settings().systemUpdates" (change)="saveSettings()" />
         <span class="toggle-slider"></span>
       </label>
     </div>
@@ -244,11 +233,7 @@
         </div>
       </div>
       <label class="toggle-switch">
-        <input
-          type="checkbox"
-          [(ngModel)]="settings().soundEnabled"
-          (change)="saveSettings()"
-        />
+        <input type="checkbox" [(ngModel)]="settings().soundEnabled" (change)="saveSettings()" />
         <span class="toggle-slider"></span>
       </label>
     </div>

@@ -37,6 +37,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { createChildLogger } from '../_shared/logger.ts';
 import { enforceRateLimit, RateLimitError, getClientIp } from '../_shared/rate-limiter.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Logger con contexto fijo
 const log = createChildLogger('MercadoPagoWebhook');
@@ -54,11 +55,6 @@ interface MPWebhookPayload {
     id: string;
   };
 }
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 // IPs autorizadas de MercadoPago (rangos CIDR)
 // Fuente: https://www.mercadopago.com.ar/developers/es/docs/your-integrations/notifications/ipn
@@ -128,6 +124,9 @@ function isMercadoPagoIP(clientIP: string): boolean {
 } */
 
 serve(async (req) => {
+  // ✅ SECURITY: CORS con whitelist de dominios permitidos
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -223,7 +222,6 @@ serve(async (req) => {
       ip: clientIP,
       isAuthorizedIP,
       hasSignature: !!xSignature,
-      rateLimitRemaining: rateLimit.remaining,
     });
 
     // Obtener query params para validación
@@ -326,22 +324,74 @@ serve(async (req) => {
               }),
               {
                 status: 403,
-                headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
               }
             );
           } else {
             console.log('✅ HMAC validation passed');
           }
         } catch (cryptoError) {
-          console.error('Error calculating HMAC:', cryptoError);
-          // No fallar por errores de crypto, solo loggear
+          // ✅ SECURITY: Si falla la validación HMAC, rechazar
+          console.error('❌ Webhook rejected: HMAC calculation error', {
+            error: cryptoError,
+            ip: clientIP,
+            timestamp: new Date().toISOString(),
+          });
+
+          return new Response(
+            JSON.stringify({
+              error: 'Webhook signature validation failed',
+              code: 'SIGNATURE_VALIDATION_ERROR',
+            }),
+            {
+              status: 500,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            }
+          );
         }
       } else {
-        console.warn('x-signature present but missing ts or v1 parts');
+        // ✅ SECURITY: Rechazar firma malformada
+        console.error('❌ Webhook rejected: Invalid x-signature format (missing ts or v1)', {
+          ip: clientIP,
+          signatureFormat: xSignature,
+          timestamp: new Date().toISOString(),
+        });
+
+        return new Response(
+          JSON.stringify({
+            error: 'Invalid webhook signature format',
+            code: 'INVALID_SIGNATURE_FORMAT',
+          }),
+          {
+            status: 401,
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+          }
+        );
       }
     } else {
-      console.warn('⚠️ No x-signature header - webhook signature not validated');
-      // En producción deberíamos rechazar, por ahora solo loggeamos
+      // ✅ SECURITY: Rechazar webhooks sin firma HMAC o sin request ID
+      const missingHeaders = [];
+      if (!xSignature) missingHeaders.push('x-signature');
+      if (!xRequestId) missingHeaders.push('x-request-id');
+
+      console.error('❌ Webhook rejected: Missing required headers', {
+        ip: clientIP,
+        missingHeaders,
+        type: webhookPayload.type,
+        paymentId: webhookPayload.data?.id,
+        timestamp: new Date().toISOString(),
+      });
+
+      return new Response(
+        JSON.stringify({
+          error: `Missing required headers: ${missingHeaders.join(', ')}`,
+          code: 'MISSING_REQUIRED_HEADERS',
+        }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Solo procesar notificaciones de tipo 'payment'
@@ -437,22 +487,26 @@ serve(async (req) => {
       });
 
     } catch (apiError) {
-      log.error('MercadoPago API error', apiError);
+      // ✅ CRITICAL FIX: Retornar 500 para que MercadoPago reintente
+      log.error('❌ MercadoPago API error - webhook will be retried', {
+        error: apiError,
+        payment_id: paymentId,
+        timestamp: new Date().toISOString(),
+      });
 
-      // Retornar 200 OK para evitar reintentos infinitos
-      // El polling backup confirmará el pago de todas formas
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message: 'Error fetching payment, will be processed by polling',
-            payment_id: paymentId,
-            error_details: apiError instanceof Error ? apiError.message : 'Unknown error',
-          }),
-          {
-            status: 200,
-            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+      // MercadoPago reintenta automáticamente con 500/502/503
+      // Reintentos: inmediato, +1h, +2h, +4h, +8h (máx 12 en 24h)
+      return new Response(
+        JSON.stringify({
+          error: 'Failed to fetch payment data from MercadoPago',
+          retry: true,
+          payment_id: paymentId,
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // ========================================
@@ -1011,18 +1065,23 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error processing MercadoPago webhook:', error);
+    // ✅ CRITICAL FIX: Retornar 500 para que MercadoPago reintente
+    log.error('❌ Critical error processing webhook - will be retried', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+    });
 
-    // Retornar 200 incluso en error para evitar reintentos de MP
-    // MP reintenta si recibe 4xx/5xx
+    // MercadoPago reintenta automáticamente con 500/502/503
+    // Esto previene pérdida de pagos por errores transitorios (DB timeout, etc.)
     return new Response(
       JSON.stringify({
-        success: false,
-        error: error instanceof Error ? error.message : 'Internal server error',
-        details: error instanceof Error ? error.stack : undefined,
+        error: 'Internal server error processing webhook',
+        retry: true,
+        details: error instanceof Error ? error.message : 'Unknown error',
       }),
       {
-        status: 200,
+        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );

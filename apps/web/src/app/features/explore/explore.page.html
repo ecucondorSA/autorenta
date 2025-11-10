@@ -1,3 +1,4 @@
+<!-- Desktop Header -->
 <ion-header [translucent]="true" class="md:block hidden">
   <ion-toolbar color="primary">
     <ion-searchbar
@@ -10,11 +11,10 @@
   </ion-toolbar>
 </ion-header>
 
-<!-- Mobile: Floating Search & Filters -->
+<!-- Mobile: Floating Search -->
 <div class="md:hidden block absolute top-safe-top left-0 right-0 z-20 p-3">
   <div class="flex gap-2">
-    <!-- Search Bar -->
-    <div class="flex-1 bg-white dark:bg-slate-deep rounded-full shadow-lg">
+    <div class="flex-1 bg-surface-raised dark:bg-surface-secondary rounded-full shadow-lg">
       <ion-searchbar
         [(ngModel)]="searchQuery"
         (ionChange)="onSearch()"
@@ -27,31 +27,60 @@
 </div>
 
 <ion-content [fullscreen]="true" class="explore-content">
-  <!-- Map View (Fullscreen) -->
-  <div class="map-container">
-    <app-cars-map
-      [cars]="carMapLocations"
-      [selectedCarId]="selectedCarId"
-      (carSelected)="onMapCarSelected($event)"
-      (userLocationChange)="onUserLocationChange($event)"
-    ></app-cars-map>
+  <!-- 🎯 MAP CENTRIC LAYOUT -->
+  <div class="map-centric-container">
+    <!-- Left: Map (70% desktop, 100% mobile) -->
+    <div class="map-section">
+      <app-cars-map
+        #carsMapRef
+        [cars]="carMapLocations()"
+        [selectedCarId]="selectedCarId()"
+        [userLocation]="userLocation()"
+        (carSelected)="onMapCarSelected($event)"
+        (userLocationChange)="onUserLocationChange($event)"
+      ></app-cars-map>
+
+      <!-- 🎯 Map Filters (Floating chips/inline) -->
+      <app-map-filters
+        [availableCars]="carMapLocations()"
+        [userLocation]="userLocation() || undefined"
+        (filterChange)="onFilterChange($event)"
+      ></app-map-filters>
+
+      <!-- Floating Action Buttons -->
+      <div class="fab-container">
+        <ion-fab vertical="top" horizontal="end" slot="fixed" class="fab-location">
+          <ion-fab-button size="small" (click)="centerOnUser()">
+            <ion-icon name="locate-outline"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
+
+      <!-- WhatsApp FAB (floating) - Removed until we verify correct inputs -->
+      <!-- <app-whatsapp-fab
+        *ngIf="selectedCar()"
+        [carOwnerId]="selectedCar()?.carId"
+        class="whatsapp-fab-map"
+      ></app-whatsapp-fab> -->
+    </div>
+
+    <!-- Right: Drawer (30% desktop, bottom-sheet mobile) -->
+    <app-map-drawer
+      [selectedCar]="selectedCar()"
+      [userLocation]="userLocation() || undefined"
+      [isOpen]="isDrawerOpen()"
+      [isMobile]="isMobileView()"
+      (closeDrawer)="onCloseDrawer()"
+      (reserveClick)="onReserveClick($event)"
+      (chatClick)="onChatClick($event)"
+    ></app-map-drawer>
   </div>
 
-  <!-- Floating Action Buttons -->
-  <div class="fab-container">
-    <!-- Center on User Location -->
-    <ion-fab vertical="top" horizontal="end" slot="fixed" class="fab-location">
-      <ion-fab-button size="small" (click)="centerOnUser()">
-        <ion-icon name="locate-outline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
-  </div>
-
-  <!-- Bottom Carousel (Airbnb-style) -->
-  <div 
+  <!-- Desktop: Bottom Carousel (Alternative view, hidden when drawer is open) -->
+  <div
+    *ngIf="!isMobileView && !isDrawerOpen && filteredCars.length > 0"
     #carouselContainer
-    class="map-carousel" 
-    *ngIf="filteredCars.length > 0"
+    class="map-carousel"
     (mouseenter)="onCarouselHover(true)"
     (mouseleave)="onCarouselHover(false)"
   >
@@ -61,12 +90,12 @@
         class="map-carousel-card-wrapper"
         role="listitem"
         [attr.data-car-id]="car.id"
-        [class.selected]="car.id === selectedCarId"
+        [class.selected]="car.id === selectedCarId()"
       >
         <app-car-card
           [car]="car"
           [priority]="i === 0"
-          [selected]="car.id === selectedCarId"
+          [selected]="car.id === selectedCarId()"
           (click)="onCarouselCardSelected(car.id)"
           class="map-carousel-card"
           [attr.aria-label]="'Ver más sobre ' + (car.title || 'este auto')"
@@ -74,4 +103,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Mobile: Sticky CTA - Removed until we verify correct inputs -->
+  <!-- <app-sticky-cta-mobile
+    *ngIf="isMobileView() && selectedCar()"
+    [car]="selectedCar()"
+    [isActive]="selectedCarId() !== null"
+    (ctaClick)="onStickyCtaClick()"
+  ></app-sticky-cta-mobile> -->
 </ion-content>

@@ -38,9 +38,9 @@ describe('AutorentarCreditService', () => {
   };
 
   beforeEach(() => {
-    const rpcSpy = jasmine.createSpy('rpc').and.returnValue(
-      Promise.resolve({ data: [mockCreditInfo], error: null })
-    );
+    const rpcSpy = jasmine
+      .createSpy('rpc')
+      .and.returnValue(Promise.resolve({ data: [mockCreditInfo], error: null }));
 
     supabaseMock = {
       rpc: rpcSpy,
@@ -137,7 +137,7 @@ describe('AutorentarCreditService', () => {
     it('should issue credit with default amount', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockIssueResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service.issueCredit('user-123').subscribe({
@@ -156,7 +156,7 @@ describe('AutorentarCreditService', () => {
     it('should issue credit with custom amount', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockIssueResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service.issueCredit('user-123', 50000).subscribe({
@@ -174,7 +174,7 @@ describe('AutorentarCreditService', () => {
     it('should refresh credit info after issuance', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockIssueResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service.issueCredit('user-123').subscribe({
@@ -216,7 +216,7 @@ describe('AutorentarCreditService', () => {
     it('should consume credit for claim', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockConsumeResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service
@@ -244,7 +244,7 @@ describe('AutorentarCreditService', () => {
     it('should handle missing claimId', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockConsumeResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service
@@ -270,7 +270,7 @@ describe('AutorentarCreditService', () => {
     it('should refresh credit info after consumption', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockConsumeResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service
@@ -321,7 +321,7 @@ describe('AutorentarCreditService', () => {
     it('should extend credit successfully', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockRenewalResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service.extendCredit('user-123').subscribe({
@@ -329,7 +329,7 @@ describe('AutorentarCreditService', () => {
           expect(result).toEqual(mockRenewalResult);
           expect(supabaseMock.rpc).toHaveBeenCalledWith(
             'extend_autorentar_credit_for_good_history',
-            { p_user_id: 'user-123' }
+            { p_user_id: 'user-123' },
           );
           done();
         },
@@ -340,7 +340,7 @@ describe('AutorentarCreditService', () => {
     it('should refresh credit info after successful renewal', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockRenewalResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service.extendCredit('user-123').subscribe({
@@ -394,7 +394,7 @@ describe('AutorentarCreditService', () => {
 
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockRenewalResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service.checkRenewalEligibility('user-123').subscribe({
@@ -415,9 +415,7 @@ describe('AutorentarCreditService', () => {
         expires_at: null,
       };
 
-      supabaseMock.rpc.and.returnValue(
-        Promise.resolve({ data: [mockRenewalResult], error: null })
-      );
+      supabaseMock.rpc.and.returnValue(Promise.resolve({ data: [mockRenewalResult], error: null }));
 
       service.checkRenewalEligibility('user-123').subscribe({
         next: (eligible) => {
@@ -453,7 +451,7 @@ describe('AutorentarCreditService', () => {
     it('should recognize breakage successfully', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockBreakageResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service.recognizeBreakage('user-123').subscribe({
@@ -471,7 +469,7 @@ describe('AutorentarCreditService', () => {
     it('should refresh credit info after breakage', (done) => {
       supabaseMock.rpc.and.returnValues(
         Promise.resolve({ data: [mockBreakageResult], error: null }),
-        Promise.resolve({ data: [mockCreditInfo], error: null })
+        Promise.resolve({ data: [mockCreditInfo], error: null }),
       );
 
       service.recognizeBreakage('user-123').subscribe({

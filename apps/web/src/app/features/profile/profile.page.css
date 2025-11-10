@@ -1,0 +1,206 @@
+/* Profile Page - Grid Layout with Areas */
+
+.profile-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .profile-container {
+    padding: 2rem;
+  }
+}
+
+/* Main Grid Layout */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .profile-grid {
+    grid-template-columns: 320px 1fr 280px;
+    grid-template-areas:
+      "sidebar main activity"
+      "sidebar main activity"
+      "sidebar main activity";
+    gap: 2rem;
+  }
+}
+
+.profile-sidebar {
+  grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+.profile-main {
+  grid-area: main;
+  min-width: 0; /* Prevents grid overflow */
+}
+
+.profile-activity {
+  grid-area: activity;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+/* Sticky Tab Navigation */
+.sticky-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface-primary, #ffffff);
+  border-bottom: 2px solid var(--border-default, #e5e7eb);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sticky-tabs {
+    background: var(--surface-secondary, #1f2937);
+    border-bottom-color: var(--border-default, #374151);
+  }
+}
+
+.tab-button {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary, #6b7280);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  position: relative;
+}
+
+.tab-button:hover {
+  color: var(--text-primary, #111827);
+  background: var(--surface-secondary, #f3f4f6);
+}
+
+.tab-button.active {
+  color: var(--cta-default, #2c4a52);
+  border-bottom-color: var(--cta-default, #2c4a52);
+}
+
+@media (prefers-color-scheme: dark) {
+  .tab-button {
+    color: var(--text-secondary, #9ca3af);
+  }
+
+  .tab-button:hover {
+    color: var(--text-primary, #f9fafb);
+    background: var(--surface-secondary, #374151);
+  }
+
+  .tab-button.active {
+    color: var(--cta-default, #4a8fa5);
+    border-bottom-color: var(--cta-default, #4a8fa5);
+  }
+}
+
+/* Tab Content */
+.tab-content {
+  min-height: 400px;
+}
+
+.tab-panel {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Footer */
+.profile-footer {
+  margin-top: 3rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--border-default, #e5e7eb);
+}
+
+@media (prefers-color-scheme: dark) {
+  .profile-footer {
+    border-top-color: var(--border-default, #374151);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1023px) {
+  .profile-sidebar,
+  .profile-activity {
+    position: static;
+    max-height: none;
+  }
+
+  .profile-grid {
+    grid-template-areas:
+      "sidebar"
+      "main"
+      "activity";
+  }
+}
+
+/* Scrollbar styling for sidebar */
+.profile-sidebar::-webkit-scrollbar,
+.profile-activity::-webkit-scrollbar {
+  width: 6px;
+}
+
+.profile-sidebar::-webkit-scrollbar-track,
+.profile-activity::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.profile-sidebar::-webkit-scrollbar-thumb,
+.profile-activity::-webkit-scrollbar-thumb {
+  background: var(--border-default, #e5e7eb);
+  border-radius: 3px;
+}
+
+.profile-sidebar::-webkit-scrollbar-thumb:hover,
+.profile-activity::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted, #9ca3af);
+}
+
+@media (prefers-color-scheme: dark) {
+  .profile-sidebar::-webkit-scrollbar-thumb,
+  .profile-activity::-webkit-scrollbar-thumb {
+    background: var(--border-default, #4b5563);
+  }
+
+  .profile-sidebar::-webkit-scrollbar-thumb:hover,
+  .profile-activity::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted, #6b7280);
+  }
+}

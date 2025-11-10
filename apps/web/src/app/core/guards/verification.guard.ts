@@ -17,10 +17,11 @@ export class VerificationGuard {
     // Load the current verification status
     await this.verificationService.loadStatuses();
 
-    const status = this.verificationService.statuses();
+    const statuses = this.verificationService.statuses();
 
-    // If user is verified, allow access
-    if (status?.status === 'VERIFICADO') {
+    // Check if any status is VERIFICADO (typically checking 'owner' role)
+    const locadorStatus = statuses.find((s) => s.role === 'owner');
+    if (locadorStatus?.status === 'VERIFICADO') {
       return true;
     }
 
@@ -42,8 +43,9 @@ export class HasMissingDocsGuard {
 
   async hasMissingDocs(): Promise<boolean> {
     await this.verificationService.loadStatuses();
-    const status = this.verificationService.statuses();
-    return (status?.missing_docs?.length ?? 0) > 0;
+    const statuses = this.verificationService.statuses();
+    // Check if any status has missing docs
+    return statuses.some((status) => (status.missing_docs?.length ?? 0) > 0);
   }
 }
 

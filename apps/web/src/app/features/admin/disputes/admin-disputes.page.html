@@ -1,0 +1,233 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Disputas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <ion-card>
+      <ion-card-content>
+        <p class="text-sm text-gray-500">Abiertas</p>
+        <p class="text-2xl font-bold text-yellow-600">{{ getStatusCount('open') }}</p>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-content>
+        <p class="text-sm text-gray-500">En Revisión</p>
+        <p class="text-2xl font-bold text-cta-default">{{ getStatusCount('in_review') }}</p>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-content>
+        <p class="text-sm text-gray-500">Resueltas</p>
+        <p class="text-2xl font-bold text-success-light">{{ getStatusCount('resolved') }}</p>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-content>
+        <p class="text-sm text-gray-500">Rechazadas</p>
+        <p class="text-2xl font-bold text-red-600">{{ getStatusCount('rejected') }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Filters -->
+  <ion-card class="mb-4">
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <ion-item>
+          <ion-label position="stacked">Estado</ion-label>
+          <ion-select [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="status">
+            <ion-select-option value="">Todos</ion-select-option>
+            <ion-select-option value="open">Abierta</ion-select-option>
+            <ion-select-option value="in_review">En Revisión</ion-select-option>
+            <ion-select-option value="resolved">Resuelta</ion-select-option>
+            <ion-select-option value="rejected">Rechazada</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Tipo</ion-label>
+          <ion-select [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="kind">
+            <ion-select-option value="">Todos</ion-select-option>
+            <ion-select-option value="damage">Daños</ion-select-option>
+            <ion-select-option value="no_show">No se presentó</ion-select-option>
+            <ion-select-option value="late_return">Devolución tardía</ion-select-option>
+            <ion-select-option value="other">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Búsqueda</ion-label>
+          <ion-input
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="searchTerm"
+            placeholder="Buscar..."
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <ion-button (click)="applyFilters()">Aplicar Filtros</ion-button>
+        <ion-button fill="outline" (click)="clearFilters()">Limpiar</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="mt-4 text-gray-500">Cargando disputas...</p>
+  </div>
+
+  <!-- Disputes List -->
+  <div *ngIf="!loading()">
+    <div *ngIf="disputes().length === 0" class="text-center py-12 text-gray-500">
+      <p>No hay disputas que coincidan con los filtros</p>
+    </div>
+
+    <div *ngIf="disputes().length > 0" class="space-y-4">
+      <ion-card *ngFor="let dispute of disputes()" class="mb-4">
+        <ion-card-header>
+          <div class="flex items-center justify-between">
+            <ion-card-title class="text-base">
+              Disputa #{{ dispute.id.slice(0, 8) }}
+            </ion-card-title>
+            <ion-badge [color]="getStatusColor(dispute.status)">
+              {{ getStatusLabel(dispute.status) }}
+            </ion-badge>
+          </div>
+          <ion-card-subtitle>
+            {{ getKindLabel(dispute.kind) }} • Booking: {{ dispute.booking_id.slice(0, 8) }} •
+            {{ formatDate(dispute.created_at) }}
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p class="text-sm mb-4">{{ dispute.description || 'Sin descripción' }}</p>
+
+          <div class="flex gap-2">
+            <ion-button fill="outline" size="small" (click)="openDetailModal(dispute)">
+              <ion-icon name="eye" slot="start"></ion-icon>
+              Ver Detalles
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div
+    *ngIf="showDetailModal()"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+    (click)="closeDetailModal()"
+  >
+    <ion-card
+      class="max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+      (click)="$event.stopPropagation()"
+    >
+      <ion-card-header>
+        <ion-card-title>Detalles de Disputa</ion-card-title>
+        <ion-card-subtitle>#{{ selectedDispute()?.id?.slice(0, 8) }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngIf="selectedDispute()" class="space-y-4">
+          <!-- Dispute Info -->
+          <div>
+            <h3 class="text-lg font-semibold mb-2">Información</h3>
+            <div class="space-y-2">
+              <p class="text-sm">
+                <strong>Booking ID:</strong> {{ selectedDispute()!.booking_id }}
+              </p>
+              <p class="text-sm">
+                <strong>Tipo:</strong> {{ getKindLabel(selectedDispute()!.kind) }}
+              </p>
+              <p class="text-sm">
+                <strong>Estado:</strong> {{ getStatusLabel(selectedDispute()!.status) }}
+              </p>
+              <p class="text-sm">
+                <strong>Descripción:</strong>
+                {{ selectedDispute()!.description || 'Sin descripción' }}
+              </p>
+              <p class="text-sm">
+                <strong>Creada:</strong> {{ formatDate(selectedDispute()?.created_at ?? null) }}
+              </p>
+              <p *ngIf="selectedDispute()?.resolved_at" class="text-sm">
+                <strong>Resuelta:</strong> {{ formatDate(selectedDispute()?.resolved_at ?? null) }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Evidence Gallery -->
+          <div>
+            <h3 class="text-lg font-semibold mb-2">Evidencias ({{ evidence().length }})</h3>
+            <div *ngIf="evidence().length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div *ngFor="let item of evidence()" class="relative">
+                <img
+                  *ngIf="isImage(item.path)"
+                  [src]="item.path"
+                  [alt]="item.note || 'Evidencia'"
+                  class="w-full h-48 object-cover rounded"
+                />
+                <div
+                  *ngIf="!isImage(item.path)"
+                  class="w-full h-48 bg-gray-100 rounded flex items-center justify-center"
+                >
+                  <ion-icon name="document" class="text-4xl text-gray-400"></ion-icon>
+                </div>
+                <p *ngIf="item.note" class="text-xs text-gray-500 mt-2">{{ item.note }}</p>
+                <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
+                  Ver completo
+                </a>
+              </div>
+            </div>
+            <div *ngIf="evidence().length === 0" class="text-center py-8 text-gray-500">
+              <p>No hay evidencias</p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="pt-4 border-t">
+            <h3 class="text-lg font-semibold mb-3">Acciones</h3>
+            <div class="flex flex-wrap gap-2">
+              <ion-button
+                *ngIf="selectedDispute()!.status !== 'in_review'"
+                color="primary"
+                (click)="updateStatus(selectedDispute()!.id, 'in_review')"
+              >
+                Marcar en Revisión
+              </ion-button>
+              <ion-button
+                *ngIf="selectedDispute()!.status !== 'resolved'"
+                color="success"
+                (click)="updateStatus(selectedDispute()!.id, 'resolved')"
+              >
+                Resolver
+              </ion-button>
+              <ion-button
+                *ngIf="selectedDispute()!.status !== 'rejected'"
+                color="danger"
+                (click)="updateStatus(selectedDispute()!.id, 'rejected')"
+              >
+                Rechazar
+              </ion-button>
+            </div>
+          </div>
+        </div>
+
+        <ion-button expand="block" fill="outline" class="mt-4" (click)="closeDetailModal()">
+          Cerrar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

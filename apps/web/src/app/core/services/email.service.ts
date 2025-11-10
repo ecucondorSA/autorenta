@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
@@ -37,17 +37,17 @@ export class EmailService {
    * Envía email de confirmación de reserva
    */
   async sendBookingConfirmation(
-    data: BookingConfirmationEmailData
+    data: BookingConfirmationEmailData,
   ): Promise<{ success: boolean; error?: string }> {
     try {
       const { data: result, error } = await this.supabase.functions.invoke(
         'send-booking-confirmation-email',
         {
           body: data,
-        }
+        },
       );
 
-      if ((error)) {
+      if (error) {
         console.error('Error sending booking confirmation email:', error);
         return { success: false, error: error.message };
       }
@@ -69,21 +69,18 @@ export class EmailService {
   async sendBookingCancellation(
     bookingId: string,
     recipientEmail: string,
-    recipientName: string
+    recipientName: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: result, error } = await this.supabase.functions.invoke(
-        'send-booking-cancellation-email',
-        {
-          body: {
-            bookingId,
-            recipientEmail,
-            recipientName,
-          },
-        }
-      );
+      const { error } = await this.supabase.functions.invoke('send-booking-cancellation-email', {
+        body: {
+          bookingId,
+          recipientEmail,
+          recipientName,
+        },
+      });
 
-      if ((error)) {
+      if (error) {
         console.error('Error sending cancellation email:', error);
         return { success: false, error: error.message };
       }
@@ -105,22 +102,19 @@ export class EmailService {
     bookingId: string,
     recipientEmail: string,
     recipientName: string,
-    startDate: string
+    startDate: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: result, error } = await this.supabase.functions.invoke(
-        'send-booking-reminder-email',
-        {
-          body: {
-            bookingId,
-            recipientEmail,
-            recipientName,
-            startDate,
-          },
-        }
-      );
+      const { error } = await this.supabase.functions.invoke('send-booking-reminder-email', {
+        body: {
+          bookingId,
+          recipientEmail,
+          recipientName,
+          startDate,
+        },
+      });
 
-      if ((error)) {
+      if (error) {
         console.error('Error sending reminder email:', error);
         return { success: false, error: error.message };
       }

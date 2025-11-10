@@ -33,13 +33,22 @@ AutoRenta es un marketplace de renta de autos MVP para Argentina construido con:
 # 1. Configurar autenticación CLI
 ./tools/setup-auth.sh    # GitHub, Supabase, Cloudflare
 
-# 2. Instalar dependencias
+# 2. Configurar secrets de desarrollo
+cp .env.local.example .env.local
+# Editar .env.local y llenar con tus credenciales:
+# - NG_APP_SUPABASE_ANON_KEY (obtener de Supabase Dashboard)
+# - NG_APP_MAPBOX_ACCESS_TOKEN (obtener de Mapbox)
+# - NG_APP_PAYPAL_CLIENT_ID (obtener de PayPal Developer)
+
+# 3. Instalar dependencias
 npm run install
 
-# 3. Verificar configuración
+# 4. Verificar configuración
 npm run check:auth
 npm run status
 ```
+
+**⚠️ IMPORTANTE**: Nunca commitear `.env.local` - está en `.gitignore` automáticamente.
 
 ### Desarrollo Diario
 
@@ -270,6 +279,133 @@ Para bugs complejos que abarcan múltiples capas (UI → Service → DB → RLS)
 5. Merge con `--no-ff`
 
 **Guía completa**: [CLAUDE_ARCHITECTURE.md#vertical-stack-debugging](./CLAUDE_ARCHITECTURE.md#vertical-stack-debugging-workflow)
+
+## Debugging Build Errors
+
+### Filosofía: Preservar Funcionalidad
+
+**CRÍTICO**: Cuando encuentres errores de compilación, NUNCA elimines componentes o funcionalidades para "arreglar" el error. En su lugar:
+
+1. **Analiza el error real**: Lee el mensaje de error completo para entender el problema subyacente
+2. **Identifica la causa raíz**: Determina qué está causando el error (imports faltantes, tipos incorrectos, configuración)
+3. **Arregla el problema**: Soluciona el problema real preservando toda la funcionalidad
+4. **Verifica la funcionalidad**: Asegúrate de que ninguna feature se perdió en el proceso
+
+### Proceso de Debugging de Angular Build Errors
+
+#### Paso 1: Identificar todos los errores
+
+```bash
+# Ver el log completo de compilación
+tail -200 app_start.log | grep -E "ERROR|WARNING"
+
+# Listar todos los componentes faltantes
+grep "is not a known element" app_start.log | grep -o "'app-[^']*'" | sort -u
+```
+
+#### Paso 2: Para cada error, determina la solución correcta
+
+**Error**: `'app-component-name' is not a known element`
+**Causa**: Componente no está en el array `imports` del módulo/componente
+**Solución**: Agregar el componente a `imports`, NO removerlo del template
+
+```typescript
+// ✅ CORRECTO
+imports: [
+  CommonModule,
+  MissingComponent,  // <- Agregar componente faltante
+],
+
+// ❌ INCORRECTO - No remover del template
+// Esto elimina funcionalidad
+```
+
+**Error**: `Property 'method' does not exist on type 'Component'`
+**Causa**: Método o propiedad falta en el componente TypeScript
+**Solución**: Agregar el método/propiedad faltante, NO remover del template
+
+```typescript
+// ✅ CORRECTO
+onMethodClick(param: string): void {
+  // Implementar lógica del método
+}
+
+// ❌ INCORRECTO
+// (click)="onMethodClick($event)"  <- No eliminar del template
+```
+
+**Error**: `Property 'prop' is private and only accessible within class`
+**Causa**: Propiedad privada siendo accedida desde el template
+**Solución**: Cambiar a `public` o crear un getter público, NO remover del template
+
+```typescript
+// ✅ CORRECTO - Opción 1: Hacer público
+public map: MapboxMap | null = null;
+
+// ✅ CORRECTO - Opción 2: Crear getter
+private map: MapboxMap | null = null;
+get mapInstance(): MapboxMap | null {
+  return this.map;
+}
+
+// ❌ INCORRECTO
+// [map]="component?.map"  <- No eliminar del template
+```
+
+**Error**: `Parser Error: Missing expected } at column X`
+**Causa**: Sintaxis de template inválida (ej: spread operator en template)
+**Solución**: Mover la lógica a un método del componente
+
+```typescript
+// ❌ INCORRECTO - Spread operator en template
+(change)="data.set({...data(), field: $event})"
+
+// ✅ CORRECTO - Método helper
+onFieldChange(event: Event): void {
+  this.data.set({
+    ...this.data(),
+    field: (event.target as HTMLInputElement).value
+  });
+}
+
+// En template:
+(change)="onFieldChange($event)"
+```
+
+#### Paso 3: Verificar que no se perdió funcionalidad
+
+Después de arreglar errores, verifica:
+
+```bash
+# 1. Build exitoso
+tail -20 app_start.log | grep "Application bundle generation complete"
+
+# 2. No quedan errores
+tail -100 app_start.log | grep ERROR
+
+# 3. Todos los componentes siguen en el template
+grep -o "app-[a-z-]*" src/app/features/*/\*.html | sort -u
+
+# 4. Todas las features siguen disponibles
+# - Verifica manualmente en http://localhost:4200
+```
+
+### Checklist Anti-Patterns a Evitar
+
+- ❌ Eliminar componentes del template porque no están importados
+- ❌ Eliminar métodos del template porque no existen en el componente
+- ❌ Comentar secciones del template para "arreglar" errores
+- ❌ Remover imports "no usados" sin verificar si están en el template
+- ❌ Simplificar funcionalidad compleja para evitar errors de tipos
+
+### Checklist de Buenas Prácticas
+
+- ✅ Agregar imports faltantes para componentes usados en template
+- ✅ Implementar métodos faltantes referenciados en template
+- ✅ Hacer públicas las propiedades accedidas desde template
+- ✅ Crear métodos helper para lógica compleja de template
+- ✅ Sincronizar tipos cuando hay cambios en DB: `npm run sync:types`
+- ✅ Limpiar cache de Angular si hay errores extraños: `rm -rf apps/web/.angular`
 
 ## Common Pitfalls
 

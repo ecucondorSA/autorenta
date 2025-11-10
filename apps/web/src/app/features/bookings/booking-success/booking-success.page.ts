@@ -144,7 +144,12 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
 
     // Fallback: mostrar car_id si existe
     if (booking.car_id) {
-      console.warn('[BookingSuccess] Car data not loaded for booking:', booking.id, 'car_id:', booking.car_id);
+      console.warn(
+        '[BookingSuccess] Car data not loaded for booking:',
+        booking.id,
+        'car_id:',
+        booking.car_id,
+      );
       return `Vehículo (${booking.car_id.slice(0, 8)}...)`;
     }
 

@@ -11,7 +11,7 @@ import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 
 /**
  * Página de Check-out para locatarios
- * 
+ *
  * Permite realizar la inspección final del vehículo al devolver el auto.
  * Muestra comparación con check-in (odómetro, combustible) y permite reportar daños.
  * Integra con el sistema FGO v1.1 para registrar evidencias.
@@ -19,11 +19,7 @@ import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 @Component({
   selector: 'app-check-out',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    InspectionUploaderComponent,
-  ],
+  imports: [CommonModule, RouterLink, InspectionUploaderComponent],
   templateUrl: './check-out.page.html',
   styleUrl: './check-out.page.css',
 })
@@ -45,7 +41,7 @@ export class CheckOutPage implements OnInit {
   readonly canPerformCheckOut = computed(() => {
     const booking = this.booking();
     if (!booking) return false;
-    
+
     // Solo permite check-out si:
     // 1. Booking está en progreso o completado
     // 2. El usuario es el locatario
@@ -55,7 +51,7 @@ export class CheckOutPage implements OnInit {
     const validStatus = booking.status === 'in_progress' || booking.status === 'completed';
     const hasCheckOut = this.existingInspection()?.signedAt !== undefined;
     const hasCheckIn = this.checkInInspection()?.signedAt !== undefined;
-    
+
     return isRenter && validStatus && !hasCheckOut && hasCheckIn;
   });
 
@@ -117,11 +113,11 @@ export class CheckOutPage implements OnInit {
         firstValueFrom(this.fgoService.getInspectionByStage(bookingId, 'check_in')),
         firstValueFrom(this.fgoService.getInspectionByStage(bookingId, 'check_out')),
       ]);
-      
+
       if (checkIn) {
         this.checkInInspection.set(checkIn);
       }
-      
+
       if (checkOut?.signedAt) {
         this.existingInspection.set(checkOut);
         this.inspectionCompleted.set(true);
@@ -189,11 +185,3 @@ export class CheckOutPage implements OnInit {
     });
   }
 }
-
-
-
-
-
-
-
-

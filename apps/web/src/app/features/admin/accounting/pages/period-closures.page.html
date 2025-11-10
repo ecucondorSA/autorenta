@@ -1,0 +1,170 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin/accounting"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Cierres de Período</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openCreateModal()">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Filters -->
+  <ion-card class="mb-4">
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ion-item>
+          <ion-label position="stacked">Tipo de Período</ion-label>
+          <ion-select
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="periodType"
+          >
+            <ion-select-option value="">Todos</ion-select-option>
+            <ion-select-option value="daily">Diario</ion-select-option>
+            <ion-select-option value="monthly">Mensual</ion-select-option>
+            <ion-select-option value="yearly">Anual</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Estado</ion-label>
+          <ion-select [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="status">
+            <ion-select-option value="">Todos</ion-select-option>
+            <ion-select-option value="open">Abierto</ion-select-option>
+            <ion-select-option value="closed">Cerrado</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha Inicio</ion-label>
+          <ion-input
+            type="date"
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="startDate"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha Fin</ion-label>
+          <ion-input
+            type="date"
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="endDate"
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <ion-button (click)="applyFilters()">Aplicar</ion-button>
+        <ion-button fill="outline" (click)="clearFilters()">Limpiar</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="mt-4 text-gray-500">Cargando cierres...</p>
+  </div>
+
+  <!-- Closures List -->
+  <ion-card *ngIf="!loading()">
+    <ion-card-header>
+      <ion-card-title> Cierres de Período ({{ closures().length }}) </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngIf="closures().length === 0" class="text-center py-8 text-gray-500">
+        <p>No hay cierres que coincidan con los filtros</p>
+      </div>
+
+      <div *ngIf="closures().length > 0" class="space-y-4">
+        <ion-item *ngFor="let closure of closures()" class="mb-4">
+          <ion-label>
+            <h3>{{ closure.period_code }} - {{ closure.period_type }}</h3>
+            <p class="text-sm">
+              {{ closure.start_date | date: 'short' }} - {{ closure.end_date | date: 'short' }}
+            </p>
+            <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <p class="text-gray-500">Débitos</p>
+                <p class="font-semibold">${{ closure.total_debits.toFixed(2) }}</p>
+              </div>
+              <div>
+                <p class="text-gray-500">Créditos</p>
+                <p class="font-semibold">${{ closure.total_credits.toFixed(2) }}</p>
+              </div>
+            </div>
+          </ion-label>
+          <div slot="end" class="flex flex-col items-end gap-2">
+            <ion-badge [color]="closure.balance_check ? 'success' : 'danger'">
+              {{ closure.balance_check ? 'Balanceado' : 'Desbalanceado' }}
+            </ion-badge>
+            <ion-badge [color]="closure.status === 'closed' ? 'success' : 'warning'">
+              {{ closure.status }}
+            </ion-badge>
+          </div>
+        </ion-item>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Create Closure Modal -->
+  <div
+    *ngIf="showCreateModal()"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+    (click)="closeCreateModal()"
+  >
+    <ion-card class="max-w-md w-full" (click)="$event.stopPropagation()">
+      <ion-card-header>
+        <ion-card-title>Ejecutar Cierre de Período</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form (ngSubmit)="executeClosure()">
+          <ion-item class="mb-4">
+            <ion-label position="stacked">Tipo de Período *</ion-label>
+            <ion-select
+              [(ngModel)]="newClosure"
+              [ngModelOptions]="{ standalone: true }"
+              name="periodType"
+              (ionChange)="openCreateModal()"
+            >
+              <ion-select-option value="daily">Diario</ion-select-option>
+              <ion-select-option value="monthly">Mensual</ion-select-option>
+              <ion-select-option value="yearly">Anual</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item class="mb-4">
+            <ion-label position="stacked">Código de Período *</ion-label>
+            <ion-input
+              [(ngModel)]="newClosure"
+              [ngModelOptions]="{ standalone: true }"
+              name="periodCode"
+              placeholder="YYYY-MM-DD, YYYY-MM o YYYY"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <div class="flex gap-2">
+            <ion-button expand="block" type="submit" [disabled]="loading()">
+              Ejecutar Cierre
+            </ion-button>
+            <ion-button expand="block" fill="outline" (click)="closeCreateModal()">
+              Cancelar
+            </ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

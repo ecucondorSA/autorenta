@@ -1,0 +1,171 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/bookings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Contratos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openCreateModal()">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="mt-4 text-gray-500">Cargando contratos...</p>
+  </div>
+
+  <!-- Error Message -->
+  <ion-card *ngIf="error()" color="danger" class="mb-4">
+    <ion-card-content>
+      <div class="flex items-center">
+        <ion-icon name="alert-circle" class="text-xl mr-3"></ion-icon>
+        <div>
+          <strong>Error</strong>
+          <p class="mt-2">{{ error() }}</p>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Success Message -->
+  <ion-card *ngIf="success()" color="success" class="mb-4">
+    <ion-card-content>
+      <div class="flex items-center">
+        <ion-icon name="checkmark-circle" class="text-xl mr-3"></ion-icon>
+        <div>
+          <strong>Éxito</strong>
+          <p class="mt-2">{{ success() }}</p>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Contracts List -->
+  <div *ngIf="!loading()">
+    <div *ngIf="contracts().length === 0" class="text-center py-12">
+      <ion-icon name="document-text-outline" class="text-6xl text-gray-400 mb-4"></ion-icon>
+      <p class="text-gray-500 mb-4">No hay contratos disponibles</p>
+      <ion-button (click)="openCreateModal()">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Crear Contrato
+      </ion-button>
+    </div>
+
+    <div *ngIf="contracts().length > 0" class="space-y-4">
+      <ion-card *ngFor="let contract of contracts()" class="mb-4">
+        <ion-card-header>
+          <div class="flex items-center justify-between">
+            <ion-card-title class="text-base">
+              Contrato #{{ contract.id.slice(0, 8) }}
+            </ion-card-title>
+            <ion-badge [color]="getStatusBadgeColor(contract.accepted_by_renter)">
+              {{ contract.accepted_by_renter ? 'Aceptado' : 'Pendiente' }}
+            </ion-badge>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="space-y-2 mb-4">
+            <p class="text-sm"><strong>Booking ID:</strong> {{ contract.booking_id }}</p>
+            <p class="text-sm">
+              <strong>Versión de Términos:</strong> {{ contract.terms_version }}
+            </p>
+            <p class="text-sm">
+              <strong>Fecha de Creación:</strong> {{ formatDate(contract.created_at) }}
+            </p>
+            <p class="text-sm"><strong>Aceptado:</strong> {{ formatDate(contract.accepted_at) }}</p>
+            <p *ngIf="contract.booking" class="text-sm">
+              <strong>Auto:</strong> {{ contract.booking.car?.brand }}
+              {{ contract.booking.car?.model }}
+            </p>
+          </div>
+
+          <div class="flex gap-2">
+            <ion-button
+              *ngIf="contract.pdf_url"
+              fill="outline"
+              size="small"
+              [href]="contract.pdf_url"
+              target="_blank"
+            >
+              <ion-icon name="document" slot="start"></ion-icon>
+              Ver PDF
+            </ion-button>
+
+            <ion-button
+              *ngIf="!contract.accepted_by_renter"
+              fill="solid"
+              color="success"
+              size="small"
+              (click)="acceptContract(contract.id)"
+              [disabled]="loading()"
+            >
+              <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+              Aceptar Contrato
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Create Contract Modal -->
+  <div
+    *ngIf="showCreateModal()"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+    (click)="closeCreateModal()"
+  >
+    <ion-card class="max-w-md w-full" (click)="$event.stopPropagation()">
+      <ion-card-header>
+        <ion-card-title>Crear Contrato</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form (ngSubmit)="createContract()">
+          <ion-item class="mb-4">
+            <ion-label position="stacked">Booking ID *</ion-label>
+            <ion-input
+              [(ngModel)]="newContract"
+              [ngModelOptions]="{ standalone: true }"
+              name="bookingId"
+              placeholder="ID del booking"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="mb-4">
+            <ion-label position="stacked">Versión de Términos</ion-label>
+            <ion-input
+              [(ngModel)]="newContract"
+              [ngModelOptions]="{ standalone: true }"
+              name="termsVersion"
+              placeholder="1.0"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="mb-4">
+            <ion-label position="stacked">URL del PDF (opcional)</ion-label>
+            <ion-input
+              [(ngModel)]="newContract"
+              [ngModelOptions]="{ standalone: true }"
+              name="pdfUrl"
+              type="url"
+              placeholder="https://..."
+            ></ion-input>
+          </ion-item>
+
+          <div class="flex gap-2">
+            <ion-button expand="block" type="submit" [disabled]="loading()"> Crear </ion-button>
+            <ion-button expand="block" fill="outline" (click)="closeCreateModal()">
+              Cancelar
+            </ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

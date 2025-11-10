@@ -1,11 +1,21 @@
 import { Component, EventEmitter, Input, Output, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/wallet.model';
 
 /**
  * Componente para solicitar retiros
+ *
+ * ✅ SECURITY: Validaciones robustas de monto y disponibilidad
  */
 @Component({
   selector: 'app-withdrawal-request-form',
@@ -61,7 +71,14 @@ export class WithdrawalRequestFormComponent {
   constructor(private readonly fb: FormBuilder) {
     this.form = this.fb.group({
       bank_account_id: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.min(this.MIN_AMOUNT), Validators.max(999999)]],
+      amount: [
+        '',
+        [
+          Validators.required,
+          Validators.min(this.MIN_AMOUNT),
+          this.validateMaxWithdrawableAmount(),
+        ],
+      ],
       user_notes: [''],
     });
 
@@ -81,6 +98,36 @@ export class WithdrawalRequestFormComponent {
         });
       }
     });
+  }
+
+  /**
+   * ✅ SECURITY: Validar que el monto no exceda el balance disponible
+   */
+  private validateMaxWithdrawableAmount(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const amount = control.value;
+
+      if (!amount || amount <= 0) {
+        return null; // Dejar que Validators.required maneje esto
+      }
+
+      // Calcular fee y total debit
+      const fee = Math.round(amount * this.FEE_PERCENTAGE * 100) / 100;
+      const totalDebit = amount + fee;
+
+      // Validar contra withdrawableBalance
+      if (totalDebit > this.withdrawableBalance) {
+        return {
+          insufficientBalance: {
+            required: totalDebit,
+            available: this.withdrawableBalance,
+            missing: totalDebit - this.withdrawableBalance,
+          },
+        };
+      }
+
+      return null;
+    };
   }
 
   onSubmit(): void {
@@ -144,6 +191,11 @@ export class WithdrawalRequestFormComponent {
 
     if (control.errors['max']) {
       return 'Monto demasiado alto';
+    }
+
+    if (control.errors['insufficientBalance']) {
+      const error = control.errors['insufficientBalance'];
+      return `Saldo insuficiente. Disponible: $${error.available.toFixed(2)}, Necesario: $${error.required.toFixed(2)} (incluye comisión)`;
     }
 
     return 'Campo inválido';

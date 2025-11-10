@@ -86,18 +86,18 @@ export class MyClaimsPage {
         },
         error: (error) => {
           console.error('Error loading claims:', error);
-          this.toastService.showToast('Error al cargar siniestros', 'error');
+          this.toastService.error('Error al cargar siniestros', '');
           this.loading.set(false);
         },
       });
     } catch (error) {
       console.error('Error loading claims:', error);
-      this.toastService.showToast('Error al cargar siniestros', 'error');
+      this.toastService.error('Error al cargar siniestros', '');
       this.loading.set(false);
     }
   }
 
-  setFilter(status: typeof this.filterStatus extends () => infer T ? T : never) {
+  setFilter(status: InsuranceClaim['status'] | 'all') {
     this.filterStatus.set(status);
   }
 
@@ -108,10 +108,7 @@ export class MyClaimsPage {
   reportNewClaim() {
     // Navigate to booking selection or ask which booking
     this.router.navigate(['/bookings']);
-    this.toastService.showToast(
-      'Selecciona una reserva para reportar un siniestro',
-      'info'
-    );
+    this.toastService.info('Siniestros', 'Selecciona una reserva para reportar un siniestro');
   }
 
   getStatusColor(status: InsuranceClaim['status']): string {
@@ -149,7 +146,7 @@ export class MyClaimsPage {
   }
 
   getClaimTypeLabel(type: InsuranceClaim['claim_type']): string {
-    const labels: Record<InsuranceClaim['claim_type'], string> = {
+    const labels: Record<string, string> = {
       collision: 'Colisión',
       theft: 'Robo',
       vandalism: 'Vandalismo',
@@ -162,7 +159,7 @@ export class MyClaimsPage {
   }
 
   getClaimTypeIcon(type: InsuranceClaim['claim_type']): string {
-    const icons: Record<InsuranceClaim['claim_type'], string> = {
+    const icons: Record<string, string> = {
       collision: '🚗💥',
       theft: '🚨',
       vandalism: '🔨',

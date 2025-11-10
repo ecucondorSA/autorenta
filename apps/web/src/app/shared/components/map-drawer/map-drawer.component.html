@@ -1,0 +1,261 @@
+<!-- 🎯 MAP DRAWER - Desktop (Sidebar) & Mobile (Bottom Sheet) -->
+
+<!-- Desktop: Fixed Right Sidebar (30%) -->
+<div *ngIf="!isMobile && isOpen" class="map-drawer-overlay" (click)="close()"></div>
+
+<div [ngClass]="drawerClass">
+  <!-- Header -->
+  <div class="drawer-header">
+    <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure">
+      Detalles del Auto
+    </h2>
+    <button
+      *ngIf="!isMobile || isOpen"
+      (click)="close()"
+      class="btn-close"
+      type="button"
+      aria-label="Cerrar drawer"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="drawer-content">
+    <div *ngIf="selectedCar; else emptyState" class="content-wrapper">
+      <!-- Car Card Extended -->
+      <div class="mb-4">
+        <div class="car-preview">
+          <!-- Main Image -->
+          <div class="relative w-full aspect-video bg-surface-secondary overflow-hidden rounded-lg">
+            <img
+              *ngIf="selectedCar.photoUrl"
+              [src]="selectedCar.photoUrl"
+              [alt]="selectedCar.title"
+              class="w-full h-full object-cover"
+            />
+            <div
+              *ngIf="!selectedCar.photoUrl"
+              class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-warning-light/10 to-cta-default/10"
+            >
+              <svg
+                class="w-12 h-12 text-cta-default/40"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+
+            <!-- Distance Badge (Top Right) -->
+            <div *ngIf="distanceKm() !== null" class="absolute top-3 right-3">
+              <div
+                class="inline-flex items-center gap-1 rounded-full bg-surface-raised dark:bg-surface-secondary px-3 py-1.5 text-xs font-semibold text-cta-default shadow-md"
+              >
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M3 10a7 7 0 1114 0 7 7 0 01-14 0zm5-2a2 2 0 11-4 0 2 2 0 014 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span>{{ distanceKm() | number: '1.1-1' }} km</span>
+              </div>
+            </div>
+
+            <!-- Quick Actions (Top Left) -->
+            <div class="absolute top-3 left-3 flex gap-2">
+              <button type="button" class="action-button" title="Favorito">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </button>
+              <button type="button" class="action-button" title="Compartir">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8.684 13.342C9.839 10.053 13.081 8 16.5 8c.69 0 1.371.055 2.036.157m0 0A18.023 18.023 0 020.464 20.357m18.036-1.215a14.025 14.025 0 01-23.864-3.642"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Title & Location -->
+          <div class="mt-4 space-y-2">
+            <h3
+              class="text-lg font-bold text-text-primary dark:text-text-inverse-pure line-clamp-2"
+            >
+              {{ selectedCar.title }}
+            </h3>
+            <p class="text-sm text-text-secondary dark:text-text-secondary flex items-center gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              {{ selectedCar.locationLabel }}
+            </p>
+          </div>
+
+          <!-- Price Display (Prominent) -->
+          <div
+            class="mt-4 p-4 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600"
+          >
+            <div class="flex items-baseline justify-between">
+              <span class="text-3xl font-bold text-cta-default">
+                {{ formatPrice(selectedCar.pricePerDay) }}
+              </span>
+              <span class="text-sm text-text-secondary dark:text-text-secondary">/día</span>
+            </div>
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-2">
+              Precio sin tarjeta obligatoria
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Proof & Badges -->
+      <!-- Note: Commented out until Phase 2 - social-proof requires full Car model, not CarMapLocation -->
+      <!-- <div class="mb-4">
+        <app-social-proof-indicators
+          *ngIf="selectedCar"
+          [car]="selectedCar"
+        ></app-social-proof-indicators>
+      </div> -->
+
+      <!-- Chat Toggle (Collapsible) -->
+      <div class="mb-4 border-t border-border-default dark:border-gray-600 pt-4">
+        <button
+          (click)="toggleChat()"
+          type="button"
+          class="w-full flex items-center justify-between py-2"
+        >
+          <span class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure">
+            💬 Preguntar al anfitrión
+          </span>
+          <svg
+            class="w-5 h-5 text-text-secondary transition-transform"
+            [class.rotate-180]="showChat()"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </button>
+
+        <!-- Chat Content (Collapsed) -->
+        <div
+          *ngIf="showChat()"
+          class="mt-3 p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600 space-y-2 animate-slideDown"
+        >
+          <p class="text-xs text-text-secondary dark:text-text-secondary">
+            Escribe una pregunta antes de reservar. El anfitrión responde en ~1 hora.
+          </p>
+          <textarea
+            placeholder="¿Puedo recoger el auto a las 5 PM? ¿Hay conductor disponible?"
+            class="w-full px-3 py-2 text-sm rounded border border-border-default dark:border-gray-600 dark:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
+            rows="3"
+          ></textarea>
+          <button
+            type="button"
+            class="w-full py-2 px-3 rounded bg-cta-default text-cta-text text-sm font-semibold hover:bg-cta-default/90 transition-colors"
+          >
+            Enviar pregunta
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Info Cards -->
+      <div class="mb-4 grid grid-cols-2 gap-2">
+        <div
+          class="p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600"
+        >
+          <p class="text-xs text-text-secondary dark:text-text-secondary mb-1">Disponibilidad</p>
+          <p class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure">
+            Hoy mismo
+          </p>
+        </div>
+        <div
+          class="p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600"
+        >
+          <p class="text-xs text-text-secondary dark:text-text-secondary mb-1">Modelo</p>
+          <p class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure">
+            SUV / 4x4
+          </p>
+        </div>
+      </div>
+
+      <!-- View Full Details Link -->
+      <button
+        type="button"
+        class="w-full text-center text-sm font-semibold text-cta-default hover:underline mb-4"
+      >
+        Ver detalles completos →
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <ng-template #emptyState>
+      <div class="flex flex-col items-center justify-center h-64">
+        <svg
+          class="w-12 h-12 text-pearl-light mb-3"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4" />
+        </svg>
+        <p class="text-sm text-text-secondary dark:text-text-secondary">
+          Selecciona un auto del mapa para ver detalles
+        </p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Sticky Footer: Checkout -->
+  <!-- NOTE: SimpleCheckoutComponent requires full Car model, not CarMapLocation.
+       This is a limitation we'll address in Phase 2 by either:
+       1. Creating a lightweight checkout component specific for map-drawer, or
+       2. Loading the full Car from the database when drawer opens
+  -->
+  <div class="drawer-footer" *ngIf="selectedCar">
+    <div class="p-4 text-center text-sm text-text-secondary">
+      <p>Checkout coming in Phase 2</p>
+      <button
+        (click)="navigateToCheckout()"
+        class="mt-2 w-full py-2 px-3 rounded bg-cta-default text-cta-text font-semibold hover:bg-cta-default/90"
+      >
+        Continuar al checkout
+      </button>
+    </div>
+  </div>
+</div>

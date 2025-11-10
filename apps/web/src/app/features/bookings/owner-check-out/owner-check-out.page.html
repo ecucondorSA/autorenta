@@ -11,44 +11,47 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="text-center py-16">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
-    <p class="mt-4 text-charcoal-medium">Cargando reserva...</p>
+    <p class="mt-4 text-text-secondary">Cargando reserva...</p>
   </div>
 
   <!-- Check-Out Form -->
   <div *ngIf="!loading() && booking()" class="max-w-2xl mx-auto">
     <!-- Booking Info Card -->
     <div class="card-premium p-6 mb-6">
-      <h2 class="text-xl font-bold text-smoke-black mb-4">Información de la Reserva</h2>
+      <h2 class="text-xl font-bold text-text-primary mb-4">Información de la Reserva</h2>
 
       <div class="space-y-3">
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Auto:</span>
+          <span class="text-text-secondary">Auto:</span>
           <span class="font-semibold">{{ booking()?.car?.title }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Locatario:</span>
+          <span class="text-text-secondary">Locatario:</span>
           <span class="font-semibold">{{ booking()?.renter_id || 'N/A' }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-charcoal-medium">Período:</span>
+          <span class="text-text-secondary">Período:</span>
           <span class="font-semibold">
-            {{ booking()?.start_at | date:'dd/MM/yyyy' }} - {{ booking()?.end_at | date:'dd/MM/yyyy' }}
+            {{ booking()?.start_at | date: 'dd/MM/yyyy' }} -
+            {{ booking()?.end_at | date: 'dd/MM/yyyy' }}
           </span>
         </div>
       </div>
     </div>
 
     <!-- Check-In Comparison Card -->
-    <div *ngIf="checkInData()" class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-      <h3 class="font-semibold text-blue-900 mb-3">📋 Estado al Check-In</h3>
+    <div *ngIf="checkInData()" class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6">
+      <h3 class="font-semibold text-cta-default mb-3">📋 Estado al Check-In</h3>
       <div class="space-y-2 text-sm">
         <div class="flex justify-between">
-          <span class="text-blue-700">Kilometraje:</span>
-          <span class="font-semibold text-blue-900">{{ checkInData().odometer_reading | number }} km</span>
+          <span class="text-cta-default">Kilometraje:</span>
+          <span class="font-semibold text-cta-default"
+            >{{ checkInData().odometer_reading | number }} km</span
+          >
         </div>
         <div class="flex justify-between">
-          <span class="text-blue-700">Combustible:</span>
-          <span class="font-semibold text-blue-900">{{ checkInData().fuel_level }}%</span>
+          <span class="text-cta-default">Combustible:</span>
+          <span class="font-semibold text-cta-default">{{ checkInData().fuel_level }}%</span>
         </div>
       </div>
     </div>
@@ -57,7 +60,7 @@
     <form class="space-y-6">
       <!-- Odometer -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">1. Kilometraje Actual</h3>
+        <h3 class="font-bold text-text-primary mb-4">1. Kilometraje Actual</h3>
         <ion-item>
           <ion-label position="stacked">Kilometraje *</ion-label>
           <ion-input
@@ -68,21 +71,21 @@
             required
           ></ion-input>
         </ion-item>
-        <div *ngIf="odometerDifference() !== null" class="mt-3 p-3 bg-sand-light rounded-lg">
+        <div *ngIf="odometerDifference() !== null" class="mt-3 p-3 bg-surface-secondary rounded-lg">
           <div class="flex justify-between items-center">
-            <span class="text-sm text-charcoal-medium">Kilómetros recorridos:</span>
-            <span class="font-bold text-accent-petrol">{{ odometerDifference() | number }} km</span>
+            <span class="text-sm text-text-secondary">Kilómetros recorridos:</span>
+            <span class="font-bold text-cta-default">{{ odometerDifference() | number }} km</span>
           </div>
         </div>
       </div>
 
       <!-- Fuel Level -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">2. Nivel de Combustible</h3>
+        <h3 class="font-bold text-text-primary mb-4">2. Nivel de Combustible</h3>
         <div class="px-4">
           <div class="flex justify-between items-center mb-2">
-            <span class="text-charcoal-medium">Nivel:</span>
-            <span class="font-bold text-accent-petrol">{{ fuelLevelPercentage }}</span>
+            <span class="text-text-secondary">Nivel:</span>
+            <span class="font-bold text-cta-default">{{ fuelLevelPercentage }}</span>
           </div>
           <ion-range
             [value]="fuelLevel()"
@@ -98,14 +101,18 @@
             <ion-label slot="end">100%</ion-label>
           </ion-range>
         </div>
-        <div *ngIf="fuelDifference() !== null" class="mt-3 p-3 rounded-lg"
-             [class.bg-green-50]="fuelDifference()! >= 0"
-             [class.bg-red-50]="fuelDifference()! < 0">
+        <div
+          *ngIf="fuelDifference() !== null"
+          class="mt-3 p-3 rounded-lg"
+          [class.bg-success-light/10]="fuelDifference()! >= 0"
+          [class.bg-red-50]="fuelDifference()! < 0">
           <div class="flex justify-between items-center">
             <span class="text-sm">Diferencia de combustible:</span>
-            <span class="font-bold"
-                  [class.text-green-700]="fuelDifference()! >= 0"
-                  [class.text-red-700]="fuelDifference()! < 0">
+            <span
+              class="font-bold"
+              [class.text-success-light]="fuelDifference()! >= 0"
+              [class.text-red-700]="fuelDifference()! < 0"
+            >
               {{ fuelDifference()! > 0 ? '+' : '' }}{{ fuelDifference() }}%
             </span>
           </div>
@@ -114,8 +121,8 @@
 
       <!-- Photos -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">3. Fotos del Auto (mínimo 4) *</h3>
-        <p class="text-sm text-charcoal-medium mb-4">
+        <h3 class="font-bold text-text-primary mb-4">3. Fotos del Auto (mínimo 4) *</h3>
+        <p class="text-sm text-text-secondary mb-4">
           Toma fotos del estado actual del auto, especialmente de cualquier daño nuevo
         </p>
         <input
@@ -129,17 +136,17 @@
         <button
           type="button"
           (click)="fileInput.click()"
-          class="w-full px-4 py-3 border-2 border-dashed border-pearl-gray rounded-lg hover:border-accent-petrol transition-colors"
+          class="w-full px-4 py-3 border-2 border-dashed border-border-default rounded-lg hover:border-cta-default transition-colors"
         >
-          <ion-icon name="camera" class="text-2xl text-accent-petrol"></ion-icon>
-          <p class="text-sm text-charcoal-medium mt-2">Click para subir fotos</p>
+          <ion-icon name="camera" class="text-2xl text-cta-default"></ion-icon>
+          <p class="text-sm text-text-secondary mt-2">Click para subir fotos</p>
         </button>
         <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 gap-4 mt-4">
           <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative">
-            <img [src]="photo" alt="Foto {{i+1}}" class="w-full h-32 object-cover rounded-lg" />
+            <img [src]="photo" alt="Foto {{ i + 1 }}" class="w-full h-32 object-cover rounded-lg" />
           </div>
         </div>
-        <p class="text-sm text-charcoal-medium mt-2">
+        <p class="text-sm text-text-secondary mt-2">
           {{ uploadedPhotos().length }} foto(s) subida(s)
         </p>
       </div>
@@ -147,7 +154,7 @@
       <!-- Damages Toggle -->
       <div class="card-premium p-6">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="font-bold text-smoke-black">4. ¿Hay daños nuevos?</h3>
+          <h3 class="font-bold text-text-primary">4. ¿Hay daños nuevos?</h3>
           <ion-toggle
             [checked]="hasDamages()"
             (ionChange)="toggleDamages()"
@@ -156,7 +163,7 @@
         </div>
 
         <!-- Damages Form (if hasDamages) -->
-        <div *ngIf="hasDamages()" class="space-y-4 pt-4 border-t border-pearl-gray">
+        <div *ngIf="hasDamages()" class="space-y-4 pt-4 border-t border-border-default">
           <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
             <p class="text-sm text-amber-800">
               ⚠️ El monto de daños se deducirá del depósito de garantía ($250 USD) del locatario.
@@ -190,24 +197,24 @@
         </div>
 
         <!-- No Damages (if !hasDamages) -->
-        <div *ngIf="!hasDamages()" class="bg-green-50 border border-green-200 rounded-lg p-4 mt-4">
+        <div *ngIf="!hasDamages()" class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4">
           <div class="flex items-center gap-2">
-            <ion-icon name="checkmark-circle" class="text-green-600 text-2xl"></ion-icon>
-            <span class="text-sm text-green-800">El auto fue devuelto en buenas condiciones</span>
+            <ion-icon name="checkmark-circle" class="text-success-light text-2xl"></ion-icon>
+            <span class="text-sm text-success-light">El auto fue devuelto en buenas condiciones</span>
           </div>
         </div>
       </div>
 
       <!-- Signature -->
       <div class="card-premium p-6">
-        <h3 class="font-bold text-smoke-black mb-4">5. Firma Digital *</h3>
-        <div class="border-2 border-dashed border-pearl-gray rounded-lg p-4">
-          <div class="bg-white border border-pearl-gray rounded p-4 text-center">
-            <p class="text-sm text-charcoal-medium">Firma digital (simulada)</p>
+        <h3 class="font-bold text-text-primary mb-4">5. Firma Digital *</h3>
+        <div class="border-2 border-dashed border-border-default rounded-lg p-4">
+          <div class="bg-surface-raised border border-border-default rounded p-4 text-center">
+            <p class="text-sm text-text-secondary">Firma digital (simulada)</p>
             <button
               type="button"
               (click)="signatureDataUrl.set('signature-placeholder')"
-              class="mt-2 px-4 py-2 bg-accent-petrol text-white rounded-lg"
+              class="mt-2 px-4 py-2 bg-cta-default text-cta-text rounded-lg"
             >
               {{ signatureDataUrl() ? '✓ Firmado' : 'Firmar' }}
             </button>
@@ -216,24 +223,34 @@
       </div>
 
       <!-- Summary -->
-      <div class="card-premium p-6 bg-gradient-to-br from-accent-petrol/5 to-accent-warm/5">
-        <h3 class="font-bold text-smoke-black mb-4">Resumen</h3>
+      <div class="card-premium p-6 bg-gradient-to-br from-cta-default/5 to-warning-light/5">
+        <h3 class="font-bold text-text-primary mb-4">Resumen</h3>
         <div class="space-y-2 text-sm">
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Kilómetros recorridos:</span>
+            <span class="text-text-secondary">Kilómetros recorridos:</span>
             <span class="font-semibold">{{ odometerDifference() || '---' }} km</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Diferencia de combustible:</span>
-            <span class="font-semibold"
-                  [class.text-green-600]="fuelDifference()! >= 0"
-                  [class.text-red-600]="fuelDifference()! < 0">
-              {{ fuelDifference() !== null ? (fuelDifference()! > 0 ? '+' : '') + fuelDifference() + '%' : '---' }}
+            <span class="text-text-secondary">Diferencia de combustible:</span>
+            <span
+              class="font-semibold"
+              [class.text-success-light]="fuelDifference()! >= 0"
+              [class.text-red-600]="fuelDifference()! < 0"
+            >
+              {{
+                fuelDifference() !== null
+                  ? (fuelDifference()! > 0 ? '+' : '') + fuelDifference() + '%'
+                  : '---'
+              }}
             </span>
           </div>
           <div class="flex justify-between">
-            <span class="text-charcoal-medium">Daños reportados:</span>
-            <span class="font-semibold" [class.text-red-600]="hasDamages()" [class.text-green-600]="!hasDamages()">
+            <span class="text-text-secondary">Daños reportados:</span>
+            <span
+              class="font-semibold"
+              [class.text-red-600]="hasDamages()"
+              [class.text-success-light]="!hasDamages()"
+            >
               {{ hasDamages() ? 'Sí ($' + damageAmount() + ' USD)' : 'No' }}
             </span>
           </div>
@@ -245,7 +262,7 @@
         <button
           type="button"
           (click)="cancel()"
-          class="flex-1 px-6 py-3 rounded-xl border-2 border-pearl-gray text-charcoal-medium font-semibold hover:bg-sand-light transition-all"
+          class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default text-text-secondary font-semibold hover:bg-surface-secondary transition-all"
           [disabled]="submitting()"
         >
           Cancelar
@@ -254,7 +271,7 @@
           type="button"
           (click)="submitCheckOut()"
           [disabled]="!canSubmit() || submitting()"
-          class="flex-1 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          class="flex-1 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ion-spinner *ngIf="submitting()" name="crescent" class="mr-2"></ion-spinner>
           {{ submitting() ? 'Procesando...' : 'Completar Check-Out' }}

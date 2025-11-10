@@ -8,9 +8,7 @@ import { SmartOnboardingComponent } from '../../shared/components/smart-onboardi
   selector: 'app-onboarding-page',
   imports: [CommonModule, SmartOnboardingComponent],
   template: `
-    <app-smart-onboarding
-      (completed)="onOnboardingCompleted($event)"
-    ></app-smart-onboarding>
+    <app-smart-onboarding (completed)="onOnboardingCompleted($event)"></app-smart-onboarding>
   `,
 })
 export class OnboardingPage {

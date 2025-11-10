@@ -14,22 +14,22 @@ import {
     <div class="space-y-3">
       <!-- Loading State -->
       <div *ngIf="loading()" class="animate-pulse">
-        <div class="h-8 bg-pearl-gray dark:bg-slate-deep rounded w-32"></div>
-        <div class="h-4 bg-pearl-gray dark:bg-slate-deep rounded w-24 mt-2"></div>
+        <div class="h-8 bg-border-default dark:bg-surface-secondary rounded w-32"></div>
+        <div class="h-4 bg-border-default dark:bg-surface-secondary rounded w-24 mt-2"></div>
       </div>
 
       <!-- Price Display -->
       <div *ngIf="!loading() && pricing()" class="space-y-2">
         <!-- Main Price -->
         <div class="flex items-baseline gap-2">
-          <span class="text-3xl font-bold text-smoke-black dark:text-white-pure">
+          <span class="text-3xl font-bold text-text-primary dark:text-text-inverse-pure">
             {{ formatPrice(pricing()!.price_per_hour, pricing()!.currency) }}
           </span>
-          <span class="text-sm text-charcoal-medium dark:text-pearl-light">/hora</span>
+          <span class="text-sm text-text-secondary dark:text-text-secondary">/hora</span>
         </div>
 
         <!-- Total Price -->
-        <div *ngIf="showTotal" class="text-sm text-charcoal-medium dark:text-pearl-light">
+        <div *ngIf="showTotal" class="text-sm text-text-secondary dark:text-text-secondary">
           Total:
           <span class="font-semibold">{{
             formatPrice(pricing()!.total_price, pricing()!.currency)
@@ -53,7 +53,7 @@ import {
           *ngIf="showBreakdown"
           type="button"
           (click)="breakdownExpanded.set(!breakdownExpanded())"
-          class="text-sm text-accent-petrol dark:text-teal-bright hover:underline flex items-center gap-1"
+          class="text-sm text-cta-default dark:text-cta-default hover:underline flex items-center gap-1"
         >
           <span>Ver detalle</span>
           <svg
@@ -75,14 +75,14 @@ import {
         <!-- Breakdown Details -->
         <div
           *ngIf="showBreakdown && breakdownExpanded()"
-          class="mt-3 p-4 rounded-lg bg-sand-light/50 dark:bg-slate-deep/30 space-y-2.5 text-sm"
+          class="mt-3 p-4 rounded-lg bg-surface-secondary/50 dark:bg-surface-secondary/30 space-y-2.5 text-sm"
         >
           <!-- Base Price -->
           <div
-            class="flex justify-between items-center pb-2 border-b border-pearl-gray dark:border-charcoal-medium"
+            class="flex justify-between items-center pb-2 border-b border-border-default dark:border-charcoal-medium"
           >
-            <span class="text-charcoal-medium dark:text-pearl-light">Tarifa base</span>
-            <span class="font-semibold text-smoke-black dark:text-white-pure">
+            <span class="text-text-secondary dark:text-text-secondary">Tarifa base</span>
+            <span class="font-semibold text-text-primary dark:text-text-inverse-pure">
               {{ formatPrice(pricing()!.breakdown.base_price, pricing()!.currency) }}
             </span>
           </div>
@@ -90,38 +90,39 @@ import {
           <!-- Factors -->
           <div *ngFor="let factor of getVisibleFactors()" class="flex justify-between items-center">
             <div class="flex items-center gap-2">
-              <span class="text-charcoal-medium dark:text-pearl-light">{{ factor.label }}</span>
+              <span class="text-text-secondary dark:text-text-secondary">{{ factor.label }}</span>
               <span
                 class="text-xs px-2 py-0.5 rounded"
-                [class.bg-green-100]="factor.value < 0"
-                [class.text-green-700]="factor.value < 0"
+                [class.bg-success-light/20]="factor.value < 0"
+                [class.text-success-light]="factor.value < 0"
                 [class.bg-amber-100]="factor.value > 0"
                 [class.text-amber-700]="factor.value > 0"
                 [class.bg-gray-100]="factor.value === 0"
-                [class.text-gray-600 dark:text-gray-300]="factor.value === 0"
+                [class.text-gray-600
+                dark:text-gray-300]="factor.value === 0"
               >
                 {{ formatFactor(factor.value) }}
               </span>
             </div>
-            <span class="text-sm text-charcoal-medium dark:text-pearl-light">{{
+            <span class="text-sm text-text-secondary dark:text-text-secondary">{{
               factor.description
             }}</span>
           </div>
 
           <!-- Total Multiplier -->
           <div
-            class="flex justify-between items-center pt-2 border-t border-pearl-gray dark:border-charcoal-medium font-semibold"
+            class="flex justify-between items-center pt-2 border-t border-border-default dark:border-charcoal-medium font-semibold"
           >
-            <span class="text-smoke-black dark:text-white-pure">Multiplicador total</span>
+            <span class="text-text-primary dark:text-text-inverse-pure">Multiplicador total</span>
             <span
               class="text-lg"
-              [class.text-green-600]="pricing()!.breakdown.total_multiplier < 1"
+              [class.text-success-light]="pricing()!.breakdown.total_multiplier < 1"
               [class.text-amber-600]="pricing()!.breakdown.total_multiplier > 1.1"
-              [class.text-smoke-black]="
+              [class.text-text-primary]="
                 pricing()!.breakdown.total_multiplier >= 1 &&
                 pricing()!.breakdown.total_multiplier <= 1.1
               "
-              [class.dark:text-white-pure]="
+              [class.dark:text-text-inverse-pure]="
                 pricing()!.breakdown.total_multiplier >= 1 &&
                 pricing()!.breakdown.total_multiplier <= 1.1
               "
@@ -132,7 +133,7 @@ import {
 
           <!-- Context Info -->
           <div
-            class="mt-3 pt-3 border-t border-pearl-gray dark:border-charcoal-medium text-xs text-charcoal-medium dark:text-pearl-light/70"
+            class="mt-3 pt-3 border-t border-border-default dark:border-charcoal-medium text-xs text-text-secondary dark:text-text-secondary/70"
           >
             <p>
               {{ getDayName(pricing()!.details.day_of_week) }} •

@@ -2,15 +2,15 @@ import { Injectable, signal } from '@angular/core';
 
 /**
  * 📲 PWA Install Service
- * 
+ *
  * Maneja la instalación de PWA con prompt personalizado
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PwaInstallService {
   private deferredPrompt: any = null;
-  
+
   // Señales reactivas
   readonly canInstall = signal(false);
   readonly isInstalled = signal(false);
@@ -28,7 +28,7 @@ export class PwaInstallService {
     window.addEventListener('beforeinstallprompt', (e: unknown) => {
       // Prevenir el prompt automático de Chrome
       (e as Event).preventDefault();
-      
+
       // Guardar el evento para usarlo después
       this.deferredPrompt = e;
       this.canInstall.set(true);
@@ -89,7 +89,7 @@ export class PwaInstallService {
 
     // Esperar la respuesta del usuario
     const { outcome } = await this.deferredPrompt.userChoice;
-    
+
     console.log(`Usuario ${outcome === 'accepted' ? 'aceptó' : 'rechazó'} la instalación`);
 
     // Limpiar el prompt usado
@@ -105,7 +105,7 @@ export class PwaInstallService {
    */
   dismissPrompt(): void {
     this.showInstallPrompt.set(false);
-    
+
     // No mostrar de nuevo en 7 días
     const dismissedUntil = new Date();
     dismissedUntil.setDate(dismissedUntil.getDate() + 7);
@@ -140,9 +140,9 @@ export class PwaInstallService {
         instructions: [
           'Toca el botón de compartir ⎙',
           'Desplázate y selecciona "Añadir a la pantalla de inicio"',
-          'Toca "Añadir" en la esquina superior derecha'
+          'Toca "Añadir" en la esquina superior derecha',
         ],
-        icon: '📱'
+        icon: '📱',
       };
     }
 
@@ -153,9 +153,9 @@ export class PwaInstallService {
         instructions: [
           'Toca el menú ⋮ (tres puntos)',
           'Selecciona "Instalar app" o "Añadir a pantalla de inicio"',
-          'Toca "Instalar"'
+          'Toca "Instalar"',
         ],
-        icon: '🤖'
+        icon: '🤖',
       };
     }
 
@@ -165,9 +165,9 @@ export class PwaInstallService {
         browser: 'Microsoft Edge',
         instructions: [
           'Haz clic en el ícono de instalación en la barra de direcciones',
-          'O ve a Menú > Aplicaciones > Instalar este sitio como una aplicación'
+          'O ve a Menú > Aplicaciones > Instalar este sitio como una aplicación',
         ],
-        icon: '🌐'
+        icon: '🌐',
       };
     }
 
@@ -177,9 +177,9 @@ export class PwaInstallService {
         browser: 'Chrome',
         instructions: [
           'Haz clic en el ícono de instalación en la barra de direcciones',
-          'O ve a Menú > Instalar Autorentar'
+          'O ve a Menú > Instalar Autorentar',
         ],
-        icon: '💻'
+        icon: '💻',
       };
     }
 
@@ -199,7 +199,7 @@ export class PwaInstallService {
       notifications: 'Notification' in window && 'PushManager' in window,
       offline: 'serviceWorker' in navigator,
       backgroundSync: 'serviceWorker' in navigator && 'SyncManager' in window,
-      fileHandling: 'launchQueue' in window
+      fileHandling: 'launchQueue' in window,
     };
   }
 }

@@ -1,5 +1,5 @@
 <div
-  class="min-h-screen bg-ivory-soft dark:bg-graphite-dark flex items-center justify-center py-12 px-4"
+  class="min-h-screen bg-surface-base dark:bg-surface-base flex items-center justify-center py-12 px-4"
 >
   <div class="w-full max-w-md">
     <!-- Logo -->
@@ -14,20 +14,20 @@
           class="h-full w-auto object-contain"
         />
       </div>
-      <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous mb-2">
+      <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary mb-2">
         Bienvenido de vuelta
       </h1>
-      <p class="text-charcoal-medium dark:text-pearl-light">Ingresá a tu cuenta de Autorentar</p>
+      <p class="text-text-secondary dark:text-text-secondary">Ingresá a tu cuenta de Autorentar</p>
     </div>
 
     <!-- Card -->
-    <div class="card-premium p-8 bg-white dark:bg-anthracite">
+    <div class="card-premium p-8 bg-surface-raised dark:bg-surface-raised">
       <!-- Google Sign In Button -->
       <button
         type="button"
         (click)="signInWithGoogle()"
         [disabled]="loading()"
-        class="w-full flex items-center justify-center gap-3 rounded-lg border-2 border-pearl-gray dark:border-slate-deep bg-white dark:bg-slate-deep px-6 py-3 text-sm font-semibold text-smoke-black dark:text-white hover:bg-pearl-light dark:hover:bg-charcoal-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+        class="w-full flex items-center justify-center gap-3 rounded-lg border-2 border-border-default dark:border-slate-deep bg-surface-raised dark:bg-surface-secondary px-6 py-3 text-sm font-semibold text-text-primary dark:text-text-inverse hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
       >
         <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -54,10 +54,11 @@
       <!-- Divider -->
       <div class="relative my-6">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-pearl-gray dark:border-charcoal-medium"></div>
+          <div class="w-full border-t border-border-default dark:border-charcoal-medium"></div>
         </div>
         <div class="relative flex justify-center text-sm">
-          <span class="px-4 bg-white dark:bg-anthracite text-charcoal-medium dark:text-pearl-light"
+          <span
+            class="px-4 bg-surface-raised dark:bg-surface-raised text-text-secondary dark:text-text-secondary"
             >O continuar con email</span
           >
         </div>
@@ -68,7 +69,7 @@
         <div>
           <label
             for="login-email"
-            class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2"
+            class="block text-sm font-medium text-text-primary dark:text-text-primary mb-2"
           >
             Email<span aria-hidden="true"> *</span>
           </label>
@@ -89,16 +90,17 @@
                 ? 'login-email-error'
                 : null
             "
-            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-white dark:bg-slate-deep text-smoke-black dark:text-ivory-luminous"
-            [class.border-pearl-gray dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
+            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-primary"
+            [class.border-border-default]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
             [class.dark:border-charcoal-medium]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
             [class.border-red-500]="form.controls.email.touched && form.controls.email.invalid"
-            [class.focus:ring-accent-petrol]="
+            [class.focus:ring-cta-default]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
-            [class.focus:border-accent-petrol]="
+            [class.focus:border-cta-default]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
           />
@@ -124,7 +126,7 @@
         <div>
           <label
             for="login-password"
-            class="block text-sm font-medium text-smoke-black dark:text-ivory-luminous mb-2"
+            class="block text-sm font-medium text-text-primary dark:text-text-primary mb-2"
           >
             Contraseña<span aria-hidden="true"> *</span>
           </label>
@@ -145,8 +147,11 @@
                 ? 'login-password-error'
                 : null
             "
-            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-white dark:bg-slate-deep text-smoke-black dark:text-ivory-luminous"
-            [class.border-pearl-gray dark:border-gray-600]="
+            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-primary"
+            [class.border-border-default]="
+              !form.controls.password.touched || !form.controls.password.invalid
+            "
+            [class.dark:border-gray-600]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
             [class.dark:border-charcoal-medium]="
@@ -155,10 +160,10 @@
             [class.border-red-500]="
               form.controls.password.touched && form.controls.password.invalid
             "
-            [class.focus:ring-accent-petrol]="
+            [class.focus:ring-cta-default]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
-            [class.focus:border-accent-petrol]="
+            [class.focus:border-cta-default]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
           />
@@ -193,7 +198,7 @@
         <!-- Submit Button -->
         <button
           type="submit"
-          class="w-full rounded-lg bg-accent-petrol px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+          class="w-full rounded-lg bg-cta-default text-cta-text hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
           [disabled]="form.invalid || loading()"
         >
           <span *ngIf="!loading()">Ingresar</span>
@@ -219,12 +224,12 @@
 
         <!-- Links -->
         <div class="flex justify-between items-center text-sm pt-2">
-          <a routerLink="/auth/register" class="text-accent-petrol hover:underline font-medium">
+          <a routerLink="/auth/register" class="text-cta-default hover:underline font-medium">
             Crear cuenta
           </a>
           <a
             routerLink="/auth/reset-password"
-            class="text-charcoal-medium dark:text-pearl-light hover:text-accent-petrol transition-colors"
+            class="text-text-secondary dark:text-text-secondary hover:text-cta-default transition-colors"
           >
             ¿Olvidaste tu contraseña?
           </a>
@@ -233,7 +238,9 @@
     </div>
 
     <!-- Footer Info -->
-    <p class="text-center text-xs text-ash-gray dark:text-charcoal-medium dark:text-pearl-light mt-6">
+    <p
+      class="text-center text-xs text-text-muted dark:text-text-secondary dark:text-text-secondary mt-6"
+    >
       Al ingresar, aceptás nuestros Términos y Condiciones
     </p>
   </div>

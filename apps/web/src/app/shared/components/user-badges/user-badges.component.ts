@@ -43,7 +43,7 @@ export class UserBadgesComponent {
         type: 'top_host',
         label: 'Top Host',
         icon: '🏆',
-        color: 'from-yellow-400 to-orange-500',
+        color: 'from-yellow-400 to-warning-light',
         description: '≥10 reviews, promedio ≥4.8⭐',
       });
     }
@@ -53,7 +53,7 @@ export class UserBadgesComponent {
         type: 'verified_renter',
         label: 'Verified Renter',
         icon: '✓',
-        color: 'from-blue-500 to-blue-600',
+        color: 'from-cta-default to-cta-default',
         description: 'Identidad verificada',
       });
     }
@@ -64,7 +64,7 @@ export class UserBadgesComponent {
         type: 'trusted_driver',
         label: 'Trusted Driver',
         icon: '🚗',
-        color: 'from-green-500 to-success-600',
+        color: 'from-success-light to-success-600',
         description: '≥10 reservas, promedio ≥4.8⭐',
       });
     }

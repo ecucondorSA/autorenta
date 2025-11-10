@@ -114,7 +114,7 @@ export class SupabaseClientService {
     try {
       const { error } = await this.client.from('profiles').select('id').limit(1);
       return !error;
-    } catch (__error) {
+    } catch {
       return false;
     }
   }

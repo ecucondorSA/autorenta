@@ -35,7 +35,9 @@ export async function forceServiceWorkerUpdate(): Promise<void> {
 
     // 5. Reload the page to get fresh content
     window.location.reload();
-  } catch (_error) {}
+  } catch (_error) {
+    // Silently ignore service worker errors
+  }
 }
 
 /**

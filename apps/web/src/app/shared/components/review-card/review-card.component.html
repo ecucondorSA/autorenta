@@ -1,5 +1,5 @@
 <div
-  class="review-card bg-white dark:bg-slate-deep rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
+  class="review-card bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
 >
   <!-- Header with user info and rating -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
@@ -7,12 +7,12 @@
       <!-- Avatar (clickable) con skeleton loader -->
       <a
         [routerLink]="['/users', review.reviewer_id]"
-        class="flex-shrink-0 transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full relative"
+        class="flex-shrink-0 transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-cta-default focus:ring-offset-2 rounded-full relative"
       >
         <!-- Skeleton loader mientras carga avatar -->
         <div
           *ngIf="!review.reviewer_avatar"
-          class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-md"
+          class="w-12 h-12 bg-gradient-to-br from-cta-default to-cta-default rounded-full flex items-center justify-center text-text-inverse font-semibold text-lg shadow-md"
         >
           {{ getAvatarInitials(review.reviewer_name || 'Usuario') }}
         </div>
@@ -30,7 +30,7 @@
         <!-- Fallback si imagen falla -->
         <div
           *ngIf="review.reviewer_avatar"
-          class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-md hidden"
+          class="w-12 h-12 bg-gradient-to-br from-cta-default to-cta-default rounded-full flex items-center justify-center text-text-inverse font-semibold text-lg shadow-md hidden"
         >
           {{ getAvatarInitials(review.reviewer_name || 'Usuario') }}
         </div>
@@ -40,7 +40,7 @@
       <div>
         <a
           [routerLink]="['/users', review.reviewer_id]"
-          class="font-semibold text-gray-900 hover:text-blue-600 transition-colors focus:outline-none focus:underline"
+          class="font-semibold text-gray-900 hover:text-cta-default transition-colors focus:outline-none focus:underline"
         >
           {{ review.reviewer_name || 'Usuario' }}
         </a>
@@ -55,7 +55,10 @@
           </svg>
           {{ getTimeSince(review.created_at) }}
         </p>
-        <p *ngIf="showCarTitle && review.car_title" class="text-xs text-gray-400 dark:text-gray-300 mt-1">
+        <p
+          *ngIf="showCarTitle && review.car_title"
+          class="text-xs text-gray-400 dark:text-gray-300 mt-1"
+        >
           {{ review.car_title }}
         </p>
       </div>
@@ -95,12 +98,17 @@
   </div>
 
   <!-- Public comment -->
-  <div *ngIf="review.comment_public" class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-l-4 border-blue-500">
+  <div
+    *ngIf="review.comment_public"
+    class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-l-4 border-cta-default"
+  >
     <p class="text-gray-700 leading-relaxed">{{ review.comment_public }}</p>
   </div>
 
   <!-- Category ratings -->
-  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+  <div
+    class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+  >
     <div class="category-rating" *ngIf="review.rating_cleanliness">
       <div class="flex items-center justify-between text-sm">
         <span class="text-gray-600 dark:text-gray-300">Limpieza</span>
@@ -239,4 +247,12 @@
       <span>Reportar review</span>
     </button>
   </div>
+
+  <!-- Flag Review Modal -->
+  <app-flag-review-modal
+    [isOpen]="showFlagModal()"
+    [reviewId]="review.id"
+    (closeModal)="onCloseFlagModal()"
+    (flagged)="onFlagged()"
+  ></app-flag-review-modal>
 </div>

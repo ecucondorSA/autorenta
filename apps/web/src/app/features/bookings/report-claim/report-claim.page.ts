@@ -156,10 +156,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 (click)="fileInput.click()"
                 [disabled]="uploadedPhotoPreviews.length >= 10 || uploadingPhotos"
               >
-                <ion-icon
-                  slot="start"
-                  [name]="uploadingPhotos ? 'hourglass' : 'camera'"
-                ></ion-icon>
+                <ion-icon slot="start" [name]="uploadingPhotos ? 'hourglass' : 'camera'"></ion-icon>
                 {{
                   uploadingPhotos
                     ? 'Subiendo...'
@@ -216,7 +213,13 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
               class="submit-button"
             >
               <ion-icon slot="start" [name]="submitting ? 'hourglass' : 'alert-circle'"></ion-icon>
-              {{ submitting ? 'Enviando...' : uploadingPhotos ? 'Subiendo fotos...' : 'Reportar Siniestro' }}
+              {{
+                submitting
+                  ? 'Enviando...'
+                  : uploadingPhotos
+                    ? 'Subiendo fotos...'
+                    : 'Reportar Siniestro'
+              }}
             </ion-button>
 
             <!-- Información Legal -->
@@ -489,7 +492,7 @@ export class ReportClaimPage implements OnInit {
       this.claimData.location = `Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}`;
 
       await this.showToast('Ubicación obtenida', 'success');
-    } catch (__error) {
+    } catch {
       await this.showToast('No se pudo obtener la ubicación', 'danger');
     } finally {
       this.gettingLocation = false;
