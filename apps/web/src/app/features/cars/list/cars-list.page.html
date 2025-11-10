@@ -40,11 +40,11 @@
 
     <!-- Drawer lateral (30% desktop, tabs mobile) -->
     <app-cars-drawer
-      [cars]="premiumCars()"
-      [isOpen]="drawerOpen()"
-      [selectedCarId]="selectedCarId()"
+      [carsInput]="premiumCars()"
+      [isOpenInput]="drawerOpen()"
+      [selectedCarIdInput]="selectedCarId()"
       (carSelected)="onCarSelected($event)"
-      (close)="onDrawerClose()"
+      (closeDrawer)="onDrawerClose()"
       (reserveClick)="onReserveClick($event)"
     />
   </div>

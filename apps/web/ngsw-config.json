@@ -173,7 +173,8 @@
     "!/**/*__*/**",
     "!https://obxvffplochgeiclibng.supabase.co/**",
     "!https://api.mapbox.com/**",
-    "!https://events.mapbox.com/**"
+    "!https://events.mapbox.com/**",
+    "/auth/**"
   ],
   "navigationRequestStrategy": "freshness"
 }
