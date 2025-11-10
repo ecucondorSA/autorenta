@@ -1,8 +1,8 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import { PayoutService, Payout } from '../../../../core/services/payout.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-payouts-history',
@@ -133,6 +133,24 @@ import { firstValueFrom } from 'rxjs';
           }
         </div>
 
+        <!-- Load More Button -->
+        @if (hasMore()) {
+          <div class="mt-4 flex justify-center">
+            <button
+              (click)="loadMore()"
+              [disabled]="loadingMore()"
+              class="px-6 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 transition-colors"
+            >
+              {{ loadingMore() ? 'Cargando...' : 'Cargar más' }}
+            </button>
+          </div>
+        }
+
+        <!-- Pagination Info -->
+        <div class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400">
+          Mostrando {{ payouts().length }} de {{ totalCount() }} ingresos
+        </div>
+
         <!-- Summary Stats -->
         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="bg-cta-default/10 dark:bg-cta-default/20 rounded-lg p-4">
@@ -164,18 +182,31 @@ export class PayoutsHistoryComponent implements OnInit {
 
   readonly payouts = signal<Payout[]>([]);
   readonly loading = signal(false);
+  readonly loadingMore = signal(false);
   readonly error = signal<string | null>(null);
 
   readonly totalAmount = signal(0);
   readonly completedCount = signal(0);
   readonly pendingCount = signal(0);
+  readonly totalCount = signal(0);
+  readonly hasMore = signal(false);
+
+  // Pagination state
+  private readonly PAGE_SIZE = 10;
+  private currentOffset = 0;
 
   async ngOnInit(): Promise<void> {
     await this.loadPayouts();
   }
 
-  async loadPayouts(): Promise<void> {
-    this.loading.set(true);
+  async loadPayouts(reset: boolean = true): Promise<void> {
+    if (reset) {
+      this.currentOffset = 0;
+      this.payouts.set([]);
+    }
+
+    this.loading.set(reset);
+    this.loadingMore.set(!reset);
     this.error.set(null);
 
     try {
@@ -184,24 +215,47 @@ export class PayoutsHistoryComponent implements OnInit {
         throw new Error('Usuario no autenticado');
       }
 
-      const payoutsList = await firstValueFrom(this.payoutService.getUserPayouts(user.id));
-      this.payouts.set(payoutsList);
+      const result = await firstValueFrom(
+        this.payoutService.getUserPayoutsPaginated(user.id, this.PAGE_SIZE, this.currentOffset),
+      );
 
-      // Calculate stats
-      const total = payoutsList.reduce((sum, p) => sum + p.amount, 0);
-      const completed = payoutsList.filter((p) => p.status === 'completed').length;
-      const pending = payoutsList.filter(
+      // Append or replace payouts
+      if (reset) {
+        this.payouts.set(result.data);
+      } else {
+        this.payouts.set([...this.payouts(), ...result.data]);
+      }
+
+      this.hasMore.set(result.hasMore);
+      this.totalCount.set(result.total);
+
+      // Calculate stats from all payouts loaded so far
+      const allPayouts = this.payouts();
+      const total = allPayouts.reduce((sum, p) => sum + p.amount, 0);
+      const completed = allPayouts.filter((p) => p.status === 'completed').length;
+      const pending = allPayouts.filter(
         (p) => p.status === 'pending' || p.status === 'processing',
       ).length;
 
       this.totalAmount.set(total);
       this.completedCount.set(completed);
       this.pendingCount.set(pending);
+
+      // Update offset for next page
+      this.currentOffset += this.PAGE_SIZE;
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al cargar historial de ingresos');
     } finally {
       this.loading.set(false);
+      this.loadingMore.set(false);
     }
+  }
+
+  async loadMore(): Promise<void> {
+    if (!this.hasMore() || this.loadingMore()) {
+      return;
+    }
+    await this.loadPayouts(false);
   }
 
   getStatusLabel(status: Payout['status']): string {

@@ -2,21 +2,14 @@ import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { WalletService } from '../../core/services/wallet.service';
-import { BookingsService } from '../../core/services/bookings.service';
-import { CarsService } from '../../core/services/cars.service';
+import type { DashboardStats } from '../../core/models/dashboard.model';
+import { DashboardService } from '../../core/services/dashboard.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';
 import { PayoutsHistoryComponent } from './components/payouts-history/payouts-history.component';
 import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
 import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
-
-interface EarningsSummary {
-  thisMonth: number;
-  lastMonth: number;
-  total: number;
-}
 
 @Component({
   standalone: true,
@@ -36,36 +29,42 @@ interface EarningsSummary {
   styleUrls: ['./owner-dashboard.page.css'],
 })
 export class OwnerDashboardPage implements OnInit {
-  private readonly walletService = inject(WalletService);
-  private readonly bookingsService = inject(BookingsService);
-  private readonly carsService = inject(CarsService);
+  private readonly dashboardService = inject(DashboardService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly showCalendar = signal(false);
 
-  // Balance del wallet
-  readonly availableBalance = computed(() => this.walletService.availableBalance());
-  readonly pendingBalance = computed(() => this.walletService.lockedBalance());
-  readonly totalEarnings = computed(() => this.walletService.totalBalance());
+  // Dashboard stats from Edge Function
+  readonly stats = signal<DashboardStats | null>(null);
 
-  // Estadísticas
-  readonly totalCars = signal(0);
-  readonly activeCars = signal(0);
-  readonly upcomingBookings = signal(0);
-  readonly activeBookings = signal(0);
-  readonly completedBookings = signal(0);
+  // Wallet computed signals
+  readonly availableBalance = computed(() => this.stats()?.wallet.availableBalance ?? 0);
+  readonly pendingBalance = computed(() => this.stats()?.wallet.lockedBalance ?? 0);
+  readonly totalBalance = computed(() => this.stats()?.wallet.totalBalance ?? 0);
+  readonly withdrawableBalance = computed(() => this.stats()?.wallet.withdrawableBalance ?? 0);
 
-  readonly earnings = signal<EarningsSummary>({
-    thisMonth: 0,
-    lastMonth: 0,
-    total: 0,
-  });
+  // Cars computed signals
+  readonly totalCars = computed(() => this.stats()?.cars.total ?? 0);
+  readonly activeCars = computed(() => this.stats()?.cars.active ?? 0);
+  readonly pendingCars = computed(() => this.stats()?.cars.pending ?? 0);
+  readonly suspendedCars = computed(() => this.stats()?.cars.suspended ?? 0);
 
-  // Computed signals for derived values (better performance than getters)
+  // Bookings computed signals
+  readonly upcomingBookings = computed(() => this.stats()?.bookings.upcoming ?? 0);
+  readonly activeBookings = computed(() => this.stats()?.bookings.active ?? 0);
+  readonly completedBookings = computed(() => this.stats()?.bookings.completed ?? 0);
+  readonly totalBookings = computed(() => this.stats()?.bookings.total ?? 0);
+
+  // Earnings computed signals
+  readonly thisMonthEarnings = computed(() => this.stats()?.earnings.thisMonth ?? 0);
+  readonly lastMonthEarnings = computed(() => this.stats()?.earnings.lastMonth ?? 0);
+  readonly totalEarnings = computed(() => this.stats()?.earnings.total ?? 0);
+
+  // Growth percentage calculation
   readonly growthPercentage = computed(() => {
-    const current = this.earnings().thisMonth;
-    const previous = this.earnings().lastMonth;
+    const current = this.thisMonthEarnings();
+    const previous = this.lastMonthEarnings();
     if (previous === 0) return current > 0 ? 100 : 0;
     return Math.round(((current - previous) / previous) * 100);
   });
@@ -84,67 +83,29 @@ export class OwnerDashboardPage implements OnInit {
     };
   }
 
-  async loadDashboardData() {
+  async loadDashboardData(forceRefresh: boolean = false) {
     this.loading.set(true);
     this.error.set(null);
 
-    try {
-      // Load all data in parallel for better performance
-      const [cars, bookings] = await Promise.all([
-        this.carsService.listMyCars(),
-        this.bookingsService.getOwnerBookings(),
-        this.walletService.getBalance(),
-      ]);
+    this.dashboardService.getDashboardStats(forceRefresh).subscribe({
+      next: (stats) => {
+        this.stats.set(stats);
+        this.loading.set(false);
+      },
+      error: (_err) => {
+        this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
+        this.loading.set(false);
+      },
+    });
+  }
 
-      // Update car statistics
-      this.totalCars.set(cars.length);
-      this.activeCars.set(cars.filter((c) => c.status === 'active').length);
-
-      // Update booking statistics
-      this.upcomingBookings.set(
-        bookings.filter((b) => b.status === 'confirmed' && new Date(b.start_at) > new Date())
-          .length,
-      );
-      this.activeBookings.set(bookings.filter((b) => b.status === 'in_progress').length);
-      this.completedBookings.set(bookings.filter((b) => b.status === 'completed').length);
-
-      // Calcular ganancias por mes
-      const now = new Date();
-      const thisMonth = bookings
-        .filter((b) => {
-          if (!b.updated_at) return false;
-          const completedDate = new Date(b.updated_at);
-          return (
-            b.status === 'completed' &&
-            completedDate.getMonth() === now.getMonth() &&
-            completedDate.getFullYear() === now.getFullYear()
-          );
-        })
-        .reduce((sum, b) => sum + (b.total_amount || 0), 0);
-
-      const lastMonth = bookings
-        .filter((b) => {
-          if (!b.updated_at) return false;
-          const completedDate = new Date(b.updated_at);
-          const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1);
-          return (
-            b.status === 'completed' &&
-            completedDate.getMonth() === lastMonthDate.getMonth() &&
-            completedDate.getFullYear() === lastMonthDate.getFullYear()
-          );
-        })
-        .reduce((sum, b) => sum + (b.total_amount || 0), 0);
-
-      const total = bookings
-        .filter((b) => b.status === 'completed')
-        .reduce((sum, b) => sum + (b.total_amount || 0), 0);
-
-      this.earnings.set({ thisMonth, lastMonth, total });
-    } catch (_err) {
-      this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
-    } finally {
-      this.loading.set(false);
-    }
+  /**
+   * Refresh dashboard data manually
+   * Clears cache and fetches fresh data
+   */
+  refreshDashboard(): void {
+    this.dashboardService.clearCache();
+    this.loadDashboardData(true);
   }
 
   toggleCalendar(): void {
