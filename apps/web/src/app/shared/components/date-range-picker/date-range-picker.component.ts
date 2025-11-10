@@ -56,7 +56,9 @@ export class DateRangePickerComponent {
   @Input() dailyPrice: number | null | undefined = null; // Precio por día para calcular total en presets
   @Input() showPrices = true; // Mostrar precios en los presets
   @Input() carId: string | null = null; // ID del auto para validar disponibilidad
-  @Input() availabilityChecker: ((carId: string, from: string, to: string) => Promise<boolean>) | null = null;
+  @Input() availabilityChecker:
+    | ((carId: string, from: string, to: string) => Promise<boolean>)
+    | null = null;
   @Input() blockedRanges: BlockedDateRange[] = []; // ✅ NEW: Rangos de fechas bloqueadas (bookings confirmados)
   @Output() readonly rangeChange = new EventEmitter<DateRange>();
   @Output() readonly availabilityChange = new EventEmitter<boolean>();
@@ -136,9 +138,13 @@ export class DateRangePickerComponent {
 
     // Track evento: preset clicked
     const presetType: 'weekend' | '1week' | '2weeks' | '1month' =
-      preset.days === 'weekend' ? 'weekend' :
-      preset.days === 7 ? '1week' :
-      preset.days === 14 ? '2weeks' : '1month';
+      preset.days === 'weekend'
+        ? 'weekend'
+        : preset.days === 7
+          ? '1week'
+          : preset.days === 14
+            ? '2weeks'
+            : '1month';
 
     this.analytics.trackEvent('date_preset_clicked', {
       car_id: this.carId ?? undefined,
@@ -235,7 +241,10 @@ export class DateRangePickerComponent {
   /**
    * Genera sugerencias de fechas alternativas cuando el rango seleccionado no está disponible
    */
-  private async generateAlternativeSuggestions(requestedFrom: string, requestedTo: string): Promise<void> {
+  private async generateAlternativeSuggestions(
+    requestedFrom: string,
+    requestedTo: string,
+  ): Promise<void> {
     const requestedDays = Math.ceil(
       (new Date(requestedTo).getTime() - new Date(requestedFrom).getTime()) / (1000 * 60 * 60 * 24),
     );
@@ -250,7 +259,10 @@ export class DateRangePickerComponent {
     searchDate.setDate(today.getDate() + 1); // Empezar mañana
 
     // Intentar encontrar 5 sugerencias
-    while (suggestions.length < 5 && searchDate <= new Date(today.getTime() + maxSearchDays * 24 * 60 * 60 * 1000)) {
+    while (
+      suggestions.length < 5 &&
+      searchDate <= new Date(today.getTime() + maxSearchDays * 24 * 60 * 60 * 1000)
+    ) {
       const fromDate = new Date(searchDate);
       const toDate = new Date(fromDate);
       toDate.setDate(fromDate.getDate() + requestedDays);
@@ -266,8 +278,11 @@ export class DateRangePickerComponent {
           if (available) {
             const discount = this.calculateDiscountForDays(requestedDays);
             const pricePerDay = this.dailyPrice || null;
-            const totalPrice = pricePerDay ? requestedDays * pricePerDay * (1 - discount / 100) : null;
-            const savings = pricePerDay && discount > 0 ? requestedDays * pricePerDay * (discount / 100) : null;
+            const totalPrice = pricePerDay
+              ? requestedDays * pricePerDay * (1 - discount / 100)
+              : null;
+            const savings =
+              pricePerDay && discount > 0 ? requestedDays * pricePerDay * (discount / 100) : null;
 
             suggestions.push({
               from: fromStr,
@@ -337,7 +352,6 @@ export class DateRangePickerComponent {
   showMoreSuggestions(): void {
     this.showingSuggestions.set(true);
   }
-
 
   /**
    * Calcula el precio total para un preset dado

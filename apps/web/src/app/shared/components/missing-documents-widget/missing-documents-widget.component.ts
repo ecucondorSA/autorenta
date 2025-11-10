@@ -44,7 +44,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
                 <!-- Action Button -->
                 <a
                   routerLink="/verification"
-                  class="inline-block px-4 py-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-white font-medium rounded-lg transition-colors text-sm"
+                  class="inline-block px-4 py-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-text-inverse font-medium rounded-lg transition-colors text-sm"
                 >
                   Completar Verificación →
                 </a>
@@ -58,24 +58,24 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
               </button>
             </div>
           </div>
-        } @else if (verificationStatus()?.status === 'VERIFICADO') {
+        } @else if (currentStatus()?.status === 'VERIFICADO') {
           <!-- Verified Badge -->
           <div
-            class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/40 rounded-lg p-4 mb-6"
+            class="bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-center gap-3">
               <span class="text-2xl">✅</span>
               <div>
-                <p class="font-semibold text-green-900 dark:text-green-200">
+                <p class="font-semibold text-success-light dark:text-success-light">
                   Verificación Completada
                 </p>
-                <p class="text-sm text-green-800 dark:text-green-300">
+                <p class="text-sm text-success-light dark:text-success-light">
                   Tu cuenta está completamente verificada
                 </p>
               </div>
             </div>
           </div>
-        } @else if (verificationStatus()?.status === 'RECHAZADO') {
+        } @else if (currentStatus()?.status === 'RECHAZADO') {
           <!-- Rejected Status -->
           <div
             class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded-lg p-4 mb-6"
@@ -87,11 +87,14 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
                   Verificación Rechazada
                 </p>
                 <p class="text-sm text-red-800 dark:text-red-300 mb-3">
-                  {{ verificationStatus()?.notes || 'Tu verificación fue rechazada. Contacta con soporte para más información.' }}
+                  {{
+                    currentStatus()?.notes ||
+                      'Tu verificación fue rechazada. Contacta con soporte para más información.'
+                  }}
                 </p>
                 <a
                   routerLink="/verification"
-                  class="inline-block px-4 py-2 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white font-medium rounded-lg transition-colors text-sm"
+                  class="inline-block px-4 py-2 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-text-inverse font-medium rounded-lg transition-colors text-sm"
                 >
                   Reintentar Verificación →
                 </a>
@@ -114,9 +117,13 @@ export class MissingDocumentsWidgetComponent implements OnInit {
   private readonly verificationService = inject(VerificationService);
 
   readonly verificationStatus = this.verificationService.statuses;
-  readonly missingDocs = computed(() => this.verificationStatus()?.missing_docs || []);
+  readonly currentStatus = computed(() => {
+    const statuses = this.verificationStatus();
+    return statuses && statuses.length > 0 ? statuses[0] : null;
+  });
+  readonly missingDocs = computed(() => this.currentStatus()?.missing_docs || []);
   readonly missingDocsCount = computed(() => this.missingDocs().length);
-  readonly hasVerificationStatus = computed(() => !!this.verificationStatus());
+  readonly hasVerificationStatus = computed(() => !!this.currentStatus());
   readonly showDismissed = signal(false);
 
   ngOnInit() {

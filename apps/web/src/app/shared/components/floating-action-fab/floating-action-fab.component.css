@@ -1,0 +1,28 @@
+.fab-group {
+  position: fixed;
+  z-index: 40;
+}
+
+.fab-actions {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.fab-actions--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.fab-actions--hidden {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.fab-action,
+.fab-main {
+  min-width: 44px;
+  min-height: 44px;
+}

@@ -23,25 +23,26 @@
  */
 
 import { Injectable, inject } from '@angular/core';
-import {
-  RefundRequest,
-  ProcessRefundParams,
-  ProcessRefundResult,
-} from '../models';
-import { injectSupabase } from './supabase-client.service';
-import { LoggerService } from './logger.service';
 import type {
   AdminRole,
   AdminUser,
   AdminUserInsert,
   AdminUserUpdate,
   AdminAuditLog,
-  AdminAuditLogInsert,
   AdminPermission,
   AdminActionContext,
   AdminUserWithProfile,
-  ADMIN_PERMISSIONS,
 } from '../types/admin.types';
+import {
+  RefundRequest,
+  ProcessRefundParams,
+  ProcessRefundResult,
+  WithdrawalRequest,
+  Car,
+  Booking,
+} from '../models';
+import { LoggerService } from './logger.service';
+import { injectSupabase } from './supabase-client.service';
 
 // Import ADMIN_PERMISSIONS constant
 const PERMISSIONS_MATRIX: Record<AdminRole, AdminPermission[]> = {
@@ -365,11 +366,7 @@ export class AdminService {
   /**
    * Grant admin role to user (super admin only)
    */
-  async grantAdminRole(
-    userId: string,
-    role: AdminRole,
-    notes?: string,
-  ): Promise<AdminUser | null> {
+  async grantAdminRole(userId: string, role: AdminRole, notes?: string): Promise<AdminUser | null> {
     try {
       // Check permission
       const hasPermission = await this.hasPermission('grant_admin_roles');
@@ -520,7 +517,7 @@ export class AdminService {
   /**
    * List pending car approvals
    */
-  async listPendingCars(): Promise<unknown[]> {
+  async listPendingCars(): Promise<Car[]> {
     // Check permission
     const hasPermission = await this.hasPermission('view_cars');
     if (!hasPermission) {
@@ -534,13 +531,13 @@ export class AdminService {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as Car[];
   }
 
   /**
    * List recent bookings
    */
-  async listRecentBookings(limit = 20): Promise<unknown[]> {
+  async listRecentBookings(limit = 20): Promise<Booking[]> {
     // Check permission
     const hasPermission = await this.hasPermission('view_bookings');
     if (!hasPermission) {
@@ -554,7 +551,7 @@ export class AdminService {
       .limit(limit);
 
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as Booking[];
   }
 
   /**
@@ -680,7 +677,7 @@ export class AdminService {
   /**
    * List withdrawal requests with optional status filter
    */
-  async listWithdrawalRequests(status?: string): Promise<unknown[]> {
+  async listWithdrawalRequests(status?: string): Promise<WithdrawalRequest[]> {
     // Check permission
     const hasPermission = await this.hasPermission('view_payments');
     if (!hasPermission) {
@@ -706,14 +703,16 @@ export class AdminService {
     if (error) throw error;
 
     return (data ?? []).map((item) => {
-      const typedItem = item as Record<string, unknown>;
-      return {
-        ...typedItem,
-        user_name: (typedItem.user as Record<string, unknown>)?.full_name,
-        user_email: (
-          (typedItem.user as Record<string, unknown>)?.email as Array<{ email: string }>
-        )?.[0]?.email,
+      const typedItem = item as unknown as WithdrawalRequest & {
+        user?: { full_name?: string | null; email?: Array<{ email: string }> };
       };
+      const { user, ...rest } = typedItem;
+      return {
+        ...rest,
+        user_name: user?.full_name ?? undefined,
+        user_email: user?.email?.[0]?.email ?? undefined,
+        bank_account: typedItem.bank_account,
+      } as WithdrawalRequest;
     });
   }
 
@@ -820,7 +819,10 @@ export class AdminService {
    * @param userId - User ID to flag
    * @param notes - Reason for flagging
    */
-  async flagVerificationSuspicious(userId: string, notes: string): Promise<AdminVerificationResponse> {
+  async flagVerificationSuspicious(
+    userId: string,
+    notes: string,
+  ): Promise<AdminVerificationResponse> {
     const { data, error } = await this.supabase.rpc('admin_flag_verification_suspicious', {
       p_user_id: userId,
       p_notes: notes,
@@ -955,7 +957,7 @@ export class AdminService {
     }
 
     // Flatten nested data
-    const typedData = data as Record<string, unknown>;
+    const typedData = data as unknown as Record<string, unknown>;
     const user = typedData.user as Record<string, unknown>;
     const booking = typedData.booking as Record<string, unknown>;
     const car = booking?.car as Record<string, unknown>;
@@ -987,8 +989,7 @@ export class AdminService {
       .limit(20);
 
     // If query looks like a UUID, search by ID
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (uuidRegex.test(query)) {
       bookingsQuery = bookingsQuery.eq('id', query);
     }

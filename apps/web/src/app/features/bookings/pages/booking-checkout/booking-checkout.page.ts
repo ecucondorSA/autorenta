@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  signal,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
@@ -33,12 +27,7 @@ import { DriverProfileService } from '../../../../core/services/driver-profile.s
 @Component({
   selector: 'app-booking-checkout',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    PaymentProviderSelectorComponent,
-    PayPalButtonComponent,
-  ],
+  imports: [CommonModule, RouterLink, PaymentProviderSelectorComponent, PayPalButtonComponent],
   templateUrl: './booking-checkout.page.html',
   styleUrls: ['./booking-checkout.page.css'],
 })
@@ -184,14 +173,9 @@ export class BookingCheckoutPage implements OnInit {
 
     try {
       // Cargar booking y perfil de conductor en paralelo
-      await Promise.all([
-        this.loadBooking(),
-        this.driverProfileService.loadProfile(),
-      ]);
+      await Promise.all([this.loadBooking(), this.driverProfileService.loadProfile()]);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error cargando el booking'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error cargando el booking');
     } finally {
       this.isLoading.set(false);
     }
@@ -203,9 +187,7 @@ export class BookingCheckoutPage implements OnInit {
    * Carga los detalles del booking desde la DB
    */
   private async loadBooking(): Promise<void> {
-    const bookingData = await this.bookingsService.getBookingById(
-      this.bookingId()
-    );
+    const bookingData = await this.bookingsService.getBookingById(this.bookingId());
 
     if (!bookingData) {
       throw new Error('Booking no encontrado');
@@ -213,9 +195,7 @@ export class BookingCheckoutPage implements OnInit {
 
     // Validar que el booking está en estado pendiente de pago
     if (bookingData.status !== 'pending') {
-      throw new Error(
-        `Este booking está en estado "${bookingData.status}" y no se puede pagar`
-      );
+      throw new Error(`Este booking está en estado "${bookingData.status}" y no se puede pagar`);
     }
 
     this.booking.set(bookingData);
@@ -253,9 +233,7 @@ export class BookingCheckoutPage implements OnInit {
       const gateway = this.gatewayFactory.createBookingGateway('mercadopago');
 
       // Crear preferencia de pago
-      const preference = await gateway
-        .createBookingPreference(this.bookingId(), true)
-        .toPromise();
+      const preference = await gateway.createBookingPreference(this.bookingId(), true).toPromise();
 
       if (!preference || !preference.success || !preference.init_point) {
         throw new Error('Error creando preferencia de pago');
@@ -267,11 +245,7 @@ export class BookingCheckoutPage implements OnInit {
       // Redirigir a MercadoPago
       gateway.redirectToCheckout(preference.init_point, false);
     } catch (err) {
-      this.error.set(
-        err instanceof Error
-          ? err.message
-          : 'Error procesando pago con MercadoPago'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error procesando pago con MercadoPago');
       this.isProcessingPayment.set(false);
     }
   }
@@ -279,10 +253,7 @@ export class BookingCheckoutPage implements OnInit {
   /**
    * Maneja la aprobación del pago de PayPal
    */
-  handlePayPalApprove(event: {
-    orderId: string;
-    captureId: string;
-  }): void {
+  handlePayPalApprove(event: { orderId: string; captureId: string }): void {
     console.log('PayPal payment approved:', event);
 
     // Redirigir a página de confirmación
@@ -300,9 +271,7 @@ export class BookingCheckoutPage implements OnInit {
    */
   handlePayPalError(error: Error): void {
     console.error('PayPal payment error:', error);
-    this.error.set(
-      `Error procesando pago con PayPal: ${error.message}`
-    );
+    this.error.set(`Error procesando pago con PayPal: ${error.message}`);
     this.isProcessingPayment.set(false);
   }
 

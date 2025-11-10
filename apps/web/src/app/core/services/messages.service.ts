@@ -1,5 +1,11 @@
 import { Injectable, signal, inject } from '@angular/core';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import {
+  MessagesRepository,
+  ConversationDTO,
+  ConversationListOptions,
+  PaginatedConversations,
+} from '../repositories/messages.repository';
 import { injectSupabase } from './supabase-client.service';
 import { RealtimeConnectionService, ConnectionStatus } from './realtime-connection.service';
 import { OfflineMessagesService } from './offline-messages.service';
@@ -23,6 +29,7 @@ export class MessagesService {
   private readonly supabase = injectSupabase();
   private readonly realtimeConnection = inject(RealtimeConnectionService);
   private readonly offlineMessages = inject(OfflineMessagesService);
+  private readonly messagesRepository = inject(MessagesRepository);
 
   private realtimeChannel?: RealtimeChannel;
 
@@ -128,7 +135,7 @@ export class MessagesService {
     body: string;
     bookingId?: string;
     carId?: string;
-  }): Promise<void> {
+  }): Promise<Message> {
     if (!params.bookingId && !params.carId) {
       throw new Error('Debes indicar bookingId o carId');
     }
@@ -142,15 +149,24 @@ export class MessagesService {
 
     // Try to send immediately
     try {
-      const { error } = await this.supabase.from('messages').insert({
-        booking_id: params.bookingId ?? null,
-        car_id: params.carId ?? null,
-        sender_id: user.id,
-        recipient_id: params.recipientId,
-        body: params.body,
-      });
+      const { data, error } = await this.supabase
+        .from('messages')
+        .insert({
+          booking_id: params.bookingId ?? null,
+          car_id: params.carId ?? null,
+          sender_id: user.id,
+          recipient_id: params.recipientId,
+          body: params.body,
+        })
+        .select('*')
+        .single<Message>();
 
       if (error) throw error;
+      if (!data) {
+        throw new Error('No se pudo obtener el mensaje enviado');
+      }
+
+      return data;
     } catch (_error) {
       // Queue for retry when connection is restored
       await this.offlineMessages.queueMessage({
@@ -232,9 +248,30 @@ export class MessagesService {
   }
 
   // Typing indicator usando presence
-  async setTyping(bookingId: string, userId: string, isTyping: boolean): Promise<void> {
+  /**
+   * Establece el estado de typing para un booking
+   */
+  async setTyping(bookingId: string, userId: string, isTyping: boolean): Promise<void>;
+  /**
+   * Establece el estado de typing para un car chat
+   */
+  async setTyping(
+    contextId: string,
+    userId: string,
+    isTyping: boolean,
+    type: 'car' | 'booking',
+  ): Promise<void>;
+  async setTyping(
+    contextId: string,
+    userId: string,
+    isTyping: boolean,
+    type?: 'car' | 'booking',
+  ): Promise<void> {
     try {
-      const channel = this.supabase.channel(`presence-${bookingId}`, {
+      // Determinar el nombre del canal según el tipo
+      const channelName = type === 'car' ? `presence-car-${contextId}` : `presence-${contextId}`;
+
+      const channel = this.supabase.channel(channelName, {
         config: {
           presence: {
             key: userId,
@@ -249,14 +286,33 @@ export class MessagesService {
       } else {
         await channel.untrack();
       }
-    } catch (__error) {
+    } catch {
       // Don't throw - typing is not critical
     }
   }
 
-  subscribeToTyping(bookingId: string, callback: (typingUsers: string[]) => void): RealtimeChannel {
+  /**
+   * Suscribe a cambios de typing para un booking
+   */
+  subscribeToTyping(bookingId: string, callback: (typingUsers: string[]) => void): RealtimeChannel;
+  /**
+   * Suscribe a cambios de typing para un car chat
+   */
+  subscribeToTyping(
+    contextId: string,
+    callback: (typingUsers: string[]) => void,
+    type: 'car' | 'booking',
+  ): RealtimeChannel;
+  subscribeToTyping(
+    contextId: string,
+    callback: (typingUsers: string[]) => void,
+    type?: 'car' | 'booking',
+  ): RealtimeChannel {
+    // Determinar el nombre del canal según el tipo
+    const channelName = type === 'car' ? `presence-car-${contextId}` : `presence-${contextId}`;
+
     const channel = this.supabase
-      .channel(`presence-${bookingId}`, {
+      .channel(channelName, {
         config: {
           presence: {
             key: 'typing',
@@ -280,7 +336,9 @@ export class MessagesService {
             .map((presence) => presence.user_id)
             .filter((id): id is string => typeof id === 'string');
           callback(typingUsers);
-        } catch (__error) {}
+        } catch {
+          // Silently ignore typing errors
+        }
       })
       .subscribe();
 
@@ -323,7 +381,7 @@ export class MessagesService {
 
           // Success: remove from queue
           await this.offlineMessages.removeMessage(message.id);
-        } catch (__error) {
+        } catch {
           // Increment retry counter
           await this.offlineMessages.incrementRetry(message.id);
 
@@ -333,7 +391,8 @@ export class MessagesService {
           }
         }
       }
-    } catch (__error) {
+    } catch {
+      // Silently ignore sync errors
     } finally {
       this.isSyncing.set(false);
     }
@@ -344,5 +403,81 @@ export class MessagesService {
       this.realtimeConnection.unsubscribe(this.realtimeChannel.topic);
       this.realtimeChannel = undefined;
     }
+  }
+
+  /**
+   * Lista conversaciones con paginación usando MessagesRepository
+   */
+  async listConversations(
+    userId: string,
+    options?: ConversationListOptions,
+  ): Promise<PaginatedConversations> {
+    return this.messagesRepository.listConversations(userId, options);
+  }
+
+  /**
+   * Marca una conversación completa como leída
+   * Actualiza todos los mensajes no leídos de la conversación
+   */
+  async markConversationRead(
+    conversationId: string,
+    userId: string,
+    type: 'booking' | 'car',
+  ): Promise<void> {
+    const filter = type === 'booking' ? { booking_id: conversationId } : { car_id: conversationId };
+
+    const { error } = await this.supabase
+      .from('messages')
+      .update({ read_at: new Date().toISOString() })
+      .eq('recipient_id', userId)
+      .match(filter)
+      .is('read_at', null);
+
+    if (error) throw error;
+  }
+
+  /**
+   * Formatea una fecha relativa para mostrar en UI
+   * Ejemplos: "Ahora", "Hace 5m", "Hace 2h", "Hace 3d", "15 nov"
+   */
+  formatRelativeDate(date: Date | string): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    const now = new Date();
+    const diff = now.getTime() - dateObj.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return 'Ahora';
+    if (minutes < 60) return `Hace ${minutes}m`;
+    if (hours < 24) return `Hace ${hours}h`;
+    if (days < 7) return `Hace ${days}d`;
+
+    return dateObj.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+  }
+
+  /**
+   * Formatea hora para mostrar en mensajes
+   * Ejemplo: "14:30"
+   */
+  formatTime(dateStr: string): string {
+    return new Date(dateStr).toLocaleTimeString('es-AR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  /**
+   * Formatea fecha completa para mostrar en mensajes
+   * Ejemplo: "15 nov 2024, 14:30"
+   */
+  formatDateTime(dateStr: string): string {
+    return new Date(dateStr).toLocaleString('es-AR', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }

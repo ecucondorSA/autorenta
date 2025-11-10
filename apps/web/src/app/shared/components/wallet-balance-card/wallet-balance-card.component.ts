@@ -7,6 +7,8 @@ import {
   computed,
   effect,
   EffectRef,
+  runInInjectionContext,
+  Injector,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
@@ -42,6 +44,7 @@ import { WalletService } from '../../../core/services/wallet.service';
 })
 export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   private readonly walletService = inject(WalletService);
+  private readonly injector = inject(Injector);
   private refreshInterval?: number;
 
   // ==================== INPUTS & OUTPUTS ====================
@@ -194,16 +197,16 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       this.startAutoRefresh();
     }
 
-    this.pendingWatcher = effect(
-      () => {
+    // Crear effect dentro del contexto de inyección
+    runInInjectionContext(this.injector, () => {
+      this.pendingWatcher = effect(() => {
         const newCount = this.walletService.pendingDepositsCount();
         if (newCount > 0 && newCount > this.previousPendingCount) {
           this.showPendingNotification();
         }
         this.previousPendingCount = newCount;
-      },
-      { allowSignalWrites: true },
-    );
+      });
+    });
   }
 
   ngOnDestroy(): void {
@@ -289,7 +292,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   async loadPendingDeposits(): Promise<void> {
     try {
       await this.walletService.refreshPendingDepositsCount();
-    } catch (_err) {}
+    } catch (_err) {
+      // Silently ignore refresh errors
+    }
   }
 
   /**

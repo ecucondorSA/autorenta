@@ -372,23 +372,8 @@ export class ResponsiveFeatureComponent implements OnInit {
   selector: 'app-analytics-demo',
   template: `<div>Analytics Demo</div>`,
 })
-export class AnalyticsDemoComponent implements OnInit {
+export class AnalyticsDemoComponent {
   private guidedTour = inject(GuidedTourService);
-
-  ngOnInit() {
-    // All tour events are automatically tracked via TelemetryBridge
-    // You can also access event history:
-
-    const _history = this.guidedTour.getEventHistory();
-
-    // Events automatically sent:
-    // - tour_started
-    // - tour_step_shown
-    // - tour_step_completed
-    // - tour_completed
-    // - tour_cancelled
-    // - tour_error
-  }
 }
 
 // ============================================================================

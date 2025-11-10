@@ -449,7 +449,7 @@ export function calculateHoldEstimatedArs(
 /**
  * Calcula Crédito de Seguridad requerido (modalidad sin tarjeta)
  */
-export function calculateCreditSecurityUsd(vehicleValueUsd: number): number {
+export function calculateCreditSecurityUsd(_vehicleValueUsd: number): number {
   return 600;
 }
 

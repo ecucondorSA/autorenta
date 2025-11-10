@@ -14,11 +14,14 @@ import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import { WalletService } from '../../core/services/wallet.service';
 import { ReviewsService } from '../../core/services/reviews.service';
+import { ProfileStore } from '../../core/stores/profile.store';
 import { UserProfile, Role, UserStats, Review } from '../../core/models';
+import type { UpdateProfileData } from '../../core/services/profile.service';
 
 import { UserBadgesComponent } from '../../shared/components/user-badges/user-badges.component';
 import { ReviewCardComponent } from '../../shared/components/review-card/review-card.component';
 import { PwaCapabilitiesComponent } from '../../shared/components/pwa-capabilities/pwa-capabilities.component';
+import { ProfileWizardComponent } from './components/profile-wizard/profile-wizard.component';
 
 @Component({
   standalone: true,
@@ -30,6 +33,7 @@ import { PwaCapabilitiesComponent } from '../../shared/components/pwa-capabiliti
     UserBadgesComponent,
     ReviewCardComponent,
     PwaCapabilitiesComponent,
+    ProfileWizardComponent,
     TranslateModule,
   ],
   templateUrl: './profile.page.html',
@@ -41,14 +45,19 @@ export class ProfilePage implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly walletService = inject(WalletService);
   private readonly reviewsService = inject(ReviewsService);
+  private readonly profileStore = inject(ProfileStore);
 
-  readonly profile = signal<UserProfile | null>(null);
-  readonly loading = signal(false);
+  // Use ProfileStore for profile state
+  readonly profile = this.profileStore.profile;
+  readonly loading = this.profileStore.loading;
+  readonly uploadingAvatar = this.profileStore.uploadingAvatar;
+  readonly error = this.profileStore.error;
+
+  // Component-specific state
   readonly saving = signal(false);
-  readonly uploadingAvatar = signal(false);
   readonly message = signal<string | null>(null);
-  readonly error = signal<string | null>(null);
   readonly editMode = signal(false);
+  readonly useWizard = signal(true); // Toggle between wizard and old form
   readonly copiedWAN = signal(false);
 
   // Reviews and stats
@@ -59,23 +68,18 @@ export class ProfilePage implements OnInit {
   readonly showAllReviewsOwner = signal(false);
   readonly showAllReviewsRenter = signal(false);
 
-  readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
-  readonly avatarUrl = computed(() => this.profile()?.avatar_url ?? '');
-  readonly canPublishCars = computed(() => {
-    const role = this.profile()?.role;
-    return role === 'owner' || role === 'both';
-  });
-  readonly canBookCars = computed(() => {
-    const role = this.profile()?.role;
-    return role === 'renter' || role === 'both';
-  });
+  // Use ProfileStore computed values
+  readonly userEmail = this.profileStore.userEmail;
+  readonly avatarUrl = this.profileStore.avatarUrl;
+  readonly canPublishCars = this.profileStore.canPublishCars;
+  readonly canBookCars = this.profileStore.canBookCars;
 
-  // Wallet state
-  readonly availableBalance = this.walletService.availableBalance;
-  readonly withdrawableBalance = this.walletService.withdrawableBalance;
-  readonly protectedCreditBalance = this.walletService.nonWithdrawableBalance;
-  readonly lockedBalance = this.walletService.lockedBalance;
-  readonly totalBalance = this.walletService.totalBalance;
+  // Wallet state (delegated from ProfileStore)
+  readonly availableBalance = this.profileStore.availableBalance;
+  readonly withdrawableBalance = this.profileStore.withdrawableBalance;
+  readonly protectedCreditBalance = this.profileStore.protectedCreditBalance;
+  readonly lockedBalance = this.profileStore.lockedBalance;
+  readonly totalBalance = this.profileStore.totalBalance;
 
   // Computed reviews for display
   readonly displayedReviewsAsOwner = computed(() => {
@@ -130,19 +134,12 @@ export class ProfilePage implements OnInit {
 
   ngOnInit(): void {
     void this.loadProfile();
-    void this.walletService.getBalance().subscribe({
-      error: () => { /* Ignorar error si no se puede cargar el balance */ }
-    });
     void this.loadReviewsAndStats();
   }
 
   async loadProfile(): Promise<void> {
-    this.loading.set(true);
-    this.error.set(null);
-
     try {
-      const profile = await this.profileService.getCurrentProfile();
-      this.profile.set(profile);
+      const profile = await this.profileStore.loadProfile();
 
       if (profile) {
         this.form.patchValue({
@@ -162,24 +159,9 @@ export class ProfilePage implements OnInit {
         });
       }
     } catch (err) {
-      // Get detailed error message
-      let errorMessage = 'No pudimos cargar tu perfil.';
-      if (err instanceof Error) {
-        errorMessage = err.message;
-      } else if (typeof err === 'object' && err !== null) {
-        errorMessage = JSON.stringify(err);
-      }
-
-      // Provide more context based on error type
-      if (errorMessage.includes('Usuario no autenticado')) {
-        errorMessage = 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.';
-      } else if (errorMessage.includes('RLS Policy')) {
-        errorMessage = 'Error de permisos: ' + errorMessage;
-      }
-
-      this.error.set(errorMessage);
-    } finally {
-      this.loading.set(false);
+      // Error is already handled by ProfileStore
+      // Just log for debugging
+      console.error('Error loading profile:', err);
     }
   }
 
@@ -212,6 +194,40 @@ export class ProfilePage implements OnInit {
     }
   }
 
+  onWizardCancel(): void {
+    this.editMode.set(false);
+  }
+
+  onWizardComplete(): void {
+    this.editMode.set(false);
+    this.message.set('Perfil actualizado exitosamente');
+    setTimeout(() => this.message.set(null), 3000);
+  }
+
+  /**
+   * Convert UserProfile to UpdateProfileData for wizard
+   */
+  getProfileDataForWizard(): UpdateProfileData | null {
+    const profile = this.profile();
+    if (!profile) return null;
+
+    return {
+      full_name: profile.full_name,
+      role: profile.role,
+      phone: profile.phone ?? undefined,
+      whatsapp: profile.whatsapp ?? undefined,
+      driver_license_number: profile.driver_license_number ?? undefined,
+      driver_license_country: profile.driver_license_country ?? undefined,
+      driver_license_expiry: profile.driver_license_expiry ?? undefined,
+      address_line1: profile.address_line1 ?? undefined,
+      address_line2: profile.address_line2 ?? undefined,
+      city: profile.city ?? undefined,
+      state: profile.state ?? undefined,
+      postal_code: profile.postal_code ?? undefined,
+      country: profile.country ?? undefined,
+    };
+  }
+
   async saveProfile(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -219,20 +235,19 @@ export class ProfilePage implements OnInit {
     }
 
     this.saving.set(true);
-    this.error.set(null);
     this.message.set(null);
 
     try {
       const updates = this.form.getRawValue();
-      const updatedProfile = await this.profileService.updateProfile(updates);
-      this.profile.set(updatedProfile);
+      await this.profileStore.updateProfile(updates);
       this.editMode.set(false);
       this.message.set('Perfil actualizado exitosamente');
 
       // Limpiar mensaje después de 3 segundos
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu perfil.');
+      // Error is already handled by ProfileStore
+      this.message.set(err instanceof Error ? err.message : 'No pudimos actualizar tu perfil.');
     } finally {
       this.saving.set(false);
     }
@@ -244,28 +259,16 @@ export class ProfilePage implements OnInit {
 
     if (!file) return;
 
-    this.uploadingAvatar.set(true);
-    this.error.set(null);
     this.message.set(null);
 
     try {
-      const newAvatarUrl = await this.profileService.uploadAvatar(file);
-
-      // Actualizar perfil local
-      const currentProfile = this.profile();
-      if (currentProfile) {
-        this.profile.set({
-          ...currentProfile,
-          avatar_url: newAvatarUrl,
-        });
-      }
-
+      await this.profileStore.uploadAvatar(file);
       this.message.set('Avatar actualizado exitosamente');
       setTimeout(() => this.message.set(null), 3000);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
+      // Error is already handled by ProfileStore
+      this.message.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
     } finally {
-      this.uploadingAvatar.set(false);
       // Reset input
       input.value = '';
     }
@@ -276,27 +279,15 @@ export class ProfilePage implements OnInit {
       return;
     }
 
-    this.uploadingAvatar.set(true);
-    this.error.set(null);
+    this.message.set(null);
 
     try {
-      await this.profileService.deleteAvatar();
-
-      // Actualizar perfil local
-      const currentProfile = this.profile();
-      if (currentProfile) {
-        this.profile.set({
-          ...currentProfile,
-          avatar_url: undefined,
-        });
-      }
-
+      await this.profileStore.deleteAvatar();
       this.message.set('Avatar eliminado');
       setTimeout(() => this.message.set(null), 3000);
-    } catch (_err) {
-      this.error.set('No pudimos eliminar tu avatar.');
-    } finally {
-      this.uploadingAvatar.set(false);
+    } catch (err) {
+      // Error is already handled by ProfileStore
+      this.message.set(err instanceof Error ? err.message : 'No pudimos eliminar tu avatar.');
     }
   }
 
@@ -327,6 +318,7 @@ export class ProfilePage implements OnInit {
       this.reviewsAsOwner.set(reviewsAsOwner);
       this.reviewsAsRenter.set(reviewsAsRenter);
     } catch (__error) {
+      console.error('Error loading reviews and stats:', __error);
     } finally {
       this.reviewsLoading.set(false);
     }
@@ -355,7 +347,7 @@ export class ProfilePage implements OnInit {
       setTimeout(() => {
         this.copiedWAN.set(false);
       }, 2000);
-    } catch (__error) {
+    } catch {
       this.error.set('Error al copiar el número de cuenta');
     }
   }

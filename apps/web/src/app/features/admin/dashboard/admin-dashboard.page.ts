@@ -43,7 +43,9 @@ export class AdminDashboardPage implements OnInit {
     try {
       await this.adminService.approveCar(carId);
       await this.loadData();
-    } catch (__error) { /* Silenced */ }
+    } catch {
+      /* Silenced */
+    }
   }
 
   private async loadData(): Promise<void> {
@@ -57,7 +59,7 @@ export class AdminDashboardPage implements OnInit {
       this.pendingCarsSignal.set(cars);
       this.bookingsSignal.set(bookings);
       this.verificationStatsSignal.set(verificationStats);
-    } catch (__error) {
+    } catch {
       this.pendingCarsSignal.set([]);
       this.bookingsSignal.set([]);
       this.verificationStatsSignal.set(null);

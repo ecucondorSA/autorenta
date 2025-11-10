@@ -222,8 +222,10 @@ cmd_deploy() {
     log "Deploying web app..."
     cmd_deploy_web
 
-    log "Deploying worker..."
+    log "Deploying all workers..."
     cmd_deploy_worker
+    cmd_deploy_worker_doc_verifier
+    cmd_deploy_worker_ai_car_generator
 
     success "🎉 Full deployment completed!"
 }
@@ -251,7 +253,27 @@ cmd_deploy_worker() {
     npm run build
     wrangler deploy
 
-    success "Worker deployed"
+    success "Payment Webhook Worker deployed"
+}
+
+cmd_deploy_worker_doc_verifier() {
+    header "📦 Deploying Doc Verifier Worker"
+    check_command wrangler "npm install -g wrangler"
+
+    cd "$PROJECT_ROOT/functions/workers/doc-verifier"
+    wrangler deploy
+
+    success "Doc Verifier Worker deployed"
+}
+
+cmd_deploy_worker_ai_car_generator() {
+    header "📦 Deploying AI Car Generator Worker"
+    check_command wrangler "npm install -g wrangler"
+
+    cd "$PROJECT_ROOT/functions/workers/ai-car-generator"
+    wrangler deploy
+
+    success "AI Car Generator Worker deployed"
 }
 
 ###############################################################################
@@ -536,6 +558,8 @@ case "$COMMAND" in
     deploy) cmd_deploy "$@" ;;
     deploy:web) cmd_deploy_web "$@" ;;
     deploy:worker) cmd_deploy_worker "$@" ;;
+    deploy:worker:doc-verifier) cmd_deploy_worker_doc_verifier "$@" ;;
+    deploy:worker:ai-car-generator) cmd_deploy_worker_ai_car_generator "$@" ;;
 
     # CI/CD
     ci) cmd_ci "$@" ;;

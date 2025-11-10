@@ -1,9 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 interface RefundConfirmationEmailData {
   refundRequestId: string;
@@ -28,6 +24,9 @@ interface RefundConfirmationEmailData {
  * - REFUND_CONFIRMATION_FROM_EMAIL: Sender email (default: no-reply@autorentar.com)
  */
 serve(async (req) => {
+  // ✅ SECURITY: CORS con whitelist de dominios permitidos
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });

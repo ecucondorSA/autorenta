@@ -47,7 +47,7 @@ export class BonusMalusService {
       }
 
       return data as UserBonusMalus;
-    } catch (__error) {
+    } catch {
       return null;
     }
   }
@@ -75,7 +75,7 @@ export class BonusMalusService {
 
       if (error) throw error;
       return data as BonusMalusCalculation;
-    } catch (__error) {
+    } catch {
       return null;
     }
   }
@@ -87,7 +87,7 @@ export class BonusMalusService {
     try {
       const bonusMalus = await this.getUserBonusMalus(userId);
       return bonusMalus?.total_factor ?? 0;
-    } catch (__error) {
+    } catch {
       return 0;
     }
   }
@@ -108,17 +108,15 @@ export class BonusMalusService {
       type = 'BONUS';
       message = `¡Tienes un ${percentage.toFixed(0)}% de descuento!`;
       icon = '🎉';
-      color = 'text-green-600';
+      color = 'text-success-light';
       tips.push('Mantén tu excelente reputación para seguir obteniendo descuentos.');
     } else if (factor < 0) {
       // BONUS pequeño
       type = 'BONUS';
       message = `Tienes un ${percentage.toFixed(0)}% de descuento`;
       icon = '✨';
-      color = 'text-green-500';
-      tips.push(
-        'Completa más reservas y mantén un buen rating para aumentar tu descuento.',
-      );
+      color = 'text-success-light';
+      tips.push('Completa más reservas y mantén un buen rating para aumentar tu descuento.');
     } else if (factor === 0) {
       // NEUTRAL
       type = 'NEUTRAL';
@@ -132,7 +130,7 @@ export class BonusMalusService {
       type = 'MALUS';
       message = `Tienes un ${percentage.toFixed(0)}% de recargo`;
       icon = '⚠️';
-      color = 'text-orange-500';
+      color = 'text-warning-light';
       tips.push('Mejora tu rating completando reservas exitosas.');
       tips.push('Evita cancelaciones para reducir el recargo.');
     } else {
@@ -166,7 +164,7 @@ export class BonusMalusService {
 
       const nextRecalc = new Date(bonusMalus.next_recalculation_at);
       return nextRecalc < new Date();
-    } catch (__error) {
+    } catch {
       return false;
     }
   }
@@ -229,7 +227,7 @@ export class BonusMalusService {
       }
 
       return tips;
-    } catch (__error) {
+    } catch {
       return [];
     }
   }
@@ -237,7 +235,10 @@ export class BonusMalusService {
   /**
    * Calcula el impacto monetario del factor bonus-malus en una reserva
    */
-  calculateMonetaryImpact(basePrice: number, factor: number): {
+  calculateMonetaryImpact(
+    basePrice: number,
+    factor: number,
+  ): {
     adjustedPrice: number;
     difference: number;
     percentageChange: number;
@@ -264,9 +265,7 @@ export class BonusMalusService {
     averageFactor: number;
   } | null> {
     try {
-      const { data, error } = await this.supabase
-        .from('user_bonus_malus')
-        .select('total_factor');
+      const { data, error } = await this.supabase.from('user_bonus_malus').select('total_factor');
 
       if (error) throw error;
 
@@ -274,8 +273,7 @@ export class BonusMalusService {
       const usersWithBonus = data.filter((u) => u.total_factor < 0).length;
       const usersWithMalus = data.filter((u) => u.total_factor > 0).length;
       const usersNeutral = data.filter((u) => u.total_factor === 0).length;
-      const averageFactor =
-        data.reduce((sum, u) => sum + u.total_factor, 0) / totalUsers;
+      const averageFactor = data.reduce((sum, u) => sum + u.total_factor, 0) / totalUsers;
 
       return {
         totalUsers,
@@ -284,7 +282,7 @@ export class BonusMalusService {
         usersNeutral,
         averageFactor,
       };
-    } catch (__error) {
+    } catch {
       return null;
     }
   }
@@ -302,7 +300,7 @@ export class BonusMalusService {
         count: data as number,
         success: true,
       };
-    } catch (__error) {
+    } catch {
       return {
         count: 0,
         success: false,

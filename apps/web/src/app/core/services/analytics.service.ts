@@ -13,6 +13,8 @@ export type ConversionEventType =
   | 'date_availability_checked'
   | 'date_unavailable_error'
   | 'date_autosuggest_applied'
+  | 'alternative_dates_suggested'
+  | 'alternative_date_applied'
   // Social Proof Events
   | 'social_proof_viewed'
   | 'urgency_indicator_viewed'
@@ -88,11 +90,7 @@ export interface ConversionEventData {
 // Declaración global para gtag (Google Analytics)
 declare global {
   interface Window {
-    gtag?: (
-      command: string,
-      eventName: string | Date,
-      params?: Record<string, unknown>,
-    ) => void;
+    gtag?: (command: string, eventName: string | Date, params?: Record<string, unknown>) => void;
     dataLayer?: unknown[];
   }
 }
@@ -164,7 +162,7 @@ export class AnalyticsService {
         created_at: new Date().toISOString(),
       });
 
-      if ((error)) {
+      if (error) {
         console.error('Error tracking Supabase event:', error);
       }
     } catch (error) {
@@ -183,6 +181,8 @@ export class AnalyticsService {
       date_availability_checked: 'view_item',
       date_unavailable_error: 'exception',
       date_autosuggest_applied: 'select_content',
+      alternative_dates_suggested: 'select_content',
+      alternative_date_applied: 'select_content',
 
       // Social Proof
       social_proof_viewed: 'view_promotion',

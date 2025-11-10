@@ -319,7 +319,7 @@ describe('DistanceBadgeComponent', () => {
         { distance: 60, shouldBeNearby: false, expectedClass: 'default' },
       ];
 
-      testCases.forEach(testCase => {
+      testCases.forEach((testCase) => {
         component.distanceKm = testCase.distance;
         fixture.detectChanges();
 

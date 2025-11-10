@@ -1,5 +1,8 @@
 import { Injectable, inject, signal, computed, effect } from '@angular/core';
-import { MarketplaceService, MarketplaceStatus } from '../../../../core/services/marketplace.service';
+import {
+  MarketplaceService,
+  MarketplaceStatus,
+} from '../../../../core/services/marketplace.service';
 
 /**
  * Service for managing MercadoPago onboarding
@@ -53,7 +56,7 @@ export class PublishCarMpOnboardingService {
     } catch (error) {
       console.error('Failed to load MP status:', error);
       this.mpStatusError.set(
-        error instanceof Error ? error.message : 'Error al verificar Mercado Pago'
+        error instanceof Error ? error.message : 'Error al verificar Mercado Pago',
       );
     } finally {
       this.mpStatusLoading.set(false);
@@ -94,7 +97,7 @@ export class PublishCarMpOnboardingService {
 
       if (status.status === 'pending' && status.onboardingUrl) {
         const shouldContinue = confirm(
-          'Ya iniciaste el proceso de vinculación. ¿Querés continuar donde lo dejaste?'
+          'Ya iniciaste el proceso de vinculación. ¿Querés continuar donde lo dejaste?',
         );
         if (shouldContinue) {
           window.open(status.onboardingUrl, '_blank');

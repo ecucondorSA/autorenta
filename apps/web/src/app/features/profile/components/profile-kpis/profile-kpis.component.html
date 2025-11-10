@@ -1,0 +1,116 @@
+<div class="kpis-grid">
+  <!-- Wallet KPI -->
+  <article
+    class="kpi-card kpi-wallet"
+    [class.state-empty]="walletStatus() === 'empty'"
+    [class.state-low]="walletStatus() === 'low'"
+  >
+    <header class="kpi-header">
+      <div class="kpi-label">
+        <span>Wallet</span>
+        <small>{{ walletStatus() === 'empty' ? 'Sin fondos' : walletStatus() === 'low' ? 'Por debajo de $100' : 'Saludable' }}</small>
+      </div>
+      <button
+        type="button"
+        class="kpi-action"
+        (click)="onWalletClick.emit()"
+        routerLink="/wallet"
+      >
+        Gestionar
+      </button>
+    </header>
+    <div class="kpi-body">
+      <div class="kpi-value">${{ availableBalance() | number:'1.2-2' }}</div>
+      <p class="kpi-subtitle">Saldo listo para retirar</p>
+    </div>
+    <footer class="kpi-footer">
+      <span class="trend trend-positive">+12% esta semana</span>
+    </footer>
+  </article>
+
+  <!-- Reservas activas KPI -->
+  <article
+    class="kpi-card kpi-bookings"
+    *ngIf="canBookCars()"
+  >
+    <header class="kpi-header">
+      <div class="kpi-label">
+        <span>Reservas activas</span>
+        <small>{{ bookingsStatus() === 'none' ? 'Sin movimientos' : bookingsStatus() === 'high' ? 'Alta demanda' : 'Operando' }}</small>
+      </div>
+      <button
+        type="button"
+        class="kpi-action"
+        (click)="onBookingsClick.emit()"
+        routerLink="/bookings"
+      >
+        Ver agenda
+      </button>
+    </header>
+    <div class="kpi-body">
+      <div class="kpi-value">{{ activeBookings() }}</div>
+      <p class="kpi-subtitle">Reservas en curso como locatario</p>
+    </div>
+    <footer class="kpi-footer">
+      <span class="trend" [class.trend-positive]="bookingsStatus() === 'high'" [class.trend-idle]="bookingsStatus() === 'none'">
+        {{ bookingsStatus() === 'none' ? 'Activa campañas para recibir más' : 'Mantén tu tasa de respuesta alta' }}
+      </span>
+    </footer>
+  </article>
+
+  <!-- Autos publicados KPI -->
+  <article
+    class="kpi-card kpi-cars"
+    *ngIf="canPublishCars()"
+  >
+    <header class="kpi-header">
+      <div class="kpi-label">
+        <span>Autos publicados</span>
+        <small>{{ carsStatus() === 'high' ? 'Flota destacada' : 'Puedes sumar más unidades' }}</small>
+      </div>
+      <button
+        type="button"
+        class="kpi-action"
+        (click)="onCarsClick.emit()"
+        routerLink="/cars/mine"
+      >
+        Gestionar
+      </button>
+    </header>
+    <div class="kpi-body">
+      <div class="kpi-value">{{ publishedCars() }}</div>
+      <p class="kpi-subtitle">Unidades activas en Marketplace</p>
+    </div>
+    <footer class="kpi-footer">
+      <span class="trend trend-positive" *ngIf="carsStatus() === 'high'">Nivel Pro</span>
+      <span class="trend" *ngIf="carsStatus() !== 'high'">Mayor exposición con +5 autos</span>
+    </footer>
+  </article>
+
+  <!-- Reviews KPI -->
+  <article
+    class="kpi-card kpi-reviews"
+  >
+    <header class="kpi-header">
+      <div class="kpi-label">
+        <span>Reviews</span>
+        <small>{{ reviewsStatus() === 'none' ? 'Aún sin reseñas' : 'Reputación en crecimiento' }}</small>
+      </div>
+      <button
+        type="button"
+        class="kpi-action"
+        (click)="onReviewsClick.emit()"
+      >
+        Ver feedback
+      </button>
+    </header>
+    <div class="kpi-body">
+      <div class="kpi-value">{{ reviewsCount() }}</div>
+      <p class="kpi-subtitle">Suma reseñas para un boost estilo Uber Pro</p>
+    </div>
+    <footer class="kpi-footer">
+      <span class="trend trend-positive" *ngIf="reviewsStatus() === 'high'">Excelente reputación</span>
+      <span class="trend" *ngIf="reviewsStatus() !== 'high'">Incentiva reviews tras cada viaje</span>
+    </footer>
+  </article>
+</div>

@@ -185,7 +185,7 @@ export class CarsService {
         `
         *,
         car_photos(*),
-        owner:v_car_owner_info!owner_id(
+        owner:profiles!cars_owner_id_fkey(
           id,
           full_name,
           avatar_url,
@@ -275,7 +275,7 @@ export class CarsService {
         `
         *,
         car_photos(*),
-        owner:v_car_owner_info!owner_id(
+        owner:profiles!cars_owner_id_fkey(
           id,
           full_name,
           avatar_url,
@@ -312,6 +312,68 @@ export class CarsService {
       ...car,
       photos: car.car_photos || [],
     })) as Car[];
+  }
+
+  /**
+   * Alias for listMyCars for backward compatibility
+   */
+  async getMyCars(): Promise<Car[]> {
+    return this.listMyCars();
+  }
+
+  /**
+   * Get blocked date ranges for a car (bookings + manual blocks)
+   * Returns dates where the car is unavailable
+   */
+  async getBlockedDateRanges(carId: string): Promise<Array<{ from: string; to: string }>> {
+    try {
+      // Get bookings that block the car
+      const { data: bookings, error: bookingsError } = await this.supabase
+        .from('bookings')
+        .select('start_at, end_at')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
+        .order('start_at', { ascending: true });
+
+      if (bookingsError) throw bookingsError;
+
+      // Get manual blocks
+      const { data: blocks, error: blocksError } = await this.supabase
+        .from('car_blocked_dates')
+        .select('blocked_from, blocked_to')
+        .eq('car_id', carId)
+        .order('blocked_from', { ascending: true });
+
+      if (blocksError) throw blocksError;
+
+      // Combine and format
+      const ranges: Array<{ from: string; to: string }> = [];
+
+      // Add booking ranges
+      if (bookings) {
+        for (const booking of bookings) {
+          ranges.push({
+            from: booking.start_at.split('T')[0],
+            to: booking.end_at.split('T')[0],
+          });
+        }
+      }
+
+      // Add manual block ranges
+      if (blocks) {
+        for (const block of blocks) {
+          ranges.push({
+            from: block.blocked_from,
+            to: block.blocked_to,
+          });
+        }
+      }
+
+      return ranges;
+    } catch (error) {
+      console.error('Error getting blocked date ranges:', error);
+      return [];
+    }
   }
 
   async deleteCar(carId: string): Promise<void> {
@@ -547,11 +609,10 @@ export class CarsService {
       }
 
       return data === true;
-    } catch (__error) {
+    } catch {
       return false;
     }
   }
-
 
   /**
    * ✅ NUEVO: Verifica si un auto tiene reservas activas
@@ -683,7 +744,11 @@ export class CarsService {
       let attempts = 0;
       const maxAttempts = 100; // Evitar loops infinitos
 
-      while (alternatives.length < maxOptions && searchStart < maxSearchDate && attempts < maxAttempts) {
+      while (
+        alternatives.length < maxOptions &&
+        searchStart < maxSearchDate &&
+        attempts < maxAttempts
+      ) {
         attempts++;
 
         // Calcular end date propuesto

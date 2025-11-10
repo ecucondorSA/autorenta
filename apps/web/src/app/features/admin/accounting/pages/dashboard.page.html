@@ -51,10 +51,7 @@
       </ion-card-header>
       <ion-card-content>
         <ion-list lines="none" class="bg-transparent">
-          <ion-item
-            *ngFor="let alert of healthCheck()?.alerts"
-            class="bg-transparent"
-          >
+          <ion-item *ngFor="let alert of healthCheck()?.alerts" class="bg-transparent">
             <ion-icon name="alert-circle" slot="start"></ion-icon>
             <ion-label class="ion-text-wrap">{{ alert }}</ion-label>
           </ion-item>
@@ -160,7 +157,7 @@
         title="Utilidad Neta"
         [value]="dashboard()!.monthly_profit"
         icon="trending-up-outline"
-        [color]="(dashboard()!.monthly_profit ?? 0) >= 0 ? 'success' : 'danger'"
+        [color]="(dashboard()!.monthly_profit || 0) >= 0 ? 'success' : 'danger'"
       />
 
       <app-kpi-card
@@ -212,7 +209,11 @@
             <ion-label>
               <h3 class="font-semibold">Conciliación Wallet</h3>
               <p>
-                {{ healthCheck()?.walletReconciled ? 'OK - Sin diferencias' : 'Error - Verificar conciliación' }}
+                {{
+                  healthCheck()?.walletReconciled
+                    ? 'OK - Sin diferencias'
+                    : 'Error - Verificar conciliación'
+                }}
               </p>
             </ion-label>
           </ion-item>
@@ -226,7 +227,13 @@
             ></ion-icon>
             <ion-label>
               <h3 class="font-semibold">Provisión FGO</h3>
-              <p>{{ healthCheck()?.fgoAdequate ? 'Adecuada (≥5% de depósitos)' : 'Insuficiente - Revisar' }}</p>
+              <p>
+                {{
+                  healthCheck()?.fgoAdequate
+                    ? 'Adecuada (≥5% de depósitos)'
+                    : 'Insuficiente - Revisar'
+                }}
+              </p>
             </ion-label>
           </ion-item>
 

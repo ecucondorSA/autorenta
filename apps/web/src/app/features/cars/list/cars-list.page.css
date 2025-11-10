@@ -100,6 +100,7 @@
 .map-controls__sort {
   display: none;
   align-items: center;
+  margin-left: auto;
 }
 
 @media (min-width: 768px) {
@@ -1309,8 +1310,12 @@
 
 /* Skeletons del carrusel */
 @keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
 }
 
 .skeleton-card {
@@ -1344,7 +1349,8 @@
 
 /* 🎯 Pulse highlight animation for selected car */
 @keyframes pulseHighlight {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
     transform: scale(1);
   }
@@ -1361,4 +1367,58 @@
 .map-carousel-card-wrapper.pulse-highlight ::ng-deep app-car-card {
   border: 2px solid #22c55e !important;
   box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3) !important;
+}
+
+/* 🎯 Map-Centric Layout (70/30 split) */
+.map-page-layout {
+  display: flex;
+  height: calc(100vh - 60px); /* Restar altura de titlebar */
+  position: relative;
+}
+
+.map-section {
+  flex: 0 0 70%;
+  position: relative;
+  height: 100%;
+}
+
+.map-filters-overlay {
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  z-index: 1000;
+  max-width: 320px;
+}
+
+.urgent-banner-overlay {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  max-width: 600px;
+  width: 90%;
+}
+
+@media (max-width: 1024px) {
+  .map-page-layout {
+    flex-direction: column;
+    height: calc(100vh - 60px - 70px); /* Restar titlebar + bottom nav */
+  }
+
+  .map-section {
+    flex: 1 1 auto;
+    height: 40vh;
+  }
+
+  .map-filters-overlay {
+    top: 10px;
+    left: 10px;
+    max-width: calc(100% - 20px);
+  }
+
+  .urgent-banner-overlay {
+    top: 10px;
+    width: calc(100% - 20px);
+  }
 }

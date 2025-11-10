@@ -34,6 +34,7 @@ import { SplashLoaderComponent } from './shared/components/splash-loader/splash-
 import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
+import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
@@ -57,6 +58,7 @@ import { ShareButtonComponent } from './shared/components/share-button/share-but
     VerificationPromptBannerComponent,
     SplashLoaderComponent,
     PwaInstallPromptComponent,
+    PwaInstallBannerComponent,
     PwaUpdatePromptComponent,
     PwaTitlebarComponent,
     VerificationBadgeComponent,
@@ -305,7 +307,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     try {
       const profile = await this.profileService.getCurrentProfile();
       this.userProfile.set(profile as Record<string, unknown> | null);
-    } catch (__error) {
+    } catch {
       // Silently fail - avatar will show placeholder
     }
   }

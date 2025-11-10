@@ -22,27 +22,52 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <ion-item>
           <ion-label position="stacked">Fecha Inicio</ion-label>
-          <ion-input type="date" [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="startDate"></ion-input>
+          <ion-input
+            type="date"
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="startDate"
+          ></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Fecha Fin</ion-label>
-          <ion-input type="date" [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="endDate"></ion-input>
+          <ion-input
+            type="date"
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="endDate"
+          ></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Código de Cuenta</ion-label>
-          <ion-input [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="accountCode" placeholder="Ej: 1.01.01"></ion-input>
+          <ion-input
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="accountCode"
+            placeholder="Ej: 1.01.01"
+          ></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Tipo de Referencia</ion-label>
-          <ion-input [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="referenceType" placeholder="Ej: booking"></ion-input>
+          <ion-input
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="referenceType"
+            placeholder="Ej: booking"
+          ></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Búsqueda</ion-label>
-          <ion-input [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="searchTerm" placeholder="Buscar en descripción"></ion-input>
+          <ion-input
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="searchTerm"
+            placeholder="Buscar en descripción"
+          ></ion-input>
         </ion-item>
       </div>
 
@@ -64,9 +89,7 @@
     <ion-card-header>
       <ion-card-title>
         Entradas del Libro Mayor
-        <span class="text-sm font-normal text-gray-500">
-          ({{ ledgerData().total }} total)
-        </span>
+        <span class="text-sm font-normal text-gray-500"> ({{ ledgerData().total }} total) </span>
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>

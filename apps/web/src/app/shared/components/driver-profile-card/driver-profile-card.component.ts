@@ -81,10 +81,18 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
                   <div class="protector-info">
                     <div class="protector-detail">
                       <ion-icon name="shield-checkmark-outline" color="success"></ion-icon>
-                      <span>{{ remainingClaims() }} uso{{ remainingClaims() === 1 ? '' : 's' }} restante{{ remainingClaims() === 1 ? '' : 's' }}</span>
+                      <span
+                        >{{ remainingClaims() }} uso{{
+                          remainingClaims() === 1 ? '' : 's'
+                        }}
+                        restante{{ remainingClaims() === 1 ? '' : 's' }}</span
+                      >
                     </div>
                     <div class="protector-detail">
-                      <ion-icon name="calendar-outline" [color]="isNearExpiry() ? 'warning' : 'medium'"></ion-icon>
+                      <ion-icon
+                        name="calendar-outline"
+                        [color]="isNearExpiry() ? 'warning' : 'medium'"
+                      ></ion-icon>
                       <span>{{ expiryMessage() }}</span>
                     </div>
                   </div>
@@ -102,7 +110,10 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
             </ion-card>
 
             <!-- Expired or No Protector -->
-            <ion-card class="protector-card warning" *ngIf="!hasActiveProtector() || isProtectorExpired()">
+            <ion-card
+              class="protector-card warning"
+              *ngIf="!hasActiveProtector() || isProtectorExpired()"
+            >
               <ion-card-content>
                 <div class="protector-warning">
                   <ion-icon name="shield-outline" color="medium"></ion-icon>
@@ -111,9 +122,10 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
                       {{ isProtectorExpired() ? 'Tu protección expiró' : 'Sin protección activa' }}
                     </p>
                     <p class="warning-message">
-                      {{ isProtectorExpired()
-                        ? 'Renueva tu Bonus Protector para seguir protegido'
-                        : 'Protege tu clase de conductor de siniestros inesperados'
+                      {{
+                        isProtectorExpired()
+                          ? 'Renueva tu Bonus Protector para seguir protegido'
+                          : 'Protege tu clase de conductor de siniestros inesperados'
                       }}
                     </p>
                   </div>
@@ -181,7 +193,8 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
                   [class.discount]="hasDiscount()"
                   [class.surcharge]="hasSurcharge()"
                 >
-                  {{ guaranteeDiscountPct() > 0 ? '-' : '+' }}{{ Math.abs(guaranteeDiscountPct()) }}%
+                  {{ guaranteeDiscountPct() > 0 ? '-' : '+'
+                  }}{{ Math.abs(guaranteeDiscountPct()) }}%
                 </span>
               </div>
             </div>
@@ -240,9 +253,7 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
         <div *ngIf="!driverProfileService.loading() && !profile()" class="no-profile">
           <ion-icon name="person-add-outline" color="medium"></ion-icon>
           <p>No tienes perfil de conductor aún.</p>
-          <ion-button (click)="onInitializeProfile()">
-            Inicializar Perfil
-          </ion-button>
+          <ion-button (click)="onInitializeProfile()"> Inicializar Perfil </ion-button>
         </div>
       </ion-card-content>
     </ion-card>

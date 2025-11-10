@@ -24,7 +24,7 @@
  * ```
  */
 
-import { toucan } from '@sentry/cloudflare';
+// import { toucan } from '@sentry/cloudflare';
 
 // Extend Env interface to include Sentry DSN
 export interface SentryEnv {
@@ -32,7 +32,8 @@ export interface SentryEnv {
   ENVIRONMENT?: string;
 }
 
-let sentryInstance: ReturnType<typeof toucan> | null = null;
+// let sentryInstance: ReturnType<typeof toucan> | null = null;
+let sentryInstance: any = null;
 
 /**
  * Initialize Sentry for Cloudflare Worker
@@ -45,7 +46,7 @@ export function initSentry(
   request: Request,
   env: SentryEnv,
   ctx: ExecutionContext,
-): ReturnType<typeof toucan> | null {
+): any {
   if (sentryInstance) {
     return sentryInstance;
   }
@@ -58,59 +59,25 @@ export function initSentry(
     return null;
   }
 
-  sentryInstance = toucan({
-    dsn: sentryDsn,
-    environment,
-    context: ctx,
-    request,
-    // Performance Monitoring
-    tracesSampleRate: 0.1, // 10% of transactions
-    // Release tracking
-    release: 'autorenta-workers@0.1.0',
-    // Enable debug mode in development
-    debug: environment !== 'production',
-    // Default tags
-    initialScope: {
-      tags: {
-        service: 'cloudflare-workers',
-        worker: 'payments-webhook',
-        runtime: 'cloudflare-workers',
-      },
-    },
-    // Before send hook - sanitize sensitive data
-    beforeSend(event) {
-      // Remove sensitive data from breadcrumbs
-      if (event.breadcrumbs) {
-        event.breadcrumbs = event.breadcrumbs.map((breadcrumb) => {
-          if (breadcrumb.data) {
-            breadcrumb.data = sanitizeData(breadcrumb.data);
-          }
-          return breadcrumb;
-        });
-      }
+  // For now, Sentry is disabled in development for Cloudflare Workers
+  console.log('ℹ️  Sentry integration disabled for Cloudflare Workers');
 
-      // Remove sensitive data from extra
-      if (event.extra) {
-        event.extra = sanitizeData(event.extra);
-      }
+  sentryInstance = {
+    captureException: () => undefined,
+    captureMessage: () => undefined,
+    addBreadcrumb: () => {},
+    setTags: () => {},
+    setUser: () => {},
+    setContext: () => {},
+  };
 
-      // Remove sensitive data from contexts
-      if (event.contexts) {
-        event.contexts = sanitizeData(event.contexts);
-      }
-
-      return event;
-    },
-  });
-
-  console.log('✅ Sentry initialized:', environment);
   return sentryInstance;
 }
 
 /**
  * Get current Sentry instance
  */
-export function getSentry(): ReturnType<typeof toucan> | null {
+export function getSentry(): any {
   return sentryInstance;
 }
 

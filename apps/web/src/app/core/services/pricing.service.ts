@@ -48,10 +48,7 @@ export class PricingService {
 
     // If user location provided, calculate delivery fee
     if (params.userLocation) {
-      const distanceData = await this.calculateDeliveryFee(
-        params.carId,
-        params.userLocation
-      );
+      const distanceData = await this.calculateDeliveryFee(params.carId, params.userLocation);
 
       if (distanceData) {
         baseQuote.delivery_fee = distanceData.deliveryFeeCents / 100; // Convert to ARS
@@ -72,7 +69,7 @@ export class PricingService {
    */
   async calculateDeliveryFee(
     carId: string,
-    userLocation: LocationCoords
+    userLocation: LocationCoords,
   ): Promise<{
     distanceKm: number;
     deliveryFeeCents: number;
@@ -94,7 +91,7 @@ export class PricingService {
       userLocation.lat,
       userLocation.lng,
       car.location_lat,
-      car.location_lng
+      car.location_lng,
     );
 
     // Calculate delivery fee

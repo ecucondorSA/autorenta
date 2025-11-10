@@ -1,17 +1,17 @@
-<div class="min-h-screen bg-ivory-soft dark:bg-graphite-dark pb-20 transition-colors duration-300 text-smoke-black dark:text-pearl-light">
+<div class="min-h-screen bg-surface-base dark:bg-surface-base pb-20 transition-colors duration-300 text-text-primary dark:text-text-secondary">
   <!-- Header -->
-  <div class="bg-white dark:bg-slate-deep-pure dark:bg-anthracite border-b border-pearl-gray dark:border-gray-600/30 dark:border-slate-deep/50 transition-colors">
+  <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-gray-600/30 dark:border-slate-deep/50 transition-colors">
     <div class="mx-auto max-w-5xl px-6 py-8">
       <div class="flex items-start justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous tracking-tight">Mi Perfil</h1>
-          <p class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light/70">
+          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary tracking-tight">Mi Perfil</h1>
+          <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary/70">
             Gestiona tu información personal y preferencias
           </p>
         </div>
         <button
           (click)="signOut()"
-          class="px-4 py-2 text-sm font-medium text-charcoal-medium dark:text-pearl-light/80 hover:text-smoke-black dark:hover:text-ivory-luminous transition-colors rounded-lg hover:bg-sand-light dark:hover:bg-slate-deep/70"
+          class="px-4 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary/80 hover:text-text-primary dark:hover:text-ivory-luminous transition-colors rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep/70"
         >
           Cerrar sesión
         </button>
@@ -21,15 +21,15 @@
 
   <!-- Loading State -->
   <div *ngIf="loading()" class="mx-auto max-w-5xl px-6 py-12 text-center">
-    <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-accent-petrol border-r-transparent"></div>
-    <p class="mt-4 text-charcoal-medium dark:text-pearl-light/70">Cargando perfil...</p>
+    <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"></div>
+    <p class="mt-4 text-text-secondary dark:text-text-secondary/70">Cargando perfil...</p>
   </div>
 
   <!-- Content -->
   <div *ngIf="!loading()" class="mx-auto max-w-5xl px-6 py-8">
     <!-- Messages -->
-    <div *ngIf="message()" class="mb-6 rounded-xl bg-green-50 border border-green-200 dark:bg-success-500/15 dark:border-success-400/40 p-4 transition-colors">
-      <p class="text-sm font-medium text-green-800 dark:text-success-100">{{ message() }}</p>
+    <div *ngIf="message()" class="mb-6 rounded-xl bg-success-light/10 border border-success-light/40 dark:bg-success-500/15 dark:border-success-400/40 p-4 transition-colors">
+      <p class="text-sm font-medium text-success-light dark:text-success-100">{{ message() }}</p>
     </div>
 
     <div *ngIf="error()" class="mb-6 rounded-xl bg-red-50 border border-red-200 dark:bg-red-500/15 dark:border-red-400/40 p-4 transition-colors">
@@ -45,7 +45,7 @@
             <img
               [src]="avatarUrl() || '/assets/avatar-placeholder.png'"
               alt="Avatar"
-              class="h-32 w-32 rounded-full object-cover bg-sand-light dark:bg-slate-deep/70 ring-4 ring-pearl-gray/30 dark:ring-slate-deep/60 transition-colors"
+              class="h-32 w-32 rounded-full object-cover bg-surface-secondary dark:bg-surface-secondary/70 ring-4 ring-pearl-gray/30 dark:ring-slate-deep/60 transition-colors"
             />
             <!-- Hover Overlay -->
             <label
@@ -59,32 +59,32 @@
                 (change)="onAvatarChange($event)"
                 [disabled]="uploadingAvatar()"
               />
-              <svg class="h-8 w-8 text-white-pure mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-8 w-8 text-text-inverse-pure mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span class="text-xs font-medium text-white-pure">Cambiar foto</span>
+              <span class="text-xs font-medium text-text-inverse-pure">Cambiar foto</span>
             </label>
           </div>
 
-          <h2 class="text-2xl font-bold text-smoke-black mb-1">{{ profile()?.full_name }}</h2>
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-3">{{ userEmail() }}</p>
+          <h2 class="text-2xl font-bold text-text-primary mb-1">{{ profile()?.full_name }}</h2>
+          <p class="text-sm text-text-secondary dark:text-text-secondary mb-3">{{ userEmail() }}</p>
 
           <!-- Role Badge -->
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-sand-light px-4 py-1.5 text-sm font-semibold text-smoke-black">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-4 py-1.5 text-sm font-semibold text-text-primary">
             {{ profile()?.role === 'renter' ? 'Locatario' : profile()?.role === 'owner' ? 'Locador' : 'Ambos' }}
           </span>
 
           <!-- Permissions -->
-          <div class="mt-3 flex flex-col gap-1.5 text-xs text-charcoal-medium dark:text-pearl-light">
+          <div class="mt-3 flex flex-col gap-1.5 text-xs text-text-secondary dark:text-text-secondary">
             <span *ngIf="canPublishCars()" class="flex items-center gap-1">
-              <svg class="h-3 w-3 text-accent-petrol" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="h-3 w-3 text-cta-default" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
               Puedes publicar autos
             </span>
             <span *ngIf="canBookCars()" class="flex items-center gap-1">
-              <svg class="h-3 w-3 text-accent-warm" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="h-3 w-3 text-warning-light" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
               Puedes reservar autos
@@ -96,30 +96,30 @@
         <div class="flex flex-col justify-center gap-6">
           <!-- Ratings -->
           <div class="space-y-3">
-            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-petrol/10 to-accent-petrol/5 dark:from-accent-petrol/12 dark:to-transparent border border-accent-petrol/20 dark:border-accent-petrol/35 transition-colors">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-cta-default/10 to-cta-default/5 dark:from-cta-default/12 dark:to-transparent border border-cta-default/20 dark:border-cta-default/35 transition-colors">
               <div>
-                <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">Como Locador</p>
+                <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-1">Como Locador</p>
                 <div class="flex items-baseline gap-2">
-                  <span class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">0.0</span>
-                  <span class="text-accent-petrol dark:text-accent-petrol/80">★</span>
+                  <span class="text-3xl font-bold text-text-primary dark:text-text-primary">0.0</span>
+                  <span class="text-cta-default dark:text-cta-default/80">★</span>
                 </div>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mt-1">0 reviews</p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">0 reviews</p>
               </div>
-              <svg class="h-12 w-12 text-accent-petrol/20 dark:text-accent-petrol/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-12 w-12 text-cta-default/20 dark:text-cta-default/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
             </div>
 
-            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-warm/10 to-accent-warm/5 dark:from-accent-warm/12 dark:to-transparent border border-accent-warm/20 dark:border-accent-warm/35 transition-colors">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-warning-light/10 to-warning-light/5 dark:from-warning-light/12 dark:to-transparent border border-warning-light/20 dark:border-warning-light/35 transition-colors">
               <div>
-                <p class="text-xs font-medium text-charcoal-medium dark:text-pearl-light/70 mb-1">Como Locatario</p>
+                <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-1">Como Locatario</p>
                 <div class="flex items-baseline gap-2">
-                  <span class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous">0.0</span>
-                  <span class="text-accent-warm dark:text-accent-warm/80">★</span>
+                  <span class="text-3xl font-bold text-text-primary dark:text-text-primary">0.0</span>
+                  <span class="text-warning-light dark:text-warning-light/80">★</span>
                 </div>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/60 mt-1">0 reviews</p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">0 reviews</p>
               </div>
-              <svg class="h-12 w-12 text-accent-warm/20 dark:text-accent-warm/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-12 w-12 text-warning-light/20 dark:text-warning-light/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
@@ -129,42 +129,42 @@
         <!-- Right: Wallet & Verification -->
         <div class="flex flex-col justify-center gap-4">
           <!-- Wallet -->
-          <a routerLink="/wallet" class="block p-6 rounded-xl bg-gradient-to-br from-green-50 to-success-50 dark:from-success-500/12 dark:to-transparent border-2 border-green-200 dark:border-success-400/50 hover:border-green-400 dark:hover:border-success-300 transition-all hover:shadow-lg group">
+          <a routerLink="/wallet" class="block p-6 rounded-xl bg-gradient-to-br from-success-light/10 to-success-50 dark:from-success-500/12 dark:to-transparent border-2 border-success-light/40 dark:border-success-400/50 hover:border-success-light dark:hover:border-success-300 transition-all hover:shadow-lg group">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-semibold text-green-700 dark:text-success-100 uppercase tracking-wide">Mi Wallet</span>
+              <span class="text-xs font-semibold text-success-light dark:text-success-100 uppercase tracking-wide">Mi Wallet</span>
               <svg class="h-5 w-5 text-success-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            <p class="text-3xl font-bold text-green-900 dark:text-success-100">$0.00</p>
+            <p class="text-3xl font-bold text-success-light dark:text-success-100">$0.00</p>
             <p class="text-xs text-success-600 dark:text-success-200 mt-1">ARS</p>
           </a>
 
           <!-- Verification Status -->
-          <div class="p-4 rounded-xl bg-sand-light dark:bg-slate-deep/70 border border-pearl-gray dark:border-slate-deep transition-colors">
-            <h4 class="text-xs font-semibold text-smoke-black dark:text-ivory-luminous mb-3 uppercase tracking-wide">Estado de Verificación</h4>
-            <div class="space-y-2 text-xs text-charcoal-medium dark:text-pearl-light/70">
+          <div class="p-4 rounded-xl bg-surface-secondary dark:bg-surface-secondary/70 border border-border-default dark:border-slate-deep transition-colors">
+            <h4 class="text-xs font-semibold text-text-primary dark:text-text-primary mb-3 uppercase tracking-wide">Estado de Verificación</h4>
+            <div class="space-y-2 text-xs text-text-secondary dark:text-text-secondary/70">
               <div class="flex items-center justify-between">
                 <span>Email</span>
-                <span [class]="profile()?.is_email_verified ? 'text-success-600 dark:text-success-200 font-semibold' : 'text-ash-gray dark:text-pearl-light/50'">
+                <span [class]="profile()?.is_email_verified ? 'text-success-600 dark:text-success-200 font-semibold' : 'text-text-muted dark:text-text-secondary/50'">
                   {{ profile()?.is_email_verified ? '✓ Verificado' : '✗ Sin verificar' }}
                 </span>
               </div>
               <div class="flex items-center justify-between">
                 <span>Teléfono</span>
-                <span [class]="profile()?.is_phone_verified ? 'text-success-600 dark:text-success-200 font-semibold' : 'text-ash-gray dark:text-pearl-light/50'">
+                <span [class]="profile()?.is_phone_verified ? 'text-success-600 dark:text-success-200 font-semibold' : 'text-text-muted dark:text-text-secondary/50'">
                   {{ profile()?.is_phone_verified ? '✓ Verificado' : '✗ Sin verificar' }}
                 </span>
               </div>
               <div class="flex items-center justify-between">
                 <span>Licencia</span>
-                <span [class]="profile()?.is_driver_verified ? 'text-success-600 dark:text-success-200 font-semibold' : 'text-ash-gray dark:text-pearl-light/50'">
+                <span [class]="profile()?.is_driver_verified ? 'text-success-600 dark:text-success-200 font-semibold' : 'text-text-muted dark:text-text-secondary/50'">
                   {{ profile()?.is_driver_verified ? '✓ Verificado' : '✗ Sin verificar' }}
                 </span>
               </div>
 
               <!-- Document Status: Driver License -->
-              <div class="flex items-center justify-between pt-2 mt-2 border-t border-pearl-gray dark:border-gray-600/30 dark:border-slate-deep/40">
+              <div class="flex items-center justify-between pt-2 mt-2 border-t border-border-default dark:border-gray-600/30 dark:border-slate-deep/40">
                 <span class="text-xs">Licencia de conducir</span>
                 <span [class]="getKycStatusClass(driverLicenseStatus()) + ' text-xs'">
                   {{ getKycStatusLabel(driverLicenseStatus()) }}
@@ -181,7 +181,7 @@
             </div>
 
             <!-- KYC Badge -->
-            <div class="mt-3 pt-3 border-t border-pearl-gray dark:border-slate-deep/70">
+            <div class="mt-3 pt-3 border-t border-border-default dark:border-slate-deep/70">
               <span [class]="'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ' + getKycStatusClass(kycStatus())">
                 <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -198,16 +198,16 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <a routerLink="/cars/publish" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
         <div class="flex items-center gap-4">
-          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-accent-petrol/10 flex items-center justify-center group-hover:bg-accent-petrol group-hover:scale-110 transition-all">
-            <svg class="h-7 w-7 text-accent-petrol group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-cta-default/10 flex items-center justify-center group-hover:bg-cta-default group-hover:scale-110 transition-all">
+            <svg class="h-7 w-7 text-cta-default group-hover:text-text-inverse-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-accent-petrol transition-colors">Publicar Auto</h3>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Añade un nuevo vehículo</p>
+            <h3 class="text-base font-bold text-text-primary dark:text-text-primary group-hover:text-cta-default transition-colors">Publicar Auto</h3>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">Añade un nuevo vehículo</p>
           </div>
-          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-accent-petrol group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70 group-hover:text-cta-default group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -215,16 +215,16 @@
 
       <a *ngIf="canPublishCars()" routerLink="/cars/my" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
         <div class="flex items-center gap-4">
-          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-accent-warm/10 flex items-center justify-center group-hover:bg-accent-warm group-hover:scale-110 transition-all">
-            <svg class="h-7 w-7 text-accent-warm group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-warning-light/10 flex items-center justify-center group-hover:bg-warning-light group-hover:scale-110 transition-all">
+            <svg class="h-7 w-7 text-warning-light group-hover:text-text-inverse-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-accent-warm transition-colors">Mis Autos</h3>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Gestiona tus publicaciones</p>
+            <h3 class="text-base font-bold text-text-primary dark:text-text-primary group-hover:text-warning-light transition-colors">Mis Autos</h3>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">Gestiona tus publicaciones</p>
           </div>
-          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-accent-warm group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70 group-hover:text-warning-light group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -232,16 +232,16 @@
 
       <a *ngIf="canPublishCars()" routerLink="/bookings/owner" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
         <div class="flex items-center gap-4">
-          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-500 group-hover:scale-110 transition-all">
-            <svg class="h-7 w-7 text-blue-600 group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-cta-default/20 flex items-center justify-center group-hover:bg-cta-default group-hover:scale-110 transition-all">
+            <svg class="h-7 w-7 text-cta-default group-hover:text-text-inverse-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-blue-600 transition-colors">Reservas de mis autos</h3>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Gestiona las reservas de tus autos</p>
+            <h3 class="text-base font-bold text-text-primary dark:text-text-primary group-hover:text-cta-default transition-colors">Reservas de mis autos</h3>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">Gestiona las reservas de tus autos</p>
           </div>
-          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70 group-hover:text-cta-default group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -250,15 +250,15 @@
       <a *ngIf="canBookCars()" routerLink="/bookings" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
         <div class="flex items-center gap-4">
           <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-purple-100 flex items-center justify-center group-hover:bg-purple-500 group-hover:scale-110 transition-all">
-            <svg class="h-7 w-7 text-purple-600 group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-7 w-7 text-purple-600 group-hover:text-text-inverse-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-purple-600 transition-colors">Mis Reservas</h3>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Ve tus alquileres</p>
+            <h3 class="text-base font-bold text-text-primary dark:text-text-primary group-hover:text-purple-600 transition-colors">Mis Reservas</h3>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">Ve tus alquileres</p>
           </div>
-          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -267,15 +267,15 @@
       <a routerLink="/profile/verification" class="group card-premium p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200">
         <div class="flex items-center gap-4">
           <div class="flex-shrink-0 h-14 w-14 rounded-xl bg-amber-100 flex items-center justify-center group-hover:bg-amber-500 group-hover:scale-110 transition-all">
-            <svg class="h-7 w-7 text-amber-600 group-hover:text-white-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-7 w-7 text-amber-600 group-hover:text-text-inverse-pure transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-smoke-black dark:text-ivory-luminous group-hover:text-amber-600 transition-colors">Verificación</h3>
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 mt-0.5">Completa tu identidad</p>
+            <h3 class="text-base font-bold text-text-primary dark:text-text-primary group-hover:text-amber-600 transition-colors">Verificación</h3>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">Completa tu identidad</p>
           </div>
-          <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70 group-hover:text-amber-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70 group-hover:text-amber-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -283,16 +283,17 @@
     </div>
 
     <!-- Tabs Navigation -->
-    <div class="mb-6 border-b border-pearl-gray dark:border-slate-deep/70 transition-colors">
+    <div class="mb-6 border-b border-border-default dark:border-slate-deep/70 transition-colors">
       <nav class="-mb-px flex gap-6 overflow-x-auto" aria-label="Tabs">
         <button
           *ngFor="let tab of tabs"
           (click)="setActiveTab(tab.id)"
-          [class.text-accent-petrol]="activeTab() === tab.id"
-          [class.border-accent-petrol]="activeTab() === tab.id"
-          [class.text-charcoal-medium dark:text-pearl-light]="activeTab() !== tab.id"
+          [class.text-cta-default]="activeTab() === tab.id"
+          [class.border-cta-default]="activeTab() === tab.id"
+          [class.text-text-secondary]="activeTab() !== tab.id"
+          [class.dark:text-text-secondary]="activeTab() !== tab.id"
           [class.border-transparent]="activeTab() !== tab.id"
-          class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-smoke-black dark:hover:text-ivory-luminous"
+          class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary dark:hover:text-ivory-luminous"
         >
           {{ tab.label }}
         </button>
@@ -303,10 +304,10 @@
     <div class="card-premium p-6">
       <!-- General Tab -->
       <div *ngIf="activeTab() === 'general'">
-        <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Información General</h3>
+        <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">Información General</h3>
         <form [formGroup]="generalForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-smoke-black dark:text-ivory-luminous mb-2">Nombre completo</label>
+            <label class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2">Nombre completo</label>
             <input
               type="text"
               formControlName="full_name"
@@ -319,12 +320,13 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">Rol en Autorent</label>
+            <label class="block text-sm font-semibold text-text-primary mb-2">Rol en Autorent</label>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                                                                     <label *ngFor="let roleOption of roles" class="relative flex cursor-pointer rounded-lg border p-4 transition-all"
-                                                                                      [class.border-accent-petrol]="generalForm.value.role === roleOption.value"
-                                                                                      [class.bg-accent-petrol/5]="generalForm.value.role === roleOption.value"
-                                                                                      [class.border-pearl-gray dark:border-gray-600]="generalForm.value.role !== roleOption.value">
+                                                                                      [class.border-cta-default]="generalForm.value.role === roleOption.value"
+                                                                                      [class.bg-cta-default/5]="generalForm.value.role === roleOption.value"
+                                                                                      [class.border-border-default]="generalForm.value.role !== roleOption.value"
+                                                                                      [class.dark:border-gray-600]="generalForm.value.role !== roleOption.value">
                                                                       
                                                         
                                           
@@ -338,8 +340,8 @@
                   class="sr-only"
                 />
                 <div class="flex flex-1 flex-col">
-                  <span class="block text-sm font-semibold text-smoke-black">{{ roleOption.label }}</span>
-                  <span class="mt-1 text-xs text-charcoal-medium dark:text-pearl-light">{{ roleOption.description }}</span>
+                  <span class="block text-sm font-semibold text-text-primary">{{ roleOption.label }}</span>
+                  <span class="mt-1 text-xs text-text-secondary dark:text-text-secondary">{{ roleOption.description }}</span>
                 </div>
               </label>
             </div>
@@ -349,10 +351,10 @@
 
       <!-- Contact Tab -->
       <div *ngIf="activeTab() === 'contact'">
-        <h3 class="text-lg font-semibold text-smoke-black mb-4">Información de Contacto</h3>
+        <h3 class="text-lg font-semibold text-text-primary mb-4">Información de Contacto</h3>
         <form [formGroup]="contactForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">Teléfono</label>
+            <label class="block text-sm font-semibold text-text-primary mb-2">Teléfono</label>
             <input
               type="tel"
               formControlName="phone"
@@ -362,24 +364,24 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">WhatsApp</label>
+            <label class="block text-sm font-semibold text-text-primary mb-2">WhatsApp</label>
             <input
               type="tel"
               formControlName="whatsapp"
               class="input-premium"
               placeholder="+54 11 1234-5678"
             />
-            <p class="mt-1 text-xs text-charcoal-medium dark:text-pearl-light">Número de WhatsApp para comunicación rápida</p>
+            <p class="mt-1 text-xs text-text-secondary dark:text-text-secondary">Número de WhatsApp para comunicación rápida</p>
           </div>
         </form>
       </div>
 
       <!-- Address Tab -->
       <div *ngIf="activeTab() === 'address'">
-        <h3 class="text-lg font-semibold text-smoke-black mb-4">Dirección</h3>
+        <h3 class="text-lg font-semibold text-text-primary mb-4">Dirección</h3>
         <form [formGroup]="addressForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">Dirección 1</label>
+            <label class="block text-sm font-semibold text-text-primary mb-2">Dirección 1</label>
             <input
               type="text"
               formControlName="address_line1"
@@ -389,7 +391,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">Dirección 2 (opcional)</label>
+            <label class="block text-sm font-semibold text-text-primary mb-2">Dirección 2 (opcional)</label>
             <input
               type="text"
               formControlName="address_line2"
@@ -400,7 +402,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">Ciudad</label>
+              <label class="block text-sm font-semibold text-text-primary mb-2">Ciudad</label>
               <input
                 type="text"
                 formControlName="city"
@@ -410,7 +412,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">Provincia/Estado</label>
+              <label class="block text-sm font-semibold text-text-primary mb-2">Provincia/Estado</label>
               <input
                 type="text"
                 formControlName="state"
@@ -422,7 +424,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">Código Postal</label>
+              <label class="block text-sm font-semibold text-text-primary mb-2">Código Postal</label>
               <input
                 type="text"
                 formControlName="postal_code"
@@ -432,7 +434,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-semibold text-smoke-black mb-2">País</label>
+              <label class="block text-sm font-semibold text-text-primary mb-2">País</label>
               <input
                 type="text"
                 formControlName="country"
@@ -446,8 +448,8 @@
 
       <!-- Conductor Tab -->
       <div *ngIf="activeTab() === 'conductor'">
-        <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous mb-4">Perfil de Conductor</h3>
-        <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mb-6">
+        <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">Perfil de Conductor</h3>
+        <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-6">
           Tu clase de conductor determina los descuentos o recargos que se aplican en tus reservas.
           Mejora tu clase conduciendo sin siniestros.
         </p>
@@ -459,19 +461,19 @@
         <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <a
             [routerLink]="['/profile/driver-profile']"
-            class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-accent-petrol/10 to-accent-petrol/5 dark:from-accent-petrol/12 dark:to-transparent border border-accent-petrol/20 dark:border-accent-petrol/35 hover:border-accent-petrol/40 dark:hover:border-accent-petrol/50 transition-all"
+            class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-cta-default/10 to-cta-default/5 dark:from-cta-default/12 dark:to-transparent border border-cta-default/20 dark:border-cta-default/35 hover:border-cta-default/40 dark:hover:border-cta-default/50 transition-all"
           >
             <div class="flex items-center gap-3">
-              <svg class="h-6 w-6 text-accent-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-6 w-6 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
               </svg>
               <div>
-                <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Ver Perfil Completo</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">Detalles de tu clase y progreso</p>
+                <p class="font-semibold text-text-primary dark:text-text-primary">Ver Perfil Completo</p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/70">Detalles de tu clase y progreso</p>
               </div>
             </div>
-            <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
           </a>
@@ -486,24 +488,24 @@
                       d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
               </svg>
               <div>
-                <p class="font-semibold text-smoke-black dark:text-ivory-luminous">Proteger mi Clase</p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">Comprar Bonus Protector</p>
+                <p class="font-semibold text-text-primary dark:text-text-primary">Proteger mi Clase</p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/70">Comprar Bonus Protector</p>
               </div>
             </div>
-            <svg class="h-5 w-5 text-charcoal-medium dark:text-pearl-light/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-text-secondary dark:text-text-secondary/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
           </a>
         </div>
 
         <!-- Info Box -->
-        <div class="mt-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700/30">
+        <div class="mt-6 p-4 rounded-xl bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default/30">
           <div class="flex gap-3">
-            <svg class="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-cta-default dark:text-cta-default flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <div class="text-sm text-blue-800 dark:text-blue-200">
+            <div class="text-sm text-cta-default dark:text-cta-default">
               <p class="font-semibold mb-1">¿Cómo funciona el sistema Bonus-Malus?</p>
               <p>
                 Tu clase va de 0 (excelente) a 10 (alto riesgo). Cada año sin siniestros mejora tu clase en 1 nivel.
@@ -516,7 +518,7 @@
 
       <!-- Verification Tab -->
       <div *ngIf="activeTab() === 'verification'">
-        <h3 class="text-lg font-semibold text-smoke-black mb-6">Verificación de Identidad</h3>
+        <h3 class="text-lg font-semibold text-text-primary mb-6">Verificación de Identidad</h3>
 
         <!-- Verification Progress Component -->
         <div class="mb-6">
@@ -525,7 +527,7 @@
 
         <!-- Level 1: Email & Phone Verification -->
         <div class="space-y-4 mb-6">
-          <h4 class="text-md font-semibold text-smoke-black">Level 1: Verificación Básica</h4>
+          <h4 class="text-md font-semibold text-text-primary">Level 1: Verificación Básica</h4>
 
           <!-- Email Verification -->
           <app-email-verification></app-email-verification>
@@ -536,53 +538,53 @@
 
         <!-- Level 3: Facial Verification -->
         <div class="mb-6">
-          <h4 class="text-md font-semibold text-smoke-black mb-4">Level 3: Verificación Facial</h4>
+          <h4 class="text-md font-semibold text-text-primary mb-4">Level 3: Verificación Facial</h4>
           <app-selfie-capture></app-selfie-capture>
         </div>
       </div>
 
       <!-- Notifications Tab -->
       <div *ngIf="activeTab() === 'notifications'">
-        <h3 class="text-lg font-semibold text-smoke-black mb-4">Preferencias de Notificaciones</h3>
+        <h3 class="text-lg font-semibold text-text-primary mb-4">Preferencias de Notificaciones</h3>
         <form [formGroup]="notificationsForm" class="space-y-6">
           <div>
-            <h4 class="text-sm font-semibold text-smoke-black mb-3">Email</h4>
+            <h4 class="text-sm font-semibold text-text-primary mb-3">Email</h4>
             <div class="space-y-2">
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="email_bookings" class="rounded border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol">
-                <span class="text-sm text-smoke-black">Notificaciones de reservas</span>
+                <input type="checkbox" formControlName="email_bookings" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <span class="text-sm text-text-primary">Notificaciones de reservas</span>
               </label>
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="email_promotions" class="rounded border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol">
-                <span class="text-sm text-smoke-black">Promociones y novedades</span>
+                <input type="checkbox" formControlName="email_promotions" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <span class="text-sm text-text-primary">Promociones y novedades</span>
               </label>
             </div>
           </div>
 
           <div>
-            <h4 class="text-sm font-semibold text-smoke-black mb-3">Push</h4>
+            <h4 class="text-sm font-semibold text-text-primary mb-3">Push</h4>
             <div class="space-y-2">
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="push_bookings" class="rounded border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol">
-                <span class="text-sm text-smoke-black">Notificaciones de reservas</span>
+                <input type="checkbox" formControlName="push_bookings" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <span class="text-sm text-text-primary">Notificaciones de reservas</span>
               </label>
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="push_promotions" class="rounded border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol">
-                <span class="text-sm text-smoke-black">Promociones y novedades</span>
+                <input type="checkbox" formControlName="push_promotions" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <span class="text-sm text-text-primary">Promociones y novedades</span>
               </label>
             </div>
           </div>
 
           <div>
-            <h4 class="text-sm font-semibold text-smoke-black mb-3">WhatsApp</h4>
+            <h4 class="text-sm font-semibold text-text-primary mb-3">WhatsApp</h4>
             <div class="space-y-2">
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="whatsapp_bookings" class="rounded border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol">
-                <span class="text-sm text-smoke-black">Notificaciones de reservas</span>
+                <input type="checkbox" formControlName="whatsapp_bookings" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <span class="text-sm text-text-primary">Notificaciones de reservas</span>
               </label>
               <label class="flex items-center gap-3">
-                <input type="checkbox" formControlName="whatsapp_promotions" class="rounded border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol">
-                <span class="text-sm text-smoke-black">Promociones y novedades</span>
+                <input type="checkbox" formControlName="whatsapp_promotions" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+                <span class="text-sm text-text-primary">Promociones y novedades</span>
               </label>
             </div>
           </div>
@@ -591,10 +593,10 @@
 
       <!-- Preferences Tab -->
       <div *ngIf="activeTab() === 'preferences'">
-        <h3 class="text-lg font-semibold text-smoke-black mb-4">Preferencias</h3>
+        <h3 class="text-lg font-semibold text-text-primary mb-4">Preferencias</h3>
         <form [formGroup]="preferencesForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">Zona Horaria</label>
+            <label class="block text-sm font-semibold text-text-primary mb-2">Zona Horaria</label>
             <select formControlName="timezone" class="input-premium">
               <option value="America/Buenos_Aires">Buenos Aires (GMT-3)</option>
               <option value="America/Montevideo">Montevideo (GMT-3)</option>
@@ -603,7 +605,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">Idioma</label>
+            <label class="block text-sm font-semibold text-text-primary mb-2">Idioma</label>
             <select formControlName="locale" class="input-premium">
               <option value="es-AR">Español (Argentina)</option>
               <option value="es-UY">Español (Uruguay)</option>
@@ -613,7 +615,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-smoke-black mb-2">Moneda</label>
+            <label class="block text-sm font-semibold text-text-primary mb-2">Moneda</label>
             <select formControlName="currency" class="input-premium">
               <option value="ARS">Pesos Argentinos (ARS)</option>
               <option value="UYU">Pesos Uruguayos (UYU)</option>
@@ -623,8 +625,8 @@
 
           <div>
             <label class="flex items-center gap-3">
-              <input type="checkbox" formControlName="marketing_opt_in" class="rounded border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol">
-              <span class="text-sm text-smoke-black">Deseo recibir ofertas y promociones especiales</span>
+              <input type="checkbox" formControlName="marketing_opt_in" class="rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default">
+              <span class="text-sm text-text-primary">Deseo recibir ofertas y promociones especiales</span>
             </label>
           </div>
         </form>
@@ -632,46 +634,46 @@
 
       <!-- Security Tab -->
       <div *ngIf="activeTab() === 'security'">
-        <h3 class="text-lg font-semibold text-smoke-black mb-4">Seguridad y Privacidad</h3>
+        <h3 class="text-lg font-semibold text-text-primary mb-4">Seguridad y Privacidad</h3>
         <form [formGroup]="securityForm" class="space-y-4">
-          <div class="p-4 rounded-lg bg-sand-light border border-pearl-gray dark:border-gray-600">
-            <h4 class="text-sm font-semibold text-smoke-black mb-2">Estado de Verificación</h4>
+          <div class="p-4 rounded-lg bg-surface-secondary border border-border-default dark:border-gray-600">
+            <h4 class="text-sm font-semibold text-text-primary mb-2">Estado de Verificación</h4>
             <div class="space-y-2 text-sm">
               <div class="flex items-center justify-between">
-                <span class="text-charcoal-medium dark:text-pearl-light">Email verificado</span>
-                <span [class]="profile()?.is_email_verified ? 'text-success-600 font-medium' : 'text-ash-gray dark:text-pearl-light/70'">
+                <span class="text-text-secondary dark:text-text-secondary">Email verificado</span>
+                <span [class]="profile()?.is_email_verified ? 'text-success-600 font-medium' : 'text-text-muted dark:text-text-secondary/70'">
                   {{ profile()?.is_email_verified ? 'Sí' : 'No' }}
                 </span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-charcoal-medium dark:text-pearl-light">Teléfono verificado</span>
-                <span [class]="profile()?.is_phone_verified ? 'text-success-600 font-medium' : 'text-ash-gray dark:text-pearl-light/70'">
+                <span class="text-text-secondary dark:text-text-secondary">Teléfono verificado</span>
+                <span [class]="profile()?.is_phone_verified ? 'text-success-600 font-medium' : 'text-text-muted dark:text-text-secondary/70'">
                   {{ profile()?.is_phone_verified ? 'Sí' : 'No' }}
                 </span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-charcoal-medium dark:text-pearl-light">Licencia verificada</span>
-                <span [class]="profile()?.is_driver_verified ? 'text-success-600 font-medium' : 'text-ash-gray dark:text-pearl-light/70'">
+                <span class="text-text-secondary dark:text-text-secondary">Licencia verificada</span>
+                <span [class]="profile()?.is_driver_verified ? 'text-success-600 font-medium' : 'text-text-muted dark:text-text-secondary/70'">
                   {{ profile()?.is_driver_verified ? 'Sí' : 'No' }}
                 </span>
               </div>
             </div>
           </div>
 
-          <div class="p-4 rounded-lg border border-pearl-gray dark:border-gray-600">
+          <div class="p-4 rounded-lg border border-border-default dark:border-gray-600">
             <label class="flex items-start gap-3">
               <input
                 type="checkbox"
                 formControlName="tos_accepted"
                 [disabled]="tosAccepted()"
-                class="mt-0.5 rounded border-pearl-gray dark:border-gray-600 text-accent-petrol focus:ring-accent-petrol"
+                class="mt-0.5 rounded border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default"
               />
               <div class="flex-1">
-                <span class="text-sm text-smoke-black">
+                <span class="text-sm text-text-primary">
                   He leído y acepto los
-                  <a href="/terminos" class="text-accent-petrol hover:underline" target="_blank">Términos y Condiciones</a>
+                  <a href="/terminos" class="text-cta-default hover:underline" target="_blank">Términos y Condiciones</a>
                   y la
-                  <a href="/privacidad" class="text-accent-petrol hover:underline" target="_blank">Política de Privacidad</a>
+                  <a href="/privacidad" class="text-cta-default hover:underline" target="_blank">Política de Privacidad</a>
                 </span>
                 <p *ngIf="tosAccepted()" class="mt-1 text-xs text-success-600">
                   Aceptado el {{ profile()?.tos_accepted_at | date:'medium' }}
@@ -683,8 +685,8 @@
       </div>
 
       <!-- Save Button (bottom of all tabs) -->
-      <div class="mt-6 flex items-center justify-between border-t border-pearl-gray dark:border-gray-600 pt-6">
-        <a routerLink="/cars" class="text-sm text-charcoal-medium dark:text-pearl-light hover:text-smoke-black transition-colors">
+      <div class="mt-6 flex items-center justify-between border-t border-border-default dark:border-gray-600 pt-6">
+        <a routerLink="/cars" class="text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary transition-colors">
           ← Volver al inicio
         </a>
         <button

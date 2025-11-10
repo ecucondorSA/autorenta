@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { AdminService } from '../../core/services/admin.service';
+import { AdminService, type VerificationStats } from '../../core/services/admin.service';
 import { CarsService } from '../../core/services/cars.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { Car } from '../../core/models';
@@ -43,6 +43,7 @@ export class AdminDashboardPage implements OnInit {
   readonly message = signal<string | null>(null);
   readonly exporting = signal(false);
   readonly exportMessage = signal<string | null>(null);
+  readonly verificationStats = signal<VerificationStats | null>(null);
 
   constructor(
     private readonly adminService: AdminService,
@@ -59,12 +60,13 @@ export class AdminDashboardPage implements OnInit {
     this.loading.set(true);
     try {
       // Load statistics in parallel
-      const [cars, profiles, photos, bookings, payments] = await Promise.all([
+      const [cars, profiles, photos, bookings, payments, verificationStats] = await Promise.all([
         this.carsService.listPendingCars(),
         this.getAllProfiles(),
         this.getPhotoCount(),
         this.getBookingCount(),
         this.getPaymentCount(),
+        this.adminService.getVerificationStats(),
       ]);
 
       const allCars = await this.getAllCars();
@@ -80,8 +82,10 @@ export class AdminDashboardPage implements OnInit {
         totalBookings: bookings,
         totalPayments: payments,
       });
+      this.verificationStats.set(verificationStats);
     } catch (_err) {
       this.message.set('No pudimos cargar las estadísticas.');
+      this.verificationStats.set(null);
     } finally {
       this.loading.set(false);
     }

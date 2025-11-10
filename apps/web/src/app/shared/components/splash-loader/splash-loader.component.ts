@@ -126,7 +126,9 @@ import { TranslateModule } from '@ngx-translate/core';
       <div class="overlay absolute inset-0"></div>
 
       <!-- Content Over Video -->
-      <div class="relative z-10 h-full flex flex-col items-center justify-center gap-8 text-white">
+      <div
+        class="relative z-10 h-full flex flex-col items-center justify-center gap-8 text-text-inverse"
+      >
         <!-- Logo/Wordmark -->
         <div
           class="flex items-center justify-center h-28 motion-ok"

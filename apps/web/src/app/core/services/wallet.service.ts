@@ -55,13 +55,13 @@ export class WalletService {
           error: (err) => {
             // Log error but don't block page - wallet page will show error state
             console.warn('Failed to load wallet balance on init:', err);
-          }
+          },
         });
         this.getTransactions().subscribe({
           error: (err) => {
             // Log error but don't block page - wallet page will show error state
             console.warn('Failed to load wallet transactions on init:', err);
-          }
+          },
         });
       }
     });
@@ -346,7 +346,11 @@ export class WalletService {
   /**
    * Force poll pending payments from MercadoPago
    */
-  async forcePollPendingPayments(): Promise<{ success: boolean; confirmed: number; message: string }> {
+  async forcePollPendingPayments(): Promise<{
+    success: boolean;
+    confirmed: number;
+    message: string;
+  }> {
     this.loading.set(true);
     try {
       const { data, error } = await this.supabase.rpc('wallet_poll_pending_payments');

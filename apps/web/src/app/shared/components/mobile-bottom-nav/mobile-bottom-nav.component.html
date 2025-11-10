@@ -33,25 +33,22 @@
         </svg>
 
         <!-- Badge de notificaciones -->
-        <span *ngIf="item.badgeSignal && item.badgeSignal() > 0" class="nav-item__badge" [attr.aria-label]="item.badgeSignal() + ' notificaciones'">
+        <span
+          *ngIf="item.badgeSignal && item.badgeSignal() > 0"
+          class="nav-item__badge"
+          [attr.aria-label]="item.badgeSignal() + ' notificaciones'"
+        >
           {{ item.badgeSignal() > 99 ? '99+' : item.badgeSignal() }}
         </span>
       </div>
 
       <!-- Label -->
-      <span
-        class="nav-item__label"
-        [class.nav-item__label--active]="isActive(item.route)"
-      >
+      <span class="nav-item__label" [class.nav-item__label--active]="isActive(item.route)">
         {{ item.label }}
       </span>
 
       <!-- Indicador activo -->
-      <div
-        *ngIf="isActive(item.route)"
-        class="nav-item__indicator"
-        aria-hidden="true"
-      ></div>
+      <div *ngIf="isActive(item.route)" class="nav-item__indicator" aria-hidden="true"></div>
     </a>
   </div>
 

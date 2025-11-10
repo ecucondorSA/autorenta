@@ -22,12 +22,21 @@ import { LoggerService } from '../../../core/services/logger.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
+import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { Car } from '../../../core/models';
-import { DateRange, DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
-import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
-import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
+import {
+  MapFiltersComponent,
+  FilterState,
+} from '../../../shared/components/map-filters/map-filters.component';
+import { CarsDrawerComponent } from '../../../shared/components/cars-drawer/cars-drawer.component';
+import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
+import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
+import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
+import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
+import { MobileBottomNavComponent } from '../../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 import { getErrorMessage } from '../../../core/utils/type-guards';
 
 // Interface para auto con distancia
@@ -54,9 +63,13 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
   imports: [
     CommonModule,
     CarsMapComponent,
-    DateRangePickerComponent,
-    CarCardComponent,
-    SkeletonLoaderComponent,
+    MapFiltersComponent,
+    CarsDrawerComponent,
+    StickyCtaMobileComponent,
+    UrgentRentalBannerComponent,
+    WhatsappFabComponent,
+    PwaTitlebarComponent,
+    MobileBottomNavComponent,
     TranslateModule,
   ],
   templateUrl: './cars-list.page.html',
@@ -78,6 +91,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly distanceCalculator = inject(DistanceCalculatorService);
   private readonly locationService = inject(LocationService);
+  private readonly urgentRentalService = inject(UrgentRentalService);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
   private sortInitialized = false;
   private analyticsLastKey: string | null = null;
@@ -100,12 +114,12 @@ export class CarsListPage implements OnInit, OnDestroy {
         pricePerDay: car.price_per_day,
         currency: car.currency || 'ARS',
         lat: car.location_lat || 0,
-      lng: car.location_lng || 0,
-      updatedAt: car.updated_at || new Date().toISOString(),
-      city: car.location_city,
-      state: car.location_state,
-      country: car.location_country,
-      locationLabel: car.location_city || 'Sin ubicación',
+        lng: car.location_lng || 0,
+        updatedAt: car.updated_at || new Date().toISOString(),
+        city: car.location_city,
+        state: car.location_state,
+        country: car.location_country,
+        locationLabel: car.location_city || 'Sin ubicación',
         photoUrl: gallery[0] ?? null,
         photoGallery: gallery,
         description: car.description,
@@ -117,6 +131,20 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly selectedCarId = signal<string | null>(null);
   readonly searchExpanded = signal(false);
   readonly inventoryReady = signal(false);
+  readonly drawerOpen = signal(false);
+  readonly mapFilters = signal<FilterState>({
+    dateRange: null,
+    priceRange: null,
+    vehicleTypes: null,
+    immediateOnly: false,
+    transmission: null,
+  });
+  readonly urgentAvailability = signal<{
+    available: boolean;
+    distance?: number;
+    eta?: number;
+  } | null>(null);
+  readonly expressModeSignal = signal(true);
   readonly isMobile = computed(() => {
     if (!this.isBrowser) return false;
     return window.innerWidth < 1024;
@@ -354,15 +382,14 @@ export class CarsListPage implements OnInit, OnDestroy {
     }
 
     // Filtrar solo autos activos con al menos una reseña (o rating_avg > 0)
-    const eligibleCars = cars.filter(car =>
-      car.status === 'active' &&
-      (car.rating_avg > 0 || car.rating_count > 0)
+    const eligibleCars = cars.filter(
+      (car) => car.status === 'active' && (car.rating_avg > 0 || car.rating_count > 0),
     );
 
     if (!eligibleCars.length) {
       // Si no hay autos con reseñas, mostrar todos los activos
       return cars
-        .filter(car => car.status === 'active')
+        .filter((car) => car.status === 'active')
         .sort((a, b) => {
           // Primero por distancia (si hay ubicación del usuario)
           const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
@@ -485,6 +512,10 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   onUserLocationChange(location: { lat: number; lng: number }): void {
     this.userLocation.set(location);
+    // Open drawer when user location is set and there are cars
+    if (this.cars().length > 0 && !this.drawerOpen()) {
+      this.drawerOpen.set(true);
+    }
   }
 
   async loadCars(): Promise<void> {
@@ -525,7 +556,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       this.logger.error(
         'Error loading cars',
         'CarsListPage',
-        err instanceof Error ? err : new Error(getErrorMessage(err))
+        err instanceof Error ? err : new Error(getErrorMessage(err)),
       );
       // Mostrar mensaje al usuario en caso de error crítico
       if (err instanceof Error) {
@@ -564,7 +595,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       this.logger.error(
         'Error al refrescar autos',
         'CarsListPage',
-        _error instanceof Error ? _error : new Error(getErrorMessage(_error))
+        _error instanceof Error ? _error : new Error(getErrorMessage(_error)),
       );
       if (this.pullToRefresh) {
         this.pullToRefresh.completeRefresh();
@@ -601,7 +632,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     // Show simple notification banner (usando createElement para evitar XSS)
     const banner = document.createElement('div');
     banner.className =
-      'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
+      'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-success-light text-text-primary px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
 
     // Crear elementos de forma segura (sin innerHTML)
     const messageSpan = document.createElement('span');
@@ -743,10 +774,15 @@ export class CarsListPage implements OnInit, OnDestroy {
   onCarSelected(carId: string): void {
     const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
-    
+
+    // Open drawer when car is selected
+    if (!this.drawerOpen()) {
+      this.drawerOpen.set(true);
+    }
+
     // Pausar auto-scroll del carousel por 8 segundos
     this.stopCarouselAutoScroll();
-    
+
     // Programar reanudación después de 8 segundos
     this.carouselAutoScrollResumeTimeout = setTimeout(() => {
       if (this.recommendedCars().length >= 3) {
@@ -754,26 +790,95 @@ export class CarsListPage implements OnInit, OnDestroy {
       }
       this.carouselAutoScrollResumeTimeout = undefined;
     }, 8000);
-    
+
     // Si es el mismo auto (doble click), navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
       return;
     }
-    
+
     // Primera selección: fly to location en el mapa
     if (this.carsMapComponent) {
       this.carsMapComponent.flyToCarLocation(carId);
+    }
+
+    // Check urgent availability for selected car
+    void this.checkUrgentAvailability(carId);
+  }
+
+  /**
+   * Handle map filters change
+   */
+  onFiltersChange(filters: FilterState): void {
+    this.mapFilters.set(filters);
+    // Update date range if changed
+    if (filters.dateRange) {
+      const from = filters.dateRange.start.toISOString().split('T')[0];
+      const to = filters.dateRange.end.toISOString().split('T')[0];
+      this.dateRange.set({ from, to });
+    }
+    // Reload cars with new filters
+    void this.loadCars();
+  }
+
+  /**
+   * Handle drawer close
+   */
+  onDrawerClose(): void {
+    this.drawerOpen.set(false);
+  }
+
+  /**
+   * Handle reserve click from drawer
+   */
+  onReserveClick(carId: string): void {
+    // Navigate to car detail page or open booking modal
+    this.router.navigate(['/cars', carId]);
+  }
+
+  /**
+   * Get selected car for CTA
+   */
+  readonly selectedCar = computed(() => {
+    const carId = this.selectedCarId();
+    if (!carId) return null;
+    return this.cars().find((c) => c.id === carId) || null;
+  });
+
+  /**
+   * Get selected car price for CTA
+   */
+  readonly selectedCarPrice = computed(() => {
+    const car = this.selectedCar();
+    return car?.price_per_day ?? null;
+  });
+
+  /**
+   * Check urgent availability for a car
+   */
+  private async checkUrgentAvailability(carId: string): Promise<void> {
+    const car = this.cars().find((c) => c.id === carId);
+    if (!car || !car.region_id) return;
+
+    try {
+      const availability = await this.urgentRentalService.checkImmediateAvailability(carId);
+      this.urgentAvailability.set({
+        available: availability.available,
+        distance: availability.distance,
+        eta: availability.eta,
+      });
+    } catch (_error) {
+      console.warn('Could not check urgent availability:', _error);
     }
   }
 
   onMapCarSelected(carId: string): void {
     const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
-    
+
     // Pausar auto-scroll del carousel por 8 segundos
     this.stopCarouselAutoScroll();
-    
+
     // Programar reanudación después de 8 segundos
     this.carouselAutoScrollResumeTimeout = setTimeout(() => {
       if (this.recommendedCars().length >= 3) {
@@ -781,13 +886,13 @@ export class CarsListPage implements OnInit, OnDestroy {
       }
       this.carouselAutoScrollResumeTimeout = undefined;
     }, 8000);
-    
+
     // Si es el mismo auto, navegar al detalle
     if (previousCarId === carId) {
       this.router.navigate(['/cars/detail', carId]);
       return;
     }
-    
+
     // Primera selección: scroll + highlight
     this.scrollToCarInCarousel(carId);
   }
@@ -873,11 +978,11 @@ export class CarsListPage implements OnInit, OnDestroy {
     const cardLeft = card.offsetLeft;
     const cardWidth = card.offsetWidth;
     const carouselWidth = carousel.offsetWidth;
-    const scrollPosition = cardLeft - (carouselWidth / 2) + (cardWidth / 2);
+    const scrollPosition = cardLeft - carouselWidth / 2 + cardWidth / 2;
 
     carousel.scrollTo({
       left: Math.max(0, scrollPosition),
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
 
     // Highlight temporal
@@ -893,7 +998,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       return [];
     }
     return rawPhotos
-      .map((photo) => (typeof photo === 'string' ? photo : photo?.url ?? null))
+      .map((photo) => (typeof photo === 'string' ? photo : (photo?.url ?? null)))
       .filter((url): url is string => typeof url === 'string' && url.length > 0);
   }
 

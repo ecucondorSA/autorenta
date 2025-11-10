@@ -29,18 +29,8 @@ import { take } from 'rxjs/operators';
           <div class="account-info">
             <div class="account-header">
               <h4 class="account-holder">{{ account.accountHolder }}</h4>
-              <span
-                *ngIf="account.isDefault"
-                class="badge badge-primary"
-              >
-                Predeterminada
-              </span>
-              <span
-                *ngIf="!account.isDefault"
-                class="badge badge-secondary"
-              >
-                Adicional
-              </span>
+              <span *ngIf="account.isDefault" class="badge badge-primary"> Predeterminada </span>
+              <span *ngIf="!account.isDefault" class="badge badge-secondary"> Adicional </span>
             </div>
             <div class="account-details">
               <span class="account-type">
@@ -78,21 +68,26 @@ import { take } from 'rxjs/operators';
       <!-- Empty State -->
       <div *ngIf="accounts().length === 0" class="empty-state">
         <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+          />
         </svg>
         <p class="empty-text">No tenés cuentas bancarias configuradas</p>
         <p class="empty-hint">Agregá una cuenta para poder retirar fondos</p>
       </div>
 
       <!-- Add Account Button -->
-      <button
-        type="button"
-        class="btn-secondary"
-        (click)="toggleAddForm()"
-        *ngIf="!showAddForm()"
-      >
+      <button type="button" class="btn-secondary" (click)="toggleAddForm()" *ngIf="!showAddForm()">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4v16m8-8H4"
+          />
         </svg>
         Agregar Cuenta Bancaria
       </button>
@@ -109,7 +104,10 @@ import { take } from 'rxjs/operators';
               placeholder="Juan Pérez"
               class="form-input"
             />
-            <span *ngIf="form.controls.accountHolder.invalid && form.controls.accountHolder.touched" class="error-text">
+            <span
+              *ngIf="form.controls.accountHolder.invalid && form.controls.accountHolder.touched"
+              class="error-text"
+            >
               El nombre del titular es requerido
             </span>
           </div>
@@ -124,7 +122,10 @@ import { take } from 'rxjs/operators';
               class="form-input"
             />
             <span class="hint-text">22 dígitos sin espacios</span>
-            <span *ngIf="form.controls.accountNumber.invalid && form.controls.accountNumber.touched" class="error-text">
+            <span
+              *ngIf="form.controls.accountNumber.invalid && form.controls.accountNumber.touched"
+              class="error-text"
+            >
               CBU/CVU debe tener 22 dígitos
             </span>
           </div>
@@ -139,28 +140,16 @@ import { take } from 'rxjs/operators';
 
           <div class="form-group">
             <label class="checkbox-label">
-              <input
-                type="checkbox"
-                formControlName="isDefault"
-              />
+              <input type="checkbox" formControlName="isDefault" />
               <span>Usar como cuenta predeterminada</span>
             </label>
           </div>
 
           <div class="form-actions">
-            <button
-              type="button"
-              class="btn-text"
-              (click)="toggleAddForm()"
-              [disabled]="loading()"
-            >
+            <button type="button" class="btn-text" (click)="toggleAddForm()" [disabled]="loading()">
               Cancelar
             </button>
-            <button
-              type="submit"
-              class="btn-primary"
-              [disabled]="form.invalid || loading()"
-            >
+            <button type="submit" class="btn-primary" [disabled]="form.invalid || loading()">
               {{ loading() ? 'Guardando...' : 'Agregar Cuenta' }}
             </button>
           </div>
@@ -178,283 +167,285 @@ import { take } from 'rxjs/operators';
       </div>
     </div>
   `,
-  styles: [`
-    .bank-accounts {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+  styles: [
+    `
+      .bank-accounts {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
 
-    .accounts-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+      .accounts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
 
-    .account-card {
-      border: 1px solid #e5e7eb;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      transition: all 0.2s;
-    }
+      .account-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: all 0.2s;
+      }
 
-    .account-card:hover {
-      border-color: #d1d5db;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
+      .account-card:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
 
-    .account-card.default {
-      border-color: #3b82f6;
-      background: #eff6ff;
-    }
+      .account-card.default {
+        border-color: #3b82f6;
+        background: #eff6ff;
+      }
 
-    .account-info {
-      margin-bottom: 0.75rem;
-    }
+      .account-info {
+        margin-bottom: 0.75rem;
+      }
 
-    .account-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
+      .account-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
 
-    .account-holder {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #111827;
-    }
+      .account-holder {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+      }
 
-    .badge {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      font-weight: 500;
-    }
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+      }
 
-    .badge-primary {
-      background: #dbeafe;
-      color: #1e40af;
-    }
+      .badge-primary {
+        background: #dbeafe;
+        color: #1e40af;
+      }
 
-    .badge-secondary {
-      background: #f3f4f6;
-      color: #6b7280;
-    }
+      .badge-secondary {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
 
-    .account-details {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
+      .account-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
 
-    .account-number {
-      font-family: monospace;
-      font-size: 0.875rem;
-    }
+      .account-number {
+        font-family: monospace;
+        font-size: 0.875rem;
+      }
 
-    .account-status {
-      margin-top: 0.5rem;
-    }
+      .account-status {
+        margin-top: 0.5rem;
+      }
 
-    .status-badge {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      font-weight: 500;
-    }
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+      }
 
-    .status-badge.verified {
-      background: #d1fae5;
-      color: #065f46;
-    }
+      .status-badge.verified {
+        background: #d1fae5;
+        color: #065f46;
+      }
 
-    .status-badge.unverified {
-      background: #fef3c7;
-      color: #92400e;
-    }
+      .status-badge.unverified {
+        background: #fef3c7;
+        color: #92400e;
+      }
 
-    .status-badge.invalid {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+      .status-badge.invalid {
+        background: #fee2e2;
+        color: #991b1b;
+      }
 
-    .account-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
+      .account-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
 
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-      text-align: center;
-    }
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        text-align: center;
+      }
 
-    .empty-icon {
-      width: 3rem;
-      height: 3rem;
-      color: #9ca3af;
-      margin-bottom: 1rem;
-    }
+      .empty-icon {
+        width: 3rem;
+        height: 3rem;
+        color: #9ca3af;
+        margin-bottom: 1rem;
+      }
 
-    .empty-text {
-      font-size: 1rem;
-      font-weight: 500;
-      color: #374151;
-      margin-bottom: 0.25rem;
-    }
+      .empty-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
 
-    .empty-hint {
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
+      .empty-hint {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
 
-    .add-form {
-      border: 1px solid #e5e7eb;
-      border-radius: 0.5rem;
-      padding: 1.5rem;
-      background: #f9fafb;
-    }
+      .add-form {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        background: #f9fafb;
+      }
 
-    .form-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #111827;
-      margin-bottom: 1rem;
-    }
+      .form-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 1rem;
+      }
 
-    .form-group {
-      margin-bottom: 1rem;
-    }
+      .form-group {
+        margin-bottom: 1rem;
+      }
 
-    .form-group label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #374151;
-      margin-bottom: 0.25rem;
-    }
+      .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
 
-    .form-input,
-    .form-select {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-    }
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
 
-    .form-input:focus,
-    .form-select:focus {
-      outline: none;
-      border-color: #3b82f6;
-      ring: 2px;
-      ring-color: #dbeafe;
-    }
+      .form-input:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        ring: 2px;
+        ring-color: #dbeafe;
+      }
 
-    .hint-text {
-      display: block;
-      font-size: 0.75rem;
-      color: #6b7280;
-      margin-top: 0.25rem;
-    }
+      .hint-text {
+        display: block;
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
 
-    .error-text {
-      display: block;
-      font-size: 0.75rem;
-      color: #dc2626;
-      margin-top: 0.25rem;
-    }
+      .error-text {
+        display: block;
+        font-size: 0.75rem;
+        color: #dc2626;
+        margin-top: 0.25rem;
+      }
 
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-    }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+      }
 
-    .checkbox-label input[type="checkbox"] {
-      width: 1rem;
-      height: 1rem;
-    }
+      .checkbox-label input[type='checkbox'] {
+        width: 1rem;
+        height: 1rem;
+      }
 
-    .form-actions {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: flex-end;
-      margin-top: 1.5rem;
-    }
+      .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+      }
 
-    .btn-primary,
-    .btn-secondary,
-    .btn-text {
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: none;
-    }
+      .btn-primary,
+      .btn-secondary,
+      .btn-text {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+      }
 
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-    }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+      }
 
-    .btn-primary:hover:not(:disabled) {
-      background: #2563eb;
-    }
+      .btn-primary:hover:not(:disabled) {
+        background: #2563eb;
+      }
 
-    .btn-secondary {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: white;
-      color: #3b82f6;
-      border: 1px solid #3b82f6;
-    }
+      .btn-secondary {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        color: #3b82f6;
+        border: 1px solid #3b82f6;
+      }
 
-    .btn-secondary:hover:not(:disabled) {
-      background: #eff6ff;
-    }
+      .btn-secondary:hover:not(:disabled) {
+        background: #eff6ff;
+      }
 
-    .btn-text {
-      background: transparent;
-      color: #6b7280;
-    }
+      .btn-text {
+        background: transparent;
+        color: #6b7280;
+      }
 
-    .btn-text:hover:not(:disabled) {
-      color: #111827;
-    }
+      .btn-text:hover:not(:disabled) {
+        color: #111827;
+      }
 
-    .btn-primary:disabled,
-    .btn-secondary:disabled,
-    .btn-text:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+      .btn-primary:disabled,
+      .btn-secondary:disabled,
+      .btn-text:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 
-    .alert {
-      padding: 0.75rem;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-    }
+      .alert {
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
 
-    .alert-error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
 
-    .alert-success {
-      background: #d1fae5;
-      color: #065f46;
-    }
-  `],
+      .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+      }
+    `,
+  ],
 })
 export class BankAccountsComponent implements OnInit {
   @Input() userId!: string;
@@ -493,9 +484,7 @@ export class BankAccountsComponent implements OnInit {
 
       this.accounts.set(accounts || []);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar cuentas'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar cuentas');
     } finally {
       this.loading.set(false);
     }
@@ -538,9 +527,7 @@ export class BankAccountsComponent implements OnInit {
 
       setTimeout(() => this.success.set(null), 3000);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al agregar cuenta'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al agregar cuenta');
     } finally {
       this.loading.set(false);
     }
@@ -563,9 +550,7 @@ export class BankAccountsComponent implements OnInit {
 
       setTimeout(() => this.success.set(null), 3000);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al actualizar cuenta'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al actualizar cuenta');
     } finally {
       this.loading.set(false);
     }

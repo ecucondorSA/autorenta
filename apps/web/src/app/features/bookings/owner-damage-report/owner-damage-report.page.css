@@ -120,7 +120,9 @@ ion-note {
 }
 
 .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .transition-colors {
@@ -136,15 +138,15 @@ ion-note {
 }
 
 /* Color utilities */
-.text-charcoal-medium {
+.text-text-secondary {
   color: #6b7280;
 }
 
-.text-smoke-black {
+.text-text-primary {
   color: #1f2937;
 }
 
-.text-accent-petrol {
+.text-cta-default {
   color: #0ea5e9;
 }
 
@@ -156,11 +158,11 @@ ion-note {
   color: #991b1b;
 }
 
-.text-green-600 {
+.text-success-light {
   color: #16a34a;
 }
 
-.text-green-800 {
+.text-success-light {
   color: #166534;
 }
 
@@ -176,11 +178,11 @@ ion-note {
   color: #78350f;
 }
 
-.text-blue-700 {
+.text-cta-default {
   color: #1d4ed8;
 }
 
-.text-blue-900 {
+.text-cta-default {
   color: #1e3a8a;
 }
 
@@ -196,7 +198,7 @@ ion-note {
   background-color: #fffbeb;
 }
 
-.bg-blue-50 {
+.bg-cta-default-10 {
   background-color: #eff6ff;
 }
 
@@ -204,7 +206,7 @@ ion-note {
   background-color: #fef2f2;
 }
 
-.bg-green-50 {
+.bg-success-light-10 {
   background-color: #f0fdf4;
 }
 
@@ -240,15 +242,15 @@ ion-note {
   border-color: #e5e7eb;
 }
 
-.border-pearl-gray {
+.border-border-default {
   border-color: #d1d5db;
 }
 
-.hover\:border-accent-petrol:hover {
+.hover\:border-cta-default:hover {
   border-color: #0ea5e9;
 }
 
-.hover\:bg-sand-light:hover {
+.hover\:bg-surface-secondary:hover {
   background-color: #fef3c7;
 }
 

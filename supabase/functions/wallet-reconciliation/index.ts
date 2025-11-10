@@ -7,6 +7,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { sendReconciliationAlert } from '../_shared/alerts.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -179,7 +180,27 @@ serve(async (req) => {
 
     if (discrepancies.length > 0 || !fundOk) {
       console.error('[Reconciliation] ⚠️ CRITICAL: Discrepancies detected!');
-      // TODO: Enviar email/Slack notification a admins
+
+      // ✅ IMPLEMENTED: Sistema de alertas con logging estructurado
+      // Future: Integrar con Slack/Email cuando esté configurado
+      try {
+        await sendReconciliationAlert(
+          discrepancies.map(d => ({
+            user_id: d.user_id,
+            stored_balance: d.stored_balance,
+            calculated_balance: d.calculated_balance,
+            difference: d.difference,
+            difference_ars: (d.difference / 100).toFixed(2),
+          })),
+          totalDifference,
+          fundOk,
+          report.coverage_fund_balance,
+          report.coverage_fund_calculated
+        );
+      } catch (alertError) {
+        console.error('[Reconciliation] Failed to send alert:', alertError);
+        // No fallar la reconciliación si falla el envío de alerta
+      }
     }
 
     return new Response(

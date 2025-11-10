@@ -1,7 +1,7 @@
 <div class="space-y-4">
   <!-- Header -->
   <div class="flex items-center justify-between">
-    <h3 class="text-lg font-semibold text-smoke-black">Historial de Retiros</h3>
+    <h3 class="text-lg font-semibold text-text-primary">Historial de Retiros</h3>
     <button
       (click)="onRefresh()"
       [disabled]="loading"
@@ -15,7 +15,7 @@
   @if (loading) {
     <div class="text-center py-8">
       <div
-        class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent-petrol"
+        class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"
       ></div>
       <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Cargando historial...</p>
     </div>
@@ -23,7 +23,9 @@
 
   <!-- Empty State -->
   @if (!loading && requests.length === 0) {
-    <div class="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+    <div
+      class="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600"
+    >
       <svg
         class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-300"
         fill="none"
@@ -38,7 +40,9 @@
         ></path>
       </svg>
       <h3 class="mt-2 text-sm font-semibold text-gray-900">No hay retiros</h3>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">Todavía no has solicitado ningún retiro</p>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+        Todavía no has solicitado ningún retiro
+      </p>
     </div>
   }
 
@@ -47,7 +51,7 @@
     <div class="space-y-3">
       @for (request of requests; track request.id) {
         <div
-          class="bg-white dark:bg-slate-deep border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition-shadow"
+          class="bg-surface-raised dark:bg-surface-secondary border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition-shadow"
         >
           <div class="flex items-start justify-between">
             <!-- Request Info -->
@@ -82,7 +86,7 @@
                 </div>
                 <div>
                   <p class="text-xs text-gray-500 dark:text-gray-300">Neto</p>
-                  <p class="text-lg font-bold text-green-600">
+                  <p class="text-lg font-bold text-success-light">
                     ${{ request.net_amount | number: '1.2-2' }}
                   </p>
                 </div>
@@ -117,9 +121,9 @@
 
               @if (request.admin_notes) {
                 <div
-                  class="mt-2 p-2 bg-info-50 dark:bg-info-500/15 border border-info-500 dark:border-info-500/40 rounded-lg"
+                  class="mt-2 p-2 bg-cta-default/10 dark:bg-cta-default/15 border border-cta-default dark:border-cta-default/40 rounded-lg"
                 >
-                  <p class="text-xs text-info-900 dark:text-info-100">
+                  <p class="text-xs text-cta-default dark:text-cta-default">
                     <strong>Nota del admin:</strong> {{ request.admin_notes }}
                   </p>
                 </div>

@@ -27,9 +27,10 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       // Determine if we should show error to user
       // Skip for certain endpoints (e.g., analytics, health checks)
-      const skipUserNotification = req.url.includes('/analytics') || 
-                                  req.url.includes('/health') ||
-                                  req.url.includes('/metrics');
+      const skipUserNotification =
+        req.url.includes('/analytics') ||
+        req.url.includes('/health') ||
+        req.url.includes('/metrics');
 
       // Determine severity based on status code
       let severity: 'error' | 'warning' | 'critical' = 'error';
@@ -50,14 +51,3 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
     }),
   );
 };
-
-
-
-
-
-
-
-
-
-
-

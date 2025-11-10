@@ -16,37 +16,38 @@ interface PendingReview {
 @Component({
   selector: 'app-pending-reviews',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReviewCardComponent],
+  imports: [CommonModule, RouterLink],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div class="max-w-4xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Reseñas Pendientes
-          </h1>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse mb-2">Reseñas Pendientes</h1>
           <p class="text-gray-600 dark:text-gray-300">
-            Tienes {{ pendingReviews().length }} {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
+            Tienes {{ pendingReviews().length }}
+            {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
           </p>
         </div>
 
         <!-- Loading State -->
         @if (loading()) {
           <div class="flex items-center justify-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default"></div>
           </div>
         }
 
         <!-- Error State -->
         @if (error() && !loading()) {
-          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+          <div
+            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
+          >
             <p class="text-red-800 dark:text-red-200">{{ error() }}</p>
           </div>
         }
 
         <!-- Empty State -->
         @if (!loading() && !error() && pendingReviews().length === 0) {
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
+          <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-8 text-center">
             <svg
               class="mx-auto h-12 w-12 text-gray-400"
               fill="none"
@@ -60,7 +61,7 @@ interface PendingReview {
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
               No tienes reseñas pendientes
             </h3>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
@@ -69,7 +70,7 @@ interface PendingReview {
             <div class="mt-6">
               <a
                 routerLink="/bookings"
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-cta-text bg-cta-default hover:bg-cta-default"
               >
                 Ver mis reservas
               </a>
@@ -82,37 +83,40 @@ interface PendingReview {
           <div class="space-y-4">
             @for (review of pendingReviews(); track review.booking_id) {
               <div
-                class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border-l-4 border-blue-500"
+                class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6 border-l-4 border-cta-default"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-2">
                       {{ review.car_title }}
                     </h3>
                     <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
                       Califica a: <span class="font-medium">{{ review.reviewee_name }}</span>
                     </p>
                     <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                      <span>
-                        Finalizó: {{ formatDate(review.checkout_date) }}
-                      </span>
+                      <span> Finalizó: {{ formatDate(review.checkout_date) }} </span>
                       <span
                         class="px-2 py-1 rounded-full text-xs font-medium"
                         [class.bg-yellow-100]="review.days_remaining > 7"
                         [class.text-yellow-800]="review.days_remaining > 7"
-                        [class.bg-orange-100]="review.days_remaining <= 7 && review.days_remaining > 3"
-                        [class.text-orange-800]="review.days_remaining <= 7 && review.days_remaining > 3"
+                        [class.bg-warning-light/20]="
+                          review.days_remaining <= 7 && review.days_remaining > 3
+                        "
+                        [class.text-warning-light]="
+                          review.days_remaining <= 7 && review.days_remaining > 3
+                        "
                         [class.bg-red-100]="review.days_remaining <= 3"
                         [class.text-red-800]="review.days_remaining <= 3"
                       >
-                        {{ review.days_remaining }} {{ review.days_remaining === 1 ? 'día restante' : 'días restantes' }}
+                        {{ review.days_remaining }}
+                        {{ review.days_remaining === 1 ? 'día restante' : 'días restantes' }}
                       </span>
                     </div>
                   </div>
                   <div>
                     <a
                       [routerLink]="['/bookings', review.booking_id]"
-                      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-cta-text bg-cta-default hover:bg-cta-default"
                     >
                       Dejar reseña
                     </a>
@@ -146,9 +150,7 @@ export class PendingReviewsPage implements OnInit {
       const reviews = await this.reviewsService.getPendingReviews();
       this.pendingReviews.set(reviews);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar reseñas pendientes'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar reseñas pendientes');
     } finally {
       this.loading.set(false);
     }
@@ -162,4 +164,3 @@ export class PendingReviewsPage implements OnInit {
     });
   }
 }
-

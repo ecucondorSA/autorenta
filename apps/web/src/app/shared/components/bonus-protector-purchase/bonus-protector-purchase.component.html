@@ -1,9 +1,13 @@
-<div class="bg-white dark:bg-slate-deep rounded-lg shadow-md p-6" [class.p-4]="compact">
+<div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-md p-6" [class.p-4]="compact">
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center mb-2">
       <svg class="w-6 h-6 mr-2 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        <path
+          fill-rule="evenodd"
+          d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+          clip-rule="evenodd"
+        ></path>
       </svg>
       <h3 class="text-xl font-semibold text-gray-900" [class.text-lg]="compact">
         Protector de Bonus
@@ -15,14 +19,22 @@
   </div>
 
   <!-- Active Protector Notice -->
-  <div *ngIf="hasActiveProtector()" class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+  <div *ngIf="hasActiveProtector()" class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mb-6">
     <div class="flex items-start">
-      <svg class="w-6 h-6 text-green-600 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+      <svg
+        class="w-6 h-6 text-success-light mr-3 flex-shrink-0"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+          clip-rule="evenodd"
+        ></path>
       </svg>
       <div>
-        <p class="text-sm font-medium text-green-800">Ya tienes un protector activo</p>
-        <p class="text-xs text-green-700 mt-1">
+        <p class="text-sm font-medium text-success-light">Ya tienes un protector activo</p>
+        <p class="text-xs text-success-light mt-1">
           No puedes comprar otro protector hasta que el actual expire o se use.
         </p>
       </div>
@@ -42,7 +54,10 @@
         class="relative border rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
       >
         <!-- Popular Badge -->
-        <div *ngIf="level.popular" class="absolute -top-2 -right-2 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+        <div
+          *ngIf="level.popular"
+          class="absolute -top-2 -right-2 bg-purple-600 text-text-inverse text-xs font-bold px-2 py-1 rounded-full"
+        >
           Popular
         </div>
 
@@ -71,20 +86,45 @@
         <!-- Features -->
         <ul class="space-y-2">
           <li class="flex items-start text-xs text-gray-700">
-            <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            <svg
+              class="w-4 h-4 text-success-light mr-2 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
             </svg>
-            Protege {{ level.maxProtectedClaims }} {{ level.maxProtectedClaims === 1 ? 'reclamo' : 'reclamos' }}
+            Protege {{ level.maxProtectedClaims }}
+            {{ level.maxProtectedClaims === 1 ? 'reclamo' : 'reclamos' }}
           </li>
           <li class="flex items-start text-xs text-gray-700">
-            <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            <svg
+              class="w-4 h-4 text-success-light mr-2 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
             </svg>
             Válido por 6 meses
           </li>
           <li class="flex items-start text-xs text-gray-700">
-            <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            <svg
+              class="w-4 h-4 text-success-light mr-2 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
             </svg>
             Evita subir de clase
           </li>
@@ -93,7 +133,9 @@
     </div>
 
     <!-- Balance Info -->
-    <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
+    <div
+      class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4"
+    >
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm text-gray-600 dark:text-gray-300">Tu saldo disponible</p>
@@ -101,16 +143,20 @@
             {{ formatPrice(availableBalance() * 100) }}
           </p>
         </div>
-        <div *ngIf="getSelectedLevel() && !canAfford(getSelectedLevel()!.priceCents)"
-             class="text-right">
+        <div
+          *ngIf="getSelectedLevel() && !canAfford(getSelectedLevel()!.priceCents)"
+          class="text-right"
+        >
           <p class="text-sm font-medium text-red-600">Saldo insuficiente</p>
-          <a href="/wallet" class="text-xs text-blue-600 hover:text-blue-700 underline">
+          <a href="/wallet" class="text-xs text-cta-default hover:text-cta-default underline">
             Depositar fondos
           </a>
         </div>
-        <div *ngIf="getSelectedLevel() && canAfford(getSelectedLevel()!.priceCents)"
-             class="text-right">
-          <p class="text-sm font-medium text-green-600">✓ Saldo suficiente</p>
+        <div
+          *ngIf="getSelectedLevel() && canAfford(getSelectedLevel()!.priceCents)"
+          class="text-right"
+        >
+          <p class="text-sm font-medium text-success-light">✓ Saldo suficiente</p>
         </div>
       </div>
     </div>
@@ -122,11 +168,22 @@
       [disabled]="purchasing || !canAfford(getSelectedLevel()!.priceCents)"
       [class.opacity-50]="purchasing || !canAfford(getSelectedLevel()!.priceCents)"
       [class.cursor-not-allowed]="purchasing || !canAfford(getSelectedLevel()!.priceCents)"
-      class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+      class="w-full bg-purple-600 hover:bg-purple-700 text-text-inverse font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
     >
       <svg *ngIf="purchasing" class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
       </svg>
       <span *ngIf="!purchasing">
         Comprar {{ getSelectedLevel()?.name }} - {{ formatPrice(getSelectedLevel()!.priceCents) }}
@@ -135,15 +192,18 @@
     </button>
 
     <!-- Purchase Message -->
-    <div *ngIf="purchaseMessage" class="mt-4 p-4 rounded-lg"
-         [class.bg-green-50]="purchaseMessage.includes('exitosamente')"
-         [class.border-green-200]="purchaseMessage.includes('exitosamente')"
-         [class.bg-red-50]="!purchaseMessage.includes('exitosamente')"
-         [class.border-red-200]="!purchaseMessage.includes('exitosamente')"
-         class="border">
-      <p class="text-sm"
-         [class.text-green-800]="purchaseMessage.includes('exitosamente')"
-         [class.text-red-800]="!purchaseMessage.includes('exitosamente')">
+    <div
+      *ngIf="purchaseMessage"
+      class="mt-4 p-4 rounded-lg"
+      [class.bg-success-light/10]="purchaseMessage.includes('exitosamente')"
+      [class.border-success-light/40]="purchaseMessage.includes('exitosamente')"
+      [class.bg-red-50]="!purchaseMessage.includes('exitosamente')"
+      [class.border-red-200]="!purchaseMessage.includes('exitosamente')">
+      <p
+        class="text-sm"
+        [class.text-success-light]="purchaseMessage.includes('exitosamente')"
+        [class.text-red-800]="!purchaseMessage.includes('exitosamente')"
+      >
         {{ purchaseMessage }}
       </p>
     </div>
@@ -153,20 +213,44 @@
       <h4 class="text-sm font-semibold text-gray-900 mb-3">¿Cómo funciona?</h4>
       <ul class="space-y-2">
         <li class="flex items-start text-sm text-gray-700">
-          <svg class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          <svg
+            class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
           </svg>
           <span>Si tienes un reclamo, el protector lo absorbe sin afectar tu clase</span>
         </li>
         <li class="flex items-start text-sm text-gray-700">
-          <svg class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          <svg
+            class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
           </svg>
           <span>Cada protector tiene un número limitado de usos</span>
         </li>
         <li class="flex items-start text-sm text-gray-700">
-          <svg class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          <svg
+            class="w-5 h-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
           </svg>
           <span>Expira en 6 meses o cuando se agoten los usos</span>
         </li>
@@ -182,7 +266,7 @@
     <button
       (click)="onPurchase()"
       [disabled]="purchasing"
-      class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg"
+      class="bg-purple-600 hover:bg-purple-700 text-text-inverse text-sm font-medium py-2 px-4 rounded-lg"
     >
       Comprar por {{ formatPrice(protectionLevels[selectedLevel - 1].priceCents) }}
     </button>

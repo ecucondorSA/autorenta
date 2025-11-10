@@ -40,16 +40,20 @@ describe('RiskCalculatorService', () => {
     // Mock Supabase client
     mockSupabaseService = {
       getClient: jasmine.createSpy('getClient').and.returnValue({
-        rpc: jasmine.createSpy('rpc').and.returnValue(
-          Promise.resolve({ data: null, error: { message: 'Not implemented in tests' } })
-        ),
+        rpc: jasmine
+          .createSpy('rpc')
+          .and.returnValue(
+            Promise.resolve({ data: null, error: { message: 'Not implemented in tests' } }),
+          ),
       }),
     };
 
     // Default mocks
     mockFranchiseService.getFranchiseInfo.and.returnValue(mockFranchiseInfo);
     mockFranchiseService.shouldRevalidate.and.returnValue(false);
-    mockFranchiseService.formatArs.and.callFake((amount: number) => `$${amount.toLocaleString('es-AR')}`);
+    mockFranchiseService.formatArs.and.callFake(
+      (amount: number) => `$${amount.toLocaleString('es-AR')}`,
+    );
     mockFranchiseService.formatUsd.and.callFake((amount: number) => `USD ${amount}`);
 
     mockDistanceService.getDistanceTier.and.returnValue('regional');
@@ -131,7 +135,7 @@ describe('RiskCalculatorService', () => {
       expect(mockFranchiseService.getFranchiseInfo).toHaveBeenCalledWith(
         15000,
         'standard',
-        mockFxRate
+        mockFxRate,
       );
     });
 
@@ -158,7 +162,14 @@ describe('RiskCalculatorService', () => {
         snapshotDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
       };
 
-      const result = await service.calculateRisk(15000, mockFxRate, true, undefined, undefined, existingSnapshot);
+      const result = await service.calculateRisk(
+        15000,
+        mockFxRate,
+        true,
+        undefined,
+        undefined,
+        existingSnapshot,
+      );
 
       expect(result.requiresRevalidation).toBe(true);
       expect(mockFranchiseService.shouldRevalidate).toHaveBeenCalled();
@@ -419,7 +430,7 @@ describe('RiskCalculatorService', () => {
       const table = service.getFranchiseTable(risk);
 
       expect(mockFranchiseService.formatArs).toHaveBeenCalled();
-      table.rows.forEach(row => {
+      table.rows.forEach((row) => {
         expect(row.amountArs).toBeDefined();
       });
     });
@@ -467,7 +478,7 @@ describe('RiskCalculatorService', () => {
         expect(mockFranchiseService.getFranchiseInfo).toHaveBeenCalledWith(
           value,
           expectedBuckets[index],
-          mockFxRate
+          mockFxRate,
         );
       }
     });

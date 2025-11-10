@@ -47,16 +47,17 @@ export class AdminSettlementsPage implements OnInit {
 
     // Filter by status
     if (this.selectedStatus() !== 'all') {
-      filtered = filtered.filter(c => c.status === this.selectedStatus());
+      filtered = filtered.filter((c) => c.status === this.selectedStatus());
     }
 
     // Filter by search query
     const query = this.searchQuery().toLowerCase();
     if (query) {
-      filtered = filtered.filter(c =>
-        c.bookingId.toLowerCase().includes(query) ||
-        c.id.toLowerCase().includes(query) ||
-        c.notes?.toLowerCase().includes(query)
+      filtered = filtered.filter(
+        (c) =>
+          c.bookingId.toLowerCase().includes(query) ||
+          c.id.toLowerCase().includes(query) ||
+          c.notes?.toLowerCase().includes(query),
       );
     }
 
@@ -80,9 +81,7 @@ export class AdminSettlementsPage implements OnInit {
       // Calculate stats
       this.calculateStats(mockClaims);
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al cargar claims'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar claims');
     } finally {
       this.loading.set(false);
     }
@@ -104,7 +103,13 @@ export class AdminSettlementsPage implements OnInit {
 
     // Generate mock claims
     const mockClaims: Claim[] = bookings.slice(0, 5).map((booking, index) => {
-      const statuses: Claim['status'][] = ['submitted', 'under_review', 'approved', 'rejected', 'draft'];
+      const statuses: Claim['status'][] = [
+        'submitted',
+        'under_review',
+        'approved',
+        'rejected',
+        'draft',
+      ];
       const status = statuses[index % statuses.length];
 
       return {
@@ -141,10 +146,10 @@ export class AdminSettlementsPage implements OnInit {
   private calculateStats(claims: Claim[]): void {
     this.stats.set({
       total: claims.length,
-      pending: claims.filter(c => c.status === 'submitted').length,
-      underReview: claims.filter(c => c.status === 'under_review').length,
-      approved: claims.filter(c => c.status === 'approved').length,
-      rejected: claims.filter(c => c.status === 'rejected').length,
+      pending: claims.filter((c) => c.status === 'submitted').length,
+      underReview: claims.filter((c) => c.status === 'under_review').length,
+      approved: claims.filter((c) => c.status === 'approved').length,
+      rejected: claims.filter((c) => c.status === 'rejected').length,
       totalAmount: claims.reduce((sum, c) => sum + c.totalEstimatedCostUsd, 0),
     });
   }
@@ -222,11 +227,13 @@ export class AdminSettlementsPage implements OnInit {
       const result = await this.settlementService.processClaim(claim);
 
       if (result.ok) {
-        alert(`Claim procesado exitosamente. Total recuperado: ${this.formatCurrency(
-          (result.waterfall?.breakdown.holdCaptured || 0) / 100 +
-          (result.waterfall?.breakdown.walletDebited || 0) / 100 +
-          (result.waterfall?.breakdown.fgoPaid || 0) / 100
-        )}`);
+        alert(
+          `Claim procesado exitosamente. Total recuperado: ${this.formatCurrency(
+            (result.waterfall?.breakdown.holdCaptured || 0) / 100 +
+              (result.waterfall?.breakdown.walletDebited || 0) / 100 +
+              (result.waterfall?.breakdown.fgoPaid || 0) / 100,
+          )}`,
+        );
         await this.loadClaims();
       } else {
         alert(`Error: ${result.error}`);

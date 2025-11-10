@@ -1,4 +1,12 @@
-import { Component, input, output, signal, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  signal,
+  inject,
+  OnInit,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettlementService, DamageItem } from '../../../core/services/settlement.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
@@ -8,12 +16,13 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-damage-comparison',
   standalone: true,
   imports: [CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './damage-comparison.component.html',
   styleUrls: ['./damage-comparison.component.scss'],
 })
 export class DamageComparisonComponent implements OnInit {
   readonly bookingId = input.required<string>();
-  readonly onDamagesDetected = output<DamageItem[]>();
+  readonly damagesDetected = output<DamageItem[]>();
 
   private readonly settlementService = inject(SettlementService);
   private readonly fgoV1_1Service = inject(FgoV1_1Service);
@@ -67,7 +76,7 @@ export class DamageComparisonComponent implements OnInit {
       if (detectedDamages.length === 0) {
         this.error.set('No se detectaron daños nuevos. El auto está en buen estado.');
       } else {
-        this.onDamagesDetected.emit(detectedDamages);
+        this.damagesDetected.emit(detectedDamages);
       }
     } catch (err) {
       console.error('Error comparing damages:', err);
@@ -111,5 +120,11 @@ export class DamageComparisonComponent implements OnInit {
       default:
         return 'medium';
     }
+  }
+
+  getTotalDamageCost(): string {
+    return this.damages()
+      .reduce((sum, d) => sum + d.estimatedCostUsd, 0)
+      .toFixed(2);
   }
 }

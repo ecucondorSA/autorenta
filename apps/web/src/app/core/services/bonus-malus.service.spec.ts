@@ -162,9 +162,7 @@ describe('BonusMalusService', () => {
 
   describe('getBonusMalusFactor', () => {
     it('should return the total factor', async () => {
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(mockUserBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(mockUserBonusMalus));
 
       const factor = await service.getBonusMalusFactor(mockUserId);
 
@@ -188,7 +186,7 @@ describe('BonusMalusService', () => {
       expect(display.percentage).toBe(8);
       expect(display.message).toContain('8% de descuento');
       expect(display.icon).toBe('🎉');
-      expect(display.color).toBe('text-green-600');
+      expect(display.color).toBe('text-success-light');
       expect(display.tips?.length).toBeGreaterThan(0);
     });
 
@@ -198,7 +196,7 @@ describe('BonusMalusService', () => {
       expect(display.type).toBe('BONUS');
       expect(display.percentage).toBe(3);
       expect(display.icon).toBe('✨');
-      expect(display.color).toBe('text-green-500');
+      expect(display.color).toBe('text-success-light');
     });
 
     it('should format NEUTRAL correctly', () => {
@@ -218,7 +216,7 @@ describe('BonusMalusService', () => {
       expect(display.percentage).toBe(3);
       expect(display.message).toContain('3% de recargo');
       expect(display.icon).toBe('⚠️');
-      expect(display.color).toBe('text-orange-500');
+      expect(display.color).toBe('text-warning-light');
     });
 
     it('should format significant MALUS correctly', () => {
@@ -237,9 +235,7 @@ describe('BonusMalusService', () => {
       const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(); // Yesterday
       const outdatedBonusMalus = { ...mockUserBonusMalus, next_recalculation_at: pastDate };
 
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(outdatedBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(outdatedBonusMalus));
 
       const needs = await service.needsRecalculation(mockUserId);
 
@@ -247,9 +243,7 @@ describe('BonusMalusService', () => {
     });
 
     it('should return false if next_recalculation_at is in the future', async () => {
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(mockUserBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(mockUserBonusMalus));
 
       const needs = await service.needsRecalculation(mockUserId);
 
@@ -275,9 +269,7 @@ describe('BonusMalusService', () => {
         },
       };
 
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(lowRatingBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(lowRatingBonusMalus));
 
       const tips = await service.getImprovementTips(mockUserId);
 
@@ -312,9 +304,7 @@ describe('BonusMalusService', () => {
         },
       };
 
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(lowExperienceBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(lowExperienceBonusMalus));
 
       const tips = await service.getImprovementTips(mockUserId);
 
@@ -322,9 +312,7 @@ describe('BonusMalusService', () => {
     });
 
     it('should provide tips for unverified users', async () => {
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(mockUserBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(mockUserBonusMalus));
 
       const tips = await service.getImprovementTips(mockUserId);
 
@@ -348,9 +336,7 @@ describe('BonusMalusService', () => {
         },
       };
 
-      spyOn(service, 'getUserBonusMalus').and.returnValue(
-        Promise.resolve(excellentBonusMalus),
-      );
+      spyOn(service, 'getUserBonusMalus').and.returnValue(Promise.resolve(excellentBonusMalus));
 
       const tips = await service.getImprovementTips(mockUserId);
 

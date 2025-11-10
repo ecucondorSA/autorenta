@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { AccountingService } from '../../../../core/services/accounting.service';
-import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 import type { AuditLog, PaginatedResult } from '../../../../core/services/accounting.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-audit-logs',
@@ -18,7 +18,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
         </p>
       </div>
 
-      <div class="mb-4 rounded-lg border border-gray-200 bg-white p-4">
+      <div class="mb-4 rounded-lg border border-gray-200 bg-surface-raised p-4">
         <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Severidad</label>
@@ -62,7 +62,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
           <div class="flex items-end">
             <button
               (click)="loadLogs()"
-              class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              class="w-full rounded-lg bg-cta-default text-cta-text hover:bg-cta-default"
             >
               Filtrar
             </button>
@@ -72,7 +72,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"></div>
         </div>
       } @else if (logs().data.length === 0) {
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -84,9 +84,9 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
             <div
               class="rounded-lg border p-4"
               [class.bg-red-50]="log.severity === 'critical'"
-              [class.bg-orange-50]="log.severity === 'high'"
+              [class.bg-warning-light/10]="log.severity === 'high'"
               [class.bg-yellow-50]="log.severity === 'medium'"
-              [class.bg-blue-50]="log.severity === 'low'"
+              [class.bg-cta-default/10]="log.severity === 'low'"
             >
               <div class="flex items-start justify-between">
                 <div class="flex-1">
@@ -95,12 +95,12 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
                       class="rounded-full px-2 py-1 text-xs font-medium"
                       [class.bg-red-100]="log.severity === 'critical'"
                       [class.text-red-800]="log.severity === 'critical'"
-                      [class.bg-orange-100]="log.severity === 'high'"
-                      [class.text-orange-800]="log.severity === 'high'"
+                      [class.bg-warning-light/20]="log.severity === 'high'"
+                      [class.text-warning-light]="log.severity === 'high'"
                       [class.bg-yellow-100]="log.severity === 'medium'"
                       [class.text-yellow-800]="log.severity === 'medium'"
-                      [class.bg-blue-100]="log.severity === 'low'"
-                      [class.text-blue-800]="log.severity === 'low'"
+                      [class.bg-cta-default/20]="log.severity === 'low'"
+                      [class.text-cta-default]="log.severity === 'low'"
                     >
                       {{ log.severity }}
                     </span>
@@ -109,7 +109,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
                   <p class="text-sm font-medium text-gray-900">{{ log.description }}</p>
                   @if (log.variance !== null && log.variance !== undefined) {
                     <p class="mt-1 text-xs text-gray-600">
-                      Diferencia: ${{ log.variance | number: '1.2-2' }}
+                      Diferencia: \${{ log.variance | number: '1.2-2' }}
                     </p>
                   }
                   <p class="mt-1 text-xs text-gray-500">
@@ -118,8 +118,8 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
                 </div>
                 <span
                   class="rounded-full px-2 py-1 text-xs font-medium"
-                  [class.bg-green-100]="log.resolution_status === 'resolved'"
-                  [class.text-green-800]="log.resolution_status === 'resolved'"
+                  [class.bg-success-light/20]="log.resolution_status === 'resolved'"
+                  [class.text-success-light]="log.resolution_status === 'resolved'"
                   [class.bg-gray-100]="log.resolution_status === 'open'"
                   [class.text-gray-800]="log.resolution_status === 'open'"
                 >
@@ -131,7 +131,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
 
           <!-- Paginación -->
           @if (logs().totalPages > 1) {
-            <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4">
+            <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-surface-raised p-4">
               <button
                 (click)="previousPage()"
                 [disabled]="currentPage() === 1"
@@ -157,7 +157,6 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
   `,
 })
 export class AuditLogsPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseClientService);
   private accountingService!: AccountingService;
 
   readonly logs = signal<PaginatedResult<AuditLog>>({
@@ -177,10 +176,10 @@ export class AuditLogsPage implements OnInit {
   };
 
   async ngOnInit(): Promise<void> {
-    const supabase = this.supabaseService.getClient();
-    const url = supabase.supabaseUrl;
-    const key = (supabase as any).supabaseKey || '';
-    this.accountingService = new AccountingService(url, key);
+    this.accountingService = new AccountingService(
+      environment.supabaseUrl,
+      environment.supabaseAnonKey,
+    );
     await this.loadLogs();
   }
 
@@ -215,4 +214,3 @@ export class AuditLogsPage implements OnInit {
     }
   }
 }
-

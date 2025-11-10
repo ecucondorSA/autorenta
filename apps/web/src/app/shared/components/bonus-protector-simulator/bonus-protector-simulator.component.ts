@@ -1,4 +1,4 @@
-import { Component, input, signal, inject, computed } from '@angular/core';
+import { Component, input, signal, inject, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
@@ -7,6 +7,7 @@ import { BonusProtectorService } from '../../../core/services/bonus-protector.se
   selector: 'app-bonus-protector-simulator',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './bonus-protector-simulator.component.html',
   styleUrls: ['./bonus-protector-simulator.component.scss'],
 })

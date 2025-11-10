@@ -1,0 +1,40 @@
+<div class="fab-group" [class]="positionClass()">
+  <!-- Action buttons (shown when expanded) -->
+  <div
+    class="fab-actions flex flex-col gap-3 mb-3 transition-all duration-300"
+    [class.fab-actions--visible]="expanded()"
+    [class.fab-actions--hidden]="!expanded()"
+  >
+    <button
+      *ngFor="let action of actions; let i = index"
+      type="button"
+      (click)="onActionClick(action.id)"
+      [class]="getActionColorClass(action)"
+      class="fab-action w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cta-default"
+      [style.transition-delay.ms]="expanded() ? i * 50 : 0"
+      [attr.aria-label]="action.label"
+    >
+      <span class="text-xl">{{ action.icon }}</span>
+    </button>
+  </div>
+
+  <!-- Main toggle button -->
+  <button
+    type="button"
+    (click)="toggleExpanded()"
+    class="fab-main w-14 h-14 rounded-full bg-cta-default text-cta-text shadow-xl flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cta-default"
+    [attr.aria-label]="expanded() ? 'Cerrar acciones' : 'Abrir acciones'"
+    [attr.aria-expanded]="expanded()"
+  >
+    <svg
+      class="w-6 h-6 transition-transform duration-300"
+      [class.rotate-45]="expanded()"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+    </svg>
+  </button>
+</div>

@@ -31,14 +31,16 @@ import { IonicModule } from '@ionic/angular';
             <h2 class="text-2xl font-bold mb-1">{{ formattedValue }}</h2>
             <div *ngIf="change !== undefined" class="flex items-center text-sm">
               <ion-icon
-                [name]="trend === 'up' ? 'trending-up' : trend === 'down' ? 'trending-down' : 'remove'"
-                [class.text-green-500]="trend === 'up'"
+                [name]="
+                  trend === 'up' ? 'trending-up' : trend === 'down' ? 'trending-down' : 'remove'
+                "
+                [class.text-success-light]="trend === 'up'"
                 [class.text-red-500]="trend === 'down'"
                 [class.text-gray-500]="trend === 'neutral'"
                 class="mr-1"
               ></ion-icon>
               <span
-                [class.text-green-500]="trend === 'up'"
+                [class.text-success-light]="trend === 'up'"
                 [class.text-red-500]="trend === 'down'"
                 [class.text-gray-500]="trend === 'neutral'"
               >
@@ -48,25 +50,24 @@ import { IonicModule } from '@ionic/angular';
             </div>
           </div>
           <div *ngIf="icon" class="ml-4">
-            <ion-icon
-              [name]="icon"
-              class="text-4xl opacity-30"
-            ></ion-icon>
+            <ion-icon [name]="icon" class="text-4xl opacity-30"></ion-icon>
           </div>
         </div>
       </ion-card-content>
     </ion-card>
   `,
-  styles: [`
-    .kpi-card {
-      margin: 0;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+  styles: [
+    `
+      .kpi-card {
+        margin: 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
 
-    .kpi-card ion-card-content {
-      padding: 16px;
-    }
-  `]
+      .kpi-card ion-card-content {
+        padding: 16px;
+      }
+    `,
+  ],
 })
 export class KpiCardComponent {
   @Input() title = '';

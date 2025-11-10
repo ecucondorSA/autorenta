@@ -11,18 +11,18 @@
 .card-premium:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border-color: #8b7355;
+  border-color: var(--warning-light); /* warning-light */
 }
 
 /* Estado seleccionado - Visual feedback premium */
 .card-premium.selected {
-  border-color: #2c4a52; /* accent-petrol */
+  border-color: var(--cta-default); /* cta-default (azul pastel) */
   border-width: 2px;
   transform: scale(1.02) translateY(-2px);
   box-shadow:
-    0 0 0 3px rgba(44, 74, 82, 0.15),
-    /* Glow petrol */ 0 0 0 6px rgba(139, 115, 85, 0.08),
-    /* Glow warm */ 0 12px 32px rgba(44, 74, 82, 0.2); /* Shadow profunda */
+    0 0 0 3px rgba(167, 216, 244, 0.15),
+    /* cta-default glow */ 0 0 0 6px rgba(196, 168, 130, 0.08),
+    /* warning-light glow */ 0 12px 32px rgba(167, 216, 244, 0.2); /* cta-default shadow */
   z-index: 10;
   position: relative;
 }
@@ -31,21 +31,25 @@
 .card-premium.selected:hover {
   transform: scale(1.02) translateY(-2px);
   box-shadow:
-    0 0 0 3px rgba(44, 74, 82, 0.2),
-    0 0 0 6px rgba(139, 115, 85, 0.12),
-    0 14px 36px rgba(44, 74, 82, 0.25);
+    0 0 0 3px rgba(167, 216, 244, 0.2),
+    /* cta-default glow */ 0 0 0 6px rgba(196, 168, 130, 0.12),
+    /* warning-light glow */ 0 14px 36px rgba(167, 216, 244, 0.25); /* cta-default shadow */
 }
 
 /* Animación sutil para el fallback sin foto */
 .card-premium:hover .absolute.inset-0:has(svg) {
-  background: linear-gradient(135deg, rgba(139, 115, 85, 0.15) 0%, rgba(44, 74, 82, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(196, 168, 130, 0.15) 0%,
+    rgba(167, 216, 244, 0.15) 100%
+  ); /* warning-light y cta-default */
 }
 
 /* Mejora la transición del badge de distancia */
-.card-premium .text-accent-petrol {
+.card-premium .text-cta-default {
   transition: color 0.2s ease;
 }
 
-.card-premium:hover .text-accent-petrol {
-  color: #1f3a40;
+.card-premium:hover .text-cta-default {
+  color: var(--cta-hover); /* cta-hover (azul pastel más oscuro) */
 }

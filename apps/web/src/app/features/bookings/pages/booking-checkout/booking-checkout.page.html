@@ -2,7 +2,9 @@
   <!-- Header -->
   <div class="checkout-header">
     <h1 class="text-2xl font-bold text-gray-900 mb-2">Completar Pago</h1>
-    <p class="text-sm text-gray-600 dark:text-gray-300">Selecciona tu método de pago preferido y completa la reserva</p>
+    <p class="text-sm text-gray-600 dark:text-gray-300">
+      Selecciona tu método de pago preferido y completa la reserva
+    </p>
   </div>
 
   <!-- Loading State -->
@@ -14,19 +16,20 @@
   <!-- Error State -->
   <div *ngIf="error() && !isLoading()" class="error-container">
     <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
     </svg>
     <h3 class="error-title">Error</h3>
     <p class="error-message">{{ error() }}</p>
-    <button class="btn-secondary" (click)="cancelPayment()">
-      Volver
-    </button>
+    <button class="btn-secondary" (click)="cancelPayment()">Volver</button>
   </div>
 
   <!-- Main Content -->
   <div *ngIf="!isLoading() && !error()" class="checkout-content">
-
     <!-- Booking Summary -->
     <div class="booking-summary-card">
       <h2 class="card-title">Resumen de la Reserva</h2>
@@ -41,11 +44,11 @@
         <!-- Date Range -->
         <div class="detail-row">
           <span class="detail-label">Desde</span>
-          <span class="detail-value">{{ booking().start_date | date:'dd/MM/yyyy' }}</span>
+          <span class="detail-value">{{ booking().start_date | date: 'dd/MM/yyyy' }}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Hasta</span>
-          <span class="detail-value">{{ booking().end_date | date:'dd/MM/yyyy' }}</span>
+          <span class="detail-value">{{ booking().end_date | date: 'dd/MM/yyyy' }}</span>
         </div>
 
         <!-- Total Original (en moneda del booking) -->
@@ -59,7 +62,10 @@
     </div>
 
     <!-- Driver Profile Info -->
-    <div *ngIf="driverProfileService.profile() && !driverProfileService.loading()" class="driver-profile-card">
+    <div
+      *ngIf="driverProfileService.profile() && !driverProfileService.loading()"
+      class="driver-profile-card"
+    >
       <h2 class="card-title">Tu Perfil de Conductor</h2>
 
       <div class="driver-profile-content">
@@ -81,42 +87,90 @@
           <!-- Fee Multiplier -->
           <div class="multiplier-row">
             <div class="multiplier-info">
-              <svg class="multiplier-icon" [class.discount]="hasDiscount()" [class.surcharge]="hasSurcharge()"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path *ngIf="hasDiscount()" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                <path *ngIf="!hasDiscount()" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+              <svg
+                class="multiplier-icon"
+                [class.discount]="hasDiscount()"
+                [class.surcharge]="hasSurcharge()"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  *ngIf="hasDiscount()"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                />
+                <path
+                  *ngIf="!hasDiscount()"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
+                />
               </svg>
               <div>
                 <span class="multiplier-label">Tarifa de Servicio</span>
                 <p class="multiplier-description">
-                  {{ hasDiscount() ? 'Descuento por buena conducción' : hasSurcharge() ? 'Recargo por clase de riesgo' : 'Sin ajuste' }}
+                  {{
+                    hasDiscount()
+                      ? 'Descuento por buena conducción'
+                      : hasSurcharge()
+                        ? 'Recargo por clase de riesgo'
+                        : 'Sin ajuste'
+                  }}
                 </p>
               </div>
             </div>
-            <span class="multiplier-value" [class.discount]="hasDiscount()" [class.surcharge]="hasSurcharge()">
-              {{ feeDiscountPct() > 0 ? '-' : feeDiscountPct() < 0 ? '+' : '' }}{{ Math.abs(feeDiscountPct()) }}%
+            <span
+              class="multiplier-value"
+              [class.discount]="hasDiscount()"
+              [class.surcharge]="hasSurcharge()"
+            >
+              {{ feeDiscountPct() > 0 ? '-' : feeDiscountPct() < 0 ? '+' : ''
+              }}{{ Math.abs(feeDiscountPct()) }}%
             </span>
           </div>
 
           <!-- Guarantee Multiplier -->
           <div class="multiplier-row">
             <div class="multiplier-info">
-              <svg class="multiplier-icon" [class.discount]="hasDiscount()" [class.surcharge]="hasSurcharge()"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              <svg
+                class="multiplier-icon"
+                [class.discount]="hasDiscount()"
+                [class.surcharge]="hasSurcharge()"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
               <div>
                 <span class="multiplier-label">Garantía</span>
                 <p class="multiplier-description">
-                  {{ hasDiscount() ? 'Descuento en garantía bloqueada' : hasSurcharge() ? 'Recargo en garantía bloqueada' : 'Sin ajuste' }}
+                  {{
+                    hasDiscount()
+                      ? 'Descuento en garantía bloqueada'
+                      : hasSurcharge()
+                        ? 'Recargo en garantía bloqueada'
+                        : 'Sin ajuste'
+                  }}
                 </p>
               </div>
             </div>
-            <span class="multiplier-value" [class.discount]="hasDiscount()" [class.surcharge]="hasSurcharge()">
-              {{ guaranteeDiscountPct() > 0 ? '-' : guaranteeDiscountPct() < 0 ? '+' : '' }}{{ Math.abs(guaranteeDiscountPct()) }}%
+            <span
+              class="multiplier-value"
+              [class.discount]="hasDiscount()"
+              [class.surcharge]="hasSurcharge()"
+            >
+              {{ guaranteeDiscountPct() > 0 ? '-' : guaranteeDiscountPct() < 0 ? '+' : ''
+              }}{{ Math.abs(guaranteeDiscountPct()) }}%
             </span>
           </div>
         </div>
@@ -124,15 +178,21 @@
         <!-- Explanation -->
         <div class="explanation-section">
           <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <p class="explanation-text">
             <span *ngIf="hasDiscount()">
-              ¡Felicitaciones! Por tu excelente historial de conducción estás recibiendo descuentos en esta reserva.
+              ¡Felicitaciones! Por tu excelente historial de conducción estás recibiendo descuentos
+              en esta reserva.
             </span>
             <span *ngIf="hasSurcharge()">
-              Debido a tu clase de riesgo actual, se aplican recargos en esta reserva. Mejora tu clase conduciendo sin siniestros.
+              Debido a tu clase de riesgo actual, se aplican recargos en esta reserva. Mejora tu
+              clase conduciendo sin siniestros.
             </span>
             <span *ngIf="!hasDiscount() && !hasSurcharge()">
               Actualmente tienes la clase base (5). Conduce sin siniestros para obtener descuentos.
@@ -147,23 +207,38 @@
       <div class="protector-header" (click)="toggleProtectorOffer()">
         <div class="protector-title">
           <svg class="shield-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
           </svg>
           <div>
             <h3>¿Quieres proteger tu clase?</h3>
             <p class="protector-subtitle">Evita que tu clase suba tras un siniestro</p>
           </div>
         </div>
-        <svg class="chevron-icon" [class.expanded]="showProtectorOffer()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        <svg
+          class="chevron-icon"
+          [class.expanded]="showProtectorOffer()"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </div>
 
       <div class="protector-content" [class.show]="showProtectorOffer()">
         <p class="protector-description">
-          El <strong>Bonus Protector</strong> es un seguro opcional que protege tu clase de conductor
-          de subir en caso de siniestros. Ideal si tienes recargos actualmente.
+          El <strong>Bonus Protector</strong> es un seguro opcional que protege tu clase de
+          conductor de subir en caso de siniestros. Ideal si tienes recargos actualmente.
         </p>
 
         <div class="quick-options">
@@ -216,14 +291,17 @@
         [amount]="booking()?.total_price || 0"
         [currency]="booking()?.currency || 'ARS'"
         [defaultProvider]="selectedProvider()"
-        (providerChange)="handleProviderChange($event)">
+        (providerChange)="handleProviderChange($event)"
+      >
       </app-payment-provider-selector>
     </div>
 
     <!-- Payment Amount Display -->
     <div *ngIf="amountInProviderCurrency() > 0" class="amount-display-card">
       <div class="amount-display">
-        <p class="amount-label">Total a pagar con {{ selectedProvider() === 'paypal' ? 'PayPal' : 'MercadoPago' }}:</p>
+        <p class="amount-label">
+          Total a pagar con {{ selectedProvider() === 'paypal' ? 'PayPal' : 'MercadoPago' }}:
+        </p>
         <p class="amount-value">
           {{ formatCurrency(amountInProviderCurrency(), providerCurrency()) }}
         </p>
@@ -232,18 +310,28 @@
 
     <!-- Payment Buttons Section -->
     <div class="payment-buttons-section">
-
       <!-- MercadoPago Payment Button -->
       <div *ngIf="isMercadoPago()" class="payment-button-container">
         <button
           class="btn-primary mercadopago-btn"
           [disabled]="!isPaymentButtonEnabled() || isProcessingPayment()"
-          (click)="handleMercadoPagoPayment()">
-
+          (click)="handleMercadoPagoPayment()"
+        >
           <svg *ngIf="isProcessingPayment()" class="spinner-small" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
-            <path class="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+              fill="none"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
           </svg>
 
           <span *ngIf="!isProcessingPayment()">Pagar con MercadoPago</span>
@@ -252,8 +340,12 @@
 
         <p class="payment-info">
           <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           Serás redirigido a MercadoPago para completar el pago de forma segura
         </p>
@@ -266,26 +358,27 @@
           [useSplitPayment]="true"
           [disabled]="!isPaymentButtonEnabled()"
           (paymentApproved)="handlePayPalApprove($event)"
-          (paymentError)="handlePayPalError($event)">
+          (paymentError)="handlePayPalError($event)"
+        >
         </app-paypal-button>
 
         <p class="payment-info">
           <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
           </svg>
           Pago seguro procesado por PayPal
         </p>
       </div>
-
     </div>
 
     <!-- Cancel Button -->
     <div class="cancel-section">
-      <button
-        class="btn-secondary"
-        [disabled]="isProcessingPayment()"
-        (click)="cancelPayment()">
+      <button class="btn-secondary" [disabled]="isProcessingPayment()" (click)="cancelPayment()">
         Cancelar y Volver
       </button>
     </div>
@@ -293,14 +386,19 @@
     <!-- Security Notice -->
     <div class="security-notice">
       <svg class="lock-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+        />
       </svg>
       <div class="security-text">
         <p class="font-medium">Pago 100% Seguro</p>
-        <p class="text-xs text-gray-500 dark:text-gray-300">Tus datos están protegidos mediante encriptación SSL</p>
+        <p class="text-xs text-gray-500 dark:text-gray-300">
+          Tus datos están protegidos mediante encriptación SSL
+        </p>
       </div>
     </div>
-
   </div>
 </div>

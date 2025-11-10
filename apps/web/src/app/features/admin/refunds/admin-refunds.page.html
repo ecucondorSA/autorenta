@@ -3,14 +3,16 @@
     <!-- Header -->
     <div class="mb-8 flex justify-between items-center">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Gestión de Reembolsos</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+          Gestión de Reembolsos
+        </h1>
         <p class="mt-2 text-gray-600 dark:text-gray-300">
           Procesa reembolsos de forma segura y con trazabilidad completa
         </p>
       </div>
       <button
         (click)="openNewRefundModal()"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors flex items-center gap-2 shadow-lg"
+        class="bg-cta-default text-cta-text px-6 py-3 rounded-md font-medium transition-colors flex items-center gap-2 shadow-lg"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -26,10 +28,15 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white dark:bg-slate-deep rounded-lg shadow p-6">
+      <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -40,15 +47,22 @@
           </div>
           <div class="ml-4">
             <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Pendientes</p>
-            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ pendingCount() }}</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-text-inverse">
+              {{ pendingCount() }}
+            </p>
           </div>
         </div>
       </div>
 
-      <div class="bg-white dark:bg-slate-deep rounded-lg shadow p-6">
+      <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">
         <div class="flex items-center">
-          <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 bg-success-light rounded-md p-3">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -59,17 +73,22 @@
           </div>
           <div class="ml-4">
             <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Monto Pendiente</p>
-            <p class="text-2xl font-semibold text-gray-900 dark:text-white">
-              {{ totalPendingAmount() | money : 'ARS' }}
+            <p class="text-2xl font-semibold text-gray-900 dark:text-text-inverse">
+              {{ totalPendingAmount() | money: 'ARS' }}
             </p>
           </div>
         </div>
       </div>
 
-      <div class="bg-white dark:bg-slate-deep rounded-lg shadow p-6">
+      <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">
         <div class="flex items-center">
-          <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 bg-cta-default rounded-md p-3">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -80,7 +99,7 @@
           </div>
           <div class="ml-4">
             <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Completados Hoy</p>
-            <p class="text-2xl font-semibold text-gray-900 dark:text-white">
+            <p class="text-2xl font-semibold text-gray-900 dark:text-text-inverse">
               {{ completedToday() }}
             </p>
           </div>
@@ -89,14 +108,14 @@
     </div>
 
     <!-- Filters and Actions -->
-    <div class="bg-white dark:bg-slate-deep rounded-lg shadow mb-6 p-4">
+    <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow mb-6 p-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div class="flex gap-2 flex-wrap">
           <button
             (click)="filterByStatus('')"
             [class]="
               filterStatus() === ''
-                ? 'bg-blue-600 text-white'
+                ? 'bg-cta-default text-cta-text'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300'
             "
             class="px-4 py-2 rounded-md font-medium transition-colors"
@@ -107,7 +126,7 @@
             (click)="filterByStatus('pending')"
             [class]="
               filterStatus() === 'pending'
-                ? 'bg-yellow-600 text-white'
+                ? 'bg-yellow-600 text-text-inverse'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300'
             "
             class="px-4 py-2 rounded-md font-medium transition-colors"
@@ -118,7 +137,7 @@
             (click)="filterByStatus('processing')"
             [class]="
               filterStatus() === 'processing'
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-cta-default text-cta-text'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300'
             "
             class="px-4 py-2 rounded-md font-medium transition-colors"
@@ -129,7 +148,7 @@
             (click)="filterByStatus('completed')"
             [class]="
               filterStatus() === 'completed'
-                ? 'bg-green-600 text-white'
+                ? 'bg-success-light text-text-primary'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300'
             "
             class="px-4 py-2 rounded-md font-medium transition-colors"
@@ -140,7 +159,7 @@
 
         <button
           (click)="exportToCSV()"
-          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
+          class="bg-success-light text-text-primary px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
         >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -156,10 +175,10 @@
     </div>
 
     <!-- Refunds Table -->
-    <div class="bg-white dark:bg-slate-deep rounded-lg shadow overflow-hidden">
+    <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow overflow-hidden">
       @if (loading()) {
         <div class="flex justify-center items-center p-12">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default"></div>
         </div>
       } @else if (refundRequests().length === 0) {
         <div class="text-center py-12">
@@ -176,7 +195,7 @@
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-text-inverse">
             No hay reembolsos
           </h3>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
@@ -225,14 +244,18 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white dark:bg-slate-deep divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody
+              class="bg-surface-raised dark:bg-surface-secondary divide-y divide-gray-200 dark:divide-gray-700"
+            >
               @for (refund of refundRequests(); track refund.id) {
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-text-inverse"
+                  >
                     {{ formatDate(refund.created_at) }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                    <div class="text-sm font-medium text-gray-900 dark:text-text-inverse">
                       {{ refund.user_name || 'N/A' }}
                     </div>
                     <div class="text-sm text-gray-500 dark:text-gray-300">
@@ -240,15 +263,17 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900 dark:text-white">
+                    <div class="text-sm text-gray-900 dark:text-text-inverse">
                       {{ refund.car_title || 'N/A' }}
                     </div>
                     <div class="text-xs text-gray-500 dark:text-gray-300">
                       ID: {{ refund.booking_id.substring(0, 8) }}...
                     </div>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                    {{ refund.refund_amount | money : refund.currency }}
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-text-inverse"
+                  >
+                    {{ refund.refund_amount | money: refund.currency }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                     {{ getDestinationText(refund.destination) }}
@@ -264,7 +289,7 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       (click)="selectRefund(refund)"
-                      class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                      class="text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default"
                     >
                       Ver Detalles
                     </button>
@@ -282,15 +307,26 @@
 <!-- Detail Modal -->
 @if (selectedRefund()) {
   <div class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-deep rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto shadow-xl">
-      <div class="sticky top-0 bg-white dark:bg-slate-deep border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Detalle del Reembolso</h2>
+    <div
+      class="bg-surface-raised dark:bg-surface-secondary rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto shadow-xl"
+    >
+      <div
+        class="sticky top-0 bg-surface-raised dark:bg-surface-secondary border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center"
+      >
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">
+          Detalle del Reembolso
+        </h2>
         <button
           (click)="closeDetailModal()"
           class="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200"
         >
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -310,52 +346,68 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Monto</p>
-            <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
-              {{ selectedRefund()!.refund_amount | money : selectedRefund()!.currency }}
+            <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-text-inverse">
+              {{ selectedRefund()!.refund_amount | money: selectedRefund()!.currency }}
             </p>
           </div>
           <div>
             <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Destino</p>
-            <p class="mt-1 text-sm text-gray-900 dark:text-white">
+            <p class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
               {{ getDestinationText(selectedRefund()!.destination) }}
             </p>
           </div>
           <div>
             <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Usuario</p>
-            <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ selectedRefund()!.user_name }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-300">{{ selectedRefund()!.user_email }}</p>
+            <p class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
+              {{ selectedRefund()!.user_name }}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-300">
+              {{ selectedRefund()!.user_email }}
+            </p>
           </div>
           <div>
             <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Booking</p>
-            <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ selectedRefund()!.car_title }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-300">{{ selectedRefund()!.booking_id }}</p>
+            <p class="mt-1 text-sm text-gray-900 dark:text-text-inverse">
+              {{ selectedRefund()!.car_title }}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-300">
+              {{ selectedRefund()!.booking_id }}
+            </p>
           </div>
         </div>
 
         <!-- Timestamps -->
         <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-          <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Cronología</h3>
+          <h3 class="text-sm font-medium text-gray-900 dark:text-text-inverse mb-2">Cronología</h3>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
               <span class="text-gray-500 dark:text-gray-300">Creado:</span>
-              <span class="text-gray-900 dark:text-white">{{ formatDate(selectedRefund()!.created_at) }}</span>
+              <span class="text-gray-900 dark:text-text-inverse">{{
+                formatDate(selectedRefund()!.created_at)
+              }}</span>
             </div>
             @if (selectedRefund()!.approved_at) {
               <div class="flex justify-between">
                 <span class="text-gray-500 dark:text-gray-300">Aprobado:</span>
-                <span class="text-gray-900 dark:text-white">{{ formatDate(selectedRefund()!.approved_at) }}</span>
+                <span class="text-gray-900 dark:text-text-inverse">{{
+                  formatDate(selectedRefund()!.approved_at)
+                }}</span>
               </div>
             }
             @if (selectedRefund()!.processed_at) {
               <div class="flex justify-between">
                 <span class="text-gray-500 dark:text-gray-300">Procesado:</span>
-                <span class="text-gray-900 dark:text-white">{{ formatDate(selectedRefund()!.processed_at) }}</span>
+                <span class="text-gray-900 dark:text-text-inverse">{{
+                  formatDate(selectedRefund()!.processed_at)
+                }}</span>
               </div>
             }
             @if (selectedRefund()!.completed_at) {
               <div class="flex justify-between">
                 <span class="text-gray-500 dark:text-gray-300">Completado:</span>
-                <span class="text-gray-900 dark:text-white">{{ formatDate(selectedRefund()!.completed_at) }}</span>
+                <span class="text-gray-900 dark:text-text-inverse">{{
+                  formatDate(selectedRefund()!.completed_at)
+                }}</span>
               </div>
             }
           </div>
@@ -364,14 +416,20 @@
         <!-- Reason/Notes -->
         @if (selectedRefund()!.request_reason) {
           <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Motivo</h3>
-            <p class="text-sm text-gray-700 dark:text-gray-300">{{ selectedRefund()!.request_reason }}</p>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-text-inverse mb-2">Motivo</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">
+              {{ selectedRefund()!.request_reason }}
+            </p>
           </div>
         }
         @if (selectedRefund()!.admin_notes) {
           <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Notas del Admin</h3>
-            <p class="text-sm text-gray-700 dark:text-gray-300">{{ selectedRefund()!.admin_notes }}</p>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-text-inverse mb-2">
+              Notas del Admin
+            </h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">
+              {{ selectedRefund()!.admin_notes }}
+            </p>
           </div>
         }
       </div>
@@ -391,15 +449,26 @@
 <!-- New Refund Modal -->
 @if (showNewRefundModal()) {
   <div class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-deep rounded-lg max-w-4xl w-full max-h-screen overflow-y-auto shadow-xl">
-      <div class="sticky top-0 bg-white dark:bg-slate-deep border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Procesar Nuevo Reembolso</h2>
+    <div
+      class="bg-surface-raised dark:bg-surface-secondary rounded-lg max-w-4xl w-full max-h-screen overflow-y-auto shadow-xl"
+    >
+      <div
+        class="sticky top-0 bg-surface-raised dark:bg-surface-secondary border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center"
+      >
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">
+          Procesar Nuevo Reembolso
+        </h2>
         <button
           (click)="closeNewRefundModal()"
           class="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200"
         >
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -407,19 +476,21 @@
       <div class="px-6 py-4 space-y-6">
         <!-- Step 1: Search Booking -->
         <div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">1. Buscar Booking</h3>
+          <h3 class="text-lg font-medium text-gray-900 dark:text-text-inverse mb-4">
+            1. Buscar Booking
+          </h3>
           <div class="flex gap-2">
             <input
               type="text"
               [value]="searchQuery()"
               (input)="updateSearchQuery($any($event.target).value)"
               placeholder="Booking ID o Email del usuario"
-              class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+              class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-cta-default focus:border-cta-default dark:bg-gray-800 dark:text-text-inverse"
             />
             <button
               (click)="searchBookings()"
               [disabled]="searching()"
-              class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-md font-medium transition-colors"
+              class="bg-cta-default text-cta-text px-6 py-2 rounded-md font-medium transition-colors"
             >
               @if (searching()) {
                 <span class="flex items-center gap-2">
@@ -437,28 +508,38 @@
             <div class="mt-4 space-y-2">
               @for (booking of searchResults(); track booking.id) {
                 <div
-                  [class]="booking.can_refund ? 'border-green-300 dark:border-green-700' : 'border-gray-300 dark:border-gray-700 opacity-50'"
+                  [class]="
+                    booking.can_refund
+                      ? 'border-success-light/50 dark:border-success-light'
+                      : 'border-gray-300 dark:border-gray-700 opacity-50'
+                  "
                   class="border rounded-md p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
                   (click)="booking.can_refund ? selectBookingForRefund(booking) : null"
                 >
                   <div class="flex justify-between items-start">
                     <div>
-                      <p class="font-medium text-gray-900 dark:text-white">{{ booking.car_title || 'N/A' }}</p>
+                      <p class="font-medium text-gray-900 dark:text-text-inverse">
+                        {{ booking.car_title || 'N/A' }}
+                      </p>
                       <p class="text-sm text-gray-500 dark:text-gray-300">ID: {{ booking.id }}</p>
                       <p class="text-sm text-gray-500 dark:text-gray-300">
-                        Total: {{ booking.total_amount | money : booking.currency }}
+                        Total: {{ booking.total_amount | money: booking.currency }}
                       </p>
                     </div>
                     <div class="text-right">
                       @if (booking.can_refund) {
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <span
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light/20 text-success-light"
+                        >
                           Elegible
                         </span>
-                        <p class="text-sm text-gray-900 dark:text-white mt-1">
-                          Disponible: {{ booking.refund_eligible_amount | money : booking.currency }}
+                        <p class="text-sm text-gray-900 dark:text-text-inverse mt-1">
+                          Disponible: {{ booking.refund_eligible_amount | money: booking.currency }}
                         </p>
                       } @else {
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <span
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                        >
                           No Elegible
                         </span>
                       }
@@ -473,7 +554,9 @@
         <!-- Step 2: Refund Details -->
         @if (refundForm().bookingId) {
           <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">2. Detalles del Reembolso</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-text-inverse mb-4">
+              2. Detalles del Reembolso
+            </h3>
 
             <div class="space-y-4">
               <div>
@@ -483,10 +566,10 @@
                 <input
                   type="number"
                   [value]="refundForm().amount"
-                  (input)="updateRefundAmount(parseFloat($any($event.target).value))"
+                  (input)="updateRefundAmount(parseFloatValue($any($event.target).value))"
                   step="0.01"
                   min="0"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-cta-default focus:border-cta-default dark:bg-gray-800 dark:text-text-inverse"
                 />
               </div>
 
@@ -497,10 +580,12 @@
                 <select
                   [value]="refundForm().destination"
                   (change)="updateRefundDestination($any($event.target).value)"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-cta-default focus:border-cta-default dark:bg-gray-800 dark:text-text-inverse"
                 >
                   <option value="wallet">Wallet (Instantáneo)</option>
-                  <option value="original_payment_method">Método de Pago Original (2-5 días)</option>
+                  <option value="original_payment_method">
+                    Método de Pago Original (2-5 días)
+                  </option>
                 </select>
               </div>
 
@@ -513,7 +598,7 @@
                   (input)="updateRefundReason($any($event.target).value)"
                   rows="3"
                   placeholder="Ej: Cancelación por el locador, Error en el pago, etc."
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-cta-default focus:border-cta-default dark:bg-gray-800 dark:text-text-inverse"
                 ></textarea>
               </div>
             </div>
@@ -532,7 +617,7 @@
         <button
           (click)="submitRefund()"
           [disabled]="!refundForm().bookingId || processing()"
-          class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-md font-medium transition-colors"
+          class="bg-cta-default text-cta-text px-6 py-2 rounded-md font-medium transition-colors"
         >
           @if (processing()) {
             <span class="flex items-center gap-2">

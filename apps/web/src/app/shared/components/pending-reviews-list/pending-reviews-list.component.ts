@@ -8,12 +8,14 @@ import { ReviewsService } from '../../../core/services/reviews.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
       <h3 class="mb-4 text-lg font-semibold text-gray-900">Reviews Pendientes</h3>
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+          <div
+            class="h-6 w-6 animate-spin rounded-full border-2 border-cta-default border-t-transparent"
+          ></div>
         </div>
       } @else if (pendingReviews().length === 0) {
         <div class="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-600">
@@ -26,9 +28,7 @@ import { ReviewsService } from '../../../core/services/reviews.service';
               <div class="flex items-start justify-between">
                 <div class="flex-1">
                   <h4 class="font-medium text-gray-900">{{ review.car_title }}</h4>
-                  <p class="text-sm text-gray-600">
-                    Para: {{ review.reviewee_name }}
-                  </p>
+                  <p class="text-sm text-gray-600">Para: {{ review.reviewee_name }}</p>
                   <p class="mt-1 text-xs text-gray-500">
                     Checkout: {{ review.checkout_date | date: 'short' }}
                   </p>
@@ -38,8 +38,10 @@ import { ReviewsService } from '../../../core/services/reviews.service';
                     class="rounded-full px-3 py-1 text-xs font-medium"
                     [class.bg-yellow-100]="review.days_remaining > 7"
                     [class.text-yellow-800]="review.days_remaining > 7"
-                    [class.bg-orange-100]="review.days_remaining <= 7 && review.days_remaining > 3"
-                    [class.text-orange-800]="review.days_remaining <= 7 && review.days_remaining > 3"
+                    [class.bg-warning-light/20]="review.days_remaining <= 7 && review.days_remaining > 3"
+                    [class.text-warning-light]="
+                      review.days_remaining <= 7 && review.days_remaining > 3
+                    "
                     [class.bg-red-100]="review.days_remaining <= 3"
                     [class.text-red-800]="review.days_remaining <= 3"
                   >
@@ -50,7 +52,7 @@ import { ReviewsService } from '../../../core/services/reviews.service';
               <div class="mt-3">
                 <a
                   [routerLink]="['/bookings', review.booking_id]"
-                  class="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  class="inline-block rounded-lg bg-cta-default text-cta-text hover:bg-cta-default"
                 >
                   Escribir Review
                 </a>
@@ -93,4 +95,3 @@ export class PendingReviewsListComponent implements OnInit {
     }
   }
 }
-

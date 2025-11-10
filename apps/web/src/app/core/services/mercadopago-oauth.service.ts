@@ -57,31 +57,27 @@ export class MercadoPagoOAuthService {
    * @returns Promise que se resuelve cuando se redirige a MercadoPago
    */
   async connectMercadoPago(redirectUri?: string): Promise<void> {
-    try {
-      // Usar redirect URI personalizada o default
-      const callbackUri = redirectUri || window.location.origin + '/auth/mercadopago/callback';
+    // Usar redirect URI personalizada o default
+    const callbackUri = redirectUri || window.location.origin + '/auth/mercadopago/callback';
 
-      const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-connect', {
-        body: {
-          redirect_uri: callbackUri,
-        },
-      });
+    const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-connect', {
+      body: {
+        redirect_uri: callbackUri,
+      },
+    });
 
-      if (error) {
-        throw new Error(error.message || 'Error al conectar con MercadoPago');
-      }
-
-      const response = data as ConnectMercadoPagoResponse;
-
-      if (!response?.success || !response.authorization_url) {
-        throw new Error(response?.error || 'No se pudo generar URL de autorización');
-      }
-
-      // Redirigir a MercadoPago para autorización
-      window.location.href = response.authorization_url;
-    } catch (err: unknown) {
-      throw new Error((err as Error).message || 'Error inesperado al conectar con MercadoPago');
+    if (error) {
+      throw new Error(error.message || 'Error al conectar con MercadoPago');
     }
+
+    const response = data as ConnectMercadoPagoResponse;
+
+    if (!response?.success || !response.authorization_url) {
+      throw new Error(response?.error || 'No se pudo generar URL de autorización');
+    }
+
+    // Redirigir a MercadoPago para autorización
+    window.location.href = response.authorization_url;
   }
 
   /**
@@ -92,27 +88,21 @@ export class MercadoPagoOAuthService {
    * @returns Promise<boolean> - true si la conexión fue exitosa
    */
   async handleCallback(code: string, state: string): Promise<boolean> {
-    try {
-      const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-callback', {
-        body: { code, state },
-      });
+    const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-callback', {
+      body: { code, state },
+    });
 
-      if (error) {
-        throw new Error(error.message || 'Error procesando callback');
-      }
-
-      const response = data as OAuthCallbackResponse;
-
-      if (!response?.success) {
-        throw new Error(
-          response?.error || response?.error_description || 'Error en la autorización',
-        );
-      }
-
-      return true;
-    } catch (err: unknown) {
-      throw err;
+    if (error) {
+      throw new Error(error.message || 'Error procesando callback');
     }
+
+    const response = data as OAuthCallbackResponse;
+
+    if (!response?.success) {
+      throw new Error(response?.error || response?.error_description || 'Error en la autorización');
+    }
+
+    return true;
   }
 
   /**
@@ -132,9 +122,6 @@ export class MercadoPagoOAuthService {
 
       console.log('[OAuth] Estado:', status.connected ? '✅ Conectado' : '❌ No conectado');
 
-      if (status.connected && status.collector_id) {
-      }
-
       return status;
     } catch (err: unknown) {
       return { connected: false };
@@ -147,23 +134,19 @@ export class MercadoPagoOAuthService {
    * @returns Promise<boolean> - true si la desconexión fue exitosa
    */
   async disconnect(): Promise<boolean> {
-    try {
-      const { data, error } = await this.supabase.rpc('disconnect_mercadopago');
+    const { data, error } = await this.supabase.rpc('disconnect_mercadopago');
 
-      if (error) {
-        throw new Error(error.message || 'Error al desconectar cuenta');
-      }
-
-      const response = data as { success: boolean; error?: string; warning?: string };
-
-      if (!response?.success) {
-        throw new Error(response?.error || 'No se pudo desconectar la cuenta');
-      }
-
-      return true;
-    } catch (err: unknown) {
-      throw err;
+    if (error) {
+      throw new Error(error.message || 'Error al desconectar cuenta');
     }
+
+    const response = data as { success: boolean; error?: string; warning?: string };
+
+    if (!response?.success) {
+      throw new Error(response?.error || 'No se pudo desconectar la cuenta');
+    }
+
+    return true;
   }
 
   /**

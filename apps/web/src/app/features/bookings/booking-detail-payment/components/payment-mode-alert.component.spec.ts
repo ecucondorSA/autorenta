@@ -49,10 +49,10 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
 
     it('debería mostrar alerta azul con borde azul', () => {
       // Assert
-      const alert = fixture.nativeElement.querySelector('.bg-blue-50');
+      const alert = fixture.nativeElement.querySelector('.bg-cta-default/10');
       expect(alert).toBeTruthy();
       expect(alert.className).toContain('border-l-4');
-      expect(alert.className).toContain('border-blue-500');
+      expect(alert.className).toContain('border-cta-default');
     });
 
     it('debería mostrar el monto del hold en ARS', () => {
@@ -68,7 +68,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       expect(text).toContain('Reembolsable');
 
       // Verificar que existe el badge con estilos correctos
-      const badge = fixture.nativeElement.querySelector('.bg-blue-100');
+      const badge = fixture.nativeElement.querySelector('.bg-cta-default/20');
       expect(badge).toBeTruthy();
     });
 
@@ -146,7 +146,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       // Arrange - Iniciar con tarjeta
       component.paymentMode = 'card';
       fixture.detectChanges();
-      let alert = fixture.nativeElement.querySelector('.bg-blue-50');
+      let alert = fixture.nativeElement.querySelector('.bg-cta-default/10');
       expect(alert).toBeTruthy();
 
       // Act - Cambiar a wallet
@@ -156,7 +156,7 @@ describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
       // Assert - Verificar cambio a alerta morada
       alert = fixture.nativeElement.querySelector('.bg-purple-50');
       expect(alert).toBeTruthy();
-      const blueAlert = fixture.nativeElement.querySelector('.bg-blue-50');
+      const blueAlert = fixture.nativeElement.querySelector('.bg-cta-default/10');
       expect(blueAlert).toBeFalsy();
     });
 

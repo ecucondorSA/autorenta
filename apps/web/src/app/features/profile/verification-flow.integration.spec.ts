@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { IdentityLevelService, type VerificationProgress } from '../../core/services/identity-level.service';
+import {
+  IdentityLevelService,
+  type VerificationProgress,
+} from '../../core/services/identity-level.service';
 import { EmailVerificationService } from '../../core/services/email-verification.service';
 import { PhoneVerificationService } from '../../core/services/phone-verification.service';
 import { FaceVerificationService } from '../../core/services/face-verification.service';
@@ -40,7 +43,13 @@ describe('Verification Flow Integration', () => {
     progress_percentage: 0,
     requirements: {
       level_1: { email_verified: false, phone_verified: false, completed: false },
-      level_2: { document_verified: false, driver_license_verified: false, completed: false, ai_score: null, driver_license_score: null },
+      level_2: {
+        document_verified: false,
+        driver_license_verified: false,
+        completed: false,
+        ai_score: null,
+        driver_license_score: null,
+      },
       level_3: { selfie_verified: false, completed: false, face_match_score: null },
     },
     missing_requirements: [
@@ -62,7 +71,9 @@ describe('Verification Flow Integration', () => {
       ...mockProgressLevel0.requirements,
       level_1: { email_verified: true, phone_verified: false, completed: false },
     },
-    missing_requirements: mockProgressLevel0.missing_requirements.filter(r => r.requirement !== 'email'),
+    missing_requirements: mockProgressLevel0.missing_requirements.filter(
+      (r) => r.requirement !== 'email',
+    ),
   };
 
   // After phone verification (Level 1 complete)
@@ -74,7 +85,7 @@ describe('Verification Flow Integration', () => {
       level_1: { email_verified: true, phone_verified: true, completed: true },
     },
     missing_requirements: mockProgressLevel0.missing_requirements.filter(
-      r => r.requirement !== 'email' && r.requirement !== 'phone'
+      (r) => r.requirement !== 'email' && r.requirement !== 'phone',
     ),
     can_access_level_2: true,
   };
@@ -86,12 +97,16 @@ describe('Verification Flow Integration', () => {
     progress_percentage: 80,
     requirements: {
       level_1: { email_verified: true, phone_verified: true, completed: true },
-      level_2: { document_verified: true, driver_license_verified: true, completed: true, ai_score: 85, driver_license_score: 90 },
+      level_2: {
+        document_verified: true,
+        driver_license_verified: true,
+        completed: true,
+        ai_score: 85,
+        driver_license_score: 90,
+      },
       level_3: { selfie_verified: false, completed: false, face_match_score: null },
     },
-    missing_requirements: [
-      { requirement: 'selfie', label: 'Selfie verificado', level: 3 },
-    ],
+    missing_requirements: [{ requirement: 'selfie', label: 'Selfie verificado', level: 3 }],
     can_access_level_2: true,
     can_access_level_3: true,
   };
@@ -103,7 +118,13 @@ describe('Verification Flow Integration', () => {
     progress_percentage: 100,
     requirements: {
       level_1: { email_verified: true, phone_verified: true, completed: true },
-      level_2: { document_verified: true, driver_license_verified: true, completed: true, ai_score: 85, driver_license_score: 90 },
+      level_2: {
+        document_verified: true,
+        driver_license_verified: true,
+        completed: true,
+        ai_score: 85,
+        driver_license_score: 90,
+      },
       level_3: { selfie_verified: true, completed: true, face_match_score: 90 },
     },
     missing_requirements: [],
@@ -167,7 +188,9 @@ describe('Verification Flow Integration', () => {
       },
       channel: jasmine.createSpy('channel').and.returnValue({
         on: jasmine.createSpy('on').and.returnValue({
-          subscribe: jasmine.createSpy('subscribe').and.returnValue(Promise.resolve({ status: 'SUBSCRIBED' })),
+          subscribe: jasmine
+            .createSpy('subscribe')
+            .and.returnValue(Promise.resolve({ status: 'SUBSCRIBED' })),
         }),
       }),
       removeChannel: jasmine.createSpy('removeChannel'),
@@ -322,19 +345,19 @@ describe('Verification Flow Integration', () => {
     // Level 1 incomplete - cannot access Level 2 or 3
     (window as any).updateProgress(mockProgressLevel0);
     let progress = await identityLevelService.getVerificationProgress();
-    expect(await identityLevelService.checkLevelAccess(1)).toBe(true);
-    expect(await identityLevelService.checkLevelAccess(2)).toBe(false);
-    expect(await identityLevelService.checkLevelAccess(3)).toBe(false);
+    expect((await identityLevelService.checkLevelAccess(1)).allowed).toBe(true);
+    expect((await identityLevelService.checkLevelAccess(2)).allowed).toBe(false);
+    expect((await identityLevelService.checkLevelAccess(3)).allowed).toBe(false);
 
     // Level 1 complete - can access Level 2, not Level 3
     (window as any).updateProgress(mockProgressLevel1Complete);
     progress = await identityLevelService.getVerificationProgress();
-    expect(await identityLevelService.checkLevelAccess(2)).toBe(true);
-    expect(await identityLevelService.checkLevelAccess(3)).toBe(false);
+    expect((await identityLevelService.checkLevelAccess(2)).allowed).toBe(true);
+    expect((await identityLevelService.checkLevelAccess(3)).allowed).toBe(false);
 
     // Level 2 complete - can access Level 3
     (window as any).updateProgress(mockProgressLevel2Complete);
     progress = await identityLevelService.getVerificationProgress();
-    expect(await identityLevelService.checkLevelAccess(3)).toBe(true);
+    expect((await identityLevelService.checkLevelAccess(3)).allowed).toBe(true);
   });
 });

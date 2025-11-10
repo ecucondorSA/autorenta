@@ -1,5 +1,5 @@
 <div
-  class="wallet-page min-h-screen bg-ivory-soft dark:bg-graphite-dark dark:text-pearl-light py-section-sm"
+  class="wallet-page min-h-screen bg-surface-base dark:bg-surface-base dark:text-text-secondary py-section-sm"
 >
   <div class="container-page px-container space-y-10">
     <!-- ✅ FIX: Error Alert - Show wallet service errors -->
@@ -20,7 +20,9 @@
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-red-900 dark:text-error-100">Error al cargar el wallet</p>
+            <p class="text-sm font-medium text-red-900 dark:text-error-100">
+              Error al cargar el wallet
+            </p>
             <p class="mt-1 text-sm text-red-700 dark:text-error-200">{{ error.message }}</p>
             <button
               type="button"
@@ -36,20 +38,20 @@
 
     <!-- Hero Snapshot -->
     <section
-      class="rounded-3xl border border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
+      class="rounded-3xl border border-border-default dark:border-gray-600/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
     >
       <div class="grid gap-6 lg:grid-cols-5 items-start">
         <div class="lg:col-span-3 flex flex-col gap-4">
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
             >
               Panel de control
             </p>
-            <h1 class="text-3xl font-bold text-smoke-black dark:text-ivory-luminous mt-1">
+            <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary mt-1">
               Mi Wallet
             </h1>
-            <p class="text-body text-charcoal-medium dark:text-pearl-light/80 mt-1">
+            <p class="text-body text-text-secondary dark:text-text-secondary/80 mt-1">
               Administra tus fondos, realiza depósitos y consulta tu historial de transacciones en
               un solo lugar.
             </p>
@@ -57,17 +59,16 @@
           <div class="space-y-3">
             <div class="flex flex-wrap gap-2">
               <span
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 dark:bg-accent-petrol/20 dark:text-accent-petrol"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 dark:bg-cta-default/20 dark:text-cta-default"
               >
                 ✅ Saldo actualizado
               </span>
               <span
                 class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-                [class.bg-green-50]="protectedCreditStatus() === 'active'"
-                [class.text-green-700]="protectedCreditStatus() === 'active'"
+                [class.bg-success-light/10]="protectedCreditStatus() === 'active'"
+                [class.text-success-light]="protectedCreditStatus() === 'active'"
                 [class.bg-amber-50]="protectedCreditStatus() !== 'active'"
-                [class.text-amber-700]="protectedCreditStatus() !== 'active'"
-              >
+                [class.text-amber-700]="protectedCreditStatus() !== 'active'">
                 {{
                   protectedCreditStatus() === 'active'
                     ? 'Crédito protegido listo'
@@ -112,20 +113,20 @@
               <button
                 type="button"
                 (click)="setActiveTab('transactions')"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-primary-100 text-primary-700 dark:text-accent-petrol font-semibold hover:bg-primary-50 dark:hover:bg-accent-petrol/10 transition"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-primary-100 text-primary-700 dark:text-cta-default font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
               >
                 Ver transacciones
               </button>
               <button
                 type="button"
                 (click)="setActiveTab('withdrawals')"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-pearl-gray dark:border-gray-600 text-charcoal-medium dark:text-pearl-light font-semibold hover:border-primary-300 transition"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-border-default dark:border-gray-600 text-text-secondary dark:text-text-secondary font-semibold hover:border-primary-300 transition"
               >
                 Solicitar retiro
               </button>
             </div>
             <p
-              class="text-xs text-charcoal-medium dark:text-pearl-light/70 flex flex-wrap items-center gap-3"
+              class="text-xs text-text-secondary dark:text-text-secondary/70 flex flex-wrap items-center gap-3"
             >
               @if (pendingDepositsCount() > 0) {
                 <span>
@@ -135,7 +136,7 @@
                 <button
                   type="button"
                   (click)="refreshWalletData()"
-                  class="inline-flex items-center gap-1 text-primary-700 dark:text-accent-petrol font-semibold hover:text-primary-900 dark:hover:text-accent-petrol/80 transition"
+                  class="inline-flex items-center gap-1 text-primary-700 dark:text-cta-default font-semibold hover:text-primary-900 dark:hover:text-cta-default/80 transition"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -165,17 +166,17 @@
     <!-- Onboarding Banner (Only for new users with pending protected credit) -->
     @if (protectedCreditStatus() === 'pending' && !onboardingBannerDismissed()) {
       <section
-        class="rounded-2xl border-2 border-accent-petrol/30 dark:border-accent-petrol/40 bg-gradient-to-br from-accent-petrol/5 to-accent-warm/5 dark:from-accent-petrol/10 dark:to-accent-warm/10 p-6 md:p-8 shadow-soft relative overflow-hidden"
+        class="rounded-2xl border-2 border-cta-default/30 dark:border-cta-default/40 bg-gradient-to-br from-cta-default/5 to-warning-light/5 dark:from-cta-default/10 dark:to-warning-light/10 p-6 md:p-8 shadow-soft relative overflow-hidden"
       >
         <!-- Dismiss Button -->
         <button
           type="button"
           (click)="dismissOnboardingBanner()"
-          class="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white dark:bg-slate-deep/50 dark:hover:bg-slate-deep/50 transition"
+          class="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-surface-raised dark:bg-surface-secondary/50 dark:hover:bg-slate-deep/50 transition"
           aria-label="Cerrar banner"
         >
           <svg
-            class="w-5 h-5 text-charcoal-medium dark:text-pearl-light"
+            class="w-5 h-5 text-text-secondary dark:text-text-secondary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -195,15 +196,15 @@
             <div>
               <div class="flex items-center gap-2 mb-2">
                 <span
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-accent-petrol/20 text-accent-petrol dark:bg-accent-petrol/30 dark:text-accent-petrol"
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-cta-default/20 text-cta-default dark:bg-cta-default/30 dark:text-cta-default"
                 >
                   ✨ Nuevo
                 </span>
               </div>
-              <h2 class="text-2xl md:text-3xl font-bold text-smoke-black dark:text-ivory-luminous">
+              <h2 class="text-2xl md:text-3xl font-bold text-text-primary dark:text-text-primary">
                 Configura tu crédito protegido para reservar sin tarjeta
               </h2>
-              <p class="text-base text-charcoal-medium dark:text-pearl-light/80 mt-2">
+              <p class="text-base text-text-secondary dark:text-text-secondary/80 mt-2">
                 Deposita <strong>USD 300 una sola vez</strong> y reserva vehículos sin necesidad de
                 tarjeta de crédito internacional.
               </p>
@@ -226,10 +227,10 @@
                   />
                 </svg>
                 <div>
-                  <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">
+                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
                     No necesitas tarjeta
                   </p>
-                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
                     Ideal sin tarjeta internacional
                   </p>
                 </div>
@@ -250,10 +251,10 @@
                   />
                 </svg>
                 <div>
-                  <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">
+                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
                     Úsalo en cada reserva
                   </p>
-                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
                     Se reutiliza automáticamente
                   </p>
                 </div>
@@ -274,10 +275,10 @@
                   />
                 </svg>
                 <div>
-                  <p class="text-sm font-semibold text-smoke-black dark:text-ivory-luminous">
+                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
                     Se libera después
                   </p>
-                  <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
                     Vuelve disponible tras el viaje
                   </p>
                 </div>
@@ -290,7 +291,7 @@
             <button
               type="button"
               (click)="openDepositModalForProtectedCredit()"
-              class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-accent-petrol text-white font-bold hover:bg-accent-petrol/90 transition shadow-soft"
+              class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-soft"
             >
               <span>Configurar crédito protegido</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,7 +303,7 @@
                 />
               </svg>
             </button>
-            <p class="text-xs text-center text-charcoal-medium dark:text-pearl-light/60">
+            <p class="text-xs text-center text-text-secondary dark:text-text-secondary/60">
               Configura en 5 minutos
             </p>
           </div>
@@ -313,17 +314,17 @@
     <!-- Expandable Benefits Section (only for users without active protected credit) -->
     @if (protectedCreditStatus() !== 'active') {
       <section
-        class="rounded-2xl border border-accent-petrol/20 dark:border-accent-petrol/30 bg-white dark:bg-anthracite shadow-soft overflow-hidden"
+        class="rounded-2xl border border-cta-default/20 dark:border-cta-default/30 bg-surface-raised dark:bg-surface-raised shadow-soft overflow-hidden"
       >
         <!-- Collapsible Header -->
         <button
           type="button"
           (click)="toggleBenefitsSection()"
-          class="w-full px-6 py-4 flex items-center justify-between hover:bg-accent-petrol/5 dark:hover:bg-accent-petrol/10 transition-colors"
+          class="w-full px-6 py-4 flex items-center justify-between hover:bg-cta-default/5 dark:hover:bg-cta-default/10 transition-colors"
         >
           <div class="flex items-center gap-3">
             <svg
-              class="w-6 h-6 text-accent-petrol"
+              class="w-6 h-6 text-cta-default"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -336,35 +337,44 @@
               />
             </svg>
             <div class="text-left">
-              <h3 class="text-lg font-bold text-smoke-black dark:text-ivory-luminous">
+              <h3 class="text-lg font-bold text-text-primary dark:text-text-primary">
                 ¿Por qué usar Crédito Autorentar?
               </h3>
-              <p class="text-xs text-charcoal-medium dark:text-pearl-light/70">
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
                 Conoce los beneficios y casos de uso
               </p>
             </div>
           </div>
           <svg
-            class="w-5 h-5 text-charcoal-medium dark:text-pearl-light transition-transform"
+            class="w-5 h-5 text-text-secondary dark:text-text-secondary transition-transform"
             [class.rotate-180]="benefitsSectionExpanded()"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </button>
 
         <!-- Expandable Content -->
         @if (benefitsSectionExpanded()) {
-          <div class="px-6 pb-6 pt-2 space-y-6 border-t border-pearl-gray dark:border-gray-600/30 dark:border-neutral-700">
+          <div
+            class="px-6 pb-6 pt-2 space-y-6 border-t border-border-default dark:border-gray-600/30 dark:border-neutral-700"
+          >
             <!-- Benefits Grid -->
             <div>
-              <h4 class="text-sm font-bold text-smoke-black dark:text-ivory-luminous mb-3">
+              <h4 class="text-sm font-bold text-text-primary dark:text-text-primary mb-3">
                 Beneficios principales
               </h4>
               <div class="grid gap-3 sm:grid-cols-2">
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-success-50 dark:bg-success-500/10">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-success-50 dark:bg-success-500/10"
+                >
                   <svg
                     class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -388,7 +398,9 @@
                   </div>
                 </div>
 
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-primary-50 dark:bg-primary-500/10">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-primary-50 dark:bg-primary-500/10"
+                >
                   <svg
                     class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -412,9 +424,11 @@
                   </div>
                 </div>
 
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-accent-petrol/10 dark:bg-accent-petrol/20">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-cta-default/10 dark:bg-cta-default/20"
+                >
                   <svg
-                    class="w-5 h-5 text-accent-petrol dark:text-accent-petrol flex-shrink-0 mt-0.5"
+                    class="w-5 h-5 text-cta-default dark:text-cta-default flex-shrink-0 mt-0.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -427,16 +441,18 @@
                     />
                   </svg>
                   <div>
-                    <p class="text-sm font-semibold text-accent-petrol dark:text-accent-petrol">
+                    <p class="text-sm font-semibold text-cta-default dark:text-cta-default">
                       Se libera inmediatamente
                     </p>
-                    <p class="text-xs text-accent-petrol/80 dark:text-accent-petrol/70 mt-1">
+                    <p class="text-xs text-cta-default/80 dark:text-cta-default/70 mt-1">
                       Después de cada viaje completado, el crédito vuelve a estar disponible
                     </p>
                   </div>
                 </div>
 
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-warning-50 dark:bg-warning-500/10">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-warning-50 dark:bg-warning-500/10"
+                >
                   <svg
                     class="w-5 h-5 text-warning-600 dark:text-warning-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -464,11 +480,13 @@
 
             <!-- Use Cases -->
             <div>
-              <h4 class="text-sm font-bold text-smoke-black dark:text-ivory-luminous mb-3">
+              <h4 class="text-sm font-bold text-text-primary dark:text-text-primary mb-3">
                 Casos de uso ideales
               </h4>
               <ul class="space-y-2">
-                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                <li
+                  class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary"
+                >
                   <svg
                     class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -487,7 +505,9 @@
                     compras internacionales
                   </span>
                 </li>
-                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                <li
+                  class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary"
+                >
                   <svg
                     class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -506,7 +526,9 @@
                     simplificar el proceso
                   </span>
                 </li>
-                <li class="flex items-start gap-2 text-sm text-charcoal-medium dark:text-pearl-light">
+                <li
+                  class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary"
+                >
                   <svg
                     class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
                     fill="none"
@@ -533,7 +555,7 @@
               <button
                 type="button"
                 (click)="openDepositModalForProtectedCredit()"
-                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white font-bold hover:bg-accent-petrol/90 transition shadow-soft"
+                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-soft"
               >
                 <span>Configurar crédito protegido ahora</span>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -555,19 +577,19 @@
     <section class="grid gap-6 lg:grid-cols-3">
       <div class="lg:col-span-2 space-y-6">
         <section
-          class="rounded-2xl border border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
+          class="rounded-2xl border border-border-default dark:border-gray-600/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
         >
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p
-                class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+                class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
               >
                 Protección de reservas
               </p>
-              <h2 class="text-2xl font-semibold text-smoke-black dark:text-ivory-luminous mt-1">
+              <h2 class="text-2xl font-semibold text-text-primary dark:text-text-primary mt-1">
                 Crédito Autorentar
               </h2>
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mt-1">
+              <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-1">
                 Elegí cómo garantizar tus viajes: tarjeta de crédito o crédito protegido dentro de
                 la plataforma.
               </p>
@@ -575,7 +597,7 @@
             <button
               type="button"
               (click)="openDepositModal()"
-              class="px-4 py-2 rounded-lg border border-primary-200 text-primary-700 dark:text-accent-petrol font-semibold hover:bg-primary-50 dark:hover:bg-accent-petrol/10 transition"
+              class="px-4 py-2 rounded-lg border border-primary-200 text-primary-700 dark:text-cta-default font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
             >
               Configurar crédito
             </button>
@@ -598,7 +620,7 @@
                 >
                   Crédito protegido
                 </p>
-                <p class="text-lg font-semibold text-smoke-black dark:text-warning-50">
+                <p class="text-lg font-semibold text-text-primary dark:text-warning-50">
                   USD {{ protectedCreditBalance() / 100 | number: '1.2-2' }}
                 </p>
                 <p class="text-xs text-warning-700/80 dark:text-warning-200/80 mt-1">
@@ -613,7 +635,7 @@
                 >
                   Transferible (in-app)
                 </p>
-                <p class="text-lg font-semibold text-smoke-black dark:text-success-50">
+                <p class="text-lg font-semibold text-text-primary dark:text-success-50">
                   USD {{ transferableBalance() / 100 | number: '1.2-2' }}
                 </p>
                 <p class="text-xs text-success-700/80 dark:text-success-100/70 mt-1">
@@ -621,23 +643,27 @@
                 </p>
               </div>
               <div
-                class="rounded-xl border border-pearl-gray dark:border-gray-600/60 dark:border-neutral-700 px-3 py-3 bg-white dark:bg-slate-deep/80 dark:bg-slate-deep/80"
+                class="rounded-xl border border-border-default dark:border-gray-600/60 dark:border-neutral-700 px-3 py-3 bg-surface-raised dark:bg-surface-secondary/80 dark:bg-surface-secondary/80"
               >
                 <p
-                  class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/70"
+                  class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/70"
                 >
                   Retirable (off-ramp)
                 </p>
-                <p class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+                <p class="text-lg font-semibold text-text-primary dark:text-text-primary">
                   USD {{ withdrawableBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <p class="text-xs text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60 mt-1">
+                <p
+                  class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60 mt-1"
+                >
                   Disponible para tu cuenta bancaria
                 </p>
               </div>
             </div>
 
-            <p class="text-xs text-charcoal-medium dark:text-pearl-light/80 dark:text-pearl-light/70">
+            <p
+              class="text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/70"
+            >
               Los fondos bloqueados se liberan automáticamente cuando finalizan tus reservas. Podés
               sumar saldo retirables para completar pagos o solicitar retiros cuando quieras.
             </p>
@@ -655,19 +681,19 @@
         }
 
         <section
-          class="rounded-2xl border border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-5 shadow-soft"
+          class="rounded-2xl border border-border-default dark:border-gray-600/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-5 shadow-soft"
         >
-          <h3 class="text-base font-semibold text-smoke-black dark:text-ivory-luminous mb-2">
+          <h3 class="text-base font-semibold text-text-primary dark:text-text-primary mb-2">
             Acciones rápidas
           </h3>
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light/70 mb-4">
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-4">
             Sumá fondos, transfere a otros usuarios o retiralos cuando lo necesites.
           </p>
           <div class="flex flex-col gap-3">
             <button
               type="button"
               (click)="openDepositModal()"
-              class="w-full inline-flex items-center justify-between rounded-lg border border-primary-100 text-primary-700 dark:text-accent-petrol px-4 py-3 font-semibold hover:bg-primary-50 dark:hover:bg-accent-petrol/10 transition"
+              class="w-full inline-flex items-center justify-between rounded-lg border border-primary-100 text-primary-700 dark:text-cta-default px-4 py-3 font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
             >
               Depositar
               <span aria-hidden="true">→</span>
@@ -675,7 +701,7 @@
             <button
               type="button"
               (click)="goToTransfer()"
-              class="w-full inline-flex items-center justify-between rounded-lg border border-pearl-gray dark:border-neutral-700 text-charcoal-medium dark:text-pearl-light px-4 py-3 font-semibold hover:border-primary-300 transition"
+              class="w-full inline-flex items-center justify-between rounded-lg border border-border-default dark:border-neutral-700 text-text-secondary dark:text-text-secondary px-4 py-3 font-semibold hover:border-primary-300 transition"
             >
               Transferir
               <span aria-hidden="true">→</span>
@@ -683,7 +709,7 @@
             <button
               type="button"
               (click)="setActiveTab('withdrawals')"
-              class="w-full inline-flex items-center justify-between rounded-lg border border-pearl-gray dark:border-neutral-700 text-charcoal-medium dark:text-pearl-light px-4 py-3 font-semibold hover:border-primary-300 transition"
+              class="w-full inline-flex items-center justify-between rounded-lg border border-border-default dark:border-neutral-700 text-text-secondary dark:text-text-secondary px-4 py-3 font-semibold hover:border-primary-300 transition"
             >
               Retirar
               <span aria-hidden="true">→</span>
@@ -695,19 +721,19 @@
 
     <!-- Transactions & Withdrawals -->
     <section
-      class="rounded-3xl border border-pearl-gray dark:border-gray-600/70 dark:border-neutral-800/70 bg-white dark:bg-anthracite p-6 shadow-soft"
+      class="rounded-3xl border border-border-default dark:border-gray-600/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
     >
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <p
-            class="text-xs uppercase tracking-wide text-charcoal-medium dark:text-pearl-light/70 dark:text-pearl-light/60"
+            class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
           >
             Movimientos y retiros
           </p>
-          <h2 class="text-2xl font-bold text-smoke-black dark:text-ivory-luminous">
+          <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary">
             Historial y gestión
           </h2>
-          <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70">
             Consulta depósitos, cargos y gestiona tus solicitudes de retiro desde un mismo lugar.
           </p>
         </div>
@@ -715,18 +741,18 @@
           <button
             type="button"
             (click)="setActiveTab('transactions')"
-            [class.bg-accent-petrol]="activeTab() === 'transactions'"
-            [class.text-white]="activeTab() === 'transactions'"
-            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-charcoal-medium dark:text-pearl-light hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80 transition"
+            [class.bg-cta-default]="activeTab() === 'transactions'"
+            [class.text-text-inverse]="activeTab() === 'transactions'"
+            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
           >
             Transacciones
           </button>
           <button
             type="button"
             (click)="setActiveTab('withdrawals')"
-            [class.bg-accent-petrol]="activeTab() === 'withdrawals'"
-            [class.text-white]="activeTab() === 'withdrawals'"
-            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-charcoal-medium dark:text-pearl-light hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80 transition"
+            [class.bg-cta-default]="activeTab() === 'withdrawals'"
+            [class.text-text-inverse]="activeTab() === 'withdrawals'"
+            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
           >
             Retiros
           </button>
@@ -741,25 +767,25 @@
         @if (activeTab() === 'withdrawals') {
           <div class="space-y-6">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="text-lg font-semibold text-smoke-black dark:text-ivory-luminous">
+              <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">
                 Gestión de Retiros
               </h3>
               <div class="flex gap-2">
                 <button
                   type="button"
                   (click)="setWithdrawalMode('form')"
-                  [class.bg-accent-petrol]="withdrawalMode() === 'form'"
-                  [class.text-white]="withdrawalMode() === 'form'"
-                  class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-charcoal-medium dark:text-pearl-light hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80 transition"
+                  [class.bg-cta-default]="withdrawalMode() === 'form'"
+                  [class.text-text-inverse]="withdrawalMode() === 'form'"
+                  class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
                 >
                   Solicitar retiro
                 </button>
                 <button
                   type="button"
                   (click)="setWithdrawalMode('accounts')"
-                  [class.bg-accent-petrol]="withdrawalMode() === 'accounts'"
-                  [class.text-white]="withdrawalMode() === 'accounts'"
-                  class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-charcoal-medium dark:text-pearl-light hover:bg-accent-petrol/10 dark:hover:bg-slate-deep/80 transition"
+                  [class.bg-cta-default]="withdrawalMode() === 'accounts'"
+                  [class.text-text-inverse]="withdrawalMode() === 'accounts'"
+                  class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
                 >
                   Cuentas bancarias
                 </button>
@@ -780,7 +806,7 @@
                   <div class="info-card-warm">
                     <div class="flex items-start gap-3">
                       <svg
-                        class="w-5 h-5 text-accent-warm mt-0.5 flex-shrink-0"
+                        class="w-5 h-5 text-warning-light mt-0.5 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -793,13 +819,13 @@
                         ></path>
                       </svg>
                       <div class="flex-1">
-                        <p class="text-sm text-smoke-black dark:text-pearl-light">
+                        <p class="text-sm text-text-primary dark:text-text-secondary">
                           Aún no registraste cuentas bancarias.
                         </p>
                         <button
                           type="button"
                           (click)="setWithdrawalMode('accounts')"
-                          class="mt-2 text-sm font-medium text-accent-warm dark:text-pearl-light hover:text-accent-petrol dark:hover:text-ivory-luminous underline transition"
+                          class="mt-2 text-sm font-medium text-warning-light dark:text-text-secondary hover:text-cta-default dark:hover:text-ivory-luminous underline transition"
                         >
                           Agregar cuenta bancaria
                         </button>
@@ -808,7 +834,7 @@
                   </div>
                 }
 
-                <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
+                <div class="border-t border-border-default dark:border-slate-deep pt-6">
                   <app-withdrawal-history
                     [requests]="withdrawalRequests()"
                     [loading]="loading().fetchingRequests"
@@ -828,7 +854,7 @@
                   (deleteAccount)="handleDeleteAccount($event)"
                 ></app-bank-accounts-list>
 
-                <div class="border-t border-pearl-gray dark:border-slate-deep pt-6">
+                <div class="border-t border-border-default dark:border-slate-deep pt-6">
                   <h4 class="text-base font-semibold mb-4">Agregar nueva cuenta</h4>
                   <app-bank-account-form
                     (submitAccount)="handleAddBankAccount($event)"
@@ -843,7 +869,7 @@
 
     <!-- Gradient CTA -->
     <section
-      class="bg-gradient-to-r from-accent-petrol to-accent-warm rounded-2xl shadow-elevated p-6 text-white"
+      class="bg-gradient-to-r from-cta-default to-warning-light rounded-2xl shadow-elevated p-6 text-text-inverse"
     >
       <div class="flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
@@ -857,21 +883,21 @@
           <button
             type="button"
             (click)="openDepositModal()"
-            class="px-5 py-3 bg-white dark:bg-slate-deep text-accent-petrol font-semibold rounded-xl hover:bg-sand-light transition"
+            class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary text-cta-default font-semibold rounded-xl hover:bg-surface-secondary transition"
           >
             Depositar
           </button>
           <button
             type="button"
             (click)="goToTransfer()"
-            class="px-5 py-3 bg-white dark:bg-slate-deep/20 border border-white/40 text-white font-semibold rounded-xl hover:bg-white dark:bg-slate-deep/30 transition"
+            class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary/20 border border-white/40 text-text-inverse font-semibold rounded-xl hover:bg-surface-raised dark:bg-surface-secondary/30 transition"
           >
             Transferir
           </button>
           <button
             type="button"
             (click)="setActiveTab('withdrawals')"
-            class="px-5 py-3 bg-accent-petrol/80 text-white font-semibold rounded-xl hover:bg-accent-petrol transition"
+            class="px-5 py-3 bg-cta-default text-cta-text font-semibold rounded-xl hover:bg-cta-default transition"
           >
             Retirar
           </button>
@@ -886,11 +912,11 @@
 
     <!-- Help -->
     <section class="text-center">
-      <p class="text-sm text-charcoal-medium dark:text-pearl-light/70">
+      <p class="text-sm text-text-secondary dark:text-text-secondary/70">
         ¿Necesitas más ayuda?
         <a
           href="mailto:autorentardev@gmail.com"
-          class="text-accent-petrol hover:text-accent-warm font-semibold ml-1 transition"
+          class="text-cta-default hover:text-warning-light font-semibold ml-1 transition"
           >Contacta a soporte</a
         >
       </p>

@@ -7,13 +7,13 @@
     <div class="mt-4 flex flex-wrap items-center gap-3">
       <button
         type="button"
-        class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+        class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-text-inverse transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
         [disabled]="exporting()"
         (click)="exportSnapshot()"
       >
         <span
           *ngIf="exporting()"
-          class="inline-block h-2 w-2 animate-pulse rounded-full bg-white dark:bg-slate-deep"
+          class="inline-block h-2 w-2 animate-pulse rounded-full bg-surface-raised dark:bg-surface-secondary"
           aria-hidden="true"
         ></span>
         Exportar inspección Supabase
@@ -30,20 +30,28 @@
 
   <!-- Database Statistics -->
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
+    <div
+      class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm"
+    >
       <p class="text-sm font-medium text-slate-600">Usuarios Registrados</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalProfiles }}</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
+    <div
+      class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm"
+    >
       <p class="text-sm font-medium text-slate-600">Total de Autos</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalCars }}</p>
       <p class="mt-1 text-xs text-slate-500">{{ stats().activeCars }} activos</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
+    <div
+      class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm"
+    >
       <p class="text-sm font-medium text-slate-600">Fotos de Autos</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalPhotos }}</p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white dark:bg-slate-deep p-5 shadow-sm">
+    <div
+      class="rounded-xl border border-slate-200 bg-surface-raised dark:bg-surface-secondary p-5 shadow-sm"
+    >
       <p class="text-sm font-medium text-slate-600">Reservas</p>
       <p class="mt-2 text-3xl font-bold text-slate-900">{{ stats().totalBookings }}</p>
     </div>
@@ -51,47 +59,62 @@
 
   <!-- Verification Statistics -->
   @if (verificationStats()) {
-    <div class="rounded-xl border border-orange-200 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-sm">
+    <div
+      class="rounded-xl border border-warning-light/40 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-sm"
+    >
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-semibold text-slate-900">🔍 Verificaciones de Identidad</h2>
         <a
           routerLink="/admin/verifications"
-          class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700">
+          class="inline-flex items-center gap-2 rounded-lg bg-cta-default text-cta-text transition hover:bg-cta-default"
+        >
           Ver Cola →
         </a>
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="rounded-lg bg-white p-4 shadow-sm">
+        <div class="rounded-lg bg-surface-raised p-4 shadow-sm">
           <p class="text-xs font-medium text-slate-600">Pendientes de Revisión</p>
-          <p class="mt-2 text-2xl font-bold text-orange-600">{{ verificationStats()!.pending_reviews }}</p>
+          <p class="mt-2 text-2xl font-bold text-warning-light">
+            {{ verificationStats()!.pending_reviews }}
+          </p>
         </div>
-        <div class="rounded-lg bg-white p-4 shadow-sm">
+        <div class="rounded-lg bg-surface-raised p-4 shadow-sm">
           <p class="text-xs font-medium text-slate-600">Aprobadas Hoy</p>
-          <p class="mt-2 text-2xl font-bold text-green-600">{{ verificationStats()!.approved_today }}</p>
+          <p class="mt-2 text-2xl font-bold text-success-light">
+            {{ verificationStats()!.approved_today }}
+          </p>
         </div>
-        <div class="rounded-lg bg-white p-4 shadow-sm">
+        <div class="rounded-lg bg-surface-raised p-4 shadow-sm">
           <p class="text-xs font-medium text-slate-600">Rechazadas Hoy</p>
-          <p class="mt-2 text-2xl font-bold text-red-600">{{ verificationStats()!.rejected_today }}</p>
+          <p class="mt-2 text-2xl font-bold text-red-600">
+            {{ verificationStats()!.rejected_today }}
+          </p>
         </div>
-        <div class="rounded-lg bg-white p-4 shadow-sm">
+        <div class="rounded-lg bg-surface-raised p-4 shadow-sm">
           <p class="text-xs font-medium text-slate-600">Total Usuarios</p>
-          <p class="mt-2 text-2xl font-bold text-slate-900">{{ verificationStats()!.total_users }}</p>
+          <p class="mt-2 text-2xl font-bold text-slate-900">
+            {{ verificationStats()!.total_users }}
+          </p>
         </div>
       </div>
 
       <div class="mt-4 grid gap-3 sm:grid-cols-3 text-sm">
-        <div class="flex items-center justify-between px-3 py-2 bg-white rounded-lg">
+        <div class="flex items-center justify-between px-3 py-2 bg-surface-raised rounded-lg">
           <span class="text-slate-600">Nivel 1 (Explorador):</span>
           <span class="font-semibold text-slate-900">{{ verificationStats()!.level_1_users }}</span>
         </div>
-        <div class="flex items-center justify-between px-3 py-2 bg-white rounded-lg">
+        <div class="flex items-center justify-between px-3 py-2 bg-surface-raised rounded-lg">
           <span class="text-slate-600">Nivel 2 (Participante):</span>
-          <span class="font-semibold text-blue-600">{{ verificationStats()!.level_2_users }}</span>
+          <span class="font-semibold text-cta-default">{{
+            verificationStats()!.level_2_users
+          }}</span>
         </div>
-        <div class="flex items-center justify-between px-3 py-2 bg-white rounded-lg">
+        <div class="flex items-center justify-between px-3 py-2 bg-surface-raised rounded-lg">
           <span class="text-slate-600">Nivel 3 (Verificado Full):</span>
-          <span class="font-semibold text-purple-600">{{ verificationStats()!.level_3_users }}</span>
+          <span class="font-semibold text-purple-600">{{
+            verificationStats()!.level_3_users
+          }}</span>
         </div>
       </div>
     </div>
@@ -107,7 +130,7 @@
       <div *ngFor="let car of pendingCars(); let i = index" class="space-y-3">
         <app-car-card [car]="car" [priority]="i === 0"></app-car-card>
         <button
-          class="w-full rounded bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-700"
+          class="w-full rounded bg-success-light text-text-primary transition hover:bg-success-light"
           (click)="approve(car)"
         >
           Aprobar auto
@@ -124,5 +147,7 @@
   </div>
 
   <p *ngIf="loading()" class="text-center text-sm text-slate-500">Cargando datos...</p>
-  <p *ngIf="message()" class="rounded-lg bg-blue-50 p-3 text-sm text-blue-800">{{ message() }}</p>
+  <p *ngIf="message()" class="rounded-lg bg-cta-default/10 p-3 text-sm text-cta-default">
+    {{ message() }}
+  </p>
 </section>

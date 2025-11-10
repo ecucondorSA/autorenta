@@ -84,7 +84,11 @@ export class VerificationStateService implements OnDestroy {
     const now = Date.now();
 
     // Check cache
-    if (!force && this.verificationProgress() && now - this.lastFetchTime < this.CACHE_DURATION_MS) {
+    if (
+      !force &&
+      this.verificationProgress() &&
+      now - this.lastFetchTime < this.CACHE_DURATION_MS
+    ) {
       console.log('[VerificationState] Using cached progress');
       return this.verificationProgress();
     }
@@ -184,42 +188,27 @@ export class VerificationStateService implements OnDestroy {
     // Check what changed
     if (eventType === 'UPDATE') {
       // Email verified
-      if (
-        !oldData.email_verified_at &&
-        newData.email_verified_at
-      ) {
+      if (!oldData.email_verified_at && newData.email_verified_at) {
         this.dispatchEvent('email_verified');
       }
 
       // Phone verified
-      if (
-        !oldData.phone_verified_at &&
-        newData.phone_verified_at
-      ) {
+      if (!oldData.phone_verified_at && newData.phone_verified_at) {
         this.dispatchEvent('phone_verified');
       }
 
       // Documents verified (Level 2)
-      if (
-        oldData.current_level < 2 &&
-        newData.current_level >= 2
-      ) {
+      if (oldData.current_level < 2 && newData.current_level >= 2) {
         this.dispatchEvent('level_2_achieved');
       }
 
       // Selfie verified (Level 3)
-      if (
-        !oldData.selfie_verified_at &&
-        newData.selfie_verified_at
-      ) {
+      if (!oldData.selfie_verified_at && newData.selfie_verified_at) {
         this.dispatchEvent('selfie_verified');
       }
 
       // Level 3 achieved
-      if (
-        oldData.current_level < 3 &&
-        newData.current_level >= 3
-      ) {
+      if (oldData.current_level < 3 && newData.current_level >= 3) {
         this.dispatchEvent('level_3_achieved');
       }
     }

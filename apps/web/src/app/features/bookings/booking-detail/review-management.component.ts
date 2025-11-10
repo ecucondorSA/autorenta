@@ -64,8 +64,8 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
     >
       <h3 class="h5 mb-4">📝 Tu Calificación</h3>
       <div class="info-card-warm p-4 mb-4">
-        <p class="text-sm font-semibold text-accent-warm">⏳ Review pendiente de publicación</p>
-        <p class="text-xs text-charcoal-medium dark:text-pearl-light mt-1">
+        <p class="text-sm font-semibold text-warning-light">⏳ Review pendiente de publicación</p>
+        <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
           Se publicará cuando ambas partes hayan calificado, o después de 14 días.
         </p>
       </div>
@@ -128,7 +128,9 @@ export class ReviewManagementComponent implements OnInit {
         this.existingReview.set(review as Review);
         this.canReview.set(false);
       }
-    } catch (__error) { /* Silenced */ }
+    } catch {
+      /* Silenced */
+    }
   }
 
   handleShowReviewForm(): void {
@@ -155,7 +157,7 @@ export class ReviewManagementComponent implements OnInit {
       } else {
         alert(`Error al enviar la review: ${result.error}`);
       }
-    } catch (__error) {
+    } catch {
       alert('Error al enviar la review. Intentá nuevamente.');
     } finally {
       this.isSubmittingReview.set(false);
@@ -210,6 +212,8 @@ export class ReviewManagementComponent implements OnInit {
         carTitle: car.title || 'Vehículo',
         reviewType,
       });
-    } catch (__error) { /* Silenced */ }
+    } catch {
+      /* Silenced */
+    }
   }
 }

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { WithdrawalService } from '../../../../core/services/withdrawal.service';
-import { ToastService } from '../../../../core/services/toast.service';
-import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
+import { WithdrawalService } from '@core/services/withdrawal.service';
+import { ToastService } from '@core/services/toast.service';
+import type { WithdrawalRequest } from '@core/models/wallet.model';
 
 @Component({
   selector: 'app-withdrawals-admin',
@@ -22,8 +22,8 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
         <button
           (click)="loadWithdrawals('pending')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'pending'"
-          [class.text-white]="filterStatus() === 'pending'"
+          [class.bg-cta-default]="filterStatus() === 'pending'"
+          [class.text-text-inverse]="filterStatus() === 'pending'"
           [class.bg-gray-200]="filterStatus() !== 'pending'"
         >
           Pendientes
@@ -31,8 +31,8 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
         <button
           (click)="loadWithdrawals('completed')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'completed'"
-          [class.text-white]="filterStatus() === 'completed'"
+          [class.bg-cta-default]="filterStatus() === 'completed'"
+          [class.text-text-inverse]="filterStatus() === 'completed'"
           [class.bg-gray-200]="filterStatus() !== 'completed'"
         >
           Completados
@@ -40,8 +40,8 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
         <button
           (click)="loadWithdrawals('rejected')"
           class="rounded-lg px-4 py-2 text-sm font-medium"
-          [class.bg-blue-600]="filterStatus() === 'rejected'"
-          [class.text-white]="filterStatus() === 'rejected'"
+          [class.bg-cta-default]="filterStatus() === 'rejected'"
+          [class.text-text-inverse]="filterStatus() === 'rejected'"
           [class.bg-gray-200]="filterStatus() !== 'rejected'"
         >
           Rechazados
@@ -50,7 +50,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"></div>
         </div>
       } @else if (withdrawals().length === 0) {
         <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -59,13 +59,13 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
       } @else {
         <div class="space-y-4">
           @for (withdrawal of withdrawals(); track withdrawal.id) {
-            <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
               <div class="mb-4 flex items-start justify-between">
                 <div>
                   <h3 class="font-semibold text-gray-900">Solicitud #{{ withdrawal.id.slice(0, 8) }}</h3>
                   <p class="text-sm text-gray-600">
-                    Usuario: {{ withdrawal.user_id.slice(0, 8) }}... | 
-                    Monto: ${{ withdrawal.amount | number: '1.2-2' }}
+                    Usuario: {{ withdrawal.user_id.slice(0, 8) }}... |
+                    Monto: \${{ withdrawal.amount | number: '1.2-2' }}
                   </p>
                   <p class="text-xs text-gray-500">
                     {{ withdrawal.created_at | date: 'short' }}
@@ -75,8 +75,8 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
                   class="rounded-full px-3 py-1 text-xs font-medium"
                   [class.bg-yellow-100]="withdrawal.status === 'pending'"
                   [class.text-yellow-800]="withdrawal.status === 'pending'"
-                  [class.bg-green-100]="withdrawal.status === 'completed'"
-                  [class.text-green-800]="withdrawal.status === 'completed'"
+                  [class.bg-success-light/20]="withdrawal.status === 'completed'"
+                  [class.text-success-light]="withdrawal.status === 'completed'"
                   [class.bg-red-100]="withdrawal.status === 'rejected'"
                   [class.text-red-800]="withdrawal.status === 'rejected'"
                 >
@@ -106,14 +106,14 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
                     <button
                       (click)="approveWithdrawal(withdrawal.id)"
                       [disabled]="processing()"
-                      class="flex-1 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                      class="flex-1 rounded-lg bg-success-light text-text-primary hover:bg-success-light disabled:opacity-50"
                     >
                       Aprobar
                     </button>
                     <button
                       (click)="showRejectModal(withdrawal.id)"
                       [disabled]="processing()"
-                      class="flex-1 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                      class="flex-1 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-red-700 disabled:opacity-50"
                     >
                       Rechazar
                     </button>
@@ -139,7 +139,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
           (click)="cancelReject()"
         >
           <div
-            class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl"
+            class="w-full max-w-md rounded-lg bg-surface-raised p-6 shadow-xl"
             (click)="$event.stopPropagation()"
           >
             <h3 class="mb-4 text-lg font-semibold">Rechazar Retiro</h3>
@@ -164,7 +164,7 @@ import type { WithdrawalRequest } from '../../../../core/models/wallet.model';
               <button
                 (click)="confirmReject()"
                 [disabled]="!rejectionReason || processing()"
-                class="flex-1 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                class="flex-1 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-red-700 disabled:opacity-50"
               >
                 Rechazar
               </button>
@@ -206,6 +206,7 @@ export class WithdrawalsAdminPage implements OnInit {
       this.withdrawals.set(requests);
     } catch (err) {
       this.toastService.error(
+        'Retiros',
         err instanceof Error ? err.message : 'Error al cargar retiros',
       );
     } finally {
@@ -219,12 +220,13 @@ export class WithdrawalsAdminPage implements OnInit {
     try {
       await this.withdrawalService.approveWithdrawal({
         request_id: requestId,
-        admin_notes: this.adminNotes[requestId] || null,
+        admin_notes: this.adminNotes[requestId] || undefined,
       });
-      this.toastService.success('Retiro aprobado correctamente');
+      this.toastService.success('Retiros', 'Retiro aprobado correctamente');
       await this.loadWithdrawals(this.filterStatus() || undefined);
     } catch (err) {
       this.toastService.error(
+        'Retiros',
         err instanceof Error ? err.message : 'Error al aprobar retiro',
       );
     } finally {
@@ -253,11 +255,12 @@ export class WithdrawalsAdminPage implements OnInit {
         request_id: requestId,
         rejection_reason: this.rejectionReason,
       });
-      this.toastService.success('Retiro rechazado');
+      this.toastService.success('Retiros', 'Retiro rechazado');
       this.cancelReject();
       await this.loadWithdrawals(this.filterStatus() || undefined);
     } catch (err) {
       this.toastService.error(
+        'Retiros',
         err instanceof Error ? err.message : 'Error al rechazar retiro',
       );
     } finally {
@@ -265,4 +268,3 @@ export class WithdrawalsAdminPage implements OnInit {
     }
   }
 }
-

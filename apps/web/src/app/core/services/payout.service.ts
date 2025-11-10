@@ -55,6 +55,7 @@ export class PayoutService {
 
   /**
    * Get all payouts for a user
+   * @deprecated Use getUserPayoutsPaginated instead
    */
   getUserPayouts(userId: string): Observable<Payout[]> {
     return from(
@@ -66,6 +67,47 @@ export class PayoutService {
         .order('created_at', { ascending: false }),
     ).pipe(
       map(({ data }) => data as Payout[]),
+      catchError((error) => {
+        return throwError(() => new Error('Failed to fetch payouts'));
+      }),
+    );
+  }
+
+  /**
+   * Get paginated payouts for a user
+   * @param userId - User ID
+   * @param limit - Number of records per page (default 10)
+   * @param offset - Offset for pagination (default 0)
+   */
+  getUserPayoutsPaginated(
+    userId: string,
+    limit: number = 10,
+    offset: number = 0,
+  ): Observable<{ data: Payout[]; total: number; hasMore: boolean }> {
+    return from(
+      Promise.all([
+        // Get paginated data
+        this.supabase
+          .getClient()
+          .from('payouts')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+          .range(offset, offset + limit - 1),
+        // Get total count
+        this.supabase
+          .getClient()
+          .from('payouts')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', userId),
+      ]),
+    ).pipe(
+      map(([dataResponse, countResponse]) => {
+        const data = (dataResponse.data || []) as Payout[];
+        const total = countResponse.count || 0;
+        const hasMore = offset + limit < total;
+        return { data, total, hasMore };
+      }),
       catchError((error) => {
         return throwError(() => new Error('Failed to fetch payouts'));
       }),
@@ -122,7 +164,7 @@ export class PayoutService {
         .order('is_default', { ascending: false }),
     ).pipe(
       map(({ data }) => data as BankAccount[]),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch bank accounts'));
       }),
     );
@@ -169,7 +211,7 @@ export class PayoutService {
         this.supabase.getClient().from('bank_accounts').select('*').eq('id', accountId).single(),
       ),
       map(({ data }) => data as BankAccount),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to set default bank account'));
       }),
     );
@@ -219,7 +261,7 @@ export class PayoutService {
               : 0,
         };
       }),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to calculate payout statistics'));
       }),
     );

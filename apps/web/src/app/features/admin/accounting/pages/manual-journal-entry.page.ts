@@ -1,12 +1,9 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import {
-  AccountingService,
-  AccountingAccount,
-} from '../../../../core/services/accounting.service';
-import { SupabaseService } from '../../../../core/services/supabase.service';
+import { AccountingService, AccountingAccount } from '../../../../core/services/accounting.service';
+import { environment } from '../../../../../environments/environment';
 
 interface JournalEntryLine {
   account_code: string;
@@ -24,7 +21,6 @@ interface JournalEntryLine {
   styleUrls: ['./manual-journal-entry.page.scss'],
 })
 export class ManualJournalEntryPage implements OnInit {
-  private readonly supabaseService = inject(SupabaseService);
   private readonly accountingService: AccountingService;
 
   readonly loading = signal(false);
@@ -39,10 +35,9 @@ export class ManualJournalEntryPage implements OnInit {
   readonly success = signal<string | null>(null);
 
   constructor() {
-    const supabase = this.supabaseService.getClient();
     this.accountingService = new AccountingService(
-      supabase.supabaseUrl,
-      supabase.supabaseKey,
+      environment.supabaseUrl,
+      environment.supabaseAnonKey,
     );
   }
 
@@ -194,5 +189,9 @@ export class ManualJournalEntryPage implements OnInit {
 
   isBalanced(): boolean {
     return Math.abs(this.getTotalDebit() - this.getTotalCredit()) < 0.01;
+  }
+
+  getDifference(): number {
+    return Math.abs(this.getTotalDebit() - this.getTotalCredit());
   }
 }

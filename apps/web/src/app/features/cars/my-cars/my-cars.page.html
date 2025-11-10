@@ -1,15 +1,19 @@
-<div class="min-h-screen bg-ivory-soft pb-20">
+<div class="min-h-screen bg-surface-base pb-20">
   <!-- Header Premium -->
-  <div class="bg-white dark:bg-slate-deep-pure border-b border-pearl-gray dark:border-gray-600/30 mb-8">
+  <div
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-gray-600/30 mb-8"
+  >
     <div class="mx-auto max-w-7xl px-6 py-8">
       <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-smoke-black tracking-tight">Mis Autos</h1>
-          <p class="mt-2 text-sm text-charcoal-medium dark:text-pearl-light">Gestioná las publicaciones que creaste</p>
+          <h1 class="text-3xl font-bold text-text-primary tracking-tight">Mis Autos</h1>
+          <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary">
+            Gestioná las publicaciones que creaste
+          </p>
         </div>
         <button
           (click)="openPublishModal()"
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 hover:shadow-lg transition-all cursor-pointer"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 hover:shadow-lg transition-all cursor-pointer"
         >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -30,9 +34,11 @@
     <!-- Loading State -->
     <div *ngIf="loading()" class="text-center py-16">
       <div
-        class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-accent-petrol border-r-transparent"
+        class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"
       ></div>
-      <p class="mt-4 text-charcoal-medium dark:text-pearl-light font-medium">Cargando tus autos...</p>
+      <p class="mt-4 text-text-secondary dark:text-text-secondary font-medium">
+        Cargando tus autos...
+      </p>
     </div>
 
     <!-- Empty State with Benefits -->
@@ -42,7 +48,7 @@
         <div class="mx-auto max-w-md">
           <div class="card-premium p-12">
             <svg
-              class="mx-auto h-20 w-20 text-charcoal-medium dark:text-pearl-light mb-6"
+              class="mx-auto h-20 w-20 text-text-secondary dark:text-text-secondary mb-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -54,13 +60,13 @@
                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
               />
             </svg>
-            <h3 class="text-xl font-bold text-smoke-black mb-2">Todavía no publicaste autos</h3>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-6">
+            <h3 class="text-xl font-bold text-text-primary mb-2">Todavía no publicaste autos</h3>
+            <p class="text-sm text-text-secondary dark:text-text-secondary mb-6">
               Comenzá a ganar dinero publicando tu primer auto en Autorentar
             </p>
             <button
               (click)="openPublishModal()"
-              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 transition-all cursor-pointer"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all cursor-pointer"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -79,10 +85,12 @@
       <!-- Benefits Section -->
       <div class="card-premium p-8">
         <div class="text-center mb-8">
-          <h2 class="text-2xl font-bold text-smoke-black mb-2">
+          <h2 class="text-2xl font-bold text-text-primary mb-2">
             Por qué conviene subir tu auto a Autorentar
           </h2>
-          <p class="text-charcoal-medium dark:text-pearl-light">Transformá tu auto en una fuente de ingresos pasivos</p>
+          <p class="text-text-secondary dark:text-text-secondary">
+            Transformá tu auto en una fuente de ingresos pasivos
+          </p>
         </div>
 
         <!-- Comparison: Auto Parado vs Auto en Autorentar -->
@@ -107,7 +115,7 @@
                   />
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-smoke-black mb-1">Auto Parado</h3>
+              <h3 class="text-lg font-bold text-text-primary mb-1">Auto Parado</h3>
               <p class="text-sm text-red-700 font-semibold">Pierde valor cada mes</p>
             </div>
             <ul class="space-y-3 text-sm">
@@ -125,8 +133,8 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light"
-                  ><strong class="text-smoke-black">$0 USD/mes</strong> de ingresos</span
+                <span class="text-text-secondary dark:text-text-secondary"
+                  ><strong class="text-text-primary">$0 USD/mes</strong> de ingresos</span
                 >
               </li>
               <li class="flex items-start gap-2">
@@ -143,7 +151,7 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light"
+                <span class="text-text-secondary dark:text-text-secondary"
                   >Depreciación <strong class="text-red-700">100% pérdida</strong> (10-15%
                   anual)</span
                 >
@@ -162,8 +170,8 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light"
-                  >Mantenimiento = <strong class="text-smoke-black">gasto puro</strong></span
+                <span class="text-text-secondary dark:text-text-secondary"
+                  >Mantenimiento = <strong class="text-text-primary">gasto puro</strong></span
                 >
               </li>
               <li class="flex items-start gap-2">
@@ -180,7 +188,9 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light">Seguro sin utilizar el vehículo</span>
+                <span class="text-text-secondary dark:text-text-secondary"
+                  >Seguro sin utilizar el vehículo</span
+                >
               </li>
               <li class="flex items-start gap-2">
                 <svg
@@ -196,21 +206,23 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light">Ningún retorno de inversión</span>
+                <span class="text-text-secondary dark:text-text-secondary"
+                  >Ningún retorno de inversión</span
+                >
               </li>
             </ul>
           </div>
 
           <!-- Auto en Autorentar -->
           <div
-            class="border-2 border-green-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-success-50"
+            class="border-2 border-success-light/40 rounded-xl p-6 bg-gradient-to-br from-success-light/10 to-success-50"
           >
             <div class="text-center mb-4">
               <div
-                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-3"
+                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success-light/20 mb-3"
               >
                 <svg
-                  class="w-8 h-8 text-green-600"
+                  class="w-8 h-8 text-success-light"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -223,13 +235,13 @@
                   />
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-smoke-black mb-1">Auto en Autorentar</h3>
-              <p class="text-sm text-green-700 font-semibold">Genera ingresos pasivos</p>
+              <h3 class="text-lg font-bold text-text-primary mb-1">Auto en Autorentar</h3>
+              <p class="text-sm text-success-light font-semibold">Genera ingresos pasivos</p>
             </div>
             <ul class="space-y-3 text-sm">
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-light flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -241,13 +253,13 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light"
-                  ><strong class="text-green-700">$300-500 USD/mes</strong> de ingresos</span
+                <span class="text-text-secondary dark:text-text-secondary"
+                  ><strong class="text-success-light">$300-500 USD/mes</strong> de ingresos</span
                 >
               </li>
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-light flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -259,14 +271,14 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light"
-                  >Depreciación <strong class="text-green-700">compensada</strong> por
+                <span class="text-text-secondary dark:text-text-secondary"
+                  >Depreciación <strong class="text-success-light">compensada</strong> por
                   alquileres</span
                 >
               </li>
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-light flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -278,14 +290,14 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light"
-                  >Mantenimiento <strong class="text-smoke-black">cubierto</strong> por
+                <span class="text-text-secondary dark:text-text-secondary"
+                  >Mantenimiento <strong class="text-text-primary">cubierto</strong> por
                   ganancias</span
                 >
               </li>
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-light flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -297,11 +309,13 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light">Seguro completo + depósito de garantía</span>
+                <span class="text-text-secondary dark:text-text-secondary"
+                  >Seguro completo + depósito de garantía</span
+                >
               </li>
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-light flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -313,8 +327,8 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span class="text-charcoal-medium dark:text-pearl-light"
-                  >ROI: <strong class="text-green-700">12-18% anual</strong></span
+                <span class="text-text-secondary dark:text-text-secondary"
+                  >ROI: <strong class="text-success-light">12-18% anual</strong></span
                 >
               </li>
             </ul>
@@ -323,38 +337,44 @@
 
         <!-- ROI Calculator Card -->
         <div
-          class="bg-gradient-to-br from-accent-petrol/5 to-accent-warm/5 border-2 border-accent-petrol/20 rounded-xl p-6 mb-8"
+          class="bg-gradient-to-br from-cta-default/5 to-warning-light/5 border-2 border-cta-default/20 rounded-xl p-6 mb-8"
         >
-          <h3 class="text-lg font-bold text-smoke-black mb-4 text-center">
+          <h3 class="text-lg font-bold text-text-primary mb-4 text-center">
             Estimación de Ganancias
           </h3>
           <div class="grid md:grid-cols-3 gap-6">
-            <div class="text-center p-4 bg-white dark:bg-slate-deep-pure rounded-lg">
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-1">Valor del auto</p>
-              <p class="text-2xl font-bold text-smoke-black">$10,000</p>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">USD promedio</p>
+            <div class="text-center p-4 bg-surface-raised dark:bg-surface-raised rounded-lg">
+              <p class="text-sm text-text-secondary dark:text-text-secondary mb-1">
+                Valor del auto
+              </p>
+              <p class="text-2xl font-bold text-text-primary">$10,000</p>
+              <p class="text-xs text-text-muted dark:text-text-secondary/70">USD promedio</p>
             </div>
-            <div class="text-center p-4 bg-white dark:bg-slate-deep-pure rounded-lg">
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-1">Ingreso mensual</p>
-              <p class="text-2xl font-bold text-green-600">$300-500</p>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">USD (20-25 días alquilados)</p>
+            <div class="text-center p-4 bg-surface-raised dark:bg-surface-raised rounded-lg">
+              <p class="text-sm text-text-secondary dark:text-text-secondary mb-1">
+                Ingreso mensual
+              </p>
+              <p class="text-2xl font-bold text-success-light">$300-500</p>
+              <p class="text-xs text-text-muted dark:text-text-secondary/70">
+                USD (20-25 días alquilados)
+              </p>
             </div>
-            <div class="text-center p-4 bg-white dark:bg-slate-deep-pure rounded-lg">
-              <p class="text-sm text-charcoal-medium dark:text-pearl-light mb-1">Retorno total</p>
-              <p class="text-2xl font-bold text-accent-petrol">4-6 años</p>
-              <p class="text-xs text-ash-gray dark:text-pearl-light/70">El auto se autopaga</p>
+            <div class="text-center p-4 bg-surface-raised dark:bg-surface-raised rounded-lg">
+              <p class="text-sm text-text-secondary dark:text-text-secondary mb-1">Retorno total</p>
+              <p class="text-2xl font-bold text-cta-default">4-6 años</p>
+              <p class="text-xs text-text-muted dark:text-text-secondary/70">El auto se autopaga</p>
             </div>
           </div>
         </div>
 
         <!-- Key Benefits Grid -->
         <div class="grid md:grid-cols-3 gap-4 mb-8">
-          <div class="text-center p-6 bg-sand-light rounded-xl">
+          <div class="text-center p-6 bg-surface-secondary rounded-xl">
             <div
-              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-petrol/10 mb-3"
+              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-cta-default/10 mb-3"
             >
               <svg
-                class="w-6 h-6 text-accent-petrol"
+                class="w-6 h-6 text-cta-default"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -367,17 +387,17 @@
                 />
               </svg>
             </div>
-            <h4 class="font-bold text-smoke-black mb-2">100% Seguro</h4>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+            <h4 class="font-bold text-text-primary mb-2">100% Seguro</h4>
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               Seguro completo + verificación de usuarios + depósito de garantía
             </p>
           </div>
-          <div class="text-center p-6 bg-sand-light rounded-xl">
+          <div class="text-center p-6 bg-surface-secondary rounded-xl">
             <div
-              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-warm/10 mb-3"
+              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-warning-light/10 mb-3"
             >
               <svg
-                class="w-6 h-6 text-accent-warm"
+                class="w-6 h-6 text-warning-light"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -390,12 +410,12 @@
                 />
               </svg>
             </div>
-            <h4 class="font-bold text-smoke-black mb-2">Gestión 100% Digital</h4>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+            <h4 class="font-bold text-text-primary mb-2">Gestión 100% Digital</h4>
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               Todo desde tu celular: pagos, contratos y seguimiento automático
             </p>
           </div>
-          <div class="text-center p-6 bg-sand-light rounded-xl">
+          <div class="text-center p-6 bg-surface-secondary rounded-xl">
             <div
               class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 mb-3"
             >
@@ -413,8 +433,8 @@
                 />
               </svg>
             </div>
-            <h4 class="font-bold text-smoke-black mb-2">Libertad Total</h4>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+            <h4 class="font-bold text-text-primary mb-2">Libertad Total</h4>
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               Vos decidís cuándo, a quién y a qué precio alquilar tu auto
             </p>
           </div>
@@ -424,7 +444,7 @@
         <div class="text-center">
           <button
             (click)="openPublishModal()"
-            class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-accent-petrol to-accent-warm text-white-pure font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 cursor-pointer"
+            class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-cta-default to-warning-light text-text-inverse-pure font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 cursor-pointer"
           >
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -447,14 +467,14 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">Total de Autos</p>
-              <p class="text-3xl font-bold text-smoke-black">{{ cars().length }}</p>
+              <p class="text-sm font-medium text-text-secondary dark:text-text-secondary mb-1">
+                Total de Autos
+              </p>
+              <p class="text-3xl font-bold text-text-primary">{{ cars().length }}</p>
             </div>
-            <div
-              class="h-14 w-14 rounded-full bg-accent-petrol/10 flex items-center justify-center"
-            >
+            <div class="h-14 w-14 rounded-full bg-cta-default/10 flex items-center justify-center">
               <svg
-                class="h-7 w-7 text-accent-petrol"
+                class="h-7 w-7 text-cta-default"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -473,12 +493,16 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">Activos</p>
-              <p class="text-3xl font-bold text-green-600">{{ countActive() }}</p>
+              <p class="text-sm font-medium text-text-secondary dark:text-text-secondary mb-1">
+                Activos
+              </p>
+              <p class="text-3xl font-bold text-success-light">{{ countActive() }}</p>
             </div>
-            <div class="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center">
+            <div
+              class="h-14 w-14 rounded-full bg-success-light/10 flex items-center justify-center"
+            >
               <svg
-                class="h-7 w-7 text-green-600"
+                class="h-7 w-7 text-success-light"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -497,12 +521,18 @@
         <div class="card-premium p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-charcoal-medium dark:text-pearl-light mb-1">En Borrador</p>
-              <p class="text-3xl font-bold text-ash-gray dark:text-pearl-light/70">{{ countDraft() }}</p>
+              <p class="text-sm font-medium text-text-secondary dark:text-text-secondary mb-1">
+                En Borrador
+              </p>
+              <p class="text-3xl font-bold text-text-muted dark:text-text-secondary/70">
+                {{ countDraft() }}
+              </p>
             </div>
-            <div class="h-14 w-14 rounded-full bg-sand-light flex items-center justify-center">
+            <div
+              class="h-14 w-14 rounded-full bg-surface-secondary flex items-center justify-center"
+            >
               <svg
-                class="h-7 w-7 text-charcoal-medium dark:text-pearl-light"
+                class="h-7 w-7 text-text-secondary dark:text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -539,7 +569,7 @@
           <button
             type="button"
             (click)="openOnboardingModal()"
-            class="flex-shrink-0 rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-amber-600/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 transition-all"
+            class="flex-shrink-0 rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-semibold text-text-inverse shadow-sm hover:bg-amber-600/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 transition-all"
           >
             Conectar Mercado Pago
           </button>
@@ -561,17 +591,17 @@
       </div>
 
       <!-- Benefits Banner (also shown when has cars) -->
-      <div class="mt-8 card-premium p-6 bg-gradient-to-r from-accent-petrol/5 to-accent-warm/5">
+      <div class="mt-8 card-premium p-6 bg-gradient-to-r from-cta-default/5 to-warning-light/5">
         <div class="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h3 class="text-lg font-bold text-smoke-black mb-1">¿Tenés más autos?</h3>
-            <p class="text-sm text-charcoal-medium dark:text-pearl-light">
+            <h3 class="text-lg font-bold text-text-primary mb-1">¿Tenés más autos?</h3>
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               Publicá más vehículos y aumentá tus ingresos pasivos
             </p>
           </div>
           <button
             (click)="openPublishModal()"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-petrol text-white-pure font-semibold hover:opacity-90 transition-all cursor-pointer"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all cursor-pointer"
           >
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path

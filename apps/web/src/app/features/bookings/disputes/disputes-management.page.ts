@@ -3,7 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { DisputesService, Dispute, DisputeEvidence, DisputeKind } from '../../../core/services/disputes.service';
+import {
+  DisputesService,
+  Dispute,
+  DisputeEvidence,
+  DisputeKind,
+} from '../../../core/services/disputes.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
 import { ToastService } from '../../../core/services/toast.service';
@@ -107,12 +112,15 @@ export class DisputesManagementPage implements OnInit {
         await this.uploadEvidenceFiles(dispute.id);
       }
 
-      this.toastService.success('Disputa creada exitosamente');
+      this.toastService.success('Disputa creada exitosamente', '');
       this.closeCreateModal();
       await this.loadDisputes();
     } catch (err) {
       console.error('Error creating dispute:', err);
-      this.toastService.error('Error', err instanceof Error ? err.message : 'Error al crear disputa');
+      this.toastService.error(
+        'Error',
+        err instanceof Error ? err.message : 'Error al crear disputa',
+      );
     } finally {
       this.loading.set(false);
     }
@@ -171,10 +179,14 @@ export class DisputesManagementPage implements OnInit {
         const { data: urlData } = supabase.storage.from('documents').getPublicUrl(filePath);
 
         // Add evidence record
-        await this.disputesService.addEvidence(disputeId, urlData.publicUrl, this.evidenceNote() || undefined);
+        await this.disputesService.addEvidence(
+          disputeId,
+          urlData.publicUrl,
+          this.evidenceNote() || undefined,
+        );
       }
 
-      this.toastService.success('Evidencias subidas exitosamente');
+      this.toastService.success('Evidencias subidas exitosamente', '');
       this.evidenceFiles.set([]);
       this.evidenceNote.set('');
       await this.loadDisputes();

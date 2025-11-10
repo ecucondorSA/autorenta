@@ -10,11 +10,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { tap } from 'rxjs/operators';
-import { from } from 'rxjs';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ProfileStore } from '../../core/stores/profile.store';
 import { DriverProfileCardComponent } from '../../shared/components/driver-profile-card/driver-profile-card.component';
 import {
   UserProfile,
@@ -71,41 +69,31 @@ export class ProfileExpandedPage {
   private readonly metaService = inject(MetaService);
   private readonly verificationStateService = inject(VerificationStateService);
   private readonly verificationNotificationsService = inject(VerificationNotificationsService);
+  private readonly profileStore = inject(ProfileStore);
 
-  // Core signals
-  readonly profile = toSignal(
-    from(this.profileService.getMe()).pipe(
-      tap((profile) => {
-        if (profile) this.populateForms(profile);
-      })
-    ),
-    { initialValue: null }
-  );
-  
+  // Use ProfileStore for profile state
+  readonly profile = this.profileStore.profile;
+
   private readonly documentsSubject = signal<UserDocument[]>([]);
   readonly documents = this.documentsSubject.asReadonly();
-  
-  readonly loading = signal(false);
+
+  // Use ProfileStore for loading/error/avatar state
+  readonly loading = this.profileStore.loading;
+  readonly uploadingAvatar = this.profileStore.uploadingAvatar;
+  readonly error = this.profileStore.error;
+
+  // Component-specific state
   readonly saving = signal(false);
   readonly message = signal<string | null>(null);
-  readonly error = signal<string | null>(null);
   readonly activeTab = signal<TabId>('general');
 
-  // Profile computed values
+  // Profile computed values (from ProfileStore)
   readonly avatarUrl = computed(() => this.profile()?.avatar_url ?? null);
-  readonly uploadingAvatar = signal(false);
-  readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? '');
-  
-  readonly canPublishCars = computed(() => {
-    // Use RPC data: can_access_level_2 indicates ability to publish
-    return this.verificationStateService.verificationProgress()?.can_access_level_2 ?? false;
-  });
+  readonly userEmail = this.profileStore.userEmail;
 
-  readonly canBookCars = computed(() => {
-    // Basic role check - Level 1 allows booking, Level 3 for premium features
-    const role = this.profile()?.role;
-    return role === 'renter' || role === 'both';
-  });
+  // Use ProfileStore computed values
+  readonly canPublishCars = this.profileStore.canPublishCars;
+  readonly canBookCars = this.profileStore.canBookCars;
 
   // Verification status from RPC (replaces local document-based calculations)
   readonly driverLicenseStatus = computed((): KycStatus => {
@@ -166,7 +154,7 @@ export class ProfileExpandedPage {
     const role = this.profile()?.role;
     return role === 'renter' || role === 'both';
   });
-  
+
   readonly showOwnerFlow = computed(() => {
     const role = this.profile()?.role;
     return role === 'owner' || role === 'both';
@@ -349,38 +337,38 @@ export class ProfileExpandedPage {
   // Helper methods
   getKycStatusClass(status: KycStatus): string {
     const map: Record<KycStatus, string> = {
-      'not_started': 'bg-gray-100 text-gray-800',
-      'pending': 'bg-yellow-100 text-yellow-800',
-      'verified': 'bg-green-100 text-green-800',
-      'rejected': 'bg-red-100 text-red-800',
+      not_started: 'bg-gray-100 text-gray-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      verified: 'bg-success-light/20 text-success-light',
+      rejected: 'bg-red-100 text-red-800',
     };
     return map[status] || map['not_started'];
   }
 
   getKycStatusLabel(status: KycStatus): string {
     const map: Record<KycStatus, string> = {
-      'not_started': 'No iniciado',
-      'pending': 'Pendiente',
-      'verified': 'Verificado',
-      'rejected': 'Rechazado',
+      not_started: 'No iniciado',
+      pending: 'Pendiente',
+      verified: 'Verificado',
+      rejected: 'Rechazado',
     };
     return map[status] || 'No iniciado';
   }
 
   getVerificationStatusClass(status: VerificationStatus): string {
     const map: Record<VerificationStatus, string> = {
-      'VERIFICADO': 'bg-green-100 text-green-800',
-      'PENDIENTE': 'bg-yellow-100 text-yellow-800',
-      'RECHAZADO': 'bg-red-100 text-red-800',
+      VERIFICADO: 'bg-success-light/20 text-success-light',
+      PENDIENTE: 'bg-yellow-100 text-yellow-800',
+      RECHAZADO: 'bg-red-100 text-red-800',
     };
     return map[status];
   }
 
   getVerificationStatusIcon(status: VerificationStatus): string {
     const map: Record<VerificationStatus, string> = {
-      'VERIFICADO': 'check-circle',
-      'PENDIENTE': 'clock',
-      'RECHAZADO': 'x-circle',
+      VERIFICADO: 'check-circle',
+      PENDIENTE: 'clock',
+      RECHAZADO: 'x-circle',
     };
     return map[status];
   }
@@ -394,7 +382,7 @@ export class ProfileExpandedPage {
   }
 
   getStepStatusClass(step: { completed: boolean }): string {
-    return step.completed ? 'text-green-600' : 'text-gray-400 dark:text-gray-300';
+    return step.completed ? 'text-success-light' : 'text-gray-400 dark:text-gray-300';
   }
 
   getStepStatusLabel(step: { completed: boolean }): string {
@@ -403,10 +391,10 @@ export class ProfileExpandedPage {
 
   getMissingDocumentLabel(key: string): string {
     const labels: Record<string, string> = {
-      'email': 'Email',
-      'phone': 'Teléfono',
-      'driver_license': 'Licencia de conducir',
-      'vehicle': 'Registro de vehículo',
+      email: 'Email',
+      phone: 'Teléfono',
+      driver_license: 'Licencia de conducir',
+      vehicle: 'Registro de vehículo',
     };
     return labels[key] || key;
   }
@@ -490,7 +478,16 @@ export class ProfileExpandedPage {
 
   private isValidTab(tab: string | null): boolean {
     if (!tab) return false;
-    return ['general', 'contact', 'address', 'conductor', 'verification', 'notifications', 'preferences', 'security'].includes(tab);
+    return [
+      'general',
+      'contact',
+      'address',
+      'conductor',
+      'verification',
+      'notifications',
+      'preferences',
+      'security',
+    ].includes(tab);
   }
 
   private populateForms(profile: UserProfile): void {
@@ -549,9 +546,8 @@ export class ProfileExpandedPage {
 
   async saveCurrentTab(): Promise<void> {
     this.saving.set(true);
-    this.error.set(null);
     this.message.set(null);
-    
+
     try {
       const tab = this.activeTab();
       let payload: any = {};
@@ -566,7 +562,7 @@ export class ProfileExpandedPage {
         case 'address':
           payload = this.addressForm.getRawValue();
           break;
-        case 'notifications':
+        case 'notifications': {
           const notifValues = this.notificationsForm.getRawValue();
           payload = {
             notif_prefs: {
@@ -585,16 +581,23 @@ export class ProfileExpandedPage {
             },
           };
           break;
+        }
         case 'preferences':
           payload = this.preferencesForm.getRawValue();
           break;
       }
 
       await this.profileService.safeUpdateProfile(payload);
-      await this.profileService.getMe();
+      // Refresh profile from store
+      await this.profileStore.refresh();
+      const updatedProfile = this.profile();
+      if (updatedProfile) {
+        this.populateForms(updatedProfile);
+      }
       this.message.set('Cambios guardados exitosamente');
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'No pudimos guardar los cambios.');
+      // Error is already handled by ProfileStore
+      this.message.set(err instanceof Error ? err.message : 'No pudimos guardar los cambios.');
     } finally {
       this.saving.set(false);
     }
@@ -604,19 +607,14 @@ export class ProfileExpandedPage {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
 
-    this.uploadingAvatar.set(true);
-    this.loading.set(true);
-    
+    this.message.set(null);
+
     try {
-      const newAvatarUrl = await this.profileService.uploadAvatar(file);
-      await this.profileService.safeUpdateProfile({ avatar_url: newAvatarUrl });
-      await this.profileService.getMe();
+      await this.profileStore.uploadAvatar(file);
       this.message.set('Avatar actualizado exitosamente');
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
-    } finally {
-      this.loading.set(false);
-      this.uploadingAvatar.set(false);
+      // Error is already handled by ProfileStore
+      this.message.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
     }
   }
 

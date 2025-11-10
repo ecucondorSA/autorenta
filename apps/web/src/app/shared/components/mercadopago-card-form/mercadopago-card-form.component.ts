@@ -128,7 +128,7 @@ interface CardToken {
         <button
           type="submit"
           [disabled]="isSubmitting()"
-          class="w-full bg-primary-600 text-white py-3 rounded-md font-medium hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full bg-primary-600 text-text-inverse py-3 rounded-md font-medium hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           @if (isSubmitting()) {
             <span class="flex items-center justify-center">
@@ -208,8 +208,8 @@ interface CardToken {
         </div>
       }
 
-      <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-        <p class="text-xs text-blue-700">
+      <div class="mt-4 p-3 bg-cta-default/10 border border-cta-default/40 rounded-md">
+        <p class="text-xs text-cta-default">
           🔒 Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu
           tarjeta.
         </p>

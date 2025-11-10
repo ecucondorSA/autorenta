@@ -1,16 +1,13 @@
-<div class="bg-white rounded-lg shadow-md p-6" [class.p-4]="compact">
+<div class="bg-surface-raised rounded-lg shadow-md p-6" [class.p-4]="compact">
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex items-center justify-center py-8">
-    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"></div>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error() && !loading()" class="bg-red-50 border border-red-200 rounded-lg p-4">
     <p class="text-red-600 text-sm">{{ error()?.message }}</p>
-    <button
-      (click)="refresh()"
-      class="mt-2 text-red-600 hover:text-red-700 text-sm font-medium"
-    >
+    <button (click)="refresh()" class="mt-2 text-red-600 hover:text-red-700 text-sm font-medium">
       Reintentar
     </button>
   </div>
@@ -20,8 +17,11 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center space-x-3">
-        <div [class]="getClassBadgeColor(driverClass())" class="w-12 h-12 rounded-full flex items-center justify-center">
-          <span class="text-white text-xl font-bold">{{ driverClass() }}</span>
+        <div
+          [class]="getClassBadgeColor(driverClass())"
+          class="w-12 h-12 rounded-full flex items-center justify-center"
+        >
+          <span class="text-text-inverse text-xl font-bold">{{ driverClass() }}</span>
         </div>
         <div>
           <h3 class="text-lg font-semibold text-gray-900" [class.text-base]="compact">
@@ -35,7 +35,7 @@
       <button
         *ngIf="!compact"
         (click)="onViewBenefits()"
-        class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+        class="text-cta-default hover:text-cta-default text-sm font-medium"
       >
         Ver beneficios
       </button>
@@ -66,16 +66,16 @@
             {{ driverScore() }}/100
           </span>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">{{ getScoreLabel(driverScore()) }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+          {{ getScoreLabel(driverScore()) }}
+        </p>
       </div>
 
       <!-- Clean Bookings Percentage -->
       <div class="bg-gray-50 rounded-lg p-3">
         <div class="flex items-center justify-between">
           <span class="text-xs text-gray-600 dark:text-gray-300">Reservas Sin Daños</span>
-          <span class="text-sm font-semibold text-green-600">
-            {{ cleanPercentage() }}%
-          </span>
+          <span class="text-sm font-semibold text-success-light"> {{ cleanPercentage() }}% </span>
         </div>
         <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
           {{ profile()?.clean_bookings || 0 }} de {{ profile()?.total_bookings || 0 }} reservas
@@ -87,13 +87,21 @@
         <div class="flex items-center justify-between">
           <span class="text-xs text-gray-600 dark:text-gray-300">Ajuste en Tarifas</span>
           <span
-            [class]="feeMultiplier() < 1 ? 'text-green-600' : feeMultiplier() > 1 ? 'text-red-600' : 'text-gray-600 dark:text-gray-300'"
+            [class]="
+              feeMultiplier() < 1
+                ? 'text-success-light'
+                : feeMultiplier() > 1
+                  ? 'text-red-600'
+                  : 'text-gray-600 dark:text-gray-300'
+            "
             class="text-sm font-semibold"
           >
             {{ getFeeMultiplierLabel(feeMultiplier()) }}
           </span>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">Multiplicador: {{ feeMultiplier() }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+          Multiplicador: {{ feeMultiplier() }}
+        </p>
       </div>
 
       <!-- Guarantee Multiplier -->
@@ -101,28 +109,43 @@
         <div class="flex items-center justify-between">
           <span class="text-xs text-gray-600 dark:text-gray-300">Ajuste en Garantía</span>
           <span
-            [class]="guaranteeMultiplier() < 1 ? 'text-green-600' : guaranteeMultiplier() > 1 ? 'text-red-600' : 'text-gray-600 dark:text-gray-300'"
+            [class]="
+              guaranteeMultiplier() < 1
+                ? 'text-success-light'
+                : guaranteeMultiplier() > 1
+                  ? 'text-red-600'
+                  : 'text-gray-600 dark:text-gray-300'
+            "
             class="text-sm font-semibold"
           >
             {{ getGuaranteeMultiplierLabel(guaranteeMultiplier()) }}
           </span>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">Multiplicador: {{ guaranteeMultiplier() }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+          Multiplicador: {{ guaranteeMultiplier() }}
+        </p>
       </div>
     </div>
 
     <!-- Compact Stats -->
     <div *ngIf="!showDetails && compact" class="mt-2 text-center">
       <p class="text-sm text-gray-600 dark:text-gray-300">
-        Score: <span [class]="getScoreColor(driverScore())" class="font-semibold">{{ driverScore() }}</span>
-        • Clean: <span class="font-semibold text-green-600">{{ cleanPercentage() }}%</span>
+        Score:
+        <span [class]="getScoreColor(driverScore())" class="font-semibold">{{
+          driverScore()
+        }}</span>
+        • Clean: <span class="font-semibold text-success-light">{{ cleanPercentage() }}%</span>
       </p>
     </div>
 
     <!-- Call to Action -->
-    <div *ngIf="!compact && driverClass() > 2" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
-      <p class="text-sm text-blue-800">
-        <strong>¡Mejora tu clase!</strong> Completa reservas sin daños para obtener mejores tarifas y garantías más bajas.
+    <div
+      *ngIf="!compact && driverClass() > 2"
+      class="mt-4 bg-cta-default/10 border border-cta-default/40 rounded-lg p-3"
+    >
+      <p class="text-sm text-cta-default">
+        <strong>¡Mejora tu clase!</strong> Completa reservas sin daños para obtener mejores tarifas
+        y garantías más bajas.
       </p>
     </div>
   </div>

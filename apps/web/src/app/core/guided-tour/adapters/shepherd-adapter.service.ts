@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import Shepherd from 'shepherd.js';
-import type { Tour, StepOptions } from 'shepherd.js';
+import type { Tour, StepOptions, TourOptions } from 'shepherd.js';
 import { StepDefinition, TourId } from '../interfaces/tour-definition.interface';
 
 export interface TourRendererAdapter {
@@ -58,7 +58,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
       },
     };
 
-    this.tour = new Shepherd.Tour(defaultOptions as any);
+    this.tour = new Shepherd.Tour(defaultOptions as TourOptions);
 
     // Setup event listeners
     this.tour.on('show', (event) => {

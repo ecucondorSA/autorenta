@@ -81,8 +81,7 @@ export class BookingCancellationService {
 
       return { success: true };
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Error inesperado al cancelar';
+      const errorMessage = error instanceof Error ? error.message : 'Error inesperado al cancelar';
       return {
         success: false,
         error: errorMessage,
@@ -166,7 +165,11 @@ export class BookingCancellationService {
 
       if (!refundResponse.ok) {
         const errorData = await refundResponse.json().catch(() => ({}));
-        this.logger.error('Error processing refund', 'BookingCancellationService', new Error(JSON.stringify(errorData)));
+        this.logger.error(
+          'Error processing refund',
+          'BookingCancellationService',
+          new Error(JSON.stringify(errorData)),
+        );
       } else {
         const refundData = await refundResponse.json();
         this.logger.info('Refund processed successfully', refundData);

@@ -308,11 +308,3 @@ export class UrgentRentalService {
     }
   }
 }
-
-
-
-
-
-
-
-

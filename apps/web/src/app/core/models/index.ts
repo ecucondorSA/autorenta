@@ -41,6 +41,12 @@ export * from './fgo.model';
 // Export Insurance models
 export * from './insurance.model';
 
+// Export Dashboard models
+export * from './dashboard.model';
+
+// Export ProfileService types
+export type { UpdateProfileData } from '../services/profile.service';
+
 // Nuevos tipos para perfil expandido
 export type KycStatus = 'not_started' | 'pending' | 'verified' | 'rejected';
 export type OnboardingStatus = 'incomplete' | 'complete';
@@ -521,10 +527,13 @@ export interface Review {
   flag_reason?: string | null;
   flagged_by?: string | null;
   flagged_at?: string | null;
+  flagged_by_name?: string | null;
   moderation_status: ModerationStatus;
   moderated_by?: string | null;
   moderated_at?: string | null;
   moderation_notes?: string | null;
+  moderated_by_name?: string | null;
+  flag_status?: 'pending' | 'approved' | 'rejected';
 
   // Timestamps
   created_at: string;
@@ -804,7 +813,13 @@ export interface BonusMalusDisplay {
 // REFUND MANAGEMENT SYSTEM
 // ============================================
 
-export type RefundStatus = 'pending' | 'approved' | 'processing' | 'completed' | 'failed' | 'rejected';
+export type RefundStatus =
+  | 'pending'
+  | 'approved'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'rejected';
 export type RefundDestination = 'wallet' | 'original_payment_method';
 
 export interface RefundRequest {

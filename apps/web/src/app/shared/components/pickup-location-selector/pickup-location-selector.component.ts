@@ -10,7 +10,10 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { LocationMapPickerComponent, LocationCoordinates } from '../location-map-picker/location-map-picker.component';
+import {
+  LocationMapPickerComponent,
+  LocationCoordinates,
+} from '../location-map-picker/location-map-picker.component';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 
 export interface PickupLocationSelection {
@@ -96,7 +99,7 @@ export class PickupLocationSelectorComponent implements OnInit {
       this.carLocation.lat,
       this.carLocation.lng,
       pickup.latitude,
-      pickup.longitude
+      pickup.longitude,
     );
 
     this.distanceKm.set(distance);

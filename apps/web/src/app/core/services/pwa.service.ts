@@ -145,7 +145,9 @@ export class PwaService {
       this.updateAvailable.set(false);
       // Reload the page to load the new version
       document.location.reload();
-    } catch (__error) {}
+    } catch {
+      // Silently ignore activation errors
+    }
   }
 
   /**
@@ -166,9 +168,8 @@ export class PwaService {
     try {
       await navigator.share(data);
       return true;
-    } catch (__error) {
-      if ((__error as Error).name !== 'AbortError') {
-      }
+    } catch {
+      // Only return false, don't log AbortError (user cancelled)
       return false;
     }
   }
@@ -254,7 +255,9 @@ export class PwaService {
 
     try {
       await nav.setAppBadge(count);
-    } catch (__error) {}
+    } catch {
+      // Silently ignore badge errors
+    }
   }
 
   /**
@@ -268,7 +271,9 @@ export class PwaService {
 
     try {
       await nav.clearAppBadge();
-    } catch (__error) {}
+    } catch {
+      // Silently ignore badge errors
+    }
   }
 
   /**
@@ -288,9 +293,8 @@ export class PwaService {
         multiple,
       });
       return contacts;
-    } catch (__error) {
-      if ((__error as Error).name !== 'AbortError') {
-      }
+    } catch {
+      // Return null on any error (including user cancellation)
       return null;
     }
   }
@@ -311,7 +315,7 @@ export class PwaService {
       wakeLock.addEventListener('release', () => {});
 
       return wakeLock;
-    } catch (__error) {
+    } catch {
       return null;
     }
   }
@@ -341,7 +345,7 @@ export class PwaService {
 
       await navigator.clipboard.write([new ClipboardItem(items)]);
       return true;
-    } catch (__error) {
+    } catch {
       return false;
     }
   }
@@ -358,7 +362,7 @@ export class PwaService {
     try {
       await screenOrientation.lock(orientation);
       return true;
-    } catch (__error) {
+    } catch {
       return false;
     }
   }
@@ -391,7 +395,7 @@ export class PwaService {
 
       await registration.periodicSync.register(tag, { minInterval });
       return true;
-    } catch (__error) {
+    } catch {
       return false;
     }
   }

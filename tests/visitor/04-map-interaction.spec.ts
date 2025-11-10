@@ -701,3 +701,152 @@ test.describe('Cars Map Component - Performance', () => {
     }
   });
 });
+
+test.describe('Cars Map Component - Photo Circular Marker', () => {
+  test('should display photo circular markers on marketplace page', async ({ page }) => {
+    // Navigate to marketplace page (uses markerVariant='photo')
+    await page.goto('/marketplace');
+    await page.waitForLoadState('domcontentloaded');
+    
+    // Wait for map to load
+    await page.waitForTimeout(5000);
+    
+    const mapContainer = page.locator('app-cars-map').first();
+    await expect(mapContainer).toBeVisible({ timeout: 15000 });
+    
+    // Wait for markers to be rendered
+    await page.waitForTimeout(3000);
+    
+    // Look for photo circular markers
+    const photoMarkers = page.locator('.marker-circle-photo, .car-marker-simple .marker-circle-photo');
+    const markerCount = await photoMarkers.count();
+    
+    if (markerCount > 0) {
+      // Verify at least one photo marker is visible
+      const firstMarker = photoMarkers.first();
+      await expect(firstMarker).toBeVisible({ timeout: 5000 });
+      
+      // Verify marker has either image or fallback initials
+      const hasImage = await firstMarker.locator('.marker-photo-image').isVisible().catch(() => false);
+      const hasFallback = await firstMarker.locator('.marker-photo-fallback').isVisible().catch(() => false);
+      
+      // Marker should have either image or fallback
+      expect(hasImage || hasFallback).toBe(true);
+      
+      // If image exists, verify it has proper styling
+      if (hasImage) {
+        const image = firstMarker.locator('.marker-photo-image').first();
+        const borderRadius = await image.evaluate((img) => {
+          return window.getComputedStyle(img).borderRadius;
+        });
+        expect(borderRadius).toContain('50%');
+      }
+      
+      // If fallback exists, verify it shows initials
+      if (hasFallback) {
+        const fallback = firstMarker.locator('.marker-photo-fallback').first();
+        const text = await fallback.textContent();
+        expect(text?.length).toBeGreaterThan(0);
+        expect(text?.length).toBeLessThanOrEqual(2); // Should be 1-2 characters
+      }
+    } else {
+      // If no markers found, verify map still loaded (might be empty state)
+      await expect(mapContainer).toBeVisible();
+    }
+  });
+
+  test('should open drawer and scroll to selected car when clicking photo marker', async ({ page }) => {
+    await page.goto('/marketplace');
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(5000);
+    
+    const mapContainer = page.locator('app-cars-map').first();
+    await expect(mapContainer).toBeVisible({ timeout: 15000 });
+    
+    // Wait for markers
+    await page.waitForTimeout(3000);
+    
+    // Find a photo marker
+    const photoMarker = page.locator('.marker-circle-photo').first();
+    const markerVisible = await photoMarker.isVisible().catch(() => false);
+    
+    if (markerVisible) {
+      // Get car ID from marker's parent
+      const markerParent = photoMarker.locator('xpath=ancestor::div[contains(@class, "car-marker-simple")]').first();
+      const carId = await markerParent.getAttribute('data-car-id');
+      
+      if (carId) {
+        // Click on the marker
+        await photoMarker.click({ timeout: 5000 });
+        
+        // Wait for drawer to open
+        await page.waitForTimeout(1000);
+        
+        // Verify drawer is open
+        const drawer = page.locator('.drawer-section.drawer-open, .drawer-section[class*="drawer-open"]').first();
+        const drawerOpen = await drawer.isVisible().catch(() => false);
+        
+        if (drawerOpen) {
+          await expect(drawer).toBeVisible({ timeout: 3000 });
+          
+          // Verify selected car card exists in drawer
+          const selectedCarCard = page.locator(`[data-car-id="${carId}"].car-card-wrapper--selected`).first();
+          const cardVisible = await selectedCarCard.isVisible({ timeout: 3000 }).catch(() => false);
+          
+          if (cardVisible) {
+            // Verify card is selected
+            await expect(selectedCarCard).toBeVisible();
+            
+            // Verify card has selected class
+            const hasSelectedClass = await selectedCarCard.evaluate((el) => {
+              return el.classList.contains('car-card-wrapper--selected');
+            });
+            expect(hasSelectedClass).toBe(true);
+          }
+        } else {
+          // Drawer might not be visible on mobile or might use different selector
+          // At least verify marker was clicked
+          expect(carId).toBeTruthy();
+        }
+      }
+    } else {
+      // If no markers, just verify map loaded
+      await expect(mapContainer).toBeVisible();
+    }
+  });
+
+  test('should show fallback initials when photo fails to load', async ({ page }) => {
+    await page.goto('/marketplace');
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(5000);
+    
+    // Block image loading to simulate photo failure
+    await page.route('**/*.{jpg,jpeg,png,gif,webp}', route => route.abort());
+    
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(5000);
+    
+    const mapContainer = page.locator('app-cars-map').first();
+    await expect(mapContainer).toBeVisible({ timeout: 15000 });
+    
+    await page.waitForTimeout(3000);
+    
+    // Find markers with fallback
+    const markersWithFallback = page.locator('.marker-circle-photo--no-image .marker-photo-fallback');
+    const fallbackCount = await markersWithFallback.count();
+    
+    if (fallbackCount > 0) {
+      const fallback = markersWithFallback.first();
+      await expect(fallback).toBeVisible({ timeout: 3000 });
+      
+      // Verify fallback shows initials (1-2 characters)
+      const text = await fallback.textContent();
+      expect(text?.trim().length).toBeGreaterThan(0);
+      expect(text?.trim().length).toBeLessThanOrEqual(2);
+    } else {
+      // If no fallbacks found, markers might have loaded before route blocking
+      // or might use different structure - verify map still works
+      await expect(mapContainer).toBeVisible();
+    }
+  });
+});

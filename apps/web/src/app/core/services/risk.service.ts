@@ -30,7 +30,14 @@ export class RiskService {
    * ✅ NEW: Usa RiskCalculatorService para aplicar lógica de distancia con criterio MAYOR
    */
   async calculateRiskSnapshot(params: CalculateRiskSnapshotParams): Promise<RiskSnapshot> {
-    const { vehicleValueUsd, bucket, country, fxRate, coverageUpgrade = 'standard', distanceKm } = params;
+    const {
+      vehicleValueUsd,
+      bucket,
+      country,
+      fxRate,
+      coverageUpgrade = 'standard',
+      distanceKm,
+    } = params;
 
     // 1. Calcular franquicia base según valor del vehículo
     const baseDeductible = calculateDeductibleUsd(vehicleValueUsd);
@@ -172,7 +179,10 @@ export class RiskService {
   /**
    * Recalcula el risk snapshot cuando cambia el upgrade de cobertura
    */
-  recalculateWithUpgrade(currentSnapshot: RiskSnapshot, newUpgrade: CoverageUpgrade): Promise<RiskSnapshot> {
+  recalculateWithUpgrade(
+    currentSnapshot: RiskSnapshot,
+    newUpgrade: CoverageUpgrade,
+  ): Promise<RiskSnapshot> {
     return this.calculateRiskSnapshot({
       vehicleValueUsd: currentSnapshot.vehicleValueUsd,
       bucket: currentSnapshot.bucket,
@@ -185,7 +195,10 @@ export class RiskService {
   /**
    * Recalcula el risk snapshot cuando cambia el FX rate
    */
-  recalculateWithNewFxRate(currentSnapshot: RiskSnapshot, newFxRate: number): Promise<RiskSnapshot> {
+  recalculateWithNewFxRate(
+    currentSnapshot: RiskSnapshot,
+    newFxRate: number,
+  ): Promise<RiskSnapshot> {
     return this.calculateRiskSnapshot({
       vehicleValueUsd: currentSnapshot.vehicleValueUsd,
       bucket: currentSnapshot.bucket,

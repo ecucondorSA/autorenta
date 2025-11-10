@@ -20,7 +20,7 @@ import { CarChatComponent } from './components/car-chat.component';
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-white shadow dark:bg-gray-800">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-gray-800">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center gap-4">
             <!-- Back button -->
@@ -40,7 +40,7 @@ import { CarChatComponent } from './components/car-chat.component';
             </button>
 
             <div>
-              <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Mensajes</h1>
+              <h1 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">Mensajes</h1>
               <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
                 @if (bookingId()) {
                   Conversación sobre reserva
@@ -59,37 +59,55 @@ import { CarChatComponent } from './components/car-chat.component';
       <div class="mx-auto max-w-4xl p-4">
         <!-- Booking Context Card -->
         @if (hasBookingContext() && bookingContext()) {
-          <div class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+          <div
+            class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4 dark:border-cta-default dark:bg-cta-default/20"
+          >
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                <svg
+                  class="h-6 w-6 text-cta-default dark:text-cta-default"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
+                <h3 class="text-sm font-semibold text-cta-default dark:text-cta-default mb-1">
                   Reserva: {{ bookingContext()!.carTitle }}
                 </h3>
                 @if (bookingContext()!.dates) {
-                  <p class="text-xs text-blue-700 dark:text-blue-300 mb-2">
+                  <p class="text-xs text-cta-default dark:text-cta-default mb-2">
                     📅 {{ bookingContext()!.dates }}
                   </p>
                 }
                 <div class="flex items-center gap-2">
                   <span
                     class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                    [class.bg-blue-100]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
-                    [class.text-blue-800]="bookingContext()!.status === 'confirmed' || bookingContext()!.status === 'in_progress'"
+                    [class.bg-cta-default/20]="
+                      bookingContext()!.status === 'confirmed' ||
+                      bookingContext()!.status === 'in_progress'
+                    "
+                    [class.text-cta-default]="
+                      bookingContext()!.status === 'confirmed' ||
+                      bookingContext()!.status === 'in_progress'
+                    "
                     [class.bg-yellow-100]="bookingContext()!.status === 'pending'"
                     [class.text-yellow-800]="bookingContext()!.status === 'pending'"
-                    [class.bg-green-100]="bookingContext()!.status === 'completed'"
-                    [class.text-green-800]="bookingContext()!.status === 'completed'"
+                    [class.bg-success-light/20]="bookingContext()!.status === 'completed'"
+                    [class.text-success-light]="bookingContext()!.status === 'completed'"
                   >
                     {{ bookingContext()!.statusLabel }}
                   </span>
                   <a
                     [routerLink]="['/bookings', bookingId()]"
-                    class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
+                    class="text-xs text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default underline"
                   >
                     Ver detalle
                   </a>
@@ -178,9 +196,10 @@ export class MessagesPage implements OnInit {
 
     return {
       carTitle: booking.car_title || `${booking.car_brand} ${booking.car_model}`,
-      dates: booking.start_at && booking.end_at
-        ? `${new Date(booking.start_at).toLocaleDateString('es-AR')} - ${new Date(booking.end_at).toLocaleDateString('es-AR')}`
-        : null,
+      dates:
+        booking.start_at && booking.end_at
+          ? `${new Date(booking.start_at).toLocaleDateString('es-AR')} - ${new Date(booking.end_at).toLocaleDateString('es-AR')}`
+          : null,
       status: booking.status,
       statusLabel: this.getStatusLabel(booking.status),
     };

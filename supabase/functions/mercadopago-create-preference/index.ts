@@ -22,6 +22,8 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Tipos
 interface CreatePreferenceRequest {
@@ -30,18 +32,31 @@ interface CreatePreferenceRequest {
   description?: string;
 }
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
 serve(async (req) => {
+  // ✅ SECURITY: CORS con whitelist de dominios permitidos
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
+    // ========================================
+    // RATE LIMITING (P0 Security - DDoS Protection)
+    // ========================================
+    try {
+      await enforceRateLimit(req, {
+        endpoint: 'mercadopago-create-preference',
+        windowSeconds: 60, // 1 minute window
+      });
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        return error.toResponse();
+      }
+      // Don't block on rate limiter errors - fail open for availability
+      console.error('[RateLimit] Error enforcing rate limit:', error);
+    }
     // Verificar variables de entorno - PRODUCTION TOKEN (NO FALLBACK)
     const MP_ACCESS_TOKEN_RAW = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
 

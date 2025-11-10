@@ -16,7 +16,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
   selector: 'app-email-verification',
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="bg-white rounded-lg border border-gray-200 p-6">
+    <div class="bg-surface-raised rounded-lg border border-gray-200 p-6">
       <!-- Header -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center gap-3">
@@ -28,7 +28,9 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
           </div>
           <div>
             <h4 class="font-semibold text-gray-900">Verificación de Email</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-300">{{ status().value || 'No configurado' }}</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {{ status().value || 'No configurado' }}
+            </p>
           </div>
         </div>
         <span class="text-xs font-medium px-2 py-1 rounded-full" [class]="getStatusLabelClass()">
@@ -37,8 +39,11 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
       </div>
 
       <!-- Verified State -->
-      <div *ngIf="status().isVerified" class="p-4 bg-green-50 border border-green-200 rounded-lg">
-        <div class="flex items-center gap-2 text-green-800">
+      <div
+        *ngIf="status().isVerified"
+        class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
+      >
+        <div class="flex items-center gap-2 text-success-light">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"
@@ -48,7 +53,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
           </svg>
           <span class="text-sm font-medium">Email verificado exitosamente</span>
         </div>
-        <p class="text-xs text-green-700 mt-2">
+        <p class="text-xs text-success-light mt-2">
           Verificado el {{ formatDate(status().verifiedAt) }}
         </p>
       </div>
@@ -72,7 +77,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
             class="flex-grow px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             [class]="
               canResend()
-                ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
                 : 'bg-gray-200 text-gray-500 dark:text-gray-300 cursor-not-allowed'
             "
           >
@@ -86,9 +91,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
                 />
               </svg>
               <span>{{
-                cooldownRemaining() > 0
-                  ? 'Espera ' + cooldownRemaining() + 's'
-                  : 'Reenviar email'
+                cooldownRemaining() > 0 ? 'Espera ' + cooldownRemaining() + 's' : 'Reenviar email'
               }}</span>
             </span>
             <span *ngIf="loading()" class="flex items-center justify-center gap-2">
@@ -101,7 +104,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
         <!-- Success Message -->
         <div
           *ngIf="successMessage()"
-          class="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800"
+          class="p-3 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-light"
         >
           {{ successMessage() }}
         </div>
@@ -134,9 +137,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
 
   readonly cooldownRemaining = signal(0);
   readonly successMessage = signal<string | null>(null);
-  readonly canResend = computed(
-    () => this.status().canResend && this.cooldownRemaining() === 0,
-  );
+  readonly canResend = computed(() => this.status().canResend && this.cooldownRemaining() === 0);
 
   private unsubscribe?: () => void;
   private stopCooldownTimer?: () => void;
@@ -199,7 +200,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
 
   getStatusBadgeClass(): string {
     return this.status().isVerified
-      ? 'bg-green-100 text-green-600'
+      ? 'bg-success-light/20 text-success-light'
       : 'bg-yellow-100 text-yellow-600';
   }
 
@@ -209,7 +210,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
 
   getStatusLabelClass(): string {
     return this.status().isVerified
-      ? 'bg-green-100 text-green-800'
+      ? 'bg-success-light/20 text-success-light'
       : 'bg-yellow-100 text-yellow-800';
   }
 

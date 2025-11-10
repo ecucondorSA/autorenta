@@ -313,7 +313,10 @@ export class DriverProfileService {
   /**
    * Calcula el impacto de un siniestro en la clase
    */
-  calculateClaimImpact(severity: number, withFault: boolean): {
+  calculateClaimImpact(
+    severity: number,
+    withFault: boolean,
+  ): {
     currentClass: number;
     newClass: number;
     classIncrease: number;

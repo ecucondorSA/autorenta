@@ -29,7 +29,7 @@ export class MyCarsPage {
 
   constructor() {
     this.loading.set(true);
-    this.carsService.listMyCars().then(cars => {
+    this.carsService.listMyCars().then((cars) => {
       this.cars.set(cars);
       this.loading.set(false);
     });
@@ -98,7 +98,7 @@ export class MyCarsPage {
 
     // Recargar lista de autos para actualizar estados
     this.loading.set(true);
-    this.carsService.listMyCars().then(cars => {
+    this.carsService.listMyCars().then((cars) => {
       this.cars.set(cars);
       this.loading.set(false);
     });

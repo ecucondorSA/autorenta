@@ -127,6 +127,15 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
     this.error.set(null);
 
     try {
+      // Early validation: check if phone is empty or too short
+      const cleanedPhone = phone?.trim() || '';
+      if (!cleanedPhone || cleanedPhone.length < 7) {
+        const formatHint = this.getPhoneFormatHint(countryCode);
+        throw new Error(
+          `Por favor ingresa un número de teléfono válido. Formato esperado: ${formatHint}`
+        );
+      }
+
       // Check cooldown (using base class method)
       this.checkCooldown();
 
@@ -138,11 +147,34 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       }
 
       // Format phone number (E.164 format)
-      const formattedPhone = this.formatPhoneNumber(phone, countryCode);
+      const formattedPhone = this.formatPhoneNumber(cleanedPhone, countryCode);
+
+      console.log('[PhoneVerificationService] Phone formatting:', {
+        original: phone,
+        cleaned: cleanedPhone,
+        countryCode,
+        formatted: formattedPhone,
+      });
+
+      // Check if formatted phone is empty or invalid
+      if (!formattedPhone || formattedPhone.length < 8) {
+        const formatHint = this.getPhoneFormatHint(countryCode);
+        throw new Error(
+          `Número de teléfono inválido. Formato esperado: ${formatHint}`
+        );
+      }
 
       // Validate phone number format
-      if (!this.isValidPhoneNumber(formattedPhone)) {
-        throw new Error('Número de teléfono inválido. Por favor verifica el formato.');
+      if (!this.isValidPhoneNumber(formattedPhone, countryCode)) {
+        const formatHint = this.getPhoneFormatHint(countryCode);
+        console.error('[PhoneVerificationService] Invalid phone format:', {
+          formattedPhone,
+          countryCode,
+          formatHint,
+        });
+        throw new Error(
+          `Número de teléfono inválido. Formato esperado: ${formatHint}`
+        );
       }
 
       // Send OTP via Supabase Auth
@@ -154,6 +186,58 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       });
 
       if (error) {
+        // Get error code if available (Supabase uses 'code' or 'error_code')
+        const errorCode = (error as any).code || (error as any).error_code || '';
+        const errorMessage = error.message || '';
+
+        // Provide more user-friendly error messages
+        // Check for phone provider errors (multiple ways Supabase can return this)
+        if (
+          errorCode === 'phone_provider_disabled' ||
+          errorCode === 'provider_disabled' ||
+          errorMessage?.includes('phone_provider_disabled') ||
+          errorMessage?.includes('Unsupported phone provider') ||
+          errorMessage?.includes('phone provider') ||
+          errorMessage?.includes('SMS provider')
+        ) {
+          throw new Error(
+            'El servicio de SMS no está configurado para este país. Por favor contacta al soporte o intenta con otro número.'
+          );
+        }
+        
+        // Handle other Supabase errors
+        if (errorCode === 'phone_exists' || errorMessage?.includes('phone_exists')) {
+          throw new Error('Este número de teléfono ya está registrado.');
+        }
+        
+        if (
+          errorCode === 'over_sms_send_rate_limit' ||
+          errorMessage?.includes('over_sms_send_rate_limit') ||
+          errorMessage?.includes('rate limit')
+        ) {
+          throw new Error('Has excedido el límite de envíos. Por favor intenta más tarde.');
+        }
+
+        // Handle invalid phone format errors from Supabase
+        if (
+          errorCode === 'validation_failed' ||
+          errorMessage?.includes('invalid phone') ||
+          errorMessage?.includes('phone number')
+        ) {
+          const formatHint = this.getPhoneFormatHint(countryCode);
+          throw new Error(
+            `Número de teléfono inválido según el proveedor. Formato esperado: ${formatHint}`
+          );
+        }
+
+        // Log the full error for debugging
+        console.error('[PhoneVerificationService] Supabase error:', {
+          code: errorCode,
+          message: errorMessage,
+          error: error,
+        });
+
+        // Re-throw original error if we don't have a specific message
         throw error;
       }
 
@@ -258,28 +342,97 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
    * Format phone number to E.164 format
    */
   private formatPhoneNumber(phone: string, countryCode: string): string {
-    // Remove all non-digit characters except +
-    let cleaned = phone.replace(/[^\d+]/g, '');
+    if (!phone || typeof phone !== 'string') {
+      return '';
+    }
 
-    // If already starts with +, return as is
+    // Remove all non-digit characters except +
+    let cleaned = phone.trim().replace(/[^\d+]/g, '');
+
+    // If already starts with +, validate and return
     if (cleaned.startsWith('+')) {
+      // If it already has a country code, use it (might be different from selected)
+      // But we'll still validate it later
       return cleaned;
+    }
+
+    // If empty after cleaning, return empty
+    if (!cleaned || cleaned.length === 0) {
+      return '';
     }
 
     // Remove leading zeros
     cleaned = cleaned.replace(/^0+/, '');
+
+    // If empty after removing zeros, return empty
+    if (!cleaned || cleaned.length === 0) {
+      return '';
+    }
 
     // Add country code
     return `${countryCode}${cleaned}`;
   }
 
   /**
-   * Validate phone number format (E.164)
+   * Get phone format hint for a country code
    */
-  private isValidPhoneNumber(phone: string): boolean {
+  private getPhoneFormatHint(countryCode: string): string {
+    const hints: Record<string, string> = {
+      '+54': '+54 seguido de 10 dígitos (ej: +5491123456789)',
+      '+1': '+1 seguido de 10 dígitos (ej: +15551234567)',
+      '+52': '+52 seguido de 10 dígitos (ej: +525512345678)',
+      '+55': '+55 seguido de 10-11 dígitos (ej: +5511987654321)',
+      '+56': '+56 seguido de 9 dígitos (ej: +56912345678)',
+    };
+    return hints[countryCode] || 'formato E.164 internacional';
+  }
+
+  /**
+   * Validate phone number format (E.164)
+   * Supports multiple countries with different digit lengths
+   */
+  private isValidPhoneNumber(phone: string, countryCode?: string): boolean {
     // E.164 format: +[country code][number]
-    // Argentina: +54 followed by 10 digits
-    return /^\+54\d{10}$/.test(phone);
+    // Must start with + and have at least 7 digits after country code
+    if (!phone.startsWith('+')) {
+      return false;
+    }
+
+    // Remove the + and validate
+    const withoutPlus = phone.substring(1);
+    
+    // Must contain only digits after the +
+    if (!/^\d+$/.test(withoutPlus)) {
+      return false;
+    }
+
+    // Country-specific validation
+    if (phone.startsWith('+54')) {
+      // Argentina: +54 followed by 10 digits (total 12 digits after +)
+      return /^\+54\d{10}$/.test(phone);
+    } else if (phone.startsWith('+1')) {
+      // USA/Canada: +1 followed by 10 digits (total 11 digits after +)
+      return /^\+1\d{10}$/.test(phone);
+    } else if (phone.startsWith('+52')) {
+      // Mexico: +52 followed by 10 digits (total 12 digits after +)
+      return /^\+52\d{10}$/.test(phone);
+    } else if (phone.startsWith('+55')) {
+      // Brazil: +55 followed by 10-11 digits (total 12-13 after +)
+      return /^\+55\d{10,11}$/.test(phone);
+    } else if (phone.startsWith('+56')) {
+      // Chile: +56 followed by 9 digits (total 11 digits after +)
+      return /^\+56\d{9}$/.test(phone);
+    }
+
+    // If country code is provided but doesn't match, validate against it
+    if (countryCode && !phone.startsWith(countryCode)) {
+      return false;
+    }
+
+    // Generic validation: at least 7 digits after country code, max 15 total
+    // E.164 allows 1-15 digits total (including country code)
+    const totalDigits = withoutPlus.length;
+    return totalDigits >= 8 && totalDigits <= 15;
   }
 
   /**
