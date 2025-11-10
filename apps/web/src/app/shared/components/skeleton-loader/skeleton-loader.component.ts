@@ -1,7 +1,8 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-type SkeletonType = 'text' | 'circle' | 'rect' | 'card';
+type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'avatar' | 'list-item' | 'table-row';
+type SkeletonSize = 'sm' | 'md' | 'lg';
 
 /**
  * 💀 Skeleton Loader Component
@@ -20,7 +21,7 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card';
   template: `
     <div class="skeleton-wrapper">
       <!-- Card Skeleton -->
-      <div *ngIf="type === 'card'" class="skeleton-card">
+      <div *ngIf="type === 'card'" class="skeleton-card" [class.skeleton-card-sm]="size === 'sm'" [class.skeleton-card-lg]="size === 'lg'">
         <div class="skeleton-image"></div>
         <div class="skeleton-content">
           <div class="skeleton-line skeleton-title"></div>
@@ -31,11 +32,11 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card';
 
       <!-- Text Skeleton -->
       <div *ngIf="type === 'text'" class="skeleton-text-wrapper">
-        <div *ngFor="let _ of counter" class="skeleton-line"></div>
+        <div *ngFor="let _ of counter" class="skeleton-line" [class.skeleton-line-sm]="size === 'sm'" [class.skeleton-line-lg]="size === 'lg'"></div>
       </div>
 
       <!-- Circle Skeleton (para avatares) -->
-      <div *ngIf="type === 'circle'" class="skeleton-circle"></div>
+      <div *ngIf="type === 'circle' || type === 'avatar'" class="skeleton-circle" [class.skeleton-circle-sm]="size === 'sm'" [class.skeleton-circle-lg]="size === 'lg'"></div>
 
       <!-- Rectangle Skeleton -->
       <div
@@ -44,6 +45,23 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card';
         [style.width.px]="width"
         [style.height.px]="height"
       ></div>
+
+      <!-- List Item Skeleton -->
+      <div *ngIf="type === 'list-item'" class="skeleton-list-item">
+        <div class="skeleton-circle skeleton-circle-sm"></div>
+        <div class="flex-1">
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line skeleton-text short"></div>
+        </div>
+      </div>
+
+      <!-- Table Row Skeleton -->
+      <div *ngIf="type === 'table-row'" class="skeleton-table-row">
+        <div class="skeleton-line" style="width: 20%;"></div>
+        <div class="skeleton-line" style="width: 30%;"></div>
+        <div class="skeleton-line" style="width: 25%;"></div>
+        <div class="skeleton-line" style="width: 15%;"></div>
+      </div>
     </div>
   `,
   styles: [
@@ -144,15 +162,68 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card';
         flex-direction: column;
         gap: 8px;
       }
+
+      /* Size variants for cards */
+      .skeleton-card-sm .skeleton-image {
+        height: 120px;
+      }
+
+      .skeleton-card-lg .skeleton-image {
+        height: 300px;
+      }
+
+      /* Size variants for text */
+      .skeleton-line-sm {
+        height: 8px;
+      }
+
+      .skeleton-line-lg {
+        height: 16px;
+      }
+
+      /* Size variants for circles */
+      .skeleton-circle-sm {
+        width: 32px;
+        height: 32px;
+      }
+
+      .skeleton-circle-lg {
+        width: 64px;
+        height: 64px;
+      }
+
+      /* List item variant */
+      .skeleton-list-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: white;
+        border-radius: 8px;
+      }
+
+      :host-context(.dark) .skeleton-list-item {
+        background: #1a1a1a;
+      }
+
+      /* Table row variant */
+      .skeleton-table-row {
+        display: flex;
+        gap: 16px;
+        padding: 12px;
+        align-items: center;
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SkeletonLoaderComponent {
   @Input() type: SkeletonType = 'text';
+  @Input() size: SkeletonSize = 'md';
   @Input() count = 1;
   @Input() width = 100;
   @Input() height = 100;
+  @Input() animated = true;
 
   get counter(): number[] {
     return Array(this.count).fill(0);

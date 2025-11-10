@@ -58,6 +58,16 @@ export class OwnerDashboardPage implements OnInit {
     total: 0,
   });
 
+  // Computed signals for derived values (better performance than getters)
+  readonly growthPercentage = computed(() => {
+    const current = this.earnings().thisMonth;
+    const previous = this.earnings().lastMonth;
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return Math.round(((current - previous) / previous) * 100);
+  });
+
+  readonly isGrowthPositive = computed(() => this.growthPercentage() >= 0);
+
   async ngOnInit() {
     await this.loadDashboardData();
   }
@@ -67,16 +77,18 @@ export class OwnerDashboardPage implements OnInit {
     this.error.set(null);
 
     try {
-      // Cargar balance del wallet
-      await this.walletService.getBalance();
+      // Load all data in parallel for better performance
+      const [cars, bookings] = await Promise.all([
+        this.carsService.listMyCars(),
+        this.bookingsService.getOwnerBookings(),
+        this.walletService.getBalance(),
+      ]);
 
-      // Cargar estadísticas de autos
-      const cars = await this.carsService.listMyCars();
+      // Update car statistics
       this.totalCars.set(cars.length);
       this.activeCars.set(cars.filter((c) => c.status === 'active').length);
 
-      // Cargar estadísticas de reservas
-      const bookings = await this.bookingsService.getOwnerBookings();
+      // Update booking statistics
       this.upcomingBookings.set(
         bookings.filter((b) => b.status === 'confirmed' && new Date(b.start_at) > new Date())
           .length,
@@ -121,17 +133,6 @@ export class OwnerDashboardPage implements OnInit {
     } finally {
       this.loading.set(false);
     }
-  }
-
-  get growthPercentage(): number {
-    const current = this.earnings().thisMonth;
-    const previous = this.earnings().lastMonth;
-    if (previous === 0) return current > 0 ? 100 : 0;
-    return Math.round(((current - previous) / previous) * 100);
-  }
-
-  get isGrowthPositive(): boolean {
-    return this.growthPercentage >= 0;
   }
 
   toggleCalendar(): void {
