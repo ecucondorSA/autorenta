@@ -77,7 +77,7 @@
 
   <!-- Loading State con Skeleton -->
   <div *ngIf="loading() && filteredHistory().length === 0" class="space-y-3">
-    <app-skeleton-loader type="list-item" [count]="5"></app-skeleton-loader>
+    <app-skeleton-loader type="list" [count]="5"></app-skeleton-loader>
   </div>
 
   <!-- Empty State -->
