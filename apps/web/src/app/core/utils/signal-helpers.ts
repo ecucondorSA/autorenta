@@ -5,7 +5,7 @@
  * Provides type-safe wrappers and helpers for common reactive patterns.
  */
 
-import { Signal } from '@angular/core';
+import { Signal, NoInfer } from '@angular/core';
 import { toSignal, ToSignalOptions } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 
@@ -73,11 +73,11 @@ export function toSignalSafe<T>(
   options?: ToSignalSafeOptions<T>
 ): Signal<T | undefined> {
   try {
-    // Use type assertion to bypass TypeScript's strict overload checking
-    // This is safe because we're wrapping Angular's toSignal which handles
-    // the type checking internally. The overloads above provide type safety
-    // at the function signature level.
-    return toSignal(source$, options as ToSignalOptions<T>);
+    // Use @ts-expect-error because Angular's toSignal has strict overloads
+    // that don't work well with our wrapper. The overloads above ensure
+    // type safety at the function signature level.
+    // @ts-expect-error - Angular's toSignal overloads are too strict for our wrapper
+    return toSignal(source$, options);
   } catch (error) {
     console.error('[toSignalSafe] Error converting observable to signal:', error);
     throw new Error(
