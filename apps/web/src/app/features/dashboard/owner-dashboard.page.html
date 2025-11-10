@@ -133,13 +133,13 @@
           <div>
             <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Este Mes</p>
             <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
-              {{ earnings().thisMonth | money }}
+              {{ thisMonthEarnings() | money }}
             </p>
           </div>
           <div>
             <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Mes Anterior</p>
             <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
-              {{ earnings().lastMonth | money }}
+              {{ lastMonthEarnings() | money }}
             </p>
           </div>
           <div>
